@@ -115,17 +115,11 @@
 	<key>LSSupportsOpeningDocumentsInPlace</key>
 	<true/>
 	<key>NSCameraUsageDescription</key>
-	<string>Can I use the camera please?</string>
+	<string>Access to Camera is requested. This is only required for choosing your profile picture and completing KYC Verification.</string>
 	<key>NSFaceIDUsageDescription</key>
 	<string>Why is my app authenticating using face id?</string>
-	<key>NSLocationAlwaysAndWhenInUseUsageDescription</key>
-	<string>Your location helps us to verify you kYC details</string>
-	<key>NSLocationAlwaysUsageDescription</key>
-	<string>This app needs access to location when in the background.</string>
-	<key>NSLocationWhenInUseUsageDescription</key>
-	<string>This app needs access to location when open.</string>
 	<key>NSMicrophoneUsageDescription</key>
-	<string>Can I use the mic please?</string>
+	<string>Access to Microphone is requested. This is only required for completing KYC Verification.</string>
 	<key>NSPhotoLibraryUsageDescription</key>
 	<string>Access to photos is requested. This is only required for choosing your profile picture and completing KYC Verification.</string>
 	<key>UIBackgroundModes</key>

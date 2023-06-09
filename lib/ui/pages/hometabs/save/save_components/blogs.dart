@@ -143,10 +143,27 @@ class SaveBlogSection extends StatelessWidget {
   }
 }
 
-class BlogWebView extends StatelessWidget {
+class BlogWebView extends StatefulWidget {
   final String? initialUrl;
   final String? title;
+
   const BlogWebView({Key? key, this.initialUrl, this.title}) : super(key: key);
+
+  @override
+  State<BlogWebView> createState() => _BlogWebViewState();
+}
+
+class _BlogWebViewState extends State<BlogWebView> {
+  WebViewController? controller;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = WebViewController()
+      ..setBackgroundColor(Colors.black)
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..loadRequest(Uri.parse(widget.initialUrl!));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -155,13 +172,12 @@ class BlogWebView extends StatelessWidget {
         backgroundColor: UiConstants.kBackgroundColor3,
         leading: FelloAppBarBackButton(),
         centerTitle: true,
-        title: Text(title ?? 'Title', style: TextStyles.rajdhaniSB.title5),
+        title:
+            Text(widget.title ?? 'Title', style: TextStyles.rajdhaniSB.title5),
       ),
       backgroundColor: UiConstants.kBackgroundColor,
-      body: WebView(
-        initialUrl: initialUrl,
-        backgroundColor: UiConstants.kBackgroundColor,
-        javascriptMode: JavascriptMode.unrestricted,
+      body: WebViewWidget(
+        controller: controller!,
       ),
     );
   }

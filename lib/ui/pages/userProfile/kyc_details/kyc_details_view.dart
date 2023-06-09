@@ -108,8 +108,8 @@ class KYCDetailsView extends StatelessWidget {
                                     if (model.kycVerificationStatus ==
                                         KycVerificationStatus.UNVERIFIED)
                                       Text(
-                                          "Complete your PAN and Email Account verification to be KYC verified",
-                                          style: TextStyles.sourceSansSB.body1),
+                                          "Please provide your PAN and registered email ID",
+                                          style: TextStyles.sourceSansSB.body2),
                                     SizedBox(height: SizeConfig.padding16),
                                     getKycView(model),
                                     Divider(
@@ -209,7 +209,7 @@ class EmailVerificationTile extends StatelessWidget {
         children: [
           Text(
             model.isEmailVerified
-                ? "Linked Account"
+                ? "Registered Email"
                 : "Step 2: Choose a google account",
             style: TextStyles.sourceSansM.body2,
           ),

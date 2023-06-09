@@ -1,3 +1,5 @@
+import 'package:felloapp/util/flavor_config.dart';
+
 class ApiPath {
   ApiPath();
 
@@ -77,7 +79,9 @@ class ApiPath {
   static const kRedeemGtReward = "/gt/redeem";
 
   //Fello Coupons
-  static const kFelloCoupons = "/eligible";
+  static String kFelloCoupons = FlavorConfig.isDevelopment()
+      ? "/mono-coupons-dev-couponEligible"
+      : "/eligible";
 
   //DeviceInfo
   get kSetUserDeviceId => "/setUserDeviceId";
@@ -104,6 +108,7 @@ class ApiPath {
   static String tambolaTickets(String? uid) => "/$uid/tickets";
 
   static String tambolaBestTickets(String uid) => "/$uid/winning-tickets";
+
   static String buyTambolaTicket(String uid) => "/user/$uid/tickets";
 
   static String ticketCount(String? uid) => "/user/$uid/tickets/count";
@@ -144,8 +149,7 @@ class ApiPath {
   static String pastWinners(String? type, String? freq) =>
       "/leaderboard/past/type/$type/freq/$freq";
 
-  static String getAssetOptions(String freq, String type) =>
-      '/asset/options?freq=$freq&type=$type';
+  static String getAssetOptions() => '/asset/options';
 
   // Internal Ops
   static const String failureReport = '/fail/report';
@@ -159,7 +163,9 @@ class ApiPath {
   static const String getGames = "/games";
 
   // Coupon Apis
-  static const String getCoupons = "/coupons";
+  static String getCoupons = FlavorConfig.isDevelopment()
+      ? "/mono-coupons-dev-getCoupons"
+      : "/coupons";
 
   static String getGameByCode(String gameCode) => "/game/$gameCode";
 
@@ -194,7 +200,7 @@ class ApiPath {
   static const kOnboardingStory = '/story/onboarding';
   static const kTambolaStory = '/story/tambola';
 
-  static String get getAppConfig => '/app/config';
+  // static String get getAppConfig => '/app/config';
 
   //marketing events
   static String kDailyAppBonusEvent(String uid) => "/user/$uid/daily-bonus";
@@ -219,4 +225,12 @@ class ApiPath {
   static const String powerPlayReward = "/powerplay/rewards";
 
   static const String lastWeekRecap = "/recap";
+
+  static const String quickSave = "/global/quick_save";
+
+  static const String investmentPrefs = "/lb/investment-prefs";
+
+  static String portfolio(String uid) => "/$uid/portfolio";
+
+  static String incentives = "/app/incentives";
 }

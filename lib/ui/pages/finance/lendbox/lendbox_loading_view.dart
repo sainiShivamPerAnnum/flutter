@@ -17,7 +17,7 @@ import 'package:lottie/lottie.dart';
 
 class LendboxLoadingView extends StatelessWidget {
   final TransactionType transactionType;
-  final LendboxTransactionService? _txnService =
+  final LendboxTransactionService _txnService =
       locator<LendboxTransactionService>();
   final int waitTimeInSec = 45;
 
@@ -30,14 +30,14 @@ class LendboxLoadingView extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        SizedBox(height: SizeConfig.padding32),
+        SizedBox(height: SizeConfig.fToolBarHeight / 2),
         Text(locale.felloFloText, style: TextStyles.rajdhaniSB.body2),
         SizedBox(
           height: SizeConfig.padding12,
           width: SizeConfig.screenWidth,
         ),
         Text(
-          locale.floEarn10Percent,
+          "Earn up to 12% Returns",
           style: TextStyles.sourceSans.body4.colour(UiConstants.kTextColor3),
         ),
         Expanded(
@@ -91,7 +91,9 @@ class LendboxLoadingView extends StatelessWidget {
                 AppState.unblockNavigation();
                 log("Screen Stack:${AppState.screenStack.toString()}");
 
-                AppState.backButtonDispatcher!.didPopRoute();
+                // while (AppState.screenStack.length > 1) {
+                await AppState.backButtonDispatcher!.didPopRoute();
+                // }
                 log("Screen Stack:${AppState.screenStack.toString()}");
 
                 showTransactionPendingDialog();
@@ -114,12 +116,12 @@ class LendboxLoadingView extends StatelessWidget {
     );
   }
 
-  showTransactionPendingDialog() {
+  void showTransactionPendingDialog() {
     BaseUtil.openDialog(
       addToScreenStack: true,
       hapticVibrate: true,
       isBarrierDismissible: false,
-      content: PendingDialog(
+      content: const PendingDialog(
         title: "We're still processing!",
         subtitle:
             "Your transaction is taking longer than usual. We'll get back to you in ",

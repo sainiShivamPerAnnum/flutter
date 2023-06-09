@@ -12,6 +12,7 @@ import 'package:felloapp/core/model/asset_options_model.dart';
 import 'package:felloapp/core/model/faq_model.dart';
 import 'package:felloapp/core/model/page_config_model.dart';
 import 'package:felloapp/core/model/promo_cards_model.dart';
+import 'package:felloapp/core/model/quick_save_model.dart';
 import 'package:felloapp/core/model/story_model.dart';
 import 'package:felloapp/core/model/sub_combos_model.dart';
 import 'package:felloapp/core/model/winners_model.dart';
@@ -22,6 +23,7 @@ import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/code_from_freq.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/flavor_config.dart';
+import 'package:flutter/material.dart';
 
 //[TODO]:Added Prod CDN url;
 class GetterRepository extends BaseRepo {
@@ -55,7 +57,7 @@ class GetterRepository extends BaseRepo {
         token: token,
       );
 
-      print("Reaching here: ${statisticsResponse.toString()}");
+      debugPrint("Reaching here: ${statisticsResponse.toString()}");
 
       return ApiResponse(model: statisticsResponse["data"], code: 200);
     } catch (e) {
@@ -89,19 +91,38 @@ class GetterRepository extends BaseRepo {
   }
 
   Future<ApiResponse<AssetOptionsModel>> getAssetOptions(
-      String freq, String type) async {
+      String freq, String type,
+      {String? subType, bool? isOldLendboxUser}) async {
     try {
+      Map<String, dynamic>? map;
+
+      if (type == "flo") {
+        map = {
+          "type": type,
+          "freq": freq,
+          "subType": subType,
+          "isOldLbUser": isOldLendboxUser.toString(),
+        };
+      }
+      if (type == "gold") {
+        map = {
+          "type": type,
+          "freq": freq,
+        };
+      }
+
       final token = await getBearerToken();
-      return await _cacheService.cachedApi(
-        'AssetsOptions-$freq-$type',
-        TTL.ONE_HOUR,
-        () => APIService.instance.getData(ApiPath.getAssetOptions(freq, type),
-            cBaseUrl: _baseUrl, token: token),
-        (p0) => ApiResponse<AssetOptionsModel>(
-          code: 200,
-          model: AssetOptionsModel.fromJson(
-            p0,
-          ),
+
+      final response = await APIService.instance.getData(
+          ApiPath.getAssetOptions(),
+          queryParams: map,
+          cBaseUrl: _baseUrl,
+          token: token);
+
+      return ApiResponse<AssetOptionsModel>(
+        code: 200,
+        model: AssetOptionsModel.fromJson(
+          response,
         ),
       );
     } catch (e) {
@@ -263,7 +284,7 @@ class GetterRepository extends BaseRepo {
     try {
       // final token = await getBearerToken();
 
-      return (await (_cacheService.cachedApi(
+      return await _cacheService.cachedApi(
         '${CacheKeys.FAQS}/${type.name}',
         TTL.TWO_HOURS,
         () => APIService.instance.getData(
@@ -276,7 +297,7 @@ class GetterRepository extends BaseRepo {
           final faqs = FAQDataModel.helper.fromMapArray(response["data"]);
           return ApiResponse<List<FAQDataModel>>(model: faqs, code: 200);
         },
-      )));
+      );
     } catch (e) {
       logger.e(e.toString());
       return ApiResponse.withError(
@@ -318,9 +339,9 @@ class GetterRepository extends BaseRepo {
         (response) {
           final responseData = response["dynamicUi"];
 
-          logger.d("Page Config: $responseData");
+          // logger.d("Page Config: $responseData");
           final pageConfig = DynamicUI.fromMap(responseData);
-          logger.d("Page Config: $responseData");
+          logger.d("Page Config: ${pageConfig.toString()}");
           return ApiResponse<DynamicUI>(model: pageConfig, code: 200);
         },
       );
@@ -330,34 +351,38 @@ class GetterRepository extends BaseRepo {
     }
   }
 
-  //TODO: Not working
-  //Triggered on: Share button click on win view
-  // Future<ApiResponse<List<ScratchCard>>> getScratchCards() async {
-  //   try {
-  //     // final token = await getBearerToken();
-  //     final response = await APIService.instance.getData(
-  //       ApiPath.scratchCards(userService.baseUser.uid),
-  //       cBaseUrl: "https://6w37rw51hj.execute-api.ap-south-1.amazonaws.com/dev",
-  //       queryParams: {},
-  //     );
+  Future<ApiResponse<QuickSaveModel>> getQuickSave() async {
+    try {
+      final token = await getBearerToken();
+      final response = await APIService.instance.getData(
+        ApiPath.quickSave,
+        cBaseUrl: _baseUrl,
+        token: token,
+      );
 
-  //     // final response2 = await APIService.instance.getData(
-  //     //   "/user/ojUP6fumUgOb9wDMB6Jmoy32GOE3/golden_tickets",
-  //     //   cBaseUrl: _baseUrl,
-  //     //   queryParams: {},
-  //     // );
+      final quickSave = QuickSaveModel.fromJson(response);
 
-  //     final responseData = response["data"]["gts"];
+      return ApiResponse<QuickSaveModel>(model: quickSave, code: 200);
+    } catch (e) {
+      logger.e(e.toString());
+      return ApiResponse.withError("Unable to fetch stories", 400);
+    }
+  }
 
-  //     print("Test123 ${response.toString()}");
-  //     // final scratchCards = ScratchCard.fromJson(json, docId);
+  Future<ApiResponse<List>> getIncentivesList() async {
+    try {
+      final token = await getBearerToken();
+      final response = await APIService.instance.getData(
+        ApiPath.incentives,
+        cBaseUrl: _baseUrl,
+        token: token,
+      );
 
-  //     // return ApiResponse<List<ScratchCard>>(model: events, code: 200);
-  //   } catch (e) {
-  //     logger.e(e.toString());
-  //     print("Test123 ${e.toString()}");
-
-  //     return ApiResponse.withError("Unable to fetch golden tickets", 400);
-  //   }
-  // }
+      return ApiResponse<List>(
+          model: response["data"]["earnMoreRewards"], code: 200);
+    } catch (e) {
+      logger.e(e.toString());
+      return ApiResponse.withError("Unable to fetch stories", 400);
+    }
+  }
 }

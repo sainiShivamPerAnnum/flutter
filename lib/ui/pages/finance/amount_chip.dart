@@ -19,6 +19,7 @@ class AmountChip extends StatelessWidget {
   final bool isBest;
   final Function(int val) onClick;
   final int index;
+
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
@@ -43,8 +44,8 @@ class AmountChip extends StatelessWidget {
                   borderRadius: BorderRadius.circular(SizeConfig.roundness5),
                   border: Border.all(
                     color: isActive
-                        ? Color(0xFFFEF5DC)
-                        : Color(0xFFFEF5DC).withOpacity(0.2),
+                        ? const Color(0xFFFEF5DC)
+                        : const Color(0xFFFEF5DC).withOpacity(0.2),
                     width: SizeConfig.border0,
                   ),
                 ),
@@ -64,7 +65,7 @@ class AmountChip extends StatelessWidget {
                   horizontal: SizeConfig.padding4,
                   vertical: SizeConfig.padding2,
                 ),
-                decoration: BoxDecoration(
+                decoration: const BoxDecoration(
                   color: UiConstants.primaryColor,
                 ),
                 child: Text(
@@ -73,6 +74,79 @@ class AmountChip extends StatelessWidget {
                 ),
               ),
             )
+        ],
+      ),
+    );
+  }
+}
+
+class AmountChipV2 extends StatelessWidget {
+  const AmountChipV2(
+      {Key? key,
+      this.isBest = false,
+      required this.isActive,
+      required this.amt,
+      required this.onClick,
+      required this.index})
+      : super(key: key);
+
+  final bool isActive;
+  final int amt;
+  final bool isBest;
+  final Function(int val) onClick;
+  final int index;
+
+  @override
+  Widget build(BuildContext context) {
+    S locale = S.of(context);
+    return SizedBox(
+      height: SizeConfig.padding46 + SizeConfig.padding2,
+      child: Column(
+        // mainAxisSize: MainAxisSize.max,
+        mainAxisAlignment: MainAxisAlignment.end,
+        children: [
+          if (isBest)
+            Container(
+              padding: EdgeInsets.symmetric(
+                horizontal: SizeConfig.padding8,
+                vertical: SizeConfig.padding2,
+              ),
+              decoration: const BoxDecoration(
+                color: UiConstants.kSnackBarPositiveContentColor,
+              ),
+              child: Text(
+                locale.best,
+                style: TextStyles.sourceSans.body5,
+              ),
+            ),
+          if (!isBest) const Spacer(),
+          GestureDetector(
+            onTap: () {
+              onClick(index);
+            },
+            child: Container(
+              height: SizeConfig.padding32,
+              padding: EdgeInsets.symmetric(
+                vertical: SizeConfig.padding4,
+                horizontal: SizeConfig.padding12,
+              ),
+              margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding6),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(SizeConfig.roundness5),
+                border: Border.all(
+                  color: isActive
+                      ? const Color(0xFFFEF5DC)
+                      : const Color(0xFFFEF5DC).withOpacity(0.2),
+                  width: SizeConfig.border0,
+                ),
+              ),
+              alignment: Alignment.center,
+              child: Text(
+                "₹ ${amt.toInt()}",
+                style: TextStyles.sourceSans.body2.colour(Colors.white),
+              ),
+            ),
+          ),
         ],
       ),
     );

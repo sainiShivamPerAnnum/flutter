@@ -1,12 +1,8 @@
-import 'dart:developer';
-
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/model/coupon_card_model.dart';
 import 'package:felloapp/core/model/eligible_coupon_model.dart';
 import 'package:felloapp/core/repository/base_repo.dart';
 import 'package:felloapp/core/service/api_service.dart';
-import 'package:felloapp/core/service/notifier_services/user_service.dart';
-import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/flavor_config.dart';
@@ -17,20 +13,21 @@ class CouponRepository extends BaseRepo {
   final CustomLogger? _logger = locator<CustomLogger>();
   final _rsaEncryption = new RSAEncryption();
   final String _baseUrl = FlavorConfig.isDevelopment()
-      ? "https://z8gkfckos5.execute-api.ap-south-1.amazonaws.com/dev"
+      ? "https://64w9v5hct9.execute-api.ap-south-1.amazonaws.com/dev"
       : "https://mwl33qq6sd.execute-api.ap-south-1.amazonaws.com/prod";
 
-  Future<ApiResponse<EligibleCouponResponseModel>> getEligibleCoupon({
-    String? uid,
-    String? couponcode,
-    int? amount,
-  }) async {
+  Future<ApiResponse<EligibleCouponResponseModel>> getEligibleCoupon(
+      {String? uid,
+      String? couponcode,
+      int? amount,
+      required String assetType}) async {
     try {
       final String _bearer = await getBearerToken();
       Map<String, dynamic> _body = {
         "uid": uid,
+        "type": assetType,
         "couponCode": couponcode,
-        "amt": amount
+        "amt": amount,
       };
       _logger!.d("initiateUserDeposit:: Pre encryption: $_body");
       if (await _rsaEncryption.init()) {
@@ -57,13 +54,17 @@ class CouponRepository extends BaseRepo {
     }
   }
 
-  Future<ApiResponse<List<CouponModel>>> getCoupons() async {
+  Future<ApiResponse<List<CouponModel>>> getCoupons(
+      {required String assetType}) async {
     try {
       final token = await getBearerToken();
       final couponResponse = await APIService.instance.getData(
         ApiPath.getCoupons,
         cBaseUrl: _baseUrl,
         token: token,
+        queryParams: {
+          "type": assetType,
+        },
       );
 
       final List<CouponModel> coupons =

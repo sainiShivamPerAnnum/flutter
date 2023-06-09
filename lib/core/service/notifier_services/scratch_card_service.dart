@@ -64,6 +64,17 @@ class ScratchCardService
   //ALL GOLDEN TICKETS VIEW FIELDS -- START
 
   // static bool hasScratchCard = false;
+
+  int _unscratchedMilestoneScratchCardCount = 0;
+
+  int get unscratchedMilestoneScratchCardCount =>
+      _unscratchedMilestoneScratchCardCount;
+
+  set unscratchedMilestoneScratchCardCount(int value) {
+    _unscratchedMilestoneScratchCardCount = value;
+    notifyListeners();
+  }
+
   int _unscratchedTicketsCount = 0;
 
   int get unscratchedTicketsCount => _unscratchedTicketsCount;
@@ -81,12 +92,14 @@ class ScratchCardService
   static List<String>? scratchCardsList;
   static String previousPrizeSubtype = '';
 
-  static dump() {
+  dump() {
     scratchCardId = null;
     gameEndMsgText = null;
     currentGT = null;
     lastScratchCardId = null;
     previousPrizeSubtype = '';
+    _unscratchedTicketsCount = 0;
+    _unscratchedMilestoneScratchCardCount = 0;
   }
 
   List<ScratchCard>? _unscratchedScratchCards;
@@ -169,6 +182,7 @@ class ScratchCardService
       String? title,
       double? amount = 0,
       bool onJourney = false,
+      bool showRatingDialog = true,
       bool showAutoSavePrompt = false}) async {
     if (AppState.isWebGameLInProgress || AppState.isWebGamePInProgress) return;
     if (currentGT != null) {
@@ -186,6 +200,7 @@ class ScratchCardService
               source: source,
               title: title,
               amount: amount,
+              showRatingDialog: showRatingDialog,
               showAutosavePrompt: showAutoSavePrompt,
             ),
           ),
@@ -194,11 +209,11 @@ class ScratchCardService
     }
   }
 
-  showMultipleScratchCardsView() {
+  void showMultipleScratchCardsView() {
     if (scratchCardsList != null && scratchCardsList!.isNotEmpty) {
       if (scratchCardsList!.length == 1) {
         scratchCardId = scratchCardsList![0];
-        return fetchAndVerifyScratchCardByID()
+        fetchAndVerifyScratchCardByID()
             .then((_) => showInstantScratchCardView(source: GTSOURCE.prize));
       } else {
         AppState.screenStack.add(ScreenItem.dialog);
@@ -217,6 +232,12 @@ class ScratchCardService
     final res = await _gtRepo.getGTByPrizeType("UNSCRATCHED");
     if (res.isSuccess()) {
       unscratchedTicketsCount = res.model!.length;
+      unscratchedMilestoneScratchCardCount = 0;
+      res.model!.forEach((sc) {
+        if (sc.prizeSubtype!.toLowerCase().contains("_mlst_")) {
+          unscratchedMilestoneScratchCardCount += 1;
+        }
+      });
     } else {
       unscratchedTicketsCount = 0;
     }

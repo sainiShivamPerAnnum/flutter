@@ -45,11 +45,10 @@ final _goldMarquee = [
 final _floMarquee = [
   "Higher returns than FDs",
   "Your money is safe with us",
-  "7 days lock-in period"
 ];
 
 class SaveContainer extends StatefulWidget {
-  SaveContainer({
+  const SaveContainer({
     Key? key,
     required this.investmentType,
     this.isPopular = false,
@@ -390,7 +389,7 @@ class _InvestmentDetails extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
-                "Invest today",
+                "Save today",
                 style: TextStyles.sourceSans.body4.colour(
                   Colors.white.withOpacity(0.7),
                 ),
@@ -423,7 +422,11 @@ class _InvestmentDetails extends StatelessWidget {
                 valueListenable: _onValueChanged,
                 builder: (context, snapshot, child) {
                   return Text(
-                      "₹${3.calculateCompoundInterest(type, _onValueChanged.value * 1.0)}",
+                      "₹${3.calculateCompoundInterest(
+                        type,
+                        _onValueChanged.value * 1.0,
+                        10,
+                      )}",
                       style: TextStyles.rajdhaniSB.title4);
                 },
               )

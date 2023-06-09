@@ -3,11 +3,11 @@ import 'package:felloapp/core/model/last_week_model.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/marketing_event_handler_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
-import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -128,31 +128,13 @@ class LastWeekBg extends StatelessWidget {
                         style: TextStyles.sourceSans.body4,
                       ),
                     Container(
-                      height: SizeConfig.navBarHeight * 0.9,
-                      margin: EdgeInsets.fromLTRB(
-                        SizeConfig.pageHorizontalMargins,
-                        SizeConfig.pageHorizontalMargins - SizeConfig.padding12,
-                        SizeConfig.pageHorizontalMargins,
-                        SizeConfig.pageHorizontalMargins,
-                      ),
-                      width: SizeConfig.screenWidth,
-                      decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                            begin: Alignment.topCenter,
-                            end: Alignment.bottomCenter,
-                            stops: const [0.1, 1],
-                            colors: [
-                              UiConstants.kBuyTicketSaveButton,
-                              UiConstants.kBuyTicketSaveButton.withOpacity(0.4),
-                            ],
-                          ),
-                          // color: UiConstants.kBuyTicketSaveButton,
-                          borderRadius: BorderRadius.circular(5)),
-                      child: MaterialButton(
-                        shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(5)),
-                        padding: const EdgeInsets.symmetric(vertical: 10),
-                        // color:  UiConstants.kBuyTicketSaveButton,
+                      margin: EdgeInsets.only(
+                          left: SizeConfig.pageHorizontalMargins,
+                          right: SizeConfig.pageHorizontalMargins,
+                          top: SizeConfig.padding8,
+                          bottom: SizeConfig.viewPadding!.bottom +
+                              SizeConfig.padding8),
+                      child: AppPositiveBtn(
                         onPressed: () {
                           if (callCampaign) {
                             locator<MarketingEventHandlerService>()
@@ -171,13 +153,15 @@ class LastWeekBg extends StatelessWidget {
                           AppState.backButtonDispatcher!.didPopRoute();
                           AppState.delegate!.parseRoute(Uri.parse('/save'));
                         },
-                        child: Center(
-                          child: Text(
-                            'SAVE NOW',
-                            style:
-                                TextStyles.rajdhaniB.body1.colour(Colors.white),
-                          ),
-                        ),
+
+                        btnText: "SAVE NOW",
+                        // child: Center(
+                        //   child: Text(
+                        //     'SAVE NOW',
+                        //     style:
+                        //         TextStyles.rajdhaniB.body1.colour(Colors.white),
+                        //   ),
+                        // ),
                       ),
                     ),
                   ],

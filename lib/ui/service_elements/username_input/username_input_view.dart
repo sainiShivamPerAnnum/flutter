@@ -17,100 +17,99 @@ class UsernameInputView extends StatelessWidget {
     return BaseView<UserProfileVM>(
       onModelReady: (model) => model.usernameInit(),
       onModelDispose: (model) => model.usernameDispose(),
-      builder: ((context, model, child) => Container(
-            margin: EdgeInsets.only(
-                bottom: MediaQuery.of(context).viewInsets.bottom),
-            width: SizeConfig.screenWidth,
-            padding: EdgeInsets.symmetric(
-                horizontal: SizeConfig.pageHorizontalMargins),
-            child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                mainAxisSize: MainAxisSize.min,
-                children: [
-                  Padding(
-                    padding:
-                        EdgeInsets.symmetric(vertical: SizeConfig.padding32),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                locale.obCreateUserName,
-                                style: TextStyles.rajdhaniB.title3,
-                              ),
-                              SizedBox(height: SizeConfig.padding6),
-                              Text(
-                                locale.obuniqueNameText,
-                                style: TextStyles.sourceSans.body3
-                                    .colour(UiConstants.kTextColor2),
-                              )
-                            ],
+      builder: (context, model, child) => Container(
+        margin:
+            EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+        width: SizeConfig.screenWidth,
+        padding:
+            EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
+        child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: SizeConfig.padding32),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Expanded(
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            locale.obCreateUserName,
+                            style: TextStyles.rajdhaniB.title3,
                           ),
-                        ),
-                        GestureDetector(
-                          onTap: () {
-                            AppState.backButtonDispatcher!.didPopRoute();
-                          },
-                          child: Icon(
-                            Icons.close,
-                            color: UiConstants.kTextColor,
-                            size: SizeConfig.padding24,
-                          ),
-                        )
-                      ],
-                    ),
-                  ),
-                  AppTextField(
-                    hintText: locale.obUserNameHint,
-                    onTap: () {},
-                    prefixText: '@',
-                    autoFocus: true,
-                    autovalidateMode: AutovalidateMode.onUserInteraction,
-                    textEditingController: model.usernameController,
-                    isEnabled: model.inEditMode,
-                    textStyle: TextStyles.body2.colour(Colors.white),
-                    inputFormatters: [
-                      LowerCaseTextFormatter(),
-                      FilteringTextInputFormatter.allow(
-                        RegExp(r'[A-Za-z0-9.]'),
-                      )
-                    ],
-                    validator: (val) {
-                      if (val == null || val.isEmpty)
-                        return "";
-                      else
-                        return null;
-                    },
-                    onChanged: (String value) {
-                      model.checkIfUsernameIsAvailable();
-                    },
-                  ),
-                  Container(
-                    height: model.errorPadding,
-                  ),
-                  Container(
-                    height: SizeConfig.padding20,
-                    child: model.showResult(),
-                  ),
-                  Container(
-                    width: SizeConfig.screenWidth,
-                    margin: EdgeInsets.symmetric(
-                      vertical: SizeConfig.pageHorizontalMargins,
-                    ),
-                    child: model.isUpdaingUserDetails
-                        ? LinearProgressIndicator(
-                            backgroundColor: Colors.black,
+                          SizedBox(height: SizeConfig.padding6),
+                          Text(
+                            locale.obuniqueNameText,
+                            style: TextStyles.sourceSans.body3
+                                .colour(UiConstants.kTextColor2),
                           )
-                        : AppPositiveBtn(
-                            btnText: "ADD",
-                            onPressed: () => model.updateUsername()),
+                        ],
+                      ),
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        AppState.backButtonDispatcher!.didPopRoute();
+                      },
+                      child: Icon(
+                        Icons.close,
+                        color: UiConstants.kTextColor,
+                        size: SizeConfig.padding24,
+                      ),
+                    )
+                  ],
+                ),
+              ),
+              AppTextField(
+                hintText: locale.obUserNameHint,
+                onTap: () {},
+                prefixText: '@',
+                autoFocus: true,
+                autovalidateMode: AutovalidateMode.onUserInteraction,
+                textEditingController: model.usernameController,
+                isEnabled: model.inEditMode,
+                textStyle: TextStyles.body2.colour(Colors.white),
+                inputFormatters: [
+                  LowerCaseTextFormatter(),
+                  FilteringTextInputFormatter.allow(
+                    RegExp(r'[A-Za-z0-9.]'),
                   )
-                ]),
-          )),
+                ],
+                validator: (val) {
+                  if (val == null || val.isEmpty)
+                    return "";
+                  else
+                    return null;
+                },
+                onChanged: (String value) {
+                  model.checkIfUsernameIsAvailable();
+                },
+              ),
+              Container(
+                height: model.errorPadding,
+              ),
+              Container(
+                height: SizeConfig.padding20,
+                child: model.showResult(),
+              ),
+              Container(
+                width: SizeConfig.screenWidth,
+                margin: EdgeInsets.symmetric(
+                  vertical: SizeConfig.pageHorizontalMargins,
+                ),
+                child: model.isUpdaingUserDetails
+                    ? LinearProgressIndicator(
+                        backgroundColor: Colors.black,
+                      )
+                    : AppPositiveBtn(
+                        btnText: "ADD",
+                        onPressed: () => model.updateUsername()),
+              )
+            ]),
+      ),
     );
   }
 }

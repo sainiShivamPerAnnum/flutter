@@ -1,7 +1,6 @@
 import 'dart:async';
 
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/constants/cache_keys.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/transaction_state_enum.dart';
@@ -10,9 +9,7 @@ import 'package:felloapp/core/model/paytm_models/create_paytm_transaction_model.
 import 'package:felloapp/core/model/paytm_models/paytm_transaction_response_model.dart';
 import 'package:felloapp/core/model/power_play_models/get_matches_model.dart';
 import 'package:felloapp/core/repository/paytm_repo.dart';
-import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
-import 'package:felloapp/core/service/notifier_services/marketing_event_handler_service.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
@@ -31,23 +28,26 @@ import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 
 class LendboxTransactionService extends BaseTransactionService {
-  final UserService? _userService = locator<UserService>();
-  final CustomLogger? _logger = locator<CustomLogger>();
-  final UserCoinService? _userCoinService = locator<UserCoinService>();
-  final PaytmRepository? _paytmRepo = locator<PaytmRepository>();
+  final UserService _userService = locator<UserService>();
+  final CustomLogger _logger = locator<CustomLogger>();
+  final UserCoinService _userCoinService = locator<UserCoinService>();
+  final PaytmRepository _paytmRepo = locator<PaytmRepository>();
   final _gtService = ScratchCardService();
-  final InternalOpsService? _internalOpsService = locator<InternalOpsService>();
-  final TxnHistoryService? _txnHistoryService = locator<TxnHistoryService>();
+  final InternalOpsService _internalOpsService = locator<InternalOpsService>();
+  final TxnHistoryService _txnHistoryService = locator<TxnHistoryService>();
 
   // final PaytmService? _paytmService = locator<PaytmService>();
-  final RazorpayService? _razorpayService = locator<RazorpayService>();
-  final TambolaService? _tambolaService = locator<TambolaService>();
+  final RazorpayService _razorpayService = locator<RazorpayService>();
+  final TambolaService _tambolaService = locator<TambolaService>();
   S locale = locator<S>();
   TransactionResponseModel? _model;
   bool skipMl = false;
+  String? floAssetType;
+  String? maturityPref;
+  String? couponCode;
 
   Future<void> initiateWithdrawal(double txnAmount, String? txnId) async {
-    this.currentTransactionState = TransactionState.success;
+    currentTransactionState = TransactionState.success;
     await _txnHistoryService!.updateTransactions(InvestmentType.LENDBOXP2P);
   }
 
@@ -57,10 +57,15 @@ class LendboxTransactionService extends BaseTransactionService {
 
   TransactionResponseModel? get transactionReponseModel => _model;
 
-  Future<void> initiateTransaction(double txnAmount, bool skipMl) async {
-    this.currentTxnAmount = txnAmount;
+  Future<void> initiateTransaction(double txnAmount, bool skipMl,
+      String floAssetType, String maturityPref, String? couponCode) async {
+    this.couponCode = '';
+    this.floAssetType = floAssetType;
+    this.maturityPref = maturityPref;
+    currentTxnAmount = txnAmount;
     this.skipMl = skipMl;
-    String paymentMode = this.getPaymentMode();
+    this.couponCode = couponCode;
+    String paymentMode = getPaymentMode();
 
     switch (paymentMode) {
       case "PAYTM-PG":
@@ -120,15 +125,15 @@ class LendboxTransactionService extends BaseTransactionService {
   }
 
   Future<CreatePaytmTransactionModel?> createPaytmTransaction() async {
-    if (this.currentTxnAmount == null) return null;
+    if (currentTxnAmount == null) return null;
     final mid = AppConfig.getValue(AppConfigKey.paytmMid);
     final ApiResponse<CreatePaytmTransactionModel>
         paytmSubscriptionApiResponse = await _paytmRepo!.createTransaction(
-      this.currentTxnAmount!.toDouble(),
+      currentTxnAmount!.toDouble(),
       null,
       {},
       null,
-      this.skipMl ?? false,
+      skipMl ?? false,
       mid,
       InvestmentType.LENDBOXP2P,
     );
@@ -136,7 +141,7 @@ class LendboxTransactionService extends BaseTransactionService {
     if (!paytmSubscriptionApiResponse.isSuccess())
       return BaseUtil.showNegativeAlert(
           paytmSubscriptionApiResponse.errorMessage, "");
-    this.currentTxnOrderId = paytmSubscriptionApiResponse.model!.data!.orderId;
+    currentTxnOrderId = paytmSubscriptionApiResponse.model!.data!.orderId;
     return paytmSubscriptionApiResponse.model;
   }
 
@@ -144,12 +149,16 @@ class LendboxTransactionService extends BaseTransactionService {
     AppState.blockNavigation();
 
     await _razorpayService!.initiateRazorpayTxn(
-      amount: this.currentTxnAmount,
+      amount: currentTxnAmount,
       augMap: {},
-      lbMap: {},
+      lbMap: {
+        "fundType": floAssetType,
+        "maturityPref": maturityPref,
+      },
+      couponCode: couponCode,
       email: _userService!.baseUser!.email,
       mobile: _userService!.baseUser!.mobile,
-      skipMl: this.skipMl,
+      skipMl: skipMl,
       investmentType: InvestmentType.LENDBOXP2P,
     );
   }
@@ -171,11 +180,11 @@ class LendboxTransactionService extends BaseTransactionService {
             }
             currentTxnTambolaTicketsCount = res.model!.data!.tickets!;
             currentTxnScratchCardCount = res.model?.data?.gtIds?.length ?? 0;
-            await _newUserCheck();
+            await locator<BaseUtil>().newUserCheck();
             transactionReponseModel = res.model!;
             timer!.cancel();
             return transactionResponseUpdate(
-              amount: this.currentTxnAmount,
+              amount: currentTxnAmount,
               gtIds: transactionReponseModel?.data?.gtIds ?? [],
             );
           }
@@ -195,45 +204,34 @@ class LendboxTransactionService extends BaseTransactionService {
     }
   }
 
-  Future<void> _newUserCheck() async {
-    locator<MarketingEventHandlerService>().getHappyHourCampaign();
-
-    if (_userService!.baseUser!.segments.contains("NEW_USER")) {
-      await CacheService.invalidateByKey(CacheKeys.USER);
-      final list = _userService!.baseUser!.segments;
-      list.remove("NEW_USER");
-      _userService!.userSegments = list;
-      _userService!.baseUser!.segments = list;
-    }
-  }
-
   Future<void> transactionResponseUpdate(
       {List<String>? gtIds, double? amount}) async {
-    _logger!.d("Polling response processing");
+    _logger.d("Polling response processing");
     try {
       //add this to augmontBuyVM
-      _userCoinService!.getUserCoinBalance();
+      unawaited(_userCoinService.getUserCoinBalance());
       double newFlcBalance = amount ?? 0;
       if (newFlcBalance > 0) {
-        _userCoinService!.setFlcBalance(
-            (_userCoinService!.flcBalance! + newFlcBalance).toInt());
+        _userCoinService.setFlcBalance(
+            (_userCoinService.flcBalance! + newFlcBalance).toInt());
       }
-      _userService!.getUserFundWalletData();
+      unawaited(_userService.getUserFundWalletData());
       if (currentTransactionState == TransactionState.ongoing) {
         ScratchCardService.scratchCardsList = gtIds;
         // await _gtService.fetchAndVerifyScratchCardByID();
-        await _userService!.getUserJourneyStats();
+        await _userService.getUserJourneyStats();
 
         AppState.unblockNavigation();
         currentTransactionState = TransactionState.success;
         Haptic.vibrate();
       }
 
-      _txnHistoryService!.updateTransactions(InvestmentType.LENDBOXP2P);
+      unawaited(
+          _txnHistoryService.updateTransactions(InvestmentType.LENDBOXP2P));
     } catch (e) {
-      _logger!.e(e);
-      _internalOpsService!.logFailure(_userService!.baseUser!.uid,
-          FailType.DepositPayloadError, e as Map<String, dynamic>);
+      _logger.e(e);
+      unawaited(_internalOpsService.logFailure(_userService.baseUser!.uid,
+          FailType.DepositPayloadError, e as Map<String, dynamic>));
     }
   }
 

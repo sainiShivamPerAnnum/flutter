@@ -1,9 +1,14 @@
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/enums/faqTypes.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/ui/pages/support/faq/faq_page.dart';
 import 'package:felloapp/util/dynamic_ui_utils.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -148,3 +153,36 @@ class _HelpFabState extends State<HelpFab> {
 //     return FloatingActionButton(onPressed: onPressed);
 //   }
 // }
+
+class HelpFooter extends StatelessWidget {
+  const HelpFooter({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Center(
+      child: Container(
+        width: SizeConfig.screenWidth! * 0.36,
+        padding: EdgeInsets.symmetric(vertical: SizeConfig.padding16),
+        child: OutlinedButton(
+          style: OutlinedButton.styleFrom(
+            side: const BorderSide(width: 1.0, color: Colors.white),
+          ),
+          onPressed: () {
+            Haptic.vibrate();
+            AppState.delegate!.appState.currentAction = PageAction(
+              state: PageState.addWidget,
+              page: FaqPageConfig,
+              widget: const FAQPage(
+                type: FaqsType.savings,
+              ),
+            );
+          },
+          child: Text(
+            "Need Help ?",
+            style: TextStyles.sourceSansB.body2,
+          ),
+        ),
+      ),
+    );
+  }
+}

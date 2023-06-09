@@ -70,7 +70,7 @@ class PlayViewModel extends BaseViewModel {
   List<String> boxAssets = [
     Assets.ludoGameAsset,
     Assets.token,
-    Assets.gift,
+    // Assets.gift,
     "assets/svg/piggy_bank.svg",
   ];
   List<String> boxTitles = [];
@@ -193,11 +193,12 @@ class PlayViewModel extends BaseViewModel {
     playViewChildren.add(SizedBox(
       height: SizeConfig.padding10,
     ));
+    playViewChildren.add(SizedBox(height: SizeConfig.padding16));
+
     playViewChildren.add(
       LottieBuilder.network(
           "https://d37gtxigg82zaw.cloudfront.net/scroll-animation.json"),
     );
-    playViewChildren.add(SizedBox(height: SizeConfig.navBarHeight));
     return playViewChildren;
   }
 

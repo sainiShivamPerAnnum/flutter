@@ -6,7 +6,6 @@ import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/navigator/back_button_actions.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
-import 'package:felloapp/ui/pages/finance/augmont/gold_buy/augmont_buy_vm.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_buy/gold_buy_input_view.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_buy/gold_buy_loading_view.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_buy/gold_buy_success_view.dart';
@@ -19,10 +18,13 @@ import 'package:flutter/services.dart';
 import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 import 'package:provider/provider.dart';
 
+import 'augmont_buy_vm.dart';
+
 class GoldBuyView extends StatefulWidget {
   final int? amount;
   final bool skipMl;
   final OnAmountChanged onChanged;
+
   const GoldBuyView(
       {Key? key, this.amount, this.skipMl = false, required this.onChanged})
       : super(key: key);
@@ -37,6 +39,7 @@ class _GoldBuyViewState extends State<GoldBuyView>
       locator<AugmontTransactionService>();
   AppLifecycleState? appLifecycleState;
   final iosScreenShotChannel = const MethodChannel('secureScreenshotChannel');
+
   @override
   void initState() {
     super.initState();
@@ -104,8 +107,9 @@ class _GoldBuyViewState extends State<GoldBuyView>
                   onModelReady: (model) =>
                       model.init(widget.amount, widget.skipMl, this),
                   builder: (ctx, model, child) {
-                    if (model.state == ViewState.Busy)
-                      return Center(child: FullScreenLoader());
+                    if (model.state == ViewState.Busy) {
+                      return const Center(child: FullScreenLoader());
+                    }
                     _secureScreenshots(txnService);
 
                     return _getView(txnService, model);
@@ -123,7 +127,7 @@ class _GoldBuyViewState extends State<GoldBuyView>
       AugmontTransactionService txnService, GoldBuyViewModel model) {
     if (txnService.currentTransactionState == TransactionState.idle) {
       return GoldBuyInputView(
-        // amount: widget.amount,
+        amount: widget.amount,
         skipMl: widget.skipMl,
         model: model,
         augTxnService: txnService,
@@ -139,9 +143,9 @@ class _GoldBuyViewState extends State<GoldBuyView>
 
   double? _getHeight(txnService) {
     if (txnService.currentTransactionState == TransactionState.idle) {
-      return SizeConfig.screenHeight! * 0.95;
+      return SizeConfig.screenHeight!;
     } else if (txnService.currentTransactionState == TransactionState.ongoing) {
-      return SizeConfig.screenHeight! * 0.95;
+      return SizeConfig.screenHeight!;
     } else if (txnService.currentTransactionState == TransactionState.success) {
       return SizeConfig.screenHeight;
     }

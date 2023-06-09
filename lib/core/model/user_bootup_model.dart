@@ -24,21 +24,12 @@ class UserBootUpDetailsModel {
     );
   }
 
-  Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      'message': message,
-      'data': data!.toMap(),
-    };
-  }
-
   factory UserBootUpDetailsModel.fromMap(Map<String, dynamic> map) {
     return UserBootUpDetailsModel(
       message: map['message'] as String,
       data: Data.fromMap(map['data'] as Map<String, dynamic>),
     );
   }
-
-  String toJson() => json.encode(toMap());
 
   factory UserBootUpDetailsModel.fromJson(String source) =>
       UserBootUpDetailsModel.fromMap(
@@ -59,6 +50,7 @@ class UserBootUpDetailsModel {
 }
 
 class Data {
+  final List<String>? marqueeMessages;
   final Cache? cache;
   final bool? isBlocked;
   final bool? isAppUpdateRequired;
@@ -67,6 +59,7 @@ class Data {
   final bool? signOutUser;
   final BanMap? banMap;
   Data({
+    this.marqueeMessages,
     @required this.cache,
     @required this.isBlocked,
     @required this.isAppUpdateRequired,
@@ -76,41 +69,12 @@ class Data {
     @required this.banMap,
   });
 
-  Data copyWith({
-    Cache? cache,
-    bool? isBlocked,
-    bool? isAppUpdateRequired,
-    bool? isAppForcedUpdateRequired,
-    Notice? notice,
-    bool? signOutUser,
-    BanMap? banMap,
-  }) {
-    return Data(
-      cache: cache ?? this.cache,
-      isBlocked: isBlocked ?? this.isBlocked,
-      isAppUpdateRequired: isAppUpdateRequired ?? this.isAppUpdateRequired,
-      isAppForcedUpdateRequired:
-          isAppForcedUpdateRequired ?? this.isAppForcedUpdateRequired,
-      notice: notice ?? this.notice,
-      signOutUser: signOutUser ?? this.signOutUser,
-      banMap: banMap ?? this.banMap,
-    );
-  }
-
-  Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      'cache': cache?.toMap(),
-      'isBlocked': isBlocked,
-      'isAppUpdateRequired': isAppUpdateRequired,
-      'isAppForcedUpdateRequired': isAppForcedUpdateRequired,
-      'notice': notice?.toMap(),
-      'signOutUser': signOutUser,
-      'banMap': banMap?.toMap(),
-    };
-  }
-
   factory Data.fromMap(Map<String, dynamic> map) {
     return Data(
+      marqueeMessages: map["marqueeMessages"] != null
+          ? (List<String>.from(
+              map['marqueeMessages'].cast<String>() as List<String>))
+          : [],
       cache: map['cache'] != null
           ? Cache.fromMap(map['cache'] as Map<String, dynamic>)
           : Cache.base(),
@@ -126,8 +90,6 @@ class Data {
           : BanMap.base(),
     );
   }
-
-  String toJson() => json.encode(toMap());
 
   factory Data.fromJson(String source) =>
       Data.fromMap(json.decode(source) as Map<String, dynamic>);
@@ -189,7 +151,7 @@ class Cache {
 
   factory Cache.fromMap(Map<String, dynamic> map) {
     return Cache(
-        before: TimestampModel.fromMap(map['before'] as Map<String, dynamic>),
+        before: TimestampModel.fromMap(map['before']),
         keys: List<String>.from((map['keys'].cast<String>() as List<String>)));
   }
 
@@ -407,30 +369,42 @@ class InvestmentsBanMap {
 class InvestmentTypeBanMap {
   AssetBanMap? augmont;
   AssetBanMap? lendBox;
+  AssetBanMap? lendBoxFd1;
+  AssetBanMap? lendBoxFd2;
   InvestmentTypeBanMap({
     @required this.augmont,
     @required this.lendBox,
+    @required this.lendBoxFd1,
+    @required this.lendBoxFd2,
   });
 
   InvestmentTypeBanMap copyWith({
     AssetBanMap? augmont,
     AssetBanMap? lendBox,
+    AssetBanMap? lendBoxFd1,
+    AssetBanMap? lendBoxFd2,
   }) {
     return InvestmentTypeBanMap(
       augmont: augmont ?? this.augmont,
       lendBox: lendBox ?? this.lendBox,
+      lendBoxFd1: lendBoxFd1 ?? this.lendBoxFd1,
+      lendBoxFd2: lendBoxFd2 ?? this.lendBoxFd2,
     );
   }
 
   InvestmentTypeBanMap.base() {
     augmont = AssetBanMap.base();
     lendBox = AssetBanMap.base();
+    lendBoxFd1 = AssetBanMap.base();
+    lendBoxFd2 = AssetBanMap.base();
   }
 
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'augmont': augmont!.toMap(),
       'lendBox': lendBox!.toMap(),
+      'lendboxFd1': lendBoxFd1!.toMap(),
+      'lendboxFd2': lendBoxFd2!.toMap(),
     };
   }
 
@@ -445,6 +419,16 @@ class InvestmentTypeBanMap {
           ? AssetBanMap.fromMap(
               map[Constants.ASSET_TYPE_LENDBOX] as Map<String, dynamic>,
               Constants.ASSET_TYPE_LENDBOX)
+          : AssetBanMap.base(),
+      lendBoxFd1: map[Constants.ASSET_TYPE_LENDBOX_FD1] != null
+          ? AssetBanMap.fromMap(
+              map[Constants.ASSET_TYPE_LENDBOX_FD1] as Map<String, dynamic>,
+              Constants.ASSET_TYPE_LENDBOX_FD1)
+          : AssetBanMap.base(),
+      lendBoxFd2: map[Constants.ASSET_TYPE_LENDBOX_FD2] != null
+          ? AssetBanMap.fromMap(
+              map[Constants.ASSET_TYPE_LENDBOX_FD2] as Map<String, dynamic>,
+              Constants.ASSET_TYPE_LENDBOX_FD2)
           : AssetBanMap.base(),
     );
   }

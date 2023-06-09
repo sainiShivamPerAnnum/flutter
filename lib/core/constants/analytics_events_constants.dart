@@ -176,6 +176,8 @@ class AnalyticsEvents {
   static const mobileOtpDone = "Entered OTP";
   static const lastWeekCrossButton = "Last Week Cross Tapped";
   static const lastWeekSaveNow = "Last Week Save Now Tapped";
+  static const reviewPopupSuccess = "Review Popup Rating Success";
+  static const rateOnPlayStoreTapped = "Rate on Play Store Tapped";
 
   //Marketing Events
 
@@ -187,4 +189,31 @@ class AnalyticsEvents {
   static const transactionFailed = "Razorpay Transaction Failed";
 
   static const installedApps = "Installed Applications";
+
+  static const globalSaveTapped = "Global Save Now Tapped";
+  static const videoTileTapped = "Video Tile Tapped";
+  static const balanceCardTapped = "Balance card tapped";
+  static const balanceCardHorizontalSwiped = "Balance card horizontal swipped";
+  static const balanceCardVerticalSwiped = "Balance card vertical swipped";
+  static const viewBreakdownTapped = "View breakdown tapped";
+  static const saveOnAssetBannerTapped = "Save on Asset Banner";
+  static const tambolaStripOnHomeTapped = "Tambola Strip on Home Tapped";
+  static const offerBannerTapped = "Offer Banner Tapped";
+  static const floSlabBannerTapped = "Flo Slab Banner Tapped";
+  static const withdrawFloTapped = "Withdraw on Flo Asset Tapped";
+  static const investFloBannerTapped = "Invest on Flo Slab Tapped";
+  static const depositCardInFloSlabTapped = "Deposit Card in Flo Slab Tapped";
+  static const decideOnDepositCardTapped = "Decide on Deposit Card Tapped";
+  static const decisionOnDepositCard = "Decision on Deposit Card";
+  static const helpInFloSlabTapped = "Help Banner in Flo Slab Tapped";
+  static const investNowInFloSlabTapped = "Invest Now in Flo Slab Tapped";
+  static const assetSelectionProceed = "Asset Selection Proceed";
+  static const tambolaTicketInfoTapped = "Tambola Ticket Info HH Tapped";
+
+  static const maturityChoiceTapped = "Maturity Details Choose Tapped";
+  static const maturitySelectionContinueTapped =
+      "Maturity Selection Continue Tapped";
+  static const maturityWithdrawPopupTapped = "Maturity Withdraw Popup Tapped";
+  static const quickCheckoutTapped = "Quick Checkout Tapped";
+  static const quickCheckoutTileTapped = "Quick Checkout Tile Tapped";
 }

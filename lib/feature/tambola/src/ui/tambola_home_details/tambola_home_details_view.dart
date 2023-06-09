@@ -17,6 +17,7 @@ import 'package:felloapp/util/show_case_key.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:lottie/lottie.dart';
 import 'package:showcaseview/showcaseview.dart';
 
 import '../widgets/past_week_winners_section.dart';
@@ -74,7 +75,7 @@ class _TambolaHomeDetailsViewState extends State<TambolaHomeDetailsView> {
 
     return BaseView<TambolaHomeDetailsViewModel>(
       onModelReady: (model) => model.init(),
-      onModelDispose: (model) => model.dispose(),
+      onModelDispose: (model) => model.dump(),
       builder: (context, model, child) {
         return Scaffold(
           backgroundColor: const Color(0XFF141414),
@@ -104,8 +105,8 @@ class _TambolaHomeDetailsViewState extends State<TambolaHomeDetailsView> {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          SvgPicture.asset(
-                            Assets.cr1_Tambola,
+                          Lottie.asset(
+                            'assets/lotties/1cr_thar.json',
                             height: SizeConfig.screenHeight! * 0.2,
                           ),
                           SizedBox(
@@ -178,8 +179,7 @@ class _TambolaHomeDetailsViewState extends State<TambolaHomeDetailsView> {
                       ),
                       Showcase(
                         key: ShowCaseKeys.TambolaButton,
-                        description:
-                            'You get a ticket on every ₹500 you invest!',
+                        description: 'You get a ticket on every ₹500 you save!',
                         child: AppPositiveBtn(
                           btnText: 'Save & Get Free Tickets',
                           onPressed: () {
@@ -213,10 +213,10 @@ class _TambolaHomeDetailsViewState extends State<TambolaHomeDetailsView> {
                           },
                         ),
                       ),
-                      if (!widget.isStandAloneScreen)
-                        SizedBox(
-                          height: SizeConfig.navBarHeight,
-                        )
+                      // if (!widget.isStandAloneScreen)
+                      //   SizedBox(
+                      //     height: SizeConfig.navBarHeight,
+                      //   )
                     ],
                   ),
                 ),

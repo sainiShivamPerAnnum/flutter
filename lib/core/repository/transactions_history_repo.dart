@@ -34,10 +34,12 @@ class TransactionHistoryRepository extends BaseRepo {
   // }
 
   Future<ApiResponse<TransactionResponse>> getUserTransactions({
-    String? start,
+    int limit = 30,
+    int? offset,
     String? type,
     String? subtype,
     String? status,
+    String? lbFundType,
   }) async {
     List<UserTransaction> events = [];
     try {
@@ -46,8 +48,12 @@ class TransactionHistoryRepository extends BaseRepo {
       final _queryParams = {
         "type": type,
         "subType": subtype,
-        "start": start,
-        "status": status
+        "limit": limit.toString(),
+        if (offset != null && offset != 0) ...{
+          "offset": offset.toString(),
+        },
+        "status": status,
+        if (lbFundType != null) "lbFundType": lbFundType
       };
       final response = await APIService.instance.getData(
         ApiPath.kSingleTransactions(_uid),

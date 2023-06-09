@@ -12,8 +12,12 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 class HappyHourBanner extends StatefulWidget {
-  HappyHourBanner({Key? key, required this.model}) : super(key: key);
+  const HappyHourBanner(
+      {Key? key, required this.model, this.isComingFromSave = false})
+      : super(key: key);
   final HappyHourCampign model;
+  final bool isComingFromSave;
+
   @override
   State<HappyHourBanner> createState() => _HappyHourBannerState(
       endTime: DateTime.parse(model.data!.endTime!),
@@ -45,7 +49,8 @@ class _HappyHourBannerState extends TimerUtil<HappyHourBanner> {
     S locale = S.of(context);
     return GestureDetector(
       onTap: () {
-        locator<BaseUtil>().showHappyHourDialog(widget.model);
+        locator<BaseUtil>().showHappyHourDialog(widget.model,
+            isComingFromSave: widget.isComingFromSave);
         locator<MixpanelAnalytics>()
             .track(eventName: "Happy Hour Strip Tapped ", properties: {
           "Reward": {

@@ -23,6 +23,7 @@ class GTInstantViewModel extends BaseViewModel {
   final CustomLogger? _logger = locator<CustomLogger>();
   final ApiPath? _apiPaths = locator<ApiPath>();
   final ScratchCardService? _gtService = locator<ScratchCardService>();
+
   // final PaytmService? _paytmService = locator<PaytmService>();
   final JourneyService _journeyService = locator<JourneyService>();
   final MarketingEventHandlerService _marketingEventHandlerService =
@@ -82,6 +83,7 @@ class GTInstantViewModel extends BaseViewModel {
   }
 
   bool _isCardScratchStarted = false;
+
   bool get isCardScratchStarted => this._isCardScratchStarted;
 
   set isCardScratchStarted(bool value) {
@@ -121,7 +123,7 @@ class GTInstantViewModel extends BaseViewModel {
   //   _gtService!.showAutosavePrompt();
   // }
 
-  Future<void> redeemTicket() async {
+  Future<void> redeemTicket(bool showRatingDialog) async {
     scratchKey.currentState!.reveal();
     Haptic.vibrate();
     AppState.isInstantGtViewInView = true;
@@ -153,10 +155,11 @@ class GTInstantViewModel extends BaseViewModel {
           locale.gtRedeemErrorTitle, locale.getRedeemErrorSubtitle);
     }
 
-    Future.delayed(Duration(seconds: 3), () {
+    Future.delayed(const Duration(seconds: 3), () {
       AppState.isInstantGtViewInView = false;
       _marketingEventHandlerService.showModalsheet = true;
       AppState.backButtonDispatcher!.didPopRoute();
+      if (showRatingDialog) BaseUtil.showFelloRatingSheet();
     });
   }
 

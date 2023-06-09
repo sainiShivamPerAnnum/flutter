@@ -134,11 +134,10 @@ class BankAndPanService
     final res = await _paymentRepo!.getActiveBankAccountDetails();
     if (res.isSuccess()) {
       activeBankAccountDetails = res.model;
-      isBankDetailsAdded = true;
     }
   }
 
-  verifyBankDetails() async {
+  void verifyBankDetails() {
     if (activeBankAccountDetails != null &&
         activeBankAccountDetails!.account != null &&
         activeBankAccountDetails!.account!.isNotEmpty) {

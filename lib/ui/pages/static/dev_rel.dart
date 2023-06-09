@@ -59,6 +59,6 @@ class CacheClearWidget extends StatelessWidget {
               ],
             ),
           )
-        : SizedBox();
+        : const SizedBox();
   }
 }

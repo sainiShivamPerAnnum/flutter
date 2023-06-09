@@ -106,127 +106,122 @@ class LastWeekUi extends StatelessWidget {
       isTopSaver: model.isTopSaver,
       model: model,
       child: SafeArea(
-        child: Stack(
+        child: Column(
           children: [
-            Column(
-              children: [
-                SizedBox(
-                  height: fromRoot
-                      ? SizeConfig.fToolBarHeight
-                      : SizeConfig.fToolBarHeight / 2,
-                  child: Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    mainAxisAlignment: MainAxisAlignment.end,
-                    children: [
-                      GestureDetector(
-                        onTap: () {
-                          Haptic.vibrate();
-                          AppState.backButtonDispatcher!.didPopRoute();
-                          if (callCampaign) {
-                            locator<MarketingEventHandlerService>()
-                                .getCampaigns();
-                          }
+            SizedBox(
+              height: fromRoot
+                  ? SizeConfig.fToolBarHeight
+                  : SizeConfig.fToolBarHeight / 2,
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.end,
+                children: [
+                  GestureDetector(
+                    onTap: () {
+                      Haptic.vibrate();
+                      AppState.backButtonDispatcher!.didPopRoute();
+                      if (callCampaign) {
+                        locator<MarketingEventHandlerService>().getCampaigns();
+                      }
 
-                          locator<AnalyticsService>().track(
-                              eventName: AnalyticsEvents.lastWeekCrossButton,
-                              properties: {
-                                "Last week deposited": model.user?.invested,
-                                "last week returns": model.user?.returns,
-                                "last week return Percentage":
-                                    model.user?.gainsPerc,
-                              });
-                        },
-                        child: Container(
-                          margin: EdgeInsets.only(
-                              top: fromRoot ? SizeConfig.padding26 : 0),
-                          child: const Icon(
-                            Icons.close,
-                            size: 25,
-                            color: Colors.white,
-                          ),
-                        ),
-                      )
-                    ],
-                  ),
+                      locator<AnalyticsService>().track(
+                          eventName: AnalyticsEvents.lastWeekCrossButton,
+                          properties: {
+                            "Last week deposited": model.user?.invested,
+                            "last week returns": model.user?.returns,
+                            "last week return Percentage":
+                                model.user?.gainsPerc,
+                          });
+                    },
+                    child: Container(
+                      margin: EdgeInsets.only(
+                          top: fromRoot ? SizeConfig.padding26 : 0),
+                      child: const Icon(
+                        Icons.close,
+                        size: 25,
+                        color: Colors.white,
+                      ),
+                    ),
+                  )
+                ],
+              ),
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SvgPicture.asset(
+                  'assets/svg/paper_plane.svg',
+                  height: SizeConfig.padding32,
+                  width: SizeConfig.padding32,
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
+                SizedBox(
+                  width: SizeConfig.padding16,
+                ),
+                Text(
+                  'Last Week on Fello',
+                  style: TextStyles.rajdhaniSB.title3,
+                ),
+              ],
+            ),
+            SizedBox(
+              height: SizeConfig.padding24,
+            ),
+            Expanded(
+              child: SingleChildScrollView(
+                physics: const BouncingScrollPhysics(),
+                child: Column(
                   children: [
-                    SvgPicture.asset(
-                      'assets/svg/paper_plane.svg',
-                      height: SizeConfig.padding32,
-                      width: SizeConfig.padding32,
+                    TotalInvestmentWidget(data: model!),
+                    SizedBox(
+                      height: SizeConfig.padding40,
+                    ),
+                    Center(
+                      child: Text(
+                        model.user == null
+                            ? "😥 You missed last week on "
+                            : ' 💰 Your Weekly Report',
+                        style: TextStyles.rajdhaniSB.title5,
+                      ),
+                    ),
+                    if (model.user != null) ...[
+                      SizedBox(
+                        height: SizeConfig.padding16,
+                      ),
+                      UserInvestmentWidget(
+                        data: model.user!,
+                      ),
+                    ],
+                    SizedBox(
+                      height: SizeConfig.padding16,
+                    ),
+                    ListView.separated(
+                      itemCount: model.misc?.length ?? 0,
+                      shrinkWrap: true,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemBuilder: (context, index) {
+                        return WeekReportRowView(
+                            title: model.misc?[index].title ?? '',
+                            subTitle: model.misc?[index].subtitle ?? '',
+                            value: model.misc?[index].numeric ?? '',
+                            icon: model.misc?[index].iconUrl ?? '',
+                            backgroundColor:
+                                model.misc![index].bgHex!.toColor()!);
+                      },
+                      separatorBuilder: (context, index) {
+                        return SizedBox(
+                          height: SizeConfig.padding12,
+                        );
+                      },
                     ),
                     SizedBox(
-                      width: SizeConfig.padding16,
+                      height: SizeConfig.padding20,
                     ),
-                    Text(
-                      'Last Week on Fello',
-                      style: TextStyles.rajdhaniSB.title3,
+                    SizedBox(
+                      height: SizeConfig.navBarHeight * 2,
                     ),
                   ],
                 ),
-                SizedBox(
-                  height: SizeConfig.padding24,
-                ),
-                Expanded(
-                  child: SingleChildScrollView(
-                    physics: const BouncingScrollPhysics(),
-                    child: Column(
-                      children: [
-                        TotalInvestmentWidget(data: model!),
-                        SizedBox(
-                          height: SizeConfig.padding40,
-                        ),
-                        Center(
-                          child: Text(
-                            model.user == null
-                                ? "😥 You missed out on"
-                                : ' 💰 Your Weekly Report',
-                            style: TextStyles.rajdhaniSB.title5,
-                          ),
-                        ),
-                        if (model.user != null) ...[
-                          SizedBox(
-                            height: SizeConfig.padding16,
-                          ),
-                          UserInvestmentWidget(
-                            data: model.user!,
-                          ),
-                        ],
-                        SizedBox(
-                          height: SizeConfig.padding16,
-                        ),
-                        ListView.separated(
-                          itemCount: model.misc?.length ?? 0,
-                          shrinkWrap: true,
-                          physics: const NeverScrollableScrollPhysics(),
-                          itemBuilder: (context, index) {
-                            return WeekReportRowView(
-                                title: model.misc?[index].title ?? '',
-                                subTitle: model.misc?[index].subtitle ?? '',
-                                value: model.misc?[index].numeric ?? '',
-                                icon: model.misc?[index].iconUrl ?? '',
-                                backgroundColor:
-                                    model.misc![index].bgHex!.toColor()!);
-                          },
-                          separatorBuilder: (context, index) {
-                            return SizedBox(
-                              height: SizeConfig.padding12,
-                            );
-                          },
-                        ),
-                        SizedBox(
-                          height: SizeConfig.padding20,
-                        ),
-                        SizedBox(
-                          height: SizeConfig.navBarHeight * 2,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ],
+              ),
             ),
           ],
         ),

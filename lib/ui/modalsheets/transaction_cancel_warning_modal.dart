@@ -10,7 +10,6 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-
 import 'package:flutter_svg/svg.dart';
 
 class TransactionCancelBottomSheet extends StatelessWidget {
@@ -46,7 +45,8 @@ class TransactionCancelBottomSheet extends StatelessWidget {
             ),
             Text(
               "Now is the right time to Save!",
-              style: TextStyles.sourceSansSB.body2.colour(Color(0xffD9D9D9)),
+              style:
+                  TextStyles.sourceSansSB.body2.colour(const Color(0xffD9D9D9)),
             ),
             SizedBox(
               height: SizeConfig.screenHeight! * 0.05,
@@ -68,7 +68,7 @@ class TransactionCancelBottomSheet extends StatelessWidget {
                         height: SizeConfig.padding28,
                       ),
                       Text(
-                        "Invest Today",
+                        "Save Today",
                         style: TextStyles.sourceSans.body3
                             .colour(UiConstants.kTextColor2),
                       ),
@@ -100,10 +100,7 @@ class TransactionCancelBottomSheet extends StatelessWidget {
                         height: SizeConfig.padding2,
                       ),
                       Text(
-                        "₹ " +
-                            12
-                                .getReturns(investMentType, amt * 1.0, 0)
-                                .toString(),
+                        "₹ ${12.calculateAmountAfterMaturity(amt.toString(), 1)}",
                         style:
                             TextStyles.sourceSansSB.body1.colour(Colors.white),
                       )
@@ -128,11 +125,7 @@ class TransactionCancelBottomSheet extends StatelessWidget {
                         height: SizeConfig.padding2,
                       ),
                       Text(
-                        "₹ " +
-                            3.calculateCompoundInterest(
-                              investMentType,
-                              amt * 1.0,
-                            ),
+                        "₹${3.calculateAmountAfterMaturity(amt.toString(), 3)}",
                         style:
                             TextStyles.sourceSansSB.body1.colour(Colors.white),
                       )
@@ -141,7 +134,7 @@ class TransactionCancelBottomSheet extends StatelessWidget {
                 ],
               ),
             ),
-            Spacer(),
+            const Spacer(),
             SizedBox(
                 width: SizeConfig.screenWidth! * 0.8,
                 child: AppPositiveBtn(

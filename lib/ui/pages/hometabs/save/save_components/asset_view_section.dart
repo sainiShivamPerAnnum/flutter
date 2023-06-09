@@ -5,6 +5,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
+import 'package:felloapp/core/model/portfolio_model.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
@@ -12,15 +13,17 @@ import 'package:felloapp/ui/elements/helpers/tnc_text.dart';
 import 'package:felloapp/ui/elements/title_subtitle_container.dart';
 import 'package:felloapp/ui/elements/video_player/app_video_player.dart';
 import 'package:felloapp/ui/pages/finance/mini_trans_card/mini_trans_card_view.dart';
+import 'package:felloapp/ui/pages/hometabs/save/flo_components/flo_basic_card.dart';
+import 'package:felloapp/ui/pages/hometabs/save/flo_components/flo_premium_section.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/ui/pages/login/login_components/login_support.dart';
-import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/service_elements/gold_sell_card/sell_card_view.dart';
 import 'package:felloapp/ui/shared/spotlight_controller.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/dynamic_ui_utils.dart';
 import 'package:felloapp/util/extensions/investment_returns_extension.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/show_case_key.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -29,10 +32,9 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
+import 'package:provider/provider.dart';
 import 'package:showcaseview/showcaseview.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
-
-import '../../../../service_elements/user_service/user_fund_quantity_se.dart';
 
 class AssetSectionView extends StatefulWidget {
   AssetSectionView({Key? key, required this.type, UserService? userService})
@@ -67,7 +69,6 @@ class _AssetSectionViewState extends State<AssetSectionView> {
   final Map<String, String> _lbInfo = {
     "P2P": "Asset",
     "10%": "Returns",
-    "7 days": "Lock-in"
   };
 
   @override
@@ -92,6 +93,7 @@ class _AssetSectionViewState extends State<AssetSectionView> {
         ],
         builder: (_, model, ___) {
           bool isNewUser = model!.userSegments.contains("NEW_USER");
+          bool isLendboxNewUser = model.userSegments.contains("LBOX_NEW");
           final balance = widget.type == InvestmentType.AUGGOLD99
               ? model.userFundWallet?.augGoldQuantity ?? 0
               : model.userFundWallet?.wLbBalance ?? 0;
@@ -190,18 +192,21 @@ class _AssetSectionViewState extends State<AssetSectionView> {
                                 height: SizeConfig.padding4,
                               ),
                               if (balance == 0) ...[
-                                SizedBox(
-                                  height: SizeConfig.padding10,
-                                ),
-                                _buildInfoSection(),
+                                if (_isGold)
+                                  SizedBox(
+                                    height: SizeConfig.padding10,
+                                  ),
+                                if (_isGold) _buildInfoSection(),
                                 SizedBox(
                                   height: SizeConfig.padding10,
                                 ),
                               ],
+                              if (!_isGold) FloPremiumSection(model: model),
+                              if (!_isGold) FloBasicCard(model: model),
                               if (!isNewUser) ...[
                                 MiniTransactionCard(
                                     investmentType: widget.type),
-                                if (balance != 0) ...[
+                                if (balance != 0 && _isGold) ...[
                                   Align(
                                     alignment: Alignment.centerLeft,
                                     child: Padding(
@@ -222,9 +227,10 @@ class _AssetSectionViewState extends State<AssetSectionView> {
                                 ]
                               ],
                               if (!isNewUser) ...[
-                                _CircularSlider(
+                                CircularSlider(
                                   isNewUser: isNewUser,
                                   type: widget.type,
+                                  interest: _isGold ? 8 : 12,
                                 )
                               ],
                               SizedBox(
@@ -254,9 +260,10 @@ class _AssetSectionViewState extends State<AssetSectionView> {
                                 SizedBox(
                                   height: SizeConfig.padding24,
                                 ),
-                                _CircularSlider(
+                                CircularSlider(
                                   isNewUser: isNewUser,
                                   type: widget.type,
+                                  interest: _isGold ? 8 : 12,
                                 )
                               ],
                               SizedBox(
@@ -284,7 +291,7 @@ class _AssetSectionViewState extends State<AssetSectionView> {
                       Align(
                         alignment: Alignment.bottomCenter,
                         child: Container(
-                          color: Color(0xff232326).withOpacity(0.9),
+                          color: const Color(0xff232326).withOpacity(0.95),
                           padding: EdgeInsets.symmetric(
                                   vertical: SizeConfig.padding14)
                               .copyWith(top: 2),
@@ -323,23 +330,29 @@ class _AssetSectionViewState extends State<AssetSectionView> {
                               SizedBox(
                                 height: SizeConfig.padding4,
                               ),
-                              Showcase(
-                                key: ShowCaseKeys.SaveButton,
-                                description:
-                                    'Once you are done, tap on SAVE to start saving!',
-                                child: SizedBox(
-                                  width: SizeConfig.screenWidth! * 0.8,
-                                  height: SizeConfig.screenHeight! * 0.07,
-                                  child: AppPositiveBtn(
-                                      btnText: "SAVE",
-                                      onPressed: () {
-                                        BaseUtil().openRechargeModalSheet(
-                                            investmentType: widget.type);
-                                      }),
-                                ),
+                              SizedBox(
+                                width: SizeConfig.screenWidth! * 0.8,
+                                // height: SizeConfig.screenHeight! * 0.07,
+                                child: MaterialButton(
+                                    color: Colors.white,
+                                    height: SizeConfig.padding44,
+                                    shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(
+                                          SizeConfig.roundness5),
+                                    ),
+                                    child: Text(
+                                      "SAVE",
+                                      style: TextStyles.rajdhaniB.body1
+                                          .colour(Colors.black),
+                                    ),
+                                    onPressed: () {
+                                      Haptic.vibrate();
+                                      BaseUtil().openRechargeModalSheet(
+                                          investmentType: widget.type);
+                                    }),
                               ),
                               SizedBox(
-                                height: SizeConfig.padding2,
+                                height: SizeConfig.padding16,
                               ),
                             ],
                           ),
@@ -357,7 +370,7 @@ class _AssetSectionViewState extends State<AssetSectionView> {
                             Padding(
                               padding:
                                   EdgeInsets.only(right: SizeConfig.padding8),
-                              child: FaqPill(
+                              child: const FaqPill(
                                 type: FaqsType.savings,
                               ),
                             ),
@@ -442,88 +455,216 @@ class _BuildOwnAsset extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     bool isGold = type == InvestmentType.AUGGOLD99;
-    return Container(
-      margin: EdgeInsets.symmetric(
-          horizontal: SizeConfig.padding34, vertical: SizeConfig.padding10),
-      padding: EdgeInsets.symmetric(
-          horizontal: SizeConfig.padding24, vertical: SizeConfig.padding20),
-      decoration: BoxDecoration(
-        color: color,
-        border: Border.all(color: Colors.white.withOpacity(0.5)),
-        borderRadius: BorderRadius.circular(16),
-      ),
-      child: Column(
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          Row(
-            children: [
-              Text(
-                isGold
-                    ? "You Own"
-                    : (userService.userFundWallet?.wLbBalance ==
-                            userService.userFundWallet?.wLbPrinciple)
-                        ? "Invested Amount"
-                        : "Current Amount",
-                style: TextStyles.sourceSans.body2,
-                textAlign: TextAlign.center,
-              ),
-              if (!isGold &&
-                  !(userService.userFundWallet?.wLbBalance ==
-                      userService.userFundWallet?.wLbPrinciple))
-                LboxGrowthArrow(),
-              Spacer(),
-              Text(
-                isGold
-                    ? (userService.userFundWallet?.augGoldQuantity ?? 0)
-                            .toString() +
-                        " gms"
-                    : "₹ " +
-                        (userService.userFundWallet?.wLbBalance ?? 0)
-                            .toStringAsFixed(2),
-                textAlign: TextAlign.center,
-                style: TextStyles.rajdhaniSB.title3.colour(
-                  Colors.white.withOpacity(0.8),
-                ),
-              )
-            ],
-          ),
-          if (type == InvestmentType.LENDBOXP2P &&
-              !(userService.userFundWallet?.wLbBalance ==
-                  userService.userFundWallet?.wLbPrinciple)) ...[
-            SizedBox(
-              height: SizeConfig.padding4,
+    return isGold
+        ? Container(
+            margin: EdgeInsets.symmetric(
+                horizontal: SizeConfig.padding34,
+                vertical: SizeConfig.padding10),
+            padding: EdgeInsets.symmetric(
+                horizontal: SizeConfig.padding24,
+                vertical: SizeConfig.padding20),
+            decoration: BoxDecoration(
+              color: color,
+              border: Border.all(color: Colors.white.withOpacity(0.5)),
+              borderRadius: BorderRadius.circular(16),
             ),
-            Row(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text(
-                  "Invested Amount",
-                  style: TextStyles.sourceSans.body1.colour(Colors.white),
-                  textAlign: TextAlign.center,
+                Row(
+                  children: [
+                    Text(
+                      "You Own",
+                      style: TextStyles.sourceSans.body2,
+                      textAlign: TextAlign.center,
+                    ),
+                    const Spacer(),
+                    Text(
+                      "${(userService.userFundWallet?.augGoldQuantity ?? 0).toString()} gms",
+                      textAlign: TextAlign.center,
+                      style: TextStyles.rajdhaniSB.title3.colour(
+                        Colors.white.withOpacity(0.8),
+                      ),
+                    )
+                  ],
                 ),
-                SizedBox(
-                  width: SizeConfig.padding1,
-                ),
-                Spacer(),
-                Text(
-                  "₹ " +
-                      (userService.userFundWallet?.wLbPrinciple ?? 0)
-                          .toStringAsFixed(2),
-                  textAlign: TextAlign.center,
-                  style: TextStyles.rajdhaniSB.title4.colour(
-                    Colors.white.withOpacity(0.8),
-                  ),
-                )
               ],
             ),
-          ]
-        ],
-      ),
-    );
+          )
+        : Padding(
+            padding: EdgeInsets.only(
+              top: SizeConfig.pageHorizontalMargins,
+              bottom: SizeConfig.pageHorizontalMargins / 3,
+              left: SizeConfig.pageHorizontalMargins / 2,
+              right: SizeConfig.pageHorizontalMargins / 2,
+            ),
+            child: const FloBalanceBriefRow(
+              tier: Constants.ASSET_TYPE_LENDBOX,
+            ),
+          );
   }
 
   Color get color => type == InvestmentType.AUGGOLD99
       ? Color(0xff303B6A)
       : UiConstants.kFloContainerColor;
+}
+
+class FloBalanceBriefRow extends StatelessWidget {
+  const FloBalanceBriefRow({
+    required this.tier,
+    this.mini = false,
+    this.leftAlign = false,
+    super.key,
+    this.lead,
+    this.trail,
+    this.percent,
+  });
+  final double? lead, trail, percent;
+  final String tier;
+  final bool mini;
+  final bool leftAlign;
+
+  @override
+  Widget build(BuildContext context) {
+    return Selector<UserService, Portfolio>(
+      builder: (context, portfolio, child) => Row(
+        children: [
+          Expanded(
+            flex: 6,
+            child: Column(
+              crossAxisAlignment: (mini || leftAlign)
+                  ? CrossAxisAlignment.start
+                  : CrossAxisAlignment.center,
+              children: [
+                Text(
+                  "Current",
+                  style: TextStyles.rajdhaniM.colour(Colors.white60),
+                ),
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  mainAxisAlignment: (mini || leftAlign)
+                      ? MainAxisAlignment.start
+                      : MainAxisAlignment.center,
+                  children: [
+                    Flexible(
+                      fit: FlexFit.loose,
+                      child: Text(
+                        "₹${BaseUtil.digitPrecision(lead ?? getCurrentValue(tier, portfolio), 2)}",
+                        style: mini
+                            ? TextStyles.sourceSansSB.body0
+                            : TextStyles.sourceSansSB.title4,
+                      ),
+                    ),
+                    Column(
+                      children: [
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.end,
+                          children: [
+                            SizedBox(width: SizeConfig.padding6),
+                            Transform.translate(
+                              offset: Offset(0, -SizeConfig.padding4),
+                              child: RotatedBox(
+                                quarterTurns:
+                                    getPercValue(tier, portfolio) >= 0 ? 0 : 2,
+                                child: SvgPicture.asset(
+                                  Assets.arrow,
+                                  width: mini
+                                      ? SizeConfig.iconSize3
+                                      : SizeConfig.iconSize2,
+                                  color: getPercValue(tier, portfolio) >= 0
+                                      ? UiConstants.primaryColor
+                                      : Colors.red,
+                                ),
+                              ),
+                            ),
+                            Text(
+                                " ${BaseUtil.digitPrecision(
+                                  getPercValue(tier, portfolio),
+                                  2,
+                                  false,
+                                )}%",
+                                style: TextStyles.sourceSans.body3.colour(
+                                    getPercValue(tier, portfolio) >= 0
+                                        ? UiConstants.primaryColor
+                                        : Colors.red)),
+                          ],
+                        ),
+                        SizedBox(
+                          height:
+                              mini ? SizeConfig.padding2 : SizeConfig.padding4,
+                        )
+                      ],
+                    ),
+                  ],
+                )
+              ],
+            ),
+          ),
+          Expanded(
+            flex: 4,
+            child: Column(
+              crossAxisAlignment: (mini || leftAlign)
+                  ? CrossAxisAlignment.start
+                  : CrossAxisAlignment.center,
+              children: [
+                Text(
+                  "Invested",
+                  style: TextStyles.rajdhaniM.colour(Colors.white60),
+                ),
+                Text(
+                  "₹${BaseUtil.digitPrecision(trail ?? getInvestedValue(tier, portfolio), 2)}",
+                  style: mini
+                      ? TextStyles.sourceSansSB.body0
+                      : TextStyles.sourceSansSB.title4,
+                )
+              ],
+            ),
+          )
+        ],
+      ),
+      selector: (p0, p1) => p1.userPortfolio,
+    );
+  }
+
+  double getPercValue(String tier, Portfolio portfolio) {
+    if (percent != null) return percent!;
+    switch (tier) {
+      case Constants.ASSET_TYPE_FLO_FIXED_6:
+        return portfolio.flo.fixed2.percGains;
+      case Constants.ASSET_TYPE_FLO_FIXED_3:
+        return portfolio.flo.fixed1.percGains;
+      case Constants.ASSET_TYPE_FLO_FELXI:
+        return portfolio.flo.flexi.percGains;
+      default:
+        return portfolio.flo.percGains;
+    }
+  }
+
+  double getCurrentValue(String tier, Portfolio portfolio) {
+    switch (tier) {
+      case Constants.ASSET_TYPE_FLO_FIXED_6:
+        return portfolio.flo.fixed2.balance;
+      case Constants.ASSET_TYPE_FLO_FIXED_3:
+        return portfolio.flo.fixed1.balance;
+      case Constants.ASSET_TYPE_FLO_FELXI:
+        return portfolio.flo.flexi.balance;
+      default:
+        return portfolio.flo.balance;
+    }
+  }
+
+  double getInvestedValue(String tier, Portfolio portfolio) {
+    switch (tier) {
+      case Constants.ASSET_TYPE_FLO_FIXED_6:
+        return portfolio.flo.fixed2.principle;
+      case Constants.ASSET_TYPE_FLO_FIXED_3:
+        return portfolio.flo.fixed1.principle;
+      case Constants.ASSET_TYPE_FLO_FELXI:
+        return portfolio.flo.flexi.principle;
+      default:
+        return portfolio.flo.principle;
+    }
+  }
 }
 
 class ComparisonBox extends StatelessWidget {
@@ -617,7 +758,7 @@ class ComparisonBox extends StatelessWidget {
                               width: SizeConfig.padding20,
                             ),
                             Text(
-                              isGold ? "100%" : "10%",
+                              isGold ? "100%" : "12%",
                               style: TextStyles.rajdhaniSB.title1,
                             ),
 
@@ -625,7 +766,7 @@ class ComparisonBox extends StatelessWidget {
                             //   height: SizeConfig.padding10,
                             // ),
                             Text(
-                              isGold ? "Stable returns" : "Assured Returns",
+                              isGold ? "Stable returns" : "Returns*",
                               style: TextStyles.sourceSans.body3
                                   .colour(Colors.white.withOpacity(0.4)),
                             ),
@@ -915,8 +1056,8 @@ class _WhySection extends StatelessWidget {
         ],
       ),
     ),
-    Icons.lock_outline: Text("7 days Withdrawal Lock-in",
-        style: TextStyles.sourceSans.body2.colour(Color(0xffA7A7A8)))
+    // Icons.lock_outline: Text("7 days Withdrawal Lock-in",
+    //     style: TextStyles.sourceSans.body2.colour(Color(0xffA7A7A8)))
   };
 
   @override
@@ -1043,16 +1184,21 @@ class _Footer extends StatelessWidget {
   }
 }
 
-class _CircularSlider extends StatefulWidget {
-  const _CircularSlider({Key? key, required this.type, required this.isNewUser})
+class CircularSlider extends StatefulWidget {
+  const CircularSlider(
+      {Key? key,
+      required this.type,
+      required this.isNewUser,
+      required this.interest})
       : super(key: key);
   final InvestmentType type;
   final bool isNewUser;
+  final int interest;
   @override
-  State<_CircularSlider> createState() => _CircularSliderState();
+  State<CircularSlider> createState() => CircularSliderState();
 }
 
-class _CircularSliderState extends State<_CircularSlider> {
+class CircularSliderState extends State<CircularSlider> {
   double _volumeValue = 10000;
   bool isEventSent = false;
   void onVolumeChanged(double value) {
@@ -1118,7 +1264,7 @@ class _CircularSliderState extends State<_CircularSlider> {
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [
                           Text(
-                            "Invest Today",
+                            "Save Today",
                             style: TextStyles.sourceSans.body2.colour(
                               Color(0xffA9C6D6),
                             ),
@@ -1145,7 +1291,11 @@ class _CircularSliderState extends State<_CircularSlider> {
                 style: TextStyles.rajdhaniSB.title3,
               ),
               Text(
-                "(Based on last years' returns)",
+                widget.type == InvestmentType.LENDBOXP2P
+                    ? widget.interest == 12
+                        ? "(Based on 12% returns*)"
+                        : "(Based on 10% returns*)"
+                    : "(Based on last years' returns)",
                 style: TextStyles.sourceSans.body3.colour(Color(0xffA9C6D6)),
               )
             ],
@@ -1173,7 +1323,9 @@ class _CircularSliderState extends State<_CircularSlider> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
-                          "₹" + 6.getReturns(widget.type, _volumeValue, 0),
+                          "₹" +
+                              6.getReturns(widget.type, _volumeValue,
+                                  widget.interest, 0),
                           style: TextStyles.rajdhaniSB.body1,
                         ),
                         Text(
@@ -1191,7 +1343,9 @@ class _CircularSliderState extends State<_CircularSlider> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
-                          "₹" + 12.getReturns(widget.type, _volumeValue, 0),
+                          "₹" +
+                              12.getReturns(widget.type, _volumeValue,
+                                  widget.interest, 0),
                           style: TextStyles.rajdhaniSB.body1,
                         ),
                         Text(
@@ -1211,7 +1365,10 @@ class _CircularSliderState extends State<_CircularSlider> {
                         Text(
                           "₹" +
                               3.calculateCompoundInterest(
-                                  widget.type, _volumeValue),
+                                widget.type,
+                                _volumeValue,
+                                widget.interest,
+                              ),
                           style: TextStyles.rajdhaniSB.body1,
                         ),
                         Text(
@@ -1231,7 +1388,7 @@ class _CircularSliderState extends State<_CircularSlider> {
                         Text(
                           "₹" +
                               5.calculateCompoundInterest(
-                                  widget.type, _volumeValue),
+                                  widget.type, _volumeValue, widget.interest),
                           style: TextStyles.rajdhaniSB.body1,
                         ),
                         Text(
