@@ -73,7 +73,7 @@ class LauncherViewModel extends BaseViewModel {
     unawaited(initLogic());
     loopingLottieAnimationController!.addListener(() {
       if (loopingLottieAnimationController!.status == AnimationStatus.forward) {
-        print("Looping lottie completed");
+        debugPrint("Looping lottie completed");
         if (!isFetchingData) {
           notifyListeners();
           loopingLottieAnimationController!.stop();

@@ -81,9 +81,9 @@ class LoginControllerViewModel extends BaseViewModel {
   static AppState appStateProvider = AppState.delegate!.appState;
 
   //Screen States
-  final _mobileScreenKey = new GlobalKey<LoginMobileViewState>();
-  final _otpScreenKey = new GlobalKey<LoginOtpViewState>();
-  final _nameKey = new GlobalKey<LoginUserNameViewState>();
+  final _mobileScreenKey = GlobalKey<LoginMobileViewState>();
+  final _otpScreenKey = GlobalKey<LoginOtpViewState>();
+  final _nameKey = GlobalKey<LoginUserNameViewState>();
 
 //Private Variables
   bool _isSignup = false;
@@ -121,7 +121,7 @@ class LoginControllerViewModel extends BaseViewModel {
   init(initPage, loginModelInstance) {
     _currentPage = (initPage != null) ? initPage : LoginMobileView.index;
     // _formProgress = 0.2 * (_currentPage + 1);
-    _controller = new PageController(initialPage: _currentPage!);
+    _controller = PageController(initialPage: _currentPage!);
     _controller!.addListener(_pageListener);
     _pageNotifier = ValueNotifier(0.0);
     _pages = [
@@ -708,7 +708,7 @@ class LoginControllerViewModel extends BaseViewModel {
     _pageNotifier!.value = _controller!.page;
   }
 
-  void initTruecaller() async {
+  Future<void> initTruecaller() async {
     TruecallerSdk.initializeSDK(
         buttonColor: UiConstants.primaryColor.value,
         buttonTextColor: Colors.white.value,

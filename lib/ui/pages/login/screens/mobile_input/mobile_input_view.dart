@@ -78,8 +78,8 @@ class LoginMobileViewState extends State<LoginMobileView> {
       }
     });
 
-    print('Children created: ' + groups.toString());
-    return new TextSpan(children: groups);
+    print('Children created: $groups');
+    return TextSpan(children: groups);
   }
 
   @override
@@ -135,7 +135,7 @@ class LoginMobileViewState extends State<LoginMobileView> {
                         color: UiConstants.primaryColor,
                         size: SizeConfig.iconSize0,
                       )
-                    : SizedBox.shrink(),
+                    : const SizedBox.shrink(),
                 textEditingController: model.mobileController,
                 onChanged: (value) => model.upDateCheckTick(),
                 onTap: () {
@@ -198,7 +198,7 @@ class BankingLogo extends StatelessWidget {
       margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding12),
       height: SizeConfig.screenWidth! * 0.085,
       width: SizeConfig.screenWidth! * 0.085,
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: Color(0xFF39393C),
         shape: BoxShape.circle,
       ),

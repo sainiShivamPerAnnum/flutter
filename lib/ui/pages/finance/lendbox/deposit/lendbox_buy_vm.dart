@@ -208,7 +208,7 @@ class LendboxBuyViewModel extends BaseViewModel {
     isLendboxOldUser =
         locator<UserService>().userSegments.contains(Constants.US_FLO_OLD);
 
-    // updateMinValues(); // TODO: uncomment after testing
+    updateMinValues();
     await getAssetOptionsModel();
 
     log("isLendboxOldUser $isLendboxOldUser");
