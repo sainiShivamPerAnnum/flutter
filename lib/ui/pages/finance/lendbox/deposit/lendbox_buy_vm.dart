@@ -59,7 +59,7 @@ class LendboxBuyViewModel extends BaseViewModel {
 
   // TextEditingController? vpaController;
 
-  double minAmount = 100;
+  int minAmount = 100;
   double maxAmount = 50000;
   AssetOptionsModel? assetOptionsModel;
   List<CouponModel>? _couponList;
@@ -237,14 +237,23 @@ class LendboxBuyViewModel extends BaseViewModel {
   }
 
   void updateMinValues() {
+    List lendboxDetails = AppConfig.getValue(AppConfigKey.lendbox);
+
     if (floAssetType == Constants.ASSET_TYPE_FLO_FELXI) {
-      minAmount = 100;
+      var data =
+          locator<UserService>().userSegments.contains(Constants.US_FLO_OLD)
+              ? lendboxDetails[2]['minAmountText']
+              : lendboxDetails[3]['minAmountText'];
+      minAmount = BaseUtil.extractIntFromString(data);
     }
     if (floAssetType == Constants.ASSET_TYPE_FLO_FIXED_3) {
-      minAmount = 1000;
+      minAmount =
+          BaseUtil.extractIntFromString(lendboxDetails[1]['minAmountText']);
+      ;
     }
     if (floAssetType == Constants.ASSET_TYPE_FLO_FIXED_6) {
-      minAmount = 10000;
+      minAmount =
+          BaseUtil.extractIntFromString(lendboxDetails[0]['minAmountText']);
     }
   }
 

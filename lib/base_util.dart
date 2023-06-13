@@ -67,6 +67,7 @@ import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher_string.dart';
+
 import 'core/model/timestamp_model.dart';
 import 'ui/pages/finance/lendbox/deposit/lendbox_buy_view.dart';
 
@@ -712,6 +713,17 @@ class BaseUtil extends ChangeNotifier {
           color: Colors.white,
         );
     }
+  }
+
+  static int extractIntFromString(String input) {
+    // Remove all non-digit characters from the string
+    final sanitizedString = input.replaceAll(RegExp(r'[^0-9]'), '');
+
+    // Parse the sanitized string as an integer
+    final parsedInt = int.tryParse(sanitizedString);
+
+    // Return the parsed integer value, or 0 if it couldn't be parsed
+    return parsedInt ?? 0;
   }
 
   Future<bool> authenticateUser(AuthCredential credential) {
