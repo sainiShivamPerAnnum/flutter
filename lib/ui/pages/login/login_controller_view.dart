@@ -50,7 +50,7 @@ class _LoginControllerViewState extends State<LoginControllerView> {
       onModelReady: (model) {
         model.init(initPage, model);
         if (Platform.isAndroid) {
-          if (AppConfig.getValue<bool?>(AppConfigKey.enable_Truecaller_Login) ??
+          if (AppConfig.getValue<bool?>(AppConfigKey.enable_truecaller_login) ??
               false) {
             Future.delayed(const Duration(seconds: 1), () {
               model.initTruecaller();
