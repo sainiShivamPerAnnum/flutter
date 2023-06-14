@@ -56,7 +56,7 @@ class Save extends StatelessWidget {
 }
 
 class SaveViewWrapper extends StatelessWidget {
-  SaveViewWrapper({Key? key, required this.model}) : super(key: key);
+  const SaveViewWrapper({Key? key, required this.model}) : super(key: key);
   final SaveViewModel model;
 
   @override
