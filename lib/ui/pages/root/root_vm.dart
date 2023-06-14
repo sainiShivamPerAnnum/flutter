@@ -258,7 +258,7 @@ class RootViewModel extends BaseViewModel {
     }
 
     if (quickSaveData.length == 1) {
-      String fileUrl = quickSaveData[1].icon!;
+      String fileUrl = quickSaveData[0].icon!;
       childWidget = BaseUtil.getWidgetBasedOnUrl(fileUrl);
     } else {
       childWidget = const Icon(
