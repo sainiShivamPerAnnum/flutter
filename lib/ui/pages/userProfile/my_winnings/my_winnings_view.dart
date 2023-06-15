@@ -32,32 +32,6 @@ class MyWinningsView extends StatelessWidget {
           ),
           child: Scaffold(
             extendBodyBehindAppBar: true,
-            // appBar: AppBar(
-            //   title: Text(
-            //     "Scratch Cards",
-            //     maxLines: 1,
-            //     overflow: TextOverflow.clip,
-            //     style: TextStyles.title4.bold.colour(Colors.white),
-            //   ),
-            //
-            //   elevation: 0.0,
-            //   backgroundColor: UiConstants.kTambolaMidTextColor,
-            //   leading: Row(
-            //     children: [
-            //       SizedBox(
-            //         width: SizeConfig.pageHorizontalMargins,),
-            //       IconButton(
-            //         onPressed: () {
-            //           AppState.backButtonDispatcher!.didPopRoute();
-            //         },
-            //         icon: const Icon(
-            //           Icons.arrow_back_ios,
-            //           color: Colors.white,
-            //         ),
-            //       ),
-            //     ],
-            //   ),
-            // ),
             backgroundColor: UiConstants.kBackgroundColor,
             body: Stack(
               children: [
