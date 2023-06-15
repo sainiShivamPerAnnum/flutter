@@ -102,10 +102,12 @@ class RewardRedeemWidget extends StatelessWidget {
     super.key,
     required this.m,
     required this.minWithdrawPrize,
+    this.isWinView = false,
   });
 
   final UserService? m;
   final String minWithdrawPrize;
+  final bool isWinView;
 
   @override
   Widget build(BuildContext context) {
@@ -117,12 +119,14 @@ class RewardRedeemWidget extends StatelessWidget {
 
     return Container(
       width: SizeConfig.screenWidth,
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(SizeConfig.roundness40),
-            bottomRight: Radius.circular(SizeConfig.roundness40)),
-        color: UiConstants.kTambolaMidTextColor,
-      ),
+      decoration: isWinView
+          ? null
+          : BoxDecoration(
+              borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(SizeConfig.roundness40),
+                  bottomRight: Radius.circular(SizeConfig.roundness40)),
+              color: UiConstants.kTambolaMidTextColor,
+            ),
       padding: EdgeInsets.only(
         top: SizeConfig.padding20,
       ),

@@ -34,6 +34,7 @@ class CurrentWinningsInfo extends StatelessWidget {
           child: RewardRedeemWidget(
             m: userservice,
             minWithdrawPrize: minWithdrawPrize,
+            isWinView: true,
           ),
         );
       },
