@@ -46,6 +46,11 @@ class UserRepository extends BaseRepo {
           _apiPaths!.kCustomAuthToken,
           body: _body,
           isAuthTokenAvailable: false);
+
+      if (res['token'] == null) {
+        return ApiResponse.withError("Unable to signup using truecaller", 400);
+      }
+
       return ApiResponse(model: res['token'], code: 200);
     } catch (e) {
       return ApiResponse.withError("Unable to signup using truecaller", 400);

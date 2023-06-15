@@ -118,7 +118,7 @@ class LoginControllerViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  init(initPage, loginModelInstance) {
+  void init(initPage, loginModelInstance) {
     _currentPage = (initPage != null) ? initPage : LoginMobileView.index;
     // _formProgress = 0.2 * (_currentPage + 1);
     _controller = PageController(initialPage: _currentPage!);
@@ -237,7 +237,7 @@ class LoginControllerViewModel extends BaseViewModel {
                 .trim()
                 .replaceAll(RegExp(r"\s+\b|\b\s"), " ");
             String gender =
-            _formatGender(_nameKey.currentState!.model.genderValue);
+                _formatGender(_nameKey.currentState!.model.genderValue);
 
             userService.baseUser ??= BaseUser.newUser(
                 userService.firebaseUser!.uid,
@@ -257,7 +257,7 @@ class LoginControllerViewModel extends BaseViewModel {
               final token = await _getBearerToken();
               userService.baseUser!.mobile = userMobile;
               final ApiResponse response =
-              await _userRepo!.setNewUser(userService.baseUser!, token);
+                  await _userRepo!.setNewUser(userService.baseUser!, token);
               logger!.i(response.toString());
               if (response.code == 400) {
                 _analyticsService.track(
@@ -409,7 +409,7 @@ class LoginControllerViewModel extends BaseViewModel {
     _otpScreenKey.currentState?.model?.otpFocusNode.requestFocus();
     await CacheService.invalidateByKey(CacheKeys.USER);
     ApiResponse<BaseUser> user =
-        await _userRepo!.getUserById(id: userService.firebaseUser!.uid);
+        await _userRepo.getUserById(id: userService.firebaseUser!.uid);
     logger.d("User data found: ${user.model}");
     if (user.code == 400) {
       BaseUtil.showNegativeAlert(user.errorMessage ?? locale.accountMaintenance,
@@ -421,19 +421,19 @@ class LoginControllerViewModel extends BaseViewModel {
     } else if (user.model == null ||
         (user.model != null && user.model!.hasIncompleteDetails())) {
       if (user.model == null) {
-        logger!.d("New User, initializing BaseUser");
+        logger.d("New User, initializing BaseUser");
         userService.baseUser =
-            BaseUser.newUser(userService!.firebaseUser!.uid, userMobile!);
+            BaseUser.newUser(userService.firebaseUser!.uid, userMobile!);
       }
 
       ///First time user!
       _isSignup = true;
-      logger!.d(
+      logger.d(
           "No existing user details found or found incomplete details for user. Moving to details page");
       AppState.isFirstTime = true;
 
       if (source == LoginSource.TRUECALLER) {
-        _analyticsService!.track(eventName: AnalyticsEvents.truecallerSignup);
+        _analyticsService.track(eventName: AnalyticsEvents.truecallerSignup);
       }
       //Move to name input page
       BaseUtil.isNewUser = true;
@@ -713,7 +713,7 @@ class LoginControllerViewModel extends BaseViewModel {
         buttonColor: UiConstants.primaryColor.value,
         buttonTextColor: Colors.white.value,
         sdkOptions: TruecallerSdkScope.SDK_OPTION_WITHOUT_OTP);
-    TruecallerSdk.isUsable.then((isUsable) {
+    await TruecallerSdk.isUsable.then((isUsable) {
       isUsable ? TruecallerSdk.getProfile : print("***Not usable***");
     });
 
@@ -723,16 +723,17 @@ class LoginControllerViewModel extends BaseViewModel {
         case TruecallerSdkCallbackResult.success:
           String? phNo = truecallerSdkCallback.profile?.phoneNumber;
           loginUsingTrueCaller = true;
-          logger!.d("Truecaller no: $phNo");
+          logger.d("Truecaller no: $phNo");
 
-          _analyticsService!
-              .track(eventName: AnalyticsEvents.truecallerVerified);
+          _analyticsService.track(
+              eventName: AnalyticsEvents.truecallerVerified);
           AppState.isOnboardingInProgress = true;
           _authenticateTrucallerUser(phNo);
           break;
         case TruecallerSdkCallbackResult.failure:
           int? errorCode = truecallerSdkCallback.error?.code;
-          logger!.e(errorCode);
+          print("Error Code: $errorCode");
+          logger.e("$errorCode");
           break;
         case TruecallerSdkCallbackResult.verification:
           print("Verification Required!!");
@@ -747,7 +748,9 @@ class LoginControllerViewModel extends BaseViewModel {
     //Make api call to get custom token
 
     final ApiResponse<String> tokenRes =
-        await _userRepo!.getCustomUserToken(phno);
+        await _userRepo.getCustomUserToken(phno);
+
+    debugPrint("Token: ${tokenRes.model}");
 
     if (tokenRes.code == 400) {
       BaseUtil.showNegativeAlert(locale.authFailed, tokenRes.errorMessage);
@@ -759,21 +762,21 @@ class LoginControllerViewModel extends BaseViewModel {
     _mobileScreenKey.currentState!.model.mobileController.text =
         _formatMobileNumber(phno)!;
     //Authenticate using custom token
-    FirebaseAuth.instance.signInWithCustomToken(token).then((res) {
-      logger!.i("New Firebase User: ${res.additionalUserInfo!.isNewUser}");
+    unawaited(FirebaseAuth.instance.signInWithCustomToken(token).then((res) {
+      logger.i("New Firebase User: ${res.additionalUserInfo!.isNewUser}");
       //on successful authentication
       _onSignInSuccess(LoginSource.TRUECALLER);
     }).catchError((e) {
-      logger!.e(e);
+      logger.e(e);
       BaseUtil.showNegativeAlert(locale.authFailed, locale.authenticateNumber);
       loginUsingTrueCaller = false;
-    });
+    }));
   }
 
   void onTermsAndConditionsClicked() {
     Haptic.vibrate();
     BaseUtil.launchUrl('https://fello.in/policy/tnc');
-    _analyticsService!.track(eventName: AnalyticsEvents.termsAndConditions);
+    _analyticsService.track(eventName: AnalyticsEvents.termsAndConditions);
   }
 
   exit() {

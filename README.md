@@ -7,8 +7,8 @@ Mobile Client App for Fello
 This project contains 3 flavors:
 
 - development
-- staging
 - production
+- qa
 
 To run the desired flavor either use the launch configuration in VSCode/Android Studio or use the
 following commands:
@@ -20,7 +20,7 @@ $ flutter run --flavor dev --target lib/main_dev.dart
 # Production
 $ flutter run --flavor prod --target lib/main_prod.dart
 
-# Staging
+# Qa
 $ flutter run --flavor qa --target lib/main_qa.dart
 
 ```

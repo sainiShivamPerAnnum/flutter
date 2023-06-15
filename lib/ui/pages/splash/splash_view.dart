@@ -34,7 +34,7 @@ class _LauncherViewState extends State<LauncherView>
                 model.loopOutlottieAnimationController =
                     AnimationController(vsync: this);
                 model.loopingLottieAnimationController = AnimationController(
-                    vsync: this, duration: Duration(milliseconds: 2500));
+                    vsync: this, duration: const Duration(milliseconds: 2500));
 
                 model.init();
               }, onModelDispose: (model) {
@@ -102,7 +102,7 @@ class _LauncherViewState extends State<LauncherView>
                           Align(
                             alignment: Alignment.bottomCenter,
                             child: Padding(
-                              padding: EdgeInsets.only(bottom: 40),
+                              padding: const EdgeInsets.only(bottom: 40),
                               child: Visibility(
                                 maintainSize: true,
                                 maintainAnimation: true,
