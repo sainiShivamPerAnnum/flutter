@@ -48,12 +48,12 @@ class CurrentWinningsInfo extends StatelessWidget {
                       "Fello Rewards",
                       style: TextStyles.rajdhaniSB
                           .copyWith(fontSize: SizeConfig.body0),
-                      key: ValueKey(Constants.CURRENT_WINNINGS),
+                      key: const ValueKey(Constants.CURRENT_WINNINGS),
                     ),
                     Text(
                         '₹ ${(userservice.userFundWallet?.unclaimedBalance ?? 0).truncate()}',
                         style: TextStyles.title1.extraBold.colour(Colors.white),
-                        key: ValueKey(Constants.CURRENT_WINNING_AMOUNT)),
+                        key: const ValueKey(Constants.CURRENT_WINNING_AMOUNT)),
                     SizedBox(
                       height: SizeConfig.padding16,
                     ),
@@ -69,7 +69,7 @@ class CurrentWinningsInfo extends StatelessWidget {
                             width: SizeConfig.screenWidth! * 0.32)
                         : (userservice.userFundWallet?.unclaimedBalance ?? 0) >
                                 0
-                            ? Container(
+                            ? SizedBox(
                                 width: SizeConfig.screenWidth! / 2.5,
                                 child: RichText(
                                   maxLines: 3,
@@ -96,7 +96,7 @@ class CurrentWinningsInfo extends StatelessWidget {
                                   ),
                                 ),
                               )
-                            : SizedBox(),
+                            : const SizedBox(),
                   ],
                 ),
                 if (userservice.userFundWallet != null)

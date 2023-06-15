@@ -31,6 +31,11 @@ class PrizingRepo extends BaseRepo {
       );
 
       final data = response['data'];
+
+      if (data == null || data['txnId'].toString().isEmpty) {
+        return ApiResponse.withError(data['message'], 400);
+      }
+
       return ApiResponse(model: data['txnId'], code: 200);
     } catch (e) {
       logger!.e(e);

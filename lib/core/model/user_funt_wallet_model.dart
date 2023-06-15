@@ -4,7 +4,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/util/logger.dart';
 
 class UserFundWallet {
-  static Log log = new Log('UserFundWallet');
+  static Log log = const Log('UserFundWallet');
 
   //augmont
   double? _augGoldPrinciple;
@@ -40,15 +40,16 @@ class UserFundWallet {
   //on hold
   double? _processingRedemptionBalance;
 
-  static final String fldAugmontGoldPrinciple = 'wAugPrinciple';
-  static final String fldAugmontGoldBalance = 'wAugBalance';
-  static final String fldAugmontGoldQuantity = 'wAugQuantity';
-  static final String fldIciciPrinciple = 'wICPrinciple';
-  static final String fldIciciBalance = 'wICBalance';
-  static final String fldPrizeBalance = 'wPriBalance';
-  static final String fldPrizeLockedBalance = 'wPriLockBalance';
-  static final String fldPrizeLifetimeWin = 'wLifeTimeWin';
-  static final String fldProcessingRedemption = 'wRedemptionProcessing';
+  static const String fldAugmontGoldPrinciple = 'wAugPrinciple';
+  static const String fldAugmontGoldBalance = 'wAugBalance';
+  static const String fldAugmontGoldQuantity = 'wAugQuantity';
+  static const String fldIciciPrinciple = 'wICPrinciple';
+  static const String fldIciciBalance = 'wICBalance';
+  static const String fldPrizeBalance = 'wPriBalance';
+  static const String fldPrizeLockedBalance = 'wPriLockBalance';
+  static const String fldPrizeLifetimeWin = 'wLifeTimeWin';
+  static const String fldProcessingRedemption = 'wRedemptionProcessing';
+
   UserFundWallet(
     this._augGoldPrinciple,
     this._augGoldBalance,
