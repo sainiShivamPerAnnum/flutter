@@ -15,10 +15,6 @@
 		97C146FC1CF9000F007C117D /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FA1CF9000F007C117D /* Main.storyboard */; };
 		97C146FE1CF9000F007C117D /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FD1CF9000F007C117D /* Assets.xcassets */; };
 		97C147011CF9000F007C117D /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 97C146FF1CF9000F007C117D /* LaunchScreen.storyboard */; };
-<<<<<<< Updated upstream
-		9CCCF0997BFAA6B697708D34 /* Pods_Runner.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = F7187FE56DA631239438BF13 /* Pods_Runner.framework */; };
-=======
->>>>>>> Stashed changes
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -613,36 +609,20 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-<<<<<<< Updated upstream
-		026938B2332EA9F03888F3CB /* Pods-Runner.debug-qa.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug-qa.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.debug-qa.xcconfig"; sourceTree = "<group>"; };
-		1498D2321E8E86230040F4C2 /* GeneratedPluginRegistrant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GeneratedPluginRegistrant.h; sourceTree = "<group>"; };
-		1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeneratedPluginRegistrant.m; sourceTree = "<group>"; };
-		285FF2F33BE1D7AD4A3F6169 /* Pods-Runner.profile-qa.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile-qa.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile-qa.xcconfig"; sourceTree = "<group>"; };
-		33594FCDE927251A9A8F7056 /* Pods-Runner.release-dev.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release-dev.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release-dev.xcconfig"; sourceTree = "<group>"; };
-=======
 		054327BE05FCEF0A8718B012 /* Pods-Runner.profile-qa.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile-qa.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile-qa.xcconfig"; sourceTree = "<group>"; };
 		122D2059396FB768431B8164 /* Pods-Runner.release-qa.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release-qa.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release-qa.xcconfig"; sourceTree = "<group>"; };
 		1498D2321E8E86230040F4C2 /* GeneratedPluginRegistrant.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = GeneratedPluginRegistrant.h; sourceTree = "<group>"; };
 		1498D2331E8E89220040F4C2 /* GeneratedPluginRegistrant.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = GeneratedPluginRegistrant.m; sourceTree = "<group>"; };
 		2187ADAFB25ABD2F446A15B8 /* Pods-Runner.debug-prod.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug-prod.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.debug-prod.xcconfig"; sourceTree = "<group>"; };
 		30699081CAECDFBE9B9E9B37 /* Pods-Runner.profile-prod.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile-prod.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile-prod.xcconfig"; sourceTree = "<group>"; };
->>>>>>> Stashed changes
 		3B3967151E833CAA004F5970 /* AppFrameworkInfo.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; name = AppFrameworkInfo.plist; path = Flutter/AppFrameworkInfo.plist; sourceTree = "<group>"; };
 		531F28C0274B7636002E8A52 /* config */ = {isa = PBXFileReference; lastKnownFileType = folder; path = config; sourceTree = "<group>"; };
 		538D381927C61E1B00A4CC68 /* SwiftUI.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = SwiftUI.framework; path = System/Library/Frameworks/SwiftUI.framework; sourceTree = SDKROOT; };
 		53E99B7D2770AA47000F1EEC /* Pods.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; path = Pods.xcodeproj; sourceTree = "<group>"; };
-<<<<<<< Updated upstream
-		69E241FEF9871D1178231E34 /* Pods-Runner.profile-prod.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile-prod.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile-prod.xcconfig"; sourceTree = "<group>"; };
-		74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Runner-Bridging-Header.h"; sourceTree = "<group>"; };
-		74858FAE1ED2DC5600515810 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
-		7AFA3C8E1D35360C0083082E /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Release.xcconfig; path = Flutter/Release.xcconfig; sourceTree = "<group>"; };
-		83E7F9CFC1DE79958D9ACFD5 /* Pods-Runner.debug-prod.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug-prod.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.debug-prod.xcconfig"; sourceTree = "<group>"; };
-=======
 		74858FAD1ED2DC5600515810 /* Runner-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Runner-Bridging-Header.h"; sourceTree = "<group>"; };
 		74858FAE1ED2DC5600515810 /* AppDelegate.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		7AFA3C8E1D35360C0083082E /* Release.xcconfig */ = {isa = PBXFileReference; lastKnownFileType = text.xcconfig; name = Release.xcconfig; path = Flutter/Release.xcconfig; sourceTree = "<group>"; };
 		95F90D9ACF79FDF23DD79419 /* Pods_Runner.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Runner.framework; sourceTree = BUILT_PRODUCTS_DIR; };
->>>>>>> Stashed changes
 		9740EEB21CF90195004384FC /* Debug.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Debug.xcconfig; path = Flutter/Debug.xcconfig; sourceTree = "<group>"; };
 		9740EEB31CF90195004384FC /* Generated.xcconfig */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.xcconfig; name = Generated.xcconfig; path = Flutter/Generated.xcconfig; sourceTree = "<group>"; };
 		974EB37A2162450248883484 /* Pods-Runner.release-prod.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release-prod.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release-prod.xcconfig"; sourceTree = "<group>"; };
@@ -651,20 +631,11 @@
 		97C146FD1CF9000F007C117D /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		97C147001CF9000F007C117D /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		97C147021CF9000F007C117D /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-<<<<<<< Updated upstream
-		A498B55CE40A6D4343E46397 /* Pods-Runner.profile-dev.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile-dev.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile-dev.xcconfig"; sourceTree = "<group>"; };
-		A5EA8A6F25F8DEC100C7D14B /* Runner.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Runner.entitlements; sourceTree = "<group>"; };
-		BD0E0FB5C773771ED69A1F73 /* Pods-Runner.debug-dev.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug-dev.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.debug-dev.xcconfig"; sourceTree = "<group>"; };
-		DBEF125384613DD239F4978B /* Pods-Runner.release-qa.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release-qa.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release-qa.xcconfig"; sourceTree = "<group>"; };
-		DE3219A9068F3B6BC0EB4DB7 /* Pods-Runner.release-prod.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release-prod.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release-prod.xcconfig"; sourceTree = "<group>"; };
-		F7187FE56DA631239438BF13 /* Pods_Runner.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_Runner.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-=======
 		A5EA8A6F25F8DEC100C7D14B /* Runner.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; path = Runner.entitlements; sourceTree = "<group>"; };
 		B3BDF746A2D2F176FDC45890 /* Pods-Runner.profile-dev.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.profile-dev.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.profile-dev.xcconfig"; sourceTree = "<group>"; };
 		C8B55041714A83F7D9EFF137 /* Pods-Runner.release-dev.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.release-dev.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.release-dev.xcconfig"; sourceTree = "<group>"; };
 		CB94B55F038A0D743AD97FA1 /* Pods-Runner.debug-qa.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug-qa.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.debug-qa.xcconfig"; sourceTree = "<group>"; };
 		F78006A61C4AB4638977C7D1 /* Pods-Runner.debug-dev.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Runner.debug-dev.xcconfig"; path = "Target Support Files/Pods-Runner/Pods-Runner.debug-dev.xcconfig"; sourceTree = "<group>"; };
->>>>>>> Stashed changes
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -672,11 +643,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-<<<<<<< Updated upstream
-				9CCCF0997BFAA6B697708D34 /* Pods_Runner.framework in Frameworks */,
-=======
 				1E790DEC4792D22450226880 /* Pods_Runner.framework in Frameworks */,
->>>>>>> Stashed changes
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -687,11 +654,7 @@
 			isa = PBXGroup;
 			children = (
 				538D381927C61E1B00A4CC68 /* SwiftUI.framework */,
-<<<<<<< Updated upstream
-				F7187FE56DA631239438BF13 /* Pods_Runner.framework */,
-=======
 				95F90D9ACF79FDF23DD79419 /* Pods_Runner.framework */,
->>>>>>> Stashed changes
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -700,17 +663,6 @@
 			isa = PBXGroup;
 			children = (
 				53E99B7D2770AA47000F1EEC /* Pods.xcodeproj */,
-<<<<<<< Updated upstream
-				83E7F9CFC1DE79958D9ACFD5 /* Pods-Runner.debug-prod.xcconfig */,
-				026938B2332EA9F03888F3CB /* Pods-Runner.debug-qa.xcconfig */,
-				BD0E0FB5C773771ED69A1F73 /* Pods-Runner.debug-dev.xcconfig */,
-				DE3219A9068F3B6BC0EB4DB7 /* Pods-Runner.release-prod.xcconfig */,
-				DBEF125384613DD239F4978B /* Pods-Runner.release-qa.xcconfig */,
-				33594FCDE927251A9A8F7056 /* Pods-Runner.release-dev.xcconfig */,
-				69E241FEF9871D1178231E34 /* Pods-Runner.profile-prod.xcconfig */,
-				285FF2F33BE1D7AD4A3F6169 /* Pods-Runner.profile-qa.xcconfig */,
-				A498B55CE40A6D4343E46397 /* Pods-Runner.profile-dev.xcconfig */,
-=======
 				2187ADAFB25ABD2F446A15B8 /* Pods-Runner.debug-prod.xcconfig */,
 				CB94B55F038A0D743AD97FA1 /* Pods-Runner.debug-qa.xcconfig */,
 				F78006A61C4AB4638977C7D1 /* Pods-Runner.debug-dev.xcconfig */,
@@ -720,7 +672,6 @@
 				30699081CAECDFBE9B9E9B37 /* Pods-Runner.profile-prod.xcconfig */,
 				054327BE05FCEF0A8718B012 /* Pods-Runner.profile-qa.xcconfig */,
 				B3BDF746A2D2F176FDC45890 /* Pods-Runner.profile-dev.xcconfig */,
->>>>>>> Stashed changes
 			);
 			path = Pods;
 			sourceTree = "<group>";
@@ -870,11 +821,7 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 97C147051CF9000F007C117D /* Build configuration list for PBXNativeTarget "Runner" */;
 			buildPhases = (
-<<<<<<< Updated upstream
-				4533E16C74A1AEDD438BDCE0 /* [CP] Check Pods Manifest.lock */,
-=======
 				441BCB161C9580C76A14AF12 /* [CP] Check Pods Manifest.lock */,
->>>>>>> Stashed changes
 				9740EEB61CF901F6004384FC /* Run Script */,
 				97C146EA1CF9000F007C117D /* Sources */,
 				97C146EB1CF9000F007C117D /* Frameworks */,
@@ -883,11 +830,7 @@
 				3B06AD1E1E4923F5004D2608 /* Thin Binary */,
 				31B4847726C28B3700B34495 /* ShellScript */,
 				88BB1BC242170CA70F1570AC /* Run Script */,
-<<<<<<< Updated upstream
-				F4BF83A7EDAFFCFCD5C3D0AC /* [CP] Embed Pods Frameworks */,
-=======
 				3458150B057DEA9DAD751320 /* [CP] Embed Pods Frameworks */,
->>>>>>> Stashed changes
 			);
 			buildRules = (
 			);
@@ -1679,11 +1622,7 @@
 			shellPath = /bin/sh;
 			shellScript = "/bin/sh \"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" embed_and_thin";
 		};
-<<<<<<< Updated upstream
-		4533E16C74A1AEDD438BDCE0 /* [CP] Check Pods Manifest.lock */ = {
-=======
 		441BCB161C9580C76A14AF12 /* [CP] Check Pods Manifest.lock */ = {
->>>>>>> Stashed changes
 			isa = PBXShellScriptBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
@@ -1752,26 +1691,6 @@
 			shellPath = /bin/sh;
 			shellScript = "/bin/sh \"$FLUTTER_ROOT/packages/flutter_tools/bin/xcode_backend.sh\" build\n";
 		};
-<<<<<<< Updated upstream
-		F4BF83A7EDAFFCFCD5C3D0AC /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks-${CONFIGURATION}-input-files.xcfilelist",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputFileListPaths = (
-				"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks-${CONFIGURATION}-output-files.xcfilelist",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${PODS_ROOT}/Target Support Files/Pods-Runner/Pods-Runner-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-=======
->>>>>>> Stashed changes
 /* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
@@ -1860,11 +1779,7 @@
 		};
 		249021D4217E4FDB00AE95B9 /* Profile-prod */ = {
 			isa = XCBuildConfiguration;
-<<<<<<< Updated upstream
-			baseConfigurationReference = 69E241FEF9871D1178231E34 /* Pods-Runner.profile-prod.xcconfig */;
-=======
 			baseConfigurationReference = 30699081CAECDFBE9B9E9B37 /* Pods-Runner.profile-prod.xcconfig */;
->>>>>>> Stashed changes
 			buildSettings = {
 				APP_BUILD_NAME = Fello;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -1872,11 +1787,7 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-<<<<<<< Updated upstream
-				CURRENT_PROJECT_VERSION = 194;
-=======
 				CURRENT_PROJECT_VERSION = 200;
->>>>>>> Stashed changes
 				DEVELOPMENT_TEAM = 7FH5SHLD2G;
 				ENABLE_BITCODE = NO;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = i386;
@@ -1897,13 +1808,8 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-<<<<<<< Updated upstream
-				MARKETING_VERSION = 4.3.0;
-				PACKAGE_CONFIG = /Users/arabkumar/Documents/Fello/Github/felloapp/.dart_tool/package_config.json;
-=======
 				MARKETING_VERSION = 4.4.1;
 				PACKAGE_CONFIG = "/Users/shouryalala/CodeHaven/fello/fello-app-2023/felloapp/.dart_tool/package_config.json";
->>>>>>> Stashed changes
 				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1980,11 +1886,7 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-<<<<<<< Updated upstream
-				CURRENT_PROJECT_VERSION = 194;
-=======
 				CURRENT_PROJECT_VERSION = 200;
->>>>>>> Stashed changes
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 7FH5SHLD2G;
 				ENABLE_BITCODE = NO;
@@ -2005,12 +1907,8 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-<<<<<<< Updated upstream
-				MARKETING_VERSION = 4.3.0;
-=======
 				MARKETING_VERSION = 4.4.1;
 				PACKAGE_CONFIG = "/Users/shouryalala/CodeHaven/fello/fello-app-2023/felloapp/.dart_tool/package_config.json";
->>>>>>> Stashed changes
 				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -2086,11 +1984,7 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-<<<<<<< Updated upstream
-				CURRENT_PROJECT_VERSION = 194;
-=======
 				CURRENT_PROJECT_VERSION = 200;
->>>>>>> Stashed changes
 				DEVELOPMENT_TEAM = 7FH5SHLD2G;
 				ENABLE_BITCODE = NO;
 				FLUTTER_APPLICATION_PATH = "/Users/shouryalala/CodeHaven/fello/fello-app-2023/felloapp";
@@ -2109,12 +2003,8 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-<<<<<<< Updated upstream
-				MARKETING_VERSION = 4.3.0;
-=======
 				MARKETING_VERSION = 4.4.1;
 				PACKAGE_CONFIG = "/Users/shouryalala/CodeHaven/fello/fello-app-2023/felloapp/.dart_tool/package_config.json";
->>>>>>> Stashed changes
 				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -2179,11 +2069,7 @@
 		};
 		38A0128F2889419A002D717A /* Profile-qa */ = {
 			isa = XCBuildConfiguration;
-<<<<<<< Updated upstream
-			baseConfigurationReference = 285FF2F33BE1D7AD4A3F6169 /* Pods-Runner.profile-qa.xcconfig */;
-=======
 			baseConfigurationReference = 054327BE05FCEF0A8718B012 /* Pods-Runner.profile-qa.xcconfig */;
->>>>>>> Stashed changes
 			buildSettings = {
 				APP_BUILD_NAME = Fello;
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -2191,11 +2077,7 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-<<<<<<< Updated upstream
-				CURRENT_PROJECT_VERSION = 194;
-=======
 				CURRENT_PROJECT_VERSION = 200;
->>>>>>> Stashed changes
 				DEVELOPMENT_TEAM = 7FH5SHLD2G;
 				ENABLE_BITCODE = NO;
 				FLUTTER_APPLICATION_PATH = "/Users/shouryalala/CodeHaven/fello/fello-app-2023/felloapp";
@@ -2215,13 +2097,8 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-<<<<<<< Updated upstream
-				MARKETING_VERSION = 4.3.0;
-				PACKAGE_CONFIG = /Users/arabkumar/Documents/Fello/Github/felloapp/.dart_tool/package_config.json;
-=======
 				MARKETING_VERSION = 4.4.1;
 				PACKAGE_CONFIG = "/Users/shouryalala/CodeHaven/fello/fello-app-2023/felloapp/.dart_tool/package_config.json";
->>>>>>> Stashed changes
 				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.qa;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -2300,11 +2177,7 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-<<<<<<< Updated upstream
-				CURRENT_PROJECT_VERSION = 194;
-=======
 				CURRENT_PROJECT_VERSION = 200;
->>>>>>> Stashed changes
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 7FH5SHLD2G;
 				ENABLE_BITCODE = NO;
@@ -2327,12 +2200,8 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-<<<<<<< Updated upstream
-				MARKETING_VERSION = 4.3.0;
-=======
 				MARKETING_VERSION = 4.4.1;
 				PACKAGE_CONFIG = "/Users/shouryalala/CodeHaven/fello/fello-app-2023/felloapp/.dart_tool/package_config.json";
->>>>>>> Stashed changes
 				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -2408,11 +2277,7 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-<<<<<<< Updated upstream
-				CURRENT_PROJECT_VERSION = 194;
-=======
 				CURRENT_PROJECT_VERSION = 200;
->>>>>>> Stashed changes
 				DEVELOPMENT_TEAM = 7FH5SHLD2G;
 				ENABLE_BITCODE = NO;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = i386;
@@ -2432,12 +2297,8 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-<<<<<<< Updated upstream
-				MARKETING_VERSION = 4.3.0;
-=======
 				MARKETING_VERSION = 4.4.1;
 				PACKAGE_CONFIG = "/Users/shouryalala/CodeHaven/fello/fello-app-2023/felloapp/.dart_tool/package_config.json";
->>>>>>> Stashed changes
 				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -2502,11 +2363,7 @@
 		};
 		531F28BB274B6D71002E8A52 /* Profile-dev */ = {
 			isa = XCBuildConfiguration;
-<<<<<<< Updated upstream
-			baseConfigurationReference = A498B55CE40A6D4343E46397 /* Pods-Runner.profile-dev.xcconfig */;
-=======
 			baseConfigurationReference = B3BDF746A2D2F176FDC45890 /* Pods-Runner.profile-dev.xcconfig */;
->>>>>>> Stashed changes
 			buildSettings = {
 				APP_BUILD_NAME = "Fello-Dev";
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
@@ -2514,11 +2371,7 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-<<<<<<< Updated upstream
-				CURRENT_PROJECT_VERSION = 194;
-=======
 				CURRENT_PROJECT_VERSION = 200;
->>>>>>> Stashed changes
 				DEVELOPMENT_TEAM = 7FH5SHLD2G;
 				ENABLE_BITCODE = NO;
 				FLUTTER_APPLICATION_PATH = "/Users/shouryalala/CodeHaven/fello/fello-app-2023/felloapp";
@@ -2538,13 +2391,8 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-<<<<<<< Updated upstream
-				MARKETING_VERSION = 4.3.0;
-				PACKAGE_CONFIG = /Users/arabkumar/Documents/Fello/Github/felloapp/.dart_tool/package_config.json;
-=======
 				MARKETING_VERSION = 4.4.1;
 				PACKAGE_CONFIG = "/Users/shouryalala/CodeHaven/fello/fello-app-2023/felloapp/.dart_tool/package_config.json";
->>>>>>> Stashed changes
 				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -2675,11 +2523,7 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-<<<<<<< Updated upstream
-				CURRENT_PROJECT_VERSION = 194;
-=======
 				CURRENT_PROJECT_VERSION = 200;
->>>>>>> Stashed changes
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 7FH5SHLD2G;
 				ENABLE_BITCODE = NO;
@@ -2701,12 +2545,8 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-<<<<<<< Updated upstream
-				MARKETING_VERSION = 4.3.0;
-=======
 				MARKETING_VERSION = 4.4.1;
 				PACKAGE_CONFIG = "/Users/shouryalala/CodeHaven/fello/fello-app-2023/felloapp/.dart_tool/package_config.json";
->>>>>>> Stashed changes
 				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -2728,11 +2568,7 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-<<<<<<< Updated upstream
-				CURRENT_PROJECT_VERSION = 194;
-=======
 				CURRENT_PROJECT_VERSION = 200;
->>>>>>> Stashed changes
 				DEVELOPMENT_TEAM = 7FH5SHLD2G;
 				ENABLE_BITCODE = NO;
 				"EXCLUDED_ARCHS[sdk=iphoneos*]" = "armv7 1386";
@@ -2753,12 +2589,8 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-<<<<<<< Updated upstream
-				MARKETING_VERSION = 4.3.0;
-=======
 				MARKETING_VERSION = 4.4.1;
 				PACKAGE_CONFIG = "/Users/shouryalala/CodeHaven/fello/fello-app-2023/felloapp/.dart_tool/package_config.json";
->>>>>>> Stashed changes
 				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
