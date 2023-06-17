@@ -8,6 +8,10 @@ import android.content.Intent
 import android.widget.RemoteViews
 import android.util.Log
 import `in`.fello.felloapp.R
+import java.text.DecimalFormat
+import java.text.DecimalFormatSymbols
+import android.content.SharedPreferences
+
 
 class MyWidgetProvider : AppWidgetProvider() {
 
@@ -20,10 +24,12 @@ class MyWidgetProvider : AppWidgetProvider() {
             Log.d("MyWidgetProvider", "onUpdate called");
             val views = RemoteViews(context.packageName, R.layout.balance_widget_layout)
 
-            // Update the views with your desired values and functionality
-            // Fetch the balance data and update the amount_text TextView
-            val balance = fetchData()
-            views.setTextViewText(R.id.amount_text, String.format("%.2f", balance))
+            val sharedPreferences: SharedPreferences = context.getSharedPreferences("FlutterSharedPreferences",
+                Context.MODE_PRIVATE
+            )
+            Log.d("MyWidgetProvider", sharedPreferences.getString("flutter.felloBalance","0.00")?: "0.00")
+            val widgetData = sharedPreferences.getString("flutter.felloBalance","0.0")
+            views.setTextViewText(R.id.amount_text, formatBalance(widgetData))
 
             // Set the click action for the button to open a specific screen in your app
             // val intent = Intent(context, SpecificActivity::class.java)
@@ -35,9 +41,16 @@ class MyWidgetProvider : AppWidgetProvider() {
         }
     }
 
-    private fun fetchData(): Double {
-        // Fetch and return the balance data from your source (e.g., database, API)
-        // Replace this with your actual implementation
-        return 3.0
+    private fun formatBalance(value: String?): String {
+       try{
+            val doubleNumber = value?.toDouble()
+            val formatter = DecimalFormat("#,##,###.00")
+            formatter.decimalFormatSymbols = DecimalFormatSymbols.getInstance().apply {
+                groupingSeparator = ','
+            }
+            return "₹${formatter.format(doubleNumber)}"
+       }catch(e: NumberFormatException) {
+            return "N/A"
+       }
     }
 }

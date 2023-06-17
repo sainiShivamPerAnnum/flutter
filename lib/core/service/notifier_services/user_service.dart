@@ -491,6 +491,17 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
       } else {
         userFundWallet = temp;
       }
+
+      //TODO SHOURYA
+      //Save fund balance in shared preferences and set that as userFundWallet until remote data is available
+      //Dont save in shared preferences if userFundWallet has not changed
+      //put commas in total balance
+      SharedPreferences prefs = await SharedPreferences.getInstance();
+      log('SHOURYAA ${prefs.toString()}  ${prefs.getString(Constants.FELLO_BALANCE)}');
+      if (userFundWallet?.netWorth != null && userFundWallet!.netWorth! > 0) {
+        prefs.setString(
+            Constants.FELLO_BALANCE, userFundWallet!.netWorth!.toString());
+      }
     }
   }
 
@@ -687,7 +698,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
                                   width: SizeConfig.screenWidth! * 0.16),
                             ],
                           ),
-                    content: const Text(
+                          content: const Text(
                               "Fello protects your data to avoid unauthorized access. Please unlock Fello to continue."),
                           actions: [
                             CupertinoDialogAction(

@@ -169,4 +169,6 @@ class Constants {
   static const REWARDS = "rewards";
   static const LEADERBOARD = "leaderBoard";
   static const GET_TAMBOLA_TICKETS = "getTambolaTickets";
+
+  static const FELLO_BALANCE = "felloBalance";
 }
