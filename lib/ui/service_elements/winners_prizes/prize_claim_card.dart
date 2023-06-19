@@ -18,23 +18,14 @@ import 'package:property_change_notifier/property_change_notifier.dart';
 class PrizeClaimCard extends StatelessWidget {
   const PrizeClaimCard({super.key});
 
-  // final WinViewModel model;
-  // PrizeClaimCard({this.model});
-
   @override
   Widget build(BuildContext context) {
-    // S locale = S.of(context);
-    String minWithdrawPrize =
-        AppConfig.getValue(AppConfigKey.min_withdrawable_prize).toString();
-    String refUnlock =
-        AppConfig.getValue(AppConfigKey.unlock_referral_amt).toString();
-    // int refUnlockAmt = BaseUtil.toInt(refUnlock);
-    // int minWithdrawPrizeAmt = BaseUtil.toInt(minWithdrawPrize);
     return PropertyChangeConsumer<UserService, UserServiceProperties>(
-        properties: const [UserServiceProperties.myUserFund],
-        builder: (context, m, property) {
-          return RewardBalanceWidget(userService: m);
-        });
+      properties: const [UserServiceProperties.myUserFund],
+      builder: (context, m, property) {
+        return RewardBalanceWidget(userService: m);
+      },
+    );
   }
 }
 
@@ -53,7 +44,7 @@ class RewardBalanceWidget extends StatelessWidget {
                 minWithdrawPrizeAmt &&
             userService?.userFundWallet?.processingRedemptionBalance == 0;
     return Container(
-      height: showBottomInfo ? SizeConfig.screenHeight! * 0.316 : null,
+      height: showBottomInfo ? SizeConfig.screenHeight! * 0.305 : null,
       decoration: BoxDecoration(
         borderRadius: showBottomInfo
             ? null
@@ -75,8 +66,8 @@ class RewardBalanceWidget extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "Total rewards won on Fello -",
-                    style: TextStyles.sourceSans.body3.colour(Colors.black),
+                    "Total rewards won on Fello",
+                    style: TextStyles.sourceSansSB.body3.colour(Colors.black),
                   ),
                   Text(
                     "₹${userService?.userFundWallet?.prizeLifetimeWin.toInt()}",
@@ -105,8 +96,9 @@ class RewardRedeemWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    var referralService = locator<ReferralService>();
     int minWithdrawPrizeAmt = BaseUtil.toInt(minWithdrawPrize);
-    String currentAsset = locator<ReferralService>()
+    String currentAsset = referralService
         .getRedeemAsset(m?.userFundWallet?.unclaimedBalance.toDouble() ?? 0.0);
     bool isEnabled = (m?.userFundWallet?.unclaimedBalance.toInt() ?? 0) >=
         minWithdrawPrizeAmt;
@@ -116,37 +108,32 @@ class RewardRedeemWidget extends StatelessWidget {
       decoration: isWinView
           ? null
           : BoxDecoration(
-              borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(SizeConfig.roundness40),
-                  bottomRight: Radius.circular(SizeConfig.roundness40)),
-              color: UiConstants.kTambolaMidTextColor,
-            ),
+        borderRadius: BorderRadius.only(
+            bottomLeft: Radius.circular(SizeConfig.roundness40),
+            bottomRight: Radius.circular(SizeConfig.roundness40)),
+        color: UiConstants.kTambolaMidTextColor,
+      ),
       padding: EdgeInsets.only(
         top: SizeConfig.padding20,
       ),
       child: Column(
         children: [
           Container(
-            padding: EdgeInsets.symmetric(
-                horizontal: SizeConfig.pageHorizontalMargins),
-            // margin: EdgeInsets.symmetric(
-            //     vertical: SizeConfig.padding6),
+            padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding32),
             child: Row(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 if (m?.userFundWallet != null)
                   SvgPicture.asset(
                     currentAsset,
-                    height: SizeConfig.padding90 + SizeConfig.padding40,
-                    // width: SizeConfig.padding90 +
-                    //     SizeConfig.padding24,
+                    height: SizeConfig.padding90 + SizeConfig.padding46,
                   ),
-                SizedBox(width: SizeConfig.padding64),
+                SizedBox(width: SizeConfig.padding32),
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
-                    SizedBox(height: SizeConfig.padding10),
+                    SizedBox(height: SizeConfig.padding6),
                     Row(
                       children: [
                         Text(
@@ -169,7 +156,7 @@ class RewardRedeemWidget extends StatelessWidget {
                       "₹ ${m?.userFundWallet?.unclaimedBalance.toInt() ?? '-'}",
                       style: TextStyles.rajdhaniB
                           .colour(UiConstants.kcashBackAmountTextColor)
-                          .copyWith(fontSize: SizeConfig.padding44),
+                          .copyWith(fontSize: SizeConfig.padding40),
                       textAlign: TextAlign.center,
                     ),
                     MaterialButton(
@@ -185,10 +172,13 @@ class RewardRedeemWidget extends StatelessWidget {
                           ? Colors.white
                           : Colors.white.withOpacity(0.5),
                       onPressed: () {
-                        isEnabled
-                            ? locator<ReferralService>()
-                                .showConfirmDialog(PrizeClaimChoice.GOLD_CREDIT)
-                            : null;
+                        if (isEnabled) {
+                          referralService
+                              .showConfirmDialog(PrizeClaimChoice.GOLD_CREDIT);
+                        } else {
+                          BaseUtil.showNegativeAlert("Not enough winnings",
+                              "Winnings can only be redeemed after reaching ₹${referralService.minWithdrawPrizeAmt}");
+                        }
                       },
                       child: Text(
                         'REDEEM',
@@ -200,10 +190,9 @@ class RewardRedeemWidget extends StatelessWidget {
               ],
             ),
           ),
-          SizedBox(height: SizeConfig.padding8),
+          SizedBox(height: SizeConfig.padding10),
           if (m?.userFundWallet?.processingRedemptionBalance != 0)
             Container(
-              margin: EdgeInsets.only(top: SizeConfig.padding6),
               width: SizeConfig.screenWidth,
               height: SizeConfig.padding54,
               padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding32),
@@ -218,36 +207,30 @@ class RewardRedeemWidget extends StatelessWidget {
           else if ((m?.userFundWallet?.unclaimedBalance ?? 0) <
               minWithdrawPrizeAmt)
             Container(
-              margin: EdgeInsets.only(top: SizeConfig.padding6),
               width: SizeConfig.screenWidth,
-              height: SizeConfig.padding54,
               padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding32),
               child: FittedBox(
                 child: Text(
-                  // locale.winningsRedeem(minWithdrawPrize),
-
                   "Reward Balance can be redeemed on reaching ₹${minWithdrawPrize}",
                   style: TextStyles.rajdhaniSB.body3
-                      .colour(Colors.white.withOpacity(0.8)),
+                      .colour(Colors.white.withOpacity(0.6)),
                 ),
               ),
             )
           else if ((m?.userFundWallet?.unclaimedBalance ?? 0) >=
-              minWithdrawPrizeAmt)
-            Container(
-              margin: EdgeInsets.only(top: SizeConfig.padding6),
-              width: SizeConfig.screenWidth,
-              height: SizeConfig.padding54,
-              padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding32),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  Text(
-                    "Redeem your rewards to ",
-                    style: TextStyles.rajdhaniSB.body3
-                        .colour(Colors.white.withOpacity(0.8)),
-                  ),
-                  SvgPicture.asset('assets/svg/digital_gold.svg',
+                minWithdrawPrizeAmt)
+              Container(
+                width: SizeConfig.screenWidth,
+                padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding32),
+                child: Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      "Redeem your rewards to ",
+                      style: TextStyles.rajdhaniSB.body3
+                          .colour(Colors.white.withOpacity(0.8)),
+                    ),
+                    SvgPicture.asset('assets/svg/digital_gold.svg',
                       height: SizeConfig.padding40,
                       width: SizeConfig.padding40),
                   Text(
@@ -258,8 +241,7 @@ class RewardRedeemWidget extends StatelessWidget {
                 ],
               ),
             ),
-
-          // SizedBox(height: SizeConfig.padding8),
+          SizedBox(height: SizeConfig.padding24),
         ],
       ),
     );

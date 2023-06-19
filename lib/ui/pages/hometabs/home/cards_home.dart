@@ -1149,8 +1149,13 @@ class CardContent extends StatelessWidget {
                 SizedBox(width: SizeConfig.padding16),
                 AnimatedCrossFade(
                   firstChild: MaterialButton(
-                    minWidth: SizeConfig.padding40,
+                    minWidth: SizeConfig.padding90,
                     onPressed: onButtonPressed,
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(
+                        SizeConfig.roundness5,
+                      ),
+                    ),
                     color: title == "Fello Rewards"
                         ? isRewardButtonEnabled
                             ? Colors.white

@@ -34,9 +34,9 @@ class ReferEarnCard extends StatelessWidget {
           child: Container(
             margin: EdgeInsets.fromLTRB(
                 SizeConfig.padding24,
+                SizeConfig.padding1,
                 SizeConfig.padding24,
-                SizeConfig.padding24,
-                (SizeConfig.screenWidth! * 0.15) / 2),
+                (SizeConfig.screenWidth! * 0.07) / 2),
             width: double.infinity,
             decoration: BoxDecoration(
                 color: UiConstants.kSecondaryBackgroundColor,

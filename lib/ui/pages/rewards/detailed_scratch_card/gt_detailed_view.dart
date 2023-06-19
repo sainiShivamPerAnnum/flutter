@@ -24,7 +24,9 @@ final scratchKey = GlobalKey<ScratcherState>();
 
 class GTDetailedView extends StatelessWidget {
   final ScratchCard ticket;
-  GTDetailedView({required this.ticket});
+
+  const GTDetailedView({super.key, required this.ticket});
+
   @override
   Widget build(BuildContext context) {
     return BaseView<GTDetailedViewModel>(
@@ -43,14 +45,14 @@ class GTDetailedView extends StatelessWidget {
                 onPressed: () {
                   AppState.backButtonDispatcher!.didPopRoute();
                 },
-                icon: Icon(Icons.close),
+                icon: const Icon(Icons.close),
               )
             ],
           ),
           backgroundColor: Colors.black.withOpacity(0.7),
           body: Column(
             children: [
-              Spacer(),
+              const Spacer(),
               (model.viewScratchedCard)
                   ? RepaintBoundary(
                       //Scratched card
@@ -100,15 +102,15 @@ class GTDetailedView extends StatelessWidget {
                           width: SizeConfig.screenWidth! * 0.75,
                         )),
               AnimatedContainer(
-                  decoration: BoxDecoration(),
-                  duration: Duration(seconds: 1),
+                  decoration: const BoxDecoration(),
+                  duration: const Duration(seconds: 1),
                   curve: Curves.easeIn,
                   width: SizeConfig.screenWidth,
                   child: setTicketHeader(model)),
-              Spacer(flex: 2),
+              const Spacer(flex: 2),
               AnimatedContainer(
-                decoration: BoxDecoration(),
-                duration: Duration(seconds: 1),
+                decoration: const BoxDecoration(),
+                duration: const Duration(seconds: 1),
                 curve: Curves.easeIn,
                 width: SizeConfig.screenWidth,
                 child: setModalContent(model, context),
@@ -145,7 +147,7 @@ class GTDetailedView extends StatelessWidget {
       if (model.isCardScratched) {
         if (!ticket.isRewarding! ||
             ticket.rewardArr == null ||
-            ticket.rewardArr!.isEmpty)
+            ticket.rewardArr!.isEmpty) {
           return Column(
             children: [
               Text(locale.rewardsEmpty,
@@ -161,9 +163,9 @@ class GTDetailedView extends StatelessWidget {
               ),
             ],
           );
-        else {
+        } else {
           if (model.state == ViewState.Busy) {
-            return SizedBox.shrink();
+            return const SizedBox.shrink();
           } else {
             return Column(
               children: [
@@ -219,7 +221,7 @@ class GTDetailedView extends StatelessWidget {
       //redeemed ticket -> just show the details
       return Container(
         width: double.infinity,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           color: UiConstants.gameCardColor,
         ),
         padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
@@ -228,26 +230,26 @@ class GTDetailedView extends StatelessWidget {
           (ticket.redeemedTimestamp != null &&
                   ticket.redeemedTimestamp !=
                       TimestampModel(seconds: 0, nanoseconds: 0))
-              ? bulletTiles(locale.redeemedOn +
-                  "${DateFormat('dd MMM, yyyy').format(DateTime.fromMillisecondsSinceEpoch(ticket.redeemedTimestamp!.seconds * 1000))} | ${DateFormat('h:mm a').format(DateTime.fromMillisecondsSinceEpoch(ticket.redeemedTimestamp!.seconds * 1000))}")
-              : bulletTiles(locale.receivedOn +
-                  "${DateFormat('dd MMM, yyyy').format(DateTime.fromMillisecondsSinceEpoch(ticket.timestamp!.seconds * 1000))} | ${DateFormat('h:mm a').format(DateTime.fromMillisecondsSinceEpoch(ticket.timestamp!.seconds * 1000))}")
+              ? bulletTiles(
+                  "${locale.redeemedOn}${DateFormat('dd MMM, yyyy').format(DateTime.fromMillisecondsSinceEpoch(ticket.redeemedTimestamp!.seconds * 1000))} | ${DateFormat('h:mm a').format(DateTime.fromMillisecondsSinceEpoch(ticket.redeemedTimestamp!.seconds * 1000))}")
+              : bulletTiles(
+                  "${locale.receivedOn}${DateFormat('dd MMM, yyyy').format(DateTime.fromMillisecondsSinceEpoch(ticket.timestamp!.seconds * 1000))} | ${DateFormat('h:mm a').format(DateTime.fromMillisecondsSinceEpoch(ticket.timestamp!.seconds * 1000))}")
         ]),
       );
     } else {
       if (model.isCardScratched) {
         if (!ticket.isRewarding! ||
             ticket.rewardArr == null ||
-            ticket.rewardArr!.isEmpty)
+            ticket.rewardArr!.isEmpty) {
           return Column(
-            children: [],
+            children: const [],
           );
-        else {
+        } else {
           if (model.state == ViewState.Busy) {
             return Container(
               padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
               width: double.infinity,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: UiConstants.gameCardColor,
               ),
               child: Column(
@@ -268,7 +270,7 @@ class GTDetailedView extends StatelessWidget {
           } else {
             return Container(
               width: double.infinity,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 color: UiConstants.gameCardColor,
               ),
               padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
@@ -279,16 +281,16 @@ class GTDetailedView extends StatelessWidget {
                     (ticket.redeemedTimestamp != null &&
                             ticket.redeemedTimestamp !=
                                 TimestampModel(seconds: 0, nanoseconds: 0))
-                        ? bulletTiles(locale.redeemedOn +
-                            "${DateFormat('dd MMM, yyyy').format(DateTime.fromMillisecondsSinceEpoch(ticket.redeemedTimestamp!.seconds * 1000))} | ${DateFormat('h:mm a').format(DateTime.fromMillisecondsSinceEpoch(ticket.redeemedTimestamp!.seconds * 1000))}")
-                        : bulletTiles(locale.receivedOn +
-                            "${DateFormat('dd MMM, yyyy').format(DateTime.fromMillisecondsSinceEpoch(ticket.timestamp!.seconds * 1000))} | ${DateFormat('h:mm a').format(DateTime.fromMillisecondsSinceEpoch(ticket.timestamp!.seconds * 1000))}")
+                        ? bulletTiles(
+                            "${locale.redeemedOn}${DateFormat('dd MMM, yyyy').format(DateTime.fromMillisecondsSinceEpoch(ticket.redeemedTimestamp!.seconds * 1000))} | ${DateFormat('h:mm a').format(DateTime.fromMillisecondsSinceEpoch(ticket.redeemedTimestamp!.seconds * 1000))}")
+                        : bulletTiles(
+                            "${locale.receivedOn}${DateFormat('dd MMM, yyyy').format(DateTime.fromMillisecondsSinceEpoch(ticket.timestamp!.seconds * 1000))} | ${DateFormat('h:mm a').format(DateTime.fromMillisecondsSinceEpoch(ticket.timestamp!.seconds * 1000))}")
                   ]),
             );
           }
         }
       } else {
-        return SizedBox(height: 0);
+        return const SizedBox(height: 0);
       }
     }
   }
@@ -300,12 +302,12 @@ class GTDetailedView extends StatelessWidget {
         mainAxisSize: MainAxisSize.min,
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
-          Icon(
+          const Icon(
             Icons.brightness_1,
             size: 06,
             color: UiConstants.kTextColor2,
           ),
-          SizedBox(width: 10),
+          const SizedBox(width: 10),
           title.beautify(
               style: TextStyles.body3.colour(UiConstants.kTextColor2),
               boldStyle:
