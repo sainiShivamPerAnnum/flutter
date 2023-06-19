@@ -311,7 +311,7 @@ class MyWinningsViewModel extends BaseViewModel {
           style: TextStyles.body3.colour(Colors.grey),
           children: [
             TextSpan(
-              text: locale.businessDays,
+              text: " ${locale.businessDays}",
               style: TextStyles.body3.bold.colour(UiConstants.tertiarySolid),
             )
           ],

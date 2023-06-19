@@ -33,14 +33,7 @@ class PrizeClaimCard extends StatelessWidget {
     return PropertyChangeConsumer<UserService, UserServiceProperties>(
         properties: const [UserServiceProperties.myUserFund],
         builder: (context, m, property) {
-          return Column(
-            children: [
-              if (m?.userFundWallet?.isPrizeBalanceUnclaimed() ?? false)
-                RewardBalanceWidget(userService: m)
-              else
-                SizedBox(height: SizeConfig.padding2),
-            ],
-          );
+          return RewardBalanceWidget(userService: m);
         });
   }
 }
@@ -57,7 +50,8 @@ class RewardBalanceWidget extends StatelessWidget {
     int minWithdrawPrizeAmt = BaseUtil.toInt(minWithdrawPrize);
     bool showBottomInfo =
         (userService?.userFundWallet?.prizeLifetimeWin.toInt() ?? 0) >
-            minWithdrawPrizeAmt;
+                minWithdrawPrizeAmt &&
+            userService?.userFundWallet?.processingRedemptionBalance == 0;
     return Container(
       height: showBottomInfo ? SizeConfig.screenHeight! * 0.316 : null,
       decoration: BoxDecoration(
@@ -207,7 +201,22 @@ class RewardRedeemWidget extends StatelessWidget {
             ),
           ),
           SizedBox(height: SizeConfig.padding8),
-          if ((m?.userFundWallet?.unclaimedBalance ?? 0) < minWithdrawPrizeAmt)
+          if (m?.userFundWallet?.processingRedemptionBalance != 0)
+            Container(
+              margin: EdgeInsets.only(top: SizeConfig.padding6),
+              width: SizeConfig.screenWidth,
+              height: SizeConfig.padding54,
+              padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding32),
+              child: Center(
+                child: Text(
+                  "Processing ₹${m?.userFundWallet?.processingRedemptionBalance} to Digital Gold...",
+                  style: TextStyles.rajdhaniSB.body3
+                      .colour(Colors.white.withOpacity(0.8)),
+                ),
+              ),
+            )
+          else if ((m?.userFundWallet?.unclaimedBalance ?? 0) <
+              minWithdrawPrizeAmt)
             Container(
               margin: EdgeInsets.only(top: SizeConfig.padding6),
               width: SizeConfig.screenWidth,

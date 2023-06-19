@@ -160,6 +160,23 @@ class _CardsState extends State<Cards> with SingleTickerProviderStateMixin {
     });
   }
 
+  String getRewardSubText() {
+    final referralService = locator<ReferralService>();
+    final userService = locator<UserService>();
+    final currentWinnings = userService.userFundWallet?.unclaimedBalance ?? 0.0;
+
+    if (userService.userFundWallet?.processingRedemptionBalance != null &&
+        (userService.userFundWallet?.processingRedemptionBalance ?? 0) > 0) {
+      return "Processing ₹${userService.userFundWallet?.processingRedemptionBalance} to Digital Gold...";
+    }
+
+    if (currentWinnings >= (referralService.minWithdrawPrizeAmt ?? 200)) {
+      return "You can redeem rewards to Digital Gold";
+    } else {
+      return "Rewards can be redeemed after ₹${referralService.minWithdrawPrizeAmt ?? 200}";
+    }
+  }
+
   void onRedeemPressed() {
     final referralService = locator<ReferralService>();
     final currentWinnings =
@@ -377,11 +394,11 @@ class _CardsState extends State<Cards> with SingleTickerProviderStateMixin {
                                             duration: duration,
                                             asset: Assets.dailyAppBonusHero,
                                             title: "Fello Rewards",
-                                            infoTitle1: "Unclaimed Balance",
+                                            infoTitle1: "Reward Balance",
                                             infoTitle2: "Processing Balance",
                                             secondaryColor:
                                                 UiConstants.kRewardColor,
-                                            subtitle: "Rewards earned on Fello",
+                                            subtitle: getRewardSubText(),
                                             onButtonPressed: onRedeemPressed,
                                             onCardPressed: () {
                                               AppState.delegate!.parseRoute(
@@ -1027,7 +1044,7 @@ class _CardsState extends State<Cards> with SingleTickerProviderStateMixin {
 }
 
 class CardContent extends StatelessWidget {
-  CardContent({
+  const CardContent({
     required this.isHorizontalView,
     required this.isVerticalView,
     required this.curve,
@@ -1055,6 +1072,11 @@ class CardContent extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    bool isRewardButtonEnabled =
+        (locator<UserService>().userFundWallet?.unclaimedBalance.toInt() ??
+                0) >=
+            (locator<ReferralService>().minWithdrawPrizeAmt ?? 200);
+
     return AnimatedOpacity(
       opacity: isHorizontalView || isVerticalView ? 1 : 0,
       curve: curve,
@@ -1065,14 +1087,14 @@ class CardContent extends StatelessWidget {
             curve: curve,
             duration: duration,
             height: (SizeConfig.screenWidth! * 0.45 -
-                    (SizeConfig.screenWidth! *
-                        0.64 *
-                        0.03 *
-                        (isVerticalView
-                            ? 8
-                            : isHorizontalView
-                                ? 0
-                                : 2))) /
+                (SizeConfig.screenWidth! *
+                    0.64 *
+                    0.03 *
+                    (isVerticalView
+                        ? 8
+                        : isHorizontalView
+                        ? 0
+                        : 2))) /
                 2,
             decoration: BoxDecoration(
               color: secondaryColor,
@@ -1101,7 +1123,7 @@ class CardContent extends StatelessWidget {
                           Text(
                             title,
                             style:
-                                TextStyles.rajdhaniM.body0.colour(Colors.white),
+                            TextStyles.rajdhaniM.body0.colour(Colors.white),
                           ),
                           if (isVerticalView)
                             Padding(
@@ -1129,15 +1151,18 @@ class CardContent extends StatelessWidget {
                   firstChild: MaterialButton(
                     minWidth: SizeConfig.padding40,
                     onPressed: onButtonPressed,
-                    color:
-                        title == "Fello Rewards" ? Colors.black : Colors.white,
+                    color: title == "Fello Rewards"
+                        ? isRewardButtonEnabled
+                            ? Colors.white
+                            : Colors.white.withOpacity(0.5)
+                        : Colors.white,
                     child: FittedBox(
                       fit: BoxFit.scaleDown,
                       child: Text(
                         title == "Fello Rewards" ? "REDEEM" : "SAVE",
                         style: TextStyles.rajdhaniB.body2.colour(
                           title == "Fello Rewards"
-                              ? Colors.white
+                              ? Colors.black
                               : secondaryColor,
                         ),
                       ),
@@ -1181,123 +1206,153 @@ class CardContent extends StatelessWidget {
                                 ? 0
                                 : 2))) /
                 2,
-            child: Row(children: [
-              Expanded(
-                flex: 6,
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    FittedBox(
-                      fit: BoxFit.scaleDown,
-                      child: Text(
-                        infoTitle1,
-                        style: TextStyles.rajdhaniSB.body3.colour(Colors.grey),
+            child: Row(
+              children: [
+                Expanded(
+                  flex: 6,
+                  child: Column(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          infoTitle1,
+                          style:
+                              TextStyles.rajdhaniSB.body3.colour(Colors.grey),
+                        ),
                       ),
-                    ),
-                    SizedBox(height: SizeConfig.padding2),
-                    FittedBox(
-                      fit: BoxFit.scaleDown,
-                      child: Row(
-                        crossAxisAlignment: CrossAxisAlignment.end,
-                        children: [
-                          Selector<UserService,
-                              Tuple2<Portfolio, UserFundWallet?>>(
-                            builder: (_, value, child) => Text(
-                              getFirstValue(value.item1, value.item2, title),
-                              style: TextStyles.sourceSansB.body0
-                                  .colour(Colors.white),
-                            ),
-                            selector: (_, userService) => Tuple2(
-                                userService.userPortfolio,
-                                userService.userFundWallet),
-                          ),
-                          if (title != "Fello Rewards")
-                            Column(
-                              children: [
-                                Selector<UserService, Portfolio>(
-                                  builder: (context, value, child) => Row(
-                                    crossAxisAlignment: CrossAxisAlignment.end,
-                                    children: [
-                                      SizedBox(width: SizeConfig.padding6),
-                                      Transform.translate(
-                                        offset: Offset(0, -SizeConfig.padding4),
-                                        child: RotatedBox(
-                                          quarterTurns:
-                                              getPercValue(value, title) >= 0
-                                                  ? 0
-                                                  : 2,
-                                          child: SvgPicture.asset(
-                                            Assets.arrow,
-                                            width: SizeConfig.iconSize3,
-                                            color:
-                                                getPercValue(value, title) >= 0
-                                                    ? UiConstants.primaryColor
-                                                    : Colors.red,
-                                          ),
-                                        ),
-                                      ),
-                                      Text(
-                                          " ${BaseUtil.digitPrecision(
-                                            getPercValue(value, title),
-                                            2,
-                                            false,
-                                          )}%",
-                                          style: TextStyles.sourceSans.body3
-                                              .colour(
-                                                  getPercValue(value, title) >=
-                                                          0
-                                                      ? UiConstants.primaryColor
-                                                      : Colors.red)),
-                                    ],
-                                  ),
-                                  selector: (p0, p1) => p1.userPortfolio,
-                                ),
-                                SizedBox(height: SizeConfig.padding2)
-                              ],
-                            )
-                        ],
-                      ),
-                    )
-                  ],
-                ),
-              ),
-              SizedBox(width: SizeConfig.padding16),
-              Expanded(
-                flex: 4,
-                child:
-                    Selector<UserService, Tuple2<Portfolio, UserFundWallet?>>(
-                  builder: (_, value, child) => (title == "Fello Rewards" &&
-                          (value.item2?.processingRedemptionBalance ?? 0) == 0)
-                      ? const SizedBox()
-                      : Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.start,
+                      SizedBox(height: SizeConfig.padding2),
+                      FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
-                            FittedBox(
-                              fit: BoxFit.scaleDown,
-                              child: Text(
-                                infoTitle2,
-                                style: TextStyles.rajdhaniSB.body3
-                                    .colour(Colors.grey),
-                              ),
-                            ),
-                            SizedBox(height: SizeConfig.padding2),
-                            FittedBox(
-                              fit: BoxFit.scaleDown,
-                              child: Text(
-                                getSecondValue(value.item1, value.item2, title),
+                            Selector<UserService,
+                                Tuple2<Portfolio, UserFundWallet?>>(
+                              builder: (_, value, child) => Text(
+                                getFirstValue(value.item1, value.item2, title),
                                 style: TextStyles.sourceSansB.body0
                                     .colour(Colors.white),
                               ),
-                            )
+                              selector: (_, userService) => Tuple2(
+                                  userService.userPortfolio,
+                                  userService.userFundWallet),
+                            ),
+                            if (title != "Fello Rewards")
+                              Column(
+                                children: [
+                                  Selector<UserService, Portfolio>(
+                                    builder: (context, value, child) => Row(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                      children: [
+                                        SizedBox(width: SizeConfig.padding6),
+                                        Transform.translate(
+                                          offset:
+                                              Offset(0, -SizeConfig.padding4),
+                                          child: RotatedBox(
+                                            quarterTurns:
+                                                getPercValue(value, title) >= 0
+                                                    ? 0
+                                                    : 2,
+                                            child: SvgPicture.asset(
+                                              Assets.arrow,
+                                              width: SizeConfig.iconSize3,
+                                              color:
+                                                  getPercValue(value, title) >=
+                                                          0
+                                                      ? UiConstants.primaryColor
+                                                      : Colors.red,
+                                            ),
+                                          ),
+                                        ),
+                                        Text(
+                                            " ${BaseUtil.digitPrecision(
+                                              getPercValue(value, title),
+                                              2,
+                                              false,
+                                            )}%",
+                                            style: TextStyles.sourceSans.body3
+                                                .colour(getPercValue(
+                                                            value, title) >=
+                                                        0
+                                                    ? UiConstants.primaryColor
+                                                    : Colors.red)),
+                                      ],
+                                    ),
+                                    selector: (p0, p1) => p1.userPortfolio,
+                                  ),
+                                  SizedBox(height: SizeConfig.padding2)
+                                ],
+                              )
                           ],
                         ),
-                  selector: (_, userService) => Tuple2(
-                      userService.userPortfolio, userService.userFundWallet),
+                      )
+                    ],
+                  ),
                 ),
-              ),
-            ]),
+                SizedBox(width: SizeConfig.padding16),
+                Expanded(
+                  flex: 4,
+                  child:
+                      Selector<UserService, Tuple2<Portfolio, UserFundWallet?>>(
+                    builder: (_, value, child) {
+                      return (title == "Fello Rewards" &&
+                              (value.item2?.processingRedemptionBalance ?? 0) ==
+                                  0)
+                          ? isVerticalView
+                              ? const SizedBox()
+                              : MaterialButton(
+                                  height: SizeConfig.padding34,
+                                  minWidth: SizeConfig.padding90,
+                                  padding: EdgeInsets.zero,
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(
+                                      SizeConfig.roundness5,
+                                    ),
+                                  ),
+                                  color: isRewardButtonEnabled
+                                      ? Colors.white
+                                      : Colors.white.withOpacity(0.5),
+                                  onPressed: onButtonPressed,
+                                  child: Text(
+                                    'REDEEM',
+                                    style: TextStyles.rajdhaniB.body3
+                                        .colour(Colors.black),
+                                  ),
+                                )
+                          : Column(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  child: Text(
+                                    infoTitle2,
+                                    style: TextStyles.rajdhaniSB.body3
+                                        .colour(Colors.grey),
+                                  ),
+                                ),
+                                SizedBox(height: SizeConfig.padding2),
+                                FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  child: Text(
+                                    getSecondValue(
+                                        value.item1, value.item2, title),
+                                    style: TextStyles.sourceSansB.body0
+                                        .colour(Colors.white),
+                                  ),
+                                )
+                              ],
+                            );
+                    },
+                    selector: (_, userService) => Tuple2(
+                        userService.userPortfolio, userService.userFundWallet),
+                  ),
+                ),
+              ],
+            ),
           )
         ],
       ),
