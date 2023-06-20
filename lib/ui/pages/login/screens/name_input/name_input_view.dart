@@ -131,23 +131,6 @@ class LoginUserNameViewState extends State<LoginNameInputView> {
                                   model.genderValue = index;
                                 });
                               },
-                              child: Container(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: SizeConfig.padding12,
-                                  vertical: SizeConfig.padding12,
-                                ),
-                                child: FittedBox(
-                                  fit: BoxFit.scaleDown,
-                                  child: Text(
-                                    model.genderOptions[index],
-                                    style: TextStyles.sourceSans.body3.colour(
-                                      (model.genderValue == index)
-                                          ? UiConstants.primaryColor
-                                          : UiConstants.kTextColor2,
-                                    ),
-                                  ),
-                                ),
-                              ),
                               style: ButtonStyle(
                                 backgroundColor: MaterialStateProperty.all(
                                   model.genderValue == index
@@ -165,6 +148,23 @@ class LoginUserNameViewState extends State<LoginNameInputView> {
                                         color: (model.genderValue == index)
                                             ? UiConstants.primaryColor
                                             : Colors.black),
+                                  ),
+                                ),
+                              ),
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: SizeConfig.padding12,
+                                  vertical: SizeConfig.padding12,
+                                ),
+                                child: FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  child: Text(
+                                    model.genderOptions[index],
+                                    style: TextStyles.sourceSans.body3.colour(
+                                      (model.genderValue == index)
+                                          ? UiConstants.primaryColor
+                                          : UiConstants.kTextColor2,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -294,7 +294,7 @@ class FelloUserAvatar extends StatelessWidget {
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             border: Border.all(
-              color: Color(0xff737373).withOpacity(0.5),
+              color: const Color(0xff737373).withOpacity(0.5),
               width: SizeConfig.border1,
             ),
           ),
@@ -316,7 +316,7 @@ class FelloUserAvatar extends StatelessWidget {
           child: Container(
             height: SizeConfig.padding6,
             width: SizeConfig.padding6,
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
               shape: BoxShape.circle,
               color: UiConstants.kTextColor,
             ),
@@ -328,7 +328,7 @@ class FelloUserAvatar extends StatelessWidget {
           decoration: BoxDecoration(
             shape: BoxShape.circle,
             border: Border.all(
-              color: Color(0xffD9D9D9),
+              color: const Color(0xffD9D9D9),
               width: SizeConfig.border1,
             ),
           ),
@@ -350,15 +350,15 @@ class HeaderPainter extends CustomPainter {
     final paint = Paint()
       ..style = PaintingStyle.fill
       ..shader = ui.Gradient.linear(
-        Offset(0, 0),
+        const Offset(0, 0),
         Offset(0, size.height * 0.97),
         [
-          Color(0xff135756),
+          const Color(0xff135756),
           UiConstants.kBackgroundColor,
         ],
       );
 
-    final path = new Path()
+    final path = Path()
       ..moveTo(
         0,
         0,
@@ -374,7 +374,8 @@ class HeaderPainter extends CustomPainter {
     path.lineTo(size.width, 0);
     path.close();
 
-    canvas.drawShadow(path, Color(0xff135756), SizeConfig.padding32, true);
+    canvas.drawShadow(
+        path, const Color(0xff135756), SizeConfig.padding32, true);
     canvas.drawPath(path, paint);
   }
 

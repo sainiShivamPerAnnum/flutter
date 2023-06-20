@@ -21,7 +21,7 @@ class LoginOtpView extends StatefulWidget {
   final String? mobileNo;
   final LoginControllerViewModel loginModel;
 
-  LoginOtpView({
+  const LoginOtpView({
     Key? key,
     this.otpEntered,
     this.resendOtp,
@@ -41,7 +41,7 @@ class LoginOtpViewState extends State<LoginOtpView> {
   Widget build(BuildContext context) {
     S? locale = S.of(context);
     final baseProvider = Provider.of<BaseUtil>(context, listen: true);
-    final CustomLogger? logger = locator<CustomLogger>();
+    final CustomLogger logger = locator<CustomLogger>();
     return BaseView<LoginOtpViewModel>(
       onModelReady: (model) {
         this.model = model;
@@ -84,7 +84,7 @@ class LoginOtpViewState extends State<LoginOtpView> {
                   strokeWidth: 1,
                   gapSpace: SizeConfig.padding12,
                   textStyle: TextStyles.sourceSansSB.body1.colour(
-                    Color(0xFFFFFFFF),
+                    const Color(0xFFFFFFFF),
                   ),
                 ),
                 onChanged: (value) {
@@ -94,16 +94,14 @@ class LoginOtpViewState extends State<LoginOtpView> {
                 },
                 onSubmit: (pin) {
                   model.log.debug(
-                    "Pressed submit for pin: " +
-                        pin.toString() +
-                        "\n  No action taken.",
+                    "Pressed submit for pin: $pin\n  No action taken.",
                   );
                   widget.loginModel.processScreenInput(1);
                 },
               ),
             ),
             SizedBox(height: SizeConfig.padding40),
-            if ((model.showResendOption && !model.isTriesExceeded))
+            if (model.showResendOption && !model.isTriesExceeded)
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [
@@ -141,7 +139,7 @@ class LoginOtpViewState extends State<LoginOtpView> {
                     child: Text(
                       locale.obResend,
                       style: TextStyles.sourceSans.body2.colour(
-                        Color(0xFF34C3A7),
+                        const Color(0xFF34C3A7),
                       ),
                     ),
                   ),
@@ -166,9 +164,9 @@ class LoginOtpViewState extends State<LoginOtpView> {
                     ),
                   ),
                   TweenAnimationBuilder<Duration>(
-                    duration: Duration(seconds: 30),
+                    duration: const Duration(seconds: 30),
                     tween: Tween(
-                      begin: Duration(seconds: 30),
+                      begin: const Duration(seconds: 30),
                       end: Duration.zero,
                     ),
                     onEnd: () {

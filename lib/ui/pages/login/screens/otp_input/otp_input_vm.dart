@@ -13,9 +13,9 @@ import 'package:sms_autofill/sms_autofill.dart';
 
 class LoginOtpViewModel extends BaseViewModel with CodeAutoFill {
   final CustomLogger logger = locator<CustomLogger>();
-  final pinEditingController = new TextEditingController();
-  final iosScreenShotChannel = MethodChannel('secureScreenshotChannel');
-  Log log = new Log("OtpInputScreen");
+  final pinEditingController = TextEditingController();
+  final iosScreenShotChannel = const MethodChannel('secureScreenshotChannel');
+  Log log = const Log("OtpInputScreen");
   String _loaderMessage = "Enter the received OTP..";
   FocusNode otpFocusNode = FocusNode();
   late LoginControllerViewModel parentModelInstance;
@@ -39,7 +39,7 @@ class LoginOtpViewModel extends BaseViewModel with CodeAutoFill {
   }
 
   set otpFieldEnabled(bool val) {
-    this._otpFieldEnabled = val;
+    _otpFieldEnabled = val;
     notifyListeners();
   }
 
@@ -54,7 +54,7 @@ class LoginOtpViewModel extends BaseViewModel with CodeAutoFill {
     }
     listenForCode();
     listenForDummyCode();
-    Future.delayed(Duration(seconds: 30), () {
+    Future.delayed(const Duration(seconds: 30), () {
       try {
         showResendOption = true;
       } catch (e) {
@@ -64,7 +64,7 @@ class LoginOtpViewModel extends BaseViewModel with CodeAutoFill {
   }
 
   listenForDummyCode() {
-    Future.delayed(Duration(seconds: 2), () {
+    Future.delayed(const Duration(seconds: 2), () {
       if (parentModelInstance.userMobile ==
           FlavorConfig.instance!.values.dummyMobileNo) {
         pinEditingController.text = "937521";
