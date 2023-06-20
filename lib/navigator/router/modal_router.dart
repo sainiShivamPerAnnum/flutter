@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 
 class TutorialOverlay extends ModalRoute<void> {
   @override
-  Duration get transitionDuration => Duration(milliseconds: 500);
+  Duration get transitionDuration => const Duration(milliseconds: 500);
 
   @override
   bool get opaque => false;

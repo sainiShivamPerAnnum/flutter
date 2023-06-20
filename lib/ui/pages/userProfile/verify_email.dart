@@ -27,7 +27,7 @@ import 'package:provider/provider.dart';
 class VerifyEmail extends StatefulWidget {
   static const int index = 3;
 
-  VerifyEmail({Key? key}) : super(key: key);
+  const VerifyEmail({Key? key}) : super(key: key);
 
   @override
   VerifyEmailState createState() => VerifyEmailState();
@@ -35,12 +35,13 @@ class VerifyEmail extends StatefulWidget {
 
 class VerifyEmailState extends State<VerifyEmail> {
   S locale = locator<S>();
-  TextEditingController email = new TextEditingController();
-  TextEditingController otp = new TextEditingController();
-  final UserService? _userService = locator<UserService>();
+  TextEditingController email = TextEditingController();
+  TextEditingController otp = TextEditingController();
+  final UserService _userService = locator<UserService>();
+
   // final baseProvider = locator<BaseUtil>();
   final formKey = GlobalKey<FormState>();
-  final UserRepository? _userRepo = locator<UserRepository>();
+  final UserRepository _userRepo = locator<UserRepository>();
 
   Timer? timer;
   bool isGmailVerifying = false;
@@ -48,6 +49,7 @@ class VerifyEmailState extends State<VerifyEmail> {
   late DBModel dbProvider;
   String? generatedOTP;
   bool _isContinueWithGoogle = false;
+
   //bool baseProvider.isGoogleSignInProgress = false;
   FocusNode? focusNode;
   bool _isOtpSent = false;
@@ -62,7 +64,7 @@ class VerifyEmailState extends State<VerifyEmail> {
     email = TextEditingController(text: _userService!.baseUser!.email ?? '');
     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
       baseProvider.isGoogleSignInProgress = false;
-      focusNode = new FocusNode();
+      focusNode = FocusNode();
       focusNode!.requestFocus();
       // showEmailOptions();
     });
@@ -103,7 +105,7 @@ class VerifyEmailState extends State<VerifyEmail> {
     setState(() {
       _isProcessing = true;
     });
-    var rnd = new math.Random();
+    var rnd = math.Random();
     var next = rnd.nextDouble() * 1000000;
     while (next < 100000) {
       next *= 10;
@@ -176,8 +178,9 @@ class VerifyEmailState extends State<VerifyEmail> {
       });
       if (res.model!) {
         await _userService!.setBaseUser();
-        while (AppState.screenStack.length > 1)
+        while (AppState.screenStack.length > 1) {
           AppState.backButtonDispatcher!.didPopRoute();
+        }
         BaseUtil.showPositiveAlert(locale.emailVerified, locale.emailVerified1);
       } else {
         BaseUtil.showNegativeAlert(
@@ -256,10 +259,11 @@ class VerifyEmailState extends State<VerifyEmail> {
 
   confirmAction() async {
     if (!_isVerifying && !_isProcessing) {
-      if (_isOtpSent)
+      if (_isOtpSent) {
         verifyOtp();
-      else
+      } else {
         generateOtp();
+      }
     }
   }
 
@@ -302,18 +306,18 @@ class VerifyEmailState extends State<VerifyEmail> {
                     Form(
                       key: formKey,
                       child: Container(
-                        padding: EdgeInsets.only(top: 30, bottom: 10),
+                        padding: const EdgeInsets.only(top: 30, bottom: 10),
                         child: AppTextField(
                           focusNode: focusNode,
                           textEditingController: email,
                           isEnabled: _isProcessing || _isOtpSent ? false : true,
                           keyboardType: TextInputType.emailAddress,
                           validator: (val) {
-                            if (val == "")
+                            if (val == "") {
                               return null;
-                            else if (val == null)
+                            } else if (val == null) {
                               return locale.obEmailHint;
-                            else if (!RegExp(
+                            } else if (!RegExp(
                                     r'^(([^<>()[\]\\.,;:\s@\"]+(\.[^<>()[\]\\.,;:\s@\"]+)*)|(\".+\"))@((\[[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\.[0-9]{1,3}\])|(([a-zA-Z\-0-9]+\.)+[a-zA-Z]{2,}))$')
                                 .hasMatch(val)) {
                               return locale.obValidEmail;
@@ -346,7 +350,7 @@ class VerifyEmailState extends State<VerifyEmail> {
                                 FullScreenLoader(
                                   size: SizeConfig.padding80,
                                 ),
-                                SizedBox(
+                                const SizedBox(
                                   height: 8,
                                 ),
                                 Text(
@@ -357,99 +361,96 @@ class VerifyEmailState extends State<VerifyEmail> {
                               ],
                             ),
                           )
-                        : SizedBox(),
+                        : const SizedBox(),
                     _isOtpSent
-                        ? Container(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  locale.obEnterOTP,
-                                  style: TextStyles.rajdhaniSB.title2,
+                        ? Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                locale.obEnterOTP,
+                                style: TextStyles.rajdhaniSB.title2,
+                              ),
+                              Padding(
+                                padding:
+                                    const EdgeInsets.fromLTRB(0, 18.0, 0, 18.0),
+                                child: PinInputTextField(
+                                  autoFocus: true,
+                                  pinLength: 6,
+                                  decoration: BoxLooseDecoration(
+                                      enteredColor: UiConstants.primaryColor,
+                                      solidColor: UiConstants.primaryColor
+                                          .withOpacity(0.04),
+                                      strokeColor: UiConstants.primaryColor,
+                                      strokeWidth: 1,
+                                      textStyle: TextStyles.body0),
+                                  controller: otp,
+                                  onChanged: (value) {
+                                    print(value);
+                                    if (value.length == 6) {
+                                      verifyOtp();
+                                    } else {
+                                      setState(() {
+                                        _isOtpIncorrect = false;
+                                      });
+                                    }
+                                  },
+                                  onSubmit: (pin) {
+                                    print(
+                                        "Pressed submit for pin: $pin\n  No action taken.");
+                                  },
                                 ),
-                                Padding(
-                                  padding: const EdgeInsets.fromLTRB(
-                                      0, 18.0, 0, 18.0),
-                                  child: PinInputTextField(
-                                    autoFocus: true,
-                                    pinLength: 6,
-                                    decoration: BoxLooseDecoration(
-                                        enteredColor: UiConstants.primaryColor,
-                                        solidColor: UiConstants.primaryColor
-                                            .withOpacity(0.04),
-                                        strokeColor: UiConstants.primaryColor,
-                                        strokeWidth: 1,
-                                        textStyle: TextStyles.body0),
-                                    controller: otp,
-                                    onChanged: (value) {
-                                      print(value);
-                                      if (value.length == 6) {
-                                        verifyOtp();
-                                      } else {
-                                        setState(() {
-                                          _isOtpIncorrect = false;
-                                        });
-                                      }
-                                    },
-                                    onSubmit: (pin) {
-                                      print("Pressed submit for pin: " +
-                                          pin.toString() +
-                                          "\n  No action taken.");
-                                    },
+                              ),
+                              SizedBox(
+                                height: SizeConfig.padding16,
+                              ),
+                              Row(
+                                children: [
+                                  Text(
+                                    locale.obOTPValidFor,
+                                    style: TextStyles.sourceSans.body3,
                                   ),
-                                ),
-                                SizedBox(
-                                  height: SizeConfig.padding16,
-                                ),
-                                Row(
-                                  children: [
-                                    Text(
-                                      locale.obOTPValidFor,
-                                      style: TextStyles.sourceSans.body3,
-                                    ),
-                                    TweenAnimationBuilder<Duration>(
-                                        duration: Duration(minutes: 15),
-                                        tween: Tween(
-                                            begin: Duration(minutes: 15),
-                                            end: Duration.zero),
-                                        onEnd: () {
-                                          print('Timer ended');
-                                          BaseUtil.showNegativeAlert(
-                                            locale.obSessionExpired,
-                                            locale.obPleaseTryAgain,
-                                          );
-                                          AppState.backButtonDispatcher!
-                                              .didPopRoute();
-                                        },
-                                        builder: (BuildContext context,
-                                            Duration value, Widget? child) {
-                                          final minutes = value.inMinutes;
-                                          final seconds = value.inSeconds % 60;
-                                          return Text(
-                                            '$minutes:$seconds',
-                                            style: TextStyle(
-                                              color: UiConstants.primaryColor,
-                                              fontWeight: FontWeight.bold,
-                                            ),
-                                          );
-                                        }),
-                                    // Text(
-                                    //   "15:00",
-                                    //   style: TextStyle(
-                                    //     color: UiConstants.primaryColor,
-                                    //     fontWeight: FontWeight.w700,
-                                    //   ),
-                                    // ),
-                                    Text(
-                                      locale.obMinutes,
-                                      style: TextStyles.sourceSans.body3,
-                                    )
-                                  ],
-                                )
-                              ],
-                            ),
+                                  TweenAnimationBuilder<Duration>(
+                                      duration: const Duration(minutes: 15),
+                                      tween: Tween(
+                                          begin: const Duration(minutes: 15),
+                                          end: Duration.zero),
+                                      onEnd: () {
+                                        print('Timer ended');
+                                        BaseUtil.showNegativeAlert(
+                                          locale.obSessionExpired,
+                                          locale.obPleaseTryAgain,
+                                        );
+                                        AppState.backButtonDispatcher!
+                                            .didPopRoute();
+                                      },
+                                      builder: (BuildContext context,
+                                          Duration value, Widget? child) {
+                                        final minutes = value.inMinutes;
+                                        final seconds = value.inSeconds % 60;
+                                        return Text(
+                                          '$minutes:$seconds',
+                                          style: const TextStyle(
+                                            color: UiConstants.primaryColor,
+                                            fontWeight: FontWeight.bold,
+                                          ),
+                                        );
+                                      }),
+                                  // Text(
+                                  //   "15:00",
+                                  //   style: TextStyle(
+                                  //     color: UiConstants.primaryColor,
+                                  //     fontWeight: FontWeight.w700,
+                                  //   ),
+                                  // ),
+                                  Text(
+                                    locale.obMinutes,
+                                    style: TextStyles.sourceSans.body3,
+                                  )
+                                ],
+                              )
+                            ],
                           )
-                        : SizedBox(),
+                        : const SizedBox(),
                     _isOtpIncorrect
                         ? Padding(
                             padding: const EdgeInsets.symmetric(vertical: 16),
@@ -458,7 +459,7 @@ class VerifyEmailState extends State<VerifyEmail> {
                               children: [
                                 Text(
                                   locale.obIncorrectOTP,
-                                  style: TextStyle(
+                                  style: const TextStyle(
                                     color: Colors.red,
                                     fontWeight: FontWeight.w700,
                                   ),
@@ -466,7 +467,7 @@ class VerifyEmailState extends State<VerifyEmail> {
                               ],
                             ),
                           )
-                        : SizedBox(),
+                        : const SizedBox(),
                     SizedBox(
                       height: SizeConfig.screenHeight! * 0.5,
                     ),
