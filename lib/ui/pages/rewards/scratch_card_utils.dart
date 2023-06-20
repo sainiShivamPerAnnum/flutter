@@ -69,12 +69,14 @@ class ScratchCardGridItemCard extends StatelessWidget {
 class UnRedeemedGoldenScratchCard extends StatelessWidget {
   final bool isLevelChange;
   final double width;
-  UnRedeemedGoldenScratchCard(
-      {required this.isLevelChange, required this.width});
+
+  const UnRedeemedGoldenScratchCard(
+      {super.key, required this.isLevelChange, required this.width});
+
   @override
   Widget build(BuildContext context) {
     return AnimatedContainer(
-      duration: Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 300),
       curve: Curves.easeIn,
       height: width,
       width: width,
@@ -92,14 +94,18 @@ class UnRedeemedGoldenScratchCard extends StatelessWidget {
 
 class RedeemedGoldenScratchCard extends StatelessWidget {
   final ScratchCard? ticket;
+
   // final TextStyle titleStyle, subtitleStyle, titleStyle2;
   final double width;
-  RedeemedGoldenScratchCard(
-      {required this.ticket,
+
+  const RedeemedGoldenScratchCard(
+      {super.key,
+      required this.ticket,
       // @required this.titleStyle,
       // @required this.subtitleStyle,
       // @required this.titleStyle2,
       required this.width});
+
   @override
   Widget build(BuildContext context) {
     return LayoutBuilder(
@@ -108,7 +114,7 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
           child: AnimatedContainer(
             height: width,
             width: width,
-            duration: Duration(milliseconds: 300),
+            duration: const Duration(milliseconds: 300),
             curve: Curves.easeIn,
             padding: EdgeInsets.all(width * 0.04),
             child: Stack(
@@ -123,17 +129,16 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
                   alignment: Alignment.centerLeft,
                   child: Padding(
                     padding: EdgeInsets.only(
-                      left:
-                          (constraint.maxWidth >= SizeConfig.screenWidth! * 0.5
-                              ? SizeConfig.padding32
-                              : 0),
+                      left: constraint.maxWidth >= SizeConfig.screenWidth! * 0.5
+                          ? SizeConfig.padding32
+                          : 0,
                     ),
                     child: AnimatedScale(
                       scale:
-                          (constraint.maxWidth >= SizeConfig.screenWidth! * 0.5
+                          constraint.maxWidth >= SizeConfig.screenWidth! * 0.5
                               ? 1
-                              : 0.7),
-                      duration: Duration(milliseconds: 100),
+                              : 0.7,
+                      duration: const Duration(milliseconds: 100),
                       curve: Curves.easeIn,
                       child: Material(
                         color: Colors.transparent,
@@ -156,10 +161,11 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
       if (ticket.rewardArr!.length == 1) {
         //Has a single reward
 
-        if (ticket.rewardArr![0].type == 'flc')
+        if (ticket.rewardArr![0].type == 'flc') {
           return Assets.gt_token;
-        else
+        } else {
           return Assets.gt_cashback;
+        }
       } else if (ticket.rewardArr!.length == 2) {
         //Both flc and cash
         return Assets.gt_token_cashback;
@@ -231,7 +237,7 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
               style: TextStyles.rajdhaniB.title2.colour(Colors.black),
             ),
           ),
-          Text(' ' + locale.rewardWon,
+          Text(' ${locale.rewardWon}',
               style: TextStyles.body4.copyWith(fontSize: SizeConfig.padding12))
         ],
       );
@@ -315,7 +321,7 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
           )
         ],
       );
-    } else
+    } else {
       rewardWidget = RichText(
         text: TextSpan(
           style: TextStyles.sourceSans.body2,
@@ -329,6 +335,7 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
           ],
         ),
       );
+    }
 
     return Padding(
         padding: maxWidth == SizeConfig.screenWidth || noPaddingRequired
@@ -343,74 +350,66 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
     S locale = locator<S>();
     return ListView.separated(
         shrinkWrap: true,
-        physics: NeverScrollableScrollPhysics(),
+        physics: const NeverScrollableScrollPhysics(),
         padding: EdgeInsets.zero,
         itemBuilder: (ctx, i) {
           switch (rewards[i].type) {
             case Constants.GT_REWARD_RUPEE:
-              return Container(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    RichText(
-                      text: TextSpan(
-                        text: '₹ ${rewards[i].value}',
-                        style:
-                            TextStyles.rajdhaniSB.title4.colour(Colors.black),
-                      ),
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  RichText(
+                    text: TextSpan(
+                      text: '₹ ${rewards[i].value}',
+                      style: TextStyles.rajdhaniSB.title4.colour(Colors.black),
                     ),
-                    Text(
-                      ' ' + locale.rewardWon,
-                      style: TextStyles.sourceSans.body4.colour(Colors.black),
-                    )
-                  ],
-                ),
+                  ),
+                  Text(
+                    ' ${locale.rewardWon}',
+                    style: TextStyles.sourceSans.body4.colour(Colors.black),
+                  )
+                ],
               );
             case Constants.GT_REWARD_AMT:
-              return Container(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    RichText(
-                      text: TextSpan(
-                        text: '₹ ${rewards[i].value}',
-                        style:
-                            TextStyles.rajdhaniSB.title4.colour(Colors.black),
-                      ),
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  RichText(
+                    text: TextSpan(
+                      text: '₹ ${rewards[i].value}',
+                      style: TextStyles.rajdhaniSB.title4.colour(Colors.black),
                     ),
-                    Text(
-                      ' ' + locale.rewardWon,
-                      style: TextStyles.sourceSans.body4.colour(Colors.black),
-                    )
-                  ],
-                ),
+                  ),
+                  Text(
+                    ' ${locale.rewardWon}',
+                    style: TextStyles.sourceSans.body4.colour(Colors.black),
+                  )
+                ],
               );
             case Constants.GT_REWARD_FLC:
-              return Container(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        SvgPicture.asset(
-                          Assets.token,
-                          width: SizeConfig.padding24,
-                          height: SizeConfig.padding24,
-                        ),
-                        SizedBox(
-                          width: SizeConfig.padding4,
-                        ),
-                        Text("${rewards[i].value} ",
-                            style: TextStyles.rajdhaniB.title2
-                                .colour(Colors.black)),
-                      ],
-                    ),
-                    Text(
-                      ' ' + locale.tokensWon,
-                      style: TextStyles.sourceSans.body4.colour(Colors.black),
-                    )
-                  ],
-                ),
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      SvgPicture.asset(
+                        Assets.token,
+                        width: SizeConfig.padding24,
+                        height: SizeConfig.padding24,
+                      ),
+                      SizedBox(
+                        width: SizeConfig.padding4,
+                      ),
+                      Text("${rewards[i].value} ",
+                          style:
+                              TextStyles.rajdhaniB.title2.colour(Colors.black)),
+                    ],
+                  ),
+                  Text(
+                    ' ${locale.tokensWon}',
+                    style: TextStyles.sourceSans.body4.colour(Colors.black),
+                  )
+                ],
               );
             case Constants.GT_REWARD_GOLD:
               return Column(
@@ -470,7 +469,7 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
                 ],
               );
             default:
-              return SizedBox();
+              return const SizedBox();
           }
         },
         separatorBuilder: (ctx, i) {
@@ -481,16 +480,16 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
 
   Widget bulletTiles(String title) {
     return Padding(
-      padding: EdgeInsets.only(bottom: 20.0),
+      padding: const EdgeInsets.only(bottom: 20.0),
       child: Wrap(
         crossAxisAlignment: WrapCrossAlignment.center,
         children: [
-          Icon(
+          const Icon(
             Icons.brightness_1,
             size: 12,
             color: UiConstants.primaryColor,
           ),
-          SizedBox(width: 10),
+          const SizedBox(width: 10),
           Text(
             title,
             style: TextStyles.body3,

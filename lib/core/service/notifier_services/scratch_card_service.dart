@@ -32,26 +32,25 @@ final GlobalKey ticketImageKey = GlobalKey();
 
 class ScratchCardService
     extends PropertyChangeNotifier<ScratchCardServiceProperties> {
-  final CustomLogger? _logger = locator<CustomLogger>();
+  final CustomLogger _logger = locator<CustomLogger>();
   final ScratchCardRepository _gtRepo = locator<ScratchCardRepository>();
-  final UserService? _userService = locator<UserService>();
-  // final PaytmService? _paytmService = locator<PaytmService>();
-  final InternalOpsService? _internalOpsService = locator<InternalOpsService>();
-  final AppFlyerAnalytics? _appFlyer = locator<AppFlyerAnalytics>();
+  final UserService _userService = locator<UserService>();
+  final InternalOpsService _internalOpsService = locator<InternalOpsService>();
+  final AppFlyerAnalytics _appFlyer = locator<AppFlyerAnalytics>();
   S locale = locator<S>();
 
-  //ALL GOLDEN TICKETS VIEW FIELDS -- START
   bool isLastPageForScratchCards = false;
   bool _isFetchingScratchCards = false;
   String? scratchCardsListLastTicketId;
+
   bool get isFetchingScratchCards => _isFetchingScratchCards;
+
   set isFetchingScratchCards(bool val) {
     _isFetchingScratchCards = val;
     notifyListeners();
   }
 
   List<ScratchCard> _allScratchCards = [];
-
   List<ScratchCard> get allScratchCards => _allScratchCards;
   set allScratchCards(List<ScratchCard> value) {
     _allScratchCards = value;
@@ -61,28 +60,20 @@ class ScratchCardService
     if (value != null) _allScratchCards.addAll(value);
   }
 
-  //ALL GOLDEN TICKETS VIEW FIELDS -- START
-
-  // static bool hasScratchCard = false;
-
   int _unscratchedMilestoneScratchCardCount = 0;
 
   int get unscratchedMilestoneScratchCardCount =>
       _unscratchedMilestoneScratchCardCount;
-
   set unscratchedMilestoneScratchCardCount(int value) {
     _unscratchedMilestoneScratchCardCount = value;
     notifyListeners();
   }
 
   int _unscratchedTicketsCount = 0;
-
   int get unscratchedTicketsCount => _unscratchedTicketsCount;
-
   set unscratchedTicketsCount(int value) {
     _unscratchedTicketsCount = value;
     notifyListeners();
-    // notifyListeners(ScratchCardServiceProperties.UnscratchedCount);
   }
 
   static String? scratchCardId;
@@ -189,7 +180,7 @@ class ScratchCardService
       log("previousPrizeSubtype $previousPrizeSubtype  && current gt prizeSubtype: ${ScratchCardService.currentGT!.prizeSubtype} ");
       if (previousPrizeSubtype == ScratchCardService.currentGT!.prizeSubtype &&
           !onJourney) return;
-      await Future.delayed(Duration(milliseconds: 200), () async {
+      await Future.delayed(const Duration(milliseconds: 200), () async {
         // if (source != GTSOURCE.deposit)
         AppState.screenStack.add(ScreenItem.dialog);
         await Navigator.of(AppState.delegate!.navigatorKey.currentContext!)
@@ -221,7 +212,7 @@ class ScratchCardService
           PageRouteBuilder(
             opaque: false,
             pageBuilder: (BuildContext context, _, __) =>
-                MultipleScratchCardsView(),
+                const MultipleScratchCardsView(),
           ),
         );
       }
@@ -260,7 +251,7 @@ class ScratchCardService
         final link = await _appFlyer!.inviteLink();
         if (link['status'] == 'success') {
           url = link['payload']['userInviteUrl'];
-          if (url == null) url = link['payload']['userInviteURL'];
+          url ??= link['payload']['userInviteURL'];
         }
 
         if (url != null) {
@@ -276,7 +267,7 @@ class ScratchCardService
   }
 
   caputure(String shareMessage) {
-    Future.delayed(Duration(seconds: 1), () {
+    Future.delayed(const Duration(seconds: 1), () {
       captureCard().then((image) {
         if (image != null) {
           shareCard(image, shareMessage);
@@ -343,9 +334,9 @@ class ScratchCardService
       if (Platform.isAndroid) {
         final directory = (await getExternalStorageDirectory())!.path;
         String dt = DateTime.now().toString();
-        File imgg = new File('$directory/fello-reward-$dt.png');
+        File imgg = File('$directory/fello-reward-$dt.png');
         imgg.writeAsBytesSync(image);
-        Share.shareFiles(
+        unawaited(Share.shareFiles(
           [imgg.path],
           subject: 'Fello Rewards',
           text: shareMessage ?? "",
@@ -358,7 +349,7 @@ class ScratchCardService
                 FailType.FelloRewardCardShareFailed, errorDetails);
           }
           print(onError);
-        });
+        }));
       } else if (Platform.isIOS) {
         String dt = DateTime.now().toString();
 
@@ -366,12 +357,12 @@ class ScratchCardService
         if (!await directory.exists()) await directory.create(recursive: true);
 
         final File imgg =
-            await new File('${directory.path}/fello-reward-$dt.jpg').create();
+            await File('${directory.path}/fello-reward-$dt.jpg').create();
         imgg.writeAsBytesSync(image);
 
         _logger!.d("Image file created and sharing, ${imgg.path}");
 
-        Share.shareFiles(
+        unawaited(Share.shareFiles(
           [imgg.path],
           subject: 'Fello Rewards',
           text: shareMessage ?? "",
@@ -384,7 +375,7 @@ class ScratchCardService
                 FailType.FelloRewardCardShareFailed, errorDetails);
           }
           print(onError);
-        });
+        }));
       }
     } catch (e) {
       // backButtonDispatcher.didPopRoute();
@@ -393,43 +384,6 @@ class ScratchCardService
           locale.taskFailed, locale.UnableToSharePicture);
     }
   }
-
-  // showAutosavePrompt() {
-  //   if (!(AppConfig.getValue(AppConfigKey.autosaveActive) as bool)) return;
-  //   BaseUtil.openDialog(
-  //     addToScreenStack: true,
-  //     isBarrierDismissible: false,
-  //     hapticVibrate: true,
-  //     content: FelloInfoDialog(
-  //       title: locale.savingsOnAuto,
-  //       subtitle: locale.savingsOnAutoSubtitle,
-  //       png: Assets.preAutosave,
-  //       action: AppPositiveBtn(
-  //         btnText: locale.btnSetupAutoSave,
-  //         onPressed: () {
-  //           AppState.backButtonDispatcher!.didPopRoute();
-  //           openAutosave();
-  //         },
-  //       ),
-  //     ),
-  //   );
-  // }
-
-  // openAutosave() {
-  //   if (!(AppConfig.getValue(AppConfigKey.autosaveActive) as bool)) return;
-
-  //   if (_paytmService!.activeSubscription != null) {
-  //     AppState.delegate!.appState.currentAction = PageAction(
-  //         page: AutosaveProcessViewPageConfig,
-  //         widget: AutosaveProcessView(page: 2),
-  //         state: PageState.addWidget);
-  //   } else {
-  //     AppState.delegate!.appState.currentAction = PageAction(
-  //       page: AutosaveDetailsViewPageConfig,
-  //       state: PageState.addPage,
-  //     );
-  //   }
-  // }
 
   Future<void> fetchScratchCards({bool more = false}) async {
     try {
