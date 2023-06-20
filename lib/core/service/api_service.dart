@@ -60,7 +60,7 @@ class APIService implements API {
     // final HttpMetric metric =
     //     FirebasePerformance.instance.newHttpMetric(url, HttpMethod.Get);
     // await metric.start();
-    int startTime = DateTime.now().millisecondsSinceEpoch;
+    // int startTime = DateTime.now().millisecondsSinceEpoch;
 
     // var responseJson;
     // token = Preference.getString('token');
@@ -343,7 +343,6 @@ class APIService implements API {
         throw BadRequestException(responseJson['message']);
 
       case 401:
-
       case 403:
         throw UnauthorizedException(response.body.toString());
       case 500:
