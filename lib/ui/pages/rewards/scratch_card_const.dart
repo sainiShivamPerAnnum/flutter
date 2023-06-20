@@ -25,7 +25,7 @@ class ScratchCardConstants {
       case tambolaTitan:
         return {
           "title": "Won in",
-          "subtitle": 'Tambola',
+          "subtitle": 'Ticket Draws',
         };
       case explorer:
         return {
