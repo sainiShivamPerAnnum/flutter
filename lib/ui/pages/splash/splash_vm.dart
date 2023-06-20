@@ -116,11 +116,10 @@ class LauncherViewModel extends BaseViewModel {
           CacheService.checkIfInvalidationRequired(),
           _analyticsService.login(
               isOnBoarded: true, baseUser: userService.baseUser),
-          userService.firebaseUser!.getIdToken().then(
-                (token) =>
-                    _userRepo.updateUserAppFlyer(userService.baseUser!, token),
-              ),
         ]);
+        String token = await userService.firebaseUser!.getIdToken();
+        _userRepo.updateUserAppFlyer(userService.baseUser!, token);
+
         unawaited(locator<GameRepo>().getGameTiers());
         _referralService.init();
         _baseUtil.init();
