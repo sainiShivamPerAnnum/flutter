@@ -7,6 +7,7 @@ import 'package:felloapp/core/service/notifier_services/scratch_card_service.dar
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/rewards/detailed_scratch_card/gt_detailed_vm.dart';
+import 'package:felloapp/ui/pages/rewards/scratch_card_const.dart';
 import 'package:felloapp/ui/pages/rewards/scratch_card_utils.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/extensions/rich_text_extension.dart';
@@ -26,25 +27,6 @@ class GTDetailedView extends StatelessWidget {
   final ScratchCard ticket;
 
   const GTDetailedView({super.key, required this.ticket});
-
-  Map<String, String> getTitle() {
-    if (ticket.eventType == "dailyBonus") {
-      return {
-        "title": "Won in",
-        "subtitle": 'Tambola',
-      };
-    }
-    if (ticket.eventType == "newUser") {
-      return {
-        "title": "Signup",
-        "subtitle": 'Welcome Fello!',
-      };
-    }
-    return {
-      "title": "Won in",
-      "subtitle": 'Tambola',
-    };
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -163,73 +145,75 @@ class GTDetailedView extends StatelessWidget {
           SizedBox(
             height: SizeConfig.padding40,
           ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Column(
-                children: [
-                  Text(
-                    // 'Won In',
-                    getTitle()['title']!,
-                    style: TextStyles.sourceSans.body3.colour(Colors.white),
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(
-                    height: SizeConfig.padding8,
-                  ),
-                  Text(
-                    getTitle()['subtitle']!,
-                    // '${ticket.eventType}',
-                    style: TextStyles.rajdhaniSB.title5.colour(Colors.white),
-                    textAlign: TextAlign.center,
-                  ),
-                ],
-              ),
-              SizedBox(
-                width: SizeConfig.padding32,
-              ),
-              //create a vertical divider
-              Container(
-                height: SizeConfig.padding90,
-                width: 2,
-                color: Colors.white,
-              ),
-
-              SizedBox(
-                width: SizeConfig.padding32,
-              ),
-              Column(
-                children: [
-                  Container(
-                    height: SizeConfig.padding40,
-                    width: SizeConfig.padding40,
-                    decoration: BoxDecoration(
-                      color: Colors.white,
-                      borderRadius: BorderRadius.circular(SizeConfig.padding8),
+          if (ticket.tag != null &&
+              (ticket.tag?.isNotEmpty ?? false) &&
+              ticket.tag != ScratchCardConstants.general)
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Column(
+                  children: [
+                    Text(
+                      ScratchCardConstants.getTitle(ticket.tag!)['title']!,
+                      style: TextStyles.sourceSans.body3.colour(Colors.white),
+                      textAlign: TextAlign.center,
                     ),
-                  ),
-                  SizedBox(
-                    height: SizeConfig.padding8,
-                  ),
-                  Text(
-                    'You earned a badge',
-                    style: TextStyles.sourceSans.body3
-                        .colour(Colors.white.withOpacity(0.6)),
-                    textAlign: TextAlign.center,
-                  ),
-                  SizedBox(
-                    height: SizeConfig.padding4,
-                  ),
-                  Text(
-                    ticket.tag ?? 'Tambola Titan',
-                    // 'Tambola Titan',
-                    style: TextStyles.sourceSansSB.body2.colour(Colors.white),
-                    textAlign: TextAlign.center,
-                  ),
-                ],
-              ),
-            ],
-          )
+                    SizedBox(
+                      height: SizeConfig.padding8,
+                    ),
+                    Text(
+                      ScratchCardConstants.getTitle(ticket.tag!)['subtitle']!,
+                      style: TextStyles.rajdhaniSB.title5.colour(Colors.white),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  width: SizeConfig.padding32,
+                ),
+                //create a vertical divider
+                Container(
+                  height: SizeConfig.padding90,
+                  width: 2,
+                  color: Colors.white,
+                ),
+
+                SizedBox(
+                  width: SizeConfig.padding32,
+                ),
+                Column(
+                  children: [
+                    Container(
+                      height: SizeConfig.padding40,
+                      width: SizeConfig.padding40,
+                      decoration: BoxDecoration(
+                        color: Colors.white,
+                        borderRadius:
+                            BorderRadius.circular(SizeConfig.padding8),
+                      ),
+                    ),
+                    SizedBox(
+                      height: SizeConfig.padding8,
+                    ),
+                    Text(
+                      'You earned a badge',
+                      style: TextStyles.sourceSans.body3
+                          .colour(Colors.white.withOpacity(0.6)),
+                      textAlign: TextAlign.center,
+                    ),
+                    SizedBox(
+                      height: SizeConfig.padding4,
+                    ),
+                    Text(
+                      ticket.tag ?? 'Tambola Titan',
+                      // 'Tambola Titan',
+                      style: TextStyles.sourceSansSB.body2.colour(Colors.white),
+                      textAlign: TextAlign.center,
+                    ),
+                  ],
+                ),
+              ],
+            )
         ],
       );
     } else {
