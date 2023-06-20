@@ -27,6 +27,25 @@ class GTDetailedView extends StatelessWidget {
 
   const GTDetailedView({super.key, required this.ticket});
 
+  Map<String, String> getTitle() {
+    if (ticket.eventType == "dailyBonus") {
+      return {
+        "title": "Won in",
+        "subtitle": 'Tambola',
+      };
+    }
+    if (ticket.eventType == "newUser") {
+      return {
+        "title": "Signup",
+        "subtitle": 'Welcome Fello!',
+      };
+    }
+    return {
+      "title": "Won in",
+      "subtitle": 'Tambola',
+    };
+  }
+
   @override
   Widget build(BuildContext context) {
     return BaseView<GTDetailedViewModel>(
@@ -141,6 +160,76 @@ class GTDetailedView extends StatelessWidget {
                     TextStyles.sourceSans.body4.colour(UiConstants.kTextColor3),
                 alignment: TextAlign.center),
           ),
+          SizedBox(
+            height: SizeConfig.padding40,
+          ),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Column(
+                children: [
+                  Text(
+                    // 'Won In',
+                    getTitle()['title']!,
+                    style: TextStyles.sourceSans.body3.colour(Colors.white),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(
+                    height: SizeConfig.padding8,
+                  ),
+                  Text(
+                    getTitle()['subtitle']!,
+                    // '${ticket.eventType}',
+                    style: TextStyles.rajdhaniSB.title5.colour(Colors.white),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
+              SizedBox(
+                width: SizeConfig.padding32,
+              ),
+              //create a vertical divider
+              Container(
+                height: SizeConfig.padding90,
+                width: 2,
+                color: Colors.white,
+              ),
+
+              SizedBox(
+                width: SizeConfig.padding32,
+              ),
+              Column(
+                children: [
+                  Container(
+                    height: SizeConfig.padding40,
+                    width: SizeConfig.padding40,
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(SizeConfig.padding8),
+                    ),
+                  ),
+                  SizedBox(
+                    height: SizeConfig.padding8,
+                  ),
+                  Text(
+                    'You earned a badge',
+                    style: TextStyles.sourceSans.body3
+                        .colour(Colors.white.withOpacity(0.6)),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(
+                    height: SizeConfig.padding4,
+                  ),
+                  Text(
+                    ticket.tag ?? 'Tambola Titan',
+                    // 'Tambola Titan',
+                    style: TextStyles.sourceSansSB.body2.colour(Colors.white),
+                    textAlign: TextAlign.center,
+                  ),
+                ],
+              ),
+            ],
+          )
         ],
       );
     } else {

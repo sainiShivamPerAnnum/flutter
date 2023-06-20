@@ -25,8 +25,8 @@ class ScratchCardsView extends StatelessWidget {
     return Consumer<ScratchCardService>(
       builder: (context, model, properties) {
         model.allScratchCards.forEach((element) {
-          print(
-              "PrizeSubtype: ${element.prizeSubtype} & RT: ${element.redeemedTimestamp.toString()}");
+          debugPrint(
+              "PrizeSubtype: ${element.eventType} & RT: ${element.redeemedTimestamp.toString()}");
         });
         return model.isFetchingScratchCards && model.allScratchCards.isEmpty
             ? const Center(child: FullScreenLoader())
