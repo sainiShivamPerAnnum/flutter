@@ -100,7 +100,7 @@ class APIService implements API {
       if (e is SocketException) {
         throw FetchDataException('No Internet connection');
       } else if (e is UnauthorizedException) {
-        throw UnauthorizedException("Token Expired, Signout current user");
+        throw UnauthorizedException("Verification Failed. Please try again");
       } else {
         rethrow;
       }
@@ -343,7 +343,7 @@ class APIService implements API {
         throw BadRequestException(responseJson['message']);
 
       case 401:
-
+        throw BadRequestException(responseJson['message']);
       case 403:
         throw UnauthorizedException(response.body.toString());
       case 500:
