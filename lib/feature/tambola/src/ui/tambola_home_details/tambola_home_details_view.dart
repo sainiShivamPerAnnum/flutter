@@ -78,7 +78,7 @@ class _TambolaHomeDetailsViewState extends State<TambolaHomeDetailsView> {
       onModelDispose: (model) => model.dump(),
       builder: (context, model, child) {
         return Scaffold(
-          backgroundColor: const Color(0XFF141414),
+          backgroundColor: const Color(0XF2a2a2a),
           appBar: widget.isStandAloneScreen
               ? AppBar(
                   elevation: 0,
@@ -105,9 +105,14 @@ class _TambolaHomeDetailsViewState extends State<TambolaHomeDetailsView> {
                       child: Column(
                         mainAxisSize: MainAxisSize.min,
                         children: [
-                          Lottie.asset(
-                            'assets/lotties/1cr_thar.json',
-                            height: SizeConfig.screenHeight! * 0.2,
+                          SvgPicture.asset(
+                            Assets.tambolaCardAsset,
+                            width: SizeConfig.screenWidth! * 0.4,
+                          ),
+                          Text(
+                            "Tickets",
+                            style: TextStyles.rajdhaniB.title1,
+                            textAlign: TextAlign.center,
                           ),
                           SizedBox(
                             height: SizeConfig.padding14,
@@ -122,10 +127,14 @@ class _TambolaHomeDetailsViewState extends State<TambolaHomeDetailsView> {
                         ],
                       ),
                     ),
-                    Padding(
-                      padding:
-                          EdgeInsets.symmetric(vertical: SizeConfig.padding12),
-                      child: const TambolaTicketInfo(),
+                    SizedBox(
+                      height: SizeConfig.blockSizeVertical! * 2,
+                    ),
+                    SvgPicture.asset(
+                      "assets/svg/first_ticket_unlock.svg",
+                      width: SizeConfig.screenWidth! * 0.9,
+                      // height: SizeConfig.iconSize1 * 1.5,
+                      fit: BoxFit.cover,
                     ),
                     Container(
                       margin:
@@ -181,7 +190,8 @@ class _TambolaHomeDetailsViewState extends State<TambolaHomeDetailsView> {
                         key: ShowCaseKeys.TambolaButton,
                         description: 'You get a ticket on every ₹500 you save!',
                         child: AppPositiveBtn(
-                          btnText: 'Save & Get Free Tickets',
+                          style: TextStyles.rajdhaniSB.body0,
+                          btnText: 'Unlock your first ticket now',
                           onPressed: () {
                             locator<AnalyticsService>().track(
                                 eventName: (locator<TambolaService>()

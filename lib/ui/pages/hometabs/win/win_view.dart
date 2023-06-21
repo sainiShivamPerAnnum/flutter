@@ -97,8 +97,8 @@ class Win extends StatelessWidget {
                   height: SizeConfig.padding10,
                 ),
 
-                LottieBuilder.network(
-                    "https://d37gtxigg82zaw.cloudfront.net/scroll-animation.json"),
+                // LottieBuilder.network(
+                //     "https://d37gtxigg82zaw.cloudfront.net/scroll-animation.json"),
 
                 // SizedBox(height: SizeConfig.navBarHeight),
               ],

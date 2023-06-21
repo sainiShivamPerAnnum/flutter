@@ -79,7 +79,7 @@ class _TambolaLeaderboardViewState extends State<TambolaLeaderboardView> {
                   height: SizeConfig.pageHorizontalMargins,
                 ),
                 Text(
-                  "Last week winners",
+                  "Last week's leaderboard",
                   style: TextStyles.rajdhaniSB.body0,
                 ),
                 SizedBox(

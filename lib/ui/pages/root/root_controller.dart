@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 
 class RootController {
   static final tambolaNavBar = NavBarItemModel(
-      "Tambola", Assets.navTambolaLottie, ShowCaseKeys.TambolaKey);
+      "Tickets", Assets.navTambolaLottie, ShowCaseKeys.TambolaKey);
   static final journeyNavBarItem =
       NavBarItemModel("Journey", Assets.navJourneyLottie, ShowCaseKeys.Journey);
 

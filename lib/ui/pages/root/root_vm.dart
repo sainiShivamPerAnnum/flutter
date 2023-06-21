@@ -132,9 +132,9 @@ class RootViewModel extends BaseViewModel {
 
         if (!await verifyUserBootupDetails()) return;
         await checkForBootUpAlerts();
-        if (showNewInstallPopUp()) {
-          await showLastWeekOverview();
-        }
+        // if (showNewInstallPopUp()) {
+        await showLastWeekOverview();
+        // }
         showMarketingCampings();
         await Future.wait([
           _referralService.verifyReferral(),
@@ -184,49 +184,49 @@ class RootViewModel extends BaseViewModel {
     }
   }
 
-  bool showNewInstallPopUp() {
-    if (!PreferenceHelper.getBool(PreferenceHelper.NEW_INSTALL_POPUP,
-            def: false) &&
-        AppState.isRootAvailableForIncomingTaskExecution) {
-      fetchCampaign = false;
-      AppState.isRootAvailableForIncomingTaskExecution = false;
-      BaseUtil.openDialog(
-          isBarrierDismissible: true,
-          addToScreenStack: true,
-          content: Dialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-            ),
-            child: WillPopScope(
-              onWillPop: () async {
-                if (AppState.screenStack.last == ScreenItem.dialog) {
-                  AppState.screenStack.removeLast();
-                  AppState.isRootAvailableForIncomingTaskExecution = true;
+  // bool showNewInstallPopUp() {
+  //   if (!PreferenceHelper.getBool(PreferenceHelper.NEW_INSTALL_POPUP,
+  //           def: false) &&
+  //       AppState.isRootAvailableForIncomingTaskExecution) {
+  //     fetchCampaign = false;
+  //     AppState.isRootAvailableForIncomingTaskExecution = false;
+  //     BaseUtil.openDialog(
+  //         isBarrierDismissible: true,
+  //         addToScreenStack: true,
+  //         content: Dialog(
+  //           shape: RoundedRectangleBorder(
+  //             borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+  //           ),
+  //           child: WillPopScope(
+  //             onWillPop: () async {
+  //               if (AppState.screenStack.last == ScreenItem.dialog) {
+  //                 AppState.screenStack.removeLast();
+  //                 AppState.isRootAvailableForIncomingTaskExecution = true;
 
-                  showMarketingCampings();
-                }
-                return Future.value(true);
-              },
-              child: GestureDetector(
-                onTap: () async {
-                  AppState.backButtonDispatcher!.didPopRoute();
-                  AppState.isRootAvailableForIncomingTaskExecution = true;
+  //                 showMarketingCampings();
+  //               }
+  //               return Future.value(true);
+  //             },
+  //             child: GestureDetector(
+  //               onTap: () async {
+  //                 AppState.backButtonDispatcher!.didPopRoute();
+  //                 AppState.isRootAvailableForIncomingTaskExecution = true;
 
-                  showMarketingCampings();
-                },
-                child: Image.asset(
-                    _userService.userSegments.contains(Constants.US_FLO_OLD)
-                        ? Assets.oldUserPopUp
-                        : Assets.newUserPopUp),
-              ),
-            ),
-          ));
-      PreferenceHelper.setBool(PreferenceHelper.NEW_INSTALL_POPUP, true);
-      return false;
-    } else {
-      return true;
-    }
-  }
+  //                 showMarketingCampings();
+  //               },
+  //               child: Image.asset(
+  //                   _userService.userSegments.contains(Constants.US_FLO_OLD)
+  //                       ? Assets.oldUserPopUp
+  //                       : Assets.newUserPopUp),
+  //             ),
+  //           ),
+  //         ));
+  //     PreferenceHelper.setBool(PreferenceHelper.NEW_INSTALL_POPUP, true);
+  //     return false;
+  //   } else {
+  //     return true;
+  //   }
+  // }
 
   FileType getFileType(String fileUrl) {
     String extension = fileUrl.toLowerCase().split('.').last;

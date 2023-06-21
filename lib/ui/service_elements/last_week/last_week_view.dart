@@ -440,7 +440,7 @@ class TotalInvestmentWidget extends StatelessWidget {
                 ),
                 AssetContainer(
                     icon: 'assets/svg/tambola_card_asset.svg',
-                    title: 'Tambola prizes',
+                    title: 'Ticket Rewards',
                     value: BaseUtil.formatIndianRupees(
                         data.main!.tambolaPrizeAmt!.toDouble()))
               ],
