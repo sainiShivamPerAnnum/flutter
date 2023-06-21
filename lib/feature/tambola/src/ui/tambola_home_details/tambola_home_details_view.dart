@@ -140,7 +140,7 @@ class _TambolaHomeDetailsViewState extends State<TambolaHomeDetailsView> {
                     ),
                     SizedBox(height: SizeConfig.padding20),
                     const TambolaPrize(),
-                    TambolaLeaderBoard(),
+                    TambolaLeaderboardView(),
                     const TermsAndConditions(url: Constants.tambolatnc),
                     SizedBox(
                       height: SizeConfig.screenHeight! * 0.25,
