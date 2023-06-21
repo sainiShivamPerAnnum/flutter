@@ -8,7 +8,6 @@ import 'package:felloapp/ui/elements/video_player/app_video_player.dart';
 // import 'package:felloapp/ui/pages/games/tambola/tambola_home/tambola_home.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
-import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -41,7 +40,7 @@ class _AutosaveOnboardingViewState extends State<AutosaveOnboardingView> {
     [
       Assets.autosaveBenefitsAssets[2],
       "Automated Investments",
-      "Never run out of tokens and enjoy unlimited gameplay"
+      "Automatically get Tambola Tickets when you autosave in multiples of ₹500"
     ],
   ];
   int currentPage = 0;
@@ -65,7 +64,6 @@ class _AutosaveOnboardingViewState extends State<AutosaveOnboardingView> {
 
   @override
   Widget build(BuildContext context) {
-    S locale = S.of(context);
     return Scaffold(
       backgroundColor: UiConstants.kBackgroundColor,
       body: Stack(
@@ -75,12 +73,12 @@ class _AutosaveOnboardingViewState extends State<AutosaveOnboardingView> {
               Container(
                 width: SizeConfig.screenWidth! / 2,
                 height: SizeConfig.fToolBarHeight,
-                color: Color(0xff025155),
+                color: UiConstants.kAutoSaveOnboardingColor,
               ),
               Container(
                 width: SizeConfig.screenWidth! / 2,
                 height: SizeConfig.fToolBarHeight,
-                color: const Color(0xff01646B),
+                color: UiConstants.kAutoSaveOnboardingTextColor,
               )
             ],
           ),

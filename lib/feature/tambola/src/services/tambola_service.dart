@@ -263,6 +263,8 @@ class TambolaService extends ChangeNotifier {
     }
     final tambolaTickets = bestTickets?.data?.allTickets();
     for (final boardObj in tambolaTickets!) {
+      if (boardObj.assignedTime.toDate().weekday == 7 &&
+          boardObj.assignedTime.toDate().hour > 18) continue;
       if (getCornerOdds(
               boardObj, weeklyPicks!.getPicksPostDate(DateTime.monday)) ==
           0) {

@@ -7,7 +7,7 @@ import 'package:felloapp/core/service/payments/augmont_transaction_service.dart'
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
-import 'package:felloapp/ui/pages/finance/augmont/gold_buy/gold_buy_input_view.dart';
+import 'package:felloapp/ui/pages/finance/augmont/gold_buy/widgets/buy_app_bar.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_sell/gold_sell_vm.dart';
 import 'package:felloapp/ui/pages/finance/sell_confirmation_screen.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';

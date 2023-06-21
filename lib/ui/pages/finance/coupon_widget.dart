@@ -1,11 +1,10 @@
 import 'package:felloapp/core/model/coupon_card_model.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_buy/augmont_buy_vm.dart';
-import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/assets.dart' as a;
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -16,38 +15,52 @@ class CouponWidget extends StatelessWidget {
   final List<CouponModel>? coupon;
   final Function(CouponModel coupon) onTap;
   final GoldBuyViewModel model;
+
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
     return coupon == null
-        ? SizedBox()
+        ? const SizedBox()
         : SizedBox(
-            height: SizeConfig.screenHeight! * 0.21,
+            height: SizeConfig.screenHeight! * 0.17,
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Padding(
-                  padding:
-                      EdgeInsets.only(left: SizeConfig.pageHorizontalMargins),
+                  padding: EdgeInsets.symmetric(
+                      horizontal: SizeConfig.pageHorizontalMargins),
                   child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
                     children: [
                       Text(
                         locale.btnApplyCoupon,
                         style: TextStyles.sourceSansSB.body1,
                       ),
-                      SizedBox(width: SizeConfig.padding10),
-                      if (model.couponApplyInProgress && model.isSpecialCoupon)
-                        SizedBox(
-                            width: SizeConfig.padding16,
-                            height: SizeConfig.padding16,
-                            child: CircularProgressIndicator(
-                              color: UiConstants.primaryColor,
-                              strokeWidth: 2,
-                            )),
+
+                      GestureDetector(
+                        onTap: () {
+                          model.buyFieldNode.unfocus();
+                          model.showOfferModal(model);
+                        },
+                        child: Text(
+                          'Add Manually',
+                          style: TextStyles.sourceSans.body3
+                              .colour(UiConstants.kTabBorderColor),
+                        ),
+                      ),
+                      // SizedBox(width: SizeConfig.padding10),
+                      // if (model.couponApplyInProgress && model.isSpecialCoupon)
+                      //   SizedBox(
+                      //       width: SizeConfig.padding16,
+                      //       height: SizeConfig.padding16,
+                      //       child: const CircularProgressIndicator(
+                      //         color: UiConstants.primaryColor,
+                      //         strokeWidth: 2,
+                      //       )),
                     ],
                   ),
                 ),
-                SizedBox(
+                const SizedBox(
                   height: 18,
                 ),
                 coupon != null
@@ -76,31 +89,31 @@ class CouponWidget extends StatelessWidget {
                           itemCount: coupon!.length,
                         ),
                       )
-                    : SizedBox(),
-                SizedBox(
-                  height: 12,
-                ),
-                Padding(
-                  padding:
-                      EdgeInsets.only(left: SizeConfig.pageHorizontalMargins),
-                  child: RichText(
-                    text: TextSpan(
-                      text: locale.txnHavDiffCoupunCode,
-                      style: TextStyles.sourceSans.body4,
-                      children: [
-                        TextSpan(
-                            text: locale.txnEnterHereText,
-                            style: TextStyles.sourceSans.body4
-                                .copyWith(decoration: TextDecoration.underline),
-                            recognizer: TapGestureRecognizer()
-                              ..onTap = () {
-                                model.buyFieldNode.unfocus();
-                                model.showOfferModal(model);
-                              }),
-                      ],
-                    ),
-                  ),
-                )
+                    : const SizedBox(),
+                // const SizedBox(
+                //   height: 12,
+                // ),
+                // Padding(
+                //   padding:
+                //       EdgeInsets.only(left: SizeConfig.pageHorizontalMargins),
+                //   child: RichText(
+                //     text: TextSpan(
+                //       text: locale.txnHavDiffCoupunCode,
+                //       style: TextStyles.sourceSans.body4,
+                //       children: [
+                //         TextSpan(
+                //             text: locale.txnEnterHereText,
+                //             style: TextStyles.sourceSans.body4
+                //                 .copyWith(decoration: TextDecoration.underline),
+                //             recognizer: TapGestureRecognizer()
+                //               ..onTap = () {
+                //                 model.buyFieldNode.unfocus();
+                //                 model.showOfferModal(model);
+                //               }),
+                //       ],
+                //     ),
+                //   ),
+                // )
               ],
             ),
           );
@@ -117,6 +130,7 @@ class _CouponView extends StatelessWidget {
   final CouponModel model;
   final Function(CouponModel coupon) onTap;
   final GoldBuyViewModel goldBuyViewModel;
+
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
@@ -129,11 +143,12 @@ class _CouponView extends StatelessWidget {
       },
       child: Container(
         width: SizeConfig.screenWidth! * .7,
-        padding: EdgeInsets.only(left: 16, right: 18, bottom: 18, top: 8),
+        height: SizeConfig.padding80,
+        padding: const EdgeInsets.only(left: 16, right: 18, top: 8),
         decoration: BoxDecoration(
           border: goldBuyViewModel.appliedCoupon != null
               ? goldBuyViewModel.appliedCoupon?.code == model.code
-                  ? Border.all(color: Color(0xFF08D2AD))
+                  ? Border.all(color: const Color(0xFF08D2AD))
                   : null
               : null,
           color:
@@ -147,16 +162,16 @@ class _CouponView extends StatelessWidget {
             Row(
               children: [
                 SvgPicture.asset(
-                  Assets.ticketTilted,
+                  a.Assets.ticketTilted,
                 ),
-                SizedBox(
+                const SizedBox(
                   width: 8,
                 ),
                 Text(
                   model.code!,
                   style: TextStyles.sourceSansSB.body1.colour(Colors.white),
                 ),
-                Spacer(),
+                const Spacer(),
                 GestureDetector(
                   onTap: () {
                     if (goldBuyViewModel.appliedCoupon == null ||
@@ -177,9 +192,9 @@ class _CouponView extends StatelessWidget {
                           : Text(
                               locale.txnApply.toUpperCase(),
                               style: TextStyles.sourceSansSB.body3
-                                  .colour(Color(0xff1ADAB7)),
+                                  .colour(const Color(0xff1ADAB7)),
                             )
-                      : Icon(
+                      : const Icon(
                           Icons.close,
                           size: 20,
                           color: Color(0xff1ADAB7),
@@ -187,7 +202,7 @@ class _CouponView extends StatelessWidget {
                 )
               ],
             ),
-            SizedBox(
+            const SizedBox(
               height: 6,
             ),
             SizedBox(
@@ -205,6 +220,3 @@ class _CouponView extends StatelessWidget {
     );
   }
 }
-
-
-// 

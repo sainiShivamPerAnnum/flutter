@@ -15,17 +15,20 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/transition_delegate.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
-import 'package:felloapp/ui/elements/fello_dialog/fello_rating_dialog.dart';
+import 'package:felloapp/ui/elements/fello_dialog/fello_in_app_review.dart';
 import 'package:felloapp/ui/pages/campaigns/info_stories/info_stories_view.dart';
 import 'package:felloapp/ui/pages/campaigns/topSavers/top_savers_new.dart';
 import 'package:felloapp/ui/pages/finance/autosave/autosave_details/autosave_details_view.dart';
 import 'package:felloapp/ui/pages/finance/autosave/autosave_onboarding/autosave_onboarding_view.dart';
 import 'package:felloapp/ui/pages/finance/autosave/autosave_setup/autosave_process_view.dart';
 import 'package:felloapp/ui/pages/finance/autosave/autosave_update/autosave_update_view.dart';
-import 'package:felloapp/ui/pages/finance/lendbox/detail_page/lendbox_details_view.dart';
+import 'package:felloapp/ui/pages/finance/lendbox/detail_page/flo_premium_details_view.dart';
 import 'package:felloapp/ui/pages/finance/transactions_history/transactions_history_view.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/journey_view.dart';
+import 'package:felloapp/ui/pages/hometabs/play/play_view.dart';
+import 'package:felloapp/ui/pages/hometabs/save/save_components/asset_view_section.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/blogs.dart';
+import 'package:felloapp/ui/pages/hometabs/win/win_view.dart';
 import 'package:felloapp/ui/pages/login/login_controller_view.dart';
 import 'package:felloapp/ui/pages/notifications/notifications_view.dart';
 import 'package:felloapp/ui/pages/onboarding/blocked_user.dart';
@@ -40,6 +43,7 @@ import 'package:felloapp/ui/pages/rewards/scratch_card/scratch_card_view.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/ui/pages/root/root_view.dart';
 import 'package:felloapp/ui/pages/splash/splash_view.dart';
+import 'package:felloapp/ui/pages/static/earn_more_returns_view.dart';
 import 'package:felloapp/ui/pages/static/web_view.dart';
 import 'package:felloapp/ui/pages/support/freshdesk_help.dart';
 import 'package:felloapp/ui/pages/support/referral_policy_page.dart';
@@ -56,6 +60,7 @@ import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/dynamic_ui_utils.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -137,9 +142,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     if (canPop()) {
       _removePage(_pages.last as MaterialPage<dynamic>);
       debugPrint("Current Stack: ${AppState.screenStack}");
-      if (AppState.screenStack.length == 1) {
-        _journeyService!.checkForMilestoneLevelChange();
-      }
+      // if (AppState.screenStack.length == 1) {
+      //   _journeyService!.checkForMilestoneLevelChange();
+      // }
       notifyListeners();
 
       return Future.value(true);
@@ -217,7 +222,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.UserProfileDetails:
           _addPageData(const UserProfileDetails(), UserProfileDetailsConfig);
           break;
-
+        case Pages.AccountsView:
+          _addPageData(const Win(), AccountsViewConfig);
+          break;
         case Pages.TxnHistory:
           _addPageData(
               const TransactionsHistory(), TransactionsHistoryPageConfig);
@@ -243,9 +250,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.Notifications:
           _addPageData(NotificationsPage(), NotificationsConfig);
           break;
-        case Pages.LendboxDetails:
-          _addPageData(const LendboxDetailsView(), LendboxDetailsPageConfig);
-          break;
         case Pages.ReferralDetails:
           _addPageData(ReferralDetailsView(), ReferralDetailsPageConfig);
           break;
@@ -261,7 +265,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           break;
 
         case Pages.ScratchCardsView:
-          _addPageData(ScratchCardsView(), ScratchCardsViewPageConfig);
+          _addPageData(const ScratchCardsView(), ScratchCardsViewPageConfig);
           break;
         case Pages.AutosaveOnboardingView:
           _addPageData(
@@ -318,10 +322,12 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.PowerPlayFTUX:
           _addPageData(const PowerPlayWelcomePage(), pageConfig);
           break;
-
-        // case Pages.TransactionDetailsPage:
-        //   _addPageData(TransactionDetailsPage(), TransactionDetailsPageConfig);
-        //   break;
+        case Pages.EarnMoreReturnsView:
+          _addPageData(const EarnMoreReturns(), EarnMoreReturnsViewPageConfig);
+          break;
+        case Pages.PlayView:
+          _addPageData(const Play(), TransactionDetailsPageConfig);
+          break;
 
         default:
           break;
@@ -400,6 +406,10 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.Login:
         LoginPageConfig.currentPageAction = action;
         break;
+
+      case Pages.AccountsView:
+        AccountsViewConfig.currentPageAction = action;
+        break;
       case Pages.Onboard:
         OnboardPageConfig.currentPageAction = action;
         break;
@@ -460,7 +470,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         SupportPageConfig.currentPageAction = action;
         break;
 
-        break;
       case Pages.YourFunds:
         YourFundsConfig.currentPageAction = action;
         break;
@@ -500,8 +509,8 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.AugGoldDetails:
         AugmontGoldDetailsPageConfig.currentPageAction = action;
         break;
-      case Pages.LendboxDetails:
-        LendboxDetailsPageConfig.currentPageAction = action;
+      case Pages.FloPremiumDetails:
+        FloPremiumDetailsPageConfig.currentPageAction = action;
         break;
       case Pages.ReferralDetails:
         ReferralDetailsPageConfig.currentPageAction = action;
@@ -624,6 +633,21 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.PowerPlaySeasonLeaderboard:
         PowerPlaySeasonLeaderboardDetailsConfig.currentPageAction = action;
         break;
+      case Pages.YoutubePlayerView:
+        YoutubePlayerViewConfig.currentPageAction = action;
+        break;
+      case Pages.EarnMoreReturnsView:
+        EarnMoreReturnsViewPageConfig.currentPageAction = action;
+        break;
+      case Pages.PlayView:
+        PlayViewConfig.currentPageAction = action;
+        break;
+      case Pages.AssetSelectionView:
+        AssetSelectionViewConfig.currentPageAction = action;
+        break;
+      case Pages.LendboxBuyView:
+        LendboxBuyViewConfig.currentPageAction = action;
+        break;
       default:
         break;
     }
@@ -678,9 +702,15 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     return List.of(_pages);
   }
 
-  void parseRoute(Uri uri, {String? title}) {
+  void parseRoute(Uri uri, {String? title, bool isExternal = false}) {
     _logger.d("Url: ${uri.toString()}");
+    Haptic.vibrate();
     if (uri.scheme == "http" || uri.scheme == "https") {
+      if (isExternal) {
+        BaseUtil.launchUrl(uri.toString());
+        return;
+      }
+
       AppState.delegate!.appState.currentAction = PageAction(
         page: WebViewPageConfig,
         state: PageState.addWidget,
@@ -726,7 +756,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         );
         break;
       case "appRating":
-        if (checkForRatingDialog()) dialogWidget = FelloRatingDialog();
+        if (checkForRatingDialog()) dialogWidget = const FelloInAppReview();
         break;
     }
     if (dialogWidget != null) {
@@ -779,15 +809,14 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
 
     switch (screenKey) {
       case 'journey':
-        onTapItem(RootController.journeyNavBarItem);
-
+        pageConfiguration = JourneyViewPageConfig;
         break;
       case 'save':
         onTapItem(RootController.saveNavBarItem);
 
         break;
       case 'play':
-        onTapItem(RootController.playNavBarItem);
+        pageConfiguration = PlayViewConfig;
         break;
       case 'win':
         onTapItem(RootController.winNavBarItem);
@@ -796,20 +825,45 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case 'profile':
         pageConfiguration = UserProfileDetailsConfig;
         break;
-      // case 'augDetails':
-      //   pageConfiguration = SaveAssetsViewConfig;
-      //   break;
-      case 'lboxDetails':
-        pageConfiguration = LendboxDetailsPageConfig;
+      case "accounts":
+        pageConfiguration = AccountsViewConfig;
         break;
+      case "goldDetails":
+        appState.currentAction = PageAction(
+            state: PageState.addWidget,
+            page: SaveAssetsViewConfig,
+            widget: AssetSectionView(
+              type: InvestmentType.AUGGOLD99,
+            ));
+        break;
+      case "floDetails":
+        appState.currentAction = PageAction(
+          state: PageState.addWidget,
+          page: SaveAssetsViewConfig,
+          widget: AssetSectionView(
+            type: InvestmentType.LENDBOXP2P,
+          ),
+        );
+        break;
+      case "flo10Details":
+        appState.currentAction = PageAction(
+            state: PageState.addWidget,
+            page: FloPremiumDetailsPageConfig,
+            widget: const FloPremiumDetailsView(is12: false));
+        break;
+      case "flo12Details":
+        appState.currentAction = PageAction(
+            state: PageState.addWidget,
+            page: FloPremiumDetailsPageConfig,
+            widget: const FloPremiumDetailsView(is12: true));
+        break;
+
       case 'quickTour':
         Future.delayed(const Duration(seconds: 2),
             SpotLightController.instance.startQuickTour);
 
         break;
-      case 'lendboxDetails':
-        pageConfiguration = LendboxDetailsPageConfig;
-        break;
+
       case 'kycVerify':
         pageConfiguration = KycDetailsPageConfig;
         break;
@@ -827,6 +881,19 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         BaseUtil()
             .openRechargeModalSheet(investmentType: InvestmentType.LENDBOXP2P);
         break;
+      case 'lboxBuy12':
+        BaseUtil.openFloBuySheet(
+            floAssetType: Constants.ASSET_TYPE_FLO_FIXED_6);
+        break;
+      case 'lboxBuy8':
+        BaseUtil.openFloBuySheet(floAssetType: Constants.ASSET_TYPE_FLO_FELXI);
+        break;
+
+      case 'lboxBuy10':
+        BaseUtil.openFloBuySheet(
+            floAssetType: Constants.ASSET_TYPE_FLO_FIXED_3);
+        break;
+
       case 'lboxSell':
         BaseUtil()
             .openSellModalSheet(investmentType: InvestmentType.LENDBOXP2P);
@@ -924,6 +991,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case 'powerPlayPrizes':
         openPowerPlayModalSheet();
         break;
+      case "earnMoreReturns":
+        pageConfiguration = EarnMoreReturnsViewPageConfig;
+        break;
     }
     if (pageConfiguration != null) {
       addPage(pageConfiguration);
@@ -933,6 +1003,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
 
   void onTapItem(NavBarItemModel item) {
     log('onTapItem ${item.title}');
+    while (AppState.screenStack.length > 1) {
+      AppState.backButtonDispatcher!.didPopRoute();
+    }
     var _rootController = locator<RootController>();
 
     _rootController.onChange(_rootController.navItems.values
@@ -952,8 +1025,8 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
 
   openWebGame(String game) {
     bool isLocked = false;
-    double netWorth = locator<UserService>().userFundWallet!.augGoldPrinciple +
-        (locator<UserService>().userFundWallet!.wLbPrinciple ?? 0.0);
+    double netWorth = locator<UserService>().userPortfolio.gold.principle +
+        (locator<UserService>().userPortfolio.flo.principle);
     for (var i in locator<GameRepo>().gameTier.data) {
       for (var j in i!.games) {
         if (j!.gameCode == game) {

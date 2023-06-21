@@ -25,14 +25,15 @@ import '../../../core/repository/user_repo.dart';
 
 class LauncherViewModel extends BaseViewModel {
   bool _isSlowConnection = false;
-  late Timer _timer3;
-  late Stopwatch _logoWatch;
-  bool _isPerformanceCollectionEnabled = false, _isFetchingData = false;
+  Timer? _timer3;
+  Stopwatch? _logoWatch;
+  bool _isPerformanceCollectionEnabled = false, _isFetchingData = true;
   String _performanceCollectionMessage =
       'Unknown status of performance collection.';
   final navigator = AppState.delegate!.appState;
 
-  AnimationController? loopOutlottieAnimationController;
+  AnimationController? loopOutlottieAnimationController,
+      loopingLottieAnimationController;
   int loopLottieDuration = 2500;
 
   // LOCATORS
@@ -63,22 +64,44 @@ class LauncherViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  bool isStillLooping = false;
+  bool isPreExecuted = false;
+  bool isHalfLottieExecuted = false;
+
   Future<void> init() async {
     isFetchingData = true;
-    _logoWatch = Stopwatch()..start();
-    // _togglePerformanceCollection();
-    initLogic();
+    unawaited(initLogic());
+    loopingLottieAnimationController!.addListener(() {
+      if (loopingLottieAnimationController!.status == AnimationStatus.forward) {
+        print("Looping lottie completed");
+        if (!isFetchingData) {
+          notifyListeners();
+          loopingLottieAnimationController!.stop();
+          unawaited(loopOutlottieAnimationController!.forward());
+          Future.delayed(const Duration(milliseconds: 900)).then((_) {
+            exitSplash();
+          });
+        }
+      }
+    });
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      unawaited(
+        loopingLottieAnimationController!.forward(from: 0.6).then((_) {
+          loopingLottieAnimationController!.repeat();
+        }),
+      );
+    });
     _timer3 = Timer(const Duration(seconds: 6), () {
       isSlowConnection = true;
     });
   }
 
   void exit() {
-    _timer3.cancel();
-    _logoWatch.stop();
+    _timer3?.cancel();
+    _logoWatch?.stop();
   }
 
-  initLogic() async {
+  Future<void> initLogic() async {
     try {
       await CacheService.initialize();
       //Initialize every time
@@ -89,9 +112,7 @@ class LauncherViewModel extends BaseViewModel {
 
       //Initialize only if user is onboarded
       if (userService.isUserOnboarded) {
-        // await _journeyRepo.init();
         await Future.wait([
-          // _journeyService.init(),
           CacheService.checkIfInvalidationRequired(),
           _analyticsService.login(
               isOnBoarded: true, baseUser: userService.baseUser),
@@ -100,44 +121,53 @@ class LauncherViewModel extends BaseViewModel {
                     _userRepo.updateUserAppFlyer(userService.baseUser!, token),
               ),
         ]);
-        // _userCoinService.init();
-        locator<GameRepo>().getGameTiers();
+        unawaited(locator<GameRepo>().getGameTiers());
         _referralService.init();
         _baseUtil.init();
-        _fcmListener.setupFcm();
+        unawaited(_fcmListener.setupFcm());
       }
     } catch (e) {
       _logger.e("Splash Screen init : $e");
-      _internalOpsService.logFailure(
+      unawaited(_internalOpsService.logFailure(
         userService.baseUser?.uid ?? '',
         FailType.Splash,
         {'error': "Splash Screen init : $e"},
-      );
+      ));
     }
 
-    _timer3.cancel();
-    int delayedSecond = _logoWatch.elapsed.inMilliseconds % loopLottieDuration;
-    delayedSecond = loopLottieDuration - delayedSecond;
-    await Future.delayed(Duration(milliseconds: delayedSecond));
-    isFetchingData = false;
-    unawaited(loopOutlottieAnimationController!.forward());
-    await Future.delayed(const Duration(milliseconds: 900));
+    _timer3?.cancel();
+    _isFetchingData = false;
 
+    // if (isStillLooping && !isPreExecuted) {
+    //   int delayedSecond =
+    //       _logoWatch.elapsed.inMilliseconds % loopLottieDuration;
+    //   delayedSecond = loopLottieDuration - delayedSecond;
+    //   await Future.delayed(Duration(milliseconds: delayedSecond));
+    //   unawaited(loopOutlottieAnimationController!.forward());
+    //   await Future.delayed(const Duration(milliseconds: 900));
+    //   exitSplash();
+    // }
+  }
+
+  void exitSplash() {
+    _logger.i("Splash: Exiting splash");
     if (!userService.isUserOnboarded) {
       _logger.d("New user. Moving to Onboarding..");
       bool showOnboarding = PreferenceHelper.getBool(
           PreferenceHelper.CACHE_ONBOARDING_COMPLETION);
 
       if (showOnboarding == false) {
-        return navigator.currentAction = PageAction(
+        navigator.currentAction = PageAction(
           state: PageState.replaceAll,
           page: OnBoardingViewPageConfig,
         );
+        return;
       } else {
-        return navigator.currentAction = PageAction(
+        navigator.currentAction = PageAction(
           state: PageState.replaceAll,
           page: LoginPageConfig,
         );
+        return;
       }
     }
 

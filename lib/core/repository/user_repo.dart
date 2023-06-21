@@ -7,6 +7,7 @@ import 'package:felloapp/core/enums/ttl.dart';
 import 'package:felloapp/core/model/alert_model.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/flc_pregame_model.dart';
+import 'package:felloapp/core/model/portfolio_model.dart';
 import 'package:felloapp/core/model/user_augmont_details_model.dart';
 import 'package:felloapp/core/model/user_bootup_model.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
@@ -21,6 +22,7 @@ import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:flutter/material.dart';
 
 import 'base_repo.dart';
 
@@ -518,39 +520,39 @@ class UserRepository extends BaseRepo {
       required int dayOpenCount}) async {
     UserBootUpDetailsModel userBootUp;
 
-    try {
-      Map<String, dynamic> queryParameters = {
-        'deviceId': deviceId,
-        'platform': platform,
-        'appVersion': appVersion,
-        'lastOpened': lastOpened,
-        'dayOpenCount': dayOpenCount.toString(),
-      };
+    // try {
+    Map<String, dynamic> queryParameters = {
+      'deviceId': deviceId,
+      'platform': platform,
+      'appVersion': appVersion,
+      'lastOpened': lastOpened,
+      'dayOpenCount': dayOpenCount.toString(),
+    };
 
-      final token = await getBearerToken();
+    final token = await getBearerToken();
 
-      final respone = await APIService.instance.getData(
-        ApiPath.userBootUp(
-          userService.baseUser?.uid,
-        ),
-        token: token,
-        queryParams: queryParameters,
-        cBaseUrl: _baseUrl,
-      );
+    final respone = await APIService.instance.getData(
+      ApiPath.userBootUp(
+        userService.baseUser?.uid,
+      ),
+      token: token,
+      queryParams: queryParameters,
+      cBaseUrl: _baseUrl,
+    );
+    debugPrint("Bootup Response: $respone");
+    userBootUp = UserBootUpDetailsModel.fromMap(respone);
 
-      userBootUp = UserBootUpDetailsModel.fromMap(respone);
-
-      return ApiResponse<UserBootUpDetailsModel>(model: userBootUp, code: 200);
-    } catch (e) {
-      logger!.d("Unable to fetch user boot up ee ${e.toString()}");
-      locator<InternalOpsService>().logFailure(
-        userService.baseUser?.uid ?? "",
-        FailType.UserBootUpDetailsFetchFailed,
-        {'message': "User Bootup details fetch failed"},
-      );
-      return ApiResponse.withError(
-          e.toString() ?? "Unable to get user bootup details", 400);
-    }
+    return ApiResponse<UserBootUpDetailsModel>(model: userBootUp, code: 200);
+    // } catch (e) {
+    //   logger!.d("Unable to fetch user boot up ee ${e.toString()}");
+    //   locator<InternalOpsService>().logFailure(
+    //     userService.baseUser?.uid ?? "",
+    //     FailType.UserBootUpDetailsFetchFailed,
+    //     {'message': "User Bootup details fetch failed"},
+    //   );
+    //   return ApiResponse.withError(
+    //       e.toString() ?? "Unable to get user bootup details", 400);
+    // }
   }
 
   Future<ApiResponse<bool>> isEmailRegistered(String email) async {
@@ -582,6 +584,20 @@ class UserRepository extends BaseRepo {
       final res = await APIService.instance.getData(ApiPath.isUsernameAvailable,
           queryParams: query, cBaseUrl: _baseUrl, token: token);
       return ApiResponse(code: 200, model: res['data']['isAvailable']);
+    } catch (e) {
+      logger.d(e);
+      return ApiResponse.withError(e.toString(), 400);
+    }
+  }
+
+  Future<ApiResponse<Portfolio>> getPortfolioData() async {
+    try {
+      final uid = userService.baseUser!.uid;
+      final token = await getBearerToken();
+      final res = await APIService.instance
+          .getData(ApiPath.portfolio(uid!), cBaseUrl: _baseUrl, token: token);
+      final Portfolio portfolio = Portfolio.fromMap(res['data']);
+      return ApiResponse(code: 200, model: portfolio);
     } catch (e) {
       logger.d(e);
       return ApiResponse.withError(e.toString(), 400);

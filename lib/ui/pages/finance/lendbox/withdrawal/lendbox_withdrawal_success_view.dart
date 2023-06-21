@@ -8,6 +8,8 @@ import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
 class LendboxWithdrawalSuccessView extends StatelessWidget {
+  const LendboxWithdrawalSuccessView({super.key});
+
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);

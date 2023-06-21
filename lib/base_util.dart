@@ -1,12 +1,16 @@
 //Project Imports
 //Dart & Flutter Imports
 import 'dart:async';
+import 'dart:developer' as d;
 import 'dart:math';
 
 import 'package:another_flushbar/flushbar.dart'; //Pub Imports
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/constants/cache_keys.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/aug_gold_rates_model.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
@@ -26,17 +30,20 @@ import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/analytics/base_analytics.dart';
+import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
+import 'package:felloapp/core/service/notifier_services/marketing_event_handler_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/back_button_actions.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
+import 'package:felloapp/ui/elements/fello_dialog/fello_in_app_review.dart';
 import 'package:felloapp/ui/modalsheets/confirm_exit_modal.dart';
-import 'package:felloapp/ui/modalsheets/deposit_options_modal_sheet.dart';
 import 'package:felloapp/ui/modalsheets/happy_hour_modal.dart';
+import 'package:felloapp/ui/pages/asset_selection.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_buy/gold_buy_view.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_sell/gold_sell_view.dart';
-import 'package:felloapp/ui/pages/finance/lendbox/deposit/lendbox_buy_view.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/withdrawal/lendbox_withdrawal_view.dart';
 import 'package:felloapp/ui/pages/games/web/web_home/web_game_modal_sheet.dart';
 import 'package:felloapp/ui/service_elements/username_input/username_input_view.dart';
@@ -55,11 +62,15 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
+import 'package:lottie/lottie.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher_string.dart';
-
 import 'core/model/timestamp_model.dart';
+import 'ui/pages/finance/lendbox/deposit/lendbox_buy_view.dart';
+
+enum FileType { svg, lottie, unknown, png }
 
 class BaseUtil extends ChangeNotifier {
   final CustomLogger logger = locator<CustomLogger>();
@@ -250,7 +261,7 @@ class BaseUtil extends ChangeNotifier {
   openProfileDetailsScreen() {
     // if (JourneyService.isAvatarAnimationInProgress) return;
     // if (_userService!.userJourneyStats!.mlIndex! > 1)
-    AppState.delegate!.parseRoute(Uri.parse("profile"));
+    AppState.delegate!.parseRoute(Uri.parse("accounts"));
     // else {
     // print("Reachng");
 
@@ -314,68 +325,145 @@ class BaseUtil extends ChangeNotifier {
     );
   }
 
-  openRechargeModalSheet({
+  void openRechargeModalSheet({
     int? amt,
     bool? isSkipMl,
     required InvestmentType investmentType,
   }) {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      // if (_userService!.userJourneyStats?.mlIndex == 1)
-      //   return BaseUtil.openDialog(
-      //     addToScreenStack: true,
-      //     isBarrierDismissible: true,
-      //     hapticVibrate: false,
-      //     content: CompleteProfileDialog(),
-      //   );
-      final bool? isAugDepositBanned = _userService
-          ?.userBootUp?.data!.banMap?.investments?.deposit?.augmont?.isBanned;
-      final String? augDepositBanNotice = _userService
-          ?.userBootUp?.data!.banMap?.investments?.deposit?.augmont?.reason;
-      final bool? islBoxlDepositBanned = _userService
-          ?.userBootUp?.data!.banMap?.investments?.deposit?.lendBox?.isBanned;
-      final String? lBoxDepositBanNotice = _userService
-          ?.userBootUp?.data!.banMap?.investments?.deposit?.lendBox?.reason;
-      if (investmentType == InvestmentType.AUGGOLD99 &&
-          isAugDepositBanned != null &&
-          isAugDepositBanned) {
-        return BaseUtil.showNegativeAlert(
-            augDepositBanNotice ?? locale.assetNotAvailable, locale.tryLater);
-      }
+    final bool? isAugDepositBanned = _userService
+        .userBootUp?.data!.banMap?.investments?.deposit?.augmont?.isBanned;
+    final String? augDepositBanNotice = _userService
+        .userBootUp?.data!.banMap?.investments?.deposit?.augmont?.reason;
 
-      if (investmentType == InvestmentType.LENDBOXP2P &&
-          islBoxlDepositBanned != null &&
-          islBoxlDepositBanned) {
-        return BaseUtil.showNegativeAlert(
-          lBoxDepositBanNotice ?? locale.assetNotAvailable,
-          locale.tryLater,
-        );
-      }
-      double amount = 0;
+    if (investmentType == InvestmentType.AUGGOLD99 &&
+        isAugDepositBanned != null &&
+        isAugDepositBanned) {
+      BaseUtil.showNegativeAlert(
+          augDepositBanNotice ?? locale.assetNotAvailable, locale.tryLater);
+      return;
+    }
 
+    double amount = 0;
+
+    if (investmentType == InvestmentType.LENDBOXP2P) {
+      AppState.delegate!.appState.currentAction = PageAction(
+        page: AssetSelectionViewConfig,
+        state: PageState.addWidget,
+        widget: AssetSelectionPage(
+          showOnlyFlo: true,
+          amount: amt,
+          isSkipMl: isSkipMl ?? false,
+        ),
+      );
+    }
+
+    if (investmentType == InvestmentType.AUGGOLD99) {
       BaseUtil.openModalBottomSheet(
-        addToScreenStack: true,
-        enableDrag: false,
-        hapticVibrate: true,
-        isBarrierDismissible: false,
-        backgroundColor: Colors.transparent,
-        isScrollControlled: true,
-        content: investmentType == InvestmentType.AUGGOLD99
-            ? GoldBuyView(
-                onChanged: (p0) => amount = p0,
-                amount: amt,
-                skipMl: isSkipMl ?? false,
-              )
-            : LendboxBuyView(
-                amount: amt,
-                skipMl: isSkipMl ?? false,
-                onChanged: (p0) => amount = p0,
-              ),
-      ).then((value) {
-        AppState.isRepeated = false;
-        AppState.onTap = null;
-        locator<BackButtonActions>().isTransactionCancelled = false;
-      });
-    });
+          addToScreenStack: true,
+          enableDrag: false,
+          hapticVibrate: true,
+          isBarrierDismissible: false,
+          backgroundColor: Colors.transparent,
+          isScrollControlled: true,
+          content: GoldBuyView(
+            onChanged: (p0) => amount = p0,
+            amount: amt,
+            skipMl: isSkipMl ?? false,
+          ));
+    }
+
+    AppState.isRepeated = false;
+    AppState.onTap = null;
+    locator<BackButtonActions>().isTransactionCancelled = false;
+  }
+
+  static void openFloBuySheet(
+      {int? amt, bool? isSkipMl, required String floAssetType}) {
+    final UserService _userService = locator<UserService>();
+    final S locale = locator<S>();
+    bool isUserBanned = false;
+    switch (floAssetType) {
+      case Constants.ASSET_TYPE_FLO_FIXED_6:
+        final bool? islBoxDepositBanned = _userService.userBootUp?.data!.banMap
+            ?.investments?.deposit?.lendBoxFd2?.isBanned;
+        final String? lBoxDepositBanNotice = _userService
+            .userBootUp?.data!.banMap?.investments?.deposit?.lendBoxFd2?.reason;
+        if (islBoxDepositBanned != null && islBoxDepositBanned) {
+          BaseUtil.showNegativeAlert(
+            lBoxDepositBanNotice ?? locale.assetNotAvailable,
+            locale.tryLater,
+          );
+          isUserBanned = true;
+        }
+        break;
+
+      case Constants.ASSET_TYPE_FLO_FIXED_3:
+        final bool? islBoxDepositBanned = _userService.userBootUp?.data!.banMap
+            ?.investments?.deposit?.lendBoxFd1?.isBanned;
+        final String? lBoxDepositBanNotice = _userService
+            .userBootUp?.data!.banMap?.investments?.deposit?.lendBoxFd1?.reason;
+        if (islBoxDepositBanned != null && islBoxDepositBanned) {
+          BaseUtil.showNegativeAlert(
+            lBoxDepositBanNotice ?? locale.assetNotAvailable,
+            locale.tryLater,
+          );
+          isUserBanned = true;
+        }
+        break;
+      case Constants.ASSET_TYPE_FLO_FELXI:
+        final bool? islBoxDepositBanned = _userService
+            .userBootUp?.data!.banMap?.investments?.deposit?.lendBox?.isBanned;
+        final String? lBoxDepositBanNotice = _userService
+            .userBootUp?.data!.banMap?.investments?.deposit?.lendBox?.reason;
+        if (islBoxDepositBanned != null && islBoxDepositBanned) {
+          BaseUtil.showNegativeAlert(
+            lBoxDepositBanNotice ?? locale.assetNotAvailable,
+            locale.tryLater,
+          );
+          isUserBanned = true;
+        }
+        break;
+    }
+
+    Haptic.vibrate();
+
+    if (isUserBanned) return;
+    AppState.delegate!.appState.currentAction = PageAction(
+      page: LendboxBuyViewConfig,
+      state: PageState.addWidget,
+      widget: LendboxBuyView(
+        amount: amt,
+        skipMl: isSkipMl ?? false,
+        onChanged: (p0) => p0,
+        floAssetType: floAssetType,
+      ),
+    );
+
+    AppState.isRepeated = false;
+    AppState.onTap = null;
+    locator<BackButtonActions>().isTransactionCancelled = false;
+  }
+
+  Future<void> newUserCheck() async {
+    unawaited(locator<MarketingEventHandlerService>().getHappyHourCampaign());
+
+    if (_userService.userSegments.contains("NEW_USER")) {
+      await CacheService.invalidateByKey(CacheKeys.USER);
+      await _userService.setBaseUser();
+    }
+  }
+
+  static String getMaturityPref(String maturityEnum) {
+    switch (maturityEnum) {
+      case '0':
+        return "Withdrawing to your bank account after maturity";
+      case '1':
+        return "Auto-investing in 12% Flo after maturity";
+      case '2':
+        return "Move to Flo Basic after maturity";
+      default:
+        return "What will happen to your investment after maturity?";
+    }
   }
 
   Future<void> showConfirmExit() async {
@@ -441,27 +529,39 @@ class BaseUtil extends ChangeNotifier {
     //       content: CompleteProfileDialog());
     locator<AnalyticsService>()
         .track(eventName: AnalyticsEvents.assetOptionsModalTapped);
-    Future.delayed(Duration(milliseconds: timer), () {
-      return openModalBottomSheet(
-          addToScreenStack: true,
-          enableDrag: false,
-          hapticVibrate: true,
-          backgroundColor:
-              UiConstants.kRechargeModalSheetAmountSectionBackgroundColor,
-          isBarrierDismissible: true,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(
-              SizeConfig.roundness12,
-            ),
-            topRight: Radius.circular(SizeConfig.roundness24),
-          ),
-          content: DepositOptionModalSheet(
+    Haptic.vibrate();
+    Future.delayed(
+      Duration(milliseconds: timer),
+      () {
+        return AppState.delegate!.appState.currentAction = PageAction(
+          page: AssetSelectionViewConfig,
+          state: PageState.addWidget,
+          widget: AssetSelectionPage(
+            showOnlyFlo: false,
             amount: amount,
             isSkipMl: isSkipMl,
-            title: title,
-            subtitle: subtitle,
-          ));
-    });
+          ),
+        );
+
+        // return openModalBottomSheet(
+        //   addToScreenStack: true,
+        //   hapticVibrate: true,
+        //   backgroundColor:
+        //       UiConstants.kRechargeModalSheetAmountSectionBackgroundColor,
+        //   isBarrierDismissible: false,
+        //   isScrollControlled: true,
+        //   borderRadius: BorderRadius.only(
+        //       topLeft: Radius.circular(SizeConfig.roundness12),
+        //       topRight: Radius.circular(SizeConfig.roundness24)),
+        //   content: AssetSelectionPage(
+        //     showOnlyFlo: false,
+        //     amount: amount,
+        //     isSkipMl: isSkipMl,
+        //     isFromGlobal: true,
+        //   ),
+        // );
+      },
+    );
   }
 
   static showPositiveAlert(String? title, String? message, {int seconds = 2}) {
@@ -497,10 +597,10 @@ class BaseUtil extends ChangeNotifier {
     if (addToScreenStack != null && addToScreenStack == true) {
       AppState.screenStack.add(ScreenItem.dialog);
     }
-    debugPrint("Current Stack: ${AppState.screenStack}");
-    if (hapticVibrate != null && hapticVibrate == true) Haptic.vibrate();
+    d.log("Current Stack: ${AppState.screenStack}");
+    Haptic.vibrate();
     await showDialog(
-      barrierColor: barrierColor,
+      barrierColor: barrierColor ?? Colors.black.withOpacity(0.7),
       context: AppState.delegate!.navigatorKey.currentContext!,
       barrierDismissible: isBarrierDismissible,
       builder: (ctx) => content!,
@@ -522,8 +622,8 @@ class BaseUtil extends ChangeNotifier {
     if (addToScreenStack != null && addToScreenStack == true) {
       AppState.screenStack.add(ScreenItem.dialog);
     }
-    if (hapticVibrate != null && hapticVibrate == true) Haptic.vibrate();
-    debugPrint("Current Stack: ${AppState.screenStack}");
+    Haptic.vibrate();
+    d.log("Current Stack: ${AppState.screenStack}");
     await showModalBottomSheet(
       enableDrag: enableDrag,
       constraints: boxContraints,
@@ -541,6 +641,77 @@ class BaseUtil extends ChangeNotifier {
       context: AppState.delegate!.navigatorKey.currentContext!,
       builder: (ctx) => content!,
     );
+  }
+
+  static void showFelloRatingSheet() {
+    if (PreferenceHelper.getBool(PreferenceHelper.APP_RATING_SUBMITTED) ==
+        false) {
+      Future.delayed(const Duration(milliseconds: 300), () {
+        Haptic.vibrate();
+
+        BaseUtil.openModalBottomSheet(
+          addToScreenStack: true,
+          enableDrag: false,
+          hapticVibrate: true,
+          isBarrierDismissible: true,
+          backgroundColor: Colors.transparent,
+          isScrollControlled: true,
+          content: const FelloInAppReview(),
+        );
+      });
+    }
+  }
+
+  static FileType getFileType(String fileUrl) {
+    String extension = fileUrl.toLowerCase().split('.').last;
+
+    switch (extension) {
+      case "svg":
+        return FileType.svg;
+      case "json":
+      case "lottie":
+        return FileType.lottie;
+      case "png":
+      case "jpeg":
+      case "webp":
+      case "jpg":
+        return FileType.png;
+      default:
+        return FileType.unknown;
+    }
+  }
+
+  static Widget getWidgetBasedOnUrl(String fileUrl,
+      {double? height, double? width}) {
+    FileType fileType = getFileType(fileUrl);
+
+    switch (fileType) {
+      case FileType.svg:
+        return SvgPicture.network(
+          fileUrl,
+          fit: BoxFit.contain,
+          height: height,
+          width: width,
+        );
+        break;
+      case FileType.lottie:
+        return Lottie.network(fileUrl,
+            fit: BoxFit.contain, height: height, width: width);
+        break;
+      case FileType.png:
+        return CachedNetworkImage(
+          fit: BoxFit.contain,
+          imageUrl: fileUrl,
+          height: height,
+          width: width,
+        );
+        break;
+      default:
+        return const Icon(
+          Icons.add,
+          color: Colors.white,
+        );
+    }
   }
 
   Future<bool> authenticateUser(AuthCredential credential) {

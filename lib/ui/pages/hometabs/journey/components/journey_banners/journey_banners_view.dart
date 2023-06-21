@@ -8,7 +8,6 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'dart:math' as math;
 
 class JourneyBannersView extends StatelessWidget {
   const JourneyBannersView({Key? key}) : super(key: key);
@@ -21,7 +20,7 @@ class JourneyBannersView extends StatelessWidget {
       onModelDispose: (model) => model.clear(),
       builder: (ctx, model, child) {
         return Positioned(
-          bottom: SizeConfig.navBarHeight,
+          bottom: 0,
           child: Container(
             width: SizeConfig.screenWidth,
             height: kBottomNavigationBarHeight,

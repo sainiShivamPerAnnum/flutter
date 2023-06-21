@@ -15,6 +15,7 @@ import 'package:felloapp/ui/pages/userProfile/referrals/referral_details/referra
 import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/extensions/rich_text_extension.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -85,39 +86,48 @@ class ReferralDetailsView extends StatelessWidget {
                               SizedBox(
                                 height: SizeConfig.padding16,
                               ),
-                              RichText(
-                                textAlign: TextAlign.center,
-                                text: TextSpan(
-                                  children: [
-                                    TextSpan(
-                                        text: locale.earnUpto +
-                                            '₹' +
-                                            AppConfig.getValue(
-                                                    AppConfigKey.referralBonus)
-                                                .toString() +
-                                            ' and ',
-                                        style: TextStyles.sourceSans.body3
-                                            .colour(UiConstants.kTextColor3)),
-                                    WidgetSpan(
-                                        child: Container(
-                                      margin: EdgeInsets.symmetric(
-                                          horizontal: SizeConfig.padding4),
-                                      height: 17,
-                                      width: 17,
-                                      child: SvgPicture.asset(
-                                        Assets.token,
-                                      ),
-                                    )),
-                                    TextSpan(
-                                        text: AppConfig.getValue(AppConfigKey
-                                                    .referralFlcBonus)
-                                                .toString() +
-                                            locale.winIpadFromGT,
-                                        style: TextStyles.sourceSans.body3
-                                            .colour(UiConstants.kTextColor3)),
-                                  ],
-                                ),
-                              ),
+                              AppConfig.getValue(
+                                      AppConfigKey.app_referral_message)
+                                  .toString()
+                                  .beautify(
+                                      style: TextStyles.body3
+                                          .colour(Colors.white70),
+                                      boldStyle: TextStyles.sourceSansB.body3
+                                          .colour(Colors.white),
+                                      alignment: TextAlign.center),
+                              // RichText(
+                              //   textAlign: TextAlign.center,
+                              //   text: TextSpan(
+                              //     children: [
+                              //       TextSpan(
+                              //           text: locale.earnUpto +
+                              //               '₹' +
+                              //               AppConfig.getValue(
+                              //                       AppConfigKey.referralBonus)
+                              //                   .toString() +
+                              //               ' and ',
+                              //           style: TextStyles.sourceSans.body3
+                              //               .colour(UiConstants.kTextColor3)),
+                              //       WidgetSpan(
+                              //           child: Container(
+                              //         margin: EdgeInsets.symmetric(
+                              //             horizontal: SizeConfig.padding4),
+                              //         height: 17,
+                              //         width: 17,
+                              //         child: SvgPicture.asset(
+                              //           Assets.token,
+                              //         ),
+                              //       )),
+                              //       TextSpan(
+                              //           text: AppConfig.getValue(AppConfigKey
+                              //                       .referralFlcBonus)
+                              //                   .toString() +
+                              //               locale.winIpadFromGT,
+                              //           style: TextStyles.sourceSans.body3
+                              //               .colour(UiConstants.kTextColor3)),
+                              //     ],
+                              //   ),
+                              // ),
                               SizedBox(
                                 height: SizeConfig.padding28,
                               ),
@@ -857,12 +867,8 @@ class _InfoComponentState extends State<HowToEarnComponment> {
                     //   leadingAsset: Assets.wmtsaveMoney,
                     // ),
                     InfoTile(
-                      title: locale.askfrndForInvesText +
-                          "₹${widget.model.unlockReferralBonus}" +
-                          locale.askfrndForInvesText1 +
-                          "${AppConfig.getValue(AppConfigKey.referralBonus)}" +
-                          locale.askfrndForInvesText2(AppConfig.getValue(
-                              AppConfigKey.referralFlcBonus)),
+                      title:
+                          "Once your friend makes their first investment of minimum ₹100, you both get rewards",
                       leadingAsset: Assets.tickets,
                     ),
                     SizedBox(height: SizeConfig.padding8),

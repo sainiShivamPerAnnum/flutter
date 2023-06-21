@@ -1,16 +1,15 @@
+import 'dart:developer';
+
 import 'package:felloapp/core/model/bottom_nav_bar_item_model.dart';
 import 'package:felloapp/feature/tambola/tambola.dart';
-import 'package:felloapp/ui/pages/hometabs/journey/journey_view.dart';
-import 'package:felloapp/ui/pages/hometabs/play/play_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
-import 'package:felloapp/ui/pages/hometabs/win/win_view.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/show_case_key.dart';
 import 'package:flutter/material.dart';
 
 class RootController {
   static final tambolaNavBar = NavBarItemModel(
-      "Tambola", Assets.navTambolaLottie, ShowCaseKeys.TambolaKey);
+      "Tickets", Assets.navTambolaLottie, ShowCaseKeys.TambolaKey);
   static final journeyNavBarItem =
       NavBarItemModel("Journey", Assets.navJourneyLottie, ShowCaseKeys.Journey);
 
@@ -27,31 +26,18 @@ class RootController {
   Map<Widget, NavBarItemModel> navItems = {};
 
   void onChange(NavBarItemModel model) {
+    log("onChange ${model.title}");
     currentNavBarItemModel = model;
   }
 
   void getNavItems(String navItem) {
     switch (navItem) {
-      case "JN":
-        navItems.putIfAbsent(
-            const JourneyView(), () => RootController.journeyNavBarItem);
-
-        break;
-
       case "SV":
         navItems.putIfAbsent(const Save(), () => RootController.saveNavBarItem);
         break;
       case "TM":
         navItems.putIfAbsent(const TambolaHomeView(standAloneScreen: false),
             () => RootController.tambolaNavBar);
-        break;
-
-      case "WN":
-      case "AC":
-        navItems.putIfAbsent(const Win(), () => RootController.winNavBarItem);
-        break;
-      case "PL":
-        navItems.putIfAbsent(const Play(), () => RootController.playNavBarItem);
         break;
 
       default:

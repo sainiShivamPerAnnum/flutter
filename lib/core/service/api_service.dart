@@ -82,13 +82,11 @@ class APIService implements API {
         'uid': userService?.firebaseUser?.uid ?? '',
         if (headers != null) ...headers
       });
-      // log("API:: $url: ${DateTime.now().millisecondsSinceEpoch - startTime}");
-      // logger!.d("response from $token");
-      // logger!.d("Get Response: ${response.statusCode}");
-      // logger!.d("Get Response: ${response.body}");
+
+      log(token.toString());
 
       logger?.i(
-          "API:: GET REQUEST \n=> PATH: $url  \n=> StatusCode: ${response.statusCode} \n"
+          "API:: GET REQUEST \n=> PATH: $finalPath  \n=> StatusCode: ${response.statusCode} \n=> queryParam: $queryParams \n=> headers: $headers \n"
           "=> Response Body: ${response.body}");
 
       if (decryptData) {
@@ -155,7 +153,8 @@ class APIService implements API {
       );
       // log("API:: $url: ${DateTime.now().millisecondsSinceEpoch - startTime}");
 
-      logger?.i("API:: POST REQUEST \n=> PATH: $url  "
+      logger?.i(
+          "API:: POST REQUEST \n=> PATH: $_url \n=> queryParam: $queryParams \n=> headers: $headers "
           "\n=> StatusCode: ${response.statusCode} "
           "\nRequest Body: $body \n"
           "=> Response Body: ${response.body}");
@@ -202,8 +201,7 @@ class APIService implements API {
         headers: headers,
         body: jsonEncode(body ?? {}),
       );
-
-      logger?.i("API:: PUT REQUEST \n=> PATH: $url  "
+      logger?.i("API:: PUT REQUEST \n=> PATH: $_url  \n=> headers: $headers"
           "\n=> StatusCode: ${response.statusCode} "
           "\nRequest Body: $body \n"
           "=> Response Body: ${response.body}");

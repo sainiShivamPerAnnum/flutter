@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
@@ -31,19 +32,21 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
+import 'package:felloapp/ui/elements/bottom_nav_bar/default_quick_save_modal_sheet.dart';
+import 'package:felloapp/ui/elements/bottom_nav_bar/quick_save_modal_sheet.dart';
 import 'package:felloapp/ui/modalsheets/security_modal_sheet.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/ui/service_elements/last_week/last_week_view.dart';
-import 'package:felloapp/ui/shared/spotlight_controller.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
-import 'package:felloapp/util/styles/size_config.dart';
-import 'package:felloapp/util/styles/ui_constants.dart';
+import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
+
+import '../../../util/assets.dart';
 // import 'package:flutter_dynamic_icon/flutter_dynamic_icon.dart';
 
 enum NavBarItem { Journey, Save, Account, Play, Tambola }
@@ -79,7 +82,6 @@ class RootViewModel extends BaseViewModel {
   bool get isWelcomeAnimationInProgress => _isWelcomeAnimationInProgress;
 
   set isWelcomeAnimationInProgress(bool value) {
-    log("isWelcomeAnimationInProgress: $value");
     _isWelcomeAnimationInProgress = value;
     notifyListeners();
   }
@@ -93,7 +95,7 @@ class RootViewModel extends BaseViewModel {
       locator<MarketingEventHandlerService>();
   final RootController _rootController = locator<RootController>();
 
-  Future<void> refresh() async {
+  Future<void> pullToRefresh() async {
     if (_rootController.currentNavBarItemModel ==
         RootController.tambolaNavBar) {
       return;
@@ -102,9 +104,9 @@ class RootViewModel extends BaseViewModel {
     await Future.wait([
       _userCoinService.getUserCoinBalance(),
       _userService.getUserFundWalletData(),
-      _journeyService.checkForMilestoneLevelChange(),
+      // _journeyService.checkForMilestoneLevelChange(),
       _gtService.updateUnscratchedGTCount(),
-      _journeyService.getUnscratchedGT(),
+      // _journeyService.getUnscratchedGT(),
       _subscriptionService.getSubscription(),
     ]);
 
@@ -130,12 +132,10 @@ class RootViewModel extends BaseViewModel {
 
         if (!await verifyUserBootupDetails()) return;
         await checkForBootUpAlerts();
+        // if (showNewInstallPopUp()) {
         await showLastWeekOverview();
-
-        if (AppState.isFirstTime) {
-          Future.delayed(const Duration(seconds: 1),
-              SpotLightController.instance.showTourDialog);
-        }
+        // }
+        showMarketingCampings();
         await Future.wait([
           _referralService.verifyReferral(),
           _referralService.initDynamicLinks(),
@@ -144,22 +144,22 @@ class RootViewModel extends BaseViewModel {
         unawaited(handleStartUpNotificationData());
 
         await Future.wait([
-          _userService.checkForNewNotifications(),
+          // _userService.checkForNewNotifications(),
+          _gtService.updateUnscratchedGTCount(),
           _userService.getProfilePicture(),
           _fcmListener.refreshTopics(),
         ]);
 
         _initAdhocNotifications();
-
-        if (!AppState.isFirstTime && fetchCampaign) {
-          showMarketingCampings();
-        }
       },
     );
   }
 
   void showMarketingCampings() {
-    Future.delayed(const Duration(seconds: 2), _marketingService.getCampaigns);
+    if (AppState.isRootAvailableForIncomingTaskExecution) {
+      Future.delayed(
+          const Duration(seconds: 2), _marketingService.getCampaigns);
+    }
   }
 
   Map<Widget, NavBarItemModel> get navBarItems =>
@@ -184,13 +184,149 @@ class RootViewModel extends BaseViewModel {
     }
   }
 
-  // uploadMilestone(){
+  // bool showNewInstallPopUp() {
+  //   if (!PreferenceHelper.getBool(PreferenceHelper.NEW_INSTALL_POPUP,
+  //           def: false) &&
+  //       AppState.isRootAvailableForIncomingTaskExecution) {
+  //     fetchCampaign = false;
+  //     AppState.isRootAvailableForIncomingTaskExecution = false;
+  //     BaseUtil.openDialog(
+  //         isBarrierDismissible: true,
+  //         addToScreenStack: true,
+  //         content: Dialog(
+  //           shape: RoundedRectangleBorder(
+  //             borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+  //           ),
+  //           child: WillPopScope(
+  //             onWillPop: () async {
+  //               if (AppState.screenStack.last == ScreenItem.dialog) {
+  //                 AppState.screenStack.removeLast();
+  //                 AppState.isRootAvailableForIncomingTaskExecution = true;
 
+  //                 showMarketingCampings();
+  //               }
+  //               return Future.value(true);
+  //             },
+  //             child: GestureDetector(
+  //               onTap: () async {
+  //                 AppState.backButtonDispatcher!.didPopRoute();
+  //                 AppState.isRootAvailableForIncomingTaskExecution = true;
+
+  //                 showMarketingCampings();
+  //               },
+  //               child: Image.asset(
+  //                   _userService.userSegments.contains(Constants.US_FLO_OLD)
+  //                       ? Assets.oldUserPopUp
+  //                       : Assets.newUserPopUp),
+  //             ),
+  //           ),
+  //         ));
+  //     PreferenceHelper.setBool(PreferenceHelper.NEW_INSTALL_POPUP, true);
+  //     return false;
+  //   } else {
+  //     return true;
+  //   }
   // }
 
-  // downloadJourneyPage() {
-  //   _journeyRepo!.fetchJourneyPages(1, JourneyRepository.PAGE_DIRECTION_UP);
-  // }
+  FileType getFileType(String fileUrl) {
+    String extension = fileUrl.toLowerCase().split('.').last;
+
+    switch (extension) {
+      case "svg":
+        return FileType.svg;
+      case "json":
+      case "lottie":
+        return FileType.lottie;
+      case "png":
+      case "jpeg":
+      case "webp":
+      case "jpg":
+        return FileType.png;
+      default:
+        return FileType.unknown;
+    }
+  }
+
+  Widget centerTab(
+    BuildContext context,
+  ) {
+    Widget childWidget;
+    final quickSaveData = _userService.quickSaveModel?.data;
+
+    if (quickSaveData == null || quickSaveData.isEmpty) {
+      return defaultCenterButton();
+    }
+
+    if (quickSaveData.length == 1) {
+      String fileUrl = quickSaveData[1].icon!;
+      childWidget = BaseUtil.getWidgetBasedOnUrl(fileUrl);
+    } else {
+      childWidget = const Icon(
+        Icons.add,
+        color: Colors.white,
+      );
+    }
+
+    void onTap() {
+      if (quickSaveData.length == 1) {
+        if (quickSaveData[0].action == null ||
+            (quickSaveData[0].action?.isEmpty ?? false)) {
+          BaseUtil().openRechargeModalSheet(
+            investmentType: InvestmentType.AUGGOLD99,
+          );
+        } else {
+          AppState.delegate!.parseRoute(Uri.parse(quickSaveData[0].action!));
+        }
+      } else {
+        BaseUtil.openModalBottomSheet(
+          addToScreenStack: true,
+          enableDrag: false,
+          hapticVibrate: true,
+          isBarrierDismissible: true,
+          backgroundColor: Colors.transparent,
+          isScrollControlled: true,
+          content: QuickSaveModalSheet(
+            quickSaveData: quickSaveData,
+          ),
+        );
+      }
+
+      locator<AnalyticsService>().track(
+        eventName: AnalyticsEvents.quickCheckoutTapped,
+      );
+    }
+
+    return FloatingActionButton(
+      elevation: 10,
+      onPressed: onTap,
+      backgroundColor: Colors.black,
+      child: childWidget,
+    );
+  }
+
+  Widget defaultCenterButton() {
+    return FloatingActionButton(
+      elevation: 10,
+      backgroundColor: Colors.black,
+      onPressed: () {
+        BaseUtil.openModalBottomSheet(
+          addToScreenStack: true,
+          enableDrag: false,
+          hapticVibrate: true,
+          isBarrierDismissible: true,
+          backgroundColor: Colors.transparent,
+          isScrollControlled: true,
+          content: const DefaultQuickSaveModalSheet(),
+        );
+      },
+      child: const Icon(
+        Icons.add,
+        color: Colors.white,
+      ),
+    );
+  }
+
+  void onCenterButtonTap() {}
 
   Future<void> openJourneyView() async {
     AppState.delegate!.appState.currentAction =
@@ -224,7 +360,7 @@ class RootViewModel extends BaseViewModel {
     if (AppState.isRootAvailableForIncomingTaskExecution == false) return;
     if (updateAvailable) {
       AppState.isRootAvailableForIncomingTaskExecution = false;
-      BaseUtil.openDialog(
+      unawaited(BaseUtil.openDialog(
         isBarrierDismissible: false,
         hapticVibrate: true,
         addToScreenStack: true,
@@ -251,11 +387,11 @@ class RootViewModel extends BaseViewModel {
             return false;
           },
         ),
-      );
+      ));
     } else if (isMsgNoticeAvailable) {
       AppState.isRootAvailableForIncomingTaskExecution = false;
       String msg = PreferenceHelper.getString(Constants.MSG_NOTICE);
-      BaseUtil.openDialog(
+      unawaited(BaseUtil.openDialog(
         isBarrierDismissible: false,
         hapticVibrate: true,
         addToScreenStack: true,
@@ -273,7 +409,7 @@ class RootViewModel extends BaseViewModel {
             return false;
           },
         ),
-      );
+      ));
     }
   }
 
@@ -420,9 +556,9 @@ class RootViewModel extends BaseViewModel {
   }
 
   Future<void> showLastWeekOverview() async {
-    log('showLastWeekOverview called', name: 'HomeVM');
-
     if (isWelcomeAnimationInProgress &&
+        AppState.isFirstTime == false &&
+        !_userService.isUserInFirstWeekOfSignUp() &&
         await BaseUtil.isFirstTimeThisWeek()) {
       log('showLastWeekOverview condition ok', name: 'HomeVM');
 
@@ -437,6 +573,7 @@ class RootViewModel extends BaseViewModel {
           if (AppState.screenStack.length == 1 &&
               (AppState.screenStack.last != ScreenItem.dialog ||
                   AppState.screenStack.last != ScreenItem.modalsheet)) {
+            AppState.isRootAvailableForIncomingTaskExecution = false;
             unawaited(BaseUtil.openModalBottomSheet(
               addToScreenStack: true,
               backgroundColor: UiConstants.gameCardColor,

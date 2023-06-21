@@ -9,18 +9,17 @@ class BaseDialog extends StatelessWidget {
   Widget build(BuildContext context) {
     return Dialog(
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(SizeConfig.cardBorderRadius),
-      ),
+          borderRadius: BorderRadius.circular(SizeConfig.cardBorderRadius)),
       elevation: 0.0,
       backgroundColor: Colors.transparent,
-      child: dialogContent(context),
       insetPadding: EdgeInsets.symmetric(horizontal: SizeConfig.padding20),
+      child: dialogContent(context),
     );
   }
 
-  dialogContent(BuildContext context) {
+  Widget dialogContent(BuildContext context) {
     return Container(
-      decoration: new BoxDecoration(
+      decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(SizeConfig.cardBorderRadius),
         gradient: LinearGradient(
           begin: Alignment.topCenter,
@@ -38,12 +37,12 @@ class BaseDialog extends StatelessWidget {
             bottom: SizeConfig.padding12,
             right: SizeConfig.padding12,
             left: SizeConfig.padding12,
-            top: SizeConfig.padding32,
+            top: SizeConfig.padding24,
           ),
           margin: EdgeInsets.all(1),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(SizeConfig.cardBorderRadius),
-            color: UiConstants.kSecondaryBackgroundColor,
+            color: UiConstants.kTambolaMidTextColor,
           ),
           child: content),
     );

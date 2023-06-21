@@ -9,7 +9,6 @@ import 'package:felloapp/ui/pages/static/blur_filter.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/service_elements/user_service/life_time_wins.dart';
 import 'package:felloapp/ui/service_elements/user_service/net_worth_value.dart';
-import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -67,8 +66,22 @@ class JourneyAppBar extends StatelessWidget {
                                 shape: BoxShape.circle,
                               ),
                               padding: EdgeInsets.all(SizeConfig.padding2),
-                              child: ProfileImageSE(
-                                  radius: SizeConfig.avatarRadius * 0.9),
+                              child: CircleAvatar(
+                                backgroundColor: Colors.black,
+                                radius: SizeConfig.avatarRadius * 0.9,
+                                child: GestureDetector(
+                                  child: Icon(
+                                    Icons.arrow_back_ios_new_rounded,
+                                    size: SizeConfig.padding20,
+                                    color: Colors.white,
+                                  ),
+                                  onTap: () {
+                                    Haptic.vibrate();
+                                    AppState.backButtonDispatcher!
+                                        .didPopRoute();
+                                  },
+                                ),
+                              ),
                             ),
                             SizedBox(width: SizeConfig.padding12),
                             Expanded(

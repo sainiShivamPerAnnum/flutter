@@ -17,6 +17,7 @@ import 'package:felloapp/util/show_case_key.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:lottie/lottie.dart';
 import 'package:showcaseview/showcaseview.dart';
 
 import '../widgets/past_week_winners_section.dart';
@@ -74,10 +75,10 @@ class _TambolaHomeDetailsViewState extends State<TambolaHomeDetailsView> {
 
     return BaseView<TambolaHomeDetailsViewModel>(
       onModelReady: (model) => model.init(),
-      onModelDispose: (model) => model.dispose(),
+      onModelDispose: (model) => model.dump(),
       builder: (context, model, child) {
         return Scaffold(
-          backgroundColor: const Color(0XFF141414),
+          backgroundColor: const Color(0XF2a2a2a),
           appBar: widget.isStandAloneScreen
               ? AppBar(
                   elevation: 0,
@@ -105,8 +106,13 @@ class _TambolaHomeDetailsViewState extends State<TambolaHomeDetailsView> {
                         mainAxisSize: MainAxisSize.min,
                         children: [
                           SvgPicture.asset(
-                            Assets.cr1_Tambola,
-                            height: SizeConfig.screenHeight! * 0.2,
+                            Assets.tambolaCardAsset,
+                            width: SizeConfig.screenWidth! * 0.4,
+                          ),
+                          Text(
+                            "Tickets",
+                            style: TextStyles.rajdhaniB.title1,
+                            textAlign: TextAlign.center,
                           ),
                           SizedBox(
                             height: SizeConfig.padding14,
@@ -121,10 +127,14 @@ class _TambolaHomeDetailsViewState extends State<TambolaHomeDetailsView> {
                         ],
                       ),
                     ),
-                    Padding(
-                      padding:
-                          EdgeInsets.symmetric(vertical: SizeConfig.padding12),
-                      child: const TambolaTicketInfo(),
+                    SizedBox(
+                      height: SizeConfig.blockSizeVertical! * 2,
+                    ),
+                    SvgPicture.asset(
+                      "assets/svg/first_ticket_unlock.svg",
+                      width: SizeConfig.screenWidth! * 0.9,
+                      // height: SizeConfig.iconSize1 * 1.5,
+                      fit: BoxFit.cover,
                     ),
                     Container(
                       margin:
@@ -139,7 +149,7 @@ class _TambolaHomeDetailsViewState extends State<TambolaHomeDetailsView> {
                     ),
                     SizedBox(height: SizeConfig.padding20),
                     const TambolaPrize(),
-                    TambolaLeaderBoard(),
+                    TambolaLeaderboardView(),
                     const TermsAndConditions(url: Constants.tambolatnc),
                     SizedBox(
                       height: SizeConfig.screenHeight! * 0.25,
@@ -178,10 +188,10 @@ class _TambolaHomeDetailsViewState extends State<TambolaHomeDetailsView> {
                       ),
                       Showcase(
                         key: ShowCaseKeys.TambolaButton,
-                        description:
-                            'You get a ticket on every ₹500 you invest!',
+                        description: 'You get a ticket on every ₹500 you save!',
                         child: AppPositiveBtn(
-                          btnText: 'Save & Get Free Tickets',
+                          style: TextStyles.rajdhaniSB.body0,
+                          btnText: 'Unlock your first ticket now',
                           onPressed: () {
                             locator<AnalyticsService>().track(
                                 eventName: (locator<TambolaService>()
@@ -213,10 +223,10 @@ class _TambolaHomeDetailsViewState extends State<TambolaHomeDetailsView> {
                           },
                         ),
                       ),
-                      if (!widget.isStandAloneScreen)
-                        SizedBox(
-                          height: SizeConfig.navBarHeight,
-                        )
+                      // if (!widget.isStandAloneScreen)
+                      //   SizedBox(
+                      //     height: SizeConfig.navBarHeight,
+                      //   )
                     ],
                   ),
                 ),

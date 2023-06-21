@@ -3,7 +3,6 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/constants/cache_keys.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/payment_mode_enum.dart';
@@ -16,9 +15,7 @@ import 'package:felloapp/core/model/paytm_models/paytm_transaction_response_mode
 import 'package:felloapp/core/model/power_play_models/get_matches_model.dart';
 import 'package:felloapp/core/repository/paytm_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
-import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
-import 'package:felloapp/core/service/notifier_services/marketing_event_handler_service.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
@@ -37,30 +34,32 @@ import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 
 class AugmontTransactionService extends BaseTransactionService {
-  final UserService? _userService = locator<UserService>();
-  final CustomLogger? _logger = locator<CustomLogger>();
-  final UserCoinService? _userCoinService = locator<UserCoinService>();
-  final PaytmRepository? _paytmRepo = locator<PaytmRepository>();
+  final UserService _userService = locator<UserService>();
+  final CustomLogger _logger = locator<CustomLogger>();
+  final UserCoinService _userCoinService = locator<UserCoinService>();
+  final PaytmRepository _paytmRepo = locator<PaytmRepository>();
   final _gtService = ScratchCardService();
-  final InternalOpsService? _internalOpsService = locator<InternalOpsService>();
-  final TxnHistoryService? _txnHistoryService = locator<TxnHistoryService>();
-  final AnalyticsService? _analyticsService = locator<AnalyticsService>();
+  final InternalOpsService _internalOpsService = locator<InternalOpsService>();
+  final TxnHistoryService _txnHistoryService = locator<TxnHistoryService>();
+  final AnalyticsService _analyticsService = locator<AnalyticsService>();
 
   // final PaytmService? _paytmService = locator<PaytmService>();
-  final RazorpayService? _razorpayService = locator<RazorpayService>();
-  final TambolaService? _tambolaService = locator<TambolaService>();
+  final RazorpayService _razorpayService = locator<RazorpayService>();
+  final TambolaService _tambolaService = locator<TambolaService>();
   S locale = locator<S>();
   double? currentTxnGms = 0.0;
   DepositFcmResponseModel? depositFcmResponseModel;
   bool _isGoldBuyInProgress = false;
   bool _isGoldSellInProgress = false;
 
+  TransactionState get currentTxnState => currentTransactionState;
+
   late GoldPurchaseDetails currentGoldPurchaseDetails;
 
-  get isGoldBuyInProgress => this._isGoldBuyInProgress;
+  get isGoldBuyInProgress => _isGoldBuyInProgress;
 
   set isGoldBuyInProgress(value) {
-    this._isGoldBuyInProgress = value;
+    _isGoldBuyInProgress = value;
     notifyListeners();
   }
 
@@ -72,17 +71,17 @@ class AugmontTransactionService extends BaseTransactionService {
     _model = model;
   }
 
-  bool get isGoldSellInProgress => this._isGoldSellInProgress;
+  bool get isGoldSellInProgress => _isGoldSellInProgress;
 
   set isGoldSellInProgress(bool value) {
-    this._isGoldSellInProgress = value;
+    _isGoldSellInProgress = value;
     notifyListeners();
   }
 
   Future<void>? initiateAugmontTransaction(
       {required GoldPurchaseDetails details}) {
     currentGoldPurchaseDetails = details;
-    String paymentMode = this.getPaymentMode();
+    String paymentMode = getPaymentMode();
 
     switch (paymentMode) {
       case "PAYTM-PG":
@@ -232,34 +231,35 @@ class AugmontTransactionService extends BaseTransactionService {
   }
 
   Future<void> transactionResponseUpdate({List<String>? gtIds}) async {
-    _logger!.d("Polling response processing");
+    _logger.d("Polling response processing");
     try {
       //add this to augmontBuyVM
-      unawaited(_userCoinService!.getUserCoinBalance());
-      unawaited(_userService!.getUserFundWalletData());
+      unawaited(_userCoinService.getUserCoinBalance());
+      unawaited(_userService.getUserFundWalletData());
       if (currentTransactionState == TransactionState.ongoing) {
         ScratchCardService.scratchCardsList = gtIds;
-        await _userService!.getUserJourneyStats();
+        await _userService.getUserJourneyStats();
         AppState.unblockNavigation();
         currentTransactionState = TransactionState.success;
         Haptic.vibrate();
       }
-      _txnHistoryService!.updateTransactions(InvestmentType.AUGGOLD99);
+      unawaited(
+          _txnHistoryService.updateTransactions(InvestmentType.AUGGOLD99));
     } catch (e) {
-      _logger!.e(e);
-      unawaited(_internalOpsService!.logFailure(_userService!.baseUser!.uid,
+      _logger.e(e);
+      unawaited(_internalOpsService.logFailure(_userService.baseUser!.uid,
           FailType.DepositPayloadError, e as Map<String, dynamic>));
     }
   }
 
   Future<void> processPolling(Timer? timer) async {
-    final res = await _paytmRepo!.getTransactionStatus(currentTxnOrderId);
+    final res = await _paytmRepo.getTransactionStatus(currentTxnOrderId);
     if (res.isSuccess()) {
       TransactionResponseModel txnStatus = res.model!;
       switch (txnStatus.data!.status) {
         case Constants.TXN_STATUS_RESPONSE_SUCCESS:
           if (!txnStatus.data!.isUpdating!) {
-            await _newUserCheck();
+            await locator<BaseUtil>().newUserCheck();
             PowerPlayService.powerPlayDepositFlow = false;
             MatchData? liveMatchData =
                 locator<PowerPlayService>().liveMatchData;
@@ -293,18 +293,6 @@ class AugmontTransactionService extends BaseTransactionService {
           );
           break;
       }
-    }
-  }
-
-  Future<void> _newUserCheck() async {
-    locator<MarketingEventHandlerService>().getHappyHourCampaign();
-
-    if (_userService!.baseUser!.segments.contains("NEW_USER")) {
-      await CacheService.invalidateByKey(CacheKeys.USER);
-      final list = _userService!.baseUser!.segments;
-      list.remove("NEW_USER");
-      _userService!.userSegments = list;
-      _userService!.baseUser!.segments = list;
     }
   }
 
@@ -347,8 +335,8 @@ class AugmontTransactionService extends BaseTransactionService {
           paytmSubscriptionApiResponse.errorMessage, "");
     }
 
-    this.currentTxnOrderId = paytmSubscriptionApiResponse.model!.data!.orderId;
-    this.currentTxnAmount = amount;
+    currentTxnOrderId = paytmSubscriptionApiResponse.model!.data!.orderId;
+    currentTxnAmount = amount;
     return paytmSubscriptionApiResponse.model;
   }
 

@@ -100,6 +100,8 @@ class UserProfileVM extends BaseViewModel {
   bool _isUpdaingUserDetails = false;
   bool _isTambolaNotificationLoading = false;
   bool _isApplockLoading = false;
+  bool _isFloInvoiceMailLoading = false;
+
   bool _hasInputError = false;
   int? _gen;
   String? gender;
@@ -144,6 +146,7 @@ class UserProfileVM extends BaseViewModel {
   bool get isTambolaNotificationLoading => _isTambolaNotificationLoading;
 
   bool get isApplockLoading => _isApplockLoading;
+  bool get isFloInvoiceMailLoading => _isFloInvoiceMailLoading;
 
   bool get hasInputError => _hasInputError;
 
@@ -158,6 +161,11 @@ class UserProfileVM extends BaseViewModel {
   bool get applock =>
       _userService.baseUser!.userPreferences
           .getPreference(Preferences.APPLOCK) ==
+      1;
+
+  bool get floInvoiceEmail =>
+      _userService.baseUser!.userPreferences
+          .getPreference(Preferences.FLOINVOICEMAIL) ==
       1;
 
   bool get tambolaNotification =>
@@ -211,11 +219,10 @@ class UserProfileVM extends BaseViewModel {
     notifyListeners();
   }
 
-  // set isNewUser(value) {
-  //   this._isNewUser = value;
-
-  //   notifyListeners();
-  // }
+  set isFloInvoiceMailLoading(bool value) {
+    _isFloInvoiceMailLoading = value;
+    notifyListeners();
+  }
 
   set isEmailEnabled(value) {
     this._isEmailEnabled = value;
@@ -573,7 +580,7 @@ class UserProfileVM extends BaseViewModel {
                 _analyticsService!.signOut();
                 _bankAndKycService!.dump();
                 _powerPlayService.dump();
-                ScratchCardService.dump();
+                _gtService.dump();
                 _tambolaRepo.dump();
                 locator<JourneyRepository>().dump();
                 _appstate.dump();
@@ -802,7 +809,7 @@ class UserProfileVM extends BaseViewModel {
     AppState.backButtonDispatcher!.didPopRoute();
   }
 
-  onAppLockPreferenceChanged(val) async {
+  Future<void> onAppLockPreferenceChanged(bool val) async {
     if (await BaseUtil.showNoInternetAlert()) return;
     isApplockLoading = true;
     _userService.baseUser!.userPreferences.setPreference(
@@ -817,6 +824,10 @@ class UserProfileVM extends BaseViewModel {
               Preferences.TAMBOLANOTIFICATIONS,
             ) ==
             1,
+        'mUserPrefsEr': _userService.baseUser!.userPreferences.getPreference(
+              Preferences.FLOINVOICEMAIL,
+            ) ==
+            1,
       },
     ).then((value) {
       _userService.setBaseUser();
@@ -825,7 +836,34 @@ class UserProfileVM extends BaseViewModel {
     isApplockLoading = false;
   }
 
-  onTambolaNotificationPreferenceChanged(val) async {
+  Future<void> onFloInvoiceEmailPreferenceChanged(bool val) async {
+    if (await BaseUtil.showNoInternetAlert()) return;
+    isFloInvoiceMailLoading = true;
+    _userService.baseUser!.userPreferences.setPreference(
+      Preferences.FLOINVOICEMAIL,
+      val ? 1 : 0,
+    );
+    await _userRepo.updateUser(
+      uid: _userService.baseUser!.uid,
+      dMap: {
+        'mUserPrefsAl': _userService.baseUser!.userPreferences.getPreference(
+              Preferences.APPLOCK,
+            ) ==
+            1,
+        'mUserPrefsTn': _userService.baseUser!.userPreferences.getPreference(
+              Preferences.TAMBOLANOTIFICATIONS,
+            ) ==
+            1,
+        'mUserPrefsEr': val
+      },
+    ).then((value) {
+      _userService.setBaseUser();
+      const Log("Preferences updated");
+    });
+    isFloInvoiceMailLoading = false;
+  }
+
+  Future<void> onTambolaNotificationPreferenceChanged(bool val) async {
     if (await BaseUtil.showNoInternetAlert()) return;
     isTambolaNotificationLoading = true;
     bool res = await fcmlistener!.toggleTambolaDrawNotificationStatus(val);
@@ -838,6 +876,10 @@ class UserProfileVM extends BaseViewModel {
           'mUserPrefsTn': val,
           'mUserPrefsAl': _userService.baseUser!.userPreferences.getPreference(
                 Preferences.APPLOCK,
+              ) ==
+              1,
+          'mUserPrefsEr': _userService.baseUser!.userPreferences.getPreference(
+                Preferences.FLOINVOICEMAIL,
               ) ==
               1,
         },
@@ -854,7 +896,7 @@ class UserProfileVM extends BaseViewModel {
     isTambolaNotificationLoading = false;
   }
 
-  showEmailOptions() {
+  void showEmailOptions() {
     baseProvider!.isGoogleSignInProgress = false;
     emailOptionsFocusNode.unfocus();
     BaseUtil.openModalBottomSheet(
@@ -896,9 +938,14 @@ class UserProfileVM extends BaseViewModel {
       return BaseUtil.showNegativeAlert(
           "No username entered", "Please add a good username to continue");
     }
+    if (usernameController!.text.length < 4) {
+      return BaseUtil.showNegativeAlert("Username too small",
+          "Please try a username with more than 3 characters");
+    }
     AppState.blockNavigation();
     isUpdaingUserDetails = true;
     inEditMode = false;
+
     final res = await _userRepo
         .updateUser(dMap: {BaseUser.fldUsername: usernameController?.text});
     isUpdaingUserDetails = false;

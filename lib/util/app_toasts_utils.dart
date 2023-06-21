@@ -15,12 +15,12 @@ class AppToasts {
   static showNegativeToast(
       {required String? title, required String? subtitle, int? seconds}) async {
     if (handleToastPreChecks(title, subtitle)) {
-      if (flushbar != null) await flushbar!.dismiss();
+      if (flushbar != null) await flushbar?.dismiss();
       flushbar = Flushbar(
         flushbarPosition:
             isKeyboardOpen ? FlushbarPosition.TOP : FlushbarPosition.BOTTOM,
         flushbarStyle: FlushbarStyle.FLOATING,
-        icon: Icon(
+        icon: const Icon(
           Icons.assignment_late,
           size: 28.0,
           color: UiConstants.tertiarySolid,
@@ -32,7 +32,7 @@ class AppToasts {
             subtitle!.isEmpty ? "Please try again after sometime" : subtitle,
         duration: Duration(seconds: seconds ?? 2),
         backgroundColor: Colors.black,
-        boxShadows: [
+        boxShadows: const [
           BoxShadow(
             color: UiConstants.negativeAlertColor,
             offset: Offset(0.0, 2.0),
@@ -54,7 +54,7 @@ class AppToasts {
         flushbarPosition:
             isKeyboardOpen ? FlushbarPosition.TOP : FlushbarPosition.BOTTOM,
         flushbarStyle: FlushbarStyle.FLOATING,
-        icon: Icon(
+        icon: const Icon(
           Icons.flag,
           size: 28.0,
           color: UiConstants.primaryColor,
@@ -68,7 +68,7 @@ class AppToasts {
         boxShadows: [
           BoxShadow(
             color: UiConstants.positiveAlertColor!,
-            offset: Offset(0.0, 2.0),
+            offset: const Offset(0.0, 2.0),
             blurRadius: 3.0,
           )
         ],
@@ -88,7 +88,7 @@ class AppToasts {
       flushbar = Flushbar(
         flushbarPosition: FlushbarPosition.TOP,
         flushbarStyle: FlushbarStyle.FLOATING,
-        icon: Icon(
+        icon: const Icon(
           Icons.error,
           size: 28.0,
           color: Colors.white,
@@ -97,12 +97,12 @@ class AppToasts {
         borderRadius: BorderRadius.circular(SizeConfig.roundness12),
         title: "No Internet",
         message: "Please check your network connection and try again",
-        duration: Duration(seconds: 2),
+        duration: const Duration(seconds: 2),
         backgroundColor: Colors.red,
         boxShadows: [
           BoxShadow(
             color: Colors.red[800]!,
-            offset: Offset(0.0, 2.0),
+            offset: const Offset(0.0, 2.0),
             blurRadius: 3.0,
           )
         ],

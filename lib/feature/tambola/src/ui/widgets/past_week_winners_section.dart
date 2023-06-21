@@ -7,14 +7,26 @@ import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
+import 'package:flutter_svg/svg.dart';
+import 'dart:math' as math;
 
-class TambolaLeaderBoard extends StatelessWidget {
-  const TambolaLeaderBoard({
+class TambolaLeaderboardView extends StatefulWidget {
+  const TambolaLeaderboardView({
     Key? key,
-    // required this.winners,
   }) : super(key: key);
 
-  // final List<Winners>? winners;
+  @override
+  State<TambolaLeaderboardView> createState() => _TambolaLeaderboardViewState();
+}
+
+class _TambolaLeaderboardViewState extends State<TambolaLeaderboardView> {
+  bool _seeAll = false;
+
+  void seeAllClicked() {
+    setState(() {
+      _seeAll = true;
+    });
+  }
 
   String? getWinnersCategory(List<Winners> winners, int index) {
     MatchMap? data = winners[index].matchMap;
@@ -46,6 +58,12 @@ class TambolaLeaderBoard extends StatelessWidget {
   }
 
   @override
+  void dispose() {
+    _seeAll = false;
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     // S locale = S.of(context);
     return Selector<TambolaService, List<Winners>?>(
@@ -61,7 +79,7 @@ class TambolaLeaderBoard extends StatelessWidget {
                   height: SizeConfig.pageHorizontalMargins,
                 ),
                 Text(
-                  "Last week winners",
+                  "Last week's leaderboard",
                   style: TextStyles.rajdhaniSB.body0,
                 ),
                 SizedBox(
@@ -127,7 +145,7 @@ class TambolaLeaderBoard extends StatelessWidget {
                               ),
                               Column(
                                 children: List.generate(
-                                  winners.length,
+                                  _seeAll ? winners.length : 10,
                                   (i) {
                                     return Column(
                                       children: [
@@ -234,6 +252,35 @@ class TambolaLeaderBoard extends StatelessWidget {
                               SizedBox(
                                 height: SizeConfig.padding16,
                               ),
+                              !_seeAll
+                                  ? GestureDetector(
+                                      onTap: () {
+                                        setState(() {
+                                          _seeAll = true;
+                                        });
+                                      },
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            "See all",
+                                            style: TextStyles.sourceSansSB.body2
+                                                .colour(Colors.white),
+                                          ),
+                                          SizedBox(
+                                            width: SizeConfig.padding8,
+                                          ),
+                                          Transform.rotate(
+                                              angle: math.pi / 2,
+                                              child: SvgPicture.asset(
+                                                Assets.chevRonRightArrow,
+                                                color: UiConstants.primaryColor,
+                                              ))
+                                        ],
+                                      ),
+                                    )
+                                  : SizedBox()
                             ],
                           )),
               ],

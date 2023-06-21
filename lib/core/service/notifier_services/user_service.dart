@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 
@@ -8,6 +9,8 @@ import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/journey_models/user_journey_stats_model.dart';
 import 'package:felloapp/core/model/page_config_model.dart';
+import 'package:felloapp/core/model/portfolio_model.dart';
+import 'package:felloapp/core/model/quick_save_model.dart';
 import 'package:felloapp/core/model/user_augmont_details_model.dart';
 import 'package:felloapp/core/model/user_bootup_model.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
@@ -56,6 +59,15 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   final GetterRepository _gettersRepo = locator<GetterRepository>();
   final AppState _appState = locator<AppState>();
   final RootController _rootController = locator<RootController>();
+  Portfolio _userPortfolio = Portfolio.base();
+
+  Portfolio get userPortfolio => _userPortfolio;
+
+  set userPortfolio(Portfolio value) {
+    _userPortfolio = value;
+    notifyListeners();
+  }
+
   S locale = locator<S>();
 
   User? _firebaseUser;
@@ -78,6 +90,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   UserAugmontDetail? _userAugmontDetails;
   UserBootUpDetailsModel? userBootUp;
   DynamicUI? pageConfigs;
+  QuickSaveModel? quickSaveModel;
 
   bool? _isEmailVerified;
   bool? _isSimpleKycVerified;
@@ -134,6 +147,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
 
   set userSegments(List userSeg) {
     _userSegments = userSeg;
+    log('userSeg  $userSeg');
     notifyListeners(UserServiceProperties.mySegments);
   }
 
@@ -199,6 +213,9 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   }
 
   set userFundWallet(UserFundWallet? wallet) {
+    if ((_userFundWallet?.netWorth ?? 0) != (wallet?.netWorth ?? 0)) {
+      updatePortFolio();
+    }
     _userFundWallet = wallet;
     notifyListeners(UserServiceProperties.myUserFund);
     _logger.d("Wallet updated in userservice, property listeners notified");
@@ -255,6 +272,15 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     return baseUser!.username != null && baseUser!.username!.isNotEmpty;
   }
 
+  Future<void> updatePortFolio() async {
+    final res = await _userRepo!.getPortfolioData();
+    if (res.isSuccess()) {
+      userPortfolio = res.model!;
+    } else {
+      userPortfolio = Portfolio.base();
+    }
+  }
+
   bool get isUserOnboarded {
     try {
       if (_firebaseUser != null &&
@@ -262,13 +288,30 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
           _baseUser!.uid!.isNotEmpty &&
           _baseUser!.mobile!.isNotEmpty &&
           _baseUser!.name!.isNotEmpty) {
-        _logger.d("Onborded User: ${_baseUser!.uid}");
+        _logger.d("Onboarded User: ${_baseUser!.uid}");
         return true;
       }
     } catch (e) {
       _logger.e(e.toString());
     }
 
+    return false;
+  }
+
+  bool isUserInFirstWeekOfSignUp() {
+    int signUpDay = baseUser!.createdOn.toDate().weekday;
+    int noOfDaysForNextWeek = 7 - signUpDay;
+
+    DateTime signUpWeekEndDate = DateTime(
+      baseUser!.createdOn.toDate().year,
+      baseUser!.createdOn.toDate().month,
+      baseUser!.createdOn.toDate().day,
+    ).add(
+      noOfDaysForNextWeek != 0
+          ? Duration(days: noOfDaysForNextWeek)
+          : Duration(hours: 24 - baseUser!.createdOn.toDate().hour),
+    );
+    if (baseUser!.createdOn.toDate().isBefore(signUpWeekEndDate)) return true;
     return false;
   }
 
@@ -303,6 +346,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
               dayOpenCount: dayOpenCount);
       if (res.isSuccess()) {
         userBootUp = res.model;
+        notifyListeners();
       }
     } else {
       //No user logged in
@@ -356,11 +400,16 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
       _firebaseUser = FirebaseAuth.instance.currentUser;
       await setBaseUser();
       if (baseUser != null) {
-        // await getUserJourneyStats();
+        unawaited(getUserJourneyStats());
         final res = await _gettersRepo.getPageConfigs();
+        final QuickSaveRes = await _gettersRepo.getQuickSave();
         if (res.isSuccess()) {
           setPageConfigs(res.model!);
           _appState.setCurrentTabIndex = 0;
+        }
+
+        if (QuickSaveRes.isSuccess()) {
+          quickSaveModel = QuickSaveRes.model;
         }
       }
     } catch (e) {
@@ -384,6 +433,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
       // await _apiCacheManager!.clearCacheMemory();
       _logger.d("UserService signout called");
       _userFundWallet = null;
+      _userPortfolio = Portfolio.base();
       _firebaseUser = null;
       _baseUser = null;
       _myUserDpUrl = null;

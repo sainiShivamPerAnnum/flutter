@@ -215,7 +215,7 @@ class GoldSellViewModel extends BaseViewModel {
 
   late WithdrawableGoldResponseModel responseModel;
 
-  fetchLockedGoldQnt() async {
+  Future<void> fetchLockedGoldQnt() async {
     isQntFetching = true;
     refresh();
     await _userService!.getUserFundWalletData();

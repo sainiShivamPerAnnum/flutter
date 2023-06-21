@@ -48,6 +48,7 @@ class Assets {
   static const String prizeRankOne = "assets/vectors/rank_first.svg";
   static const String prizeRankTwo = "assets/vectors/rank_second.svg";
   static const String prizeRankThird = "assets/vectors/rank_third.svg";
+
 // ONBOARDING
   static const String bankLottie = "assets/lotties/bank.json";
   static const String truecaller = "assets/images/truecaller.png";
@@ -120,7 +121,7 @@ class Assets {
   static const String goldAsset = "assets/svg/digital_gold.svg";
   static const String rbi = "assets/svg/rbi.svg";
   static const String icici = "assets/svg/icici.svg";
-  static const String sebi = "assets/svg/sebi.svg";
+  static const String sebi = "assets/vectors/icons/sebi_new.svg";
 
   static const String arrowIcon = "assets/svg/raising_arrow.svg";
   static const String timer = "assets/svg/timer.svg";
@@ -144,6 +145,7 @@ class Assets {
   static const String txnHistory = "assets/vectors/icons/txnHistory.svg";
   static const String bank = "assets/vectors/icons/bank.svg";
   static const String repeat = "assets/vectors/icons/repeat.svg";
+  static const String bankLogo = "assets/vectors/bankLogo.svg";
 
   // REFERRAL
   static const String google = "assets/vectors/icons/google.svg";
@@ -305,8 +307,13 @@ class Assets {
     "assets/vectors/aus3.svg",
   ];
 
+  static String journeyIcon = "assets/vectors/icons/journeyIcon.svg";
+
   static String multiAvatars = "assets/vectors/multiAvatars.svg";
   static String multiRealAvatars = "assets/images/cus_photos.png";
+  static String btnBg = "assets/vectors/btnBg.svg";
+
+  static String arrow = "assets/vectors/arrow.svg";
   static final String infoWhyPan =
       'Your PAN Card is used as your unique ID to set up your investment profile in different assets';
 
@@ -362,6 +369,8 @@ class Assets {
       'https://d37gtxigg82zaw.cloudfront.net/scroll-animation.json';
   static const String tambolaTopBannerLottie =
       '${assetBaseUrl}lotties/tambola_animation.json';
+  static const String tambolaTopBannerTharLottie =
+      'assets/lotties/tambola_thar.json';
 
   //POWER PLAY ASSETS
   static const String powerPlayMain =
@@ -374,4 +383,11 @@ class Assets {
       "https://d37gtxigg82zaw.cloudfront.net/powerplay/teams/RCB.svg";
   static const goldCoinIcon =
       "https://d37gtxigg82zaw.cloudfront.net/weekly-recap/investments.svg";
+
+  static const carGoalsBg = "${assetBaseUrl}autosave/save-for-car.svg";
+  static const iphoneGoalsBg = "${assetBaseUrl}autosave/save-for-iphone.svg";
+  static const goaGoalsBg = "${assetBaseUrl}autosave/save-for-goa.svg";
+  static const baliGoalsBg = "${assetBaseUrl}autosave/save-for-bali.svg";
+
+  static const String inAppReviewBg = 'assets/svg/in_app_review_success_bg.svg';
 }

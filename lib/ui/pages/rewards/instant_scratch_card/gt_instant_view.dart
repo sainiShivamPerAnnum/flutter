@@ -37,12 +37,14 @@ class GTInstantView extends StatefulWidget {
   final String? title;
   final GTSOURCE source;
   final double? amount;
+  final bool showRatingDialog;
 
   final bool showAutosavePrompt;
   GTInstantView(
       {this.title,
       required this.source,
       this.amount,
+      this.showRatingDialog = true,
       this.showAutosavePrompt = false});
   @override
   State<GTInstantView> createState() => _GTInstantViewState();
@@ -193,7 +195,8 @@ class _GTInstantViewState extends State<GTInstantView>
                                                     _controller.reverse());
                                           }
 
-                                          model.redeemTicket();
+                                          model.redeemTicket(
+                                              widget.showRatingDialog);
                                         },
                                         image: Image.asset(
                                           model.scratchCard!.isLevelChange!

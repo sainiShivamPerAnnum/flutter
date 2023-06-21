@@ -22,11 +22,14 @@ import 'package:felloapp/core/service/referral_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
+import 'package:felloapp/ui/elements/fello_dialog/fello_in_app_review.dart';
 import 'package:felloapp/ui/pages/userProfile/my_winnings/my_winnings_view.dart';
 import 'package:felloapp/ui/service_elements/last_week/last_week_view.dart';
 import 'package:felloapp/util/custom_logger.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:flutter/material.dart';
 
 class WinViewModel extends BaseViewModel {
   final UserService _userService = locator<UserService>();
@@ -352,6 +355,20 @@ class WinViewModel extends BaseViewModel {
       widget: const LastWeekOverView(
         callCampaign: false,
       ),
+    );
+  }
+
+  void showRatingSheet() {
+    Haptic.vibrate();
+
+    BaseUtil.openModalBottomSheet(
+      addToScreenStack: true,
+      enableDrag: false,
+      hapticVibrate: true,
+      isBarrierDismissible: true,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      content: const FelloInAppReview(),
     );
   }
 }

@@ -263,7 +263,7 @@ class SubService extends ChangeNotifier {
     if (res.isSuccess()) {
       subscriptionData = res.model;
       AppState.backButtonDispatcher!.didPopRoute();
-      Future.delayed(Duration(seconds: 1), () {
+      Future.delayed(const Duration(seconds: 1), () {
         BaseUtil.showPositiveAlert("Subscription updated successfully",
             "Effective changes will take place from tomorrow");
       });
@@ -282,7 +282,7 @@ class SubService extends ChangeNotifier {
     if (res.isSuccess()) {
       subscriptionData = res.model;
       AppState.backButtonDispatcher!.didPopRoute();
-      Future.delayed(Duration(seconds: 1), () {
+      Future.delayed(const Duration(seconds: 1), () {
         BaseUtil.showPositiveAlert("Subscription paused successfully",
             "Effective changes will take place from tomorrow");
       });
@@ -300,7 +300,7 @@ class SubService extends ChangeNotifier {
     isPauseOrResuming = false;
     if (res.isSuccess()) {
       subscriptionData = res.model;
-      Future.delayed(Duration(seconds: 1), () {
+      Future.delayed(const Duration(seconds: 1), () {
         BaseUtil.showPositiveAlert("Subscription resumed successfully",
             "Effective changes will take place from tomorrow");
       });
@@ -460,7 +460,6 @@ class SubService extends ChangeNotifier {
         List<ApplicationMeta> allUpiApps =
             await UpiPay.getInstalledUpiApplications(
                 statusType: UpiApplicationDiscoveryAppStatusType.all);
-        print("Apps: found ${allUpiApps.length.toString()}");
 
         allUpiApps.forEach((element) {
           if (element.upiApplication.appName == "Paytm" &&
@@ -484,6 +483,7 @@ class SubService extends ChangeNotifier {
             appMetaList.add(element);
           }
         });
+
         return appMetaList;
       } catch (e) {
         print("Apps: No Apps found");

@@ -1,9 +1,11 @@
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/ui/modalsheets/transaction_details_model_sheet.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -53,6 +55,30 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage> {
     super.initState();
   }
 
+  String floSubtype() {
+    if (widget.txn.subType == "LENDBOXP2P") {
+      if (widget.txn.lbMap != null) {
+        switch (widget.txn.lbMap.fundType) {
+          case Constants.ASSET_TYPE_FLO_FIXED_6:
+            return "12% Flo";
+          case Constants.ASSET_TYPE_FLO_FIXED_3:
+            return "10% Flo";
+          case Constants.ASSET_TYPE_FLO_FELXI:
+            if (locator<UserService>()
+                .userSegments
+                .contains(Constants.US_FLO_OLD)) {
+              return "10% Flo";
+            } else {
+              return "8% Flo";
+            }
+          default:
+            return "10% Flo";
+        }
+      }
+    }
+    return "";
+  }
+
   @override
   Widget build(BuildContext context) {
     final isGold =
@@ -93,7 +119,7 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage> {
                         width: SizeConfig.screenWidth! * 0.12,
                       ),
                       Text(
-                        isGold ? locale.digitalGoldText : locale.felloFloText,
+                        isGold ? locale.digitalGoldText : floSubtype(),
                         style: TextStyles.rajdhaniSB.body2,
                       )
                     ],
@@ -133,7 +159,7 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage> {
                       ),
                     ),
                   ],
-                  Divider(
+                  const Divider(
                     color: Color(0xff3E3E3E),
                   ),
 
@@ -267,10 +293,12 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage> {
                                           false)
                                         Text(
                                             "+ " +
-                                                (widget.txn
-                                                        .couponMap?["goldQty"]
-                                                        .toString() ??
-                                                    "") +
+                                                (BaseUtil.digitPrecision(
+                                                        widget.txn.couponMap?[
+                                                            "goldQty"],
+                                                        4,
+                                                        false)
+                                                    .toString()) +
                                                 " gms",
                                             style: TextStyles.sourceSans.body3
                                                 .colour(Color(0xffA5FCE7))),
@@ -304,12 +332,19 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage> {
                                     Text(
                                       (widget.txn.couponMap!
                                                   .containsKey("goldQty")
-                                              ? (widget.txn.augmnt![
-                                                          "aGoldInTxn"] +
-                                                      widget.txn.couponMap![
-                                                          "goldQty"])
+                                              ? (BaseUtil.digitPrecision(
+                                                      widget.txn.augmnt![
+                                                              "aGoldInTxn"] +
+                                                          widget.txn.couponMap![
+                                                              "goldQty"],
+                                                      4,
+                                                      false))
                                                   .toString()
-                                              : widget.txn.augmnt!["aGoldInTxn"]
+                                              : BaseUtil.digitPrecision(
+                                                      widget.txn.augmnt![
+                                                          "aGoldInTxn"],
+                                                      4,
+                                                      false)
                                                   .toString()) +
                                           " gms",
                                       style:
@@ -332,7 +367,9 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage> {
                                 widget.txn.type ==
                                         UserTransaction.TRAN_TYPE_WITHDRAW
                                     ? "Rewards Deducted:"
-                                    : (widget.txn.augmnt != null &&
+                                    : (widget.txn.subType !=
+                                                Constants.ASSET_TYPE_LENDBOX &&
+                                            widget.txn.augmnt != null &&
                                             widget.txn.augmnt!["aBlockId"] ==
                                                 null)
                                         ? "You redeemed ₹${widget.txn.amount} from your total winnings."
@@ -358,8 +395,10 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage> {
                             ),
                             Row(
                               children: [
-                                widget.txn.augmnt != null &&
-                                        widget.txn.augmnt!["aBlockId"] == null
+                                (widget.txn.subType !=
+                                            Constants.ASSET_TYPE_LENDBOX &&
+                                        widget.txn.subType !=
+                                            Constants.ASSET_TYPE_AUGMONT)
                                     ? const SizedBox()
                                     : Expanded(
                                         child: Container(

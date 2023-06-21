@@ -1,7 +1,9 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/model/subscription_models/subscription_model.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/core/service/power_play_service.dart';
+import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/feature/tambola/tambola.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/service_elements/user_service/user_fund_quantity_se.dart';
@@ -15,11 +17,13 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:lottie/lottie.dart';
+import 'package:provider/provider.dart';
 
 class GoldBuySuccessView extends StatelessWidget {
-  final AugmontTransactionService? _augTxnService =
+  final AugmontTransactionService _augTxnService =
       locator<AugmontTransactionService>();
-  final ScratchCardService? _gtService = locator<ScratchCardService>();
+  final ScratchCardService _gtService = locator<ScratchCardService>();
+
   GoldBuySuccessView({Key? key}) : super(key: key);
 
   @override
@@ -42,7 +46,7 @@ class GoldBuySuccessView extends StatelessWidget {
                     AppState.backButtonDispatcher!.didPopRoute();
                     // _augTxnService!.showGtIfAvailable();
                   },
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.close,
                     color: Colors.white,
                   ),
@@ -164,7 +168,7 @@ class GoldBuySuccessView extends StatelessWidget {
                       ),
                     ),
                   ),
-                  VerticalDivider(
+                  const VerticalDivider(
                     width: 3,
                     thickness: 0.5,
                     color: UiConstants.kTextColor2,
@@ -216,7 +220,7 @@ class GoldBuySuccessView extends StatelessWidget {
                 style:
                     TextStyles.rajdhani.body3.colour(UiConstants.kTextColor3),
               ),
-              Spacer(),
+              const Spacer(),
               UserFundQuantitySE(
                 style:
                     TextStyles.sourceSans.body2.colour(UiConstants.kTextColor),
@@ -257,6 +261,8 @@ class GoldBuySuccessView extends StatelessWidget {
               ],
             ),
           ),
+          const AutopaySetupWidget(),
+          SizedBox(height: SizeConfig.padding20),
           TextButton(
             onPressed: () {
               AppState.isRepeated = true;
@@ -270,7 +276,7 @@ class GoldBuySuccessView extends StatelessWidget {
               // _tambolaService.weeklyTicksFetched = false;
               _tambolaService.getBestTambolaTickets();
 
-              _augTxnService!.showGtIfAvailable();
+              _augTxnService.showGtIfAvailable();
             },
             child: Text(
               PowerPlayService.powerPlayDepositFlow
@@ -390,5 +396,47 @@ class WinningChips extends StatelessWidget {
             )),
       ),
     );
+  }
+}
+
+class AutopaySetupWidget extends StatelessWidget {
+  const AutopaySetupWidget({Key? key}) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Selector<SubService, SubscriptionModel?>(
+        selector: (_, subService) => subService.subscriptionData,
+        builder: (context, subState, child) {
+          if (subState != null) return Container();
+          return Container(
+            margin: EdgeInsets.symmetric(
+                horizontal: SizeConfig.pageHorizontalMargins),
+            padding: EdgeInsets.all(SizeConfig.padding12),
+            decoration: BoxDecoration(
+                border: Border.all(
+                    width: 0.5,
+                    color: const Color(0xff627F8E).withOpacity(0.4)),
+                borderRadius: BorderRadius.circular(SizeConfig.roundness12)),
+            child: Row(
+              children: [
+                Text(
+                  'Want to save a hassle\nfree automated way?',
+                  style: TextStyles.sourceSans.body3
+                      .colour(Colors.white.withOpacity(0.5)),
+                ),
+                const Spacer(),
+                TextButton(
+                  onPressed: () {
+                    locator<SubService>().handleTap();
+                  },
+                  child: Text(
+                    "Setup Autopay".toUpperCase(),
+                    style: TextStyles.rajdhaniSB.body0.colour(Colors.white),
+                  ),
+                )
+              ],
+            ),
+          );
+        });
   }
 }

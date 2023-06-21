@@ -1,13 +1,11 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:collection';
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
-
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/util/logger.dart';
+import 'package:flutter/foundation.dart';
 
 parseTimeStamp(dynamic data) {
   if (data != null) {
@@ -64,6 +62,7 @@ class UserTransaction {
   Timestamp? _timestamp;
   Timestamp? _updatedTime;
   Map<String, dynamic>? couponMap;
+  LbMap lbMap;
   List<TransactionStatusMapItemModel>? transactionUpdatesMap;
 
   static final String fldAmount = 'tAmount';
@@ -167,11 +166,10 @@ class UserTransaction {
     this._timestamp,
     this._paytmMap,
     this._updatedTime,
-    
     this.transactionUpdatesMap,
     this.misMap,
     this.couponMap,
-    
+    this.lbMap,
   );
 
   UserTransaction.fromMap(Map<String, dynamic> data, String documentID)
@@ -196,6 +194,7 @@ class UserTransaction {
           parseTransactionStatusSummary(data[fldtransactionUpdatesMap]) ?? '',
           data['miscMap'] ?? {},
           data["coupon"] ?? {},
+          LbMap.fromMap(data["lbMap"] ?? {}),
         );
 
   UserTransaction.fromJSON(Map<String, dynamic> data, String documentID)
@@ -220,6 +219,7 @@ class UserTransaction {
           data[fldtransactionUpdatesMap],
           data['miscMap'],
           data["coupon"],
+          LbMap.fromMap(data["lbMap"] ?? {}),
         );
 
   //Augmont gold investment initiated by investor
@@ -460,4 +460,30 @@ class TransactionStatusMapItemModel {
 
   @override
   int get hashCode => title.hashCode ^ timestamp.hashCode ^ value.hashCode;
+}
+
+class LbMap {
+  String? fundType;
+  TimestampModel? maturityAt;
+  String? maturityPref;
+  double? gainAmount;
+  LbMap({
+    this.fundType,
+    this.maturityAt,
+    this.maturityPref,
+    this.gainAmount,
+  });
+
+  factory LbMap.fromMap(Map<String, dynamic> map) {
+    return LbMap(
+      fundType: map['fundType'] != null ? map['fundType'] as String : "",
+      maturityAt: map['maturityAt'] != null
+          ? TimestampModel.fromMap(map['maturityAt'])
+          : TimestampModel.currentTimeStamp(),
+      maturityPref:
+          map['maturityPref'] != null ? map['maturityPref'] as String : "NA",
+      gainAmount:
+          map['gainAmount'] != null ? (map['gainAmount'] * 1.0) as double : 1.0,
+    );
+  }
 }

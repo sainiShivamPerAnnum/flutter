@@ -8,6 +8,7 @@ import 'package:felloapp/core/repository/payment_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/analytics/base_analytics_service.dart';
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -108,9 +109,9 @@ class BankDetailsViewModel extends BaseViewModel {
 
       BaseUtil.showPositiveAlert(
           locale.bankDetailsUpdatedTitle, locale.bankDetailsUpdatedSubTitle);
-      // AppState.backButtonDispatcher!.didPopRoute();
       inEditMode = false;
       isDetailsUpdating = false;
+      AppState.backButtonDispatcher!.didPopRoute();
     } else {
       BaseUtil.showNegativeAlert(response.errorMessage ?? locale.updateFailed,
           locale.obPleaseTryAgain);
