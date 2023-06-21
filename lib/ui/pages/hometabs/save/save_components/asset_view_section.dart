@@ -12,11 +12,14 @@ import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/helpers/tnc_text.dart';
 import 'package:felloapp/ui/elements/title_subtitle_container.dart';
 import 'package:felloapp/ui/elements/video_player/app_video_player.dart';
+import 'package:felloapp/ui/pages/finance/augmont/gold_buy/augmont_buy_vm.dart';
 import 'package:felloapp/ui/pages/finance/mini_trans_card/mini_trans_card_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/flo_components/flo_basic_card.dart';
 import 'package:felloapp/ui/pages/hometabs/save/flo_components/flo_premium_section.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/ui/pages/login/login_components/login_support.dart';
+import 'package:felloapp/ui/pages/static/app_widget.dart';
+import 'package:felloapp/ui/pages/static/gold_rate_card.dart';
 import 'package:felloapp/ui/service_elements/gold_sell_card/sell_card_view.dart';
 import 'package:felloapp/ui/shared/spotlight_controller.dart';
 import 'package:felloapp/util/assets.dart';
@@ -30,6 +33,7 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:provider/provider.dart';
@@ -167,6 +171,33 @@ class _AssetSectionViewState extends State<AssetSectionView> {
                                     .colour(_subTitleColor),
                               ),
                               SizedBox(
+                                height: SizeConfig.padding26,
+                              ),
+                              if (!isNewUser &&
+                                  widget.type == InvestmentType.AUGGOLD99)
+                                GoldInfoWidget(model: model),
+                              if (isNewUser &&
+                                  widget.type == InvestmentType.AUGGOLD99)
+                                Container(
+                                    margin: EdgeInsets.symmetric(
+                                        horizontal:
+                                            SizeConfig.pageHorizontalMargins),
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: SizeConfig.padding20,
+                                      vertical: SizeConfig.padding12,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      // color: Colors.white.withOpacity(0.1),
+                                      color: const Color(0xff323D71),
+                                      borderRadius: BorderRadius.circular(
+                                          SizeConfig.roundness16),
+                                      border: Border.all(
+                                        width: 1,
+                                        color: Colors.white,
+                                      ),
+                                    ),
+                                    child: const _GoldRateWidget()),
+                              SizedBox(
                                 height: SizeConfig.padding10,
                               ),
                               if (balance == 0)
@@ -212,7 +243,7 @@ class _AssetSectionViewState extends State<AssetSectionView> {
                                     child: Padding(
                                       padding: EdgeInsets.only(
                                           left: SizeConfig.padding10),
-                                      child: TitleSubtitleContainer(
+                                      child: const TitleSubtitleContainer(
                                           title: "Withdrawal",
                                           leadingPadding: false),
                                     ),
@@ -280,7 +311,8 @@ class _AssetSectionViewState extends State<AssetSectionView> {
                               _Footer(
                                 isGold: _isGold,
                               ),
-                              TermsAndConditions(url: Constants.savingstnc),
+                              const TermsAndConditions(
+                                  url: Constants.savingstnc),
                               SizedBox(
                                 height: SizeConfig.screenHeight! * 0.15,
                               ),
@@ -389,7 +421,7 @@ class _AssetSectionViewState extends State<AssetSectionView> {
   Widget _buildInfoSection() {
     final info = _isGold ? _goldInfo : _lbInfo;
     List<Widget> children = [];
-    for (var e in info.entries) {
+    for (final e in info.entries) {
       children.add(
         Expanded(
           child: Column(
@@ -412,17 +444,18 @@ class _AssetSectionViewState extends State<AssetSectionView> {
           ),
         ),
       );
-      if (!(info.values.toList().indexOf(e.value) == info.values.length - 1))
+      if (!(info.values.toList().indexOf(e.value) == info.values.length - 1)) {
         children.add(
           SizedBox(
             height: SizeConfig.padding54,
             child: VerticalDivider(
-              color: Color(0xff7F86A3).withOpacity(0.3),
+              color: const Color(0xff7F86A3).withOpacity(0.3),
               thickness: 0.5,
               width: 20,
             ),
           ),
         );
+      }
     }
     return Padding(
       padding: EdgeInsets.zero,
@@ -437,13 +470,142 @@ class _AssetSectionViewState extends State<AssetSectionView> {
       : UiConstants.kFloContainerColor;
 
   Color get _secondaryColor => _isGold
-      ? Color(0xff293566).withOpacity(0)
-      : Color(0xff297264).withOpacity(0);
+      ? const Color(0xff293566).withOpacity(0)
+      : const Color(0xff297264).withOpacity(0);
 
   String get _getAsset => _isGold ? Assets.goldAsset : Assets.floAsset;
 
   Color get _subTitleColor =>
       _isGold ? UiConstants.kBlogTitleColor : UiConstants.kTabBorderColor;
+}
+
+class GoldInfoWidget extends StatelessWidget {
+  const GoldInfoWidget({
+    super.key,
+    required this.model,
+  });
+
+  final UserService model;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin:
+          EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(SizeConfig.roundness16),
+        border: Border.all(width: 1, color: Colors.white),
+      ),
+      child: Column(
+        children: [
+          Container(
+            decoration: BoxDecoration(
+              color: Color(0xff1F2C65),
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(SizeConfig.roundness16),
+                topRight: Radius.circular(SizeConfig.roundness16),
+              ),
+            ),
+            padding: EdgeInsets.symmetric(
+              horizontal: SizeConfig.padding20,
+              vertical: SizeConfig.padding12,
+            ),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Gold Amount",
+                      style: TextStyles.rajdhaniSB.body2
+                          .colour(Colors.white.withOpacity(0.7)),
+                    ),
+                    SizedBox(
+                      height: SizeConfig.padding4,
+                    ),
+                    Selector<UserService, Portfolio>(
+                        selector: (p0, p1) => p1.userPortfolio,
+                        builder: (context, value, child) {
+                          return Row(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text(
+                                "₹${BaseUtil.digitPrecision(value.gold.balance ?? 0, 2)}",
+                                textAlign: TextAlign.center,
+                                style: TextStyles.sourceSansSB.title5.colour(
+                                  Colors.white.withOpacity(0.8),
+                                ),
+                              ),
+                              SizedBox(width: SizeConfig.padding6),
+                              Transform.translate(
+                                offset: Offset(0, -SizeConfig.padding4),
+                                child: RotatedBox(
+                                  quarterTurns:
+                                      value.gold.percGains >= 0 ? 0 : 2,
+                                  child: SvgPicture.asset(
+                                    Assets.arrow,
+                                    width: SizeConfig.iconSize3,
+                                    color: value.gold.percGains >= 0
+                                        ? UiConstants.primaryColor
+                                        : Colors.red,
+                                  ),
+                                ),
+                              ),
+                              Text(
+                                  " ${BaseUtil.digitPrecision(
+                                    value.gold.percGains,
+                                    2,
+                                    false,
+                                  )}%",
+                                  style: TextStyles.sourceSans.body3.colour(
+                                      value.gold.percGains >= 0
+                                          ? UiConstants.primaryColor
+                                          : Colors.red)),
+                            ],
+                          );
+                        }),
+                  ],
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text(
+                      "Gold Value",
+                      style: TextStyles.rajdhaniSB.body2
+                          .colour(Colors.white.withOpacity(0.7)),
+                    ),
+                    SizedBox(
+                      height: SizeConfig.padding4,
+                    ),
+                    Text(
+                      "${(model.userFundWallet?.augGoldQuantity ?? 0).toString()} gms",
+                      style: TextStyles.sourceSansSB.title5.colour(
+                        Colors.white.withOpacity(0.8),
+                      ),
+                    )
+                  ],
+                )
+              ],
+            ),
+          ),
+          Container(
+              padding: EdgeInsets.symmetric(
+                horizontal: SizeConfig.padding20,
+                vertical: SizeConfig.padding12,
+              ),
+              decoration: BoxDecoration(
+                color: const Color(0xff323D71),
+                borderRadius: BorderRadius.only(
+                  bottomLeft: Radius.circular(SizeConfig.roundness16),
+                  bottomRight: Radius.circular(SizeConfig.roundness16),
+                ),
+              ),
+              child: const _GoldRateWidget())
+        ],
+      ),
+    );
+  }
 }
 
 class _BuildOwnAsset extends StatelessWidget {
@@ -452,45 +614,12 @@ class _BuildOwnAsset extends StatelessWidget {
       : super(key: key);
   final InvestmentType type;
   final UserService userService;
+
   @override
   Widget build(BuildContext context) {
     bool isGold = type == InvestmentType.AUGGOLD99;
     return isGold
-        ? Container(
-            margin: EdgeInsets.symmetric(
-                horizontal: SizeConfig.padding34,
-                vertical: SizeConfig.padding10),
-            padding: EdgeInsets.symmetric(
-                horizontal: SizeConfig.padding24,
-                vertical: SizeConfig.padding20),
-            decoration: BoxDecoration(
-              color: color,
-              border: Border.all(color: Colors.white.withOpacity(0.5)),
-              borderRadius: BorderRadius.circular(16),
-            ),
-            child: Column(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Row(
-                  children: [
-                    Text(
-                      "You Own",
-                      style: TextStyles.sourceSans.body2,
-                      textAlign: TextAlign.center,
-                    ),
-                    const Spacer(),
-                    Text(
-                      "${(userService.userFundWallet?.augGoldQuantity ?? 0).toString()} gms",
-                      textAlign: TextAlign.center,
-                      style: TextStyles.rajdhaniSB.title3.colour(
-                        Colors.white.withOpacity(0.8),
-                      ),
-                    )
-                  ],
-                ),
-              ],
-            ),
-          )
+        ? const SizedBox()
         : Padding(
             padding: EdgeInsets.only(
               top: SizeConfig.pageHorizontalMargins,
@@ -504,8 +633,9 @@ class _BuildOwnAsset extends StatelessWidget {
           );
   }
 
-  Color get color => type == InvestmentType.AUGGOLD99
-      ? Color(0xff303B6A)
+  Color get color =>
+      type == InvestmentType.AUGGOLD99
+      ? const Color(0xff303B6A)
       : UiConstants.kFloContainerColor;
 }
 
@@ -519,6 +649,7 @@ class FloBalanceBriefRow extends StatelessWidget {
     this.trail,
     this.percent,
   });
+
   final double? lead, trail, percent;
   final String tier;
   final bool mini;
@@ -673,6 +804,7 @@ class ComparisonBox extends StatelessWidget {
       : super(key: key);
   final Color backgroundColor;
   final bool isGold;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -703,7 +835,7 @@ class ComparisonBox extends StatelessWidget {
                           TextSpan(
                             text: "vs ",
                             style: TextStyles.rajdhaniSB.title3.colour(
-                              Color(0xffF6CC60),
+                              const Color(0xffF6CC60),
                             ),
                           ),
                           TextSpan(
@@ -790,7 +922,7 @@ class ComparisonBox extends StatelessWidget {
                             horizontal: SizeConfig.padding24,
                             vertical: SizeConfig.padding10),
                         decoration: BoxDecoration(
-                          color: Color(0xff323232),
+                          color: const Color(0xff323232),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: Row(
@@ -834,7 +966,7 @@ class ComparisonBox extends StatelessWidget {
                             horizontal: SizeConfig.padding24,
                             vertical: SizeConfig.padding10),
                         decoration: BoxDecoration(
-                          color: Color(0xff323232),
+                          color: const Color(0xff323232),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: Row(
@@ -875,7 +1007,7 @@ class ComparisonBox extends StatelessWidget {
                             horizontal: SizeConfig.padding24,
                             vertical: SizeConfig.padding10),
                         decoration: BoxDecoration(
-                          color: Color(0xff323232),
+                          color: const Color(0xff323232),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: Row(
@@ -916,7 +1048,7 @@ class ComparisonBox extends StatelessWidget {
                             horizontal: SizeConfig.padding24,
                             vertical: SizeConfig.padding10),
                         decoration: BoxDecoration(
-                          color: Color(0xff323232),
+                          color: const Color(0xff323232),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: Row(
@@ -964,7 +1096,7 @@ class ComparisonBox extends StatelessWidget {
               Align(
                 alignment: Alignment.center,
                 child: Container(
-                  padding: EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
                       color: Colors.black,
                       shape: BoxShape.circle,
@@ -995,14 +1127,15 @@ class _WhySection extends StatelessWidget {
           children: [
             TextSpan(
               text: "BIS Hallmark Gold",
-              style: TextStyles.sourceSans.body2.colour(Color(0xffA7A7A8)),
+              style:
+                  TextStyles.sourceSans.body2.colour(const Color(0xffA7A7A8)),
             )
           ]),
     ),
     Assets.timer: RichText(
       text: TextSpan(
           text: "Stable ",
-          style: TextStyles.sourceSans.body2.colour(Color(0xffA7A7A8)),
+          style: TextStyles.sourceSans.body2.colour(const Color(0xffA7A7A8)),
           children: [
             TextSpan(
                 text: "returns",
@@ -1016,12 +1149,13 @@ class _WhySection extends StatelessWidget {
         children: [
           TextSpan(
               text: "of saving",
-              style: TextStyles.sourceSans.body2.colour(Color(0xffA7A7A8)))
+              style:
+                  TextStyles.sourceSans.body2.colour(const Color(0xffA7A7A8)))
         ],
       ),
     ),
     Icons.lock_outline: Text("48 hours Lock-in",
-        style: TextStyles.sourceSans.body2.colour(Color(0xffA7A7A8)))
+        style: TextStyles.sourceSans.body2.colour(const Color(0xffA7A7A8)))
   };
   final Map<dynamic, Widget> felloPros = {
     Assets.arrowIcon: RichText(
@@ -1031,14 +1165,15 @@ class _WhySection extends StatelessWidget {
           children: [
             TextSpan(
               text: "than other assets",
-              style: TextStyles.sourceSans.body2.colour(Color(0xffA7A7A8)),
+              style:
+                  TextStyles.sourceSans.body2.colour(const Color(0xffA7A7A8)),
             )
           ]),
     ),
     Assets.timer: RichText(
       text: TextSpan(
           text: "Interest Credited",
-          style: TextStyles.sourceSans.body2.colour(Color(0xffA7A7A8)),
+          style: TextStyles.sourceSans.body2.colour(const Color(0xffA7A7A8)),
           children: [
             TextSpan(
                 text: " Everyday",
@@ -1052,7 +1187,8 @@ class _WhySection extends StatelessWidget {
         children: [
           TextSpan(
               text: "& Secured",
-              style: TextStyles.sourceSans.body2.colour(Color(0xffA7A7A8)))
+              style:
+                  TextStyles.sourceSans.body2.colour(const Color(0xffA7A7A8)))
         ],
       ),
     ),
@@ -1108,7 +1244,7 @@ class _WhySection extends StatelessWidget {
                           child: Icon(
                             key,
                             size: SizeConfig.padding20,
-                            color: Color(0xff62E3C4).withOpacity(0.7),
+                            color: const Color(0xff62E3C4).withOpacity(0.7),
                           ),
                         ),
                 ),
@@ -1165,7 +1301,7 @@ class _Footer extends StatelessWidget {
               text: TextSpan(
                 text: highlightedText + " ",
                 style: TextStyles.sourceSansSB.title5.colour(
-                  Color(0xffA9C6D6).withOpacity(0.7),
+                  const Color(0xffA9C6D6).withOpacity(0.7),
                 ),
                 children: [
                   TextSpan(
@@ -1194,6 +1330,7 @@ class CircularSlider extends StatefulWidget {
   final InvestmentType type;
   final bool isNewUser;
   final int interest;
+
   @override
   State<CircularSlider> createState() => CircularSliderState();
 }
@@ -1201,6 +1338,7 @@ class CircularSlider extends StatefulWidget {
 class CircularSliderState extends State<CircularSlider> {
   double _volumeValue = 10000;
   bool isEventSent = false;
+
   void onVolumeChanged(double value) {
     if (!isEventSent) {
       locator<AnalyticsService>().track(
@@ -1235,7 +1373,7 @@ class CircularSliderState extends State<CircularSlider> {
                   radiusFactor: 0.6,
                   axisLineStyle: AxisLineStyle(
                       cornerStyle: CornerStyle.bothFlat,
-                      color: Color(0xffD9D9D9).withOpacity(0.5),
+                      color: const Color(0xffD9D9D9).withOpacity(0.5),
                       thickness: 6),
                   pointers: <GaugePointer>[
                     RangePointer(
@@ -1244,7 +1382,7 @@ class CircularSliderState extends State<CircularSlider> {
                       enableAnimation: true,
                       width: 12,
                       sizeUnit: GaugeSizeUnit.logicalPixel,
-                      color: Color(0xff3DA49D),
+                      color: const Color(0xff3DA49D),
                     ),
                     MarkerPointer(
                         value: _volumeValue,
@@ -1266,7 +1404,7 @@ class CircularSliderState extends State<CircularSlider> {
                           Text(
                             "Save Today",
                             style: TextStyles.sourceSans.body2.colour(
-                              Color(0xffA9C6D6),
+                              const Color(0xffA9C6D6),
                             ),
                           ),
                           Text(
@@ -1296,7 +1434,8 @@ class CircularSliderState extends State<CircularSlider> {
                         ? "(Based on 12% returns*)"
                         : "(Based on 10% returns*)"
                     : "(Based on last years' returns)",
-                style: TextStyles.sourceSans.body3.colour(Color(0xffA9C6D6)),
+                style:
+                    TextStyles.sourceSans.body3.colour(const Color(0xffA9C6D6)),
               )
             ],
           ),
@@ -1308,7 +1447,8 @@ class CircularSliderState extends State<CircularSlider> {
             children: [
               Text(
                 "To see it grow into",
-                style: TextStyles.sourceSans.body0.colour(Color(0xffA9C6D6)),
+                style:
+                    TextStyles.sourceSans.body0.colour(const Color(0xffA9C6D6)),
               ),
               SizedBox(
                 height: SizeConfig.padding16 + SizeConfig.padding2,
@@ -1418,13 +1558,13 @@ class CirclePainter extends CustomPainter {
         Offset(size.width / 2, size.height / 2),
         (size.width * (0.41 - (0.06 * i))),
         Paint()
-          ..color = Color(0xffD9D9D9).withOpacity(0.1)
+          ..color = const Color(0xffD9D9D9).withOpacity(0.1)
           ..style = PaintingStyle.stroke
           ..strokeWidth = 1
           ..shader = ui.Gradient.linear(
             Offset(size.width, size.height),
             Offset(0, size.height),
-            [Color(0xffD9D9D9), Color(0xffD9D9D9).withOpacity(0)],
+            [const Color(0xffD9D9D9), const Color(0xffD9D9D9).withOpacity(0)],
           ),
       );
     }
@@ -1432,4 +1572,102 @@ class CirclePainter extends CustomPainter {
 
   @override
   bool shouldRepaint(CirclePainter painter) => false;
+}
+
+class _GoldRateWidget extends StatefulWidget {
+  const _GoldRateWidget({Key? key}) : super(key: key);
+
+  @override
+  State<_GoldRateWidget> createState() => _GoldRateWidgetState();
+}
+
+class _GoldRateWidgetState extends State<_GoldRateWidget> {
+  bool switchValue = false;
+
+  void handleToggle(bool newValue) {
+    setState(() {
+      switchValue = newValue;
+    });
+
+    // Perform any desired actions based on the new state of the switch
+    if (switchValue) {
+      // Switch is toggled on
+      print('Switch is on');
+      // Perform additional logic or trigger specific functions
+    } else {
+      // Switch is toggled off
+      print('Switch is off');
+      // Perform additional logic or trigger specific functions
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: const Color(0xff323D71),
+      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+        Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "Market Rate",
+              style: TextStyles.sourceSans.body3,
+            ),
+            SizedBox(
+              height: SizeConfig.padding4,
+            ),
+            Text(
+              "Get notified about price\nchanges in Digital Gold",
+              style: TextStyles.sourceSans.body4.colour(Color(0xffA9C6D6)),
+            )
+          ],
+        ),
+        BaseView<GoldBuyViewModel>(onModelReady: (model) {
+          // if (fetchGoldRate) {
+          model.fetchGoldRates();
+          // }
+        }, builder: (ctx, model, child) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.end,
+            children: [
+              Row(
+                children: [
+                  model.isGoldRateFetching
+                      ? SpinKitThreeBounce(
+                          size: SizeConfig.body2,
+                          color: Colors.white,
+                        )
+                      : Text(
+                          "₹ ${(model.goldRates != null ? model.goldRates!.goldBuyPrice : 0.0)?.toStringAsFixed(2)}/gm",
+                          style: TextStyles.sourceSansSB.body1
+                              .colour(Colors.white),
+                        ),
+                  NewCurrentGoldPriceWidget(
+                    fetchGoldRates: model.fetchGoldRates,
+                    goldprice: model.goldRates != null
+                        ? model.goldRates!.goldBuyPrice
+                        : 0.0,
+                    isFetching: model.isGoldRateFetching,
+                    mini: true,
+                    textColor: Colors.white,
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: SizeConfig.padding4,
+              ),
+              AppSwitch(
+                onToggle: handleToggle,
+                value: switchValue,
+                isLoading: model.isGoldRateFetching,
+                height: SizeConfig.padding28,
+                width: SizeConfig.padding46,
+                toggleSize: SizeConfig.padding20,
+              ),
+            ],
+          );
+        }),
+      ]),
+    );
+  }
 }
