@@ -15,6 +15,8 @@ import android.content.SharedPreferences
 
 class MyWidgetProvider : AppWidgetProvider() {
     companion object {
+        const val ACTION_BUTTON_CLICK = "com.example.ACTION_BUTTON_CLICK"
+
         fun getFormattedFelloBalance(context: Context): String {
             try{
                 val sharedPreferences: SharedPreferences = context.getSharedPreferences("FlutterSharedPreferences",
@@ -49,13 +51,29 @@ class MyWidgetProvider : AppWidgetProvider() {
             views.setTextViewText(R.id.amount_text, felloBalance)
 
             // Set the click action for the button to open a specific screen in your app
-            // val intent = Intent(context, SpecificActivity::class.java)
-            // val pendingIntent = PendingIntent.getActivity(context, 0, intent, 0)
-            // views.setOnClickPendingIntent(R.id.quick_save_button, pendingIntent)
+            val intent = Intent(context, MyWidgetProvider::class.java).setAction(ACTION_BUTTON_CLICK)
+            val pendingIntent = PendingIntent.getActivity(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
+            views.setOnClickPendingIntent(R.id.quick_save_button, pendingIntent)
 
             // Update the widget
             appWidgetManager.updateAppWidget(appWidgetId, views)
         }
+    }
+
+    override fun onReceive(context: Context, intent: Intent) {
+        super.onReceive(context, intent)
+        Log.d("MyWidgetProvider", "onReceive called");
+        if (intent.action == ACTION_BUTTON_CLICK) {
+            // Button click action
+            handleButtonClick(context)
+        }
+    }
+
+    private fun handleButtonClick(context: Context) {
+        Log.d("MyWidgetProvider", "handleButtonClick called");
+
+        // Function to be called when the button is clicked
+        // Toast.makeText(context, "Button clicked", Toast.LENGTH_SHORT).show()
     }
 
     private fun formatBalance(value: String?): String {
