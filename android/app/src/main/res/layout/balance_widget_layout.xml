@@ -1,42 +1,44 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    android:layout_width="match_parent"
-    android:layout_height="match_parent"
-    android:background="@android:color/black"
+    android:id="@+id/quick_save_button"
+    android:layout_width="110dp"
+    android:layout_height="110dp"
+    android:background="@drawable/balance_widget_bg3"
     android:orientation="vertical">
 
-    <ImageView
+    <!-- <ImageView
         android:id="@+id/icon_image"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
         android:layout_gravity="center_horizontal"
-        android:src="@drawable/ic_fello_notif" />
+        android:paddingTop="16dp"
+        android:src="@drawable/fello_full_logo" /> -->
 
-    <TextView
+    <!-- <TextView
         android:id="@+id/fello_balance_text"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="20dp"
         android:layout_marginTop="8dp"
         android:gravity="center"
-        android:text="Fello Balance"
+        android:text="Your Balance"
         android:textColor="@android:color/white"
-        android:textSize="16sp" />
+        android:textSize="10sp" /> -->
 
     <TextView
         android:id="@+id/amount_text"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="4dp"
+        android:layout_marginTop="50dp"
         android:gravity="center"
         android:textColor="@android:color/white"
-        android:textSize="24sp" />
+        android:textSize="18sp" />
 
-    <Button
+    <!-- <Button
         android:id="@+id/quick_save_button"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="40dp"
         android:layout_marginTop="8dp"
         android:backgroundTint="#34C3A7"
         android:text="Quick Save"
-        android:textColor="@android:color/white" />
+        android:textColor="@android:color/white" /> -->
 
 </LinearLayout>

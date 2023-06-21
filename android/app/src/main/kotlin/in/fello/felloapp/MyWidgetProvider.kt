@@ -11,6 +11,9 @@ import `in`.fello.felloapp.R
 import java.text.DecimalFormat
 import java.text.DecimalFormatSymbols
 import android.content.SharedPreferences
+import io.flutter.embedding.android.FlutterActivity
+import io.flutter.embedding.engine.FlutterEngineCache
+import io.flutter.plugin.common.MethodChannel
 
 
 class MyWidgetProvider : AppWidgetProvider() {
@@ -63,14 +66,36 @@ class MyWidgetProvider : AppWidgetProvider() {
     override fun onReceive(context: Context, intent: Intent) {
         super.onReceive(context, intent)
         Log.d("MyWidgetProvider", "onReceive called");
+
+        Log.d("MyWidgetProvider", "SHOURYAAX handleButtonClick called");
         if (intent.action == ACTION_BUTTON_CLICK) {
             // Button click action
             handleButtonClick(context)
         }
+
+        if (intent.action == AppWidgetManager.ACTION_APPWIDGET_UPDATE) {
+            val clickedWidgetId = intent.getIntExtra(AppWidgetManager.EXTRA_APPWIDGET_ID, -1)
+
+            if (clickedWidgetId != -1) {
+                // Create an intent to launch the Flutter activity
+                handleButtonClick(context)
+            }
+        }
     }
 
     private fun handleButtonClick(context: Context) {
-        Log.d("MyWidgetProvider", "handleButtonClick called");
+        Log.d("MyWidgetProvider", "SHOURYAAA handleButtonClick called");
+
+        val flutterIntent = Intent(context, MainActivity::class.java)
+        val engine = FlutterEngineCache.getInstance().get("flutter_engine")
+        // val channel = MethodChannel(FlutterEngineCache.getInstance().get("flutter_engine").dartExecutor.binaryMessenger, "methodChannel/deviceData")
+        val messenger = engine?.dartExecutor?.binaryMessenger
+        if(messenger != null) {
+
+            val channel = MethodChannel(messenger, "methodChannel/deviceData")        
+       
+            channel.invokeMethod("openAssetSelection", flutterIntent)
+        }
 
         // Function to be called when the button is clicked
         // Toast.makeText(context, "Button clicked", Toast.LENGTH_SHORT).show()

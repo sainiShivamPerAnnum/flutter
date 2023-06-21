@@ -45,6 +45,7 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 import '../../../util/assets.dart';
 // import 'package:flutter_dynamic_icon/flutter_dynamic_icon.dart';
@@ -151,6 +152,14 @@ class RootViewModel extends BaseViewModel {
         ]);
 
         _initAdhocNotifications();
+
+        const platform = MethodChannel("methodChannel/deviceData");
+        platform.setMethodCallHandler((call) async {
+          if (call.method == 'handleIntent') {
+            print('SHOURYAA CALLED');
+            AppState.delegate!.parseRoute(Uri.parse("/play"));
+          }
+        });
       },
     );
   }
