@@ -5,8 +5,6 @@ import 'package:flutter/material.dart';
 
 import '../tambola_top_banner.dart';
 
-typedef OnPageChanged = void Function(int);
-
 class TodayWeeklyPicksCard extends StatelessWidget {
   const TodayWeeklyPicksCard({
     Key? key,

@@ -125,7 +125,7 @@ class ViewBreakdown extends StatelessWidget {
                   width: SizeConfig.padding4,
                 ),
                 Text(
-                  "Total Tambola Tickets",
+                  "Total Tickets",
                   style: TextStyles.sourceSansSB.body1,
                 ),
                 const Spacer(),
