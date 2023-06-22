@@ -46,8 +46,6 @@ import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
-import '../../../util/assets.dart';
 // import 'package:flutter_dynamic_icon/flutter_dynamic_icon.dart';
 
 enum NavBarItem { Journey, Save, Account, Play, Tambola }
@@ -267,7 +265,7 @@ class RootViewModel extends BaseViewModel {
     }
 
     if (quickSaveData.length == 1) {
-      String fileUrl = quickSaveData[1].icon!;
+      String fileUrl = quickSaveData[0].icon!;
       childWidget = BaseUtil.getWidgetBasedOnUrl(fileUrl);
     } else {
       childWidget = const Icon(

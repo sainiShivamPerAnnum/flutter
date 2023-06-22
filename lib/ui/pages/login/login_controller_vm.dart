@@ -81,9 +81,9 @@ class LoginControllerViewModel extends BaseViewModel {
   static AppState appStateProvider = AppState.delegate!.appState;
 
   //Screen States
-  final _mobileScreenKey = new GlobalKey<LoginMobileViewState>();
-  final _otpScreenKey = new GlobalKey<LoginOtpViewState>();
-  final _nameKey = new GlobalKey<LoginUserNameViewState>();
+  final _mobileScreenKey = GlobalKey<LoginMobileViewState>();
+  final _otpScreenKey = GlobalKey<LoginOtpViewState>();
+  final _nameKey = GlobalKey<LoginUserNameViewState>();
 
 //Private Variables
   bool _isSignup = false;
@@ -237,7 +237,7 @@ class LoginControllerViewModel extends BaseViewModel {
                 .trim()
                 .replaceAll(RegExp(r"\s+\b|\b\s"), " ");
             String gender =
-            _formatGender(_nameKey.currentState!.model.genderValue);
+                _formatGender(_nameKey.currentState!.model.genderValue);
 
             userService.baseUser ??= BaseUser.newUser(
                 userService.firebaseUser!.uid,
@@ -257,7 +257,7 @@ class LoginControllerViewModel extends BaseViewModel {
               final token = await _getBearerToken();
               userService.baseUser!.mobile = userMobile;
               final ApiResponse response =
-              await _userRepo!.setNewUser(userService.baseUser!, token);
+                  await _userRepo!.setNewUser(userService.baseUser!, token);
               logger!.i(response.toString());
               if (response.code == 400) {
                 _analyticsService.track(
@@ -708,12 +708,12 @@ class LoginControllerViewModel extends BaseViewModel {
     _pageNotifier!.value = _controller!.page;
   }
 
-  void initTruecaller() async {
+  Future<void> initTruecaller() async {
     TruecallerSdk.initializeSDK(
         buttonColor: UiConstants.primaryColor.value,
         buttonTextColor: Colors.white.value,
         sdkOptions: TruecallerSdkScope.SDK_OPTION_WITHOUT_OTP);
-    TruecallerSdk.isUsable.then((isUsable) {
+    await TruecallerSdk.isUsable.then((isUsable) {
       isUsable ? TruecallerSdk.getProfile : print("***Not usable***");
     });
 
@@ -723,16 +723,17 @@ class LoginControllerViewModel extends BaseViewModel {
         case TruecallerSdkCallbackResult.success:
           String? phNo = truecallerSdkCallback.profile?.phoneNumber;
           loginUsingTrueCaller = true;
-          logger!.d("Truecaller no: $phNo");
+          logger.d("Truecaller no: $phNo");
 
-          _analyticsService!
-              .track(eventName: AnalyticsEvents.truecallerVerified);
+          _analyticsService.track(
+              eventName: AnalyticsEvents.truecallerVerified);
           AppState.isOnboardingInProgress = true;
           _authenticateTrucallerUser(phNo);
           break;
         case TruecallerSdkCallbackResult.failure:
           int? errorCode = truecallerSdkCallback.error?.code;
-          logger!.e(errorCode);
+          print("Error Code: $errorCode");
+          logger.e("$errorCode");
           break;
         case TruecallerSdkCallbackResult.verification:
           print("Verification Required!!");

@@ -157,7 +157,8 @@ class _FloPremiumDetailsViewState extends State<FloPremiumDetailsView>
                                                     height:
                                                         SizeConfig.padding16),
                                               FloPremiumTransactionsList(
-                                                key: ValueKey("10floTxns"),
+                                                key:
+                                                    const ValueKey("10floTxns"),
                                                 model: model,
                                               ),
                                             ],

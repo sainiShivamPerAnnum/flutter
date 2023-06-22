@@ -18,7 +18,8 @@ class CustomLogger {
   CustomLogger()
       : _filter = DevelopmentFilter(),
         _printer = PrettyPrinter(),
-        _output = ConsoleOutput() {
+        _output =
+            MultiOutput([ConsoleOutput(), StreamOutput(), MemoryOutput()]) {
     _filter.init();
     _filter.level = level ?? Logger.level;
     _printer.init();

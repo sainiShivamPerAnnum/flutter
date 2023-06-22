@@ -236,7 +236,7 @@ class TxnHistoryService extends ChangeNotifier {
     } else if (type == UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD) {
       return locale.digitalGoldText;
     } else if (type == UserTransaction.TRAN_SUBTYPE_TAMBOLA_WIN) {
-      return locale.tambolaWin;
+      return "Ticket Win";
     } else if (type == UserTransaction.TRAN_SUBTYPE_REF_BONUS) {
       return locale.refBonus;
     } else if (type == UserTransaction.TRAN_SUBTYPE_REWARD_REDEEM) {

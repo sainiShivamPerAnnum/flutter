@@ -187,7 +187,7 @@ class GoldBuySuccessView extends StatelessWidget {
                               style: TextStyles.sourceSans.body2
                                   .colour(UiConstants.kTextColor2)),
                           SizedBox(height: SizeConfig.padding16),
-                          Text("${_augTxnService!.currentTxnGms}" + locale.gm,
+                          Text("${_augTxnService!.currentTxnGms}${locale.gm}",
                               style: TextStyles.rajdhaniB.title4),
                           SizedBox(height: SizeConfig.padding12),
                         ],
@@ -254,8 +254,8 @@ class GoldBuySuccessView extends StatelessWidget {
                   SizedBox(width: SizeConfig.padding12),
                 if (_augTxnService!.currentTxnTambolaTicketsCount > 0)
                   WinningChips(
-                      title: locale.tTicket,
-                      tooltip: locale.winChipsTitle3,
+                      title: 'Tickets',
+                      tooltip: '',
                       asset: Assets.singleTmbolaTicket,
                       qty: _augTxnService!.currentTxnTambolaTicketsCount)
               ],
@@ -316,18 +316,18 @@ class WinningChips extends StatelessWidget {
   Widget build(BuildContext context) {
     return Expanded(
       child: LayoutBuilder(
-        builder: ((context, constraints) => Tooltip(
-              triggerMode: TooltipTriggerMode.tap,
-              message: tooltip,
-              child: Container(
-                // height: SizeConfig.padding80,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-                  color: color ?? UiConstants.darkPrimaryColor2,
-                ),
-                padding: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.pageHorizontalMargins,
-                  vertical: SizeConfig.padding12,
+        builder: (context, constraints) => Tooltip(
+          triggerMode: TooltipTriggerMode.tap,
+          message: tooltip,
+          child: Container(
+            // height: SizeConfig.padding80,
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+              color: color ?? UiConstants.darkPrimaryColor2,
+            ),
+            padding: EdgeInsets.symmetric(
+              horizontal: SizeConfig.pageHorizontalMargins,
+              vertical: SizeConfig.padding12,
                 ),
                 margin: margin ?? EdgeInsets.zero,
                 child: constraints.maxWidth < SizeConfig.screenWidth! / 3
@@ -383,17 +383,17 @@ class WinningChips extends StatelessWidget {
                                 ConstrainedBox(
                                   constraints: BoxConstraints(
                                       maxWidth: SizeConfig.screenWidth! * 0.09),
-                                  child: FittedBox(
-                                    fit: BoxFit.scaleDown,
-                                    child: Text(qty.toString(),
-                                        style: TextStyles.rajdhaniB.title3),
-                                  ),
-                                ),
-                              ],
-                            )
-                          ]),
-              ),
-            )),
+                              child: FittedBox(
+                                fit: BoxFit.scaleDown,
+                                child: Text(qty.toString(),
+                                    style: TextStyles.rajdhaniB.title3),
+                              ),
+                            ),
+                          ],
+                        )
+                      ]),
+          ),
+        ),
       ),
     );
   }

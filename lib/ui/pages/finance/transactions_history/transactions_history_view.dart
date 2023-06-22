@@ -71,7 +71,7 @@ class TransactionsHistory extends StatelessWidget {
                     pageSnapping: true,
                     scrollDirection: Axis.horizontal,
                     allowImplicitScrolling: true,
-                    physics: NeverScrollableScrollPhysics(),
+                    physics: const NeverScrollableScrollPhysics(),
                     children: [
                       SingleTransactionView(
                         model: model,
@@ -101,7 +101,7 @@ class SingleTransactionView extends StatelessWidget {
       children: [
         Padding(
           padding: EdgeInsets.only(left: SizeConfig.padding24),
-          child: Container(
+          child: SizedBox(
             height: SizeConfig.padding40,
             width: SizeConfig.screenWidth! / 3.8,
             child: DropdownButtonFormField<String>(
@@ -111,12 +111,12 @@ class SingleTransactionView extends StatelessWidget {
                 contentPadding:
                     EdgeInsets.symmetric(horizontal: SizeConfig.padding10),
                 enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
+                  borderSide: const BorderSide(
                       color: UiConstants.kSecondaryBackgroundColor, width: 2),
                   borderRadius: BorderRadius.circular(SizeConfig.roundness5),
                 ),
                 focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
+                  borderSide: const BorderSide(
                       color: UiConstants.kSecondaryBackgroundColor, width: 2),
                   borderRadius: BorderRadius.circular(SizeConfig.roundness5),
                 ),
@@ -125,7 +125,7 @@ class SingleTransactionView extends StatelessWidget {
               ),
               iconEnabledColor: UiConstants.kTextColor,
               elevation: 0,
-              icon: Icon(Icons.keyboard_arrow_down_rounded),
+              icon: const Icon(Icons.keyboard_arrow_down_rounded),
               hint: Text(
                 locale.type,
                 style:
@@ -151,7 +151,7 @@ class SingleTransactionView extends StatelessWidget {
         ),
         Expanded(
           child: model!.state == ViewState.Busy
-              ? Center(
+              ? const Center(
                   child: FullScreenLoader(),
                 )
               : Column(
@@ -173,7 +173,7 @@ class SingleTransactionView extends StatelessWidget {
                               ],
                             )
                           : ListView(
-                              physics: BouncingScrollPhysics(),
+                  physics: const BouncingScrollPhysics(),
                               controller: model!.tranListController,
                               children: List.generate(
                                 model!.filteredList!.length,
@@ -219,7 +219,7 @@ class SIPTransactionHistoryView extends StatelessWidget {
   Widget build(BuildContext context) {
     S locale = S.of(context);
     return model!.state == ViewState.Busy
-        ? Center(
+        ? const Center(
             child: FullScreenLoader(),
           )
         : Column(
@@ -240,7 +240,7 @@ class SIPTransactionHistoryView extends StatelessWidget {
                           ],
                         )
                       : ListView(
-                          physics: BouncingScrollPhysics(),
+              physics: const BouncingScrollPhysics(),
                           controller: model!.sipScrollController,
                           children: List.generate(
                             model!.filteredSIPList!.length,
@@ -373,7 +373,7 @@ class TransactionTile extends StatelessWidget {
         ),
         SizedBox(
             width: SizeConfig.screenWidth! * 0.9,
-            child: Divider(
+            child: const Divider(
               color: UiConstants.kTextColor2,
             ))
       ],

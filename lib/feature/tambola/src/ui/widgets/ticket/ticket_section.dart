@@ -74,6 +74,8 @@ class TicketSection extends StatelessWidget {
                 widget: const TambolaHomeDetailsView(
                   isStandAloneScreen: true,
                   showPrizeSection: true,
+                  showBottomButton: false,
+                  showDemoImage: false,
                 ),
               );
             },

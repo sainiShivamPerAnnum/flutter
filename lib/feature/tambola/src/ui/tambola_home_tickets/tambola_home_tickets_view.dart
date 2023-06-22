@@ -22,8 +22,6 @@ class TambolaHomeTicketsView extends StatefulWidget {
     Key? key,
   }) : super(key: key);
 
-  // final TambolaHomeViewModel model;
-
   @override
   State<TambolaHomeTicketsView> createState() => _TambolaHomeTicketsViewState();
 }
@@ -115,6 +113,8 @@ class TambolaRewardLottieStrip extends StatelessWidget {
                     widget: const TambolaHomeDetailsView(
                       isStandAloneScreen: true,
                       showPrizeSection: true,
+                      showBottomButton: false,
+                      showDemoImage: false,
                     ),
                   );
                 },

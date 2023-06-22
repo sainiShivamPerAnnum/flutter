@@ -84,9 +84,9 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage> {
     final isGold =
         widget.txn.subType == UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD;
     return Scaffold(
-      backgroundColor: Color(0xff151D22),
+      backgroundColor: const Color(0xff151D22),
       appBar: AppBar(
-        backgroundColor: Color(0xff151D22),
+        backgroundColor: const Color(0xff151D22),
         elevation: 0,
       ),
       body: Stack(
@@ -139,7 +139,7 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage> {
                     child: Text(
                       getFormattedDate + " at " + formattedTime,
                       style: TextStyles.sourceSansSB.body2
-                          .colour(Color(0xffA0A0A0)),
+                          .colour(const Color(0xffA0A0A0)),
                     ),
                   ),
                   SizedBox(
@@ -151,11 +151,11 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage> {
                     SizedBox(height: SizeConfig.padding12),
                     Center(
                       child: Padding(
-                        padding: EdgeInsets.only(top: 4, bottom: 8),
+                        padding: const EdgeInsets.only(top: 4, bottom: 8),
                         child: Text(locale.txnHappyHours,
                             textAlign: TextAlign.center,
                             style: TextStyles.sourceSans.body2
-                                .colour(Color(0xffB5CDCB))),
+                                .colour(const Color(0xffB5CDCB))),
                       ),
                     ),
                   ],
@@ -176,7 +176,7 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage> {
                               Text(
                                 "Status",
                                 style: TextStyles.sourceSans
-                                    .colour(Color(0xffA9C6D6)),
+                                    .colour(const Color(0xffA9C6D6)),
                               ),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -204,7 +204,7 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage> {
                           ),
                           TransactionSummary(
                               summary: widget.txn.transactionUpdatesMap),
-                          Divider(
+                          const Divider(
                             color: Color(0xff3E3E3E),
                           ),
                           if (isGold &&
@@ -221,7 +221,7 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage> {
                                     Text(
                                       "Purchase Rate",
                                       style: TextStyles.sourceSans.body3
-                                          .colour(Color(0xffA9C6D6)),
+                                          .colour(const Color(0xffA9C6D6)),
                                     ),
                                     Text(
                                         "₹" +
@@ -233,7 +233,7 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage> {
                                   ],
                                 ),
                               ),
-                              Divider(
+                              const Divider(
                                 color: Color(0xff3E3E3E),
                               ),
                             ],
@@ -247,7 +247,7 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage> {
                                   Text(
                                     "Gold purchased ",
                                     style: TextStyles.sourceSans.body3
-                                        .colour(Color(0xffA9C6D6)),
+                                        .colour(const Color(0xffA9C6D6)),
                                   ),
                                   Text(
                                       widget.txn.augmnt!["aGoldInTxn"]
@@ -257,7 +257,7 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage> {
                                 ],
                               ),
                             ),
-                            Divider(
+                            const Divider(
                               color: Color(0xff3E3E3E),
                             ),
                             if (widget.txn.couponCode != null ||
@@ -273,18 +273,20 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage> {
                                       Row(
                                         children: [
                                           SvgPicture.asset(Assets.couponsAsset),
-                                          SizedBox(
+                                          const SizedBox(
                                             width: 4,
                                           ),
                                           Text(
                                             widget.txn.couponCode ?? "",
                                             style: TextStyles.sourceSansSB.body3
-                                                .colour(Color(0xffA5FCE7)),
+                                                .colour(
+                                                    const Color(0xffA5FCE7)),
                                           ),
                                           Text(
                                             " coupon applied",
                                             style: TextStyles.sourceSansL.body3
-                                                .colour(Color(0xffA5FCE7)),
+                                                .colour(
+                                                    const Color(0xffA5FCE7)),
                                           ),
                                         ],
                                       ),
@@ -384,9 +386,9 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage> {
                                 alignment: Alignment.topLeft,
                                 child: SizedBox(
                                   child: Text(
-                                    "Tokens and Tambola Tickets are deducted for withdrawals",
+                                    "Tokens and Tickets are deducted for withdrawals",
                                     style: TextStyles.sourceSans.body4
-                                        .colour(Color(0xffA0A0A0)),
+                                        .colour(const Color(0xffA0A0A0)),
                                   ),
                                 ),
                               ),
@@ -403,12 +405,13 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage> {
                                     : Expanded(
                                         child: Container(
                                           decoration: BoxDecoration(
-                                              color: Color(0xff212B31),
+                                              color: const Color(0xff212B31),
                                               borderRadius:
                                                   BorderRadius.circular(8)),
-                                          padding: EdgeInsets.symmetric(
+                                          padding: const EdgeInsets.symmetric(
                                               horizontal: 16, vertical: 8),
-                                          margin: EdgeInsets.only(right: 8),
+                                          margin:
+                                              const EdgeInsets.only(right: 8),
                                           child: Column(
                                             children: [
                                               Row(
@@ -462,12 +465,12 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage> {
                                     child: Container(
                                       alignment: Alignment.center,
                                       decoration: BoxDecoration(
-                                          color: Color(0xff212B31),
+                                          color: const Color(0xff212B31),
                                           borderRadius:
                                               BorderRadius.circular(8)),
-                                      padding: EdgeInsets.symmetric(
+                                      padding: const EdgeInsets.symmetric(
                                           horizontal: 16, vertical: 8),
-                                      margin: EdgeInsets.only(right: 8),
+                                      margin: const EdgeInsets.only(right: 8),
                                       child: Column(
                                         children: [
                                           Row(
@@ -501,7 +504,7 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage> {
                                             width: SizeConfig.padding4,
                                           ),
                                           Text(
-                                            "Tambola Ticket",
+                                            "Ticket(s)",
                                             textAlign: TextAlign.center,
                                             style: TextStyles.rajdhaniSB.body4,
                                           ),

@@ -24,6 +24,8 @@ class HowTambolaWorks extends StatelessWidget {
           widget: const TambolaHomeDetailsView(
             isStandAloneScreen: true,
             showPrizeSection: false,
+            showBottomButton: false,
+            showDemoImage: false,
           ),
         );
       },

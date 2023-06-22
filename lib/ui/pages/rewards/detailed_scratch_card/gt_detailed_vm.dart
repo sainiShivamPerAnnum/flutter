@@ -24,15 +24,15 @@ class GTDetailedViewModel extends BaseViewModel {
   bool _viewScratchedCard = false;
   bool isCardScratched = false;
   bool _isShareLoading = false;
-  final UserService? _userService = locator<UserService>();
-  final UserCoinService? _userCoinService = locator<UserCoinService>();
+  final UserService _userService = locator<UserService>();
+  final UserCoinService _userCoinService = locator<UserCoinService>();
   final ScratchCardService _gtService = locator<ScratchCardService>();
-  final CustomLogger? _logger = locator<CustomLogger>();
-  final ApiPath? _apiPaths = locator<ApiPath>();
+  final CustomLogger _logger = locator<CustomLogger>();
+  final ApiPath _apiPaths = locator<ApiPath>();
   final JourneyService _journeyService = locator<JourneyService>();
 
-  final _rsaEncryption = new RSAEncryption();
-  final ScratchCardRepository? _gtRepo = locator<ScratchCardRepository>();
+  final _rsaEncryption = RSAEncryption();
+  final ScratchCardRepository _gtRepo = locator<ScratchCardRepository>();
 
   get viewScratchedCard => this._viewScratchedCard;
 
@@ -102,7 +102,7 @@ class GTDetailedViewModel extends BaseViewModel {
         //Pity ticket
       }
     }
-    Future.delayed(Duration(seconds: 0), () {
+    Future.delayed(const Duration(seconds: 0), () {
       _viewScratcher = true;
       notifyListeners();
     });

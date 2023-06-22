@@ -26,10 +26,14 @@ class TambolaHomeDetailsView extends StatefulWidget {
     this.isStandAloneScreen = false,
     this.showPrizeSection = false,
     this.showWinners = false,
+    this.showBottomButton = true,
+    this.showDemoImage = true,
   }) : super(key: key);
   final bool isStandAloneScreen;
   final bool showPrizeSection;
   final bool showWinners;
+  final bool showBottomButton;
+  final showDemoImage;
 
   @override
   State<TambolaHomeDetailsView> createState() => _TambolaHomeDetailsViewState();
@@ -128,26 +132,29 @@ class _TambolaHomeDetailsViewState extends State<TambolaHomeDetailsView> {
                     SizedBox(
                       height: SizeConfig.blockSizeVertical! * 2,
                     ),
-                    Image.asset(
-                      "assets/images/tambola_transparent.png",
-                      width: SizeConfig.screenWidth! * 0.9,
-                      // height: SizeConfig.iconSize1 * 1.5,
-                      fit: BoxFit.cover,
-                    ),
-                    Container(
-                      margin:
-                          EdgeInsets.symmetric(vertical: SizeConfig.padding10),
-                      width: SizeConfig.screenWidth! * 0.9,
-                      child: Text(
-                        '15 numbers on a ticket. 21 numbers picked every week. Cross all numbers to get rewarded!',
-                        textAlign: TextAlign.center,
-                        style: TextStyles.rajdhaniSB.body2.colour(
-                            UiConstants.kProfileBorderColor.withOpacity(0.41)),
+                    if (widget.showDemoImage) ...[
+                      Image.asset(
+                        "assets/images/tambola_transparent.png",
+                        width: SizeConfig.screenWidth! * 0.9,
+                        // height: SizeConfig.iconSize1 * 1.5,
+                        fit: BoxFit.cover,
                       ),
-                    ),
-                    SizedBox(height: SizeConfig.padding20),
+                      Container(
+                        margin: EdgeInsets.symmetric(
+                            vertical: SizeConfig.padding10),
+                        width: SizeConfig.screenWidth! * 0.9,
+                        child: Text(
+                          '15 numbers on a ticket. 21 numbers picked every week. Cross all numbers to get rewarded!',
+                          textAlign: TextAlign.center,
+                          style: TextStyles.rajdhaniSB.body2.colour(UiConstants
+                              .kProfileBorderColor
+                              .withOpacity(0.41)),
+                        ),
+                      ),
+                      SizedBox(height: SizeConfig.padding20),
+                    ],
                     const TambolaPrize(),
-                    TambolaLeaderboardView(),
+                    const TambolaLeaderboardView(),
                     const TermsAndConditions(url: Constants.tambolatnc),
                     SizedBox(
                       height: SizeConfig.screenHeight! * 0.25,
@@ -155,80 +162,83 @@ class _TambolaHomeDetailsViewState extends State<TambolaHomeDetailsView> {
                   ],
                 ),
               ),
-              Align(
-                alignment: Alignment.bottomCenter,
-                child: Container(
-                  padding: const EdgeInsets.only(
-                      top: 14, bottom: 24, left: 32, right: 32),
-                  width: double.infinity,
-                  color: UiConstants.kBackgroundColor,
-                  // height: SizeConfig.screenHeight! * 0.17,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Container(
-                        margin: EdgeInsets.only(bottom: SizeConfig.padding12),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            SvgPicture.asset(Assets.sparklingStar),
-                            const SizedBox(
-                              width: 4,
-                            ),
-                            Text(
-                              model.tambolaGameData?.highLight ?? '',
-                              style: TextStyles.sourceSans.body4
-                                  .colour(const Color(0xffA7A7A8)),
-                            ),
-                          ],
+              if (widget.showBottomButton)
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Container(
+                    padding: const EdgeInsets.only(
+                        top: 14, bottom: 24, left: 32, right: 32),
+                    width: double.infinity,
+                    color: UiConstants.kBackgroundColor,
+                    // height: SizeConfig.screenHeight! * 0.17,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          margin: EdgeInsets.only(bottom: SizeConfig.padding12),
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              SvgPicture.asset(Assets.sparklingStar),
+                              const SizedBox(
+                                width: 4,
+                              ),
+                              Text(
+                                model.tambolaGameData?.highLight ?? '',
+                                style: TextStyles.sourceSans.body4
+                                    .colour(const Color(0xffA7A7A8)),
+                              ),
+                            ],
+                          ),
                         ),
-                      ),
-                      Showcase(
-                        key: ShowCaseKeys.TambolaButton,
-                        description: 'You get a ticket on every ₹500 you save!',
-                        child: AppPositiveBtn(
-                          style: TextStyles.rajdhaniSB.body0,
-                          btnText: 'Unlock your first ticket now',
-                          onPressed: () {
-                            locator<AnalyticsService>().track(
-                                eventName: (locator<TambolaService>()
-                                            .bestTickets
-                                            ?.data !=
-                                        null)
-                                    ? AnalyticsEvents.tambolaSaveTapped
-                                    : AnalyticsEvents
-                                        .tambolaGetFirstTicketTapped,
-                                properties: AnalyticsProperties
-                                    .getDefaultPropertiesMap(extraValuesMap: {
-                                  "Time left for draw Tambola (mins)":
-                                      AnalyticsProperties
-                                          .getTimeLeftForTambolaDraw(),
-                                  "Tambola Tickets Owned": AnalyticsProperties
-                                      .getTambolaTicketCount(),
-                                  "Number of Tickets": locator<TambolaService>()
-                                          .bestTickets
-                                          ?.data
-                                          ?.totalTicketCount ??
-                                      0,
-                                  "Amount": 500,
-                                }));
-                            BaseUtil.openDepositOptionsModalSheet(
-                                amount: 500, //model.ticketSavedAmount,
-                                subtitle:
-                                    'Save ₹500 in any of the asset & get 1 Free Tambola Ticket',
-                                timer: 0);
-                          },
+                        Showcase(
+                          key: ShowCaseKeys.TambolaButton,
+                          description:
+                              'You get a ticket on every ₹500 you save!',
+                          child: AppPositiveBtn(
+                            style: TextStyles.rajdhaniSB.body0,
+                            btnText: 'Unlock your first ticket now',
+                            onPressed: () {
+                              locator<AnalyticsService>().track(
+                                  eventName: (locator<TambolaService>()
+                                              .bestTickets
+                                              ?.data !=
+                                          null)
+                                      ? AnalyticsEvents.tambolaSaveTapped
+                                      : AnalyticsEvents
+                                          .tambolaGetFirstTicketTapped,
+                                  properties: AnalyticsProperties
+                                      .getDefaultPropertiesMap(extraValuesMap: {
+                                    "Time left for draw Tambola (mins)":
+                                        AnalyticsProperties
+                                            .getTimeLeftForTambolaDraw(),
+                                    "Tambola Tickets Owned": AnalyticsProperties
+                                        .getTambolaTicketCount(),
+                                    "Number of Tickets":
+                                        locator<TambolaService>()
+                                                .bestTickets
+                                                ?.data
+                                                ?.totalTicketCount ??
+                                            0,
+                                    "Amount": 500,
+                                  }));
+                              BaseUtil.openDepositOptionsModalSheet(
+                                  amount: 500, //model.ticketSavedAmount,
+                                  subtitle:
+                                      'Save ₹500 in any of the asset & get 1 Free Tambola Ticket',
+                                  timer: 0);
+                            },
+                          ),
                         ),
-                      ),
-                      // if (!widget.isStandAloneScreen)
-                      //   SizedBox(
-                      //     height: SizeConfig.navBarHeight,
-                      //   )
-                    ],
+                        // if (!widget.isStandAloneScreen)
+                        //   SizedBox(
+                        //     height: SizeConfig.navBarHeight,
+                        //   )
+                      ],
+                    ),
                   ),
                 ),
-              ),
             ],
           ),
         );
