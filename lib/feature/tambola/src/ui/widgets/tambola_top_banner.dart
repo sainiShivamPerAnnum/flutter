@@ -11,7 +11,7 @@ class TambolaTopBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.symmetric(horizontal: SizeConfig.screenWidth! * 0.06),
+      // margin: EdgeInsets.symmetric(horizontal: SizeConfig.screenWidth! * 0.06),
       padding: EdgeInsets.only(
         top: SizeConfig.pageHorizontalMargins + SizeConfig.padding16,
         bottom: SizeConfig.pageHorizontalMargins,

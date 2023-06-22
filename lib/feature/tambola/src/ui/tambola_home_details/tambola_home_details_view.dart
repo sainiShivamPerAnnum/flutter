@@ -5,7 +5,6 @@ import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/feature/tambola/src/ui/tambola_home_details/tambola_home_details_vm.dart';
 import 'package:felloapp/feature/tambola/src/ui/widgets/header.dart';
 import 'package:felloapp/feature/tambola/src/ui/widgets/prizes_section.dart';
-import 'package:felloapp/feature/tambola/src/ui/widgets/ticket_cost_info.dart';
 import 'package:felloapp/feature/tambola/tambola.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/helpers/tnc_text.dart';
@@ -17,7 +16,6 @@ import 'package:felloapp/util/show_case_key.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:lottie/lottie.dart';
 import 'package:showcaseview/showcaseview.dart';
 
 import '../widgets/past_week_winners_section.dart';
@@ -130,8 +128,8 @@ class _TambolaHomeDetailsViewState extends State<TambolaHomeDetailsView> {
                     SizedBox(
                       height: SizeConfig.blockSizeVertical! * 2,
                     ),
-                    SvgPicture.asset(
-                      "assets/svg/first_ticket_unlock.svg",
+                    Image.asset(
+                      "assets/images/tambola_transparent.png",
                       width: SizeConfig.screenWidth! * 0.9,
                       // height: SizeConfig.iconSize1 * 1.5,
                       fit: BoxFit.cover,
@@ -141,7 +139,7 @@ class _TambolaHomeDetailsViewState extends State<TambolaHomeDetailsView> {
                           EdgeInsets.symmetric(vertical: SizeConfig.padding10),
                       width: SizeConfig.screenWidth! * 0.9,
                       child: Text(
-                        model.tambolaGameData?.description ?? "Tambola",
+                        '15 numbers on a ticket. 21 numbers picked every week. Cross all numbers to get rewarded!',
                         textAlign: TextAlign.center,
                         style: TextStyles.rajdhaniSB.body2.colour(
                             UiConstants.kProfileBorderColor.withOpacity(0.41)),

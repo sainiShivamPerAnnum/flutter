@@ -72,9 +72,6 @@ class _PicksCardViewState extends State<PicksCardView> {
           Radius.circular(SizeConfig.roundness12),
         ),
       ),
-      margin: EdgeInsets.symmetric(
-        horizontal: SizeConfig.pageHorizontalMargins,
-      ),
       padding: EdgeInsets.symmetric(vertical: SizeConfig.padding12),
       child: Column(
         children: [

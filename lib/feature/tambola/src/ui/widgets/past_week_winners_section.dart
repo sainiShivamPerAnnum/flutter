@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:felloapp/core/model/winners_model.dart';
 import 'package:felloapp/feature/tambola/src/services/tambola_service.dart';
 import 'package:felloapp/ui/elements/default_avatar.dart';
@@ -6,9 +8,8 @@ import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
-import 'package:provider/provider.dart';
 import 'package:flutter_svg/svg.dart';
-import 'dart:math' as math;
+import 'package:provider/provider.dart';
 
 class TambolaLeaderboardView extends StatefulWidget {
   const TambolaLeaderboardView({
@@ -53,8 +54,8 @@ class _TambolaLeaderboardViewState extends State<TambolaLeaderboardView> {
     return temp.length > 1
         ? temp.join(", ")
         : temp.isEmpty
-            ? ""
-            : temp[0];
+        ? ""
+        : temp[0];
   }
 
   @override
@@ -87,38 +88,38 @@ class _TambolaLeaderboardViewState extends State<TambolaLeaderboardView> {
                 ),
                 winners == null
                     ? Center(
-                        child: Column(
-                          children: [
-                            FullScreenLoader(size: SizeConfig.padding80),
-                            SizedBox(
-                              height: SizeConfig.padding16,
-                            ),
-                            Text(
-                              "Fetching last week winners..",
-                              style: TextStyles.rajdhaniB.body2
-                                  .colour(Colors.white),
-                            ),
-                          ],
-                        ),
-                      )
+                  child: Column(
+                    children: [
+                      FullScreenLoader(size: SizeConfig.padding80),
+                      SizedBox(
+                        height: SizeConfig.padding16,
+                      ),
+                      Text(
+                        "Fetching last week winners..",
+                        style: TextStyles.rajdhaniB.body2
+                            .colour(Colors.white),
+                      ),
+                    ],
+                  ),
+                )
                     : (winners.isEmpty
-                        ? Container(
-                            margin: EdgeInsets.symmetric(
-                                vertical: SizeConfig.padding24),
-                            color: Colors.transparent,
-                            alignment: Alignment.center,
-                            width: SizeConfig.screenWidth,
-                            child: NoRecordDisplayWidget(
-                              topPadding: false,
-                              assetSvg: Assets.noWinnersAsset,
-                              text: "Leaderboard will be updated soon",
-                            ),
-                          )
-                        : Column(
-                            children: [
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
+                    ? Container(
+                  margin: EdgeInsets.symmetric(
+                      vertical: SizeConfig.padding24),
+                  color: Colors.transparent,
+                  alignment: Alignment.center,
+                  width: SizeConfig.screenWidth,
+                  child: NoRecordDisplayWidget(
+                    topPadding: false,
+                    assetSvg: Assets.noWinnersAsset,
+                    text: "Leaderboard will be updated soon",
+                  ),
+                )
+                    : Column(
+                  children: [
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
                                   Text(
                                     "#",
                                     style: TextStyles.sourceSans.body3
@@ -128,7 +129,7 @@ class _TambolaLeaderboardViewState extends State<TambolaLeaderboardView> {
                                   Text("Names",
                                       style: TextStyles.sourceSans.body3
                                           .colour(UiConstants.kTextColor2)),
-                                  Spacer(),
+                                  const Spacer(),
                                   Text(
                                     'Tickets Owned',
                                     style: TextStyles.sourceSans.body3
@@ -140,136 +141,136 @@ class _TambolaLeaderboardViewState extends State<TambolaLeaderboardView> {
                                     'Rewards',
                                     style: TextStyles.sourceSans.body3
                                         .colour(UiConstants.kTextColor2),
-                                  )
-                                ],
-                              ),
-                              Column(
-                                children: List.generate(
-                                  _seeAll ? winners.length : 10,
-                                  (i) {
-                                    return Column(
-                                      children: [
-                                        Container(
-                                          width: SizeConfig.screenWidth,
-                                          padding: EdgeInsets.symmetric(
-                                              vertical: SizeConfig.padding12),
-                                          margin: EdgeInsets.symmetric(
-                                            vertical: SizeConfig.padding4,
-                                          ),
-                                          decoration: BoxDecoration(
-                                            color: Colors.transparent,
-                                            borderRadius: BorderRadius.circular(
-                                                SizeConfig.roundness16),
-                                          ),
-                                          child: Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: [
-                                              Text(
-                                                "${i + 1}",
-                                                style: TextStyles
-                                                    .sourceSans.body2
-                                                    .colour(Colors.white),
-                                              ),
-                                              SizedBox(
-                                                  width: SizeConfig.padding24),
-                                              DefaultAvatar(),
-                                              SizedBox(
-                                                  width: SizeConfig.padding12),
-                                              Expanded(
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: [
-                                                    Text(
-                                                        //"avc",
-                                                        winners[i]
-                                                            .username!
-                                                            .replaceAll(
-                                                                '@', '.'),
-                                                        style: TextStyles
-                                                            .sourceSans.body2
-                                                            .colour(
-                                                                Colors.white)),
-                                                    SizedBox(
-                                                        height: SizeConfig
-                                                            .padding4),
-                                                    Text(
-                                                      getWinnersCategory(
-                                                              winners, i) ??
-                                                          "",
-                                                      style: TextStyles
-                                                          .sourceSans.body4
-                                                          .colour(Colors.white
-                                                              .withOpacity(
-                                                                  0.5)),
-                                                      maxLines: 2,
-                                                      textAlign:
-                                                          TextAlign.start,
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                width: SizeConfig.padding64,
-                                              ),
-                                              SizedBox(
-                                                // color: Colors.red,
-                                                width: SizeConfig.padding54,
-                                                child: Text(
-                                                  "${winners[i].ticketOwned ?? "00"}",
-                                                  style: TextStyles
-                                                      .sourceSans.body2
-                                                      .colour(Colors.white),
-                                                ),
-                                              ),
-                                              // SizedBox(width: SizeConfig.padding16),
-                                              SizedBox(
-                                                width: SizeConfig.padding64,
-                                                // color: Colors.blue,
-                                                child: Text(
-                                                  "₹ ${winners[i].amount?.toInt() ?? "00"}",
-                                                  style: TextStyles
-                                                      .sourceSans.body2
-                                                      .colour(Colors.white),
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                        if (i + 1 < winners.length)
-                                          const Divider(
-                                            color: Colors.white,
-                                            thickness: 0.2,
-                                          )
-                                      ],
-                                    );
-                                  },
+                        )
+                      ],
+                    ),
+                    Column(
+                      children: List.generate(
+                        _seeAll ? winners.length : 10,
+                            (i) {
+                          return Column(
+                            children: [
+                              Container(
+                                width: SizeConfig.screenWidth,
+                                padding: EdgeInsets.symmetric(
+                                    vertical: SizeConfig.padding12),
+                                margin: EdgeInsets.symmetric(
+                                  vertical: SizeConfig.padding4,
                                 ),
-                              ),
-                              SizedBox(
-                                height: SizeConfig.padding16,
-                              ),
-                              !_seeAll
-                                  ? GestureDetector(
-                                      onTap: () {
-                                        setState(() {
-                                          _seeAll = true;
-                                        });
-                                      },
-                                      child: Row(
+                                decoration: BoxDecoration(
+                                  color: Colors.transparent,
+                                  borderRadius: BorderRadius.circular(
+                                      SizeConfig.roundness16),
+                                ),
+                                child: Row(
+                                  crossAxisAlignment:
+                                  CrossAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "${i + 1}",
+                                      style: TextStyles
+                                          .sourceSans.body2
+                                          .colour(Colors.white),
+                                    ),
+                                    SizedBox(
+                                        width: SizeConfig.padding24),
+                                    DefaultAvatar(),
+                                    SizedBox(
+                                        width: SizeConfig.padding12),
+                                    Expanded(
+                                      child: Column(
+                                        crossAxisAlignment:
+                                        CrossAxisAlignment.start,
                                         mainAxisAlignment:
-                                            MainAxisAlignment.center,
+                                        MainAxisAlignment.center,
                                         children: [
                                           Text(
-                                            "See all",
-                                            style: TextStyles.sourceSansSB.body2
-                                                .colour(Colors.white),
-                                          ),
+                                            //"avc",
+                                              winners[i]
+                                                  .username!
+                                                  .replaceAll(
+                                                  '@', '.'),
+                                              style: TextStyles
+                                                  .sourceSans.body2
+                                                  .colour(
+                                                  Colors.white)),
                                           SizedBox(
-                                            width: SizeConfig.padding8,
+                                              height: SizeConfig
+                                                  .padding4),
+                                          Text(
+                                            getWinnersCategory(
+                                                winners, i) ??
+                                                "",
+                                            style: TextStyles
+                                                .sourceSans.body4
+                                                .colour(Colors.white
+                                                .withOpacity(
+                                                0.5)),
+                                            maxLines: 2,
+                                            textAlign:
+                                            TextAlign.start,
+                                          ),
+                                        ],
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: SizeConfig.padding64,
+                                    ),
+                                    SizedBox(
+                                      // color: Colors.red,
+                                      width: SizeConfig.padding54,
+                                      child: Text(
+                                        "${winners[i].ticketOwned ?? "00"}",
+                                        style: TextStyles
+                                            .sourceSans.body2
+                                            .colour(Colors.white),
+                                      ),
+                                    ),
+                                    // SizedBox(width: SizeConfig.padding16),
+                                    SizedBox(
+                                      width: SizeConfig.padding64,
+                                      // color: Colors.blue,
+                                      child: Text(
+                                        "₹ ${winners[i].amount?.toInt() ?? "00"}",
+                                        style: TextStyles
+                                            .sourceSans.body2
+                                            .colour(Colors.white),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                              if (i + 1 < winners.length)
+                                const Divider(
+                                  color: Colors.white,
+                                  thickness: 0.2,
+                                )
+                            ],
+                          );
+                        },
+                      ),
+                    ),
+                    SizedBox(
+                      height: SizeConfig.padding16,
+                    ),
+                    !_seeAll
+                        ? GestureDetector(
+                      onTap: () {
+                        setState(() {
+                          _seeAll = true;
+                        });
+                      },
+                      child: Row(
+                        mainAxisAlignment:
+                        MainAxisAlignment.center,
+                        children: [
+                          Text(
+                            "See all",
+                            style: TextStyles.sourceSansSB.body2
+                                .colour(Colors.white),
+                          ),
+                          SizedBox(
+                            width: SizeConfig.padding8,
                                           ),
                                           Transform.rotate(
                                               angle: math.pi / 2,
@@ -280,9 +281,9 @@ class _TambolaLeaderboardViewState extends State<TambolaLeaderboardView> {
                                         ],
                                       ),
                                     )
-                                  : SizedBox()
+                                  : const SizedBox()
                             ],
-                          )),
+                )),
               ],
             ),
           );
