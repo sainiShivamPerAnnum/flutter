@@ -6,6 +6,7 @@ import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/model/portfolio_model.dart';
+import 'package:felloapp/core/repository/getters_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
@@ -633,8 +634,7 @@ class _BuildOwnAsset extends StatelessWidget {
           );
   }
 
-  Color get color =>
-      type == InvestmentType.AUGGOLD99
+  Color get color => type == InvestmentType.AUGGOLD99
       ? const Color(0xff303B6A)
       : UiConstants.kFloContainerColor;
 }
@@ -1584,21 +1584,14 @@ class _GoldRateWidget extends StatefulWidget {
 class _GoldRateWidgetState extends State<_GoldRateWidget> {
   bool switchValue = false;
 
+  final _getterRepo = locator<GetterRepository>();
+
   void handleToggle(bool newValue) {
     setState(() {
       switchValue = newValue;
     });
 
-    // Perform any desired actions based on the new state of the switch
-    if (switchValue) {
-      // Switch is toggled on
-      print('Switch is on');
-      // Perform additional logic or trigger specific functions
-    } else {
-      // Switch is toggled off
-      print('Switch is off');
-      // Perform additional logic or trigger specific functions
-    }
+    _getterRepo.subscribeGoldPriceAlert(switchValue ? 1 : 0);
   }
 
   @override
