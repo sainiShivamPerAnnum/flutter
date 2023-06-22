@@ -96,7 +96,7 @@ class BaseRemoteConfig {
     'augmont_deposit_permission': '1'
   };
   static const Map<String, String> _KYC_COMPLETION_PRIZE = {
-    'kyc_completion_prize': 'You have won ₹50 and 10 Tambola tickets!'
+    'kyc_completion_prize': 'You have won ₹50 and 10 tickets!'
   };
   static const Map<String, String> _UNLOCK_REFERRAL_AMT = {
     'unlock_referral_amt': '100'
@@ -180,7 +180,7 @@ class BaseRemoteConfig {
   };
   static const Map<String, String> _GAME_TAMBOLA_ANNOUNCEMENT = {
     'game_tambola_announcement':
-        'Stand to win big prizes every week by matching your tambola tickets! Winners are announced every Monday'
+    'Stand to win big prizes every week by matching your tickets! Winners are announced every Monday'
   };
   static const Map<String, String> _GAME_CRICKET_FPL_ANNOUNCEMENT = {
     'game_cricket_fpl_announcement': ''

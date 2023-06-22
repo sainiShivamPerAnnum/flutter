@@ -307,7 +307,7 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage> {
                                       if (widget.txn.couponMap
                                               ?.containsKey("gtId") ??
                                           false)
-                                        Text("+ 1 Tambola Ticket",
+                                        Text("+ 1 Ticket",
                                             style: TextStyles.sourceSans.body3
                                                 .colour(Color(0xffA5FCE7)))
                                     ],

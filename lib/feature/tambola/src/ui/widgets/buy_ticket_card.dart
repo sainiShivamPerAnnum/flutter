@@ -271,7 +271,7 @@ class _ButTicketsComponentState extends State<ButTicketsComponent> {
                   BaseUtil.openDepositOptionsModalSheet(
                       amount: ticketCost,
                       subtitle:
-                          'Save ₹500 in any of the asset & get 1 Free Tambola Ticket',
+                          'Save ₹500 in any of the asset & get 1 Free Ticket',
                       timer: 0);
                 },
                 btnText: "SAVE",

@@ -86,7 +86,7 @@ class OnboardingViewModel extends BaseViewModel {
       ],
       [
         "Get rewarded for Saving",
-        "Save and get free tambola tickets and participate in the weekly draws",
+        "Save and get free tickets and participate in the weekly draws",
       ],
       [
         "Become a Crorepati",

@@ -588,7 +588,7 @@ class ViewBreakdown extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      "Lifetime Tambola Tickets",
+                      "Lifetime Tickets",
                       style: TextStyles.sourceSans.body2,
                     ),
                     const Spacer(),

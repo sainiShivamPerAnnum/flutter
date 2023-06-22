@@ -43,7 +43,7 @@ class TambolaRepo extends BaseRepo {
         code: 200,
       );
     } catch (e) {
-      logger.e('Failed to get best tambola tickets: $e');
+      logger.e('Failed to get best tickets: $e');
       return ApiResponse.withError(e.toString(), 400);
     }
   }

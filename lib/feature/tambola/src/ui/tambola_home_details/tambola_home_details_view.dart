@@ -226,7 +226,7 @@ class _TambolaHomeDetailsViewState extends State<TambolaHomeDetailsView> {
                               BaseUtil.openDepositOptionsModalSheet(
                                   amount: 500, //model.ticketSavedAmount,
                                   subtitle:
-                                      'Save ₹500 in any of the asset & get 1 Free Tambola Ticket',
+                                      'Save ₹500 in any of the asset & get 1 Free Ticket',
                                   timer: 0);
                             },
                           ),
