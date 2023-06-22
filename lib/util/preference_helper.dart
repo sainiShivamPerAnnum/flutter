@@ -32,6 +32,7 @@ class PreferenceHelper {
   static const LAST_WEEK_NUMBER = 'lastWeekNumber';
   static const APP_RATING_SUBMITTED = 'app_rating_submitted';
   static const NEW_INSTALL_POPUP = "new_install_popup";
+  static const GOLD_PRICE_SUBSCRIBE = "gold_price_subscribe";
 
   static Future<SharedPreferences?> initiate() async {
     if (_prefs == null) {

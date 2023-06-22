@@ -29,6 +29,7 @@ import 'package:felloapp/util/dynamic_ui_utils.dart';
 import 'package:felloapp/util/extensions/investment_returns_extension.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/show_case_key.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -98,7 +99,7 @@ class _AssetSectionViewState extends State<AssetSectionView> {
         ],
         builder: (_, model, ___) {
           bool isNewUser = model!.userSegments.contains("NEW_USER");
-          bool isLendboxNewUser = model.userSegments.contains("LBOX_NEW");
+          // bool isLendboxNewUser = model.userSegments.contains("LBOX_NEW");
           final balance = widget.type == InvestmentType.AUGGOLD99
               ? model.userFundWallet?.augGoldQuantity ?? 0
               : model.userFundWallet?.wLbBalance ?? 0;
@@ -1575,7 +1576,8 @@ class _GoldRateWidget extends StatefulWidget {
 }
 
 class _GoldRateWidgetState extends State<_GoldRateWidget> {
-  bool switchValue = false;
+  bool switchValue =
+      PreferenceHelper.getBool(PreferenceHelper.GOLD_PRICE_SUBSCRIBE);
 
   final _getterRepo = locator<GetterRepository>();
 
@@ -1585,6 +1587,8 @@ class _GoldRateWidgetState extends State<_GoldRateWidget> {
     });
 
     _getterRepo.subscribeGoldPriceAlert(switchValue ? 1 : 0);
+
+    PreferenceHelper.setBool(PreferenceHelper.GOLD_PRICE_SUBSCRIBE, true);
   }
 
   @override
