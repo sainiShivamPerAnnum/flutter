@@ -1589,6 +1589,12 @@ class _GoldRateWidgetState extends State<_GoldRateWidget> {
     _getterRepo.subscribeGoldPriceAlert(switchValue ? 1 : 0);
 
     PreferenceHelper.setBool(PreferenceHelper.GOLD_PRICE_SUBSCRIBE, true);
+
+    if (switchValue) {
+      BaseUtil.showPositiveAlert(
+          'We will notify you when the gold prices change!',
+          'Don\'t worry, we will not to spam you');
+    }
   }
 
   @override
