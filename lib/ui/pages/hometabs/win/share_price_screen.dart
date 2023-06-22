@@ -37,7 +37,7 @@ class SharePriceScreen extends StatelessWidget {
               Container(
                 width: double.infinity,
                 height: double.infinity,
-                margin: EdgeInsets.only(top: kToolbarHeight),
+                margin: const EdgeInsets.only(top: kToolbarHeight),
                 padding: EdgeInsets.symmetric(vertical: SizeConfig.padding16),
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
@@ -66,7 +66,7 @@ class SharePriceScreen extends StatelessWidget {
                               borderRadius: BorderRadius.circular(
                                 SizeConfig.buttonBorderRadius,
                               ),
-                              gradient: LinearGradient(
+                              gradient: const LinearGradient(
                                 colors: [
                                   Color(0xff12BC9D),
                                   Color(0xff249680),
@@ -100,7 +100,7 @@ class SharePriceScreen extends StatelessWidget {
                     onPressed: () {
                       AppState.backButtonDispatcher!.didPopRoute();
                     },
-                    icon: Icon(
+                    icon: const Icon(
                       Icons.close,
                       color: Colors.white,
                     ),

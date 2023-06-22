@@ -55,7 +55,7 @@ class LendboxWithdrawalInputView extends StatelessWidget {
             LendboxAmountInputView(
               amountController: model!.amountController,
               focusNode: model!.fieldNode,
-              chipAmounts: [],
+              chipAmounts: const [],
               isEnabled: !model!.inProgress,
               readOnly: model.readOnly,
               onTap: () => model.readOnly = false,

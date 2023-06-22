@@ -8,8 +8,8 @@ import 'package:firebase_remote_config/firebase_remote_config.dart';
 
 class BaseRemoteConfig {
   static late RemoteConfig remoteConfig;
-  static UserService? _userService = locator<UserService>();
-  static final InternalOpsService? _internalOpsService =
+  static final UserService _userService = locator<UserService>();
+  static final InternalOpsService _internalOpsService =
       locator<InternalOpsService>();
 
   ///Each config is set as a map = {name, default value}
@@ -212,7 +212,7 @@ class BaseRemoteConfig {
 
   static const Map<String, String> _PAYTM_DEV_MID = {'paytm_dev_mid': 'pdm'};
 
-  static Map<String, String> _RZP_PROD_MID = {
+  static final Map<String, String> _RZP_PROD_MID = {
     'rzpMid': FlavorConfig.isDevelopment()
         ? 'rzp_test_UqHw6vJBbC8dR8'
         : 'rzp_live_RaxovywGPsLp2I'

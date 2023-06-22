@@ -64,7 +64,7 @@ class TambolaPrize extends StatelessWidget {
                                     height: SizeConfig.padding16,
                                   ),
                                   Text(
-                                    "Fetching tambola prizes.",
+                                    "Fetching prizes.",
                                     style: TextStyles.rajdhaniB.body2
                                         .colour(Colors.white),
                                   ),
