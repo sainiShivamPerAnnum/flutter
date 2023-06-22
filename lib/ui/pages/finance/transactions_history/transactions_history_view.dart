@@ -71,7 +71,7 @@ class TransactionsHistory extends StatelessWidget {
                     pageSnapping: true,
                     scrollDirection: Axis.horizontal,
                     allowImplicitScrolling: true,
-                    physics: NeverScrollableScrollPhysics(),
+                    physics: const NeverScrollableScrollPhysics(),
                     children: [
                       SingleTransactionView(
                         model: model,
@@ -101,7 +101,7 @@ class SingleTransactionView extends StatelessWidget {
       children: [
         Padding(
           padding: EdgeInsets.only(left: SizeConfig.padding24),
-          child: Container(
+          child: SizedBox(
             height: SizeConfig.padding40,
             width: SizeConfig.screenWidth! / 3.8,
             child: DropdownButtonFormField<String>(
@@ -111,12 +111,12 @@ class SingleTransactionView extends StatelessWidget {
                 contentPadding:
                     EdgeInsets.symmetric(horizontal: SizeConfig.padding10),
                 enabledBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
+                  borderSide: const BorderSide(
                       color: UiConstants.kSecondaryBackgroundColor, width: 2),
                   borderRadius: BorderRadius.circular(SizeConfig.roundness5),
                 ),
                 focusedBorder: OutlineInputBorder(
-                  borderSide: BorderSide(
+                  borderSide: const BorderSide(
                       color: UiConstants.kSecondaryBackgroundColor, width: 2),
                   borderRadius: BorderRadius.circular(SizeConfig.roundness5),
                 ),
@@ -125,7 +125,7 @@ class SingleTransactionView extends StatelessWidget {
               ),
               iconEnabledColor: UiConstants.kTextColor,
               elevation: 0,
-              icon: Icon(Icons.keyboard_arrow_down_rounded),
+              icon: const Icon(Icons.keyboard_arrow_down_rounded),
               hint: Text(
                 locale.type,
                 style:
@@ -151,13 +151,13 @@ class SingleTransactionView extends StatelessWidget {
         ),
         Expanded(
           child: model!.state == ViewState.Busy
-              ? Center(
+              ? const Center(
                   child: FullScreenLoader(),
                 )
               : Column(
                   children: [
                     Expanded(
-                      child: (model!.filteredList!.length == 0
+                      child: model!.filteredList!.length == 0
                           ? Column(
                               children: [
                                 SizedBox(
@@ -173,7 +173,7 @@ class SingleTransactionView extends StatelessWidget {
                               ],
                             )
                           : ListView(
-                              physics: BouncingScrollPhysics(),
+                              physics: const BouncingScrollPhysics(),
                               controller: model!.tranListController,
                               children: List.generate(
                                 model!.filteredList!.length,
@@ -181,7 +181,7 @@ class SingleTransactionView extends StatelessWidget {
                                   txn: model!.filteredList![index],
                                 ),
                               ),
-                            )),
+                            ),
                     ),
                     if (model!.isMoreTxnsBeingFetched)
                       Container(
@@ -219,7 +219,7 @@ class SIPTransactionHistoryView extends StatelessWidget {
   Widget build(BuildContext context) {
     S locale = S.of(context);
     return model!.state == ViewState.Busy
-        ? Center(
+        ? const Center(
             child: FullScreenLoader(),
           )
         : Column(
@@ -240,7 +240,7 @@ class SIPTransactionHistoryView extends StatelessWidget {
                           ],
                         )
                       : ListView(
-                          physics: BouncingScrollPhysics(),
+              physics: const BouncingScrollPhysics(),
                           controller: model!.sipScrollController,
                           children: List.generate(
                             model!.filteredSIPList!.length,
@@ -276,7 +276,9 @@ class SIPTransactionHistoryView extends StatelessWidget {
 
 class NoTransactionsContent extends StatelessWidget {
   final double? width;
-  NoTransactionsContent({this.width});
+
+  NoTransactionsContent({super.key, this.width});
+
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
@@ -288,7 +290,7 @@ class NoTransactionsContent extends StatelessWidget {
             Assets.noTransaction,
             width: width ?? SizeConfig.screenWidth! * 0.8,
           ),
-          SizedBox(
+          const SizedBox(
             height: 20,
           ),
           Text(
@@ -308,8 +310,9 @@ class TransactionTile extends StatelessWidget {
   // final TransactionsHistoryViewModel model;
   final UserTransaction txn;
   final TxnHistoryService txnHistoryService = locator<TxnHistoryService>();
+
   TransactionTile({
-    // @required this.model,
+    super.key,
     required this.txn,
   });
 
@@ -348,7 +351,7 @@ class TransactionTile extends StatelessWidget {
               style:
                   TextStyles.sourceSans.body3.colour(UiConstants.kTextColor)),
           subtitle: Text(
-            floSubtype() + getFormattedDate + " at " + formattedTime,
+            "${floSubtype()}$getFormattedDate at $formattedTime",
             style: TextStyles.sourceSans.body4.colour(UiConstants.kTextColor2),
             textAlign: TextAlign.start,
           ),
@@ -373,7 +376,7 @@ class TransactionTile extends StatelessWidget {
         ),
         SizedBox(
             width: SizeConfig.screenWidth! * 0.9,
-            child: Divider(
+            child: const Divider(
               color: UiConstants.kTextColor2,
             ))
       ],
@@ -409,7 +412,8 @@ class TransactionStatusChip extends StatelessWidget {
   final Color color;
   final String? status;
 
-  TransactionStatusChip({this.color = Colors.white, this.status = "NA"});
+  TransactionStatusChip(
+      {super.key, this.color = Colors.white, this.status = "NA"});
 
   @override
   Widget build(BuildContext context) {
@@ -428,7 +432,7 @@ class TransactionStatusChip extends StatelessWidget {
             ),
             margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding12),
           )
-        : SizedBox();
+        : const SizedBox();
   }
 }
 
@@ -436,10 +440,13 @@ class TransactionSIPTile extends StatelessWidget {
   final TransactionsHistoryViewModel? model;
   final SubscriptionTransactionModel? txn;
   final TxnHistoryService? _txnHistoryService = locator<TxnHistoryService>();
+
   TransactionSIPTile({
+    super.key,
     required this.model,
     this.txn,
   });
+
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
@@ -485,7 +492,7 @@ class TransactionChoiceSelectionTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
-    return Container(
+    return SizedBox(
         height: SizeConfig.screenWidth! * 0.09,
         width: SizeConfig.screenWidth! * 0.6,
         child: Column(
@@ -499,7 +506,7 @@ class TransactionChoiceSelectionTab extends StatelessWidget {
                     onTap: () {
                       model!.tabIndex = 0;
                       model!.pageController!.animateToPage(0,
-                          duration: Duration(milliseconds: 200),
+                          duration: const Duration(milliseconds: 200),
                           curve: Curves.linear);
                     },
                     child: Container(
@@ -515,7 +522,7 @@ class TransactionChoiceSelectionTab extends StatelessWidget {
                   onTap: () {
                     model!.tabIndex = 1;
                     model!.pageController!.animateToPage(1,
-                        duration: Duration(milliseconds: 200),
+                        duration: const Duration(milliseconds: 200),
                         curve: Curves.linear);
                   },
                   child: Container(
