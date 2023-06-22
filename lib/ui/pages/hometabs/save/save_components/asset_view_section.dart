@@ -501,7 +501,7 @@ class GoldInfoWidget extends StatelessWidget {
         children: [
           Container(
             decoration: BoxDecoration(
-              color: Color(0xff1F2C65),
+              color: const Color(0xff1F2C65),
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(SizeConfig.roundness16),
                 topRight: Radius.circular(SizeConfig.roundness16),
@@ -1299,7 +1299,7 @@ class _Footer extends StatelessWidget {
             left: SizeConfig.padding44,
             child: RichText(
               text: TextSpan(
-                text: highlightedText + " ",
+                text: "$highlightedText ",
                 style: TextStyles.sourceSansSB.title5.colour(
                   const Color(0xffA9C6D6).withOpacity(0.7),
                 ),
@@ -1408,7 +1408,7 @@ class CircularSliderState extends State<CircularSlider> {
                             ),
                           ),
                           Text(
-                            "₹" + _volumeValue.round().toString(),
+                            "₹${_volumeValue.round()}",
                             style: TextStyles.rajdhaniB.title2,
                           ),
                         ],
@@ -1463,9 +1463,7 @@ class CircularSliderState extends State<CircularSlider> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
-                          "₹" +
-                              6.getReturns(widget.type, _volumeValue,
-                                  widget.interest, 0),
+                          "₹${6.getReturns(widget.type, _volumeValue, widget.interest, 0)}",
                           style: TextStyles.rajdhaniSB.body1,
                         ),
                         Text(
@@ -1483,9 +1481,7 @@ class CircularSliderState extends State<CircularSlider> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
-                          "₹" +
-                              12.getReturns(widget.type, _volumeValue,
-                                  widget.interest, 0),
+                          "₹${12.getReturns(widget.type, _volumeValue, widget.interest, 0)}",
                           style: TextStyles.rajdhaniSB.body1,
                         ),
                         Text(
@@ -1503,12 +1499,11 @@ class CircularSliderState extends State<CircularSlider> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
-                          "₹" +
-                              3.calculateCompoundInterest(
-                                widget.type,
-                                _volumeValue,
-                                widget.interest,
-                              ),
+                          "₹${3.calculateCompoundInterest(
+                            widget.type,
+                            _volumeValue,
+                            widget.interest,
+                          )}",
                           style: TextStyles.rajdhaniSB.body1,
                         ),
                         Text(
@@ -1526,9 +1521,7 @@ class CircularSliderState extends State<CircularSlider> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
-                          "₹" +
-                              5.calculateCompoundInterest(
-                                  widget.type, _volumeValue, widget.interest),
+                          "₹${5.calculateCompoundInterest(widget.type, _volumeValue, widget.interest)}",
                           style: TextStyles.rajdhaniSB.body1,
                         ),
                         Text(
@@ -1611,7 +1604,8 @@ class _GoldRateWidgetState extends State<_GoldRateWidget> {
             ),
             Text(
               "Get notified about price\nchanges in Digital Gold",
-              style: TextStyles.sourceSans.body4.colour(Color(0xffA9C6D6)),
+              style:
+                  TextStyles.sourceSans.body4.colour(const Color(0xffA9C6D6)),
             )
           ],
         ),

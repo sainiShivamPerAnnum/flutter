@@ -5,6 +5,8 @@ import 'package:flutter/material.dart';
 
 import '../tambola_top_banner.dart';
 
+typedef OnPageChanged = void Function(int);
+
 class TodayWeeklyPicksCard extends StatelessWidget {
   const TodayWeeklyPicksCard({
     Key? key,
@@ -13,25 +15,31 @@ class TodayWeeklyPicksCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-        height: SizeConfig.screenHeight! * 0.34,
-        child: Stack(
-          alignment: Alignment.topLeft,
-          children: [
-            Positioned(
-              top: SizeConfig.screenHeight! * 0.27,
-              child: const HowTambolaWorks(),
+      margin: EdgeInsets.only(
+        left: SizeConfig.pageHorizontalMargins,
+        right: SizeConfig.pageHorizontalMargins,
+        top: SizeConfig.pageHorizontalMargins,
+      ),
+      decoration: BoxDecoration(
+        color: UiConstants.darkPrimaryColor4,
+        borderRadius: BorderRadius.all(
+          Radius.circular(SizeConfig.roundness12),
+        ),
+      ),
+      child: Column(
+        children: [
+          Container(
+            padding: EdgeInsets.only(
+              // top: SizeConfig.pageHorizontalMargins,
+              bottom: SizeConfig.padding8,
             ),
-            Container(
-              height: SizeConfig.screenHeight! * 0.30,
-              padding: EdgeInsets.only(
-                top: SizeConfig.pageHorizontalMargins,
-                bottom: SizeConfig.padding8,
-              ),
-              child: (DateTime.now().weekday == 1 && DateTime.now().hour < 16)
-                  ? const TambolaTopBanner()
-                  : const PicksCardView(),
-            ),
-          ],
-        ));
+            child: (DateTime.now().weekday == 1 && DateTime.now().hour < 16)
+                ? const TambolaTopBanner()
+                : const PicksCardView(),
+          ),
+          const HowTambolaWorks(),
+        ],
+      ),
+    );
   }
 }

@@ -315,7 +315,7 @@ class LendboxSuccessView extends StatelessWidget {
                     SizedBox(width: SizeConfig.padding12),
                   if (_txnService!.currentTxnTambolaTicketsCount > 0)
                     WinningChips(
-                      title: locale.tTicket,
+                      title: 'Ticket',
                       tooltip: locale.winChipsTitle3,
                       asset: Assets.singleTmbolaTicket,
                       qty: _txnService!.currentTxnTambolaTicketsCount.toInt(),
