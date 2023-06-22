@@ -63,7 +63,7 @@ class TambolaMiniInfoCard extends StatelessWidget {
                                       child: FittedBox(
                                         fit: BoxFit.scaleDown,
                                         child: Text(
-                                          "Tambola Tickets",
+                                          "Your Tickets",
                                           style: TextStyles.rajdhaniM.body0
                                               .colour(Colors.white),
                                           maxLines: 1,

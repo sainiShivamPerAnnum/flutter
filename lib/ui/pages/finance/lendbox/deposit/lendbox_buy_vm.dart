@@ -490,7 +490,7 @@ class LendboxBuyViewModel extends BaseViewModel {
       showInfoIcon = false;
     }
 
-    return "+$totalTickets Tambola Tickets";
+    return "+$totalTickets Tickets";
   }
 
   onChipClick(int index) {

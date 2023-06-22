@@ -100,7 +100,7 @@ class APIService implements API {
       if (e is SocketException) {
         throw FetchDataException('No Internet connection');
       } else if (e is UnauthorizedException) {
-        throw UnauthorizedException("Token Expired, Signout current user");
+        throw UnauthorizedException("Verification Failed. Please try again");
       } else {
         rethrow;
       }
@@ -203,7 +203,7 @@ class APIService implements API {
       );
       logger?.i("API:: PUT REQUEST \n=> PATH: $_url  \n=> headers: $headers"
           "\n=> StatusCode: ${response.statusCode} "
-          "\n=>Request Body: $body \n"
+          "\n=> Request Body: $body \n"
           "=> Response Body: ${response.body}");
 
       responseJson = returnResponse(response);
@@ -279,7 +279,7 @@ class APIService implements API {
 
       logger?.i("API:: PATCH REQUEST \n=> PATH: $url  "
           "\n=> StatusCode: ${response.statusCode} "
-          "\n=>Request Body: $body \n"
+          "\n=> Request Body: $body \n"
           "=> Response Body: ${response.body}");
 
       responseJson = returnResponse(response);
@@ -343,6 +343,7 @@ class APIService implements API {
         throw BadRequestException(responseJson['message']);
 
       case 401:
+        throw BadRequestException(responseJson['message']);
       case 403:
         throw UnauthorizedException(response.body.toString());
       case 500:

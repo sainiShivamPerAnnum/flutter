@@ -45,8 +45,7 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
-
-import '../../../util/assets.dart';
+import 'package:flutter/services.dart';
 // import 'package:flutter_dynamic_icon/flutter_dynamic_icon.dart';
 
 enum NavBarItem { Journey, Save, Account, Play, Tambola }
@@ -132,9 +131,9 @@ class RootViewModel extends BaseViewModel {
 
         if (!await verifyUserBootupDetails()) return;
         await checkForBootUpAlerts();
-        if (showNewInstallPopUp()) {
-          await showLastWeekOverview();
-        }
+        // if (showNewInstallPopUp()) {
+        await showLastWeekOverview();
+        // }
         showMarketingCampings();
         await Future.wait([
           _referralService.verifyReferral(),
@@ -151,6 +150,14 @@ class RootViewModel extends BaseViewModel {
         ]);
 
         _initAdhocNotifications();
+
+        const platform = MethodChannel("methodChannel/deviceData");
+        platform.setMethodCallHandler((call) async {
+          if (call.method == 'handleIntent') {
+            print('SHOURYAA CALLED');
+            AppState.delegate!.parseRoute(Uri.parse("/play"));
+          }
+        });
       },
     );
   }
@@ -184,49 +191,49 @@ class RootViewModel extends BaseViewModel {
     }
   }
 
-  bool showNewInstallPopUp() {
-    if (!PreferenceHelper.getBool(PreferenceHelper.NEW_INSTALL_POPUP,
-            def: false) &&
-        AppState.isRootAvailableForIncomingTaskExecution) {
-      fetchCampaign = false;
-      AppState.isRootAvailableForIncomingTaskExecution = false;
-      BaseUtil.openDialog(
-          isBarrierDismissible: true,
-          addToScreenStack: true,
-          content: Dialog(
-            shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-            ),
-            child: WillPopScope(
-              onWillPop: () async {
-                if (AppState.screenStack.last == ScreenItem.dialog) {
-                  AppState.screenStack.removeLast();
-                  AppState.isRootAvailableForIncomingTaskExecution = true;
+  // bool showNewInstallPopUp() {
+  //   if (!PreferenceHelper.getBool(PreferenceHelper.NEW_INSTALL_POPUP,
+  //           def: false) &&
+  //       AppState.isRootAvailableForIncomingTaskExecution) {
+  //     fetchCampaign = false;
+  //     AppState.isRootAvailableForIncomingTaskExecution = false;
+  //     BaseUtil.openDialog(
+  //         isBarrierDismissible: true,
+  //         addToScreenStack: true,
+  //         content: Dialog(
+  //           shape: RoundedRectangleBorder(
+  //             borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+  //           ),
+  //           child: WillPopScope(
+  //             onWillPop: () async {
+  //               if (AppState.screenStack.last == ScreenItem.dialog) {
+  //                 AppState.screenStack.removeLast();
+  //                 AppState.isRootAvailableForIncomingTaskExecution = true;
 
-                  showMarketingCampings();
-                }
-                return Future.value(true);
-              },
-              child: GestureDetector(
-                onTap: () async {
-                  AppState.backButtonDispatcher!.didPopRoute();
-                  AppState.isRootAvailableForIncomingTaskExecution = true;
+  //                 showMarketingCampings();
+  //               }
+  //               return Future.value(true);
+  //             },
+  //             child: GestureDetector(
+  //               onTap: () async {
+  //                 AppState.backButtonDispatcher!.didPopRoute();
+  //                 AppState.isRootAvailableForIncomingTaskExecution = true;
 
-                  showMarketingCampings();
-                },
-                child: Image.asset(
-                    _userService.userSegments.contains(Constants.US_FLO_OLD)
-                        ? Assets.oldUserPopUp
-                        : Assets.newUserPopUp),
-              ),
-            ),
-          ));
-      PreferenceHelper.setBool(PreferenceHelper.NEW_INSTALL_POPUP, true);
-      return false;
-    } else {
-      return true;
-    }
-  }
+  //                 showMarketingCampings();
+  //               },
+  //               child: Image.asset(
+  //                   _userService.userSegments.contains(Constants.US_FLO_OLD)
+  //                       ? Assets.oldUserPopUp
+  //                       : Assets.newUserPopUp),
+  //             ),
+  //           ),
+  //         ));
+  //     PreferenceHelper.setBool(PreferenceHelper.NEW_INSTALL_POPUP, true);
+  //     return false;
+  //   } else {
+  //     return true;
+  //   }
+  // }
 
   FileType getFileType(String fileUrl) {
     String extension = fileUrl.toLowerCase().split('.').last;
