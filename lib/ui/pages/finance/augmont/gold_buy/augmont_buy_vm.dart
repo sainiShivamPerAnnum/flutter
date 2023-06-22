@@ -768,7 +768,7 @@ class GoldBuyViewModel extends BaseViewModel {
       showInfoIcon = false;
     }
 
-    return "+$totalTickets Tambola Tickets";
+    return "+$totalTickets Tickets";
   }
 }
 

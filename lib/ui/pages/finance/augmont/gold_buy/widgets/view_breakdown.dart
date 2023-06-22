@@ -122,7 +122,7 @@ class ViewBreakdown extends StatelessWidget {
                   ),
                 ),
                 SizedBox(
-                  width: SizeConfig.padding4,
+                  width: SizeConfig.padding8,
                 ),
                 Text(
                   "Total Tickets",
@@ -142,7 +142,7 @@ class ViewBreakdown extends StatelessWidget {
               Row(
                 children: [
                   Text(
-                    "Happy Hour Tambola Tickets",
+                    "Happy Hour Tickets",
                     style: TextStyles.sourceSans.body2,
                   ),
                   const Spacer(),
@@ -158,7 +158,7 @@ class ViewBreakdown extends StatelessWidget {
               Row(
                 children: [
                   Text(
-                    "Lifetime Tambola Tickets",
+                    "Lifetime Tickets",
                     style: TextStyles.sourceSans.body2,
                   ),
                   const Spacer(),
