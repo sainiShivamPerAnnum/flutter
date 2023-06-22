@@ -79,8 +79,8 @@ class LoginMobileViewState extends State<LoginMobileView> {
       }
     });
 
-    print('Children created: ' + groups.toString());
-    return new TextSpan(children: groups);
+    print('Children created: $groups');
+    return TextSpan(children: groups);
   }
 
   @override
