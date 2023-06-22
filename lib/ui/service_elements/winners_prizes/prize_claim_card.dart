@@ -44,7 +44,7 @@ class RewardBalanceWidget extends StatelessWidget {
                 minWithdrawPrizeAmt &&
             userService?.userFundWallet?.processingRedemptionBalance == 0;
     return Container(
-      height: showBottomInfo ? SizeConfig.screenHeight! * 0.305 : null,
+      // height: showBottomInfo ? SizeConfig.screenHeight! * 0.32 : null,
       decoration: BoxDecoration(
         borderRadius: showBottomInfo
             ? null
@@ -59,9 +59,10 @@ class RewardBalanceWidget extends StatelessWidget {
               m: userService, minWithdrawPrize: minWithdrawPrize),
           if (showBottomInfo)
             Container(
-              margin: EdgeInsets.only(top: SizeConfig.padding16),
+              // margin: EdgeInsets.only(top: SizeConfig.padding16),
               padding: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.pageHorizontalMargins),
+                  horizontal: SizeConfig.pageHorizontalMargins,
+                  vertical: SizeConfig.padding12),
               child: Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
