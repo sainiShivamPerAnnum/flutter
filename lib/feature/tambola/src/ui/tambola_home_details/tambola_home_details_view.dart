@@ -1,5 +1,7 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/enums/app_config_keys.dart';
+import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/feature/tambola/src/ui/tambola_home_details/tambola_home_details_vm.dart';
@@ -133,11 +135,43 @@ class _TambolaHomeDetailsViewState extends State<TambolaHomeDetailsView> {
                       height: SizeConfig.blockSizeVertical! * 2,
                     ),
                     if (widget.showDemoImage) ...[
-                      Image.asset(
-                        "assets/images/tambola_transparent.png",
-                        width: SizeConfig.screenWidth! * 0.9,
-                        // height: SizeConfig.iconSize1 * 1.5,
-                        fit: BoxFit.cover,
+                      Stack(
+                        children: [
+                          Center(
+                            child: Image.asset(
+                              "assets/images/blurred_ticket.png",
+                              width: SizeConfig.screenWidth! * 0.9,
+                              // height: SizeConfig.iconSize1 * 1.5,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                          Positioned(
+                            top: SizeConfig.padding54,
+                            left: 0,
+                            right: 0,
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(
+                                  Icons.lock,
+                                  size: SizeConfig.iconSize1 * 2,
+                                  color: Colors.white,
+                                  weight: 700,
+                                  grade: 200,
+                                  opticalSize: 48,
+                                ),
+                                SizedBox(
+                                  height: SizeConfig.padding10,
+                                ),
+                                Text(
+                                  "Unlock your first ticket by saving\n₹${AppConfig.getValue(AppConfigKey.tambola_cost)} on Fello",
+                                  style: TextStyles.rajdhaniB.body1,
+                                  textAlign: TextAlign.center,
+                                )
+                              ],
+                            ),
+                          )
+                        ],
                       ),
                       Container(
                         margin: EdgeInsets.symmetric(

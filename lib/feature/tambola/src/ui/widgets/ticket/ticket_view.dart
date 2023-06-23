@@ -129,7 +129,7 @@ class _TicketsViewState extends State<TicketsView>
   Widget _buildTabContent() {
     // Widget buildObject = NoTicketWidget();
     final bestTicketsData = widget.bestTickets?.data;
-    if (bestTicketsData == null) return NoTicketWidget();
+    if (bestTicketsData == null) return const NoTicketWidget();
     List<TambolaTicketModel> tickets = [];
     switch (_tabController.index) {
       case 0:
