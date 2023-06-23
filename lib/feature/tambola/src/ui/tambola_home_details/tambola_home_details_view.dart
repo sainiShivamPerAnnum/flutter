@@ -141,7 +141,6 @@ class _TambolaHomeDetailsViewState extends State<TambolaHomeDetailsView> {
                             child: Image.asset(
                               "assets/images/blurred_ticket.png",
                               width: SizeConfig.screenWidth! * 0.9,
-                              // height: SizeConfig.iconSize1 * 1.5,
                               fit: BoxFit.cover,
                             ),
                           ),
