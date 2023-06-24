@@ -540,25 +540,30 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
         _compileUserWallet();
       } else {
         userFundWallet = temp;
+        _triggerHomeScreenWidgetUpdate();
       }
+    }
+  }
 
-      //TODO SHOURYA
-      //Save fund balance in shared preferences and set that as userFundWallet until remote data is available
-      //Dont save in shared preferences if userFundWallet has not changed
-      //put commas in total balance
-      SharedPreferences prefs = await SharedPreferences.getInstance();
-      log('SHOURYA ${prefs.toString()}  ${prefs.getString(Constants.FELLO_BALANCE)}');
-      if (userFundWallet?.netWorth != null && userFundWallet!.netWorth! > 0) {
-        prefs.setString(
-            Constants.FELLO_BALANCE, userFundWallet!.netWorth!.toString());
-      }
+  Future<void> _triggerHomeScreenWidgetUpdate() async {
+    SharedPreferences prefs = await SharedPreferences.getInstance();
+    log('FELLO BALANCE: ${prefs.getString(Constants.FELLO_BALANCE)}');
+    if (userFundWallet?.netWorth != null &&
+        userFundWallet!.netWorth! > 0 &&
+        (prefs.getString(Constants.FELLO_BALANCE) == null ||
+            prefs.getString(Constants.FELLO_BALANCE) != null &&
+                prefs.getString(Constants.FELLO_BALANCE)!.isNotEmpty &&
+                prefs.getString(Constants.FELLO_BALANCE) !=
+                    userFundWallet!.netWorth!.toString())) {
+      prefs.setString(
+          Constants.FELLO_BALANCE, userFundWallet!.netWorth!.toString());
 
-      log('SHOURYA calling method channel for updateHomeScreenWidget');
+      log('Calling method channel for updateHomeScreenWidget');
       final platform = MethodChannel('methodChannel/deviceData');
       try {
         await platform.invokeMethod('updateHomeScreenWidget');
       } catch (e) {
-        print('SHOURYA Failed to update widget: $e');
+        print('Failed to update Home Screen widget: $e');
       }
     }
   }
