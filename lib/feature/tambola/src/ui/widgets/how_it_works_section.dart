@@ -3,6 +3,7 @@ import 'package:felloapp/feature/tambola/tambola.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -10,43 +11,58 @@ import 'package:flutter_svg/flutter_svg.dart';
 class HowTambolaWorks extends StatelessWidget {
   const HowTambolaWorks({
     super.key,
-    // required this.model,
   });
-
-  // final TambolaHomeViewModel model;
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: SizeConfig.padding14),
-      child: GestureDetector(
-        onTap: () {
-          AppState.delegate!.appState.currentAction = PageAction(
-            state: PageState.addWidget,
-            page: TambolaNewUser,
-            widget: const TambolaHomeDetailsView(
-              isStandAloneScreen: true,
-              showPrizeSection: false,
-            ),
-          );
-        },
-        child: Row(
-          mainAxisAlignment: MainAxisAlignment.center,
-          children: [
-            SvgPicture.asset(
-              Assets.tambola_instant_view,
-              height: 35,
-            ),
-            Text(
-              'How Tambola Works? ',
-              style: TextStyles.sourceSansSB.body2.colour(Colors.white),
-            ),
-            SvgPicture.asset(
-              Assets.chevRonRightArrow,
-              color: const Color(0xff62E3C4),
-              height: SizeConfig.iconSize1,
-            ),
-          ],
+    return GestureDetector(
+      onTap: () {
+        Haptic.vibrate();
+        AppState.delegate!.appState.currentAction = PageAction(
+          state: PageState.addWidget,
+          page: TambolaNewUser,
+          widget: const TambolaHomeDetailsView(
+            isStandAloneScreen: true,
+            showPrizeSection: false,
+            showBottomButton: false,
+            showDemoImage: false,
+          ),
+        );
+      },
+      child: Container(
+        margin: EdgeInsets.symmetric(
+          horizontal: SizeConfig.pageHorizontalMargins,
+        ),
+        width: SizeConfig.screenWidth! * 0.882,
+        child: Padding(
+          padding: EdgeInsets.only(
+              top: SizeConfig.padding6,
+              bottom: SizeConfig.padding12,
+              left: SizeConfig.pageHorizontalMargins,
+              right: SizeConfig.pageHorizontalMargins / 2),
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SvgPicture.asset(
+                Assets.tambolaCardAsset,
+                width: SizeConfig.padding34,
+              ),
+              SizedBox(width: SizeConfig.padding4),
+              FittedBox(
+                fit: BoxFit.scaleDown,
+                child: Text(
+                  "How Tickets Work?",
+                  style: TextStyles.sourceSansSB.body2.colour(Colors.white),
+                  maxLines: 1,
+                ),
+              ),
+              SizedBox(width: SizeConfig.padding8),
+              SvgPicture.asset(
+                Assets.chevRonRightArrow,
+                color: UiConstants.primaryColor,
+              )
+            ],
+          ),
         ),
       ),
     );

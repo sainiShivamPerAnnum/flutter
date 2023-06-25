@@ -183,8 +183,8 @@ class WithDrawWarningScreen extends StatelessWidget {
                                                 AppConfigKey.tambola_cost))
                                         .round() >
                                     1
-                                ? "Tambola Tickets"
-                                : "Tambola Ticket",
+                                ? "Tickets"
+                                : "Ticket",
                             textAlign: TextAlign.center,
                             style: TextStyles.rajdhaniSB.body4,
                           ),

@@ -277,7 +277,7 @@ class CorrectPredictorsListView extends StatelessWidget {
       wText += " | ${item.flc} tokens ";
     }
     if (item.tt! > 0) {
-      wText += " | ${item.tt} tambola tickets";
+      wText += " | ${item.tt} tickets";
     }
     return wText;
   }

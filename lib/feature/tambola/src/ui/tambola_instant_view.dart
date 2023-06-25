@@ -54,7 +54,7 @@ class TambolaInstantView extends StatelessWidget {
                   height: SizeConfig.padding28,
                 ),
                 Text(
-                  "Congratulations! \nyou got $ticketCount tambola tickets",
+                  "Congratulations! \nyou got $ticketCount tickets",
                   style: TextStyles.sourceSansSB.title5,
                   textAlign: TextAlign.center,
                 ),

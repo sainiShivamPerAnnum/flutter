@@ -65,7 +65,7 @@ class TicketSection extends StatelessWidget {
             },
           ),
           ViewAllTicketsBar(
-            title: "View Prizes",
+            title: "Reward Categories",
             onPressed: () {
               Haptic.vibrate();
               AppState.delegate!.appState.currentAction = PageAction(
@@ -74,6 +74,8 @@ class TicketSection extends StatelessWidget {
                 widget: const TambolaHomeDetailsView(
                   isStandAloneScreen: true,
                   showPrizeSection: true,
+                  showBottomButton: false,
+                  showDemoImage: false,
                 ),
               );
             },

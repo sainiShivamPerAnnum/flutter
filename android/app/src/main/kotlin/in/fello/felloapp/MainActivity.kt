@@ -26,6 +26,11 @@ import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugins.GeneratedPluginRegistrant
 import java.io.ByteArrayOutputStream
+import `in`.fello.felloapp.R
+import android.widget.RemoteViews
+import android.appwidget.AppWidgetManager
+import android.content.ComponentName
+
 
 
 class MainActivity : FlutterFragmentActivity()  {
@@ -88,6 +93,8 @@ class MainActivity : FlutterFragmentActivity()  {
             }
             else if(call.method == "isDeviceRooted"){
                 result.success(RootCheckService().isDeviceRooted())
+            }else if(call.method == "updateHomeScreenWidget"){
+                result.success(updateHomeScreenWidget())
             }
             else {
               result.notImplemented()
@@ -159,7 +166,28 @@ class MainActivity : FlutterFragmentActivity()  {
     
     @SuppressLint("HardwareIds")
     private fun getAndroidId(): String? {
+        Log.d("MainActivity","Calling AndroidID");
         return Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID);
+    }
+
+    private fun updateHomeScreenWidget(): String? {
+        Log.d("MainActivity", "SHOURYA updateWidget() triggered from Flutter")
+
+        val appWidgetManager = AppWidgetManager.getInstance(this)
+        val widgetProvider = ComponentName(applicationContext, MyWidgetProvider::class.java)
+        val appWidgetIds = appWidgetManager.getAppWidgetIds(widgetProvider)
+        
+        // Update the widget content and notify changes
+        for (appWidgetId in appWidgetIds) {
+            val views = RemoteViews(context.packageName, R.layout.balance_widget_layout)
+            val felloBalance = MyWidgetProvider.getFormattedFelloBalance(applicationContext)
+            views.setTextViewText(R.id.amount_text, felloBalance)
+
+            // Update the widget
+            appWidgetManager.updateAppWidget(appWidgetId, views)
+        }
+
+        return "DONE";
     }
 
     @SuppressLint("QueryPermissionsNeeded")
@@ -305,6 +333,8 @@ class MainActivity : FlutterFragmentActivity()  {
             res?.error("400", "exception",ex.message )
         }
     }
+
+    
 
 
     override fun onStart() {

@@ -2,7 +2,6 @@ import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/feature/tambola/src/ui/tambola_home_details/tambola_home_details_view.dart';
 import 'package:felloapp/feature/tambola/src/ui/tambola_home_tickets/tambola_home_tickets_vm.dart';
 import 'package:felloapp/feature/tambola/src/ui/widgets/buy_ticket_card.dart';
-import 'package:felloapp/feature/tambola/src/ui/widgets/how_it_works_section.dart';
 import 'package:felloapp/feature/tambola/src/ui/widgets/next_week_info_card.dart';
 import 'package:felloapp/feature/tambola/src/ui/widgets/past_week_winners_section.dart';
 import 'package:felloapp/feature/tambola/src/ui/widgets/results_card.dart';
@@ -22,8 +21,6 @@ class TambolaHomeTicketsView extends StatefulWidget {
   const TambolaHomeTicketsView({
     Key? key,
   }) : super(key: key);
-
-  // final TambolaHomeViewModel model;
 
   @override
   State<TambolaHomeTicketsView> createState() => _TambolaHomeTicketsViewState();
@@ -80,9 +77,8 @@ class _TambolaHomeTicketsViewState extends State<TambolaHomeTicketsView> {
                     ),
                     const NextWeekTicketInfo(),
                     AnimatedBuyTambolaTicketCard(key: tambolaBuyTicketCardKey),
-                    const TambolaLeaderBoard(),
-                    const HowTambolaWorks(),
-                    LottieBuilder.network(Assets.bottomBannerLottie),
+                    const TambolaLeaderboardView(),
+                    // LottieBuilder.network(Assets.bottomBannerLottie),
                     SizedBox(height: SizeConfig.navBarHeight),
                   ],
                 ),
@@ -117,6 +113,8 @@ class TambolaRewardLottieStrip extends StatelessWidget {
                     widget: const TambolaHomeDetailsView(
                       isStandAloneScreen: true,
                       showPrizeSection: true,
+                      showBottomButton: false,
+                      showDemoImage: false,
                     ),
                   );
                 },

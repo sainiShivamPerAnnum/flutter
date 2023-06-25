@@ -17,6 +17,7 @@ class LoginMobileView extends StatefulWidget {
   static const int index = 0; //pager index
   const LoginMobileView({Key? key, required this.loginModel}) : super(key: key);
   final LoginControllerViewModel loginModel;
+
   @override
   State<LoginMobileView> createState() => LoginMobileViewState();
 }
@@ -78,8 +79,8 @@ class LoginMobileViewState extends State<LoginMobileView> {
       }
     });
 
-    print('Children created: ' + groups.toString());
-    return new TextSpan(children: groups);
+    print('Children created: $groups');
+    return TextSpan(children: groups);
   }
 
   @override
@@ -135,7 +136,7 @@ class LoginMobileViewState extends State<LoginMobileView> {
                         color: UiConstants.primaryColor,
                         size: SizeConfig.iconSize0,
                       )
-                    : SizedBox.shrink(),
+                    : const SizedBox.shrink(),
                 textEditingController: model.mobileController,
                 onChanged: (value) => model.upDateCheckTick(),
                 onTap: () {
@@ -156,6 +157,7 @@ class LoginMobileViewState extends State<LoginMobileView> {
 
 class SignupHeroAsset extends StatelessWidget {
   final String asset;
+
   const SignupHeroAsset({Key? key, required this.asset}) : super(key: key);
 
   @override
@@ -198,7 +200,7 @@ class BankingLogo extends StatelessWidget {
       margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding12),
       height: SizeConfig.screenWidth! * 0.085,
       width: SizeConfig.screenWidth! * 0.085,
-      decoration: BoxDecoration(
+      decoration: const BoxDecoration(
         color: Color(0xFF39393C),
         shape: BoxShape.circle,
       ),

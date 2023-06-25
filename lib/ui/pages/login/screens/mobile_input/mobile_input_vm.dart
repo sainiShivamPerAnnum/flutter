@@ -22,17 +22,24 @@ class LoginMobileViewModel extends BaseViewModel {
   bool _validate = true;
   bool _showTickCheck = false;
   bool showAvailableMobileNos = true;
-  Log log = new Log("MobileInputScreen");
+  Log log = const Log("MobileInputScreen");
   static final GlobalKey<FormFieldState<String>> _phoneFieldKey =
       GlobalKey<FormFieldState<String>>();
   String code = "+91";
+
   // bool hasReferralCode = false;
   get formKey => _formKey;
+
   get showTickCheck => _showTickCheck;
+
   get validate => _validate;
+
   get phoneFieldKey => _phoneFieldKey;
+
   TextEditingController get mobileController => _mobileController;
+
   get truecallerMobileController => _mobileController;
+
   get referralCodeController => _referralCodeController;
   S locale = locator<S>();
 
@@ -55,7 +62,7 @@ class LoginMobileViewModel extends BaseViewModel {
       } else {
         mobileFocusNode.requestFocus();
       }
-      Future.delayed(Duration(milliseconds: 500), () {
+      Future.delayed(const Duration(milliseconds: 500), () {
         mobileFocusNode.requestFocus();
       });
     }
@@ -67,10 +74,9 @@ class LoginMobileViewModel extends BaseViewModel {
 
   String? validateMobile() {
     Pattern pattern = "^[0-9]*\$";
-    RegExp regex = new RegExp(pattern as String);
+    RegExp regex = RegExp(pattern as String);
     if (!regex.hasMatch(_mobileController.text) ||
-        _mobileController.text.length != 10)
-      return locale.validMobileNumber;
+        _mobileController.text.length != 10) return locale.validMobileNumber;
 
     if (!(_mobileController.text.startsWith("6") ||
         _mobileController.text.startsWith("7") ||
@@ -98,5 +104,6 @@ class LoginMobileViewModel extends BaseViewModel {
   }
 
   String getMobile() => _mobileController.text;
+
   String getReferralCode() => _referralCodeController.text;
 }

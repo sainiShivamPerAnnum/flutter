@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:felloapp/base_util.dart';
@@ -19,6 +20,7 @@ import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/util/api_response.dart';
+import 'package:felloapp/util/app_exceptions.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
@@ -46,14 +48,18 @@ class UserRepository extends BaseRepo {
           _apiPaths!.kCustomAuthToken,
           body: _body,
           isAuthTokenAvailable: false);
+
+      if (res['token'] == null) {
+        return ApiResponse.withError("Unable to signup using truecaller", 400);
+      }
+
       return ApiResponse(model: res['token'], code: 200);
     } catch (e) {
       return ApiResponse.withError("Unable to signup using truecaller", 400);
     }
   }
 
-  Future<ApiResponse<Map<String, dynamic>>> setNewUser(
-      BaseUser baseUser, token) async {
+  Future<ApiResponse<Map<String, dynamic>>> setNewUser(BaseUser baseUser, token) async {
     try {
       final String _bearer = token;
 
@@ -96,11 +102,11 @@ class UserRepository extends BaseRepo {
       return await _cacheService.cachedApi(
           CacheKeys.USER,
           TTL.ONE_DAY,
-          () => APIService.instance.getData(
-                ApiPath.kGetUserById(id),
-                cBaseUrl: _baseUrl,
-                token: token,
-              ), (dynamic res) {
+              () => APIService.instance.getData(
+            ApiPath.kGetUserById(id),
+            cBaseUrl: _baseUrl,
+            token: token,
+          ), (dynamic res) {
         try {
           if (res != null && res['data'] != null && res['data'].isNotEmpty) {
             final _user = BaseUser.fromMap(res['data'], id!);
@@ -190,13 +196,15 @@ class UserRepository extends BaseRepo {
       );
 
       return ApiResponse(code: 200, model: res['data']['token']);
+    } on UnauthorizedException catch (_) {
+      return ApiResponse.withError("Invalid Otp", 400);
     } catch (e) {
-      logger!.d(e);
-      locator<InternalOpsService>().logFailure(
+      logger!.d("verifyOtp error $e");
+      unawaited(locator<InternalOpsService>().logFailure(
         mobile,
         FailType.VerifyOtpFailed,
         {'message': "Verify Otp failed"},
-      );
+      ));
       return ApiResponse.withError(e.toString() ?? "send OTP failed", 400);
     }
   }
@@ -254,15 +262,14 @@ class UserRepository extends BaseRepo {
     }
   }
 
-  Future<void> setNewDeviceId(
-      {required String? uid,
-      required String? deviceId,
-      required String? platform,
-      required String? model,
-      required String? brand,
-      required String? version,
-      required bool? isPhysicalDevice,
-      String? integrity}) async {
+  Future<void> setNewDeviceId({required String? uid,
+    required String? deviceId,
+    required String? platform,
+    required String? model,
+    required String? brand,
+    required String? version,
+    required bool? isPhysicalDevice,
+    String? integrity}) async {
     try {
       final token = await getBearerToken();
       Map<String, dynamic> _body = {
@@ -332,7 +339,7 @@ class UserRepository extends BaseRepo {
       if (latestNotifTime != null) {
         int latestTimeInSeconds = int.tryParse(latestNotifTime)!;
         AlertModel latestAlert = notifications[0].createdTime!.seconds >
-                notifications[1].createdTime!.seconds
+            notifications[1].createdTime!.seconds
             ? notifications[0]
             : notifications[1];
         if (latestAlert.createdTime!.seconds > latestTimeInSeconds) {
@@ -353,9 +360,7 @@ class UserRepository extends BaseRepo {
     }
   }
 
-  Future<ApiResponse<List<AlertModel>>> getUserNotifications(
-    String? lastDocId,
-  ) async {
+  Future<ApiResponse<List<AlertModel>>> getUserNotifications(String? lastDocId,) async {
     try {
       final token = await getBearerToken();
       final userNotifications = await APIService.instance.getData(
@@ -471,7 +476,7 @@ class UserRepository extends BaseRepo {
     try {
       final token = await getBearerToken();
       Map<String, dynamic> response =
-          await _internalOpsService!.initDeviceInfo();
+      await _internalOpsService!.initDeviceInfo();
       if (response != null) {
         final String? deviceId = response["deviceId"];
         final String? platform = response["platform"];
@@ -511,13 +516,12 @@ class UserRepository extends BaseRepo {
 
   //Method to fetch the user-boot-up-ee
 
-  Future<ApiResponse<UserBootUpDetailsModel>> fetchUserBootUpRssponse(
-      {required String? userId,
-      required String? deviceId,
-      required String? platform,
-      required String appVersion,
-      required String lastOpened,
-      required int dayOpenCount}) async {
+  Future<ApiResponse<UserBootUpDetailsModel>> fetchUserBootUpRssponse({required String? userId,
+    required String? deviceId,
+    required String? platform,
+    required String appVersion,
+    required String lastOpened,
+    required int dayOpenCount}) async {
     UserBootUpDetailsModel userBootUp;
 
     // try {

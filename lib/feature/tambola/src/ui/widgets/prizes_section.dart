@@ -35,7 +35,7 @@ class TambolaPrize extends StatelessWidget {
                       height: SizeConfig.screenWidth! * 0.17,
                     ),
                     Text(
-                      "Tambola Prizes",
+                      "Reward Categories",
                       style: TextStyles.rajdhaniB.title4.colour(Colors.white),
                     ),
                     Container(
@@ -64,7 +64,7 @@ class TambolaPrize extends StatelessWidget {
                                     height: SizeConfig.padding16,
                                   ),
                                   Text(
-                                    "Fetching tambola prizes.",
+                                    "Fetching prizes.",
                                     style: TextStyles.rajdhaniB.body2
                                         .colour(Colors.white),
                                   ),

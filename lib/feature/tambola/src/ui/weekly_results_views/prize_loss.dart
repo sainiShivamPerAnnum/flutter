@@ -26,7 +26,7 @@ class Loser extends StatelessWidget {
             ),
             Flexible(
               child: Text(
-                'Your last week Tambola tickets did not win',
+                'Your last week tickets did not win',
                 style:
                     TextStyles.rajdhaniB.title3.colour(Colors.white).copyWith(),
                 textAlign: TextAlign.center,
@@ -37,7 +37,7 @@ class Loser extends StatelessWidget {
                 vertical: SizeConfig.padding20,
               ),
               child: Text(
-                  "None of your tickets matched this time.\nSave & get Tambola tickets for the coming week!",
+                  "None of your tickets matched this time.\nSave & get tickets for the coming week!",
                   textAlign: TextAlign.center,
                   style: TextStyles.sourceSans.body3
                       .colour(UiConstants.kFAQsAnswerColor)),
@@ -50,7 +50,7 @@ class Loser extends StatelessWidget {
                   vertical: SizeConfig.pageHorizontalMargins),
               width: SizeConfig.navBarWidth,
               child: const AppPositiveBtn(
-                  btnText: 'GET MORE TAMBOLA TICKETS',
+                  btnText: 'GET MORE TICKETS',
                   onPressed: BaseUtil.openDepositOptionsModalSheet),
             ),
           ],

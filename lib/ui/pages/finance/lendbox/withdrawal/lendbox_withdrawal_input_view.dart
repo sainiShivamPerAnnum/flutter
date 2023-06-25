@@ -1,4 +1,5 @@
 import 'package:felloapp/core/enums/view_state_enum.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/lendbox_app_bar.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/withdrawal/lendbox_withdrawal_vm.dart';
@@ -7,6 +8,7 @@ import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/service_elements/gold_sell_card/sell_card_components.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -36,7 +38,9 @@ class LendboxWithdrawalInputView extends StatelessWidget {
               trackClosingEvent: () =>
                   AppState.backButtonDispatcher!.didPopRoute(),
               assetType: Constants.ASSET_TYPE_FLO_FELXI,
-              isOldUser: true,
+              isOldUser: locator<UserService>()
+                  .userSegments
+                  .contains(Constants.US_FLO_OLD),
             ),
             SizedBox(height: SizeConfig.padding32),
             if (model.state == ViewState.Idle &&
@@ -51,7 +55,7 @@ class LendboxWithdrawalInputView extends StatelessWidget {
             LendboxAmountInputView(
               amountController: model!.amountController,
               focusNode: model!.fieldNode,
-              chipAmounts: [],
+              chipAmounts: const [],
               isEnabled: !model!.inProgress,
               readOnly: model.readOnly,
               onTap: () => model.readOnly = false,

@@ -22,7 +22,7 @@ import 'package:lottie/lottie.dart';
 class LendboxSuccessView extends StatelessWidget {
   final TransactionType transactionType;
   final LendboxTransactionService _txnService =
-  locator<LendboxTransactionService>();
+      locator<LendboxTransactionService>();
 
   LendboxSuccessView({Key? key, required this.transactionType})
       : super(key: key);
@@ -123,7 +123,7 @@ class LendboxSuccessView extends StatelessWidget {
             ),
             SizedBox(height: SizeConfig.padding12),
             if (_txnService?.transactionReponseModel?.data?.txnDisplayMsg
-                ?.isNotEmpty ??
+                    ?.isNotEmpty ??
                 false)
               SizedBox(
                 width: SizeConfig.screenWidth! * 0.8,
@@ -208,11 +208,11 @@ class LendboxSuccessView extends StatelessWidget {
                               children: [
                                 Text(
                                   _txnService
-                                      ?.transactionReponseModel
-                                      ?.data
-                                      ?.floDepositDetails
-                                      ?.maturityDate !=
-                                      null
+                                              ?.transactionReponseModel
+                                              ?.data
+                                              ?.floDepositDetails
+                                              ?.maturityDate !=
+                                          null
                                       ? "Return %"
                                       : locale.totalBalance,
                                   style: TextStyles.sourceSans.body2
@@ -220,21 +220,21 @@ class LendboxSuccessView extends StatelessWidget {
                                 ),
                                 SizedBox(height: SizeConfig.padding16),
                                 _txnService?.transactionReponseModel?.data
-                                    ?.floDepositDetails?.maturityDate !=
-                                    null
+                                            ?.floDepositDetails?.maturityDate !=
+                                        null
                                     ? Text(
-                                  getFundType(_txnService
-                                      ?.transactionReponseModel
-                                      ?.data
-                                      ?.floDepositDetails
-                                      ?.fundType),
-                                  style: TextStyles.rajdhaniB.title3,
-                                )
+                                        getFundType(_txnService
+                                            ?.transactionReponseModel
+                                            ?.data
+                                            ?.floDepositDetails
+                                            ?.fundType),
+                                        style: TextStyles.rajdhaniB.title3,
+                                      )
                                     : UserFundQuantitySE(
-                                  style: TextStyles.rajdhaniB.title3,
-                                  investmentType:
-                                  InvestmentType.LENDBOXP2P,
-                                ),
+                                        style: TextStyles.rajdhaniB.title3,
+                                        investmentType:
+                                            InvestmentType.LENDBOXP2P,
+                                      ),
                                 SizedBox(
                                   height: SizeConfig.padding12,
                                 ),
@@ -246,7 +246,7 @@ class LendboxSuccessView extends StatelessWidget {
                     ),
                   ),
                   if (_txnService?.transactionReponseModel?.data
-                      ?.floDepositDetails?.maturityDate !=
+                          ?.floDepositDetails?.maturityDate !=
                       null)
                     Padding(
                       padding: EdgeInsets.symmetric(
@@ -254,14 +254,14 @@ class LendboxSuccessView extends StatelessWidget {
                           vertical: SizeConfig.padding6),
                       child: Text(
                         _txnService?.transactionReponseModel?.data
-                            ?.floDepositDetails?.maturityDate ??
+                                ?.floDepositDetails?.maturityDate ??
                             "",
                         style: TextStyles.sourceSans.body2
                             .colour(UiConstants.kFAQsAnswerColor),
                       ),
                     ),
                   if (_txnService?.transactionReponseModel?.data
-                      ?.floDepositDetails?.maturityString !=
+                          ?.floDepositDetails?.maturityString !=
                       null)
                     Container(
                       width: SizeConfig.screenWidth,
@@ -271,15 +271,15 @@ class LendboxSuccessView extends StatelessWidget {
                           color: UiConstants.kBackgroundColor,
                           borderRadius: BorderRadius.only(
                               bottomLeft:
-                              Radius.circular(SizeConfig.roundness12),
+                                  Radius.circular(SizeConfig.roundness12),
                               bottomRight:
-                              Radius.circular(SizeConfig.roundness12))),
+                                  Radius.circular(SizeConfig.roundness12))),
                       padding: EdgeInsets.symmetric(
                           horizontal: SizeConfig.pageHorizontalMargins,
                           vertical: SizeConfig.padding6),
                       child: Text(
                         _txnService?.transactionReponseModel?.data
-                            ?.floDepositDetails?.maturityString ??
+                                ?.floDepositDetails?.maturityString ??
                             "",
                         style: TextStyles.sourceSans.body2.colour(Colors.white),
                       ),
@@ -315,8 +315,8 @@ class LendboxSuccessView extends StatelessWidget {
                     SizedBox(width: SizeConfig.padding12),
                   if (_txnService!.currentTxnTambolaTicketsCount > 0)
                     WinningChips(
-                      title: locale.tTicket,
-                      tooltip: locale.winChipsTitle3,
+                      title: 'Ticket',
+                      tooltip: '',
                       asset: Assets.singleTmbolaTicket,
                       qty: _txnService!.currentTxnTambolaTicketsCount.toInt(),
                     )

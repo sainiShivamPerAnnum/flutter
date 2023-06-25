@@ -8,8 +8,8 @@ import 'package:firebase_remote_config/firebase_remote_config.dart';
 
 class BaseRemoteConfig {
   static late RemoteConfig remoteConfig;
-  static UserService? _userService = locator<UserService>();
-  static final InternalOpsService? _internalOpsService =
+  static final UserService _userService = locator<UserService>();
+  static final InternalOpsService _internalOpsService =
       locator<InternalOpsService>();
 
   ///Each config is set as a map = {name, default value}
@@ -96,7 +96,7 @@ class BaseRemoteConfig {
     'augmont_deposit_permission': '1'
   };
   static const Map<String, String> _KYC_COMPLETION_PRIZE = {
-    'kyc_completion_prize': 'You have won ₹50 and 10 Tambola tickets!'
+    'kyc_completion_prize': 'You have won ₹50 and 10 tickets!'
   };
   static const Map<String, String> _UNLOCK_REFERRAL_AMT = {
     'unlock_referral_amt': '100'
@@ -180,7 +180,7 @@ class BaseRemoteConfig {
   };
   static const Map<String, String> _GAME_TAMBOLA_ANNOUNCEMENT = {
     'game_tambola_announcement':
-        'Stand to win big prizes every week by matching your tambola tickets! Winners are announced every Monday'
+    'Stand to win big prizes every week by matching your tickets! Winners are announced every Monday'
   };
   static const Map<String, String> _GAME_CRICKET_FPL_ANNOUNCEMENT = {
     'game_cricket_fpl_announcement': ''
@@ -212,7 +212,7 @@ class BaseRemoteConfig {
 
   static const Map<String, String> _PAYTM_DEV_MID = {'paytm_dev_mid': 'pdm'};
 
-  static Map<String, String> _RZP_PROD_MID = {
+  static final Map<String, String> _RZP_PROD_MID = {
     'rzpMid': FlavorConfig.isDevelopment()
         ? 'rzp_test_UqHw6vJBbC8dR8'
         : 'rzp_live_RaxovywGPsLp2I'

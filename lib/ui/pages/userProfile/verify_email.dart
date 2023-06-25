@@ -27,7 +27,7 @@ import 'package:provider/provider.dart';
 class VerifyEmail extends StatefulWidget {
   static const int index = 3;
 
-  VerifyEmail({Key? key}) : super(key: key);
+  const VerifyEmail({Key? key}) : super(key: key);
 
   @override
   VerifyEmailState createState() => VerifyEmailState();
@@ -35,12 +35,13 @@ class VerifyEmail extends StatefulWidget {
 
 class VerifyEmailState extends State<VerifyEmail> {
   S locale = locator<S>();
-  TextEditingController email = new TextEditingController();
-  TextEditingController otp = new TextEditingController();
-  final UserService? _userService = locator<UserService>();
+  TextEditingController email = TextEditingController();
+  TextEditingController otp = TextEditingController();
+  final UserService _userService = locator<UserService>();
+
   // final baseProvider = locator<BaseUtil>();
   final formKey = GlobalKey<FormState>();
-  final UserRepository? _userRepo = locator<UserRepository>();
+  final UserRepository _userRepo = locator<UserRepository>();
 
   Timer? timer;
   bool isGmailVerifying = false;
@@ -48,6 +49,7 @@ class VerifyEmailState extends State<VerifyEmail> {
   late DBModel dbProvider;
   String? generatedOTP;
   bool _isContinueWithGoogle = false;
+
   //bool baseProvider.isGoogleSignInProgress = false;
   FocusNode? focusNode;
   bool _isOtpSent = false;
@@ -62,7 +64,7 @@ class VerifyEmailState extends State<VerifyEmail> {
     email = TextEditingController(text: _userService!.baseUser!.email ?? '');
     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
       baseProvider.isGoogleSignInProgress = false;
-      focusNode = new FocusNode();
+      focusNode = FocusNode();
       focusNode!.requestFocus();
       // showEmailOptions();
     });
@@ -103,7 +105,7 @@ class VerifyEmailState extends State<VerifyEmail> {
     setState(() {
       _isProcessing = true;
     });
-    var rnd = new math.Random();
+    var rnd = math.Random();
     var next = rnd.nextDouble() * 1000000;
     while (next < 100000) {
       next *= 10;

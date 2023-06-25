@@ -1027,7 +1027,7 @@ class _CardsState extends State<Cards> with SingleTickerProviderStateMixin {
 }
 
 class CardContent extends StatelessWidget {
-  CardContent({
+  const CardContent({
     required this.isHorizontalView,
     required this.isVerticalView,
     required this.curve,

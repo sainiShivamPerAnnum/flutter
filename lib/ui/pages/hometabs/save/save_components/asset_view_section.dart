@@ -93,7 +93,7 @@ class _AssetSectionViewState extends State<AssetSectionView> {
         ],
         builder: (_, model, ___) {
           bool isNewUser = model!.userSegments.contains("NEW_USER");
-          bool isLendboxNewUser = model.userSegments.contains("LBOX_NEW");
+          // bool isLendboxNewUser = model.userSegments.contains("LBOX_NEW");
           final balance = widget.type == InvestmentType.AUGGOLD99
               ? model.userFundWallet?.augGoldQuantity ?? 0
               : model.userFundWallet?.wLbBalance ?? 0;
@@ -212,7 +212,7 @@ class _AssetSectionViewState extends State<AssetSectionView> {
                                     child: Padding(
                                       padding: EdgeInsets.only(
                                           left: SizeConfig.padding10),
-                                      child: TitleSubtitleContainer(
+                                      child: const TitleSubtitleContainer(
                                           title: "Withdrawal",
                                           leadingPadding: false),
                                     ),
@@ -280,7 +280,8 @@ class _AssetSectionViewState extends State<AssetSectionView> {
                               _Footer(
                                 isGold: _isGold,
                               ),
-                              TermsAndConditions(url: Constants.savingstnc),
+                              const TermsAndConditions(
+                                  url: Constants.savingstnc),
                               SizedBox(
                                 height: SizeConfig.screenHeight! * 0.15,
                               ),
@@ -389,7 +390,7 @@ class _AssetSectionViewState extends State<AssetSectionView> {
   Widget _buildInfoSection() {
     final info = _isGold ? _goldInfo : _lbInfo;
     List<Widget> children = [];
-    for (var e in info.entries) {
+    for (final e in info.entries) {
       children.add(
         Expanded(
           child: Column(
@@ -412,17 +413,18 @@ class _AssetSectionViewState extends State<AssetSectionView> {
           ),
         ),
       );
-      if (!(info.values.toList().indexOf(e.value) == info.values.length - 1))
+      if (!(info.values.toList().indexOf(e.value) == info.values.length - 1)) {
         children.add(
           SizedBox(
             height: SizeConfig.padding54,
             child: VerticalDivider(
-              color: Color(0xff7F86A3).withOpacity(0.3),
+              color: const Color(0xff7F86A3).withOpacity(0.3),
               thickness: 0.5,
               width: 20,
             ),
           ),
         );
+      }
     }
     return Padding(
       padding: EdgeInsets.zero,
@@ -437,8 +439,8 @@ class _AssetSectionViewState extends State<AssetSectionView> {
       : UiConstants.kFloContainerColor;
 
   Color get _secondaryColor => _isGold
-      ? Color(0xff293566).withOpacity(0)
-      : Color(0xff297264).withOpacity(0);
+      ? const Color(0xff293566).withOpacity(0)
+      : const Color(0xff297264).withOpacity(0);
 
   String get _getAsset => _isGold ? Assets.goldAsset : Assets.floAsset;
 
@@ -504,8 +506,9 @@ class _BuildOwnAsset extends StatelessWidget {
           );
   }
 
-  Color get color => type == InvestmentType.AUGGOLD99
-      ? Color(0xff303B6A)
+  Color get color =>
+      type == InvestmentType.AUGGOLD99
+      ? const Color(0xff303B6A)
       : UiConstants.kFloContainerColor;
 }
 
@@ -703,7 +706,7 @@ class ComparisonBox extends StatelessWidget {
                           TextSpan(
                             text: "vs ",
                             style: TextStyles.rajdhaniSB.title3.colour(
-                              Color(0xffF6CC60),
+                              const Color(0xffF6CC60),
                             ),
                           ),
                           TextSpan(
@@ -790,7 +793,7 @@ class ComparisonBox extends StatelessWidget {
                             horizontal: SizeConfig.padding24,
                             vertical: SizeConfig.padding10),
                         decoration: BoxDecoration(
-                          color: Color(0xff323232),
+                          color: const Color(0xff323232),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: Row(
@@ -834,7 +837,7 @@ class ComparisonBox extends StatelessWidget {
                             horizontal: SizeConfig.padding24,
                             vertical: SizeConfig.padding10),
                         decoration: BoxDecoration(
-                          color: Color(0xff323232),
+                          color: const Color(0xff323232),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: Row(
@@ -875,7 +878,7 @@ class ComparisonBox extends StatelessWidget {
                             horizontal: SizeConfig.padding24,
                             vertical: SizeConfig.padding10),
                         decoration: BoxDecoration(
-                          color: Color(0xff323232),
+                          color: const Color(0xff323232),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: Row(
@@ -916,7 +919,7 @@ class ComparisonBox extends StatelessWidget {
                             horizontal: SizeConfig.padding24,
                             vertical: SizeConfig.padding10),
                         decoration: BoxDecoration(
-                          color: Color(0xff323232),
+                          color: const Color(0xff323232),
                           borderRadius: BorderRadius.circular(10),
                         ),
                         child: Row(
@@ -964,7 +967,7 @@ class ComparisonBox extends StatelessWidget {
               Align(
                 alignment: Alignment.center,
                 child: Container(
-                  padding: EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
                       color: Colors.black,
                       shape: BoxShape.circle,
@@ -995,14 +998,15 @@ class _WhySection extends StatelessWidget {
           children: [
             TextSpan(
               text: "BIS Hallmark Gold",
-              style: TextStyles.sourceSans.body2.colour(Color(0xffA7A7A8)),
+              style:
+                  TextStyles.sourceSans.body2.colour(const Color(0xffA7A7A8)),
             )
           ]),
     ),
     Assets.timer: RichText(
       text: TextSpan(
           text: "Stable ",
-          style: TextStyles.sourceSans.body2.colour(Color(0xffA7A7A8)),
+          style: TextStyles.sourceSans.body2.colour(const Color(0xffA7A7A8)),
           children: [
             TextSpan(
                 text: "returns",
@@ -1016,12 +1020,13 @@ class _WhySection extends StatelessWidget {
         children: [
           TextSpan(
               text: "of saving",
-              style: TextStyles.sourceSans.body2.colour(Color(0xffA7A7A8)))
+              style:
+                  TextStyles.sourceSans.body2.colour(const Color(0xffA7A7A8)))
         ],
       ),
     ),
     Icons.lock_outline: Text("48 hours Lock-in",
-        style: TextStyles.sourceSans.body2.colour(Color(0xffA7A7A8)))
+        style: TextStyles.sourceSans.body2.colour(const Color(0xffA7A7A8)))
   };
   final Map<dynamic, Widget> felloPros = {
     Assets.arrowIcon: RichText(
@@ -1031,14 +1036,15 @@ class _WhySection extends StatelessWidget {
           children: [
             TextSpan(
               text: "than other assets",
-              style: TextStyles.sourceSans.body2.colour(Color(0xffA7A7A8)),
+              style:
+                  TextStyles.sourceSans.body2.colour(const Color(0xffA7A7A8)),
             )
           ]),
     ),
     Assets.timer: RichText(
       text: TextSpan(
           text: "Interest Credited",
-          style: TextStyles.sourceSans.body2.colour(Color(0xffA7A7A8)),
+          style: TextStyles.sourceSans.body2.colour(const Color(0xffA7A7A8)),
           children: [
             TextSpan(
                 text: " Everyday",
@@ -1052,7 +1058,8 @@ class _WhySection extends StatelessWidget {
         children: [
           TextSpan(
               text: "& Secured",
-              style: TextStyles.sourceSans.body2.colour(Color(0xffA7A7A8)))
+              style:
+                  TextStyles.sourceSans.body2.colour(const Color(0xffA7A7A8)))
         ],
       ),
     ),
@@ -1108,7 +1115,7 @@ class _WhySection extends StatelessWidget {
                           child: Icon(
                             key,
                             size: SizeConfig.padding20,
-                            color: Color(0xff62E3C4).withOpacity(0.7),
+                            color: const Color(0xff62E3C4).withOpacity(0.7),
                           ),
                         ),
                 ),
@@ -1163,9 +1170,9 @@ class _Footer extends StatelessWidget {
             left: SizeConfig.padding44,
             child: RichText(
               text: TextSpan(
-                text: highlightedText + " ",
+                text: "$highlightedText ",
                 style: TextStyles.sourceSansSB.title5.colour(
-                  Color(0xffA9C6D6).withOpacity(0.7),
+                  const Color(0xffA9C6D6).withOpacity(0.7),
                 ),
                 children: [
                   TextSpan(
@@ -1235,7 +1242,7 @@ class CircularSliderState extends State<CircularSlider> {
                   radiusFactor: 0.6,
                   axisLineStyle: AxisLineStyle(
                       cornerStyle: CornerStyle.bothFlat,
-                      color: Color(0xffD9D9D9).withOpacity(0.5),
+                      color: const Color(0xffD9D9D9).withOpacity(0.5),
                       thickness: 6),
                   pointers: <GaugePointer>[
                     RangePointer(
@@ -1244,7 +1251,7 @@ class CircularSliderState extends State<CircularSlider> {
                       enableAnimation: true,
                       width: 12,
                       sizeUnit: GaugeSizeUnit.logicalPixel,
-                      color: Color(0xff3DA49D),
+                      color: const Color(0xff3DA49D),
                     ),
                     MarkerPointer(
                         value: _volumeValue,
@@ -1266,11 +1273,11 @@ class CircularSliderState extends State<CircularSlider> {
                           Text(
                             "Save Today",
                             style: TextStyles.sourceSans.body2.colour(
-                              Color(0xffA9C6D6),
+                              const Color(0xffA9C6D6),
                             ),
                           ),
                           Text(
-                            "₹" + _volumeValue.round().toString(),
+                            "₹${_volumeValue.round()}",
                             style: TextStyles.rajdhaniB.title2,
                           ),
                         ],
@@ -1296,7 +1303,8 @@ class CircularSliderState extends State<CircularSlider> {
                         ? "(Based on 12% returns*)"
                         : "(Based on 10% returns*)"
                     : "(Based on last years' returns)",
-                style: TextStyles.sourceSans.body3.colour(Color(0xffA9C6D6)),
+                style:
+                    TextStyles.sourceSans.body3.colour(const Color(0xffA9C6D6)),
               )
             ],
           ),
@@ -1308,7 +1316,8 @@ class CircularSliderState extends State<CircularSlider> {
             children: [
               Text(
                 "To see it grow into",
-                style: TextStyles.sourceSans.body0.colour(Color(0xffA9C6D6)),
+                style:
+                    TextStyles.sourceSans.body0.colour(const Color(0xffA9C6D6)),
               ),
               SizedBox(
                 height: SizeConfig.padding16 + SizeConfig.padding2,
@@ -1323,9 +1332,7 @@ class CircularSliderState extends State<CircularSlider> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
-                          "₹" +
-                              6.getReturns(widget.type, _volumeValue,
-                                  widget.interest, 0),
+                          "₹${6.getReturns(widget.type, _volumeValue, widget.interest, 0)}",
                           style: TextStyles.rajdhaniSB.body1,
                         ),
                         Text(
@@ -1343,9 +1350,7 @@ class CircularSliderState extends State<CircularSlider> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
-                          "₹" +
-                              12.getReturns(widget.type, _volumeValue,
-                                  widget.interest, 0),
+                          "₹${12.getReturns(widget.type, _volumeValue, widget.interest, 0)}",
                           style: TextStyles.rajdhaniSB.body1,
                         ),
                         Text(
@@ -1363,12 +1368,11 @@ class CircularSliderState extends State<CircularSlider> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
-                          "₹" +
-                              3.calculateCompoundInterest(
-                                widget.type,
-                                _volumeValue,
-                                widget.interest,
-                              ),
+                          "₹${3.calculateCompoundInterest(
+                            widget.type,
+                            _volumeValue,
+                            widget.interest,
+                          )}",
                           style: TextStyles.rajdhaniSB.body1,
                         ),
                         Text(
@@ -1386,9 +1390,7 @@ class CircularSliderState extends State<CircularSlider> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
-                          "₹" +
-                              5.calculateCompoundInterest(
-                                  widget.type, _volumeValue, widget.interest),
+                          "₹${5.calculateCompoundInterest(widget.type, _volumeValue, widget.interest)}",
                           style: TextStyles.rajdhaniSB.body1,
                         ),
                         Text(
@@ -1416,15 +1418,15 @@ class CirclePainter extends CustomPainter {
     for (var i = 0; i < 2; i++) {
       canvas.drawCircle(
         Offset(size.width / 2, size.height / 2),
-        (size.width * (0.41 - (0.06 * i))),
+        size.width * (0.41 - (0.06 * i)),
         Paint()
-          ..color = Color(0xffD9D9D9).withOpacity(0.1)
+          ..color = const Color(0xffD9D9D9).withOpacity(0.1)
           ..style = PaintingStyle.stroke
           ..strokeWidth = 1
           ..shader = ui.Gradient.linear(
             Offset(size.width, size.height),
             Offset(0, size.height),
-            [Color(0xffD9D9D9), Color(0xffD9D9D9).withOpacity(0)],
+            [const Color(0xffD9D9D9), const Color(0xffD9D9D9).withOpacity(0)],
           ),
       );
     }

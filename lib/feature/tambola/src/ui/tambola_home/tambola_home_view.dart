@@ -97,7 +97,7 @@ class _TambolaHomeViewState extends State<TambolaHomeView> {
                           )
                         ],
                       ),
-                      title: "Tambola",
+                      title: "Tickets",
                       backgroundColor: UiConstants.kBackgroundColor,
                     )
                   : null,

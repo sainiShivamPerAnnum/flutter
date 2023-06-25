@@ -31,8 +31,10 @@ class JourneyMilestoneDetailsModalSheet extends StatefulWidget {
   final MilestoneModel milestone;
   final JOURNEY_MILESTONE_STATUS status;
   final String version;
+
   JourneyMilestoneDetailsModalSheet(
       {required this.milestone, required this.status, required this.version});
+
   @override
   State<JourneyMilestoneDetailsModalSheet> createState() =>
       _JourneyMilestoneDetailsModalSheetState();
@@ -440,7 +442,7 @@ class _JourneyMilestoneDetailsModalSheetState
       case Constants.GT_REWARD_GOLD:
         return " " + locale.worthOfGold;
       case Constants.GT_REWARD_TAMBOLA_TICKET:
-        return " " + locale.tTicket;
+        return " Ticket";
       default:
         return "";
     }

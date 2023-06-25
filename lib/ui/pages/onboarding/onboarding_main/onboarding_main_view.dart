@@ -199,9 +199,13 @@ class _OnBoardingViewState extends State<OnBoardingView>
                             itemBuilder: (context, index) {
                               return Column(
                                 children: [
-                                  Text(
-                                    model.onboardingData![index][0],
-                                    style: TextStyles.rajdhaniB.title2,
+                                  FittedBox(
+                                    fit: BoxFit.fitWidth,
+                                    child: Text(
+                                      model.onboardingData![index][0],
+                                      style: TextStyles.rajdhaniB.title3,
+                                      textAlign: TextAlign.center,
+                                    ),
                                   ),
                                   SizedBox(
                                     height: SizeConfig.padding16,
@@ -212,7 +216,7 @@ class _OnBoardingViewState extends State<OnBoardingView>
                                     style: TextStyles.sourceSans.body2,
                                   ),
                                   SizedBox(
-                                    height: SizeConfig.padding24,
+                                    height: SizeConfig.padding20,
                                   ),
                                   model.assetWidgets[index],
                                 ],

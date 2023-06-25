@@ -141,7 +141,7 @@ class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
                           Constants.ASSET_TYPE_FLO_FIXED_6
                       ? 'Upto ₹ 99,999 can be invested at one go'
                       : locale.upto50000,
-                  minAmount: widget.model.minAmount,
+                  minAmount: widget.model.minAmount.toDouble(),
                   minAmountMsg:
                       "Minimum purchase amount is ₹ ${widget.model.minAmount.toInt()}",
                   notice: widget.model.buyNotice,
@@ -555,7 +555,7 @@ class ViewBreakdown extends StatelessWidget {
                     width: SizeConfig.padding4,
                   ),
                   Text(
-                    "Total Tambola Tickets",
+                    "Total Tickets",
                     style: TextStyles.sourceSansSB.body1,
                   ),
                   const Spacer(),
@@ -572,7 +572,7 @@ class ViewBreakdown extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      "Happy Hour Tambola Tickets",
+                      "Happy Hour Tickets",
                       style: TextStyles.sourceSans.body2,
                     ),
                     const Spacer(),
@@ -588,7 +588,7 @@ class ViewBreakdown extends StatelessWidget {
                 Row(
                   children: [
                     Text(
-                      "Lifetime Tambola Tickets",
+                      "Lifetime Tickets",
                       style: TextStyles.sourceSans.body2,
                     ),
                     const Spacer(),
