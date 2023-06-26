@@ -454,6 +454,7 @@ class _BuildOwnAsset extends StatelessWidget {
       : super(key: key);
   final InvestmentType type;
   final UserService userService;
+
   @override
   Widget build(BuildContext context) {
     bool isGold = type == InvestmentType.AUGGOLD99;
@@ -506,8 +507,7 @@ class _BuildOwnAsset extends StatelessWidget {
           );
   }
 
-  Color get color =>
-      type == InvestmentType.AUGGOLD99
+  Color get color => type == InvestmentType.AUGGOLD99
       ? const Color(0xff303B6A)
       : UiConstants.kFloContainerColor;
 }
@@ -517,15 +517,18 @@ class FloBalanceBriefRow extends StatelessWidget {
     required this.tier,
     this.mini = false,
     this.leftAlign = false,
+    this.endAlign = false,
     super.key,
     this.lead,
     this.trail,
     this.percent,
   });
+
   final double? lead, trail, percent;
   final String tier;
   final bool mini;
   final bool leftAlign;
+  final bool endAlign;
 
   @override
   Widget build(BuildContext context) {
@@ -535,6 +538,7 @@ class FloBalanceBriefRow extends StatelessWidget {
           Expanded(
             flex: 6,
             child: Column(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               crossAxisAlignment: (mini || leftAlign)
                   ? CrossAxisAlignment.start
                   : CrossAxisAlignment.center,
@@ -546,69 +550,71 @@ class FloBalanceBriefRow extends StatelessWidget {
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   mainAxisAlignment: (mini || leftAlign)
-                      ? MainAxisAlignment.start
-                      : MainAxisAlignment.center,
-                  children: [
-                    Flexible(
-                      fit: FlexFit.loose,
-                      child: Text(
-                        "₹${BaseUtil.digitPrecision(lead ?? getCurrentValue(tier, portfolio), 2)}",
-                        style: mini
-                            ? TextStyles.sourceSansSB.body0
-                            : TextStyles.sourceSansSB.title4,
-                      ),
-                    ),
-                    Column(
+                          ? MainAxisAlignment.start
+                          : MainAxisAlignment.center,
                       children: [
-                        Row(
-                          crossAxisAlignment: CrossAxisAlignment.end,
+                        Flexible(
+                          fit: FlexFit.loose,
+                          child: Text(
+                            "₹${BaseUtil.digitPrecision(lead ?? getCurrentValue(tier, portfolio), 2)}",
+                            style: mini
+                                ? TextStyles.sourceSansSB.body0
+                                : TextStyles.sourceSansSB.title4,
+                          ),
+                        ),
+                        Column(
                           children: [
-                            SizedBox(width: SizeConfig.padding6),
-                            Transform.translate(
-                              offset: Offset(0, -SizeConfig.padding4),
-                              child: RotatedBox(
-                                quarterTurns:
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                SizedBox(width: SizeConfig.padding6),
+                                Transform.translate(
+                                  offset: Offset(0, -SizeConfig.padding4),
+                                  child: RotatedBox(
+                                    quarterTurns:
                                     getPercValue(tier, portfolio) >= 0 ? 0 : 2,
-                                child: SvgPicture.asset(
-                                  Assets.arrow,
-                                  width: mini
-                                      ? SizeConfig.iconSize3
-                                      : SizeConfig.iconSize2,
-                                  color: getPercValue(tier, portfolio) >= 0
-                                      ? UiConstants.primaryColor
-                                      : Colors.red,
+                                    child: SvgPicture.asset(
+                                      Assets.arrow,
+                                      width: mini
+                                          ? SizeConfig.iconSize3
+                                          : SizeConfig.iconSize2,
+                                      color: getPercValue(tier, portfolio) >= 0
+                                          ? UiConstants.primaryColor
+                                          : Colors.red,
+                                    ),
+                                  ),
                                 ),
-                              ),
+                                Text(
+                                    " ${BaseUtil.digitPrecision(
+                                      getPercValue(tier, portfolio),
+                                      2,
+                                      false,
+                                    )}%",
+                                    style: TextStyles.sourceSans.body3.colour(
+                                        getPercValue(tier, portfolio) >= 0
+                                            ? UiConstants.primaryColor
+                                            : Colors.red)),
+                              ],
                             ),
-                            Text(
-                                " ${BaseUtil.digitPrecision(
-                                  getPercValue(tier, portfolio),
-                                  2,
-                                  false,
-                                )}%",
-                                style: TextStyles.sourceSans.body3.colour(
-                                    getPercValue(tier, portfolio) >= 0
-                                        ? UiConstants.primaryColor
-                                        : Colors.red)),
+                            SizedBox(
+                              height:
+                              mini ? SizeConfig.padding2 : SizeConfig.padding4,
+                            )
                           ],
                         ),
-                        SizedBox(
-                          height:
-                              mini ? SizeConfig.padding2 : SizeConfig.padding4,
-                        )
                       ],
-                    ),
+                    )
                   ],
-                )
-              ],
             ),
           ),
           Expanded(
             flex: 4,
             child: Column(
               crossAxisAlignment: (mini || leftAlign)
-                  ? CrossAxisAlignment.start
-                  : CrossAxisAlignment.center,
+                  ? CrossAxisAlignment.end
+                  : endAlign
+                      ? CrossAxisAlignment.end
+                      : CrossAxisAlignment.center,
               children: [
                 Text(
                   "Invested",
@@ -676,6 +682,7 @@ class ComparisonBox extends StatelessWidget {
       : super(key: key);
   final Color backgroundColor;
   final bool isGold;
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -1201,6 +1208,7 @@ class CircularSlider extends StatefulWidget {
   final InvestmentType type;
   final bool isNewUser;
   final int interest;
+
   @override
   State<CircularSlider> createState() => CircularSliderState();
 }
@@ -1208,6 +1216,7 @@ class CircularSlider extends StatefulWidget {
 class CircularSliderState extends State<CircularSlider> {
   double _volumeValue = 10000;
   bool isEventSent = false;
+
   void onVolumeChanged(double value) {
     if (!isEventSent) {
       locator<AnalyticsService>().track(
