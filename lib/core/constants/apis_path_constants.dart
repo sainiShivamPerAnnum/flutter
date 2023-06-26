@@ -14,7 +14,7 @@ class ApiPath {
   //User Ops Apis
   get kAddNewUser => "/v2/new";
 
-  get kUpdateUserAppflyer => "/userOps/api/v3/user/appflyer";
+  get kUpdateUserAppflyer => "/appflyer";
 
   get kAddBankAccount => "/bank";
 

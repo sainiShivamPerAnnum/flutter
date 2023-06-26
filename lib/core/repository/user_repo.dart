@@ -152,6 +152,7 @@ class UserRepository extends BaseRepo {
       await APIService.instance.putData(
         _apiPaths!.kUpdateUserAppflyer,
         body: body,
+        cBaseUrl: _baseUrl,
         token: token,
       );
 
