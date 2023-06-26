@@ -116,7 +116,61 @@ class SizeConfig {
   static double get padding80 => screenWidth! * 0.193; //56
   static double get padding90 => screenWidth! * 0.245;
 
-  static double get padding175 => screenWidth! * 0.466; //100
+  static double get padding100 => screenWidth! * 0.24;
+
+  static double get padding104 => screenWidth! * 0.2496;
+
+  static double get padding108 => screenWidth! * 0.2592;
+
+  static double get padding112 => screenWidth! * 0.2688;
+
+  static double get padding116 => screenWidth! * 0.2784;
+
+  static double get padding120 => screenWidth! * 0.288;
+
+  static double get padding124 => screenWidth! * 0.2976;
+
+  static double get padding128 => screenWidth! * 0.3072;
+
+  static double get padding132 => screenWidth! * 0.3168;
+
+  static double get padding136 => screenWidth! * 0.3264;
+
+  static double get padding140 => screenWidth! * 0.336;
+
+  static double get padding144 => screenWidth! * 0.3456;
+
+  static double get padding148 => screenWidth! * 0.3552;
+
+  static double get padding152 => screenWidth! * 0.3648;
+
+  static double get padding156 => screenWidth! * 0.3744;
+
+  static double get padding160 => screenWidth! * 0.384;
+
+  static double get padding164 => screenWidth! * 0.3936;
+
+  static double get padding168 => screenWidth! * 0.4032;
+
+  static double get padding172 => screenWidth! * 0.4128;
+
+  static double get padding175 => screenWidth! * 0.466;
+
+  static double get padding176 => screenWidth! * 0.4224;
+
+  static double get padding180 => screenWidth! * 0.432;
+
+  static double get padding184 => screenWidth! * 0.4416;
+
+  static double get padding188 => screenWidth! * 0.4512;
+
+  static double get padding192 => screenWidth! * 0.4608;
+
+  static double get padding196 => screenWidth! * 0.4704;
+
+  static double get padding200 => screenWidth! * 0.48;
+
+  static double get padding300 => screenWidth! * 0.8;
 
   // MARGINS
   static double get pageHorizontalMargins => screenWidth! * 0.0579; //

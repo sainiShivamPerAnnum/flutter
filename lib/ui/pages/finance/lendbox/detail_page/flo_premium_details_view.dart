@@ -351,6 +351,135 @@ class _FloPremiumDetailsViewState extends State<FloPremiumDetailsView>
                                     },
                                   ),
                                 ),
+
+                                SizedBox(
+                                    height: SizeConfig.pageHorizontalMargins),
+                                CircularSlider(
+                                    type: InvestmentType.LENDBOXP2P,
+                                    isNewUser: false,
+                                    interest: model.is12 ? 12 : 10),
+
+                                //From our 12% Flo Savers
+                                SizedBox(height: SizeConfig.padding40),
+                                Text(
+                                  "From our 12% Flo Savers",
+                                  style: TextStyles.rajdhaniSB.title4
+                                      .colour(Colors.white),
+                                  textAlign: TextAlign.center,
+                                ),
+                                SizedBox(height: SizeConfig.padding24),
+                                SizedBox(
+                                  height: SizeConfig.padding140,
+                                  child: ListView.builder(
+                                    itemCount: 3,
+                                    // shrinkWrap: true  ,
+                                    scrollDirection: Axis.horizontal,
+                                    itemBuilder:
+                                        (BuildContext context, int index) {
+                                      return Container(
+                                        width: SizeConfig.padding300,
+                                        margin: EdgeInsets.only(
+                                            left: SizeConfig.padding16),
+                                        height: SizeConfig.padding140,
+                                        decoration: ShapeDecoration(
+                                          // color: const Color(0xFF191919),
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(8)),
+                                        ),
+                                        child: Row(
+                                          children: [
+                                            ClipRRect(
+                                              borderRadius:
+                                                  const BorderRadius.only(
+                                                topLeft: Radius.circular(8),
+                                                bottomLeft: Radius.circular(8),
+                                              ),
+                                              clipBehavior: Clip.hardEdge,
+                                              child: Image.network(
+                                                  'https://picsum.photos/140'),
+                                            ),
+                                            Stack(
+                                              children: [
+                                                Container(
+                                                  decoration:
+                                                      const BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.only(
+                                                      topRight:
+                                                          Radius.circular(8),
+                                                      bottomRight:
+                                                          Radius.circular(8),
+                                                    ),
+                                                  ),
+                                                  child: ClipRRect(
+                                                    borderRadius:
+                                                        const BorderRadius.only(
+                                                      topRight:
+                                                          Radius.circular(8),
+                                                      bottomRight:
+                                                          Radius.circular(8),
+                                                    ),
+                                                    clipBehavior: Clip.hardEdge,
+                                                    child: Image.asset(
+                                                      'assets/svg/comma.png',
+                                                      fit: BoxFit.contain,
+                                                    ),
+                                                  ),
+                                                ),
+                                                Positioned(
+                                                  left: 15,
+                                                  top: 10,
+                                                  child: Column(
+                                                    mainAxisSize:
+                                                        MainAxisSize.min,
+                                                    crossAxisAlignment:
+                                                        CrossAxisAlignment
+                                                            .start,
+                                                    children: [
+                                                      Text(
+                                                        "Arun Sharma, 27",
+                                                        style: TextStyles
+                                                            .sourceSansSB.body3
+                                                            .colour(
+                                                                Colors.white),
+                                                      ),
+                                                      SizedBox(
+                                                          height: SizeConfig
+                                                              .padding8),
+                                                      Padding(
+                                                        padding: EdgeInsets.only(
+                                                            right: SizeConfig
+                                                                .padding12),
+                                                        child: SizedBox(
+                                                          width: SizeConfig
+                                                              .padding152,
+                                                          child: Text(
+                                                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sollicitudin ac mattis tellus consequat sit et sagittis, am..",
+                                                            style: TextStyles
+                                                                .sourceSans
+                                                                .body4
+                                                                .colour(Colors
+                                                                    .white),
+                                                            maxLines: 5,
+                                                            textAlign:
+                                                                TextAlign.left,
+                                                          ),
+                                                        ),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                )
+                                              ],
+                                            )
+                                          ],
+                                        ),
+                                      );
+                                    },
+                                  ),
+                                ),
+
+                                SizedBox(height: SizeConfig.padding20),
                                 Padding(
                                   padding: EdgeInsets.symmetric(
                                       vertical: SizeConfig.padding16),
@@ -361,12 +490,6 @@ class _FloPremiumDetailsViewState extends State<FloPremiumDetailsView>
                                   ),
                                 ),
                                 const SaveAssetsFooter(isFlo: true),
-                                SizedBox(
-                                    height: SizeConfig.pageHorizontalMargins),
-                                CircularSlider(
-                                    type: InvestmentType.LENDBOXP2P,
-                                    isNewUser: false,
-                                    interest: model.is12 ? 12 : 10),
                                 SizedBox(
                                     height: SizeConfig.pageHorizontalMargins),
                                 Padding(
@@ -780,9 +903,6 @@ class FloPremiumHeader extends StatelessWidget {
                                       .colour(Colors.black),
                                 ),
                               ),
-                              // SizedBox(
-                              //   width: SizeConfig.padding10,
-                              // )
                             ],
                           ),
                           Positioned(
@@ -792,7 +912,7 @@ class FloPremiumHeader extends StatelessWidget {
                                   SizeConfig.padding12,
                                   (SizeConfig.padding12 * 1.0909090909090908)
                                       .toDouble()),
-                              painter: RPSCustomPainter(),
+                              painter: StarCustomPainter(),
                             ),
                           ),
                           Positioned(
@@ -802,7 +922,7 @@ class FloPremiumHeader extends StatelessWidget {
                                   SizeConfig.padding6,
                                   (SizeConfig.padding6 * 1.0909090909090908)
                                       .toDouble()),
-                              painter: RPSCustomPainter(),
+                              painter: StarCustomPainter(),
                             ),
                           )
                         ],
@@ -1185,7 +1305,7 @@ class LBoxAssetCard extends StatelessWidget {
   }
 }
 
-class RPSCustomPainter extends CustomPainter {
+class StarCustomPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     Path path_0 = Path();

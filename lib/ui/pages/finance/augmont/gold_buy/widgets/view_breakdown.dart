@@ -138,7 +138,7 @@ class ViewBreakdown extends StatelessWidget {
             SizedBox(
               height: SizeConfig.padding24,
             ),
-            if (model.showHappyHour) ...[
+            if (model.showHappyHour && model.happyHourTickets != null) ...[
               Row(
                 children: [
                   Text(
