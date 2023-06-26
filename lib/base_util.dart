@@ -459,7 +459,7 @@ class BaseUtil extends ChangeNotifier {
       case '0':
         return "Withdrawing to your bank account after maturity";
       case '1':
-        return "Auto-investing in 12% Flo after maturity";
+        return "Auto-investing in 12% Flo on maturity";
       case '2':
         return "Move to Flo Basic after maturity";
       default:

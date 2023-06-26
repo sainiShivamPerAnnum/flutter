@@ -33,6 +33,7 @@ import 'package:intl/intl.dart';
 
 class FloPremiumDetailsView extends StatefulWidget {
   final bool is12;
+
   const FloPremiumDetailsView({super.key, required this.is12});
 
   @override
@@ -45,6 +46,15 @@ class _FloPremiumDetailsViewState extends State<FloPremiumDetailsView>
 
   AnimationController? _animController;
   Animation<double>? offsetAnim;
+
+  bool _seeAll = false;
+
+  void seeAllClicked() {
+    setState(() {
+      _seeAll = true;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -67,6 +77,7 @@ class _FloPremiumDetailsViewState extends State<FloPremiumDetailsView>
     controller?.dispose();
     _animController!.dispose();
     super.dispose();
+    _seeAll = false;
   }
 
   @override
@@ -123,19 +134,123 @@ class _FloPremiumDetailsViewState extends State<FloPremiumDetailsView>
                                                   model: model),
                                               SizedBox(
                                                   height: SizeConfig.padding32),
-                                              if (model.isInvested)
-                                                const FloBalanceBriefRow(
-                                                  key: ValueKey("10floBalance"),
-                                                  tier: Constants
-                                                      .ASSET_TYPE_FLO_FIXED_6,
-                                                ),
-                                              if (model.isInvested)
-                                                SizedBox(
-                                                    height:
+                                              Container(
+                                                margin: EdgeInsets.symmetric(
+                                                    horizontal:
                                                         SizeConfig.padding16),
-                                              FloPremiumTransactionsList(
-                                                  key: ValueKey("12floTxns"),
-                                                  model: model),
+                                                padding: EdgeInsets.only(
+                                                  top: SizeConfig.padding16,
+                                                  // horizontal:
+                                                  //     SizeConfig.padding16,
+                                                ),
+                                                decoration: ShapeDecoration(
+                                                  color:
+                                                      const Color(0xFF013B3F),
+                                                  shape: RoundedRectangleBorder(
+                                                    side: const BorderSide(
+                                                      width: 1,
+                                                      strokeAlign: BorderSide
+                                                          .strokeAlignOutside,
+                                                      color: Color(0xFF326164),
+                                                    ),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            16),
+                                                  ),
+                                                ),
+                                                child: Column(
+                                                  children: [
+                                                    if (model.isInvested)
+                                                      Container(
+                                                        margin: EdgeInsets
+                                                            .symmetric(
+                                                                horizontal:
+                                                                    SizeConfig
+                                                                        .padding24),
+                                                        child:
+                                                            const FloBalanceBriefRow(
+                                                          key: ValueKey(
+                                                              "10floBalance"),
+                                                          tier: Constants
+                                                              .ASSET_TYPE_FLO_FIXED_6,
+                                                          mini: true,
+                                                        ),
+                                                      ),
+                                                    if (model.isInvested)
+                                                      SizedBox(
+                                                          height: SizeConfig
+                                                              .padding16),
+                                                    Container(
+                                                      margin:
+                                                          EdgeInsets.symmetric(
+                                                        horizontal: SizeConfig
+                                                            .padding16,
+                                                      ),
+                                                      child:
+                                                          FloPremiumTransactionsList(
+                                                        key: const ValueKey(
+                                                            "12floTxns"),
+                                                        model: model,
+                                                        seeAll: _seeAll,
+                                                      ),
+                                                    ),
+                                                    GestureDetector(
+                                                      onTap: () {
+                                                        setState(() {
+                                                          _seeAll = !_seeAll;
+                                                        });
+                                                      },
+                                                      child: Container(
+                                                        decoration: BoxDecoration(
+                                                            color: Colors.white
+                                                                .withOpacity(
+                                                                    0.10),
+                                                            borderRadius: BorderRadius.only(
+                                                                bottomLeft: Radius
+                                                                    .circular(
+                                                                        SizeConfig
+                                                                            .roundness16),
+                                                                bottomRight: Radius
+                                                                    .circular(
+                                                                        SizeConfig
+                                                                            .roundness16))),
+                                                        child: Row(
+                                                          mainAxisAlignment:
+                                                              MainAxisAlignment
+                                                                  .center,
+                                                          children: [
+                                                            Text(
+                                                              _seeAll
+                                                                  ? 'View less Investments'
+                                                                  : 'View more Investments',
+                                                              style: TextStyles
+                                                                  .sourceSansSB
+                                                                  .body2
+                                                                  .colour(Colors
+                                                                      .white),
+                                                            ),
+                                                            SizedBox(
+                                                              width: SizeConfig
+                                                                  .padding4,
+                                                            ),
+                                                            Icon(
+                                                              _seeAll
+                                                                  ? Icons
+                                                                      .keyboard_arrow_up
+                                                                  : Icons
+                                                                      .keyboard_arrow_down_outlined,
+                                                              color:
+                                                                  Colors.white,
+                                                              size: SizeConfig
+                                                                  .padding28,
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                    )
+                                                  ],
+                                                ),
+                                              ),
                                             ],
                                           )
                                         : Column(
@@ -160,7 +275,58 @@ class _FloPremiumDetailsViewState extends State<FloPremiumDetailsView>
                                                 key:
                                                     const ValueKey("10floTxns"),
                                                 model: model,
+                                                seeAll: _seeAll,
                                               ),
+                                              GestureDetector(
+                                                onTap: () {
+                                                  setState(() {
+                                                    _seeAll = !_seeAll;
+                                                  });
+                                                },
+                                                child: Container(
+                                                  decoration: BoxDecoration(
+                                                      color: Colors.white
+                                                          .withOpacity(0.10),
+                                                      borderRadius: BorderRadius.only(
+                                                          bottomLeft: Radius
+                                                              .circular(SizeConfig
+                                                                  .roundness16),
+                                                          bottomRight: Radius
+                                                              .circular(SizeConfig
+                                                                  .roundness16))),
+                                                  child: Row(
+                                                    mainAxisAlignment:
+                                                        MainAxisAlignment
+                                                            .center,
+                                                    children: [
+                                                      Text(
+                                                        'View more Investments',
+                                                        style: TextStyles
+                                                            .sourceSansSB.body2
+                                                            .colour(
+                                                                Colors.white),
+                                                      ),
+                                                      SizedBox(
+                                                        width:
+                                                            SizeConfig.padding4,
+                                                      ),
+                                                      Icon(
+                                                        Icons
+                                                            .keyboard_arrow_down_outlined,
+                                                        color: Colors.white,
+                                                        size: SizeConfig
+                                                            .padding28,
+                                                      ),
+                                                      // Transform.rotate(
+                                                      //     angle: math.pi / 2,
+                                                      //     child: SvgPicture.asset(
+                                                      //       Assets.chevRonRightArrow,
+                                                      //       color: UiConstants.primaryColor,
+                                                      //     ))
+                                                    ],
+                                                  ),
+                                                ),
+                                              )
                                             ],
                                           ),
                                     transitionBuilder: (child, animation) {
@@ -521,6 +687,7 @@ class _FloPremiumDetailsViewState extends State<FloPremiumDetailsView>
 
 class FloPremiumHeader extends StatelessWidget {
   final FloPremiumDetailsViewModel model;
+
   const FloPremiumHeader({
     super.key,
     required this.model,
@@ -593,10 +760,13 @@ class FloPremiumHeader extends StatelessWidget {
 }
 
 class FloPremiumTransactionsList extends StatelessWidget {
-  FloPremiumDetailsViewModel model;
-  FloPremiumTransactionsList({
+  final FloPremiumDetailsViewModel model;
+  final bool seeAll;
+
+  const FloPremiumTransactionsList({
     Key? key,
     required this.model,
+    required this.seeAll,
   }) : super(key: key);
 
   void trackTransactionCardTap(
@@ -627,194 +797,221 @@ class FloPremiumTransactionsList extends StatelessWidget {
         });
   }
 
+  int getLength() {
+    if (model.transactionsList.length > 2) {
+      if (seeAll) {
+        return model.transactionsList.length;
+      } else {
+        return 2;
+      }
+    } else {
+      return model.transactionsList.length;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    return AnimatedContainer(
-      duration: const Duration(seconds: 1),
-      curve: Curves.easeIn,
-      child: ListView.builder(
-          shrinkWrap: true,
-          itemCount: model.transactionsList.length,
-          physics: const NeverScrollableScrollPhysics(),
-          itemBuilder: (ctx, i) {
-            String formattedInvestmentDate = DateFormat('dd MMM, yyyy').format(
-                DateTime.fromMillisecondsSinceEpoch(model
-                    .transactionsList[i].timestamp!.millisecondsSinceEpoch));
+    return Column(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        AnimatedContainer(
+          duration: const Duration(seconds: 1),
+          curve: Curves.easeIn,
+          child: ListView.builder(
+              shrinkWrap: true,
+              itemCount: getLength(),
+              physics: const NeverScrollableScrollPhysics(),
+              itemBuilder: (ctx, i) {
+                String formattedInvestmentDate = DateFormat('dd MMM, yyyy')
+                    .format(DateTime.fromMillisecondsSinceEpoch(model
+                        .transactionsList[i]
+                        .timestamp!
+                        .millisecondsSinceEpoch));
 
-            String formattedMaturityDate = DateFormat('dd MMM, yyyy').format(
-                DateTime.fromMillisecondsSinceEpoch(model.transactionsList[i]
-                    .lbMap.maturityAt!.millisecondsSinceEpoch));
+                String formattedMaturityDate = DateFormat('dd MMM, yyyy')
+                    .format(DateTime.fromMillisecondsSinceEpoch(model
+                        .transactionsList[i]
+                        .lbMap
+                        .maturityAt!
+                        .millisecondsSinceEpoch));
 
-            double currentValue = BaseUtil.digitPrecision(
-                model.transactionsList[i].amount +
-                    (model.transactionsList[i].lbMap.gainAmount ?? 0),
-                2);
+                double currentValue = BaseUtil.digitPrecision(
+                    model.transactionsList[i].amount +
+                        (model.transactionsList[i].lbMap.gainAmount ?? 0),
+                    2);
 
-            double principleValue =
-                BaseUtil.digitPrecision(model.transactionsList[i].amount, 2);
+                double principleValue = BaseUtil.digitPrecision(
+                    model.transactionsList[i].amount, 2);
 
-            double gain = BaseUtil.digitPrecision(
-                model.transactionsList[i].lbMap.gainAmount ?? 0, 2, false);
+                double gain = BaseUtil.digitPrecision(
+                    model.transactionsList[i].lbMap.gainAmount ?? 0, 2, false);
 
-            bool hasUserDecided =
-                model.transactionsList[i].lbMap.maturityPref != "NA";
-            String userMaturityPref = BaseUtil.getMaturityPref(
-                model.transactionsList[i].lbMap.maturityPref ?? "NA");
+                bool hasUserDecided =
+                    model.transactionsList[i].lbMap.maturityPref != "NA";
+                String userMaturityPref = BaseUtil.getMaturityPref(
+                    model.transactionsList[i].lbMap.maturityPref ?? "NA");
 
-            return (model.transactionsList[i].lbMap.fundType ?? "").isNotEmpty
-                ? InkWell(
-                    onTap: () {
-                      Haptic.vibrate();
-                      AppState.delegate!.appState.currentAction = PageAction(
-                        state: PageState.addWidget,
-                        page: TransactionDetailsPageConfig,
-                        widget: TransactionDetailsPage(
-                          txn: model.transactionsList[i],
-                        ),
-                      );
-                      trackTransactionCardTap(currentValue, currentValue - gain,
-                          formattedMaturityDate);
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white10,
-                        borderRadius:
-                            BorderRadius.circular(SizeConfig.roundness16),
-                      ),
-                      margin: EdgeInsets.symmetric(
-                          horizontal: SizeConfig.pageHorizontalMargins,
-                          vertical: SizeConfig.padding10),
-                      child: Column(children: [
-                        Padding(
-                          padding: EdgeInsets.only(
-                            top: SizeConfig.padding12,
-                            bottom: SizeConfig.padding12,
-                            left: SizeConfig.pageHorizontalMargins,
-                            right: SizeConfig.padding12,
-                          ),
-                          child: Column(
-                            children: [
-                              Row(
-                                children: [
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "Invested on",
-                                        style: TextStyles.body3.colour(
-                                            UiConstants.kTextFieldTextColor),
-                                      ),
-                                      FloPremiumTierChip(
-                                        value: formattedInvestmentDate,
-                                      )
-                                    ],
-                                  ),
-                                  SizedBox(width: SizeConfig.padding16),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "Matures on",
-                                        style: TextStyles.body3.colour(
-                                            UiConstants.kTextFieldTextColor),
-                                      ),
-                                      FloPremiumTierChip(
-                                        value: formattedMaturityDate,
-                                      )
-                                    ],
-                                  ),
-                                  const Spacer(),
-                                  const Icon(
-                                    Icons.arrow_forward_ios_rounded,
-                                    color: UiConstants.kTextFieldTextColor,
-                                  )
-                                ],
-                              ),
-                              SizedBox(height: SizeConfig.padding16),
-                              FloBalanceBriefRow(
-                                lead: currentValue,
-                                trail: principleValue,
-                                percent: (gain / principleValue) * 100,
-                                leftAlign: true,
-                                tier: model.is12
-                                    ? Constants.ASSET_TYPE_FLO_FIXED_6
-                                    : Constants.ASSET_TYPE_FLO_FIXED_3,
-                              ),
-                            ],
-                          ),
-                        ),
-                        Container(
-                          width: SizeConfig.screenWidth,
-                          padding: EdgeInsets.symmetric(
-                            vertical: SizeConfig.padding16,
-                            horizontal: SizeConfig.padding16,
-                          ),
+                return (model.transactionsList[i].lbMap.fundType ?? "")
+                        .isNotEmpty
+                    ? InkWell(
+                        onTap: () {
+                          Haptic.vibrate();
+                          AppState.delegate!.appState.currentAction =
+                              PageAction(
+                            state: PageState.addWidget,
+                            page: TransactionDetailsPageConfig,
+                            widget: TransactionDetailsPage(
+                              txn: model.transactionsList[i],
+                            ),
+                          );
+                          trackTransactionCardTap(currentValue,
+                              currentValue - gain, formattedMaturityDate);
+                        },
+                        child: Container(
                           decoration: BoxDecoration(
                             color: Colors.white10,
-                            borderRadius: BorderRadius.only(
-                                bottomLeft:
-                                    Radius.circular(SizeConfig.roundness16),
-                                bottomRight:
-                                    Radius.circular(SizeConfig.roundness16)),
+                            borderRadius:
+                                BorderRadius.circular(SizeConfig.roundness16),
                           ),
-                          alignment: Alignment.center,
-                          child: hasUserDecided
-                              ? Text(
-                                  userMaturityPref,
-                                  style: TextStyles.sourceSans.body2,
-                                )
-                              : Row(children: [
-                                  Expanded(
-                                    child: Text(
+                          margin: EdgeInsets.only(
+                              //     horizontal: SizeConfig.pageHorizontalMargins,
+                              bottom: SizeConfig.padding16),
+                          child: Column(children: [
+                            Padding(
+                              padding: EdgeInsets.only(
+                                top: SizeConfig.padding12,
+                                bottom: SizeConfig.padding12,
+                                left: SizeConfig.pageHorizontalMargins,
+                                right: SizeConfig.padding12,
+                              ),
+                              child: Column(
+                                children: [
+                                  Row(
+                                    children: [
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "Invested on",
+                                            style: TextStyles.body3.colour(
+                                                UiConstants
+                                                    .kTextFieldTextColor),
+                                          ),
+                                          FloPremiumTierChip(
+                                            value: formattedInvestmentDate,
+                                          )
+                                        ],
+                                      ),
+                                      SizedBox(width: SizeConfig.padding16),
+                                      Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            "Matures on",
+                                            style: TextStyles.body3.colour(
+                                                UiConstants
+                                                    .kTextFieldTextColor),
+                                          ),
+                                          FloPremiumTierChip(
+                                            value: formattedMaturityDate,
+                                          )
+                                        ],
+                                      ),
+                                      const Spacer(),
+                                      const Icon(
+                                        Icons.arrow_forward_ios_rounded,
+                                        color: UiConstants.kTextFieldTextColor,
+                                      )
+                                    ],
+                                  ),
+                                  SizedBox(height: SizeConfig.padding16),
+                                  FloBalanceBriefRow(
+                                    lead: currentValue,
+                                    trail: principleValue,
+                                    percent: (gain / principleValue) * 100,
+                                    leftAlign: true,
+                                    tier: model.is12
+                                        ? Constants.ASSET_TYPE_FLO_FIXED_6
+                                        : Constants.ASSET_TYPE_FLO_FIXED_3,
+                                  ),
+                                ],
+                              ),
+                            ),
+                            Container(
+                              width: SizeConfig.screenWidth,
+                              padding: EdgeInsets.symmetric(
+                                vertical: SizeConfig.padding16,
+                                horizontal: SizeConfig.padding16,
+                              ),
+                              decoration: BoxDecoration(
+                                color: Colors.white10,
+                                borderRadius: BorderRadius.only(
+                                    bottomLeft:
+                                        Radius.circular(SizeConfig.roundness16),
+                                    bottomRight: Radius.circular(
+                                        SizeConfig.roundness16)),
+                              ),
+                              alignment: Alignment.center,
+                              child: hasUserDecided
+                                  ? Text(
                                       userMaturityPref,
                                       style: TextStyles.sourceSans.body2,
-                                    ),
-                                  ),
-                                  SizedBox(width: SizeConfig.padding10),
-                                  MaterialButton(
-                                    onPressed: () {
-                                      BaseUtil.openModalBottomSheet(
-                                        isBarrierDismissible: false,
-                                        addToScreenStack: true,
-                                        hapticVibrate: true,
-                                        isScrollControlled: true,
-                                        content: MaturityPrefModalSheet(
-                                          amount: "${currentValue - gain}",
-                                          txnId:
-                                              model.transactionsList[i].docKey!,
-                                          assetType: model.is12
-                                              ? Constants.ASSET_TYPE_FLO_FIXED_6
-                                              : Constants
-                                                  .ASSET_TYPE_FLO_FIXED_3,
+                                    )
+                                  : Row(children: [
+                                      Expanded(
+                                        child: Text(
+                                          userMaturityPref,
+                                          style: TextStyles.sourceSans.body2,
                                         ),
-                                      ).then(
-                                          (value) => model.getTransactions());
-                                      trackDecideButtonTap(
-                                        currentValue,
-                                        currentValue - gain,
-                                        formattedMaturityDate,
-                                      );
-                                    },
-                                    color: Colors.white,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(
-                                          SizeConfig.roundness5),
-                                    ),
-                                    child: Text(
-                                      "CHOOSE",
-                                      style: TextStyles.rajdhaniB.body2
-                                          .colour(Colors.black),
-                                    ),
-                                  )
-                                ]),
-                        )
-                      ]),
-                    ),
-                  )
-                : const SizedBox();
-          }),
+                                      ),
+                                      SizedBox(width: SizeConfig.padding10),
+                                      MaterialButton(
+                                        onPressed: () {
+                                          BaseUtil.openModalBottomSheet(
+                                            isBarrierDismissible: false,
+                                            addToScreenStack: true,
+                                            hapticVibrate: true,
+                                            isScrollControlled: true,
+                                            content: MaturityPrefModalSheet(
+                                              amount: "${currentValue - gain}",
+                                              txnId: model
+                                                  .transactionsList[i].docKey!,
+                                              assetType: model.is12
+                                                  ? Constants
+                                                      .ASSET_TYPE_FLO_FIXED_6
+                                                  : Constants
+                                                      .ASSET_TYPE_FLO_FIXED_3,
+                                            ),
+                                          ).then((value) =>
+                                              model.getTransactions());
+                                          trackDecideButtonTap(
+                                            currentValue,
+                                            currentValue - gain,
+                                            formattedMaturityDate,
+                                          );
+                                        },
+                                        color: Colors.white,
+                                        shape: RoundedRectangleBorder(
+                                          borderRadius: BorderRadius.circular(
+                                              SizeConfig.roundness5),
+                                        ),
+                                        child: Text(
+                                          "CHOOSE",
+                                          style: TextStyles.rajdhaniB.body2
+                                              .colour(Colors.black),
+                                        ),
+                                      )
+                                    ]),
+                            )
+                          ]),
+                        ),
+                      )
+                    : const SizedBox();
+              }),
+        ),
+      ],
     );
   }
 }
@@ -912,7 +1109,7 @@ class LBoxAssetCard extends StatelessWidget {
                                     UiConstants.kTextColor.withOpacity(0.8)),
                               ),
                               SizedBox(width: SizeConfig.padding4),
-                              LboxGrowthArrow()
+                              const LboxGrowthArrow()
                             ],
                           ),
                         ],

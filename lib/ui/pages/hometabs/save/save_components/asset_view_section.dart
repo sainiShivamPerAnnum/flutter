@@ -1290,7 +1290,7 @@ class CircularSliderState extends State<CircularSlider> {
           ),
         ),
         Positioned(
-          top: 0,
+          top: -5,
           child: Column(
             children: [
               Text(
@@ -1305,7 +1305,7 @@ class CircularSliderState extends State<CircularSlider> {
                     : "(Based on last years' returns)",
                 style:
                     TextStyles.sourceSans.body3.colour(const Color(0xffA9C6D6)),
-              )
+              ),
             ],
           ),
         ),
