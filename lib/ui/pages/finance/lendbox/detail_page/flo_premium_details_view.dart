@@ -287,56 +287,60 @@ class _FloPremiumDetailsViewState extends State<FloPremiumDetailsView>
                                                 model: model,
                                                 seeAll: _seeAll,
                                               ),
-                                              GestureDetector(
-                                                onTap: () {
-                                                  setState(() {
-                                                    _seeAll = !_seeAll;
-                                                  });
-                                                },
-                                                child: Container(
-                                                  decoration: BoxDecoration(
-                                                      color: Colors.white
-                                                          .withOpacity(0.10),
-                                                      borderRadius: BorderRadius.only(
-                                                          bottomLeft: Radius
-                                                              .circular(SizeConfig
-                                                                  .roundness16),
-                                                          bottomRight: Radius
-                                                              .circular(SizeConfig
-                                                                  .roundness16))),
-                                                  child: Row(
-                                                    mainAxisAlignment:
-                                                        MainAxisAlignment
-                                                            .center,
-                                                    children: [
-                                                      Text(
-                                                        'View more Investments',
-                                                        style: TextStyles
-                                                            .sourceSansSB.body2
-                                                            .colour(
-                                                                Colors.white),
-                                                      ),
-                                                      SizedBox(
-                                                        width:
-                                                            SizeConfig.padding4,
-                                                      ),
-                                                      Icon(
-                                                        Icons
-                                                            .keyboard_arrow_down_outlined,
-                                                        color: Colors.white,
-                                                        size: SizeConfig
-                                                            .padding28,
-                                                      ),
-                                                      // Transform.rotate(
-                                                      //     angle: math.pi / 2,
-                                                      //     child: SvgPicture.asset(
-                                                      //       Assets.chevRonRightArrow,
-                                                      //       color: UiConstants.primaryColor,
-                                                      //     ))
-                                                    ],
+                                              if (model.isInvested)
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    setState(() {
+                                                      _seeAll = !_seeAll;
+                                                    });
+                                                  },
+                                                  child: Container(
+                                                    decoration: BoxDecoration(
+                                                        color: Colors.white
+                                                            .withOpacity(0.10),
+                                                        borderRadius: BorderRadius.only(
+                                                            bottomLeft:
+                                                                Radius.circular(
+                                                                    SizeConfig
+                                                                        .roundness16),
+                                                            bottomRight:
+                                                                Radius.circular(
+                                                                    SizeConfig
+                                                                        .roundness16))),
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Text(
+                                                          'View more Investments',
+                                                          style: TextStyles
+                                                              .sourceSansSB
+                                                              .body2
+                                                              .colour(
+                                                                  Colors.white),
+                                                        ),
+                                                        SizedBox(
+                                                          width: SizeConfig
+                                                              .padding4,
+                                                        ),
+                                                        Icon(
+                                                          Icons
+                                                              .keyboard_arrow_down_outlined,
+                                                          color: Colors.white,
+                                                          size: SizeConfig
+                                                              .padding28,
+                                                        ),
+                                                        // Transform.rotate(
+                                                        //     angle: math.pi / 2,
+                                                        //     child: SvgPicture.asset(
+                                                        //       Assets.chevRonRightArrow,
+                                                        //       color: UiConstants.primaryColor,
+                                                        //     ))
+                                                      ],
+                                                    ),
                                                   ),
-                                                ),
-                                              )
+                                                )
                                             ],
                                           ),
                                     transitionBuilder: (child, animation) {
@@ -451,7 +455,7 @@ class _FloPremiumDetailsViewState extends State<FloPremiumDetailsView>
                                         CrossAxisAlignment.start,
                                     children: [
                                       Text(
-                                        "Still not convinced?",
+                                        "We’ll be happy to assist",
                                         style: TextStyles.rajdhaniSB.title5,
                                       ),
                                       SizedBox(height: SizeConfig.padding12),
@@ -459,8 +463,8 @@ class _FloPremiumDetailsViewState extends State<FloPremiumDetailsView>
                                         children: [
                                           Expanded(
                                             child: Text(
-                                              "Know more about the P2P Asset by talking to us",
-                                              style: TextStyles.body2
+                                              "Our Customer Support team is ready to help. Click on ASK FELLO to get in contact with us.",
+                                              style: TextStyles.body3
                                                   .colour(Colors.white),
                                             ),
                                           ),
@@ -483,7 +487,7 @@ class _FloPremiumDetailsViewState extends State<FloPremiumDetailsView>
                                                         style: BorderStyle
                                                             .solid))),
                                             child: Text(
-                                              "CONTACT US",
+                                              "ASK FELLO",
                                               style: TextStyles.rajdhaniB.body2
                                                   .colour(Colors.white),
                                             ),
@@ -508,7 +512,7 @@ class _FloPremiumDetailsViewState extends State<FloPremiumDetailsView>
                     child: Container(
                       color: UiConstants.kBackgroundColor.withOpacity(0.96),
                       width: SizeConfig.screenWidth,
-                      height: SizeConfig.screenWidth! * 0.24 +
+                      height: SizeConfig.screenWidth! * 0.26 +
                           MediaQuery.of(context).viewPadding.bottom / 2,
                       child: Stack(
                         children: [
@@ -630,6 +634,7 @@ class _FloPremiumDetailsViewState extends State<FloPremiumDetailsView>
                                   ],
                                 ),
                               ),
+                              SizedBox(height: SizeConfig.padding12),
                             ],
                           ),
                         ],
@@ -714,46 +719,105 @@ class FloPremiumHeader extends StatelessWidget {
           Row(
             children: [
               Expanded(
-                  child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Fello Flo Premium",
-                    style: TextStyles.rajdhaniSB.title4,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          boxShadow: [
-                            BoxShadow(
-                              color: UiConstants.primaryColor.withOpacity(0.95),
-                              blurRadius: 50,
-                            )
-                          ],
-                        ),
-                        child: Text(
-                          model.is12 ? "12% Flo" : "10% Flo",
-                          style: TextStyles.rajdhaniB.title0.colour(
-                            model.is12
-                                ? UiConstants.primaryColor
-                                : Colors.white,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Container(
+                          margin: EdgeInsets.only(top: SizeConfig.padding12),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                offset: const Offset(-10, 40),
+                                color:
+                                    UiConstants.primaryColor.withOpacity(0.95),
+                                blurRadius: 50,
+                              )
+                            ],
+                          ),
+                          child: Text(
+                            model.is12 ? "12% Flo" : "10% Flo",
+                            style: TextStyles.rajdhaniB.title0.colour(
+                              model.is12
+                                  ? UiConstants.primaryColor
+                                  : Colors.white,
+                            ),
                           ),
                         ),
+                      ],
+                    ),
+                    Text(
+                      model.is12 ? "12% Returns p.a." : "10% Returns p.a.",
+                      style: TextStyles.rajdhaniSB.title4,
+                    ),
+                    SizedBox(height: SizeConfig.padding16),
+                    SizedBox(
+                      width: SizeConfig.screenWidth! * 0.5,
+                      child: Stack(
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                "Available only for",
+                                style: TextStyles.sourceSans.body3,
+                              ),
+                              SizedBox(width: SizeConfig.padding4),
+                              Container(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: SizeConfig.padding12,
+                                    vertical: SizeConfig.padding2),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xff62E3C4),
+                                  borderRadius: BorderRadius.circular(
+                                      SizeConfig.roundness12),
+                                ),
+                                child: Text(
+                                  "99 days",
+                                  style: TextStyles.sourceSansB.body3
+                                      .colour(Colors.black),
+                                ),
+                              ),
+                              // SizedBox(
+                              //   width: SizeConfig.padding10,
+                              // )
+                            ],
+                          ),
+                          Positioned(
+                            right: 10,
+                            child: CustomPaint(
+                              size: Size(
+                                  SizeConfig.padding12,
+                                  (SizeConfig.padding12 * 1.0909090909090908)
+                                      .toDouble()),
+                              painter: RPSCustomPainter(),
+                            ),
+                          ),
+                          Positioned(
+                            right: 5,
+                            child: CustomPaint(
+                              size: Size(
+                                  SizeConfig.padding6,
+                                  (SizeConfig.padding6 * 1.0909090909090908)
+                                      .toDouble()),
+                              painter: RPSCustomPainter(),
+                            ),
+                          )
+                        ],
                       ),
-                    ],
-                  )
-                ],
-              )),
+                    )
+                  ],
+                ),
+              ),
               SvgPicture.asset(
                 Assets.floAsset,
                 height: SizeConfig.screenHeight! * 0.1,
               ),
             ],
           ),
-          SizedBox(height: SizeConfig.padding10),
+          SizedBox(height: SizeConfig.padding16),
           Text(
             model.is12 ? model.flo12Highlights : model.flo10Highlights,
             style: TextStyles.sourceSans.body2.colour(UiConstants.primaryColor),
@@ -1118,5 +1182,55 @@ class LBoxAssetCard extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+class RPSCustomPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    Path path_0 = Path();
+    path_0.moveTo(size.width * 0.5184209, size.height);
+    path_0.lineTo(size.width * 0.4815791, size.height);
+    path_0.cubicTo(
+        size.width * 0.4815791,
+        size.height * 0.7342100,
+        size.width * 0.2657891,
+        size.height * 0.5184208,
+        0,
+        size.height * 0.5184208);
+    path_0.lineTo(0, size.height * 0.4815792);
+    path_0.cubicTo(
+        size.width * 0.2657891,
+        size.height * 0.4815792,
+        size.width * 0.4815791,
+        size.height * 0.2657892,
+        size.width * 0.4815791,
+        0);
+    path_0.lineTo(size.width * 0.5184209, 0);
+    path_0.cubicTo(
+        size.width * 0.5184209,
+        size.height * 0.2657892,
+        size.width * 0.7342109,
+        size.height * 0.4815792,
+        size.width,
+        size.height * 0.4815792);
+    path_0.lineTo(size.width, size.height * 0.5184208);
+    path_0.cubicTo(
+        size.width * 0.7342109,
+        size.height * 0.5184208,
+        size.width * 0.5184209,
+        size.height * 0.7342100,
+        size.width * 0.5184209,
+        size.height);
+    path_0.close();
+
+    Paint paint_0_fill = Paint()..style = PaintingStyle.fill;
+    paint_0_fill.color = Colors.white.withOpacity(1.0);
+    canvas.drawPath(path_0, paint_0_fill);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    return true;
   }
 }
