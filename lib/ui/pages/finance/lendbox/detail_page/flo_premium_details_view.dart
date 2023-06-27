@@ -572,50 +572,77 @@ class _FloPremiumDetailsViewState extends State<FloPremiumDetailsView>
                                           color: Colors.white, width: 2)),
                                   margin: EdgeInsets.all(
                                       SizeConfig.pageHorizontalMargins),
-                                  padding: EdgeInsets.all(
-                                      SizeConfig.pageHorizontalMargins),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                  padding: EdgeInsets.all(SizeConfig.padding16),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Text(
-                                        "We’ll be happy to assist",
-                                        style: TextStyles.rajdhaniSB.title5,
-                                      ),
-                                      SizedBox(height: SizeConfig.padding12),
-                                      Row(
-                                        children: [
-                                          Expanded(
-                                            child: Text(
-                                              "Our Customer Support team is ready to help. Click on ASK FELLO to get in contact with us.",
+                                      SizedBox(
+                                        width: SizeConfig.padding200 +
+                                            SizeConfig.padding4,
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              "We’ll be happy to assist",
+                                              style:
+                                                  TextStyles.rajdhaniSB.body1,
+                                            ),
+                                            SizedBox(
+                                                height: SizeConfig.padding12),
+                                            Text(
+                                              "Get in touch with the experts at Fello to assist you in your savings",
                                               style: TextStyles.body3
                                                   .colour(Colors.white),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                      Stack(
+                                        children: [
+                                          SvgPicture.asset(
+                                            'assets/svg/customer_help.svg',
+                                            height: SizeConfig.padding104,
+                                          ),
+                                          Transform.translate(
+                                            offset:
+                                                Offset(0, SizeConfig.padding54),
+                                            child: Align(
+                                              alignment: Alignment.bottomCenter,
+                                              child: OutlinedButton(
+                                                onPressed: () {
+                                                  Haptic.vibrate();
+                                                  AppState.delegate!.appState
+                                                          .currentAction =
+                                                      PageAction(
+                                                    state: PageState.addPage,
+                                                    page:
+                                                        FreshDeskHelpPageConfig,
+                                                  );
+                                                  trackHelpBannerTapped(
+                                                      model.is12);
+                                                },
+                                                style: ButtonStyle(
+                                                    backgroundColor:
+                                                        MaterialStateProperty
+                                                            .all(const Color(
+                                                                0xFF01656B)),
+                                                    side: MaterialStateProperty
+                                                        .all(const BorderSide(
+                                                            color: Colors.white,
+                                                            width: 1.0,
+                                                            style: BorderStyle
+                                                                .solid))),
+                                                child: Text(
+                                                  "ASK FELLO",
+                                                  style: TextStyles
+                                                      .rajdhaniB.body2
+                                                      .colour(Colors.white),
+                                                ),
+                                              ),
                                             ),
                                           ),
-                                          SizedBox(width: SizeConfig.padding10),
-                                          OutlinedButton(
-                                            onPressed: () {
-                                              Haptic.vibrate();
-                                              AppState.delegate!.appState
-                                                  .currentAction = PageAction(
-                                                state: PageState.addPage,
-                                                page: FreshDeskHelpPageConfig,
-                                              );
-                                              trackHelpBannerTapped(model.is12);
-                                            },
-                                            style: ButtonStyle(
-                                                side: MaterialStateProperty.all(
-                                                    const BorderSide(
-                                                        color: Colors.white,
-                                                        width: 1.0,
-                                                        style: BorderStyle
-                                                            .solid))),
-                                            child: Text(
-                                              "ASK FELLO",
-                                              style: TextStyles.rajdhaniB.body2
-                                                  .colour(Colors.white),
-                                            ),
-                                          )
                                         ],
                                       )
                                     ],
@@ -859,7 +886,7 @@ class FloPremiumHeader extends StatelessWidget {
                               BoxShadow(
                                 offset: const Offset(-10, 40),
                                 color:
-                                UiConstants.primaryColor.withOpacity(0.95),
+                                    UiConstants.primaryColor.withOpacity(0.95),
                                 blurRadius: 50,
                               )
                             ],

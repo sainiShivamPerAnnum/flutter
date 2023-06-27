@@ -295,7 +295,7 @@ class FloBasicCard extends StatelessWidget {
                   children: [
                     Expanded(
                       child:
-                          "Get *1 Ticket for every ₹${AppConfig.getValue(AppConfigKey.tambola_cost)}* saved in 8% Flo"
+                          "Get *1 Ticket for every ₹${AppConfig.getValue(AppConfigKey.tambola_cost)}* saved in ${isLendboxOldUser ? 10 : 8}% Flo"
                               .beautify(
                         boldStyle:
                             TextStyles.sourceSansB.body4.colour(Colors.white),
