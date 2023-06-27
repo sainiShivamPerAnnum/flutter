@@ -961,6 +961,13 @@ class BaseUtil extends ChangeNotifier {
     return currentWeekNumber != lastWeekNumber;
   }
 
+  static int calculateRemainingDays(DateTime endDate) {
+    DateTime now = DateTime.now();
+    Duration difference = endDate.difference(now);
+    int remaining = difference.inDays;
+    return remaining;
+  }
+
   int getTicketCountForTransaction(double investment) =>
       (investment / Constants.INVESTMENT_AMOUNT_FOR_TICKET).floor();
 

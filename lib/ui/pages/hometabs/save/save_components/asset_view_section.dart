@@ -52,7 +52,7 @@ class _AssetSectionViewState extends State<AssetSectionView> {
 
   final String _goldSubtitle = "24K Gold  •  99.99% Pure •  100% Secure";
 
-  final String _floSubtitle = "P2P Asset  • 10% Returns • RBI Certified";
+  final String _floSubtitle = "P2P Asset •  Consistent Returns • RBI Certified";
 
   final String __goldDescription =
       "Digital gold is an efficient way of investing in gold. Each unit is backed by 24K 99.9% purity gold.";
@@ -201,6 +201,9 @@ class _AssetSectionViewState extends State<AssetSectionView> {
                                   height: SizeConfig.padding10,
                                 ),
                               ],
+                              SizedBox(
+                                height: SizeConfig.padding10,
+                              ),
                               if (!_isGold) FloPremiumSection(model: model),
                               if (!_isGold) FloBasicCard(model: model),
                               if (!isNewUser) ...[

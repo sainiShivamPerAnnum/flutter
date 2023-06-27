@@ -30,6 +30,7 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
+import 'package:shimmer/shimmer.dart';
 
 class FloPremiumDetailsView extends StatefulWidget {
   final bool is12;
@@ -833,6 +834,8 @@ class FloPremiumHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final daysRemaining = BaseUtil.calculateRemainingDays(DateTime(2023, 9, 1));
+
     return Padding(
       padding:
           EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
@@ -856,7 +859,7 @@ class FloPremiumHeader extends StatelessWidget {
                               BoxShadow(
                                 offset: const Offset(-10, 40),
                                 color:
-                                    UiConstants.primaryColor.withOpacity(0.95),
+                                UiConstants.primaryColor.withOpacity(0.95),
                                 blurRadius: 50,
                               )
                             ],
@@ -897,10 +900,15 @@ class FloPremiumHeader extends StatelessWidget {
                                   borderRadius: BorderRadius.circular(
                                       SizeConfig.roundness12),
                                 ),
-                                child: Text(
-                                  "99 days",
-                                  style: TextStyles.sourceSansB.body3
-                                      .colour(Colors.black),
+                                child: Shimmer.fromColors(
+                                  direction: ShimmerDirection.ltr,
+                                  baseColor: Colors.grey[900]!,
+                                  highlightColor: Colors.grey[100]!,
+                                  child: Text(
+                                    "$daysRemaining days",
+                                    style: TextStyles.sourceSansB.body3
+                                        .colour(Colors.black),
+                                  ),
                                 ),
                               ),
                             ],
