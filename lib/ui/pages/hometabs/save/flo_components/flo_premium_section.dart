@@ -5,6 +5,7 @@ import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/detail_page/flo_premium_details_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/flo_components/flo_permium_card.dart';
 import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/extensions/rich_text_extension.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:shimmer/shimmer.dart';
@@ -67,13 +68,15 @@ class FloPremiumSection extends StatelessWidget {
             ),
             Align(
               alignment: Alignment.topCenter,
-              child: SizedBox(
-                // margin: EdgeInsets.only(
-                //   top: SizeConfig.padding12,),
+              child: Container(
+                margin: EdgeInsets.only(
+                  left: SizeConfig.screenWidth! / 8,
+                ),
                 width: SizeConfig.screenWidth! * 0.5,
                 child: Stack(
                   children: [
                     Container(
+                      // alignment: Alignment.center,
                       padding: EdgeInsets.symmetric(
                           horizontal: SizeConfig.padding12,
                           vertical: SizeConfig.padding2),
@@ -83,17 +86,22 @@ class FloPremiumSection extends StatelessWidget {
                             BorderRadius.circular(SizeConfig.roundness12),
                       ),
                       child: Shimmer.fromColors(
+                        // period: const Duration(seconds: 10),
                         baseColor: Colors.grey[900]!,
                         highlightColor: Colors.grey[100]!,
-                        child: Text(
-                          "Available only for ${daysRemaining} days",
+                        loop: 1,
+                        child:
+                            "Available only for *$daysRemaining days*".beautify(
+                          boldStyle:
+                              TextStyles.sourceSansB.body4.colour(Colors.white),
                           style:
-                              TextStyles.sourceSansB.body3.colour(Colors.black),
+                              TextStyles.sourceSans.body4.colour(Colors.white),
+                          alignment: TextAlign.center,
                         ),
                       ),
                     ),
                     Positioned(
-                      right: 8,
+                      right: 30,
                       child: CustomPaint(
                         size: Size(
                             SizeConfig.padding14,
@@ -103,7 +111,7 @@ class FloPremiumSection extends StatelessWidget {
                       ),
                     ),
                     Positioned(
-                      right: 1,
+                      right: 22,
                       child: CustomPaint(
                         size: Size(
                             SizeConfig.padding8,

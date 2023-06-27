@@ -481,15 +481,15 @@ class _FloPremiumDetailsViewState extends State<FloPremiumDetailsView>
                                 ),
 
                                 SizedBox(height: SizeConfig.padding20),
-                                Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: SizeConfig.padding16),
-                                  child: Text(
-                                    "100% Safe & Secure with Fello",
-                                    style: TextStyles.rajdhaniSB.title4
-                                        .colour(Colors.white),
-                                  ),
-                                ),
+                                // Padding(
+                                //   padding: EdgeInsets.symmetric(
+                                //       vertical: SizeConfig.padding16),
+                                //   child: Text(
+                                //     "100% Safe & Secure with Fello",
+                                //     style: TextStyles.rajdhaniSB.title4
+                                //         .colour(Colors.white),
+                                //   ),
+                                // ),
                                 const SaveAssetsFooter(isFlo: true),
                                 SizedBox(
                                     height: SizeConfig.pageHorizontalMargins),
