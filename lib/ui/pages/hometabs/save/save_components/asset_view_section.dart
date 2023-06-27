@@ -4,14 +4,20 @@ import 'package:carousel_slider/carousel_slider.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/model/portfolio_model.dart';
+import 'package:felloapp/core/model/subscription_models/subscription_model.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/core/service/subscription_service.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/helpers/tnc_text.dart';
 import 'package:felloapp/ui/elements/title_subtitle_container.dart';
 import 'package:felloapp/ui/elements/video_player/app_video_player.dart';
+import 'package:felloapp/ui/pages/finance/autosave/autosave_setup/autosave_process_view.dart';
 import 'package:felloapp/ui/pages/finance/mini_trans_card/mini_trans_card_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/flo_components/flo_basic_card.dart';
 import 'package:felloapp/ui/pages/hometabs/save/flo_components/flo_premium_section.dart';
@@ -334,29 +340,9 @@ class _AssetSectionViewState extends State<AssetSectionView> {
                               SizedBox(
                                 height: SizeConfig.padding4,
                               ),
+                              AssetBottomButtons(type: widget.type),
                               SizedBox(
-                                width: SizeConfig.screenWidth! * 0.8,
-                                // height: SizeConfig.screenHeight! * 0.07,
-                                child: MaterialButton(
-                                    color: Colors.white,
-                                    height: SizeConfig.padding44,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(
-                                          SizeConfig.roundness5),
-                                    ),
-                                    child: Text(
-                                      "SAVE",
-                                      style: TextStyles.rajdhaniB.body1
-                                          .colour(Colors.black),
-                                    ),
-                                    onPressed: () {
-                                      Haptic.vibrate();
-                                      BaseUtil().openRechargeModalSheet(
-                                          investmentType: widget.type);
-                                    }),
-                              ),
-                              SizedBox(
-                                height: SizeConfig.padding16,
+                                height: SizeConfig.padding10,
                               ),
                             ],
                           ),
@@ -449,6 +435,82 @@ class _AssetSectionViewState extends State<AssetSectionView> {
 
   Color get _subTitleColor =>
       _isGold ? UiConstants.kBlogTitleColor : UiConstants.kTabBorderColor;
+}
+
+class AssetBottomButtons extends StatelessWidget {
+  const AssetBottomButtons({
+    super.key,
+    required this.type,
+  });
+
+  final InvestmentType type;
+
+  @override
+  Widget build(BuildContext context) {
+    return Selector<SubService, SubscriptionModel?>(
+      selector: (_, subService) => subService.subscriptionData,
+      builder: (context, state, child) {
+        // state = SubscriptionModel();
+        return SizedBox(
+          width: SizeConfig.screenWidth! * 0.85,
+          child: Row(
+            mainAxisAlignment: state != null
+                ? MainAxisAlignment.center
+                : MainAxisAlignment.spaceBetween,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Expanded(
+                flex: state == null ? 0 : 1,
+                child: MaterialButton(
+                  minWidth: state == null ? SizeConfig.padding156 : null,
+                  color: state != null ? Colors.white : null,
+                  height: SizeConfig.padding44,
+                  shape: RoundedRectangleBorder(
+                    side: const BorderSide(width: 1.5, color: Colors.white),
+                    borderRadius: BorderRadius.circular(SizeConfig.roundness5),
+                  ),
+                  child: Text(
+                    state != null ? "SAVE" : "SAVE ONCE",
+                    style: TextStyles.rajdhaniB.body1
+                        .colour(state != null ? Colors.black : Colors.white),
+                  ),
+                  onPressed: () {
+                    Haptic.vibrate();
+                    BaseUtil().openRechargeModalSheet(investmentType: type);
+                  },
+                ),
+              ),
+              if (state == null)
+                MaterialButton(
+                  minWidth: SizeConfig.padding156,
+                  color: Colors.white,
+                  height: SizeConfig.padding44,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(SizeConfig.roundness5),
+                  ),
+                  child: Text(
+                    "SAVE DAILY",
+                    style: TextStyles.rajdhaniB.body1.colour(Colors.black),
+                  ),
+                  onPressed: () {
+                    Haptic.vibrate();
+                    AppState.delegate!.appState.currentAction = PageAction(
+                      state: PageState.addWidget,
+                      page: AutosaveProcessViewPageConfig,
+                      widget: AutosaveProcessView(
+                        investmentType: type,
+                      ),
+                    );
+                    // BaseUtil().openRechargeModalSheet(
+                    //     investmentType: widget.type);
+                  },
+                ),
+            ],
+          ),
+        );
+      },
+    );
+  }
 }
 
 class _BuildOwnAsset extends StatelessWidget {
@@ -553,61 +615,61 @@ class FloBalanceBriefRow extends StatelessWidget {
                 Row(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   mainAxisAlignment: (mini || leftAlign)
-                          ? MainAxisAlignment.start
-                          : MainAxisAlignment.center,
+                      ? MainAxisAlignment.start
+                      : MainAxisAlignment.center,
+                  children: [
+                    Flexible(
+                      fit: FlexFit.loose,
+                      child: Text(
+                        "₹${BaseUtil.digitPrecision(lead ?? getCurrentValue(tier, portfolio), 2)}",
+                        style: mini
+                            ? TextStyles.sourceSansSB.body0
+                            : TextStyles.sourceSansSB.title4,
+                      ),
+                    ),
+                    Column(
                       children: [
-                        Flexible(
-                          fit: FlexFit.loose,
-                          child: Text(
-                            "₹${BaseUtil.digitPrecision(lead ?? getCurrentValue(tier, portfolio), 2)}",
-                            style: mini
-                                ? TextStyles.sourceSansSB.body0
-                                : TextStyles.sourceSansSB.title4,
-                          ),
-                        ),
-                        Column(
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.end,
                           children: [
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                SizedBox(width: SizeConfig.padding6),
-                                Transform.translate(
-                                  offset: Offset(0, -SizeConfig.padding4),
-                                  child: RotatedBox(
-                                    quarterTurns:
+                            SizedBox(width: SizeConfig.padding6),
+                            Transform.translate(
+                              offset: Offset(0, -SizeConfig.padding4),
+                              child: RotatedBox(
+                                quarterTurns:
                                     getPercValue(tier, portfolio) >= 0 ? 0 : 2,
-                                    child: SvgPicture.asset(
-                                      Assets.arrow,
-                                      width: mini
-                                          ? SizeConfig.iconSize3
-                                          : SizeConfig.iconSize2,
-                                      color: getPercValue(tier, portfolio) >= 0
-                                          ? UiConstants.primaryColor
-                                          : Colors.red,
-                                    ),
-                                  ),
+                                child: SvgPicture.asset(
+                                  Assets.arrow,
+                                  width: mini
+                                      ? SizeConfig.iconSize3
+                                      : SizeConfig.iconSize2,
+                                  color: getPercValue(tier, portfolio) >= 0
+                                      ? UiConstants.primaryColor
+                                      : Colors.red,
                                 ),
-                                Text(
-                                    " ${BaseUtil.digitPrecision(
-                                      getPercValue(tier, portfolio),
-                                      2,
-                                      false,
-                                    )}%",
-                                    style: TextStyles.sourceSans.body3.colour(
-                                        getPercValue(tier, portfolio) >= 0
-                                            ? UiConstants.primaryColor
-                                            : Colors.red)),
-                              ],
+                              ),
                             ),
-                            SizedBox(
-                              height:
-                              mini ? SizeConfig.padding2 : SizeConfig.padding4,
-                            )
+                            Text(
+                                " ${BaseUtil.digitPrecision(
+                                  getPercValue(tier, portfolio),
+                                  2,
+                                  false,
+                                )}%",
+                                style: TextStyles.sourceSans.body3.colour(
+                                    getPercValue(tier, portfolio) >= 0
+                                        ? UiConstants.primaryColor
+                                        : Colors.red)),
                           ],
                         ),
+                        SizedBox(
+                          height:
+                              mini ? SizeConfig.padding2 : SizeConfig.padding4,
+                        )
                       ],
-                    )
+                    ),
                   ],
+                )
+              ],
             ),
           ),
           Expanded(

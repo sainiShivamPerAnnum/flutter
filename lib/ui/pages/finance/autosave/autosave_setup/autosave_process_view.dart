@@ -1,5 +1,6 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/faqTypes.dart';
+import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
@@ -27,7 +28,9 @@ import './autosave_process_slides/autosave_asset_choice_view.dart';
 import './autosave_process_slides/autosave_steps_view.dart';
 
 class AutosaveProcessView extends StatefulWidget {
-  const AutosaveProcessView({Key? key}) : super(key: key);
+  const AutosaveProcessView({Key? key, this.investmentType}) : super(key: key);
+
+  final InvestmentType? investmentType;
 
   @override
   State<AutosaveProcessView> createState() => _AutosaveProcessViewState();
@@ -36,23 +39,23 @@ class AutosaveProcessView extends StatefulWidget {
 class _AutosaveProcessViewState extends State<AutosaveProcessView> {
   @override
   Widget build(BuildContext context) {
-    S locale = S.of(context);
+    // S locale = S.of(context);
     return Selector<SubService, AutosaveState>(
-      selector: (_, _subService) => _subService.autosaveState,
+      selector: (_, subService) => subService.autosaveState,
       builder: (context, autosaveState, child) =>
           BaseView<AutosaveProcessViewModel>(
-            onModelReady: (model) => model.init(),
-            onModelDispose: (model) => model.dump(),
-            builder: (context, model, child) {
-              return Scaffold(
-                backgroundColor: UiConstants.kBackgroundColor,
-                appBar: AppBar(
-                  backgroundColor: UiConstants.kBackgroundColor,
-                  elevation: 0.0,
-                  title: model.currentPage <= 3
-                      ? Text(
-                    "Step ${model.currentPage + 1} of 4",
-                    style: TextStyles.sourceSansL.body3,
+        onModelReady: (model) => model.init(widget.investmentType),
+        onModelDispose: (model) => model.dump(),
+        builder: (context, model, child) {
+          return Scaffold(
+            backgroundColor: UiConstants.kBackgroundColor,
+            appBar: AppBar(
+              backgroundColor: UiConstants.kBackgroundColor,
+              elevation: 0.0,
+              title: model.currentPage <= 3
+                  ? Text(
+                      "Step ${model.currentPage + 1} of 4",
+                      style: TextStyles.sourceSansL.body3,
                   )
                       : Container(),
                   centerTitle: true,

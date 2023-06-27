@@ -394,10 +394,11 @@ class SubService extends ChangeNotifier {
 
   Future<List> getAmountChipsAndCombos({required String freq}) async {
     ApiResponse<List> data = await _getterRepo.getSubCombosAndChips(freq: freq);
-    if (data.isSuccess())
+    if (data.isSuccess()) {
       return data.model!;
-    else
+    } else {
       return defaultChipsAndComboList;
+    }
   }
 
   // Future<List<SubComboModel>> getSipCombos({required String freq}) async {
