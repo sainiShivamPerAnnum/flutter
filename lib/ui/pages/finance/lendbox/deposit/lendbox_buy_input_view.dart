@@ -207,18 +207,6 @@ class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
                                   return;
                                 }
 
-                                // if (widget.model.floAssetType ==
-                                //     Constants.ASSET_TYPE_FLO_FIXED_6) {
-                                //   widget.model.openReinvestBottomSheet();
-                                //   return;
-                                // }
-                                // if (widget.model.floAssetType ==
-                                //         Constants.ASSET_TYPE_FLO_FIXED_3 &&
-                                //     !widget.model.isLendboxOldUser) {
-                                //   widget.model.openReinvestBottomSheet();
-                                //   return;
-                                // }
-
                                 if (!widget.model.isBuyInProgress) {
                                   FocusScope.of(context).unfocus();
                                   widget.model.initiateBuy();
@@ -285,17 +273,17 @@ class FloBuyNavBar extends StatelessWidget {
   String getTitle() {
     if (model.floAssetType == Constants.ASSET_TYPE_FLO_FELXI &&
         model.isLendboxOldUser) {
-      return 'in Flo 10% P.A';
+      return '10% Returns p.a.';
     } else if (model.floAssetType == Constants.ASSET_TYPE_FLO_FELXI &&
         !model.isLendboxOldUser) {
-      return 'in Flo 8% P.A';
+      return '8% Returns p.a.';
     }
 
     if (model.floAssetType == Constants.ASSET_TYPE_FLO_FIXED_6) {
-      return "in Flo 12% P.A";
+      return "12% Returns p.a.";
     }
     if (model.floAssetType == Constants.ASSET_TYPE_FLO_FIXED_3) {
-      return "in Flo 10% P.A";
+      return "10% Returns p.a.";
     }
 
     return "";
