@@ -64,6 +64,7 @@ class LendboxBuyViewModel extends BaseViewModel {
   AssetOptionsModel? assetOptionsModel;
   List<CouponModel>? _couponList;
   int? numberOfTambolaTickets;
+  int tambolaMultiplier = 1;
 
   int? totalTickets;
   int? happyHourTickets;
@@ -240,20 +241,21 @@ class LendboxBuyViewModel extends BaseViewModel {
     List lendboxDetails = AppConfig.getValue(AppConfigKey.lendbox);
 
     if (floAssetType == Constants.ASSET_TYPE_FLO_FELXI) {
-      var data =
-          locator<UserService>().userSegments.contains(Constants.US_FLO_OLD)
-              ? lendboxDetails[2]['minAmountText']
-              : lendboxDetails[3]['minAmountText'];
-      minAmount = BaseUtil.extractIntFromString(data);
+      final int lendboxIndex = isLendboxOldUser ? 2 : 3;
+      final lendboxData = lendboxDetails[lendboxIndex];
+
+      minAmount = BaseUtil.extractIntFromString(lendboxData['minAmountText']);
+      tambolaMultiplier = lendboxData['tambolaMultiplier'] ?? 1;
     }
     if (floAssetType == Constants.ASSET_TYPE_FLO_FIXED_3) {
       minAmount =
           BaseUtil.extractIntFromString(lendboxDetails[1]['minAmountText']);
-      ;
+      tambolaMultiplier = lendboxDetails[1]['tambolaMultiplier'] ?? 1;
     }
     if (floAssetType == Constants.ASSET_TYPE_FLO_FIXED_6) {
       minAmount =
           BaseUtil.extractIntFromString(lendboxDetails[0]['minAmountText']);
+      tambolaMultiplier = lendboxDetails[0]['tambolaMultiplier'] ?? 1;
     }
   }
 
@@ -465,32 +467,31 @@ class LendboxBuyViewModel extends BaseViewModel {
             : null;
 
     final num minAmount =
-        num.tryParse(happyHourModel?.data?.minAmount.toString() ?? "0") ?? 0;
+        num.tryParse(happyHourModel?.data?.minAmount.toString() ?? '0') ?? 0;
 
     if (parsedFloAmount < tambolaCost) {
       totalTickets = 0;
       showInfoIcon = false;
-      return "";
+      return '';
     }
 
     numberOfTambolaTickets = parsedFloAmount ~/ tambolaCost;
-    totalTickets = numberOfTambolaTickets;
+    totalTickets = numberOfTambolaTickets! * tambolaMultiplier;
 
-    showHappyHour
-        ? happyHourTickets = (happyHourModel?.data != null &&
-                happyHourModel?.data?.rewards?[0].type == 'tt')
-            ? happyHourModel?.data!.rewards![0].value
-            : null
-        : happyHourTickets = null;
+    happyHourTickets =
+        showHappyHour && happyHourModel?.data?.rewards?[0].type == 'tt'
+            ? happyHourModel!.data!.rewards![0].value
+            : null;
 
     if (parsedFloAmount >= minAmount && happyHourTickets != null) {
-      totalTickets = numberOfTambolaTickets! + happyHourTickets!;
+      totalTickets =
+          (numberOfTambolaTickets! * tambolaMultiplier) + happyHourTickets!;
       showInfoIcon = true;
     } else {
       showInfoIcon = false;
     }
 
-    return "+$totalTickets Tickets";
+    return '+$totalTickets Tickets';
   }
 
   onChipClick(int index) {
