@@ -14,7 +14,7 @@ import 'package:felloapp/feature/tambola/tambola.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_buy/augmont_buy_vm.dart';
-import 'package:felloapp/ui/pages/hometabs/save/flo_components/flo_permium_card.dart';
+import 'package:felloapp/ui/pages/finance/lendbox/detail_page/flo_premium_details_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/save_banner.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/ui/pages/static/gold_rate_card.dart';
@@ -28,6 +28,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 
 class AssetSelectionPage extends StatelessWidget {
   const AssetSelectionPage(
@@ -195,7 +196,7 @@ class FloPlanWidget extends StatelessWidget {
               // ),
             ],
           ),
-          SizedBox(height: SizeConfig.padding16),
+          SizedBox(height: SizeConfig.padding26),
           FelloFloPrograms(
             percentage: '12%',
             isRecommended: true,
@@ -206,7 +207,7 @@ class FloPlanWidget extends StatelessWidget {
             isSkipMl: isSkipMl,
             promoText: "Get *5X tickets* on saving",
           ),
-          SizedBox(width: SizeConfig.padding12),
+          // SizedBox(height: SizeConfig.padding12),
           FelloFloPrograms(
             percentage: '10%',
             isRecommended: false,
@@ -221,8 +222,9 @@ class FloPlanWidget extends StatelessWidget {
                 : Constants.ASSET_TYPE_FLO_FIXED_3,
             amount: amount,
             isSkipMl: isSkipMl,
+            promoText: isLendboxOldUser ? null : "Get *3X tickets* on saving",
           ),
-          SizedBox(width: SizeConfig.padding12),
+          // SizedBox(height: SizeConfig.padding12),
           if (!isLendboxOldUser)
             FelloFloPrograms(
               percentage: '8%',
@@ -392,29 +394,10 @@ class FelloFloPrograms extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.end,
-      mainAxisSize: MainAxisSize.min,
+    final daysRemaining = BaseUtil.calculateRemainingDays(DateTime(2023, 9, 1));
+
+    return Stack(
       children: [
-        if (isRecommended)
-          Container(
-            padding: EdgeInsets.symmetric(
-              horizontal: SizeConfig.padding8,
-              vertical: SizeConfig.padding2,
-            ),
-            decoration: const BoxDecoration(
-              color: Color(0xff62E3C4),
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(5),
-                topRight: Radius.circular(5),
-              ),
-            ),
-            child: Text(
-              'Recommended',
-              style: TextStyles.sourceSansSB.body5.colour(Colors.black),
-            ),
-          ),
-        // if (!isRecommended) const Spacer(),
         GestureDetector(
           onTap: () {
             BaseUtil.openFloBuySheet(
@@ -468,7 +451,7 @@ class FelloFloPrograms extends StatelessWidget {
                             children: [
                               Text(
                                 percentage,
-                                style: TextStyles.rajdhaniSB.title2
+                                style: TextStyles.rajdhaniSB.title3
                                     .colour(Colors.white.withOpacity(0.8)),
                                 textAlign: TextAlign.center,
                               ),
@@ -487,19 +470,21 @@ class FelloFloPrograms extends StatelessWidget {
                               ),
                             ],
                           ),
-                          Row(
-                            children: [
-                              FloPremiumTierChip(value: chipString1),
-                              SizedBox(width: SizeConfig.padding4),
-                              FloPremiumTierChip(value: chipString2),
-                            ],
-                          ),
+                          Text(chipString1, style: TextStyles.sourceSans.body4)
                         ],
                       ),
-                      SvgPicture.asset(
-                        'assets/svg/Arrow_dotted.svg',
-                        height: SizeConfig.padding24,
-                        width: SizeConfig.padding24,
+                      Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          SvgPicture.asset(
+                            'assets/svg/Arrow_dotted.svg',
+                            height: SizeConfig.padding24,
+                            width: SizeConfig.padding24,
+                          ),
+                          SizedBox(height: SizeConfig.padding12),
+                          Text(chipString2, style: TextStyles.sourceSans.body4)
+                        ],
                       ),
                     ],
                   ),
@@ -507,7 +492,7 @@ class FelloFloPrograms extends StatelessWidget {
                 if (promoText != null && promoText!.isNotEmpty)
                   Container(
                     padding: EdgeInsets.symmetric(
-                      vertical: SizeConfig.padding4,
+                      vertical: SizeConfig.padding6,
                     ),
                     decoration: ShapeDecoration(
                       // color: const Color(0xFF246F74),
@@ -539,6 +524,68 @@ class FelloFloPrograms extends StatelessWidget {
             ),
           ),
         ),
+        if (isRecommended)
+          Transform.translate(
+            offset: Offset(0, -SizeConfig.padding12),
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                margin: EdgeInsets.only(
+                  left: SizeConfig.screenWidth! / 8,
+                ),
+                width: SizeConfig.screenWidth! * 0.5,
+                child: Stack(
+                  children: [
+                    Container(
+                      // alignment: Alignment.center,
+                      padding: EdgeInsets.symmetric(
+                          horizontal: SizeConfig.padding12,
+                          vertical: SizeConfig.padding2),
+                      decoration: BoxDecoration(
+                        color: const Color(0xff62E3C4),
+                        borderRadius:
+                            BorderRadius.circular(SizeConfig.roundness12),
+                      ),
+                      child: Shimmer.fromColors(
+                        // period: const Duration(seconds: 10),
+                        baseColor: Colors.grey[900]!,
+                        highlightColor: Colors.grey[100]!,
+                        loop: 1,
+                        child:
+                            "Available only for *$daysRemaining days*".beautify(
+                          boldStyle:
+                              TextStyles.sourceSansB.body4.colour(Colors.white),
+                          style:
+                              TextStyles.sourceSans.body4.colour(Colors.white),
+                          alignment: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      right: 30,
+                      child: CustomPaint(
+                        size: Size(
+                            SizeConfig.padding14,
+                            (SizeConfig.padding14 * 1.0909090909090908)
+                                .toDouble()),
+                        painter: StarCustomPainter(),
+                      ),
+                    ),
+                    Positioned(
+                      right: 22,
+                      child: CustomPaint(
+                        size: Size(
+                            SizeConfig.padding8,
+                            (SizeConfig.padding8 * 1.0909090909090908)
+                                .toDouble()),
+                        painter: StarCustomPainter(),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
+          ),
       ],
     );
   }
