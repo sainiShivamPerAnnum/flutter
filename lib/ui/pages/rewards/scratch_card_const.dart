@@ -80,4 +80,34 @@ class ScratchCardConstants {
         };
     }
   }
+
+  static String getBadges(String tag) {
+    switch (tag) {
+      case dailyBonus:
+      case sevenDayChamp:
+        return "assets/svg/7_day_champ.svg";
+      case tambolaTitan:
+        return "assets/svg/ticket_titan.svg";
+      case explorer:
+        return "assets/svg/explorer.svg";
+      case welcomeFello:
+        return "assets/svg/7_day_champ.svg";
+      case whatAFello:
+        return "assets/svg/What_a_Fello.svg";
+      case savingsMarvel:
+        return "assets/svg/Savings_Marvel.svg";
+      case happyFello:
+        return "assets/svg/Happy_Fello.svg";
+      case quizMaster:
+        return "assets/svg/Quiz_Master.svg";
+      case referralNinja:
+        return "assets/svg/Referral_Ninja.svg";
+      case gamingLegend:
+        return "assets/svg/Gaming_Legend.svg";
+      case general:
+        return "assets/svg/ticket_titan.svg";
+      default:
+        return "assets/svg/ticket_titan.svg";
+    }
+  }
 }

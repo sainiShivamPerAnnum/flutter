@@ -18,6 +18,7 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:scratcher/scratcher.dart';
 
@@ -147,7 +148,7 @@ class GTDetailedView extends StatelessWidget {
           ),
           if (ticket.tag != null &&
               (ticket.tag?.isNotEmpty ?? false) &&
-              ticket.tag != ScratchCardConstants.general)
+              ticket.tag == ScratchCardConstants.general)
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -175,7 +176,11 @@ class GTDetailedView extends StatelessWidget {
                 Container(
                   height: SizeConfig.padding90,
                   width: 2,
-                  color: Colors.white,
+                  // color: Colors.white,
+                  child: SvgPicture.asset(
+                    ScratchCardConstants.getBadges(ticket.tag!),
+                    fit: BoxFit.fitHeight,
+                  ),
                 ),
 
                 SizedBox(
