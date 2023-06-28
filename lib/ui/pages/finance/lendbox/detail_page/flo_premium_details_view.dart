@@ -369,116 +369,7 @@ class _FloPremiumDetailsViewState extends State<FloPremiumDetailsView>
                                   textAlign: TextAlign.center,
                                 ),
                                 SizedBox(height: SizeConfig.padding24),
-                                SizedBox(
-                                  height: SizeConfig.padding140,
-                                  child: ListView.builder(
-                                    itemCount: 3,
-                                    // shrinkWrap: true  ,
-                                    scrollDirection: Axis.horizontal,
-                                    itemBuilder:
-                                        (BuildContext context, int index) {
-                                      return Container(
-                                        width: SizeConfig.padding300,
-                                        margin: EdgeInsets.only(
-                                            left: SizeConfig.padding16),
-                                        height: SizeConfig.padding140,
-                                        decoration: ShapeDecoration(
-                                          // color: const Color(0xFF191919),
-                                          shape: RoundedRectangleBorder(
-                                              borderRadius:
-                                                  BorderRadius.circular(8)),
-                                        ),
-                                        child: Row(
-                                          children: [
-                                            ClipRRect(
-                                              borderRadius:
-                                                  const BorderRadius.only(
-                                                topLeft: Radius.circular(8),
-                                                bottomLeft: Radius.circular(8),
-                                              ),
-                                              clipBehavior: Clip.hardEdge,
-                                              child: Image.network(
-                                                  'https://picsum.photos/140'),
-                                            ),
-                                            Stack(
-                                              children: [
-                                                Container(
-                                                  decoration:
-                                                      const BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.only(
-                                                      topRight:
-                                                          Radius.circular(8),
-                                                      bottomRight:
-                                                          Radius.circular(8),
-                                                    ),
-                                                  ),
-                                                  child: ClipRRect(
-                                                    borderRadius:
-                                                        const BorderRadius.only(
-                                                      topRight:
-                                                          Radius.circular(8),
-                                                      bottomRight:
-                                                          Radius.circular(8),
-                                                    ),
-                                                    clipBehavior: Clip.hardEdge,
-                                                    child: Image.asset(
-                                                      'assets/svg/comma.png',
-                                                      fit: BoxFit.contain,
-                                                    ),
-                                                  ),
-                                                ),
-                                                Positioned(
-                                                  left: 15,
-                                                  top: 10,
-                                                  child: Column(
-                                                    mainAxisSize:
-                                                        MainAxisSize.min,
-                                                    crossAxisAlignment:
-                                                        CrossAxisAlignment
-                                                            .start,
-                                                    children: [
-                                                      Text(
-                                                        "Arun Sharma, 27",
-                                                        style: TextStyles
-                                                            .sourceSansSB.body3
-                                                            .colour(
-                                                                Colors.white),
-                                                      ),
-                                                      SizedBox(
-                                                          height: SizeConfig
-                                                              .padding8),
-                                                      Padding(
-                                                        padding: EdgeInsets.only(
-                                                            right: SizeConfig
-                                                                .padding12),
-                                                        child: SizedBox(
-                                                          width: SizeConfig
-                                                              .padding152,
-                                                          child: Text(
-                                                            "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sollicitudin ac mattis tellus consequat sit et sagittis, am..",
-                                                            style: TextStyles
-                                                                .sourceSans
-                                                                .body4
-                                                                .colour(Colors
-                                                                    .white),
-                                                            maxLines: 5,
-                                                            textAlign:
-                                                                TextAlign.left,
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                )
-                                              ],
-                                            )
-                                          ],
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                ),
+                                FloTestomonials(),
 
                                 SizedBox(height: SizeConfig.padding20),
                                 // Padding(
@@ -851,6 +742,126 @@ class _FloPremiumDetailsViewState extends State<FloPremiumDetailsView>
   }
 }
 
+class FloTestomonials extends StatelessWidget {
+  FloTestomonials({
+    super.key,
+  });
+
+  final Map<String, String> testimonials = {
+    "Akash mahesh":
+        "Fello has completely changed the way I save money. I now earn interest on saving money and save more to play tambola and win rewards. The app has truly motimvated me to save more. Highly recommend it to everyone",
+    "Vinay Kumar":
+        "I wanted to build a habit of saving money and Fello made it possible. It is a win win situation where I save and invest money and then play Tambola and get chance for getting more rewards",
+    "Rohit":
+        "Fello has taken monotony out of saving money. It is very easy to use. The addition of Tambola to a savings app is a very good idea as it makes saving money rewarding and fun. I have personally won rewards when playing Tambola"
+  };
+
+  @override
+  Widget build(BuildContext context) {
+    List<String> shuffledKeys = testimonials.keys.toList()..shuffle();
+
+    return SizedBox(
+      height: SizeConfig.padding160,
+      child: ListView.builder(
+        itemCount: testimonials.length,
+        scrollDirection: Axis.horizontal,
+        itemBuilder: (BuildContext context, int index) {
+          String name = shuffledKeys[index];
+          String? testimonial = testimonials[name];
+
+          return Container(
+            width: SizeConfig.padding300,
+            margin: EdgeInsets.only(left: SizeConfig.padding16),
+            height: SizeConfig.padding160,
+            decoration: ShapeDecoration(
+              // color: const Color(0xFF191919),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8)),
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  flex: 2,
+                  child: ClipRRect(
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(8),
+                      bottomLeft: Radius.circular(8),
+                    ),
+                    clipBehavior: Clip.hardEdge,
+                    child: Image.network(
+                      'https://picsum.photos/140',
+                      fit: BoxFit.fitHeight,
+                      height: SizeConfig.padding160,
+                    ),
+                  ),
+                ),
+                Expanded(
+                  flex: 3,
+                  child: Stack(
+                    children: [
+                      Container(
+                        decoration: const BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(8),
+                            bottomRight: Radius.circular(8),
+                          ),
+                        ),
+                        child: ClipRRect(
+                          borderRadius: const BorderRadius.only(
+                            topRight: Radius.circular(8),
+                            bottomRight: Radius.circular(8),
+                          ),
+                          clipBehavior: Clip.hardEdge,
+                          child: Image.asset(
+                            'assets/svg/comma.png',
+                            fit: BoxFit.fitHeight,
+                            height: SizeConfig.padding160,
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                        left: 15,
+                        top: 10,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              name,
+                              style: TextStyles.sourceSansSB.body3
+                                  .colour(Colors.white),
+                            ),
+                            SizedBox(height: SizeConfig.padding8),
+                            Padding(
+                              padding:
+                                  EdgeInsets.only(right: SizeConfig.padding12),
+                              child: SizedBox(
+                                width: SizeConfig.padding152,
+                                child: Text(
+                                  testimonial ?? "",
+                                  style: TextStyles.sourceSans.body4
+                                      .colour(Colors.white),
+                                  maxLines: 5,
+                                  overflow: TextOverflow.ellipsis,
+                                  textAlign: TextAlign.left,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                )
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
 class FloPremiumHeader extends StatelessWidget {
   final FloPremiumDetailsViewModel model;
 
@@ -928,9 +939,10 @@ class FloPremiumHeader extends StatelessWidget {
                                       SizeConfig.roundness12),
                                 ),
                                 child: Shimmer.fromColors(
-                                  direction: ShimmerDirection.ltr,
+                                  period: const Duration(milliseconds: 2500),
                                   baseColor: Colors.grey[900]!,
                                   highlightColor: Colors.grey[100]!,
+                                  loop: 3,
                                   child: Text(
                                     "$daysRemaining days",
                                     style: TextStyles.sourceSansB.body3
