@@ -334,7 +334,6 @@ class ReferralService extends ChangeNotifier {
       );
 
       if (_flag) {
-        //TODO: REFRESH ROOT CALL
         _logger.d('Rewards added');
       }
     }

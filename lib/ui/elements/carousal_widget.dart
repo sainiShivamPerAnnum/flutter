@@ -35,10 +35,9 @@ class _CarousalWidgetState extends State<CarousalWidget> {
 
   @override
   void initState() {
-    // TODO: implement initState
-    WidgetsBinding.instance.addPostFrameCallback(((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       nextPage();
-    }));
+    });
 
     super.initState();
   }

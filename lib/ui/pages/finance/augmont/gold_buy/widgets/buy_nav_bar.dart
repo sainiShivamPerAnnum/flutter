@@ -1,4 +1,6 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/app_config_keys.dart';
+import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_buy/augmont_buy_vm.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_buy/widgets/view_breakdown.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
@@ -54,8 +56,10 @@ class BuyNavBar extends StatelessWidget {
                       isBarrierDismissible: true,
                       backgroundColor: const Color(0xff1A1A1A),
                       addToScreenStack: true,
-                      content: ViewBreakdown(
+                      isScrollControlled: true,
+                      content: GoldBreakdownView(
                         model: model,
+                        showPsp: false,
                       ),
                     );
                   },
@@ -99,7 +103,78 @@ class BuyNavBar extends StatelessWidget {
                     ? AppPositiveBtn(
                         width: SizeConfig.screenWidth! * 0.22,
                         height: SizeConfig.screenWidth! * 0.12,
-                        onPressed: () => onTap(),
+                        onPressed: () {
+                          if (model.isIntentFlow) {
+                            BaseUtil.openModalBottomSheet(
+                              isBarrierDismissible: true,
+                              backgroundColor: const Color(0xff1A1A1A),
+                              addToScreenStack: true,
+                              isScrollControlled: true,
+                              content: GoldBreakdownView(
+                                model: model,
+                                //TODO: check if breakdown needs to be shown on psp options (A/B testing)
+                                showBreakDown: AppConfig.getValue(
+                                    AppConfigKey.payment_brief_view),
+                              ),
+                            );
+                          } else {
+                            onTap();
+                          }
+                        },
+
+                        // () {
+                        //   log("Reached here");
+
+                        //   UpiPay.getInstalledUpiApplications(
+                        //           statusType:
+                        //               UpiApplicationDiscoveryAppStatusType.all)
+                        //       .then(
+                        //     (value) => //log("${value.length}")
+                        //         BaseUtil.openModalBottomSheet(
+                        //       isBarrierDismissible: true,
+                        //       addToScreenStack: true,
+                        //       isScrollControlled: true,
+                        //       // enableDrag: true,
+                        //       hapticVibrate: true,
+                        //       content: WillPopScope(
+                        //         onWillPop: () async {
+                        //           AppState.removeOverlay();
+                        //           return Future.value(true);
+                        //         },
+                        //         child: Padding(
+                        //           padding: EdgeInsets.all(
+                        //               SizeConfig.pageHorizontalMargins),
+                        //     child: GridView.builder(
+                        //         physics:
+                        //             const NeverScrollableScrollPhysics(),
+                        //         gridDelegate:
+                        //             const SliverGridDelegateWithFixedCrossAxisCount(
+                        //           crossAxisCount: 3,
+                        //           mainAxisSpacing: 2,
+                        //           crossAxisSpacing: 2,
+                        //         ),
+                        //         itemBuilder: (ctx, i) {
+                        //           return Column(
+                        //             children: [
+                        //               value[i].iconImage(
+                        //                 SizeConfig.padding44,
+                        //               ),
+                        //               const SizedBox(height: 4),
+                        //               Text(
+                        //                 value[i].upiApplication.appName,
+                        //                 style: TextStyles
+                        //                     .sourceSansSB.body3
+                        //                     .colour(Colors.white),
+                        //               )
+                        //             ],
+                        //           );
+                        //         }),
+                        //   ),
+                        // ),
+                        //     ),
+                        //   );
+                        // },
+                        // () => onTap(),
                         btnText: 'Save')
                     : AppNegativeBtn(
                         btnText: 'Save',

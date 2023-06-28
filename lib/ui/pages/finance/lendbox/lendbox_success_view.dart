@@ -29,7 +29,7 @@ class LendboxSuccessView extends StatelessWidget {
 
   void showGtIfAvailable() {
     if (transactionType == TransactionType.DEPOSIT) {
-      _txnService!.showGtIfAvailable();
+      _txnService.showGtIfAvailable();
     }
   }
 
@@ -73,7 +73,7 @@ class LendboxSuccessView extends StatelessWidget {
                       fit: BoxFit.cover,
                     ),
                   ),
-                  if (_txnService!.currentTxnAmount! > 0)
+                  if (_txnService.currentTxnAmount! > 0)
                     Align(
                       alignment: Alignment.centerLeft,
                       child: Container(
@@ -88,7 +88,7 @@ class LendboxSuccessView extends StatelessWidget {
                         ),
                       ),
                     ),
-                  if (_txnService!.currentTxnScratchCardCount > 0)
+                  if (_txnService.currentTxnScratchCardCount > 0)
                     Align(
                       alignment: Alignment.centerRight,
                       child: Container(
@@ -103,7 +103,7 @@ class LendboxSuccessView extends StatelessWidget {
                         ),
                       ),
                     ),
-                  if (_txnService!.currentTxnTambolaTicketsCount > 0)
+                  if (_txnService.currentTxnTambolaTicketsCount > 0)
                     Align(
                       alignment: Alignment.bottomCenter,
                       child: Container(
@@ -122,13 +122,13 @@ class LendboxSuccessView extends StatelessWidget {
               style: TextStyles.rajdhaniB.title2,
             ),
             SizedBox(height: SizeConfig.padding12),
-            if (_txnService?.transactionReponseModel?.data?.txnDisplayMsg
+            if (_txnService.transactionResponseModel?.data?.txnDisplayMsg
                     ?.isNotEmpty ??
                 false)
               SizedBox(
                 width: SizeConfig.screenWidth! * 0.8,
                 child: Text(
-                    _txnService?.transactionReponseModel?.data?.txnDisplayMsg ??
+                    _txnService.transactionResponseModel?.data?.txnDisplayMsg ??
                         "",
                     textAlign: TextAlign.center,
                     style: TextStyles.sourceSans.body2.setOpacity(0.7)),
@@ -179,7 +179,7 @@ class LendboxSuccessView extends StatelessWidget {
                                         .colour(UiConstants.kTextColor2)),
                                 SizedBox(height: SizeConfig.padding16),
                                 Text(
-                                  "₹ ${_txnService!.currentTxnAmount!.toStringAsFixed(2)}",
+                                  "₹ ${_txnService.currentTxnAmount!.toStringAsFixed(2)}",
                                   style: TextStyles.rajdhaniB.title3,
                                 ),
                                 SizedBox(
@@ -208,7 +208,7 @@ class LendboxSuccessView extends StatelessWidget {
                               children: [
                                 Text(
                                   _txnService
-                                              ?.transactionReponseModel
+                                              .transactionResponseModel
                                               ?.data
                                               ?.floDepositDetails
                                               ?.maturityDate !=
@@ -219,12 +219,12 @@ class LendboxSuccessView extends StatelessWidget {
                                       .colour(UiConstants.kTextColor2),
                                 ),
                                 SizedBox(height: SizeConfig.padding16),
-                                _txnService?.transactionReponseModel?.data
+                                _txnService.transactionResponseModel?.data
                                             ?.floDepositDetails?.maturityDate !=
                                         null
                                     ? Text(
                                         getFundType(_txnService
-                                            ?.transactionReponseModel
+                                            .transactionResponseModel
                                             ?.data
                                             ?.floDepositDetails
                                             ?.fundType),
@@ -245,7 +245,7 @@ class LendboxSuccessView extends StatelessWidget {
                       ],
                     ),
                   ),
-                  if (_txnService?.transactionReponseModel?.data
+                  if (_txnService.transactionResponseModel?.data
                           ?.floDepositDetails?.maturityDate !=
                       null)
                     Padding(
@@ -253,14 +253,14 @@ class LendboxSuccessView extends StatelessWidget {
                           horizontal: SizeConfig.pageHorizontalMargins,
                           vertical: SizeConfig.padding6),
                       child: Text(
-                        _txnService?.transactionReponseModel?.data
+                        _txnService.transactionResponseModel?.data
                                 ?.floDepositDetails?.maturityDate ??
                             "",
                         style: TextStyles.sourceSans.body2
                             .colour(UiConstants.kFAQsAnswerColor),
                       ),
                     ),
-                  if (_txnService?.transactionReponseModel?.data
+                  if (_txnService.transactionResponseModel?.data
                           ?.floDepositDetails?.maturityString !=
                       null)
                     Container(
@@ -278,7 +278,7 @@ class LendboxSuccessView extends StatelessWidget {
                           horizontal: SizeConfig.pageHorizontalMargins,
                           vertical: SizeConfig.padding6),
                       child: Text(
-                        _txnService?.transactionReponseModel?.data
+                        _txnService.transactionResponseModel?.data
                                 ?.floDepositDetails?.maturityString ??
                             "",
                         style: TextStyles.sourceSans.body2.colour(Colors.white),
@@ -300,25 +300,25 @@ class LendboxSuccessView extends StatelessWidget {
                       title: locale.felloTokens,
                       tooltip: locale.winChipsTitle1,
                       asset: Assets.token,
-                      qty: _txnService!.currentTxnAmount!.toInt()),
-                  if (_txnService!.currentTxnScratchCardCount > 0)
+                      qty: _txnService.currentTxnAmount!.toInt()),
+                  if (_txnService.currentTxnScratchCardCount > 0)
                     SizedBox(width: SizeConfig.padding12),
-                  if (_txnService!.currentTxnScratchCardCount > 0)
+                  if (_txnService.currentTxnScratchCardCount > 0)
                     WinningChips(
-                        title: _txnService!.currentTxnScratchCardCount > 1
+                        title: _txnService.currentTxnScratchCardCount > 1
                             ? locale.scratchCards
                             : locale.scratchCard,
                         tooltip: locale.winChipsTitle2,
                         asset: Assets.unredemmedScratchCardBG,
-                        qty: _txnService!.currentTxnScratchCardCount),
-                  if (_txnService!.currentTxnTambolaTicketsCount > 0)
+                        qty: _txnService.currentTxnScratchCardCount),
+                  if (_txnService.currentTxnTambolaTicketsCount > 0)
                     SizedBox(width: SizeConfig.padding12),
-                  if (_txnService!.currentTxnTambolaTicketsCount > 0)
+                  if (_txnService.currentTxnTambolaTicketsCount > 0)
                     WinningChips(
                       title: 'Ticket',
                       tooltip: '',
                       asset: Assets.singleTmbolaTicket,
-                      qty: _txnService!.currentTxnTambolaTicketsCount.toInt(),
+                      qty: _txnService.currentTxnTambolaTicketsCount.toInt(),
                     )
                 ],
               ),

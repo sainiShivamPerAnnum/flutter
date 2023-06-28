@@ -359,7 +359,6 @@ class _SaveContainerState extends State<SaveContainer> {
     return Color(0xff173B3F);
   }
 
-  //TODO: Get a border color for lendbox container
   Color get borderColor =>
       widget.isGold ? Color(0xff93B5FE) : Color(0xff3CB9A4);
 }

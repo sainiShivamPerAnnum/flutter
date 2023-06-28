@@ -170,37 +170,6 @@ class GTInstantViewModel extends BaseViewModel {
     return token;
   }
 
-  // initDepositSuccessAnimation(double amount) async {
-  //   coinsCount = _coinService.flcBalance - amount.toInt();
-  //   isInvestmentAnimationInProgress = true;
-  //   notifyListeners();
-  //   Future.delayed(Duration(milliseconds: 2500), () {
-  //     isInvestmentAnimationInProgress = false;
-  //     notifyListeners();
-  //     initCoinAnimation(amount);
-  //   });
-  // }
-
-  // initCoinAnimation(double amount) async {
-  //   await Future.delayed(Duration(milliseconds: 100), () {
-  //     isCoinAnimationInProgress = true;
-  //     lottieAnimationController.forward();
-  //     coinsCount = _coinService.flcBalance;
-  //     notifyListeners();
-  //   });
-  //   // await Future.delayed(Duration(seconds: 2), () {
-  //   //   coinContentOpacity = 0;
-  //   //   notifyListeners();
-  //   // });
-  //   await Future.delayed(Duration(milliseconds: 2500), () {
-  //     isCoinAnimationInProgress = false;
-  //     notifyListeners();
-  //   });
-  //   await Future.delayed(Duration(milliseconds: 100), () {
-  //     initNormalFlow();
-  //   });
-  // }
-
   initNormalFlow() {
     Future.delayed(Duration(milliseconds: 500), () {
       coinsCount = _coinService!.flcBalance;
@@ -209,39 +178,3 @@ class GTInstantViewModel extends BaseViewModel {
     });
   }
 }
-
-// class AnimatedCount extends ImplicitlyAnimatedWidget {
-//   AnimatedCount({
-//     Key? key,
-//     required this.count,
-//     required Duration duration,
-//     Curve curve = Curves.linear,
-//   }) : super(duration: duration, curve: curve, key: key);
-
-//   final num count;
-
-//   @override
-//   ImplicitlyAnimatedWidgetState<ImplicitlyAnimatedWidget> createState() {
-//     return _AnimatedCountState();
-//   }
-// }
-
-// class _AnimatedCountState extends AnimatedWidgetBaseState<AnimatedCount> {
-//   IntTween? _intCount;
-//   Tween<double?>? _doubleCount;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return widget.count is int
-//         ? Text(
-//             _intCount!.evaluate(animation).toString(),
-//             style: TextStyles.body1.bold,
-//           )
-//         : Text(_doubleCount!.evaluate(animation)!.toStringAsFixed(1));
-//   }
-
-//   @override
-//   void forEachTween(TweenVisitor visitor) {
-//     // TODO: implement forEachTween
-//   }
-// }

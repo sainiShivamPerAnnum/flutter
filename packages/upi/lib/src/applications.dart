@@ -58,7 +58,7 @@ class UpiApplication {
     androidPackageName: 'com.phonepe.app.preprod',
     iosBundleId: 'com.phonepe.PhonePeApp.preprod',
     appName: 'PhonePe Preprod',
-    discoveryCustomScheme: 'phonepe preprod',
+    discoveryCustomScheme: 'phonepepreprod',
   );
 
   /// Paytm
