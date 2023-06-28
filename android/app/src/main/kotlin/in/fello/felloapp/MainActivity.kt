@@ -32,14 +32,13 @@ import android.appwidget.AppWidgetManager
 import android.content.ComponentName
 
 
-
-class MainActivity : FlutterFragmentActivity()  {
+class MainActivity : FlutterFragmentActivity() {
     private val CHANNEL = "fello.in/dev/notifications/channel/tambola"
     private val DEVICEDATACHANNEL = "methodChannel/deviceData"
     private val UPIINTENTCHANNEL = "methodChannel/upiIntent"
-    private val getUpiApps="getUpiApps"
-    private val intiateTransaction="initiateTransaction"
-    private  var res: MethodChannel.Result?=null
+    private val getUpiApps = "getUpiApps"
+    private val intiateTransaction = "initiateTransaction"
+    private var res: MethodChannel.Result? = null
     private val successRequestCode = 101
     private lateinit var paymentMethodChannel:MethodChannel
     private lateinit var context:Context
@@ -91,13 +90,12 @@ class MainActivity : FlutterFragmentActivity()  {
             else if(call.method == "getAndroidId"){
                 result.success(getAndroidId())
             }
-            else if(call.method == "isDeviceRooted"){
+            else if (call.method == "isDeviceRooted") {
                 result.success(RootCheckService().isDeviceRooted())
-            }else if(call.method == "updateHomeScreenWidget"){
+            } else if (call.method == "updateHomeScreenWidget") {
                 result.success(updateHomeScreenWidget())
-            }
-            else {
-              result.notImplemented()
+            } else {
+                result.notImplemented()
             }
           }
 
@@ -163,10 +161,10 @@ class MainActivity : FlutterFragmentActivity()  {
         }
         return phonePeVersionCode
     }
-    
+
     @SuppressLint("HardwareIds")
     private fun getAndroidId(): String? {
-        Log.d("MainActivity","Calling AndroidID");
+        Log.d("MainActivity", "Calling AndroidID");
         return Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID);
     }
 
@@ -176,7 +174,7 @@ class MainActivity : FlutterFragmentActivity()  {
         val appWidgetManager = AppWidgetManager.getInstance(this)
         val widgetProvider = ComponentName(applicationContext, MyWidgetProvider::class.java)
         val appWidgetIds = appWidgetManager.getAppWidgetIds(widgetProvider)
-        
+
         // Update the widget content and notify changes
         for (appWidgetId in appWidgetIds) {
             val views = RemoteViews(context.packageName, R.layout.balance_widget_layout)
@@ -191,14 +189,15 @@ class MainActivity : FlutterFragmentActivity()  {
     }
 
     @SuppressLint("QueryPermissionsNeeded")
-    private fun getInstalledApplications(): ArrayList<HashMap<String,Any?>> {
-     try {
-       val packageManager = context.packageManager
-       val installedApps = packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
-       val userApps = installedApps.filter {
-           (it.flags and ApplicationInfo.FLAG_SYSTEM) != ApplicationInfo.FLAG_SYSTEM
-       }
-       val apps: ArrayList<HashMap<String,Any?>>  = ArrayList()
+    private fun getInstalledApplications(): ArrayList<HashMap<String, Any?>> {
+        try {
+            val packageManager = context.packageManager
+            val installedApps =
+                packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
+            val userApps = installedApps.filter {
+                (it.flags and ApplicationInfo.FLAG_SYSTEM) != ApplicationInfo.FLAG_SYSTEM
+            }
+            val apps: ArrayList<HashMap<String, Any?>> = ArrayList()
        for (app in userApps) {
           val appName =  app.loadLabel(packageManager).toString()
            val appData : HashMap<String, Any?>
@@ -333,8 +332,6 @@ class MainActivity : FlutterFragmentActivity()  {
             res?.error("400", "exception",ex.message )
         }
     }
-
-    
 
 
     override fun onStart() {

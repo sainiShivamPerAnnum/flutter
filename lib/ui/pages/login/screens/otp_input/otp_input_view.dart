@@ -94,16 +94,14 @@ class LoginOtpViewState extends State<LoginOtpView> {
                 },
                 onSubmit: (pin) {
                   model.log.debug(
-                    "Pressed submit for pin: " +
-                        pin.toString() +
-                        "\n  No action taken.",
+                    "Pressed submit for pin: $pin\n  No action taken.",
                   );
                   widget.loginModel.processScreenInput(1);
                 },
               ),
             ),
             SizedBox(height: SizeConfig.padding40),
-            if ((model.showResendOption && !model.isTriesExceeded))
+            if (model.showResendOption && !model.isTriesExceeded)
               Row(
                 mainAxisAlignment: MainAxisAlignment.center,
                 children: [

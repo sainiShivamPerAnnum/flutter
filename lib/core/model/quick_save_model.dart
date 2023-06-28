@@ -32,6 +32,10 @@ class QuickSaveData {
   final String? backgroundColor;
   final String? tag;
   final Misc? misc;
+  final String? borderColor;
+  final String? titleColor;
+  final String? subtitleColor;
+  final String? outerAssetUrl;
 
   QuickSaveData({
     this.order,
@@ -42,10 +46,14 @@ class QuickSaveData {
     this.backgroundColor,
     this.tag,
     this.misc,
+    this.titleColor,
+    this.subtitleColor,
+    this.outerAssetUrl,
+    this.borderColor,
   });
 
   factory QuickSaveData.fromJson(Map<String, dynamic> json) => QuickSaveData(
-        order: json["order"],
+    order: json["order"],
         title: json["title"],
         subTitle: json["subTitle"],
         icon: json["icon"],
@@ -53,9 +61,14 @@ class QuickSaveData {
         backgroundColor: json["backgroundColor"],
         tag: json["tag"],
         misc: json["misc"] == null ? null : Misc.fromJson(json["misc"]),
+        borderColor: json["borderColor"],
+        titleColor: json["titleColor"],
+        subtitleColor: json["subtitleColor"],
+        outerAssetUrl: json["outerAssetUrl"],
       );
 
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() =>
+      {
         "order": order,
         "title": title,
         "subTitle": subTitle,
@@ -64,6 +77,10 @@ class QuickSaveData {
         "backgroundColor": backgroundColor,
         "tag": tag,
         "misc": misc?.toJson(),
+        "borderColor": borderColor,
+        "titleColor": titleColor,
+        "subtitleColor": subtitleColor,
+        "outerAssetUrl": outerAssetUrl,
       };
 }
 

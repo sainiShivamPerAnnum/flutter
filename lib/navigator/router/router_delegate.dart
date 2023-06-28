@@ -242,7 +242,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           _addPageData(const ReferralPolicy(), RefPolicyPageConfig);
           break;
         case Pages.VerifyEmail:
-          _addPageData(VerifyEmail(), VerifyEmailPageConfig);
+          _addPageData(const VerifyEmail(), VerifyEmailPageConfig);
           break;
         case Pages.Support:
           _addPageData(const SupportPage(), SupportPageConfig);

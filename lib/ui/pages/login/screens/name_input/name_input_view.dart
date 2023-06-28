@@ -134,23 +134,6 @@ class LoginUserNameViewState extends State<LoginNameInputView> {
                                   model.genderValue = index;
                                 });
                               },
-                              child: Container(
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: SizeConfig.padding12,
-                                  vertical: SizeConfig.padding12,
-                                ),
-                                child: FittedBox(
-                                  fit: BoxFit.scaleDown,
-                                  child: Text(
-                                    model.genderOptions[index],
-                                    style: TextStyles.sourceSans.body3.colour(
-                                      (model.genderValue == index)
-                                          ? UiConstants.primaryColor
-                                          : UiConstants.kTextColor2,
-                                    ),
-                                  ),
-                                ),
-                              ),
                               style: ButtonStyle(
                                 backgroundColor: MaterialStateProperty.all(
                                   model.genderValue == index
@@ -168,6 +151,23 @@ class LoginUserNameViewState extends State<LoginNameInputView> {
                                         color: (model.genderValue == index)
                                             ? UiConstants.primaryColor
                                             : Colors.black),
+                                  ),
+                                ),
+                              ),
+                              child: Container(
+                                padding: EdgeInsets.symmetric(
+                                  horizontal: SizeConfig.padding12,
+                                  vertical: SizeConfig.padding12,
+                                ),
+                                child: FittedBox(
+                                  fit: BoxFit.scaleDown,
+                                  child: Text(
+                                    model.genderOptions[index],
+                                    style: TextStyles.sourceSans.body3.colour(
+                                      (model.genderValue == index)
+                                          ? UiConstants.primaryColor
+                                          : UiConstants.kTextColor2,
+                                    ),
                                   ),
                                 ),
                               ),
@@ -361,7 +361,7 @@ class HeaderPainter extends CustomPainter {
         ],
       );
 
-    final path = new Path()
+    final path = Path()
       ..moveTo(
         0,
         0,

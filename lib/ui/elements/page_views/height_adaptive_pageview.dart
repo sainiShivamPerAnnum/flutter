@@ -68,8 +68,9 @@ class _HeightAdaptivePageViewState extends State<HeightAdaptivePageView>
     );
   }
 
-  List<Widget> get _sizeReportingChildren => widget.children
-      .asMap() //
+  List<Widget> get _sizeReportingChildren =>
+      widget.children
+      .asMap()
       .map(
         (index, child) => MapEntry(
           index,

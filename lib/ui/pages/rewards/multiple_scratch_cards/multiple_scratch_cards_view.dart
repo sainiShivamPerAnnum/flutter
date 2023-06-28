@@ -132,9 +132,9 @@ class _MultipleScratchCardsViewState extends State<MultipleScratchCardsView> {
                                                         model.showScratchGuideLabel =
                                                             false;
                                                       },
-                                                      onChange: ((value) =>
-                                                          model.currentCardScratchPercentage =
-                                                              value),
+                                                      onChange: (value) => model
+                                                              .currentCardScratchPercentage =
+                                                          value,
                                                       onThreshold: () {
                                                         model.redeemScratchCard(
                                                             i);

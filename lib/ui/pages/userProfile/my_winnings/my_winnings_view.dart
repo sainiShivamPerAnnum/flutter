@@ -9,6 +9,7 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 
@@ -25,83 +26,99 @@ class MyWinningsView extends StatelessWidget {
         model.init();
       },
       builder: (ctx, model, child) {
-        return Scaffold(
-          appBar: AppBar(
-            title: Text(
-              "Scratch Cards",
-              maxLines: 1,
-              overflow: TextOverflow.clip,
-              style: TextStyles.title4.bold.colour(Colors.white),
-            ),
-            elevation: 0.0,
-            backgroundColor: UiConstants.kBackgroundColor,
-            leading: IconButton(
-              onPressed: () {
-                AppState.backButtonDispatcher!.didPopRoute();
-              },
-              icon: const Icon(
-                Icons.arrow_back_ios,
-                color: Colors.white,
-              ),
-            ),
+        return AnnotatedRegion<SystemUiOverlayStyle>(
+          value: SystemUiOverlayStyle(
+            statusBarColor: UiConstants.kTambolaMidTextColor,
           ),
-          backgroundColor: UiConstants.kBackgroundColor,
-          body: Stack(
-            children: [
-              const NewSquareBackground(),
-              NotificationListener<ScrollEndNotification>(
-                onNotification: (scrollInfo) {
-                  if (scrollInfo.metrics.pixels >=
-                      scrollInfo.metrics.maxScrollExtent) {
-                    model.fetchMoreCards();
-                  }
+          child: Scaffold(
+            extendBodyBehindAppBar: true,
+            backgroundColor: UiConstants.kBackgroundColor,
+            body: Stack(
+              children: [
+                const NewSquareBackground(),
+                NotificationListener<ScrollEndNotification>(
+                  onNotification: (scrollInfo) {
+                    if (scrollInfo.metrics.pixels >=
+                        scrollInfo.metrics.maxScrollExtent) {
+                      model.fetchMoreCards();
+                    }
 
-                  return true;
-                },
-                child: RefreshIndicator(
-                  backgroundColor: Colors.black,
-                  onRefresh: () async {
-                    await model.init();
-                    return Future.value(null);
+                    return true;
                   },
-                  child: ListView(
-                    shrinkWrap: true,
-                    children: const [
-                      PrizeClaimCard(),
-                      ScratchCardsView(),
-                    ],
-                  ),
-                ),
-              ),
-              Positioned(
-                bottom: 0,
-                child: Consumer<ScratchCardService>(
-                    builder: (context, service, properties) {
-                  return service.isFetchingScratchCards &&
-                          service.allScratchCards.isNotEmpty
-                      ? Container(
-                          color: UiConstants.kBackgroundColor3,
-                          width: SizeConfig.screenWidth,
-                          padding: EdgeInsets.all(SizeConfig.padding12),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.center,
+                  child: RefreshIndicator(
+                    backgroundColor: Colors.black,
+                    onRefresh: () async {
+                      model.init();
+                      return Future.value(null);
+                    },
+                    child: ListView(
+                      shrinkWrap: true,
+                      children: [
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                            horizontal: SizeConfig.pageHorizontalMargins,
+                          ),
+                          color: UiConstants.kTambolaMidTextColor,
+                          child: Row(
                             children: [
-                              SpinKitWave(
-                                color: UiConstants.primaryColor,
-                                size: SizeConfig.padding16,
+                              IconButton(
+                                onPressed: () {
+                                  AppState.backButtonDispatcher!.didPopRoute();
+                                },
+                                icon: const Icon(
+                                  Icons.arrow_back_ios,
+                                  color: Colors.white,
+                                ),
                               ),
-                              SizedBox(height: SizeConfig.padding4),
+                              SizedBox(
+                                width: SizeConfig.padding20,
+                              ),
                               Text(
-                                "Loading more tickets",
-                                style: TextStyles.body4.colour(Colors.grey),
-                              )
+                                "Scratch Cards",
+                                maxLines: 1,
+                                overflow: TextOverflow.clip,
+                                style:
+                                    TextStyles.title4.bold.colour(Colors.white),
+                              ),
                             ],
                           ),
-                        )
-                      : const SizedBox();
-                }),
-              )
-            ],
+                        ),
+                        const PrizeClaimCard(),
+                        const ScratchCardsView(),
+                      ],
+                    ),
+                  ),
+                ),
+                Positioned(
+                  bottom: 0,
+                  child: Consumer<ScratchCardService>(
+                      builder: (context, service, properties) {
+                    return service.isFetchingScratchCards &&
+                            service.allScratchCards.isNotEmpty
+                        ? Container(
+                            color: UiConstants.kBackgroundColor3,
+                            width: SizeConfig.screenWidth,
+                            padding: EdgeInsets.all(SizeConfig.padding12),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              children: [
+                                SpinKitWave(
+                                  color: UiConstants.primaryColor,
+                                  size: SizeConfig.padding16,
+                                ),
+                                SizedBox(height: SizeConfig.padding4),
+                                Text(
+                                  "Loading more tickets",
+                                  style: TextStyles.body4.colour(Colors.grey),
+                                )
+                              ],
+                            ),
+                          )
+                        : const SizedBox();
+                  }),
+                )
+              ],
+            ),
           ),
         );
       },

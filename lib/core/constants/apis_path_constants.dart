@@ -233,4 +233,6 @@ class ApiPath {
   static String portfolio(String uid) => "/$uid/portfolio";
 
   static String incentives = "/app/incentives";
+
+  static String subscribeGoldPriceAlert = "/gold-price-alert/subscribe";
 }

@@ -4,6 +4,7 @@ import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/model/quick_save_model.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/util/color_util.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
@@ -85,11 +86,15 @@ class QuickSaveModalSheet extends StatelessWidget {
                               vertical: SizeConfig.padding16),
                           margin: EdgeInsets.only(bottom: SizeConfig.padding16),
                           decoration: BoxDecoration(
+                              color: ColorUtil.fromColorString(
+                                  data.backgroundColor ?? "0x00000000"),
                               borderRadius:
                                   BorderRadius.circular(SizeConfig.roundness8),
                               border: Border.all(
-                                  color: const Color(0xffD3D3D3)
-                                      .withOpacity(0.2))),
+                                  color: ColorUtil.fromColorString(
+                                          data.backgroundColor) ??
+                                      const Color(0xffD3D3D3)
+                                          .withOpacity(0.2))),
                           child: Row(
                             children: [
                               SizedBox(
@@ -106,13 +111,22 @@ class QuickSaveModalSheet extends StatelessWidget {
                                 mainAxisAlignment: MainAxisAlignment.start,
                                 mainAxisSize: MainAxisSize.min,
                                 children: [
-                                  Text(data.title!,
-                                      style: TextStyles.rajdhaniB.title5),
+                                  Text(
+                                    data.title!,
+                                    style: TextStyles.rajdhaniB.title5.colour(
+                                        data.titleColor != null
+                                            ? ColorUtil.fromColorString(
+                                                data.titleColor)
+                                            : Colors.white),
+                                  ),
                                   Flexible(
                                     child: Text(
                                       data.subTitle!,
                                       style: TextStyles.sourceSans.body4.colour(
-                                          Colors.white.withOpacity(0.6)),
+                                          data.subtitleColor != null
+                                              ? ColorUtil.fromColorString(
+                                                  data.subtitleColor)
+                                              : Colors.white.withOpacity(0.6)),
                                       maxLines: 3,
                                     ),
                                   ),

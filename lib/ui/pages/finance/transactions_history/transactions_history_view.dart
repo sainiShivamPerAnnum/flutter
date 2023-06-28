@@ -157,7 +157,7 @@ class SingleTransactionView extends StatelessWidget {
               : Column(
                   children: [
                     Expanded(
-                      child: (model!.filteredList!.length == 0
+                      child: model!.filteredList!.length == 0
                           ? Column(
                               children: [
                                 SizedBox(
@@ -181,7 +181,7 @@ class SingleTransactionView extends StatelessWidget {
                                   txn: model!.filteredList![index],
                                 ),
                               ),
-                            )),
+                            ),
                     ),
                     if (model!.isMoreTxnsBeingFetched)
                       Container(
@@ -276,7 +276,9 @@ class SIPTransactionHistoryView extends StatelessWidget {
 
 class NoTransactionsContent extends StatelessWidget {
   final double? width;
-  NoTransactionsContent({this.width});
+
+  NoTransactionsContent({super.key, this.width});
+
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
@@ -288,7 +290,7 @@ class NoTransactionsContent extends StatelessWidget {
             Assets.noTransaction,
             width: width ?? SizeConfig.screenWidth! * 0.8,
           ),
-          SizedBox(
+          const SizedBox(
             height: 20,
           ),
           Text(
@@ -308,8 +310,9 @@ class TransactionTile extends StatelessWidget {
   // final TransactionsHistoryViewModel model;
   final UserTransaction txn;
   final TxnHistoryService txnHistoryService = locator<TxnHistoryService>();
+
   TransactionTile({
-    // @required this.model,
+    super.key,
     required this.txn,
   });
 
@@ -348,7 +351,7 @@ class TransactionTile extends StatelessWidget {
               style:
                   TextStyles.sourceSans.body3.colour(UiConstants.kTextColor)),
           subtitle: Text(
-            floSubtype() + getFormattedDate + " at " + formattedTime,
+            "${floSubtype()}$getFormattedDate at $formattedTime",
             style: TextStyles.sourceSans.body4.colour(UiConstants.kTextColor2),
             textAlign: TextAlign.start,
           ),
@@ -409,7 +412,8 @@ class TransactionStatusChip extends StatelessWidget {
   final Color color;
   final String? status;
 
-  TransactionStatusChip({this.color = Colors.white, this.status = "NA"});
+  TransactionStatusChip(
+      {super.key, this.color = Colors.white, this.status = "NA"});
 
   @override
   Widget build(BuildContext context) {
@@ -428,7 +432,7 @@ class TransactionStatusChip extends StatelessWidget {
             ),
             margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding12),
           )
-        : SizedBox();
+        : const SizedBox();
   }
 }
 
@@ -436,10 +440,13 @@ class TransactionSIPTile extends StatelessWidget {
   final TransactionsHistoryViewModel? model;
   final SubscriptionTransactionModel? txn;
   final TxnHistoryService? _txnHistoryService = locator<TxnHistoryService>();
+
   TransactionSIPTile({
+    super.key,
     required this.model,
     this.txn,
   });
+
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
@@ -485,7 +492,7 @@ class TransactionChoiceSelectionTab extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
-    return Container(
+    return SizedBox(
         height: SizeConfig.screenWidth! * 0.09,
         width: SizeConfig.screenWidth! * 0.6,
         child: Column(
@@ -499,7 +506,7 @@ class TransactionChoiceSelectionTab extends StatelessWidget {
                     onTap: () {
                       model!.tabIndex = 0;
                       model!.pageController!.animateToPage(0,
-                          duration: Duration(milliseconds: 200),
+                          duration: const Duration(milliseconds: 200),
                           curve: Curves.linear);
                     },
                     child: Container(
@@ -515,7 +522,7 @@ class TransactionChoiceSelectionTab extends StatelessWidget {
                   onTap: () {
                     model!.tabIndex = 1;
                     model!.pageController!.animateToPage(1,
-                        duration: Duration(milliseconds: 200),
+                        duration: const Duration(milliseconds: 200),
                         curve: Curves.linear);
                   },
                   child: Container(

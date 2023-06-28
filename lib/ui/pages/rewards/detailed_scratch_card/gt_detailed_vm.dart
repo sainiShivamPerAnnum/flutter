@@ -1,7 +1,6 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/scratch_card_model.dart';
 import 'package:felloapp/core/model/timestamp_model.dart';
@@ -15,7 +14,6 @@ import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/pages/rewards/detailed_scratch_card/gt_detailed_view.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/rsa_encryption.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 
 class GTDetailedViewModel extends BaseViewModel {
@@ -28,23 +26,24 @@ class GTDetailedViewModel extends BaseViewModel {
   final UserCoinService _userCoinService = locator<UserCoinService>();
   final ScratchCardService _gtService = locator<ScratchCardService>();
   final CustomLogger _logger = locator<CustomLogger>();
-  final ApiPath _apiPaths = locator<ApiPath>();
+
+  // final ApiPath _apiPaths = locator<ApiPath>();
   final JourneyService _journeyService = locator<JourneyService>();
 
-  final _rsaEncryption = RSAEncryption();
+  // final _rsaEncryption = RSAEncryption();
   final ScratchCardRepository _gtRepo = locator<ScratchCardRepository>();
 
-  get viewScratchedCard => this._viewScratchedCard;
+  get viewScratchedCard => _viewScratchedCard;
 
-  set viewScratchedCard(value) => this._viewScratchedCard = value;
+  set viewScratchedCard(value) => _viewScratchedCard = value;
 
-  get viewScratcher => this._viewScratcher;
+  get viewScratcher => _viewScratcher;
 
-  set viewScratcher(value) => this._viewScratcher = value;
+  set viewScratcher(value) => _viewScratcher = value;
 
-  get detailsModalHeight => this._detailsModalHeight;
+  get detailsModalHeight => _detailsModalHeight;
 
-  set detailsModalHeight(value) => this._detailsModalHeight = value;
+  set detailsModalHeight(value) => _detailsModalHeight = value;
 
   bool get isShareLoading => _isShareLoading;
 
