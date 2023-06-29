@@ -92,7 +92,7 @@ class QuickSaveModalSheet extends StatelessWidget {
                                   BorderRadius.circular(SizeConfig.roundness8),
                               border: Border.all(
                                   color: ColorUtil.fromColorString(
-                                          data.backgroundColor) ??
+                                          data.borderColor) ??
                                       const Color(0xffD3D3D3)
                                           .withOpacity(0.2))),
                           child: Row(

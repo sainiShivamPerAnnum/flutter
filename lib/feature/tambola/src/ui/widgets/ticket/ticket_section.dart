@@ -7,6 +7,7 @@ import 'package:felloapp/feature/tambola/src/ui/tambola_all_tickets/tambola_all_
 import 'package:felloapp/feature/tambola/src/ui/tambola_home_details/tambola_home_details_view.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/ui/pages/asset_selection.dart';
 import 'package:felloapp/ui/pages/support/faq/faq_page.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/haptic.dart';
@@ -43,9 +44,9 @@ class TicketSection extends StatelessWidget {
             activeTambolaCardCount: data.item1?.data?.totalTicketCount ?? 0,
             getTicketsTapped: getTicketsTapped,
           ),
-          SizedBox(
-            height: SizeConfig.padding6,
-          ),
+          // SizedBox(
+          //   height: SizeConfig.padding6,
+          // ),
           TicketsView(
             bestTickets: data.item1,
             weeklyPicks: data.item2 ?? DailyPick.noPicks(),
@@ -176,35 +177,32 @@ class TicketHeader extends StatelessWidget {
                         SizedBox(
                           height: SizeConfig.padding4,
                         ),
-                        Row(
-                          children: [
-                            Text(
-                              "${expiringTicketCount} ticket${expiringTicketCount > 1 ? 's' : ''} expiring this Sunday. ",
-                              style: TextStyles.sourceSansSB.body4
-                                  .colour(UiConstants.kBlogTitleColor),
-                            ),
-                            GestureDetector(
-                              onTap: () {
-                                AppState.delegate!.appState.currentAction =
-                                    PageAction(
-                                  state: PageState.addWidget,
-                                  page: FaqPageConfig,
-                                  widget: const FAQPage(
-                                    type: FaqsType.play,
-                                  ),
-                                );
-                              },
-                              child: Text(
-                                "Know More",
-                                style: TextStyles.sourceSansSB.body4
-                                    .colour(UiConstants.kBlogTitleColor)
-                                    .copyWith(
-                                        decorationStyle:
-                                            TextDecorationStyle.solid,
-                                        decoration: TextDecoration.underline),
+                        Text(
+                          "${expiringTicketCount} ticket${expiringTicketCount > 1 ? 's' : ''} expiring this Sunday. ",
+                          style: TextStyles.sourceSansSB.body4
+                              .colour(UiConstants.kBlogTitleColor),
+                          maxLines: 2,
+                          textAlign: TextAlign.start,
+                        ),
+                        GestureDetector(
+                          onTap: () {
+                            AppState.delegate!.appState.currentAction =
+                                PageAction(
+                              state: PageState.addWidget,
+                              page: FaqPageConfig,
+                              widget: const FAQPage(
+                                type: FaqsType.play,
                               ),
-                            ),
-                          ],
+                            );
+                          },
+                          child: Text(
+                            "Know More",
+                            style: TextStyles.sourceSansSB.body4
+                                .colour(UiConstants.kBlogTitleColor)
+                                .copyWith(
+                                    decorationStyle: TextDecorationStyle.solid,
+                                    decoration: TextDecoration.underline),
+                          ),
                         ),
                       ],
                     );
@@ -215,23 +213,24 @@ class TicketHeader extends StatelessWidget {
               )
             ],
           ),
-          GestureDetector(
-            onTap: getTicketsTapped,
-            child: Container(
-              padding: EdgeInsets.symmetric(
-                horizontal: SizeConfig.padding12,
-                vertical: SizeConfig.padding6,
-              ),
-              decoration: BoxDecoration(
-                color: Colors.transparent,
-                border: Border.all(color: Colors.white),
-                borderRadius: BorderRadius.circular(SizeConfig.roundness40),
-              ),
-              child: Text(
-                "Get Tickets",
-                style: TextStyles.rajdhaniSB.body4.colour(Colors.white),
-                key: const ValueKey("getTambolaTickets"),
-              ),
+          MaterialButton(
+            onPressed: () {
+              AppState.delegate!.appState.currentAction = PageAction(
+                page: AssetSelectionViewConfig,
+                state: PageState.addWidget,
+                widget: const AssetSelectionPage(
+                  showOnlyFlo: false,
+                ),
+              );
+              // AppState.delegate!.parseRoute(Uri.parse('assetBuy'));
+            },
+            color: Colors.white,
+            shape: RoundedRectangleBorder(
+              borderRadius: BorderRadius.circular(8),
+            ),
+            child: Text(
+              "+ Get Tickets",
+              style: TextStyles.rajdhaniB.body2.colour(Colors.black),
             ),
           ),
         ],

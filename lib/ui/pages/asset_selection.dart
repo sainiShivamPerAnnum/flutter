@@ -547,10 +547,10 @@ class FelloFloPrograms extends StatelessWidget {
                             BorderRadius.circular(SizeConfig.roundness12),
                       ),
                       child: Shimmer.fromColors(
-                        // period: const Duration(seconds: 10),
+                        period: const Duration(milliseconds: 2500),
                         baseColor: Colors.grey[900]!,
                         highlightColor: Colors.grey[100]!,
-                        loop: 1,
+                        loop: 3,
                         child:
                             "Available only for *$daysRemaining days*".beautify(
                           boldStyle:

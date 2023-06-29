@@ -76,7 +76,7 @@ class _TambolaHomeTicketsViewState extends State<TambolaHomeTicketsView> {
                       },
                     ),
                     const NextWeekTicketInfo(),
-                    AnimatedBuyTambolaTicketCard(key: tambolaBuyTicketCardKey),
+                    // AnimatedBuyTambolaTicketCard(key: tambolaBuyTicketCardKey),
                     const TambolaLeaderboardView(),
                     // LottieBuilder.network(Assets.bottomBannerLottie),
                     SizedBox(height: SizeConfig.navBarHeight),

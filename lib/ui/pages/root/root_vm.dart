@@ -337,8 +337,6 @@ class RootViewModel extends BaseViewModel {
     );
   }
 
-  void onCenterButtonTap() {}
-
   Future<void> openJourneyView() async {
     AppState.delegate!.appState.currentAction =
         PageAction(page: JourneyViewPageConfig, state: PageState.addPage);
