@@ -67,7 +67,7 @@ class _LendboxSuccessViewState extends State<LendboxSuccessView>
     List lendboxDetails = AppConfig.getValue(AppConfigKey.lendbox);
 
     if (_txnService
-                .transactionReponseModel?.data?.floDepositDetails?.fundType ==
+                .transactionResponseModel?.data?.floDepositDetails?.fundType ==
             Constants.ASSET_TYPE_FLO_FIXED_6 &&
         lendboxDetails[0]["tambolaMultiplier"] != null &&
         lendboxDetails[0]["tambolaMultiplier"].toString().isNotEmpty) {
@@ -75,7 +75,7 @@ class _LendboxSuccessViewState extends State<LendboxSuccessView>
     }
 
     if (_txnService
-                .transactionReponseModel?.data?.floDepositDetails?.fundType ==
+                .transactionResponseModel?.data?.floDepositDetails?.fundType ==
             Constants.ASSET_TYPE_FLO_FIXED_3 &&
         lendboxDetails[1]["tambolaMultiplier"] != null &&
         lendboxDetails[1]["tambolaMultiplier"].toString().isNotEmpty) {

@@ -23,8 +23,7 @@ class MyWidgetProvider : AppWidgetProvider() {
         fun getFormattedFelloBalance(context: Context): String {
             try {
                 val sharedPreferences: SharedPreferences = context.getSharedPreferences(
-                    "FlutterSharedPreferences",
-                    Context.MODE_PRIVATE
+                    "FlutterSharedPreferences", Context.MODE_PRIVATE
                 )
                 Log.d(
                     "MyWidgetProvider",
@@ -45,9 +44,7 @@ class MyWidgetProvider : AppWidgetProvider() {
     }
 
     override fun onUpdate(
-        context: Context,
-        appWidgetManager: AppWidgetManager,
-        appWidgetIds: IntArray
+        context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray
     ) {
         for (appWidgetId in appWidgetIds) {
             Log.d("MyWidgetProvider", "onUpdate called");
@@ -58,8 +55,7 @@ class MyWidgetProvider : AppWidgetProvider() {
             views.setTextViewText(R.id.amount_text, felloBalance)
 
             // Set the click action for the button to open a specific screen in your app
-            val intent =
-                Intent(context, MyWidgetProvider::class.java)
+            val intent = Intent(context, MyWidgetProvider::class.java)
             intent.action = "in.fello.felloapp.ACTION_BUTTON_CLICK"
             val pendingIntent =
                 PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
@@ -86,9 +82,7 @@ class MyWidgetProvider : AppWidgetProvider() {
     //     val messenger = engine?.dartExecutor?.binaryMessenger
     //     if(messenger != null) {
 
-    //
-
-            val channel = MethodChannel(messenger, "methodChannel/deviceData")
+    //         val channel = MethodChannel(messenger, "methodChannel/deviceData")
 
     //         channel.invokeMethod("openAssetSelection", flutterIntent)
     //     }
