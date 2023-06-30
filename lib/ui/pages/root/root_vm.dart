@@ -150,14 +150,6 @@ class RootViewModel extends BaseViewModel {
         ]);
 
         _initAdhocNotifications();
-
-        const platform = MethodChannel("methodChannel/deviceData");
-        platform.setMethodCallHandler((call) async {
-          if (call.method == 'handleIntent') {
-            print('SHOURYAA CALLED');
-            AppState.delegate!.parseRoute(Uri.parse("/play"));
-          }
-        });
       },
     );
   }

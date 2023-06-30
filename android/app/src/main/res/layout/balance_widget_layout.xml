@@ -2,26 +2,9 @@
     android:id="@+id/quick_save_button"
     android:layout_width="110dp"
     android:layout_height="110dp"
+    android:clickable="true"
     android:background="@drawable/balance_widget_bg3"
     android:orientation="vertical">
-
-    <!-- <ImageView
-        android:id="@+id/icon_image"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_gravity="center_horizontal"
-        android:paddingTop="16dp"
-        android:src="@drawable/fello_full_logo" /> -->
-
-    <!-- <TextView
-        android:id="@+id/fello_balance_text"
-        android:layout_width="match_parent"
-        android:layout_height="20dp"
-        android:layout_marginTop="8dp"
-        android:gravity="center"
-        android:text="Your Balance"
-        android:textColor="@android:color/white"
-        android:textSize="10sp" /> -->
 
     <TextView
         android:id="@+id/amount_text"
@@ -31,14 +14,5 @@
         android:gravity="center"
         android:textColor="@android:color/white"
         android:textSize="18sp" />
-
-    <!-- <Button
-        android:id="@+id/quick_save_button"
-        android:layout_width="match_parent"
-        android:layout_height="40dp"
-        android:layout_marginTop="8dp"
-        android:backgroundTint="#34C3A7"
-        android:text="Quick Save"
-        android:textColor="@android:color/white" /> -->
 
 </LinearLayout>

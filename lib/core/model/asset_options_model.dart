@@ -16,11 +16,6 @@ class AssetOptionsModel {
         message: json["message"],
         data: Data.fromJson(json["data"]),
       );
-
-  Map<String, dynamic> toJson() => {
-        "message": message,
-        "data": data.toJson(),
-      };
 }
 
 class Data {
@@ -28,26 +23,22 @@ class Data {
     required this.banner,
     required this.userOptions,
     this.maturityAt,
+    this.intent = false,
   });
 
   Banner banner;
   List<UserOption> userOptions;
   final DateTime? maturityAt;
+  final bool intent;
 
   factory Data.fromJson(Map<String, dynamic> json) => Data(
-        banner: Banner.fromJson(json["banner"]),
-        userOptions: List<UserOption>.from(
-            json["userOptions"].map((x) => UserOption.fromJson(x))),
-        maturityAt: json["maturityAt"] == null
-            ? null
-            : DateTime.parse(json["maturityAt"]),
-      );
-
-  Map<String, dynamic> toJson() => {
-        "banner": banner.toJson(),
-        "userOptions": List<dynamic>.from(userOptions.map((x) => x.toJson())),
-        "nearCtaText": maturityAt,
-      };
+      banner: Banner.fromJson(json["banner"]),
+      userOptions: List<UserOption>.from(
+          json["userOptions"].map((x) => UserOption.fromJson(x))),
+      maturityAt: json["maturityAt"] == null
+          ? null
+          : DateTime.parse(json["maturityAt"]),
+      intent: json['intent'] ?? false);
 }
 
 class Banner {

@@ -14,7 +14,7 @@ class ApiPath {
   //User Ops Apis
   get kAddNewUser => "/v2/new";
 
-  get kUpdateUserAppflyer => "/userOps/api/v3/user/appflyer";
+  get kUpdateUserAppflyer => "/appflyer";
 
   get kAddBankAccount => "/bank";
 
@@ -32,7 +32,7 @@ class ApiPath {
 
   static String kUpdateBankDetails(String uid) => '/user/$uid/bank';
 
-  get kCustomAuthToken => "/userOps/api/v3/trucallerAuthToken";
+  get kCustomAuthToken => "/api/v3/trucallerAuthToken";
   static const acquisitionTracking = "/userOps/api/v3/opt-analytics";
   static const String updateFcm = '/fcm/client_token';
 

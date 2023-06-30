@@ -180,7 +180,7 @@ class BaseRemoteConfig {
   };
   static const Map<String, String> _GAME_TAMBOLA_ANNOUNCEMENT = {
     'game_tambola_announcement':
-    'Stand to win big prizes every week by matching your tickets! Winners are announced every Monday'
+        'Stand to win big prizes every week by matching your tickets! Winners are announced every Monday'
   };
   static const Map<String, String> _GAME_CRICKET_FPL_ANNOUNCEMENT = {
     'game_cricket_fpl_announcement': ''
@@ -233,6 +233,10 @@ class BaseRemoteConfig {
   static const Map<String, String> _APP_REFERRAL_MESSAGE = {
     "appReferralMessage":
         "Earn upto *₹20* and *200* tokens from every scratch card. Highest referrer wins an iPad every month"
+  };
+
+  static const Map<String, bool> _PAYMENT_BRIEF_VIEW = {
+    "paymentBriefView": true
   };
 
   static Map<String, dynamic> DEFAULTS = {
@@ -305,6 +309,7 @@ class BaseRemoteConfig {
     ..._SHOW_NEW_AUTOSAVE,
     ..._YOUTUBE_VIDEOS,
     ..._APP_REFERRAL_MESSAGE,
+    ..._PAYMENT_BRIEF_VIEW,
   };
 
   static Future<bool> init() async {
@@ -489,6 +494,9 @@ class BaseRemoteConfig {
 
   static String get APP_REFERRAL_MESSAGE =>
       remoteConfig.getString(_APP_REFERRAL_MESSAGE.keys.first);
+
+  static bool get PAYMENT_BRIEF_VIEW =>
+      remoteConfig.getBool(_PAYMENT_BRIEF_VIEW.keys.first);
 
   static int get invalidationBefore {
     return remoteConfig.getInt(_CACHE_INVALIDATION.keys.first);

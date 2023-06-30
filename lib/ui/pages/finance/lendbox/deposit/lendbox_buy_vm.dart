@@ -32,6 +32,7 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:upi_pay/upi_pay.dart';
 
 import '../../../../../core/repository/getters_repo.dart';
 
@@ -87,6 +88,10 @@ class LendboxBuyViewModel extends BaseViewModel {
   bool showCouponAppliedText = false;
   bool _addSpecialCoupon = false;
   int _selectedOption = -1;
+  bool isIntentFlow = true;
+  List<ApplicationMeta> appMetaList = [];
+  UpiApplication? upiApplication;
+  ApplicationMeta? selectedUpiApplication;
 
   ///  ---------- getter and setter ------------
 
@@ -208,10 +213,12 @@ class LendboxBuyViewModel extends BaseViewModel {
     showHappyHour = locator<MarketingEventHandlerService>().showHappyHourBanner;
     isLendboxOldUser =
         locator<UserService>().userSegments.contains(Constants.US_FLO_OLD);
-
+    appMetaList = await UpiPay.getInstalledUpiApplications(
+        statusType: UpiApplicationDiscoveryAppStatusType.all);
     updateMinValues();
     await getAssetOptionsModel();
-
+    isIntentFlow = false;
+    //assetOptionsModel!.data.intent;
     log("isLendboxOldUser $isLendboxOldUser");
     if (floAssetType == Constants.ASSET_TYPE_FLO_FIXED_6) {
       maxAmount = 99999;
@@ -303,8 +310,16 @@ class LendboxBuyViewModel extends BaseViewModel {
     _isBuyInProgress = true;
     notifyListeners();
     trackCheckOut(amount.toDouble());
-    await _txnService!.initiateTransaction(amount.toDouble(), skipMl,
-        floAssetType, maturityPref, appliedCoupon?.code ?? '');
+    await _txnService.initiateTransaction(
+      FloPurchaseDetails(
+        floAssetType: floAssetType,
+        maturityPref: maturityPref,
+        couponCode: appliedCoupon?.code ?? '',
+        txnAmount: amount.toDouble(),
+        skipMl: skipMl,
+        upiChoice: selectedUpiApplication,
+      ),
+    );
     _isBuyInProgress = false;
     forcedBuy = false;
     notifyListeners();
@@ -320,12 +335,12 @@ class LendboxBuyViewModel extends BaseViewModel {
   }
 
   trackCheckOut(double? amount) {
-    _txnService!.currentTransactionAnalyticsDetails = {
+    _txnService.currentTransactionAnalyticsDetails = {
       "Asset": "Flo",
       "Amount Entered": amount ?? 0,
       "Error message": "",
     };
-    analyticsService!.track(
+    analyticsService.track(
       eventName: AnalyticsEvents.saveCheckout,
       properties: AnalyticsProperties.getDefaultPropertiesMap(
         extraValuesMap: {
@@ -416,7 +431,7 @@ class LendboxBuyViewModel extends BaseViewModel {
   }
 
   void navigateToKycScreen() {
-    analyticsService!
+    analyticsService
         .track(eventName: AnalyticsEvents.completeKYCTapped, properties: {
       "location": "Fello Felo Invest",
       "Total invested amount": AnalyticsProperties.getGoldInvestedAmount() +
@@ -431,9 +446,9 @@ class LendboxBuyViewModel extends BaseViewModel {
     );
   }
 
-  getAvailableCoupons() async {
+  Future<void> getAvailableCoupons() async {
     final ApiResponse<List<CouponModel>> couponsRes =
-        await _couponRepo!.getCoupons(assetType: floAssetType);
+        await _couponRepo.getCoupons(assetType: floAssetType);
     if (couponsRes.code == 200 &&
         couponsRes.model != null &&
         (couponsRes.model?.length ?? 0) >= 1) {
@@ -505,7 +520,7 @@ class LendboxBuyViewModel extends BaseViewModel {
 
     appliedCoupon = null;
 
-    analyticsService!
+    analyticsService
         .track(eventName: AnalyticsEvents.suggestedAmountTapped, properties: {
       'order': index,
       'Asset': floAssetType,
@@ -658,7 +673,7 @@ class LendboxBuyViewModel extends BaseViewModel {
     couponApplyInProgress = true;
 
     ApiResponse<EligibleCouponResponseModel> response =
-        await _couponRepo!.getEligibleCoupon(
+        await _couponRepo.getEligibleCoupon(
       uid: locator<UserService>().baseUser!.uid,
       amount: buyAmount!.toInt(),
       couponcode: couponCode,
@@ -695,7 +710,7 @@ class LendboxBuyViewModel extends BaseViewModel {
     } else {
       BaseUtil.showNegativeAlert(locale.couponNotApplied, locale.anotherCoupon);
     }
-    analyticsService!
+    analyticsService
         .track(eventName: AnalyticsEvents.saveBuyCoupon, properties: {
       "Asset": floAssetType,
       "Manual Code entry": isManuallyTyped,

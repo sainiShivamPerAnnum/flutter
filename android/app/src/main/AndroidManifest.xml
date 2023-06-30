@@ -176,6 +176,7 @@
             android:exported="false">
             <intent-filter>
                 <action android:name="android.appwidget.action.APPWIDGET_UPDATE" />
+                <action android:name="in.fello.felloapp.WIDGET_CLICK_ACTION" />
             </intent-filter>
             <meta-data
                 android:name="android.appwidget.provider"

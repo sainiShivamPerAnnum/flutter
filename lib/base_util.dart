@@ -246,8 +246,6 @@ class BaseUtil extends ChangeNotifier {
   }
 
   Future<void> refreshFunds() async {
-    //TODO: ADD LOADER
-    debugPrint("-----------------> I got called");
     return _userRepo!.getFundBalance().then((aValue) {
       if (aValue.code == 200) {
         userFundWallet = aValue.model;
