@@ -1,4 +1,3 @@
-import 'package:felloapp/feature/tambola/src/ui/widgets/how_it_works_section.dart';
 import 'package:felloapp/feature/tambola/src/ui/widgets/tambola_picks/picks_card_view.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
@@ -29,13 +28,13 @@ class TodayWeeklyPicksCard extends StatelessWidget {
           Container(
             padding: EdgeInsets.only(
               // top: SizeConfig.pageHorizontalMargins,
-              bottom: SizeConfig.padding8,
-            ),
+                // bottom: SizeConfig.padding8,
+                ),
             child: (DateTime.now().weekday == 1 && DateTime.now().hour < 16)
                 ? const TambolaTopBanner()
                 : const PicksCardView(),
           ),
-          const HowTambolaWorks(),
+          // const HowTambolaWorks(),
         ],
       ),
     );
