@@ -58,8 +58,9 @@ class FloPremiumSection extends StatelessWidget {
                         lendboxDetails[0]["minAmountText"] ?? "Min - ₹25,000",
                     tier: Constants.ASSET_TYPE_FLO_FIXED_6,
                     actionUri: "flo12Details",
-                    promoText:
-                        "Get *5X tickets* on saving in 10% Flo till maturity",
+                    promoText: (lendboxDetails[0]["tambolaMultiplier"] != null)
+                        ? "Get *${lendboxDetails[0]["tambolaMultiplier"]}X tickets* on saving in 12% Flo till maturity"
+                        : null,
                     cta: () => BaseUtil.openFloBuySheet(
                         floAssetType: Constants.ASSET_TYPE_FLO_FIXED_6),
                   ),
@@ -105,8 +106,7 @@ class FloPremiumSection extends StatelessWidget {
                       child: CustomPaint(
                         size: Size(
                             SizeConfig.padding14,
-                            (SizeConfig.padding14 * 1.0909090909090908)
-                                .toDouble()),
+                            (SizeConfig.padding14 * 1.09).toDouble()),
                         painter: StarCustomPainter(),
                       ),
                     ),
@@ -115,8 +115,7 @@ class FloPremiumSection extends StatelessWidget {
                       child: CustomPaint(
                         size: Size(
                             SizeConfig.padding8,
-                            (SizeConfig.padding8 * 1.0909090909090908)
-                                .toDouble()),
+                            (SizeConfig.padding8 * 1.09).toDouble()),
                         painter: StarCustomPainter(),
                       ),
                     )

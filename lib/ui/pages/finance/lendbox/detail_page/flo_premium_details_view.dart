@@ -957,8 +957,7 @@ class FloPremiumHeader extends StatelessWidget {
                             child: CustomPaint(
                               size: Size(
                                   SizeConfig.padding12,
-                                  (SizeConfig.padding12 * 1.0909090909090908)
-                                      .toDouble()),
+                                  (SizeConfig.padding12 * 1.09).toDouble()),
                               painter: StarCustomPainter(),
                             ),
                           ),
@@ -967,8 +966,7 @@ class FloPremiumHeader extends StatelessWidget {
                             child: CustomPaint(
                               size: Size(
                                   SizeConfig.padding6,
-                                  (SizeConfig.padding6 * 1.0909090909090908)
-                                      .toDouble()),
+                                  (SizeConfig.padding6 * 1.09).toDouble()),
                               painter: StarCustomPainter(),
                             ),
                           )

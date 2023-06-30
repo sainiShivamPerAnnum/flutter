@@ -569,8 +569,7 @@ class FelloFloPrograms extends StatelessWidget {
                       child: CustomPaint(
                         size: Size(
                             SizeConfig.padding14,
-                            (SizeConfig.padding14 * 1.0909090909090908)
-                                .toDouble()),
+                            (SizeConfig.padding14 * 1.09).toDouble()),
                         painter: StarCustomPainter(),
                       ),
                     ),
@@ -579,8 +578,7 @@ class FelloFloPrograms extends StatelessWidget {
                       child: CustomPaint(
                         size: Size(
                             SizeConfig.padding8,
-                            (SizeConfig.padding8 * 1.0909090909090908)
-                                .toDouble()),
+                            (SizeConfig.padding8 * 1.09).toDouble()),
                         painter: StarCustomPainter(),
                       ),
                     )

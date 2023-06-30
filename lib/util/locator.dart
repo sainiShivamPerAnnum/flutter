@@ -5,6 +5,7 @@ import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/analytics_repo.dart';
 import 'package:felloapp/core/repository/banking_repo.dart';
 import 'package:felloapp/core/repository/campaigns_repo.dart';
+import 'package:felloapp/core/repository/clientComms_repo.dart';
 import 'package:felloapp/core/repository/coupons_repo.dart';
 import 'package:felloapp/core/repository/games_repo.dart';
 import 'package:felloapp/core/repository/getters_repo.dart';
@@ -187,6 +188,7 @@ Future<void> setupLocator() async {
   locator.registerLazySingleton(UserStatsRepo.new);
   locator.registerLazySingleton(RootController.new);
   locator.registerLazySingleton(PowerPlayRepository.new);
+  locator.registerLazySingleton(ClientCommsRepo.new);
 
   //ROOT
   locator.registerLazySingleton(CardActionsNotifier.new);

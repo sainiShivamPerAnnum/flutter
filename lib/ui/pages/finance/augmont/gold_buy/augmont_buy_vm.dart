@@ -332,6 +332,8 @@ class GoldBuyViewModel extends BaseViewModel {
     }
     if (goldBuyAmount! < 10) {
       showMinCapText = true;
+      BaseUtil.showNegativeAlert(
+          "Invalid Amount", "Please Enter Amount Greater than ₹10");
       return false;
     }
 

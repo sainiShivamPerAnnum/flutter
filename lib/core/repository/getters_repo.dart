@@ -23,7 +23,6 @@ import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/code_from_freq.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/flavor_config.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 
 //[TODO]:Added Prod CDN url;
@@ -387,31 +386,4 @@ class GetterRepository extends BaseRepo {
     }
   }
 
-  Future<void> subscribeGoldPriceAlert(int flag) async {
-    try {
-      final token = await getBearerToken();
-
-      final _clientComunicationBaseUrl = FlavorConfig.isDevelopment()
-          ? 'https://2i7p0mi89b.execute-api.ap-south-1.amazonaws.com/dev'
-          : 'https://7ljkkapvw7.execute-api.ap-south-1.amazonaws.com/prod';
-
-      String? fcmToken = await FirebaseMessaging.instance.getToken();
-
-      var map = {
-        "flag": flag.toString(),
-      };
-
-      await APIService.instance.postData(
-        ApiPath.subscribeGoldPriceAlert,
-        cBaseUrl: _clientComunicationBaseUrl,
-        token: token,
-        queryParams: map,
-        headers: {'fcmToken': fcmToken ?? ""},
-      );
-
-      // logger.d(response);
-    } catch (e) {
-      logger.e(e.toString());
-    }
-  }
 }

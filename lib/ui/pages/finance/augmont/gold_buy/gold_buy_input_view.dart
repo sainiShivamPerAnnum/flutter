@@ -1,4 +1,3 @@
-import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/model/happy_hour_campign.dart';
@@ -154,12 +153,6 @@ class _GoldBuyInputViewState extends State<GoldBuyInputView> {
                 : BuyNavBar(
                 model: widget.model,
                 onTap: () async {
-                          if ((widget.model.goldBuyAmount ?? 0) < 10) {
-                            BaseUtil.showNegativeAlert("Invalid Amount",
-                                "Please Enter Amount Greater than ₹10");
-                            return;
-                          }
-
                           if (!widget.augTxnService.isGoldBuyInProgress) {
                             FocusScope.of(context).unfocus();
                             widget.model.initiateBuy();

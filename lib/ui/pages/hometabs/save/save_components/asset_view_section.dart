@@ -8,7 +8,7 @@ import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/model/portfolio_model.dart';
 import 'package:felloapp/core/model/subscription_models/subscription_model.dart';
-import 'package:felloapp/core/repository/getters_repo.dart';
+import 'package:felloapp/core/repository/clientComms_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
@@ -1649,14 +1649,14 @@ class _GoldRateWidgetState extends State<_GoldRateWidget> {
   bool switchValue =
       PreferenceHelper.getBool(PreferenceHelper.GOLD_PRICE_SUBSCRIBE);
 
-  final _getterRepo = locator<GetterRepository>();
+  final _repo = locator<ClientCommsRepo>();
 
   void handleToggle(bool newValue) {
     setState(() {
       switchValue = newValue;
     });
 
-    _getterRepo.subscribeGoldPriceAlert(switchValue ? 1 : 0);
+    _repo.subscribeGoldPriceAlert(switchValue ? 1 : 0);
 
     PreferenceHelper.setBool(PreferenceHelper.GOLD_PRICE_SUBSCRIBE, true);
 
