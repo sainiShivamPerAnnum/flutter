@@ -1,3 +1,4 @@
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/model/happy_hour_campign.dart';
@@ -82,10 +83,10 @@ class _GoldBuyInputViewState extends State<GoldBuyInputView> {
                   if (!AppState.isRepeated) {
                     locator<BackButtonActions>()
                         .showWantToCloseTransactionBottomSheet(
-                            double.parse(
-                                    widget.model.goldAmountController!.text)
-                                .round(),
-                            InvestmentType.AUGGOLD99, () {
+                        double.parse(
+                            widget.model.goldAmountController!.text)
+                            .round(),
+                        InvestmentType.AUGGOLD99, () {
                       widget.model.initiateBuy();
                       AppState.backButtonDispatcher!.didPopRoute();
                     });
@@ -140,19 +141,25 @@ class _GoldBuyInputViewState extends State<GoldBuyInputView> {
             const Spacer(),
             widget.augTxnService.isGoldBuyInProgress
                 ? Container(
-                    height: SizeConfig.screenWidth! * 0.1556,
-                    alignment: Alignment.center,
-                    width: SizeConfig.screenWidth! * 0.7,
-                    child: const LinearProgressIndicator(
-                      color: UiConstants.primaryColor,
-                      backgroundColor: UiConstants.kDarkBackgroundColor,
-                    ),
-                  )
+              height: SizeConfig.screenWidth! * 0.1556,
+              alignment: Alignment.center,
+              width: SizeConfig.screenWidth! * 0.7,
+              child: const LinearProgressIndicator(
+                color: UiConstants.primaryColor,
+                backgroundColor: UiConstants.kDarkBackgroundColor,
+              ),
+            )
                 : widget.model.goldRates == null
-                    ? const SizedBox()
-                    : BuyNavBar(
-                        model: widget.model,
-                        onTap: () async {
+                ? const SizedBox()
+                : BuyNavBar(
+                model: widget.model,
+                onTap: () async {
+                          if ((widget.model.goldBuyAmount ?? 0) < 10) {
+                            BaseUtil.showNegativeAlert("Invalid Amount",
+                                "Please Enter Amount Greater than ₹10");
+                            return;
+                          }
+
                           if (!widget.augTxnService.isGoldBuyInProgress) {
                             FocusScope.of(context).unfocus();
                             widget.model.initiateBuy();

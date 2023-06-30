@@ -205,7 +205,8 @@ class FloPlanWidget extends StatelessWidget {
             floAssetType: Constants.ASSET_TYPE_FLO_FIXED_6,
             amount: amount,
             isSkipMl: isSkipMl,
-            promoText: "Get *5X tickets* on saving",
+            promoText: lendboxDetails[0]["tambolaMultiplier"],
+            // promoText: "Get *5X tickets* on saving",
           ),
           // SizedBox(height: SizeConfig.padding12),
           FelloFloPrograms(
@@ -222,7 +223,9 @@ class FloPlanWidget extends StatelessWidget {
                 : Constants.ASSET_TYPE_FLO_FIXED_3,
             amount: amount,
             isSkipMl: isSkipMl,
-            promoText: isLendboxOldUser ? null : "Get *3X tickets* on saving",
+            promoText: isLendboxOldUser
+                ? lendboxDetails[2]["tambolaMultiplier"]
+                : lendboxDetails[1]["tambolaMultiplier"],
           ),
           // SizedBox(height: SizeConfig.padding12),
           if (!isLendboxOldUser)
@@ -235,7 +238,7 @@ class FloPlanWidget extends StatelessWidget {
               floAssetType: Constants.ASSET_TYPE_FLO_FELXI,
               amount: amount,
               isSkipMl: isSkipMl,
-            ),
+                promoText: lendboxDetails[3]["tambolaMultiplier"]),
         ],
       ),
     );

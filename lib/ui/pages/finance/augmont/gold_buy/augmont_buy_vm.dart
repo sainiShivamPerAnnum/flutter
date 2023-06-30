@@ -245,7 +245,7 @@ class GoldBuyViewModel extends BaseViewModel {
     skipMl = isSkipMilestone;
     incomingAmount = amount?.toDouble() ?? 0;
     goldBuyAmount = amount?.toDouble() ??
-        assetOptionsModel!.data.userOptions[1].value.toDouble();
+        assetOptionsModel?.data.userOptions[1].value.toDouble();
     goldAmountController = TextEditingController(
         text: amount?.toString() ??
             assetOptionsModel!.data.userOptions[1].value.toString());
