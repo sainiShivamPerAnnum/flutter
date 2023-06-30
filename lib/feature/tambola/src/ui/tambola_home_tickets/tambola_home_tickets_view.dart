@@ -1,3 +1,4 @@
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/feature/tambola/src/ui/tambola_home_details/tambola_home_details_view.dart';
 import 'package:felloapp/feature/tambola/src/ui/tambola_home_tickets/tambola_home_tickets_vm.dart';
@@ -10,12 +11,12 @@ import 'package:felloapp/feature/tambola/src/ui/widgets/ticket/ticket_section.da
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
+import 'package:felloapp/ui/pages/asset_selection.dart';
 import 'package:felloapp/util/assets.dart';
-import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:lottie/lottie.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class TambolaHomeTicketsView extends StatefulWidget {
   const TambolaHomeTicketsView({
@@ -30,7 +31,7 @@ class _TambolaHomeTicketsViewState extends State<TambolaHomeTicketsView> {
   ScrollController? _scrollController;
 
   final GlobalKey<AnimatedBuyTambolaTicketCardState> tambolaBuyTicketCardKey =
-      GlobalKey<AnimatedBuyTambolaTicketCardState>();
+  GlobalKey<AnimatedBuyTambolaTicketCardState>();
 
   @override
   void initState() {
@@ -59,7 +60,7 @@ class _TambolaHomeTicketsViewState extends State<TambolaHomeTicketsView> {
                   children: [
                     SizedBox(height: SizeConfig.padding16),
                     //1 Cr Lottie
-                    const TambolaRewardLottieStrip(),
+                    TambolaRewardLottieStrip(),
                     //Weekly/Daily Picks Card
                     const TodayWeeklyPicksCard(),
                     //Tambola Results Card
@@ -76,7 +77,7 @@ class _TambolaHomeTicketsViewState extends State<TambolaHomeTicketsView> {
                       },
                     ),
                     const NextWeekTicketInfo(),
-                    AnimatedBuyTambolaTicketCard(key: tambolaBuyTicketCardKey),
+                    // AnimatedBuyTambolaTicketCard(key: tambolaBuyTicketCardKey),
                     const TambolaLeaderboardView(),
                     // LottieBuilder.network(Assets.bottomBannerLottie),
                     SizedBox(height: SizeConfig.navBarHeight),
@@ -90,9 +91,48 @@ class _TambolaHomeTicketsViewState extends State<TambolaHomeTicketsView> {
 }
 
 class TambolaRewardLottieStrip extends StatelessWidget {
-  const TambolaRewardLottieStrip({
+  TambolaRewardLottieStrip({
     super.key,
   });
+
+  final List<String> _goldMarquee = [
+    'Get more tickets now',
+    'Know how Tickets work',
+    'Know about Ticket Rewards',
+  ];
+
+  final List<String> icon = [
+    Assets.tambolaCardAsset,
+    'assets/svg/trophy_banner.svg',
+    'assets/svg/question.svg',
+  ];
+
+  void onTap(int index) {
+    switch (index) {
+      case 0:
+        AppState.delegate!.appState.currentAction = PageAction(
+          page: AssetSelectionViewConfig,
+          state: PageState.addWidget,
+          widget: const AssetSelectionPage(
+            showOnlyFlo: false,
+          ),
+        );
+        break;
+      case 1:
+      case 2:
+        AppState.delegate!.appState.currentAction = PageAction(
+          state: PageState.addWidget,
+          page: TambolaNewUser,
+          widget: TambolaHomeDetailsView(
+            isStandAloneScreen: true,
+            showPrizeSection: index == 2,
+            showBottomButton: false,
+            showDemoImage: false,
+          ),
+        );
+        break;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -104,21 +144,61 @@ class TambolaRewardLottieStrip extends StatelessWidget {
         borderRadius: BorderRadius.circular(SizeConfig.roundness12),
         child: (DateTime.now().weekday == 1 && DateTime.now().hour < 16)
             ? const SizedBox()
-            : InkWell(
-                onTap: () {
-                  Haptic.vibrate();
-                  AppState.delegate!.appState.currentAction = PageAction(
-                    state: PageState.addWidget,
-                    page: TambolaNewUser,
-                    widget: const TambolaHomeDetailsView(
-                      isStandAloneScreen: true,
-                      showPrizeSection: true,
-                      showBottomButton: false,
-                      showDemoImage: false,
-                    ),
+            : SizedBox(
+                height: SizeConfig.padding48,
+                width: SizeConfig.screenWidth,
+                child: Builder(builder: (context) {
+                  return CarouselSlider.builder(
+                    itemCount: 3,
+                    itemBuilder: (context, index, realIndex) {
+                      return GestureDetector(
+                        onTap: () {
+                          onTap(index);
+                        },
+                        child: Container(
+                          height: SizeConfig.padding54,
+                          padding: EdgeInsets.symmetric(
+                              horizontal: SizeConfig.padding14,
+                              vertical: SizeConfig.padding12),
+                          decoration: BoxDecoration(
+                            color: const Color(0xff01656B),
+                            borderRadius:
+                                BorderRadius.circular(SizeConfig.roundness12),
+                          ),
+                          child: Row(
+                            children: [
+                              SizedBox(
+                                height: SizeConfig.padding26,
+                                width: SizeConfig.padding32,
+                                child: SvgPicture.asset(
+                                  icon[index],
+                                  height: SizeConfig.padding26,
+                                  width: SizeConfig.padding32,
+                                ),
+                              ),
+                              SizedBox(width: SizeConfig.padding10),
+                              Text(_goldMarquee[index],
+                                  style: TextStyles.rajdhaniSB.body0
+                                      .colour(Colors.white)),
+                              const Spacer(),
+                              SvgPicture.asset(
+                                Assets.chevRonRightArrow,
+                                color: UiConstants.primaryColor,
+                                height: SizeConfig.padding24,
+                                width: SizeConfig.padding24,
+                              )
+                            ],
+                          ),
+                        ),
+                      );
+                    },
+                    options: CarouselOptions(
+                        autoPlay: true,
+                        viewportFraction: 1,
+                        scrollPhysics: const AlwaysScrollableScrollPhysics()),
                   );
-                },
-                child: Lottie.asset(Assets.tambolaTopBannerTharLottie)),
+                }),
+              ),
       ),
     );
   }

@@ -385,4 +385,5 @@ class GetterRepository extends BaseRepo {
       return ApiResponse.withError("Unable to fetch stories", 400);
     }
   }
+
 }

@@ -9,9 +9,9 @@ import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/analytics/base_analytics_service.dart';
 import 'package:felloapp/core/service/cache_service.dart';
+import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/custom_logger.dart';
 import 'package:webengage_flutter/webengage_flutter.dart';
 
 class AppFlyerAnalytics extends BaseAnalyticsService {
@@ -59,7 +59,7 @@ class AppFlyerAnalytics extends BaseAnalyticsService {
     String? id = '';
 
     try {
-      AppsFlyerOptions appsFlyerOptions = new AppsFlyerOptions(
+      AppsFlyerOptions appsFlyerOptions = AppsFlyerOptions(
         afDevKey: AnalyticsService.appFlierKey,
         appId: Platform.isIOS ? '1558445254' : 'in.fello.felloapp',
         showDebug: FlavorConfig.isDevelopment(),

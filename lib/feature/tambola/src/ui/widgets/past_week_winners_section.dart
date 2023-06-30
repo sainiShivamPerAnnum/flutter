@@ -54,8 +54,8 @@ class _TambolaLeaderboardViewState extends State<TambolaLeaderboardView> {
     return temp.length > 1
         ? temp.join(", ")
         : temp.isEmpty
-        ? ""
-        : temp[0];
+            ? ""
+            : temp[0];
   }
 
   @override
@@ -80,7 +80,7 @@ class _TambolaLeaderboardViewState extends State<TambolaLeaderboardView> {
                   height: SizeConfig.pageHorizontalMargins,
                 ),
                 Text(
-                  "Last week's leaderboard",
+                  "Last Week Winners",
                   style: TextStyles.rajdhaniSB.body0,
                 ),
                 SizedBox(
@@ -120,16 +120,16 @@ class _TambolaLeaderboardViewState extends State<TambolaLeaderboardView> {
                     Row(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                                  Text(
-                                    "#",
-                                    style: TextStyles.sourceSans.body3
-                                        .colour(UiConstants.kTextColor2),
-                                  ),
-                                  SizedBox(width: SizeConfig.padding32),
-                                  Text("Names",
-                                      style: TextStyles.sourceSans.body3
-                                          .colour(UiConstants.kTextColor2)),
-                                  const Spacer(),
+                        Text(
+                          "#",
+                          style: TextStyles.sourceSans.body3
+                              .colour(UiConstants.kTextColor2),
+                        ),
+                        SizedBox(width: SizeConfig.padding32),
+                        Text("Names",
+                            style: TextStyles.sourceSans.body3
+                                .colour(UiConstants.kTextColor2)),
+                        const Spacer(),
                                   Text(
                                     'Tickets Owned',
                                     style: TextStyles.sourceSans.body3
@@ -141,23 +141,23 @@ class _TambolaLeaderboardViewState extends State<TambolaLeaderboardView> {
                                     'Rewards',
                                     style: TextStyles.sourceSans.body3
                                         .colour(UiConstants.kTextColor2),
-                        )
-                      ],
-                    ),
-                    Column(
-                      children: List.generate(
-                        _seeAll ? winners.length : 10,
-                            (i) {
-                          return Column(
-                            children: [
-                              Container(
-                                width: SizeConfig.screenWidth,
-                                padding: EdgeInsets.symmetric(
-                                    vertical: SizeConfig.padding12),
-                                margin: EdgeInsets.symmetric(
-                                  vertical: SizeConfig.padding4,
-                                ),
-                                decoration: BoxDecoration(
+                                  )
+                                ],
+                              ),
+                              Column(
+                                children: List.generate(
+                                  _seeAll ? winners.length : 10,
+                                  (i) {
+                                    return Column(
+                                      children: [
+                                        Container(
+                                          width: SizeConfig.screenWidth,
+                                          padding: EdgeInsets.symmetric(
+                                              vertical: SizeConfig.padding12),
+                                          margin: EdgeInsets.symmetric(
+                                            vertical: SizeConfig.padding4,
+                                          ),
+                                          decoration: BoxDecoration(
                                   color: Colors.transparent,
                                   borderRadius: BorderRadius.circular(
                                       SizeConfig.roundness16),
@@ -243,34 +243,34 @@ class _TambolaLeaderboardViewState extends State<TambolaLeaderboardView> {
                               if (i + 1 < winners.length)
                                 const Divider(
                                   color: Colors.white,
-                                  thickness: 0.2,
-                                )
-                            ],
-                          );
-                        },
-                      ),
-                    ),
-                    SizedBox(
-                      height: SizeConfig.padding16,
-                    ),
-                    !_seeAll
-                        ? GestureDetector(
-                      onTap: () {
-                        setState(() {
-                          _seeAll = true;
-                        });
-                      },
-                      child: Row(
-                        mainAxisAlignment:
-                        MainAxisAlignment.center,
-                        children: [
-                          Text(
-                            "See all",
-                            style: TextStyles.sourceSansSB.body2
-                                .colour(Colors.white),
-                          ),
-                          SizedBox(
-                            width: SizeConfig.padding8,
+                                            thickness: 0.2,
+                                          )
+                                      ],
+                                    );
+                                  },
+                                ),
+                              ),
+                              SizedBox(
+                                height: SizeConfig.padding16,
+                              ),
+                              !_seeAll
+                                  ? GestureDetector(
+                                      onTap: () {
+                                        setState(() {
+                                          _seeAll = true;
+                                        });
+                                      },
+                                      child: Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.center,
+                                        children: [
+                                          Text(
+                                            "See all",
+                                            style: TextStyles.sourceSansSB.body2
+                                                .colour(Colors.white),
+                                          ),
+                                          SizedBox(
+                                            width: SizeConfig.padding8,
                                           ),
                                           Transform.rotate(
                                               angle: math.pi / 2,

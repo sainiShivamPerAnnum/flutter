@@ -249,7 +249,7 @@ class GoldBuyViewModel extends BaseViewModel {
     skipMl = isSkipMilestone;
     incomingAmount = amount?.toDouble() ?? 0;
     goldBuyAmount = amount?.toDouble() ??
-        assetOptionsModel!.data.userOptions[1].value.toDouble();
+        assetOptionsModel?.data.userOptions[1].value.toDouble();
     goldAmountController = TextEditingController(
         text: amount?.toString() ??
             assetOptionsModel!.data.userOptions[1].value.toString());
@@ -332,6 +332,8 @@ class GoldBuyViewModel extends BaseViewModel {
     }
     if (goldBuyAmount! < 10) {
       showMinCapText = true;
+      BaseUtil.showNegativeAlert(
+          "Invalid Amount", "Please Enter Amount Greater than ₹10");
       return false;
     }
 

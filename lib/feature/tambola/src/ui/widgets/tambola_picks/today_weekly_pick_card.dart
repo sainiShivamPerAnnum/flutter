@@ -26,11 +26,7 @@ class TodayWeeklyPicksCard extends StatelessWidget {
       ),
       child: Column(
         children: [
-          Container(
-            padding: EdgeInsets.only(
-              // top: SizeConfig.pageHorizontalMargins,
-              bottom: SizeConfig.padding8,
-            ),
+          SizedBox(
             child: (DateTime.now().weekday == 1 && DateTime.now().hour < 16)
                 ? const TambolaTopBanner()
                 : const PicksCardView(),

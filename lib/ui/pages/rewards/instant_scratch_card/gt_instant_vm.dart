@@ -14,24 +14,24 @@ import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/rsa_encryption.dart';
 import 'package:flutter/material.dart';
 
 class GTInstantViewModel extends BaseViewModel {
-  final UserService? _userService = locator<UserService>();
-  final UserCoinService? _userCoinService = locator<UserCoinService>();
-  final CustomLogger? _logger = locator<CustomLogger>();
-  final ApiPath? _apiPaths = locator<ApiPath>();
-  final ScratchCardService? _gtService = locator<ScratchCardService>();
+  final UserService _userService = locator<UserService>();
+  final UserCoinService _userCoinService = locator<UserCoinService>();
+  final CustomLogger _logger = locator<CustomLogger>();
+  final ApiPath _apiPaths = locator<ApiPath>();
+  final ScratchCardService _gtService = locator<ScratchCardService>();
 
   // final PaytmService? _paytmService = locator<PaytmService>();
   final JourneyService _journeyService = locator<JourneyService>();
   final MarketingEventHandlerService _marketingEventHandlerService =
       locator<MarketingEventHandlerService>();
-  final _rsaEncryption = new RSAEncryption();
+
+  // final _rsaEncryption =  RSAEncryption();
   S locale = locator<S>();
-  final UserCoinService? _coinService = locator<UserCoinService>();
-  final ScratchCardRepository? _gtRepo = locator<ScratchCardRepository>();
+  final UserCoinService _coinService = locator<UserCoinService>();
+  final ScratchCardRepository _gtRepo = locator<ScratchCardRepository>();
   AnimationController? lottieAnimationController;
 
   // double coinsPositionY = SizeConfig.viewInsets.top +
@@ -52,51 +52,51 @@ class GTInstantViewModel extends BaseViewModel {
   ScratchCard? _scratchCard;
   double _buttonOpacity = 0;
 
-  double get buttonOpacity => this._buttonOpacity;
+  double get buttonOpacity => _buttonOpacity;
 
   set buttonOpacity(value) {
-    this._buttonOpacity = value;
+    _buttonOpacity = value;
     notifyListeners();
   }
 
-  ScratchCard? get scratchCard => this._scratchCard;
+  ScratchCard? get scratchCard => _scratchCard;
 
   set scratchCard(value) {
-    this._scratchCard = value;
+    _scratchCard = value;
     notifyListeners();
   }
 
-  get isShimmerEnabled => this._isShimmerEnabled;
+  get isShimmerEnabled => _isShimmerEnabled;
 
   set isShimmerEnabled(value) {
-    this._isShimmerEnabled = value;
+    _isShimmerEnabled = value;
     notifyListeners();
   }
 
   bool _showScratchGuide = false;
 
-  get showScratchGuide => this._showScratchGuide;
+  get showScratchGuide => _showScratchGuide;
 
   set showScratchGuide(value) {
-    this._showScratchGuide = value;
+    _showScratchGuide = value;
     notifyListeners();
   }
 
   bool _isCardScratchStarted = false;
 
-  bool get isCardScratchStarted => this._isCardScratchStarted;
+  bool get isCardScratchStarted => _isCardScratchStarted;
 
   set isCardScratchStarted(bool value) {
-    this._isCardScratchStarted = value;
+    _isCardScratchStarted = value;
     notifyListeners();
   }
 
   bool _isCardScratched = false;
 
-  get isCardScratched => this._isCardScratched;
+  get isCardScratched => _isCardScratched;
 
   set isCardScratched(value) {
-    this._isCardScratched = value;
+    _isCardScratched = value;
     notifyListeners();
   }
 
@@ -112,7 +112,7 @@ class GTInstantViewModel extends BaseViewModel {
     scratchCard = ScratchCardService.currentGT;
     ScratchCardService.currentGT = null;
 
-    Future.delayed(Duration(seconds: 3), () {
+    Future.delayed(const Duration(seconds: 3), () {
       if (!isCardScratchStarted) {
         showScratchGuide = true;
       }
@@ -171,7 +171,7 @@ class GTInstantViewModel extends BaseViewModel {
   }
 
   initNormalFlow() {
-    Future.delayed(Duration(milliseconds: 500), () {
+    Future.delayed(const Duration(milliseconds: 500), () {
       coinsCount = _coinService!.flcBalance;
       showMainContent = true;
       notifyListeners();

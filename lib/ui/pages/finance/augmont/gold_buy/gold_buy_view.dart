@@ -139,7 +139,7 @@ class _GoldBuyViewState extends State<GoldBuyView>
     } else if (txnService.currentTransactionState == TransactionState.ongoing) {
       return GoldBuyLoadingView(model: model);
     } else if (txnService.currentTransactionState == TransactionState.success) {
-      return GoldBuySuccessView();
+      return const GoldBuySuccessView();
     }
 
     return GoldBuyLoadingView(model: model);

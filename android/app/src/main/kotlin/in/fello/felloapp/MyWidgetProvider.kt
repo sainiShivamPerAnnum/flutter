@@ -21,12 +21,15 @@ class MyWidgetProvider : AppWidgetProvider() {
         const val ACTION_BUTTON_CLICK = "com.example.ACTION_BUTTON_CLICK"
 
         fun getFormattedFelloBalance(context: Context): String {
-            try{
-                val sharedPreferences: SharedPreferences = context.getSharedPreferences("FlutterSharedPreferences",
-                Context.MODE_PRIVATE
+            try {
+                val sharedPreferences: SharedPreferences = context.getSharedPreferences(
+                    "FlutterSharedPreferences", Context.MODE_PRIVATE
                 )
-                Log.d("MyWidgetProvider", sharedPreferences.getString("flutter.felloBalance","0.00")?: "N/A")
-                val balanceStr = sharedPreferences.getString("flutter.felloBalance","N/A")
+                Log.d(
+                    "MyWidgetProvider",
+                    sharedPreferences.getString("flutter.felloBalance", "0.00") ?: "N/A"
+                )
+                val balanceStr = sharedPreferences.getString("flutter.felloBalance", "N/A")
 
                 val doubleNumber = balanceStr?.toDouble()
                 val formatter = DecimalFormat("#,##,###")
@@ -34,16 +37,14 @@ class MyWidgetProvider : AppWidgetProvider() {
                     groupingSeparator = ','
                 }
                 return "₹${formatter.format(doubleNumber)}"
-            }catch(e: NumberFormatException) {
+            } catch (e: NumberFormatException) {
                 return "₹0"
             }
         }
     }
 
     override fun onUpdate(
-        context: Context,
-        appWidgetManager: AppWidgetManager,
-        appWidgetIds: IntArray
+        context: Context, appWidgetManager: AppWidgetManager, appWidgetIds: IntArray
     ) {
         for (appWidgetId in appWidgetIds) {
             Log.d("MyWidgetProvider", "onUpdate called");
@@ -56,7 +57,8 @@ class MyWidgetProvider : AppWidgetProvider() {
             // Set the click action for the button to open a specific screen in your app
             val intent = Intent(context, MyWidgetProvider::class.java)
             intent.action = "in.fello.felloapp.ACTION_BUTTON_CLICK"
-            val pendingIntent = PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
+            val pendingIntent =
+                PendingIntent.getBroadcast(context, 0, intent, PendingIntent.FLAG_IMMUTABLE)
             views.setOnClickPendingIntent(R.id.quick_save_button, pendingIntent)
 
             // Update the widget
@@ -80,22 +82,22 @@ class MyWidgetProvider : AppWidgetProvider() {
     //     val messenger = engine?.dartExecutor?.binaryMessenger
     //     if(messenger != null) {
 
-    //         val channel = MethodChannel(messenger, "methodChannel/deviceData")        
-       
+    //         val channel = MethodChannel(messenger, "methodChannel/deviceData")
+
     //         channel.invokeMethod("openAssetSelection", flutterIntent)
     //     }
     // }
 
     private fun formatBalance(value: String?): String {
-       try{
+        try {
             val doubleNumber = value?.toDouble()
             val formatter = DecimalFormat("#,##,###.00")
             formatter.decimalFormatSymbols = DecimalFormatSymbols.getInstance().apply {
                 groupingSeparator = ','
             }
             return "₹${formatter.format(doubleNumber)}"
-       }catch(e: NumberFormatException) {
+        } catch (e: NumberFormatException) {
             return "N/A"
-       }
+        }
     }
 }

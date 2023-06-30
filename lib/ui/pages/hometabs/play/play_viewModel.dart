@@ -24,7 +24,6 @@ import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
 
 import '../../../../util/assets.dart';
 
@@ -195,10 +194,10 @@ class PlayViewModel extends BaseViewModel {
     ));
     playViewChildren.add(SizedBox(height: SizeConfig.padding16));
 
-    playViewChildren.add(
-      LottieBuilder.network(
-          "https://d37gtxigg82zaw.cloudfront.net/scroll-animation.json"),
-    );
+    // playViewChildren.add(
+    //   LottieBuilder.network(
+    //       "https://d37gtxigg82zaw.cloudfront.net/scroll-animation.json"),
+    // );
     return playViewChildren;
   }
 

@@ -46,7 +46,6 @@ class MultipleScratchCardsViewModel extends BaseViewModel {
   bool _isCurrentScratchCardLoading = false;
 
   bool get isCurrentScratchCardLoading => _isCurrentScratchCardLoading;
-
   set isCurrentScratchCardLoading(value) {
     _isCurrentScratchCardLoading = value;
     notifyListeners();
@@ -55,7 +54,6 @@ class MultipleScratchCardsViewModel extends BaseViewModel {
   bool _showScratchGuideLabel = false;
 
   bool get showScratchGuideLabel => _showScratchGuideLabel;
-
   set showScratchGuideLabel(bool value) {
     _showScratchGuideLabel = value;
     notifyListeners();
@@ -64,7 +62,6 @@ class MultipleScratchCardsViewModel extends BaseViewModel {
   List<bool> _isScratchCardRedeemed = [];
 
   get isScratchCardRedeemed => _isScratchCardRedeemed;
-
   set isScratchCardRedeemed(value) {
     _isScratchCardRedeemed = value;
     notifyListeners();
@@ -73,7 +70,6 @@ class MultipleScratchCardsViewModel extends BaseViewModel {
   bool _showConfetti = false;
 
   get showConfetti => _showConfetti;
-
   set showConfetti(value) {
     _showConfetti = value;
     notifyListeners();

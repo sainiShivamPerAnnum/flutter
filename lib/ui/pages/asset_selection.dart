@@ -14,11 +14,12 @@ import 'package:felloapp/feature/tambola/tambola.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_buy/augmont_buy_vm.dart';
-import 'package:felloapp/ui/pages/hometabs/save/flo_components/flo_permium_card.dart';
+import 'package:felloapp/ui/pages/finance/lendbox/detail_page/flo_premium_details_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/save_banner.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/ui/pages/static/gold_rate_card.dart';
 import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/extensions/rich_text_extension.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -27,6 +28,7 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:provider/provider.dart';
+import 'package:shimmer/shimmer.dart';
 
 class AssetSelectionPage extends StatelessWidget {
   const AssetSelectionPage(
@@ -147,97 +149,97 @@ class FloPlanWidget extends StatelessWidget {
         locator<UserService>().userSegments.contains(Constants.US_FLO_OLD);
     List lendboxDetails = AppConfig.getValue(AppConfigKey.lendbox);
 
-    return GestureDetector(
-      onTap: () {
-        //todo: redirect to flo details page
-      },
-      child: Container(
-        padding: EdgeInsets.symmetric(
-          horizontal: SizeConfig.padding16,
-          vertical: SizeConfig.padding16,
-        ),
-        decoration: BoxDecoration(
-          color: const Color(0xff01656B),
-          borderRadius: BorderRadius.circular(10),
-        ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Row(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                SvgPicture.asset(
-                  'assets/svg/fello_flo.svg',
-                  height: SizeConfig.padding44,
-                  width: SizeConfig.padding44,
-                  fit: BoxFit.cover,
-                ),
-                SizedBox(width: SizeConfig.padding12),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  mainAxisAlignment: MainAxisAlignment.start,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      'Save in Fello Flo',
-                      style: TextStyles.rajdhaniSB.body0,
-                    ),
-                    SizedBox(height: SizeConfig.padding4),
-                    Text(
-                      'P2P Asset • RBI Certified',
-                      style: TextStyles.sourceSans.body4
-                          .colour(Colors.white.withOpacity(0.8)),
-                    ),
-                  ],
-                ),
-                // const Spacer(),
-                // SvgPicture.asset(
-                //   'assets/svg/Arrow_dotted.svg',
-                //   height: SizeConfig.padding24,
-                //   width: SizeConfig.padding24,
-                // ),
-              ],
-            ),
-            SizedBox(height: SizeConfig.padding16),
-            FelloFloPrograms(
-              percentage: '12%',
-              isRecommended: true,
-              chipString1: lendboxDetails[0]["maturityPeriodText"],
-              chipString2: lendboxDetails[0]["minAmountText"],
-              floAssetType: Constants.ASSET_TYPE_FLO_FIXED_6,
-              amount: amount,
-              isSkipMl: isSkipMl,
-            ),
-            SizedBox(width: SizeConfig.padding12),
-            FelloFloPrograms(
-              percentage: '10%',
-              isRecommended: false,
-              chipString1: isLendboxOldUser
-                  ? lendboxDetails[2]["maturityPeriodText"]
-                  : lendboxDetails[1]["maturityPeriodText"] ?? "1 Week Lockin",
-              chipString2: isLendboxOldUser
-                  ? lendboxDetails[2]["minAmountText"]
-                  : lendboxDetails[1]["minAmountText"] ?? 'Min - ₹1000',
-              floAssetType: isLendboxOldUser
-                  ? Constants.ASSET_TYPE_FLO_FELXI
-                  : Constants.ASSET_TYPE_FLO_FIXED_3,
-              amount: amount,
-              isSkipMl: isSkipMl,
-            ),
-            SizedBox(width: SizeConfig.padding12),
-            if (!isLendboxOldUser)
-              FelloFloPrograms(
-                percentage: '8%',
-                isRecommended: false,
-                chipString1:
-                    lendboxDetails[3]["maturityPeriodText"] ?? "1 Week Lockin",
-                chipString2: lendboxDetails[3]["minAmountText"] ?? 'Min - ₹100',
-                floAssetType: Constants.ASSET_TYPE_FLO_FELXI,
-                amount: amount,
-                isSkipMl: isSkipMl,
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: SizeConfig.padding16,
+        vertical: SizeConfig.padding16,
+      ),
+      decoration: BoxDecoration(
+        color: const Color(0xff01656B),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              SvgPicture.asset(
+                'assets/svg/fello_flo.svg',
+                height: SizeConfig.padding44,
+                width: SizeConfig.padding44,
+                fit: BoxFit.cover,
               ),
-          ],
-        ),
+              SizedBox(width: SizeConfig.padding12),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.start,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    'Save in Fello Flo',
+                    style: TextStyles.rajdhaniSB.body0,
+                  ),
+                  SizedBox(height: SizeConfig.padding4),
+                  Text(
+                    'P2P Asset • RBI Certified',
+                    style: TextStyles.sourceSans.body4
+                        .colour(Colors.white.withOpacity(0.8)),
+                  ),
+                ],
+              ),
+              // const Spacer(),
+              // SvgPicture.asset(
+              //   'assets/svg/Arrow_dotted.svg',
+              //   height: SizeConfig.padding24,
+              //   width: SizeConfig.padding24,
+              // ),
+            ],
+          ),
+          SizedBox(height: SizeConfig.padding26),
+          FelloFloPrograms(
+            percentage: '12%',
+            isRecommended: true,
+            chipString1: lendboxDetails[0]["maturityPeriodText"],
+            chipString2: lendboxDetails[0]["minAmountText"],
+            floAssetType: Constants.ASSET_TYPE_FLO_FIXED_6,
+            amount: amount,
+            isSkipMl: isSkipMl,
+            promoText: lendboxDetails[0]["tambolaMultiplier"],
+            // promoText: "Get *5X tickets* on saving",
+          ),
+          // SizedBox(height: SizeConfig.padding12),
+          FelloFloPrograms(
+            percentage: '10%',
+            isRecommended: false,
+            chipString1: isLendboxOldUser
+                ? lendboxDetails[2]["maturityPeriodText"]
+                : lendboxDetails[1]["maturityPeriodText"] ?? "1 Week Lockin",
+            chipString2: isLendboxOldUser
+                ? lendboxDetails[2]["minAmountText"]
+                : lendboxDetails[1]["minAmountText"] ?? 'Min - ₹1000',
+            floAssetType: isLendboxOldUser
+                ? Constants.ASSET_TYPE_FLO_FELXI
+                : Constants.ASSET_TYPE_FLO_FIXED_3,
+            amount: amount,
+            isSkipMl: isSkipMl,
+            promoText: isLendboxOldUser
+                ? lendboxDetails[2]["tambolaMultiplier"]
+                : lendboxDetails[1]["tambolaMultiplier"],
+          ),
+          // SizedBox(height: SizeConfig.padding12),
+          if (!isLendboxOldUser)
+            FelloFloPrograms(
+              percentage: '8%',
+              isRecommended: false,
+              chipString1:
+                  lendboxDetails[3]["maturityPeriodText"] ?? "1 Week Lockin",
+              chipString2: lendboxDetails[3]["minAmountText"] ?? 'Min - ₹100',
+              floAssetType: Constants.ASSET_TYPE_FLO_FELXI,
+              amount: amount,
+              isSkipMl: isSkipMl,
+                promoText: lendboxDetails[3]["tambolaMultiplier"]),
+        ],
       ),
     );
   }
@@ -380,7 +382,8 @@ class FelloFloPrograms extends StatelessWidget {
       required this.chipString2,
       required this.floAssetType,
       this.amount,
-      this.isSkipMl})
+      this.isSkipMl,
+      this.promoText})
       : super(key: key);
 
   final String percentage;
@@ -390,32 +393,14 @@ class FelloFloPrograms extends StatelessWidget {
   final String floAssetType;
   final int? amount;
   final bool? isSkipMl;
+  final String? promoText;
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      mainAxisAlignment: MainAxisAlignment.end,
-      mainAxisSize: MainAxisSize.min,
+    final daysRemaining = BaseUtil.calculateRemainingDays(DateTime(2023, 9, 1));
+
+    return Stack(
       children: [
-        if (isRecommended)
-          Container(
-            padding: EdgeInsets.symmetric(
-              horizontal: SizeConfig.padding8,
-              vertical: SizeConfig.padding2,
-            ),
-            decoration: const BoxDecoration(
-              color: Color(0xff62E3C4),
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(5),
-                topRight: Radius.circular(5),
-              ),
-            ),
-            child: Text(
-              'Recommended',
-              style: TextStyles.sourceSansSB.body5.colour(Colors.black),
-            ),
-          ),
-        // if (!isRecommended) const Spacer(),
         GestureDetector(
           onTap: () {
             BaseUtil.openFloBuySheet(
@@ -433,64 +418,175 @@ class FelloFloPrograms extends StatelessWidget {
           child: Container(
             margin:
                 EdgeInsets.only(top: isRecommended ? 0 : SizeConfig.padding12),
-            padding: EdgeInsets.symmetric(
-              vertical: SizeConfig.padding12,
-              horizontal: SizeConfig.padding12,
-            ),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(SizeConfig.roundness5),
-              color: const Color(0xffD9D9D9).withOpacity(0.2),
+              borderRadius: BorderRadius.circular(SizeConfig.roundness8),
+              color: const Color(0xFF246F74),
+              boxShadow: [
+                BoxShadow(
+                  color: const Color(0x3F000000).withOpacity(0.1),
+                  blurRadius: 2,
+                  offset: const Offset(0, 1),
+                  spreadRadius: 0,
+                )
+              ],
             ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            child: Column(
               children: [
-                Column(
-                  mainAxisSize: MainAxisSize.min,
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Text(
-                          percentage,
-                          style: TextStyles.rajdhaniSB.title2
-                              .colour(Colors.white.withOpacity(0.8)),
-                          textAlign: TextAlign.center,
-                        ),
-                        SizedBox(width: SizeConfig.padding2),
-                        Column(
-                          children: [
-                            Text(
-                              'Returns',
-                              style: TextStyles.sourceSansSB.body3
-                                  .colour(Colors.white.withOpacity(0.8)),
-                            ),
-                            SizedBox(
-                              height: SizeConfig.padding8,
-                            )
-                          ],
-                        ),
-                      ],
+                Container(
+                  padding: EdgeInsets.symmetric(
+                    vertical: SizeConfig.padding12,
+                    horizontal: SizeConfig.padding12,
+                  ),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(SizeConfig.roundness5),
+                    color: const Color(0xffD9D9D9).withOpacity(0.15),
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Text(
+                                percentage,
+                                style: TextStyles.rajdhaniSB.title3
+                                    .colour(Colors.white.withOpacity(0.8)),
+                                textAlign: TextAlign.center,
+                              ),
+                              SizedBox(width: SizeConfig.padding2),
+                              Column(
+                                children: [
+                                  Text(
+                                    'Returns',
+                                    style: TextStyles.sourceSansSB.body3
+                                        .colour(Colors.white.withOpacity(0.8)),
+                                  ),
+                                  SizedBox(
+                                    height: SizeConfig.padding8,
+                                  )
+                                ],
+                              ),
+                            ],
+                          ),
+                          Text(chipString1, style: TextStyles.sourceSans.body4)
+                        ],
+                      ),
+                      Column(
+                        mainAxisSize: MainAxisSize.min,
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          SvgPicture.asset(
+                            'assets/svg/Arrow_dotted.svg',
+                            height: SizeConfig.padding24,
+                            width: SizeConfig.padding24,
+                          ),
+                          SizedBox(height: SizeConfig.padding12),
+                          Text(chipString2, style: TextStyles.sourceSans.body4)
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                if (promoText != null && promoText!.isNotEmpty)
+                  Container(
+                    padding: EdgeInsets.symmetric(
+                      vertical: SizeConfig.padding6,
                     ),
-                    Row(
+                    decoration: ShapeDecoration(
+                      // color: const Color(0xFF246F74),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(SizeConfig.roundness8),
+                          bottomRight: Radius.circular(SizeConfig.roundness8),
+                        ),
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        FloPremiumTierChip(value: chipString1),
+                        SvgPicture.asset(
+                          'assets/svg/tambola_icon.svg',
+                          height: SizeConfig.padding16,
+                        ),
                         SizedBox(width: SizeConfig.padding4),
-                        FloPremiumTierChip(value: chipString2),
+                        promoText!.beautify(
+                          boldStyle:
+                              TextStyles.sourceSansB.body4.colour(Colors.white),
+                          style:
+                              TextStyles.sourceSans.body4.colour(Colors.white),
+                        ),
                       ],
                     ),
-                  ],
-                ),
-                SvgPicture.asset(
-                  'assets/svg/Arrow_dotted.svg',
-                  height: SizeConfig.padding24,
-                  width: SizeConfig.padding24,
-                ),
+                  )
               ],
             ),
           ),
         ),
+        if (isRecommended)
+          Transform.translate(
+            offset: Offset(0, -SizeConfig.padding12),
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                margin: EdgeInsets.only(
+                  left: SizeConfig.screenWidth! / 8,
+                ),
+                width: SizeConfig.screenWidth! * 0.5,
+                child: Stack(
+                  children: [
+                    Container(
+                      // alignment: Alignment.center,
+                      padding: EdgeInsets.symmetric(
+                          horizontal: SizeConfig.padding12,
+                          vertical: SizeConfig.padding2),
+                      decoration: BoxDecoration(
+                        color: const Color(0xff62E3C4),
+                        borderRadius:
+                            BorderRadius.circular(SizeConfig.roundness12),
+                      ),
+                      child: Shimmer.fromColors(
+                        period: const Duration(milliseconds: 2500),
+                        baseColor: Colors.grey[900]!,
+                        highlightColor: Colors.grey[100]!,
+                        loop: 3,
+                        child:
+                            "Available only for *$daysRemaining days*".beautify(
+                          boldStyle:
+                              TextStyles.sourceSansB.body4.colour(Colors.white),
+                          style:
+                              TextStyles.sourceSans.body4.colour(Colors.white),
+                          alignment: TextAlign.center,
+                        ),
+                      ),
+                    ),
+                    Positioned(
+                      right: 30,
+                      child: CustomPaint(
+                        size: Size(
+                            SizeConfig.padding14,
+                            (SizeConfig.padding14 * 1.09).toDouble()),
+                        painter: StarCustomPainter(),
+                      ),
+                    ),
+                    Positioned(
+                      right: 22,
+                      child: CustomPaint(
+                        size: Size(
+                            SizeConfig.padding8,
+                            (SizeConfig.padding8 * 1.09).toDouble()),
+                        painter: StarCustomPainter(),
+                      ),
+                    )
+                  ],
+                ),
+              ),
+            ),
+          ),
       ],
     );
   }

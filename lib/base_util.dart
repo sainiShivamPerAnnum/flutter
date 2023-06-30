@@ -457,7 +457,7 @@ class BaseUtil extends ChangeNotifier {
       case '0':
         return "Withdrawing to your bank account after maturity";
       case '1':
-        return "Auto-investing in 12% Flo after maturity";
+        return "Auto-investing in 12% Flo on maturity";
       case '2':
         return "Move to Flo Basic after maturity";
       default:
@@ -957,6 +957,13 @@ class BaseUtil extends ChangeNotifier {
 
     /// Check if the current week is the same as the last week when the app was opened
     return currentWeekNumber != lastWeekNumber;
+  }
+
+  static int calculateRemainingDays(DateTime endDate) {
+    DateTime now = DateTime.now();
+    Duration difference = endDate.difference(now);
+    int remaining = difference.inDays;
+    return remaining;
   }
 
   int getTicketCountForTransaction(double investment) =>

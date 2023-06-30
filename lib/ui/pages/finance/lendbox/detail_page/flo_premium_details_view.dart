@@ -30,9 +30,11 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
+import 'package:shimmer/shimmer.dart';
 
 class FloPremiumDetailsView extends StatefulWidget {
   final bool is12;
+
   const FloPremiumDetailsView({super.key, required this.is12});
 
   @override
@@ -45,6 +47,15 @@ class _FloPremiumDetailsViewState extends State<FloPremiumDetailsView>
 
   AnimationController? _animController;
   Animation<double>? offsetAnim;
+
+  bool _seeAll = false;
+
+  void seeAllClicked() {
+    setState(() {
+      _seeAll = true;
+    });
+  }
+
   @override
   void initState() {
     super.initState();
@@ -67,6 +78,7 @@ class _FloPremiumDetailsViewState extends State<FloPremiumDetailsView>
     controller?.dispose();
     _animController!.dispose();
     super.dispose();
+    _seeAll = false;
   }
 
   @override
@@ -124,18 +136,132 @@ class _FloPremiumDetailsViewState extends State<FloPremiumDetailsView>
                                               SizedBox(
                                                   height: SizeConfig.padding32),
                                               if (model.isInvested)
-                                                const FloBalanceBriefRow(
-                                                  key: ValueKey("10floBalance"),
-                                                  tier: Constants
-                                                      .ASSET_TYPE_FLO_FIXED_6,
+                                                Container(
+                                                  margin: EdgeInsets.symmetric(
+                                                      horizontal:
+                                                          SizeConfig.padding16),
+                                                  padding: EdgeInsets.only(
+                                                    top: SizeConfig.padding16,
+                                                    // horizontal:
+                                                    //     SizeConfig.padding16,
+                                                  ),
+                                                  decoration: ShapeDecoration(
+                                                    color:
+                                                        const Color(0xFF013B3F),
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                      side: const BorderSide(
+                                                        width: 1,
+                                                        strokeAlign: BorderSide
+                                                            .strokeAlignOutside,
+                                                        color:
+                                                            Color(0xFF326164),
+                                                      ),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              16),
+                                                    ),
+                                                  ),
+                                                  child: Column(
+                                                    children: [
+                                                      Container(
+                                                        margin: EdgeInsets
+                                                            .symmetric(
+                                                          horizontal: SizeConfig
+                                                              .padding24,
+                                                        ),
+                                                        child:
+                                                            const FloBalanceBriefRow(
+                                                          key: ValueKey(
+                                                              "10floBalance"),
+                                                          tier: Constants
+                                                              .ASSET_TYPE_FLO_FIXED_6,
+                                                          mini: true,
+                                                          endAlign: true,
+                                                        ),
+                                                      ),
+                                                      SizedBox(
+                                                          height: SizeConfig
+                                                              .padding16),
+                                                      Container(
+                                                        margin: EdgeInsets
+                                                            .symmetric(
+                                                          horizontal: SizeConfig
+                                                              .padding16,
+                                                        ),
+                                                        child:
+                                                            FloPremiumTransactionsList(
+                                                          key: const ValueKey(
+                                                              "12floTxns"),
+                                                          model: model,
+                                                          seeAll: _seeAll,
+                                                        ),
+                                                      ),
+                                                      SizedBox(
+                                                          height: SizeConfig
+                                                              .padding8),
+                                                      GestureDetector(
+                                                        onTap: () {
+                                                          setState(() {
+                                                            _seeAll = !_seeAll;
+                                                          });
+                                                        },
+                                                        child: Container(
+                                                          decoration: BoxDecoration(
+                                                              color: Colors
+                                                                  .white
+                                                                  .withOpacity(
+                                                                      0.10),
+                                                              borderRadius: BorderRadius.only(
+                                                                  bottomLeft: Radius
+                                                                      .circular(
+                                                                          SizeConfig
+                                                                              .roundness16),
+                                                                  bottomRight:
+                                                                      Radius.circular(
+                                                                          SizeConfig
+                                                                              .roundness16))),
+                                                          child: Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .center,
+                                                            children: [
+                                                              Text(
+                                                                _seeAll
+                                                                    ? 'View less Investments'
+                                                                    : 'View more Investments',
+                                                                style: TextStyles
+                                                                    .sourceSansSB
+                                                                    .body2
+                                                                    .colour(Colors
+                                                                        .white),
+                                                              ),
+                                                              SizedBox(
+                                                                width: SizeConfig
+                                                                    .padding4,
+                                                              ),
+                                                              Icon(
+                                                                _seeAll
+                                                                    ? Icons
+                                                                        .keyboard_arrow_up
+                                                                    : Icons
+                                                                        .keyboard_arrow_down_outlined,
+                                                                color: Colors
+                                                                    .white,
+                                                                size: SizeConfig
+                                                                    .padding28,
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      )
+                                                    ],
+                                                  ),
                                                 ),
                                               if (model.isInvested)
                                                 SizedBox(
                                                     height:
-                                                        SizeConfig.padding16),
-                                              FloPremiumTransactionsList(
-                                                  key: ValueKey("12floTxns"),
-                                                  model: model),
+                                                        SizeConfig.padding16)
                                             ],
                                           )
                                         : Column(
@@ -160,7 +286,62 @@ class _FloPremiumDetailsViewState extends State<FloPremiumDetailsView>
                                                 key:
                                                     const ValueKey("10floTxns"),
                                                 model: model,
+                                                seeAll: _seeAll,
                                               ),
+                                              if (model.isInvested)
+                                                GestureDetector(
+                                                  onTap: () {
+                                                    setState(() {
+                                                      _seeAll = !_seeAll;
+                                                    });
+                                                  },
+                                                  child: Container(
+                                                    decoration: BoxDecoration(
+                                                        color: Colors.white
+                                                            .withOpacity(0.10),
+                                                        borderRadius: BorderRadius.only(
+                                                            bottomLeft:
+                                                                Radius.circular(
+                                                                    SizeConfig
+                                                                        .roundness16),
+                                                            bottomRight:
+                                                                Radius.circular(
+                                                                    SizeConfig
+                                                                        .roundness16))),
+                                                    child: Row(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Text(
+                                                          'View more Investments',
+                                                          style: TextStyles
+                                                              .sourceSansSB
+                                                              .body2
+                                                              .colour(
+                                                                  Colors.white),
+                                                        ),
+                                                        SizedBox(
+                                                          width: SizeConfig
+                                                              .padding4,
+                                                        ),
+                                                        Icon(
+                                                          Icons
+                                                              .keyboard_arrow_down_outlined,
+                                                          color: Colors.white,
+                                                          size: SizeConfig
+                                                              .padding28,
+                                                        ),
+                                                        // Transform.rotate(
+                                                        //     angle: math.pi / 2,
+                                                        //     child: SvgPicture.asset(
+                                                        //       Assets.chevRonRightArrow,
+                                                        //       color: UiConstants.primaryColor,
+                                                        //     ))
+                                                      ],
+                                                    ),
+                                                  ),
+                                                )
                                             ],
                                           ),
                                     transitionBuilder: (child, animation) {
@@ -171,22 +352,36 @@ class _FloPremiumDetailsViewState extends State<FloPremiumDetailsView>
                                     },
                                   ),
                                 ),
-                                Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      vertical: SizeConfig.padding16),
-                                  child: Text(
-                                    "100% Safe & Secure with Fello",
-                                    style: TextStyles.rajdhaniSB.title4
-                                        .colour(Colors.white),
-                                  ),
-                                ),
-                                const SaveAssetsFooter(isFlo: true),
+
                                 SizedBox(
                                     height: SizeConfig.pageHorizontalMargins),
                                 CircularSlider(
                                     type: InvestmentType.LENDBOXP2P,
                                     isNewUser: false,
                                     interest: model.is12 ? 12 : 10),
+
+                                //From our 12% Flo Savers
+                                SizedBox(height: SizeConfig.padding40),
+                                Text(
+                                  "From our 12% Flo Savers",
+                                  style: TextStyles.rajdhaniSB.title4
+                                      .colour(Colors.white),
+                                  textAlign: TextAlign.center,
+                                ),
+                                SizedBox(height: SizeConfig.padding24),
+                                FloTestomonials(),
+
+                                SizedBox(height: SizeConfig.padding20),
+                                // Padding(
+                                //   padding: EdgeInsets.symmetric(
+                                //       vertical: SizeConfig.padding16),
+                                //   child: Text(
+                                //     "100% Safe & Secure with Fello",
+                                //     style: TextStyles.rajdhaniSB.title4
+                                //         .colour(Colors.white),
+                                //   ),
+                                // ),
+                                const SaveAssetsFooter(isFlo: true),
                                 SizedBox(
                                     height: SizeConfig.pageHorizontalMargins),
                                 Padding(
@@ -268,50 +463,77 @@ class _FloPremiumDetailsViewState extends State<FloPremiumDetailsView>
                                           color: Colors.white, width: 2)),
                                   margin: EdgeInsets.all(
                                       SizeConfig.pageHorizontalMargins),
-                                  padding: EdgeInsets.all(
-                                      SizeConfig.pageHorizontalMargins),
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
+                                  padding: EdgeInsets.all(SizeConfig.padding16),
+                                  child: Row(
+                                    mainAxisAlignment:
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
-                                      Text(
-                                        "Still not convinced?",
-                                        style: TextStyles.rajdhaniSB.title5,
-                                      ),
-                                      SizedBox(height: SizeConfig.padding12),
-                                      Row(
-                                        children: [
-                                          Expanded(
-                                            child: Text(
-                                              "Know more about the P2P Asset by talking to us",
-                                              style: TextStyles.body2
+                                      SizedBox(
+                                        width: SizeConfig.padding200 +
+                                            SizeConfig.padding4,
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(
+                                              "We’ll be happy to assist",
+                                              style:
+                                                  TextStyles.rajdhaniSB.body1,
+                                            ),
+                                            SizedBox(
+                                                height: SizeConfig.padding12),
+                                            Text(
+                                              "Get in touch with the experts at Fello to assist you in your savings",
+                                              style: TextStyles.body3
                                                   .colour(Colors.white),
+                                            )
+                                          ],
+                                        ),
+                                      ),
+                                      Stack(
+                                        children: [
+                                          SvgPicture.asset(
+                                            'assets/svg/customer_help.svg',
+                                            height: SizeConfig.padding104,
+                                          ),
+                                          Transform.translate(
+                                            offset:
+                                                Offset(0, SizeConfig.padding54),
+                                            child: Align(
+                                              alignment: Alignment.bottomCenter,
+                                              child: OutlinedButton(
+                                                onPressed: () {
+                                                  Haptic.vibrate();
+                                                  AppState.delegate!.appState
+                                                          .currentAction =
+                                                      PageAction(
+                                                    state: PageState.addPage,
+                                                    page:
+                                                        FreshDeskHelpPageConfig,
+                                                  );
+                                                  trackHelpBannerTapped(
+                                                      model.is12);
+                                                },
+                                                style: ButtonStyle(
+                                                    backgroundColor:
+                                                        MaterialStateProperty
+                                                            .all(const Color(
+                                                                0xFF01656B)),
+                                                    side: MaterialStateProperty
+                                                        .all(const BorderSide(
+                                                            color: Colors.white,
+                                                            width: 1.0,
+                                                            style: BorderStyle
+                                                                .solid))),
+                                                child: Text(
+                                                  "ASK FELLO",
+                                                  style: TextStyles
+                                                      .rajdhaniB.body2
+                                                      .colour(Colors.white),
+                                                ),
+                                              ),
                                             ),
                                           ),
-                                          SizedBox(width: SizeConfig.padding10),
-                                          OutlinedButton(
-                                            onPressed: () {
-                                              Haptic.vibrate();
-                                              AppState.delegate!.appState
-                                                  .currentAction = PageAction(
-                                                state: PageState.addPage,
-                                                page: FreshDeskHelpPageConfig,
-                                              );
-                                              trackHelpBannerTapped(model.is12);
-                                            },
-                                            style: ButtonStyle(
-                                                side: MaterialStateProperty.all(
-                                                    const BorderSide(
-                                                        color: Colors.white,
-                                                        width: 1.0,
-                                                        style: BorderStyle
-                                                            .solid))),
-                                            child: Text(
-                                              "CONTACT US",
-                                              style: TextStyles.rajdhaniB.body2
-                                                  .colour(Colors.white),
-                                            ),
-                                          )
                                         ],
                                       )
                                     ],
@@ -332,7 +554,7 @@ class _FloPremiumDetailsViewState extends State<FloPremiumDetailsView>
                     child: Container(
                       color: UiConstants.kBackgroundColor.withOpacity(0.96),
                       width: SizeConfig.screenWidth,
-                      height: SizeConfig.screenWidth! * 0.24 +
+                      height: SizeConfig.screenWidth! * 0.26 +
                           MediaQuery.of(context).viewPadding.bottom / 2,
                       child: Stack(
                         children: [
@@ -454,6 +676,7 @@ class _FloPremiumDetailsViewState extends State<FloPremiumDetailsView>
                                   ],
                                 ),
                               ),
+                              SizedBox(height: SizeConfig.padding12),
                             ],
                           ),
                         ],
@@ -519,8 +742,136 @@ class _FloPremiumDetailsViewState extends State<FloPremiumDetailsView>
   }
 }
 
+class FloTestomonials extends StatelessWidget {
+  FloTestomonials({
+    super.key,
+  });
+
+  final Map<String, List<String>> testimonials = {
+    "Akash mahesh": [
+      "Fello has completely changed the way I save money. I now earn interest on saving money and save more to play tambola and win rewards. The app has truly motimvated me to save more. Highly recommend it to everyone",
+      'https://d37gtxigg82zaw.cloudfront.net/testimonials/1.jpg'
+    ],
+    "Vinay Kumar": [
+      "I wanted to build a habit of saving money and Fello made it possible. It is a win win situation where I save and invest money and then play Tambola and get chance for getting more rewards",
+      'https://d37gtxigg82zaw.cloudfront.net/testimonials/2.jpg',
+    ],
+    "Rohit": [
+      "Fello has taken monotony out of saving money. It is very easy to use. The addition of Tambola to a savings app is a very good idea as it makes saving money rewarding and fun. I have personally won rewards when playing Tambola",
+      'https://d37gtxigg82zaw.cloudfront.net/testimonials/3.jpg',
+    ]
+  };
+
+  @override
+  Widget build(BuildContext context) {
+    List<String> shuffledKeys = testimonials.keys.toList()..shuffle();
+
+    return SizedBox(
+      height: SizeConfig.padding160,
+      child: ListView.builder(
+        itemCount: testimonials.length,
+        scrollDirection: Axis.horizontal,
+        itemBuilder: (BuildContext context, int index) {
+          String name = shuffledKeys[index];
+          String? testimonial = testimonials[name]![0];
+          String image = testimonials[name]![1];
+
+          return Container(
+            width: SizeConfig.padding300,
+            margin: EdgeInsets.only(left: SizeConfig.pageHorizontalMargins),
+            height: SizeConfig.padding160,
+            decoration: ShapeDecoration(
+              // color: const Color(0xFF191919),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8)),
+            ),
+            child: Row(
+              children: [
+                Expanded(
+                  flex: 2,
+                  child: ClipRRect(
+                    borderRadius: const BorderRadius.only(
+                      topLeft: Radius.circular(8),
+                      bottomLeft: Radius.circular(8),
+                    ),
+                    clipBehavior: Clip.hardEdge,
+                    child: Image.network(
+                      image,
+                      fit: BoxFit.fitHeight,
+                      height: SizeConfig.padding160,
+                    ),
+                  ),
+                ),
+                Expanded(
+                  flex: 3,
+                  child: Stack(
+                    children: [
+                      Container(
+                        decoration: const BoxDecoration(
+                          borderRadius: BorderRadius.only(
+                            topRight: Radius.circular(8),
+                            bottomRight: Radius.circular(8),
+                          ),
+                        ),
+                        child: ClipRRect(
+                          borderRadius: const BorderRadius.only(
+                            topRight: Radius.circular(8),
+                            bottomRight: Radius.circular(8),
+                          ),
+                          clipBehavior: Clip.hardEdge,
+                          child: Image.asset(
+                            'assets/svg/comma.png',
+                            fit: BoxFit.fitHeight,
+                            height: SizeConfig.padding160,
+                          ),
+                        ),
+                      ),
+                      Positioned(
+                        left: 15,
+                        top: 10,
+                        child: Column(
+                          mainAxisSize: MainAxisSize.min,
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              name,
+                              style: TextStyles.sourceSansSB.body3
+                                  .colour(Colors.white),
+                            ),
+                            SizedBox(height: SizeConfig.padding8),
+                            Padding(
+                              padding:
+                                  EdgeInsets.only(right: SizeConfig.padding12),
+                              child: SizedBox(
+                                width: SizeConfig.padding152,
+                                child: Text(
+                                  testimonial ?? "",
+                                  style: TextStyles.sourceSans.body4
+                                      .colour(Colors.white),
+                                  maxLines: 5,
+                                  overflow: TextOverflow.ellipsis,
+                                  textAlign: TextAlign.left,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                )
+              ],
+            ),
+          );
+        },
+      ),
+    );
+  }
+}
+
 class FloPremiumHeader extends StatelessWidget {
   final FloPremiumDetailsViewModel model;
+
   const FloPremiumHeader({
     super.key,
     required this.model,
@@ -528,6 +879,8 @@ class FloPremiumHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final daysRemaining = BaseUtil.calculateRemainingDays(DateTime(2023, 9, 1));
+
     return Padding(
       padding:
           EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
@@ -537,46 +890,104 @@ class FloPremiumHeader extends StatelessWidget {
           Row(
             children: [
               Expanded(
-                  child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Fello Flo Premium",
-                    style: TextStyles.rajdhaniSB.title4,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Container(
-                        decoration: BoxDecoration(
-                          shape: BoxShape.circle,
-                          boxShadow: [
-                            BoxShadow(
-                              color: UiConstants.primaryColor.withOpacity(0.95),
-                              blurRadius: 50,
-                            )
-                          ],
-                        ),
-                        child: Text(
-                          model.is12 ? "12% Flo" : "10% Flo",
-                          style: TextStyles.rajdhaniB.title0.colour(
-                            model.is12
-                                ? UiConstants.primaryColor
-                                : Colors.white,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Container(
+                          margin: EdgeInsets.only(top: SizeConfig.padding12),
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            boxShadow: [
+                              BoxShadow(
+                                offset: const Offset(-10, 40),
+                                color:
+                                    UiConstants.primaryColor.withOpacity(0.95),
+                                blurRadius: 50,
+                              )
+                            ],
+                          ),
+                          child: Text(
+                            model.is12 ? "12% Flo" : "10% Flo",
+                            style: TextStyles.rajdhaniB.title0.colour(
+                              model.is12
+                                  ? UiConstants.primaryColor
+                                  : Colors.white,
+                            ),
                           ),
                         ),
+                      ],
+                    ),
+                    Text(
+                      model.is12 ? "12% Returns p.a." : "10% Returns p.a.",
+                      style: TextStyles.rajdhaniSB.title4,
+                    ),
+                    SizedBox(height: SizeConfig.padding16),
+                    SizedBox(
+                      width: SizeConfig.screenWidth! * 0.5,
+                      child: Stack(
+                        children: [
+                          Row(
+                            children: [
+                              Text(
+                                "Available only for",
+                                style: TextStyles.sourceSans.body3,
+                              ),
+                              SizedBox(width: SizeConfig.padding4),
+                              Container(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: SizeConfig.padding12,
+                                    vertical: SizeConfig.padding2),
+                                decoration: BoxDecoration(
+                                  color: const Color(0xff62E3C4),
+                                  borderRadius: BorderRadius.circular(
+                                      SizeConfig.roundness12),
+                                ),
+                                child: Shimmer.fromColors(
+                                  period: const Duration(milliseconds: 2500),
+                                  baseColor: Colors.grey[900]!,
+                                  highlightColor: Colors.grey[100]!,
+                                  loop: 3,
+                                  child: Text(
+                                    "$daysRemaining days",
+                                    style: TextStyles.sourceSansB.body3
+                                        .colour(Colors.black),
+                                  ),
+                                ),
+                              ),
+                            ],
+                          ),
+                          Positioned(
+                            right: 10,
+                            child: CustomPaint(
+                              size: Size(SizeConfig.padding12,
+                                  (SizeConfig.padding12 * 1.09).toDouble()),
+                              painter: StarCustomPainter(),
+                            ),
+                          ),
+                          Positioned(
+                            right: 5,
+                            child: CustomPaint(
+                              size: Size(SizeConfig.padding6,
+                                  (SizeConfig.padding6 * 1.09).toDouble()),
+                              painter: StarCustomPainter(),
+                            ),
+                          )
+                        ],
                       ),
-                    ],
-                  )
-                ],
-              )),
+                    )
+                  ],
+                ),
+              ),
               SvgPicture.asset(
                 Assets.floAsset,
                 height: SizeConfig.screenHeight! * 0.1,
               ),
             ],
           ),
-          SizedBox(height: SizeConfig.padding10),
+          SizedBox(height: SizeConfig.padding16),
           Text(
             model.is12 ? model.flo12Highlights : model.flo10Highlights,
             style: TextStyles.sourceSans.body2.colour(UiConstants.primaryColor),
@@ -593,10 +1004,13 @@ class FloPremiumHeader extends StatelessWidget {
 }
 
 class FloPremiumTransactionsList extends StatelessWidget {
-  FloPremiumDetailsViewModel model;
-  FloPremiumTransactionsList({
+  final FloPremiumDetailsViewModel model;
+  final bool seeAll;
+
+  const FloPremiumTransactionsList({
     Key? key,
     required this.model,
+    required this.seeAll,
   }) : super(key: key);
 
   void trackTransactionCardTap(
@@ -627,6 +1041,18 @@ class FloPremiumTransactionsList extends StatelessWidget {
         });
   }
 
+  int getLength() {
+    if (model.transactionsList.length > 2) {
+      if (seeAll) {
+        return model.transactionsList.length;
+      } else {
+        return 2;
+      }
+    } else {
+      return model.transactionsList.length;
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return AnimatedContainer(
@@ -634,7 +1060,7 @@ class FloPremiumTransactionsList extends StatelessWidget {
       curve: Curves.easeIn,
       child: ListView.builder(
           shrinkWrap: true,
-          itemCount: model.transactionsList.length,
+          itemCount: getLength(),
           physics: const NeverScrollableScrollPhysics(),
           itemBuilder: (ctx, i) {
             String formattedInvestmentDate = DateFormat('dd MMM, yyyy').format(
@@ -681,15 +1107,15 @@ class FloPremiumTransactionsList extends StatelessWidget {
                         borderRadius:
                             BorderRadius.circular(SizeConfig.roundness16),
                       ),
-                      margin: EdgeInsets.symmetric(
-                          horizontal: SizeConfig.pageHorizontalMargins,
-                          vertical: SizeConfig.padding10),
+                      margin: EdgeInsets.only(
+                          //     horizontal: SizeConfig.pageHorizontalMargins,
+                          bottom: SizeConfig.padding16),
                       child: Column(children: [
                         Padding(
                           padding: EdgeInsets.only(
                             top: SizeConfig.padding12,
                             bottom: SizeConfig.padding12,
-                            left: SizeConfig.pageHorizontalMargins,
+                            left: SizeConfig.padding12,
                             right: SizeConfig.padding12,
                           ),
                           child: Column(
@@ -748,7 +1174,7 @@ class FloPremiumTransactionsList extends StatelessWidget {
                         Container(
                           width: SizeConfig.screenWidth,
                           padding: EdgeInsets.symmetric(
-                            vertical: SizeConfig.padding16,
+                            vertical: SizeConfig.padding8,
                             horizontal: SizeConfig.padding16,
                           ),
                           decoration: BoxDecoration(
@@ -763,13 +1189,13 @@ class FloPremiumTransactionsList extends StatelessWidget {
                           child: hasUserDecided
                               ? Text(
                                   userMaturityPref,
-                                  style: TextStyles.sourceSans.body2,
+                                  style: TextStyles.sourceSans.body3,
                                 )
                               : Row(children: [
                                   Expanded(
                                     child: Text(
                                       userMaturityPref,
-                                      style: TextStyles.sourceSans.body2,
+                                      style: TextStyles.sourceSans.body3,
                                     ),
                                   ),
                                   SizedBox(width: SizeConfig.padding10),
@@ -912,7 +1338,7 @@ class LBoxAssetCard extends StatelessWidget {
                                     UiConstants.kTextColor.withOpacity(0.8)),
                               ),
                               SizedBox(width: SizeConfig.padding4),
-                              LboxGrowthArrow()
+                              const LboxGrowthArrow()
                             ],
                           ),
                         ],
@@ -926,5 +1352,55 @@ class LBoxAssetCard extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+class StarCustomPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    Path path_0 = Path();
+    path_0.moveTo(size.width * 0.5184209, size.height);
+    path_0.lineTo(size.width * 0.4815791, size.height);
+    path_0.cubicTo(
+        size.width * 0.4815791,
+        size.height * 0.7342100,
+        size.width * 0.2657891,
+        size.height * 0.5184208,
+        0,
+        size.height * 0.5184208);
+    path_0.lineTo(0, size.height * 0.4815792);
+    path_0.cubicTo(
+        size.width * 0.2657891,
+        size.height * 0.4815792,
+        size.width * 0.4815791,
+        size.height * 0.2657892,
+        size.width * 0.4815791,
+        0);
+    path_0.lineTo(size.width * 0.5184209, 0);
+    path_0.cubicTo(
+        size.width * 0.5184209,
+        size.height * 0.2657892,
+        size.width * 0.7342109,
+        size.height * 0.4815792,
+        size.width,
+        size.height * 0.4815792);
+    path_0.lineTo(size.width, size.height * 0.5184208);
+    path_0.cubicTo(
+        size.width * 0.7342109,
+        size.height * 0.5184208,
+        size.width * 0.5184209,
+        size.height * 0.7342100,
+        size.width * 0.5184209,
+        size.height);
+    path_0.close();
+
+    Paint paint_0_fill = Paint()..style = PaintingStyle.fill;
+    paint_0_fill.color = Colors.white.withOpacity(1.0);
+    canvas.drawPath(path_0, paint_0_fill);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    return true;
   }
 }

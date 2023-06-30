@@ -14,6 +14,7 @@ import 'package:provider/provider.dart';
 class AppTextFieldLabel extends StatelessWidget {
   final String text;
   final double? leftPadding;
+
   const AppTextFieldLabel(this.text, {Key? key, this.leftPadding})
       : super(key: key);
 
@@ -87,6 +88,7 @@ class AppTextField extends StatelessWidget {
   final TextStyle? prefixTextStyle;
   final String? suffixText;
   final TextStyle? suffixTextStyle;
+
   //executes on every change
   final AutovalidateMode? autovalidateMode;
   final int maxLines;
@@ -355,6 +357,7 @@ class AppPositiveBtn extends StatelessWidget {
   final double? width, height;
   final Widget? widget;
   final TextStyle? style;
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -416,6 +419,7 @@ class AppPositiveCustomChildBtn extends StatelessWidget {
   final Widget child;
   final VoidCallback onPressed;
   final double? width;
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
