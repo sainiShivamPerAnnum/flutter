@@ -113,8 +113,9 @@ class AugmontTransactionService extends BaseTransactionService {
           .formatUpiAppName(),
     );
     if (txnResponse.isSuccess()) {
+      currentTxnOrderId = txnResponse.model!.data!.txnId;
       const platform = MethodChannel("methodChannel/upiIntent");
-      // autosaveState = AutosaveState.INIT;
+
       try {
         if (Platform.isIOS) {
           await BaseUtil.launchUrl(txnResponse.model!.data!.intent!);
