@@ -771,7 +771,7 @@ class FloTestomonials extends StatelessWidget {
 
           return Container(
             width: SizeConfig.padding300,
-            margin: EdgeInsets.only(left: SizeConfig.padding16),
+            margin: EdgeInsets.only(left: SizeConfig.pageHorizontalMargins),
             height: SizeConfig.padding160,
             decoration: ShapeDecoration(
               // color: const Color(0xFF191919),

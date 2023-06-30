@@ -146,7 +146,7 @@ class TambolaRewardLottieStrip extends StatelessWidget {
             ? const SizedBox()
             : SizedBox(
                 height: SizeConfig.padding48,
-                width: double.infinity,
+                width: SizeConfig.screenWidth,
                 child: Builder(builder: (context) {
                   return CarouselSlider.builder(
                     itemCount: 3,
