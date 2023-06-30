@@ -747,13 +747,19 @@ class FloTestomonials extends StatelessWidget {
     super.key,
   });
 
-  final Map<String, String> testimonials = {
-    "Akash mahesh":
-        "Fello has completely changed the way I save money. I now earn interest on saving money and save more to play tambola and win rewards. The app has truly motimvated me to save more. Highly recommend it to everyone",
-    "Vinay Kumar":
-        "I wanted to build a habit of saving money and Fello made it possible. It is a win win situation where I save and invest money and then play Tambola and get chance for getting more rewards",
-    "Rohit":
-        "Fello has taken monotony out of saving money. It is very easy to use. The addition of Tambola to a savings app is a very good idea as it makes saving money rewarding and fun. I have personally won rewards when playing Tambola"
+  final Map<String, List<String>> testimonials = {
+    "Akash mahesh": [
+      "Fello has completely changed the way I save money. I now earn interest on saving money and save more to play tambola and win rewards. The app has truly motimvated me to save more. Highly recommend it to everyone",
+      'https://d37gtxigg82zaw.cloudfront.net/testimonials/1.jpg'
+    ],
+    "Vinay Kumar": [
+      "I wanted to build a habit of saving money and Fello made it possible. It is a win win situation where I save and invest money and then play Tambola and get chance for getting more rewards",
+      'https://d37gtxigg82zaw.cloudfront.net/testimonials/2.jpg',
+    ],
+    "Rohit": [
+      "Fello has taken monotony out of saving money. It is very easy to use. The addition of Tambola to a savings app is a very good idea as it makes saving money rewarding and fun. I have personally won rewards when playing Tambola",
+      'https://d37gtxigg82zaw.cloudfront.net/testimonials/3.jpg',
+    ]
   };
 
   @override
@@ -767,7 +773,8 @@ class FloTestomonials extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         itemBuilder: (BuildContext context, int index) {
           String name = shuffledKeys[index];
-          String? testimonial = testimonials[name];
+          String? testimonial = testimonials[name]![0];
+          String image = testimonials[name]![1];
 
           return Container(
             width: SizeConfig.padding300,
@@ -789,7 +796,7 @@ class FloTestomonials extends StatelessWidget {
                     ),
                     clipBehavior: Clip.hardEdge,
                     child: Image.network(
-                      'https://picsum.photos/140',
+                      image,
                       fit: BoxFit.fitHeight,
                       height: SizeConfig.padding160,
                     ),
@@ -955,8 +962,7 @@ class FloPremiumHeader extends StatelessWidget {
                           Positioned(
                             right: 10,
                             child: CustomPaint(
-                              size: Size(
-                                  SizeConfig.padding12,
+                              size: Size(SizeConfig.padding12,
                                   (SizeConfig.padding12 * 1.09).toDouble()),
                               painter: StarCustomPainter(),
                             ),
@@ -964,8 +970,7 @@ class FloPremiumHeader extends StatelessWidget {
                           Positioned(
                             right: 5,
                             child: CustomPaint(
-                              size: Size(
-                                  SizeConfig.padding6,
+                              size: Size(SizeConfig.padding6,
                                   (SizeConfig.padding6 * 1.09).toDouble()),
                               painter: StarCustomPainter(),
                             ),
