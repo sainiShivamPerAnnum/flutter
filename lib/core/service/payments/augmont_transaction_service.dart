@@ -118,6 +118,7 @@ class AugmontTransactionService extends BaseTransactionService {
 
       try {
         if (Platform.isIOS) {
+          isIOSTxnInProgress = true;
           await BaseUtil.launchUrl(txnResponse.model!.data!.intent!);
         } else {
           final result = await platform.invokeMethod('initiatePsp', {

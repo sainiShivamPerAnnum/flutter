@@ -1,8 +1,10 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/transaction_state_enum.dart';
+import 'package:felloapp/core/model/paytm_models/create_paytm_transaction_model.dart';
 import 'package:felloapp/core/model/paytm_models/paytm_transaction_response_model.dart';
 import 'package:felloapp/core/model/power_play_models/get_matches_model.dart';
 import 'package:felloapp/core/repository/paytm_repo.dart';
@@ -15,11 +17,16 @@ import 'package:felloapp/core/service/payments/base_transaction_service.dart';
 import 'package:felloapp/core/service/payments/razorpay_service.dart';
 import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/back_button_actions.dart';
+import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
+import 'package:felloapp/util/extensions/string_extension.dart';
 import 'package:felloapp/util/fail_types.dart';
+import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:flutter/services.dart';
 import 'package:upi_pay/upi_pay.dart';
 
 class LendboxTransactionService extends BaseTransactionService {
@@ -147,37 +154,61 @@ class LendboxTransactionService extends BaseTransactionService {
 
   @override
   Future<void> processUpiTransaction() async {
-    // AppState.blockNavigation();
-    // CreatePaytmTransactionModel? createdPaytmTransactionData =
-    //     await this.createPaytmTransaction();
+    AppState.blockNavigation();
 
-    // if (createdPaytmTransactionData != null) {
-    //   final deepUri = await _paytmService!.generateUpiTransactionDeepUri(
-    //       selectedUpiApplicationName, createdPaytmTransactionData, "FELLOTXN");
+    final ApiResponse<CreatePaytmTransactionModel> txnResponse =
+        await _paytmRepo.createTransaction(
+      currentTxnAmount,
+      {},
+      {
+        "fundType": currentFloPurchaseDetails!.floAssetType,
+        "maturityPref": currentFloPurchaseDetails!.maturityPref,
+      },
+      currentFloPurchaseDetails!.couponCode,
+      currentFloPurchaseDetails!.skipMl,
+      '',
+      InvestmentType.LENDBOXP2P,
+      currentFloPurchaseDetails!.upiChoice!.upiApplication.appName
+          .formatUpiAppName(),
+    );
+    if (txnResponse.isSuccess()) {
+      currentTxnOrderId = txnResponse.model!.data!.txnId;
+      const platform = MethodChannel("methodChannel/upiIntent");
 
-    //   if (deepUri != null && deepUri.isNotEmpty) {
-    //     final res = await _paytmService!.initiateUpiTransaction(
-    //       amount: this.currentTxnAmount,
-    //       orderId: createdPaytmTransactionData.data!.orderId,
-    //       upiApplication: upiApplication,
-    //       url: deepUri,
-    //       investmentType: InvestmentType.AUGGOLD99,
-    //     );
+      try {
+        if (Platform.isIOS) {
+          isIOSTxnInProgress = true;
+          await BaseUtil.launchUrl(txnResponse.model!.data!.intent!);
+        } else {
+          final result = await platform.invokeMethod('initiatePsp', {
+            'redirectUrl':
+                txnResponse.model!.data!.intent!.replaceRange(0, 10, ''),
+            'packageName': FlavorConfig.isDevelopment()
+                ? "com.phonepe.simulator"
+                : currentFloPurchaseDetails!.upiChoice!.packageName
+          });
+          _logger.d("Result from initiatePsp: $result");
+        }
+        locator<BackButtonActions>().isTransactionCancelled = false;
 
-    //     if (res && Platform.isAndroid) initiatePolling();
-    //     AppState.unblockNavigation();
-    //   } else {
-    //     AppState.unblockNavigation();
+        if (Platform.isAndroid) {
+          currentTransactionState = TransactionState.ongoing;
+          unawaited(initiatePolling());
+        }
+      } catch (e) {
+        currentTransactionState = TransactionState.idle;
 
-    //     BaseUtil.showNegativeAlert(locale.upiConnectFailed, locale.tryLater);
-    //   }
-    // } else {
-    //   AppState.unblockNavigation();
-    //   return BaseUtil.showNegativeAlert(
-    //     locale.failedToCreateTxn,
-    //     locale.tryLater,
-    //   );
-    // }
+        AppState.unblockNavigation();
+
+        return BaseUtil.showNegativeAlert(
+            locale.failedToCreateTxn, locale.tryLater);
+      }
+    } else {
+      currentTransactionState = TransactionState.idle;
+      AppState.unblockNavigation();
+      return BaseUtil.showNegativeAlert(
+          locale.failedToCreateTxn, locale.tryLater);
+    }
   }
 }
 

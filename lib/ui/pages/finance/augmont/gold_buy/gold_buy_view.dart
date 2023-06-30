@@ -49,23 +49,26 @@ class _GoldBuyViewState extends State<GoldBuyView>
       _txnService.currentTxnOrderId = '';
       _txnService.currentTxnScratchCardCount = 0;
       _txnService.currentTxnTambolaTicketsCount = 0;
+      _txnService.isIOSTxnInProgress = false;
       _txnService.currentTransactionState = TransactionState.idle;
     });
-    WidgetsBinding.instance!.addObserver(this);
+    WidgetsBinding.instance.addObserver(this);
   }
 
   @override
   void dispose() {
-    WidgetsBinding.instance!.removeObserver(this);
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     appLifecycleState = state;
-    if (appLifecycleState == AppLifecycleState.resumed) {
-      if (!_txnService.isIOSTxnInProgress) return;
+    if (appLifecycleState == AppLifecycleState.resumed &&
+        Platform.isIOS &&
+        _txnService.isIOSTxnInProgress) {
       _txnService.isIOSTxnInProgress = false;
+      _txnService.currentTransactionState = TransactionState.ongoing;
       _txnService.initiatePolling();
     }
     super.didChangeAppLifecycleState(state);
@@ -110,7 +113,8 @@ class _GoldBuyViewState extends State<GoldBuyView>
                     if (model.state == ViewState.Busy) {
                       return const Center(child: FullScreenLoader());
                     }
-                    _secureScreenshots(txnService);
+                    //TODO: Revert before prod release
+                    // _secureScreenshots(txnService);
 
                     return _getView(txnService, model);
                   },

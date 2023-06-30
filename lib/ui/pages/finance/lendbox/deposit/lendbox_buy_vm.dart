@@ -216,8 +216,7 @@ class LendboxBuyViewModel extends BaseViewModel {
         statusType: UpiApplicationDiscoveryAppStatusType.all);
     updateMinValues();
     await getAssetOptionsModel();
-    isIntentFlow = false;
-    //assetOptionsModel!.data.intent;
+    isIntentFlow = assetOptionsModel!.data.intent;
     log("isLendboxOldUser $isLendboxOldUser");
     if (floAssetType == Constants.ASSET_TYPE_FLO_FIXED_6) {
       maxAmount = 99999;

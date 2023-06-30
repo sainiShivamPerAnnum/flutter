@@ -1,8 +1,6 @@
 import 'dart:typed_data';
 
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/enums/app_config_keys.dart';
-import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_buy/augmont_buy_vm.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/deposit/lendbox_buy_vm.dart';
@@ -49,6 +47,23 @@ class GoldBreakdownView extends StatelessWidget {
             if (showBreakDown)
               Column(
                 children: [
+                  if (showPsp)
+                    Padding(
+                      padding: EdgeInsets.only(
+                        bottom: SizeConfig.padding10,
+                      ),
+                      child: Text(
+                        "Payment Summary",
+                        style:
+                            TextStyles.sourceSansB.body0.colour(Colors.white),
+                      ),
+                    ),
+                  if (showPsp)
+                    Divider(
+                      color: UiConstants.primaryColor,
+                      height: SizeConfig.padding16,
+                    ),
+                  SizedBox(height: SizeConfig.padding12),
                   Row(
                     children: [
                       Text("Invested Amount",
@@ -109,7 +124,7 @@ class GoldBreakdownView extends StatelessWidget {
                   SizedBox(
                     height: SizeConfig.padding24,
                   ),
-                  if ((model.totalTickets ?? 0) > 0) ...[
+                  if ((model.totalTickets ?? 0) > 0 && !showPsp) ...[
                     Divider(
                         color:
                             UiConstants.kLastUpdatedTextColor.withOpacity(0.5)),
@@ -212,9 +227,7 @@ class GoldBreakdownView extends StatelessWidget {
                             UiConstants.kLastUpdatedTextColor.withOpacity(0.5))
                 ],
               ),
-            if (showPsp &&
-                AppConfig.getValue(AppConfigKey.payment_brief_view) &&
-                model.isIntentFlow)
+            if (showPsp && model.isIntentFlow)
               UpiAppsGridView(
                 apps: model.appMetaList,
                 onTap: (i) {
@@ -275,7 +288,7 @@ class UpiAppsGridView extends StatelessWidget {
             bottom: SizeConfig.padding32,
           ),
           child: Text(
-            "Select an app to continue",
+            "Choose a UPI app",
             style: TextStyles.sourceSansB.body0.colour(Colors.white),
           ),
         ),
@@ -381,170 +394,186 @@ class FloBreakdownView extends StatelessWidget {
           mainAxisSize: MainAxisSize.min,
           children: [
             SizedBox(height: SizeConfig.padding28),
-            Column(
-              children: [
-                InvestmentForeseenWidget(
-                  amount: model.amountController?.text ?? '0',
-                  assetType: model.floAssetType,
-                  isLendboxOldUser: model.isLendboxOldUser,
-                  onChanged: (_) {},
-                ),
-                Row(
-                  children: [
-                    Text("Fello Flo Amount",
-                        style: TextStyles.sourceSansSB.body1),
-                    const Spacer(),
-                    Text(
-                      "₹${model.amountController?.text ?? '0'}",
-                      style: TextStyles.sourceSansSB.body1,
+            if (showBreakDown)
+              Column(
+                children: [
+                  if (showPsp)
+                    Padding(
+                      padding: EdgeInsets.only(
+                        bottom: SizeConfig.padding10,
+                      ),
+                      child: Text(
+                        "Payment Summary",
+                        style:
+                            TextStyles.sourceSansB.body0.colour(Colors.white),
+                      ),
                     ),
-                  ],
-                ),
-                SizedBox(
-                  height: SizeConfig.padding16,
-                ),
-                Row(
-                  children: [
-                    Text(
-                      "Investment date",
-                      style: TextStyles.sourceSans.body2,
+                  if (showPsp)
+                    Divider(
+                      color: UiConstants.primaryColor,
+                      height: SizeConfig.padding16,
                     ),
-                    const Spacer(),
-                    Text(
-                      // format today's date like this "3rd Mar 2023",
-                      DateFormat('d MMM yyyy').format(DateTime.now()),
-                      style: TextStyles.sourceSansSB.body2,
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: SizeConfig.padding16,
-                ),
-                Row(
-                  children: [
-                    Text(
-                      model.floAssetType == Constants.ASSET_TYPE_FLO_FELXI
-                          ? "Lockin Period"
-                          : "Maturity date",
-                      style: TextStyles.sourceSans.body2,
-                    ),
-                    const Spacer(),
-                    Text(
-                      DateFormat('d MMM, yyyy')
-                          .format(model.assetOptionsModel!.data.maturityAt!),
-                      style: TextStyles.sourceSansSB.body2,
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: SizeConfig.padding24,
-                ),
-                if ((model.totalTickets ?? 0) > 0) ...[
-                  Divider(
-                      color:
-                          UiConstants.kLastUpdatedTextColor.withOpacity(0.5)),
-                  SizedBox(
-                    height: SizeConfig.padding24,
+                  if (showPsp) SizedBox(height: SizeConfig.padding16),
+                  InvestmentForeseenWidget(
+                    amount: model.amountController?.text ?? '0',
+                    assetType: model.floAssetType,
+                    isLendboxOldUser: model.isLendboxOldUser,
+                    onChanged: (_) {},
                   ),
                   Row(
                     children: [
-                      SizedBox(
-                        height: SizeConfig.padding28,
-                        width: SizeConfig.padding28,
-                        child: SvgPicture.asset(
-                          Assets.howToPlayAsset1Tambola,
-                          fit: BoxFit.contain,
-                        ),
-                      ),
-                      SizedBox(
-                        width: SizeConfig.padding4,
-                      ),
+                      Text("Fello Flo Amount",
+                          style: TextStyles.sourceSansSB.body1),
+                      const Spacer(),
                       Text(
-                        "Total Tickets",
+                        "₹${model.amountController?.text ?? '0'}",
                         style: TextStyles.sourceSansSB.body1,
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: SizeConfig.padding16,
+                  ),
+                  Row(
+                    children: [
+                      Text(
+                        "Investment date",
+                        style: TextStyles.sourceSans.body2,
                       ),
                       const Spacer(),
                       Text(
-                        "${model.totalTickets}",
-                        style: TextStyles.sourceSansSB.body1,
+                        // format today's date like this "3rd Mar 2023",
+                        DateFormat('d MMM yyyy').format(DateTime.now()),
+                        style: TextStyles.sourceSansSB.body2,
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: SizeConfig.padding16,
+                  ),
+                  Row(
+                    children: [
+                      Text(
+                        model.floAssetType == Constants.ASSET_TYPE_FLO_FELXI
+                            ? "Lockin Period"
+                            : "Maturity date",
+                        style: TextStyles.sourceSans.body2,
+                      ),
+                      const Spacer(),
+                      Text(
+                        DateFormat('d MMM, yyyy')
+                            .format(model.assetOptionsModel!.data.maturityAt!),
+                        style: TextStyles.sourceSansSB.body2,
                       ),
                     ],
                   ),
                   SizedBox(
                     height: SizeConfig.padding24,
                   ),
-                  if (model.showHappyHour) ...[
+                  if ((model.totalTickets ?? 0) > 0 && !showPsp) ...[
+                    Divider(
+                        color:
+                            UiConstants.kLastUpdatedTextColor.withOpacity(0.5)),
+                    SizedBox(
+                      height: SizeConfig.padding24,
+                    ),
                     Row(
                       children: [
+                        SizedBox(
+                          height: SizeConfig.padding28,
+                          width: SizeConfig.padding28,
+                          child: SvgPicture.asset(
+                            Assets.howToPlayAsset1Tambola,
+                            fit: BoxFit.contain,
+                          ),
+                        ),
+                        SizedBox(
+                          width: SizeConfig.padding4,
+                        ),
                         Text(
-                          "Happy Hour Tickets",
-                          style: TextStyles.sourceSans.body2,
+                          "Total Tickets",
+                          style: TextStyles.sourceSansSB.body1,
                         ),
                         const Spacer(),
                         Text(
-                          "${model.happyHourTickets}",
-                          style: TextStyles.sourceSans.body2,
+                          "${model.totalTickets}",
+                          style: TextStyles.sourceSansSB.body1,
                         ),
                       ],
                     ),
                     SizedBox(
                       height: SizeConfig.padding24,
                     ),
-                    Row(
-                      children: [
-                        Text(
-                          "Lifetime Tickets",
-                          style: TextStyles.sourceSans.body2,
-                        ),
-                        const Spacer(),
-                        Text(
-                          "${model.numberOfTambolaTickets}",
-                          style: TextStyles.sourceSans.body2,
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: SizeConfig.padding24,
-                    ),
-                  ],
-                ],
-                if (model.appliedCoupon != null) ...[
-                  Divider(
-                      color:
-                          UiConstants.kLastUpdatedTextColor.withOpacity(0.5)),
-                  SizedBox(
-                    height: SizeConfig.padding12,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      SvgPicture.asset(
-                        Assets.ticketTilted,
+                    if (model.showHappyHour) ...[
+                      Row(
+                        children: [
+                          Text(
+                            "Happy Hour Tickets",
+                            style: TextStyles.sourceSans.body2,
+                          ),
+                          const Spacer(),
+                          Text(
+                            "${model.happyHourTickets}",
+                            style: TextStyles.sourceSans.body2,
+                          ),
+                        ],
                       ),
-                      const SizedBox(
-                        width: 8,
+                      SizedBox(
+                        height: SizeConfig.padding24,
                       ),
-                      Text(
-                        '${model.appliedCoupon?.code} coupon applied',
-                        style: TextStyles.sourceSans.body3
-                            .colour(UiConstants.kTealTextColor),
+                      Row(
+                        children: [
+                          Text(
+                            "Lifetime Tickets",
+                            style: TextStyles.sourceSans.body2,
+                          ),
+                          const Spacer(),
+                          Text(
+                            "${model.numberOfTambolaTickets}",
+                            style: TextStyles.sourceSans.body2,
+                          ),
+                        ],
+                      ),
+                      SizedBox(
+                        height: SizeConfig.padding24,
                       ),
                     ],
-                  ),
-                  SizedBox(
-                    height: SizeConfig.padding12,
-                  )
+                  ],
+                  if (model.appliedCoupon != null) ...[
+                    Divider(
+                        color:
+                            UiConstants.kLastUpdatedTextColor.withOpacity(0.5)),
+                    SizedBox(
+                      height: SizeConfig.padding12,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        SvgPicture.asset(
+                          Assets.ticketTilted,
+                        ),
+                        const SizedBox(
+                          width: 8,
+                        ),
+                        Text(
+                          '${model.appliedCoupon?.code} coupon applied',
+                          style: TextStyles.sourceSans.body3
+                              .colour(UiConstants.kTealTextColor),
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: SizeConfig.padding12,
+                    )
+                  ],
+                  if (showBreakDown)
+                    Divider(
+                        color:
+                            UiConstants.kLastUpdatedTextColor.withOpacity(0.5)),
                 ],
-                if (showBreakDown)
-                  Divider(
-                      color:
-                          UiConstants.kLastUpdatedTextColor.withOpacity(0.5)),
-              ],
-            ),
-            if (showPsp &&
-                AppConfig.getValue(AppConfigKey.payment_brief_view) &&
-                model.isIntentFlow)
+              ),
+            if (showPsp && model.isIntentFlow)
               UpiAppsGridView(
                 apps: model.appMetaList,
                 onTap: (i) {
