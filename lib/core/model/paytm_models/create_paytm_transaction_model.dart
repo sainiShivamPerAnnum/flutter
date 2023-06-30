@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 class CreatePaytmTransactionModel {
   bool? success;
   Data? data;
@@ -11,22 +14,6 @@ class CreatePaytmTransactionModel {
   CreatePaytmTransactionModel.base() {
     success = false;
     data = Data.base();
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['success'] = this.success;
-    if (this.data != null) {
-      data['data'] = this.data!.toJson();
-    }
-    return data;
-  }
-
-  Map<String, dynamic> toMap() {
-    return {
-      'success': success,
-      'data': data!.toMap(),
-    };
   }
 
   factory CreatePaytmTransactionModel.fromMap(Map<String, dynamic> map) {
@@ -55,64 +42,49 @@ class Data {
   String? orderId;
   String? callbackUrl;
   String? txnId;
+  String? intent;
+  String? pg;
+  String? mid;
+  Data({
+    this.temptoken,
+    this.orderId,
+    this.callbackUrl,
+    this.txnId,
+    this.intent,
+    this.pg,
+    this.mid,
+  });
 
-  Data({this.temptoken, this.orderId, this.callbackUrl, this.txnId});
-
-  Data.base() {
-    temptoken = '';
-    orderId = '';
-    callbackUrl = '';
-    txnId = '';
-  }
-  Data.fromJson(Map<String, dynamic> json) {
-    temptoken = json['temptoken'] ?? '';
-    orderId = json['orderId'] ?? '';
-    callbackUrl = json['callbackUrl'] ?? '';
-    txnId = json['txnId'] ?? '';
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['temptoken'] = this.temptoken;
-    data['orderId'] = this.orderId;
-    data['callbackUrl'] = this.callbackUrl;
-    data['txnId'] = this.txnId;
-    return data;
-  }
-
-  Map<String, dynamic> toMap() {
-    return {
-      'temptoken': temptoken,
-      'orderId': orderId,
-      'callbackUrl': callbackUrl,
-      'txnId': txnId,
-    };
+  factory Data.base() {
+    return Data(
+      temptoken: null,
+      orderId: null,
+      callbackUrl: null,
+      txnId: null,
+      intent: null,
+      pg: null,
+      mid: null,
+    );
   }
 
   factory Data.fromMap(Map<String, dynamic> map) {
     return Data(
-      temptoken: map['temptoken'] ?? '',
-      orderId: map['orderId'] ?? '',
-      callbackUrl: map['callbackUrl'] ?? '',
-      txnId: map['txnId'] ?? '',
+      temptoken: map['temptoken'] != null ? map['temptoken'] as String : null,
+      orderId: map['orderId'] != null ? map['orderId'] as String : null,
+      callbackUrl:
+          map['callbackUrl'] != null ? map['callbackUrl'] as String : null,
+      txnId: map['txnId'] != null ? map['txnId'] as String : null,
+      intent: map['intent'] != null ? map['intent'] as String : null,
+      pg: map['pg'] != null ? map['pg'] as String : null,
+      mid: map['mid'] != null ? map['mid'] as String : null,
     );
   }
 
-  @override
-  String toString() =>
-      'Data(temptoken: $temptoken, orderId: $orderId, callbackUrl: $callbackUrl)';
+  factory Data.fromJson(String source) =>
+      Data.fromMap(json.decode(source) as Map<String, dynamic>);
 
-  Data copyWith({
-    String? temptoken,
-    String? orderId,
-    String? callbackUrl,
-    String? txnId,
-  }) {
-    return Data(
-      temptoken: temptoken ?? this.temptoken,
-      orderId: orderId ?? this.orderId,
-      callbackUrl: callbackUrl ?? this.callbackUrl,
-      txnId: txnId ?? this.txnId,
-    );
+  @override
+  String toString() {
+    return 'Data(temptoken: $temptoken, orderId: $orderId, callbackUrl: $callbackUrl, txnId: $txnId, intent: $intent, pg: $pg, mid: $mid)';
   }
 }

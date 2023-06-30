@@ -90,7 +90,7 @@ class LendboxBuyViewModel extends BaseViewModel {
   bool isIntentFlow = true;
   List<ApplicationMeta> appMetaList = [];
   UpiApplication? upiApplication;
-  String? selectedUpiApplicationName;
+  ApplicationMeta? selectedUpiApplication;
 
   ///  ---------- getter and setter ------------
 
@@ -216,7 +216,8 @@ class LendboxBuyViewModel extends BaseViewModel {
         statusType: UpiApplicationDiscoveryAppStatusType.all);
     updateMinValues();
     await getAssetOptionsModel();
-
+    isIntentFlow = false;
+    //assetOptionsModel!.data.intent;
     log("isLendboxOldUser $isLendboxOldUser");
     if (floAssetType == Constants.ASSET_TYPE_FLO_FIXED_6) {
       maxAmount = 99999;
@@ -307,13 +308,16 @@ class LendboxBuyViewModel extends BaseViewModel {
     _isBuyInProgress = true;
     notifyListeners();
     trackCheckOut(amount.toDouble());
-    await _txnService.initiateTransaction(FloPurchaseDetails(
-      floAssetType: floAssetType,
-      maturityPref: maturityPref,
-      couponCode: appliedCoupon?.code ?? '',
-      txnAmount: amount.toDouble(),
-      skipMl: skipMl,
-    ));
+    await _txnService.initiateTransaction(
+      FloPurchaseDetails(
+        floAssetType: floAssetType,
+        maturityPref: maturityPref,
+        couponCode: appliedCoupon?.code ?? '',
+        txnAmount: amount.toDouble(),
+        skipMl: skipMl,
+        upiChoice: selectedUpiApplication,
+      ),
+    );
     _isBuyInProgress = false;
     forcedBuy = false;
     notifyListeners();

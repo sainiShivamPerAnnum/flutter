@@ -1,9 +1,7 @@
-import 'dart:io';
+// ignore_for_file: no_leading_underscores_for_local_identifiers
 
 import 'package:felloapp/core/constants/apis_path_constants.dart';
-import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
-import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/paytm_models/create_paytm_subscription_response_model.dart';
 import 'package:felloapp/core/model/paytm_models/create_paytm_transaction_model.dart';
 import 'package:felloapp/core/model/paytm_models/paytm_transaction_response_model.dart';
@@ -17,25 +15,28 @@ import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:intl/intl.dart';
 
+// ignore: constant_identifier_names
+enum AppUse { PHONE_PE, GOOGLE_PAY, PAYTM }
+
 class PaytmRepository extends BaseRepo {
   String processText = "processing";
-  String _baseUrl = FlavorConfig.isProduction()
+  final String _baseUrl = FlavorConfig.isProduction()
       ? "https://yg58g0feo0.execute-api.ap-south-1.amazonaws.com/prod"
       : "https://wd7bvvu7le.execute-api.ap-south-1.amazonaws.com/dev";
 
-  String _baseUrl2 = FlavorConfig.isProduction()
+  final String _baseUrl2 = FlavorConfig.isProduction()
       ? "https://2z48o79cm5.execute-api.ap-south-1.amazonaws.com/prod"
       : "https://2je5zoqtuc.execute-api.ap-south-1.amazonaws.com/dev";
 
   Future<ApiResponse<CreatePaytmTransactionModel>> createTransaction(
-    double? amount,
-    Map<String, dynamic>? augMap,
-    Map<String, dynamic>? lbMap,
-    String? couponCode,
-    bool? skipMl,
-    String mid,
-    InvestmentType investmentType,
-  ) async {
+      double? amount,
+      Map<String, dynamic>? augMap,
+      Map<String, dynamic>? lbMap,
+      String? couponCode,
+      bool? skipMl,
+      String mid,
+      InvestmentType investmentType,
+      AppUse? appUse) async {
     try {
       final String? _uid = userService!.baseUser!.uid;
       final Map<String, dynamic> _body = {
@@ -50,18 +51,27 @@ class PaytmRepository extends BaseRepo {
       if (investmentType == InvestmentType.LENDBOXP2P) _body["lbMap"] = lbMap;
 
       final _token = await getBearerToken();
-      logger!.d("This is body: $_body");
+      logger.d("This is body: $_body");
 
-      final paymentMode = Platform.isAndroid
-          ? AppConfig.getValue(AppConfigKey.active_pg_android)
-          : AppConfig.getValue(AppConfigKey.active_pg_ios);
+      final Map<String, String> _header = {
+        if (appUse != null)
+          'appUse':
+              FlavorConfig.isDevelopment() ? AppUse.PHONE_PE.name : appUse.name,
+        "mid": mid ?? '',
+      };
+      logger.d("This is header: $_header");
+
+      // final paymentMode = Platform.isAndroid
+      //     ? AppConfig.getValue(AppConfigKey.active_pg_android)
+      //     : AppConfig.getValue(AppConfigKey.active_pg_ios);
 
       final response = await APIService.instance.postData(
         ApiPath.kCreatePaytmTransaction,
         body: _body,
         token: _token,
         cBaseUrl: _baseUrl,
-        headers: {'pg-mode': paymentMode, "mid": mid ?? ''},
+        headers: _header,
+        // decryptData: true,
       );
 
       CreatePaytmTransactionModel _responseModel =
@@ -70,9 +80,8 @@ class PaytmRepository extends BaseRepo {
       return ApiResponse<CreatePaytmTransactionModel>(
           model: _responseModel, code: 200);
     } catch (e) {
-      logger!.e(e.toString());
-      return ApiResponse.withError(
-          e?.toString() ?? "Unable to create transaction", 400);
+      logger.e(e.toString());
+      return ApiResponse.withError(e.toString(), 400);
     }
   }
 

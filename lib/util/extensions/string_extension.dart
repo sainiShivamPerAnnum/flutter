@@ -1,3 +1,4 @@
+import 'package:felloapp/core/repository/paytm_repo.dart';
 import 'package:felloapp/ui/pages/finance/autosave/autosave_setup/autosave_process_vm.dart';
 
 extension StringExtension on String {
@@ -27,6 +28,21 @@ extension FRename on FREQUENCY {
         return "week";
       case FREQUENCY.monthly:
         return "month";
+    }
+  }
+}
+
+extension UpiRenameExtension on String {
+  AppUse formatUpiAppName() {
+    switch (this) {
+      case "Phonepe":
+        return AppUse.PHONE_PE;
+      case "Paytm":
+        return AppUse.PAYTM;
+      case "Google Pay":
+        return AppUse.GOOGLE_PAY;
+      default:
+        return AppUse.PHONE_PE;
     }
   }
 }

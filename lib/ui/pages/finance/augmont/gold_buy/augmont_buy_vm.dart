@@ -59,7 +59,7 @@ class GoldBuyViewModel extends BaseViewModel {
   double? incomingAmount;
   List<ApplicationMeta> appMetaList = [];
   UpiApplication? upiApplication;
-  String? selectedUpiApplicationName;
+  ApplicationMeta? selectedUpiApplication;
   int _status = 0;
   int lastTappedChipIndex = 1;
   CouponModel? _focusCoupon;
@@ -244,6 +244,7 @@ class GoldBuyViewModel extends BaseViewModel {
     animationController = AnimationController(
         vsync: vsync, duration: const Duration(milliseconds: 500));
     await getAssetOptionsModel();
+    isIntentFlow = assetOptionsModel!.data.intent;
     animationController?.addListener(listnear);
     skipMl = isSkipMilestone;
     incomingAmount = amount?.toDouble() ?? 0;
@@ -307,6 +308,7 @@ class GoldBuyViewModel extends BaseViewModel {
         couponCode: appliedCoupon?.code ?? '',
         skipMl: skipMl,
         goldInGrams: goldAmountInGrams,
+        upiChoice: selectedUpiApplication,
       ),
     );
   }

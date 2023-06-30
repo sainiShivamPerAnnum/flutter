@@ -117,6 +117,7 @@ class APIService implements API {
     Map<String, String>? headers,
     Map<String, dynamic>? queryParams,
     bool isAuthTokenAvailable = true,
+    final bool decryptData = false,
   }) async {
     var responseJson;
     String queryString = '';
@@ -158,7 +159,12 @@ class APIService implements API {
           "\n=> StatusCode: ${response.statusCode} "
           "\nRequest Body: $body \n"
           "=> Response Body: ${response.body}");
+      if (decryptData) {
+        final data = await _decryptData(response.body);
+        log("decryptData  ${data!}");
 
+        return json.decode(data);
+      }
       responseJson = returnResponse(response);
     } on SocketException {
       throw FetchDataException(

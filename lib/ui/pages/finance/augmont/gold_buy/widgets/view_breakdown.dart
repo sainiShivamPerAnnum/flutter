@@ -1,3 +1,5 @@
+import 'dart:typed_data';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
@@ -9,6 +11,7 @@ import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/assets.dart' as A;
 import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
@@ -214,10 +217,14 @@ class GoldBreakdownView extends StatelessWidget {
                 model.isIntentFlow)
               UpiAppsGridView(
                 apps: model.appMetaList,
-                onTap: () {
+                onTap: (i) {
                   if (!model.isGoldBuyInProgress) {
                     Haptic.vibrate();
                     FocusScope.of(context).unfocus();
+                    model.selectedUpiApplication = i == -1
+                        ? ApplicationMeta.android(
+                            UpiApplication.phonePe, Uint8List(10), 1, 1)
+                        : model.appMetaList[i];
                     model.initiateBuy();
                   }
 
@@ -256,7 +263,7 @@ class UpiAppsGridView extends StatelessWidget {
   });
 
   final List<ApplicationMeta> apps;
-  final VoidCallback onTap;
+  final Function onTap;
 
   @override
   Widget build(BuildContext context) {
@@ -272,34 +279,76 @@ class UpiAppsGridView extends StatelessWidget {
             style: TextStyles.sourceSansB.body0.colour(Colors.white),
           ),
         ),
-        GridView.builder(
-            physics: const NeverScrollableScrollPhysics(),
-            gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-              crossAxisCount: 4,
-              // mainAxisSpacing: 2,
-              // crossAxisSpacing: 2,
-            ),
-            padding: EdgeInsets.zero,
-            shrinkWrap: true,
-            itemCount: apps.length,
-            itemBuilder: (ctx, i) {
-              return GestureDetector(
-                onTap: onTap,
-                child: SizedBox(
-                  child: Column(
-                    children: [
-                      apps[i].iconImage(SizeConfig.padding35),
-                      SizedBox(height: SizeConfig.padding6),
-                      Text(
-                        apps[i].upiApplication.appName,
-                        style:
-                            TextStyles.sourceSansM.body3.colour(Colors.white),
-                      )
-                    ],
-                  ),
+        apps.isEmpty
+            ? (FlavorConfig.isDevelopment()
+                ? Padding(
+                    padding: EdgeInsets.symmetric(
+                      vertical: SizeConfig.padding40,
+                      horizontal: SizeConfig.pageHorizontalMargins,
+                    ),
+                    child: Column(
+                      children: [
+                        const Chip(
+                          label: Text("Only for dev Purpose"),
+                          backgroundColor: UiConstants.primaryColor,
+                        ),
+                        SizedBox(height: SizeConfig.padding6),
+                        Text(
+                          "No PSP Apps on this device found, Install Phonepe simulator app and then only continue",
+                          textAlign: TextAlign.center,
+                          style: TextStyles.body2.colour(Colors.white),
+                        ),
+                        SizedBox(height: SizeConfig.padding14),
+                        MaterialButton(
+                          onPressed: () {
+                            onTap(-1);
+                          },
+                          color: Colors.white,
+                          height: SizeConfig.padding54,
+                          child: Text(
+                            "CONTINUE",
+                            style:
+                                TextStyles.rajdhaniB.body1.colour(Colors.black),
+                          ),
+                        )
+                      ],
+                    ))
+                : Padding(
+                    padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+                    child: Text(
+                      "No Upi Apps found on this device. please install any one of them to continue",
+                      textAlign: TextAlign.center,
+                      style: TextStyles.sourceSansB.body2.colour(Colors.red),
+                    ),
+                  ))
+            : GridView.builder(
+                physics: const NeverScrollableScrollPhysics(),
+                gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                  crossAxisCount: 4,
+                  // mainAxisSpacing: 2,
+                  // crossAxisSpacing: 2,
                 ),
-              );
-            }),
+                padding: EdgeInsets.zero,
+                shrinkWrap: true,
+                itemCount: apps.length,
+                itemBuilder: (ctx, i) {
+                  return GestureDetector(
+                    onTap: () => onTap(i),
+                    child: SizedBox(
+                      child: Column(
+                        children: [
+                          apps[i].iconImage(SizeConfig.padding35),
+                          SizedBox(height: SizeConfig.padding6),
+                          Text(
+                            apps[i].upiApplication.appName,
+                            style: TextStyles.sourceSansM.body3
+                                .colour(Colors.white),
+                          )
+                        ],
+                      ),
+                    ),
+                  );
+                }),
       ],
     );
   }
@@ -498,10 +547,20 @@ class FloBreakdownView extends StatelessWidget {
                 model.isIntentFlow)
               UpiAppsGridView(
                 apps: model.appMetaList,
-                onTap: () {
+                onTap: (i) {
+                  if ((model.buyAmount ?? 0) < model.minAmount) {
+                    BaseUtil.showNegativeAlert("Invalid Amount",
+                        "Please Enter Amount Greater than ${model.minAmount}");
+                    return;
+                  }
+
                   if (!model.isBuyInProgress) {
                     Haptic.vibrate();
                     FocusScope.of(context).unfocus();
+                    model.selectedUpiApplication = i == -1
+                        ? ApplicationMeta.android(
+                            UpiApplication.phonePe, Uint8List(10), 1, 1)
+                        : model.appMetaList[i];
                     model.initiateBuy();
                   }
 
@@ -518,12 +577,11 @@ class FloBreakdownView extends StatelessWidget {
                     return;
                   }
 
-                  AppState.backButtonDispatcher?.didPopRoute();
-
                   if (!model.isBuyInProgress) {
                     FocusScope.of(context).unfocus();
                     await model.initiateBuy();
                   }
+                  AppState.backButtonDispatcher?.didPopRoute();
                 },
                 btnText: 'Save'.toUpperCase(),
               ),
