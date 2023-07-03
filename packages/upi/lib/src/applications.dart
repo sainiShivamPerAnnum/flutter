@@ -61,6 +61,30 @@ class UpiApplication {
     discoveryCustomScheme: 'phonepepreprod',
   );
 
+  /// PhonePe simulator
+  static final fi = UpiApplication(
+    androidPackageName: 'com.epifi.paisa',
+    iosBundleId: 'com.epifi.paisa',
+    appName: 'Fi',
+    discoveryCustomScheme: 'fimoney',
+  );
+
+  /// Fi Money
+  static final jupiter = UpiApplication(
+    androidPackageName: 'money.jupiter',
+    iosBundleId: 'money.jupiter',
+    appName: 'Jupiter',
+    discoveryCustomScheme: 'jupiter',
+  );
+
+  /// Jupiter
+  static final PhonePeSimulator = UpiApplication(
+    androidPackageName: 'com.phonepe.simulator',
+    iosBundleId: 'com.phonepe.PhonePeApp.simulator',
+    appName: 'PhonePe Simulator',
+    discoveryCustomScheme: 'phonepesimulator',
+  );
+
   /// Paytm
   static final paytm = UpiApplication(
     androidPackageName: 'net.one97.paytm',

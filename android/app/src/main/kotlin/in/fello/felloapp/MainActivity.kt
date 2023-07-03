@@ -130,11 +130,24 @@ class MainActivity : FlutterFragmentActivity() {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == successRequestCode) {
-            print("On Activity Result"+data.toString())
-            data?.putExtra("resultCode",resultCode)
-         paymentResult.success(data?.getStringExtra("response") as Object?) ; // returnResult(data?.getStringExtra("response") as Object?)
+            data?.let { intentData ->
+                try {
+                    val response = intentData.getStringExtra("response")
+                    val resultCode = intentData.getIntExtra("resultCode", 0)
+                    paymentResult.success(response as Object?)
+                } catch (e: Exception) {
+                    // Handle any exception that may occur
+                    paymentResult.error("RESULT_ERROR", "Error processing result", null)
+                    Log.e("OnActivityResult", "Error processing result: ${e.message}")
+                }
+            } ?: run {
+                // Handle the case when data is null
+                paymentResult.error("RESULT_NULL", "Result data is null", null)
+                Log.e("OnActivityResult", "Result data is null")
+            }
         }
     }
+    
 
     fun getPhonePeVersionCode(context: Context?): Long {
         // val PHONEPE_PACKAGE_NAME_UAT = "com.phonepe.app.preprod"
@@ -262,12 +275,12 @@ class MainActivity : FlutterFragmentActivity() {
     private fun getupiApps(){
 
         val packageManager = context.packageManager
-        val mainIntent = Intent(Intent.ACTION_MAIN, null)
-        mainIntent.addCategory(Intent.CATEGORY_DEFAULT)
-        mainIntent.addCategory(Intent.CATEGORY_BROWSABLE)
-        mainIntent.action = Intent.ACTION_VIEW
-        val uri1 = Uri.Builder().scheme("upi").authority("pay").build()
-        mainIntent.data = uri1
+        val mainIntent = Intent(Intent.ACTION_VIEW)
+        // mainIntent.addCategory(Intent.CATEGORY_DEFAULT)
+        // mainIntent.addCategory(Intent.CATEGORY_BROWSABLE)
+        // mainIntent.action = Intent.ACTION_VIEW
+        // val uri1 = Uri.parse("upi://pay")
+        mainIntent.data = Uri.parse("upi://pay")
         var list= mutableListOf<Map<String,String>>()
 
         try {
@@ -277,6 +290,7 @@ class MainActivity : FlutterFragmentActivity() {
 
         for(it in activities){
             val packageName = it.activityInfo.packageName
+            Log.d(packageName,"package name");
             val drawable = packageManager.getApplicationIcon(packageName)
 
             val bitmap = getBitmapFromDrawable(drawable)

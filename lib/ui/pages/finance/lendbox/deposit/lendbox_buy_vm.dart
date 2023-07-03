@@ -319,9 +319,23 @@ class LendboxBuyViewModel extends BaseViewModel {
         upiChoice: selectedUpiApplication,
       ),
     );
+
     _isBuyInProgress = false;
     forcedBuy = false;
     notifyListeners();
+
+    if (selectedUpiApplication != null) {
+      analyticsService
+          .track(eventName: AnalyticsEvents.intentUpiAppSelected, properties: {
+        "floAssetType": floAssetType,
+        "maturityPref": maturityPref,
+        "couponCode": appliedCoupon?.code ?? '',
+        "txnAmount": amount.toDouble(),
+        "skipMl": skipMl,
+        "upiChoice": selectedUpiApplication,
+        "abTesting": AppConfig.getValue(AppConfigKey.payment_brief_view)
+      });
+    }
   }
 
   bool readOnly = true;

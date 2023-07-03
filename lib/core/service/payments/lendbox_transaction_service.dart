@@ -23,7 +23,6 @@ import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/extensions/string_extension.dart';
 import 'package:felloapp/util/fail_types.dart';
-import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/services.dart';
@@ -181,11 +180,13 @@ class LendboxTransactionService extends BaseTransactionService {
           await BaseUtil.launchUrl(txnResponse.model!.data!.intent!);
         } else {
           final result = await platform.invokeMethod('initiatePsp', {
-            'redirectUrl':
-                txnResponse.model!.data!.intent!.replaceRange(0, 10, ''),
-            'packageName': FlavorConfig.isDevelopment()
-                ? "com.phonepe.simulator"
-                : currentFloPurchaseDetails!.upiChoice!.packageName
+            'redirectUrl': currentFloPurchaseDetails!
+                        .upiChoice!.upiApplication.appName
+                        .toLowerCase() ==
+                    'phonepe simulator'
+                ? txnResponse.model!.data!.intent!.replaceRange(0, 10, '')
+                : txnResponse.model!.data!.intent,
+            'packageName': currentFloPurchaseDetails!.upiChoice!.packageName
           });
           _logger.d("Result from initiatePsp: $result");
         }

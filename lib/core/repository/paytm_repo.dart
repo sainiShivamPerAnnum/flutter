@@ -54,9 +54,7 @@ class PaytmRepository extends BaseRepo {
       logger.d("This is body: $_body");
 
       final Map<String, String> _header = {
-        if (appUse != null)
-          'appUse':
-              FlavorConfig.isDevelopment() ? AppUse.PHONE_PE.name : appUse.name,
+        if (appUse != null) 'appUse': appUse.name,
         "mid": mid ?? '',
       };
       logger.d("This is header: $_header");

@@ -311,6 +311,17 @@ class GoldBuyViewModel extends BaseViewModel {
         upiChoice: selectedUpiApplication,
       ),
     );
+    if (selectedUpiApplication != null) {
+      _analyticsService
+          .track(eventName: AnalyticsEvents.intentUpiAppSelected, properties: {
+        "goldBuyAmount": goldBuyAmount,
+        "couponCode": appliedCoupon?.code ?? '',
+        "skipMl": skipMl,
+        "goldInGrams": goldAmountInGrams,
+        "upiChoice": selectedUpiApplication,
+        "abTesting": AppConfig.getValue(AppConfigKey.payment_brief_view)
+      });
+    }
   }
 
   //2 Basic Checks
