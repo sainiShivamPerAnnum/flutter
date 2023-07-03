@@ -188,7 +188,7 @@ class InitAutosaveCard extends HookWidget {
                           height: SizeConfig.padding8,
                         ),
                         Text(
-                          'Invest in Fello Flo or Digital Gold to meet your financial Goals',
+                          'Invest on Fello to meet your financial Goals',
                           style: TextStyles.sourceSans.body4
                               .colour(const Color(0xFFA9C5D5)),
                         ),
@@ -199,7 +199,7 @@ class InitAutosaveCard extends HookWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              'Set Your Goals',
+                              'Setup Autosave',
                               style: TextStyles.sourceSansSB.body2
                                   .colour(Colors.white),
                             ),
@@ -292,88 +292,82 @@ class ActiveOrPausedAutosaveCard extends StatelessWidget {
                 borderRadius: BorderRadius.circular(SizeConfig.roundness16),
                 border: Border.all(color: Colors.white12),
               ),
-              child: Stack(
+              child: Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.center,
+                  SvgPicture.asset(
+                    service.subscriptionData != null &&
+                            service.subscriptionData!.status ==
+                                Constants.SUBSCRIPTION_ACTIVE
+                        ? Assets.autoSaveOngoing
+                        : Assets.autoSavePaused,
+                    height: SizeConfig.padding90,
+                    width: SizeConfig.padding90,
+                  ),
+                  SizedBox(
+                    width: SizeConfig.padding20,
+                  ),
+                  Column(
+                    // mainAxisAlignment: MainAxisAlignment.center,
+                    crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      SvgPicture.asset(
-                        service.subscriptionData != null &&
-                                service.subscriptionData!.status ==
-                                    Constants.SUBSCRIPTION_ACTIVE
-                            ? Assets.autoSaveOngoing
-                            : Assets.autoSavePaused,
-                        height: SizeConfig.padding90,
-                        width: SizeConfig.padding90,
+                      FittedBox(
+                        fit: BoxFit.scaleDown,
+                        child: Text(
+                          getAutosaveStatusText(service.autosaveState) +
+                              " Autosave",
+                          style: TextStyles.sourceSansB.body0.colour(
+                              service.autosaveState == AutosaveState.PAUSED
+                                  ? const Color(0xFFEFAF4E)
+                                  : Colors.white),
+                          textAlign: TextAlign.left,
+                        ),
                       ),
+                      SizedBox(height: SizeConfig.padding12),
+                      RichText(
+                        text: TextSpan(
+                          text: '₹',
+                          style: TextStyles.sourceSansSB.body0
+                              .colour(UiConstants.kTextColor),
+                          children: [
+                            TextSpan(
+                              text:
+                                  "${asset == InvestmentType.AUGGOLD99 ? service.subscriptionData?.augAmt : asset == InvestmentType.LENDBOXP2P ? service.subscriptionData?.lbAmt : service.subscriptionData?.amount ?? 0} ",
+                              style: TextStyles.rajdhaniSB.title4
+                                  .colour(Colors.white),
+                            ),
+                            TextSpan(
+                              text:
+                                  "/${service.subscriptionData?.frequency.toCamelCase().frequencyRename() ?? "day"}",
+                              style: TextStyles.sourceSans.body2
+                                  .colour(Colors.white.withOpacity(0.4)),
+                            ),
+                          ],
+                        ),
+                      ),
+                      SizedBox(height: SizeConfig.padding24),
                       SizedBox(
-                        width: SizeConfig.padding20,
-                      ),
-                      Column(
-                        // mainAxisAlignment: MainAxisAlignment.center,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          FittedBox(
-                            fit: BoxFit.scaleDown,
-                            child: Text(
-                              getAutosaveStatusText(service.autosaveState) +
-                                  " Autosave",
-                              style: TextStyles.sourceSansB.body0.colour(
+                        width: SizeConfig.screenWidth! * 0.45,
+                        child: Row(
+                          children: [
+                            Text(
+                              getTitle(),
+                              style: TextStyles.sourceSans.body4.colour(
                                   service.autosaveState == AutosaveState.PAUSED
-                                      ? const Color(0xFFEFAF4E)
-                                      : Colors.white),
+                                      ? Colors.white
+                                      : const Color(0xFFA9C5D5)),
+                              maxLines: 2,
                               textAlign: TextAlign.left,
                             ),
-                          ),
-                          SizedBox(height: SizeConfig.padding12),
-                          RichText(
-                            text: TextSpan(
-                              text: '₹',
-                              style: TextStyles.sourceSansSB.body0
-                                  .colour(UiConstants.kTextColor),
-                              children: [
-                                TextSpan(
-                                  text:
-                                      "${asset == InvestmentType.AUGGOLD99 ? service.subscriptionData?.augAmt : asset == InvestmentType.LENDBOXP2P ? service.subscriptionData?.lbAmt : service.subscriptionData?.amount ?? 0} ",
-                                  style: TextStyles.rajdhaniSB.title4
-                                      .colour(Colors.white),
-                                ),
-                                TextSpan(
-                                  text:
-                                      "/${service.subscriptionData?.frequency.toCamelCase().frequencyRename() ?? "day"}",
-                                  style: TextStyles.sourceSans.body2
-                                      .colour(Colors.white.withOpacity(0.4)),
-                                ),
-                              ],
-                            ),
-                          ),
-                          SizedBox(height: SizeConfig.padding24),
-                          SizedBox(
-                            width: SizeConfig.screenWidth! * 0.45,
-                            child: Row(
-                              children: [
-                                Text(
-                                  getTitle(),
-                                  style: TextStyles.sourceSans.body4.colour(
-                                      service.autosaveState ==
-                                              AutosaveState.PAUSED
-                                          ? Colors.white
-                                          : const Color(0xFFA9C5D5)),
-                                  maxLines: 2,
-                                  textAlign: TextAlign.left,
-                                ),
-                                const Spacer(),
-                                if (service.autosaveState ==
-                                    AutosaveState.PAUSED)
-                                  const Icon(
-                                    Icons.arrow_forward_ios_rounded,
-                                    color: Colors.white,
-                                    size: 15,
-                                  )
-                              ],
-                            ),
-                          ),
-                        ],
+                            const Spacer(),
+                            if (service.autosaveState == AutosaveState.PAUSED)
+                              const Icon(
+                                Icons.arrow_forward_ios_rounded,
+                                color: Colors.white,
+                                size: 15,
+                              )
+                          ],
+                        ),
                       ),
                     ],
                   ),

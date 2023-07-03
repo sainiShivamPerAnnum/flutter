@@ -72,7 +72,7 @@ class _EarnMoreReturnsState extends State<EarnMoreReturns> {
     return Scaffold(
       appBar: AppBar(
         title: Text(
-          "Earn More Returns",
+          "Badges on Fello",
           style: TextStyles.sourceSansSB.title3,
         ),
         backgroundColor: UiConstants.kBackgroundColor,
