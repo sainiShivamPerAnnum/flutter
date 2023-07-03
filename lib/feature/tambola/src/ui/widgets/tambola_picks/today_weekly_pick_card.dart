@@ -31,7 +31,7 @@ class TodayWeeklyPicksCard extends StatelessWidget {
                 ? const TambolaTopBanner()
                 : const PicksCardView(),
           ),
-          const HowTambolaWorks(),
+          const TotalTambolaWon(),
         ],
       ),
     );
