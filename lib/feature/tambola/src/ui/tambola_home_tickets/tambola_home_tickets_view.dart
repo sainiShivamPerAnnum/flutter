@@ -1,4 +1,5 @@
-import 'package:carousel_slider/carousel_slider.dart';
+import 'dart:async';
+
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/feature/tambola/src/ui/tambola_home_details/tambola_home_details_view.dart';
 import 'package:felloapp/feature/tambola/src/ui/tambola_home_tickets/tambola_home_tickets_vm.dart';
@@ -31,7 +32,7 @@ class _TambolaHomeTicketsViewState extends State<TambolaHomeTicketsView> {
   ScrollController? _scrollController;
 
   final GlobalKey<AnimatedBuyTambolaTicketCardState> tambolaBuyTicketCardKey =
-  GlobalKey<AnimatedBuyTambolaTicketCardState>();
+      GlobalKey<AnimatedBuyTambolaTicketCardState>();
 
   @override
   void initState() {
@@ -90,11 +91,17 @@ class _TambolaHomeTicketsViewState extends State<TambolaHomeTicketsView> {
   }
 }
 
-class TambolaRewardLottieStrip extends StatelessWidget {
+class TambolaRewardLottieStrip extends StatefulWidget {
   TambolaRewardLottieStrip({
     super.key,
   });
 
+  @override
+  State<TambolaRewardLottieStrip> createState() =>
+      _TambolaRewardLottieStripState();
+}
+
+class _TambolaRewardLottieStripState extends State<TambolaRewardLottieStrip> {
   final List<String> _goldMarquee = [
     'Get more tickets now',
     'Know how Tickets work',
@@ -134,71 +141,83 @@ class TambolaRewardLottieStrip extends StatelessWidget {
     }
   }
 
+  late final PageController _controller =
+      PageController(viewportFraction: 0.9, initialPage: 0);
+
+  Timer? _timer;
+  int _currentPage = 0;
+
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      _timer = Timer.periodic(const Duration(seconds: 5), (timer) {
+        if (_currentPage < 3) {
+          _currentPage++;
+        } else {
+          _currentPage = 0;
+        }
+        if (_controller.hasClients) {
+          _controller.animateToPage(
+            _currentPage,
+            duration: const Duration(milliseconds: 350),
+            curve: Curves.easeIn,
+          );
+        }
+      });
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: SizeConfig.pageHorizontalMargins,
-      ),
-      child: ClipRRect(
-        borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-        child: (DateTime.now().weekday == 1 && DateTime.now().hour < 16)
-            ? const SizedBox()
-            : SizedBox(
-                height: SizeConfig.padding48,
-                width: SizeConfig.screenWidth,
-                child: Builder(builder: (context) {
-                  return CarouselSlider.builder(
-                    itemCount: 3,
-                    itemBuilder: (context, index, realIndex) {
-                      return GestureDetector(
-                        onTap: () {
-                          onTap(index);
-                        },
-                        child: Container(
-                          height: SizeConfig.padding54,
-                          padding: EdgeInsets.symmetric(
-                              horizontal: SizeConfig.padding14,
-                              vertical: SizeConfig.padding12),
-                          decoration: BoxDecoration(
-                            color: const Color(0xff01656B),
-                            borderRadius:
-                                BorderRadius.circular(SizeConfig.roundness12),
-                          ),
-                          child: Row(
-                            children: [
-                              SizedBox(
-                                height: SizeConfig.padding26,
-                                width: SizeConfig.padding32,
-                                child: SvgPicture.asset(
-                                  icon[index],
-                                  height: SizeConfig.padding26,
-                                  width: SizeConfig.padding32,
-                                ),
-                              ),
-                              SizedBox(width: SizeConfig.padding10),
-                              Text(_goldMarquee[index],
-                                  style: TextStyles.rajdhaniSB.body0
-                                      .colour(Colors.white)),
-                              const Spacer(),
-                              SvgPicture.asset(
-                                Assets.chevRonRightArrow,
-                                color: UiConstants.primaryColor,
-                                height: SizeConfig.padding24,
-                                width: SizeConfig.padding24,
-                              )
-                            ],
-                          ),
-                        ),
-                      );
-                    },
-                    options: CarouselOptions(
-                        autoPlay: true,
-                        viewportFraction: 1,
-                        scrollPhysics: const AlwaysScrollableScrollPhysics()),
-                  );
-                }),
+    return SizedBox(
+      height: SizeConfig.padding48,
+      width: SizeConfig.screenWidth,
+      child: PageView.builder(
+        controller: _controller,
+        itemCount: 3,
+        itemBuilder: (context, index) {
+          return GestureDetector(
+            onTap: () {
+              onTap(index);
+            },
+            child: Container(
+              margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding8),
+              height: SizeConfig.padding54,
+              padding: EdgeInsets.symmetric(
+                  horizontal: SizeConfig.padding14,
+                  vertical: SizeConfig.padding12),
+              decoration: BoxDecoration(
+                color: const Color(0xff01656B),
+                borderRadius: BorderRadius.circular(SizeConfig.roundness12),
               ),
+              child: Row(
+                children: [
+                  SizedBox(
+                    height: SizeConfig.padding26,
+                    width: SizeConfig.padding32,
+                    child: SvgPicture.asset(
+                      icon[index],
+                      height: SizeConfig.padding26,
+                      width: SizeConfig.padding32,
+                    ),
+                  ),
+                  SizedBox(width: SizeConfig.padding10),
+                  Text(_goldMarquee[index],
+                      style: TextStyles.rajdhaniSB.body0.colour(Colors.white)),
+                  const Spacer(),
+                  SvgPicture.asset(
+                    Assets.chevRonRightArrow,
+                    color: UiConstants.primaryColor,
+                    height: SizeConfig.padding24,
+                    width: SizeConfig.padding24,
+                  )
+                ],
+              ),
+            ),
+          );
+        },
       ),
     );
   }
