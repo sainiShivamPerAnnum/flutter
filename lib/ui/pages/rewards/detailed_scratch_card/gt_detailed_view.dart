@@ -146,9 +146,7 @@ class GTDetailedView extends StatelessWidget {
           SizedBox(
             height: SizeConfig.padding40,
           ),
-          if (ticket.tag != null &&
-              (ticket.tag?.isNotEmpty ?? false) &&
-              ticket.tag == ScratchCardConstants.general)
+          if (ticket.tag != null && (ticket.tag?.isNotEmpty ?? false))
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
@@ -176,11 +174,8 @@ class GTDetailedView extends StatelessWidget {
                 Container(
                   height: SizeConfig.padding90,
                   width: 2,
-                  // color: Colors.white,
-                  child: SvgPicture.asset(
-                    ScratchCardConstants.getBadges(ticket.tag!),
-                    fit: BoxFit.fitHeight,
-                  ),
+                  color: Colors.white,
+                  // child:
                 ),
 
                 SizedBox(
@@ -188,15 +183,11 @@ class GTDetailedView extends StatelessWidget {
                 ),
                 Column(
                   children: [
-                    Container(
-                      height: SizeConfig.padding40,
-                      width: SizeConfig.padding40,
-                      decoration: BoxDecoration(
-                        color: Colors.white,
-                        borderRadius:
-                            BorderRadius.circular(SizeConfig.padding8),
-                      ),
-                    ),
+                    SvgPicture.asset(
+                        ScratchCardConstants.getBadges(ticket.tag!),
+                        // fit: BoxFit.fitHeight,
+                        height: SizeConfig.padding60,
+                        width: SizeConfig.padding60),
                     SizedBox(
                       height: SizeConfig.padding8,
                     ),
