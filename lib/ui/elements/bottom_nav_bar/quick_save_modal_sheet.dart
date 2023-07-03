@@ -87,7 +87,7 @@ class QuickSaveModalSheet extends StatelessWidget {
                     decoration: BoxDecoration(
                         color: data.backgroundColor != null
                             ? data.backgroundColor?.toColor()
-                            : const Color(0x00000000),
+                            : const Color(0xff1B262C),
                         borderRadius:
                             BorderRadius.circular(SizeConfig.roundness8),
                         border: Border.all(

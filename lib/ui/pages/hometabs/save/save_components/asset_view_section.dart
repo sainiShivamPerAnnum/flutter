@@ -639,13 +639,18 @@ class AssetBottomButtons extends StatelessWidget {
                   ),
                   onPressed: () {
                     Haptic.vibrate();
-                    AppState.delegate!.appState.currentAction = PageAction(
-                      state: PageState.addWidget,
-                      page: AutosaveProcessViewPageConfig,
-                      widget: AutosaveProcessView(
-                        investmentType: type,
-                      ),
-                    );
+
+                    if (state != null) {
+                      BaseUtil().openRechargeModalSheet(investmentType: type);
+                    } else {
+                      AppState.delegate!.appState.currentAction = PageAction(
+                        state: PageState.addWidget,
+                        page: AutosaveProcessViewPageConfig,
+                        widget: AutosaveProcessView(
+                          investmentType: type,
+                        ),
+                      );
+                    }
 
                     locator<AnalyticsService>().track(
                         eventName: state != null
