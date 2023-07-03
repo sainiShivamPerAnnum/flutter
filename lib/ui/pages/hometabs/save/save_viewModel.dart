@@ -287,6 +287,7 @@ class SaveViewModel extends BaseViewModel {
           saveViewItems.add(const PowerPlayCard());
           break;
         case 'NAS':
+          saveViewItems.add(const QuizSection());
           saveViewItems.add(const AutosaveCard());
           break;
         case 'CH':

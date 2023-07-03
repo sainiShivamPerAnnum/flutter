@@ -46,6 +46,7 @@ class AppState extends ChangeNotifier {
   static ScrollController homeCardListController = ScrollController();
   static String? _fcmData;
   static bool showAutosaveBt = false;
+  static bool autosaveMiddleFlow = false;
   static bool showAutoSaveSurveyBt = false;
   static bool isFirstTime = false;
   static bool isRootLoaded = false;

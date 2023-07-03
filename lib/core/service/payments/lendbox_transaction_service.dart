@@ -202,13 +202,13 @@ class LendboxTransactionService extends BaseTransactionService {
         AppState.unblockNavigation();
 
         return BaseUtil.showNegativeAlert(
-            locale.failedToCreateTxn, locale.tryLater);
+            "Transaction Cancelled", locale.tryLater);
       }
     } else {
       currentTransactionState = TransactionState.idle;
       AppState.unblockNavigation();
       return BaseUtil.showNegativeAlert(
-          locale.failedToCreateTxn, locale.tryLater);
+          txnResponse.errorMessage, locale.tryLater);
     }
   }
 }

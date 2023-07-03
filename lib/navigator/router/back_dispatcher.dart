@@ -136,6 +136,11 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
     }
 
     if (AppState.showAutosaveBt) {
+      if (AppState.autosaveMiddleFlow) {
+        AppState.showAutoSaveSurveyBt = false;
+        AppState.autosaveMiddleFlow = false;
+        return _routerDelegate!.popRoute();
+      }
       if (locator<SubService>().pageController?.hasClients ?? false) {
         final PageController apgController =
             locator<SubService>().pageController!;

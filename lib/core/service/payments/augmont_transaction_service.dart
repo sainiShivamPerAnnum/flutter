@@ -145,7 +145,7 @@ class AugmontTransactionService extends BaseTransactionService {
         AppState.unblockNavigation();
 
         return BaseUtil.showNegativeAlert(
-            locale.failedToCreateTxn, locale.tryLater);
+            "Transaction Cancelled", locale.tryLater);
       }
     } else {
       isGoldBuyInProgress = false;
@@ -154,7 +154,7 @@ class AugmontTransactionService extends BaseTransactionService {
       AppState.unblockNavigation();
 
       return BaseUtil.showNegativeAlert(
-          locale.failedToCreateTxn, locale.tryLater);
+          txnResponse.errorMessage, locale.tryLater);
     }
   }
 

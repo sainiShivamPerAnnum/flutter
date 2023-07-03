@@ -334,6 +334,8 @@ class LendboxBuyViewModel extends BaseViewModel {
         "skipMl": skipMl,
         "upiChoice": selectedUpiApplication,
         "abTesting": AppConfig.getValue(AppConfigKey.payment_brief_view)
+            ? "with payment summary"
+            : "without payment summary"
       });
     }
   }

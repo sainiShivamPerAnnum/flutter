@@ -280,7 +280,7 @@ class ActiveOrPausedAutosaveCard extends StatelessWidget {
           GestureDetector(
             onTap: service.handleTap,
             child: Container(
-              height: SizeConfig.screenWidth! * 0.36,
+              // height: SizeConfig.screenWidth! * 0.36,
               // width: SizeConfig.screenWidth,
               padding: EdgeInsets.symmetric(
                   horizontal: SizeConfig.padding16,
@@ -345,21 +345,23 @@ class ActiveOrPausedAutosaveCard extends StatelessWidget {
                           ],
                         ),
                       ),
-                      SizedBox(height: SizeConfig.padding24),
+                      SizedBox(height: SizeConfig.padding12),
                       SizedBox(
                         width: SizeConfig.screenWidth! * 0.45,
                         child: Row(
                           children: [
-                            Text(
-                              getTitle(),
-                              style: TextStyles.sourceSans.body4.colour(
-                                  service.autosaveState == AutosaveState.PAUSED
-                                      ? Colors.white
-                                      : const Color(0xFFA9C5D5)),
-                              maxLines: 2,
-                              textAlign: TextAlign.left,
+                            Expanded(
+                              child: Text(
+                                getTitle(),
+                                style: TextStyles.sourceSans.body4.colour(
+                                    service.autosaveState ==
+                                            AutosaveState.PAUSED
+                                        ? Colors.white
+                                        : const Color(0xFFA9C5D5)),
+                                maxLines: 2,
+                                textAlign: TextAlign.left,
+                              ),
                             ),
-                            const Spacer(),
                             if (service.autosaveState == AutosaveState.PAUSED)
                               const Icon(
                                 Icons.arrow_forward_ios_rounded,
