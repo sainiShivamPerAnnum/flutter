@@ -1,10 +1,14 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
+import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_buy/augmont_buy_vm.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_buy/widgets/view_breakdown.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart' as A;
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/show_case_key.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
@@ -104,6 +108,11 @@ class BuyNavBar extends StatelessWidget {
                         width: SizeConfig.screenWidth! * 0.22,
                         height: SizeConfig.screenWidth! * 0.12,
                         onPressed: () {
+                          locator<AnalyticsService>().track(
+                              eventName: AnalyticsEvents.saveInitiate,
+                              properties: {
+                                "investmentType": InvestmentType.AUGGOLD99,
+                              });
                           if (model.isIntentFlow) {
                             BaseUtil.openModalBottomSheet(
                               isBarrierDismissible: true,
@@ -112,7 +121,6 @@ class BuyNavBar extends StatelessWidget {
                               isScrollControlled: true,
                               content: GoldBreakdownView(
                                 model: model,
-                                //TODO: check if breakdown needs to be shown on psp options (A/B testing)
                                 showBreakDown: AppConfig.getValue(
                                     AppConfigKey.payment_brief_view),
                               ),

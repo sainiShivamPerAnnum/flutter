@@ -96,13 +96,13 @@ class AutosaveProcessViewModel extends BaseViewModel {
       onComboTapped(2);
       comboController = PageController();
     } else if (value == 1) {
-      floAmountFieldController!.text = '100';
+      floAmountFieldController!.text = '250';
       goldAmountFieldController!.text = '0';
-      _totalInvestingAmount = 100;
+      _totalInvestingAmount = 250;
     } else {
       floAmountFieldController!.text = '0';
-      goldAmountFieldController!.text = '100';
-      _totalInvestingAmount = 100;
+      goldAmountFieldController!.text = '250';
+      _totalInvestingAmount = 250;
     }
     notifyListeners();
   }
@@ -249,6 +249,7 @@ class AutosaveProcessViewModel extends BaseViewModel {
   Future<void> init(InvestmentType? investmentType) async {
     state = ViewState.Busy;
     AppState.showAutosaveBt = true;
+    if (investmentType != null) AppState.autosaveMiddleFlow = true;
     _subService.pageController = PageController();
     await _subService.getSubscription();
     if (_subService.autosaveState == AutosaveState.IDLE) {
@@ -387,7 +388,7 @@ class AutosaveProcessViewModel extends BaseViewModel {
         TextEditingController(text: _subService.subscriptionData!.lbAmt ?? '0');
     selectedAssetOption = _bankingService.isKYCVerified ? 0 : 2;
     _subService.pageController!.addListener(
-          () {
+      () {
         if ((_subService.pageController!.page ?? 0).toInt() != currentPage) {
           currentPage = _subService.pageController!.page!.toInt();
         }

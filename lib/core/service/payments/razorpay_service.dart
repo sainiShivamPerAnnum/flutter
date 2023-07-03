@@ -189,7 +189,7 @@ class RazorpayService extends ChangeNotifier {
         _razorpay!.open(options);
         return true;
       } else {
-        BaseUtil.showNegativeAlert(locale.failedToCreateTxn, locale.tryLater);
+        BaseUtil.showNegativeAlert(txnResponse.errorMessage, locale.tryLater);
         AppState.unblockNavigation();
 
         return false;

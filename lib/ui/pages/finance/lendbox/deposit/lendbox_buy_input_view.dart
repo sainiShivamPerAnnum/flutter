@@ -202,6 +202,12 @@ class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
                           : FloBuyNavBar(
                               model: widget.model,
                               onTap: () {
+                                locator<AnalyticsService>().track(
+                                    eventName: AnalyticsEvents.saveInitiate,
+                                    properties: {
+                                      "investmentType":
+                                          InvestmentType.LENDBOXP2P,
+                                    });
                                 if ((widget.model.buyAmount ?? 0) <
                                     widget.model.minAmount) {
                                   BaseUtil.showNegativeAlert("Invalid Amount",

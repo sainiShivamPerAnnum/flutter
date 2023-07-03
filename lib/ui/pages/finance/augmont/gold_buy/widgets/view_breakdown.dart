@@ -47,6 +47,8 @@ class GoldBreakdownView extends StatelessWidget {
               "skipMl": model.skipMl,
               "goldInGrams": model.goldAmountInGrams,
               "abTesting": AppConfig.getValue(AppConfigKey.payment_brief_view)
+                  ? "with payment summary"
+                  : "without payment summary"
             });
         return Future.value(true);
       },
@@ -414,6 +416,8 @@ class FloBreakdownView extends StatelessWidget {
               "txnAmount": model.buyAmount,
               "skipMl": model.skipMl,
               "abTesting": AppConfig.getValue(AppConfigKey.payment_brief_view)
+                  ? "with payment summary"
+                  : "without payment summary"
             });
         return true;
       },

@@ -188,9 +188,9 @@ class AnalyticsEvents {
   //Transaction Events
   static const transactionCompleted = "Razorpay Transaction Completed";
   static const transactionFailed = "Razorpay Transaction Failed";
-  static const intentTransactionBackPressed =
-      "Transaction Intent flow back pressed";
-  static const intentUpiAppSelected = "Transaction Intent Upi app selected";
+  static const intentTransactionBackPressed = "Back Tapped from PG";
+  static const intentUpiAppSelected = "Choose UPI App on PG";
+  static const saveInitiate = "save initiate";
 
   static const installedApps = "Installed Applications";
 
