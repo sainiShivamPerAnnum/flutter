@@ -28,7 +28,8 @@ enum AppConfigKey {
   youtube_videos,
   app_referral_message,
   enable_truecaller_login,
-  payment_brief_view
+  payment_brief_view,
+  quiz_config,
 }
 
 extension AppConfigKeys on String {
@@ -93,7 +94,8 @@ extension AppConfigKeys on String {
         return AppConfigKey.enable_truecaller_login;
       case "paymentBriefView":
         return AppConfigKey.payment_brief_view;
-
+      case "quizConfig":
+        return AppConfigKey.quiz_config;
       default:
         return AppConfigKey.unknown;
     }

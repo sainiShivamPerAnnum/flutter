@@ -71,7 +71,6 @@ class _GoldBuySuccessViewState extends State<GoldBuySuccessView>
                         AppState.isRepeated = true;
                         AppState.unblockNavigation();
                         AppState.backButtonDispatcher!.didPopRoute();
-                        // _augTxnService!.showGtIfAvailable();
                       },
                       icon: const Icon(
                         Icons.close,

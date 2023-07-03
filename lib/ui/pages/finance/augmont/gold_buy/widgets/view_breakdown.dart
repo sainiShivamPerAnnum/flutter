@@ -1,6 +1,10 @@
 import 'dart:typed_data';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/enums/app_config_keys.dart';
+import 'package:felloapp/core/model/app_config_model.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_buy/augmont_buy_vm.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/deposit/lendbox_buy_vm.dart';
@@ -16,6 +20,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:upi_pay/upi_pay.dart';
+
+import '../../../../../../util/locator.dart';
 
 class GoldBreakdownView extends StatelessWidget {
   const GoldBreakdownView({
@@ -33,6 +39,15 @@ class GoldBreakdownView extends StatelessWidget {
     return WillPopScope(
       onWillPop: () async {
         AppState.removeOverlay();
+        locator<AnalyticsService>().track(
+            eventName: AnalyticsEvents.intentTransactionBackPressed,
+            properties: {
+              "goldBuyAmount": model.goldBuyAmount,
+              "couponCode": model.appliedCoupon?.code ?? '',
+              "skipMl": model.skipMl,
+              "goldInGrams": model.goldAmountInGrams,
+              "abTesting": AppConfig.getValue(AppConfigKey.payment_brief_view)
+            });
         return Future.value(true);
       },
       child: Padding(
@@ -158,7 +173,8 @@ class GoldBreakdownView extends StatelessWidget {
                     SizedBox(
                       height: SizeConfig.padding24,
                     ),
-                    if (model.showHappyHour && model.happyHourTickets != null) ...[
+                    if (model.showHappyHour &&
+                        model.happyHourTickets != null) ...[
                       Row(
                         children: [
                           Text(
@@ -234,10 +250,15 @@ class GoldBreakdownView extends StatelessWidget {
                   if (!model.isGoldBuyInProgress) {
                     Haptic.vibrate();
                     FocusScope.of(context).unfocus();
+
                     model.selectedUpiApplication = i == -1
                         ? ApplicationMeta.android(
-                            UpiApplication.phonePe, Uint8List(10), 1, 1)
+                            UpiApplication.PhonePeSimulator,
+                            Uint8List(10),
+                            1,
+                            1)
                         : model.appMetaList[i];
+
                     model.initiateBuy();
                   }
 
@@ -356,6 +377,7 @@ class UpiAppsGridView extends StatelessWidget {
                             apps[i].upiApplication.appName,
                             style: TextStyles.sourceSansM.body3
                                 .colour(Colors.white),
+                            textAlign: TextAlign.center,
                           )
                         ],
                       ),
@@ -383,6 +405,16 @@ class FloBreakdownView extends StatelessWidget {
     return WillPopScope(
       onWillPop: () async {
         AppState.removeOverlay();
+        locator<AnalyticsService>().track(
+            eventName: AnalyticsEvents.intentTransactionBackPressed,
+            properties: {
+              "floAssetType": model.floAssetType,
+              "maturityPref": model.maturityPref,
+              "couponCode": model.appliedCoupon?.code ?? '',
+              "txnAmount": model.buyAmount,
+              "skipMl": model.skipMl,
+              "abTesting": AppConfig.getValue(AppConfigKey.payment_brief_view)
+            });
         return true;
       },
       child: Padding(

@@ -1,15 +1,14 @@
 import 'dart:async';
 
-// for meta
-import 'package:upi_pay/src/response.dart';
-
+import 'package:upi_pay/src/applications.dart';
 import 'package:upi_pay/src/discovery.dart';
+import 'package:upi_pay/src/exceptions.dart';
 import 'package:upi_pay/src/meta.dart';
 import 'package:upi_pay/src/method_channel.dart';
 
+// for meta
+import 'package:upi_pay/src/response.dart';
 import 'package:upi_pay/src/status.dart';
-import 'package:upi_pay/src/applications.dart';
-import 'package:upi_pay/src/exceptions.dart';
 import 'package:upi_pay/src/transaction.dart';
 import 'package:upi_pay/src/transaction_details.dart';
 
@@ -177,5 +176,7 @@ class UpiPay {
     UpiApplication.whatsApp: UpiApplicationStatus.whatsApp,
     UpiApplication.yesBank: UpiApplicationStatus.yesBank,
     UpiApplication.yuvaPay: UpiApplicationStatus.yuvaPay,
+    UpiApplication.PhonePeSimulator: UpiApplicationStatus.phonePeSimulator,
+    UpiApplication.phonePePreprod: UpiApplicationStatus.phonePePreProd
   };
 }

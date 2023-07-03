@@ -377,16 +377,6 @@ class ActiveOrPausedAutosaveCard extends StatelessWidget {
                       ),
                     ],
                   ),
-                  // Align(
-                  //   alignment: Alignment.topRight,
-                  //   child: Padding(
-                  //     padding: EdgeInsets.only(top: SizeConfig.padding12),
-                  //     child: SvgPicture.asset(
-                  //       Assets.chevRonRightArrow,
-                  //       width: SizeConfig.iconSize0,
-                  //     ),
-                  //   ),
-                  // )
                 ],
               ),
             ),
