@@ -154,7 +154,9 @@ class FloPremiumSection extends StatelessWidget {
                   lendboxDetails[1]["minAmountText"] ?? "Min - ₹25,000",
               tier: Constants.ASSET_TYPE_FLO_FIXED_3,
               actionUri: "flo10Details",
-              promoText: "Get *3X tickets* on saving in 10% Flo till maturity",
+              promoText: (lendboxDetails[1]["tambolaMultiplier"] != null)
+                  ? "Get *${lendboxDetails[1]["tambolaMultiplier"]}X tickets* on saving in 10% Flo till maturity"
+                  : null,
               cta: () => BaseUtil.openFloBuySheet(
                   floAssetType: Constants.ASSET_TYPE_FLO_FIXED_3),
             ),

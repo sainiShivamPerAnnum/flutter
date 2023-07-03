@@ -205,9 +205,9 @@ class _AssetSectionViewState extends State<AssetSectionView> {
                                       ),
                                     ),
                                     child: const _GoldRateWidget()),
-                              SizedBox(
-                                height: SizeConfig.padding10,
-                              ),
+                              // SizedBox(
+                              //   height: SizeConfig.padding10,
+                              // ),
                               if (balance == 0)
                                 Padding(
                                   padding: EdgeInsets.symmetric(
@@ -1658,7 +1658,7 @@ class _GoldRateWidgetState extends State<_GoldRateWidget> {
 
     _repo.subscribeGoldPriceAlert(switchValue ? 1 : 0);
 
-    PreferenceHelper.setBool(PreferenceHelper.GOLD_PRICE_SUBSCRIBE, true);
+    PreferenceHelper.setBool(PreferenceHelper.GOLD_PRICE_SUBSCRIBE, newValue);
 
     if (switchValue) {
       BaseUtil.showPositiveAlert(
