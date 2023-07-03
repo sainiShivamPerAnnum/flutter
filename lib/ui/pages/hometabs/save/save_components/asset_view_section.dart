@@ -622,7 +622,7 @@ class AssetBottomButtons extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Expanded(
-                flex: state == null ? 0 : 1,
+                flex: 1,
                 child: MaterialButton(
                   minWidth: state == null ? SizeConfig.padding156 : null,
                   color: state != null ? Colors.white : null,
@@ -632,27 +632,9 @@ class AssetBottomButtons extends StatelessWidget {
                     borderRadius: BorderRadius.circular(SizeConfig.roundness5),
                   ),
                   child: Text(
-                    state != null ? "SAVE" : "SAVE ONCE",
+                    state != null ? "SAVE" : "SAVE DAILY",
                     style: TextStyles.rajdhaniB.body1
                         .colour(state != null ? Colors.black : Colors.white),
-                  ),
-                  onPressed: () {
-                    Haptic.vibrate();
-                    BaseUtil().openRechargeModalSheet(investmentType: type);
-                  },
-                ),
-              ),
-              if (state == null)
-                MaterialButton(
-                  minWidth: SizeConfig.padding156,
-                  color: Colors.white,
-                  height: SizeConfig.padding44,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(SizeConfig.roundness5),
-                  ),
-                  child: Text(
-                    "SAVE DAILY",
-                    style: TextStyles.rajdhaniB.body1.colour(Colors.black),
                   ),
                   onPressed: () {
                     Haptic.vibrate();
@@ -663,10 +645,34 @@ class AssetBottomButtons extends StatelessWidget {
                         investmentType: type,
                       ),
                     );
-                    // BaseUtil().openRechargeModalSheet(
-                    //     investmentType: widget.type);
                   },
                 ),
+              ),
+              if (state == null) ...[
+                SizedBox(width: SizeConfig.padding12),
+                Expanded(
+                  flex: 1,
+                  child: MaterialButton(
+                    minWidth: SizeConfig.padding156,
+                    color: Colors.white,
+                    height: SizeConfig.padding44,
+                    shape: RoundedRectangleBorder(
+                      borderRadius:
+                          BorderRadius.circular(SizeConfig.roundness5),
+                    ),
+                    child: Text(
+                      "SAVE ONCE",
+                      style: TextStyles.rajdhaniB.body1.colour(Colors.black),
+                    ),
+                    onPressed: () {
+                      Haptic.vibrate();
+                      BaseUtil().openRechargeModalSheet(investmentType: type);
+                      // BaseUtil().openRechargeModalSheet(
+                      //     investmentType: widget.type);
+                    },
+                  ),
+                ),
+              ]
             ],
           ),
         );
