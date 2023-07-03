@@ -27,9 +27,9 @@ final scratchKey = GlobalKey<ScratcherState>();
 class GTDetailedView extends StatelessWidget {
   final ScratchCard ticket;
 
- const GTDetailedView({super.key,required this.ticket});
+  const GTDetailedView({super.key, required this.ticket});
 
- @override
+  @override
   Widget build(BuildContext context) {
     return BaseView<GTDetailedViewModel>(
       onModelReady: (model) {
@@ -147,68 +147,73 @@ class GTDetailedView extends StatelessWidget {
             height: SizeConfig.padding40,
           ),
           if (ticket.tag != null && (ticket.tag?.isNotEmpty ?? false))
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                Column(
-                  children: [
-                    Text(
-                      ScratchCardConstants.getTitle(ticket.tag!)['title']!,
-                      style: TextStyles.sourceSans.body3.colour(Colors.white),
-                      textAlign: TextAlign.center,
+            SizedBox(
+              height: SizeConfig.padding120,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          ScratchCardConstants.getTitle(ticket.tag!)['title']!,
+                          style:
+                              TextStyles.sourceSans.body3.colour(Colors.white),
+                          textAlign: TextAlign.center,
+                        ),
+                        SizedBox(
+                          height: SizeConfig.padding8,
+                        ),
+                        Text(
+                          ScratchCardConstants.getTitle(
+                              ticket.tag!)['subtitle']!,
+                          style:
+                              TextStyles.rajdhaniSB.title5.colour(Colors.white),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
                     ),
-                    SizedBox(
-                      height: SizeConfig.padding8,
+                  ),
+                  //vertical divider
+                  Container(
+                    height: SizeConfig.padding90,
+                    width: 2,
+                    color: Colors.white,
+                    // child:
+                  ),
+                  Expanded(
+                    child: Column(
+                      children: [
+                        SvgPicture.asset(
+                            ScratchCardConstants.getBadges(ticket.tag!),
+                            // fit: BoxFit.fitHeight,
+                            height: SizeConfig.padding60,
+                            width: SizeConfig.padding60),
+                        SizedBox(
+                          height: SizeConfig.padding8,
+                        ),
+                        Text(
+                          'You earned a badge',
+                          style: TextStyles.sourceSans.body3
+                              .colour(Colors.white.withOpacity(0.6)),
+                          textAlign: TextAlign.center,
+                        ),
+                        SizedBox(
+                          height: SizeConfig.padding4,
+                        ),
+                        Text(
+                          ticket.tag ?? 'Ticket Titan',
+                          // 'Tambola Titan',
+                          style: TextStyles.sourceSansSB.body2
+                              .colour(Colors.white),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
                     ),
-                    Text(
-                      ScratchCardConstants.getTitle(ticket.tag!)['subtitle']!,
-                      style: TextStyles.rajdhaniSB.title5.colour(Colors.white),
-                      textAlign: TextAlign.center,
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  width: SizeConfig.padding32,
-                ),
-                //create a vertical divider
-                Container(
-                  height: SizeConfig.padding90,
-                  width: 2,
-                  color: Colors.white,
-                  // child:
-                ),
-
-                SizedBox(
-                  width: SizeConfig.padding32,
-                ),
-                Column(
-                  children: [
-                    SvgPicture.asset(
-                        ScratchCardConstants.getBadges(ticket.tag!),
-                        // fit: BoxFit.fitHeight,
-                        height: SizeConfig.padding60,
-                        width: SizeConfig.padding60),
-                    SizedBox(
-                      height: SizeConfig.padding8,
-                    ),
-                    Text(
-                      'You earned a badge',
-                      style: TextStyles.sourceSans.body3
-                          .colour(Colors.white.withOpacity(0.6)),
-                      textAlign: TextAlign.center,
-                    ),
-                    SizedBox(
-                      height: SizeConfig.padding4,
-                    ),
-                    Text(
-                      ticket.tag ?? 'Ticket Titan',
-                      // 'Tambola Titan',
-                      style: TextStyles.sourceSansSB.body2.colour(Colors.white),
-                      textAlign: TextAlign.center,
-                    ),
-                  ],
-                ),
-              ],
+                  ),
+                ],
+              ),
             )
         ],
       );

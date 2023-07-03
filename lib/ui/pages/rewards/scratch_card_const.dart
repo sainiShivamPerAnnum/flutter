@@ -70,13 +70,13 @@ class ScratchCardConstants {
         };
       case general:
         return {
-          "title": "Won in",
-          "subtitle": 'Tambola',
+          "title": "Won a",
+          "subtitle": 'Ticket',
         };
       default:
         return {
-          "title": "Won in",
-          "subtitle": 'Tambola',
+          "title": "Won a",
+          "subtitle": 'Ticket',
         };
     }
   }
