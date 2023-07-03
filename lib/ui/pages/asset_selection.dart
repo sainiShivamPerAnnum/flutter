@@ -397,8 +397,6 @@ class FelloFloPrograms extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final daysRemaining = BaseUtil.calculateRemainingDays(DateTime(2023, 9, 1));
-
     return Stack(
       children: [
         GestureDetector(
@@ -538,56 +536,62 @@ class FelloFloPrograms extends StatelessWidget {
                   left: SizeConfig.screenWidth! / 8,
                 ),
                 width: SizeConfig.screenWidth! * 0.5,
-                child: Stack(
-                  children: [
-                    Container(
-                      // alignment: Alignment.center,
-                      padding: EdgeInsets.symmetric(
-                          horizontal: SizeConfig.padding12,
-                          vertical: SizeConfig.padding2),
-                      decoration: BoxDecoration(
-                        color: const Color(0xff62E3C4),
-                        borderRadius:
-                            BorderRadius.circular(SizeConfig.roundness12),
-                      ),
-                      child: Shimmer.fromColors(
-                        period: const Duration(milliseconds: 2500),
-                        baseColor: Colors.grey[900]!,
-                        highlightColor: Colors.grey[100]!,
-                        loop: 3,
-                        child:
-                            "Available only for *$daysRemaining days*".beautify(
-                          boldStyle:
-                              TextStyles.sourceSansB.body4.colour(Colors.white),
-                          style:
-                              TextStyles.sourceSans.body4.colour(Colors.white),
-                          alignment: TextAlign.center,
-                        ),
-                      ),
-                    ),
-                    Positioned(
-                      right: 30,
-                      child: CustomPaint(
-                        size: Size(
-                            SizeConfig.padding14,
-                            (SizeConfig.padding14 * 1.09).toDouble()),
-                        painter: StarCustomPainter(),
-                      ),
-                    ),
-                    Positioned(
-                      right: 22,
-                      child: CustomPaint(
-                        size: Size(
-                            SizeConfig.padding8,
-                            (SizeConfig.padding8 * 1.09).toDouble()),
-                        painter: StarCustomPainter(),
-                      ),
-                    )
-                  ],
-                ),
+                child: const AvailabilityOfferWidget(),
               ),
             ),
           ),
+      ],
+    );
+  }
+}
+
+class AvailabilityOfferWidget extends StatelessWidget {
+  const AvailabilityOfferWidget({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final daysRemaining = BaseUtil.calculateRemainingDays(DateTime(2023, 9, 1));
+
+    return Stack(
+      children: [
+        Container(
+          // alignment: Alignment.center,
+          padding: EdgeInsets.symmetric(
+              horizontal: SizeConfig.padding12, vertical: SizeConfig.padding2),
+          decoration: BoxDecoration(
+            color: const Color(0xff62E3C4),
+            borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+          ),
+          child: Shimmer.fromColors(
+            period: const Duration(milliseconds: 2500),
+            baseColor: Colors.grey[900]!,
+            highlightColor: Colors.grey[100]!,
+            loop: 3,
+            child: "Available only for *$daysRemaining days*".beautify(
+              boldStyle: TextStyles.sourceSansB.body4.colour(Colors.white),
+              style: TextStyles.sourceSans.body4.colour(Colors.white),
+              alignment: TextAlign.center,
+            ),
+          ),
+        ),
+        Positioned(
+          right: 30,
+          child: CustomPaint(
+            size: Size(
+                SizeConfig.padding14, (SizeConfig.padding14 * 1.09).toDouble()),
+            painter: StarCustomPainter(),
+          ),
+        ),
+        Positioned(
+          right: 22,
+          child: CustomPaint(
+            size: Size(
+                SizeConfig.padding8, (SizeConfig.padding8 * 1.09).toDouble()),
+            painter: StarCustomPainter(),
+          ),
+        )
       ],
     );
   }
