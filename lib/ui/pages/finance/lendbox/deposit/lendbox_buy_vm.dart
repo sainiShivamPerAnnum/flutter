@@ -332,7 +332,7 @@ class LendboxBuyViewModel extends BaseViewModel {
         "couponCode": appliedCoupon?.code ?? '',
         "txnAmount": amount.toDouble(),
         "skipMl": skipMl,
-        "upiChoice": selectedUpiApplication,
+        "upiChoice": selectedUpiApplication!.packageName,
         "abTesting": AppConfig.getValue(AppConfigKey.payment_brief_view)
             ? "with payment summary"
             : "without payment summary"

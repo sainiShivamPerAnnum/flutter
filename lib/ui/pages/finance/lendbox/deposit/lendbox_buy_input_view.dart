@@ -206,7 +206,7 @@ class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
                                     eventName: AnalyticsEvents.saveInitiate,
                                     properties: {
                                       "investmentType":
-                                          InvestmentType.LENDBOXP2P,
+                                          InvestmentType.LENDBOXP2P.name,
                                     });
                                 if ((widget.model.buyAmount ?? 0) <
                                     widget.model.minAmount) {
