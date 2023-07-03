@@ -56,35 +56,35 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
                   ? Text(
                       "Step ${model.currentPage + 1} of 4",
                       style: TextStyles.sourceSansL.body3,
-                  )
-                      : Container(),
-                  centerTitle: true,
-                  leading: IconButton(
-                    icon: const Icon(
-                      Icons.arrow_back_ios,
-                      color: UiConstants.kTextColor,
-                    ),
-                    onPressed: () {
-                      FocusScope.of(context).unfocus();
-                      (autosaveState == AutosaveState.INIT ||
+                    )
+                  : Container(),
+              centerTitle: true,
+              leading: IconButton(
+                icon: const Icon(
+                  Icons.arrow_back_ios,
+                  color: UiConstants.kTextColor,
+                ),
+                onPressed: () {
+                  FocusScope.of(context).unfocus();
+                  (autosaveState == AutosaveState.INIT ||
                           autosaveState == AutosaveState.ACTIVE ||
                           model.pageController!.page == 0)
-                          ? AppState.backButtonDispatcher!.didPopRoute()
-                          : model.pageController!.animateToPage(
+                      ? AppState.backButtonDispatcher!.didPopRoute()
+                      : model.pageController!.animateToPage(
                           model.pageController!.page!.toInt() - 1,
                           duration: const Duration(milliseconds: 500),
                           curve: Curves.decelerate);
-                      model.trackAutosaveBackPress();
-                    },
-                  ),
-                  actions: [
-                    Row(
-                      children: const [FaqPill(type: FaqsType.autosave)],
+                  model.trackAutosaveBackPress();
+                },
+              ),
+              actions: [
+                Row(
+                  children: const [FaqPill(type: FaqsType.autosave)],
                 )
-                  ],
-                ),
-                resizeToAvoidBottomInset: false,
-                body: model.state == ViewState.Busy
+              ],
+            ),
+            resizeToAvoidBottomInset: false,
+            body: model.state == ViewState.Busy
                 ? const Center(
                     child: FullScreenLoader(),
                   )
@@ -100,11 +100,11 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
                                     ? AutosaveSuccessView(model: model)
                                     : const SizedBox(),
                       ),
-                  ],
-                ),
-              );
-            },
-          ),
+                    ],
+                  ),
+          );
+        },
+      ),
     );
   }
 }
@@ -266,11 +266,11 @@ class AutosavePendingView extends StatelessWidget {
           ),
           Expanded(
               child: Center(
-                child: LottieBuilder.asset(
-                  "assets/lotties/loader.json",
-                  width: SizeConfig.screenWidth! * 0.5,
-                ),
-              )),
+            child: LottieBuilder.asset(
+              "assets/lotties/loader.json",
+              width: SizeConfig.screenWidth! * 0.5,
+            ),
+          )),
           Text(
             "We'll notify you once your autosave is confirmed",
             style: TextStyles.sourceSansL.body4.colour(Colors.amber),

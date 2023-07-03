@@ -101,6 +101,7 @@ class AnalyticsEvents {
   static const asUpiAppTapped = "Autosave UPI App Tapped";
   static const asUpiSubmitTapped = "Autosave UPI Submit Tapped";
   static const asHardBackTapped = "Autosave Hard Back Tapped";
+  static const asSurveyTapped = "Autosave Survey Tapped";
   static const asDoneTapped = "Autosave success done tapped";
   static const asPrevTapped = "Autosave Previous Tapped";
   static const asUpdateTapped = "Update Autosave Tapped";
