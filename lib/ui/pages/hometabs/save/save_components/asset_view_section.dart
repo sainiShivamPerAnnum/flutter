@@ -2,6 +2,7 @@ import 'dart:ui' as ui;
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
@@ -645,6 +646,14 @@ class AssetBottomButtons extends StatelessWidget {
                         investmentType: type,
                       ),
                     );
+
+                    locator<AnalyticsService>().track(
+                        eventName: state != null
+                            ? AnalyticsEvents.saveOnce
+                            : AnalyticsEvents.saveDaily,
+                        properties: {
+                          'assetType': type,
+                        });
                   },
                 ),
               ),
@@ -667,6 +676,11 @@ class AssetBottomButtons extends StatelessWidget {
                     onPressed: () {
                       Haptic.vibrate();
                       BaseUtil().openRechargeModalSheet(investmentType: type);
+                      locator<AnalyticsService>().track(
+                          eventName: AnalyticsEvents.saveOnce,
+                          properties: {
+                            'assetType': type,
+                          });
                       // BaseUtil().openRechargeModalSheet(
                       //     investmentType: widget.type);
                     },
@@ -1669,7 +1683,7 @@ class _GoldRateWidgetState extends State<_GoldRateWidget> {
     if (switchValue) {
       BaseUtil.showPositiveAlert(
           'We will notify you when the gold prices change!',
-          'Don\'t worry, we will not to spam you');
+          'Keep saving in Gold with Fello!');
     }
   }
 

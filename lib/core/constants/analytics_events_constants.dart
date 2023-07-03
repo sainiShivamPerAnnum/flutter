@@ -101,7 +101,8 @@ class AnalyticsEvents {
   static const asUpiAppTapped = "Autosave UPI App Tapped";
   static const asUpiSubmitTapped = "Autosave UPI Submit Tapped";
   static const asHardBackTapped = "Autosave Hard Back Tapped";
-  static const asSurveyTapped = "Autosave Survey Tapped";
+  static const asSurveyContinueTapped = "Autosave Survey Continue Tapped";
+  static const asSurveyGoBackTapped = "Autosave Survey Go Back Tapped";
   static const asDoneTapped = "Autosave success done tapped";
   static const asPrevTapped = "Autosave Previous Tapped";
   static const asUpdateTapped = "Update Autosave Tapped";
@@ -220,4 +221,7 @@ class AnalyticsEvents {
   static const maturityWithdrawPopupTapped = "Maturity Withdraw Popup Tapped";
   static const quickCheckoutTapped = "Quick Checkout Tapped";
   static const quickCheckoutTileTapped = "Quick Checkout Tile Tapped";
+  static const saveOnce = "Save Once Tapped in Asset Detail Page";
+  static const saveDaily = "Save Daily Tapped in Asset Detail Page";
+  static const tambolaCarousel = "Tambola Top Carousel Tapped";
 }
