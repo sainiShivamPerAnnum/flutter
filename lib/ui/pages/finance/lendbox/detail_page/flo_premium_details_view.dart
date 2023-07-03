@@ -290,75 +290,135 @@ class _FloPremiumDetailsViewState extends State<FloPremiumDetailsView>
                                               SizedBox(
                                                   height: SizeConfig.padding32),
                                               if (model.isInvested)
-                                                const FloBalanceBriefRow(
-                                                  key: ValueKey("10floBalance"),
-                                                  tier: Constants
-                                                      .ASSET_TYPE_FLO_FIXED_3,
+                                                Container(
+                                                  margin: EdgeInsets.symmetric(
+                                                      horizontal:
+                                                          SizeConfig.padding16),
+                                                  padding: EdgeInsets.only(
+                                                    top: SizeConfig.padding16,
+                                                    // horizontal:
+                                                    //     SizeConfig.padding16,
+                                                  ),
+                                                  decoration: ShapeDecoration(
+                                                    color:
+                                                        const Color(0xFF013B3F),
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                      side: const BorderSide(
+                                                        width: 1,
+                                                        strokeAlign: BorderSide
+                                                            .strokeAlignOutside,
+                                                        color:
+                                                            Color(0xFF326164),
+                                                      ),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              16),
+                                                    ),
+                                                  ),
+                                                  child: Column(
+                                                    children: [
+                                                      if (model.isInvested)
+                                                        Container(
+                                                          margin: EdgeInsets
+                                                              .symmetric(
+                                                            horizontal:
+                                                                SizeConfig
+                                                                    .padding24,
+                                                          ),
+                                                          child:
+                                                              const FloBalanceBriefRow(
+                                                            key: ValueKey(
+                                                                "10floBalance"),
+                                                            tier: Constants
+                                                                .ASSET_TYPE_FLO_FIXED_3,
+                                                            mini: true,
+                                                            endAlign: true,
+                                                          ),
+                                                        ),
+                                                      if (model.isInvested)
+                                                        SizedBox(
+                                                            height: SizeConfig
+                                                                .padding16),
+                                                      Container(
+                                                        margin: EdgeInsets
+                                                            .symmetric(
+                                                          horizontal: SizeConfig
+                                                              .padding16,
+                                                        ),
+                                                        child:
+                                                            FloPremiumTransactionsList(
+                                                          key: const ValueKey(
+                                                              "10floTxns"),
+                                                          model: model,
+                                                          seeAll: _seeAll,
+                                                        ),
+                                                      ),
+                                                      SizedBox(
+                                                          height: SizeConfig
+                                                              .padding8),
+                                                      if (model.isInvested)
+                                                        GestureDetector(
+                                                          onTap: () {
+                                                            setState(() {
+                                                              _seeAll =
+                                                                  !_seeAll;
+                                                            });
+                                                          },
+                                                          child: Container(
+                                                            decoration: BoxDecoration(
+                                                                color: Colors
+                                                                    .white
+                                                                    .withOpacity(
+                                                                        0.10),
+                                                                borderRadius: BorderRadius.only(
+                                                                    bottomLeft: Radius.circular(
+                                                                        SizeConfig
+                                                                            .roundness16),
+                                                                    bottomRight:
+                                                                        Radius.circular(
+                                                                            SizeConfig.roundness16))),
+                                                            child: Row(
+                                                              mainAxisAlignment:
+                                                                  MainAxisAlignment
+                                                                      .center,
+                                                              children: [
+                                                                Text(
+                                                                  _seeAll
+                                                                      ? 'View less Investments'
+                                                                      : 'View more Investments',
+                                                                  style: TextStyles
+                                                                      .sourceSansSB
+                                                                      .body2
+                                                                      .colour(Colors
+                                                                          .white),
+                                                                ),
+                                                                SizedBox(
+                                                                  width: SizeConfig
+                                                                      .padding4,
+                                                                ),
+                                                                Icon(
+                                                                  _seeAll
+                                                                      ? Icons
+                                                                          .keyboard_arrow_up
+                                                                      : Icons
+                                                                          .keyboard_arrow_down_outlined,
+                                                                  color: Colors
+                                                                      .white,
+                                                                  size: SizeConfig
+                                                                      .padding28,
+                                                                ),
+                                                              ],
+                                                            ),
+                                                          ),
+                                                        )
+                                                    ],
+                                                  ),
                                                 ),
                                               if (model.isInvested)
                                                 SizedBox(
                                                     height:
-                                                        SizeConfig.padding16),
-                                              FloPremiumTransactionsList(
-                                                key:
-                                                    const ValueKey("10floTxns"),
-                                                model: model,
-                                                seeAll: _seeAll,
-                                              ),
-                                              if (model.isInvested)
-                                                GestureDetector(
-                                                  onTap: () {
-                                                    setState(() {
-                                                      _seeAll = !_seeAll;
-                                                    });
-                                                  },
-                                                  child: Container(
-                                                    decoration: BoxDecoration(
-                                                        color: Colors.white
-                                                            .withOpacity(0.10),
-                                                        borderRadius: BorderRadius.only(
-                                                            bottomLeft:
-                                                                Radius.circular(
-                                                                    SizeConfig
-                                                                        .roundness16),
-                                                            bottomRight:
-                                                                Radius.circular(
-                                                                    SizeConfig
-                                                                        .roundness16))),
-                                                    child: Row(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
-                                                      children: [
-                                                        Text(
-                                                          'View more Investments',
-                                                          style: TextStyles
-                                                              .sourceSansSB
-                                                              .body2
-                                                              .colour(
-                                                                  Colors.white),
-                                                        ),
-                                                        SizedBox(
-                                                          width: SizeConfig
-                                                              .padding4,
-                                                        ),
-                                                        Icon(
-                                                          Icons
-                                                              .keyboard_arrow_down_outlined,
-                                                          color: Colors.white,
-                                                          size: SizeConfig
-                                                              .padding28,
-                                                        ),
-                                                        // Transform.rotate(
-                                                        //     angle: math.pi / 2,
-                                                        //     child: SvgPicture.asset(
-                                                        //       Assets.chevRonRightArrow,
-                                                        //       color: UiConstants.primaryColor,
-                                                        //     ))
-                                                      ],
-                                                    ),
-                                                  ),
-                                                )
+                                                        SizeConfig.padding16)
                                             ],
                                           ),
                                     transitionBuilder: (child, animation) {
