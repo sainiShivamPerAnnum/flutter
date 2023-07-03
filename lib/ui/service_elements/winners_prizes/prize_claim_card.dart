@@ -110,10 +110,19 @@ class RewardRedeemWidget extends StatelessWidget {
           ? null
           : BoxDecoration(
         borderRadius: BorderRadius.only(
-            bottomLeft: Radius.circular(SizeConfig.roundness40),
-            bottomRight: Radius.circular(SizeConfig.roundness40)),
-        color: UiConstants.kTambolaMidTextColor,
-      ),
+                  bottomLeft: Radius.circular(SizeConfig.roundness40),
+                  bottomRight: Radius.circular(SizeConfig.roundness40)),
+              color: UiConstants.kTambolaMidTextColor,
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.2),
+                  // Adjust shadow color and opacity
+                  offset: const Offset(0, 4),
+                  // Adjust shadow offset
+                  blurRadius: 6, // Adjust shadow blur radius
+                ),
+              ],
+            ),
       padding: EdgeInsets.only(
         top: SizeConfig.padding20,
       ),

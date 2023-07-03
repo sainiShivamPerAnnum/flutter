@@ -1,9 +1,11 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -20,7 +22,6 @@ import 'package:felloapp/ui/service_elements/user_service/lendbox_principle_valu
 import 'package:felloapp/ui/service_elements/user_service/user_fund_quantity_se.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
-import 'package:felloapp/util/dynamic_ui_utils.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
@@ -79,6 +80,22 @@ class _FloPremiumDetailsViewState extends State<FloPremiumDetailsView>
     _animController!.dispose();
     super.dispose();
     _seeAll = false;
+  }
+
+  String getText() {
+    List lendboxDetails = AppConfig.getValue(AppConfigKey.lendbox);
+
+    // bool isLendboxOldUser = locator<UserService>().userSegments.contains(Constants.US_FLO_OLD);
+
+    if (widget.is12) {
+      return (lendboxDetails[0]["tambolaMultiplier"] != null)
+          ? "Get *${lendboxDetails[0]["tambolaMultiplier"]}X tickets* on saving in 12% Flo till maturity"
+          : "Get consistent returns on saving in 12% Flo till maturity";
+    }
+
+    return (lendboxDetails[1]["tambolaMultiplier"] != null)
+        ? "Get *${lendboxDetails[1]["tambolaMultiplier"]}X tickets* on saving in 10% Flo till maturity"
+        : "Get consistent returns on saving in 10% Flo till maturity";
   }
 
   @override
@@ -584,7 +601,7 @@ class _FloPremiumDetailsViewState extends State<FloPremiumDetailsView>
                                     padding: EdgeInsets.symmetric(
                                         horizontal: SizeConfig.padding4),
                                     child: Text(
-                                      DynamicUiUtils.ctaText.LENDBOXP2P ?? "",
+                                      getText(),
                                       style: TextStyles.sourceSans.body4.colour(
                                         Colors.white,
                                       ),

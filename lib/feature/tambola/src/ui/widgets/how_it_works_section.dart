@@ -8,8 +8,8 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 
-class HowTambolaWorks extends StatelessWidget {
-  const HowTambolaWorks({
+class TotalTambolaWon extends StatelessWidget {
+  const TotalTambolaWon({
     super.key,
   });
 
@@ -17,8 +17,8 @@ class HowTambolaWorks extends StatelessWidget {
   Widget build(BuildContext context) {
     final userService = locator<UserService>();
 
-    if (userService.userFundWallet?.wTambolaTotalWon != null &&
-        (userService.userFundWallet?.wTambolaTotalWon ?? 0) > 0) {
+    if (userService.userFundWallet?.wTmbWin != null &&
+        (userService.userFundWallet?.wTmbWin ?? 0) > 0) {
       return GestureDetector(
         onTap: () {
           Haptic.vibrate();
@@ -56,7 +56,7 @@ class HowTambolaWorks extends StatelessWidget {
                 ),
                 const Spacer(),
                 Text(
-                  "₹${userService.userFundWallet?.wTambolaTotalWon}",
+                  "₹${userService.userFundWallet?.wTmbWin}",
                   style: TextStyles.rajdhaniSB.title5.colour(
                     const Color(0xFFFFE9B1),
                   ),

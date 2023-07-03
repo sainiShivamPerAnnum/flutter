@@ -120,6 +120,7 @@ class MainActivity : FlutterFragmentActivity() {
                     val id: Long = getPhonePeVersionCode(context)
                     result.success(id)
                 }
+
                 else -> {
                     result.notImplemented()
                 }
@@ -147,7 +148,7 @@ class MainActivity : FlutterFragmentActivity() {
             }
         }
     }
-    
+
 
     fun getPhonePeVersionCode(context: Context?): Long {
         // val PHONEPE_PACKAGE_NAME_UAT = "com.phonepe.app.preprod"
@@ -272,7 +273,7 @@ class MainActivity : FlutterFragmentActivity() {
 
 
 
-    private fun getupiApps(){
+    private fun getupiApps() {
 
         val packageManager = context.packageManager
         val mainIntent = Intent(Intent.ACTION_VIEW)
@@ -281,25 +282,26 @@ class MainActivity : FlutterFragmentActivity() {
         // mainIntent.action = Intent.ACTION_VIEW
         // val uri1 = Uri.parse("upi://pay")
         mainIntent.data = Uri.parse("upi://pay")
-        var list= mutableListOf<Map<String,String>>()
+        var list = mutableListOf<Map<String, String>>()
 
         try {
-            val activities = packageManager.queryIntentActivities(mainIntent, PackageManager.MATCH_DEFAULT_ONLY)
-            Log.d(activities.toString(),"UPI Apps Present")
+            val activities =
+                packageManager.queryIntentActivities(mainIntent, PackageManager.MATCH_DEFAULT_ONLY)
+            Log.d(activities.toString(), "UPI Apps Present")
             // Convert the activities into a response that can be transferred over the channel.
 
-        for(it in activities){
-            val packageName = it.activityInfo.packageName
-            Log.d(packageName,"package name");
-            val drawable = packageManager.getApplicationIcon(packageName)
+            for (it in activities) {
+                val packageName = it.activityInfo.packageName
+                Log.d(packageName, "package name");
+                val drawable = packageManager.getApplicationIcon(packageName)
 
-            val bitmap = getBitmapFromDrawable(drawable)
-            val icon = if (bitmap != null) {
-                encodeToBase64(bitmap)
-            } else {
-                null
-            }
-            var map=mapOf(
+                val bitmap = getBitmapFromDrawable(drawable)
+                val icon = if (bitmap != null) {
+                    encodeToBase64(bitmap)
+                } else {
+                    null
+                }
+                var map = mapOf(
                     "packageName" to packageName,
                     "icon" to icon,
                     "priority" to it.priority,
