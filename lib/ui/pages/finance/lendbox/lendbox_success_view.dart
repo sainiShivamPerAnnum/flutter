@@ -24,7 +24,7 @@ import 'package:lottie/lottie.dart';
 class LendboxSuccessView extends StatefulWidget {
   final TransactionType transactionType;
 
-  LendboxSuccessView({Key? key, required this.transactionType})
+  const LendboxSuccessView({Key? key, required this.transactionType})
       : super(key: key);
 
   @override
@@ -404,12 +404,6 @@ class _LendboxSuccessViewState extends State<LendboxSuccessView>
                       await AppState.backButtonDispatcher!.didPopRoute();
                     }
 
-                    // if (AppState.delegate!.currentConfiguration!.key ==
-                    //         'AssetSelectionViewPath' ||
-                    //     AppState.screenStack.last == ScreenItem.dialog) {
-                    //   AppState.backButtonDispatcher!.didPopRoute();
-                    // }
-
                     AppState.delegate!.appState.setCurrentTabIndex =
                         DynamicUiUtils.navBar
                             .indexWhere((element) => element == 'SV');
@@ -452,13 +446,13 @@ class _LendboxSuccessViewState extends State<LendboxSuccessView>
             ),
           ),
         // Modal barrier to block interaction
-        if (widget.transactionType == TransactionType.DEPOSIT)
-          IgnorePointer(
-            ignoring: _showLottie,
-            child: Container(
-              color: Colors.transparent,
-            ),
-          ),
+        // if (widget.transactionType == TransactionType.DEPOSIT)
+        //   IgnorePointer(
+        //     ignoring: _showLottie,
+        //     child: Container(
+        //       color: Colors.transparent,
+        //     ),
+        //   ),
       ],
     );
   }

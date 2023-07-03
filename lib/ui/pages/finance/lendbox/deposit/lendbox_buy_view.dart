@@ -167,7 +167,7 @@ class _LendboxBuyViewState extends State<LendboxBuyView>
       return LendboxLoadingView(transactionType: type);
     } else if (lboxTxnService.currentTransactionState ==
         TransactionState.success) {
-      return LendboxSuccessView(
+      return const LendboxSuccessView(
         transactionType: type,
       );
     }
