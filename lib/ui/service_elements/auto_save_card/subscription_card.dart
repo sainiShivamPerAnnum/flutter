@@ -76,7 +76,7 @@ class InitAutosaveCard extends HookWidget {
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
           const TitleSubtitleContainer(
-            title: 'Introducing Autosave',
+            title: 'Save for your goals',
             // subTitle: 'Automated payments for Fello Flo & Digital Gold',
           ),
           SizedBox(height: SizeConfig.padding16),

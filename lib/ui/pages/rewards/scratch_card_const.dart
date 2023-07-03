@@ -1,7 +1,7 @@
 /// This file contains the constants used in scratch card detail page
 
 class ScratchCardConstants {
-  static const String tambolaTitan = "Tambola Titan";
+  static const String tambolaTitan = "Ticket Titan";
   static const String explorer = "Explorer";
   static const String welcomeFello = "Welcome to Fello";
   static const String whatAFello = "What a Fello";

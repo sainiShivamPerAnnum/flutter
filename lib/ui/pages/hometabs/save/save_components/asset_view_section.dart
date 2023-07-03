@@ -618,7 +618,7 @@ class AssetBottomButtons extends StatelessWidget {
           child: Row(
             mainAxisAlignment: state != null
                 ? MainAxisAlignment.center
-                : MainAxisAlignment.spaceBetween,
+                : MainAxisAlignment.spaceAround,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Expanded(
