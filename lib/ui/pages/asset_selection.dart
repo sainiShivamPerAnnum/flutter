@@ -454,7 +454,7 @@ class FelloFloPrograms extends StatelessWidget {
                             children: [
                               Text(
                                 percentage,
-                                style: TextStyles.rajdhaniSB.title3
+                                style: TextStyles.sourceSansSB.title3
                                     .colour(Colors.white.withOpacity(0.8)),
                                 textAlign: TextAlign.center,
                               ),
@@ -462,17 +462,18 @@ class FelloFloPrograms extends StatelessWidget {
                               Column(
                                 children: [
                                   Text(
-                                    'Returns',
+                                    'Flo',
                                     style: TextStyles.sourceSansSB.body3
                                         .colour(Colors.white.withOpacity(0.8)),
                                   ),
                                   SizedBox(
-                                    height: SizeConfig.padding8,
+                                    height: SizeConfig.padding4,
                                   )
                                 ],
                               ),
                             ],
                           ),
+                          SizedBox(height: SizeConfig.padding8),
                           Text(chipString1, style: TextStyles.sourceSans.body4)
                         ],
                       ),
