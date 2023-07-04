@@ -85,14 +85,14 @@ class QuickSaveModalSheet extends StatelessWidget {
                         vertical: SizeConfig.padding16),
                     margin: EdgeInsets.only(bottom: SizeConfig.padding16),
                     decoration: BoxDecoration(
-                        color: data.backgroundColor != null
-                            ? data.backgroundColor?.toColor()
+                        color: data.theme?.backgroundColor != null
+                            ? data.theme?.backgroundColor?.toColor()
                             : const Color(0xff1B262C),
                         borderRadius:
                             BorderRadius.circular(SizeConfig.roundness8),
                         border: Border.all(
-                            color: data.borderColor != null
-                                ? data.borderColor!.toColor()!
+                            color: data.theme?.borderColor != null
+                                ? data.theme!.borderColor!.toColor()!
                                 : const Color(0xffD3D3D3).withOpacity(0.2))),
                     child: Row(
                       children: [
@@ -113,16 +113,16 @@ class QuickSaveModalSheet extends StatelessWidget {
                             Text(
                               data.title!,
                               style: TextStyles.rajdhaniB.title5.colour(
-                                  data.titleColor != null
-                                      ? data.titleColor?.toColor()
+                                  data.theme?.titleColor != null
+                                      ? data.theme?.titleColor?.toColor()
                                       : const Color(0xffF4EDD9)),
                             ),
                             Flexible(
                               child: Text(
                                 data.subTitle!,
                                 style: TextStyles.sourceSans.body4.colour(
-                                    data.subtitleColor != null
-                                        ? data.subtitleColor?.toColor()
+                                    data.theme?.subtitleColor != null
+                                        ? data.theme?.subtitleColor?.toColor()
                                         : Colors.white.withOpacity(0.6)),
                                 maxLines: 3,
                               ),

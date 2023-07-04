@@ -21,6 +21,11 @@ class QuickSaveModel {
             ? []
             : List<dynamic>.from(data!.map((x) => x.toJson())),
       };
+
+  @override
+  String toString() {
+    return 'QuickSaveModel{message: $message, data: $data}';
+  }
 }
 
 class QuickSaveData {
@@ -29,13 +34,10 @@ class QuickSaveData {
   final String? subTitle;
   final String? icon;
   final String? action;
-  final String? backgroundColor;
   final String? tag;
-  final Misc? misc;
-  final String? borderColor;
-  final String? titleColor;
-  final String? subtitleColor;
   final String? outerAssetUrl;
+  final Theme? theme;
+  final Misc? misc;
 
   QuickSaveData({
     this.order,
@@ -43,13 +45,10 @@ class QuickSaveData {
     this.subTitle,
     this.icon,
     this.action,
-    this.backgroundColor,
     this.tag,
-    this.misc,
-    this.titleColor,
-    this.subtitleColor,
     this.outerAssetUrl,
-    this.borderColor,
+    this.theme,
+    this.misc,
   });
 
   factory QuickSaveData.fromJson(Map<String, dynamic> json) => QuickSaveData(
@@ -58,52 +57,84 @@ class QuickSaveData {
         subTitle: json["subTitle"],
         icon: json["icon"],
         action: json["action"],
-        backgroundColor: json["backgroundColor"],
         tag: json["tag"],
-        misc: json["misc"] == null ? null : Misc.fromJson(json["misc"]),
-        borderColor: json["borderColor"],
-        titleColor: json["titleColor"],
-        subtitleColor: json["subtitleColor"],
         outerAssetUrl: json["outerAssetUrl"],
+        theme: json["theme"] == null ? null : Theme.fromJson(json["theme"]),
+        misc: json["misc"] == null ? null : Misc.fromJson(json["misc"]),
       );
 
-  Map<String, dynamic> toJson() =>
-      {
+  Map<String, dynamic> toJson() => {
         "order": order,
         "title": title,
         "subTitle": subTitle,
         "icon": icon,
         "action": action,
-        "backgroundColor": backgroundColor,
         "tag": tag,
-        "misc": misc?.toJson(),
-        "borderColor": borderColor,
-        "titleColor": titleColor,
-        "subtitleColor": subtitleColor,
         "outerAssetUrl": outerAssetUrl,
+        "theme": theme?.toJson(),
+        "misc": misc?.toJson(),
       };
+
+  @override
+  String toString() {
+    return 'QuickSaveData{order: $order, title: $title, subTitle: $subTitle, icon: $icon, action: $action, tag: $tag, outerAssetUrl: $outerAssetUrl, theme: $theme, misc: $misc}';
+  }
 }
 
 class Misc {
   final int? amount;
   final String? asset;
-  final String? coupon;
 
   Misc({
     this.amount,
     this.asset,
-    this.coupon,
   });
 
   factory Misc.fromJson(Map<String, dynamic> json) => Misc(
         amount: json["amount"],
         asset: json["asset"],
-        coupon: json["coupon"],
       );
 
   Map<String, dynamic> toJson() => {
         "amount": amount,
         "asset": asset,
-        "coupon": coupon,
       };
+
+  @override
+  String toString() {
+    return 'Misc{amount: $amount, asset: $asset}';
+  }
+}
+
+class Theme {
+  final String? backgroundColor;
+  final String? borderColor;
+  final String? titleColor;
+  final String? subtitleColor;
+
+  Theme({
+    this.backgroundColor,
+    this.borderColor,
+    this.titleColor,
+    this.subtitleColor,
+  });
+
+  factory Theme.fromJson(Map<String, dynamic> json) => Theme(
+        backgroundColor: json["backgroundColor"],
+        borderColor: json["borderColor"],
+        titleColor: json["titleColor"],
+        subtitleColor: json["subtitleColor"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "backgroundColor": backgroundColor,
+        "borderColor": borderColor,
+        "titleColor": titleColor,
+        "subtitleColor": subtitleColor,
+      };
+
+  @override
+  String toString() {
+    return 'Theme{backgroundColor: $backgroundColor, borderColor: $borderColor, titleColor: $titleColor, subtitleColor: $subtitleColor}';
+  }
 }
