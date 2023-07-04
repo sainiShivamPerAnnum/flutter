@@ -206,9 +206,10 @@ class _AssetSectionViewState extends State<AssetSectionView> {
                                       ),
                                     ),
                                     child: const _GoldRateWidget()),
-                              // SizedBox(
-                              //   height: SizeConfig.padding10,
-                              // ),
+                              if (balance == 0)
+                                SizedBox(
+                                  height: SizeConfig.padding14,
+                                ),
                               if (balance == 0)
                                 Padding(
                                   padding: EdgeInsets.symmetric(
@@ -614,6 +615,9 @@ class AssetBottomButtons extends StatelessWidget {
       selector: (_, subService) => subService.subscriptionData,
       builder: (context, state, child) {
         // state = SubscriptionModel();
+        var userSegments = locator<UserService>().userSegments;
+
+        // if(state == null && )
         return SizedBox(
           width: SizeConfig.screenWidth! * 0.85,
           child: Row(
@@ -622,76 +626,81 @@ class AssetBottomButtons extends StatelessWidget {
                 : MainAxisAlignment.spaceAround,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              Expanded(
-                flex: 1,
-                child: MaterialButton(
-                  minWidth: state == null ? SizeConfig.padding156 : null,
-                  color: state != null ? Colors.white : null,
-                  height: SizeConfig.padding44,
-                  shape: RoundedRectangleBorder(
-                    side: const BorderSide(width: 1.5, color: Colors.white),
-                    borderRadius: BorderRadius.circular(SizeConfig.roundness5),
-                  ),
-                  child: Text(
-                    state != null ? "SAVE" : "SAVE DAILY",
-                    style: TextStyles.rajdhaniB.body1
-                        .colour(state != null ? Colors.black : Colors.white),
-                  ),
-                  onPressed: () {
-                    Haptic.vibrate();
-
-                    if (state != null) {
-                      BaseUtil().openRechargeModalSheet(investmentType: type);
-                    } else {
-                      AppState.delegate!.appState.currentAction = PageAction(
-                        state: PageState.addWidget,
-                        page: AutosaveProcessViewPageConfig,
-                        widget: AutosaveProcessView(
-                          investmentType: type,
-                        ),
-                      );
-                    }
-
-                    locator<AnalyticsService>().track(
-                        eventName: state != null
-                            ? AnalyticsEvents.saveOnce
-                            : AnalyticsEvents.saveDaily,
-                        properties: {
-                          'assetType': type,
-                        });
-                  },
-                ),
-              ),
-              if (state == null) ...[
-                SizedBox(width: SizeConfig.padding12),
+              if (state == null &&
+                  !userSegments.contains(Constants.NO_SAVE_AUG) &&
+                  !userSegments.contains(Constants.NO_SAVE_LB))
                 Expanded(
                   flex: 1,
                   child: MaterialButton(
-                    minWidth: SizeConfig.padding156,
-                    color: Colors.white,
+                    minWidth: state != null ? null : SizeConfig.padding156,
+                    color: state != null ? Colors.white : null,
                     height: SizeConfig.padding44,
                     shape: RoundedRectangleBorder(
+                      side: const BorderSide(width: 1.5, color: Colors.white),
                       borderRadius:
                           BorderRadius.circular(SizeConfig.roundness5),
                     ),
                     child: Text(
-                      "SAVE ONCE",
-                      style: TextStyles.rajdhaniB.body1.colour(Colors.black),
+                      "SAVE DAILY",
+                      style: TextStyles.rajdhaniB.body1
+                          .colour(state != null ? Colors.black : Colors.white),
                     ),
                     onPressed: () {
                       Haptic.vibrate();
-                      BaseUtil().openRechargeModalSheet(investmentType: type);
+
+                      if (state != null) {
+                        BaseUtil().openRechargeModalSheet(investmentType: type);
+                      } else {
+                        AppState.delegate!.appState.currentAction = PageAction(
+                          state: PageState.addWidget,
+                          page: AutosaveProcessViewPageConfig,
+                          widget: AutosaveProcessView(
+                            investmentType: type,
+                          ),
+                        );
+                      }
+
                       locator<AnalyticsService>().track(
-                          eventName: AnalyticsEvents.saveOnce,
+                          eventName: state != null
+                              ? AnalyticsEvents.saveOnce
+                              : AnalyticsEvents.saveDaily,
                           properties: {
                             'assetType': type,
                           });
-                      // BaseUtil().openRechargeModalSheet(
-                      //     investmentType: widget.type);
                     },
                   ),
                 ),
-              ]
+              SizedBox(width: SizeConfig.padding12),
+              Expanded(
+                flex: 1,
+                child: MaterialButton(
+                  minWidth: SizeConfig.padding156,
+                  color: Colors.white,
+                  height: SizeConfig.padding44,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(SizeConfig.roundness5),
+                  ),
+                  child: Text(
+                    (state == null &&
+                            !userSegments.contains(Constants.NO_SAVE_AUG) &&
+                            !userSegments.contains(Constants.NO_SAVE_LB))
+                        ? "SAVE ONCE"
+                        : "SAVE",
+                    style: TextStyles.rajdhaniB.body1.colour(Colors.black),
+                  ),
+                  onPressed: () {
+                    Haptic.vibrate();
+                    BaseUtil().openRechargeModalSheet(investmentType: type);
+                    locator<AnalyticsService>().track(
+                        eventName: AnalyticsEvents.saveOnce,
+                        properties: {
+                          'assetType': type,
+                        });
+                    // BaseUtil().openRechargeModalSheet(
+                    //     investmentType: widget.type);
+                  },
+                ),
+              ),
             ],
           ),
         );
