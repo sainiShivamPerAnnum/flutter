@@ -405,4 +405,6 @@ class Assets {
   static const String defaultBadge = '${assetBaseUrl}badges/default.svg';
   static const String happyFelloBadge = '${assetBaseUrl}badges/happy-fello.svg';
   static const String quizMasterBadge = '${assetBaseUrl}badges/quiz-master.svg';
+  static const String tambolaTitanBadge =
+      '${assetBaseUrl}badges/tambola-titan.svg';
 }

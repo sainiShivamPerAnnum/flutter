@@ -89,7 +89,7 @@ class ScratchCardConstants {
       case sevenDayChamp:
         return Assets.sevenDayChampBadge;
       case tambolaTitan:
-        return Assets.sevenDayChampBadge;
+        return Assets.tambolaTitanBadge;
       case explorer:
         return Assets.explorerBadge;
       case welcomeFello:
@@ -107,9 +107,9 @@ class ScratchCardConstants {
       case gamingLegend:
         return Assets.gamingLegendBadge;
       case general:
-        return Assets.sevenDayChampBadge;
+        return Assets.tambolaTitanBadge;
       default:
-        return Assets.sevenDayChampBadge;
+        return Assets.tambolaTitanBadge;
     }
   }
 }
