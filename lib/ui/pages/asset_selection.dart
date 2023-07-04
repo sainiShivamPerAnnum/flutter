@@ -205,7 +205,9 @@ class FloPlanWidget extends StatelessWidget {
             floAssetType: Constants.ASSET_TYPE_FLO_FIXED_6,
             amount: amount,
             isSkipMl: isSkipMl,
-            promoText: lendboxDetails[0]["tambolaMultiplier"],
+            promoText: lendboxDetails[0]["tambolaMultiplier"] != null
+                ? "Get *${lendboxDetails[0]["tambolaMultiplier"]}X tickets* on saving"
+                : null,
             // promoText: "Get *5X tickets* on saving",
           ),
           // SizedBox(height: SizeConfig.padding12),
@@ -224,21 +226,25 @@ class FloPlanWidget extends StatelessWidget {
             amount: amount,
             isSkipMl: isSkipMl,
             promoText: isLendboxOldUser
-                ? lendboxDetails[2]["tambolaMultiplier"]
-                : lendboxDetails[1]["tambolaMultiplier"],
+                ? lendboxDetails[2]["tambolaMultiplier"] != null
+                    ? "Get *${lendboxDetails[2]["tambolaMultiplier"]}X tickets* on saving"
+                    : null
+                : lendboxDetails[1]["tambolaMultiplier"] != null
+                    ? "Get *${lendboxDetails[1]["tambolaMultiplier"]}X tickets* on saving"
+                    : null,
           ),
           // SizedBox(height: SizeConfig.padding12),
           if (!isLendboxOldUser)
             FelloFloPrograms(
-              percentage: '8%',
-              isRecommended: false,
-              chipString1:
-                  lendboxDetails[3]["maturityPeriodText"] ?? "1 Week Lockin",
-              chipString2: lendboxDetails[3]["minAmountText"] ?? 'Min - ₹100',
-              floAssetType: Constants.ASSET_TYPE_FLO_FELXI,
-              amount: amount,
-              isSkipMl: isSkipMl,
-                promoText: lendboxDetails[3]["tambolaMultiplier"]),
+                percentage: '8%',
+                isRecommended: false,
+                chipString1:
+                    lendboxDetails[3]["maturityPeriodText"] ?? "1 Week Lockin",
+                chipString2: lendboxDetails[3]["minAmountText"] ?? 'Min - ₹100',
+                floAssetType: Constants.ASSET_TYPE_FLO_FELXI,
+                amount: amount,
+                isSkipMl: isSkipMl,
+                promoText: null),
         ],
       ),
     );
