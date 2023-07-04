@@ -352,7 +352,7 @@ class UpiAppsGridView extends StatelessWidget {
                 : Padding(
                     padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
                     child: Text(
-                      "No Upi Apps found on this device. please install any one of them to continue",
+                      "No Upi Apps found on this device. Please install Google pay, Phonepe or Paytm to start your saving journey",
                       textAlign: TextAlign.center,
                       style: TextStyles.sourceSansB.body2.colour(Colors.red),
                     ),

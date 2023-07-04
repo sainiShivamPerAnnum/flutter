@@ -67,8 +67,8 @@ class ScratchCardConstants {
         };
       case gamingLegend:
         return {
-          "title": "Won in",
-          "subtitle": 'a Game',
+          "title": "Won in a",
+          "subtitle": 'Game',
         };
       case general:
         return {
