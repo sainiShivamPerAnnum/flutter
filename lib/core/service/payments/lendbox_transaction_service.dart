@@ -189,7 +189,16 @@ class LendboxTransactionService extends BaseTransactionService {
             'packageName': currentFloPurchaseDetails!.upiChoice!.packageName
           });
           _logger.d("Result from initiatePsp: $result");
+          if (result.toString().toLowerCase().contains('failure')) {
+            currentTransactionState = TransactionState.idle;
+
+            AppState.unblockNavigation();
+
+            return BaseUtil.showNegativeAlert(
+                "Transaction Cancelled", locale.tryLater);
+          }
         }
+
         locator<BackButtonActions>().isTransactionCancelled = false;
 
         if (Platform.isAndroid) {
@@ -197,12 +206,13 @@ class LendboxTransactionService extends BaseTransactionService {
           unawaited(initiatePolling());
         }
       } catch (e) {
-        currentTransactionState = TransactionState.idle;
+        _logger.e("Intent payement exception $e");
+        locator<BackButtonActions>().isTransactionCancelled = false;
 
-        AppState.unblockNavigation();
-
-        return BaseUtil.showNegativeAlert(
-            "Transaction Cancelled", locale.tryLater);
+        if (Platform.isAndroid) {
+          currentTransactionState = TransactionState.ongoing;
+          unawaited(initiatePolling());
+        }
       }
     } else {
       currentTransactionState = TransactionState.idle;

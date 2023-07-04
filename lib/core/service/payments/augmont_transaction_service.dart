@@ -129,7 +129,17 @@ class AugmontTransactionService extends BaseTransactionService {
                 : txnResponse.model!.data!.intent,
             'packageName': currentGoldPurchaseDetails.upiChoice!.packageName
           });
-          _logger.d("Result from initiatePsp: $result");
+          _logger.d("Result from initiatePsp: ${result}");
+
+          if (result.toString().toLowerCase().contains('failure')) {
+            isGoldBuyInProgress = false;
+            currentTransactionState = TransactionState.idle;
+
+            AppState.unblockNavigation();
+
+            return BaseUtil.showNegativeAlert(
+                "Transaction Cancelled", locale.tryLater);
+          }
         }
         locator<BackButtonActions>().isTransactionCancelled = false;
 
@@ -139,13 +149,14 @@ class AugmontTransactionService extends BaseTransactionService {
           unawaited(initiatePolling());
         }
       } catch (e) {
-        isGoldBuyInProgress = false;
-        currentTransactionState = TransactionState.idle;
+        _logger.e("Intent payement exception $e");
+        locator<BackButtonActions>().isTransactionCancelled = false;
 
-        AppState.unblockNavigation();
-
-        return BaseUtil.showNegativeAlert(
-            "Transaction Cancelled", locale.tryLater);
+        if (Platform.isAndroid) {
+          isGoldBuyInProgress = false;
+          currentTransactionState = TransactionState.ongoing;
+          unawaited(initiatePolling());
+        }
       }
     } else {
       isGoldBuyInProgress = false;
