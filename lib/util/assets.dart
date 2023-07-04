@@ -390,4 +390,19 @@ class Assets {
   static const baliGoalsBg = "${assetBaseUrl}autosave/save-for-bali.svg";
 
   static const String inAppReviewBg = 'assets/svg/in_app_review_success_bg.svg';
+
+  static const String sevenDayChampBadge =
+      '${assetBaseUrl}badges/7-day-champ.svg';
+  static const String gamingLegendBadge =
+      '${assetBaseUrl}badges/gaming-legend.svg';
+  static const String savingsMarvelBadge =
+      '${assetBaseUrl}badges/savings-marvel.svg';
+  static const String referralNinjaBadge =
+      '${assetBaseUrl}badges/referral-ninja.svg';
+  static const String explorerBadge = '${assetBaseUrl}badges/explorer.svg';
+  static const String whatAFelloBadge =
+      '${assetBaseUrl}badges/what-a-fello.svg';
+  static const String defaultBadge = '${assetBaseUrl}badges/default.svg';
+  static const String happyFelloBadge = '${assetBaseUrl}badges/happy-fello.svg';
+  static const String quizMasterBadge = '${assetBaseUrl}badges/quiz-master.svg';
 }

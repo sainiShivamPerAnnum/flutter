@@ -185,7 +185,7 @@ class GTDetailedView extends StatelessWidget {
                   Expanded(
                     child: Column(
                       children: [
-                        SvgPicture.asset(
+                        SvgPicture.network(
                             ScratchCardConstants.getBadges(ticket.tag!),
                             // fit: BoxFit.fitHeight,
                             height: SizeConfig.padding60,
