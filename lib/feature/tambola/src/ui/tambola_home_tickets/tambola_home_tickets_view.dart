@@ -1,6 +1,8 @@
 import 'dart:async';
 
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/feature/tambola/src/ui/tambola_home_details/tambola_home_details_view.dart';
 import 'package:felloapp/feature/tambola/src/ui/tambola_home_tickets/tambola_home_tickets_vm.dart';
 import 'package:felloapp/feature/tambola/src/ui/widgets/buy_ticket_card.dart';
@@ -14,6 +16,7 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/asset_selection.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -180,6 +183,11 @@ class _TambolaRewardLottieStripState extends State<TambolaRewardLottieStrip> {
         itemBuilder: (context, index) {
           return GestureDetector(
             onTap: () {
+              locator<AnalyticsService>().track(
+                  eventName: AnalyticsEvents.tambolaCarousel,
+                  properties: {
+                    'order': index + 1,
+                  });
               onTap(index);
             },
             child: Container(

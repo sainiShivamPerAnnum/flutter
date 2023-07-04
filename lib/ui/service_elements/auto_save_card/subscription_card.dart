@@ -188,7 +188,7 @@ class InitAutosaveCard extends HookWidget {
                           height: SizeConfig.padding8,
                         ),
                         Text(
-                          'Invest in Fello Flo or Digital Gold to meet your financial Goals',
+                          'Invest on Fello to meet your financial Goals',
                           style: TextStyles.sourceSans.body4
                               .colour(const Color(0xFFA9C5D5)),
                         ),
@@ -199,7 +199,7 @@ class InitAutosaveCard extends HookWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              'Set Your Goals',
+                              'Setup Autosave',
                               style: TextStyles.sourceSansSB.body2
                                   .colour(Colors.white),
                             ),

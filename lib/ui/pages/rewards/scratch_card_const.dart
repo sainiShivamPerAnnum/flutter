@@ -1,3 +1,5 @@
+import 'package:felloapp/util/assets.dart';
+
 /// This file contains the constants used in scratch card detail page
 
 class ScratchCardConstants {
@@ -85,29 +87,29 @@ class ScratchCardConstants {
     switch (tag) {
       case dailyBonus:
       case sevenDayChamp:
-        return "assets/svg/7_day_champ.svg";
+        return Assets.sevenDayChampBadge;
       case tambolaTitan:
-        return "assets/svg/ticket_titan.svg";
+        return Assets.tambolaTitanBadge;
       case explorer:
-        return "assets/svg/explorer.svg";
+        return Assets.explorerBadge;
       case welcomeFello:
-        return "assets/svg/7_day_champ.svg";
+        return Assets.sevenDayChampBadge;
       case whatAFello:
-        return "assets/svg/What_a_Fello.svg";
+        return Assets.whatAFelloBadge;
       case savingsMarvel:
-        return "assets/svg/Savings_Marvel.svg";
+        return Assets.savingsMarvelBadge;
       case happyFello:
-        return "assets/svg/Happy_Fello.svg";
+        return Assets.happyFelloBadge;
       case quizMaster:
-        return "assets/svg/Quiz_Master.svg";
+        return Assets.quizMasterBadge;
       case referralNinja:
-        return "assets/svg/Referral_Ninja.svg";
+        return Assets.referralNinjaBadge;
       case gamingLegend:
-        return "assets/svg/Gaming_Legend.svg";
+        return Assets.gamingLegendBadge;
       case general:
-        return "assets/svg/ticket_titan.svg";
+        return Assets.tambolaTitanBadge;
       default:
-        return "assets/svg/ticket_titan.svg";
+        return Assets.tambolaTitanBadge;
     }
   }
 }

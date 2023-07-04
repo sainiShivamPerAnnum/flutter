@@ -1,9 +1,4 @@
-import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
-import 'package:felloapp/feature/tambola/tambola.dart';
-import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/navigator/router/ui_pages.dart';
-import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
@@ -17,21 +12,21 @@ class TotalTambolaWon extends StatelessWidget {
   Widget build(BuildContext context) {
     final userService = locator<UserService>();
 
-    if (userService.userFundWallet?.wTmbWin != null &&
-        (userService.userFundWallet?.wTmbWin ?? 0) > 0) {
+    if (userService.userFundWallet?.wTmbLifetimeWin != null &&
+        (userService.userFundWallet?.wTmbLifetimeWin ?? 0) > 0) {
       return GestureDetector(
         onTap: () {
-          Haptic.vibrate();
-          AppState.delegate!.appState.currentAction = PageAction(
-            state: PageState.addWidget,
-            page: TambolaNewUser,
-            widget: const TambolaHomeDetailsView(
-              isStandAloneScreen: true,
-              showPrizeSection: false,
-              showBottomButton: false,
-              showDemoImage: false,
-            ),
-          );
+          // Haptic.vibrate();
+          // AppState.delegate!.appState.currentAction = PageAction(
+          //   state: PageState.addWidget,
+          //   page: TambolaNewUser,
+          //   widget: const TambolaHomeDetailsView(
+          //     isStandAloneScreen: true,
+          //     showPrizeSection: false,
+          //     showBottomButton: false,
+          //     showDemoImage: false,
+          //   ),
+          // );
         },
         child: Container(
           margin: EdgeInsets.symmetric(
@@ -56,7 +51,7 @@ class TotalTambolaWon extends StatelessWidget {
                 ),
                 const Spacer(),
                 Text(
-                  "₹${userService.userFundWallet?.wTmbWin}",
+                  "₹${userService.userFundWallet?.wTmbLifetimeWin}",
                   style: TextStyles.rajdhaniSB.title5.colour(
                     const Color(0xFFFFE9B1),
                   ),

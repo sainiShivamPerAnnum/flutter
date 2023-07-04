@@ -2,6 +2,7 @@ import 'dart:ui' as ui;
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
@@ -622,7 +623,7 @@ class AssetBottomButtons extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Expanded(
-                flex: state == null ? 0 : 1,
+                flex: 1,
                 child: MaterialButton(
                   minWidth: state == null ? SizeConfig.padding156 : null,
                   color: state != null ? Colors.white : null,
@@ -632,41 +633,65 @@ class AssetBottomButtons extends StatelessWidget {
                     borderRadius: BorderRadius.circular(SizeConfig.roundness5),
                   ),
                   child: Text(
-                    state != null ? "SAVE" : "SAVE ONCE",
+                    state != null ? "SAVE" : "SAVE DAILY",
                     style: TextStyles.rajdhaniB.body1
                         .colour(state != null ? Colors.black : Colors.white),
                   ),
                   onPressed: () {
                     Haptic.vibrate();
-                    BaseUtil().openRechargeModalSheet(investmentType: type);
+
+                    if (state != null) {
+                      BaseUtil().openRechargeModalSheet(investmentType: type);
+                    } else {
+                      AppState.delegate!.appState.currentAction = PageAction(
+                        state: PageState.addWidget,
+                        page: AutosaveProcessViewPageConfig,
+                        widget: AutosaveProcessView(
+                          investmentType: type,
+                        ),
+                      );
+                    }
+
+                    locator<AnalyticsService>().track(
+                        eventName: state != null
+                            ? AnalyticsEvents.saveOnce
+                            : AnalyticsEvents.saveDaily,
+                        properties: {
+                          'assetType': type,
+                        });
                   },
                 ),
               ),
-              if (state == null)
-                MaterialButton(
-                  minWidth: SizeConfig.padding156,
-                  color: Colors.white,
-                  height: SizeConfig.padding44,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(SizeConfig.roundness5),
+              if (state == null) ...[
+                SizedBox(width: SizeConfig.padding12),
+                Expanded(
+                  flex: 1,
+                  child: MaterialButton(
+                    minWidth: SizeConfig.padding156,
+                    color: Colors.white,
+                    height: SizeConfig.padding44,
+                    shape: RoundedRectangleBorder(
+                      borderRadius:
+                          BorderRadius.circular(SizeConfig.roundness5),
+                    ),
+                    child: Text(
+                      "SAVE ONCE",
+                      style: TextStyles.rajdhaniB.body1.colour(Colors.black),
+                    ),
+                    onPressed: () {
+                      Haptic.vibrate();
+                      BaseUtil().openRechargeModalSheet(investmentType: type);
+                      locator<AnalyticsService>().track(
+                          eventName: AnalyticsEvents.saveOnce,
+                          properties: {
+                            'assetType': type,
+                          });
+                      // BaseUtil().openRechargeModalSheet(
+                      //     investmentType: widget.type);
+                    },
                   ),
-                  child: Text(
-                    "SAVE DAILY",
-                    style: TextStyles.rajdhaniB.body1.colour(Colors.black),
-                  ),
-                  onPressed: () {
-                    Haptic.vibrate();
-                    AppState.delegate!.appState.currentAction = PageAction(
-                      state: PageState.addWidget,
-                      page: AutosaveProcessViewPageConfig,
-                      widget: AutosaveProcessView(
-                        investmentType: type,
-                      ),
-                    );
-                    // BaseUtil().openRechargeModalSheet(
-                    //     investmentType: widget.type);
-                  },
                 ),
+              ]
             ],
           ),
         );
@@ -1663,7 +1688,7 @@ class _GoldRateWidgetState extends State<_GoldRateWidget> {
     if (switchValue) {
       BaseUtil.showPositiveAlert(
           'We will notify you when the gold prices change!',
-          'Don\'t worry, we will not to spam you');
+          'Keep saving in Gold with Fello!');
     }
   }
 

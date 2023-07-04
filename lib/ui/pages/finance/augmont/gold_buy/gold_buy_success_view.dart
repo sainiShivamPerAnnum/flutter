@@ -342,12 +342,12 @@ class _GoldBuySuccessViewState extends State<GoldBuySuccessView>
             ),
           ),
         // Modal barrier to block interaction
-        IgnorePointer(
-          ignoring: _showLottie,
-          child: Container(
-            color: Colors.transparent,
-          ),
-        ),
+        // IgnorePointer(
+        //   ignoring: _showLottie,
+        //   child: Container(
+        //     color: Colors.transparent,
+        //   ),
+        // ),
       ],
     );
   }

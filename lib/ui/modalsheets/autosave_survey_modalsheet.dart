@@ -37,10 +37,11 @@ class AutoSaveSurvey extends HookWidget {
         if (AppState.screenStack.last == ScreenItem.dialog) {
           AppState.screenStack.removeLast();
         }
-        locator<AnalyticsService>()
-            .track(eventName: AnalyticsEvents.asSurveyTapped, properties: {
-          'reason': reason,
-        });
+        locator<AnalyticsService>().track(
+            eventName: AnalyticsEvents.asSurveyGoBackTapped,
+            properties: {
+              'reason': reason,
+            });
         return Future.value(true);
       },
       child: Stack(
@@ -67,7 +68,7 @@ class AutoSaveSurvey extends HookWidget {
                   // textAlign: TextAlign.center,
                 ),
                 SizedBox(height: SizeConfig.padding4),
-                Text("Select anyone option to help us improve your experience",
+                Text("Select any of the below options",
                     style: TextStyles.sourceSans.body4
                         .colour(Colors.white.withOpacity(0.6))),
                 SizedBox(height: SizeConfig.padding32),
@@ -113,7 +114,7 @@ class AutoSaveSurvey extends HookWidget {
                   onPressed: () {
                     AppState.backButtonDispatcher!.didPopRoute();
                     locator<AnalyticsService>().track(
-                        eventName: AnalyticsEvents.asSurveyTapped,
+                        eventName: AnalyticsEvents.asSurveyContinueTapped,
                         properties: {
                           'reason': reason,
                         });
@@ -131,7 +132,7 @@ class AutoSaveSurvey extends HookWidget {
                         AppState.backButtonDispatcher!.didPopRoute();
                         AppState.backButtonDispatcher!.didPopRoute();
                         locator<AnalyticsService>().track(
-                            eventName: AnalyticsEvents.asSurveyTapped,
+                            eventName: AnalyticsEvents.asSurveyGoBackTapped,
                             properties: {
                               'reason': reason,
                             });
@@ -150,7 +151,7 @@ class AutoSaveSurvey extends HookWidget {
               onTap: () {
                 AppState.backButtonDispatcher!.didPopRoute();
                 locator<AnalyticsService>().track(
-                    eventName: AnalyticsEvents.asSurveyTapped,
+                    eventName: AnalyticsEvents.asSurveyGoBackTapped,
                     properties: {
                       'reason': reason,
                     });
