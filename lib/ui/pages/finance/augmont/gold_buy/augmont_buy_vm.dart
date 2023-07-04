@@ -318,7 +318,7 @@ class GoldBuyViewModel extends BaseViewModel {
         "couponCode": appliedCoupon?.code ?? '',
         "skipMl": skipMl,
         "goldInGrams": goldAmountInGrams,
-        "upiChoice": selectedUpiApplication,
+        "upiChoice": selectedUpiApplication!.packageName,
         "abTesting": AppConfig.getValue(AppConfigKey.payment_brief_view)
             ? "with payment summary"
             : "without payment summary"

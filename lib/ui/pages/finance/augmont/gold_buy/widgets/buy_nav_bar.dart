@@ -111,7 +111,7 @@ class BuyNavBar extends StatelessWidget {
                           locator<AnalyticsService>().track(
                               eventName: AnalyticsEvents.saveInitiate,
                               properties: {
-                                "investmentType": InvestmentType.AUGGOLD99,
+                                "investmentType": InvestmentType.AUGGOLD99.name,
                               });
                           if (model.isIntentFlow) {
                             BaseUtil.openModalBottomSheet(
