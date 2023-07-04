@@ -742,7 +742,7 @@ class _FloPremiumDetailsViewState extends State<FloPremiumDetailsView>
                                           height: SizeConfig.padding44,
                                           child: Text(
                                             "SAVE",
-                                            style: TextStyles.rajdhaniB.body2
+                                            style: TextStyles.rajdhaniB.body1
                                                 .colour(Colors.black),
                                           ),
                                           onPressed: () {

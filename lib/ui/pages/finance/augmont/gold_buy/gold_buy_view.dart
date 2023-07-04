@@ -113,8 +113,7 @@ class _GoldBuyViewState extends State<GoldBuyView>
                     if (model.state == ViewState.Busy) {
                       return const Center(child: FullScreenLoader());
                     }
-                    //TODO: Revert before prod release
-                    // _secureScreenshots(txnService);
+                    _secureScreenshots(txnService);
 
                     return _getView(txnService, model);
                   },

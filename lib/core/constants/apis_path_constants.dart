@@ -235,4 +235,6 @@ class ApiPath {
   static String incentives = "/app/incentives";
 
   static String subscribeGoldPriceAlert = "/gold-price-alert/subscribe";
+
+  static String augmontReport(String txnId) => "/aug/$txnId/txn";
 }

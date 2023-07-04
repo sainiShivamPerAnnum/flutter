@@ -114,8 +114,7 @@ class _LendboxBuyViewState extends State<LendboxBuyView>
                       assetTypeFlow: widget.floAssetType,
                     ),
                     builder: (ctx, model, child) {
-                      //TODO: Revert before prod release
-                      // _secureScreenshots(lboxTxnService);
+                      _secureScreenshots(lboxTxnService);
 
                       return _getView(
                         lboxTxnService,

@@ -360,7 +360,7 @@ class UpiAppsGridView extends StatelessWidget {
             : GridView.builder(
                 physics: const NeverScrollableScrollPhysics(),
                 gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
-                  crossAxisCount: 4,
+                  crossAxisCount: 3,
                   // mainAxisSpacing: 2,
                   // crossAxisSpacing: 2,
                 ),
@@ -373,7 +373,7 @@ class UpiAppsGridView extends StatelessWidget {
                     child: SizedBox(
                       child: Column(
                         children: [
-                          apps[i].iconImage(SizeConfig.padding35),
+                          apps[i].iconImage(SizeConfig.padding48),
                           SizedBox(height: SizeConfig.padding6),
                           Text(
                             apps[i].upiApplication.appName,
@@ -624,7 +624,10 @@ class FloBreakdownView extends StatelessWidget {
                     FocusScope.of(context).unfocus();
                     model.selectedUpiApplication = i == -1
                         ? ApplicationMeta.android(
-                            UpiApplication.phonePe, Uint8List(10), 1, 1)
+                            UpiApplication.PhonePeSimulator,
+                            Uint8List(10),
+                            1,
+                            1)
                         : model.appMetaList[i];
                     model.initiateBuy();
                   }

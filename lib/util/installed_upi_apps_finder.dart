@@ -1,5 +1,6 @@
 import 'dart:io';
 
+import 'package:felloapp/util/flavor_config.dart';
 import 'package:flutter/services.dart';
 import 'package:upi_pay/upi_pay.dart';
 
@@ -8,22 +9,28 @@ class UpiUtils {
     List<ApplicationMeta> upiApps = [];
 
     if (Platform.isAndroid) {
-      upiApps = await UpiPay.getInstalledUpiApplications(
-          statusType: UpiApplicationDiscoveryAppStatusType.all);
+      final List<ApplicationMeta> allUpiApps =
+          await UpiPay.getInstalledUpiApplications(
+              statusType: UpiApplicationDiscoveryAppStatusType.all);
+      if (FlavorConfig.isProduction()) {
+        for (final app in allUpiApps) {
+          if (app.upiApplication.appName == "Google Pay" ||
+              app.upiApplication.appName == "PhonePe" ||
+              app.upiApplication.appName == "Paytm") {
+            upiApps.add(app);
+          }
+        }
+      } else {
+        upiApps = allUpiApps;
+      }
     } else if (Platform.isIOS) {
       try {
         const platform = MethodChannel("methodChannel/deviceData");
 
         List<UpiApplication> applications = [
-          UpiApplication.airtel,
-          // UpiApplication.amazonPay,
           UpiApplication.googlePay,
-          UpiApplication.cred,
           UpiApplication.phonePe,
-          UpiApplication.phonePePreprod,
           UpiApplication.paytm,
-          UpiApplication.whatsApp,
-          // UpiApplication.myJio
         ];
         for (final element in applications) {
           final result = await platform.invokeMethod('isAppInstalled',

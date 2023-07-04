@@ -121,12 +121,7 @@ class AugmontTransactionService extends BaseTransactionService {
           await BaseUtil.launchUrl(txnResponse.model!.data!.intent!);
         } else {
           final result = await platform.invokeMethod('initiatePsp', {
-            'redirectUrl': currentGoldPurchaseDetails
-                        .upiChoice!.upiApplication.appName
-                        .toLowerCase() ==
-                    'phonepe simulator'
-                ? txnResponse.model!.data!.intent!.replaceRange(0, 10, '')
-                : txnResponse.model!.data!.intent,
+            'redirectUrl': txnResponse.model!.data!.intent,
             'packageName': currentGoldPurchaseDetails.upiChoice!.packageName
           });
           _logger.d("Result from initiatePsp: ${result}");

@@ -71,7 +71,6 @@ class GoldBuyViewModel extends BaseViewModel {
   bool _addSpecialCoupon = false;
   bool isSpecialCoupon = true;
   bool showCouponAppliedText = false;
-  //TODO: update this with assetOptions api to check if it is intent flow or not
   bool isIntentFlow = true;
 
   bool _skipMl = false;
