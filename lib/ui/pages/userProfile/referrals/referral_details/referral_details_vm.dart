@@ -103,7 +103,7 @@ class ReferralDetailsViewModel extends BaseViewModel {
       "Referred count (total)": AnalyticsProperties.getTotalReferralCount(),
       "code": _refCode,
     });
-    Clipboard.setData(ClipboardData(text: _refCode)).then((_) {
+    Clipboard.setData(ClipboardData(text: _refCode!)).then((_) {
       BaseUtil.showPositiveAlert("Code: $_refCode", "Copied to Clipboard");
     });
   }

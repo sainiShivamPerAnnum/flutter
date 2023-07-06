@@ -7,7 +7,7 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
-class ProfileAppBar extends StatelessWidget with PreferredSizeWidget {
+class ProfileAppBar extends StatelessWidget implements PreferredSizeWidget {
   const ProfileAppBar({
     Key? key,
     // required this.isNewUser,
