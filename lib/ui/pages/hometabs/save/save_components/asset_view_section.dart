@@ -665,7 +665,7 @@ class AssetBottomButtons extends StatelessWidget {
                               ? AnalyticsEvents.saveOnce
                               : AnalyticsEvents.saveDaily,
                           properties: {
-                            'assetType': type,
+                            'assetType': type.toString(),
                           });
                     },
                   ),
@@ -694,7 +694,7 @@ class AssetBottomButtons extends StatelessWidget {
                     locator<AnalyticsService>().track(
                         eventName: AnalyticsEvents.saveOnce,
                         properties: {
-                          'assetType': type,
+                          'assetType': type.toString(),
                         });
                     // BaseUtil().openRechargeModalSheet(
                     //     investmentType: widget.type);

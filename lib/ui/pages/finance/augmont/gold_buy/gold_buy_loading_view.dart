@@ -83,7 +83,7 @@ class GoldBuyLoadingView extends StatelessWidget {
                 if (_augTxnService!.currentTransactionState !=
                     TransactionState.ongoing) return;
                 _augTxnService!.pollingPeriodicTimer?.cancel();
-
+                _augTxnService!.isGoldBuyInProgress = false;
                 _augTxnService!.currentTransactionState = TransactionState.idle;
                 log("Screen Stack:${AppState.screenStack.toString()}");
                 AppState.unblockNavigation();

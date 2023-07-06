@@ -373,7 +373,10 @@ class UpiAppsGridView extends StatelessWidget {
                     child: SizedBox(
                       child: Column(
                         children: [
-                          apps[i].iconImage(SizeConfig.padding48),
+                          ClipRRect(
+                            borderRadius: BorderRadius.circular(100),
+                            child: apps[i].iconImage(SizeConfig.padding48),
+                          ),
                           SizedBox(height: SizeConfig.padding6),
                           Text(
                             apps[i].upiApplication.appName,

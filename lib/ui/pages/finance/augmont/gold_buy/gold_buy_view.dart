@@ -50,6 +50,8 @@ class _GoldBuyViewState extends State<GoldBuyView>
       _txnService.currentTxnScratchCardCount = 0;
       _txnService.currentTxnTambolaTicketsCount = 0;
       _txnService.isIOSTxnInProgress = false;
+      _txnService.isGoldBuyInProgress = false;
+
       _txnService.currentTransactionState = TransactionState.idle;
     });
     WidgetsBinding.instance.addObserver(this);
