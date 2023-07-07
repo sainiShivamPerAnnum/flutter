@@ -43,7 +43,7 @@ class _GoldBuyViewState extends State<GoldBuyView>
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       _txnService.currentTxnGms = 0.0;
       _txnService.currentTxnAmount = 0.0;
       _txnService.currentTxnOrderId = '';
