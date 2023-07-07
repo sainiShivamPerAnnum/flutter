@@ -9,7 +9,7 @@ extension RichTextExtension on String {
       TextStyle? italicStyle,
       TextAlign? alignment}) {
     try {
-      if (this.isEmpty || (!this.contains("*") && !this.contains("_"))) {
+      if (isEmpty || (!contains("*") && !contains("_"))) {
         return RichText(
           textAlign: alignment ?? TextAlign.start,
           text: TextSpan(
@@ -24,19 +24,18 @@ extension RichTextExtension on String {
       List<TextSpan> groups = [];
       bool isBoldOn = false;
       bool isItalicsOn = false;
-      this.runes.forEach(
-        (element) {
-          var character = String.fromCharCode(element);
-          if (character == '*' || character == '_') {
-            if (snip == '') {
-              //this is the start of a text span
-              if (character == '*') isBoldOn = true;
-              if (character == '_') isItalicsOn = true;
-            } else {
-              //this is the end of either a bold text or an italics text
-              if (isBoldOn) {
-                isBoldOn = false;
-                groups.add(TextSpan(
+      for (final element in runes) {
+        var character = String.fromCharCode(element);
+        if (character == '*' || character == '_') {
+          if (snip == '') {
+            //this is the start of a text span
+            if (character == '*') isBoldOn = true;
+            if (character == '_') isItalicsOn = true;
+          } else {
+            //this is the end of either a bold text or an italics text
+            if (isBoldOn) {
+              isBoldOn = false;
+              groups.add(TextSpan(
                   text: snip,
                   style: boldStyle ??
                       style?.bold ??
@@ -68,8 +67,7 @@ extension RichTextExtension on String {
           } else {
             snip = snip + character;
           }
-        },
-      );
+      }
 
       if (snip != null && snip.isNotEmpty) {
         groups.add(
@@ -80,13 +78,13 @@ extension RichTextExtension on String {
           ),
         );
       }
-      return new RichText(
+      return RichText(
           textAlign: alignment ?? TextAlign.start,
           text: TextSpan(children: groups));
     } catch (e) {
       return RichText(
         textAlign: alignment ?? TextAlign.start,
-        text: TextSpan(),
+        text: const TextSpan(),
       );
     }
   }

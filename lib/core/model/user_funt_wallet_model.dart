@@ -4,7 +4,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/util/logger.dart';
 
 class UserFundWallet {
-  static Log log = new Log('UserFundWallet');
+  static Log log = const Log('UserFundWallet');
 
   //augmont
   double? _augGoldPrinciple;
@@ -16,10 +16,12 @@ class UserFundWallet {
   double? wLbPrinciple;
   double? wLbProcessingAmt;
   double? wLbLifetimeInterest;
+
   //10% Flo
   double? wLbF1Balance;
   double? wLbF1Principle;
   double? wLbF1LifetimeInterest;
+
   //12% Flo
   double? wLbF2Balance;
   double? wLbF2Principle;
@@ -39,42 +41,44 @@ class UserFundWallet {
 
   //on hold
   double? _processingRedemptionBalance;
+  int? wTmbLifetimeWin;
 
-  static final String fldAugmontGoldPrinciple = 'wAugPrinciple';
-  static final String fldAugmontGoldBalance = 'wAugBalance';
-  static final String fldAugmontGoldQuantity = 'wAugQuantity';
-  static final String fldIciciPrinciple = 'wICPrinciple';
-  static final String fldIciciBalance = 'wICBalance';
-  static final String fldPrizeBalance = 'wPriBalance';
-  static final String fldPrizeLockedBalance = 'wPriLockBalance';
-  static final String fldPrizeLifetimeWin = 'wLifeTimeWin';
-  static final String fldProcessingRedemption = 'wRedemptionProcessing';
+  static const String fldAugmontGoldPrinciple = 'wAugPrinciple';
+  static const String fldAugmontGoldBalance = 'wAugBalance';
+  static const String fldAugmontGoldQuantity = 'wAugQuantity';
+  static const String fldIciciPrinciple = 'wICPrinciple';
+  static const String fldIciciBalance = 'wICBalance';
+  static const String fldPrizeBalance = 'wPriBalance';
+  static const String fldPrizeLockedBalance = 'wPriLockBalance';
+  static const String fldPrizeLifetimeWin = 'wLifeTimeWin';
+  static const String fldProcessingRedemption = 'wRedemptionProcessing';
+
   UserFundWallet(
-    this._augGoldPrinciple,
-    this._augGoldBalance,
-    this._augGoldQuantity,
-    this._iciciPrinciple,
-    this._iciciBalance,
-    this._prizeBalance,
-    this._lockedPrizeBalance,
-    this._prizeLifetimeWin,
-    this._processingRedemptionBalance,
-    this.wLbBalance,
-    this.wLbPrinciple,
-    this.wLbProcessingAmt,
-    this.netWorth,
-    this.tickets,
-    this.wLbLifetimeInterest,
-    this.wLbF1Balance,
-    this.wLbF1Principle,
-    this.wLbF1LifetimeInterest,
-    this.wLbF2Balance,
-    this.wLbF2Principle,
-    this.wLbF2LifetimeInterest,
-  );
+      this._augGoldPrinciple,
+      this._augGoldBalance,
+      this._augGoldQuantity,
+      this._iciciPrinciple,
+      this._iciciBalance,
+      this._prizeBalance,
+      this._lockedPrizeBalance,
+      this._prizeLifetimeWin,
+      this._processingRedemptionBalance,
+      this.wLbBalance,
+      this.wLbPrinciple,
+      this.wLbProcessingAmt,
+      this.netWorth,
+      this.tickets,
+      this.wLbLifetimeInterest,
+      this.wLbF1Balance,
+      this.wLbF1Principle,
+      this.wLbF1LifetimeInterest,
+      this.wLbF2Balance,
+      this.wLbF2Principle,
+      this.wLbF2LifetimeInterest,
+      this.wTmbLifetimeWin);
 
   UserFundWallet.newWallet()
-      : this(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, {}, 0, 0, 0, 0, 0, 0, 0);
+      : this(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, {}, 0, 0, 0, 0, 0, 0, 0, 0);
 
   UserFundWallet.base() {
     _augGoldPrinciple = 0.0;
@@ -129,6 +133,7 @@ class UserFundWallet {
           BaseUtil.toDouble(data['wLbF2Balance']),
           BaseUtil.toDouble(data['wLbF2Principle']),
           BaseUtil.toDouble(data['wLbF2LifetimeInterest']),
+          BaseUtil.toInt(data['wTmbLifetimeWin']),
         );
 
   Map<String, dynamic> cloneMap() => {
@@ -143,7 +148,8 @@ class UserFundWallet {
         fldProcessingRedemption: _processingRedemptionBalance,
         'wLbBalance': wLbBalance,
         'wLbPrinciple': wLbPrinciple,
-        'wLbProcessingAmt': wLbProcessingAmt
+        'wLbProcessingAmt': wLbProcessingAmt,
+    'wTmbLifetimeWin': wTmbLifetimeWin
       };
 
   double getEstTotalWealth() {

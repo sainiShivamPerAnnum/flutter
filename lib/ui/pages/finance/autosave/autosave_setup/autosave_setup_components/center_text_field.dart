@@ -59,7 +59,6 @@ class _CenterTextFieldState extends State<CenterTextField> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     widget.amountFieldController.removeListener(updateFieldWidth);
     super.dispose();
   }

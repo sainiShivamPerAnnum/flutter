@@ -20,17 +20,17 @@ class LendBoxAppBar extends StatelessWidget {
 
   String getTitle() {
     if (assetType == Constants.ASSET_TYPE_FLO_FELXI && isOldUser) {
-      return 'Fello Flo Basic - 10%';
+      return '10% Flo';
     } else if (assetType == Constants.ASSET_TYPE_FLO_FELXI && !isOldUser) {
-      return 'Fello Flo Basic - 8%';
+      return '8% Flo';
     }
 
     if (assetType == Constants.ASSET_TYPE_FLO_FIXED_3) {
-      return 'Fello Flo Premium - 10%';
+      return '10% Flo';
     }
 
     if (assetType == Constants.ASSET_TYPE_FLO_FIXED_6) {
-      return 'Fello Flo Premium - 12%';
+      return '12% Flo';
     }
 
     return 'Fello Flo';
@@ -53,9 +53,10 @@ class LendBoxAppBar extends StatelessWidget {
                 },
               ),
             ),
-      leadingWidth: SizeConfig.screenWidth! * 0.1,
+      // leadingWidth: SizeConfig.screenWidth! * 0.1,
       title: Row(
         children: [
+          SizedBox(width: SizeConfig.screenWidth! * 0.1),
           Container(
             width: SizeConfig.screenWidth! * 0.158,
             height: SizeConfig.screenWidth! * 0.158,
@@ -77,13 +78,14 @@ class LendBoxAppBar extends StatelessWidget {
               height: SizeConfig.screenWidth! * 0.27,
             ),
           ),
-          SizedBox(width: SizeConfig.padding8),
+          // SizedBox(width: SizeConfig.padding8),
           Text(
             getTitle(),
             style: TextStyles.rajdhaniSB.title5,
           ),
         ],
       ),
+      centerTitle: true,
     );
   }
 }

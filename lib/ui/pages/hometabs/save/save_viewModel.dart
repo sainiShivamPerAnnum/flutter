@@ -247,6 +247,7 @@ class SaveViewModel extends BaseViewModel {
           break;
         case 'NAS':
           saveViewItems.add(const MiniAssetsGroupSection());
+          // saveViewItems.add(const QuizSection());
           saveViewItems.add(const AutosaveCard());
 
           break;
@@ -285,7 +286,8 @@ class SaveViewModel extends BaseViewModel {
           saveViewItems.add(const PowerPlayCard());
           break;
         case 'NAS':
-          saveViewItems.add(const AutosaveCard());
+          // saveViewItems.add(const QuizSection());
+          // saveViewItems.add(const AutosaveCard());
           break;
         case 'CH':
           saveViewItems.add(Campaigns(model: smodel));

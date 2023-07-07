@@ -15,7 +15,7 @@ import 'base_repo.dart';
 class CampaignRepo extends BaseRepo {
   final _cacheService = CacheService();
   final _baseUrl = FlavorConfig.isDevelopment()
-      ? "https://mh8dfvlxl7.execute-api.ap-south-1.amazonaws.com/dev"
+      ? "https://8bopjrisyb.execute-api.ap-south-1.amazonaws.com/dev"
       : "https://l4aighxmj3.execute-api.ap-south-1.amazonaws.com/prod";
 
   final _cdnBaseUrl = FlavorConfig.isDevelopment()

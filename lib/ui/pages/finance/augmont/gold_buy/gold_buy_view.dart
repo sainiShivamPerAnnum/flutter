@@ -43,29 +43,34 @@ class _GoldBuyViewState extends State<GoldBuyView>
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       _txnService.currentTxnGms = 0.0;
       _txnService.currentTxnAmount = 0.0;
       _txnService.currentTxnOrderId = '';
       _txnService.currentTxnScratchCardCount = 0;
       _txnService.currentTxnTambolaTicketsCount = 0;
+      _txnService.isIOSTxnInProgress = false;
+      _txnService.isGoldBuyInProgress = false;
+
       _txnService.currentTransactionState = TransactionState.idle;
     });
-    WidgetsBinding.instance!.addObserver(this);
+    WidgetsBinding.instance.addObserver(this);
   }
 
   @override
   void dispose() {
-    WidgetsBinding.instance!.removeObserver(this);
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     appLifecycleState = state;
-    if (appLifecycleState == AppLifecycleState.resumed) {
-      if (!_txnService.isIOSTxnInProgress) return;
+    if (appLifecycleState == AppLifecycleState.resumed &&
+        Platform.isIOS &&
+        _txnService.isIOSTxnInProgress) {
       _txnService.isIOSTxnInProgress = false;
+      _txnService.currentTransactionState = TransactionState.ongoing;
       _txnService.initiatePolling();
     }
     super.didChangeAppLifecycleState(state);
@@ -135,7 +140,7 @@ class _GoldBuyViewState extends State<GoldBuyView>
     } else if (txnService.currentTransactionState == TransactionState.ongoing) {
       return GoldBuyLoadingView(model: model);
     } else if (txnService.currentTransactionState == TransactionState.success) {
-      return GoldBuySuccessView();
+      return const GoldBuySuccessView();
     }
 
     return GoldBuyLoadingView(model: model);

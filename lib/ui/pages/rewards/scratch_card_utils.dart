@@ -99,8 +99,9 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
   // final TextStyle titleStyle, subtitleStyle, titleStyle2;
   final double width;
 
-  RedeemedGoldenScratchCard(
-      {required this.ticket,
+ const RedeemedGoldenScratchCard(
+      {super.key,
+      required this.ticket,
       // @required this.titleStyle,
       // @required this.subtitleStyle,
       // @required this.titleStyle2,
@@ -161,10 +162,11 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
       if (ticket.rewardArr!.length == 1) {
         //Has a single reward
 
-        if (ticket.rewardArr![0].type == 'flc')
+        if (ticket.rewardArr![0].type == 'flc') {
           return Assets.gt_token;
-        else
+        } else {
           return Assets.gt_cashback;
+        }
       } else if (ticket.rewardArr!.length == 2) {
         //Both flc and cash
         return Assets.gt_token_cashback;
@@ -236,7 +238,7 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
               style: TextStyles.rajdhaniB.title2.colour(Colors.black),
             ),
           ),
-          Text(' ' + locale.rewardWon,
+          Text(' ${locale.rewardWon}',
               style: TextStyles.body4.copyWith(fontSize: SizeConfig.padding12))
         ],
       );
@@ -364,56 +366,51 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
                     ),
                   ),
                   Text(
-                    ' ' + locale.rewardWon,
+                    ' ${locale.rewardWon}',
                     style: TextStyles.sourceSans.body4.colour(Colors.black),
                   )
                 ],
               );
             case Constants.GT_REWARD_AMT:
-              return Container(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    RichText(
-                      text: TextSpan(
-                        text: '₹ ${rewards[i].value}',
-                        style:
-                            TextStyles.rajdhaniSB.title4.colour(Colors.black),
-                      ),
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  RichText(
+                    text: TextSpan(
+                      text: '₹ ${rewards[i].value}',
+                      style: TextStyles.rajdhaniSB.title4.colour(Colors.black),
                     ),
-                    Text(
-                      ' ' + locale.rewardWon,
-                      style: TextStyles.sourceSans.body4.colour(Colors.black),
-                    )
-                  ],
-                ),
+                  ),
+                  Text(
+                    ' ${locale.rewardWon}',
+                    style: TextStyles.sourceSans.body4.colour(Colors.black),
+                  )
+                ],
               );
             case Constants.GT_REWARD_FLC:
-              return Container(
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Row(
-                      children: [
-                        SvgPicture.asset(
-                          Assets.token,
-                          width: SizeConfig.padding24,
-                          height: SizeConfig.padding24,
-                        ),
-                        SizedBox(
-                          width: SizeConfig.padding4,
-                        ),
-                        Text("${rewards[i].value} ",
-                            style: TextStyles.rajdhaniB.title2
-                                .colour(Colors.black)),
-                      ],
-                    ),
-                    Text(
-                      ' ' + locale.tokensWon,
-                      style: TextStyles.sourceSans.body4.colour(Colors.black),
-                    )
-                  ],
-                ),
+              return Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Row(
+                    children: [
+                      SvgPicture.asset(
+                        Assets.token,
+                        width: SizeConfig.padding24,
+                        height: SizeConfig.padding24,
+                      ),
+                      SizedBox(
+                        width: SizeConfig.padding4,
+                      ),
+                      Text("${rewards[i].value} ",
+                          style:
+                              TextStyles.rajdhaniB.title2.colour(Colors.black)),
+                    ],
+                  ),
+                  Text(
+                    ' ${locale.tokensWon}',
+                    style: TextStyles.sourceSans.body4.colour(Colors.black),
+                  )
+                ],
               );
             case Constants.GT_REWARD_GOLD:
               return Column(

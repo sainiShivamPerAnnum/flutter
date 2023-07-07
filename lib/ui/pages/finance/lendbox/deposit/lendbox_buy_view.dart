@@ -47,25 +47,28 @@ class _LendboxBuyViewState extends State<LendboxBuyView>
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
-      _txnService!.currentTransactionState = TransactionState.idle;
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      _txnService.isIOSTxnInProgress = false;
+      _txnService.currentTransactionState = TransactionState.idle;
     });
-    WidgetsBinding.instance!.addObserver(this);
+    WidgetsBinding.instance.addObserver(this);
   }
 
   @override
   void dispose() {
-    WidgetsBinding.instance!.removeObserver(this);
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     appLifecycleState = state;
-    if (appLifecycleState == AppLifecycleState.resumed) {
-      if (!_txnService!.isIOSTxnInProgress) return;
-      _txnService!.isIOSTxnInProgress = false;
-      _txnService!.initiatePolling();
+    if (appLifecycleState == AppLifecycleState.resumed &&
+        Platform.isIOS &&
+        _txnService.isIOSTxnInProgress) {
+      _txnService.isIOSTxnInProgress = false;
+      _txnService.currentTransactionState = TransactionState.ongoing;
+      _txnService.initiatePolling();
     }
     super.didChangeAppLifecycleState(state);
   }
@@ -92,9 +95,11 @@ class _LendboxBuyViewState extends State<LendboxBuyView>
                 _getBackground(lboxTxnService!),
                 PageTransitionSwitcher(
                   duration: const Duration(milliseconds: 500),
-                  transitionBuilder: (Widget child,
-                      Animation<double> animation,
-                      Animation<double> secondaryAnimation,) {
+                  transitionBuilder: (
+                    Widget child,
+                    Animation<double> animation,
+                    Animation<double> secondaryAnimation,
+                  ) {
                     return FadeThroughTransition(
                       fillColor: Colors.transparent,
                       child: child,
@@ -110,8 +115,7 @@ class _LendboxBuyViewState extends State<LendboxBuyView>
                     ),
                     builder: (ctx, model, child) {
                       _secureScreenshots(lboxTxnService);
-                      // widget.onChanged(
-                      //     double.parse(model.amountController?.text ?? "0.0"));
+
                       return _getView(
                         lboxTxnService,
                         model,
@@ -162,7 +166,7 @@ class _LendboxBuyViewState extends State<LendboxBuyView>
       return LendboxLoadingView(transactionType: type);
     } else if (lboxTxnService.currentTransactionState ==
         TransactionState.success) {
-      return LendboxSuccessView(
+      return const LendboxSuccessView(
         transactionType: type,
       );
     }

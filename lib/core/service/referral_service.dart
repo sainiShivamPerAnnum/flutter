@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 import 'dart:ui';
 
@@ -334,7 +335,6 @@ class ReferralService extends ChangeNotifier {
       );
 
       if (_flag) {
-        //TODO: REFRESH ROOT CALL
         _logger.d('Rewards added');
       }
     }
@@ -473,10 +473,12 @@ class ReferralService extends ChangeNotifier {
 
   Future<bool> _registerClaimChoice(PrizeClaimChoice choice) async {
     if (choice == PrizeClaimChoice.NA) return false;
-    final response = await _prizingRepo!.claimPrize(
-      _userService!.userFundWallet!.unclaimedBalance,
+    final response = await _prizingRepo.claimPrize(
+      _userService.userFundWallet!.unclaimedBalance,
       choice,
     );
+
+    log("response.isSuccess() ${response.isSuccess()}");
 
     if (response.isSuccess()) {
       _userService!.getUserFundWalletData();

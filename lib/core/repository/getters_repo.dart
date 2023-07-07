@@ -157,7 +157,7 @@ class GetterRepository extends BaseRepo {
           },
         ),
         (p0) {
-          print(p0);
+          log("AppConfig: ${p0.toString()}", name: "AppConfig");
           return ApiResponse(
             code: 200,
             model: AppConfig.instance(p0),
@@ -385,4 +385,5 @@ class GetterRepository extends BaseRepo {
       return ApiResponse.withError("Unable to fetch stories", 400);
     }
   }
+
 }

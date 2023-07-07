@@ -27,7 +27,6 @@ class UserKycDataModel {
 
   @override
   String toString() {
-    // TODO: implement toString
     return "Name: $name OcrVerified: $ocrVerified Pan: $pan Status: $status Uid: $uid Url: $url";
   }
 }

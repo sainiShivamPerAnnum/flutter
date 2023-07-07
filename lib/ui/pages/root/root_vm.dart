@@ -256,7 +256,11 @@ class RootViewModel extends BaseViewModel {
       return defaultCenterButton();
     }
 
-    if (quickSaveData.length == 1) {
+    if (quickSaveData[0].outerAssetUrl != null &&
+        quickSaveData[0].outerAssetUrl!.isNotEmpty) {
+      String fileUrl = quickSaveData[0].outerAssetUrl!;
+      childWidget = BaseUtil.getWidgetBasedOnUrl(fileUrl);
+    } else if (quickSaveData.length == 1) {
       String fileUrl = quickSaveData[0].icon!;
       childWidget = BaseUtil.getWidgetBasedOnUrl(fileUrl);
     } else {
@@ -324,8 +328,6 @@ class RootViewModel extends BaseViewModel {
       ),
     );
   }
-
-  void onCenterButtonTap() {}
 
   Future<void> openJourneyView() async {
     AppState.delegate!.appState.currentAction =

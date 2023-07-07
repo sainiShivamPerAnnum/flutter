@@ -6,6 +6,7 @@ import 'package:felloapp/core/model/asset_options_model.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/ui/pages/finance/amount_chip.dart';
+import 'package:felloapp/ui/pages/finance/augmont/gold_buy/widgets/view_breakdown.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/deposit/lendbox_buy_vm.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/list_utils.dart';
@@ -18,7 +19,6 @@ import 'package:flutter/services.dart';
 import 'package:showcaseview/showcaseview.dart';
 
 import '../../../util/show_case_key.dart';
-import 'lendbox/deposit/lendbox_buy_input_view.dart';
 
 class AmountInputView extends StatefulWidget {
   final TextEditingController? amountController;
@@ -209,7 +209,7 @@ class _AmountInputViewState extends State<AmountInputView> {
               ),
               if (widget.model != null)
                 Padding(
-                  padding: EdgeInsets.symmetric(vertical: SizeConfig.padding1),
+                  padding: EdgeInsets.only(bottom: SizeConfig.padding4),
                   child: Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     mainAxisSize: MainAxisSize.min,
@@ -219,9 +219,10 @@ class _AmountInputViewState extends State<AmountInputView> {
                         style: TextStyles.sourceSans.body3.bold
                             .colour(UiConstants.primaryColor),
                       ),
-                      SizedBox(
-                        width: SizeConfig.padding4,
-                      ),
+                      if (widget.model?.showInfoIcon ?? false)
+                        SizedBox(
+                          width: SizeConfig.padding4,
+                        ),
                       if (widget.model?.showInfoIcon ?? false)
                         GestureDetector(
                           onTap: () {
@@ -238,14 +239,12 @@ class _AmountInputViewState extends State<AmountInputView> {
                             BaseUtil.openModalBottomSheet(
                               isBarrierDismissible: true,
                               addToScreenStack: true,
-                              backgroundColor: const Color(0xff1A1A1A),
-                              content: ViewBreakdown(model: widget.model!),
-                              borderRadius: BorderRadius.only(
-                                topLeft:
-                                    Radius.circular(SizeConfig.roundness24),
-                                topRight:
-                                    Radius.circular(SizeConfig.roundness24),
+                              // backgroundColor: const Color(0xff1A1A1A),
+                              content: FloBreakdownView(
+                                model: widget.model!,
+                                showPsp: false,
                               ),
+
                               hapticVibrate: true,
                               isScrollControlled: true,
                             );

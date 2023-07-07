@@ -32,14 +32,13 @@ import android.appwidget.AppWidgetManager
 import android.content.ComponentName
 
 
-
-class MainActivity : FlutterFragmentActivity()  {
+class MainActivity : FlutterFragmentActivity() {
     private val CHANNEL = "fello.in/dev/notifications/channel/tambola"
     private val DEVICEDATACHANNEL = "methodChannel/deviceData"
     private val UPIINTENTCHANNEL = "methodChannel/upiIntent"
-    private val getUpiApps="getUpiApps"
-    private val intiateTransaction="initiateTransaction"
-    private  var res: MethodChannel.Result?=null
+    private val getUpiApps = "getUpiApps"
+    private val intiateTransaction = "initiateTransaction"
+    private var res: MethodChannel.Result? = null
     private val successRequestCode = 101
     private lateinit var paymentMethodChannel:MethodChannel
     private lateinit var context:Context
@@ -91,13 +90,12 @@ class MainActivity : FlutterFragmentActivity()  {
             else if(call.method == "getAndroidId"){
                 result.success(getAndroidId())
             }
-            else if(call.method == "isDeviceRooted"){
+            else if (call.method == "isDeviceRooted") {
                 result.success(RootCheckService().isDeviceRooted())
-            }else if(call.method == "updateHomeScreenWidget"){
+            } else if (call.method == "updateHomeScreenWidget") {
                 result.success(updateHomeScreenWidget())
-            }
-            else {
-              result.notImplemented()
+            } else {
+                result.notImplemented()
             }
           }
 
@@ -122,6 +120,7 @@ class MainActivity : FlutterFragmentActivity()  {
                     val id: Long = getPhonePeVersionCode(context)
                     result.success(id)
                 }
+
                 else -> {
                     result.notImplemented()
                 }
@@ -132,11 +131,24 @@ class MainActivity : FlutterFragmentActivity()  {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == successRequestCode) {
-            print("On Activity Result"+data.toString())
-            data?.putExtra("resultCode",resultCode)
-         paymentResult.success(data?.getStringExtra("response") as Object?) ; // returnResult(data?.getStringExtra("response") as Object?)
+            data?.let { intentData ->
+                try {
+                    val response = intentData.getStringExtra("response")
+                    val resultCode = intentData.getIntExtra("resultCode", 0)
+                    paymentResult.success(response as Object?)
+                } catch (e: Exception) {
+                    // Handle any exception that may occur
+                    paymentResult.error("RESULT_ERROR", "Error processing result", null)
+                    Log.e("OnActivityResult", "Error processing result: ${e.message}")
+                }
+            } ?: run {
+                // Handle the case when data is null
+                paymentResult.error("RESULT_NULL", "Result data is null", null)
+                Log.e("OnActivityResult", "Result data is null")
+            }
         }
     }
+
 
     fun getPhonePeVersionCode(context: Context?): Long {
         // val PHONEPE_PACKAGE_NAME_UAT = "com.phonepe.app.preprod"
@@ -163,10 +175,10 @@ class MainActivity : FlutterFragmentActivity()  {
         }
         return phonePeVersionCode
     }
-    
+
     @SuppressLint("HardwareIds")
     private fun getAndroidId(): String? {
-        Log.d("MainActivity","Calling AndroidID");
+        Log.d("MainActivity", "Calling AndroidID");
         return Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID);
     }
 
@@ -176,7 +188,7 @@ class MainActivity : FlutterFragmentActivity()  {
         val appWidgetManager = AppWidgetManager.getInstance(this)
         val widgetProvider = ComponentName(applicationContext, MyWidgetProvider::class.java)
         val appWidgetIds = appWidgetManager.getAppWidgetIds(widgetProvider)
-        
+
         // Update the widget content and notify changes
         for (appWidgetId in appWidgetIds) {
             val views = RemoteViews(context.packageName, R.layout.balance_widget_layout)
@@ -191,14 +203,15 @@ class MainActivity : FlutterFragmentActivity()  {
     }
 
     @SuppressLint("QueryPermissionsNeeded")
-    private fun getInstalledApplications(): ArrayList<HashMap<String,Any?>> {
-     try {
-       val packageManager = context.packageManager
-       val installedApps = packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
-       val userApps = installedApps.filter {
-           (it.flags and ApplicationInfo.FLAG_SYSTEM) != ApplicationInfo.FLAG_SYSTEM
-       }
-       val apps: ArrayList<HashMap<String,Any?>>  = ArrayList()
+    private fun getInstalledApplications(): ArrayList<HashMap<String, Any?>> {
+        try {
+            val packageManager = context.packageManager
+            val installedApps =
+                packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
+            val userApps = installedApps.filter {
+                (it.flags and ApplicationInfo.FLAG_SYSTEM) != ApplicationInfo.FLAG_SYSTEM
+            }
+            val apps: ArrayList<HashMap<String, Any?>> = ArrayList()
        for (app in userApps) {
           val appName =  app.loadLabel(packageManager).toString()
            val appData : HashMap<String, Any?>
@@ -231,34 +244,7 @@ class MainActivity : FlutterFragmentActivity()  {
         }
 
     }
-    // TODO: IMAGE PICKER PICKING UP THIS CODE AND NOT WORKING PROPERLY.
-    // TO BE FIXED IN NEXT SPRINT
-    // override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-    //     // if(data==null){
-    //     //     return;
-    //     // }
-    //     // if(res!=null) {
-
-
-    //     //     if (requestCode == successRequestCode) {
-
-    //     //         returnResult(data?.getStringExtra("response") as Object?)
-
-    //     //     }
-    //     //     else {
-    //     //         if(!isAlreadyReturend){
-    //     //             isAlreadyReturend=true
-    //     //             res?.error("400", "user_cancelled", "Something went wrong")
-    //     //         }
-
-
-    //     //     }
-    //     // }
-
-
-    //     super.onActivityResult(requestCode, resultCode, data)
-    // }
-
+  
 
     @SuppressLint("SuspiciousIndentation")
     private fun startTransation(app:String, deepLink:String){
@@ -287,33 +273,35 @@ class MainActivity : FlutterFragmentActivity()  {
 
 
 
-    private fun getupiApps(){
+    private fun getupiApps() {
 
         val packageManager = context.packageManager
-        val mainIntent = Intent(Intent.ACTION_MAIN, null)
-        mainIntent.addCategory(Intent.CATEGORY_DEFAULT)
-        mainIntent.addCategory(Intent.CATEGORY_BROWSABLE)
-        mainIntent.action = Intent.ACTION_VIEW
-        val uri1 = Uri.Builder().scheme("upi").authority("pay").build()
-        mainIntent.data = uri1
-        var list= mutableListOf<Map<String,String>>()
+        val mainIntent = Intent(Intent.ACTION_VIEW)
+        // mainIntent.addCategory(Intent.CATEGORY_DEFAULT)
+        // mainIntent.addCategory(Intent.CATEGORY_BROWSABLE)
+        // mainIntent.action = Intent.ACTION_VIEW
+        // val uri1 = Uri.parse("upi://pay")
+        mainIntent.data = Uri.parse("upi://pay")
+        var list = mutableListOf<Map<String, String>>()
 
         try {
-            val activities = packageManager.queryIntentActivities(mainIntent, PackageManager.MATCH_DEFAULT_ONLY)
-            Log.d(activities.toString(),"UPI Apps Present")
+            val activities =
+                packageManager.queryIntentActivities(mainIntent, PackageManager.MATCH_DEFAULT_ONLY)
+            Log.d(activities.toString(), "UPI Apps Present")
             // Convert the activities into a response that can be transferred over the channel.
 
-        for(it in activities){
-            val packageName = it.activityInfo.packageName
-            val drawable = packageManager.getApplicationIcon(packageName)
+            for (it in activities) {
+                val packageName = it.activityInfo.packageName
+                Log.d(packageName, "package name");
+                val drawable = packageManager.getApplicationIcon(packageName)
 
-            val bitmap = getBitmapFromDrawable(drawable)
-            val icon = if (bitmap != null) {
-                encodeToBase64(bitmap)
-            } else {
-                null
-            }
-            var map=mapOf(
+                val bitmap = getBitmapFromDrawable(drawable)
+                val icon = if (bitmap != null) {
+                    encodeToBase64(bitmap)
+                } else {
+                    null
+                }
+                var map = mapOf(
                     "packageName" to packageName,
                     "icon" to icon,
                     "priority" to it.priority,
@@ -333,8 +321,6 @@ class MainActivity : FlutterFragmentActivity()  {
             res?.error("400", "exception",ex.message )
         }
     }
-
-    
 
 
     override fun onStart() {

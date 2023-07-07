@@ -7,6 +7,7 @@ import 'package:felloapp/core/service/notifier_services/scratch_card_service.dar
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/rewards/detailed_scratch_card/gt_detailed_vm.dart';
+import 'package:felloapp/ui/pages/rewards/scratch_card_const.dart';
 import 'package:felloapp/ui/pages/rewards/scratch_card_utils.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/extensions/rich_text_extension.dart';
@@ -17,6 +18,7 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:scratcher/scratcher.dart';
 
@@ -25,7 +27,7 @@ final scratchKey = GlobalKey<ScratcherState>();
 class GTDetailedView extends StatelessWidget {
   final ScratchCard ticket;
 
-  GTDetailedView({required this.ticket});
+  const GTDetailedView({super.key, required this.ticket});
 
   @override
   Widget build(BuildContext context) {
@@ -141,6 +143,78 @@ class GTDetailedView extends StatelessWidget {
                     TextStyles.sourceSans.body4.colour(UiConstants.kTextColor3),
                 alignment: TextAlign.center),
           ),
+          SizedBox(
+            height: SizeConfig.padding40,
+          ),
+          if (ticket.tag != null && (ticket.tag?.isNotEmpty ?? false))
+            SizedBox(
+              height: SizeConfig.padding120,
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Expanded(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Text(
+                          ScratchCardConstants.getTitle(ticket.tag!)['title']!,
+                          style:
+                              TextStyles.sourceSans.body3.colour(Colors.white),
+                          textAlign: TextAlign.center,
+                        ),
+                        SizedBox(
+                          height: SizeConfig.padding8,
+                        ),
+                        Text(
+                          ScratchCardConstants.getTitle(
+                              ticket.tag!)['subtitle']!,
+                          style:
+                              TextStyles.rajdhaniSB.title5.colour(Colors.white),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
+                  ),
+                  //vertical divider
+                  Container(
+                    height: SizeConfig.padding90,
+                    width: 2,
+                    color: Colors.white,
+                    // child:
+                  ),
+                  Expanded(
+                    child: Column(
+                      children: [
+                        SvgPicture.network(
+                            ScratchCardConstants.getBadges(ticket.tag!),
+                            // fit: BoxFit.fitHeight,
+                            height: SizeConfig.padding60,
+                            width: SizeConfig.padding60),
+                        SizedBox(
+                          height: SizeConfig.padding8,
+                        ),
+                        Text(
+                          'You earned a badge',
+                          style: TextStyles.sourceSans.body3
+                              .colour(Colors.white.withOpacity(0.6)),
+                          textAlign: TextAlign.center,
+                        ),
+                        SizedBox(
+                          height: SizeConfig.padding4,
+                        ),
+                        Text(
+                          ticket.tag ?? 'Ticket Titan',
+                          // 'Tambola Titan',
+                          style: TextStyles.sourceSansSB.body2
+                              .colour(Colors.white),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
+                  ),
+                ],
+              ),
+            )
         ],
       );
     } else {

@@ -32,6 +32,7 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:upi_pay/upi_pay.dart';
 
 import '../../../../../core/repository/getters_repo.dart';
 
@@ -64,6 +65,7 @@ class LendboxBuyViewModel extends BaseViewModel {
   AssetOptionsModel? assetOptionsModel;
   List<CouponModel>? _couponList;
   int? numberOfTambolaTickets;
+  int tambolaMultiplier = 1;
 
   int? totalTickets;
   int? happyHourTickets;
@@ -86,6 +88,10 @@ class LendboxBuyViewModel extends BaseViewModel {
   bool showCouponAppliedText = false;
   bool _addSpecialCoupon = false;
   int _selectedOption = -1;
+  bool isIntentFlow = true;
+  List<ApplicationMeta> appMetaList = [];
+  UpiApplication? upiApplication;
+  ApplicationMeta? selectedUpiApplication;
 
   ///  ---------- getter and setter ------------
 
@@ -207,10 +213,11 @@ class LendboxBuyViewModel extends BaseViewModel {
     showHappyHour = locator<MarketingEventHandlerService>().showHappyHourBanner;
     isLendboxOldUser =
         locator<UserService>().userSegments.contains(Constants.US_FLO_OLD);
-
+    appMetaList = await UpiPay.getInstalledUpiApplications(
+        statusType: UpiApplicationDiscoveryAppStatusType.all);
     updateMinValues();
     await getAssetOptionsModel();
-
+    isIntentFlow = assetOptionsModel!.data.intent;
     log("isLendboxOldUser $isLendboxOldUser");
     if (floAssetType == Constants.ASSET_TYPE_FLO_FIXED_6) {
       maxAmount = 99999;
@@ -240,20 +247,21 @@ class LendboxBuyViewModel extends BaseViewModel {
     List lendboxDetails = AppConfig.getValue(AppConfigKey.lendbox);
 
     if (floAssetType == Constants.ASSET_TYPE_FLO_FELXI) {
-      var data =
-          locator<UserService>().userSegments.contains(Constants.US_FLO_OLD)
-              ? lendboxDetails[2]['minAmountText']
-              : lendboxDetails[3]['minAmountText'];
-      minAmount = BaseUtil.extractIntFromString(data);
+      final int lendboxIndex = isLendboxOldUser ? 2 : 3;
+      final lendboxData = lendboxDetails[lendboxIndex];
+
+      minAmount = BaseUtil.extractIntFromString(lendboxData['minAmountText']);
+      tambolaMultiplier = lendboxData['tambolaMultiplier'] ?? 1;
     }
     if (floAssetType == Constants.ASSET_TYPE_FLO_FIXED_3) {
       minAmount =
           BaseUtil.extractIntFromString(lendboxDetails[1]['minAmountText']);
-      ;
+      tambolaMultiplier = lendboxDetails[1]['tambolaMultiplier'] ?? 1;
     }
     if (floAssetType == Constants.ASSET_TYPE_FLO_FIXED_6) {
       minAmount =
           BaseUtil.extractIntFromString(lendboxDetails[0]['minAmountText']);
+      tambolaMultiplier = lendboxDetails[0]['tambolaMultiplier'] ?? 1;
     }
   }
 
@@ -301,11 +309,35 @@ class LendboxBuyViewModel extends BaseViewModel {
     _isBuyInProgress = true;
     notifyListeners();
     trackCheckOut(amount.toDouble());
-    await _txnService!.initiateTransaction(amount.toDouble(), skipMl,
-        floAssetType, maturityPref, appliedCoupon?.code ?? '');
+    await _txnService.initiateTransaction(
+      FloPurchaseDetails(
+        floAssetType: floAssetType,
+        maturityPref: maturityPref,
+        couponCode: appliedCoupon?.code ?? '',
+        txnAmount: amount.toDouble(),
+        skipMl: skipMl,
+        upiChoice: selectedUpiApplication,
+      ),
+    );
+
     _isBuyInProgress = false;
     forcedBuy = false;
     notifyListeners();
+
+    if (selectedUpiApplication != null) {
+      analyticsService
+          .track(eventName: AnalyticsEvents.intentUpiAppSelected, properties: {
+        "floAssetType": floAssetType,
+        "maturityPref": maturityPref,
+        "couponCode": appliedCoupon?.code ?? '',
+        "txnAmount": amount.toDouble(),
+        "skipMl": skipMl,
+        "upiChoice": selectedUpiApplication!.packageName,
+        "abTesting": AppConfig.getValue(AppConfigKey.payment_brief_view)
+            ? "with payment summary"
+            : "without payment summary"
+      });
+    }
   }
 
   bool readOnly = true;
@@ -318,12 +350,12 @@ class LendboxBuyViewModel extends BaseViewModel {
   }
 
   trackCheckOut(double? amount) {
-    _txnService!.currentTransactionAnalyticsDetails = {
+    _txnService.currentTransactionAnalyticsDetails = {
       "Asset": "Flo",
       "Amount Entered": amount ?? 0,
       "Error message": "",
     };
-    analyticsService!.track(
+    analyticsService.track(
       eventName: AnalyticsEvents.saveCheckout,
       properties: AnalyticsProperties.getDefaultPropertiesMap(
         extraValuesMap: {
@@ -414,7 +446,7 @@ class LendboxBuyViewModel extends BaseViewModel {
   }
 
   void navigateToKycScreen() {
-    analyticsService!
+    analyticsService
         .track(eventName: AnalyticsEvents.completeKYCTapped, properties: {
       "location": "Fello Felo Invest",
       "Total invested amount": AnalyticsProperties.getGoldInvestedAmount() +
@@ -429,9 +461,9 @@ class LendboxBuyViewModel extends BaseViewModel {
     );
   }
 
-  getAvailableCoupons() async {
+  Future<void> getAvailableCoupons() async {
     final ApiResponse<List<CouponModel>> couponsRes =
-        await _couponRepo!.getCoupons(assetType: floAssetType);
+        await _couponRepo.getCoupons(assetType: floAssetType);
     if (couponsRes.code == 200 &&
         couponsRes.model != null &&
         (couponsRes.model?.length ?? 0) >= 1) {
@@ -465,32 +497,31 @@ class LendboxBuyViewModel extends BaseViewModel {
             : null;
 
     final num minAmount =
-        num.tryParse(happyHourModel?.data?.minAmount.toString() ?? "0") ?? 0;
+        num.tryParse(happyHourModel?.data?.minAmount.toString() ?? '0') ?? 0;
 
     if (parsedFloAmount < tambolaCost) {
       totalTickets = 0;
       showInfoIcon = false;
-      return "";
+      return '';
     }
 
     numberOfTambolaTickets = parsedFloAmount ~/ tambolaCost;
-    totalTickets = numberOfTambolaTickets;
+    totalTickets = numberOfTambolaTickets! * tambolaMultiplier;
 
-    showHappyHour
-        ? happyHourTickets = (happyHourModel?.data != null &&
-                happyHourModel?.data?.rewards?[0].type == 'tt')
-            ? happyHourModel?.data!.rewards![0].value
-            : null
-        : happyHourTickets = null;
+    happyHourTickets =
+        showHappyHour && happyHourModel?.data?.rewards?[0].type == 'tt'
+            ? happyHourModel!.data!.rewards![0].value
+            : null;
 
     if (parsedFloAmount >= minAmount && happyHourTickets != null) {
-      totalTickets = numberOfTambolaTickets! + happyHourTickets!;
+      totalTickets =
+          (numberOfTambolaTickets! * tambolaMultiplier) + happyHourTickets!;
       showInfoIcon = true;
     } else {
       showInfoIcon = false;
     }
 
-    return "+$totalTickets Tickets";
+    return '+$totalTickets Tickets';
   }
 
   onChipClick(int index) {
@@ -504,7 +535,7 @@ class LendboxBuyViewModel extends BaseViewModel {
 
     appliedCoupon = null;
 
-    analyticsService!
+    analyticsService
         .track(eventName: AnalyticsEvents.suggestedAmountTapped, properties: {
       'order': index,
       'Asset': floAssetType,
@@ -657,7 +688,7 @@ class LendboxBuyViewModel extends BaseViewModel {
     couponApplyInProgress = true;
 
     ApiResponse<EligibleCouponResponseModel> response =
-        await _couponRepo!.getEligibleCoupon(
+        await _couponRepo.getEligibleCoupon(
       uid: locator<UserService>().baseUser!.uid,
       amount: buyAmount!.toInt(),
       couponcode: couponCode,
@@ -694,7 +725,7 @@ class LendboxBuyViewModel extends BaseViewModel {
     } else {
       BaseUtil.showNegativeAlert(locale.couponNotApplied, locale.anotherCoupon);
     }
-    analyticsService!
+    analyticsService
         .track(eventName: AnalyticsEvents.saveBuyCoupon, properties: {
       "Asset": floAssetType,
       "Manual Code entry": isManuallyTyped,

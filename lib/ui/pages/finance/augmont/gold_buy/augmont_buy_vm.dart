@@ -28,6 +28,7 @@ import 'package:felloapp/ui/modalsheets/coupon_modal_sheet.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/installed_upi_apps_finder.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -58,7 +59,7 @@ class GoldBuyViewModel extends BaseViewModel {
   double? incomingAmount;
   List<ApplicationMeta> appMetaList = [];
   UpiApplication? upiApplication;
-  String? selectedUpiApplicationName;
+  ApplicationMeta? selectedUpiApplication;
   int _status = 0;
   int lastTappedChipIndex = 1;
   CouponModel? _focusCoupon;
@@ -70,6 +71,7 @@ class GoldBuyViewModel extends BaseViewModel {
   bool _addSpecialCoupon = false;
   bool isSpecialCoupon = true;
   bool showCouponAppliedText = false;
+  bool isIntentFlow = true;
 
   bool _skipMl = false;
   double _fieldWidth = 0.0;
@@ -236,16 +238,17 @@ class GoldBuyViewModel extends BaseViewModel {
     // resetBuyOptions();
 
     setState(ViewState.Busy);
-
+    appMetaList = await UpiUtils.getUpiApps();
     showHappyHour = locator<MarketingEventHandlerService>().showHappyHourBanner;
     animationController = AnimationController(
         vsync: vsync, duration: const Duration(milliseconds: 500));
     await getAssetOptionsModel();
+    isIntentFlow = assetOptionsModel!.data.intent;
     animationController?.addListener(listnear);
     skipMl = isSkipMilestone;
     incomingAmount = amount?.toDouble() ?? 0;
     goldBuyAmount = amount?.toDouble() ??
-        assetOptionsModel!.data.userOptions[1].value.toDouble();
+        assetOptionsModel?.data.userOptions[1].value.toDouble();
     goldAmountController = TextEditingController(
         text: amount?.toString() ??
             assetOptionsModel!.data.userOptions[1].value.toString());
@@ -279,27 +282,6 @@ class GoldBuyViewModel extends BaseViewModel {
     }
   }
 
-  //INIT CHECKS
-  // checkIfDepositIsLocked() {
-  //   if (_userService.userAugmontDetails != null &&
-  //       _userService.userAugmontDetails.depNotice != null &&
-  //       _userService.userAugmontDetails.depNotice.isNotEmpty)
-  //     buyNotice = _userService.userAugmontDetails.depNotice;
-  // }dis
-
-  // delayedAugmontCall() async {
-  //   if (_userService.userAugmontDetails == null && !_augmontSecondFetchDone) {
-  //     await Future.delayed(Duration(seconds: 2));
-  //     // await _userService.fetchUserAugmontDetail();
-  //     _augmontSecondFetchDone = true;
-  //     notifyListeners();
-  //   }
-  // }
-
-  // fetchNotices() async {
-  //   buyNotice = await _dbModel!.showAugmontBuyNotice();
-  // }
-
   resetBuyOptions() {
     goldBuyAmount = assetOptionsModel?.data.userOptions[1].value.toDouble();
     goldAmountController!.text =
@@ -311,22 +293,36 @@ class GoldBuyViewModel extends BaseViewModel {
 
   //BUY FLOW
   //1
-  initiateBuy() async {
+  Future<void> initiateBuy() async {
     if (_augTxnService.isGoldSellInProgress || couponApplyInProgress) return;
-    _augTxnService!.isGoldBuyInProgress = true;
+    _augTxnService.isGoldBuyInProgress = true;
     if (!await initChecks()) {
-      _augTxnService!.isGoldBuyInProgress = false;
+      _augTxnService.isGoldBuyInProgress = false;
       return;
     }
-    await _augTxnService!.initiateAugmontTransaction(
+    await _augTxnService.initiateAugmontTransaction(
       details: GoldPurchaseDetails(
         goldBuyAmount: goldBuyAmount,
         goldRates: goldRates,
         couponCode: appliedCoupon?.code ?? '',
-        skipMl: skipMl ?? false,
+        skipMl: skipMl,
         goldInGrams: goldAmountInGrams,
+        upiChoice: selectedUpiApplication,
       ),
     );
+    if (selectedUpiApplication != null) {
+      _analyticsService
+          .track(eventName: AnalyticsEvents.intentUpiAppSelected, properties: {
+        "goldBuyAmount": goldBuyAmount,
+        "couponCode": appliedCoupon?.code ?? '',
+        "skipMl": skipMl,
+        "goldInGrams": goldAmountInGrams,
+        "upiChoice": selectedUpiApplication!.packageName,
+        "abTesting": AppConfig.getValue(AppConfigKey.payment_brief_view)
+            ? "with payment summary"
+            : "without payment summary"
+      });
+    }
   }
 
   //2 Basic Checks
@@ -348,6 +344,8 @@ class GoldBuyViewModel extends BaseViewModel {
     }
     if (goldBuyAmount! < 10) {
       showMinCapText = true;
+      BaseUtil.showNegativeAlert(
+          "Invalid Amount", "Please Enter Amount Greater than ₹10");
       return false;
     }
 

@@ -2,5 +2,4 @@
     android:minWidth="100dp"
     android:minHeight="49dp"
     android:updatePeriodMillis="86400000"
-    android:initialLayout="@layout/balance_widget_layout">
-</appwidget-provider>
+    android:initialLayout="@layout/balance_widget_layout"></appwidget-provider>

@@ -41,8 +41,9 @@ class GTInstantView extends StatefulWidget {
 
   final bool showAutosavePrompt;
 
-  GTInstantView(
-      {this.title,
+ const GTInstantView(
+      {super.key,
+      this.title,
       required this.source,
       this.amount,
       this.showRatingDialog = true,
@@ -80,7 +81,7 @@ class _GTInstantViewState extends State<GTInstantView>
     WidgetsBinding.instance.addPostFrameCallback((_) {
       locator<MarketingEventHandlerService>().showModalsheet = true;
     });
-    this._controller.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
@@ -100,7 +101,7 @@ class _GTInstantViewState extends State<GTInstantView>
       builder: (ctx, model, child) {
         return Scaffold(
           backgroundColor: Colors.black.withOpacity(0.7),
-          body: Container(
+          body: SizedBox(
             width: SizeConfig.screenWidth,
             height: SizeConfig.screenHeight,
             child: Stack(
@@ -119,7 +120,7 @@ class _GTInstantViewState extends State<GTInstantView>
                 Align(
                   alignment: Alignment.topCenter,
                   child: SafeArea(
-                      child: Container(
+                      child: SizedBox(
                     height: kToolbarHeight,
                     child: Row(
                       children: [
@@ -211,7 +212,7 @@ class _GTInstantViewState extends State<GTInstantView>
                                           width: SizeConfig.screenWidth! * 0.6,
                                         ),
                                         child: model.state == ViewState.Busy
-                                            ? Container(
+                                            ? SizedBox(
                                                 width: SizeConfig.screenWidth! *
                                                     0.6,
                                                 height:
@@ -312,13 +313,14 @@ class _GTInstantViewState extends State<GTInstantView>
   }
 
   getGTTitle() {
-    if (widget.source == GTSOURCE.deposit)
+    if (widget.source == GTSOURCE.deposit) {
       return locale.hurray;
-    else {
-      if (widget.title != null && widget.title!.isNotEmpty)
+    } else {
+      if (widget.title != null && widget.title!.isNotEmpty) {
         return widget.title;
-      else
+      } else {
         return locale.hurray;
+      }
     }
   }
 
@@ -343,10 +345,11 @@ class _GTInstantViewState extends State<GTInstantView>
   getButtonText(GTInstantViewModel model, GTSOURCE source) {
     String title;
     if (source == GTSOURCE.deposit || source == GTSOURCE.autosave) {
-      if (widget.showAutosavePrompt != null && !model.isAutosaveAlreadySetup)
+      if (widget.showAutosavePrompt != null && !model.isAutosaveAlreadySetup) {
         title = locale.btnContinue;
-      else
+      } else {
         title = locale.btnStartPlaying;
+      }
     } else {
       title = locale.btnContinue;
     }

@@ -5,6 +5,7 @@ import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/analytics_repo.dart';
 import 'package:felloapp/core/repository/banking_repo.dart';
 import 'package:felloapp/core/repository/campaigns_repo.dart';
+import 'package:felloapp/core/repository/clientComms_repo.dart';
 import 'package:felloapp/core/repository/coupons_repo.dart';
 import 'package:felloapp/core/repository/games_repo.dart';
 import 'package:felloapp/core/repository/getters_repo.dart';
@@ -17,6 +18,7 @@ import 'package:felloapp/core/repository/paytm_repo.dart';
 import 'package:felloapp/core/repository/power_play_repo.dart';
 import 'package:felloapp/core/repository/prizing_repo.dart';
 import 'package:felloapp/core/repository/referral_repo.dart';
+import 'package:felloapp/core/repository/report_repo.dart';
 import 'package:felloapp/core/repository/save_repo.dart';
 import 'package:felloapp/core/repository/scratch_card_repo.dart';
 import 'package:felloapp/core/repository/subscription_repo.dart';
@@ -187,6 +189,8 @@ Future<void> setupLocator() async {
   locator.registerLazySingleton(UserStatsRepo.new);
   locator.registerLazySingleton(RootController.new);
   locator.registerLazySingleton(PowerPlayRepository.new);
+  locator.registerLazySingleton(ClientCommsRepo.new);
+  locator.registerLazySingleton(ReportRepository.new);
 
   //ROOT
   locator.registerLazySingleton(CardActionsNotifier.new);

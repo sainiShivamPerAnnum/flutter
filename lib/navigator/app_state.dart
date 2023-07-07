@@ -46,6 +46,8 @@ class AppState extends ChangeNotifier {
   static ScrollController homeCardListController = ScrollController();
   static String? _fcmData;
   static bool showAutosaveBt = false;
+  static bool autosaveMiddleFlow = false;
+  static bool showAutoSaveSurveyBt = false;
   static bool isFirstTime = false;
   static bool isRootLoaded = false;
   static bool unsavedChanges = false;
@@ -119,21 +121,25 @@ class AppState extends ChangeNotifier {
     routeDeepLink();
   }
 
-  routeDeepLink() {
+  void routeDeepLink() {
     if (isRootLoaded && _fcmData != null) {
       delegate!.parseRoute(Uri.parse(_fcmData!));
     }
   }
 
-  static blockNavigation() {
+  static void blockNavigation() {
     if (screenStack.last == ScreenItem.loader) return;
     screenStack.add(ScreenItem.loader);
   }
 
-  static unblockNavigation() {
+  static void unblockNavigation() {
     if (screenStack.last == ScreenItem.loader) screenStack.removeLast();
   }
 
+  static void removeOverlay() {
+    if (screenStack.last == ScreenItem.dialog ||
+        screenStack.last == ScreenItem.modalsheet) screenStack.removeLast();
+  }
 // GETTERS AND SETTERS
 
   int get getCurrentTabIndex => _rootIndex;
@@ -265,37 +271,6 @@ class AppState extends ChangeNotifier {
   executeForFirstAccountsTabClick(index) {
     SpotLightController.instance.userFlow = UserFlow.onWinPage;
   }
-
-  //TODO: REVERT WHEN PACAKGE IS SETUP
-  // executeForFirstTambolaClick(index) {
-  //   final TambolaService _tambolaService = locator<TambolaService>();
-  //   _tambolaService.completer.future.then(
-  //     (value) {
-  //       if ((_tambolaService.initialTicketCount ?? -1) == 0) {
-  //         if (_tambolaService.userWeeklyBoards!.length > 0) {
-  //           _tambolaService.initialTicketCount =
-  //               _tambolaService.userWeeklyBoards!.length;
-  //           WidgetsBinding.instance.addPostFrameCallback(
-  //             (timeStamp) {
-  //               AppState.screenStack.add(ScreenItem.dialog);
-  //               Navigator.of(AppState.delegate!.navigatorKey.currentContext!)
-  //                   .push(
-  //                 PageRouteBuilder(
-  //                   opaque: false,
-  //                   pageBuilder: (BuildContext context, _, __) =>
-  //                       TambolaInstantView(
-  //                     ticketCount: _tambolaService.userWeeklyBoards!.length,
-  //                   ),
-  //                 ),
-  //               );
-  //             },
-  //           );
-  //         }
-  //       }
-  //     },
-  //   );
-  // }
-  //TODO: REVERT WHEN PACAKGE IS SETUP
 
   void trackEvent(int index) {
     final ScratchCardService _gtService = locator<ScratchCardService>();

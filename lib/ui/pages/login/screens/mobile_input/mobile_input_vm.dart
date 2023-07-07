@@ -16,7 +16,7 @@ class LoginMobileViewModel extends BaseViewModel {
   final _formKey = GlobalKey<FormState>();
   final _mobileController = TextEditingController();
   final _referralCodeController = TextEditingController();
-  final AnalyticsService? _analyticsService = locator<AnalyticsService>();
+  final AnalyticsService _analyticsService = locator<AnalyticsService>();
   final CustomLogger? logger = locator<CustomLogger>();
   final FocusNode mobileFocusNode = FocusNode();
   bool _validate = true;
@@ -62,9 +62,8 @@ class LoginMobileViewModel extends BaseViewModel {
       } else {
         mobileFocusNode.requestFocus();
       }
-      Future.delayed(const Duration(milliseconds: 500), () {
-        mobileFocusNode.requestFocus();
-      });
+      Future.delayed(
+          const Duration(milliseconds: 500), mobileFocusNode.requestFocus);
     }
   }
 
@@ -76,15 +75,18 @@ class LoginMobileViewModel extends BaseViewModel {
     Pattern pattern = "^[0-9]*\$";
     RegExp regex = RegExp(pattern as String);
     if (!regex.hasMatch(_mobileController.text) ||
-        _mobileController.text.length != 10) return locale.validMobileNumber;
+        _mobileController.text.length != 10){
+      return locale.validMobileNumber;
+    }
 
     if (!(_mobileController.text.startsWith("6") ||
         _mobileController.text.startsWith("7") ||
         _mobileController.text.startsWith("8") ||
-        _mobileController.text.startsWith("9")))
+        _mobileController.text.startsWith("9"))) {
       return locale.validMobileNumber;
-    else
+    } else {
       return null;
+    }
   }
 
   void upDateCheckTick() {

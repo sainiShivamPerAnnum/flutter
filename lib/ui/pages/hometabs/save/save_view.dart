@@ -1,11 +1,15 @@
 import 'dart:convert';
 import 'dart:developer';
 
+import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/bank_and_pan_enum.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
+import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
+import 'package:felloapp/ui/elements/title_subtitle_container.dart';
 import 'package:felloapp/ui/pages/hometabs/home/card_actions_notifier.dart';
 import 'package:felloapp/ui/pages/hometabs/home/cards_home.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
@@ -131,6 +135,55 @@ class SaveViewWrapper extends StatelessWidget {
                 children: model.getNewUserSaveViewItems(model),
               );
       },
+    );
+  }
+}
+
+class QuizSection extends StatelessWidget {
+  const QuizSection({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    Map<String, dynamic> quizSectionData =
+        AppConfig.getValue(AppConfigKey.quiz_config);
+
+    return Container(
+      margin: EdgeInsets.only(
+        top: SizeConfig.padding20,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          TitleSubtitleContainer(
+            title: quizSectionData["title"],
+          ),
+          SizedBox(
+            height: SizeConfig.padding12,
+          ),
+          GestureDetector(
+            onTap: () {
+              AppState.delegate!.parseRoute(quizSectionData['deeplink']);
+            },
+            child: Container(
+              height: SizeConfig.screenWidth! * 0.32,
+              width: SizeConfig.screenWidth,
+              margin: EdgeInsets.symmetric(
+                  horizontal: SizeConfig.pageHorizontalMargins),
+              decoration: BoxDecoration(
+                color: UiConstants.kSecondaryBackgroundColor,
+                borderRadius: BorderRadius.circular(SizeConfig.roundness16),
+                border: Border.all(color: Colors.white12),
+                image: DecorationImage(
+                  image: NetworkImage(
+                    quizSectionData["image"],
+                  ),
+                  fit: BoxFit.cover,
+                ),
+              ),
+            ),
+          )
+        ],
+      ),
     );
   }
 }

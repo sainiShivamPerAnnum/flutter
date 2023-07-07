@@ -127,15 +127,8 @@ class RazorpayService extends ChangeNotifier {
     if (!init(investmentType)) return null; //initialise razorpay
     final mid = AppConfig.getValue(AppConfigKey.rzpMid);
     final ApiResponse<CreatePaytmTransactionModel> txnResponse =
-        await _paytmRepo!.createTransaction(
-      amount,
-      augMap,
-      lbMap,
-      couponCode,
-      skipMl,
-      mid,
-      investmentType,
-    );
+        await _paytmRepo!.createTransaction(amount, augMap, lbMap, couponCode,
+            skipMl, mid, investmentType, null);
     if (txnResponse.isSuccess()) {
       final txnModel = txnResponse.model!;
       print(txnResponse.model!.data!.orderId);
@@ -196,7 +189,7 @@ class RazorpayService extends ChangeNotifier {
         _razorpay!.open(options);
         return true;
       } else {
-        BaseUtil.showNegativeAlert(locale.failedToCreateTxn, locale.tryLater);
+        BaseUtil.showNegativeAlert(txnResponse.errorMessage, locale.tryLater);
         AppState.unblockNavigation();
 
         return false;

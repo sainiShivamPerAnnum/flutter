@@ -1,7 +1,10 @@
+import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/amount_chips_model.dart';
 import 'package:felloapp/core/model/sub_combos_model.dart';
@@ -93,13 +96,13 @@ class AutosaveProcessViewModel extends BaseViewModel {
       onComboTapped(2);
       comboController = PageController();
     } else if (value == 1) {
-      floAmountFieldController!.text = '100';
+      floAmountFieldController!.text = '250';
       goldAmountFieldController!.text = '0';
-      _totalInvestingAmount = 100;
+      _totalInvestingAmount = 250;
     } else {
       floAmountFieldController!.text = '0';
-      goldAmountFieldController!.text = '100';
-      _totalInvestingAmount = 100;
+      goldAmountFieldController!.text = '250';
+      _totalInvestingAmount = 250;
     }
     notifyListeners();
   }
@@ -230,23 +233,29 @@ class AutosaveProcessViewModel extends BaseViewModel {
             curve: Curves.decelerate)
         .then(
       (_) {
+        log("Page changed to ${_subService.pageController!.page!.toInt()}");
         if (_subService.pageController!.page!.toInt() == 1) {
           PreferenceHelper.setBool(
               PreferenceHelper.CACHE_IS_AUTOSAVE_FIRST_TIME, false);
+        }
+
+        if (_subService.pageController!.page!.toInt() == 3) {
+          AppState.showAutoSaveSurveyBt = true;
         }
       },
     );
   }
 
-  init() async {
+  Future<void> init(InvestmentType? investmentType) async {
     state = ViewState.Busy;
     AppState.showAutosaveBt = true;
+    if (investmentType != null) AppState.autosaveMiddleFlow = true;
     _subService.pageController = PageController();
     await _subService.getSubscription();
     if (_subService.autosaveState == AutosaveState.IDLE) {
       goldAmountFieldController = TextEditingController();
       await getAvailableUpiApps();
-      _subService.getAutosaveSuggestions().then((_) {
+      unawaited(_subService.getAutosaveSuggestions().then((_) {
         augDailyChips = _subService.suggestions[0][0];
         augWeeklyChips = _subService.suggestions[0][1];
         augMonthlyChips = _subService.suggestions[0][2];
@@ -262,7 +271,7 @@ class AutosaveProcessViewModel extends BaseViewModel {
         dailyMaxMinInfo = _subService.suggestions[3][0];
         weeklyMaxMinInfo = _subService.suggestions[3][1];
         monthlyMaxMinInfo = _subService.suggestions[3][2];
-      });
+      }));
       autosaveAssetOptionList = [
         AutosaveAssetModel(
           asset: "assets/vectors/flogold.svg",
@@ -285,6 +294,20 @@ class AutosaveProcessViewModel extends BaseViewModel {
       floAmountFieldController = TextEditingController();
 
       selectedAssetOption = _bankingService.isKYCVerified ? 0 : 2;
+
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        if (investmentType != null &&
+            investmentType == InvestmentType.AUGGOLD99) {
+          selectedAssetOption = 2;
+          _subService.pageController!.jumpToPage(2);
+        }
+        if (investmentType != null &&
+            investmentType == InvestmentType.LENDBOXP2P) {
+          selectedAssetOption = 1;
+          _subService.pageController!.jumpToPage(2);
+        }
+      });
+
       if (selectedAssetOption == 0) {
         dailyCombos[2].isSelected = true;
       }
@@ -300,8 +323,10 @@ class AutosaveProcessViewModel extends BaseViewModel {
     setState(ViewState.Idle);
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       if (!PreferenceHelper.getBool(
-          PreferenceHelper.CACHE_IS_AUTOSAVE_FIRST_TIME))
+              PreferenceHelper.CACHE_IS_AUTOSAVE_FIRST_TIME) &&
+          investmentType == null) {
         _subService.pageController!.jumpToPage(1);
+      }
     });
   }
 
@@ -323,7 +348,7 @@ class AutosaveProcessViewModel extends BaseViewModel {
     // if (_subService.autosaveState == AutosaveState.IDLE) {
     goldAmountFieldController = TextEditingController(
         text: _subService.subscriptionData!.augAmt ?? '0');
-    _subService.getAutosaveSuggestions().then((_) {
+    unawaited(_subService.getAutosaveSuggestions().then((_) {
       augDailyChips = _subService.suggestions[0][0];
       augWeeklyChips = _subService.suggestions[0][1];
       augMonthlyChips = _subService.suggestions[0][2];
@@ -339,7 +364,7 @@ class AutosaveProcessViewModel extends BaseViewModel {
       dailyMaxMinInfo = _subService.suggestions[3][0];
       weeklyMaxMinInfo = _subService.suggestions[3][1];
       monthlyMaxMinInfo = _subService.suggestions[3][2];
-    });
+    }));
     autosaveAssetOptionList = [
       AutosaveAssetModel(
         asset: "assets/vectors/flogold.svg",
@@ -725,7 +750,9 @@ class AutosaveProcessViewModel extends BaseViewModel {
   }
 
   void _deselectOtherChipIfAny() {
-    augDailyChips.forEach((chip) => chip.isSelected = false);
+    for (final chip in augDailyChips) {
+      chip.isSelected = false;
+    }
     augWeeklyChips.forEach((chip) => chip.isSelected = false);
     augMonthlyChips.forEach((chip) => chip.isSelected = false);
     lbDailyChips.forEach((chip) => chip.isSelected = false);
@@ -733,14 +760,14 @@ class AutosaveProcessViewModel extends BaseViewModel {
     lbMonthlyChips.forEach((chip) => chip.isSelected = false);
   }
 
-  deselectOtherComboIfAny({bool notify = false}) {
+  void deselectOtherComboIfAny({bool notify = false}) {
     dailyCombos.forEach((chip) => chip.isSelected = false);
     weeklyCombos.forEach((chip) => chip.isSelected = false);
     monthlyCombos.forEach((chip) => chip.isSelected = false);
     if (notify) notifyListeners();
   }
 
-  onCompleteClose() {
+  void onCompleteClose() {
     _analyticsService!.track(eventName: AnalyticsEvents.asDoneTapped);
     AppState.backButtonDispatcher!.didPopRoute();
     _gtService.fetchAndVerifyScratchCardByID();

@@ -9,6 +9,7 @@ import 'package:felloapp/core/model/deposit_response_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/investment_actions_repo.dart';
+import 'package:felloapp/core/repository/report_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/augmont_invoice_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
@@ -221,18 +222,24 @@ class AugmontService extends ChangeNotifier {
   Future<String?> generatePurchaseInvoicePdf(
       String? txnId, Map<String, String?>? userDetails) async {
     AugmontInvoiceService _pdfService = AugmontInvoiceService();
+    final _reportRepo = locator<ReportRepository>();
     if (!isInit()) await _init();
-    var _params = {
-      GetInvoice.fldTranId: txnId,
-    };
-    var _request = http.Request(
-        'GET', Uri.parse(_constructRequest(GetInvoice.path, _params)));
-    _request.headers
-        .addAll({'x-api-key': "aOwnj8SQ8k1TFl1gIZCbq7nrgemhnBAb5YPwzP8z"});
-    http.StreamedResponse _response = await _request.send();
+    Map<String, dynamic>? resMap;
+    final res = await _reportRepo.getReport(txnId);
+    if (res.isSuccess()) {
+      resMap = res.model;
+    }
+    // var _params = {
+    //   GetInvoice.fldTranId: txnId,
+    // };
+    // var _request = http.Request(
+    //     'GET', Uri.parse(_constructRequest(GetInvoice.path, _params)));
+    // _request.headers
+    //     .addAll({'x-api-key': "aOwnj8SQ8k1TFl1gIZCbq7nrgemhnBAb5YPwzP8z"});
+    // http.StreamedResponse _response = await _request.send();
 
-    final resMap = await _processResponse(_response);
-    if (resMap == null || !resMap[INTERNAL_FAIL_FLAG]) {
+    // final resMap = await _processResponse(_response);
+    if (resMap == null) {
       log.error('Query Failed');
       return null;
     } else {
@@ -272,7 +279,7 @@ class AugmontService extends ChangeNotifier {
     if (response == null) {
       log.error('response is null');
     }
-    if (response.statusCode != 200 && response.statusCode != 201) {     
+    if (response.statusCode != 200 && response.statusCode != 201) {
       log.error(
           'Query Failed:: Status:${response.statusCode}, Reason:${response.reasonPhrase}');
       if (response.statusCode == 502)

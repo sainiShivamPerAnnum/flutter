@@ -10,7 +10,7 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
 import 'package:showcaseview/showcaseview.dart';
 
-class FAppBar extends StatelessWidget with PreferredSizeWidget {
+class FAppBar extends StatelessWidget implements PreferredSizeWidget {
   final FaqsType? type;
   final String? title;
   final bool showCoinBar;

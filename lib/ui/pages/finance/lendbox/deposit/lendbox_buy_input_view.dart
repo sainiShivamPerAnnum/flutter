@@ -2,20 +2,22 @@ import 'dart:developer';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/bank_and_pan_enum.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
+import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/happy_hour_campign.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/back_button_actions.dart';
 import 'package:felloapp/ui/pages/finance/amount_input_view.dart';
+import 'package:felloapp/ui/pages/finance/augmont/gold_buy/widgets/view_breakdown.dart';
 import 'package:felloapp/ui/pages/finance/banner_widget.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/deposit/lendbox_buy_vm.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/deposit/widget/flo_coupon.dart';
-import 'package:felloapp/ui/pages/finance/lendbox/deposit/widget/prompt.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/lendbox_app_bar.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
@@ -200,24 +202,18 @@ class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
                           : FloBuyNavBar(
                               model: widget.model,
                               onTap: () {
+                                locator<AnalyticsService>().track(
+                                    eventName: AnalyticsEvents.saveInitiate,
+                                    properties: {
+                                      "investmentType":
+                                          InvestmentType.LENDBOXP2P.name,
+                                    });
                                 if ((widget.model.buyAmount ?? 0) <
                                     widget.model.minAmount) {
                                   BaseUtil.showNegativeAlert("Invalid Amount",
                                       "Please Enter Amount Greater than ${widget.model.minAmount}");
                                   return;
                                 }
-
-                                // if (widget.model.floAssetType ==
-                                //     Constants.ASSET_TYPE_FLO_FIXED_6) {
-                                //   widget.model.openReinvestBottomSheet();
-                                //   return;
-                                // }
-                                // if (widget.model.floAssetType ==
-                                //         Constants.ASSET_TYPE_FLO_FIXED_3 &&
-                                //     !widget.model.isLendboxOldUser) {
-                                //   widget.model.openReinvestBottomSheet();
-                                //   return;
-                                // }
 
                                 if (!widget.model.isBuyInProgress) {
                                   FocusScope.of(context).unfocus();
@@ -285,17 +281,17 @@ class FloBuyNavBar extends StatelessWidget {
   String getTitle() {
     if (model.floAssetType == Constants.ASSET_TYPE_FLO_FELXI &&
         model.isLendboxOldUser) {
-      return 'in Flo 10% P.A';
+      return '10% Returns p.a.';
     } else if (model.floAssetType == Constants.ASSET_TYPE_FLO_FELXI &&
         !model.isLendboxOldUser) {
-      return 'in Flo 8% P.A';
+      return '8% Returns p.a.';
     }
 
     if (model.floAssetType == Constants.ASSET_TYPE_FLO_FIXED_6) {
-      return "in Flo 12% P.A";
+      return "12% Returns p.a.";
     }
     if (model.floAssetType == Constants.ASSET_TYPE_FLO_FIXED_3) {
-      return "in Flo 10% P.A";
+      return "10% Returns p.a.";
     }
 
     return "";
@@ -328,11 +324,9 @@ class FloBuyNavBar extends StatelessWidget {
               BaseUtil.openModalBottomSheet(
                 isBarrierDismissible: true,
                 addToScreenStack: true,
-                backgroundColor: const Color(0xff1A1A1A),
-                content: ViewBreakdown(model: model),
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(SizeConfig.roundness24),
-                  topRight: Radius.circular(SizeConfig.roundness24),
+                content: FloBreakdownView(
+                  model: model,
+                  showPsp: false,
                 ),
                 hapticVibrate: true,
                 isScrollControlled: true,
@@ -423,248 +417,29 @@ class FloBuyNavBar extends StatelessWidget {
               AppPositiveBtn(
                 width: SizeConfig.screenWidth! * 0.32,
                 height: SizeConfig.screenWidth! * 0.12,
-                onPressed: () => onTap(),
+                onPressed: () {
+                  if (model.isIntentFlow) {
+                    BaseUtil.openModalBottomSheet(
+                      isBarrierDismissible: true,
+                      addToScreenStack: true,
+                      content: FloBreakdownView(
+                        model: model,
+                        showBreakDown:
+                            AppConfig.getValue(AppConfigKey.payment_brief_view),
+                      ),
+                      hapticVibrate: true,
+                      isScrollControlled: true,
+                    );
+                  } else {
+                    onTap();
+                  }
+                },
                 btnText: 'SAVE',
                 style: TextStyles.rajdhaniB.body1,
               ),
             ],
           ),
         ],
-      ),
-    );
-  }
-}
-
-class ViewBreakdown extends StatelessWidget {
-  const ViewBreakdown({
-    Key? key,
-    required this.model,
-  }) : super(key: key);
-
-  final LendboxBuyViewModel model;
-
-  @override
-  Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        // AppState.backButtonDispatcher?.didPopRoute();
-        return true;
-      },
-      child: Padding(
-        padding:
-            EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.start,
-          crossAxisAlignment: CrossAxisAlignment.start,
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            SizedBox(
-              height: SizeConfig.padding28,
-            ),
-            Row(
-              children: [
-                const Spacer(),
-                GestureDetector(
-                  onTap: () {
-                    Navigator.pop(context);
-                  },
-                  child: const Icon(
-                    Icons.close,
-                    color: Colors.white,
-                  ),
-                ),
-              ],
-            ),
-            SizedBox(
-              height: SizeConfig.padding20,
-            ),
-            InvestmentForeseenWidget(
-              amount: model.amountController?.text ?? '0',
-              assetType: model.floAssetType,
-              isLendboxOldUser: model.isLendboxOldUser,
-              onChanged: (_) {},
-            ),
-            Row(
-              children: [
-                Text("Fello Flo Amount", style: TextStyles.sourceSansSB.body1),
-                const Spacer(),
-                Text(
-                  "₹${model.amountController?.text ?? '0'}",
-                  style: TextStyles.sourceSansSB.body1,
-                ),
-              ],
-            ),
-            SizedBox(
-              height: SizeConfig.padding16,
-            ),
-            Row(
-              children: [
-                Text(
-                  "Investment date",
-                  style: TextStyles.sourceSans.body2,
-                ),
-                const Spacer(),
-                Text(
-                  // format today's date like this "3rd Mar 2023",
-                  DateFormat('d MMM yyyy').format(DateTime.now()),
-                  style: TextStyles.sourceSansSB.body2,
-                ),
-              ],
-            ),
-            SizedBox(
-              height: SizeConfig.padding16,
-            ),
-            Row(
-              children: [
-                Text(
-                  model.floAssetType == Constants.ASSET_TYPE_FLO_FELXI
-                      ? "Lockin Period"
-                      : "Maturity date",
-                  style: TextStyles.sourceSans.body2,
-                ),
-                const Spacer(),
-                Text(
-                  DateFormat('d MMM, yyyy')
-                      .format(model.assetOptionsModel!.data.maturityAt!),
-                  style: TextStyles.sourceSansSB.body2,
-                ),
-              ],
-            ),
-            SizedBox(
-              height: SizeConfig.padding24,
-            ),
-            if ((model.totalTickets ?? 0) > 0) ...[
-              Container(
-                height: 1,
-                color: UiConstants.kLastUpdatedTextColor.withOpacity(0.5),
-              ),
-              SizedBox(
-                height: SizeConfig.padding24,
-              ),
-              Row(
-                children: [
-                  SizedBox(
-                    height: SizeConfig.padding28,
-                    width: SizeConfig.padding28,
-                    child: SvgPicture.asset(
-                      Assets.howToPlayAsset1Tambola,
-                      fit: BoxFit.contain,
-                    ),
-                  ),
-                  SizedBox(
-                    width: SizeConfig.padding4,
-                  ),
-                  Text(
-                    "Total Tickets",
-                    style: TextStyles.sourceSansSB.body1,
-                  ),
-                  const Spacer(),
-                  Text(
-                    "${model.totalTickets}",
-                    style: TextStyles.sourceSansSB.body1,
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: SizeConfig.padding24,
-              ),
-              if (model.showHappyHour) ...[
-                Row(
-                  children: [
-                    Text(
-                      "Happy Hour Tickets",
-                      style: TextStyles.sourceSans.body2,
-                    ),
-                    const Spacer(),
-                    Text(
-                      "${model.happyHourTickets}",
-                      style: TextStyles.sourceSans.body2,
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: SizeConfig.padding24,
-                ),
-                Row(
-                  children: [
-                    Text(
-                      "Lifetime Tickets",
-                      style: TextStyles.sourceSans.body2,
-                    ),
-                    const Spacer(),
-                    Text(
-                      "${model.numberOfTambolaTickets}",
-                      style: TextStyles.sourceSans.body2,
-                    ),
-                  ],
-                ),
-                SizedBox(
-                  height: SizeConfig.padding24,
-                ),
-              ],
-            ],
-            if (model.appliedCoupon != null) ...[
-              Container(
-                height: 1,
-                color: UiConstants.kLastUpdatedTextColor.withOpacity(0.5),
-              ),
-              SizedBox(
-                height: SizeConfig.padding12,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.center,
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  SvgPicture.asset(
-                    Assets.ticketTilted,
-                  ),
-                  const SizedBox(
-                    width: 8,
-                  ),
-                  Text(
-                    '${model.appliedCoupon?.code} coupon applied',
-                    style: TextStyles.sourceSans.body3
-                        .colour(UiConstants.kTealTextColor),
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: SizeConfig.padding12,
-              )
-            ],
-            AppPositiveBtn(
-              width: SizeConfig.screenWidth!,
-              onPressed: () async {
-                if ((model.buyAmount ?? 0) < model.minAmount) {
-                  BaseUtil.showNegativeAlert("Invalid Amount",
-                      "Please Enter Amount Greater than ${model.minAmount}");
-                  return;
-                }
-
-                AppState.backButtonDispatcher?.didPopRoute();
-
-                // if (model.floAssetType == Constants.ASSET_TYPE_FLO_FIXED_6) {
-                //   model.openReinvestBottomSheet();
-                //   return;
-                // }
-                // if (model.floAssetType == Constants.ASSET_TYPE_FLO_FIXED_3 &&
-                //     !model.isLendboxOldUser) {
-                //   model.openReinvestBottomSheet();
-                //   return;
-                // }
-
-                if (!model.isBuyInProgress) {
-                  FocusScope.of(context).unfocus();
-                  await model.initiateBuy();
-                }
-              },
-              btnText: 'Save'.toUpperCase(),
-            ),
-            SizedBox(
-              height: SizeConfig.padding12,
-            ),
-          ],
-        ),
       ),
     );
   }

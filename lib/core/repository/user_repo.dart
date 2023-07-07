@@ -45,9 +45,14 @@ class UserRepository extends BaseRepo {
         "mobileNumber": mobileNo,
       };
       final res = await APIService.instance.postData(
-          _apiPaths!.kCustomAuthToken,
-          body: _body,
-          isAuthTokenAvailable: false);
+        _apiPaths!.kCustomAuthToken,
+        body: _body,
+        cBaseUrl: _baseUrl,
+        headers: {
+          'authKey':
+              '.c;a/>12-1-x[/2130x0821x/0-=0.-x02348x042n23x9023[4np0823wacxlonluco3q8',
+        },
+      );
 
       if (res['token'] == null) {
         return ApiResponse.withError("Unable to signup using truecaller", 400);
@@ -59,7 +64,8 @@ class UserRepository extends BaseRepo {
     }
   }
 
-  Future<ApiResponse<Map<String, dynamic>>> setNewUser(BaseUser baseUser, token) async {
+  Future<ApiResponse<Map<String, dynamic>>> setNewUser(
+      BaseUser baseUser, token) async {
     try {
       final String _bearer = token;
 
@@ -102,11 +108,11 @@ class UserRepository extends BaseRepo {
       return await _cacheService.cachedApi(
           CacheKeys.USER,
           TTL.ONE_DAY,
-              () => APIService.instance.getData(
-            ApiPath.kGetUserById(id),
-            cBaseUrl: _baseUrl,
-            token: token,
-          ), (dynamic res) {
+          () => APIService.instance.getData(
+                ApiPath.kGetUserById(id),
+                cBaseUrl: _baseUrl,
+                token: token,
+              ), (dynamic res) {
         try {
           if (res != null && res['data'] != null && res['data'].isNotEmpty) {
             final _user = BaseUser.fromMap(res['data'], id!);
@@ -146,6 +152,7 @@ class UserRepository extends BaseRepo {
       await APIService.instance.putData(
         _apiPaths!.kUpdateUserAppflyer,
         body: body,
+        cBaseUrl: _baseUrl,
         token: token,
       );
 
@@ -262,14 +269,15 @@ class UserRepository extends BaseRepo {
     }
   }
 
-  Future<void> setNewDeviceId({required String? uid,
-    required String? deviceId,
-    required String? platform,
-    required String? model,
-    required String? brand,
-    required String? version,
-    required bool? isPhysicalDevice,
-    String? integrity}) async {
+  Future<void> setNewDeviceId(
+      {required String? uid,
+      required String? deviceId,
+      required String? platform,
+      required String? model,
+      required String? brand,
+      required String? version,
+      required bool? isPhysicalDevice,
+      String? integrity}) async {
     try {
       final token = await getBearerToken();
       Map<String, dynamic> _body = {
@@ -339,7 +347,7 @@ class UserRepository extends BaseRepo {
       if (latestNotifTime != null) {
         int latestTimeInSeconds = int.tryParse(latestNotifTime)!;
         AlertModel latestAlert = notifications[0].createdTime!.seconds >
-            notifications[1].createdTime!.seconds
+                notifications[1].createdTime!.seconds
             ? notifications[0]
             : notifications[1];
         if (latestAlert.createdTime!.seconds > latestTimeInSeconds) {
@@ -360,7 +368,9 @@ class UserRepository extends BaseRepo {
     }
   }
 
-  Future<ApiResponse<List<AlertModel>>> getUserNotifications(String? lastDocId,) async {
+  Future<ApiResponse<List<AlertModel>>> getUserNotifications(
+    String? lastDocId,
+  ) async {
     try {
       final token = await getBearerToken();
       final userNotifications = await APIService.instance.getData(
@@ -476,7 +486,7 @@ class UserRepository extends BaseRepo {
     try {
       final token = await getBearerToken();
       Map<String, dynamic> response =
-      await _internalOpsService!.initDeviceInfo();
+          await _internalOpsService!.initDeviceInfo();
       if (response != null) {
         final String? deviceId = response["deviceId"];
         final String? platform = response["platform"];
@@ -516,12 +526,13 @@ class UserRepository extends BaseRepo {
 
   //Method to fetch the user-boot-up-ee
 
-  Future<ApiResponse<UserBootUpDetailsModel>> fetchUserBootUpRssponse({required String? userId,
-    required String? deviceId,
-    required String? platform,
-    required String appVersion,
-    required String lastOpened,
-    required int dayOpenCount}) async {
+  Future<ApiResponse<UserBootUpDetailsModel>> fetchUserBootUpRssponse(
+      {required String? userId,
+      required String? deviceId,
+      required String? platform,
+      required String appVersion,
+      required String lastOpened,
+      required int dayOpenCount}) async {
     UserBootUpDetailsModel userBootUp;
 
     // try {
