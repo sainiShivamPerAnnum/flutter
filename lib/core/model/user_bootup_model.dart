@@ -92,8 +92,7 @@ class Data {
       banMap: map['banMap'] != null
           ? BanMap.fromMap(map['banMap'] as Map<String, dynamic>)
           : BanMap.base(),
-      // stateRestricted: map['stateRestricted'] ?? false,
-      stateRestricted: true,
+      stateRestricted: map['stateRestricted'] ?? false,
     );
   }
 
