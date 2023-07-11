@@ -13,6 +13,8 @@ import 'package:flutter/services.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class FreshDeskHelp extends StatefulWidget {
+  const FreshDeskHelp({super.key});
+
   @override
   State<FreshDeskHelp> createState() => _FreshDeskHelpState();
 }

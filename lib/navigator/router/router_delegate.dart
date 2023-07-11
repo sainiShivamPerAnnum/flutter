@@ -258,10 +258,10 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           _addPageData(const MyWinningsView(), MyWinningsPageConfig);
           break;
         case Pages.BlockedUser:
-          _addPageData(BlockedUserView(), BlockedUserPageConfig);
+          _addPageData(const BlockedUserView(), BlockedUserPageConfig);
           break;
         case Pages.FreshDeskHelp:
-          _addPageData(FreshDeskHelp(), FreshDeskHelpPageConfig);
+          _addPageData(const FreshDeskHelp(), FreshDeskHelpPageConfig);
           break;
 
         case Pages.ScratchCardsView:

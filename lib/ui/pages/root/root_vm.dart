@@ -35,6 +35,7 @@ import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
 import 'package:felloapp/ui/elements/bottom_nav_bar/default_quick_save_modal_sheet.dart';
 import 'package:felloapp/ui/elements/bottom_nav_bar/quick_save_modal_sheet.dart';
 import 'package:felloapp/ui/modalsheets/security_modal_sheet.dart';
+import 'package:felloapp/ui/pages/onboarding/blocked_user.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/ui/service_elements/last_week/last_week_view.dart';
 import 'package:felloapp/util/constants.dart';
@@ -45,7 +46,6 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 // import 'package:flutter_dynamic_icon/flutter_dynamic_icon.dart';
 
 enum NavBarItem { Journey, Save, Account, Play, Tambola }
@@ -470,7 +470,21 @@ class RootViewModel extends BaseViewModel {
           flag = false;
           return;
         }
-        // //2.Checking for forced App Update
+
+        //2. Check if the user is from restricted state
+        if (_userService.userBootUp != null &&
+            (_userService.userBootUp!.data?.stateRestricted ?? false)) {
+          log("User is from restricted state", name: "UserBootUp");
+          AppState.delegate!.appState.currentAction = PageAction(
+              state: PageState.replaceWidget,
+              page: BlockedUserPageConfig,
+              widget: const BlockedUserView(
+                isStateRestricted: true,
+              ));
+          return;
+        }
+
+        // 3.Checking for forced App Update
         if (_userService.userBootUp!.data!.isAppForcedUpdateRequired != null &&
             _userService.userBootUp!.data!.isAppForcedUpdateRequired == true) {
           AppState.isUpdateScreen = true;
@@ -481,7 +495,7 @@ class RootViewModel extends BaseViewModel {
           return;
         }
 
-        //3. Sign out the user automatically
+        //4. Sign out the user automatically
         if (_userService.userBootUp!.data!.signOutUser != null &&
             _userService.userBootUp!.data!.signOutUser == true) {
           Haptic.vibrate();
@@ -510,7 +524,7 @@ class RootViewModel extends BaseViewModel {
           return;
         }
 
-        //4. App update present (Not forced)
+        //5. App update present (Not forced)
         if (_userService.userBootUp!.data!.isAppUpdateRequired != null) {
           PreferenceHelper.setBool(Constants.IS_APP_UPDATE_AVAILABLE,
               _userService.userBootUp!.data!.isAppUpdateRequired!);
@@ -518,7 +532,7 @@ class RootViewModel extends BaseViewModel {
           PreferenceHelper.setBool(Constants.IS_APP_UPDATE_AVAILABLE, false);
         }
 
-        //5. Clear all the caches
+        //6. Clear all the caches
         if (_userService.userBootUp!.data!.cache!.keys != null) {
           for (String id
               in _userService.userBootUp!.data!.cache!.keys as List<String>) {
@@ -526,7 +540,7 @@ class RootViewModel extends BaseViewModel {
           }
         }
 
-        //6. Notice
+        //7. Notice
         if (_userService.userBootUp?.data?.notice != null) {
           if (_userService.userBootUp!.data!.notice!.message != null &&
               _userService.userBootUp!.data!.notice!.message != "") {
