@@ -5,6 +5,7 @@ import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:singular_flutter_sdk/singular.dart';
 import 'package:singular_flutter_sdk/singular_config.dart';
+import 'package:singular_flutter_sdk/singular_link_params.dart';
 
 class SingularAnalytics extends BaseAnalyticsService {
   final CustomLogger? _logger = locator<CustomLogger>();
@@ -32,7 +33,12 @@ class SingularAnalytics extends BaseAnalyticsService {
       _singularConfig = SingularConfig(PROD_KEY, PROD_SECRET);
       _singularConfig!.customUserId = baseUser!.uid;
       Singular.start(_singularConfig!);
-
+      _singularConfig!.singularLinksHandler = (SingularLinkParams params) {
+        String deeplink = params.deeplink;
+        String passthrough = params.passthrough;
+        bool isDeferred = params.isDeferred;
+        // Add your code here to handle the deep link
+      };
       _singularConfig!.skAdNetworkEnabled = true;
       _singularConfig!.manualSkanConversionManagement = true;
       _singularConfig!.conversionValueUpdatedCallback = (conversionValue) {

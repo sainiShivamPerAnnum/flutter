@@ -118,7 +118,14 @@ class AugmontTransactionService extends BaseTransactionService {
       try {
         if (Platform.isIOS) {
           isIOSTxnInProgress = true;
-          await BaseUtil.launchUrl(txnResponse.model!.data!.intent!);
+          final res =
+              await BaseUtil.launchUrl(txnResponse.model!.data!.intent!);
+          if (!res) {
+            isIOSTxnInProgress = false;
+            isGoldBuyInProgress = false;
+            currentTransactionState = TransactionState.idle;
+            AppState.unblockNavigation();
+          }
         } else {
           final result = await platform.invokeMethod('initiatePsp', {
             'redirectUrl': txnResponse.model!.data!.intent,

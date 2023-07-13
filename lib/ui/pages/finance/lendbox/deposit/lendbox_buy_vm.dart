@@ -27,6 +27,7 @@ import 'package:felloapp/ui/pages/finance/lendbox/deposit/widget/prompt.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/installed_upi_apps_finder.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
@@ -213,8 +214,7 @@ class LendboxBuyViewModel extends BaseViewModel {
     showHappyHour = locator<MarketingEventHandlerService>().showHappyHourBanner;
     isLendboxOldUser =
         locator<UserService>().userSegments.contains(Constants.US_FLO_OLD);
-    appMetaList = await UpiPay.getInstalledUpiApplications(
-        statusType: UpiApplicationDiscoveryAppStatusType.all);
+    appMetaList = await UpiUtils.getUpiApps();
     updateMinValues();
     await getAssetOptionsModel();
     isIntentFlow = assetOptionsModel!.data.intent;
