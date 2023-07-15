@@ -1,6 +1,17 @@
+import 'dart:developer';
+import 'dart:io';
+
+import 'package:felloapp/base_util.dart';
+import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
+import 'package:image_picker/image_picker.dart';
+import 'package:path_provider/path_provider.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class FoundBug extends StatefulWidget {
   const FoundBug({super.key});
@@ -23,6 +34,8 @@ class _FoundBugState extends State<FoundBug> {
   String reason = "";
   String? errorMsg;
   String? dropDownErrorMsg;
+  XFile? capturedImage;
+  double? fileSize;
 
   @override
   void initState() {
@@ -91,32 +104,32 @@ class _FoundBugState extends State<FoundBug> {
                     decoration: InputDecoration(
                       border: (dropDownErrorMsg == null)
                           ? OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(16),
-                            )
+                        borderRadius: BorderRadius.circular(16),
+                      )
                           : const OutlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: Colors.red, width: 1),
-                              borderRadius: BorderRadius.only(
-                                bottomLeft: Radius.circular(8),
-                                topRight: Radius.circular(8),
-                                topLeft: Radius.circular(8),
-                              ),
-                            ),
+                        borderSide:
+                        BorderSide(color: Colors.red, width: 1),
+                        borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(8),
+                          topRight: Radius.circular(8),
+                          topLeft: Radius.circular(8),
+                        ),
+                      ),
                       contentPadding: EdgeInsets.symmetric(
                           horizontal: SizeConfig.padding10),
                       enabledBorder: (dropDownErrorMsg == null)
                           ? OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            )
+                        borderRadius: BorderRadius.circular(8),
+                      )
                           : const OutlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: Colors.red, width: 1),
-                              borderRadius: BorderRadius.only(
-                                bottomLeft: Radius.circular(8),
-                                topRight: Radius.circular(8),
-                                topLeft: Radius.circular(8),
-                              ),
-                            ),
+                        borderSide:
+                        BorderSide(color: Colors.red, width: 1),
+                        borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(8),
+                          topRight: Radius.circular(8),
+                          topLeft: Radius.circular(8),
+                        ),
+                      ),
                       filled: true,
                       fillColor: const Color(0xff1A1A1A),
                       focusedErrorBorder: const OutlineInputBorder(
@@ -131,9 +144,9 @@ class _FoundBugState extends State<FoundBug> {
                           .textTheme
                           .headline6!
                           .copyWith(
-                              height: -10,
-                              color: Colors.transparent,
-                              fontSize: 0),
+                          height: -10,
+                          color: Colors.transparent,
+                          fontSize: 0),
                       errorBorder: const OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.red, width: 1),
                         borderRadius: BorderRadius.only(
@@ -179,6 +192,7 @@ class _FoundBugState extends State<FoundBug> {
                       if (_formKey.currentState?.validate() ?? false) {
                         setState(() {
                           dropDownValue = val;
+                          dropDownErrorMsg = null;
                         });
                       }
                     },
@@ -198,7 +212,7 @@ class _FoundBugState extends State<FoundBug> {
                 ],
               ),
               SizedBox(
-                height: SizeConfig.padding12,
+                height: SizeConfig.padding18,
               ),
               Text(
                 "How would you describe the bug?",
@@ -210,8 +224,6 @@ class _FoundBugState extends State<FoundBug> {
               Column(
                 children: [
                   Container(
-                    // width: SizeConfig.screenWidth,
-                    // height: SizeConfig.padding104,
                     decoration: BoxDecoration(
                       color: const Color(0xff1A1A1A),
                       borderRadius: BorderRadius.circular(SizeConfig.padding8),
@@ -224,6 +236,7 @@ class _FoundBugState extends State<FoundBug> {
                             false) {}
                         setState(() {
                           reason = val;
+                          errorMsg = null;
                         });
                       },
                       validator: (value) {
@@ -242,17 +255,17 @@ class _FoundBugState extends State<FoundBug> {
                         focusedBorder: InputBorder.none,
                         border: (errorMsg == null)
                             ? OutlineInputBorder(
-                                borderRadius: BorderRadius.circular(16),
-                              )
+                          borderRadius: BorderRadius.circular(16),
+                        )
                             : const OutlineInputBorder(
-                                borderSide:
-                                    BorderSide(color: Colors.red, width: 1),
-                                borderRadius: BorderRadius.only(
-                                  bottomLeft: Radius.circular(8),
-                                  topRight: Radius.circular(8),
-                                  topLeft: Radius.circular(8),
-                                ),
-                              ),
+                          borderSide:
+                          BorderSide(color: Colors.red, width: 1),
+                          borderRadius: BorderRadius.only(
+                            bottomLeft: Radius.circular(8),
+                            topRight: Radius.circular(8),
+                            topLeft: Radius.circular(8),
+                          ),
+                        ),
                         enabledBorder: InputBorder.none,
                         disabledBorder: InputBorder.none,
                         isDense: true,
@@ -269,9 +282,9 @@ class _FoundBugState extends State<FoundBug> {
                             .textTheme
                             .headline6!
                             .copyWith(
-                                height: -10,
-                                color: Colors.transparent,
-                                fontSize: 0),
+                            height: -10,
+                            color: Colors.transparent,
+                            fontSize: 0),
                         errorBorder: const OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.red, width: 1),
                           borderRadius: BorderRadius.only(
@@ -298,29 +311,58 @@ class _FoundBugState extends State<FoundBug> {
                 height: SizeConfig.padding18,
               ),
               Text(
-                "Attach a screenshot (Optional)",
+                "Attach Screenshot (Optional)",
                 style: TextStyles.sourceSans.body3,
               ),
               SizedBox(
                 height: SizeConfig.padding12,
               ),
-              Container(
-                width: SizeConfig.padding72,
-                height: SizeConfig.padding72,
-                decoration: BoxDecoration(
-                  borderRadius: const BorderRadius.all(Radius.circular(12)),
-                  border: Border.all(color: const Color(0xffcacaca), width: 1),
-                  color: const Color(0xff1A1A1A),
-                ),
-                child: const Center(
-                  child:
-                      // (state is ImageCollectSuccessState)
-                      //     ? Image.memory(base64Decode(state.file))
-                      //     :
-                      Icon(
-                    Icons.add,
-                    color: Colors.white,
-                    size: 35,
+              GestureDetector(
+                onTap: () {
+                  fetchImage(ImageSource.gallery);
+                },
+                child: Container(
+                  width: SizeConfig.padding72,
+                  height: SizeConfig.padding72,
+                  decoration: BoxDecoration(
+                    borderRadius: const BorderRadius.all(Radius.circular(12)),
+                    border:
+                        Border.all(color: const Color(0xffcacaca), width: 1),
+                    color: const Color(0xff1A1A1A),
+                  ),
+                  child: Center(
+                    //Display captured image
+                    // how to do it
+                    //
+                    child: capturedImage != null
+                        ? FutureBuilder<List<int>>(
+                            future: capturedImage!.readAsBytes(),
+                            builder: (context, snapshot) {
+                              if (snapshot.hasData) {
+                                final bytes =
+                                    Uint8List.fromList(snapshot.data!);
+                                return Image.memory(
+                                  bytes,
+                                  fit: BoxFit.cover,
+                                );
+                              } else if (snapshot.hasError) {
+                                // Handle error case
+                                return const Icon(
+                                  Icons.error,
+                                  color: Colors.white,
+                                  size: 35,
+                                );
+                              } else {
+                                // Display a loading indicator while the image is being loaded
+                                return const CircularProgressIndicator();
+                              }
+                            },
+                          )
+                        : const Icon(
+                            Icons.add,
+                            color: Colors.white,
+                            size: 35,
+                          ),
                   ),
                 ),
               ),
@@ -331,9 +373,13 @@ class _FoundBugState extends State<FoundBug> {
                 btnText: 'SUBMIT',
                 onPressed: () {
                   setState(() {});
-                  if (_formKey.currentState!.validate() &&
-                      _bugReasonFormKey.currentState!.validate()) {
-                    Navigator.of(context).pop();
+                  if ((_formKey.currentState?.validate() ?? false)
+                      // &&
+                      // (_bugReasonFormKey.currentState?.validate() ?? false)
+                      ) {
+                    log("capturedImage $capturedImage");
+                    // Navigator.of(context).pop();
+                    openGmail(capturedImage);
                   }
                   // submitted.value = true;
 
@@ -354,6 +400,94 @@ class _FoundBugState extends State<FoundBug> {
         ),
       ),
     );
+  }
+
+  void fetchImage(ImageSource source) async {
+    try {
+      capturedImage =
+          await ImagePicker().pickImage(source: ImageSource.gallery);
+      verifyImage();
+    } catch (ex) {
+      debugPrint("Exception => $ex");
+      BaseUtil.showNegativeAlert(
+          'Something went wrong!', 'Please try again later');
+    }
+  }
+
+  void verifyImage() {
+    S locale = locator<S>();
+    if (capturedImage == null) return;
+    final String ext = capturedImage!.name.split('.').last.toLowerCase();
+
+    if (ext == 'png' || ext == 'jpg' || ext == 'jpeg') {
+      File imageFile = File(capturedImage!.path);
+      fileSize =
+          BaseUtil.digitPrecision(imageFile.lengthSync() / 1048576, 2, true);
+      print("File size: $fileSize");
+      if ((fileSize ?? 0) > 5) {
+        capturedImage = null;
+        BaseUtil.openDialog(
+            addToScreenStack: true,
+            isBarrierDismissible: false,
+            hapticVibrate: true,
+            content: MoreInfoDialog(
+                title: locale.invalidFile, text: locale.invalidFileSubtitle));
+      } else
+        log("imageFile => $imageFile || fileSize => $fileSize");
+
+      setState(() {});
+      return;
+    } else {
+      capturedImage = null;
+      BaseUtil.openDialog(
+          addToScreenStack: true,
+          isBarrierDismissible: false,
+          hapticVibrate: true,
+          content: MoreInfoDialog(
+              title: locale.invalidFile, text: locale.invalidFileSubtitle));
+    }
+  }
+
+  Future<void> openGmail(XFile? imageFile) async {
+    const recipientEmail = 'recipient@example.com';
+    const subject = 'Found Bug';
+    var body = 'Category: $dropDownValue\nDescription: $reason';
+
+    Uri launchUri = Uri(
+      scheme: 'mailto',
+      path: recipientEmail,
+      queryParameters: {
+        'subject': subject,
+        'body': body,
+      },
+    );
+
+    if (imageFile != null) {
+      final tempDir = await getTemporaryDirectory();
+      final fileName = imageFile.path.split('/').last;
+      final filePath = '${tempDir.path}/$fileName';
+      await imageFile.saveTo(filePath);
+      final attachmentUri = Uri.file(filePath);
+
+      final modifiedQueryParams =
+          Map<String, dynamic>.from(launchUri.queryParameters);
+      modifiedQueryParams['attachment'] = attachmentUri.toString();
+      launchUri = launchUri.replace(queryParameters: modifiedQueryParams);
+    }
+
+    if (await canLaunch(launchUri.toString())) {
+      await launch(launchUri.toString());
+    } else {
+      BaseUtil.openDialog(
+        addToScreenStack: true,
+        isBarrierDismissible: false,
+        hapticVibrate: true,
+        content: MoreInfoDialog(
+          title: 'Email not found',
+          text: 'Please set up an email account to use this feature.',
+        ),
+      );
+    }
   }
 }
 
