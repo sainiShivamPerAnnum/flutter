@@ -34,9 +34,9 @@ class SingularAnalytics extends BaseAnalyticsService {
       _singularConfig!.customUserId = baseUser!.uid;
       Singular.start(_singularConfig!);
       _singularConfig!.singularLinksHandler = (SingularLinkParams params) {
-        String deeplink = params.deeplink;
-        String passthrough = params.passthrough;
-        bool isDeferred = params.isDeferred;
+        String deeplink = params.deeplink!;
+        String passthrough = params.passthrough!;
+        bool isDeferred = params.isDeferred!;
         // Add your code here to handle the deep link
       };
       _singularConfig!.skAdNetworkEnabled = true;

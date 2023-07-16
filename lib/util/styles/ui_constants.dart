@@ -203,6 +203,11 @@ class UiConstants {
   static Color kPowerPlaySecondary = const Color(0xff8c3f31);
   static Color kPowerPlayPrimaryOff = const Color(0xff373E5E);
   static Color kPowerPlaySecondaryOff = const Color(0xff9A5445);
+
+  //GOLD PRO
+  static Color kGoldProPrimary = const Color(0xffFFD979);
+  static Color kGoldProBorder = const Color(0xffFFD979).withOpacity(0.2);
+  static Color kGoldProBgColor = const Color(0xff323232);
 }
 
 extension ColorExtension on String {

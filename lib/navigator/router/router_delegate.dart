@@ -17,7 +17,6 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/ui/elements/fello_dialog/fello_in_app_review.dart';
 import 'package:felloapp/ui/pages/campaigns/info_stories/info_stories_view.dart';
-import 'package:felloapp/ui/pages/campaigns/topSavers/top_savers_new.dart';
 import 'package:felloapp/ui/pages/finance/autosave/autosave_details/autosave_details_view.dart';
 import 'package:felloapp/ui/pages/finance/autosave/autosave_onboarding/autosave_onboarding_view.dart';
 import 'package:felloapp/ui/pages/finance/autosave/autosave_setup/autosave_process_view.dart';
@@ -297,9 +296,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.BlogPostWebView:
           _addPageData(const BlogWebView(), BlogPostWebViewConfig);
           break;
-        case Pages.CampaignView:
-          _addPageData(CampaignView(), CampaignViewPageConfig);
-          break;
+        // case Pages.CampaignView:
+        //   _addPageData(CampaignView(), CampaignViewPageConfig);
+        //   break;
         // case Pages.SaveAssetView:
         //   _addPageData(const SaveAssetView(), SaveAssetsViewConfig);
         //   break;
@@ -927,24 +926,24 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case 'blocked':
         pageConfiguration = BlockedUserPageConfig;
         break;
-      case Constants.HS_DAILY_SAVER:
-        openTopSaverScreen(Constants.HS_DAILY_SAVER);
-        break;
-      case Constants.HS_WEEKLY_SAVER:
-        openTopSaverScreen(Constants.HS_WEEKLY_SAVER);
-        break;
-      case Constants.HS_MONTHLY_SAVER:
-        openTopSaverScreen(Constants.HS_MONTHLY_SAVER);
-        break;
-      case 'bugBounty':
-        openTopSaverScreen(Constants.BUG_BOUNTY);
-        break;
-      case 'newFello':
-        openTopSaverScreen(Constants.NEW_FELLO_UI);
-        break;
-      case 'FPL':
-        openTopSaverScreen('FPL');
-        break;
+      // case Constants.HS_DAILY_SAVER:
+      //   openTopSaverScreen(Constants.HS_DAILY_SAVER);
+      //   break;
+      // case Constants.HS_WEEKLY_SAVER:
+      //   openTopSaverScreen(Constants.HS_WEEKLY_SAVER);
+      //   break;
+      // case Constants.HS_MONTHLY_SAVER:
+      //   openTopSaverScreen(Constants.HS_MONTHLY_SAVER);
+      //   break;
+      // case 'bugBounty':
+      //   openTopSaverScreen(Constants.BUG_BOUNTY);
+      //   break;
+      // case 'newFello':
+      //   openTopSaverScreen(Constants.NEW_FELLO_UI);
+      //   break;
+      // case 'FPL':
+      //   openTopSaverScreen('FPL');
+      //   break;
       // BACKWARD COMPATIBILITY --START
       case 'footballHome':
         openWebGame(Constants.GAME_TYPE_FOOTBALL);
@@ -1015,13 +1014,13 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         _rootController.navItems.values.toList().indexOf(item);
   }
 
-  openTopSaverScreen(String eventType) {
-    AppState.delegate!.appState.currentAction = PageAction(
-      page: CampaignViewPageConfig,
-      state: PageState.addWidget,
-      widget: CampaignView(eventType: eventType),
-    );
-  }
+  // openTopSaverScreen(String eventType) {
+  //   AppState.delegate!.appState.currentAction = PageAction(
+  //     page: CampaignViewPageConfig,
+  //     state: PageState.addWidget,
+  //     widget: CampaignView(eventType: eventType),
+  //   );
+  // }
 
   openWebGame(String game) {
     bool isLocked = false;

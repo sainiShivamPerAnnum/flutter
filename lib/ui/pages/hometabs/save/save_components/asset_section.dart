@@ -59,6 +59,9 @@ class SaveAssetsGroupCard extends StatelessWidget {
                   investmentType: InvestmentType.LENDBOXP2P,
                 );
               },
+              footerText:
+                  "Introducing  12% returns on your investment with *12% Flo*",
+              footerColor: UiConstants.kFloContainerColor,
             ),
           );
           break;
@@ -97,6 +100,8 @@ class SaveAssetsGroupCard extends StatelessWidget {
                   investmentType: InvestmentType.AUGGOLD99,
                 );
               },
+              footerText: "Chance to get *4.5% Extra Gold* on your savings",
+              footerColor: UiConstants.kGoldContainerColor,
             ),
           );
           break;
@@ -110,7 +115,7 @@ class SaveAssetsGroupCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(top: SizeConfig.padding16),
+      margin: EdgeInsets.symmetric(vertical: SizeConfig.padding14),
       child: getAssetsOrder(),
     );
   }
@@ -122,10 +127,9 @@ class MiniAssetsGroupSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.only(
-        left: SizeConfig.pageHorizontalMargins,
-        right: SizeConfig.pageHorizontalMargins,
-        top: SizeConfig.padding32,
+      padding: EdgeInsets.symmetric(
+        horizontal: SizeConfig.pageHorizontalMargins,
+        vertical: SizeConfig.padding14,
       ),
       child: Row(
         children: [

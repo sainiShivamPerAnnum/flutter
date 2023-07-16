@@ -67,22 +67,16 @@ class InitAutosaveCard extends HookWidget {
 
     return Container(
       width: SizeConfig.screenWidth,
-      color: UiConstants.kBackgroundColor,
-      padding: EdgeInsets.symmetric(
-        vertical: SizeConfig.padding24,
+      margin: EdgeInsets.symmetric(
+        vertical: SizeConfig.padding14,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const TitleSubtitleContainer(
-            title: 'Save for your goals',
-            // subTitle: 'Automated payments for Fello Flo & Digital Gold',
-          ),
-          SizedBox(height: SizeConfig.padding16),
+          const TitleSubtitleContainer(title: 'Save for your goals'),
+          SizedBox(height: SizeConfig.padding10),
           Container(
-            // height: SizeConfig.padding164,
-            // width: SizeConfig.screenWidth!,
             decoration: BoxDecoration(
               // color: UiConstants.kTambolaMidTextColor,
               borderRadius: BorderRadius.circular(SizeConfig.roundness16),
@@ -264,10 +258,7 @@ class ActiveOrPausedAutosaveCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(
-        top: SizeConfig.padding20,
-        bottom: SizeConfig.padding16,
-      ),
+      margin: EdgeInsets.symmetric(vertical: SizeConfig.padding14),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [

@@ -46,11 +46,11 @@ class _CurrentPriceWidgetState extends State<CurrentPriceWidget>
                 widget.fetchGoldRates!();
                 controller.reset();
                 controller.forward();
-          } else if (status == AnimationStatus.dismissed) {
-            controller.forward();
-          }
-        },
-      );
+              } else if (status == AnimationStatus.dismissed) {
+                controller.forward();
+              }
+            },
+          );
 
     controller.forward();
     super.initState();
@@ -188,11 +188,11 @@ class _NewCurrentGoldPriceWidgetState extends State<NewCurrentGoldPriceWidget>
                 widget.fetchGoldRates!();
                 controller.reset();
                 controller.forward();
-          } else if (status == AnimationStatus.dismissed) {
-            controller.forward();
-          }
-        },
-      );
+              } else if (status == AnimationStatus.dismissed) {
+                controller.forward();
+              }
+            },
+          );
 
     controller.forward();
     super.initState();
@@ -209,7 +209,7 @@ class _NewCurrentGoldPriceWidgetState extends State<NewCurrentGoldPriceWidget>
   Widget build(BuildContext context) {
     return widget.mini
         ? Text(
-      " (${animation.value.inMinutes.toString().padLeft(2, '0')}:${(animation.value.inSeconds % 60).toString().padLeft(2, '0')}s)",
+            " (${animation.value.inMinutes.toString().padLeft(2, '0')}:${(animation.value.inSeconds % 60).toString().padLeft(2, '0')}s)",
             style: TextStyles.sourceSans.body4
                 .colour(widget.textColor ?? UiConstants.kTextFieldTextColor),
           )

@@ -29,11 +29,9 @@ class TambolaMiniInfoCard extends StatelessWidget {
                     });
               },
               child: Card(
-                  margin: EdgeInsets.only(
-                    left: SizeConfig.pageHorizontalMargins,
-                    right: SizeConfig.pageHorizontalMargins,
-                    top: SizeConfig.pageHorizontalMargins,
-                  ),
+                  margin: EdgeInsets.symmetric(
+                      horizontal: SizeConfig.pageHorizontalMargins,
+                      vertical: SizeConfig.padding14),
                   shape: RoundedRectangleBorder(
                       borderRadius:
                           BorderRadius.circular(SizeConfig.roundness12)),

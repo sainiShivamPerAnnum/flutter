@@ -30,6 +30,7 @@ import 'package:felloapp/ui/pages/hometabs/save/save_components/asset_view_secti
 import 'package:felloapp/ui/pages/hometabs/save/save_components/blogs.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/campaings.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/save_welcome_card.dart';
+import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
 import 'package:felloapp/ui/pages/power_play/root_card.dart';
 import 'package:felloapp/ui/pages/static/save_assets_footer.dart';
 import 'package:felloapp/ui/service_elements/auto_save_card/subscription_card.dart';
@@ -38,10 +39,12 @@ import 'package:felloapp/util/dynamic_ui_utils.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/styles/size_config.dart';
-import 'package:felloapp/util/styles/ui_constants.dart';
+import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
+
+import '../../../../core/model/quick_links_model.dart';
 
 class SaveViewModel extends BaseViewModel {
   S? locale;
@@ -82,8 +85,7 @@ class SaveViewModel extends BaseViewModel {
   double _withdrawableQnt = 0.0;
   Timer? _timer;
 
-  late final PageController offersController =
-      PageController(viewportFraction: 0.9, initialPage: 0);
+  late final PageController offersController = PageController(initialPage: 0);
   List<EventModel>? _ongoingEvents;
   List<BlogPostModel>? _blogPosts;
   List<BlogPostModelByCategory>? _blogPostsByCategory;
@@ -98,6 +100,13 @@ class SaveViewModel extends BaseViewModel {
   bool _isLockInReached = false;
   bool _isSellButtonVisible = false;
   int _currentPage = 0;
+
+  get currentPage => _currentPage;
+
+  set currentPage(value) {
+    _currentPage = value;
+    notifyListeners();
+  }
 
   final String fetchBlogUrl =
       'https://felloblog815893968.wpcomstaging.com/wp-json/wp/v2/blog/';
@@ -188,14 +197,14 @@ class SaveViewModel extends BaseViewModel {
       getCampaignEvents().then((val) {
         if ((ongoingEvents?.length ?? 0) > 1) {
           _timer = Timer.periodic(const Duration(seconds: 5), (timer) {
-            if (_currentPage < ongoingEvents!.length - 1) {
-              _currentPage++;
+            if (currentPage < ongoingEvents!.length - 1) {
+              currentPage++;
             } else {
-              _currentPage = 0;
+              currentPage = 0;
             }
             if (offersController.hasClients) {
               offersController.animateToPage(
-                _currentPage,
+                currentPage,
                 duration: const Duration(milliseconds: 350),
                 curve: Curves.easeIn,
               );
@@ -237,21 +246,30 @@ class SaveViewModel extends BaseViewModel {
           height: SizeConfig.screenWidth! * (value ? 1.54 : 0.8),
         ),
       ),
-      const TambolaMiniInfoCard(),
     ]);
 
     DynamicUiUtils.saveViewOrder[1].forEach((key) {
       switch (key) {
+        case "QL":
+          saveViewItems.add(const QuickLinks());
+          break;
+
+        case "TM":
+          saveViewItems.add(const TambolaMiniInfoCard());
+          break;
+
         case "PP":
           saveViewItems.add(const PowerPlayCard());
           break;
-        case 'NAS':
+        case "AST":
           saveViewItems.add(const MiniAssetsGroupSection());
-          // saveViewItems.add(const QuizSection());
-          saveViewItems.add(const AutosaveCard());
-
           break;
-
+        case "QZ":
+          saveViewItems.add(const QuizSection());
+          break;
+        case 'NAS':
+          saveViewItems.add(const AutosaveCard());
+          break;
         case 'CH':
           saveViewItems.add(Campaigns(model: smodel));
           break;
@@ -276,18 +294,29 @@ class SaveViewModel extends BaseViewModel {
     List<Widget> saveViewItems = [];
     saveViewItems.addAll([
       const SaveWelcomeCard(),
-      SaveAssetsGroupCard(saveViewModel: smodel),
-      const TambolaMiniInfoCard(),
     ]);
 
     DynamicUiUtils.saveViewOrder[1].forEach((key) {
       switch (key) {
+        case "QL":
+          saveViewItems.add(const QuickLinks());
+          break;
+
+        case "TM":
+          saveViewItems.add(const TambolaMiniInfoCard());
+          break;
+
         case "PP":
           saveViewItems.add(const PowerPlayCard());
           break;
         case 'NAS':
-          // saveViewItems.add(const QuizSection());
-          // saveViewItems.add(const AutosaveCard());
+          saveViewItems.add(const AutosaveCard());
+          break;
+        case "QZ":
+          saveViewItems.add(const QuizSection());
+          break;
+        case "AST":
+          saveViewItems.add(SaveAssetsGroupCard(saveViewModel: smodel));
           break;
         case 'CH':
           saveViewItems.add(Campaigns(model: smodel));
@@ -480,6 +509,71 @@ class SaveViewModel extends BaseViewModel {
       state: PageState.addWidget,
       page: ViewAllBlogsViewConfig,
       widget: const ViewAllBlogsView(),
+    );
+  }
+}
+
+class QuickLinks extends StatelessWidget {
+  const QuickLinks({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final List<QuickLinksModel> quickLinks = [
+      QuickLinksModel(
+          name: "Fello Flo",
+          asset: Assets.floAsset,
+          deeplink: "floDetails",
+          color: UiConstants.kFloContainerColor),
+      QuickLinksModel(
+          name: "Fello Flo",
+          asset: Assets.floAsset,
+          deeplink: "floDetails",
+          color: UiConstants.kFloContainerColor),
+      QuickLinksModel(
+          name: "Fello Flo",
+          asset: Assets.floAsset,
+          deeplink: "floDetails",
+          color: UiConstants.kFloContainerColor),
+      QuickLinksModel(
+          name: "Fello Flo",
+          asset: Assets.floAsset,
+          deeplink: "floDetails",
+          color: UiConstants.kFloContainerColor),
+    ];
+
+    return Container(
+      margin: EdgeInsets.symmetric(
+        horizontal: SizeConfig.pageHorizontalMargins,
+        vertical: SizeConfig.padding14,
+      ),
+      width: SizeConfig.screenWidth,
+      child: Row(
+        children: List.generate(
+          quickLinks.length,
+          (index) => Expanded(
+            child: Column(
+              children: [
+                CircleAvatar(
+                  backgroundColor: quickLinks[index].color,
+                  radius: SizeConfig.roundness32,
+                  child: SvgPicture.asset(
+                    quickLinks[index].asset,
+                    width: SizeConfig.padding40,
+                    height: SizeConfig.padding40,
+                  ),
+                ),
+                SizedBox(height: SizeConfig.padding8),
+                Text(
+                  quickLinks[index].name,
+                  style: TextStyles.sourceSansSB.body3.colour(Colors.white),
+                )
+              ],
+            ),
+          ),
+        ),
+      ),
     );
   }
 }
