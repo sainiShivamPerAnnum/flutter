@@ -1,3 +1,4 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'dart:developer';
 
 import 'package:felloapp/base_util.dart';
@@ -18,11 +19,11 @@ import 'package:felloapp/ui/pages/finance/lendbox/detail_page/flo_premium_detail
 import 'package:felloapp/ui/pages/hometabs/save/save_components/save_banner.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/ui/pages/static/gold_rate_card.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/extensions/rich_text_extension.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/styles/size_config.dart';
-import 'package:felloapp/util/styles/textStyles.dart';
+import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -32,8 +33,8 @@ import 'package:shimmer/shimmer.dart';
 
 class AssetSelectionPage extends StatelessWidget {
   const AssetSelectionPage(
-      {Key? key,
-      required this.showOnlyFlo,
+      {required this.showOnlyFlo,
+      Key? key,
       this.amount,
       this.isSkipMl,
       this.isFromGlobal = false})
@@ -188,12 +189,6 @@ class FloPlanWidget extends StatelessWidget {
                   ),
                 ],
               ),
-              // const Spacer(),
-              // SvgPicture.asset(
-              //   'assets/svg/Arrow_dotted.svg',
-              //   height: SizeConfig.padding24,
-              //   width: SizeConfig.padding24,
-              // ),
             ],
           ),
           SizedBox(height: SizeConfig.padding26),
@@ -253,8 +248,8 @@ class FloPlanWidget extends StatelessWidget {
 
 class GoldPlanWidget extends StatelessWidget {
   const GoldPlanWidget({
-    super.key,
     required this.fetchGoldRate,
+    super.key,
     this.amount,
     this.isSkipMl,
   });
@@ -312,7 +307,7 @@ class GoldPlanWidget extends StatelessWidget {
                     mainAxisSize: MainAxisSize.min,
                     children: [
                       Text(
-                        'Save in Digital Gold',
+                        'Digital Gold',
                         style: TextStyles.rajdhaniSB.body0,
                       ),
                       SizedBox(height: SizeConfig.padding4),
@@ -323,53 +318,24 @@ class GoldPlanWidget extends StatelessWidget {
                       ),
                     ],
                   ),
-                  SvgPicture.asset(
-                    'assets/svg/Arrow_dotted.svg',
-                    height: SizeConfig.padding24,
-                    width: SizeConfig.padding24,
-                  ),
                 ],
               ),
               SizedBox(height: SizeConfig.padding34),
-              Container(
-                padding: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.padding16,
-                  vertical: SizeConfig.padding16,
-                ),
-                decoration: BoxDecoration(
-                  color: const Color(0xffD9D9D9).withOpacity(0.1),
-                  borderRadius: BorderRadius.circular(10),
-                ),
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      'Market Rate',
-                      style: TextStyles.sourceSans.body3,
-                    ),
-                    const Spacer(),
-                    model.isGoldRateFetching
-                        ? SpinKitThreeBounce(
-                            size: SizeConfig.body2,
-                            color: Colors.white,
-                          )
-                        : Text(
-                            "₹ ${(model.goldRates != null ? model.goldRates!.goldBuyPrice : 0.0)?.toStringAsFixed(2)}/gm",
-                            style: TextStyles.sourceSansSB.body1
-                                .colour(Colors.white),
-                          ),
-                    NewCurrentGoldPriceWidget(
-                      fetchGoldRates: model.fetchGoldRates,
-                      goldprice: model.goldRates != null
-                          ? model.goldRates!.goldBuyPrice
-                          : 0.0,
-                      isFetching: model.isGoldRateFetching,
-                      mini: true,
-                      textColor: Colors.white,
-                    ),
-                  ],
-                ),
+              DigitalGoldPrograms(
+                title: "Save in Gold Pro",
+                model: model,
+                showRates: false,
+                isRecommended: true,
+                promoText: "*4.5% Extra Gold* by saving Min *0.5g* in Gold",
+                amount: amount,
+                isSkipMl: isSkipMl,
+              ),
+              DigitalGoldPrograms(
+                title: "Save in Gold",
+                model: model,
+                showRates: true,
+                amount: amount,
+                isSkipMl: isSkipMl,
               )
             ],
           ),
@@ -381,12 +347,12 @@ class GoldPlanWidget extends StatelessWidget {
 
 class FelloFloPrograms extends StatelessWidget {
   const FelloFloPrograms(
-      {Key? key,
-      required this.percentage,
+      {required this.percentage,
       required this.isRecommended,
       required this.chipString1,
       required this.chipString2,
       required this.floAssetType,
+      Key? key,
       this.amount,
       this.isSkipMl,
       this.promoText})
@@ -553,8 +519,15 @@ class FelloFloPrograms extends StatelessWidget {
 
 class AvailabilityOfferWidget extends StatelessWidget {
   const AvailabilityOfferWidget({
+    this.text,
+    this.color,
+    this.width,
     super.key,
   });
+
+  final String? text;
+  final Color? color;
+  final double? width;
 
   @override
   Widget build(BuildContext context) {
@@ -567,7 +540,7 @@ class AvailabilityOfferWidget extends StatelessWidget {
           padding: EdgeInsets.symmetric(
               horizontal: SizeConfig.padding12, vertical: SizeConfig.padding2),
           decoration: BoxDecoration(
-            color: const Color(0xff62E3C4),
+            color: color ?? const Color(0xff62E3C4),
             borderRadius: BorderRadius.circular(SizeConfig.roundness12),
           ),
           child: Shimmer.fromColors(
@@ -575,7 +548,8 @@ class AvailabilityOfferWidget extends StatelessWidget {
             baseColor: Colors.grey[900]!,
             highlightColor: Colors.grey[100]!,
             loop: 3,
-            child: "Available only for *$daysRemaining days*".beautify(
+            child:
+                (text ?? "Available only for *$daysRemaining days*").beautify(
               boldStyle: TextStyles.sourceSansB.body4.colour(Colors.white),
               style: TextStyles.sourceSans.body4.colour(Colors.white),
               alignment: TextAlign.center,
@@ -598,6 +572,182 @@ class AvailabilityOfferWidget extends StatelessWidget {
             painter: StarCustomPainter(),
           ),
         )
+      ],
+    );
+  }
+}
+
+class DigitalGoldPrograms extends StatelessWidget {
+  final String title;
+  final bool showRates;
+  final bool isRecommended;
+  final int? amount;
+  final bool? isSkipMl;
+  final String? promoText;
+  final GoldBuyViewModel model;
+  const DigitalGoldPrograms({
+    required this.title,
+    this.isRecommended = false,
+    this.showRates = false,
+    Key? key,
+    this.amount,
+    this.isSkipMl = false,
+    this.promoText,
+    required this.model,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        GestureDetector(
+          onTap: () {
+            BaseUtil().openRechargeModalSheet(
+                investmentType: InvestmentType.AUGGOLD99);
+
+            locator<AnalyticsService>().track(
+                eventName: AnalyticsEvents.assetSelectionProceed,
+                properties: {
+                  'Asset': InvestmentType.AUGGOLD99.name,
+                  'Recommended': isRecommended,
+                });
+          },
+          child: Container(
+            margin:
+                EdgeInsets.only(top: isRecommended ? 0 : SizeConfig.padding12),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(SizeConfig.roundness8),
+              color: const Color(0xffD9D9D9).withOpacity(0.1),
+              boxShadow: [
+                BoxShadow(
+                  color: const Color(0x3F000000).withOpacity(0.1),
+                  blurRadius: 2,
+                  offset: const Offset(0, 1),
+                  spreadRadius: 0,
+                )
+              ],
+            ),
+            child: Column(
+              children: [
+                Container(
+                  padding: EdgeInsets.symmetric(
+                    vertical: SizeConfig.padding12,
+                    horizontal: SizeConfig.padding12,
+                  ),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(SizeConfig.roundness5),
+                    color: const Color(0xffD9D9D9).withOpacity(0.15),
+                  ),
+                  child: Column(
+                    children: [
+                      SizedBox(height: SizeConfig.padding8),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        mainAxisSize: MainAxisSize.min,
+                        children: [
+                          Text(
+                            title,
+                            style: TextStyles.sourceSansSB.body0
+                                .colour(Colors.white),
+                            textAlign: TextAlign.center,
+                          ),
+                          const Spacer(),
+                          SvgPicture.asset(
+                            Assets.chevRonRightArrow,
+                            color: Colors.white,
+                            height: SizeConfig.padding24,
+                            width: SizeConfig.padding24,
+                          ),
+                        ],
+                      ),
+                      if (showRates)
+                        Container(
+                          margin: EdgeInsets.only(top: SizeConfig.padding20),
+                          child: Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Market Rate',
+                                style: TextStyles.sourceSans.body3,
+                              ),
+                              const Spacer(),
+                              model.isGoldRateFetching
+                                  ? SpinKitThreeBounce(
+                                      size: SizeConfig.body2,
+                                      color: Colors.white,
+                                    )
+                                  : Text(
+                                      "₹ ${(model.goldRates != null ? model.goldRates!.goldBuyPrice : 0.0)?.toStringAsFixed(2)}/gm",
+                                      style: TextStyles.sourceSansSB.body1
+                                          .colour(Colors.white),
+                                    ),
+                              NewCurrentGoldPriceWidget(
+                                fetchGoldRates: model.fetchGoldRates,
+                                goldprice: model.goldRates != null
+                                    ? model.goldRates!.goldBuyPrice
+                                    : 0.0,
+                                isFetching: model.isGoldRateFetching,
+                                mini: true,
+                                textColor: Colors.white,
+                              ),
+                            ],
+                          ),
+                        )
+                    ],
+                  ),
+                ),
+                if (promoText != null && promoText!.isNotEmpty)
+                  Container(
+                    padding: EdgeInsets.symmetric(
+                      vertical: SizeConfig.padding6,
+                    ),
+                    decoration: ShapeDecoration(
+                      // color: const Color(0xFF246F74),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(SizeConfig.roundness8),
+                          bottomRight: Radius.circular(SizeConfig.roundness8),
+                        ),
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SvgPicture.asset(
+                          Assets.dailyAppBonusHero,
+                          height: SizeConfig.padding16,
+                        ),
+                        SizedBox(width: SizeConfig.padding4),
+                        promoText!.beautify(
+                          boldStyle:
+                              TextStyles.sourceSansB.body4.colour(Colors.white),
+                          style:
+                              TextStyles.sourceSans.body4.colour(Colors.white),
+                        ),
+                      ],
+                    ),
+                  )
+              ],
+            ),
+          ),
+        ),
+        if (isRecommended)
+          Transform.translate(
+            offset: Offset(0, -SizeConfig.padding12),
+            child: Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                margin: EdgeInsets.only(
+                  left: SizeConfig.screenWidth! / 8,
+                ),
+                width: SizeConfig.screenWidth! * 0.39,
+                child: const AvailabilityOfferWidget(
+                    color: UiConstants.kBlogTitleColor,
+                    text: "*16% Returns p.a*"),
+              ),
+            ),
+          ),
       ],
     );
   }

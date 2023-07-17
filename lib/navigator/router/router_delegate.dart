@@ -17,6 +17,7 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/ui/elements/fello_dialog/fello_in_app_review.dart';
 import 'package:felloapp/ui/pages/campaigns/info_stories/info_stories_view.dart';
+import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_details/gold_pro_view.dart';
 import 'package:felloapp/ui/pages/finance/autosave/autosave_details/autosave_details_view.dart';
 import 'package:felloapp/ui/pages/finance/autosave/autosave_onboarding/autosave_onboarding_view.dart';
 import 'package:felloapp/ui/pages/finance/autosave/autosave_setup/autosave_process_view.dart';
@@ -327,7 +328,10 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.PlayView:
           _addPageData(const Play(), TransactionDetailsPageConfig);
           break;
-
+        case Pages.GoldProDetailsView:
+          _addPageData(
+              const GoldProDetailsView(), GoldProDetailsViewPageConfig);
+          break;
         default:
           break;
       }
@@ -647,6 +651,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.LendboxBuyView:
         LendboxBuyViewConfig.currentPageAction = action;
         break;
+      case Pages.GoldProDetailsView:
+        GoldenMilestonesViewPageConfig.currentPageAction = action;
+        break;
       default:
         break;
     }
@@ -926,24 +933,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case 'blocked':
         pageConfiguration = BlockedUserPageConfig;
         break;
-      // case Constants.HS_DAILY_SAVER:
-      //   openTopSaverScreen(Constants.HS_DAILY_SAVER);
-      //   break;
-      // case Constants.HS_WEEKLY_SAVER:
-      //   openTopSaverScreen(Constants.HS_WEEKLY_SAVER);
-      //   break;
-      // case Constants.HS_MONTHLY_SAVER:
-      //   openTopSaverScreen(Constants.HS_MONTHLY_SAVER);
-      //   break;
-      // case 'bugBounty':
-      //   openTopSaverScreen(Constants.BUG_BOUNTY);
-      //   break;
-      // case 'newFello':
-      //   openTopSaverScreen(Constants.NEW_FELLO_UI);
-      //   break;
-      // case 'FPL':
-      //   openTopSaverScreen('FPL');
-      //   break;
       // BACKWARD COMPATIBILITY --START
       case 'footballHome':
         openWebGame(Constants.GAME_TYPE_FOOTBALL);
@@ -992,6 +981,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         break;
       case "earnMoreReturns":
         pageConfiguration = EarnMoreReturnsViewPageConfig;
+        break;
+      case "goldProDetails":
+        pageConfiguration = GoldProDetailsViewPageConfig;
         break;
     }
     if (pageConfiguration != null) {

@@ -407,4 +407,7 @@ class Assets {
   static const String quizMasterBadge = '${assetBaseUrl}badges/quiz-master.svg';
   static const String tambolaTitanBadge =
       '${assetBaseUrl}badges/tambola-titan.svg';
+
+  static const String youtubeLogo =
+      "https://upload.wikimedia.org/wikipedia/commons/e/ef/Youtube_logo.png";
 }

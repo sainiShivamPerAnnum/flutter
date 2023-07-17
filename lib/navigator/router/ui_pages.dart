@@ -95,6 +95,9 @@ const String PowerPlaySeasonLeaderboardPath = "powerplaySeasonLeaderboardPath";
 const String LendboxBuyViewPath = "/LendboxBuyViewPath";
 const String AssetSelectionViewPath = "/assetSelectionViewPath";
 
+//GoldPro
+const String GoldProDetailsPath = "/goldProDetailsPath";
+
 enum Pages {
   Splash,
   Login,
@@ -185,6 +188,8 @@ enum Pages {
   PowerPlaySeasonLeaderboard,
   LendboxBuyView,
   AssetSelectionView,
+  //GOLDPRO
+  GoldProDetailsView,
 }
 
 class PageConfiguration {
@@ -785,3 +790,9 @@ PageConfiguration AssetSelectionViewConfig = PageConfiguration(
     path: AssetSelectionViewPath,
     uiPage: Pages.AssetSelectionView,
     name: "Asset Selection View Screen");
+
+PageConfiguration GoldProDetailsViewPageConfig = PageConfiguration(
+    key: 'GoldProDetailsViewPath',
+    path: GoldProDetailsPath,
+    uiPage: Pages.GoldProDetailsView,
+    name: "Gold Pro Details View Screen");

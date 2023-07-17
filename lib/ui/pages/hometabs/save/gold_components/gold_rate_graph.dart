@@ -5,8 +5,9 @@ import 'package:google_fonts/google_fonts.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
 
 class LineGradientChart extends StatefulWidget {
-  const LineGradientChart({Key? key}) : super(key: key);
+  const LineGradientChart({Key? key, this.isPro = false}) : super(key: key);
 
+  final bool? isPro;
   @override
   State<LineGradientChart> createState() => _LineGradientChartState();
 }
@@ -144,7 +145,7 @@ class _LineGradientChartState extends State<LineGradientChart> {
           child: SfCartesianChart(
             margin: EdgeInsets.zero,
             borderWidth: 0,
-            borderColor: UiConstants.kBackgroundColor,
+            borderColor: Colors.transparent,
             plotAreaBorderWidth: 0,
             primaryXAxis: NumericAxis(
               minimum: chartData!.first.day.toDouble(),
@@ -170,13 +171,23 @@ class _LineGradientChartState extends State<LineGradientChart> {
                 splineType: SplineType.natural,
                 animationDuration: 4000,
                 enableTooltip: true,
-                gradient: LinearGradient(colors: [
-                  UiConstants.kGoldContainerColor,
-                  UiConstants.kBackgroundColor.withOpacity(0.02),
-                ], begin: Alignment.topCenter, end: Alignment.bottomCenter),
+                gradient: LinearGradient(
+                    colors: widget.isPro!
+                        ? [
+                            UiConstants.KGoldProPrimaryDark,
+                            UiConstants.kBackgroundColor.withOpacity(0.02)
+                          ]
+                        : [
+                            UiConstants.kGoldContainerColor,
+                            UiConstants.kBackgroundColor.withOpacity(0.02),
+                          ],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter),
               ),
               SplineSeries(
-                color: UiConstants.kSaveDigitalGoldCardBg,
+                color: widget.isPro!
+                    ? UiConstants.KGoldProPrimaryDark
+                    : UiConstants.kSaveDigitalGoldCardBg,
                 width: 1,
                 animationDuration: 4000,
                 enableTooltip: true,

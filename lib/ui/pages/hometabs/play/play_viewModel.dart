@@ -130,9 +130,11 @@ class PlayViewModel extends BaseViewModel {
     final response = await gamesRepo!.getGames();
     final res = await gamesRepo!.getGameTiers();
     locator<UserStatsRepo>().getGameStats();
-    gameStats = await _userStatsRepo.completer.future.onError(
-        (error, stackTrace) => BaseUtil.showNegativeAlert(
-            "", "Something went wrong please try again"));
+    gameStats =
+        await _userStatsRepo.completer.future.onError((error, stackTrace) {
+      BaseUtil.showNegativeAlert("", "Something went wrong please try again");
+      return;
+    });
 
     showSecurityMessageAtTop =
         (_userService?.userJourneyStats?.mlIndex ?? 0) > 6 ? false : true;
