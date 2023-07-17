@@ -203,6 +203,8 @@ class UiConstants {
   static Color kPowerPlaySecondary = const Color(0xff8c3f31);
   static Color kPowerPlayPrimaryOff = const Color(0xff373E5E);
   static Color kPowerPlaySecondaryOff = const Color(0xff9A5445);
+
+  static Color kReferralHeaderColor = const Color(0xff6052A9);
 }
 
 extension ColorExtension on String {
