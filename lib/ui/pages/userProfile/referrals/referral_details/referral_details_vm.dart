@@ -6,12 +6,9 @@ import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/referral_details_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/referral_repo.dart';
-import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/analytics/appflyer_analytics.dart';
-import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
-import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/api_response.dart';
 // import 'package:flutter_share_me/flutter_share_me.dart';
@@ -26,14 +23,16 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class ReferralDetailsViewModel extends BaseViewModel {
-  final CustomLogger? _logger = locator<CustomLogger>();
-  final FcmListener? _fcmListener = locator<FcmListener>();
-  final UserService? _userService = locator<UserService>();
-  final AnalyticsService? _analyticsService = locator<AnalyticsService>();
-  final AppFlyerAnalytics? _appFlyer = locator<AppFlyerAnalytics>();
-  final UserRepository? _userRepo = locator<UserRepository>();
-  final ReferralRepo? _refRepo = locator<ReferralRepo>();
-  final DBModel? _dbModel = locator<DBModel>();
+  final CustomLogger _logger = locator<CustomLogger>();
+
+  // final FcmListener _fcmListener = locator<FcmListener>();
+  // final UserService _userService = locator<UserService>();
+  final AnalyticsService _analyticsService = locator<AnalyticsService>();
+  final AppFlyerAnalytics _appFlyer = locator<AppFlyerAnalytics>();
+
+  // final UserRepository _userRepo = locator<UserRepository>();
+  final ReferralRepo _refRepo = locator<ReferralRepo>();
+  final DBModel _dbModel = locator<DBModel>();
   S locale = locator<S>();
 
   PageController? _pageController;
@@ -134,7 +133,7 @@ class ReferralDetailsViewModel extends BaseViewModel {
 
     _pageController!.animateToPage(
       tab,
-      duration: Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 300),
       curve: Curves.linear,
     );
     tabNo = tab;
@@ -144,10 +143,10 @@ class ReferralDetailsViewModel extends BaseViewModel {
     print("Method to fetch");
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
-    final ReferralRepo? _referralRepo = locator<ReferralRepo>();
+    final ReferralRepo referralRepo = locator<ReferralRepo>();
 
     if (!(baseProvider.referralsFetched ?? false)) {
-      _referralRepo!.getReferralHistory().then((refHisModel) {
+      referralRepo!.getReferralHistory().then((refHisModel) {
         if (refHisModel.isSuccess()) {
           baseProvider.referralsFetched = true;
           baseProvider.userReferralsList = refHisModel.model ?? [];
@@ -172,7 +171,7 @@ class ReferralDetailsViewModel extends BaseViewModel {
       final link = await _appFlyer!.inviteLink();
       if (link['status'] == 'success') {
         url = link['payload']['userInviteUrl'];
-        if (url == null) url = link['payload']['userInviteURL'];
+        url ??= link['payload']['userInviteURL'];
       }
       _logger!.d('appflyer invite link as $url');
     } catch (e) {
@@ -182,13 +181,13 @@ class ReferralDetailsViewModel extends BaseViewModel {
   }
 
   Future getProfileDpWithUid(String uid) async {
-    return await _dbModel!.getUserDP(uid);
+    return _dbModel!.getUserDP(uid);
   }
 
   String getUserMembershipDate(Timestamp tmp) {
     if (tmp != null) {
-      DateTime _dt = tmp.toDate();
-      return DateFormat("dd MMM, yyyy").format(_dt);
+      DateTime dt = tmp.toDate();
+      return DateFormat("dd MMM, yyyy").format(dt);
     } else {
       return '\'Unavailable\'';
     }

@@ -460,162 +460,168 @@ class BonusLockedReferals extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
-    return model.referalList!.isEmpty
-        ? Column(
-            children: [
-              SizedBox(height: SizeConfig.padding16),
-              SvgPicture.asset(Assets.noReferralAsset),
-              SizedBox(height: SizeConfig.padding16),
-              Text(
-                locale.refEmpty,
-                style: TextStyles.sourceSans.body2.colour(Colors.white),
-              ),
-              SizedBox(height: SizeConfig.padding16),
-            ],
-          )
-        : model.bonusLockedReferalPresent(model.referalList!)
-            ? Padding(
-                padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          locale.referralsTitle,
-                          style:
-                              TextStyles.sourceSans.body2.colour(Colors.white),
-                        ),
-                        Text(
-                          locale.myReward,
-                          style:
-                              TextStyles.sourceSans.body2.colour(Colors.white),
-                        )
-                      ],
-                    ),
-                    SizedBox(
-                      height: SizeConfig.padding24,
-                    ),
-                    ListView.builder(
-                        shrinkWrap: true,
-                        padding: EdgeInsets.zero,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemBuilder: (context, i) {
-                          if (!(model.referalList![i].isUserBonusUnlocked ??
-                              false)) {
-                            return Padding(
-                              padding:
-                                  EdgeInsets.only(bottom: SizeConfig.padding24),
-                              child: Row(
-                                children: [
-                                  FutureBuilder(
-                                    future: model.getProfileDpWithUid(
-                                        model.referalList![i].uid),
-                                    builder: (context, snapshot) {
-                                      if (snapshot.connectionState ==
-                                              ConnectionState.waiting ||
-                                          !snapshot.hasData) {
-                                        return DefaultAvatar();
-                                      }
+    return Container(
+      color: const Color(0xFF454545).withOpacity(0.3),
+      child: model.referalList!.isEmpty
+          ? Column(
+              children: [
+                SizedBox(height: SizeConfig.padding16),
+                SvgPicture.asset(Assets.noReferralAsset),
+                SizedBox(height: SizeConfig.padding16),
+                Text(
+                  locale.refEmpty,
+                  style: TextStyles.sourceSans.body2.colour(Colors.white),
+                ),
+                SizedBox(height: SizeConfig.padding16),
+              ],
+            )
+          : model.bonusLockedReferalPresent(model.referalList!)
+              ? Padding(
+                  padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                        children: [
+                          Text(
+                            locale.referralsTitle,
+                            style: TextStyles.sourceSans.body2
+                                .colour(Colors.white),
+                          ),
+                          Text(
+                            locale.myReward,
+                            style: TextStyles.sourceSans.body2
+                                .colour(Colors.white),
+                          )
+                        ],
+                      ),
+                      SizedBox(
+                        height: SizeConfig.padding24,
+                      ),
+                      ListView.builder(
+                          shrinkWrap: true,
+                          padding: EdgeInsets.zero,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemBuilder: (context, i) {
+                            if (!(model.referalList![i].isUserBonusUnlocked ??
+                                false)) {
+                              return Padding(
+                                padding: EdgeInsets.only(
+                                    bottom: SizeConfig.padding24),
+                                child: Row(
+                                  children: [
+                                    FutureBuilder(
+                                      future: model.getProfileDpWithUid(
+                                          model.referalList![i].uid),
+                                      builder: (context, snapshot) {
+                                        if (snapshot.connectionState ==
+                                                ConnectionState.waiting ||
+                                            !snapshot.hasData) {
+                                          return DefaultAvatar();
+                                        }
 
-                                      String imageUrl = snapshot.data as String;
+                                        String imageUrl =
+                                            snapshot.data as String;
 
-                                      return ClipOval(
-                                        child: CachedNetworkImage(
-                                          imageUrl: imageUrl,
-                                          fit: BoxFit.cover,
-                                          width: SizeConfig.iconSize5,
-                                          height: SizeConfig.iconSize5,
-                                          placeholder: (context, url) =>
-                                              Container(
+                                        return ClipOval(
+                                          child: CachedNetworkImage(
+                                            imageUrl: imageUrl,
+                                            fit: BoxFit.cover,
                                             width: SizeConfig.iconSize5,
                                             height: SizeConfig.iconSize5,
-                                            decoration: const BoxDecoration(
-                                              color: Colors.grey,
-                                              shape: BoxShape.circle,
+                                            placeholder: (context, url) =>
+                                                Container(
+                                              width: SizeConfig.iconSize5,
+                                              height: SizeConfig.iconSize5,
+                                              decoration: const BoxDecoration(
+                                                color: Colors.grey,
+                                                shape: BoxShape.circle,
+                                              ),
                                             ),
+                                            errorWidget: (a, b, c) {
+                                              return DefaultAvatar();
+                                            },
                                           ),
-                                          errorWidget: (a, b, c) {
-                                            return DefaultAvatar();
-                                          },
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                  SizedBox(
-                                    width: SizeConfig.padding10,
-                                  ),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                          model.referalList![i].userName ?? '-',
-                                          style: TextStyles.sourceSans.body1
-                                              .colour(
-                                            Colors.white,
-                                          )),
-                                      Text(
-                                        model.referalList![i].timestamp ==
-                                                    null ||
-                                                model.referalList![i].timestamp
-                                                    .toDate()
-                                                    .isBefore(Constants
-                                                        .VERSION_2_RELEASE_DATE)
-                                            ? '-'
-                                            : '${model.getUserMembershipDate(model.referalList![i].timestamp)}',
-                                        style: TextStyles.body4
-                                            .colour(UiConstants.kTextColor2),
-                                      ),
-                                    ],
-                                  ),
-                                  Expanded(
-                                    child: SizedBox(
-                                      width: double.infinity,
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.end,
-                                        children: [
-                                          // SvgPicture.asset(
-                                          //   Assets.unredemmedScratchCardBG,
-                                          //   width: SizeConfig.padding32,
-                                          // ),
-                                          SizedBox(
-                                            width: SizeConfig.padding12,
-                                          ),
-                                          Text("🔒",
-                                              style: TextStyles
-                                                  .sourceSans.body1.bold
-                                                  .colour(
-                                                Colors.white,
-                                              )),
-                                        ],
-                                      ),
+                                        );
+                                      },
                                     ),
-                                  )
-                                ],
-                              ),
-                            );
-                          } else {
-                            return const SizedBox.shrink();
-                          }
-                        },
-                        itemCount: model.referalList!.length),
+                                    SizedBox(
+                                      width: SizeConfig.padding10,
+                                    ),
+                                    Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.start,
+                                      children: [
+                                        Text(
+                                            model.referalList![i].userName ??
+                                                '-',
+                                            style: TextStyles.sourceSans.body1
+                                                .colour(
+                                              Colors.white,
+                                            )),
+                                        Text(
+                                          model.referalList![i].timestamp ==
+                                                      null ||
+                                                  model
+                                                      .referalList![i].timestamp
+                                                      .toDate()
+                                                      .isBefore(Constants
+                                                          .VERSION_2_RELEASE_DATE)
+                                              ? '-'
+                                              : '${model.getUserMembershipDate(model.referalList![i].timestamp)}',
+                                          style: TextStyles.body4
+                                              .colour(UiConstants.kTextColor2),
+                                        ),
+                                      ],
+                                    ),
+                                    Expanded(
+                                      child: SizedBox(
+                                        width: double.infinity,
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.end,
+                                          children: [
+                                            // SvgPicture.asset(
+                                            //   Assets.unredemmedScratchCardBG,
+                                            //   width: SizeConfig.padding32,
+                                            // ),
+                                            SizedBox(
+                                              width: SizeConfig.padding12,
+                                            ),
+                                            Text("🔒",
+                                                style: TextStyles
+                                                    .sourceSans.body1.bold
+                                                    .colour(
+                                                  Colors.white,
+                                                )),
+                                          ],
+                                        ),
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              );
+                            } else {
+                              return const SizedBox.shrink();
+                            }
+                          },
+                          itemCount: model.referalList!.length),
+                    ],
+                  ),
+                )
+              : Column(
+                  children: [
+                    SizedBox(height: SizeConfig.padding16),
+                    SvgPicture.asset(Assets.noReferralAsset),
+                    SizedBox(height: SizeConfig.padding16),
+                    Text(
+                      locale.refEmpty,
+                      style: TextStyles.sourceSans.body2.colour(Colors.white),
+                    ),
+                    SizedBox(height: SizeConfig.padding16),
                   ],
                 ),
-              )
-            : Column(
-                children: [
-                  SizedBox(height: SizeConfig.padding16),
-                  SvgPicture.asset(Assets.noReferralAsset),
-                  SizedBox(height: SizeConfig.padding16),
-                  Text(
-                    locale.refEmpty,
-                    style: TextStyles.sourceSans.body2.colour(Colors.white),
-                  ),
-                  SizedBox(height: SizeConfig.padding16),
-                ],
-              );
+    );
   }
 }
 
@@ -630,160 +636,219 @@ class BonusUnlockedReferals extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
-    return model.referalList!.isEmpty
-        ? Column(
-            children: [
-              SizedBox(height: SizeConfig.padding16),
-              SvgPicture.asset(Assets.noReferralAsset),
-              SizedBox(height: SizeConfig.padding16),
-              Text(
-                locale.refEmpty,
-                style: TextStyles.sourceSans.body2.colour(Colors.white),
+    return Container(
+      color: const Color(0xFF454545).withOpacity(0.3),
+      child: model.referalList == null
+          ? Container(
+              width: SizeConfig.screenWidth,
+              padding: EdgeInsets.symmetric(
+                  vertical: SizeConfig.pageHorizontalMargins),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const FullScreenLoader(),
+                  SizedBox(height: SizeConfig.padding20),
+                  Text(
+                    locale.refFetch,
+                    style: TextStyles.sourceSans.body2.colour(Colors.white),
+                  ),
+                ],
               ),
-              SizedBox(height: SizeConfig.padding16),
-            ],
-          )
-        : model.bonusUnlockedReferalPresent(model.referalList!)
-            ? Padding(
-                padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
-                child: Column(
+            )
+          : model.referalList!.isEmpty
+              ? Column(
                   children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    SizedBox(height: SizeConfig.padding46),
+                    SvgPicture.asset(
+                      'assets/svg/winScreen-referalAsset.svg',
+                      // width: SizeConfig.padding32,
+                      height: SizeConfig.padding104,
+                    ),
+                    SizedBox(height: SizeConfig.padding16),
+                    Text(
+                      'You haven’t made any referrals yet',
+                      style: TextStyles.sourceSans.body3
+                          .colour(Colors.white.withOpacity(0.8)),
+                    ),
+                    SizedBox(height: SizeConfig.padding12),
+                    Text('Earn over ₹1Lakh',
+                        textAlign: TextAlign.center,
+                        style: TextStyles.rajdhaniSB.body0
+                            .colour(Colors.white.withOpacity(0.8))),
+                    SizedBox(
+                      height: SizeConfig.padding16,
+                    ),
+                    MaterialButton(
+                      onPressed: () {},
+                      color: Colors.white,
+                      minWidth: SizeConfig.padding100,
+                      padding: EdgeInsets.symmetric(
+                          horizontal: SizeConfig.padding60,
+                          vertical: SizeConfig.padding12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius:
+                            BorderRadius.circular(SizeConfig.roundness5),
+                      ),
+                      height: SizeConfig.padding34,
+                      child: Text(
+                        "REFER NOW",
+                        style: TextStyles.rajdhaniB.body3.colour(Colors.black),
+                      ),
+                    ),
+                    SizedBox(
+                      height: SizeConfig.padding54,
+                    ),
+                  ],
+                )
+              : model.bonusUnlockedReferalPresent(model.referalList!)
+                  ? Padding(
+                      padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+                      child: Column(
+                        children: [
+                          // Row(
+                          //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          //   children: [
+                          //     Text(
+                          //       locale.referralsTitle,
+                          //       style:
+                          //           TextStyles.sourceSans.body2.colour(Colors.white),
+                          //     ),
+                          //     Text(
+                          //       locale.myReward,
+                          //       style:
+                          //           TextStyles.sourceSans.body2.colour(Colors.white),
+                          //     )
+                          //   ],
+                          // ),
+                          // SizedBox(
+                          //   height: SizeConfig.padding24,
+                          // ),
+                          ListView.builder(
+                              shrinkWrap: true,
+                              padding: EdgeInsets.zero,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemBuilder: (context, i) {
+                                if (model.referalList![i].isUserBonusUnlocked ??
+                                    false) {
+                                  return Padding(
+                                    padding: EdgeInsets.only(
+                                        bottom: SizeConfig.padding24),
+                                    child: Row(
+                                      children: [
+                                        FutureBuilder(
+                                          future: model.getProfileDpWithUid(
+                                              model.referalList![i].uid),
+                                          builder: (context, snapshot) {
+                                            if (snapshot.connectionState ==
+                                                    ConnectionState.waiting ||
+                                                !snapshot.hasData) {
+                                              return DefaultAvatar();
+                                            }
+
+                                            String imageUrl =
+                                                snapshot.data as String;
+
+                                            return ClipOval(
+                                              child: CachedNetworkImage(
+                                                imageUrl: imageUrl,
+                                                fit: BoxFit.cover,
+                                                width: SizeConfig.iconSize5,
+                                                height: SizeConfig.iconSize5,
+                                                placeholder: (context, url) =>
+                                                    Container(
+                                                  width: SizeConfig.iconSize5,
+                                                  height: SizeConfig.iconSize5,
+                                                  decoration:
+                                                      const BoxDecoration(
+                                                    color: Colors.grey,
+                                                    shape: BoxShape.circle,
+                                                  ),
+                                                ),
+                                                errorWidget: (a, b, c) {
+                                                  return DefaultAvatar();
+                                                },
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                        SizedBox(
+                                          width: SizeConfig.padding10,
+                                        ),
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(model.referalList![i].userName,
+                                                style: TextStyles
+                                                    .sourceSans.body1
+                                                    .colour(
+                                                  Colors.white,
+                                                )),
+                                            Text(
+                                              model.referalList![i].timestamp ==
+                                                          null ||
+                                                      model.referalList![i]
+                                                          .timestamp
+                                                          .toDate()
+                                                          .isBefore(Constants
+                                                              .VERSION_2_RELEASE_DATE)
+                                                  ? '-'
+                                                  : '${model.getUserMembershipDate(model.referalList![i].timestamp)}',
+                                              style: TextStyles.body4.colour(
+                                                  UiConstants.kTextColor2),
+                                            ),
+                                          ],
+                                        ),
+                                        Expanded(
+                                          child: SizedBox(
+                                            width: double.infinity,
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.end,
+                                              children: [
+                                                SvgPicture.asset(
+                                                  Assets
+                                                      .unredemmedScratchCardBG,
+                                                  width: SizeConfig.padding32,
+                                                ),
+                                                SizedBox(
+                                                  width: SizeConfig.padding12,
+                                                ),
+                                                Text("1",
+                                                    style: TextStyles
+                                                        .sourceSans.body1.bold
+                                                        .colour(
+                                                      Colors.white,
+                                                    )),
+                                              ],
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  );
+                                } else {
+                                  return const SizedBox.shrink();
+                                }
+                              },
+                              itemCount: model.referalList!.length),
+                        ],
+                      ),
+                    )
+                  : Column(
                       children: [
+                        SizedBox(height: SizeConfig.padding16),
+                        SvgPicture.asset(Assets.noReferralAsset),
+                        SizedBox(height: SizeConfig.padding16),
                         Text(
-                          locale.referralsTitle,
+                          locale.refEmpty,
                           style:
                               TextStyles.sourceSans.body2.colour(Colors.white),
                         ),
-                        Text(
-                          locale.myReward,
-                          style:
-                              TextStyles.sourceSans.body2.colour(Colors.white),
-                        )
+                        SizedBox(height: SizeConfig.padding16),
                       ],
                     ),
-                    SizedBox(
-                      height: SizeConfig.padding24,
-                    ),
-                    ListView.builder(
-                        shrinkWrap: true,
-                        padding: EdgeInsets.zero,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemBuilder: (context, i) {
-                          if (model.referalList![i].isUserBonusUnlocked ??
-                              false) {
-                            return Padding(
-                              padding:
-                                  EdgeInsets.only(bottom: SizeConfig.padding24),
-                              child: Row(
-                                children: [
-                                  FutureBuilder(
-                                    future: model.getProfileDpWithUid(
-                                        model.referalList![i].uid),
-                                    builder: (context, snapshot) {
-                                      if (snapshot.connectionState ==
-                                              ConnectionState.waiting ||
-                                          !snapshot.hasData)
-                                        return DefaultAvatar();
-
-                                      String imageUrl = snapshot.data as String;
-
-                                      return ClipOval(
-                                        child: CachedNetworkImage(
-                                          imageUrl: imageUrl,
-                                          fit: BoxFit.cover,
-                                          width: SizeConfig.iconSize5,
-                                          height: SizeConfig.iconSize5,
-                                          placeholder: (context, url) =>
-                                              Container(
-                                            width: SizeConfig.iconSize5,
-                                            height: SizeConfig.iconSize5,
-                                            decoration: const BoxDecoration(
-                                              color: Colors.grey,
-                                              shape: BoxShape.circle,
-                                            ),
-                                          ),
-                                          errorWidget: (a, b, c) {
-                                            return DefaultAvatar();
-                                          },
-                                        ),
-                                      );
-                                    },
-                                  ),
-                                  SizedBox(
-                                    width: SizeConfig.padding10,
-                                  ),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(model.referalList![i].userName,
-                                          style: TextStyles.sourceSans.body1
-                                              .colour(
-                                            Colors.white,
-                                          )),
-                                      Text(
-                                        model.referalList![i].timestamp ==
-                                                    null ||
-                                                model.referalList![i].timestamp
-                                                    .toDate()
-                                                    .isBefore(Constants
-                                                        .VERSION_2_RELEASE_DATE)
-                                            ? '-'
-                                            : '${model.getUserMembershipDate(model.referalList![i].timestamp)}',
-                                        style: TextStyles.body4
-                                            .colour(UiConstants.kTextColor2),
-                                      ),
-                                    ],
-                                  ),
-                                  Expanded(
-                                    child: SizedBox(
-                                      width: double.infinity,
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.end,
-                                        children: [
-                                          SvgPicture.asset(
-                                            Assets.unredemmedScratchCardBG,
-                                            width: SizeConfig.padding32,
-                                          ),
-                                          SizedBox(
-                                            width: SizeConfig.padding12,
-                                          ),
-                                          Text("1",
-                                              style: TextStyles
-                                                  .sourceSans.body1.bold
-                                                  .colour(
-                                                Colors.white,
-                                              )),
-                                        ],
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              ),
-                            );
-                          } else {
-                            return const SizedBox.shrink();
-                          }
-                        },
-                        itemCount: model.referalList!.length),
-                  ],
-                ),
-              )
-            : Column(
-                children: [
-                  SizedBox(height: SizeConfig.padding16),
-                  SvgPicture.asset(Assets.noReferralAsset),
-                  SizedBox(height: SizeConfig.padding16),
-                  Text(
-                    locale.refEmpty,
-                    style: TextStyles.sourceSans.body2.colour(Colors.white),
-                  ),
-                  SizedBox(height: SizeConfig.padding16),
-                ],
-              );
+    );
   }
 }
 

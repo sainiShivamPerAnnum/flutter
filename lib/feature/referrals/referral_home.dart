@@ -1,7 +1,13 @@
 import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
+import 'package:felloapp/core/service/referral_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/ui/architecture/base_view.dart';
+import 'package:felloapp/ui/elements/page_views/height_adaptive_pageview.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
+import 'package:felloapp/ui/pages/userProfile/referrals/referral_details/referral_details_view.dart';
+import 'package:felloapp/ui/pages/userProfile/referrals/referral_details/referral_details_vm.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -12,274 +18,377 @@ class ReferralHome extends StatelessWidget {
 
   final ScrollController _controller = ScrollController();
 
+  TextStyle get _selectedTextStyle =>
+      TextStyles.sourceSansSB.body1.colour(UiConstants.titleTextColor);
+
+  TextStyle get _unselectedTextStyle => TextStyles.sourceSans.body1
+      .colour(UiConstants.titleTextColor.withOpacity(0.6));
+
   @override
   Widget build(BuildContext context) {
-    return AnnotatedRegion<SystemUiOverlayStyle>(
-      value: SystemUiOverlayStyle(
-        statusBarColor: UiConstants.kReferralHeaderColor,
-      ),
-      child: Scaffold(
-        backgroundColor: const Color(0xff181818),
-        appBar: AppBar(
-          elevation: 0.0,
-          automaticallyImplyLeading: false,
-          backgroundColor: UiConstants.kReferralHeaderColor,
-          leading: IconButton(
-              onPressed: () {
-                AppState.backButtonDispatcher!.didPopRoute();
-              },
-              icon: const Icon(
-                Icons.arrow_back_ios,
-                color: Colors.white,
-              )),
-        ),
-        body: SingleChildScrollView(
-          controller: _controller,
-          child: Column(
-            children: [
-              Container(
-                // width: double.infinity,
-                decoration: BoxDecoration(
-                  color: UiConstants.kReferralHeaderColor,
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(SizeConfig.roundness12),
-                    bottomRight: Radius.circular(SizeConfig.roundness12),
-                  ),
-                ),
-                child: Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: SizeConfig.padding54,
-                  ),
-                  child: Column(
-                    children: [
-                      // SizedBox(height: SizeConfig.padding12),
-                      Container(
-                        height: SizeConfig.padding128,
-                        decoration: const BoxDecoration(
-                          shape: BoxShape.circle,
-                          color: Color(0xff1F1F1F),
-                        ),
-                        child: Center(
-                          child: Text(
-                            "Lottie",
-                            style: TextStyles.body3.colour(Colors.white),
-                          ),
-                        ),
-                      ),
-                      SizedBox(height: SizeConfig.padding24),
-                      Text.rich(
-                        TextSpan(
-                          children: [
-                            TextSpan(
-                              text: 'Win ',
-                              style: TextStyles.rajdhaniB.title1
-                                  .colour(Colors.white),
-                            ),
-                            TextSpan(
-                              text: '₹500',
-                              style: TextStyles.rajdhaniB.title1
-                                  .colour(const Color(0xFFFFD979)),
-                            ),
-                          ],
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                      Transform.translate(
-                        offset: Offset(0, -SizeConfig.padding10),
-                        child: Text(
-                          'per Referral',
-                          style:
-                              TextStyles.rajdhaniB.title1.colour(Colors.white),
-                        ),
-                      ),
-                      SizedBox(height: SizeConfig.padding16),
-                      Row(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Container(
-                            width: SizeConfig.padding6,
-                            height: SizeConfig.padding6,
-                            margin: EdgeInsets.only(top: SizeConfig.padding8),
-                            decoration: const ShapeDecoration(
-                              color: Color(0xFF61E3C4),
-                              shape: OvalBorder(),
-                            ),
-                          ),
-                          Expanded(
-                            child: Text(
-                              AppConfig.getValue(
-                                      AppConfigKey.app_referral_message)
-                                  .toString(),
-                              style: TextStyles.body3.colour(Colors.white70),
-                              textAlign: TextAlign.center,
-                            ),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: SizeConfig.padding28,
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: SizeConfig.padding24,
-              ),
-              HowItWorksWidget(
-                onStateChanged: () {
-                  _controller.animateTo(_controller.position.maxScrollExtent,
-                      duration: const Duration(milliseconds: 500),
-                      curve: Curves.ease);
-                },
-              )
-            ],
+    return BaseView<ReferralDetailsViewModel>(
+      onModelReady: (model) => model.init(context),
+      builder: (ctx, model, child) {
+        return AnnotatedRegion<SystemUiOverlayStyle>(
+          value: SystemUiOverlayStyle(
+            statusBarColor: UiConstants.kReferralHeaderColor,
           ),
-        ),
-        bottomNavigationBar: Container(
-          padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
-          decoration: BoxDecoration(
-            color: UiConstants.kDarkBoxColor,
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(SizeConfig.roundness12),
-              topRight: Radius.circular(SizeConfig.roundness12),
+          child: Scaffold(
+            // backgroundColor: const Color(0xff181818),
+            appBar: AppBar(
+              elevation: 0.0,
+              automaticallyImplyLeading: false,
+              backgroundColor: UiConstants.kReferralHeaderColor,
+              leading: IconButton(
+                  onPressed: () {
+                    AppState.backButtonDispatcher!.didPopRoute();
+                  },
+                  icon: const Icon(
+                    Icons.arrow_back_ios,
+                    color: Colors.white,
+                  )),
             ),
-          ),
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                'Your code',
-                style: TextStyles.sourceSans.body3
-                    .colour(Colors.white.withOpacity(0.45)),
-              ),
-              SizedBox(
-                height: SizeConfig.padding6,
-              ),
-              Row(
-                children: [
-                  Container(
-                    height: SizeConfig.padding44,
-                    width: SizeConfig.screenWidth! * 0.728,
-                    padding: EdgeInsets.symmetric(
-                        horizontal: SizeConfig.padding12,
-                        vertical: SizeConfig.padding6),
-                    decoration: BoxDecoration(
-                      color: const Color(0xff1B1B1B),
-                      borderRadius: BorderRadius.all(
-                          Radius.circular(SizeConfig.roundness8)),
-                    ),
-                    child: Row(
-                      crossAxisAlignment: CrossAxisAlignment.center,
+            body: Stack(
+              children: [
+                SingleChildScrollView(
+                  controller: _controller,
+                  physics: const ClampingScrollPhysics(),
+                  child: Container(
+                    color: const Color(0xff181818),
+                    child: Column(
                       children: [
-                        Text(
-                          '3EL29B',
-                          style: TextStyles.rajdhaniEB.title2
-                              .colour(const Color(0xff1ADAB7))
-                              .copyWith(
-                                letterSpacing: 4.68,
-                              ),
+                        Container(
+                          // width: double.infinity,
+                          decoration: BoxDecoration(
+                            color: UiConstants.kReferralHeaderColor,
+                            borderRadius: BorderRadius.only(
+                              bottomLeft:
+                                  Radius.circular(SizeConfig.roundness12),
+                              bottomRight:
+                                  Radius.circular(SizeConfig.roundness12),
+                            ),
+                          ),
+                          child: Container(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: SizeConfig.padding54,
+                            ),
+                            child: Column(
+                              children: [
+                                // SizedBox(height: SizeConfig.padding12),
+                                Container(
+                                  height: SizeConfig.padding128,
+                                  decoration: const BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Color(0xff1F1F1F),
+                                  ),
+                                  child: Center(
+                                    child: Text(
+                                      "Lottie",
+                                      style:
+                                          TextStyles.body3.colour(Colors.white),
+                                    ),
+                                  ),
+                                ),
+                                SizedBox(height: SizeConfig.padding24),
+                                Text.rich(
+                                  TextSpan(
+                                    children: [
+                                      TextSpan(
+                                        text: 'Win ',
+                                        style: TextStyles.rajdhaniB.title1
+                                            .colour(Colors.white),
+                                      ),
+                                      TextSpan(
+                                        text: '₹500',
+                                        style: TextStyles.rajdhaniB.title1
+                                            .colour(const Color(0xFFFFD979)),
+                                      ),
+                                    ],
+                                  ),
+                                  textAlign: TextAlign.center,
+                                ),
+                                Transform.translate(
+                                  offset: Offset(0, -SizeConfig.padding10),
+                                  child: Text(
+                                    'per Referral',
+                                    style: TextStyles.rajdhaniB.title1
+                                        .colour(Colors.white),
+                                  ),
+                                ),
+                                SizedBox(height: SizeConfig.padding16),
+                                Row(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Container(
+                                      width: SizeConfig.padding6,
+                                      height: SizeConfig.padding6,
+                                      margin: EdgeInsets.only(
+                                          top: SizeConfig.padding8),
+                                      decoration: const ShapeDecoration(
+                                        color: Color(0xFF61E3C4),
+                                        shape: OvalBorder(),
+                                      ),
+                                    ),
+                                    Expanded(
+                                      child: Text(
+                                        AppConfig.getValue(AppConfigKey
+                                                .app_referral_message)
+                                            .toString(),
+                                        style: TextStyles.body3
+                                            .colour(Colors.white70),
+                                        textAlign: TextAlign.center,
+                                      ),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: SizeConfig.padding28,
+                                ),
+                              ],
+                            ),
+                          ),
                         ),
-                        const Spacer(),
-                        GestureDetector(
-                          onTap: () {
-                            // model.copyReferCode();
+                        SizedBox(
+                          height: SizeConfig.padding24,
+                        ),
+                        HowItWorksWidget(
+                          onStateChanged: () {
+                            _controller.animateTo(
+                                _controller.position.maxScrollExtent,
+                                duration: const Duration(milliseconds: 500),
+                                curve: Curves.ease);
                           },
-                          child: Row(
+                        ),
+                        SizedBox(
+                          height: SizeConfig.padding24,
+                        ),
+                        Container(
+                          margin: EdgeInsets.only(
+                            top: SizeConfig.padding34,
+                            // bottom: SizeConfig.padding12,
+                          ),
+                          child: Column(
                             children: [
-                              Text('COPY',
-                                  style: TextStyles.sourceSans.body3.colour(
-                                      UiConstants.kTextColor3
-                                          .withOpacity(0.3))),
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Expanded(
+                                    child: TextButton(
+                                      onPressed: () => model.switchTab(0),
+                                      child: Text(
+                                        'Your Referrals',
+                                        style: model.tabNo == 0
+                                            ? _selectedTextStyle
+                                            : _unselectedTextStyle, // TextStyles.sourceSansSB.body1,
+                                      ),
+                                    ),
+                                  ),
+                                  SizedBox(
+                                    width: SizeConfig.padding16,
+                                  ),
+                                  Expanded(
+                                    child: TextButton(
+                                      onPressed: () => model.switchTab(1),
+                                      child: Text(
+                                        'Invite Contacts',
+                                        style: model.tabNo == 1
+                                            ? _selectedTextStyle
+                                            : _unselectedTextStyle, // style: TextStyles.sourceSansSB.body1,
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  AnimatedContainer(
+                                    duration: const Duration(milliseconds: 500),
+                                    height: 5,
+                                    width: model.tabPosWidthFactor,
+                                  ),
+                                  Container(
+                                    color: UiConstants.kTabBorderColor,
+                                    height: 5,
+                                    width: SizeConfig.screenWidth! * 0.38,
+                                  )
+                                ],
+                              ),
+                              HeightAdaptivePageView(
+                                controller: model.pageController,
+                                onPageChanged: (int page) {
+                                  model.switchTab(page);
+                                },
+                                children: [
+                                  //Current particiapnts
+                                  BonusUnlockedReferals(
+                                    model: model,
+                                  ),
+
+                                  //Current particiapnts
+                                  BonusLockedReferals(
+                                    model: model,
+                                  ),
+                                ],
+                              ),
                               SizedBox(
-                                width: SizeConfig.padding6,
-                              ),
-                              Icon(
-                                Icons.copy,
-                                color: UiConstants.kTextColor3.withOpacity(0.5),
-                                size: SizeConfig.padding24,
-                              ),
+                                height: SizeConfig.navBarHeight * 2.5,
+                              )
                             ],
                           ),
                         ),
                       ],
                     ),
                   ),
-                  SizedBox(
-                    width: SizeConfig.padding10,
-                  ),
-                  Container(
-                    height: SizeConfig.padding44,
-                    padding: EdgeInsets.symmetric(
-                        horizontal: SizeConfig.padding12,
-                        vertical: SizeConfig.padding12),
-                    decoration: const BoxDecoration(
-                      color: const Color(0xff1B1B1B),
-                      shape: BoxShape.circle,
-                    ),
-                    child: GestureDetector(
-                      onTap: () {
-                        // if (model.isShareAlreadyClicked ==
-                        //     false) {
-                        //   locator<ReferralService>()
-                        //       .shareLink();
-                        // }
-                      },
-                      child: Icon(
-                        Icons.share_outlined,
-                        color: UiConstants.kTabBorderColor,
-                        size: SizeConfig.padding24,
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: SizeConfig.padding18,
-              ),
-              Row(
-                children: [
-                  AppPositiveBtn(
-                    btnText: 'INVITE FRIENDS',
-                    width: SizeConfig.screenWidth! * 0.692,
-                    height: SizeConfig.padding56,
-                    onPressed: () {
-                      // if (model.isShareAlreadyClicked == false) {
-                      //   locator<ReferralService>().shareLink();
-                      // }
-                    },
-                  ),
-                  SizedBox(width: SizeConfig.padding12),
-                  Container(
-                    width: SizeConfig.padding60,
-                    height: SizeConfig.padding56,
-                    padding: EdgeInsets.all(SizeConfig.padding16),
+                ),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Container(
+                    padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
                     decoration: BoxDecoration(
-                      color: const Color(0xFF07D2AD),
-                      borderRadius: BorderRadius.circular(8),
-                      gradient: const LinearGradient(
-                        colors: [
-                          Color(0xff12BC9D),
-                          Color(0xff249680),
-                        ],
-                        begin: Alignment.topCenter,
-                        end: Alignment.bottomCenter,
+                      color: const Color(0xff3C3C3C),
+                      borderRadius: BorderRadius.only(
+                        topLeft: Radius.circular(SizeConfig.roundness12),
+                        topRight: Radius.circular(SizeConfig.roundness12),
                       ),
                     ),
-                    child: SvgPicture.asset(
-                      'assets/vectors/whatsapp.svg',
-                      width: 24,
-                      height: 24,
-                      color: Colors.white,
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          'Your code',
+                          style: TextStyles.sourceSans.body3
+                              .colour(Colors.white.withOpacity(0.45)),
+                        ),
+                        SizedBox(
+                          height: SizeConfig.padding6,
+                        ),
+                        Row(
+                          children: [
+                            Container(
+                              // height: SizeConfig.padding44,
+                              width: SizeConfig.screenWidth! * 0.728,
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: SizeConfig.padding12,
+                                  vertical: SizeConfig.padding6),
+                              decoration: BoxDecoration(
+                                color: const Color(0xff1B1B1B),
+                                borderRadius: BorderRadius.all(
+                                    Radius.circular(SizeConfig.roundness8)),
+                              ),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  Text(
+                                    model.loadingRefCode ? '-' : model.refCode,
+                                    style: TextStyles.rajdhaniEB.title2
+                                        .colour(const Color(0xff1ADAB7))
+                                        .copyWith(
+                                          letterSpacing: 4.68,
+                                        ),
+                                  ),
+                                  const Spacer(),
+                                  GestureDetector(
+                                    onTap: () {
+                                      model.copyReferCode();
+                                    },
+                                    child: Row(
+                                      children: [
+                                        Text('COPY',
+                                            style: TextStyles.sourceSans.body3
+                                                .colour(UiConstants.kTextColor3
+                                                    .withOpacity(0.3))),
+                                        SizedBox(
+                                          width: SizeConfig.padding6,
+                                        ),
+                                        Icon(
+                                          Icons.copy,
+                                          color: UiConstants.kTextColor3
+                                              .withOpacity(0.5),
+                                          size: SizeConfig.padding24,
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(
+                              width: SizeConfig.padding10,
+                            ),
+                            Container(
+                              // height: SizeConfig.padding44,
+                              padding: EdgeInsets.all(SizeConfig.padding14),
+                              decoration: const BoxDecoration(
+                                color: Color(0xff1B1B1B),
+                                shape: BoxShape.circle,
+                              ),
+                              child: GestureDetector(
+                                onTap: () {
+                                  if (model.isShareAlreadyClicked == false) {
+                                    locator<ReferralService>().shareLink();
+                                  }
+                                },
+                                child: Icon(
+                                  Icons.share_outlined,
+                                  color: UiConstants.kTabBorderColor,
+                                  size: SizeConfig.padding24,
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: SizeConfig.padding18,
+                        ),
+                        Row(
+                          children: [
+                            AppPositiveBtn(
+                              btnText: 'INVITE FRIENDS',
+                              width: SizeConfig.screenWidth! * 0.692,
+                              height: SizeConfig.padding56,
+                              onPressed: () {
+                                if (model.isShareAlreadyClicked == false) {
+                                  locator<ReferralService>().shareLink();
+                                }
+                              },
+                            ),
+                            SizedBox(width: SizeConfig.padding12),
+                            Container(
+                              width: SizeConfig.padding60,
+                              height: SizeConfig.padding56,
+                              padding: EdgeInsets.all(SizeConfig.padding16),
+                              decoration: BoxDecoration(
+                                color: const Color(0xFF07D2AD),
+                                borderRadius: BorderRadius.circular(8),
+                                gradient: const LinearGradient(
+                                  colors: [
+                                    Color(0xff12BC9D),
+                                    Color(0xff249680),
+                                  ],
+                                  begin: Alignment.topCenter,
+                                  end: Alignment.bottomCenter,
+                                ),
+                              ),
+                              child: SvgPicture.asset(
+                                'assets/vectors/whatsapp.svg',
+                                width: 24,
+                                height: 24,
+                                color: Colors.white,
+                              ),
+                            )
+                          ],
+                        ),
+                      ],
                     ),
-                  )
-                ],
-              ),
-            ],
+                  ),
+                )
+              ],
+            ),
+            // bottomNavigationBar:
           ),
-        ),
-      ),
+        );
+      },
     );
   }
 }
