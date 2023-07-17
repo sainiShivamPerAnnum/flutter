@@ -273,6 +273,12 @@ class BaseUtil extends ChangeNotifier {
     );
   }
 
+  static dynamic openGoldProBuyView() {
+    Haptic.vibrate();
+    AppState.delegate!.appState.currentAction =
+        PageAction(page: GoldProBuyViewPageConfig, state: PageState.addPage);
+  }
+
   static dynamic openGameModalSheet(String game) {
     AppState.screenStack.add(ScreenItem.modalsheet);
     return openModalBottomSheet(

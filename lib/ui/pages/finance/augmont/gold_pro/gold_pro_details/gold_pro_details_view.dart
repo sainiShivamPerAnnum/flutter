@@ -1,7 +1,8 @@
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
-import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_details/gold_pro_vm.dart';
+import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_details/gold_pro_details_vm.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/detail_page/flo_premium_details_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/gold_components/gold_balance_brief_row.dart';
 import 'package:felloapp/ui/pages/hometabs/save/gold_components/gold_pro_card.dart';
@@ -407,14 +408,16 @@ class GoldProDetailsView extends StatelessWidget {
                             shape: RoundedRectangleBorder(
                                 borderRadius: BorderRadius.circular(
                                     SizeConfig.roundness12)),
-                            onPressed: () {},
+                            onPressed: () {
+                              BaseUtil.openGoldProBuyView();
+                            },
                             minWidth: SizeConfig.screenWidth,
+                            color: UiConstants.kGoldProPrimary,
                             child: Text(
                               "EARN 4.5% EXTRA RETURNS",
                               style: TextStyles.rajdhaniB.body1
                                   .colour(Colors.black),
                             ),
-                            color: UiConstants.kGoldProPrimary,
                           )),
                     ],
                   ),
