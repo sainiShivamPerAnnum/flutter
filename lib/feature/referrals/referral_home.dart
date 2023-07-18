@@ -6,6 +6,7 @@ import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/contact_model.dart';
 import 'package:felloapp/core/service/referral_service.dart';
+import 'package:felloapp/feature/referrals/bloc/referral_cubit.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/page_views/height_adaptive_pageview.dart';
@@ -17,6 +18,7 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lottie/lottie.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -229,19 +231,22 @@ class ReferralHome extends StatelessWidget {
                                   )
                                 ],
                               ),
-                              HeightAdaptivePageView(
-                                controller: model.pageController,
-                                onPageChanged: (int page) {
-                                  model.switchTab(page);
-                                },
-                                children: [
-                                  BonusUnlockedReferals(
-                                    model: model,
-                                  ),
-                                  InviteContactWidget(
-                                    model: model,
-                                  ),
-                                ],
+                              BlocProvider<ReferralCubit>(
+                                create: (_) => ReferralCubit(),
+                                child: HeightAdaptivePageView(
+                                  controller: model.pageController,
+                                  onPageChanged: (int page) {
+                                    model.switchTab(page);
+                                  },
+                                  children: [
+                                    BonusUnlockedReferals(
+                                      model: model,
+                                    ),
+                                    InviteContactWidget(
+                                      model: model,
+                                    ),
+                                  ],
+                                ),
                               ),
                               SizedBox(
                                 height: SizeConfig.navBarHeight * 2.5,
@@ -595,26 +600,11 @@ class InviteContactWidget extends StatefulWidget {
 
 class _InviteContactWidgetState extends State<InviteContactWidget>
     with AutomaticKeepAliveClientMixin<InviteContactWidget> {
-  final MethodChannel _methodChannel =
-      const MethodChannel('methodChannel/contact');
-  HashSet<Contact> _contacts = HashSet<Contact>();
-  bool _hasPermission = false;
-  bool _showLoading = true;
 
   @override
   void initState() {
     super.initState();
-    _checkPermission();
-  }
-
-  Future<void> _checkPermission() async {
-    PermissionStatus hasPermission = await Permission.contacts.status;
-    setState(() {
-      _hasPermission = hasPermission.isGranted;
-    });
-    if (hasPermission.isGranted) {
-      await _loadContacts();
-    }
+    context.read<ReferralCubit>().checkPermission();
   }
 
   void showPermissionBottomSheet() {
@@ -815,7 +805,9 @@ class _InviteContactWidgetState extends State<InviteContactWidget>
             ),
             AppPositiveBtn(
               btnText: 'ALLOW ACCESS TO CONTACTS',
-              onPressed: _requestPermission,
+              onPressed: () async {
+                await context.read<ReferralCubit>().requestPermission();
+              },
             ),
             SizedBox(
               height: SizeConfig.padding4,
@@ -843,80 +835,6 @@ class _InviteContactWidgetState extends State<InviteContactWidget>
     );
   }
 
-  Future<void> _requestPermission() async {
-    PermissionStatus permissionStatus = await Permission.contacts.request();
-    if (permissionStatus.isGranted) {
-      setState(() {
-        _hasPermission = true;
-        // _showPermissionBottomSheet = false;
-      });
-      await _loadContacts();
-    }
-  }
-
-  Future<void> _loadContacts() async {
-    try {
-      await Future.delayed(const Duration(milliseconds: 500));
-      final List<dynamic>? contacts =
-          await _methodChannel.invokeMethod<List<dynamic>>('getContacts');
-      if (contacts != null) {
-        // Parse the contacts data
-        final Set<String> uniquePhoneNumbers = {};
-        final List<Contact> parsedContacts = [];
-
-        for (final contactData in contacts) {
-          final phoneNumber = contactData['phoneNumber'];
-          if (phoneNumber == null) continue;
-
-          final filteredPhoneNumber = _applyFilters(phoneNumber);
-          if (filteredPhoneNumber != null &&
-              !uniquePhoneNumbers.contains(filteredPhoneNumber)) {
-            uniquePhoneNumbers.add(filteredPhoneNumber);
-            parsedContacts.add(Contact(
-              displayName: contactData['displayName'],
-              phoneNumber: filteredPhoneNumber,
-            ));
-          }
-        }
-
-        // Sort the contacts list alphabetically
-        parsedContacts.sort((a, b) => a.displayName
-            .split(' ')[0]
-            .toLowerCase()
-            .compareTo(b.displayName.split(' ')[0].toLowerCase()));
-
-        // Assign the sorted list back to the _contacts variable
-        setState(() {
-          _contacts = HashSet.from(parsedContacts);
-          _showLoading = false;
-        });
-
-        //Print all contacts
-        // for (final contact in _contacts) {
-        //   log('${contact.displayName}, ${contact.phoneNumber}',
-        //       name: 'ReferralDetailsScreen');
-        // }
-      }
-    } on PlatformException catch (e) {
-      log('Error loading contacts: ${e.message}',
-          name: 'ReferralDetailsScreen');
-    }
-  }
-
-  String? _applyFilters(String phoneNumber) {
-    String filteredPhoneNumber = phoneNumber;
-
-    // Remove spaces
-    filteredPhoneNumber = filteredPhoneNumber.replaceAll(' ', '');
-
-    // Remove "+91" prefix if present
-    if (filteredPhoneNumber.startsWith('+91')) {
-      filteredPhoneNumber = filteredPhoneNumber.substring(3);
-    }
-
-    return filteredPhoneNumber.isNotEmpty ? filteredPhoneNumber : null;
-  }
-
   void _navigateToWhatsApp(String phoneNumber) {
     final text = Uri.encodeComponent('Hello, I invite you to join our app!');
     final url = 'https://wa.me/+91$phoneNumber?text=$text';
@@ -926,127 +844,153 @@ class _InviteContactWidgetState extends State<InviteContactWidget>
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      child: !_hasPermission
-          ? Column(
-              children: [
-                SizedBox(height: SizeConfig.padding20),
-                SvgPicture.asset(
-                  'assets/svg/magnifying_glass.svg',
-                  height: SizeConfig.padding148,
-                ),
-                Text(
-                  'You haven’t added your contacts yet',
-                  style: TextStyles.sourceSans.body3
+    return BlocBuilder<ReferralCubit, ReferralState>(
+      builder: (context, state) {
+        if (state is NoPermissionState) {
+          return Column(
+            children: [
+              SizedBox(height: SizeConfig.padding20),
+              SvgPicture.asset(
+                'assets/svg/magnifying_glass.svg',
+                height: SizeConfig.padding148,
+              ),
+              Text(
+                'You haven’t added your contacts yet',
+                style: TextStyles.sourceSans.body3
+                    .colour(Colors.white.withOpacity(0.8)),
+              ),
+              SizedBox(height: SizeConfig.padding12),
+              SizedBox(
+                width: SizeConfig.padding200 + SizeConfig.padding54,
+                child: Text(
+                  'Over 2000 users have given contact access to Fello',
+                  textAlign: TextAlign.center,
+                  style: TextStyles.rajdhaniSB.body0
                       .colour(Colors.white.withOpacity(0.8)),
                 ),
-                SizedBox(height: SizeConfig.padding12),
-                SizedBox(
-                  width: SizeConfig.padding200 + SizeConfig.padding54,
-                  child: Text(
-                    'Over 2000 users have given contact access to Fello',
-                    textAlign: TextAlign.center,
-                    style: TextStyles.rajdhaniSB.body0
-                        .colour(Colors.white.withOpacity(0.8)),
-                  ),
+              ),
+              SizedBox(height: SizeConfig.padding16),
+              MaterialButton(
+                onPressed: showPermissionBottomSheet,
+                color: Colors.white,
+                minWidth: SizeConfig.padding100,
+                padding: EdgeInsets.symmetric(
+                    horizontal: SizeConfig.padding60,
+                    vertical: SizeConfig.padding12),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(SizeConfig.roundness5),
                 ),
-                SizedBox(height: SizeConfig.padding16),
-                MaterialButton(
-                  onPressed: showPermissionBottomSheet,
-                  color: Colors.white,
-                  minWidth: SizeConfig.padding100,
-                  padding: EdgeInsets.symmetric(
-                      horizontal: SizeConfig.padding60,
-                      vertical: SizeConfig.padding12),
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(SizeConfig.roundness5),
-                  ),
-                  height: SizeConfig.padding34,
-                  child: Text(
-                    "SYNC CONTACTS",
-                    style: TextStyles.rajdhaniB.body3.colour(Colors.black),
-                  ),
+                height: SizeConfig.padding34,
+                child: Text(
+                  "SYNC CONTACTS",
+                  style: TextStyles.rajdhaniB.body3.colour(Colors.black),
                 ),
-                SizedBox(height: SizeConfig.padding54),
-              ],
-            )
-          : _contacts.isNotEmpty && !_showLoading
-              ? ListView.builder(
-                  itemCount: _contacts.length,
-                  shrinkWrap: true,
-                  physics: const NeverScrollableScrollPhysics(),
-                  itemBuilder: (context, index) {
-                    final contact = _contacts.elementAt(index);
-                    return Container(
-                      padding: EdgeInsets.symmetric(
-                        vertical: SizeConfig.pageHorizontalMargins,
-                        horizontal: SizeConfig.pageHorizontalMargins,
-                      ),
-                      child: Row(
-                        children: [
-                          Container(
-                            height: SizeConfig.padding44,
-                            width: SizeConfig.padding44,
-                            padding: EdgeInsets.all(SizeConfig.padding3),
-                            decoration: const ShapeDecoration(
-                              shape: OvalBorder(
-                                side: BorderSide(
-                                    width: 0.5, color: Color(0xFF1ADAB7)),
-                              ),
-                            ),
-                            child: Container(
-                              height: SizeConfig.padding38,
-                              width: SizeConfig.padding38,
-                              decoration: const BoxDecoration(
-                                color: Color(0xFFD9D9D9),
-                                shape: BoxShape.circle,
-                              ),
-                              child: Center(
-                                child: Text(
-                                  contact.displayName.substring(0, 1),
-                                  style: TextStyles.rajdhaniSB.body0
-                                      .colour(const Color(0xFF3A3A3C)),
-                                ),
-                              ),
-                            ),
-                          ),
-                          SizedBox(width: SizeConfig.padding8),
-                          Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(
-                                contact.displayName,
-                                style: TextStyles.rajdhaniSB.body2
-                                    .colour(Colors.white),
-                              ),
-                              Text(
-                                'Invite and earn ₹500',
-                                style: TextStyles.sourceSans.body4
-                                    .colour(Colors.white.withOpacity(0.48)),
-                              ),
-                            ],
-                          ),
-                          const Spacer(),
-                          GestureDetector(
-                            onTap: () {
-                              _navigateToWhatsApp(contact.phoneNumber);
-                            },
-                            child: Text(
-                              'INVITE',
-                              textAlign: TextAlign.right,
-                              style: TextStyles.rajdhaniB.body3
-                                  .colour(const Color(0xFF61E3C4)),
-                            ),
-                          ),
-                        ],
-                      ),
-                    );
-                  },
-                )
-              : const Center(child: CircularProgressIndicator()),
+              ),
+              SizedBox(height: SizeConfig.padding54),
+            ],
+          );
+        }
+
+        if (state is ContactsLoaded) {
+          return _buildContactsList(state.contacts);
+        }
+
+        if (state is ContactsError) {
+          return SizedBox(
+            height: SizeConfig.padding80,
+            child: Center(
+              child: Text(
+                'Error loading contacts',
+                style: TextStyles.sourceSans.body3
+                    .colour(Colors.white.withOpacity(0.8)),
+              ),
+            ),
+          );
+        }
+
+        return SizedBox(
+          height: SizeConfig.screenHeight! * 0.6,
+          child: const Center(
+            child: CircularProgressIndicator(),
+          ),
+        );
+      },
     );
   }
 
   @override
   bool get wantKeepAlive => true;
+
+  Widget _buildContactsList(List<Contact> contacts) {
+    return ListView.builder(
+      itemCount: contacts.length,
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemBuilder: (context, index) {
+        final contact = contacts[index];
+        return Container(
+          padding: EdgeInsets.symmetric(
+            vertical: SizeConfig.pageHorizontalMargins,
+            horizontal: SizeConfig.pageHorizontalMargins,
+          ),
+          child: Row(
+            children: [
+              Container(
+                height: SizeConfig.padding44,
+                width: SizeConfig.padding44,
+                padding: EdgeInsets.all(SizeConfig.padding3),
+                decoration: const ShapeDecoration(
+                  shape: OvalBorder(
+                    side: BorderSide(width: 0.5, color: Color(0xFF1ADAB7)),
+                  ),
+                ),
+                child: Container(
+                  height: SizeConfig.padding38,
+                  width: SizeConfig.padding38,
+                  decoration: const BoxDecoration(
+                    color: Color(0xFFD9D9D9),
+                    shape: BoxShape.circle,
+                  ),
+                  child: Center(
+                    child: Text(
+                      contact.displayName.substring(0, 1),
+                      style: TextStyles.rajdhaniSB.body0
+                          .colour(const Color(0xFF3A3A3C)),
+                    ),
+                  ),
+                ),
+              ),
+              SizedBox(width: SizeConfig.padding8),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    contact.displayName,
+                    style: TextStyles.rajdhaniSB.body2.colour(Colors.white),
+                  ),
+                  Text(
+                    'Invite and earn ₹500',
+                    style: TextStyles.sourceSans.body4
+                        .colour(Colors.white.withOpacity(0.48)),
+                  ),
+                ],
+              ),
+              const Spacer(),
+              GestureDetector(
+                onTap: () {
+                  _navigateToWhatsApp(contact.phoneNumber);
+                },
+                child: Text(
+                  'INVITE',
+                  textAlign: TextAlign.right,
+                  style: TextStyles.rajdhaniB.body3
+                      .colour(const Color(0xFF61E3C4)),
+                ),
+              ),
+            ],
+          ),
+        );
+      },
+    );
+  }
 }
