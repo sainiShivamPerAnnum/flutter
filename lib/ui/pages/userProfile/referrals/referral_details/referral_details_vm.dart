@@ -43,6 +43,7 @@ class ReferralDetailsViewModel extends BaseViewModel {
   bool get isShareAlreadyClicked => _isShareAlreadyClicked;
 
   int get tabNo => _tabNo;
+
   set tabNo(value) {
     _tabNo = value;
     notifyListeners();
@@ -51,6 +52,7 @@ class ReferralDetailsViewModel extends BaseViewModel {
   double _tabPosWidthFactor = SizeConfig.pageHorizontalMargins;
 
   double get tabPosWidthFactor => _tabPosWidthFactor;
+
   set tabPosWidthFactor(value) {
     _tabPosWidthFactor = value;
     notifyListeners();
@@ -81,7 +83,9 @@ class ReferralDetailsViewModel extends BaseViewModel {
   bool _isReferalsFetched = false;
 
   get refUrl => _refUrl;
+
   get refCode => _refCode;
+
   get isReferalsFetched => _isReferalsFetched;
 
   init(BuildContext context) {
@@ -184,7 +188,7 @@ class ReferralDetailsViewModel extends BaseViewModel {
     return _dbModel!.getUserDP(uid);
   }
 
-  String getUserMembershipDate(Timestamp tmp) {
+  String getUserMembershipDate(Timestamp? tmp) {
     if (tmp != null) {
       DateTime dt = tmp.toDate();
       return DateFormat("dd MMM, yyyy").format(dt);
@@ -194,7 +198,7 @@ class ReferralDetailsViewModel extends BaseViewModel {
   }
 
   bool bonusUnlockedReferalPresent(List<ReferralDetail> list) {
-    for (ReferralDetail e in list) {
+    for (final ReferralDetail e in list) {
       if (e.isRefereeBonusUnlocked) {
         return true;
       }
@@ -204,7 +208,7 @@ class ReferralDetailsViewModel extends BaseViewModel {
   }
 
   bool bonusLockedReferalPresent(List<ReferralDetail> list) {
-    for (ReferralDetail e in list) {
+    for (final ReferralDetail e in list) {
       if (e.isRefereeBonusUnlocked == false) {
         return true;
       }
@@ -213,46 +217,46 @@ class ReferralDetailsViewModel extends BaseViewModel {
     return false;
   }
 
-  // Future<void> shareWhatsApp() async {
-  //   if (await BaseUtil.showNoInternetAlert()) return;
-  //   _fcmListener!.addSubscription(FcmTopic.REFERRER);
-  //   BaseAnalytics.analytics!.logShare(
-  //     contentType: 'referral',
-  //     itemId: _userService!.baseUser!.uid!,
-  //     method: 'whatsapp',
-  //   );
-  //   shareWhatsappInProgress = true;
-  //   refresh();
+// Future<void> shareWhatsApp() async {
+//   if (await BaseUtil.showNoInternetAlert()) return;
+//   _fcmListener!.addSubscription(FcmTopic.REFERRER);
+//   BaseAnalytics.analytics!.logShare(
+//     contentType: 'referral',
+//     itemId: _userService!.baseUser!.uid!,
+//     method: 'whatsapp',
+//   );
+//   shareWhatsappInProgress = true;
+//   refresh();
 
-  //   String? url = await this.generateLink();
-  //   shareWhatsappInProgress = false;
-  //   refresh();
+//   String? url = await this.generateLink();
+//   shareWhatsappInProgress = false;
+//   refresh();
 
-  //   if (url == null) {
-  //     BaseUtil.showNegativeAlert(
-  //       locale.generatingLinkFailed,
-  //       locale.tryLater
-  //     );
-  //     return;
-  //   } else
-  //     _logger!.d(url);
-  //   try {
-  //     _analyticsService!.track(eventName: AnalyticsEvents.whatsappShare);
-  //     FlutterShareMe().shareToWhatsApp(msg: _shareMsg + url).then((flag) {
-  //       if (flag == "false") {
-  //         FlutterShareMe()
-  //             .shareToWhatsApp4Biz(msg: _shareMsg + url)
-  //             .then((flag) {
-  //           _logger!.d(flag);
-  //           if (flag == "false") {
-  //             BaseUtil.showNegativeAlert(
-  //                locale.whatsappNotDetected, locale.otherShareOption);
-  //           }
-  //         });
-  //       }
-  //     });
-  //   } catch (e) {
-  //     _logger!.d(e.toString());
-  //   }
-  // }
+//   if (url == null) {
+//     BaseUtil.showNegativeAlert(
+//       locale.generatingLinkFailed,
+//       locale.tryLater
+//     );
+//     return;
+//   } else
+//     _logger!.d(url);
+//   try {
+//     _analyticsService!.track(eventName: AnalyticsEvents.whatsappShare);
+//     FlutterShareMe().shareToWhatsApp(msg: _shareMsg + url).then((flag) {
+//       if (flag == "false") {
+//         FlutterShareMe()
+//             .shareToWhatsApp4Biz(msg: _shareMsg + url)
+//             .then((flag) {
+//           _logger!.d(flag);
+//           if (flag == "false") {
+//             BaseUtil.showNegativeAlert(
+//                locale.whatsappNotDetected, locale.otherShareOption);
+//           }
+//         });
+//       }
+//     });
+//   } catch (e) {
+//     _logger!.d(e.toString());
+//   }
+// }
 }

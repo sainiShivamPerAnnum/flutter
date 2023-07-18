@@ -4,7 +4,7 @@ import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/util/logger.dart';
 
 class ReferralDetail {
-  static Log log = new Log('ReferralDetail');
+  static Log log = const Log('ReferralDetail');
   String? _userName;
   String? _uid;
   TimestampModel? _timestamp;
@@ -13,7 +13,7 @@ class ReferralDetail {
   int? _refCount;
   static final helper =
       HelperModel<ReferralDetail>((map) => ReferralDetail.fromMap(map));
-   Map<String, dynamic> ?  _bonusMap;
+  Map<String, dynamic>? _bonusMap;
 
   static const String fldUsrBonusFlag = 'usr_bonus_unlocked';
   static const String fldRefereeBonusFlag = 'referee_bonus_unlocked';

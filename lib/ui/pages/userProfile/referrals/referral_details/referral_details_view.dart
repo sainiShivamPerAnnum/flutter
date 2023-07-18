@@ -465,14 +465,45 @@ class BonusLockedReferals extends StatelessWidget {
       child: model.referalList!.isEmpty
           ? Column(
               children: [
-                SizedBox(height: SizeConfig.padding16),
-                SvgPicture.asset(Assets.noReferralAsset),
-                SizedBox(height: SizeConfig.padding16),
-                Text(
-                  locale.refEmpty,
-                  style: TextStyles.sourceSans.body2.colour(Colors.white),
+                SizedBox(height: SizeConfig.padding46),
+                SvgPicture.asset(
+                  'assets/svg/magnifying_glass.svg',
+                  // width: SizeConfig.padding32,
+                  height: SizeConfig.padding104,
                 ),
                 SizedBox(height: SizeConfig.padding16),
+                Text(
+                  'You haven’t added your contacts yet',
+                  style: TextStyles.sourceSans.body3
+                      .colour(Colors.white.withOpacity(0.8)),
+                ),
+                SizedBox(height: SizeConfig.padding12),
+                Text('Over 2000 users have given contact access to Fello',
+                    textAlign: TextAlign.center,
+                    style: TextStyles.rajdhaniSB.body0
+                        .colour(Colors.white.withOpacity(0.8))),
+                SizedBox(
+                  height: SizeConfig.padding16,
+                ),
+                MaterialButton(
+                  onPressed: () {},
+                  color: Colors.white,
+                  minWidth: SizeConfig.padding100,
+                  padding: EdgeInsets.symmetric(
+                      horizontal: SizeConfig.padding60,
+                      vertical: SizeConfig.padding12),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(SizeConfig.roundness5),
+                  ),
+                  height: SizeConfig.padding34,
+                  child: Text(
+                    "SYNC CONTACTS",
+                    style: TextStyles.rajdhaniB.body3.colour(Colors.black),
+                  ),
+                ),
+                SizedBox(
+                  height: SizeConfig.padding54,
+                ),
               ],
             )
           : model.bonusLockedReferalPresent(model.referalList!)
@@ -560,15 +591,14 @@ class BonusLockedReferals extends StatelessWidget {
                                               Colors.white,
                                             )),
                                         Text(
-                                          model.referalList![i].timestamp ==
-                                                      null ||
-                                                  model
-                                                      .referalList![i].timestamp
-                                                      .toDate()
-                                                      .isBefore(Constants
-                                                          .VERSION_2_RELEASE_DATE)
+                                          model.referalList![i].timestamp
+                                                  .toDate()
+                                                  .isBefore(Constants
+                                                      .VERSION_2_RELEASE_DATE)
                                               ? '-'
-                                              : '${model.getUserMembershipDate(model.referalList![i].timestamp)}',
+                                              : model.getUserMembershipDate(
+                                                  model.referalList?[i]
+                                                      .timestamp),
                                           style: TextStyles.body4
                                               .colour(UiConstants.kTextColor2),
                                         ),
