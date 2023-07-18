@@ -735,24 +735,6 @@ class BonusUnlockedReferals extends StatelessWidget {
                       padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
                       child: Column(
                         children: [
-                          // Row(
-                          //   mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          //   children: [
-                          //     Text(
-                          //       locale.referralsTitle,
-                          //       style:
-                          //           TextStyles.sourceSans.body2.colour(Colors.white),
-                          //     ),
-                          //     Text(
-                          //       locale.myReward,
-                          //       style:
-                          //           TextStyles.sourceSans.body2.colour(Colors.white),
-                          //     )
-                          //   ],
-                          // ),
-                          // SizedBox(
-                          //   height: SizeConfig.padding24,
-                          // ),
                           ListView.builder(
                               shrinkWrap: true,
                               padding: EdgeInsets.zero,
