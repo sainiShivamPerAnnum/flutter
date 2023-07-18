@@ -230,6 +230,43 @@ class GoldSellInputView extends StatelessWidget {
                             .colour(Colors.red[400]),
                       ),
                     ),
+                  Container(
+                    margin: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: SizeConfig.pageHorizontalMargins,
+                      vertical: SizeConfig.padding16,
+                    ),
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: UiConstants.kFAQDividerColor,
+                        width: 0.5,
+                      ),
+                      borderRadius:
+                          BorderRadius.circular(SizeConfig.roundness16),
+                    ),
+                    child: Column(children: [
+                      Row(
+                        children: [
+                          Text(
+                            "Leased Gold Amount-",
+                            style: TextStyles.sourceSansM.body1
+                                .colour(UiConstants.kFAQDividerColor),
+                          ),
+                          const Spacer(),
+                          Text(
+                            "4.4gms",
+                            style: TextStyles.sourceSansB.body0
+                                .colour(Colors.white),
+                          )
+                        ],
+                      ),
+                      SizedBox(height: SizeConfig.padding8),
+                      Text(
+                        "You can un-Lease your Digital gold in Digital Gold Pro section to be make it withdrawable",
+                        style: TextStyles.body3.colour(Colors.grey),
+                      )
+                    ]),
+                  ),
                   const Spacer(),
                   augTxnService.isGoldSellInProgress
                       ? Center(

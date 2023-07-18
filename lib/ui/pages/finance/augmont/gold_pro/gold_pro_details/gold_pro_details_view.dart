@@ -1,6 +1,7 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_details/gold_pro_details_vm.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/detail_page/flo_premium_details_view.dart';
@@ -271,7 +272,10 @@ class GoldProDetailsView extends StatelessWidget {
                             )),
                             SizedBox(width: SizeConfig.padding18),
                             MaterialButton(
-                              onPressed: () {},
+                              onPressed: () {
+                                AppState.delegate!
+                                    .parseRoute(Uri.parse("goldProSell"));
+                              },
                               color: Colors.white,
                               height: SizeConfig.padding44,
                               minWidth: SizeConfig.screenWidth! * 0.3,

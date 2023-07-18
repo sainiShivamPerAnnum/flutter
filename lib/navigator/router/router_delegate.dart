@@ -19,6 +19,7 @@ import 'package:felloapp/ui/elements/fello_dialog/fello_in_app_review.dart';
 import 'package:felloapp/ui/pages/campaigns/info_stories/info_stories_view.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_buy/gold_pro_buy_view.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_details/gold_pro_details_view.dart';
+import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_sell/gold_pro_sell_view.dart';
 import 'package:felloapp/ui/pages/finance/autosave/autosave_details/autosave_details_view.dart';
 import 'package:felloapp/ui/pages/finance/autosave/autosave_onboarding/autosave_onboarding_view.dart';
 import 'package:felloapp/ui/pages/finance/autosave/autosave_setup/autosave_process_view.dart';
@@ -335,6 +336,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           break;
         case Pages.GoldProBuyView:
           _addPageData(const GoldProBuyView(), GoldProBuyViewPageConfig);
+          break;
+        case Pages.GoldProSellView:
+          _addPageData(const GoldProSellView(), GoldProSellViewPageConfig);
           break;
         default:
           break;
@@ -660,6 +664,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         break;
       case Pages.GoldProBuyView:
         GoldProBuyViewPageConfig.currentPageAction = action;
+        break;
+      case Pages.GoldProSellView:
+        GoldProSellViewPageConfig.currentPageAction = action;
         break;
       default:
         break;
@@ -994,6 +1001,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         break;
       case "goldProBuy":
         pageConfiguration = GoldProBuyViewPageConfig;
+        break;
+      case "goldProSell":
+        pageConfiguration = GoldProSellViewPageConfig;
         break;
     }
     if (pageConfiguration != null) {

@@ -5,9 +5,11 @@ import 'dart:developer';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
+import 'package:felloapp/core/enums/transaction_state_enum.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/back_button_actions.dart';
@@ -33,7 +35,8 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
   final CustomLogger? logger = locator<CustomLogger>();
   final UserService _userService = locator<UserService>();
   final WebGameViewModel _webGameViewModel = locator<WebGameViewModel>();
-
+  final AugmontTransactionService _augTxnService =
+      locator<AugmontTransactionService>();
   final JourneyService _journeyService = locator<JourneyService>();
   final AnalyticsService _analyticsService = locator<AnalyticsService>();
 
@@ -108,10 +111,11 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
       return Future.value(true);
     }
 
-    // if (SpotLightController.instance.isTourStarted) {
-    //   SpotLightController.instance.dismissSpotLight();
-    //   return Future.value(true);
-    // }
+    if (_augTxnService.currentTransactionState == TransactionState.overView) {
+      Haptic.vibrate();
+      _augTxnService.currentTransactionState = TransactionState.idle;
+      return Future.value(true);
+    }
 
     if (AppState.showAutoSaveSurveyBt) {
       final PageController apgController =
