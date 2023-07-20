@@ -1,8 +1,11 @@
+import 'package:felloapp/core/model/referral_details_model.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 
 class RewardTrack extends StatelessWidget {
-  const RewardTrack({super.key});
+  const RewardTrack({super.key, required this.revampedInfo});
+
+  final RevampedInfo revampedInfo;
 
   @override
   Widget build(BuildContext context) {
@@ -35,24 +38,24 @@ class RewardTrack extends StatelessWidget {
               color: const Color(0xFF868686),
             ),
           ),
-          const Row(
+          Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               RewardInfoBlock(
-                title: 'Signed Up',
-                isComplete: true,
-                tooltipContent: null,
+                title: revampedInfo.stages![0].title!,
+                isComplete: revampedInfo.stages![0].isComplete ?? false,
+                tooltipContent: revampedInfo.stages![0].tooltipContent,
               ),
               RewardInfoBlock(
-                title: 'Save ₹1000',
-                isComplete: false,
-                tooltipContent: '₹50',
-              ),
+                  title: revampedInfo.stages![1].title!,
+                  isComplete: revampedInfo.stages![1].isComplete ?? false,
+                  tooltipContent: revampedInfo.stages![1].tooltipContent),
               RewardInfoBlock(
-                title: 'Save in 12% Flo',
-                isComplete: false,
-                tooltipContent: '₹450',
-                isPreviousTaskCompleted: false,
+                title: revampedInfo.stages![2].title!,
+                isComplete: revampedInfo.stages![2].isComplete ?? false,
+                tooltipContent: revampedInfo.stages![2].tooltipContent,
+                isPreviousTaskCompleted:
+                    revampedInfo.stages![1].isComplete ?? false,
               ),
             ],
           ),
@@ -63,12 +66,11 @@ class RewardTrack extends StatelessWidget {
 }
 
 class RewardInfoBlock extends StatelessWidget {
-  const RewardInfoBlock(
-      {required this.title,
-      required this.isComplete,
-      super.key,
-      this.tooltipContent,
-      this.isPreviousTaskCompleted = true});
+  const RewardInfoBlock({required this.title,
+    required this.isComplete,
+    super.key,
+    this.tooltipContent,
+    this.isPreviousTaskCompleted = true});
 
   final String title;
   final bool isComplete;
@@ -86,25 +88,25 @@ class RewardInfoBlock extends StatelessWidget {
                 : SizeConfig.padding25,
             child: (tooltipContent?.isNotEmpty ?? false)
                 ? Stack(
-                    children: [
-                      CustomPaint(
-                        size: Size(SizeConfig.padding34,
-                            (SizeConfig.padding34 * 0.7).toDouble()),
-                        painter: ToolTipCustomPainter(isComplete
-                            ? const Color(0xff62E3C4).withOpacity(1.0)
-                            : const Color(0xffB9B9B9)),
-                      ),
-                      Align(
-                        alignment: Alignment.center,
-                        child: Text(
-                          tooltipContent ?? '',
-                          style: TextStyles.sourceSans.body4.colour(isComplete
-                              ? const Color(0xFF00E6C3)
-                              : const Color(0xFFB8B8B8)),
-                        ),
-                      ),
-                    ],
-                  )
+              children: [
+                CustomPaint(
+                  size: Size(SizeConfig.padding34,
+                      (SizeConfig.padding34 * 0.7).toDouble()),
+                  painter: ToolTipCustomPainter(isComplete
+                      ? const Color(0xff62E3C4).withOpacity(1.0)
+                      : const Color(0xffB9B9B9)),
+                ),
+                Align(
+                  alignment: Alignment.center,
+                  child: Text(
+                    tooltipContent ?? '',
+                    style: TextStyles.sourceSans.body4.colour(isComplete
+                        ? const Color(0xFF00E6C3)
+                        : const Color(0xFFB8B8B8)),
+                  ),
+                ),
+              ],
+            )
                 : const SizedBox()),
         Container(
           width: SizeConfig.padding16,
@@ -119,13 +121,13 @@ class RewardInfoBlock extends StatelessWidget {
                       : const Color(0xFF868686).withOpacity(0.8))),
           child: isComplete
               ? Icon(
-                  Icons.check,
-                  color: Colors.black,
-                  size: SizeConfig.padding14,
-                  weight: 700,
-                  grade: 200,
-                  opticalSize: 48,
-                )
+            Icons.check,
+            color: Colors.black,
+            size: SizeConfig.padding14,
+            weight: 700,
+            grade: 200,
+            opticalSize: 48,
+          )
               : null,
         ),
         SizedBox(

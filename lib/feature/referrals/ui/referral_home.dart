@@ -169,6 +169,46 @@ class ReferralHome extends StatelessWidget {
                               ),
                             ),
                           ),
+                          Stack(
+                            children: [
+                              Container(
+                                  height: SizeConfig.padding46,
+                                  padding: EdgeInsets.fromLTRB(
+                                      SizeConfig.padding38,
+                                      SizeConfig.padding14,
+                                      SizeConfig.padding20,
+                                      SizeConfig.padding10),
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFF39393C),
+                                    borderRadius: BorderRadius.only(
+                                      bottomLeft: Radius.circular(
+                                          SizeConfig.roundness16),
+                                      bottomRight: Radius.circular(
+                                          SizeConfig.roundness16),
+                                    ),
+                                  ),
+                                  child: Text.rich(
+                                    TextSpan(
+                                      children: [
+                                        TextSpan(
+                                            text: 'You’ve earned ',
+                                            style: TextStyles.rajdhaniSB.body2
+                                                .colour(Colors.white)),
+                                        TextSpan(
+                                            text: '₹350',
+                                            style: TextStyles.rajdhaniB.body2
+                                                .colour(
+                                                    const Color(0xFFFFD979))),
+                                        TextSpan(
+                                            text: ' so far!',
+                                            style: TextStyles.rajdhaniSB.body2
+                                                .colour(Colors.white)),
+                                      ],
+                                    ),
+                                    textAlign: TextAlign.center,
+                                  )),
+                            ],
+                          ),
                           SizedBox(
                             height: SizeConfig.padding24,
                           ),
@@ -183,80 +223,73 @@ class ReferralHome extends StatelessWidget {
                           SizedBox(
                             height: SizeConfig.padding24,
                           ),
-                          Container(
-                            margin: EdgeInsets.only(
-                              // top: SizeConfig.padding34,
-                                // bottom: SizeConfig.padding12,
-                                ),
-                            child: Column(
-                              children: [
-                                Row(
-                                  mainAxisAlignment: MainAxisAlignment.center,
-                                  children: [
-                                    Expanded(
-                                      child: TextButton(
-                                        onPressed: () => model.switchTab(0),
-                                        child: Text(
-                                          'Your Referrals',
-                                          style: model.tabNo == 0
-                                              ? _selectedTextStyle
-                                              : _unselectedTextStyle, // TextStyles.sourceSansSB.body1,
-                                        ),
+                          Column(
+                            children: [
+                              Row(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: [
+                                  Expanded(
+                                    child: TextButton(
+                                      onPressed: () => model.switchTab(0),
+                                      child: Text(
+                                        'Your Referrals',
+                                        style: model.tabNo == 0
+                                            ? _selectedTextStyle
+                                            : _unselectedTextStyle, // TextStyles.sourceSansSB.body1,
                                       ),
                                     ),
-                                    SizedBox(
-                                      width: SizeConfig.padding16,
-                                    ),
-                                    Expanded(
-                                      child: TextButton(
-                                        onPressed: () => model.switchTab(1),
-                                        child: Text(
-                                          'Invite Contacts',
-                                          style: model.tabNo == 1
-                                              ? _selectedTextStyle
-                                              : _unselectedTextStyle, // style: TextStyles.sourceSansSB.body1,
-                                        ),
-                                      ),
-                                    )
-                                  ],
-                                ),
-                                Row(
-                                  children: [
-                                    AnimatedContainer(
-                                      duration:
-                                          const Duration(milliseconds: 500),
-                                      height: 5,
-                                      width: model.tabPosWidthFactor,
-                                    ),
-                                    Container(
-                                      color: UiConstants.kTabBorderColor,
-                                      height: 5,
-                                      width: SizeConfig.screenWidth! * 0.38,
-                                    )
-                                  ],
-                                ),
-                                BlocProvider<ReferralCubit>(
-                                  create: (_) => ReferralCubit(),
-                                  child: HeightAdaptivePageView(
-                                    controller: model.pageController,
-                                    onPageChanged: (int page) {
-                                      model.switchTab(page);
-                                    },
-                                    children: [
-                                      ReferralList(
-                                        model: model,
-                                      ),
-                                      InviteContactWidget(
-                                        model: model,
-                                      ),
-                                    ],
                                   ),
+                                  SizedBox(
+                                    width: SizeConfig.padding16,
+                                  ),
+                                  Expanded(
+                                    child: TextButton(
+                                      onPressed: () => model.switchTab(1),
+                                      child: Text(
+                                        'Invite Contacts',
+                                        style: model.tabNo == 1
+                                            ? _selectedTextStyle
+                                            : _unselectedTextStyle, // style: TextStyles.sourceSansSB.body1,
+                                      ),
+                                    ),
+                                  )
+                                ],
+                              ),
+                              Row(
+                                children: [
+                                  AnimatedContainer(
+                                    duration: const Duration(milliseconds: 500),
+                                    height: 5,
+                                    width: model.tabPosWidthFactor,
+                                  ),
+                                  Container(
+                                    color: UiConstants.kTabBorderColor,
+                                    height: 5,
+                                    width: SizeConfig.screenWidth! * 0.38,
+                                  )
+                                ],
+                              ),
+                              BlocProvider<ReferralCubit>(
+                                create: (_) => ReferralCubit(),
+                                child: HeightAdaptivePageView(
+                                  controller: model.pageController,
+                                  onPageChanged: (int page) {
+                                    model.switchTab(page);
+                                  },
+                                  children: [
+                                    ReferralList(
+                                      model: model,
+                                    ),
+                                    InviteContactWidget(
+                                      model: model,
+                                    ),
+                                  ],
                                 ),
-                                SizedBox(
-                                  height: SizeConfig.padding200,
-                                )
-                              ],
-                            ),
+                              ),
+                              SizedBox(
+                                height: SizeConfig.padding200,
+                              )
+                            ],
                           ),
                         ],
                       ),
@@ -417,11 +450,6 @@ class ReferralHome extends StatelessWidget {
     );
   }
 }
-
-
-
-
-
 
 void navigateToWhatsApp(String phoneNumber) {
   final text = Uri.encodeComponent('Hello, I invite you to join our app!');

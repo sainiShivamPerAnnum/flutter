@@ -11,6 +11,8 @@ class ReferralDetail {
   bool? _isUserBonusUnlocked;
   bool? _isRefereeBonusUnlocked;
   int? _refCount;
+  String? mobile;
+  RevampedInfo? revampedInfo;
   static final helper =
       HelperModel<ReferralDetail>((map) => ReferralDetail.fromMap(map));
   Map<String, dynamic>? _bonusMap;
@@ -19,17 +21,16 @@ class ReferralDetail {
   static const String fldRefereeBonusFlag = 'referee_bonus_unlocked';
   static const String fldUserReferralCount = 'ref_count';
 
-  ReferralDetail(this._userName, this._timestamp, this._isUserBonusUnlocked,
-      this._isRefereeBonusUnlocked, this._refCount, this._bonusMap, this._uid);
-
-  // ReferralDetail.fromMap(Map<String, dynamic> rMap)
-  //     : this(
-  //           rMap['usr_name'],
-  //           rMap['timestamp'],
-  //           rMap[fldUsrBonusFlag],
-  //           rMap[fldRefereeBonusFlag],
-  //           rMap[fldUserReferralCount],
-  //           rMap['bonus_values']);
+  ReferralDetail(
+      this._userName,
+      this._timestamp,
+      this._isUserBonusUnlocked,
+      this._isRefereeBonusUnlocked,
+      this._refCount,
+      this._bonusMap,
+      this._uid,
+      this.mobile,
+      this.revampedInfo);
 
   ReferralDetail.base() {
     _userName = '';
@@ -40,6 +41,7 @@ class ReferralDetail {
     _refCount = 0;
     _bonusMap = {};
   }
+
   factory ReferralDetail.fromMap(Map<String, dynamic> rMap) {
     return ReferralDetail(
       rMap['usr_name'] ?? '',
@@ -49,6 +51,10 @@ class ReferralDetail {
       rMap[fldUserReferralCount] ?? 0,
       rMap['bonus_values'] ?? {},
       rMap['id'] ?? '',
+      rMap["mobile"],
+      rMap["revampedInfo"] == null
+          ? null
+          : RevampedInfo.fromJson(rMap["revampedInfo"]),
     );
   }
 
@@ -83,4 +89,57 @@ class ReferralDetail {
   set isUserBonusUnlocked(bool value) {
     _isUserBonusUnlocked = value;
   }
+
+  @override
+  String toString() {
+    return 'ReferralDetail{_userName: $_userName, _uid: $_uid, _timestamp: $_timestamp, _isUserBonusUnlocked: $_isUserBonusUnlocked, _isRefereeBonusUnlocked: $_isRefereeBonusUnlocked, _refCount: $_refCount, mobile: $mobile, revampedInfo: $revampedInfo, _bonusMap: $_bonusMap}';
+  }
+}
+
+class RevampedInfo {
+  final String? subtitle;
+  final List<Stage>? stages;
+
+  RevampedInfo({
+    this.subtitle,
+    this.stages,
+  });
+
+  factory RevampedInfo.fromJson(Map<String, dynamic> json) => RevampedInfo(
+        subtitle: json["subtitle"],
+        stages: json["stages"] == null
+            ? []
+            : List<Stage>.from(json["stages"]!.map((x) => Stage.fromJson(x))),
+      );
+
+  Map<String, dynamic> toJson() => {
+        "subtitle": subtitle,
+        "stages": stages == null
+            ? []
+            : List<dynamic>.from(stages!.map((x) => x.toJson())),
+      };
+}
+
+class Stage {
+  final String? title;
+  final bool? isComplete;
+  final String? tooltipContent;
+
+  Stage({
+    this.title,
+    this.isComplete,
+    this.tooltipContent,
+  });
+
+  factory Stage.fromJson(Map<String, dynamic> json) => Stage(
+        title: json["title"],
+        isComplete: json["isComplete"],
+        tooltipContent: json["tooltipContent"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "title": title,
+        "isComplete": isComplete,
+        "tooltipContent": tooltipContent,
+      };
 }

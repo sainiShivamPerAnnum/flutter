@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:felloapp/core/model/referral_details_model.dart';
 import 'package:felloapp/core/service/referral_service.dart';
+import 'package:felloapp/feature/referrals/ui/referral_home.dart';
 import 'package:felloapp/feature/referrals/ui/reward_track.dart';
 import 'package:felloapp/feature/tambola/src/ui/widgets/loader.dart';
 import 'package:felloapp/ui/pages/userProfile/referrals/referral_details/referral_details_vm.dart';
@@ -274,7 +275,7 @@ class _ReferralListViewState extends State<ReferralListView> {
                   style: TextStyles.sourceSansSB.body2.colour(Colors.white),
                 ),
                 Text(
-                  'Remind to save & get ₹450 more!',
+                  filteredReferrals[i].revampedInfo!.subtitle!,
                   style: TextStyles.sourceSans.body3.colour(
                     Colors.white.withOpacity(0.44),
                   ),
@@ -285,9 +286,9 @@ class _ReferralListViewState extends State<ReferralListView> {
               width: SizeConfig.padding76,
               child: MaterialButton(
                 onPressed: () {
-                  // navigateToWhatsApp(
-                  //   filteredReferrals[i]
-                  //         .userPhoneNumber,);
+                  navigateToWhatsApp(
+                    filteredReferrals[i].mobile!,
+                  );
                 },
                 color: Colors.white,
                 minWidth: SizeConfig.padding76,
@@ -308,7 +309,9 @@ class _ReferralListViewState extends State<ReferralListView> {
           SizedBox(
             height: SizeConfig.padding14,
           ),
-          const RewardTrack()
+          RewardTrack(
+            revampedInfo: filteredReferrals[i].revampedInfo!,
+          )
         ],
       ),
     );
@@ -351,7 +354,9 @@ class _ReferralListViewState extends State<ReferralListView> {
           SizedBox(
             height: SizeConfig.padding14,
           ),
-          const RewardTrack()
+          RewardTrack(
+            revampedInfo: filteredReferrals[i].revampedInfo!,
+          )
         ],
       ),
     );
