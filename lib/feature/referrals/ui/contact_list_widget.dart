@@ -89,52 +89,12 @@ class _ContactListWidgetState extends State<ContactListWidget> {
           SizedBox(
             height: SizeConfig.padding16,
           ),
-          Container(
-            height: SizeConfig.padding40,
-            padding: const EdgeInsets.symmetric(horizontal: 16.0),
-            decoration: BoxDecoration(
-              color: const Color(0xFF454545).withOpacity(0.3),
-              borderRadius: BorderRadius.circular(20),
-            ),
-            child: Stack(
-              alignment: Alignment.centerLeft,
-              children: [
-                const Icon(
-                  Icons.search,
-                  color: Colors.grey,
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: SizeConfig.padding36),
-                  child: TextFormField(
-                    controller: controller,
-                    style: TextStyles.sourceSans.body3.colour(Colors.white),
-                    onChanged: (query) {
-                      log('Text changed: $query');
-                      _debouncer.call(() => searchContacts(query));
-                    },
-                    validator: (value) {
-                      if (value!.isEmpty) {
-                        return 'number length should be greater than 3';
-                      }
-                      return null;
-                    },
-                    decoration: InputDecoration(
-                      contentPadding: const EdgeInsets.symmetric(vertical: 13),
-                      hintText: "Search by name",
-                      hintStyle: TextStyles.sourceSans.body3
-                          .colour(Colors.white.withOpacity(0.3)),
-                      errorStyle:
-                          TextStyles.sourceSans.body3.colour(Colors.red),
-                      border: InputBorder.none,
-                      focusedBorder: InputBorder.none,
-                      enabledBorder: InputBorder.none,
-                      errorBorder: InputBorder.none,
-                      disabledBorder: InputBorder.none,
-                    ),
-                  ),
-                ),
-              ],
-            ),
+          _SearchBar(
+            controller: controller,
+            onChanged: (query) {
+              log('Text changed: $query');
+              _debouncer.call(() => searchContacts(query));
+            },
           ),
           SizedBox(
             height: SizeConfig.padding20,
@@ -210,6 +170,60 @@ class _ContactListWidgetState extends State<ContactListWidget> {
           ),
           SizedBox(
             height: SizeConfig.navBarHeight * 2.5,
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class _SearchBar extends StatelessWidget {
+  const _SearchBar({super.key, required this.controller, this.onChanged});
+
+  final TextEditingController controller;
+  final Function(String)? onChanged;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: SizeConfig.padding40,
+      padding: const EdgeInsets.symmetric(horizontal: 16.0),
+      decoration: BoxDecoration(
+        color: const Color(0xFF454545).withOpacity(0.3),
+        borderRadius: BorderRadius.circular(20),
+      ),
+      child: Stack(
+        alignment: Alignment.centerLeft,
+        children: [
+          const Icon(
+            Icons.search,
+            color: Colors.grey,
+          ),
+          Padding(
+            padding: EdgeInsets.only(left: SizeConfig.padding36),
+            child: TextFormField(
+              controller: controller,
+              style: TextStyles.sourceSans.body3.colour(Colors.white),
+              onChanged: onChanged,
+              validator: (value) {
+                if (value!.isEmpty) {
+                  return 'number length should be greater than 3';
+                }
+                return null;
+              },
+              decoration: InputDecoration(
+                contentPadding: const EdgeInsets.symmetric(vertical: 13),
+                hintText: "Search by name",
+                hintStyle: TextStyles.sourceSans.body3
+                    .colour(Colors.white.withOpacity(0.3)),
+                errorStyle: TextStyles.sourceSans.body3.colour(Colors.red),
+                border: InputBorder.none,
+                focusedBorder: InputBorder.none,
+                enabledBorder: InputBorder.none,
+                errorBorder: InputBorder.none,
+                disabledBorder: InputBorder.none,
+              ),
+            ),
           ),
         ],
       ),
