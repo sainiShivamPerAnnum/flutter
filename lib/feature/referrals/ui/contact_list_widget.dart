@@ -1,0 +1,225 @@
+import 'dart:developer';
+
+import 'package:felloapp/core/model/contact_model.dart';
+import 'package:felloapp/util/debouncer.dart';
+import 'package:felloapp/util/extensions/rich_text_extension.dart';
+import 'package:felloapp/util/styles/styles.dart';
+import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:url_launcher/url_launcher.dart';
+
+class ContactListWidget extends StatefulWidget {
+  const ContactListWidget({super.key, required this.contacts});
+
+  final List<Contact> contacts;
+
+  @override
+  State<ContactListWidget> createState() => _ContactListWidgetState();
+}
+
+class _ContactListWidgetState extends State<ContactListWidget> {
+  TextEditingController controller = TextEditingController();
+  List<Contact> filteredContacts = []; // List to store filtered contacts
+  late final Debouncer _debouncer;
+
+  // late final ReferralCubit _referralCubit;
+
+  void searchContacts(String query) {
+    log('searchContacts: $query', name: 'ReferralDetailsScreen');
+    if (query.isEmpty || query.length < 3) {
+      // If the query is empty, display all contacts
+      setState(() {
+        filteredContacts = List.from(widget.contacts);
+      });
+    } else {
+      // Filter contacts based on the query
+      setState(() {
+        filteredContacts = widget.contacts
+            .where((contact) =>
+                contact.displayName.toLowerCase().contains(query.toLowerCase()))
+            .toList();
+        log('filteredContacts name: ${filteredContacts[0].displayName}',
+            name: 'ReferralDetailsScreen');
+      });
+    }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    // _referralCubit = context.read<ReferralCubit>();
+    filteredContacts = widget
+        .contacts; // Initialize filteredContacts with all contacts initially
+    _debouncer = Debouncer(delay: const Duration(milliseconds: 700));
+  }
+
+  void _navigateToWhatsApp(String phoneNumber) {
+    final text = Uri.encodeComponent('Hello, I invite you to join our app!');
+    final url = 'https://wa.me/+91$phoneNumber?text=$text';
+    log('WhatsApp URL: $url', name: 'ReferralDetailsScreen');
+    launch(url);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: SizeConfig.pageHorizontalMargins,
+      ),
+      color: const Color(0xff454545).withOpacity(0.3),
+      child: Column(
+        children: [
+          SizedBox(
+            height: SizeConfig.padding22,
+          ),
+          Row(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SvgPicture.asset(
+                'assets/svg/play_gift.svg',
+                height: SizeConfig.padding16,
+              ),
+              SizedBox(
+                width: SizeConfig.padding6,
+              ),
+              'You can earn upto *₹1Lakh* by referring!'.beautify(
+                boldStyle: TextStyles.sourceSansB.body3.colour(
+                  Colors.white.withOpacity(0.5),
+                ),
+                style: TextStyles.sourceSans.body3.colour(
+                  Colors.white.withOpacity(0.5),
+                ),
+              ),
+            ],
+          ),
+          SizedBox(
+            height: SizeConfig.padding16,
+          ),
+          Container(
+            height: SizeConfig.padding40,
+            padding: const EdgeInsets.symmetric(horizontal: 16.0),
+            decoration: BoxDecoration(
+              color: const Color(0xFF454545).withOpacity(0.3),
+              borderRadius: BorderRadius.circular(20),
+            ),
+            child: Stack(
+              alignment: Alignment.centerLeft,
+              children: [
+                const Icon(
+                  Icons.search,
+                  color: Colors.grey,
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: SizeConfig.padding36),
+                  child: TextFormField(
+                    controller: controller,
+                    style: TextStyles.sourceSans.body3.colour(Colors.white),
+                    onChanged: (query) {
+                      log('Text changed: $query');
+                      _debouncer.call(() => searchContacts(query));
+                    },
+                    validator: (value) {
+                      if (value!.isEmpty) {
+                        return 'number length should be greater than 3';
+                      }
+                      return null;
+                    },
+                    decoration: InputDecoration(
+                      contentPadding: const EdgeInsets.symmetric(vertical: 13),
+                      hintText: "Search by name",
+                      hintStyle: TextStyles.sourceSans.body3
+                          .colour(Colors.white.withOpacity(0.3)),
+                      errorStyle:
+                          TextStyles.sourceSans.body3.colour(Colors.red),
+                      border: InputBorder.none,
+                      focusedBorder: InputBorder.none,
+                      enabledBorder: InputBorder.none,
+                      errorBorder: InputBorder.none,
+                      disabledBorder: InputBorder.none,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+          ),
+          SizedBox(
+            height: SizeConfig.padding20,
+          ),
+          ListView.separated(
+            itemCount: filteredContacts.length,
+            shrinkWrap: true,
+            physics: const NeverScrollableScrollPhysics(),
+            itemBuilder: (context, index) {
+              final contact = filteredContacts[index];
+              return Row(
+                children: [
+                  Container(
+                    height: SizeConfig.padding44,
+                    width: SizeConfig.padding44,
+                    padding: EdgeInsets.all(SizeConfig.padding3),
+                    decoration: const ShapeDecoration(
+                      shape: OvalBorder(
+                        side: BorderSide(width: 0.5, color: Color(0xFF1ADAB7)),
+                      ),
+                    ),
+                    child: Container(
+                      height: SizeConfig.padding38,
+                      width: SizeConfig.padding38,
+                      decoration: const BoxDecoration(
+                        color: Color(0xFFD9D9D9),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Center(
+                        child: Text(
+                          contact.displayName.substring(0, 1),
+                          style: TextStyles.rajdhaniSB.body0
+                              .colour(const Color(0xFF3A3A3C)),
+                        ),
+                      ),
+                    ),
+                  ),
+                  SizedBox(width: SizeConfig.padding8),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        contact.displayName,
+                        style: TextStyles.rajdhaniSB.body2.colour(Colors.white),
+                      ),
+                      Text(
+                        'Invite and earn ₹500',
+                        style: TextStyles.sourceSans.body4
+                            .colour(Colors.white.withOpacity(0.48)),
+                      ),
+                    ],
+                  ),
+                  const Spacer(),
+                  GestureDetector(
+                    onTap: () {
+                      _navigateToWhatsApp(contact.phoneNumber);
+                    },
+                    child: Text(
+                      'INVITE',
+                      textAlign: TextAlign.right,
+                      style: TextStyles.rajdhaniB.body3
+                          .colour(const Color(0xFF61E3C4)),
+                    ),
+                  ),
+                ],
+              );
+            },
+            separatorBuilder: (BuildContext context, int index) {
+              return SizedBox(
+                height: SizeConfig.padding24,
+              );
+            },
+          ),
+          SizedBox(
+            height: SizeConfig.navBarHeight * 2.5,
+          ),
+        ],
+      ),
+    );
+  }
+}
