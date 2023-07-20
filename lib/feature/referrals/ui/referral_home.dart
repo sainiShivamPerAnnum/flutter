@@ -186,9 +186,9 @@ class ReferralHome extends StatelessWidget {
                           ),
                           Container(
                             margin: EdgeInsets.only(
-                              top: SizeConfig.padding34,
-                              // bottom: SizeConfig.padding12,
-                            ),
+                              // top: SizeConfig.padding34,
+                                // bottom: SizeConfig.padding12,
+                                ),
                             child: Column(
                               children: [
                                 Row(
@@ -658,8 +658,11 @@ class PermissionModalSheet extends StatelessWidget {
   }
 }
 
-//Copy this CustomPainter code to the Bottom of the File
-class RPSCustomPainter extends CustomPainter {
+class ToolTipCustomPainter extends CustomPainter {
+  final Color color;
+
+  ToolTipCustomPainter(this.color);
+
   @override
   void paint(Canvas canvas, Size size) {
     Path path_0 = Path();
@@ -725,7 +728,7 @@ class RPSCustomPainter extends CustomPainter {
     Paint paint_0_stroke = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = size.width * 0.013096774;
-    paint_0_stroke.color = const Color(0xff62E3C4).withOpacity(1.0);
+    paint_0_stroke.color = color;
     canvas.drawPath(path_0, paint_0_stroke);
 
     Paint paint_0_fill = Paint()..style = PaintingStyle.fill;

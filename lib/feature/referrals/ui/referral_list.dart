@@ -15,8 +15,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 class ReferralList extends StatelessWidget {
   const ReferralList({
-    Key? key,
     required this.model,
+    Key? key,
   }) : super(key: key);
 
   final ReferralDetailsViewModel model;
@@ -112,8 +112,8 @@ class ReferralList extends StatelessWidget {
 
 class ReferralListView extends StatefulWidget {
   const ReferralListView({
-    super.key,
     required this.referalList,
+    super.key,
   });
 
   final List<ReferralDetail> referalList;
@@ -242,74 +242,116 @@ class _ReferralListViewState extends State<ReferralListView> {
             itemCount: filteredReferrals.length,
             itemBuilder: (context, i) {
               if (filteredReferrals[i].isUserBonusUnlocked ?? false) {
-                return Container(
-                  padding: EdgeInsets.symmetric(
-                    horizontal: SizeConfig.padding24,
-                    vertical: SizeConfig.padding18,
-                  ),
-                  decoration: BoxDecoration(
-                    color: const Color(0xFF141414),
-                    borderRadius: BorderRadius.circular(12),
-                  ),
-                  child: Column(
-                    children: [
-                      Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  filteredReferrals[i].userName,
-                                  style: TextStyles.sourceSansSB.body2
-                                      .colour(Colors.white),
-                                ),
-                                Text(
-                                  'Remind to save & get ₹450 more!',
-                                  style: TextStyles.sourceSans.body3.colour(
-                                    Colors.white.withOpacity(0.44),
-                                  ),
-                                ),
-                              ],
-                            ),
-                            SizedBox(
-                              width: SizeConfig.padding76,
-                              child: MaterialButton(
-                                onPressed: () {
-                                  // navigateToWhatsApp(
-                                  //   filteredReferrals[i]
-                                  //         .userPhoneNumber,);
-                                },
-                                color: Colors.white,
-                                minWidth: SizeConfig.padding76,
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: SizeConfig.padding14,
-                                    vertical: SizeConfig.padding8),
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(
-                                      SizeConfig.roundness5),
-                                ),
-                                height: SizeConfig.padding30,
-                                child: Text(
-                                  "REMIND",
-                                  style: TextStyles.rajdhaniB.body3
-                                      .colour(Colors.black),
-                                ),
-                              ),
-                            ),
-                          ]),
-                      SizedBox(
-                        height: SizeConfig.padding14,
-                      ),
-                      const RewardTrack()
-                    ],
-                  ),
-                );
+                return buildIncompleteReferrals(i);
               } else {
                 return const SizedBox.shrink();
               }
             },
           ),
+        ],
+      ),
+    );
+  }
+
+  Container buildIncompleteReferrals(int i) {
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: SizeConfig.padding24,
+        vertical: SizeConfig.padding18,
+      ),
+      decoration: BoxDecoration(
+        color: const Color(0xFF141414),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        children: [
+          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  filteredReferrals[i].userName,
+                  style: TextStyles.sourceSansSB.body2.colour(Colors.white),
+                ),
+                Text(
+                  'Remind to save & get ₹450 more!',
+                  style: TextStyles.sourceSans.body3.colour(
+                    Colors.white.withOpacity(0.44),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(
+              width: SizeConfig.padding76,
+              child: MaterialButton(
+                onPressed: () {
+                  // navigateToWhatsApp(
+                  //   filteredReferrals[i]
+                  //         .userPhoneNumber,);
+                },
+                color: Colors.white,
+                minWidth: SizeConfig.padding76,
+                padding: EdgeInsets.symmetric(
+                    horizontal: SizeConfig.padding14,
+                    vertical: SizeConfig.padding8),
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(SizeConfig.roundness5),
+                ),
+                height: SizeConfig.padding30,
+                child: Text(
+                  "REMIND",
+                  style: TextStyles.rajdhaniB.body3.colour(Colors.black),
+                ),
+              ),
+            ),
+          ]),
+          SizedBox(
+            height: SizeConfig.padding14,
+          ),
+          const RewardTrack()
+        ],
+      ),
+    );
+  }
+
+  Widget buildCompleteReferrals(int i) {
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: SizeConfig.padding24,
+        vertical: SizeConfig.padding18,
+      ),
+      decoration: BoxDecoration(
+        color: const Color(0xFF125459),
+        borderRadius: BorderRadius.circular(12),
+      ),
+      child: Column(
+        children: [
+          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+            Text(
+              filteredReferrals[i].userName,
+              style: TextStyles.sourceSansSB.body2.colour(Colors.white),
+            ),
+            Row(
+              children: [
+                CustomPaint(
+                  size: Size(SizeConfig.padding8,
+                      (SizeConfig.padding8 * 1.125).toDouble()),
+                  painter: RPSCustomPainter(),
+                ),
+                SizedBox(
+                  width: SizeConfig.padding6,
+                ),
+                Text(
+                  'You earned ₹500',
+                  style: TextStyles.sourceSans.body3.colour(Colors.white),
+                )
+              ],
+            )
+          ]),
+          SizedBox(
+            height: SizeConfig.padding14,
+          ),
+          const RewardTrack()
         ],
       ),
     );
@@ -331,7 +373,7 @@ class RewardTrack extends StatelessWidget {
               margin: EdgeInsets.only(
                 left: SizeConfig.padding38,
                 right: SizeConfig.padding50,
-                bottom: SizeConfig.padding12,
+                bottom: SizeConfig.padding6,
               ),
               height: 1.2,
               width: SizeConfig.padding82,
@@ -343,166 +385,189 @@ class RewardTrack extends StatelessWidget {
             child: Container(
               margin: EdgeInsets.only(
                 right: SizeConfig.padding50,
-                bottom: SizeConfig.padding12,
+                bottom: SizeConfig.padding6,
               ),
               height: 1.2,
               width: SizeConfig.padding108,
               color: const Color(0xFF868686),
             ),
           ),
-          Row(
+          const Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              Column(
-                children: [
-                  SizedBox(
-                    height: SizeConfig.padding22,
-                  ),
-                  // Stack(
-                  //   children: [
-                  //     CustomPaint(
-                  //       size: Size(
-                  //           SizeConfig.padding32,
-                  //           (SizeConfig.padding32 *
-                  //                   0.7)
-                  //               .toDouble()),
-                  //       painter: RPSCustomPainter(),
-                  //     ),
-                  //     Padding(
-                  //       padding:  EdgeInsets.only(left: SizeConfig.padding2),
-                  //       child: Text(
-                  //         '₹450',
-                  //         style: TextStyles
-                  //             .sourceSans.body4
-                  //             .colour(
-                  //                 const Color(0xFF00E6C3)),
-                  //       ),
-                  //     ),
-                  //   ],
-                  // ),
-                  Container(
-                    width: SizeConfig.padding16,
-                    height: SizeConfig.padding16,
-                    decoration: const BoxDecoration(
-                      color: Color(0xFF61E3C4),
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(
-                      Icons.check,
-                      color: Colors.black,
-                      size: SizeConfig.padding14,
-                      weight: 700,
-                      grade: 200,
-                      opticalSize: 48,
-                    ),
-                  ),
-                  SizedBox(
-                    height: SizeConfig.padding6,
-                  ),
-                  Text(
-                    'Signed Up',
-                    style: TextStyles.sourceSans.body4.colour(Colors.white),
-                  ),
-                ],
+              RewardInfoBlock(
+                title: 'Signed Up',
+                isComplete: true,
+                tooltipContent: null,
               ),
-              Column(
-                children: [
-                  SizedBox(
-                    width: SizeConfig.padding32,
-                    child: Stack(
-                      children: [
-                        CustomPaint(
-                          size: Size(SizeConfig.padding32,
-                              (SizeConfig.padding32 * 0.7).toDouble()),
-                          painter: RPSCustomPainter(),
-                        ),
-                        Align(
-                          alignment: Alignment.center,
-                          child: Text(
-                            '₹50',
-                            style: TextStyles.sourceSans.body4
-                                .colour(const Color(0xFF00E6C3)),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    width: SizeConfig.padding16,
-                    height: SizeConfig.padding16,
-                    decoration: const BoxDecoration(
-                      color: Color(0xFF61E3C4),
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(
-                      Icons.check,
-                      color: Colors.black,
-                      size: SizeConfig.padding14,
-                      weight: 700,
-                      grade: 200,
-                      opticalSize: 48,
-                    ),
-                  ),
-                  SizedBox(
-                    height: SizeConfig.padding6,
-                  ),
-                  Text(
-                    'Save ₹1000',
-                    style: TextStyles.sourceSans.body4.colour(Colors.white),
-                  ),
-                ],
+              RewardInfoBlock(
+                title: 'Save ₹1000',
+                isComplete: false,
+                tooltipContent: '₹50',
               ),
-              Column(
-                children: [
-                  SizedBox(
-                    width: SizeConfig.padding32,
-                    child: Stack(
-                      children: [
-                        CustomPaint(
-                          size: Size(SizeConfig.padding32,
-                              (SizeConfig.padding32 * 0.7).toDouble()),
-                          painter: RPSCustomPainter(),
-                        ),
-                        Align(
-                          alignment: Alignment.center,
-                          child: Text(
-                            '₹450',
-                            style: TextStyles.sourceSans.body4
-                                .colour(const Color(0xFF00E6C3)),
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    width: SizeConfig.padding16,
-                    height: SizeConfig.padding16,
-                    decoration: const BoxDecoration(
-                      color: Color(0xFF61E3C4),
-                      shape: BoxShape.circle,
-                    ),
-                    child: Icon(
-                      Icons.check,
-                      color: Colors.black,
-                      size: SizeConfig.padding14,
-                      weight: 700,
-                      grade: 200,
-                      opticalSize: 48,
-                    ),
-                  ),
-                  SizedBox(
-                    height: SizeConfig.padding6,
-                  ),
-                  Text(
-                    'Save in 12% Flo',
-                    style: TextStyles.sourceSans.body4.colour(Colors.white),
-                  ),
-                ],
+              RewardInfoBlock(
+                title: 'Save in 12% Flo',
+                isComplete: false,
+                tooltipContent: '₹450',
+                isPreviousTaskCompleted: false,
               ),
             ],
           ),
         ],
       ),
     );
+  }
+}
+
+class RewardInfoBlock extends StatelessWidget {
+  const RewardInfoBlock(
+      {required this.title,
+      required this.isComplete,
+      super.key,
+      this.tooltipContent,
+      this.isPreviousTaskCompleted = true});
+
+  final String title;
+  final bool isComplete;
+  final String? tooltipContent;
+  final bool isPreviousTaskCompleted;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        SizedBox(
+            width: SizeConfig.padding32,
+            height: (tooltipContent?.isNotEmpty ?? false)
+                ? null
+                : SizeConfig.padding25,
+            child: (tooltipContent?.isNotEmpty ?? false)
+                ? Stack(
+                    children: [
+                      CustomPaint(
+                        size: Size(SizeConfig.padding34,
+                            (SizeConfig.padding34 * 0.7).toDouble()),
+                        painter: ToolTipCustomPainter(isComplete
+                            ? const Color(0xff62E3C4).withOpacity(1.0)
+                            : const Color(0xffB9B9B9)),
+                      ),
+                      Align(
+                        alignment: Alignment.center,
+                        child: Text(
+                          tooltipContent ?? '',
+                          style: TextStyles.sourceSans.body4.colour(isComplete
+                              ? const Color(0xFF00E6C3)
+                              : const Color(0xFFB8B8B8)),
+                        ),
+                      ),
+                    ],
+                  )
+                : const SizedBox()),
+        Container(
+          width: SizeConfig.padding16,
+          height: SizeConfig.padding16,
+          decoration: BoxDecoration(
+              color: isComplete ? const Color(0xFF61E3C4) : null,
+              shape: BoxShape.circle,
+              border: Border.all(
+                  width: 0.50,
+                  color: isPreviousTaskCompleted
+                      ? const Color(0xFF61E3C4)
+                      : const Color(0xFF868686).withOpacity(0.8))),
+          child: isComplete
+              ? Icon(
+                  Icons.check,
+                  color: Colors.black,
+                  size: SizeConfig.padding14,
+                  weight: 700,
+                  grade: 200,
+                  opticalSize: 48,
+                )
+              : null,
+        ),
+        SizedBox(
+          height: SizeConfig.padding6,
+        ),
+        Text(
+          title,
+          style: TextStyles.sourceSans.body4.colour(Colors.white),
+        ),
+      ],
+    );
+  }
+}
+
+class RPSCustomPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    Path path_0 = Path();
+    path_0.moveTo(size.width * 0.4614612, size.height * 0.09050922);
+    path_0.cubicTo(
+        size.width * 0.4002150,
+        size.height * 0.2402967,
+        size.width * 0.2972562,
+        size.height * 0.3871678,
+        size.width * 0.01808200,
+        size.height * 0.4862100);
+    path_0.cubicTo(
+        size.width * -0.008581438,
+        size.height * 0.4956589,
+        size.width * -0.004753475,
+        size.height * 0.5385889,
+        size.width * 0.02296600,
+        size.height * 0.5450044);
+    path_0.cubicTo(
+        size.width * 0.2728375,
+        size.height * 0.6033333,
+        size.width * 0.3808112,
+        size.height * 0.7530044,
+        size.width * 0.4659500,
+        size.height * 0.9352222);
+    path_0.cubicTo(
+        size.width * 0.4747938,
+        size.height * 0.9541211,
+        size.width * 0.5054163,
+        size.height * 0.9550544,
+        size.width * 0.5159763,
+        size.height * 0.9367389);
+    path_0.cubicTo(
+        size.width * 0.6182750,
+        size.height * 0.7587200,
+        size.width * 0.7628113,
+        size.height * 0.6159322,
+        size.width * 0.9800800,
+        size.height * 0.5483878);
+    path_0.cubicTo(
+        size.width * 1.005555,
+        size.height * 0.5404556,
+        size.width * 1.007008,
+        size.height * 0.5035911,
+        size.width * 0.9820600,
+        size.height * 0.4947256);
+    path_0.cubicTo(
+        size.width * 0.7327162,
+        size.height * 0.4054833,
+        size.width * 0.5921388,
+        size.height * 0.2572122,
+        size.width * 0.5175600,
+        size.height * 0.09015933);
+    path_0.cubicTo(
+        size.width * 0.5080562,
+        size.height * 0.06881111,
+        size.width * 0.4704375,
+        size.height * 0.06881111,
+        size.width * 0.4615938,
+        size.height * 0.09050922);
+    path_0.lineTo(size.width * 0.4614612, size.height * 0.09050922);
+    path_0.close();
+
+    Paint paint_0_fill = Paint()..style = PaintingStyle.fill;
+    paint_0_fill.color = const Color(0xffFFD979).withOpacity(1.0);
+    canvas.drawPath(path_0, paint_0_fill);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    return true;
   }
 }
