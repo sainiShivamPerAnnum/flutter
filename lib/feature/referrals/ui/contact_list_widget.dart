@@ -1,12 +1,12 @@
 import 'dart:developer';
 
 import 'package:felloapp/core/model/contact_model.dart';
+import 'package:felloapp/feature/referrals/ui/referral_home.dart';
 import 'package:felloapp/util/debouncer.dart';
 import 'package:felloapp/util/extensions/rich_text_extension.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:url_launcher/url_launcher.dart';
 
 class ContactListWidget extends StatefulWidget {
   const ContactListWidget({super.key, required this.contacts});
@@ -51,13 +51,6 @@ class _ContactListWidgetState extends State<ContactListWidget> {
     filteredContacts = widget
         .contacts; // Initialize filteredContacts with all contacts initially
     _debouncer = Debouncer(delay: const Duration(milliseconds: 700));
-  }
-
-  void _navigateToWhatsApp(String phoneNumber) {
-    final text = Uri.encodeComponent('Hello, I invite you to join our app!');
-    final url = 'https://wa.me/+91$phoneNumber?text=$text';
-    log('WhatsApp URL: $url', name: 'ReferralDetailsScreen');
-    launch(url);
   }
 
   @override
@@ -197,7 +190,7 @@ class _ContactListWidgetState extends State<ContactListWidget> {
                   const Spacer(),
                   GestureDetector(
                     onTap: () {
-                      _navigateToWhatsApp(contact.phoneNumber);
+                      navigateToWhatsApp(contact.phoneNumber);
                     },
                     child: Text(
                       'INVITE',
