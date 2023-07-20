@@ -407,4 +407,6 @@ class Assets {
   static const String quizMasterBadge = '${assetBaseUrl}badges/quiz-master.svg';
   static const String tambolaTitanBadge =
       '${assetBaseUrl}badges/tambola-titan.svg';
+  static const String referralReward =
+      "${assetBaseUrl}revamped-referrals/reward.svg";
 }

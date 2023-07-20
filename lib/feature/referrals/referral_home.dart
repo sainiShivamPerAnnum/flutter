@@ -1,18 +1,22 @@
 import 'dart:developer';
 
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/contact_model.dart';
 import 'package:felloapp/core/service/referral_service.dart';
 import 'package:felloapp/feature/referrals/bloc/referral_cubit.dart';
+import 'package:felloapp/feature/tambola/src/ui/widgets/loader.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
+import 'package:felloapp/ui/elements/default_avatar.dart';
 import 'package:felloapp/ui/elements/page_views/height_adaptive_pageview.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/detail_page/flo_premium_details_view.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
-import 'package:felloapp/ui/pages/userProfile/referrals/referral_details/referral_details_view.dart';
 import 'package:felloapp/ui/pages/userProfile/referrals/referral_details/referral_details_vm.dart';
+import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/debouncer.dart';
 import 'package:felloapp/util/extensions/rich_text_extension.dart';
 import 'package:felloapp/util/locator.dart';
@@ -35,6 +39,9 @@ class ReferralHome extends StatelessWidget {
   TextStyle get _unselectedTextStyle => TextStyles.sourceSans.body1
       .colour(UiConstants.titleTextColor.withOpacity(0.6));
 
+  String get subTitle => AppConfig.getValue<Map<String, dynamic>>(
+      AppConfigKey.revamped_referrals_config)['hero']['subtitle'];
+
   @override
   Widget build(BuildContext context) {
     return BaseView<ReferralDetailsViewModel>(
@@ -45,6 +52,7 @@ class ReferralHome extends StatelessWidget {
             statusBarColor: UiConstants.kReferralHeaderColor,
           ),
           child: Scaffold(
+            extendBody: true,
             // backgroundColor: const Color(0xff181818),
             appBar: AppBar(
               elevation: 0.0,
@@ -59,351 +67,341 @@ class ReferralHome extends StatelessWidget {
                     color: Colors.white,
                   )),
             ),
-            body: Stack(
-              children: [
-                SingleChildScrollView(
-                  controller: _controller,
-                  physics: const ClampingScrollPhysics(),
-                  child: Container(
-                    color: const Color(0xff181818),
-                    child: Column(
-                      children: [
-                        Container(
-                          // width: double.infinity,
-                          decoration: BoxDecoration(
-                            color: UiConstants.kReferralHeaderColor,
-                            borderRadius: BorderRadius.only(
-                              bottomLeft:
-                                  Radius.circular(SizeConfig.roundness12),
-                              bottomRight:
-                                  Radius.circular(SizeConfig.roundness12),
-                            ),
-                          ),
-                          child: Container(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: SizeConfig.padding54,
-                            ),
-                            child: Column(
-                              children: [
-                                // SizedBox(height: SizeConfig.padding12),
-                                // Container(
-                                //   height: SizeConfig.padding128,
-                                //   decoration: const BoxDecoration(
-                                //     shape: BoxShape.circle,
-                                //     color: Color(0xff1F1F1F),
-                                //   ),
-                                //   child: Center(
-                                //     child: Text(
-                                //       "Lottie",
-                                //       style:
-                                //           TextStyles.body3.colour(Colors.white),
-                                //     ),
-                                //   ),
-                                // ),
+            body: SingleChildScrollView(
+              controller: _controller,
+              physics: const ClampingScrollPhysics(),
+              child: Container(
+                color: const Color(0xff181818),
+                child: Column(
+                  children: [
+                    Container(
+                      // width: double.infinity,
+                      decoration: BoxDecoration(
+                        color: UiConstants.kReferralHeaderColor,
+                        borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(SizeConfig.roundness12),
+                          bottomRight: Radius.circular(SizeConfig.roundness12),
+                        ),
+                      ),
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                          horizontal: SizeConfig.padding54,
+                        ),
+                        child: Column(
+                          children: [
+                            // SizedBox(height: SizeConfig.padding12),
+                            // Container(
+                            //   height: SizeConfig.padding128,
+                            //   decoration: const BoxDecoration(
+                            //     shape: BoxShape.circle,
+                            //     color: Color(0xff1F1F1F),
+                            //   ),
+                            //   child: Center(
+                            //     child: Text(
+                            //       "Lottie",
+                            //       style:
+                            //           TextStyles.body3.colour(Colors.white),
+                            //     ),
+                            //   ),
+                            // ),
 
-                                Lottie.asset(
-                                  'assets/lotties/referral_lottie.json',
-                                  height: SizeConfig.padding140,
-                                  // width: SizeConfig.padding128,
-                                  fit: BoxFit.cover,
-                                ),
-                                SizedBox(height: SizeConfig.padding24),
-                                Text.rich(
+                            Lottie.asset(
+                              'assets/lotties/referral_lottie.json',
+                              height: SizeConfig.padding140,
+                              // width: SizeConfig.padding128,
+                              fit: BoxFit.cover,
+                            ),
+                            SizedBox(height: SizeConfig.padding24),
+                            Text.rich(
+                              TextSpan(
+                                children: [
                                   TextSpan(
-                                    children: [
-                                      TextSpan(
-                                        text: 'Win ',
-                                        style: TextStyles.rajdhaniB.title1
-                                            .colour(Colors.white),
-                                      ),
-                                      TextSpan(
-                                        text: '₹500',
-                                        style: TextStyles.rajdhaniB.title1
-                                            .colour(const Color(0xFFFFD979)),
-                                      ),
-                                    ],
-                                  ),
-                                  textAlign: TextAlign.center,
-                                ),
-                                Transform.translate(
-                                  offset: Offset(0, -SizeConfig.padding10),
-                                  child: Text(
-                                    'per Referral',
+                                    text: 'Win ',
                                     style: TextStyles.rajdhaniB.title1
                                         .colour(Colors.white),
                                   ),
-                                ),
-                                SizedBox(height: SizeConfig.padding16),
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.start,
-                                  children: [
-                                    Container(
-                                      width: SizeConfig.padding6,
-                                      height: SizeConfig.padding6,
-                                      margin: EdgeInsets.only(
-                                          top: SizeConfig.padding8),
-                                      decoration: const ShapeDecoration(
-                                        color: Color(0xFF61E3C4),
-                                        shape: OvalBorder(),
-                                      ),
-                                    ),
-                                    Expanded(
-                                      child: Text(
-                                        AppConfig.getValue(AppConfigKey
-                                                .app_referral_message)
-                                            .toString(),
-                                        style: TextStyles.body3
-                                            .colour(Colors.white70),
-                                        textAlign: TextAlign.center,
-                                      ),
-                                    ),
-                                  ],
+                                  TextSpan(
+                                    text: '₹500',
+                                    style: TextStyles.rajdhaniB.title1
+                                        .colour(const Color(0xFFFFD979)),
+                                  ),
+                                ],
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                            Transform.translate(
+                              offset: Offset(0, -SizeConfig.padding10),
+                              child: Text(
+                                'per Referral',
+                                style: TextStyles.rajdhaniB.title1
+                                    .colour(Colors.white),
+                              ),
+                            ),
+                            SizedBox(height: SizeConfig.padding6),
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.center,
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Container(
+                                  width: SizeConfig.padding6,
+                                  height: SizeConfig.padding6,
+                                  // margin: EdgeInsets.only(
+                                  //     top: SizeConfig.padding8),
+                                  decoration: const ShapeDecoration(
+                                    color: Color(0xFF61E3C4),
+                                    shape: OvalBorder(),
+                                  ),
                                 ),
                                 SizedBox(
-                                  height: SizeConfig.padding28,
+                                  width: SizeConfig.padding4,
+                                ),
+                                Text(
+                                  subTitle,
+                                  style:
+                                      TextStyles.body3.colour(Colors.white70),
+                                  textAlign: TextAlign.center,
+                                ),
+                              ],
+                            ),
+                            SizedBox(
+                              height: SizeConfig.padding16,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ),
+                    SizedBox(
+                      height: SizeConfig.padding24,
+                    ),
+                    HowItWorksWidget(
+                      onStateChanged: () {
+                        // _controller.animateTo(
+                        //     _controller.position.maxScrollExtent,
+                        //     duration: const Duration(milliseconds: 500),
+                        //     curve: Curves.ease);
+                      },
+                    ),
+                    SizedBox(
+                      height: SizeConfig.padding24,
+                    ),
+                    Container(
+                      margin: EdgeInsets.only(
+                        top: SizeConfig.padding34,
+                        // bottom: SizeConfig.padding12,
+                      ),
+                      child: Column(
+                        children: [
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Expanded(
+                                child: TextButton(
+                                  onPressed: () => model.switchTab(0),
+                                  child: Text(
+                                    'Your Referrals',
+                                    style: model.tabNo == 0
+                                        ? _selectedTextStyle
+                                        : _unselectedTextStyle, // TextStyles.sourceSansSB.body1,
+                                  ),
+                                ),
+                              ),
+                              SizedBox(
+                                width: SizeConfig.padding16,
+                              ),
+                              Expanded(
+                                child: TextButton(
+                                  onPressed: () => model.switchTab(1),
+                                  child: Text(
+                                    'Invite Contacts',
+                                    style: model.tabNo == 1
+                                        ? _selectedTextStyle
+                                        : _unselectedTextStyle, // style: TextStyles.sourceSansSB.body1,
+                                  ),
+                                ),
+                              )
+                            ],
+                          ),
+                          Row(
+                            children: [
+                              AnimatedContainer(
+                                duration: const Duration(milliseconds: 500),
+                                height: 5,
+                                width: model.tabPosWidthFactor,
+                              ),
+                              Container(
+                                color: UiConstants.kTabBorderColor,
+                                height: 5,
+                                width: SizeConfig.screenWidth! * 0.38,
+                              )
+                            ],
+                          ),
+                          BlocProvider<ReferralCubit>(
+                            create: (_) => ReferralCubit(),
+                            child: HeightAdaptivePageView(
+                              controller: model.pageController,
+                              onPageChanged: (int page) {
+                                model.switchTab(page);
+                              },
+                              children: [
+                                ReferralList(
+                                  model: model,
+                                ),
+                                InviteContactWidget(
+                                  model: model,
                                 ),
                               ],
                             ),
                           ),
-                        ),
-                        SizedBox(
-                          height: SizeConfig.padding24,
-                        ),
-                        HowItWorksWidget(
-                          onStateChanged: () {
-                            // _controller.animateTo(
-                            //     _controller.position.maxScrollExtent,
-                            //     duration: const Duration(milliseconds: 500),
-                            //     curve: Curves.ease);
-                          },
-                        ),
-                        SizedBox(
-                          height: SizeConfig.padding24,
-                        ),
-                        Container(
-                          margin: EdgeInsets.only(
-                            top: SizeConfig.padding34,
-                            // bottom: SizeConfig.padding12,
-                          ),
-                          child: Column(
-                            children: [
-                              Row(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Expanded(
-                                    child: TextButton(
-                                      onPressed: () => model.switchTab(0),
-                                      child: Text(
-                                        'Your Referrals',
-                                        style: model.tabNo == 0
-                                            ? _selectedTextStyle
-                                            : _unselectedTextStyle, // TextStyles.sourceSansSB.body1,
-                                      ),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    width: SizeConfig.padding16,
-                                  ),
-                                  Expanded(
-                                    child: TextButton(
-                                      onPressed: () => model.switchTab(1),
-                                      child: Text(
-                                        'Invite Contacts',
-                                        style: model.tabNo == 1
-                                            ? _selectedTextStyle
-                                            : _unselectedTextStyle, // style: TextStyles.sourceSansSB.body1,
-                                      ),
-                                    ),
-                                  )
-                                ],
-                              ),
-                              Row(
-                                children: [
-                                  AnimatedContainer(
-                                    duration: const Duration(milliseconds: 500),
-                                    height: 5,
-                                    width: model.tabPosWidthFactor,
-                                  ),
-                                  Container(
-                                    color: UiConstants.kTabBorderColor,
-                                    height: 5,
-                                    width: SizeConfig.screenWidth! * 0.38,
-                                  )
-                                ],
-                              ),
-                              BlocProvider<ReferralCubit>(
-                                create: (_) => ReferralCubit(),
-                                child: HeightAdaptivePageView(
-                                  controller: model.pageController,
-                                  onPageChanged: (int page) {
-                                    model.switchTab(page);
-                                  },
-                                  children: [
-                                    BonusUnlockedReferals(
-                                      model: model,
-                                    ),
-                                    InviteContactWidget(
-                                      model: model,
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              SizedBox(
-                                height: SizeConfig.navBarHeight * 5,
-                              )
-                            ],
-                          ),
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Container(
-                    padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
-                    decoration: BoxDecoration(
-                      color: const Color(0xff3C3C3C),
-                      borderRadius: BorderRadius.only(
-                        topLeft: Radius.circular(SizeConfig.roundness12),
-                        topRight: Radius.circular(SizeConfig.roundness12),
+                          SizedBox(
+                            height: SizeConfig.navBarHeight * 5,
+                          )
+                        ],
                       ),
                     ),
-                    child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'Your code',
-                          style: TextStyles.sourceSans.body3
-                              .colour(Colors.white.withOpacity(0.45)),
+                  ],
+                ),
+              ),
+            ),
+            bottomNavigationBar: Container(
+              padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+              decoration: BoxDecoration(
+                color: const Color(0xff3C3C3C),
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(SizeConfig.roundness12),
+                  topRight: Radius.circular(SizeConfig.roundness12),
+                ),
+              ),
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    'Your code',
+                    style: TextStyles.sourceSans.body3
+                        .colour(Colors.white.withOpacity(0.45)),
+                  ),
+                  SizedBox(
+                    height: SizeConfig.padding6,
+                  ),
+                  Row(
+                    children: [
+                      Container(
+                        // height: SizeConfig.padding44,
+                        width: SizeConfig.screenWidth! * 0.728,
+                        padding: EdgeInsets.symmetric(
+                            horizontal: SizeConfig.padding12,
+                            vertical: SizeConfig.padding6),
+                        decoration: BoxDecoration(
+                          color: const Color(0xff1B1B1B),
+                          borderRadius: BorderRadius.all(
+                              Radius.circular(SizeConfig.roundness8)),
                         ),
-                        SizedBox(
-                          height: SizeConfig.padding6,
-                        ),
-                        Row(
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Container(
-                              // height: SizeConfig.padding44,
-                              width: SizeConfig.screenWidth! * 0.728,
-                              padding: EdgeInsets.symmetric(
-                                  horizontal: SizeConfig.padding12,
-                                  vertical: SizeConfig.padding6),
-                              decoration: BoxDecoration(
-                                color: const Color(0xff1B1B1B),
-                                borderRadius: BorderRadius.all(
-                                    Radius.circular(SizeConfig.roundness8)),
-                              ),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  Text(
-                                    model.loadingRefCode ? '-' : model.refCode,
-                                    style: TextStyles.rajdhaniEB.title2
-                                        .colour(const Color(0xff1ADAB7))
-                                        .copyWith(
-                                          letterSpacing: 4.68,
-                                        ),
+                            Text(
+                              model.loadingRefCode ? '-' : model.refCode,
+                              style: TextStyles.rajdhaniEB.title2
+                                  .colour(const Color(0xff1ADAB7))
+                                  .copyWith(
+                                    letterSpacing: 4.68,
                                   ),
-                                  const Spacer(),
-                                  GestureDetector(
-                                    onTap: () {
-                                      model.copyReferCode();
-                                    },
-                                    child: Row(
-                                      children: [
-                                        Text('COPY',
-                                            style: TextStyles.sourceSans.body3
-                                                .colour(UiConstants.kTextColor3
-                                                    .withOpacity(0.3))),
-                                        SizedBox(
-                                          width: SizeConfig.padding6,
-                                        ),
-                                        Icon(
-                                          Icons.copy,
-                                          color: UiConstants.kTextColor3
-                                              .withOpacity(0.5),
-                                          size: SizeConfig.padding24,
-                                        ),
-                                      ],
-                                    ),
+                            ),
+                            const Spacer(),
+                            GestureDetector(
+                              onTap: () {
+                                model.copyReferCode();
+                              },
+                              child: Row(
+                                children: [
+                                  Text('COPY',
+                                      style: TextStyles.sourceSans.body3.colour(
+                                          UiConstants.kTextColor3
+                                              .withOpacity(0.3))),
+                                  SizedBox(
+                                    width: SizeConfig.padding6,
+                                  ),
+                                  Icon(
+                                    Icons.copy,
+                                    color: UiConstants.kTextColor3
+                                        .withOpacity(0.5),
+                                    size: SizeConfig.padding24,
                                   ),
                                 ],
                               ),
                             ),
-                            SizedBox(
-                              width: SizeConfig.padding10,
-                            ),
-                            Container(
-                              // height: SizeConfig.padding44,
-                              padding: EdgeInsets.all(SizeConfig.padding14),
-                              decoration: const BoxDecoration(
-                                color: Color(0xff1B1B1B),
-                                shape: BoxShape.circle,
-                              ),
-                              child: GestureDetector(
-                                onTap: () {
-                                  if (model.isShareAlreadyClicked == false) {
-                                    locator<ReferralService>().shareLink();
-                                  }
-                                },
-                                child: Icon(
-                                  Icons.share_outlined,
-                                  color: UiConstants.kTabBorderColor,
-                                  size: SizeConfig.padding24,
-                                ),
-                              ),
-                            ),
                           ],
                         ),
-                        SizedBox(
-                          height: SizeConfig.padding18,
+                      ),
+                      SizedBox(
+                        width: SizeConfig.padding10,
+                      ),
+                      Container(
+                        // height: SizeConfig.padding44,
+                        padding: EdgeInsets.all(SizeConfig.padding14),
+                        decoration: const BoxDecoration(
+                          color: Color(0xff1B1B1B),
+                          shape: BoxShape.circle,
                         ),
-                        Row(
-                          children: [
-                            AppPositiveBtn(
-                              btnText: 'INVITE FRIENDS',
-                              width: SizeConfig.screenWidth! * 0.692,
-                              height: SizeConfig.padding56,
-                              onPressed: () {
-                                if (model.isShareAlreadyClicked == false) {
-                                  locator<ReferralService>().shareLink();
-                                }
-                              },
-                            ),
-                            SizedBox(width: SizeConfig.padding12),
-                            Container(
-                              width: SizeConfig.padding60,
-                              height: SizeConfig.padding56,
-                              padding: EdgeInsets.all(SizeConfig.padding16),
-                              decoration: BoxDecoration(
-                                color: const Color(0xFF07D2AD),
-                                borderRadius: BorderRadius.circular(8),
-                                gradient: const LinearGradient(
-                                  colors: [
-                                    Color(0xff12BC9D),
-                                    Color(0xff249680),
-                                  ],
-                                  begin: Alignment.topCenter,
-                                  end: Alignment.bottomCenter,
-                                ),
-                              ),
-                              child: SvgPicture.asset(
-                                'assets/vectors/whatsapp.svg',
-                                width: 24,
-                                height: 24,
-                                color: Colors.white,
-                              ),
-                            )
-                          ],
+                        child: GestureDetector(
+                          onTap: () {
+                            if (model.isShareAlreadyClicked == false) {
+                              locator<ReferralService>().shareLink();
+                            }
+                          },
+                          child: Icon(
+                            Icons.share_outlined,
+                            color: UiConstants.kTabBorderColor,
+                            size: SizeConfig.padding24,
+                          ),
                         ),
-                      ],
-                    ),
+                      ),
+                    ],
                   ),
-                )
-              ],
+                  SizedBox(
+                    height: SizeConfig.padding18,
+                  ),
+                  Row(
+                    children: [
+                      AppPositiveBtn(
+                        btnText: 'INVITE FRIENDS',
+                        width: SizeConfig.screenWidth! * 0.692,
+                        height: SizeConfig.padding56,
+                        onPressed: () {
+                          if (model.isShareAlreadyClicked == false) {
+                            locator<ReferralService>().shareLink();
+                          }
+                        },
+                      ),
+                      SizedBox(width: SizeConfig.padding12),
+                      Container(
+                        width: SizeConfig.padding60,
+                        height: SizeConfig.padding56,
+                        padding: EdgeInsets.all(SizeConfig.padding16),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF07D2AD),
+                          borderRadius: BorderRadius.circular(8),
+                          gradient: const LinearGradient(
+                            colors: [
+                              Color(0xff12BC9D),
+                              Color(0xff249680),
+                            ],
+                            begin: Alignment.topCenter,
+                            end: Alignment.bottomCenter,
+                          ),
+                        ),
+                        child: SvgPicture.asset(
+                          'assets/vectors/whatsapp.svg',
+                          width: 24,
+                          height: 24,
+                          color: Colors.white,
+                        ),
+                      )
+                    ],
+                  ),
+                ],
+              ),
             ),
-            // bottomNavigationBar:
           ),
         );
       },
@@ -603,6 +601,405 @@ class _HowItWorksWidgetState extends State<HowItWorksWidget> {
               : const SizedBox()
         ],
       ),
+    );
+  }
+}
+
+class ReferralList extends StatelessWidget {
+  const ReferralList({
+    Key? key,
+    required this.model,
+  }) : super(key: key);
+
+  final ReferralDetailsViewModel model;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: const Color(0xFF454545).withOpacity(0.3),
+      child: model.referalList == null
+          ? Container(
+              width: SizeConfig.screenWidth,
+              padding: EdgeInsets.symmetric(
+                  vertical: SizeConfig.pageHorizontalMargins),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  const FullScreenLoader(),
+                  SizedBox(height: SizeConfig.padding20),
+                  Text(
+                    'Fetching your referrals. Please wait..',
+                    style: TextStyles.sourceSans.body2.colour(Colors.white),
+                  ),
+                ],
+              ),
+            )
+          : model.referalList!.isEmpty
+              ? Column(
+                  children: [
+                    SizedBox(height: SizeConfig.padding46),
+                    SvgPicture.asset(
+                      'assets/svg/winScreen-referalAsset.svg',
+                      // width: SizeConfig.padding32,
+                      height: SizeConfig.padding104,
+                    ),
+                    SizedBox(height: SizeConfig.padding16),
+                    Text(
+                      'You haven’t made any referrals yet',
+                      style: TextStyles.sourceSans.body3
+                          .colour(Colors.white.withOpacity(0.8)),
+                    ),
+                    SizedBox(height: SizeConfig.padding12),
+                    Text('Earn over ₹1Lakh',
+                        textAlign: TextAlign.center,
+                        style: TextStyles.rajdhaniSB.body0
+                            .colour(Colors.white.withOpacity(0.8))),
+                    SizedBox(
+                      height: SizeConfig.padding16,
+                    ),
+                    MaterialButton(
+                      onPressed: () {
+                        if (model.isShareAlreadyClicked == false) {
+                          locator<ReferralService>().shareLink();
+                        }
+                      },
+                      color: Colors.white,
+                      minWidth: SizeConfig.padding100,
+                      padding: EdgeInsets.symmetric(
+                          horizontal: SizeConfig.padding60,
+                          vertical: SizeConfig.padding12),
+                      shape: RoundedRectangleBorder(
+                        borderRadius:
+                            BorderRadius.circular(SizeConfig.roundness5),
+                      ),
+                      height: SizeConfig.padding34,
+                      child: Text(
+                        "REFER NOW",
+                        style: TextStyles.rajdhaniB.body3.colour(Colors.black),
+                      ),
+                    ),
+                    SizedBox(
+                      height: SizeConfig.padding54,
+                    ),
+                  ],
+                )
+              : model.bonusUnlockedReferalPresent(model.referalList!)
+                  ? Padding(
+                      padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+                      child: Column(
+                        children: [
+                          SizedBox(height: SizeConfig.padding10),
+                          Row(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              SvgPicture.network(
+                                Assets.referralReward,
+                                height: SizeConfig.padding16,
+                              ),
+                              SizedBox(
+                                width: SizeConfig.padding6,
+                              ),
+                              'Remind your friends. Don’t miss out on ₹1Lakh!'
+                                  .beautify(
+                                boldStyle: TextStyles.sourceSansB.body3.colour(
+                                  Colors.white.withOpacity(0.5),
+                                ),
+                                style: TextStyles.sourceSans.body3.colour(
+                                  Colors.white.withOpacity(0.5),
+                                ),
+                              ),
+                            ],
+                          ),
+                          SizedBox(
+                            height: SizeConfig.padding16,
+                          ),
+                          Container(
+                            height: SizeConfig.padding40,
+                            padding:
+                                const EdgeInsets.symmetric(horizontal: 16.0),
+                            decoration: BoxDecoration(
+                              color: const Color(0xFF454545).withOpacity(0.3),
+                              borderRadius: BorderRadius.circular(20),
+                            ),
+                            child: Stack(
+                              alignment: Alignment.centerLeft,
+                              children: [
+                                const Icon(
+                                  Icons.search,
+                                  color: Colors.grey,
+                                ),
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                      left: SizeConfig.padding36),
+                                  child: TextFormField(
+                                    // controller: controller,
+                                    style: TextStyles.sourceSans.body3
+                                        .colour(Colors.white),
+                                    onChanged: (query) {
+                                      log('Text changed: $query');
+                                      // _debouncer.call(() => searchContacts(query));
+                                    },
+                                    validator: (value) {
+                                      if (value!.isEmpty) {
+                                        return 'name should be greater than 3 characters';
+                                      }
+                                      return null;
+                                    },
+                                    decoration: InputDecoration(
+                                      contentPadding:
+                                          const EdgeInsets.symmetric(
+                                              vertical: 13),
+                                      hintText: "Search by name",
+                                      hintStyle: TextStyles.sourceSans.body3
+                                          .colour(
+                                              Colors.white.withOpacity(0.3)),
+                                      errorStyle: TextStyles.sourceSans.body3
+                                          .colour(Colors.red),
+                                      border: InputBorder.none,
+                                      focusedBorder: InputBorder.none,
+                                      enabledBorder: InputBorder.none,
+                                      errorBorder: InputBorder.none,
+                                      disabledBorder: InputBorder.none,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            height: SizeConfig.padding20,
+                          ),
+                          ListView.builder(
+                              shrinkWrap: true,
+                              padding: EdgeInsets.zero,
+                              physics: const NeverScrollableScrollPhysics(),
+                              itemBuilder: (context, i) {
+                                if (model.referalList![i].isUserBonusUnlocked ??
+                                    false) {
+                                  return Container(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal: SizeConfig.padding24,
+                                      vertical: SizeConfig.padding18,
+                                    ),
+                                    decoration: BoxDecoration(
+                                      color: const Color(0xFF141414),
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    child: Column(
+                                      children: [
+                                        Row(
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.spaceBetween,
+                                            children: [
+                                              Column(
+                                                crossAxisAlignment:
+                                                    CrossAxisAlignment.start,
+                                                children: [
+                                                  Text(
+                                                    model.referalList![i]
+                                                        .userName,
+                                                    style: TextStyles
+                                                        .sourceSansSB.body2
+                                                        .colour(Colors.white),
+                                                  ),
+                                                  Text(
+                                                    'Remind to save & get ₹450 more!',
+                                                    style: TextStyles
+                                                        .sourceSans.body3
+                                                        .colour(
+                                                      Colors.white
+                                                          .withOpacity(0.44),
+                                                    ),
+                                                  ),
+                                                ],
+                                              ),
+                                              SizedBox(
+                                                width: SizeConfig.padding76,
+                                                child: MaterialButton(
+                                                  onPressed: () {},
+                                                  color: Colors.white,
+                                                  minWidth:
+                                                      SizeConfig.padding76,
+                                                  padding: EdgeInsets.symmetric(
+                                                      horizontal:
+                                                          SizeConfig.padding14,
+                                                      vertical:
+                                                          SizeConfig.padding12),
+                                                  shape: RoundedRectangleBorder(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            SizeConfig
+                                                                .roundness5),
+                                                  ),
+                                                  height: SizeConfig.padding34,
+                                                  child: Text(
+                                                    "REMIND",
+                                                    style: TextStyles
+                                                        .rajdhaniB.body3
+                                                        .colour(Colors.black),
+                                                  ),
+                                                ),
+                                              ),
+                                            ]),
+                                        SizedBox(
+                                          height: SizeConfig.padding14,
+                                        ),
+                                        Row(
+                                          children: [
+                                            Column(
+                                              children: [
+                                                CustomPaint(
+                                                  size: Size(
+                                                      SizeConfig.padding32,
+                                                      (SizeConfig.padding32 *
+                                                              0.7)
+                                                          .toDouble()),
+                                                  painter: RPSCustomPainter(),
+                                                ),
+                                                Container(
+                                                  width: SizeConfig.padding16,
+                                                  height: SizeConfig.padding16,
+                                                  decoration: BoxDecoration(
+                                                    color:
+                                                        const Color(0xFF61E3C4),
+                                                    shape: BoxShape.circle,
+                                                  ),
+                                                  child: Icon(
+                                                    Icons.check,
+                                                    color: Colors.black,
+                                                    size: SizeConfig.padding14,
+                                                    weight: 700,
+                                                    grade: 200,
+                                                    opticalSize: 48,
+                                                  ),
+                                                )
+                                              ],
+                                            ),
+                                          ],
+                                        )
+                                      ],
+                                    ),
+                                  );
+
+                                  return Padding(
+                                    padding: EdgeInsets.only(
+                                        bottom: SizeConfig.padding24),
+                                    child: Row(
+                                      children: [
+                                        FutureBuilder(
+                                          future: model.getProfileDpWithUid(
+                                              model.referalList![i].uid),
+                                          builder: (context, snapshot) {
+                                            if (snapshot.connectionState ==
+                                                    ConnectionState.waiting ||
+                                                !snapshot.hasData) {
+                                              return DefaultAvatar();
+                                            }
+
+                                            String imageUrl =
+                                                snapshot.data as String;
+
+                                            return ClipOval(
+                                              child: CachedNetworkImage(
+                                                imageUrl: imageUrl,
+                                                fit: BoxFit.cover,
+                                                width: SizeConfig.iconSize5,
+                                                height: SizeConfig.iconSize5,
+                                                placeholder: (context, url) =>
+                                                    Container(
+                                                  width: SizeConfig.iconSize5,
+                                                  height: SizeConfig.iconSize5,
+                                                  decoration:
+                                                      const BoxDecoration(
+                                                    color: Colors.grey,
+                                                    shape: BoxShape.circle,
+                                                  ),
+                                                ),
+                                                errorWidget: (a, b, c) {
+                                                  return DefaultAvatar();
+                                                },
+                                              ),
+                                            );
+                                          },
+                                        ),
+                                        SizedBox(
+                                          width: SizeConfig.padding10,
+                                        ),
+                                        Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          children: [
+                                            Text(model.referalList![i].userName,
+                                                style: TextStyles
+                                                    .sourceSans.body1
+                                                    .colour(
+                                                  Colors.white,
+                                                )),
+                                            Text(
+                                              model.referalList![i].timestamp ==
+                                                          null ||
+                                                      model.referalList![i]
+                                                          .timestamp
+                                                          .toDate()
+                                                          .isBefore(Constants
+                                                              .VERSION_2_RELEASE_DATE)
+                                                  ? '-'
+                                                  : '${model.getUserMembershipDate(model.referalList![i].timestamp)}',
+                                              style: TextStyles.body4.colour(
+                                                  UiConstants.kTextColor2),
+                                            ),
+                                          ],
+                                        ),
+                                        Expanded(
+                                          child: SizedBox(
+                                            width: double.infinity,
+                                            child: Row(
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.end,
+                                              children: [
+                                                SvgPicture.asset(
+                                                  Assets
+                                                      .unredemmedScratchCardBG,
+                                                  width: SizeConfig.padding32,
+                                                ),
+                                                SizedBox(
+                                                  width: SizeConfig.padding12,
+                                                ),
+                                                Text("1",
+                                                    style: TextStyles
+                                                        .sourceSans.body1.bold
+                                                        .colour(
+                                                      Colors.white,
+                                                    )),
+                                              ],
+                                            ),
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  );
+                                } else {
+                                  return const SizedBox.shrink();
+                                }
+                              },
+                              itemCount: model.referalList!.length),
+                        ],
+                      ),
+                    )
+                  : Column(
+                      children: [
+                        SizedBox(height: SizeConfig.padding16),
+                        SvgPicture.asset(Assets.noReferralAsset),
+                        SizedBox(height: SizeConfig.padding16),
+                        Text(
+                          'No referrals yet',
+                          style:
+                              TextStyles.sourceSans.body2.colour(Colors.white),
+                        ),
+                        SizedBox(height: SizeConfig.padding16),
+                      ],
+                    ),
     );
   }
 }
@@ -1172,5 +1569,94 @@ class _ContactListWidgetState extends State<ContactListWidget> {
         ],
       ),
     );
+  }
+}
+
+// import 'dart:ui' as ui;
+//
+// //Add this CustomPaint widget to the Widget Tree
+// CustomPaint(
+// size: Size(WIDTH, (WIDTH*0.7741935483870968).toDouble()), //You can Replace [WIDTH] with your desired width for Custom Paint and height will be calculated automatically
+// painter: RPSCustomPainter(),
+// )
+
+//Copy this CustomPainter code to the Bottom of the File
+class RPSCustomPainter extends CustomPainter {
+  @override
+  void paint(Canvas canvas, Size size) {
+    Path path_0 = Path();
+    path_0.moveTo(size.width * 0.004032258, size.height * 0.09106542);
+    path_0.cubicTo(
+        size.width * 0.004032258,
+        size.height * 0.04364792,
+        size.width * 0.03379194,
+        size.height * 0.005208333,
+        size.width * 0.07050226,
+        size.height * 0.005208333);
+    path_0.lineTo(size.width * 0.9294968, size.height * 0.005208333);
+    path_0.cubicTo(
+        size.width * 0.9662065,
+        size.height * 0.005208333,
+        size.width * 0.9959677,
+        size.height * 0.04364792,
+        size.width * 0.9959677,
+        size.height * 0.09106542);
+    path_0.lineTo(size.width * 0.9959677, size.height * 0.5828458);
+    path_0.cubicTo(
+        size.width * 0.9959677,
+        size.height * 0.6302667,
+        size.width * 0.9662097,
+        size.height * 0.6687042,
+        size.width * 0.9294968,
+        size.height * 0.6687042);
+    path_0.lineTo(size.width * 0.7140290, size.height * 0.6687042);
+    path_0.cubicTo(
+        size.width * 0.6904452,
+        size.height * 0.6687042,
+        size.width * 0.6682548,
+        size.height * 0.6831208,
+        size.width * 0.6541935,
+        size.height * 0.7075750);
+    path_0.lineTo(size.width * 0.5116258, size.height * 0.9555167);
+    path_0.cubicTo(
+        size.width * 0.5016774,
+        size.height * 0.9728208,
+        size.width * 0.4814677,
+        size.height * 0.9722042,
+        size.width * 0.4721645,
+        size.height * 0.9543167);
+    path_0.lineTo(size.width * 0.3457258, size.height * 0.7112833);
+    path_0.cubicTo(
+        size.width * 0.3318806,
+        size.height * 0.6846667,
+        size.width * 0.3086871,
+        size.height * 0.6687042,
+        size.width * 0.2838629,
+        size.height * 0.6687042);
+    path_0.lineTo(size.width * 0.07050226, size.height * 0.6687042);
+    path_0.cubicTo(
+        size.width * 0.03379194,
+        size.height * 0.6687042,
+        size.width * 0.004032258,
+        size.height * 0.6302667,
+        size.width * 0.004032258,
+        size.height * 0.5828458);
+    path_0.lineTo(size.width * 0.004032258, size.height * 0.09106542);
+    path_0.close();
+
+    Paint paint_0_stroke = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = size.width * 0.008064516;
+    paint_0_stroke.color = const Color(0xff62E3C4).withOpacity(1.0);
+    canvas.drawPath(path_0, paint_0_stroke);
+
+    Paint paint_0_fill = Paint()..style = PaintingStyle.fill;
+    paint_0_fill.color = const Color(0xff000000).withOpacity(1.0);
+    canvas.drawPath(path_0, paint_0_fill);
+  }
+
+  @override
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    return true;
   }
 }
