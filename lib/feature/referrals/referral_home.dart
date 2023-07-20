@@ -845,38 +845,248 @@ class ReferralList extends StatelessWidget {
                                         SizedBox(
                                           height: SizeConfig.padding14,
                                         ),
-                                        Row(
-                                          children: [
-                                            Column(
-                                              children: [
-                                                CustomPaint(
-                                                  size: Size(
-                                                      SizeConfig.padding32,
-                                                      (SizeConfig.padding32 *
-                                                              0.7)
-                                                          .toDouble()),
-                                                  painter: RPSCustomPainter(),
+                                        SizedBox(
+                                          height: SizeConfig.padding72,
+                                          child: Stack(
+                                            children: [
+                                              Align(
+                                                alignment: Alignment.centerLeft,
+                                                child: Container(
+                                                  margin: EdgeInsets.only(
+                                                    left: SizeConfig.padding38,
+                                                    right: SizeConfig.padding50,
+                                                    bottom:
+                                                        SizeConfig.padding12,
+                                                  ),
+                                                  height: 1.2,
+                                                  width: SizeConfig.padding82,
+                                                  color:
+                                                      const Color(0xFF61E3C4),
                                                 ),
-                                                Container(
-                                                  width: SizeConfig.padding16,
-                                                  height: SizeConfig.padding16,
-                                                  decoration: BoxDecoration(
-                                                    color:
-                                                        const Color(0xFF61E3C4),
-                                                    shape: BoxShape.circle,
+                                              ),
+                                              Align(
+                                                alignment:
+                                                    Alignment.centerRight,
+                                                child: Container(
+                                                  margin: EdgeInsets.only(
+                                                    right: SizeConfig.padding50,
+                                                    bottom:
+                                                        SizeConfig.padding12,
                                                   ),
-                                                  child: Icon(
-                                                    Icons.check,
-                                                    color: Colors.black,
-                                                    size: SizeConfig.padding14,
-                                                    weight: 700,
-                                                    grade: 200,
-                                                    opticalSize: 48,
+                                                  height: 1.2,
+                                                  width: SizeConfig.padding108,
+                                                  color:
+                                                      const Color(0xFF868686),
+                                                ),
+                                              ),
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment
+                                                        .spaceBetween,
+                                                children: [
+                                                  Column(
+                                                    children: [
+                                                      SizedBox(
+                                                        height: SizeConfig
+                                                            .padding22,
+                                                      ),
+                                                      // Stack(
+                                                      //   children: [
+                                                      //     CustomPaint(
+                                                      //       size: Size(
+                                                      //           SizeConfig.padding32,
+                                                      //           (SizeConfig.padding32 *
+                                                      //                   0.7)
+                                                      //               .toDouble()),
+                                                      //       painter: RPSCustomPainter(),
+                                                      //     ),
+                                                      //     Padding(
+                                                      //       padding:  EdgeInsets.only(left: SizeConfig.padding2),
+                                                      //       child: Text(
+                                                      //         '₹450',
+                                                      //         style: TextStyles
+                                                      //             .sourceSans.body4
+                                                      //             .colour(
+                                                      //                 const Color(0xFF00E6C3)),
+                                                      //       ),
+                                                      //     ),
+                                                      //   ],
+                                                      // ),
+                                                      Container(
+                                                        width: SizeConfig
+                                                            .padding16,
+                                                        height: SizeConfig
+                                                            .padding16,
+                                                        decoration:
+                                                            const BoxDecoration(
+                                                          color:
+                                                              Color(0xFF61E3C4),
+                                                          shape:
+                                                              BoxShape.circle,
+                                                        ),
+                                                        child: Icon(
+                                                          Icons.check,
+                                                          color: Colors.black,
+                                                          size: SizeConfig
+                                                              .padding14,
+                                                          weight: 700,
+                                                          grade: 200,
+                                                          opticalSize: 48,
+                                                        ),
+                                                      ),
+                                                      SizedBox(
+                                                        height:
+                                                            SizeConfig.padding6,
+                                                      ),
+                                                      Text(
+                                                        'Signed Up',
+                                                        style: TextStyles
+                                                            .sourceSans.body4
+                                                            .colour(
+                                                                Colors.white),
+                                                      ),
+                                                    ],
                                                   ),
-                                                )
-                                              ],
-                                            ),
-                                          ],
+                                                  Column(
+                                                    children: [
+                                                      SizedBox(
+                                                        width: SizeConfig
+                                                            .padding32,
+                                                        child: Stack(
+                                                          children: [
+                                                            CustomPaint(
+                                                              size: Size(
+                                                                  SizeConfig
+                                                                      .padding32,
+                                                                  (SizeConfig.padding32 *
+                                                                          0.7)
+                                                                      .toDouble()),
+                                                              painter:
+                                                                  RPSCustomPainter(),
+                                                            ),
+                                                            Align(
+                                                              alignment:
+                                                                  Alignment
+                                                                      .center,
+                                                              child: Text(
+                                                                '₹50',
+                                                                style: TextStyles
+                                                                    .sourceSans
+                                                                    .body4
+                                                                    .colour(const Color(
+                                                                        0xFF00E6C3)),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      Container(
+                                                        width: SizeConfig
+                                                            .padding16,
+                                                        height: SizeConfig
+                                                            .padding16,
+                                                        decoration:
+                                                            const BoxDecoration(
+                                                          color:
+                                                              Color(0xFF61E3C4),
+                                                          shape:
+                                                              BoxShape.circle,
+                                                        ),
+                                                        child: Icon(
+                                                          Icons.check,
+                                                          color: Colors.black,
+                                                          size: SizeConfig
+                                                              .padding14,
+                                                          weight: 700,
+                                                          grade: 200,
+                                                          opticalSize: 48,
+                                                        ),
+                                                      ),
+                                                      SizedBox(
+                                                        height:
+                                                            SizeConfig.padding6,
+                                                      ),
+                                                      Text(
+                                                        'Save ₹1000',
+                                                        style: TextStyles
+                                                            .sourceSans.body4
+                                                            .colour(
+                                                                Colors.white),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                  Column(
+                                                    children: [
+                                                      SizedBox(
+                                                        width: SizeConfig
+                                                            .padding32,
+                                                        child: Stack(
+                                                          children: [
+                                                            CustomPaint(
+                                                              size: Size(
+                                                                  SizeConfig
+                                                                      .padding32,
+                                                                  (SizeConfig.padding32 *
+                                                                          0.7)
+                                                                      .toDouble()),
+                                                              painter:
+                                                                  RPSCustomPainter(),
+                                                            ),
+                                                            Align(
+                                                              alignment:
+                                                                  Alignment
+                                                                      .center,
+                                                              child: Text(
+                                                                '₹450',
+                                                                style: TextStyles
+                                                                    .sourceSans
+                                                                    .body4
+                                                                    .colour(const Color(
+                                                                        0xFF00E6C3)),
+                                                              ),
+                                                            ),
+                                                          ],
+                                                        ),
+                                                      ),
+                                                      Container(
+                                                        width: SizeConfig
+                                                            .padding16,
+                                                        height: SizeConfig
+                                                            .padding16,
+                                                        decoration:
+                                                            const BoxDecoration(
+                                                          color:
+                                                              Color(0xFF61E3C4),
+                                                          shape:
+                                                              BoxShape.circle,
+                                                        ),
+                                                        child: Icon(
+                                                          Icons.check,
+                                                          color: Colors.black,
+                                                          size: SizeConfig
+                                                              .padding14,
+                                                          weight: 700,
+                                                          grade: 200,
+                                                          opticalSize: 48,
+                                                        ),
+                                                      ),
+                                                      SizedBox(
+                                                        height:
+                                                            SizeConfig.padding6,
+                                                      ),
+                                                      Text(
+                                                        'Save in 12% Flo',
+                                                        style: TextStyles
+                                                            .sourceSans.body4
+                                                            .colour(
+                                                                Colors.white),
+                                                      ),
+                                                    ],
+                                                  ),
+                                                ],
+                                              ),
+                                            ],
+                                          ),
                                         )
                                       ],
                                     ),
@@ -1572,14 +1782,6 @@ class _ContactListWidgetState extends State<ContactListWidget> {
   }
 }
 
-// import 'dart:ui' as ui;
-//
-// //Add this CustomPaint widget to the Widget Tree
-// CustomPaint(
-// size: Size(WIDTH, (WIDTH*0.7741935483870968).toDouble()), //You can Replace [WIDTH] with your desired width for Custom Paint and height will be calculated automatically
-// painter: RPSCustomPainter(),
-// )
-
 //Copy this CustomPainter code to the Bottom of the File
 class RPSCustomPainter extends CustomPainter {
   @override
@@ -1646,7 +1848,7 @@ class RPSCustomPainter extends CustomPainter {
 
     Paint paint_0_stroke = Paint()
       ..style = PaintingStyle.stroke
-      ..strokeWidth = size.width * 0.008064516;
+      ..strokeWidth = size.width * 0.013096774;
     paint_0_stroke.color = const Color(0xff62E3C4).withOpacity(1.0);
     canvas.drawPath(path_0, paint_0_stroke);
 
