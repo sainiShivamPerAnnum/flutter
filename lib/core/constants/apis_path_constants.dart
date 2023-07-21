@@ -237,4 +237,12 @@ class ApiPath {
   static String subscribeGoldPriceAlert = "/gold-price-alert/subscribe";
 
   static String augmontReport(String txnId) => "/aug/$txnId/txn";
+
+  static String get verifyAugmontKyc => "/pan/re-verify";
+
+  static String get goldProScheme => "/fd/scheme";
+
+  static String get createFd => "/fd";
+
+  static String getFds(String uid) => "/$uid/fd";
 }

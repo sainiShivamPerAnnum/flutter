@@ -59,56 +59,59 @@ class _GoldProBuySuccessViewState extends State<GoldProBuySuccessView>
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Stack(
-                  children: [
-                    Align(
-                      alignment: Alignment.center,
-                      child: Lottie.network(
-                        Assets.goldDepostSuccessLottie,
-                        fit: BoxFit.cover,
-                      ),
-                    ),
-                    if (widget.txnService.currentTxnAmount! > 0)
+                SizedBox(
+                  height: SizeConfig.screenHeight! * 0.4,
+                  child: Stack(
+                    children: [
                       Align(
-                        alignment: Alignment.centerLeft,
-                        child: Container(
-                          margin: EdgeInsets.only(
-                              left: SizeConfig.padding12,
-                              bottom: SizeConfig.padding24),
-                          child: Lottie.network(
-                            Assets.floatingTokenIslandLottie,
-                            width: SizeConfig.screenWidth! * 0.3,
-                            fit: BoxFit.cover,
-                          ),
+                        alignment: Alignment.center,
+                        child: Lottie.network(
+                          Assets.goldDepostSuccessLottie,
+                          fit: BoxFit.cover,
                         ),
                       ),
-                    if (widget.txnService.currentTxnScratchCardCount > 0)
-                      Align(
-                        alignment: Alignment.centerRight,
-                        child: Container(
-                          margin: EdgeInsets.only(
-                            right: SizeConfig.padding12,
-                            top: SizeConfig.padding24,
-                          ),
-                          child: Lottie.network(
-                            Assets.floatingScratchCardIslandLottie,
-                            width: SizeConfig.screenWidth! * 0.3,
-                            fit: BoxFit.cover,
-                          ),
-                        ),
-                      ),
-                    if (widget.txnService.currentTxnTambolaTicketsCount > 0)
-                      Align(
-                        alignment: Alignment.bottomCenter,
-                        child: Container(
-                          child: Lottie.network(
-                            Assets.floatingTambolaTicketIslandLottie,
-                            width: SizeConfig.screenWidth! * 0.3,
-                            fit: BoxFit.cover,
+                      if (widget.txnService.currentTxnAmount! > 0)
+                        Align(
+                          alignment: Alignment.centerLeft,
+                          child: Container(
+                            margin: EdgeInsets.only(
+                                left: SizeConfig.padding12,
+                                bottom: SizeConfig.padding24),
+                            child: Lottie.network(
+                              Assets.floatingTokenIslandLottie,
+                              width: SizeConfig.screenWidth! * 0.3,
+                              fit: BoxFit.cover,
+                            ),
                           ),
                         ),
-                      ),
-                  ],
+                      if (widget.txnService.currentTxnScratchCardCount > 0)
+                        Align(
+                          alignment: Alignment.centerRight,
+                          child: Container(
+                            margin: EdgeInsets.only(
+                              right: SizeConfig.padding12,
+                              top: SizeConfig.padding24,
+                            ),
+                            child: Lottie.network(
+                              Assets.floatingScratchCardIslandLottie,
+                              width: SizeConfig.screenWidth! * 0.3,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                      if (widget.txnService.currentTxnTambolaTicketsCount > 0)
+                        Align(
+                          alignment: Alignment.bottomCenter,
+                          child: Container(
+                            child: Lottie.network(
+                              Assets.floatingTambolaTicketIslandLottie,
+                              width: SizeConfig.screenWidth! * 0.3,
+                              fit: BoxFit.cover,
+                            ),
+                          ),
+                        ),
+                    ],
+                  ),
                 ),
                 Text(
                   locale.btnCongratulations,
@@ -161,7 +164,7 @@ class _GoldProBuySuccessViewState extends State<GoldProBuySuccessView>
                                       .colour(UiConstants.kTextColor2)),
                               SizedBox(height: SizeConfig.padding12),
                               Text(
-                                  "${BaseUtil.getIntOrDouble(widget.txnService.currentTxnAmount!)}gms",
+                                  "₹ ${BaseUtil.getIntOrDouble(widget.txnService.currentGoldPurchaseDetails.goldBuyAmount!)}",
                                   style: TextStyles.rajdhaniSB.title3
                                       .colour(UiConstants.kGoldProPrimary)),
                               SizedBox(height: SizeConfig.padding14),
@@ -182,7 +185,8 @@ class _GoldProBuySuccessViewState extends State<GoldProBuySuccessView>
                                   style: TextStyles.sourceSans.body2
                                       .colour(UiConstants.kTextColor2)),
                               SizedBox(height: SizeConfig.padding12),
-                              Text("₹ ${widget.txnService.currentTxnGms}",
+                              Text(
+                                  "${BaseUtil.digitPrecision(widget.txnService.currentTxnGms!, 2, false)} gms",
                                   style: TextStyles.rajdhaniSB.title3),
                             ],
                           ),

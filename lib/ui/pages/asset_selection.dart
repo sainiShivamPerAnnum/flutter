@@ -322,13 +322,14 @@ class GoldPlanWidget extends StatelessWidget {
               ),
               SizedBox(height: SizeConfig.padding34),
               DigitalGoldPrograms(
-                title: "Save in Gold Pro",
+                title: "Save in ${Constants.ASSET_GOLD_STAKE}",
                 model: model,
                 showRates: false,
                 isRecommended: true,
                 promoText: "*4.5% Extra Gold* by saving Min *0.5g* in Gold",
                 amount: amount,
                 isSkipMl: isSkipMl,
+                isPro: true,
               ),
               DigitalGoldPrograms(
                 title: "Save in Gold",
@@ -585,6 +586,7 @@ class DigitalGoldPrograms extends StatelessWidget {
   final bool? isSkipMl;
   final String? promoText;
   final GoldBuyViewModel model;
+  final bool isPro;
   const DigitalGoldPrograms({
     required this.title,
     this.isRecommended = false,
@@ -593,6 +595,7 @@ class DigitalGoldPrograms extends StatelessWidget {
     this.amount,
     this.isSkipMl = false,
     this.promoText,
+    this.isPro = false,
     required this.model,
   }) : super(key: key);
 
@@ -602,15 +605,19 @@ class DigitalGoldPrograms extends StatelessWidget {
       children: [
         GestureDetector(
           onTap: () {
-            BaseUtil().openRechargeModalSheet(
-                investmentType: InvestmentType.AUGGOLD99);
+            if (isPro) {
+              BaseUtil.openGoldProBuyView();
+            } else {
+              BaseUtil().openRechargeModalSheet(
+                  investmentType: InvestmentType.AUGGOLD99);
 
-            locator<AnalyticsService>().track(
-                eventName: AnalyticsEvents.assetSelectionProceed,
-                properties: {
-                  'Asset': InvestmentType.AUGGOLD99.name,
-                  'Recommended': isRecommended,
-                });
+              locator<AnalyticsService>().track(
+                  eventName: AnalyticsEvents.assetSelectionProceed,
+                  properties: {
+                    'Asset': InvestmentType.AUGGOLD99.name,
+                    'Recommended': isRecommended,
+                  });
+            }
           },
           child: Container(
             margin:

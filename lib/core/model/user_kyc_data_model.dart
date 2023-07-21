@@ -5,6 +5,7 @@ class UserKycDataModel {
   final String pan;
   final String name;
   final String url;
+  final bool augmontKyc;
 
   UserKycDataModel({
     required this.uid,
@@ -13,6 +14,7 @@ class UserKycDataModel {
     required this.name,
     required this.url,
     required this.status,
+    required this.augmontKyc,
   });
 
   UserKycDataModel.fromMap(Map<String, dynamic> map)
@@ -23,6 +25,7 @@ class UserKycDataModel {
           status: map['status'],
           uid: map["uid"] ?? '',
           url: map["url"] ?? '',
+          augmontKyc: map["augmontKyc"] ?? false,
         );
 
   @override

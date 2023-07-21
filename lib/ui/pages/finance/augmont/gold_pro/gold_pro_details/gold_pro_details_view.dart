@@ -12,6 +12,7 @@ import 'package:felloapp/ui/pages/login/login_components/login_support.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/ui/pages/static/save_assets_footer.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -257,7 +258,7 @@ class GoldProDetailsView extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "Transfer Digital Gold Pro",
+                          "Transfer Digital ${Constants.ASSET_GOLD_STAKE}",
                           style: TextStyles.sourceSansSB.body0
                               .colour(Colors.black),
                         ),
@@ -266,7 +267,7 @@ class GoldProDetailsView extends StatelessWidget {
                           children: [
                             Expanded(
                                 child: Text(
-                              "Transfer your Gold Pro to Gold to withdraw",
+                              "Transfer your ${Constants.ASSET_GOLD_STAKE} to Gold to withdraw",
                               style: TextStyles.sourceSans.body3
                                   .colour(Colors.black),
                             )),
@@ -447,7 +448,7 @@ class HowGoldProWorksSection extends StatelessWidget {
       child: Column(
         children: [
           Text(
-            "How Digital Gold Pro works",
+            "How Digital ${Constants.ASSET_GOLD_STAKE} works",
             style: TextStyles.rajdhaniSB.title3.colour(Colors.white),
           ),
           SizedBox(height: SizeConfig.padding16),
@@ -498,7 +499,7 @@ class WhyGoldProSection extends StatelessWidget {
       child: Column(
         children: [
           Text(
-            "Why Digital Gold Pro?",
+            "Why Digital ${Constants.ASSET_GOLD_STAKE}?",
             style: TextStyles.rajdhaniSB.title3.colour(Colors.white),
           ),
           SizedBox(height: SizeConfig.padding16),

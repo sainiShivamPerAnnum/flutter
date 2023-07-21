@@ -123,12 +123,13 @@ class RazorpayService extends ChangeNotifier {
     bool? skipMl,
     String? couponCode,
     required InvestmentType investmentType,
+    Map<String, dynamic>? goldProMap,
   }) async {
     if (!init(investmentType)) return null; //initialise razorpay
     final mid = AppConfig.getValue(AppConfigKey.rzpMid);
     final ApiResponse<CreatePaytmTransactionModel> txnResponse =
         await _paytmRepo!.createTransaction(amount, augMap, lbMap, couponCode,
-            skipMl, mid, investmentType, null);
+            skipMl, mid, investmentType, null, goldProMap);
     if (txnResponse.isSuccess()) {
       final txnModel = txnResponse.model!;
       print(txnResponse.model!.data!.orderId);

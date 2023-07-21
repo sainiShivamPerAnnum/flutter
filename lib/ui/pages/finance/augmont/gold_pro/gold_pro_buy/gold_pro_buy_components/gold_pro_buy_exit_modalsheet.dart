@@ -1,6 +1,7 @@
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/elements/title_subtitle_container.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
@@ -92,7 +93,7 @@ class _GoldProBuyExitModalSheetState extends State<GoldProBuyExitModalSheet> {
                 borderRadius: BorderRadius.circular(SizeConfig.roundness12),
               ),
               child: Text(
-                "CONTINUE TO GOLD PRO",
+                "CONTINUE TO ${Constants.ASSET_GOLD_STAKE.toUpperCase()}",
                 style: TextStyles.rajdhaniB.body1.colour(Colors.black),
               ),
             ),

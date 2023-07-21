@@ -3,6 +3,7 @@ import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/hometabs/save/gold_components/gold_pro_card.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
@@ -45,7 +46,7 @@ class NewGoldProHero extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          "Get 4.5% extra returns with Gold Pro ",
+          "Get 4.5% extra returns with ${Constants.ASSET_GOLD_STAKE} ",
           style:
               TextStyles.sourceSansM.body2.colour(UiConstants.kGoldProPrimary),
         ),
@@ -70,7 +71,7 @@ class ProgressGoldProHero extends StatelessWidget {
     return Column(
       children: [
         Text(
-          "Get 4.5% extra returns with Gold Pro ",
+          "Get 4.5% extra returns with ${Constants.ASSET_GOLD_STAKE} ",
           style:
               TextStyles.sourceSansSB.body2.colour(UiConstants.kGoldProPrimary),
         ),
@@ -121,7 +122,7 @@ class ProgressGoldProHero extends StatelessWidget {
         Row(
           children: [
             Text(
-              "Get 4.5% extra returns with Gold Pro ",
+              "Get 4.5% extra returns with ${Constants.ASSET_GOLD_STAKE} ",
               style: TextStyles.sourceSansM.body3
                   .colour(UiConstants.kGoldProPrimary),
             ),
@@ -182,7 +183,7 @@ class InvestedGoldProHero extends StatelessWidget {
         Row(
           children: [
             Text(
-              "Getting 4.5% extra returns with Gold Pro ",
+              "Getting 4.5% extra returns with ${Constants.ASSET_GOLD_STAKE} ",
               style: TextStyles.sourceSansM.body3
                   .colour(UiConstants.kGoldProPrimary),
             ),

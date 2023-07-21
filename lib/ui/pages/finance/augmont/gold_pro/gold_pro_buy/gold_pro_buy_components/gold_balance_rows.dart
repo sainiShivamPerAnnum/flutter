@@ -1,6 +1,9 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_buy/gold_pro_buy_vm.dart';
+import 'package:felloapp/ui/pages/static/gold_rate_card.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/extensions/string_extension.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -28,7 +31,7 @@ class GoldBalanceRow extends StatelessWidget {
               : TextStyles.rajdhaniM.body2.colour(Colors.grey),
         ),
         Text(
-          "${BaseUtil.digitPrecision(trail, 2, false)}gms",
+          "${BaseUtil.digitPrecision(trail, 4, true)}gms",
           style: isBold
               ? TextStyles.sourceSansSB.title5.colour(Colors.white)
               : TextStyles.sourceSansSB.body2.colour(Colors.white70),
@@ -59,22 +62,51 @@ class ExpectedGoldProReturnsRow extends StatelessWidget {
             ),
             SizedBox(height: SizeConfig.padding4),
             Text(
-              "with Gold Pro",
+              "with ${Constants.ASSET_GOLD_STAKE}",
               style: TextStyles.rajdhaniM.body2.colour(Colors.grey),
             ),
           ],
         ),
-        SizedBox(width: SizeConfig.padding10),
+        SizedBox(width: SizeConfig.padding20),
         Expanded(
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
-              FittedBox(
-                child: Text(
-                  "₹${model.expectedGoldReturns.toInt()}",
-                  style: TextStyles.rajdhaniBL.title0
-                      .colour(UiConstants.kGoldProPrimary),
-                ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Expanded(
+                    child: Align(
+                      alignment: Alignment.centerRight,
+                      child: FittedBox(
+                          fit: BoxFit.scaleDown,
+                          child: RichText(
+                            textAlign: TextAlign.end,
+                            text: TextSpan(
+                              children: [
+                                TextSpan(
+                                  text: "₹" +
+                                      "${model.expectedGoldReturns.toInt()}"
+                                          .formatToIndianNumberSystem(),
+                                  style: TextStyles.rajdhaniB.title1
+                                      .colour(UiConstants.kGoldProPrimary),
+                                ),
+                                WidgetSpan(
+                                    child: Padding(
+                                  padding: EdgeInsets.only(
+                                      bottom: SizeConfig.padding12),
+                                  child: Text(
+                                    "*",
+                                    style: TextStyles.rajdhaniB.body0
+                                        .colour(UiConstants.kGoldProPrimary),
+                                  ),
+                                ))
+                              ],
+                            ),
+                          )),
+                    ),
+                  ),
+                ],
               ),
               Text(
                 "@ 15.5% p.a",
@@ -131,12 +163,17 @@ class PriceAdaptiveGoldProOverViewCard extends StatelessWidget {
                   children: [
                     Text(
                       "₹${model.totalGoldAmount}",
-                      style: TextStyles.body2.colour(Colors.white),
+                      style: TextStyles.sourceSansB.colour(Colors.white),
                     ),
                     SizedBox(height: SizeConfig.padding4),
-                    Text(
-                      "(02:47s)",
-                      style: TextStyles.body4.colour(Colors.grey),
+                    NewCurrentGoldPriceWidget(
+                      fetchGoldRates: model.fetchGoldRates,
+                      goldprice: model.goldRates != null
+                          ? model.goldRates!.goldBuyPrice
+                          : 0.0,
+                      isFetching: model.isGoldRateFetching,
+                      mini: true,
+                      textColor: UiConstants.kDividerColor,
                     )
                   ],
                 ),

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 
 import 'package:felloapp/core/constants/apis_path_constants.dart';
@@ -165,6 +166,29 @@ class BankingRepository extends BaseRepo {
         FailType.PanInfoFetchFailed,
         {'message': "User kyc fetch failed"},
       );
+      return ApiResponse.withError(
+          "Unable to fetch pan details at the moment", 400);
+    }
+  }
+
+  Future<ApiResponse<bool>> verifyAugmontKyc() async {
+    try {
+      final String token = await getBearerToken();
+      await APIService.instance.putData(
+        ApiPath.verifyAugmontKyc,
+        token: token,
+        cBaseUrl: _baseUrl,
+        body: {"uid": userService.baseUser!.uid},
+      );
+
+      return ApiResponse(model: true, code: 200);
+    } catch (e) {
+      logger.e(e.toString());
+      unawaited(locator<InternalOpsService>().logFailure(
+        userService.baseUser!.uid,
+        FailType.AugmontKycVerificationFailed,
+        {'message': "User Augmont kyc verification failed"},
+      ));
       return ApiResponse.withError(
           "Unable to fetch pan details at the moment", 400);
     }

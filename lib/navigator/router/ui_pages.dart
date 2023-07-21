@@ -799,16 +799,16 @@ PageConfiguration GoldProDetailsViewPageConfig = PageConfiguration(
     key: 'GoldProDetailsViewPath',
     path: GoldProDetailsPath,
     uiPage: Pages.GoldProDetailsView,
-    name: "Gold Pro Details View Screen");
+    name: "Gold X Details View Screen");
 
 PageConfiguration GoldProBuyViewPageConfig = PageConfiguration(
     key: 'GoldProBuyViewPath',
     path: GoldProBuyViewPath,
     uiPage: Pages.GoldProBuyView,
-    name: "Gold Pro Buy View Screen");
+    name: "Gold X Buy View Screen");
 
 PageConfiguration GoldProSellViewPageConfig = PageConfiguration(
     key: 'GoldProSellViewPath',
     path: GoldProSellViewPath,
     uiPage: Pages.GoldProSellView,
-    name: "Gold Pro Sell View Screen");
+    name: "Gold X Sell View Screen");

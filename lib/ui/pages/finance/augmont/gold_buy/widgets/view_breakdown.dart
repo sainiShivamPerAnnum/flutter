@@ -295,19 +295,22 @@ class UpiAppsGridView extends StatelessWidget {
   const UpiAppsGridView({
     required this.apps,
     required this.onTap,
+    this.padTop = false,
     super.key,
   });
 
   final List<ApplicationMeta> apps;
   final Function onTap;
+  final bool padTop;
 
   @override
   Widget build(BuildContext context) {
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         Padding(
           padding: EdgeInsets.only(
-            top: SizeConfig.padding10,
+            top: padTop ? SizeConfig.padding32 : SizeConfig.padding10,
             bottom: SizeConfig.padding32,
           ),
           child: Text(

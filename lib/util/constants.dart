@@ -28,6 +28,7 @@ class Constants {
   static const String ASSET_TYPE_FLO_FELXI = "UNI_FLEXI";
   static const String ASSET_TYPE_FLO_FIXED_3 = "UNI_FIXED_3";
   static const String ASSET_TYPE_FLO_FIXED_6 = "UNI_FIXED_6";
+  static const String ASSET_GOLD_STAKE = "Gold X";
 
   //Segments
   static const String US_FLO_OLD = "OLD_LB";
@@ -140,6 +141,11 @@ class Constants {
   static const TXN_STATUS_RESPONSE_SUCCESS = "SUCCESS";
   static const TXN_STATUS_RESPONSE_FAILURE = "FAIL";
   static const TXN_STATUS_RESPONSE_PENDING = "PENDING";
+
+  static const GOLD_PRO_TXN_STATUS_ACTIVE = "active";
+  static const GOLD_PRO_TXN_STATUS_CLOSE = "close";
+  static const GOLD_PRO_TXN_STATUS_PENDING = "pending";
+  static const GOLD_PRO_TXN_STATUS_FAILED = "failed";
 
   //User Bootup EE Constnats
   static const LAST_OPENED = "last_opened";

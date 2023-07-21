@@ -1,6 +1,13 @@
+import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/repository/payment_repo.dart';
+import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
+import 'package:felloapp/util/locator.dart';
 
 class GoldProDetailsViewModel extends BaseViewModel {
+  final PaymentRepository _paymentRepo = locator<PaymentRepository>();
+  final AugmontTransactionService _txnService =
+      locator<AugmontTransactionService>();
   List<bool> detStatus = [false, false, false, false, false];
   List<String?> faqHeaders = [
     "How safe is the invested money? Who is the money lent to?",
@@ -22,7 +29,19 @@ class GoldProDetailsViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  void init() {}
+  void init() {
+    getGoldProScheme();
+  }
 
   void dump() {}
+
+  Future<void> getGoldProScheme() async {
+    final res = await _paymentRepo.getGoldProScheme();
+    if (res.isSuccess()) {
+      _txnService.goldProScheme = res.model;
+    } else {
+      BaseUtil.showNegativeAlert(
+          "Failed to fetch Gold Scheme", res.errorMessage);
+    }
+  }
 }

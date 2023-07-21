@@ -15,6 +15,7 @@ import 'package:felloapp/ui/pages/static/gold_rate_card.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/ui/service_elements/gold_sell_card/sell_card_components.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -262,7 +263,7 @@ class GoldSellInputView extends StatelessWidget {
                       ),
                       SizedBox(height: SizeConfig.padding8),
                       Text(
-                        "You can un-Lease your Digital gold in Digital Gold Pro section to be make it withdrawable",
+                        "You can un-Lease your Digital gold in Digital ${Constants.ASSET_GOLD_STAKE} section to be make it withdrawable",
                         style: TextStyles.body3.colour(Colors.grey),
                       )
                     ]),

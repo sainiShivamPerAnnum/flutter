@@ -27,6 +27,7 @@ class _GoldProBuyViewState extends State<GoldProBuyView> {
       builder: (context, model, child) => Consumer<AugmontTransactionService>(
           builder: (transactionContext, txnService, _) {
         return Scaffold(
+          resizeToAvoidBottomInset: false,
           backgroundColor: UiConstants.darkPrimaryColor2,
           body: getView(txnService, model),
         );

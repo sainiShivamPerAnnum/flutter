@@ -61,6 +61,7 @@ class Data {
   String? gtId;
   List<String>? gtIds;
   FloDepositDetails? floDepositDetails;
+  ProMap? fd;
 
   Data({
     @required this.status,
@@ -71,23 +72,25 @@ class Data {
     this.gtId,
     this.gtIds,
     this.floDepositDetails,
+    this.fd,
   });
 
   factory Data.fromMap(Map<String, dynamic> map) {
     return Data(
-        status:
-            map['status'] as String? ?? Constants.TXN_STATUS_RESPONSE_PENDING,
-        isUpdating: map['isUpdating'] as bool? ?? true,
-        tickets: map['tickets'] as int? ?? 0,
-        goldInTxnBought: (map['goldInTxnBought'] ?? 0).toDouble(),
-        txnDisplayMsg: map['displayMessage'],
-        gtId: map['gtId'] ?? "",
-        gtIds: map['gtIds'] != null
-            ? List<String>.from(map['gtIds'].map((id) => id.toString()))
-            : null,
-        floDepositDetails: map["lbDepositDetails"] != null
-            ? FloDepositDetails.fromMap(map["lbDepositDetails"])
-            : null);
+      status: map['status'] as String? ?? Constants.TXN_STATUS_RESPONSE_PENDING,
+      isUpdating: map['isUpdating'] as bool? ?? true,
+      tickets: map['tickets'] as int? ?? 0,
+      goldInTxnBought: (map['goldInTxnBought'] ?? 0).toDouble(),
+      txnDisplayMsg: map['displayMessage'],
+      gtId: map['gtId'] ?? "",
+      gtIds: map['gtIds'] != null
+          ? List<String>.from(map['gtIds'].map((id) => id.toString()))
+          : null,
+      floDepositDetails: map["lbDepositDetails"] != null
+          ? FloDepositDetails.fromMap(map["lbDepositDetails"])
+          : null,
+      fd: map["fd"] != null ? ProMap.fromMap(map["fd"]) : null,
+    );
   }
 
   Data.base() {
@@ -96,6 +99,7 @@ class Data {
     tickets = 0;
     goldInTxnBought = 0.0;
     floDepositDetails = null;
+    fd = null;
   }
 
   factory Data.fromJson(String source) =>
@@ -141,4 +145,39 @@ class FloDepositDetails {
   @override
   String toString() =>
       'FloDepostDetails(fundType: $fundType, maturityDate: $maturityDate, maturityString: $maturityString)';
+}
+
+class ProMap {
+  final String status;
+  final double qty;
+  final String schemeId;
+  ProMap({
+    required this.status,
+    required this.qty,
+    required this.schemeId,
+  });
+
+  factory ProMap.fromMap(Map<String, dynamic> map) {
+    return ProMap(
+      status: map['status'] as String,
+      qty: map['qty'] as double,
+      schemeId: map['schemeId'] as String,
+    );
+  }
+
+  @override
+  String toString() =>
+      'ProMap(status: $status, qty: $qty, schemeId: $schemeId)';
+
+  @override
+  bool operator ==(covariant ProMap other) {
+    if (identical(this, other)) return true;
+
+    return other.status == status &&
+        other.qty == qty &&
+        other.schemeId == schemeId;
+  }
+
+  @override
+  int get hashCode => status.hashCode ^ qty.hashCode ^ schemeId.hashCode;
 }

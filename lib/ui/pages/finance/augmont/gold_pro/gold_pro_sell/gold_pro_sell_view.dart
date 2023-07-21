@@ -3,6 +3,7 @@ import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_sell/gold_pro_sell_components/gold_pro_sell_card.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_sell/gold_pro_sell_vm.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 
@@ -43,7 +44,7 @@ class GoldProSellView extends StatelessWidget {
                       ),
                       // SizedBox(width: SizeConfig.padding8),
                       Text(
-                        'Un-Lease Digital Gold Pro',
+                        'Un-Lease Digital ${Constants.ASSET_GOLD_STAKE}',
                         style: TextStyles.rajdhaniSB.title5,
                       ),
                       const Spacer()

@@ -484,7 +484,7 @@ class GoldBuyViewModel extends BaseViewModel {
   //   );
   // }
 
-  updateGoldAmount() {
+  void updateGoldAmount() {
     if ((goldAmountController?.text.isEmpty ?? false) ||
         double.tryParse(goldAmountController?.text ?? "0.0") == null) {
       goldAmountInGrams = 0.0;

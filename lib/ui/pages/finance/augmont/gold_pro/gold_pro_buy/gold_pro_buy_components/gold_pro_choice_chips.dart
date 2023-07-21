@@ -1,24 +1,46 @@
+// ignore_for_file: public_member_api_docs, sort_constructors_first
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 
+class GoldProChoiceChipsModel {
+  final double value;
+  final bool isBest;
+  bool isSelected;
+  GoldProChoiceChipsModel({
+    required this.value,
+    required this.isBest,
+    required this.isSelected,
+  });
+}
+
 class GoldProChoiceChip extends StatelessWidget {
   const GoldProChoiceChip({
-    super.key,
     required this.isSelected,
     required this.onTap,
     required this.chipValue,
     required this.isBest,
+    required this.index,
+    super.key,
   });
 
   final bool isSelected;
   final Function onTap;
   final String chipValue;
   final bool isBest;
+  final int index;
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: SizedBox(
-        width: SizeConfig.padding64,
+    return GestureDetector(
+      onTap: () => onTap(),
+      child: Container(
+        margin: index == 1
+            ? EdgeInsets.only(right: SizeConfig.padding14)
+            : index == 2 || index == 3
+                ? EdgeInsets.only(
+                    right: SizeConfig.padding10,
+                  )
+                : EdgeInsets.zero,
+        width: SizeConfig.padding54,
         child: Column(
           children: [
             if (isBest)
@@ -27,7 +49,9 @@ class GoldProChoiceChip extends StatelessWidget {
                     vertical: SizeConfig.padding2,
                     horizontal: SizeConfig.padding8),
                 decoration: BoxDecoration(
-                    color: UiConstants.kGoldProPrimary,
+                    color: isSelected
+                        ? UiConstants.kGoldProPrimary
+                        : UiConstants.primaryColor,
                     borderRadius: BorderRadius.only(
                         topLeft: Radius.circular(SizeConfig.roundness5),
                         topRight: Radius.circular(SizeConfig.roundness5))),
@@ -37,15 +61,15 @@ class GoldProChoiceChip extends StatelessWidget {
                 ),
               ),
             SizedBox(
-              height: (SizeConfig.padding64 * 0.8214285714285714).toDouble(),
+              height: (SizeConfig.padding54 * 0.8214285714285714).toDouble(),
               child: Stack(
                 children: [
                   Align(
                     alignment: Alignment.center,
                     child: CustomPaint(
                       size: Size(
-                          SizeConfig.padding64,
-                          (SizeConfig.padding64 * 0.8214285714285714)
+                          SizeConfig.padding54,
+                          (SizeConfig.padding54 * 0.8214285714285714)
                               .toDouble()),
                       painter: OutlinedTooltipBorder(
                         width: isSelected ? 1.5 : 1,
@@ -58,10 +82,10 @@ class GoldProChoiceChip extends StatelessWidget {
                   Align(
                     alignment: Alignment.center,
                     child: Padding(
-                      padding: EdgeInsets.only(bottom: SizeConfig.padding20),
+                      padding: EdgeInsets.only(bottom: SizeConfig.padding14),
                       child: Text(
                         chipValue,
-                        style: TextStyles.sourceSansM.body2.colour(isSelected
+                        style: TextStyles.sourceSansM.body3.colour(isSelected
                             ? UiConstants.kGoldProPrimary
                             : Colors.white),
                       ),

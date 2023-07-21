@@ -1,5 +1,6 @@
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
@@ -39,7 +40,7 @@ class GoldProCard extends StatelessWidget {
                       Row(
                         children: [
                           Text(
-                            "Earn 4.5% Extra Returns with Gold Pro",
+                            "Earn 4.5% Extra Returns with ${Constants.ASSET_GOLD_STAKE}",
                             style: TextStyles.rajdhaniSB.body1
                                 .colour(UiConstants.kGoldProPrimary),
                           ),
