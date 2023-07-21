@@ -207,6 +207,24 @@ class ReferralHome extends StatelessWidget {
                                     ),
                                     textAlign: TextAlign.center,
                                   )),
+                              Positioned(
+                                left: SizeConfig.padding24,
+                                top: SizeConfig.padding24,
+                                child: CustomPaint(
+                                  size: Size(SizeConfig.padding8,
+                                      (SizeConfig.padding8 * 1.125).toDouble()),
+                                  painter: ReferralStarCustomPainter(),
+                                ),
+                              ),
+                              Positioned(
+                                left: SizeConfig.padding32,
+                                top: SizeConfig.padding18,
+                                child: CustomPaint(
+                                  size: Size(SizeConfig.padding8,
+                                      (SizeConfig.padding8 * 1.125).toDouble()),
+                                  painter: ReferralStarCustomPainter(),
+                                ),
+                              ),
                             ],
                           ),
                           SizedBox(

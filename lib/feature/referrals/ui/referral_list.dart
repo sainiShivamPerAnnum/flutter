@@ -339,7 +339,7 @@ class _ReferralListViewState extends State<ReferralListView> {
                 CustomPaint(
                   size: Size(SizeConfig.padding8,
                       (SizeConfig.padding8 * 1.125).toDouble()),
-                  painter: RPSCustomPainter(),
+                  painter: ReferralStarCustomPainter(),
                 ),
                 SizedBox(
                   width: SizeConfig.padding6,
@@ -363,7 +363,11 @@ class _ReferralListViewState extends State<ReferralListView> {
   }
 }
 
-class RPSCustomPainter extends CustomPainter {
+class ReferralStarCustomPainter extends CustomPainter {
+  final Color? color;
+
+  ReferralStarCustomPainter([this.color]);
+
   @override
   void paint(Canvas canvas, Size size) {
     Path path_0 = Path();
@@ -428,7 +432,7 @@ class RPSCustomPainter extends CustomPainter {
     path_0.close();
 
     Paint paint_0_fill = Paint()..style = PaintingStyle.fill;
-    paint_0_fill.color = const Color(0xffFFD979).withOpacity(1.0);
+    paint_0_fill.color = color ?? const Color(0xffFFD979).withOpacity(1.0);
     canvas.drawPath(path_0, paint_0_fill);
   }
 
