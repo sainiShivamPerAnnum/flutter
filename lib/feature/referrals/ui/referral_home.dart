@@ -49,7 +49,7 @@ class ReferralHome extends StatelessWidget {
               children: [
                 Scaffold(
                   extendBody: true,
-                  // backgroundColor: const Color(0xff181818),
+                  backgroundColor: const Color(0xff181818),
                   appBar: AppBar(
                     elevation: 0.0,
                     automaticallyImplyLeading: false,
@@ -288,7 +288,7 @@ class ReferralHome extends StatelessWidget {
                                 ],
                               ),
                               BlocProvider<ReferralCubit>(
-                                create: (_) => ReferralCubit(),
+                                create: (_) => ReferralCubit(model),
                                 child: HeightAdaptivePageView(
                                   controller: model.pageController,
                                   onPageChanged: (int page) {
@@ -305,7 +305,9 @@ class ReferralHome extends StatelessWidget {
                                 ),
                               ),
                               SizedBox(
-                                height: SizeConfig.padding200,
+                                height: model.tabNo == 0
+                                    ? SizeConfig.padding200
+                                    : SizeConfig.padding50,
                               )
                             ],
                           ),

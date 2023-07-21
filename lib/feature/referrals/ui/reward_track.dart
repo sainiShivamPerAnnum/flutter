@@ -18,26 +18,29 @@ class RewardTrack extends StatelessWidget {
             child: Container(
               margin: EdgeInsets.only(
                 left: SizeConfig.padding38,
-                right: SizeConfig.padding50,
+                // right: SizeConfig.padding50,
                 bottom: SizeConfig.padding6,
               ),
               height: 1.2,
-              width: SizeConfig.padding82,
+              width: revampedInfo.stages!.length > 2
+                  ? SizeConfig.padding82
+                  : SizeConfig.screenWidth! * 0.56,
               color: const Color(0xFF61E3C4),
             ),
           ),
-          Align(
-            alignment: Alignment.centerRight,
-            child: Container(
-              margin: EdgeInsets.only(
-                right: SizeConfig.padding50,
-                bottom: SizeConfig.padding6,
+          if (revampedInfo.stages!.length > 2)
+            Align(
+              alignment: Alignment.centerRight,
+              child: Container(
+                margin: EdgeInsets.only(
+                  right: SizeConfig.padding50,
+                  bottom: SizeConfig.padding6,
+                ),
+                height: 1.2,
+                width: SizeConfig.padding108,
+                color: const Color(0xFF868686),
               ),
-              height: 1.2,
-              width: SizeConfig.padding108,
-              color: const Color(0xFF868686),
             ),
-          ),
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
@@ -46,17 +49,23 @@ class RewardTrack extends StatelessWidget {
                 isComplete: revampedInfo.stages![0].isComplete ?? false,
                 tooltipContent: revampedInfo.stages![0].tooltipContent,
               ),
+              // SizedBox(
+              //   width: SizeConfig.padding52,
+              // ),
+
               RewardInfoBlock(
                   title: revampedInfo.stages![1].title!,
                   isComplete: revampedInfo.stages![1].isComplete ?? false,
                   tooltipContent: revampedInfo.stages![1].tooltipContent),
-              RewardInfoBlock(
-                title: revampedInfo.stages![2].title!,
-                isComplete: revampedInfo.stages![2].isComplete ?? false,
-                tooltipContent: revampedInfo.stages![2].tooltipContent,
-                isPreviousTaskCompleted:
-                    revampedInfo.stages![1].isComplete ?? false,
-              ),
+
+              if (revampedInfo.stages!.length > 2)
+                RewardInfoBlock(
+                  title: revampedInfo.stages![2].title!,
+                  isComplete: revampedInfo.stages![2].isComplete ?? false,
+                  tooltipContent: revampedInfo.stages![2].tooltipContent,
+                  isPreviousTaskCompleted:
+                      revampedInfo.stages![1].isComplete ?? false,
+                ),
             ],
           ),
         ],
@@ -66,11 +75,12 @@ class RewardTrack extends StatelessWidget {
 }
 
 class RewardInfoBlock extends StatelessWidget {
-  const RewardInfoBlock({required this.title,
-    required this.isComplete,
-    super.key,
-    this.tooltipContent,
-    this.isPreviousTaskCompleted = true});
+  const RewardInfoBlock(
+      {required this.title,
+      required this.isComplete,
+      super.key,
+      this.tooltipContent,
+      this.isPreviousTaskCompleted = true});
 
   final String title;
   final bool isComplete;
@@ -88,25 +98,25 @@ class RewardInfoBlock extends StatelessWidget {
                 : SizeConfig.padding25,
             child: (tooltipContent?.isNotEmpty ?? false)
                 ? Stack(
-              children: [
-                CustomPaint(
-                  size: Size(SizeConfig.padding34,
-                      (SizeConfig.padding34 * 0.7).toDouble()),
-                  painter: ToolTipCustomPainter(isComplete
-                      ? const Color(0xff62E3C4).withOpacity(1.0)
-                      : const Color(0xffB9B9B9)),
-                ),
-                Align(
-                  alignment: Alignment.center,
-                  child: Text(
-                    tooltipContent ?? '',
-                    style: TextStyles.sourceSans.body4.colour(isComplete
-                        ? const Color(0xFF00E6C3)
-                        : const Color(0xFFB8B8B8)),
-                  ),
-                ),
-              ],
-            )
+                    children: [
+                      CustomPaint(
+                        size: Size(SizeConfig.padding34,
+                            (SizeConfig.padding34 * 0.7).toDouble()),
+                        painter: ToolTipCustomPainter(isComplete
+                            ? const Color(0xff62E3C4).withOpacity(1.0)
+                            : const Color(0xffB9B9B9)),
+                      ),
+                      Align(
+                        alignment: Alignment.center,
+                        child: Text(
+                          tooltipContent ?? '',
+                          style: TextStyles.sourceSans.body4.colour(isComplete
+                              ? const Color(0xFF00E6C3)
+                              : const Color(0xFFB8B8B8)),
+                        ),
+                      ),
+                    ],
+                  )
                 : const SizedBox()),
         Container(
           width: SizeConfig.padding16,
@@ -121,13 +131,13 @@ class RewardInfoBlock extends StatelessWidget {
                       : const Color(0xFF868686).withOpacity(0.8))),
           child: isComplete
               ? Icon(
-            Icons.check,
-            color: Colors.black,
-            size: SizeConfig.padding14,
-            weight: 700,
-            grade: 200,
-            opticalSize: 48,
-          )
+                  Icons.check,
+                  color: Colors.black,
+                  size: SizeConfig.padding14,
+                  weight: 700,
+                  grade: 200,
+                  opticalSize: 48,
+                )
               : null,
         ),
         SizedBox(

@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
@@ -20,7 +22,10 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
+import 'package:permission_handler/permission_handler.dart';
 import 'package:provider/provider.dart';
+
+import '../../../../../core/model/contact_model.dart';
 
 class ReferralDetailsViewModel extends BaseViewModel {
   final CustomLogger _logger = locator<CustomLogger>();
@@ -74,6 +79,7 @@ class ReferralDetailsViewModel extends BaseViewModel {
 
   String? _refUrl = "";
   String? _refCode = "";
+  List<Contact>? contactsList = [];
 
   late String _shareMsg;
   bool shareWhatsappInProgress = false;
@@ -88,7 +94,7 @@ class ReferralDetailsViewModel extends BaseViewModel {
 
   get isReferalsFetched => _isReferalsFetched;
 
-  init(BuildContext context) {
+  void init(BuildContext context) {
     generateLink().then((value) {
       _refUrl = value;
     });
@@ -96,6 +102,15 @@ class ReferralDetailsViewModel extends BaseViewModel {
 
     fetchReferralCode();
     fetchReferalsList(context);
+    checkPermission();
+  }
+
+  Future<void> checkPermission() async {
+    PermissionStatus hasPermission = await Permission.contacts.status;
+
+    if (hasPermission == PermissionStatus.granted) {
+      contactsList = await loadContacts();
+    }
   }
 
   void copyReferCode() {
@@ -215,6 +230,72 @@ class ReferralDetailsViewModel extends BaseViewModel {
     }
 
     return false;
+  }
+
+  Future<List<Contact>> loadContacts() async {
+    const MethodChannel methodChannel = MethodChannel('methodChannel/contact');
+
+    try {
+      await Future.delayed(const Duration(milliseconds: 500));
+      final List<dynamic>? contacts =
+          await methodChannel.invokeMethod<List<dynamic>>('getContacts');
+      if (contacts != null) {
+        // Parse the contacts data
+        final Set<String> uniquePhoneNumbers = {};
+        final List<Contact> parsedContacts = [];
+
+        for (final contactData in contacts) {
+          final phoneNumber = contactData['phoneNumber'];
+          if (phoneNumber == null) continue;
+
+          final filteredPhoneNumber = _applyFilters(phoneNumber);
+
+          if (filteredPhoneNumber == null) continue;
+
+          if (!uniquePhoneNumbers.contains(filteredPhoneNumber)) {
+            uniquePhoneNumbers.add(filteredPhoneNumber);
+            parsedContacts.add(Contact(
+              displayName: contactData['displayName'],
+              phoneNumber: filteredPhoneNumber,
+            ));
+          }
+        }
+
+        log('Contacts loaded successfully!', name: 'ReferralDetailsScreen');
+        return parsedContacts;
+
+        //Print all contacts
+        // for (final contact in _contacts) {
+        //   log('${contact.displayName}, ${contact.phoneNumber}',
+        //       name: 'ReferralDetailsScreen');
+        // }
+      }
+      return [];
+    } on PlatformException catch (e) {
+      log('Error loading contacts: ${e.message}',
+          name: 'ReferralDetailsScreen');
+      return [];
+    }
+  }
+
+  String? _applyFilters(String phoneNumber) {
+    String filteredPhoneNumber = phoneNumber;
+
+    // Remove spaces
+    filteredPhoneNumber = filteredPhoneNumber.replaceAll(' ', '');
+
+    // Remove "+91" prefix if present
+    if (filteredPhoneNumber.startsWith('+91')) {
+      filteredPhoneNumber = filteredPhoneNumber.substring(3);
+    }
+
+    // Filter out numbers less than 10 digits and not starting with 6, 7, 8, or 9
+    if (filteredPhoneNumber.length < 10 ||
+        !RegExp(r'^[6-9]').hasMatch(filteredPhoneNumber)) {
+      return null;
+    }
+
+    return filteredPhoneNumber.isNotEmpty ? filteredPhoneNumber : null;
   }
 
 // Future<void> shareWhatsApp() async {

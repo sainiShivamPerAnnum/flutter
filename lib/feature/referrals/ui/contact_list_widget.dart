@@ -17,12 +17,11 @@ class ContactListWidget extends StatefulWidget {
   State<ContactListWidget> createState() => _ContactListWidgetState();
 }
 
-class _ContactListWidgetState extends State<ContactListWidget> {
+class _ContactListWidgetState extends State<ContactListWidget>
+    with WidgetsBindingObserver {
   TextEditingController controller = TextEditingController();
   List<Contact> filteredContacts = []; // List to store filtered contacts
   late final Debouncer _debouncer;
-
-  // late final ReferralCubit _referralCubit;
 
   void searchContacts(String query) {
     log('searchContacts: $query', name: 'ReferralDetailsScreen');
@@ -47,10 +46,13 @@ class _ContactListWidgetState extends State<ContactListWidget> {
   @override
   void initState() {
     super.initState();
-    // _referralCubit = context.read<ReferralCubit>();
-    filteredContacts = widget
-        .contacts; // Initialize filteredContacts with all contacts initially
+    filteredContacts = widget.contacts;
     _debouncer = Debouncer(delay: const Duration(milliseconds: 700));
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      setState(() {});
+    });
+    // filteredContacts = widget
+    //     .contacts; // Initialize filteredContacts with all contacts initially
   }
 
   @override
@@ -168,9 +170,9 @@ class _ContactListWidgetState extends State<ContactListWidget> {
               );
             },
           ),
-          SizedBox(
-            height: SizeConfig.navBarHeight * 2.5,
-          ),
+          // SizedBox(
+          //   height: SizeConfig.navBarHeight ,
+          // ),
         ],
       ),
     );

@@ -50,7 +50,7 @@ class _FreshDeskHelpState extends State<FreshDeskHelp> {
             await _webViewController!.runJavaScript('hideFields()');
             exitLoading();
             //observe for window existence
-            Future.delayed(Duration(seconds: 3), () async {
+            Future.delayed(const Duration(seconds: 3), () async {
               _webViewController!
                   .runJavaScriptReturningResult(
                       'setTimeout(function() {observeWindow()}, 1000);')
@@ -68,7 +68,7 @@ class _FreshDeskHelpState extends State<FreshDeskHelp> {
 
   exitLoading() {
     if (BaseUtil.showNoInternetAlert()) return;
-    Future.delayed(Duration(seconds: 3), () {
+    Future.delayed(const Duration(seconds: 3), () {
       setState(() {
         isLoading = false;
       });
@@ -83,7 +83,7 @@ class _FreshDeskHelpState extends State<FreshDeskHelp> {
       backgroundColor: UiConstants.kBackgroundColor,
       floatingActionButton: keyboardIsOpen && Platform.isIOS
           ? FloatingActionButton(
-              child: Icon(
+              child: const Icon(
                 Icons.done,
                 color: Colors.white,
               ),
@@ -91,11 +91,11 @@ class _FreshDeskHelpState extends State<FreshDeskHelp> {
               onPressed: () =>
                   SystemChannels.textInput.invokeMethod('TextInput.hide'),
             )
-          : SizedBox(),
+          : const SizedBox(),
       appBar: AppBar(
         toolbarHeight: 0,
         elevation: 0,
-        backgroundColor: Color(0xff227c74),
+        backgroundColor: const Color(0xff227c74),
       ),
       body: SafeArea(
         child: Stack(
@@ -114,7 +114,7 @@ class _FreshDeskHelpState extends State<FreshDeskHelp> {
             if (isLoading)
               Container(
                 color: Colors.black,
-                child: Center(
+                child: const Center(
                   child: FullScreenLoader(),
                 ),
               ),
@@ -125,11 +125,11 @@ class _FreshDeskHelpState extends State<FreshDeskHelp> {
                 children: [
                   Container(
                     decoration: BoxDecoration(
-                        color: Color(0xff227c74),
+                        color: const Color(0xff227c74),
                         borderRadius:
                             BorderRadius.circular(SizeConfig.roundness12)),
                     child: IconButton(
-                      icon: Icon(Icons.arrow_back),
+                      icon: const Icon(Icons.arrow_back),
                       color: Colors.white,
                       onPressed: () async {
                         if (await _webViewController!.canGoBack())
@@ -140,11 +140,11 @@ class _FreshDeskHelpState extends State<FreshDeskHelp> {
                   SizedBox(width: SizeConfig.padding6),
                   Container(
                     decoration: BoxDecoration(
-                        color: Color(0xff227c74),
+                        color: const Color(0xff227c74),
                         borderRadius:
                             BorderRadius.circular(SizeConfig.roundness12)),
                     child: IconButton(
-                      icon: Icon(Icons.close),
+                      icon: const Icon(Icons.close),
                       color: Colors.white,
                       onPressed: () {
                         AppState.backButtonDispatcher!.didPopRoute();

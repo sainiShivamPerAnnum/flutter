@@ -41,7 +41,10 @@ class _InviteContactWidgetState extends State<InviteContactWidget>
       isBarrierDismissible: true,
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
-      content: PermissionModalSheet(widget: widget),
+      content: PermissionModalSheet(
+        widget: widget,
+        context: context,
+      ),
     );
   }
 
@@ -131,21 +134,27 @@ class PermissionModalSheet extends StatelessWidget {
   const PermissionModalSheet({
     super.key,
     required this.widget,
+    required this.context,
   });
 
   final InviteContactWidget widget;
+  final BuildContext context;
 
   String get referrersCount => AppConfig.getValue<Map<String, dynamic>>(
-      AppConfigKey.revamped_referrals_config)['stats']['referrersCount'];
+          AppConfigKey.revamped_referrals_config)['stats']['referrersCount']
+      .toString();
 
   String get usersFromReferrals => AppConfig.getValue<Map<String, dynamic>>(
-      AppConfigKey.revamped_referrals_config)['stats']['usersFromReferrals'];
+          AppConfigKey.revamped_referrals_config)['stats']['usersFromReferrals']
+      .toString();
 
   String get rewardsFromReferrals => AppConfig.getValue<Map<String, dynamic>>(
-      AppConfigKey.revamped_referrals_config)['stats']['rewardsFromReferrals'];
+              AppConfigKey.revamped_referrals_config)['stats']
+          ['rewardsFromReferrals']
+      .toString();
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext _) {
     return Container(
       width: SizeConfig.screenWidth,
       padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding32),
@@ -234,7 +243,7 @@ class PermissionModalSheet extends StatelessWidget {
                   SizedBox(
                     width: SizeConfig.padding88,
                     child: Text(
-                      usersFromReferrals,
+                      usersFromReferrals.toString(),
                       textAlign: TextAlign.center,
                       style: TextStyles.sourceSans.body3.colour(Colors.white),
                     ),

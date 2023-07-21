@@ -3,14 +3,18 @@ import 'dart:developer';
 import 'package:bloc/bloc.dart';
 import 'package:felloapp/core/model/contact_model.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:flutter/services.dart';
+import 'package:felloapp/ui/pages/userProfile/referrals/referral_details/referral_details_vm.dart';
 import 'package:meta/meta.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 part 'referral_state.dart';
 
 class ReferralCubit extends Cubit<ReferralState> {
-  ReferralCubit() : super(ReferralInitial());
+  ReferralCubit(this.model) : super(ReferralInitial()) {
+    _loadContacts();
+  }
+
+  final ReferralDetailsViewModel model;
 
   Future<void> checkPermission() async {
     PermissionStatus hasPermission = await Permission.contacts.status;
@@ -23,8 +27,10 @@ class ReferralCubit extends Cubit<ReferralState> {
   }
 
   Future<void> requestPermission() async {
+    log('requestPermission', name: 'ReferralDetailsScreen');
     AppState.backButtonDispatcher?.didPopRoute();
     PermissionStatus permissionStatus = await Permission.contacts.request();
+    log('Permission status: $permissionStatus');
     if (permissionStatus.isGranted) {
       await getContacts();
     }
@@ -32,8 +38,14 @@ class ReferralCubit extends Cubit<ReferralState> {
 
   Future<void> getContacts() async {
     emit(ContactsLoading());
+
+    if (model.contactsList != null && model.contactsList!.isNotEmpty) {
+      emit(ContactsLoaded(model.contactsList!));
+      return;
+    }
+
     try {
-      final contacts = await _loadContacts();
+      final contacts = await model.loadContacts();
 
       log("Contacts length ${contacts.length}", name: 'ReferralDetailsScreen');
 
@@ -47,69 +59,10 @@ class ReferralCubit extends Cubit<ReferralState> {
     }
   }
 
-  Future<List<Contact>> _loadContacts() async {
-    const MethodChannel methodChannel = MethodChannel('methodChannel/contact');
-
-    try {
-      await Future.delayed(const Duration(milliseconds: 500));
-      final List<dynamic>? contacts =
-          await methodChannel.invokeMethod<List<dynamic>>('getContacts');
-      if (contacts != null) {
-        // Parse the contacts data
-        final Set<String> uniquePhoneNumbers = {};
-        final List<Contact> parsedContacts = [];
-
-        for (final contactData in contacts) {
-          final phoneNumber = contactData['phoneNumber'];
-          if (phoneNumber == null) continue;
-
-          final filteredPhoneNumber = _applyFilters(phoneNumber);
-
-          if (filteredPhoneNumber == null) continue;
-
-          if (!uniquePhoneNumbers.contains(filteredPhoneNumber)) {
-            uniquePhoneNumbers.add(filteredPhoneNumber);
-            parsedContacts.add(Contact(
-              displayName: contactData['displayName'],
-              phoneNumber: filteredPhoneNumber,
-            ));
-          }
-        }
-
-        log('Contacts loaded successfully!', name: 'ReferralDetailsScreen');
-        return parsedContacts;
-
-        //Print all contacts
-        // for (final contact in _contacts) {
-        //   log('${contact.displayName}, ${contact.phoneNumber}',
-        //       name: 'ReferralDetailsScreen');
-        // }
-      }
-      return [];
-    } on PlatformException catch (e) {
-      log('Error loading contacts: ${e.message}',
-          name: 'ReferralDetailsScreen');
-      return [];
+  Future<void> _loadContacts() async {
+    if (model.contactsList != null && model.contactsList!.isNotEmpty) {
+      emit(ContactsLoaded(model.contactsList!));
+      return;
     }
-  }
-
-  String? _applyFilters(String phoneNumber) {
-    String filteredPhoneNumber = phoneNumber;
-
-    // Remove spaces
-    filteredPhoneNumber = filteredPhoneNumber.replaceAll(' ', '');
-
-    // Remove "+91" prefix if present
-    if (filteredPhoneNumber.startsWith('+91')) {
-      filteredPhoneNumber = filteredPhoneNumber.substring(3);
-    }
-
-    // Filter out numbers less than 10 digits and not starting with 6, 7, 8, or 9
-    if (filteredPhoneNumber.length < 10 ||
-        !RegExp(r'^[6-9]').hasMatch(filteredPhoneNumber)) {
-      return null;
-    }
-
-    return filteredPhoneNumber.isNotEmpty ? filteredPhoneNumber : null;
   }
 }
