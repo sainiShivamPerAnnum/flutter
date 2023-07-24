@@ -5,6 +5,7 @@ import 'package:felloapp/core/constants/cache_keys.dart';
 import 'package:felloapp/core/enums/ttl.dart';
 import 'package:felloapp/core/model/referral_details_model.dart';
 import 'package:felloapp/core/model/referral_registered_user_model.dart';
+import 'package:felloapp/core/model/referral_response_model.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/util/api_response.dart';
@@ -37,11 +38,11 @@ class ReferralRepo extends BaseRepo {
         cBaseUrl: _baseUrl,
       );
 
-      final data = response['data'];
-      PreferenceHelper.setString(
-          PreferenceHelper.REFERRAL_CODE, jsonEncode(data));
+      // final data = response['data'];
+      // log('getReferralCode $response', name: 'ReferralRepo');
+      PreferenceHelper.setString(PreferenceHelper.REFERRAL_CODE, response);
       return ApiResponse<ReferralResponse>(
-        model: ReferralResponse.fromJson(data),
+        model: ReferralResponse.fromJson(response),
         code: 200,
       );
     } catch (e) {
@@ -157,12 +158,12 @@ class ReferralRepo extends BaseRepo {
   }
 }
 
-class ReferralResponse {
-  final String code;
-  final String message;
-
-  ReferralResponse(this.code, this.message);
-
-  factory ReferralResponse.fromJson(Map<String, dynamic> data) =>
-      ReferralResponse(data['code'], data['referralMessage']);
-}
+// class ReferralResponse {
+//   final String code;
+//   final String message;
+//
+//   ReferralResponse(this.code, this.message);
+//
+//   factory ReferralResponse.fromJson(Map<String, dynamic> data) =>
+//       ReferralResponse(data['code'], data['referralMessage']);
+// }

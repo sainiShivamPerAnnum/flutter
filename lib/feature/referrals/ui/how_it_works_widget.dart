@@ -5,9 +5,11 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class HowItWorksWidget extends StatefulWidget {
-  const HowItWorksWidget({super.key, required this.onStateChanged});
+  const HowItWorksWidget(
+      {super.key, required this.onStateChanged, this.isBoxOpen = true});
 
   final Function onStateChanged;
+  final bool isBoxOpen;
 
   @override
   State<HowItWorksWidget> createState() => _HowItWorksWidgetState();
@@ -36,6 +38,7 @@ class _HowItWorksWidgetState extends State<HowItWorksWidget> {
 
   @override
   Widget build(BuildContext context) {
+    isBoxOpen = widget.isBoxOpen;
     return AnimatedContainer(
       duration: const Duration(milliseconds: 200),
       width: SizeConfig.screenWidth,
@@ -95,104 +98,104 @@ class _HowItWorksWidgetState extends State<HowItWorksWidget> {
             ),
           isBoxOpen
               ? AnimatedContainer(
-                  duration: const Duration(milliseconds: 1200),
-                  curve: Curves.easeIn,
-                  child: Stack(
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          for (int i = 0; i < 50; i++)
-                            Container(
-                              width: SizeConfig.padding6,
-                              height: 1,
-                              decoration: BoxDecoration(
-                                color: i % 2 == 0
-                                    ? Colors.white
-                                    : Colors.transparent,
+            duration: const Duration(milliseconds: 1200),
+            curve: Curves.easeIn,
+            child: Stack(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    for (int i = 0; i < 50; i++)
+                      Container(
+                        width: SizeConfig.padding6,
+                        height: 1,
+                        decoration: BoxDecoration(
+                          color: i % 2 == 0
+                              ? Colors.white
+                              : Colors.transparent,
+                        ),
+                      ),
+                  ],
+                ),
+                Transform.translate(
+                  offset: Offset(0, -SizeConfig.padding20),
+                  child: Align(
+                    alignment: Alignment.topCenter,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Column(
+                          children: [
+                            SvgPicture.network(
+                              image1,
+                              width: SizeConfig.padding32,
+                              height: SizeConfig.padding44,
+                            ),
+                            SizedBox(
+                              width: SizeConfig.padding88,
+                              child: Text(
+                                text1,
+                                textAlign: TextAlign.center,
+                                style: TextStyles.sourceSans.body4
+                                    .colour(Colors.white),
+                              ),
+                            )
+                          ],
+                        ),
+                        Column(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: [
+                            SizedBox(
+                              width: SizeConfig.padding36,
+                              height: SizeConfig.padding38,
+                              child: SvgPicture.network(
+                                image2,
+                                width: SizeConfig.padding32,
+                                height: SizeConfig.padding44,
                               ),
                             ),
-                        ],
-                      ),
-                      Transform.translate(
-                        offset: Offset(0, -SizeConfig.padding20),
-                        child: Align(
-                          alignment: Alignment.topCenter,
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Column(
-                                children: [
-                                  SvgPicture.network(
-                                    image1,
-                                    width: SizeConfig.padding32,
-                                    height: SizeConfig.padding44,
-                                  ),
-                                  SizedBox(
-                                    width: SizeConfig.padding88,
-                                    child: Text(
-                                      text1,
-                                      textAlign: TextAlign.center,
-                                      style: TextStyles.sourceSans.body4
-                                          .colour(Colors.white),
-                                    ),
-                                  )
-                                ],
+                            SizedBox(
+                              height: SizeConfig.padding8,
+                            ),
+                            SizedBox(
+                              width: SizeConfig.padding88,
+                              child: Text(
+                                text2,
+                                textAlign: TextAlign.center,
+                                style: TextStyles.sourceSans.body4
+                                    .colour(Colors.white),
                               ),
-                              Column(
-                                mainAxisAlignment: MainAxisAlignment.start,
-                                children: [
-                                  SizedBox(
-                                    width: SizeConfig.padding36,
-                                    height: SizeConfig.padding38,
-                                    child: SvgPicture.network(
-                                      image2,
-                                      width: SizeConfig.padding32,
-                                      height: SizeConfig.padding44,
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: SizeConfig.padding8,
-                                  ),
-                                  SizedBox(
-                                    width: SizeConfig.padding88,
-                                    child: Text(
-                                      text2,
-                                      textAlign: TextAlign.center,
-                                      style: TextStyles.sourceSans.body4
-                                          .colour(Colors.white),
-                                    ),
-                                  )
-                                ],
-                              ),
-                              Column(
-                                children: [
-                                  SvgPicture.network(
-                                    image3,
-                                    width: SizeConfig.padding32,
-                                    height: SizeConfig.padding40,
-                                  ),
-                                  SizedBox(
-                                    height: SizeConfig.padding8,
-                                  ),
-                                  SizedBox(
-                                    width: SizeConfig.padding88,
-                                    child: Text(
-                                      text3,
-                                      textAlign: TextAlign.center,
-                                      style: TextStyles.sourceSans.body4
-                                          .colour(Colors.white),
-                                    ),
-                                  )
-                                ],
-                              )
-                            ],
-                          ),
+                            )
+                          ],
                         ),
-                      )
-                    ],
+                        Column(
+                          children: [
+                            SvgPicture.network(
+                              image3,
+                              width: SizeConfig.padding32,
+                              height: SizeConfig.padding40,
+                            ),
+                            SizedBox(
+                              height: SizeConfig.padding8,
+                            ),
+                            SizedBox(
+                              width: SizeConfig.padding88,
+                              child: Text(
+                                text3,
+                                textAlign: TextAlign.center,
+                                style: TextStyles.sourceSans.body4
+                                    .colour(Colors.white),
+                              ),
+                            )
+                          ],
+                        )
+                      ],
+                    ),
                   ),
                 )
+              ],
+            ),
+          )
               : const SizedBox()
         ],
       ),

@@ -6,6 +6,7 @@ import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/referral_details_model.dart';
+import 'package:felloapp/core/model/referral_response_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/referral_repo.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
@@ -131,8 +132,8 @@ class ReferralDetailsViewModel extends BaseViewModel {
   Future<void> fetchReferralCode() async {
     final ApiResponse<ReferralResponse> res = await _refRepo!.getReferralCode();
     if (res.code == 200) {
-      _refCode = res.model?.code ?? "";
-      appShareMessage = res.model?.message ?? "";
+      _refCode = res.model?.referralData?.code ?? "";
+      appShareMessage = res.model?.referralData?.referralMessage ?? "";
       _shareMsg = (appShareMessage.isNotEmpty)
           ? appShareMessage
           : 'Hey I am gifting you ₹${AppConfig.getValue(AppConfigKey.referralBonus)} and ${AppConfig.getValue(AppConfigKey.referralFlcBonus)} gaming tokens. Lets start saving and playing together! Share this code: $_refCode with your friends.\n';

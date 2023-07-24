@@ -11,6 +11,7 @@ import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/prize_claim_choice.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/aug_gold_rates_model.dart';
+import 'package:felloapp/core/model/referral_response_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/repository/prizing_repo.dart';
 import 'package:felloapp/core/repository/referral_repo.dart';
@@ -94,10 +95,10 @@ class ReferralService extends ChangeNotifier {
   }
 
   Future<void> fetchReferralCode() async {
-    final ApiResponse<ReferralResponse> res = await _refRepo!.getReferralCode();
+    final ApiResponse<ReferralResponse> res = await _refRepo.getReferralCode();
     if (res.code == 200) {
-      refCode = res.model!.code;
-      appShareMessage = res.model?.message ?? '';
+      refCode = res.model!.referralData?.code ?? "";
+      appShareMessage = res.model?.referralData?.referralMessage ?? '';
     }
     _shareMsg = (appShareMessage != null && appShareMessage!.isNotEmpty)
         ? appShareMessage
