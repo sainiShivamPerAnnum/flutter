@@ -22,9 +22,14 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lottie/lottie.dart';
 import 'package:url_launcher/url_launcher.dart';
 
-class ReferralHome extends StatelessWidget {
-  ReferralHome({super.key});
+class ReferralHome extends StatefulWidget {
+  const ReferralHome({super.key});
 
+  @override
+  State<ReferralHome> createState() => _ReferralHomeState();
+}
+
+class _ReferralHomeState extends State<ReferralHome> {
   final ScrollController _controller = ScrollController();
 
   TextStyle get _selectedTextStyle =>
@@ -51,19 +56,6 @@ class ReferralHome extends StatelessWidget {
                 Scaffold(
                   extendBody: true,
                   backgroundColor: const Color(0xff181818),
-                  // appBar: AppBar(
-                  //   elevation: 0.0,
-                  //   automaticallyImplyLeading: false,
-                  //   backgroundColor: UiConstants.kReferralHeaderColor,
-                  //   leading: IconButton(
-                  //       onPressed: () {
-                  //         AppState.backButtonDispatcher!.didPopRoute();
-                  //       },
-                  //       icon: const Icon(
-                  //         Icons.arrow_back_ios,
-                  //         color: Colors.white,
-                  //       )),
-                  // ),
                   body: SafeArea(
                     child: SingleChildScrollView(
                       controller: _controller,
@@ -495,6 +487,15 @@ class ReferralHome extends StatelessWidget {
         );
       },
     );
+  }
+
+  @override
+  void dispose() {
+    // Change the statusBarColor back to the default color here
+    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
+      statusBarColor: Colors.transparent, // Change to the default color
+    ));
+    super.dispose();
   }
 }
 
