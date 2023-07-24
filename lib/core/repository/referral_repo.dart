@@ -33,14 +33,15 @@ class ReferralRepo extends BaseRepo {
 
       final String bearer = await getBearerToken();
       final response = await APIService.instance.getData(
-        ApiPath.getReferralCode(userService!.baseUser!.uid),
+        ApiPath.getReferralCode(userService.baseUser!.uid),
         token: bearer,
         cBaseUrl: _baseUrl,
       );
 
       // final data = response['data'];
       // log('getReferralCode $response', name: 'ReferralRepo');
-      PreferenceHelper.setString(PreferenceHelper.REFERRAL_CODE, response);
+      await PreferenceHelper.setString(
+          PreferenceHelper.REFERRAL_CODE, jsonEncode(response));
       return ApiResponse<ReferralResponse>(
         model: ReferralResponse.fromJson(response),
         code: 200,

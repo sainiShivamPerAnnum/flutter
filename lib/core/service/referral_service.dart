@@ -61,6 +61,7 @@ class ReferralService extends ChangeNotifier {
   int? _refUnlockAmt;
   String refCode = "---";
   String? appShareMessage;
+  String? referralShortLink;
 
   set refUnlockAmt(value) {
     this._refUnlockAmt = value;
@@ -99,10 +100,13 @@ class ReferralService extends ChangeNotifier {
     if (res.code == 200) {
       refCode = res.model!.referralData?.code ?? "";
       appShareMessage = res.model?.referralData?.referralMessage ?? '';
+      referralShortLink = res.model?.referralData?.referralShortLink ?? '';
     }
     _shareMsg = (appShareMessage != null && appShareMessage!.isNotEmpty)
         ? appShareMessage
-        : 'Hey I am gifting you ₹${AppConfig.getValue(AppConfigKey.referralBonus)} and ${AppConfig.getValue(AppConfigKey.referralBonus)} gaming tokens. Lets start saving and playing together! Share this code: $refCode with your friends.\n';
+        : 'Hey I am gifting you ₹${AppConfig.getValue(AppConfigKey.referralBonus)} and '
+            '${AppConfig.getValue(AppConfigKey.referralBonus)} gaming tokens. '
+            'Lets start saving and playing together! Share this code: $refCode with your friends.\n';
 
     notifyListeners();
   }
@@ -131,7 +135,9 @@ class ReferralService extends ChangeNotifier {
     shareLinkInProgress = true;
     notifyListeners();
 
-    String? url = await createDynamicLink(true);
+    // String? url = await createDynamicLink(true);
+
+    String? url = referralShortLink;
 
     shareLinkInProgress = false;
     notifyListeners();
@@ -198,13 +204,15 @@ class ReferralService extends ChangeNotifier {
   sharePrizeDetails(double prizeAmount) async {
     startShareLoading();
     try {
-      String? url = await createDynamicLink(true);
+      // String? url = await createDynamicLink(true);
 
       // final link = await _appFlyer!.inviteLink();
       // if (link['status'] == 'success') {
       //   url = link['payload']['userInviteUrl'];
       //   url ??= link['payload']['userInviteURL'];
       // }
+
+      String? url = referralShortLink;
 
       if (url != null) {
         caputure(

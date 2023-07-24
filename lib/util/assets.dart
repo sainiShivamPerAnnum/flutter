@@ -410,4 +410,7 @@ class Assets {
       '${assetBaseUrl}badges/tambola-titan.svg';
   static const String referralReward =
       "${assetBaseUrl}revamped-referrals/reward.svg";
+
+  static const String peopleGroup =
+      "${assetBaseUrl}revamped-referrals/friends.svg";
 }

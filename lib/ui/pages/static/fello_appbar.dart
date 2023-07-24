@@ -51,7 +51,7 @@ class FelloAppBar extends StatelessWidget {
                   overflow: TextOverflow.clip,
                   style: TextStyles.rajdhaniSB.title4,
                 ))
-              : Text(''),
+              : const Text(''),
           backgroundColor: showAppBar
               ? UiConstants.kSecondaryBackgroundColor
               : Colors.transparent,
@@ -68,7 +68,7 @@ class NotificationButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PropertyChangeConsumer<UserService, UserServiceProperties>(
-        properties: [UserServiceProperties.myNotificationStatus],
+        properties: const [UserServiceProperties.myNotificationStatus],
         builder: (context, model, property) => InkWell(
               onTap: () {
                 if (JourneyService.isAvatarAnimationInProgress) return;
@@ -101,7 +101,7 @@ class NotificationButton extends StatelessWidget {
                       right: 2,
                       top: 2,
                       child: Container(
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                           shape: BoxShape.circle,
                         ),
                         child: CircleAvatar(
