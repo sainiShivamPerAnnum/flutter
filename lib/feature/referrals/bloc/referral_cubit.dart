@@ -35,6 +35,8 @@ class ReferralCubit extends Cubit<ReferralState> {
     log('Permission status: $permissionStatus');
     if (permissionStatus.isGranted) {
       await getContacts();
+    } else {
+      emit(NoPermissionState());
     }
   }
 

@@ -142,6 +142,8 @@
 	<string>This app needs access to location when in the background.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>This app needs access to location when open.</string>
+    <key>NSContactsUsageDescription</key>
+    <string>We need access to your contacts to find and invite friends.</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>
