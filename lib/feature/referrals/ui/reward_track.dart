@@ -22,13 +22,13 @@ class RewardTrack extends StatelessWidget {
                 bottom: SizeConfig.padding6,
               ),
               height: 1.2,
-              width: revampedInfo.stages!.length > 1
+              width: revampedInfo.stages!.length > 2
                   ? SizeConfig.padding90
                   : SizeConfig.screenWidth! * 0.56,
               color: const Color(0xFF61E3C4),
             ),
           ),
-          if (revampedInfo.stages!.length > 1)
+          if (revampedInfo.stages!.length > 2)
             Align(
               alignment: Alignment.centerRight,
               child: Container(
