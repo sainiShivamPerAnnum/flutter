@@ -22,22 +22,23 @@ class RewardTrack extends StatelessWidget {
                 bottom: SizeConfig.padding6,
               ),
               height: 1.2,
-              width: revampedInfo.stages!.length > 2
-                  ? SizeConfig.padding82
+              width: revampedInfo.stages!.length > 1
+                  ? SizeConfig.padding90
                   : SizeConfig.screenWidth! * 0.56,
               color: const Color(0xFF61E3C4),
             ),
           ),
-          if (revampedInfo.stages!.length > 2)
+          if (revampedInfo.stages!.length > 1)
             Align(
               alignment: Alignment.centerRight,
               child: Container(
                 margin: EdgeInsets.only(
-                  right: SizeConfig.padding50,
+                  right: SizeConfig.padding40,
                   bottom: SizeConfig.padding6,
+                  left: SizeConfig.padding38,
                 ),
                 height: 1.2,
-                width: SizeConfig.padding108,
+                width: SizeConfig.padding90,
                 color: const Color(0xFF868686),
               ),
             ),
@@ -64,7 +65,7 @@ class RewardTrack extends StatelessWidget {
                   isComplete: revampedInfo.stages![2].isComplete ?? false,
                   tooltipContent: revampedInfo.stages![2].tooltipContent,
                   isPreviousTaskCompleted:
-                      revampedInfo.stages![1].isComplete ?? false,
+                      revampedInfo.stages![2].isComplete ?? false,
                 ),
             ],
           ),

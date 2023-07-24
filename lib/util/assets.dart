@@ -310,7 +310,8 @@ class Assets {
   static String journeyIcon = "assets/vectors/icons/journeyIcon.svg";
 
   static String multiAvatars = "assets/vectors/multiAvatars.svg";
-  static String multiRealAvatars = "assets/images/cus_photos.png";
+  static String multiRealAvatars = ""
+      "";
   static String btnBg = "assets/vectors/btnBg.svg";
 
   static String arrow = "assets/vectors/arrow.svg";

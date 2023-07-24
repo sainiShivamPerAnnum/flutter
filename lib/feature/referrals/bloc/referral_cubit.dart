@@ -2,9 +2,11 @@ import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
 import 'package:felloapp/core/model/contact_model.dart';
+import 'package:felloapp/core/repository/referral_repo.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/userProfile/referrals/referral_details/referral_details_vm.dart';
-import 'package:meta/meta.dart';
+import 'package:felloapp/util/locator.dart';
+import 'package:flutter/foundation.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 part 'referral_state.dart';
@@ -51,6 +53,7 @@ class ReferralCubit extends Cubit<ReferralState> {
 
       if (contacts.isNotEmpty) {
         emit(ContactsLoaded(contacts));
+        getRegisteredUser();
       } else {
         emit(ContactsError('No contacts found!'));
       }
@@ -62,7 +65,38 @@ class ReferralCubit extends Cubit<ReferralState> {
   Future<void> _loadContacts() async {
     if (model.contactsList != null && model.contactsList!.isNotEmpty) {
       emit(ContactsLoaded(model.contactsList!));
+      getRegisteredUser();
       return;
+    }
+  }
+
+  Future<void> getRegisteredUser() async {
+    final ReferralRepo referralRepo = locator<ReferralRepo>();
+
+    var currentState = state;
+
+    if (currentState is ContactsLoaded) {
+      List<String> registeredUser = [];
+      await referralRepo.getRegisteredUsers(model.phoneNumbers).then((res) {
+        if (res.isSuccess()) {
+          registeredUser = res.model?.data ?? [];
+
+          //match registeredUser with contacts.phoneNumbers
+          // if registeredUser matches with contacts.phoneNumbers, set the isRegistered to true, then emit the state
+          // if not, set the isRegistered to false, then emit the state,
+          // instead of emiting new ContactsLoaded state, we'll update the existing ContactsLoaded state with the new data
+
+          for (final contact in currentState.contacts) {
+            if (registeredUser.contains(contact.phoneNumber)) {
+              contact.isRegistered = true;
+            } else {
+              contact.isRegistered = false;
+            }
+          }
+          emit(ReferralInitial());
+          emit(currentState.copyWith(contacts: currentState.contacts));
+        }
+      });
     }
   }
 }

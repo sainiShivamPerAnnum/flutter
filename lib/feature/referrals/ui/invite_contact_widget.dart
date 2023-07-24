@@ -92,7 +92,7 @@ class _InviteContactWidgetState extends State<InviteContactWidget>
                   style: TextStyles.rajdhaniB.body3.colour(Colors.black),
                 ),
               ),
-              SizedBox(height: SizeConfig.padding54),
+              SizedBox(height: SizeConfig.padding156),
             ],
           );
         }

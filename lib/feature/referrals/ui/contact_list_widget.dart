@@ -143,24 +143,29 @@ class _ContactListWidgetState extends State<ContactListWidget>
                         style: TextStyles.rajdhaniSB.body2.colour(Colors.white),
                       ),
                       Text(
-                        'Invite and earn ₹500',
-                        style: TextStyles.sourceSans.body4
-                            .colour(Colors.white.withOpacity(0.48)),
+                        (contact.isRegistered ?? false)
+                            ? "Already on Fello"
+                            : 'Invite and earn ₹500',
+                        style: TextStyles.sourceSans.body4.colour(
+                            (contact.isRegistered ?? false)
+                                ? const Color(0xFF61E3C4)
+                                : Colors.white.withOpacity(0.48)),
                       ),
                     ],
                   ),
                   const Spacer(),
-                  GestureDetector(
-                    onTap: () {
-                      navigateToWhatsApp(contact.phoneNumber);
-                    },
-                    child: Text(
-                      'INVITE',
-                      textAlign: TextAlign.right,
-                      style: TextStyles.rajdhaniB.body3
-                          .colour(const Color(0xFF61E3C4)),
+                  if (!(contact.isRegistered ?? false))
+                    GestureDetector(
+                      onTap: () {
+                        navigateToWhatsApp(contact.phoneNumber);
+                      },
+                      child: Text(
+                        'INVITE',
+                        textAlign: TextAlign.right,
+                        style: TextStyles.rajdhaniB.body3
+                            .colour(const Color(0xFF61E3C4)),
+                      ),
                     ),
-                  ),
                 ],
               );
             },

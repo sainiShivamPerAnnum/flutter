@@ -8,4 +8,5 @@ class CacheKeys {
   static const FAQS = 'faqs';
   static const PAGE_CONFIGS = 'pageConfigs';
   static const APPCONFIG = "appConfig";
+  static const REFERRAL_REGISTERED_USERS = 'referral/registeredUsers';
 }

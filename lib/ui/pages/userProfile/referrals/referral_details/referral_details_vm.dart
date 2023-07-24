@@ -80,6 +80,8 @@ class ReferralDetailsViewModel extends BaseViewModel {
   String? _refUrl = "";
   String? _refCode = "";
   List<Contact>? contactsList = [];
+  List<String> phoneNumbers = [];
+  List<String> registeredUser = [];
 
   late String _shareMsg;
   bool shareWhatsappInProgress = false;
@@ -109,7 +111,7 @@ class ReferralDetailsViewModel extends BaseViewModel {
     PermissionStatus hasPermission = await Permission.contacts.status;
 
     if (hasPermission == PermissionStatus.granted) {
-      contactsList = await loadContacts();
+      await loadContacts();
     }
   }
 
@@ -254,6 +256,7 @@ class ReferralDetailsViewModel extends BaseViewModel {
 
           if (!uniquePhoneNumbers.contains(filteredPhoneNumber)) {
             uniquePhoneNumbers.add(filteredPhoneNumber);
+            phoneNumbers.add(filteredPhoneNumber);
             parsedContacts.add(Contact(
               displayName: contactData['displayName'],
               phoneNumber: filteredPhoneNumber,
@@ -262,6 +265,7 @@ class ReferralDetailsViewModel extends BaseViewModel {
         }
 
         log('Contacts loaded successfully!', name: 'ReferralDetailsScreen');
+        contactsList = parsedContacts;
         return parsedContacts;
 
         //Print all contacts
