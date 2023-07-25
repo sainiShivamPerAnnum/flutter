@@ -105,7 +105,8 @@ class _ReferralHomeState extends State<ReferralHome> {
                                                         .colour(Colors.white),
                                                   ),
                                                   TextSpan(
-                                                    text: '₹500',
+                                                    text:
+                                                        '₹${(AppConfig.getValue(AppConfigKey.revamped_referrals_config)['rewardValues']['invest1k'] ?? 50) + (AppConfig.getValue(AppConfigKey.revamped_referrals_config)['rewardValues']['invest10kflo12'] ?? 450)}',
                                                     style: TextStyles
                                                         .rajdhaniB.title1
                                                         .colour(const Color(
@@ -477,27 +478,40 @@ class _ReferralHomeState extends State<ReferralHome> {
                                 },
                               ),
                               SizedBox(width: SizeConfig.padding12),
-                              Container(
-                                width: SizeConfig.padding60,
-                                height: SizeConfig.padding56,
-                                padding: EdgeInsets.all(SizeConfig.padding16),
-                                decoration: BoxDecoration(
-                                  color: const Color(0xFF07D2AD),
-                                  borderRadius: BorderRadius.circular(8),
-                                  gradient: const LinearGradient(
-                                    colors: [
-                                      Color(0xff12BC9D),
-                                      Color(0xff249680),
-                                    ],
-                                    begin: Alignment.topCenter,
-                                    end: Alignment.bottomCenter,
+                              GestureDetector(
+                                onTap: () {
+                                  var referralService =
+                                      locator<ReferralService>();
+                                  String message = referralService.shareMsg ??
+                                      'Hey I am gifting you ₹${AppConfig.getValue(AppConfigKey.referralBonus)} and '
+                                              '${AppConfig.getValue(AppConfigKey.referralBonus)} gaming tokens. '
+                                              'Lets start saving and playing together! Share this code: *${referralService.refCode}* with your friends.\n' +
+                                          (referralService.referralShortLink ??
+                                              "");
+                                  launch('whatsapp://send?text=$message');
+                                },
+                                child: Container(
+                                  width: SizeConfig.padding60,
+                                  height: SizeConfig.padding56,
+                                  padding: EdgeInsets.all(SizeConfig.padding16),
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xFF07D2AD),
+                                    borderRadius: BorderRadius.circular(8),
+                                    gradient: const LinearGradient(
+                                      colors: [
+                                        Color(0xff12BC9D),
+                                        Color(0xff249680),
+                                      ],
+                                      begin: Alignment.topCenter,
+                                      end: Alignment.bottomCenter,
+                                    ),
                                   ),
-                                ),
-                                child: SvgPicture.asset(
-                                  'assets/vectors/whatsapp.svg',
-                                  width: 24,
-                                  height: 24,
-                                  color: Colors.white,
+                                  child: SvgPicture.asset(
+                                    'assets/vectors/whatsapp.svg',
+                                    width: 24,
+                                    height: 24,
+                                    color: Colors.white,
+                                  ),
                                 ),
                               )
                             ],

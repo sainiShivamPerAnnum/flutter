@@ -67,7 +67,7 @@ class ReferralService extends ChangeNotifier {
     this._refUnlockAmt = value;
   }
 
-  String? _shareMsg;
+  String? shareMsg;
   int? _minWithdrawPrizeAmt;
 
   String? get minWithdrawPrize => _minWithdrawPrize;
@@ -102,7 +102,7 @@ class ReferralService extends ChangeNotifier {
       appShareMessage = res.model?.referralData?.referralMessage ?? '';
       referralShortLink = res.model?.referralData?.referralShortLink ?? '';
     }
-    _shareMsg = (appShareMessage != null && appShareMessage!.isNotEmpty)
+    shareMsg = (appShareMessage != null && appShareMessage!.isNotEmpty)
         ? appShareMessage
         : 'Hey I am gifting you ₹${AppConfig.getValue(AppConfigKey.referralBonus)} and '
             '${AppConfig.getValue(AppConfigKey.referralBonus)} gaming tokens. '
@@ -151,7 +151,7 @@ class ReferralService extends ChangeNotifier {
       if (customMessage != null) {
         await Share.share(customMessage + url);
       } else {
-        await Share.share(_shareMsg! + url);
+        await Share.share(shareMsg! + url);
       }
     }
 
