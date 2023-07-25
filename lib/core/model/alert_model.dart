@@ -36,7 +36,7 @@ class AlertModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
     data['actionUri'] = actionUri;
     data['created_time'] = createdTime!.toMap();
