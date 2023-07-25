@@ -26,7 +26,6 @@ import 'package:felloapp/core/service/notifier_services/scratch_card_service.dar
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
-import 'package:felloapp/ui/elements/fello_dialog/fello_dialog.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/api_response.dart';
@@ -39,7 +38,6 @@ import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
-import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
@@ -107,6 +105,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   // bool showOnboardingTutorial = true;
   bool? showSecurityPrompt;
   bool isAnyUnscratchedGTAvailable = false;
+  bool referralFromNotification = false;
 
   User? get firebaseUser => _firebaseUser;
 
@@ -612,9 +611,10 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
         referralAlertDialog?.ctaText != null &&
         (referralAlertDialog?.ctaText?.isNotEmpty ?? false) &&
         referralAlertDialog?.title != null &&
-        AppState.isRootAvailableForIncomingTaskExecution == false) {
+        AppState.isRootAvailableForIncomingTaskExecution) {
       log("Showing referral alert dialog",
           name: "checkForNewNotifications method");
+
       showReferralAlertDialog();
     }
   }
@@ -665,6 +665,8 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
               AppPositiveBtn(
                 btnText: referralAlertDialog?.ctaText ?? "Claim",
                 onPressed: () {
+                  referralFromNotification = true;
+                  AppState.backButtonDispatcher?.didPopRoute();
                   AppState.delegate!
                       .parseRoute(Uri.parse(referralAlertDialog!.actionUri!));
                 },
@@ -674,6 +676,11 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
         ),
       ),
     );
+    AppState.isRootAvailableForIncomingTaskExecution = false;
+  }
+
+  Future<void> fcmHandlerReferralGT(String _gtId) async {
+    ScratchCardService.scratchCardId = _gtId;
   }
 
   void setPageConfigs(DynamicUI dynamicUi) {

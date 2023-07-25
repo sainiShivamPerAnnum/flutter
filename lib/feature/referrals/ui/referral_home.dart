@@ -2,6 +2,8 @@ import 'dart:developer';
 
 import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
+import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/referral_service.dart';
 import 'package:felloapp/feature/referrals/bloc/referral_cubit.dart';
 import 'package:felloapp/feature/referrals/ui/how_it_works_widget.dart';
@@ -10,6 +12,7 @@ import 'package:felloapp/feature/referrals/ui/referral_list.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/page_views/height_adaptive_pageview.dart';
+import 'package:felloapp/ui/pages/rewards/instant_scratch_card/gt_instant_view.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/userProfile/referrals/referral_details/referral_details_vm.dart';
 import 'package:felloapp/util/assets.dart';
@@ -31,6 +34,8 @@ class ReferralHome extends StatefulWidget {
 
 class _ReferralHomeState extends State<ReferralHome> {
   final ScrollController _controller = ScrollController();
+  final userService = locator<UserService>();
+  final referralService = locator<ReferralService>();
 
   TextStyle get _selectedTextStyle =>
       TextStyles.sourceSansSB.body1.colour(UiConstants.titleTextColor);
@@ -40,6 +45,27 @@ class _ReferralHomeState extends State<ReferralHome> {
 
   String get subTitle => AppConfig.getValue<Map<String, dynamic>>(
       AppConfigKey.revamped_referrals_config)['hero']['subtitle'];
+
+  @override
+  void initState() {
+    super.initState();
+
+    if (userService.referralFromNotification) {
+      WidgetsBinding.instance.addPostFrameCallback((_) {
+        _showInstantScratchCard();
+      });
+    }
+  }
+
+  void _showInstantScratchCard() {
+    final scratchCardService = locator<ScratchCardService>();
+
+    scratchCardService.fetchAndVerifyScratchCardByID().then((value) {
+      if (value) {
+        scratchCardService.showInstantScratchCardView(source: GTSOURCE.game);
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -450,7 +476,7 @@ class _ReferralHomeState extends State<ReferralHome> {
                                 child: GestureDetector(
                                   onTap: () {
                                     if (model.isShareAlreadyClicked == false) {
-                                      locator<ReferralService>().shareLink();
+                                      referralService.shareLink();
                                     }
                                   },
                                   child: Icon(
@@ -473,15 +499,13 @@ class _ReferralHomeState extends State<ReferralHome> {
                                 height: SizeConfig.padding56,
                                 onPressed: () {
                                   if (model.isShareAlreadyClicked == false) {
-                                    locator<ReferralService>().shareLink();
+                                    referralService.shareLink();
                                   }
                                 },
                               ),
                               SizedBox(width: SizeConfig.padding12),
                               GestureDetector(
                                 onTap: () {
-                                  var referralService =
-                                      locator<ReferralService>();
                                   String message = referralService.shareMsg ??
                                       'Hey I am gifting you ₹${AppConfig.getValue(AppConfigKey.referralBonus)} and '
                                               '${AppConfig.getValue(AppConfigKey.referralBonus)} gaming tokens. '

@@ -62,7 +62,7 @@ class WebGameViewModel extends BaseViewModel {
           value: true,
           type: CacheType.bool);
 
-      Future.delayed(Duration(seconds: 1), () {
+      Future.delayed(const Duration(seconds: 1), () {
         BaseUtil.showNegativeAlert(
           locale.gameLoading,
           locale.gameLoadingSubTitle,
@@ -78,7 +78,7 @@ class WebGameViewModel extends BaseViewModel {
       AppState.isWebGameLInProgress = false;
       AppState.isWebGamePInProgress = false;
       AppState.backButtonDispatcher!.didPopRoute();
-      Future.delayed(Duration(milliseconds: 700), () async {
+      Future.delayed(const Duration(milliseconds: 700), () async {
         BaseUtil.openModalBottomSheet(
           addToScreenStack: true,
           backgroundColor: UiConstants.gameCardColor,
@@ -132,7 +132,7 @@ class WebGameViewModel extends BaseViewModel {
     if (ScratchCardService.gameEndMsgText != null &&
         ScratchCardService.gameEndMsgText!.isNotEmpty) {
       _logger!.d("Showing game end message");
-      Future.delayed(duration ?? Duration(milliseconds: 500), () {
+      Future.delayed(duration ?? const Duration(milliseconds: 500), () {
         BaseUtil.openDialog(
           addToScreenStack: true,
           isBarrierDismissible: false,

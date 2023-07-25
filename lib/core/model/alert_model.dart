@@ -30,7 +30,7 @@ class AlertModel {
     id = json['id'] ?? '';
     actionUri = json['actionUri'] ?? '';
     createdTime =
-        json['created_time'] ?? TimestampModel(seconds: 0, nanoseconds: 0);
+        json['createdOn'] ?? TimestampModel(seconds: 0, nanoseconds: 0);
     subtitle = json['subtitile'] ?? '';
     title = json['title'] ?? '';
   }
@@ -59,7 +59,7 @@ class AlertModel {
     return AlertModel(
       id: map['id'] ?? '',
       actionUri: map['actionUri'] ?? '',
-      createdTime: TimestampModel.fromMap(map["created_time"]),
+      createdTime: TimestampModel.fromMap(map["createdOn"]),
       subtitle: map['subtitle'] ?? '',
       title: map['title'] ?? '',
       isPersistent: map['isPersistent'] ?? false,

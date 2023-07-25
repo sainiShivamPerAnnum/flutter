@@ -121,7 +121,7 @@ class FcmHandler extends ChangeNotifier {
           _journeyService
               .fcmHandleJourneyUpdateStats(data as Map<String, dynamic>);
           break;
-        case FcmCommands.COMMAND_GOLDEN_TICKET_WIN:
+        case FcmCommands.COMMAND_TICKET_WIN:
           log("Scratch Card win update fcm response");
           _journeyService
               .fcmHandleJourneyUpdateStats(data as Map<String, dynamic>);
@@ -137,6 +137,11 @@ class FcmHandler extends ChangeNotifier {
           break;
         case FcmCommands.COMMAND_USER_PRIZE_WIN_2:
           await _fcmHandlerDataPayloads.userPrizeWinPrompt();
+          break;
+        case FcmCommands.COMMAND_GOLDEN_TICKET_WIN:
+          log("Golden Ticket win update fcm response - ${data['payload']}",
+              name: "FcmHandler");
+          await _userService.fcmHandlerReferralGT(data['gtId']);
           break;
         case FcmCommands.COMMAND_APPXOR_DIALOG:
           debugPrint("fcm handler: appxor");
