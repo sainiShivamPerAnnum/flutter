@@ -309,28 +309,34 @@ class _ReferralHomeState extends State<ReferralHome> {
                                     )
                                   ],
                                 ),
+
                                 BlocProvider<ReferralCubit>(
-                                  create: (_) => ReferralCubit(model),
-                                  child: HeightAdaptivePageView(
-                                    controller: model.pageController,
-                                    onPageChanged: (int page) {
-                                      model.switchTab(page);
+                                  create: (context) => ReferralCubit(model),
+                                  child:
+                                      BlocBuilder<ReferralCubit, ReferralState>(
+                                    builder: (context, state) {
+                                      return HeightAdaptivePageView(
+                                        controller: model.pageController,
+                                        onPageChanged: (int page) {
+                                          model.switchTab(page);
+                                        },
+                                        children: [
+                                          ReferralList(
+                                            model: model,
+                                          ),
+                                          InviteContactWidget(
+                                            model: model,
+                                          ),
+                                        ],
+                                      );
                                     },
-                                    children: [
-                                      ReferralList(
-                                        model: model,
-                                      ),
-                                      InviteContactWidget(
-                                        model: model,
-                                      ),
-                                    ],
                                   ),
                                 ),
-                                SizedBox(
-                                  height: model.tabNo == 0
-                                      ? SizeConfig.padding200
-                                      : SizeConfig.padding50,
-                                )
+                                // SizedBox(
+                                //   height: model.tabNo == 0
+                                //       ? SizeConfig.padding200
+                                //       : SizeConfig.padding1,
+                                // )
                               ],
                             ),
                           ],
@@ -339,7 +345,9 @@ class _ReferralHomeState extends State<ReferralHome> {
                     ),
                   ),
                   bottomNavigationBar: Container(
-                    padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+                    padding: EdgeInsets.symmetric(
+                        horizontal: SizeConfig.pageHorizontalMargins,
+                        vertical: SizeConfig.padding16),
                     decoration: BoxDecoration(
                       color: const Color(0xff3C3C3C),
                       borderRadius: BorderRadius.only(

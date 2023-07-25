@@ -48,11 +48,6 @@ class _ContactListWidgetState extends State<ContactListWidget>
     super.initState();
     filteredContacts = widget.contacts;
     _debouncer = Debouncer(delay: const Duration(milliseconds: 700));
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      setState(() {});
-    });
-    // filteredContacts = widget
-    //     .contacts; // Initialize filteredContacts with all contacts initially
   }
 
   @override

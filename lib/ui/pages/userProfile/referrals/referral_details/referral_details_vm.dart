@@ -106,9 +106,9 @@ class ReferralDetailsViewModel extends BaseViewModel {
   }
 
   void init(BuildContext context) {
-    generateLink().then((value) {
-      _refUrl = value;
-    });
+    // generateLink().then((value) {
+    //   _refUrl = value;
+    // });
     _pageController = PageController(initialPage: 0);
 
     fetchReferralCode();

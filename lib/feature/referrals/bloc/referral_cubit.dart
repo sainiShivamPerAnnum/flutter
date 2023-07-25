@@ -35,6 +35,10 @@ class ReferralCubit extends Cubit<ReferralState> {
     log('Permission status: $permissionStatus');
     if (permissionStatus.isGranted) {
       await getContacts();
+    } else if (permissionStatus.isPermanentlyDenied) {
+      // Show a dialog or screen explaining why the permission is required
+      // and direct the user to the app settings to manually enable the permission
+      await openAppSettings(); // This opens the app settings page
     } else {
       emit(NoPermissionState());
     }
@@ -83,10 +87,10 @@ class ReferralCubit extends Cubit<ReferralState> {
         if (res.isSuccess()) {
           registeredUser = res.model?.data ?? [];
 
-          //match registeredUser with contacts.phoneNumbers
-          // if registeredUser matches with contacts.phoneNumbers, set the isRegistered to true, then emit the state
-          // if not, set the isRegistered to false, then emit the state,
-          // instead of emiting new ContactsLoaded state, we'll update the existing ContactsLoaded state with the new data
+          // if registeredUser contains contact.phoneNumber
+          // then set contact.isRegistered = true
+          // else set contact.isRegistered = false
+          // emit currentState with updated contacts
 
           for (final contact in currentState.contacts) {
             if (registeredUser.contains(contact.phoneNumber)) {

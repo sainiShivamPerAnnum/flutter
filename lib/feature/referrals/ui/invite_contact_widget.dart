@@ -92,7 +92,7 @@ class _InviteContactWidgetState extends State<InviteContactWidget>
                   style: TextStyles.rajdhaniB.body3.colour(Colors.black),
                 ),
               ),
-              SizedBox(height: SizeConfig.padding156),
+              SizedBox(height: SizeConfig.padding148),
             ],
           );
         }
@@ -243,7 +243,7 @@ class PermissionModalSheet extends StatelessWidget {
                   SizedBox(
                     width: SizeConfig.padding88,
                     child: Text(
-                      usersFromReferrals.toString(),
+                      '${usersFromReferrals.toString()} Users',
                       textAlign: TextAlign.center,
                       style: TextStyles.sourceSans.body3.colour(Colors.white),
                     ),
@@ -260,7 +260,7 @@ class PermissionModalSheet extends StatelessWidget {
                   SizedBox(
                     width: SizeConfig.padding88,
                     child: Text(
-                      referrersCount,
+                      "$referrersCount Referrals",
                       textAlign: TextAlign.center,
                       style: TextStyles.sourceSans.body3.colour(Colors.white),
                     ),
@@ -277,7 +277,7 @@ class PermissionModalSheet extends StatelessWidget {
                   SizedBox(
                     // width: SizeConfig.padding88,
                     child: Text(
-                      rewardsFromReferrals,
+                      "₹$rewardsFromReferrals rewards",
                       textAlign: TextAlign.center,
                       style: TextStyles.sourceSans.body3.colour(Colors.white),
                     ),
