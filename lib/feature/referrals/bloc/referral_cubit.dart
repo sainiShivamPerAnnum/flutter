@@ -49,6 +49,7 @@ class ReferralCubit extends Cubit<ReferralState> {
 
     if (model.contactsList != null && model.contactsList!.isNotEmpty) {
       emit(ContactsLoaded(model.contactsList!));
+      getRegisteredUser();
       return;
     }
 

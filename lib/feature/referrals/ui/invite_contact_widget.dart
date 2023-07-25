@@ -122,8 +122,7 @@ class _InviteContactWidgetState extends State<InviteContactWidget>
             child: CircularProgressIndicator(),
           ),
         );
-      },
-    );
+      });
   }
 
   @override

@@ -345,9 +345,11 @@ class _ReferralHomeState extends State<ReferralHome> {
                     ),
                   ),
                   bottomNavigationBar: Container(
-                    padding: EdgeInsets.symmetric(
-                        horizontal: SizeConfig.pageHorizontalMargins,
-                        vertical: SizeConfig.padding16),
+                    padding: EdgeInsets.only(
+                        right: SizeConfig.pageHorizontalMargins,
+                        left: SizeConfig.pageHorizontalMargins,
+                        bottom: SizeConfig.pageHorizontalMargins,
+                        top: SizeConfig.padding8),
                     decoration: BoxDecoration(
                       color: const Color(0xff3C3C3C),
                       borderRadius: BorderRadius.only(

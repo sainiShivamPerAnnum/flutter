@@ -99,10 +99,12 @@ class ReferralDetail {
 class RevampedInfo {
   final String? subtitle;
   final List<Stage>? stages;
+  final bool? isFullyComplete;
 
   RevampedInfo({
     this.subtitle,
     this.stages,
+    this.isFullyComplete,
   });
 
   factory RevampedInfo.fromJson(Map<String, dynamic> json) => RevampedInfo(
@@ -110,13 +112,16 @@ class RevampedInfo {
         stages: json["stages"] == null
             ? []
             : List<Stage>.from(json["stages"]!.map((x) => Stage.fromJson(x))),
+        isFullyComplete: json["isFullyComplete"],
       );
 
-  Map<String, dynamic> toJson() => {
+  Map<String, dynamic> toJson() =>
+      {
         "subtitle": subtitle,
         "stages": stages == null
             ? []
             : List<dynamic>.from(stages!.map((x) => x.toJson())),
+        "isFullyComplete": isFullyComplete,
       };
 }
 

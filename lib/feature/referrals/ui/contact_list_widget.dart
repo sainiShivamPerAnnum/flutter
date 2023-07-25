@@ -50,6 +50,20 @@ class _ContactListWidgetState extends State<ContactListWidget>
     _debouncer = Debouncer(delay: const Duration(milliseconds: 700));
   }
 
+  String formatCurrency(int amount) {
+    if (amount >= 100000) {
+      // Convert to Lacs
+      double lacs = amount / 100000;
+      return '${lacs.toStringAsFixed(1)} Lacs';
+    } else if (amount >= 1000) {
+      // Convert to Thousands
+      double thousands = amount / 1000;
+      return '${thousands.toStringAsFixed(1)} Thousand';
+    } else {
+      return amount.toString();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -73,7 +87,8 @@ class _ContactListWidgetState extends State<ContactListWidget>
               SizedBox(
                 width: SizeConfig.padding6,
               ),
-              'You can earn upto *₹1Lakh* by referring!'.beautify(
+              'You can earn upto *₹${formatCurrency(widget.contacts.length * 500)}* by referring!'
+                  .beautify(
                 boldStyle: TextStyles.sourceSansB.body3.colour(
                   Colors.white.withOpacity(0.5),
                 ),

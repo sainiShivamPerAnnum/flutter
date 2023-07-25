@@ -242,6 +242,10 @@ class _ReferralListViewState extends State<ReferralListView> {
             physics: const NeverScrollableScrollPhysics(),
             itemCount: filteredReferrals.length,
             itemBuilder: (context, i) {
+              if (filteredReferrals[i].revampedInfo?.isFullyComplete ?? false) {
+                return buildCompleteReferrals(i);
+              }
+
               if (filteredReferrals[i].isUserBonusUnlocked ?? false) {
                 return buildIncompleteReferrals(i);
               } else {
