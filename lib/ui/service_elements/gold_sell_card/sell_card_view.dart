@@ -25,7 +25,7 @@ class SellCardView extends StatelessWidget {
       : super(key: key);
 
   Color get color => investmentType == InvestmentType.AUGGOLD99
-      ? const Color(0xff303B6A)
+      ? UiConstants.goldSellCardColor
       : UiConstants.kFloContainerColor;
 
   @override
@@ -46,9 +46,9 @@ class SellCardView extends StatelessWidget {
         builder: (ctx, sellService, child) => Container(
           margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding20),
           decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(SizeConfig.cardBorderRadius),
-              color: color,
-              border: Border.all(color: Colors.white.withOpacity(0.4))),
+            borderRadius: BorderRadius.circular(SizeConfig.cardBorderRadius),
+            color: color,
+          ),
           child: Column(
             children: [
               SizedBox(

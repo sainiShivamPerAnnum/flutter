@@ -103,6 +103,8 @@
     <true/>
     <key>FacebookAdvertiserIDCollectionEnabled</key>
     <true/>
+	<key>FacebookClientToken</key>
+    <string>bb20099c8e8eb3c3ad3bb4338626b0c8</string>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>FirebaseAppDelegateProxyEnabled</key>

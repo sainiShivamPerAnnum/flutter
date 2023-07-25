@@ -99,6 +99,8 @@ const String AssetSelectionViewPath = "/assetSelectionViewPath";
 const String GoldProDetailsPath = "/goldProDetailsPath";
 const String GoldProBuyViewPath = "/goldProBuyPath";
 const String GoldProSellViewPath = "/goldProSellView";
+const String GoldProTxnsViewPath = "/goldProTxnsView";
+const String GoldProTxnsDetailsViewPath = "goldProTxnsDetailsView";
 
 enum Pages {
   Splash,
@@ -194,6 +196,8 @@ enum Pages {
   GoldProDetailsView,
   GoldProBuyView,
   GoldProSellView,
+  GoldProTxnsView,
+  GoldProTxnsDetailsView,
 }
 
 class PageConfiguration {
@@ -812,3 +816,15 @@ PageConfiguration GoldProSellViewPageConfig = PageConfiguration(
     path: GoldProSellViewPath,
     uiPage: Pages.GoldProSellView,
     name: "Gold X Sell View Screen");
+
+PageConfiguration GoldProTxnsViewPageConfig = PageConfiguration(
+    key: 'GoldProTxnsViewPath',
+    path: GoldProTxnsViewPath,
+    uiPage: Pages.GoldProTxnsView,
+    name: "Gold X Txns View Screen");
+
+PageConfiguration GoldProTxnsDetailsViewPageConfig = PageConfiguration(
+    key: 'GoldProTxnsDetailsViewPath',
+    path: GoldProTxnsDetailsViewPath,
+    uiPage: Pages.GoldProTxnsDetailsView,
+    name: "Gold X Txns Details View Screen");

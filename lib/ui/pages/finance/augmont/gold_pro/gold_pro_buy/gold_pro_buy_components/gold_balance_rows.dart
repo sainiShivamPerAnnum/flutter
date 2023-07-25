@@ -6,6 +6,7 @@ import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/extensions/string_extension.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class GoldBalanceRow extends StatelessWidget {
@@ -80,30 +81,41 @@ class ExpectedGoldProReturnsRow extends StatelessWidget {
                       alignment: Alignment.centerRight,
                       child: FittedBox(
                           fit: BoxFit.scaleDown,
-                          child: RichText(
-                            textAlign: TextAlign.end,
-                            text: TextSpan(
-                              children: [
-                                TextSpan(
-                                  text: "₹" +
-                                      "${model.expectedGoldReturns.toInt()}"
-                                          .formatToIndianNumberSystem(),
-                                  style: TextStyles.rajdhaniB.title1
-                                      .colour(UiConstants.kGoldProPrimary),
-                                ),
-                                WidgetSpan(
-                                    child: Padding(
-                                  padding: EdgeInsets.only(
-                                      bottom: SizeConfig.padding12),
-                                  child: Text(
-                                    "*",
-                                    style: TextStyles.rajdhaniB.body0
-                                        .colour(UiConstants.kGoldProPrimary),
+                          child: model.isGoldRateFetching
+                              ? SizedBox(
+                                  height: SizeConfig.padding48 -
+                                      SizeConfig.padding2,
+                                  child: SpinKitThreeBounce(
+                                    color: UiConstants.kGoldProPrimary,
+                                    size: SizeConfig.padding32,
                                   ),
-                                ))
-                              ],
-                            ),
-                          )),
+                                )
+                              : RichText(
+                                  textAlign: TextAlign.end,
+                                  text: TextSpan(
+                                    children: [
+                                      TextSpan(
+                                        text: "₹" +
+                                            "${model.expectedGoldReturns.toInt()}"
+                                                .formatToIndianNumberSystem(),
+                                        style: TextStyles.rajdhaniB.title1
+                                            .colour(
+                                                UiConstants.kGoldProPrimary),
+                                      ),
+                                      WidgetSpan(
+                                          child: Padding(
+                                        padding: EdgeInsets.only(
+                                            bottom: SizeConfig.padding12),
+                                        child: Text(
+                                          "*",
+                                          style: TextStyles.rajdhaniB.body0
+                                              .colour(
+                                                  UiConstants.kGoldProPrimary),
+                                        ),
+                                      ))
+                                    ],
+                                  ),
+                                )),
                     ),
                   ),
                 ],
@@ -152,7 +164,7 @@ class PriceAdaptiveGoldProOverViewCard extends StatelessWidget {
                     ),
                     SizedBox(height: SizeConfig.padding4),
                     Text(
-                      "more in Digital Gold to lease",
+                      "more in ${Constants.ASSET_GOLD_STAKE} to lease",
                       style: TextStyles.body4.colour(Colors.grey),
                     )
                   ],
@@ -187,7 +199,7 @@ class PriceAdaptiveGoldProOverViewCard extends StatelessWidget {
                 width: SizeConfig.padding90,
               ),
               title: Text(
-                "Saving ${model.totalGoldBalance}gms in Digital Gold",
+                "Saving ${model.totalGoldBalance}gms in ${Constants.ASSET_GOLD_STAKE}",
                 style: TextStyles.body2.colour(Colors.white),
               ),
             ),

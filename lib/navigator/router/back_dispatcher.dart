@@ -18,6 +18,7 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
 import 'package:felloapp/ui/modalsheets/autosave_confirm_exit_modalsheet.dart';
 import 'package:felloapp/ui/modalsheets/autosave_survey_modalsheet.dart';
+import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_buy/gold_pro_buy_components/gold_pro_buy_exit_modalsheet.dart';
 import 'package:felloapp/ui/pages/games/web/web_game/web_game_vm.dart';
 import 'package:felloapp/ui/pages/hometabs/home/card_actions_notifier.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
@@ -113,7 +114,22 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
 
     if (_augTxnService.currentTransactionState == TransactionState.overView) {
       Haptic.vibrate();
-      _augTxnService.currentTransactionState = TransactionState.idle;
+      if (AppState.isGoldProBuyInProgress) {
+        AppState.isGoldProBuyInProgress = false;
+        BaseUtil.openModalBottomSheet(
+          isBarrierDismissible: true,
+          addToScreenStack: true,
+          backgroundColor: UiConstants.kArrowButtonBackgroundColor,
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(SizeConfig.roundness24),
+              topRight: Radius.circular(SizeConfig.roundness24)),
+          hapticVibrate: true,
+          isScrollControlled: true,
+          content: const GoldProBuyExitModalSheet(),
+        );
+      } else {
+        _augTxnService.currentTransactionState = TransactionState.idle;
+      }
       return Future.value(true);
     }
 

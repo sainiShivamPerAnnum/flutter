@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/transaction_state_enum.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
@@ -75,16 +77,22 @@ class GoldProBuyPendingView extends StatelessWidget {
                 end: Duration.zero,
               ),
               onEnd: () async {
-                await txnService
-                    .processPolling(txnService.pollingPeriodicTimer);
+                // await txnService
+                //     .processPolling(txnService.pollingPeriodicTimer);
                 if (txnService.currentTransactionState !=
                     TransactionState.ongoing) return;
                 txnService.pollingPeriodicTimer?.cancel();
                 txnService.isGoldBuyInProgress = false;
                 txnService.currentTransactionState = TransactionState.idle;
                 AppState.unblockNavigation();
+                AppState.isGoldProBuyInProgress = false;
+                log("Screen Stack:${AppState.screenStack.toString()}");
+
                 AppState.backButtonDispatcher!.didPopRoute();
+                log("Screen Stack:${AppState.screenStack.toString()}");
+
                 showTransactionPendingDialog();
+                log("Screen Stack:${AppState.screenStack.toString()}");
               },
               builder: (BuildContext context, Duration value, Widget? child) {
                 final minutes = value.inMinutes;
@@ -105,15 +113,17 @@ class GoldProBuyPendingView extends StatelessWidget {
 
   void showTransactionPendingDialog() {
     S locale = locator<S>();
-    BaseUtil.openDialog(
-      addToScreenStack: true,
-      hapticVibrate: true,
-      isBarrierDismissible: false,
-      content: PendingDialog(
-        title: locale.processing,
-        subtitle: locale.txnDelay,
-        duration: '15 ' + locale.minutes,
-      ),
-    );
+    Future.delayed(Duration(seconds: 1), () {
+      BaseUtil.openDialog(
+        addToScreenStack: true,
+        hapticVibrate: true,
+        isBarrierDismissible: false,
+        content: PendingDialog(
+          title: locale.processing,
+          subtitle: locale.txnDelay,
+          duration: '15 ${locale.minutes}',
+        ),
+      );
+    });
   }
 }

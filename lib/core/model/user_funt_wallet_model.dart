@@ -42,6 +42,7 @@ class UserFundWallet {
   //on hold
   double? _processingRedemptionBalance;
   int? wTmbLifetimeWin;
+  double? wAugFdQty;
 
   static const String fldAugmontGoldPrinciple = 'wAugPrinciple';
   static const String fldAugmontGoldBalance = 'wAugBalance';
@@ -54,31 +55,34 @@ class UserFundWallet {
   static const String fldProcessingRedemption = 'wRedemptionProcessing';
 
   UserFundWallet(
-      this._augGoldPrinciple,
-      this._augGoldBalance,
-      this._augGoldQuantity,
-      this._iciciPrinciple,
-      this._iciciBalance,
-      this._prizeBalance,
-      this._lockedPrizeBalance,
-      this._prizeLifetimeWin,
-      this._processingRedemptionBalance,
-      this.wLbBalance,
-      this.wLbPrinciple,
-      this.wLbProcessingAmt,
-      this.netWorth,
-      this.tickets,
-      this.wLbLifetimeInterest,
-      this.wLbF1Balance,
-      this.wLbF1Principle,
-      this.wLbF1LifetimeInterest,
-      this.wLbF2Balance,
-      this.wLbF2Principle,
-      this.wLbF2LifetimeInterest,
-      this.wTmbLifetimeWin);
+    this._augGoldPrinciple,
+    this._augGoldBalance,
+    this._augGoldQuantity,
+    this._iciciPrinciple,
+    this._iciciBalance,
+    this._prizeBalance,
+    this._lockedPrizeBalance,
+    this._prizeLifetimeWin,
+    this._processingRedemptionBalance,
+    this.wLbBalance,
+    this.wLbPrinciple,
+    this.wLbProcessingAmt,
+    this.netWorth,
+    this.tickets,
+    this.wLbLifetimeInterest,
+    this.wLbF1Balance,
+    this.wLbF1Principle,
+    this.wLbF1LifetimeInterest,
+    this.wLbF2Balance,
+    this.wLbF2Principle,
+    this.wLbF2LifetimeInterest,
+    this.wTmbLifetimeWin,
+    this.wAugFdQty,
+  );
 
   UserFundWallet.newWallet()
-      : this(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, {}, 0, 0, 0, 0, 0, 0, 0, 0);
+      : this(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, {}, 0, 0, 0, 0, 0, 0, 0, 0,
+            0);
 
   UserFundWallet.base() {
     _augGoldPrinciple = 0.0;
@@ -108,6 +112,7 @@ class UserFundWallet {
     wLbF2Balance = 0;
     wLbF2Principle = 0;
     wLbF2LifetimeInterest = 0;
+    wAugFdQty = 0;
   }
 
   UserFundWallet.fromMap(Map<String, dynamic> data)
@@ -134,6 +139,7 @@ class UserFundWallet {
           BaseUtil.toDouble(data['wLbF2Principle']),
           BaseUtil.toDouble(data['wLbF2LifetimeInterest']),
           BaseUtil.toInt(data['wTmbLifetimeWin']),
+          BaseUtil.toDouble(data["wAugFdQty"] ?? 0.0),
         );
 
   Map<String, dynamic> cloneMap() => {
@@ -149,7 +155,7 @@ class UserFundWallet {
         'wLbBalance': wLbBalance,
         'wLbPrinciple': wLbPrinciple,
         'wLbProcessingAmt': wLbProcessingAmt,
-    'wTmbLifetimeWin': wTmbLifetimeWin
+        'wTmbLifetimeWin': wTmbLifetimeWin
       };
 
   double getEstTotalWealth() {

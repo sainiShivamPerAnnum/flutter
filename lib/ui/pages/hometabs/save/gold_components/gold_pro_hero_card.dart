@@ -1,10 +1,8 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
-import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/hometabs/save/gold_components/gold_pro_card.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
-import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -15,30 +13,28 @@ class GoldProHero extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        Haptic.vibrate();
-        AppState.delegate!.parseRoute(Uri.parse('goldProDetails'));
+    return Consumer<UserService>(
+      builder: (context, model, child) {
+        final double goldQuantity =
+            model.userFundWallet?.augGoldQuantity ?? 0.0;
+        final double goldProQuantity = model.userFundWallet?.wAugFdQty ?? 0.0;
+        if (goldProQuantity != 0) {
+          return InvestedGoldProHero(model: model);
+        } else if (goldQuantity <= 0) {
+          return NewGoldProHero(model: model);
+        } else if (goldQuantity <= 0.5) {
+          return ProgressGoldProHero(model: model);
+        } else {
+          return EligibleGoldProHero(model: model);
+        }
       },
-      child: Consumer<UserService>(
-        builder: (context, model, child) {
-          // final double goldQuantity = model.userFundWallet!.augGoldQuantity;
-          // if (goldQuantity <= 0) {
-          //   return NewGoldProHero();
-          // } else if (goldQuantity <= 0.5) {
-          //   return ProgressGoldProHero();
-          // } else {
-          //   return EligibleGoldProHero();
-          // }
-          return InvestedGoldProHero();
-        },
-      ),
     );
   }
 }
 
 class NewGoldProHero extends StatelessWidget {
-  const NewGoldProHero({super.key});
+  const NewGoldProHero({required this.model, super.key});
+  final UserService model;
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +60,8 @@ class NewGoldProHero extends StatelessWidget {
 }
 
 class ProgressGoldProHero extends StatelessWidget {
-  const ProgressGoldProHero({super.key});
+  const ProgressGoldProHero({required this.model, super.key});
+  final UserService model;
 
   @override
   Widget build(BuildContext context) {
@@ -85,7 +82,9 @@ class ProgressGoldProHero extends StatelessWidget {
           height: SizeConfig.padding16,
           width: SizeConfig.screenWidth,
           child: FractionallySizedBox(
-            widthFactor: 0.4,
+            widthFactor: BaseUtil.digitPrecision(
+                    model.userFundWallet?.augGoldQuantity ?? 0.0, 2) /
+                0.5,
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(100),
@@ -140,7 +139,8 @@ class ProgressGoldProHero extends StatelessWidget {
 }
 
 class EligibleGoldProHero extends StatelessWidget {
-  const EligibleGoldProHero({super.key});
+  const EligibleGoldProHero({required this.model, super.key});
+  final UserService model;
 
   @override
   Widget build(BuildContext context) {
@@ -174,7 +174,8 @@ class EligibleGoldProHero extends StatelessWidget {
 }
 
 class InvestedGoldProHero extends StatelessWidget {
-  const InvestedGoldProHero({super.key});
+  const InvestedGoldProHero({required this.model, super.key});
+  final UserService model;
 
   @override
   Widget build(BuildContext context) {
@@ -205,7 +206,7 @@ class InvestedGoldProHero extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Leased Gold Amount",
+                    "Leased Amount",
                     style: TextStyles.rajdhaniM.colour(Colors.white60),
                   ),
                   Row(
@@ -215,7 +216,7 @@ class InvestedGoldProHero extends StatelessWidget {
                       Flexible(
                         fit: FlexFit.loose,
                         child: Text(
-                          "₹${BaseUtil.digitPrecision(1200)}",
+                          "₹${BaseUtil.digitPrecision(model.userPortfolio.goldPro.balance)}",
                           style: TextStyles.sourceSansSB.title4
                               .colour(UiConstants.kGoldProPrimary),
                         ),
@@ -229,11 +230,21 @@ class InvestedGoldProHero extends StatelessWidget {
                               Transform.translate(
                                 offset: Offset(0, -SizeConfig.padding4),
                                 child: RotatedBox(
-                                  quarterTurns: 3 >= 0 ? 0 : 2,
+                                  quarterTurns: BaseUtil.digitPrecision(
+                                              model.userPortfolio.goldPro
+                                                  .absGains,
+                                              2) >=
+                                          0
+                                      ? 0
+                                      : 2,
                                   child: SvgPicture.asset(
                                     Assets.arrow,
                                     width: SizeConfig.iconSize2,
-                                    color: 3 >= 0
+                                    color: BaseUtil.digitPrecision(
+                                                model.userPortfolio.goldPro
+                                                    .absGains,
+                                                2) >=
+                                            0
                                         ? UiConstants.primaryColor
                                         : Colors.red,
                                   ),
@@ -241,12 +252,18 @@ class InvestedGoldProHero extends StatelessWidget {
                               ),
                               Text(
                                   " ${BaseUtil.digitPrecision(
-                                    3.234,
+                                    BaseUtil.digitPrecision(
+                                        model.userPortfolio.goldPro.percGains,
+                                        2),
                                     2,
                                     false,
                                   )}%",
                                   style: TextStyles.sourceSans.body3.colour(
-                                      3.4 >= 0
+                                      BaseUtil.digitPrecision(
+                                                  model.userPortfolio.goldPro
+                                                      .absGains,
+                                                  2) >=
+                                              0
                                           ? UiConstants.primaryColor
                                           : Colors.red)),
                             ],
@@ -262,16 +279,16 @@ class InvestedGoldProHero extends StatelessWidget {
               ),
             ),
             Expanded(
-              flex: 4,
+              flex: 3,
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Text(
-                    "Leased Gold Value",
+                    "Leased Value",
                     style: TextStyles.rajdhaniM.colour(Colors.white60),
                   ),
                   Text(
-                    "${BaseUtil.digitPrecision(0.5, 2)}gms",
+                    "${BaseUtil.digitPrecision(model.userFundWallet?.wAugFdQty ?? 0.0, 2)}gms",
                     style: TextStyles.sourceSansSB.title4
                         .colour(UiConstants.kGoldProPrimary),
                   )

@@ -242,7 +242,9 @@ class ApiPath {
 
   static String get goldProScheme => "/fd/scheme";
 
-  static String get createFd => "/fd";
+  static String get Fd => "/fd";
 
   static String getFds(String uid) => "/$uid/fd";
+
+  static String get goldRatesGraph => "/gold-rates/graph";
 }

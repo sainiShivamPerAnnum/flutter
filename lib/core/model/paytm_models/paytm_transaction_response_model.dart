@@ -160,7 +160,7 @@ class ProMap {
   factory ProMap.fromMap(Map<String, dynamic> map) {
     return ProMap(
       status: map['status'] as String,
-      qty: map['qty'] as double,
+      qty: (map["qty"] ?? 0.0) * 1.0,
       schemeId: map['schemeId'] as String,
     );
   }

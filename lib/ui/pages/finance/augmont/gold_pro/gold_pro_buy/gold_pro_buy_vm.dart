@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:math';
 
 import 'package:felloapp/base_util.dart';
@@ -7,6 +8,7 @@ import 'package:felloapp/core/model/aug_gold_rates_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/repository/getters_repo.dart';
 import 'package:felloapp/core/repository/payment_repo.dart';
+import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
@@ -30,6 +32,7 @@ class GoldProBuyViewModel extends BaseViewModel {
   final CustomLogger _logger = locator<CustomLogger>();
   final BankAndPanService _bankAndPanService = locator<BankAndPanService>();
   final PaymentRepository _paymentRepo = locator<PaymentRepository>();
+  final TxnHistoryService _txnHistoryService = locator<TxnHistoryService>();
   S locale = locator<S>();
   TextEditingController goldFieldController =
       TextEditingController(text: "2.5");
@@ -40,7 +43,7 @@ class GoldProBuyViewModel extends BaseViewModel {
   double _additionalGoldBalance = 0;
   double _expectedGoldReturns = 0.0;
   double _totalGoldAmount = 0;
-  bool _isGoldRateFetching = false;
+  bool _isGoldRateFetching = true;
   AugmontRates? goldRates;
 
   List<GoldProChoiceChipsModel> chipsList = [
@@ -74,6 +77,7 @@ class GoldProBuyViewModel extends BaseViewModel {
         max(totalGoldBalance - currentGoldBalance, 0), 4, true);
     print(
         "Total: $totalGoldBalance && Current: $currentGoldBalance && additional: $additionalGoldBalance");
+    updateSliderValueFromGoldBalance();
     updateAmount();
     notifyListeners();
   }
@@ -129,6 +133,7 @@ class GoldProBuyViewModel extends BaseViewModel {
   }
 
   Future<void> init() async {
+    AppState.isGoldProBuyInProgress = false;
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       _txnService.currentTransactionState = TransactionState.idle;
     });
@@ -136,10 +141,11 @@ class GoldProBuyViewModel extends BaseViewModel {
         userService.userFundWallet!.augGoldQuantity, 4, false);
     totalGoldBalance = chipsList[1].value;
     appMetaList = await UpiUtils.getUpiApps();
-    await getAssetOptionsModel();
-    await fetchGoldRates();
+    unawaited(fetchGoldRates());
     await verifyAugmontKyc();
-    isIntentFlow = assetOptionsModel!.data.intent;
+    unawaited(getAssetOptionsModel().then((_) {
+      isIntentFlow = assetOptionsModel!.data.intent;
+    }));
   }
 
   void dump() {
@@ -155,6 +161,7 @@ class GoldProBuyViewModel extends BaseViewModel {
   }
 
   Future<void> initiateGoldProTransaction() async {
+    AppState.isGoldProBuyInProgress = false;
     if (additionalGoldBalance == 0) {
       await _initiateLease();
     } else {
@@ -210,25 +217,28 @@ class GoldProBuyViewModel extends BaseViewModel {
     _txnService.isGoldBuyInProgress = true;
     AppState.blockNavigation();
     _txnService.currentGoldPurchaseDetails = GoldPurchaseDetails(
-      goldBuyAmount: totalGoldAmount,
+      goldBuyAmount: 0,
       goldRates: goldRates,
       couponCode: '',
       skipMl: false,
-      goldInGrams: additionalGoldBalance,
+      goldInGrams: totalGoldBalance,
       leaseQty: totalGoldBalance,
       isPro: true,
     );
-    _txnService.currentTxnAmount = totalGoldAmount;
+    _txnService.currentTxnAmount = 0;
     final res = await _paymentRepo.investInGoldPro(
-        totalGoldAmount, _txnService.goldProScheme!.id);
+        totalGoldBalance, _txnService.goldProScheme!.id);
     if (res.isSuccess()) {
       _txnService.currentTransactionState = TransactionState.success;
+      unawaited(locator<UserService>().getUserFundWalletData());
+      unawaited(locator<UserService>().updatePortFolio());
+      unawaited(_txnHistoryService.getGoldProTransactions());
     } else {
       _txnService.isGoldBuyInProgress = false;
       BaseUtil.showNegativeAlert(res.errorMessage, "Please try again");
     }
-    _txnService.isGoldBuyInProgress = true;
-    AppState.blockNavigation();
+    _txnService.isGoldBuyInProgress = false;
+    AppState.unblockNavigation();
   }
 
 //VM Async Helper Methods:
@@ -265,6 +275,11 @@ class GoldProBuyViewModel extends BaseViewModel {
     }
   }
 
+  void updateSliderValueFromGoldBalance() {
+    double val = BaseUtil.digitPrecision((totalGoldBalance - 0.5) / 9.5, 1);
+    if (val >= 0 && val <= 1) sliderValue = val;
+  }
+
   void updateSliderValue(double val) {
     sliderValue = val;
     totalGoldBalance = BaseUtil.digitPrecision(9.5 * val + 0.5, 1);
@@ -280,18 +295,27 @@ class GoldProBuyViewModel extends BaseViewModel {
 
   void decrementGoldBalance() {
     totalGoldBalance = BaseUtil.digitPrecision(totalGoldBalance, 1);
-    if (totalGoldBalance <= 0) return;
+    if (totalGoldBalance <= 0.5) {
+      totalGoldBalance = 0.5;
+      goldFieldController.text = totalGoldBalance.toString();
+      updateSliderValueFromGoldBalance();
+      return;
+    }
     Haptic.vibrate();
     totalGoldBalance -= 0.1;
     totalGoldBalance = BaseUtil.digitPrecision(totalGoldBalance, 1);
     goldFieldController.text = totalGoldBalance.toString();
-
     postUpdateChips();
   }
 
   void incrementGoldBalance() {
     totalGoldBalance = BaseUtil.digitPrecision(totalGoldBalance, 1);
-    if (totalGoldBalance >= 10) return;
+    if (totalGoldBalance >= 10) {
+      totalGoldBalance = 10;
+      goldFieldController.text = totalGoldBalance.toString();
+      updateSliderValueFromGoldBalance();
+      return;
+    }
     Haptic.vibrate();
     print("Before $totalGoldBalance");
     totalGoldBalance += 0.1;
@@ -322,7 +346,27 @@ class GoldProBuyViewModel extends BaseViewModel {
   }
 
   void onProceedTapped() {
+    if (totalGoldBalance > 10) {
+      BaseUtil.showNegativeAlert(
+          "Gold grams out of bound", "You can lease at most 10 grams");
+      totalGoldBalance = 10;
+      goldFieldController.text = "10";
+      updateAmount();
+      return;
+    }
+    if (totalGoldBalance < 0.5) {
+      BaseUtil.showNegativeAlert("Gold grams too low to lease",
+          "You have to lease at least 0.5 grams");
+      totalGoldBalance = 0.5;
+      goldFieldController.text = "0.5";
+      updateAmount();
+      return;
+    }
+    if (isGoldRateFetching) {
+      BaseUtil.showNegativeAlert("Fetching latest gold rates", "Please wait");
+    }
     _txnService.currentTransactionState = TransactionState.overView;
+    AppState.isGoldProBuyInProgress = true;
   }
 
   void onCompleteKycTapped() {
@@ -348,11 +392,10 @@ class GoldProBuyViewModel extends BaseViewModel {
 
     if (goldBuyPrice != null && goldBuyPrice != 0.0) {
       totalGoldAmount = BaseUtil.digitPrecision(
-              additionalGoldBalance * goldBuyPrice! +
-                  _getTaxOnAmount(
-                      additionalGoldBalance * goldBuyPrice!, netTax),
-              2,
-              false) +
+            additionalGoldBalance * goldBuyPrice! +
+                _getTaxOnAmount(additionalGoldBalance * goldBuyPrice!, netTax),
+            2,
+          ) +
           2;
 
       double expectedGoldReturnsAmount = BaseUtil.digitPrecision(
@@ -364,6 +407,16 @@ class GoldProBuyViewModel extends BaseViewModel {
       expectedGoldReturns = 0.0;
     }
   }
+
+  // double calculateLeasedGoldAmount() {
+  //   double netTax =
+  //       (goldRates?.cgstPercent ?? 0) + (goldRates?.sgstPercent ?? 0);
+  //   return BaseUtil.digitPrecision(
+  //       totalGoldBalance * goldBuyPrice! +
+  //           _getTaxOnAmount(totalGoldBalance * goldBuyPrice!, netTax),
+  //       2,
+  //       false);
+  // }
 
   double? get goldBuyPrice => goldRates != null ? goldRates!.goldBuyPrice : 0.0;
 

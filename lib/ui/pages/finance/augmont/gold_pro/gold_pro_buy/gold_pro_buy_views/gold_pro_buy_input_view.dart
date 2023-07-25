@@ -9,6 +9,8 @@ import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
+import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class GoldProBuyInputView extends StatelessWidget {
@@ -98,10 +100,24 @@ class GoldProBuyInputView extends StatelessWidget {
                                     duration: const Duration(seconds: 0),
                                     curve: Curves.easeIn,
                                     child: TextField(
-                                      maxLength: 6,
+                                      maxLength: 3,
                                       controller: model.goldFieldController,
                                       keyboardType: TextInputType.number,
                                       onChanged: model.onTextFieldValueChanged,
+                                      inputFormatters: [
+                                        TextInputFormatter.withFunction(
+                                            (oldValue, newValue) {
+                                          var decimalSeparator = NumberFormat()
+                                              .symbols
+                                              .DECIMAL_SEP;
+                                          var r = RegExp(r'^\d*(\' +
+                                              decimalSeparator +
+                                              r'\d*)?$');
+                                          return r.hasMatch(newValue.text)
+                                              ? newValue
+                                              : oldValue;
+                                        })
+                                      ],
                                       decoration: const InputDecoration(
                                         counter: Offstage(),
                                         focusedBorder: InputBorder.none,

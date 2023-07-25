@@ -1,8 +1,8 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/transaction_state_enum.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
+import 'package:felloapp/ui/pages/finance/augmont/gold_buy/widgets/view_breakdown.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_buy/gold_pro_buy_components/gold_balance_rows.dart';
-import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_buy/gold_pro_buy_components/gold_pro_buy_exit_modalsheet.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_buy/gold_pro_buy_vm.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
@@ -26,6 +26,7 @@ class GoldProBuyOverView extends StatelessWidget {
           leading: IconButton(
             icon: const Icon(Icons.arrow_back_ios),
             onPressed: () {
+              if (txnService.isGoldBuyInProgress) return;
               Haptic.vibrate();
               txnService.currentTransactionState = TransactionState.idle;
             },
@@ -126,18 +127,15 @@ class GoldProBuyOverView extends StatelessWidget {
                             GestureDetector(
                               onTap: () {
                                 BaseUtil.openModalBottomSheet(
-                                    isBarrierDismissible: true,
-                                    addToScreenStack: true,
-                                    backgroundColor:
-                                        UiConstants.kArrowButtonBackgroundColor,
-                                    borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(
-                                            SizeConfig.roundness24),
-                                        topRight: Radius.circular(
-                                            SizeConfig.roundness24)),
-                                    hapticVibrate: true,
-                                    isScrollControlled: true,
-                                    content: const GoldProBuyExitModalSheet());
+                                  isBarrierDismissible: true,
+                                  backgroundColor: const Color(0xff1A1A1A),
+                                  addToScreenStack: true,
+                                  isScrollControlled: true,
+                                  content: GoldProBreakdownView(
+                                    model: model,
+                                    showPsp: false,
+                                  ),
+                                );
                               },
                               child: Text(
                                 "View Breakdown",

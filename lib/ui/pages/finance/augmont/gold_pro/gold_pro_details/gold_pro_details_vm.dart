@@ -1,11 +1,15 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/repository/payment_repo.dart';
+import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/locator.dart';
 
 class GoldProDetailsViewModel extends BaseViewModel {
   final PaymentRepository _paymentRepo = locator<PaymentRepository>();
+  final UserService _userService = locator<UserService>();
+  final _txnHistoryService = locator<TxnHistoryService>();
   final AugmontTransactionService _txnService =
       locator<AugmontTransactionService>();
   List<bool> detStatus = [false, false, false, false, false];
@@ -31,6 +35,7 @@ class GoldProDetailsViewModel extends BaseViewModel {
 
   void init() {
     getGoldProScheme();
+    getGoldProTransactions();
   }
 
   void dump() {}
@@ -43,5 +48,18 @@ class GoldProDetailsViewModel extends BaseViewModel {
       BaseUtil.showNegativeAlert(
           "Failed to fetch Gold Scheme", res.errorMessage);
     }
+  }
+
+  Future<void> getGoldProTransactions() async {
+    Future.delayed(const Duration(milliseconds: 100), () {
+      _txnHistoryService.getGoldProTransactions(forced: true).then((value) {});
+    });
+  }
+
+  Future<void> pullToRefresh() async {
+    await _userService.getUserFundWalletData();
+    await _userService.updatePortFolio();
+    await getGoldProScheme();
+    await _txnHistoryService.getGoldProTransactions(forced: true);
   }
 }

@@ -262,6 +262,9 @@ class AugmontTransactionService extends BaseTransactionService {
                 PowerPlayService.powerPlayDepositFlow = false;
                 MatchData? liveMatchData =
                     locator<PowerPlayService>().liveMatchData;
+                unawaited(_userService.getUserFundWalletData());
+                unawaited(_userService.updatePortFolio());
+                unawaited(_txnHistoryService.getGoldProTransactions());
                 if (liveMatchData != null) {
                   unawaited(locator<PowerPlayService>()
                       .getUserTransactionHistory(matchData: liveMatchData));
@@ -280,8 +283,8 @@ class AugmontTransactionService extends BaseTransactionService {
                     gtIds: transactionResponseModel?.data?.gtIds ?? []));
               } else if (txnStatus.data!.fd!.status ==
                   Constants.GOLD_PRO_TXN_STATUS_PENDING) {
-                BaseUtil.showNegativeAlert(
-                    "Gold leasing in pending", "You can close the app");
+                // BaseUtil.showNegativeAlert(
+                //     "Gold leasing in pending", "You can close the app");
               } else if (txnStatus.data!.fd!.status ==
                   Constants.GOLD_PRO_TXN_STATUS_FAILED) {
                 BaseUtil.showNegativeAlert(
@@ -292,6 +295,8 @@ class AugmontTransactionService extends BaseTransactionService {
               PowerPlayService.powerPlayDepositFlow = false;
               MatchData? liveMatchData =
                   locator<PowerPlayService>().liveMatchData;
+              unawaited(_userService.getUserFundWalletData());
+              unawaited(_userService.updatePortFolio());
               if (liveMatchData != null) {
                 unawaited(locator<PowerPlayService>()
                     .getUserTransactionHistory(matchData: liveMatchData));

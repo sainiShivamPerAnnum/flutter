@@ -1,8 +1,10 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/portfolio_model.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/hometabs/save/gold_components/gold_pro_hero_card.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -116,7 +118,12 @@ class GoldInfoWidget extends StatelessWidget {
                 ],
               ),
             ),
-            Container(
+            GestureDetector(
+              onTap: () {
+                Haptic.vibrate();
+                AppState.delegate!.parseRoute(Uri.parse('goldProDetails'));
+              },
+              child: Container(
                 padding: EdgeInsets.symmetric(
                   horizontal: SizeConfig.padding20,
                   vertical: SizeConfig.padding12,
@@ -129,7 +136,9 @@ class GoldInfoWidget extends StatelessWidget {
                     bottomRight: Radius.circular(SizeConfig.roundness16),
                   ),
                 ),
-                child: const GoldProHero())
+                child: const GoldProHero(),
+              ),
+            )
           ],
         ),
       );

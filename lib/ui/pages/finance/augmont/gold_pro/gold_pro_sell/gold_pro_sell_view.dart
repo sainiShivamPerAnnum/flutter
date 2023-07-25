@@ -1,7 +1,10 @@
+import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_sell/gold_pro_sell_components/gold_pro_sell_card.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_sell/gold_pro_sell_vm.dart';
+import 'package:felloapp/ui/pages/static/game_card.dart';
+import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/styles/styles.dart';
@@ -17,59 +20,79 @@ class GoldProSellView extends StatelessWidget {
       onModelDispose: (model) => model.dump(),
       builder: (context, model, child) {
         return Scaffold(
-          backgroundColor: UiConstants.kModalSheetBackgroundColor,
-          body: SafeArea(
-            child: Column(
-              children: [
-                SizedBox(
-                  width: SizeConfig.screenWidth,
-                  height: kToolbarHeight,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      SizedBox(width: SizeConfig.padding4),
-                      IconButton(
-                        icon: const Icon(
-                          Icons.arrow_back_ios,
-                          color: Colors.white,
-                        ),
-                        onPressed: () =>
-                            AppState.backButtonDispatcher!.didPopRoute(),
-                      ),
+            backgroundColor: UiConstants.kModalSheetBackgroundColor,
+            body: SafeArea(
+              child: RefreshIndicator(
+                color: UiConstants.kGoldProPrimary,
+                backgroundColor: Colors.black,
+                onRefresh: () async {
+                  await model.getGoldProTransactions(forced: true);
+                },
+                child: Column(
+                  children: [
+                    SizedBox(
+                      width: SizeConfig.screenWidth,
+                      height: kToolbarHeight,
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.start,
+                        children: [
+                          SizedBox(width: SizeConfig.padding4),
+                          IconButton(
+                            icon: const Icon(
+                              Icons.arrow_back_ios,
+                              color: Colors.white,
+                            ),
+                            onPressed: () =>
+                                AppState.backButtonDispatcher!.didPopRoute(),
+                          ),
 
-                      Image.asset(
-                        Assets.digitalGoldBar,
-                        width: SizeConfig.padding54,
-                        height: SizeConfig.padding54,
+                          Image.asset(
+                            Assets.digitalGoldBar,
+                            width: SizeConfig.padding54,
+                            height: SizeConfig.padding54,
+                          ),
+                          // SizedBox(width: SizeConfig.padding8),
+
+                          Text(
+                            'Un-Lease Digital ${Constants.ASSET_GOLD_STAKE}',
+                            style: TextStyles.rajdhaniSB.title5,
+                          ),
+                          const Spacer()
+                        ],
                       ),
-                      // SizedBox(width: SizeConfig.padding8),
-                      Text(
-                        'Un-Lease Digital ${Constants.ASSET_GOLD_STAKE}',
-                        style: TextStyles.rajdhaniSB.title5,
+                    ),
+                    if (model.state == ViewState.Idle)
+                      Padding(
+                        padding:
+                            EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+                        child: Text(
+                          model.leasedGoldList.isEmpty
+                              ? ""
+                              : "Select Lease to Un-Lease to Digital Gold",
+                          style:
+                              TextStyles.rajdhaniM.body0.colour(Colors.white),
+                        ),
                       ),
-                      const Spacer()
-                    ],
-                  ),
+                    Expanded(
+                        child: model.state == ViewState.Busy
+                            ? const Center(child: FullScreenLoader())
+                            : model.leasedGoldList.isEmpty
+                                ? NoRecordDisplayWidget(
+                                    text: "No Investments made yet",
+                                  )
+                                : ListView.builder(
+                                    physics: const BouncingScrollPhysics(),
+                                    itemCount: model.leasedGoldList.length,
+                                    itemBuilder: (context, index) =>
+                                        GoldProSellCard(
+                                      data: model.leasedGoldList[index],
+                                      model: model,
+                                    ),
+                                  )),
+                  ],
                 ),
-                Padding(
-                  padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
-                  child: Text(
-                    "Select Lease to Un-Lease to Digital Gold",
-                    style: TextStyles.rajdhaniM.body0.colour(Colors.white),
-                  ),
-                ),
-                Expanded(
-                    child: ListView.builder(
-                  physics: const BouncingScrollPhysics(),
-                  itemCount: model.leasedGoldList.length,
-                  itemBuilder: (context, index) => GoldProSellCard(
-                    data: model.leasedGoldList[index],
-                  ),
-                ))
-              ],
-            ),
-          ),
-        );
+              ),
+            ));
       },
     );
   }

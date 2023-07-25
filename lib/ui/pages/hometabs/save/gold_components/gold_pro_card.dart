@@ -267,7 +267,7 @@ class GoldShimmerWidget extends StatelessWidget {
           Align(
             alignment: Alignment.center,
             child: Transform.scale(
-              scale: 2,
+              scale: size == ShimmerSizeEnum.small ? 2.5 : 2,
               child: Transform.rotate(
                 angle: 13.5,
                 child: Container(

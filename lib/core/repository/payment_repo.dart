@@ -142,7 +142,7 @@ class PaymentRepository extends BaseRepo {
   ) async {
     try {
       final token = await getBearerToken();
-      final response = await APIService.instance.postData(ApiPath.createFd,
+      final response = await APIService.instance.postData(ApiPath.Fd,
           cBaseUrl: _baseUrl,
           token: token,
           body: {
@@ -168,7 +168,7 @@ class PaymentRepository extends BaseRepo {
       getGoldProInvestments() async {
     try {
       final token = await getBearerToken();
-      final response = await APIService.instance.postData(
+      final response = await APIService.instance.getData(
         ApiPath.getFds(userService.baseUser!.uid!),
         cBaseUrl: _baseUrl,
         token: token,
@@ -181,6 +181,21 @@ class PaymentRepository extends BaseRepo {
       }
 
       return ApiResponse(model: goldProInvestments, code: 200);
+    } catch (e) {
+      logger.e(e.toString());
+      return ApiResponse.withError(e.toString(), 400);
+    }
+  }
+
+  Future<ApiResponse<bool>> preCloseGoldProInvestment(String fdId) async {
+    try {
+      final token = await getBearerToken();
+      final response = await APIService.instance.putData(ApiPath.Fd,
+          cBaseUrl: _baseUrl,
+          token: token,
+          body: {"fdId": fdId, "uid": userService.baseUser!.uid});
+
+      return ApiResponse(model: true, code: 200);
     } catch (e) {
       logger.e(e.toString());
       return ApiResponse.withError(e.toString(), 400);

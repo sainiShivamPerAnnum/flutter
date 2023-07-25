@@ -1,145 +1,162 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/model/gold_pro_models/gold_pro_investment_reponse_model.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_sell/gold_pro_sell_vm.dart';
+import 'package:felloapp/ui/pages/hometabs/save/gold_components/gold_balance_brief_row.dart';
 import 'package:felloapp/ui/pages/hometabs/save/gold_components/gold_pro_card.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class GoldProSellCard extends StatelessWidget {
-  const GoldProSellCard({required this.data, super.key});
+  const GoldProSellCard({required this.data, required this.model, super.key});
 
-  final GoldProSellCardModel data;
+  final GoldProInvestmentResponseModel data;
+  final GoldProSellViewModel model;
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        BaseUtil.openModalBottomSheet(
-          isBarrierDismissible: false,
-          addToScreenStack: true,
-          isScrollControlled: true,
-          hapticVibrate: true,
-          content: GoldProSellConfirmationModalSheet(data: data),
-        );
-      },
-      child: Container(
-        margin: EdgeInsets.symmetric(
-            horizontal: SizeConfig.pageHorizontalMargins,
-            vertical: SizeConfig.padding14),
-        decoration: BoxDecoration(
-          color: UiConstants.kArrowButtonBackgroundColor,
-          borderRadius: BorderRadius.circular(SizeConfig.roundness16),
+    return Container(
+      margin: EdgeInsets.symmetric(
+          horizontal: SizeConfig.pageHorizontalMargins,
+          vertical: SizeConfig.padding14),
+      decoration: BoxDecoration(
+        color: UiConstants.kArrowButtonBackgroundColor,
+        borderRadius: BorderRadius.circular(SizeConfig.roundness16),
+      ),
+      padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+      child: Column(children: [
+        GoldBalanceBriefRow(
+          leadTitle: "Current Gold Value",
+          leadTitleColor: Colors.grey,
+          lead: BaseUtil.digitPrecision(data.qty + data.interest, 4),
+          leadSubtitleColor: UiConstants.kGoldProPrimary,
+          trailTitle: "Gold Leased",
+          trail: data.qty,
+          trailSubtitleColor: UiConstants.kGoldProPrimary,
+          trailTitleColor: Colors.grey,
+          percent: data.interest,
+          isPro: true,
+          isGainInGms: true,
         ),
-        padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
-        child: Column(children: [
-          Row(
-            children: [
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Gold Amount",
-                    style: TextStyles.rajdhaniM.body1.colour(Colors.grey),
-                  ),
-                  SizedBox(height: SizeConfig.padding4),
-                  Text(
-                    "₹${data.amount}",
-                    style: TextStyles.sourceSansSB.body0
-                        .colour(UiConstants.kGoldProPrimary),
-                  )
-                ],
+        SizedBox(height: SizeConfig.padding12),
+        Row(
+          children: [
+            Text(
+              "Leased On",
+              style: TextStyles.sourceSans.body2
+                  .colour(UiConstants.kFAQDividerColor),
+            ),
+            const Spacer(),
+            Text(
+              DateFormat('dd MMM, yyyy').format(
+                  DateTime.fromMillisecondsSinceEpoch(
+                      data.createdOn.millisecondsSinceEpoch)),
+              style: TextStyles.sourceSansSB.body2.colour(Colors.white),
+            )
+          ],
+        ),
+        SizedBox(height: SizeConfig.padding12),
+        Row(
+          children: [
+            // RichText(
+            //   text: TextSpan(
+            //     text: "will gain extra ",
+            // style: TextStyles.body3
+            //     .colour(UiConstants.KGoldProPrimaryDark)
+            //     .setHeight(1.3),
+            //     children: [
+            //       TextSpan(
+            //           text: "${data.interest}g gold",
+            //           style:
+            //               TextStyles.sourceSans.body2.colour(Colors.white)),
+            //       TextSpan(
+            //         text: "\non ${DateFormat('dd MMM, yyyy').format(
+            //           DateTime.fromMillisecondsSinceEpoch(data.createdOn
+            //               .toDate()
+            //               .add(
+            //                 Duration(days: data.days),
+            //               )
+            //               .millisecondsSinceEpoch),
+            //         )}",
+            //       )
+            //     ],
+            //   ),
+            // ),
+            Expanded(
+              child: Text(
+                "${data.message}",
+                style: TextStyles.body3
+                    .colour(UiConstants.KGoldProPrimaryDark)
+                    .setHeight(1.3),
               ),
-              const Spacer(),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(
-                    "Gold Value",
-                    style: TextStyles.rajdhaniM.body1.colour(Colors.grey),
-                  ),
-                  SizedBox(height: SizeConfig.padding4),
-                  Text(
-                    "${data.value}gms",
-                    style: TextStyles.sourceSansSB.body0
-                        .colour(UiConstants.kGoldProPrimary),
-                  )
-                ],
-              ),
-            ],
-          ),
-          SizedBox(height: SizeConfig.padding12),
-          Row(
-            children: [
-              Text(
-                "Leased On",
-                style: TextStyles.sourceSans.body2
-                    .colour(UiConstants.kFAQDividerColor),
-              ),
-              const Spacer(),
-              Text(
-                DateFormat('dd MMM, yyyy').format(
-                    DateTime.fromMillisecondsSinceEpoch(
-                        data.leasedOn.millisecondsSinceEpoch)),
-                style: TextStyles.sourceSansSB.body2.colour(Colors.white),
-              )
-            ],
-          ),
-          SizedBox(height: SizeConfig.padding12),
-          Row(
-            children: [
-              RichText(
-                text: TextSpan(
-                  text: "will gain extra ",
-                  style: TextStyles.body3
-                      .colour(UiConstants.KGoldProPrimaryDark)
-                      .setHeight(1.3),
-                  children: [
-                    TextSpan(
-                        text: "${data.extraGold}g gold",
-                        style:
-                            TextStyles.sourceSans.body2.colour(Colors.white)),
-                    TextSpan(
-                      text:
-                          "\non ${DateFormat('dd MMM, yyyy').format(DateTime.fromMillisecondsSinceEpoch(data.maturityOn.millisecondsSinceEpoch))}",
-                    )
-                  ],
+            ),
+            SizedBox(width: SizeConfig.pageHorizontalMargins),
+            Opacity(
+              opacity: data.isWithdrawable ? 1 : 0.4,
+              child: OutlinedButton(
+                style: OutlinedButton.styleFrom(
+                  side: const BorderSide(width: 1.0, color: Colors.white),
                 ),
-              ),
-              const Spacer(),
-              OutlinedButton(
-                  style: OutlinedButton.styleFrom(
-                    side: const BorderSide(width: 1.0, color: Colors.white),
-                  ),
-                  onPressed: () {
+                onPressed: () {
+                  if (!data.isWithdrawable) {
+                    BaseUtil.showNegativeAlert(
+                        "${Constants.ASSET_GOLD_STAKE} investments have a lock-in of 7 days",
+                        "Please try again later");
+                  } else {
                     BaseUtil.openModalBottomSheet(
                       isBarrierDismissible: false,
                       addToScreenStack: true,
                       isScrollControlled: true,
                       hapticVibrate: true,
-                      content: GoldProSellConfirmationModalSheet(data: data),
+                      content: GoldProSellConfirmationModalSheet(
+                        data: data,
+                        model: model,
+                      ),
                     );
-                  },
-                  child: Text(
-                    "UN-LEASE",
-                    style: TextStyles.rajdhaniSB.body2.colour(Colors.white),
-                  ))
-            ],
-          )
-        ]),
-      ),
+                  }
+                },
+                child: Text(
+                  "UN-LEASE",
+                  style: TextStyles.rajdhaniSB.body2.colour(Colors.white),
+                ),
+              ),
+            )
+          ],
+        )
+      ]),
     );
   }
 }
 
-class GoldProSellConfirmationModalSheet extends StatelessWidget {
+class GoldProSellConfirmationModalSheet extends StatefulWidget {
   const GoldProSellConfirmationModalSheet({
-    super.key,
     required this.data,
+    required this.model,
+    super.key,
   });
 
-  final GoldProSellCardModel data;
+  final GoldProInvestmentResponseModel data;
+  final GoldProSellViewModel model;
+
+  @override
+  State<GoldProSellConfirmationModalSheet> createState() =>
+      _GoldProSellConfirmationModalSheetState();
+}
+
+class _GoldProSellConfirmationModalSheetState
+    extends State<GoldProSellConfirmationModalSheet> {
+  bool _isGoldSellInProgress = false;
+  bool get isGoldSellInProgress => _isGoldSellInProgress;
+
+  set isGoldSellInProgress(bool value) {
+    _isGoldSellInProgress = value;
+    if (mounted) {
+      setState(() {});
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -152,7 +169,10 @@ class GoldProSellConfirmationModalSheet extends StatelessWidget {
             color: UiConstants.KGoldProPrimaryDark,
             width: 2,
           ),
-          borderRadius: BorderRadius.circular(SizeConfig.roundness24),
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(SizeConfig.roundness24),
+            topRight: Radius.circular(SizeConfig.roundness24),
+          ),
           color: UiConstants.kGoldProBgColor,
         ),
         child: Stack(
@@ -179,42 +199,67 @@ class GoldProSellConfirmationModalSheet extends StatelessWidget {
                   ),
                   SizedBox(height: SizeConfig.padding8),
                   Text(
-                    "0.5g gold",
+                    "${widget.data.qty}g gold",
                     style: TextStyles.sourceSansSB.title3.colour(Colors.white),
                   ),
                   SizedBox(height: SizeConfig.padding4),
                   Text(
-                    "to be credited in your account on ${DateFormat('dd MMM, yyyy').format(DateTime.fromMillisecondsSinceEpoch(data.maturityOn.millisecondsSinceEpoch))}",
+                    "to be credited in your account on ${DateFormat('dd MMM, yyyy').format(
+                      DateTime.fromMillisecondsSinceEpoch(widget.data.createdOn
+                          .toDate()
+                          .add(
+                            Duration(days: widget.data.days),
+                          )
+                          .millisecondsSinceEpoch),
+                    )}",
                     style: TextStyles.sourceSans.body3.colour(Colors.white70),
                   ),
                   SizedBox(height: SizeConfig.pageHorizontalMargins),
-                  MaterialButton(
-                    onPressed: () {
-                      Haptic.vibrate();
-                      AppState.backButtonDispatcher!.didPopRoute();
-                    },
-                    color: Colors.white,
-                    height: SizeConfig.padding44,
-                    minWidth: SizeConfig.screenWidth,
-                    shape: RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.circular(SizeConfig.roundness12),
-                    ),
-                    child: Text(
-                      "DO NOT UN-LEASE",
-                      style: TextStyles.rajdhaniB.body1.colour(Colors.black),
-                    ),
-                  ),
-                  TextButton(
-                    onPressed: () {
-                      Haptic.vibrate();
-                      AppState.backButtonDispatcher!.didPopRoute();
-                    },
-                    child: Text(
-                      "UN-LEASE TO GOLD",
-                      style: TextStyles.rajdhaniB.body1.colour(Colors.white),
-                    ),
-                  )
+                  isGoldSellInProgress
+                      ? Padding(
+                          padding:
+                              EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+                          child: const LinearProgressIndicator(
+                              backgroundColor: Colors.black,
+                              color: Colors.white),
+                        )
+                      : Column(
+                          children: [
+                            MaterialButton(
+                              onPressed: () {
+                                Haptic.vibrate();
+                                AppState.backButtonDispatcher!.didPopRoute();
+                              },
+                              color: Colors.white,
+                              height: SizeConfig.padding44,
+                              minWidth: SizeConfig.screenWidth,
+                              shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(
+                                    SizeConfig.roundness12),
+                              ),
+                              child: Text(
+                                "DO NOT UN-LEASE",
+                                style: TextStyles.rajdhaniB.body1
+                                    .colour(Colors.black),
+                              ),
+                            ),
+                            SizedBox(height: SizeConfig.padding12),
+                            TextButton(
+                              onPressed: () async {
+                                Haptic.vibrate();
+                                isGoldSellInProgress = true;
+                                await widget.model
+                                    .preSellGoldProInvestment(widget.data);
+                                isGoldSellInProgress = false;
+                              },
+                              child: Text(
+                                "UN-LEASE TO GOLD",
+                                style: TextStyles.rajdhaniB.body1
+                                    .colour(Colors.white),
+                              ),
+                            )
+                          ],
+                        )
                 ],
               ),
             ),

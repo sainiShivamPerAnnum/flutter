@@ -7,21 +7,31 @@ class GoldProInvestmentResponseModel {
   final String uid;
   final String status;
   final String schemeId;
+  final String fdId;
   final int days;
   final double qty;
   final double interest;
   final String note;
+  final double amount;
+  final bool isWithdrawable;
+  final double interest_collected;
+  final String message;
   final TimestampModel createdOn;
   final TimestampModel updatedOn;
   GoldProInvestmentResponseModel({
     required this.id,
     required this.uid,
+    required this.fdId,
     required this.status,
     required this.schemeId,
     required this.days,
     required this.qty,
     required this.interest,
     required this.note,
+    required this.amount,
+    required this.isWithdrawable,
+    required this.interest_collected,
+    required this.message,
     required this.createdOn,
     required this.updatedOn,
   });
@@ -34,11 +44,16 @@ class GoldProInvestmentResponseModel {
       id: map['id'] as String,
       uid: map['uid'] as String,
       status: map['status'] as String,
-      schemeId: map['schemeId'] as String,
-      days: map['days'] as int,
-      qty: map['qty'] as double,
-      interest: map['interest'] as double,
+      fdId: map["fdId"] ?? map["fd_id"] ?? "",
+      schemeId: map['schemeId'] ?? map["scheme_id"] ?? "",
+      days: map['days'] ?? 0,
+      qty: (map['qty'] ?? 0).toDouble() ?? 0.0,
+      interest: (map['interest'] ?? 0).toDouble() ?? 0.0,
       note: (map['note'] ?? "") as String,
+      amount: (map['amount'] ?? 0).toDouble() ?? 0.0,
+      isWithdrawable: map['isWithdrawable'] ?? false,
+      interest_collected: (map['interest_collected'] ?? 0).toDouble() ?? 0.0,
+      message: map["message"] ?? "",
       createdOn: TimestampModel.fromMap(map['createdOn']),
       updatedOn: TimestampModel.fromMap(map['updatedOn']),
     );

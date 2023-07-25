@@ -85,7 +85,10 @@ class _GoldProBuyExitModalSheetState extends State<GoldProBuyExitModalSheet> {
                       )),
             ),
             MaterialButton(
-              onPressed: () {},
+              onPressed: () {
+                AppState.isGoldProBuyInProgress = false;
+                AppState.backButtonDispatcher!.didPopRoute();
+              },
               minWidth: SizeConfig.screenWidth! * 0.88,
               height: SizeConfig.padding44,
               color: Colors.white,
@@ -99,6 +102,8 @@ class _GoldProBuyExitModalSheetState extends State<GoldProBuyExitModalSheet> {
             ),
             TextButton(
               onPressed: () {
+                AppState.isGoldProBuyInProgress = false;
+                // AppState.backButtonDispatcher!.didPopRoute();
                 AppState.backButtonDispatcher!.didPopRoute();
                 AppState.backButtonDispatcher!.didPopRoute();
               },

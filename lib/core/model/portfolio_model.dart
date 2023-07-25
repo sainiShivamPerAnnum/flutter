@@ -5,20 +5,22 @@ class Portfolio {
   final FloTiers flo;
   final double rewards;
   final Asset absolute;
+  final Asset goldPro;
   Portfolio({
     required this.gold,
     required this.flo,
     required this.rewards,
     required this.absolute,
+    required this.goldPro,
   });
 
   factory Portfolio.fromMap(Map<String, dynamic> map) {
     return Portfolio(
-      gold: Asset.fromMap(map['gold'] as Map<String, dynamic>),
-      flo: FloTiers.fromMap(map['flo'] as Map<String, dynamic>),
-      rewards: (map['rewards'] ?? 0.0) * 1.0,
-      absolute: Asset.fromMap(map['absolute'] as Map<String, dynamic>),
-    );
+        gold: Asset.fromMap(map['gold'] as Map<String, dynamic>),
+        flo: FloTiers.fromMap(map['flo'] as Map<String, dynamic>),
+        rewards: (map['rewards'] ?? 0.0) * 1.0,
+        absolute: Asset.fromMap(map['absolute'] as Map<String, dynamic>),
+        goldPro: Asset.fromMap(map['goldFd'] as Map<String, dynamic>));
   }
 
   factory Portfolio.base() {
@@ -27,6 +29,7 @@ class Portfolio {
       flo: FloTiers.base(),
       rewards: 0.0,
       absolute: Asset.base(),
+      goldPro: Asset.base(),
     );
   }
 }

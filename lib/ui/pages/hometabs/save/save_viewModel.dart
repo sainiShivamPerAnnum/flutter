@@ -8,6 +8,7 @@ import 'package:felloapp/core/model/blog_model.dart';
 import 'package:felloapp/core/model/event_model.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
 import 'package:felloapp/core/repository/campaigns_repo.dart';
+import 'package:felloapp/core/repository/getters_repo.dart';
 import 'package:felloapp/core/repository/payment_repo.dart';
 import 'package:felloapp/core/repository/save_repo.dart';
 import 'package:felloapp/core/repository/transactions_history_repo.dart';
@@ -63,7 +64,7 @@ class SaveViewModel extends BaseViewModel {
   final CampaignRepo _campaignRepo = locator<CampaignRepo>();
   final SaveRepo? _saveRepo = locator<SaveRepo>();
   final UserService? _userService = locator<UserService>();
-  BaseUtil? baseProvider;
+  // BaseUtil? baseProvider;
 
   final BankAndPanService? _sellService = locator<BankAndPanService>();
   final TransactionHistoryRepository? _transactionHistoryRepo =
@@ -72,6 +73,7 @@ class SaveViewModel extends BaseViewModel {
   final TxnHistoryService? _txnHistoryService = locator<TxnHistoryService>();
   final UserCoinService? _userCoinService = locator<UserCoinService>();
   final BaseUtil? _baseUtil = locator<BaseUtil>();
+  final GetterRepository _getterRepo = locator<GetterRepository>();
 
   final AnalyticsService? _analyticsService = locator<AnalyticsService>();
   final List<Color> randomBlogCardCornerColors = [
@@ -186,8 +188,7 @@ class SaveViewModel extends BaseViewModel {
 
   Future<void> init() async {
     // _baseUtil.fetchUserAugmontDetail();
-    baseProvider = BaseUtil();
-
+    // baseProvider = BaseUtil();
     await _userService!.getUserFundWalletData();
     await _userCoinService!.getUserCoinBalance();
     await locator<SubService>().init();
@@ -301,11 +302,9 @@ class SaveViewModel extends BaseViewModel {
         case "QL":
           saveViewItems.add(const QuickLinks());
           break;
-
         case "TM":
           saveViewItems.add(const TambolaMiniInfoCard());
           break;
-
         case "PP":
           saveViewItems.add(const PowerPlayCard());
           break;
@@ -315,9 +314,7 @@ class SaveViewModel extends BaseViewModel {
         case "QZ":
           saveViewItems.add(const QuizSection());
           break;
-        case "AST":
-          saveViewItems.add(SaveAssetsGroupCard(saveViewModel: smodel));
-          break;
+
         case 'CH':
           saveViewItems.add(Campaigns(model: smodel));
           break;
@@ -510,6 +507,10 @@ class SaveViewModel extends BaseViewModel {
       page: ViewAllBlogsViewConfig,
       widget: const ViewAllBlogsView(),
     );
+  }
+
+  Future<void> getGoldRatesGraphData() async {
+    await _getterRepo.getGoldRatesGraphItems();
   }
 }
 
