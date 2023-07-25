@@ -13,16 +13,16 @@ part 'referral_state.dart';
 
 class ReferralCubit extends Cubit<ReferralState> {
   ReferralCubit(this.model) : super(ReferralInitial()) {
-    _loadContacts();
+    // _loadContacts();
   }
 
   final ReferralDetailsViewModel model;
 
-  Future<void> checkPermission() async {
+  Future<void> checkPermission({bool fromRefresh = false}) async {
     PermissionStatus hasPermission = await Permission.contacts.status;
 
     if (hasPermission == PermissionStatus.granted) {
-      await getContacts();
+      await getContacts(fromRefresh: fromRefresh);
     } else {
       emit(NoPermissionState());
     }
@@ -44,12 +44,12 @@ class ReferralCubit extends Cubit<ReferralState> {
     }
   }
 
-  Future<void> getContacts() async {
+  Future<void> getContacts({bool fromRefresh = false}) async {
     emit(ContactsLoading());
 
     if (model.contactsList != null && model.contactsList!.isNotEmpty) {
       emit(ContactsLoaded(model.contactsList!));
-      getRegisteredUser();
+      getRegisteredUser(fromRefresh: fromRefresh);
       return;
     }
 
@@ -59,8 +59,9 @@ class ReferralCubit extends Cubit<ReferralState> {
       log("Contacts length ${contacts.length}", name: 'ReferralDetailsScreen');
 
       if (contacts.isNotEmpty) {
+        emit(ReferralInitial());
         emit(ContactsLoaded(contacts));
-        getRegisteredUser();
+        getRegisteredUser(fromRefresh: fromRefresh);
       } else {
         emit(ContactsError('No contacts found!'));
       }
@@ -77,14 +78,16 @@ class ReferralCubit extends Cubit<ReferralState> {
     }
   }
 
-  Future<void> getRegisteredUser() async {
+  Future<void> getRegisteredUser({bool fromRefresh = false}) async {
     final ReferralRepo referralRepo = locator<ReferralRepo>();
 
     var currentState = state;
 
     if (currentState is ContactsLoaded) {
       List<String> registeredUser = [];
-      await referralRepo.getRegisteredUsers(model.phoneNumbers).then((res) {
+      await referralRepo
+          .getRegisteredUsers(model.phoneNumbers, cacheApi: !fromRefresh)
+          .then((res) {
         if (res.isSuccess()) {
           registeredUser = res.model?.data ?? [];
 

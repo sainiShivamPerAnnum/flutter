@@ -95,8 +95,10 @@ class ReferralRepo extends BaseRepo {
     }
   }
 
-  Future<ApiResponse<bool>> createReferral(String? userId,
-      String? referee,) async {
+  Future<ApiResponse<bool>> createReferral(
+    String? userId,
+    String? referee,
+  ) async {
     try {
       final String bearer = await getBearerToken();
 
@@ -119,22 +121,23 @@ class ReferralRepo extends BaseRepo {
   }
 
   Future<ApiResponse<RegisteredUser>> getRegisteredUsers(
-      List<String> phoneNumbers) async {
+      List<String> phoneNumbers,
+      {bool cacheApi = true}) async {
     try {
       final String bearer = await getBearerToken();
 
-      // final response = await APIService.instance.postData(
-      //   ApiPath.getRegisteredUsers,
-      //   body: {
-      //     'phoneNumbers': phoneNumbers,
-      //   },
-      //   token: bearer,
-      //   cBaseUrl: _baseUrl,
-      // );
-      //
-      // logger.d(response);
-      // return ApiResponse(
-      //     model: RegisteredUser.fromJson(response), code: 200);
+      if (!cacheApi) {
+        final response = await APIService.instance.postData(
+          ApiPath.getRegisteredUsers,
+          body: {
+            'phoneNumbers': phoneNumbers,
+          },
+          token: bearer,
+          cBaseUrl: _baseUrl,
+        );
+        logger.d(response);
+        return ApiResponse(model: RegisteredUser.fromJson(response), code: 200);
+      }
 
       return await _cacheService.cachedApi(
         CacheKeys.REFERRAL_REGISTERED_USERS,
