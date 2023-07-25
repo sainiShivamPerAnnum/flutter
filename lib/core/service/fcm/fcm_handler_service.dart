@@ -171,7 +171,6 @@ class FcmHandler extends ChangeNotifier {
     if (source == MsgSource.Foreground && showSnackbar == true) {
       await handleNotification(title, body);
     }
-    unawaited(_userService.checkForNewNotifications());
     return true;
   }
 

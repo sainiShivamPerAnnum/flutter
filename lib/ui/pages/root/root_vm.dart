@@ -130,9 +130,7 @@ class RootViewModel extends BaseViewModel {
 
         if (!await verifyUserBootupDetails()) return;
         await checkForBootUpAlerts();
-        // if (showNewInstallPopUp()) {
         await showLastWeekOverview();
-        // }
         showMarketingCampings();
         await Future.wait([
           _referralService.verifyReferral(),
@@ -422,6 +420,7 @@ class RootViewModel extends BaseViewModel {
         MsgSource.Terminated,
       );
     }
+    unawaited(_userService.checkForNewNotifications());
   }
 
   Future<void> checkIfAppLockModalSheetIsRequired() async {

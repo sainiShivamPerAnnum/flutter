@@ -182,68 +182,72 @@ class _ReferralHomeState extends State<ReferralHome> {
                                 )
                               ],
                             ),
-                            // Stack(
-                            //   children: [
-                            //     Container(
-                            //         height: SizeConfig.padding46,
-                            //         padding: EdgeInsets.fromLTRB(
-                            //             SizeConfig.padding38,
-                            //             SizeConfig.padding14,
-                            //             SizeConfig.padding20,
-                            //             SizeConfig.padding10),
-                            //         decoration: BoxDecoration(
-                            //           color: const Color(0xFF39393C),
-                            //           borderRadius: BorderRadius.only(
-                            //             bottomLeft: Radius.circular(
-                            //                 SizeConfig.roundness16),
-                            //             bottomRight: Radius.circular(
-                            //                 SizeConfig.roundness16),
-                            //           ),
-                            //         ),
-                            //         child: Text.rich(
-                            //           TextSpan(
-                            //             children: [
-                            //               TextSpan(
-                            //                   text: 'You’ve earned ',
-                            //                   style: TextStyles.rajdhaniSB.body2
-                            //                       .colour(Colors.white)),
-                            //               TextSpan(
-                            //                   text: '₹350',
-                            //                   style: TextStyles.rajdhaniB.body2
-                            //                       .colour(
-                            //                           const Color(0xFFFFD979))),
-                            //               TextSpan(
-                            //                   text: ' so far!',
-                            //                   style: TextStyles.rajdhaniSB.body2
-                            //                       .colour(Colors.white)),
-                            //             ],
-                            //           ),
-                            //           textAlign: TextAlign.center,
-                            //         )),
-                            //     Positioned(
-                            //       left: SizeConfig.padding24,
-                            //       top: SizeConfig.padding24,
-                            //       child: CustomPaint(
-                            //         size: Size(
-                            //             SizeConfig.padding8,
-                            //             (SizeConfig.padding8 * 1.125)
-                            //                 .toDouble()),
-                            //         painter: ReferralStarCustomPainter(),
-                            //       ),
-                            //     ),
-                            //     Positioned(
-                            //       left: SizeConfig.padding32,
-                            //       top: SizeConfig.padding18,
-                            //       child: CustomPaint(
-                            //         size: Size(
-                            //             SizeConfig.padding8,
-                            //             (SizeConfig.padding8 * 1.125)
-                            //                 .toDouble()),
-                            //         painter: ReferralStarCustomPainter(),
-                            //       ),
-                            //     ),
-                            //   ],
-                            // ),
+                            if ((model.totalReferralWon ?? 0) > 1)
+                              Stack(
+                                children: [
+                                  Container(
+                                      height: SizeConfig.padding46,
+                                      padding: EdgeInsets.fromLTRB(
+                                          SizeConfig.padding38,
+                                          SizeConfig.padding14,
+                                          SizeConfig.padding20,
+                                          SizeConfig.padding10),
+                                      decoration: BoxDecoration(
+                                        color: const Color(0xFF39393C),
+                                        borderRadius: BorderRadius.only(
+                                          bottomLeft: Radius.circular(
+                                              SizeConfig.roundness16),
+                                          bottomRight: Radius.circular(
+                                              SizeConfig.roundness16),
+                                        ),
+                                      ),
+                                      child: Text.rich(
+                                        TextSpan(
+                                          children: [
+                                            TextSpan(
+                                                text: 'You’ve earned ',
+                                                style: TextStyles
+                                                    .rajdhaniSB.body2
+                                                    .colour(Colors.white)),
+                                            TextSpan(
+                                                text: '₹350',
+                                                style: TextStyles
+                                                    .rajdhaniB.body2
+                                                    .colour(const Color(
+                                                        0xFFFFD979))),
+                                            TextSpan(
+                                                text: ' so far!',
+                                                style: TextStyles
+                                                    .rajdhaniSB.body2
+                                                    .colour(Colors.white)),
+                                          ],
+                                        ),
+                                        textAlign: TextAlign.center,
+                                      )),
+                                  Positioned(
+                                    left: SizeConfig.padding24,
+                                    top: SizeConfig.padding24,
+                                    child: CustomPaint(
+                                      size: Size(
+                                          SizeConfig.padding8,
+                                          (SizeConfig.padding8 * 1.125)
+                                              .toDouble()),
+                                      painter: ReferralStarCustomPainter(),
+                                    ),
+                                  ),
+                                  Positioned(
+                                    left: SizeConfig.padding32,
+                                    top: SizeConfig.padding18,
+                                    child: CustomPaint(
+                                      size: Size(
+                                          SizeConfig.padding8,
+                                          (SizeConfig.padding8 * 1.125)
+                                              .toDouble()),
+                                      painter: ReferralStarCustomPainter(),
+                                    ),
+                                  ),
+                                ],
+                              ),
                             SizedBox(
                               height: SizeConfig.padding24,
                             ),

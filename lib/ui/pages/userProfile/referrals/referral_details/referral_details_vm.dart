@@ -80,6 +80,7 @@ class ReferralDetailsViewModel extends BaseViewModel {
 
   String? _refUrl = "";
   String? _refCode = "";
+  int? _totalReferralWon = -1;
   List<Contact>? contactsList = [];
   List<String> phoneNumbers = [];
   List<String> registeredUser = [];
@@ -96,6 +97,13 @@ class ReferralDetailsViewModel extends BaseViewModel {
   get refCode => _refCode;
 
   get isReferalsFetched => _isReferalsFetched;
+
+  int? get totalReferralWon => _totalReferralWon;
+
+  set totalReferralWon(int? value) {
+    _totalReferralWon = value;
+    notifyListeners();
+  }
 
   void init(BuildContext context) {
     generateLink().then((value) {
@@ -130,10 +138,11 @@ class ReferralDetailsViewModel extends BaseViewModel {
   }
 
   Future<void> fetchReferralCode() async {
-    final ApiResponse<ReferralResponse> res = await _refRepo!.getReferralCode();
+    final ApiResponse<ReferralResponse> res = await _refRepo.getReferralCode();
     if (res.code == 200) {
       _refCode = res.model?.referralData?.code ?? "";
       appShareMessage = res.model?.referralData?.referralMessage ?? "";
+      totalReferralWon = res.model?.referralData?.referralRewardAmt ?? -1;
       _shareMsg = (appShareMessage.isNotEmpty)
           ? appShareMessage
           : 'Hey I am gifting you ₹${AppConfig.getValue(AppConfigKey.referralBonus)} and ${AppConfig.getValue(AppConfigKey.referralFlcBonus)} gaming tokens. Lets start saving and playing together! Share this code: $_refCode with your friends.\n';

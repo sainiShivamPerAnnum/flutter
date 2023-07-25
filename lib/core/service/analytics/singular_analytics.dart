@@ -1,3 +1,6 @@
+import 'dart:convert';
+
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/service/analytics/base_analytics_service.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -38,6 +41,14 @@ class SingularAnalytics extends BaseAnalyticsService {
         String? passthrough = params.passthrough;
         bool? isDeferred = params.isDeferred;
         // Add your code here to handle the deep link
+
+        if (passthrough != null && passthrough.isNotEmpty) {
+          Map<String, dynamic> responseMap = jsonDecode(passthrough);
+          if (responseMap.containsKey("uid")) {
+            BaseUtil.referrerUserId = responseMap["uid"];
+            BaseUtil.referredCode = responseMap["refCode"];
+          }
+        }
       };
       _singularConfig!.skAdNetworkEnabled = true;
       _singularConfig!.manualSkanConversionManagement = true;

@@ -11,6 +11,7 @@ import 'package:felloapp/core/repository/games_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/feature/referrals/ui/referral_home.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/transition_delegate.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -51,7 +52,6 @@ import 'package:felloapp/ui/pages/support/support.dart';
 import 'package:felloapp/ui/pages/userProfile/bank_details/bank_details_view.dart';
 import 'package:felloapp/ui/pages/userProfile/kyc_details/kyc_details_view.dart';
 import 'package:felloapp/ui/pages/userProfile/my_winnings/my_winnings_view.dart';
-import 'package:felloapp/ui/pages/userProfile/referrals/referral_details/referral_details_view.dart';
 import 'package:felloapp/ui/pages/userProfile/settings/settings_view.dart';
 import 'package:felloapp/ui/pages/userProfile/userProfile/userProfile_view.dart';
 import 'package:felloapp/ui/pages/userProfile/verify_email.dart';
@@ -251,7 +251,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           _addPageData(NotificationsPage(), NotificationsConfig);
           break;
         case Pages.ReferralDetails:
-          _addPageData(ReferralDetailsView(), ReferralDetailsPageConfig);
+          _addPageData(const ReferralHome(), ReferralDetailsPageConfig);
           break;
 
         case Pages.MyWinnings:

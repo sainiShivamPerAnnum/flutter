@@ -34,6 +34,7 @@ import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/marketing_event_handler_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/feature/referrals/ui/referral_home.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/back_button_actions.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -125,6 +126,7 @@ class BaseUtil extends ChangeNotifier {
   String? zeroBalanceAssetUri;
   static String? manualReferralCode;
   static String? referrerUserId;
+  static String? referredCode;
   static bool? isNewUser, isFirstFetchDone; // = 'jdF1';
 
   ///Flags in various screens defined as global variables
@@ -643,6 +645,8 @@ class BaseUtil extends ChangeNotifier {
   }
 
   static void showFelloRatingSheet() {
+    d.log("qwertyuio", name: "showFelloRatingSheet");
+
     if (PreferenceHelper.getBool(PreferenceHelper.APP_RATING_SUBMITTED) ==
         false) {
       Future.delayed(const Duration(milliseconds: 300), () {
@@ -656,6 +660,20 @@ class BaseUtil extends ChangeNotifier {
           backgroundColor: Colors.transparent,
           isScrollControlled: true,
           content: const FelloInAppReview(),
+        );
+      });
+    } else {
+      Future.delayed(const Duration(milliseconds: 300), () {
+        Haptic.vibrate();
+
+        BaseUtil.openModalBottomSheet(
+          addToScreenStack: true,
+          enableDrag: false,
+          hapticVibrate: true,
+          isBarrierDismissible: true,
+          backgroundColor: Colors.transparent,
+          isScrollControlled: true,
+          content: const ReferralRatingSheet(),
         );
       });
     }

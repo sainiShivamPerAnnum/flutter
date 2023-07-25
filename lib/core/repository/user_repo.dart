@@ -344,6 +344,27 @@ class UserRepository extends BaseRepo {
 
       String? latestNotifTime = await CacheManager.readCache(
           key: CacheManager.CACHE_LATEST_NOTIFICATION_TIME);
+
+      if (notifications[0].isPersistent ?? false) {
+        if (notifications[0].createdTime != null) {
+          var notifTime = notifications[0].createdTime!.seconds.toString();
+
+          // notifications[0] is the latest notification
+          // if the notification is persistent then we need to show the notification only once in 48 hours
+          // so we are checking if the notification is created in last 48 hours
+
+          if (notifTime != null) {
+            int notifTimeInSeconds = int.tryParse(notifTime)!;
+            int currentTimeInSeconds =
+                DateTime.now().millisecondsSinceEpoch ~/ 1000;
+            if (currentTimeInSeconds - notifTimeInSeconds < 172800) {
+              userService.referralAlertDialog = notifications[0];
+              return ApiResponse<bool>(model: true, code: 200);
+            }
+          }
+        }
+      }
+
       if (latestNotifTime != null) {
         int latestTimeInSeconds = int.tryParse(latestNotifTime)!;
         AlertModel latestAlert = notifications[0].createdTime!.seconds >

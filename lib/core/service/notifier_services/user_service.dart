@@ -6,6 +6,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
+import 'package:felloapp/core/model/alert_model.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/journey_models/user_journey_stats_model.dart';
 import 'package:felloapp/core/model/page_config_model.dart';
@@ -25,20 +26,25 @@ import 'package:felloapp/core/service/notifier_services/scratch_card_service.dar
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
+import 'package:felloapp/ui/elements/fello_dialog/fello_dialog.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
+import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/dynamic_ui_utils.dart';
+import 'package:felloapp/util/extensions/rich_text_extension.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/styles.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:image_picker/image_picker.dart';
@@ -91,6 +97,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   UserBootUpDetailsModel? userBootUp;
   DynamicUI? pageConfigs;
   QuickSaveModel? quickSaveModel;
+  AlertModel? referralAlertDialog;
 
   bool? _isEmailVerified;
   bool? _isSimpleKycVerified;
@@ -261,7 +268,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   }
 
   setUserAugmontDetails(value) {
-    this._userAugmontDetails = value;
+    _userAugmontDetails = value;
     notifyListeners(UserServiceProperties.myAugmontDetails);
     _logger.d(
         "AgmontDetails :User augmontDetails updated, property listeners notified");
@@ -559,7 +566,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
           Constants.FELLO_BALANCE, userFundWallet!.netWorth!.toString());
 
       log('Calling method channel for updateHomeScreenWidget');
-      final platform = MethodChannel('methodChannel/deviceData');
+      final platform = const MethodChannel('methodChannel/deviceData');
       try {
         await platform.invokeMethod('updateHomeScreenWidget');
       } catch (e) {
@@ -598,6 +605,75 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
         if (value.model!) hasNewNotifications = true;
       }
     });
+
+    // showReferralAlertDialog();
+
+    if (referralAlertDialog != null &&
+        referralAlertDialog?.ctaText != null &&
+        (referralAlertDialog?.ctaText?.isNotEmpty ?? false) &&
+        referralAlertDialog?.title != null &&
+        AppState.isRootAvailableForIncomingTaskExecution == false) {
+      log("Showing referral alert dialog",
+          name: "checkForNewNotifications method");
+      showReferralAlertDialog();
+    }
+  }
+
+  void showReferralAlertDialog() {
+    BaseUtil.openDialog(
+      isBarrierDismissible: false,
+      addToScreenStack: true,
+      hapticVibrate: true,
+      content: Dialog(
+        backgroundColor: const Color(0xFF3C3C3C),
+        shape: RoundedRectangleBorder(
+          side: BorderSide(width: 1, color: Colors.white.withOpacity(0.3)),
+          borderRadius: BorderRadius.circular(SizeConfig.roundness5),
+        ),
+        child: Container(
+          width: SizeConfig.screenWidth! * 0.9,
+          padding: EdgeInsets.symmetric(
+              horizontal: SizeConfig.padding20, vertical: SizeConfig.padding28),
+          child: Column(
+            mainAxisSize: MainAxisSize.min,
+            children: [
+              SvgPicture.network(
+                referralAlertDialog?.imageUrl ??
+                    "https://d37gtxigg82zaw.cloudfront.net/revamped-referrals/rupee-coin.svg",
+                height: SizeConfig.padding104,
+                width: SizeConfig.padding188,
+              ),
+              SizedBox(height: SizeConfig.padding28),
+              referralAlertDialog!.title!.beautify(
+                style: TextStyles.rajdhaniSB.title4.colour(
+                  Colors.white,
+                ),
+                alignment: TextAlign.center,
+                boldStyle: TextStyles.rajdhaniSB.title4.colour(
+                  const Color(0xFFFFD979),
+                ),
+              ),
+              SizedBox(height: SizeConfig.padding8),
+              Text(
+                referralAlertDialog?.subtitle ?? "",
+                style: TextStyles.sourceSans.body3.colour(
+                  const Color(0xFFBDBDBE),
+                ),
+                textAlign: TextAlign.center,
+              ),
+              SizedBox(height: SizeConfig.padding36),
+              AppPositiveBtn(
+                btnText: referralAlertDialog?.ctaText ?? "Claim",
+                onPressed: () {
+                  AppState.delegate!
+                      .parseRoute(Uri.parse(referralAlertDialog!.actionUri!));
+                },
+              )
+            ],
+          ),
+        ),
+      ),
+    );
   }
 
   void setPageConfigs(DynamicUI dynamicUi) {
