@@ -55,6 +55,7 @@ import 'package:felloapp/ui/pages/userProfile/my_winnings/my_winnings_view.dart'
 import 'package:felloapp/ui/pages/userProfile/settings/settings_view.dart';
 import 'package:felloapp/ui/pages/userProfile/userProfile/userProfile_view.dart';
 import 'package:felloapp/ui/pages/userProfile/verify_email.dart';
+import 'package:felloapp/ui/service_elements/quiz/quiz_web_view.dart';
 import 'package:felloapp/ui/shared/spotlight_controller.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
@@ -261,7 +262,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           _addPageData(BlockedUserView(), BlockedUserPageConfig);
           break;
         case Pages.FreshDeskHelp:
-          _addPageData(FreshDeskHelp(), FreshDeskHelpPageConfig);
+          _addPageData(const FreshDeskHelp(), FreshDeskHelpPageConfig);
           break;
 
         case Pages.ScratchCardsView:
@@ -327,6 +328,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           break;
         case Pages.PlayView:
           _addPageData(const Play(), TransactionDetailsPageConfig);
+          break;
+        case Pages.QuizWebView:
+          _addPageData(const QuizWebView(), QuizWebViewConfig);
           break;
 
         default:

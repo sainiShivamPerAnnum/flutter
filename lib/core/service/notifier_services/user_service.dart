@@ -449,6 +449,8 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
       _isSimpleKycVerified = false;
       showSecurityPrompt = false;
       _userAugmontDetails = null;
+      referralAlertDialog = null;
+
       // _myUpiId = null;
       return true;
     } catch (e) {

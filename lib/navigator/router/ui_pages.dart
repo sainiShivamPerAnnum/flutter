@@ -94,6 +94,7 @@ const String PowerPlayFTUXPath = '/powerPlayFTUXPath';
 const String PowerPlaySeasonLeaderboardPath = "powerplaySeasonLeaderboardPath";
 const String LendboxBuyViewPath = "/LendboxBuyViewPath";
 const String AssetSelectionViewPath = "/assetSelectionViewPath";
+const String QuizWebViewPath = "/quizWebViewPath";
 
 enum Pages {
   Splash,
@@ -185,6 +186,7 @@ enum Pages {
   PowerPlaySeasonLeaderboard,
   LendboxBuyView,
   AssetSelectionView,
+  QuizWebView
 }
 
 class PageConfiguration {
@@ -785,3 +787,9 @@ PageConfiguration AssetSelectionViewConfig = PageConfiguration(
     path: AssetSelectionViewPath,
     uiPage: Pages.AssetSelectionView,
     name: "Asset Selection View Screen");
+
+PageConfiguration QuizWebViewConfig = PageConfiguration(
+    key: 'QuizWebViewPath',
+    path: QuizWebViewPath,
+    uiPage: Pages.QuizWebView,
+    name: "Quiz Web View Screen");

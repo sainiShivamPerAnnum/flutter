@@ -800,6 +800,7 @@ class BaseUtil extends ChangeNotifier {
       hasMoreTransactionListDocuments = true;
       isOtpResendCount = 0;
       isUpiInfoMissing = true;
+      referredCode = null;
 
       // AppState.delegate!.appState.setCurrentTabIndex = 0;
       manualReferralCode = null;
