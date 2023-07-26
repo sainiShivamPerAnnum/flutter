@@ -517,13 +517,11 @@ class _ReferralHomeState extends State<ReferralHome> {
                                 SizedBox(width: SizeConfig.padding12),
                                 GestureDetector(
                                   onTap: () {
-                                    String message = referralService.shareMsg ??
-                                        'Hey I am gifting you ₹${AppConfig.getValue(AppConfigKey.referralBonus)} and '
-                                                '${AppConfig.getValue(AppConfigKey.referralBonus)} gaming tokens. '
-                                                'Lets start saving and playing together! Share this code: *${referralService.refCode}* with your friends.\n' +
-                                            (referralService
-                                                    .referralShortLink ??
-                                                "");
+                                    String message = (referralService
+                                                .shareMsg ??
+                                            'Hey I am gifting you ₹${AppConfig.getValue(AppConfigKey.referralBonus)} and ${AppConfig.getValue(AppConfigKey.referralBonus)} gaming tokens. Lets start saving and playing together! Share this code: *${referralService.refCode}* with your friends.\n') +
+                                        (referralService.referralShortLink ??
+                                            "");
                                     launch('whatsapp://send?text=$message');
                                   },
                                   child: Container(
