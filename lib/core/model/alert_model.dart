@@ -11,6 +11,7 @@ class AlertModel {
   bool? isPersistent;
   String? ctaText;
   String? imageUrl;
+  Misc? misc;
 
   static final helper =
       HelperModel<AlertModel>((map) => AlertModel.fromMap(map));
@@ -24,7 +25,8 @@ class AlertModel {
       this.isHighlighted,
       this.isPersistent,
       this.ctaText,
-      this.imageUrl});
+      this.imageUrl,
+      this.misc});
 
   AlertModel.fromJson(Map<String, dynamic> json) {
     id = json['id'] ?? '';
@@ -33,6 +35,8 @@ class AlertModel {
         json['createdOn'] ?? TimestampModel(seconds: 0, nanoseconds: 0);
     subtitle = json['subtitile'] ?? '';
     title = json['title'] ?? '';
+    misc:
+    json["misc"] == null ? null : Misc.fromJson(json["misc"]);
   }
 
   Map<String, dynamic> toJson() {
@@ -65,6 +69,7 @@ class AlertModel {
       isPersistent: map['isPersistent'] ?? false,
       ctaText: map['ctaText'] ?? '',
       imageUrl: map['imageUrl'] ?? '',
+      misc: map["misc"] == null ? null : Misc.fromJson(map["misc"]),
     );
   }
 
@@ -72,4 +77,24 @@ class AlertModel {
   String toString() {
     return 'AlertModel(id: $id ,actionUri: $actionUri, createdTime: $createdTime, subtitle: $subtitle, title: $title)';
   }
+}
+
+class Misc {
+  final String? gtId;
+  final String? command;
+
+  Misc({
+    this.gtId,
+    this.command,
+  });
+
+  factory Misc.fromJson(Map<String, dynamic> json) => Misc(
+        gtId: json["gtId"],
+        command: json["command"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "gtId": gtId,
+        "command": command,
+      };
 }

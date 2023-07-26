@@ -365,6 +365,11 @@ class UserRepository extends BaseRepo {
                 value: notifications[0].id!.toString(),
                 type: CacheType.string);
 
+            if (notifications[0].misc != null &&
+                notifications[0].misc?.gtId != null) {
+              userService.fcmHandlerReferralGT(notifications[0].misc!.gtId!);
+            }
+
             userService.referralAlertDialog = notifications[0];
             return ApiResponse<bool>(model: true, code: 200);
           }
