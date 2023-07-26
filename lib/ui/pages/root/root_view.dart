@@ -56,10 +56,10 @@ class Root extends StatelessWidget {
                       const RootAppBar(),
                       const HeadAlerts(),
                       // TextButton(
-                      //   onPressed: (){
-                      //     AppState.delegate?.parseRoute(Uri.parse('/lboxBuy8'));
+                      //   onPressed: () {
+                      //     AppState.delegate?.parseRoute(Uri.parse('/autosave'));
                       //   },
-                      //   child: Text("Popup"),
+                      //   child: Text("Autosave"),
                       // ),
                       Expanded(
                         child: RefreshIndicator(

@@ -264,7 +264,8 @@ class AugmontTransactionService extends BaseTransactionService {
                     locator<PowerPlayService>().liveMatchData;
                 unawaited(_userService.getUserFundWalletData());
                 unawaited(_userService.updatePortFolio());
-                unawaited(_txnHistoryService.getGoldProTransactions());
+                unawaited(
+                    _txnHistoryService.getGoldProTransactions(forced: true));
                 if (liveMatchData != null) {
                   unawaited(locator<PowerPlayService>()
                       .getUserTransactionHistory(matchData: liveMatchData));

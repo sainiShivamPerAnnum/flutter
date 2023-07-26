@@ -277,17 +277,17 @@ class _GoldProBuySuccessViewState extends State<GoldProBuySuccessView>
                           tooltip: locale.winChipsTitle1,
                           asset: Assets.token,
                           qty: widget.txnService.currentTxnAmount!.toInt()),
-                      // if (widget.txnService.currentTxnScratchCardCount > 0)
-                      SizedBox(width: SizeConfig.padding12),
-                      // if (widget.txnService.currentTxnScratchCardCount > 0)
-                      WinningChips(
-                          title:
-                              widget.txnService.currentTxnScratchCardCount > 1
-                                  ? locale.scratchCards
-                                  : locale.scratchCard,
-                          tooltip: locale.winChipsTitle2,
-                          asset: Assets.unredemmedScratchCardBG,
-                          qty: widget.txnService.currentTxnScratchCardCount),
+                      if (widget.txnService.currentTxnScratchCardCount > 0)
+                        SizedBox(width: SizeConfig.padding12),
+                      if (widget.txnService.currentTxnScratchCardCount > 0)
+                        WinningChips(
+                            title:
+                                widget.txnService.currentTxnScratchCardCount > 1
+                                    ? locale.scratchCards
+                                    : locale.scratchCard,
+                            tooltip: locale.winChipsTitle2,
+                            asset: Assets.unredemmedScratchCardBG,
+                            qty: widget.txnService.currentTxnScratchCardCount),
                       if (widget.txnService.currentTxnTambolaTicketsCount > 0)
                         SizedBox(width: SizeConfig.padding12),
                       if (widget.txnService.currentTxnTambolaTicketsCount > 0)

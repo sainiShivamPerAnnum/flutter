@@ -20,7 +20,6 @@ import 'package:felloapp/ui/pages/campaigns/info_stories/info_stories_view.dart'
 import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_buy/gold_pro_buy_view.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_details/gold_pro_details_view.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_sell/gold_pro_sell_view.dart';
-import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_transactions/gold_pro_txn_details_view.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_transactions/gold_pro_txns_view.dart';
 import 'package:felloapp/ui/pages/finance/autosave/autosave_details/autosave_details_view.dart';
 import 'package:felloapp/ui/pages/finance/autosave/autosave_onboarding/autosave_onboarding_view.dart';
@@ -986,7 +985,10 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         if (!(AppConfig.getValue(AppConfigKey.showNewAutosave) as bool)) break;
         pageConfiguration = AutosaveDetailsViewPageConfig;
         break;
-
+      case "autosave":
+        if (!(AppConfig.getValue(AppConfigKey.showNewAutosave) as bool)) break;
+        pageConfiguration = AutosaveOnboardingViewPageConfig;
+        break;
       case 'autosaveTxns':
         openTransactions(InvestmentType.AUGGOLD99);
         break;

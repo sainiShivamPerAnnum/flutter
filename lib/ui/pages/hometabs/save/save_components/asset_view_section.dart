@@ -172,7 +172,8 @@ class _AssetSectionViewState extends State<AssetSectionView> {
                                 SizedBox(
                                   height: SizeConfig.padding14,
                                 ),
-                              if (balance == 0)
+                              if (balance == 0 &&
+                                  widget.type == InvestmentType.LENDBOXP2P)
                                 Padding(
                                   padding: EdgeInsets.symmetric(
                                       horizontal: SizeConfig.padding40),
@@ -194,16 +195,6 @@ class _AssetSectionViewState extends State<AssetSectionView> {
                               SizedBox(
                                 height: SizeConfig.padding4,
                               ),
-                              if (balance == 0) ...[
-                                if (_isGold)
-                                  SizedBox(
-                                    height: SizeConfig.padding10,
-                                  ),
-                                if (_isGold) _buildInfoSection(),
-                                SizedBox(
-                                  height: SizeConfig.padding10,
-                                ),
-                              ],
                               SizedBox(
                                 height: SizeConfig.padding10,
                               ),

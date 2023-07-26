@@ -232,7 +232,7 @@ class GoldProBuyViewModel extends BaseViewModel {
       _txnService.currentTransactionState = TransactionState.success;
       unawaited(locator<UserService>().getUserFundWalletData());
       unawaited(locator<UserService>().updatePortFolio());
-      unawaited(_txnHistoryService.getGoldProTransactions());
+      unawaited(_txnHistoryService.getGoldProTransactions(forced: true));
     } else {
       _txnService.isGoldBuyInProgress = false;
       BaseUtil.showNegativeAlert(res.errorMessage, "Please try again");
@@ -262,7 +262,6 @@ class GoldProBuyViewModel extends BaseViewModel {
       case 1:
         updateSliderValue(0.21);
         break;
-
       case 2:
         updateSliderValue(0.47);
         break;
@@ -377,26 +376,26 @@ class GoldProBuyViewModel extends BaseViewModel {
     isGoldRateFetching = true;
     goldRates = await _augmontModel.getRates();
     updateAmount();
+    isGoldRateFetching = false;
     if (goldRates == null) {
       BaseUtil.showNegativeAlert(
-        locale.portalUnavailable,
-        locale.currentRatesNotLoadedText1,
-      );
+          locale.portalUnavailable, locale.currentRatesNotLoadedText1);
     }
-    isGoldRateFetching = false;
   }
 
   void updateAmount() {
     double netTax =
         (goldRates?.cgstPercent ?? 0) + (goldRates?.sgstPercent ?? 0);
 
-    if (goldBuyPrice != null && goldBuyPrice != 0.0) {
-      totalGoldAmount = BaseUtil.digitPrecision(
-            additionalGoldBalance * goldBuyPrice! +
-                _getTaxOnAmount(additionalGoldBalance * goldBuyPrice!, netTax),
-            2,
-          ) +
-          2;
+    if (goldBuyPrice != 0.0) {
+      final totalGoldInvestmentCost =
+          BaseUtil.digitPrecision(additionalGoldBalance * goldBuyPrice!, 2);
+      final taxedTotalGoldInvestmentCost = BaseUtil.digitPrecision(
+          totalGoldInvestmentCost +
+              _getTaxOnAmount(totalGoldInvestmentCost, netTax));
+      // Mismatch in augmont and ours calculation so adding ₹2 to final amount
+      totalGoldAmount = taxedTotalGoldInvestmentCost + 2;
+      // TODO: Need to be fixed
 
       double expectedGoldReturnsAmount = BaseUtil.digitPrecision(
           totalGoldBalance * goldBuyPrice! + netTax, 2, false);
@@ -408,19 +407,9 @@ class GoldProBuyViewModel extends BaseViewModel {
     }
   }
 
-  // double calculateLeasedGoldAmount() {
-  //   double netTax =
-  //       (goldRates?.cgstPercent ?? 0) + (goldRates?.sgstPercent ?? 0);
-  //   return BaseUtil.digitPrecision(
-  //       totalGoldBalance * goldBuyPrice! +
-  //           _getTaxOnAmount(totalGoldBalance * goldBuyPrice!, netTax),
-  //       2,
-  //       false);
-  // }
-
   double? get goldBuyPrice => goldRates != null ? goldRates!.goldBuyPrice : 0.0;
 
   double _getTaxOnAmount(double amount, double taxRate) {
-    return BaseUtil.digitPrecision((amount * taxRate) / (100));
+    return BaseUtil.digitPrecision((amount * taxRate) / (100 + taxRate));
   }
 }

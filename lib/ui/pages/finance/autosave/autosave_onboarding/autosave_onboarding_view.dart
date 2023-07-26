@@ -1,14 +1,14 @@
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
-import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/video_player/app_video_player.dart';
 // import '../../../../../../packages/tambola/lib/tambola/tambola_home/widgets/tambola_video_player.dart';
 // import 'package:felloapp/ui/pages/games/tambola/tambola_home/tambola_home.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -138,13 +138,15 @@ class _AutosaveOnboardingViewState extends State<AutosaveOnboardingView> {
                         left: SizeConfig.pageHorizontalMargins,
                         right: SizeConfig.pageHorizontalMargins,
                         bottom: SizeConfig.pageHorizontalMargins),
-                    child: AppPositiveBtn(
+                    child: ReactivePositiveAppButton(
                       btnText: "Setup",
-                      onPressed: () {
-                        AppState.delegate!.appState.currentAction = PageAction(
-                          state: PageState.replace,
-                          page: AutosaveProcessViewPageConfig,
-                        );
+                      onPressed: () async {
+                        final _subService = locator<SubService>();
+                        await _subService.getSubscription();
+                        await PreferenceHelper.setBool(
+                            PreferenceHelper.CACHE_IS_AUTOSAVE_FIRST_TIME,
+                            false);
+                        _subService.handleTap();
                         _analyticsService.track(
                             eventName: AnalyticsEvents.asBenefitsTapped);
                       },
