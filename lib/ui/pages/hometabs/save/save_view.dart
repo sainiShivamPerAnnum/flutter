@@ -148,8 +148,8 @@ class QuizSection extends StatelessWidget {
         AppConfig.getValue(AppConfigKey.quiz_config);
 
     return Container(
-      margin: EdgeInsets.only(
-        top: SizeConfig.padding20,
+      margin: EdgeInsets.symmetric(
+        vertical: SizeConfig.padding14,
       ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

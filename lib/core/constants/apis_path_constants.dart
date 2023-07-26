@@ -239,4 +239,14 @@ class ApiPath {
   static String augmontReport(String txnId) => "/aug/$txnId/txn";
 
   static String getRegisteredUsers = '/check';
+
+  static String get verifyAugmontKyc => "/pan/re-verify";
+
+  static String get goldProScheme => "/fd/scheme";
+
+  static String get Fd => "/fd";
+
+  static String getFds(String uid) => "/$uid/fd";
+
+  static String get goldRatesGraph => "/gold-rates/graph";
 }

@@ -4,6 +4,7 @@ import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/ui/pages/static/youtube_player_view.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
@@ -63,7 +64,7 @@ class WalthroughVideosSection extends StatelessWidget {
               ),
               alignment: Alignment.center,
               child: Image.network(
-                "https://upload.wikimedia.org/wikipedia/commons/e/ef/Youtube_logo.png",
+                Assets.youtubeLogo,
                 width: SizeConfig.padding54,
               ),
             ),

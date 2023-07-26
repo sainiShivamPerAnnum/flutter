@@ -15,6 +15,7 @@ import 'package:felloapp/ui/pages/static/gold_rate_card.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/ui/service_elements/gold_sell_card/sell_card_components.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -230,6 +231,43 @@ class GoldSellInputView extends StatelessWidget {
                             .colour(Colors.red[400]),
                       ),
                     ),
+                  Container(
+                    margin: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: SizeConfig.pageHorizontalMargins,
+                      vertical: SizeConfig.padding16,
+                    ),
+                    decoration: BoxDecoration(
+                      border: Border.all(
+                        color: UiConstants.kFAQDividerColor,
+                        width: 0.5,
+                      ),
+                      borderRadius:
+                          BorderRadius.circular(SizeConfig.roundness16),
+                    ),
+                    child: Column(children: [
+                      Row(
+                        children: [
+                          Text(
+                            "Leased Gold Amount-",
+                            style: TextStyles.sourceSansM.body1
+                                .colour(UiConstants.kFAQDividerColor),
+                          ),
+                          const Spacer(),
+                          Text(
+                            "4.4gms",
+                            style: TextStyles.sourceSansB.body0
+                                .colour(Colors.white),
+                          )
+                        ],
+                      ),
+                      SizedBox(height: SizeConfig.padding8),
+                      Text(
+                        "You can un-Lease your Digital gold in Digital ${Constants.ASSET_GOLD_STAKE} section to be make it withdrawable",
+                        style: TextStyles.body3.colour(Colors.grey),
+                      )
+                    ]),
+                  ),
                   const Spacer(),
                   augTxnService.isGoldSellInProgress
                       ? Center(

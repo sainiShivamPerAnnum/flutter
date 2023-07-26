@@ -79,7 +79,7 @@ class _GoldBuyViewState extends State<GoldBuyView>
   @override
   Widget build(BuildContext context) {
     return Consumer<AugmontTransactionService>(
-      builder: (transactionContext, txnService, transactionProperty) {
+      builder: (transactionContext, txnService, _) {
         return AnimatedContainer(
           width: double.infinity,
           height: _getHeight(txnService),

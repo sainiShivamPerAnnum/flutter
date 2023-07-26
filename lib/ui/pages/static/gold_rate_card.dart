@@ -46,11 +46,11 @@ class _CurrentPriceWidgetState extends State<CurrentPriceWidget>
                 widget.fetchGoldRates!();
                 controller.reset();
                 controller.forward();
-          } else if (status == AnimationStatus.dismissed) {
-            controller.forward();
-          }
-        },
-      );
+              } else if (status == AnimationStatus.dismissed) {
+                controller.forward();
+              }
+            },
+          );
 
     controller.forward();
     super.initState();
@@ -188,11 +188,11 @@ class _NewCurrentGoldPriceWidgetState extends State<NewCurrentGoldPriceWidget>
                 widget.fetchGoldRates!();
                 controller.reset();
                 controller.forward();
-          } else if (status == AnimationStatus.dismissed) {
-            controller.forward();
-          }
-        },
-      );
+              } else if (status == AnimationStatus.dismissed) {
+                controller.forward();
+              }
+            },
+          );
 
     controller.forward();
     super.initState();

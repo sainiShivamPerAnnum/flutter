@@ -452,18 +452,10 @@ class _FloPremiumDetailsViewState extends State<FloPremiumDetailsView>
                                   textAlign: TextAlign.center,
                                 ),
                                 SizedBox(height: SizeConfig.padding24),
-                                FloTestomonials(),
+                                Testomonials(),
 
                                 SizedBox(height: SizeConfig.padding20),
-                                // Padding(
-                                //   padding: EdgeInsets.symmetric(
-                                //       vertical: SizeConfig.padding16),
-                                //   child: Text(
-                                //     "100% Safe & Secure with Fello",
-                                //     style: TextStyles.rajdhaniSB.title4
-                                //         .colour(Colors.white),
-                                //   ),
-                                // ),
+
                                 const SaveAssetsFooter(isFlo: true),
                                 SizedBox(
                                     height: SizeConfig.pageHorizontalMargins),
@@ -825,12 +817,15 @@ class _FloPremiumDetailsViewState extends State<FloPremiumDetailsView>
   }
 }
 
-class FloTestomonials extends StatelessWidget {
-  FloTestomonials({
+class Testomonials extends StatelessWidget {
+  const Testomonials({
     super.key,
+    this.type = InvestmentType.LENDBOXP2P,
   });
 
-  final Map<String, List<String>> testimonials = {
+  final InvestmentType? type;
+
+  final Map<String, List<String>> testimonials = const {
     "Akash mahesh": [
       "Fello has completely changed the way I save money. I now earn interest on saving money and save more to play tambola and win rewards. The app has truly motimvated me to save more. Highly recommend it to everyone",
       'https://d37gtxigg82zaw.cloudfront.net/testimonials/1.jpg'
@@ -863,10 +858,12 @@ class FloTestomonials extends StatelessWidget {
             width: SizeConfig.padding300,
             margin: EdgeInsets.only(left: SizeConfig.pageHorizontalMargins),
             height: SizeConfig.padding160,
-            decoration: ShapeDecoration(
+            decoration: BoxDecoration(
               // color: const Color(0xFF191919),
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(8)),
+              border: Border.all(
+                  color: UiConstants.kGoldProBorder,
+                  width: type == InvestmentType.AUGGOLD99 ? 1 : 0),
+              borderRadius: BorderRadius.circular(8),
             ),
             child: Row(
               children: [
@@ -909,6 +906,27 @@ class FloTestomonials extends StatelessWidget {
                           ),
                         ),
                       ),
+                      if (type == InvestmentType.AUGGOLD99)
+                        Container(
+                          decoration: BoxDecoration(
+                            borderRadius: const BorderRadius.only(
+                              topRight: Radius.circular(8),
+                              bottomRight: Radius.circular(8),
+                            ),
+                            color: UiConstants.kGoldProBorder.withOpacity(0.2),
+                          ),
+                          child: ClipRRect(
+                            borderRadius: const BorderRadius.only(
+                              topRight: Radius.circular(8),
+                              bottomRight: Radius.circular(8),
+                            ),
+                            clipBehavior: Clip.hardEdge,
+                            child: SizedBox(
+                              width: SizeConfig.screenWidth,
+                              height: SizeConfig.screenWidth,
+                            ),
+                          ),
+                        ),
                       Positioned(
                         left: 15,
                         top: 10,
