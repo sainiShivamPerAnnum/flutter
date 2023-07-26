@@ -30,6 +30,7 @@ import 'package:felloapp/ui/pages/hometabs/save/save_components/asset_view_secti
 import 'package:felloapp/ui/pages/hometabs/save/save_components/blogs.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/campaings.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/save_welcome_card.dart';
+import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
 import 'package:felloapp/ui/pages/power_play/root_card.dart';
 import 'package:felloapp/ui/pages/static/save_assets_footer.dart';
 import 'package:felloapp/ui/service_elements/auto_save_card/subscription_card.dart';
@@ -247,7 +248,7 @@ class SaveViewModel extends BaseViewModel {
           break;
         case 'NAS':
           saveViewItems.add(const MiniAssetsGroupSection());
-          // saveViewItems.add(const QuizSection());
+          saveViewItems.add(const QuizSection());
           saveViewItems.add(const AutosaveCard());
 
           break;
