@@ -20,6 +20,7 @@ class UiConstants {
   static const Color darkPrimaryColor4 = Color(0xff173B3F);
   static const Color secondaryColor = Color.fromARGB(255, 241, 227, 243);
   static const Color goldSellCardColor = Color(0xff1F2C65);
+  static const Color referralIconColor = Color(0xff6052A9);
 
   // static final Color chipColor = const Color.fromARGB(255, 241, 227, 243);
   static final Color? chipColor = Colors.grey[200];

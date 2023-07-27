@@ -28,7 +28,7 @@ class Constants {
   static const String ASSET_TYPE_FLO_FELXI = "UNI_FLEXI";
   static const String ASSET_TYPE_FLO_FIXED_3 = "UNI_FIXED_3";
   static const String ASSET_TYPE_FLO_FIXED_6 = "UNI_FIXED_6";
-  static const String ASSET_GOLD_STAKE = "Gold X";
+  static const String ASSET_GOLD_STAKE = "Gold Pro";
 
   //Segments
   static const String US_FLO_OLD = "OLD_LB";

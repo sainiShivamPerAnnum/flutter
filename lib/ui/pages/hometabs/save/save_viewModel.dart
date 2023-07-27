@@ -254,7 +254,6 @@ class SaveViewModel extends BaseViewModel {
         case "QL":
           saveViewItems.add(const QuickLinks());
           break;
-
         case "TM":
           saveViewItems.add(const TambolaMiniInfoCard());
           break;
@@ -299,6 +298,9 @@ class SaveViewModel extends BaseViewModel {
 
     DynamicUiUtils.saveViewOrder[1].forEach((key) {
       switch (key) {
+        case "AST":
+          saveViewItems.add(SaveAssetsGroupCard(saveViewModel: smodel));
+          break;
         case "QL":
           saveViewItems.add(const QuickLinks());
           break;
@@ -528,25 +530,24 @@ class QuickLinks extends StatelessWidget {
           deeplink: "floDetails",
           color: UiConstants.kFloContainerColor),
       QuickLinksModel(
-          name: "Fello Flo",
-          asset: Assets.floAsset,
-          deeplink: "floDetails",
-          color: UiConstants.kFloContainerColor),
+          name: "Digital Gold",
+          asset: Assets.goldAsset,
+          deeplink: "goldDetails",
+          color: UiConstants.goldSellCardColor),
       QuickLinksModel(
-          name: "Fello Flo",
-          asset: Assets.floAsset,
-          deeplink: "floDetails",
-          color: UiConstants.kFloContainerColor),
+          name: "Refer",
+          asset: Assets.referralIcon,
+          deeplink: "referrals",
+          color: UiConstants.referralIconColor),
       QuickLinksModel(
-          name: "Fello Flo",
-          asset: Assets.floAsset,
-          deeplink: "floDetails",
-          color: UiConstants.kFloContainerColor),
+          name: "Tickets",
+          asset: Assets.tambola_instant_view,
+          deeplink: "tambolaHome",
+          color: UiConstants.kGoldProBorder),
     ];
 
     return Container(
       margin: EdgeInsets.symmetric(
-        horizontal: SizeConfig.pageHorizontalMargins,
         vertical: SizeConfig.padding14,
       ),
       width: SizeConfig.screenWidth,
@@ -554,23 +555,36 @@ class QuickLinks extends StatelessWidget {
         children: List.generate(
           quickLinks.length,
           (index) => Expanded(
-            child: Column(
-              children: [
-                CircleAvatar(
-                  backgroundColor: quickLinks[index].color,
-                  radius: SizeConfig.roundness32,
-                  child: SvgPicture.asset(
-                    quickLinks[index].asset,
-                    width: SizeConfig.padding40,
-                    height: SizeConfig.padding40,
+            child: GestureDetector(
+              onTap: () {
+                Haptic.vibrate();
+                AppState.delegate!
+                    .parseRoute(Uri.parse(quickLinks[index].deeplink));
+              },
+              child: Column(
+                children: [
+                  CircleAvatar(
+                    backgroundColor: quickLinks[index].color,
+                    radius: SizeConfig.roundness32,
+                    child: SvgPicture.asset(
+                      quickLinks[index].asset,
+                      width: quickLinks[index].asset == Assets.goldAsset ||
+                              quickLinks[index].asset == Assets.floAsset
+                          ? SizeConfig.padding56
+                          : SizeConfig.padding40,
+                      height: quickLinks[index].asset == Assets.goldAsset ||
+                              quickLinks[index].asset == Assets.floAsset
+                          ? SizeConfig.padding56
+                          : SizeConfig.padding40,
+                    ),
                   ),
-                ),
-                SizedBox(height: SizeConfig.padding8),
-                Text(
-                  quickLinks[index].name,
-                  style: TextStyles.sourceSansSB.body3.colour(Colors.white),
-                )
-              ],
+                  SizedBox(height: SizeConfig.padding8),
+                  Text(
+                    quickLinks[index].name,
+                    style: TextStyles.sourceSansSB.body3.colour(Colors.white),
+                  )
+                ],
+              ),
             ),
           ),
         ),

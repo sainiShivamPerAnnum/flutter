@@ -1,5 +1,7 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/faqTypes.dart';
+import 'package:felloapp/core/model/user_funt_wallet_model.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_details/gold_pro_details_vm.dart';
@@ -15,6 +17,7 @@ import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 
 class GoldProDetailsView extends StatelessWidget {
@@ -36,124 +39,152 @@ class GoldProDetailsView extends StatelessWidget {
               child: SingleChildScrollView(
                 child: Column(
                   children: [
-                    Container(
-                      height: SizeConfig.screenWidth,
-                      width: SizeConfig.screenWidth,
-                      decoration: BoxDecoration(
-                        color: UiConstants.kGoldProBgColor,
-                        borderRadius: BorderRadius.only(
-                          bottomLeft: Radius.circular(SizeConfig.roundness24),
-                          bottomRight: Radius.circular(SizeConfig.roundness24),
-                        ),
-                      ),
-                      child: Stack(
-                        children: [
-                          const GoldShimmerWidget(size: ShimmerSizeEnum.large),
-                          SizedBox(
+                    Selector<UserService, UserFundWallet>(
+                        selector: (p0, p1) => p1.userFundWallet!,
+                        builder: (context, wallet, child) {
+                          return Container(
+                            height: (wallet.wAugFdQty ?? 0) > 0
+                                ? SizeConfig.screenWidth
+                                : SizeConfig.screenWidth! * 0.88,
                             width: SizeConfig.screenWidth,
+                            decoration: BoxDecoration(
+                              color: UiConstants.kGoldProBgColor,
+                              borderRadius: BorderRadius.only(
+                                bottomLeft:
+                                    Radius.circular(SizeConfig.roundness24),
+                                bottomRight:
+                                    Radius.circular(SizeConfig.roundness24),
+                              ),
+                            ),
                             child: Stack(
                               children: [
-                                Align(
-                                  alignment: Alignment.center,
-                                  child: SizedBox(
-                                    width: SizeConfig.screenWidth,
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      children: [
-                                        SizedBox(
-                                          height: SizeConfig.padding20 +
-                                              kToolbarHeight / 2,
-                                        ),
-                                        Container(
-                                          decoration: BoxDecoration(
-                                            shape: BoxShape.circle,
-                                            boxShadow: [
-                                              BoxShadow(
-                                                color: Colors.white
-                                                    .withOpacity(0.3),
-                                                blurRadius: 50,
-                                              )
+                                const GoldShimmerWidget(
+                                    size: ShimmerSizeEnum.large),
+                                SizedBox(
+                                  width: SizeConfig.screenWidth,
+                                  child: Stack(
+                                    children: [
+                                      Align(
+                                        alignment: Alignment.center,
+                                        child: SizedBox(
+                                          width: SizeConfig.screenWidth,
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            children: [
+                                              SizedBox(
+                                                height: SizeConfig.padding20 +
+                                                    kToolbarHeight / 2,
+                                              ),
+                                              Container(
+                                                decoration: BoxDecoration(
+                                                  shape: BoxShape.circle,
+                                                  boxShadow: [
+                                                    BoxShadow(
+                                                      color: Colors.white
+                                                          .withOpacity(0.3),
+                                                      blurRadius: 50,
+                                                    )
+                                                  ],
+                                                ),
+                                                child: SvgPicture.asset(
+                                                  Assets.goldAsset,
+                                                  height:
+                                                      SizeConfig.screenHeight! *
+                                                          0.18,
+                                                ),
+                                              ),
+                                              SizedBox(
+                                                height: SizeConfig.padding4,
+                                              ),
+                                              Text(
+                                                "Digital Gold",
+                                                style: TextStyles
+                                                    .rajdhaniSB.title3
+                                                    .colour(Colors.white),
+                                              ),
+                                              SizedBox(
+                                                height: SizeConfig.padding4,
+                                              ),
+                                              Text(
+                                                "Lease your Gold with Augmont",
+                                                style: TextStyles
+                                                    .sourceSans.body2
+                                                    .colour(UiConstants
+                                                        .KGoldProPrimaryDark),
+                                              ),
+                                              SizedBox(
+                                                height: SizeConfig.padding26,
+                                              ),
+                                              RichText(
+                                                text: TextSpan(
+                                                    text: "Earn",
+                                                    style: TextStyles
+                                                        .sourceSans.body0
+                                                        .colour(Colors.white),
+                                                    children: [
+                                                      TextSpan(
+                                                        text:
+                                                            " 4.5% Extra Gold ",
+                                                        style: TextStyles
+                                                            .sourceSansB.body0
+                                                            .colour(UiConstants
+                                                                .kGoldProPrimary),
+                                                      ),
+                                                      const TextSpan(
+                                                        text: "every year",
+                                                      )
+                                                    ]),
+                                                textAlign: TextAlign.center,
+                                              ),
                                             ],
                                           ),
-                                          child: SvgPicture.asset(
-                                            Assets.goldAsset,
-                                            height:
-                                                SizeConfig.screenHeight! * 0.18,
-                                          ),
                                         ),
-                                        SizedBox(
-                                          height: SizeConfig.padding4,
-                                        ),
-                                        Text(
-                                          "Digital Gold",
-                                          style: TextStyles.rajdhaniSB.title3
-                                              .colour(Colors.white),
-                                        ),
-                                        SizedBox(
-                                          height: SizeConfig.padding4,
-                                        ),
-                                        Text(
-                                          "24K Gold  •  99.99% Pure •  100% Secure",
-                                          style: TextStyles.sourceSans.body2
-                                              .colour(UiConstants
-                                                  .KGoldProPrimaryDark),
-                                        ),
-                                        SizedBox(
-                                          height: SizeConfig.padding26,
-                                        ),
-                                        RichText(
-                                          text: TextSpan(
-                                              text: "Earn",
-                                              style: TextStyles.sourceSans.body0
-                                                  .colour(Colors.white),
-                                              children: [
-                                                TextSpan(
-                                                  text: " 4.5% Extra Gold ",
-                                                  style: TextStyles
-                                                      .sourceSansB.body0
-                                                      .colour(UiConstants
-                                                          .kGoldProPrimary),
+                                      ),
+                                      (wallet.wAugFdQty ?? 0) > 0
+                                          ? Align(
+                                              alignment: Alignment.bottomCenter,
+                                              child: Transform.translate(
+                                                offset: Offset(
+                                                    0, SizeConfig.padding44),
+                                                child: Container(
+                                                  margin: EdgeInsets.symmetric(
+                                                      horizontal: SizeConfig
+                                                          .pageHorizontalMargins),
+                                                  padding: EdgeInsets.all(
+                                                      SizeConfig
+                                                          .pageHorizontalMargins),
+                                                  decoration: BoxDecoration(
+                                                    color: Colors.black,
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                            SizeConfig
+                                                                .roundness24),
+                                                  ),
+                                                  child:
+                                                      const GoldBalanceBriefRow(
+                                                    mini: true,
+                                                    isPro: true,
+                                                  ),
                                                 ),
-                                                const TextSpan(
-                                                  text: "every year",
-                                                )
-                                              ]),
-                                          textAlign: TextAlign.center,
-                                        ),
-                                      ],
-                                    ),
+                                              ),
+                                            )
+                                          : const SizedBox()
+                                    ],
                                   ),
                                 ),
-                                Align(
-                                  alignment: Alignment.bottomCenter,
-                                  child: Transform.translate(
-                                    offset: Offset(0, SizeConfig.padding44),
-                                    child: Container(
-                                      margin: EdgeInsets.symmetric(
-                                          horizontal:
-                                              SizeConfig.pageHorizontalMargins),
-                                      padding: EdgeInsets.all(
-                                          SizeConfig.pageHorizontalMargins),
-                                      decoration: BoxDecoration(
-                                        color: Colors.black,
-                                        borderRadius: BorderRadius.circular(
-                                            SizeConfig.roundness24),
-                                      ),
-                                      child: const GoldBalanceBriefRow(
-                                        mini: true,
-                                        isPro: true,
-                                      ),
-                                    ),
-                                  ),
-                                )
                               ],
                             ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(height: SizeConfig.padding70),
+                          );
+                        }),
+                    Selector<UserService, UserFundWallet>(
+                        selector: (p0, p1) => p1.userFundWallet!,
+                        builder: (context, wallet, child) {
+                          return SizedBox(
+                              height: (wallet.wAugFdQty ?? 0) > 0
+                                  ? SizeConfig.padding70
+                                  : SizeConfig.padding24);
+                        }),
                     const LineGradientChart(isPro: true),
                     const GoldProInterestBreakdownWidget(),
                     // SizedBox(height: SizeConfig.padding14),
@@ -506,7 +537,7 @@ class WhyGoldProSection extends StatelessWidget {
   Widget build(BuildContext context) {
     List<Tuple2<String, String>> whyDigitalGoldList = const [
       Tuple2("7 days", "Lock-In"),
-      Tuple2("15.5%", "Annual Return"),
+      Tuple2("15.5%", "Returns p.a."),
       Tuple2("4.5%", "Extra Gold"),
     ];
     return Container(
@@ -519,13 +550,13 @@ class WhyGoldProSection extends StatelessWidget {
           ),
           SizedBox(height: SizeConfig.padding16),
           SizedBox(
-            height: SizeConfig.screenWidth! * 0.4,
+            height: SizeConfig.screenWidth! * 0.39,
             child: ListView.builder(
               scrollDirection: Axis.horizontal,
               padding: EdgeInsets.symmetric(
                   horizontal: SizeConfig.pageHorizontalMargins),
               itemBuilder: (context, index) => Container(
-                  width: SizeConfig.screenWidth! * 0.4,
+                  width: SizeConfig.screenWidth! * 0.35,
                   margin: EdgeInsets.only(right: SizeConfig.padding16),
                   decoration: BoxDecoration(
                     gradient: LinearGradient(colors: [
@@ -556,20 +587,27 @@ class WhyGoldProSection extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.center,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
-                            Text(
-                              whyDigitalGoldList[index].item1,
-                              style: TextStyles.rajdhaniBL.title50
-                                  .colour(Colors.black),
-                            ),
                             SizedBox(
-                              height: SizeConfig.padding10,
+                              height: SizeConfig.padding24,
+                            ),
+                            Expanded(
+                              child: Center(
+                                child: Text(
+                                  whyDigitalGoldList[index].item1,
+                                  style: TextStyles.rajdhaniB.title0
+                                      .colour(Colors.black),
+                                ),
+                              ),
                             ),
                             Text(
                               whyDigitalGoldList[index].item2,
                               style: TextStyles.sourceSansSB.body0
                                   .colour(Colors.black),
                               textAlign: TextAlign.center,
-                            )
+                            ),
+                            SizedBox(
+                              height: SizeConfig.padding24,
+                            ),
                           ],
                         ),
                       )

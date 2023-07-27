@@ -499,6 +499,16 @@ class GoldBuyViewModel extends BaseViewModel {
       if (goldBuyPrice != null && goldBuyPrice != 0.0) {
         goldAmountInGrams =
             BaseUtil.digitPrecision(postTaxAmount / goldBuyPrice!, 4, false);
+
+        print("""
+GOLD BREAKDOWN:
+ entered amount: $enteredAmount\n
+ tax: $netTax\n
+ taxed amount: ${getTaxOnAmount(enteredAmount, netTax)}\n
+ post taxed amount = $postTaxAmount\n
+ gold Buy price: $goldBuyPrice\n
+ gold amount: $goldAmountInGrams\n
+""");
       } else {
         goldAmountInGrams = 0.0;
       }
