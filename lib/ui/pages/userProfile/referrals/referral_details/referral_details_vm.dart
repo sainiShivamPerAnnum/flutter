@@ -73,6 +73,11 @@ class ReferralDetailsViewModel extends BaseViewModel {
 
   List<ReferralDetail>? get referalList => _referalList;
 
+  set referalList(List<ReferralDetail>? value) {
+    _referalList = value;
+    notifyListeners();
+  }
+
   String appShareMessage =
       AppConfig.getValue<String>(AppConfigKey.appShareMessage);
   String unlockReferralBonus =
@@ -182,6 +187,7 @@ class ReferralDetailsViewModel extends BaseViewModel {
           baseProvider.referralsFetched = true;
           baseProvider.userReferralsList = refHisModel.model ?? [];
           _referalList = baseProvider.userReferralsList;
+          log("Referral List: ${_referalList!.length}");
           notifyListeners();
         } else {
           BaseUtil.showNegativeAlert(refHisModel.errorMessage, '');
@@ -225,13 +231,13 @@ class ReferralDetailsViewModel extends BaseViewModel {
   }
 
   bool bonusUnlockedReferalPresent(List<ReferralDetail> list) {
-    for (final ReferralDetail e in list) {
-      if (e.isRefereeBonusUnlocked) {
-        return true;
-      }
-    }
+    // for (final ReferralDetail e in list) {
+    //   if (e.isRefereeBonusUnlocked) {
+    //     return true;
+    //   }
+    // }
 
-    return false;
+    return true;
   }
 
   bool bonusLockedReferalPresent(List<ReferralDetail> list) {

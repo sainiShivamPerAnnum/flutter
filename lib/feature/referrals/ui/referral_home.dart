@@ -582,7 +582,12 @@ class _ReferralHomeState extends State<ReferralHome> {
 }
 
 void navigateToWhatsApp(String phoneNumber) {
-  final text = Uri.encodeComponent('Hello, I invite you to join our app!');
+  var referralService = locator<ReferralService>();
+  log('phoneNumber: $phoneNumber', name: 'ReferralDetailsScreen');
+
+  final text = Uri.encodeComponent((referralService.shareMsg ??
+          'Hey I am gifting you ₹${AppConfig.getValue(AppConfigKey.referralBonus)} and ${AppConfig.getValue(AppConfigKey.referralBonus)} gaming tokens. Lets start saving and playing together! Share this code: *${referralService.refCode}* with your friends.\n') +
+      (referralService.referralShortLink ?? ""));
   final url = 'https://wa.me/+91$phoneNumber?text=$text';
   log('WhatsApp URL: $url', name: 'ReferralDetailsScreen');
   launch(url);

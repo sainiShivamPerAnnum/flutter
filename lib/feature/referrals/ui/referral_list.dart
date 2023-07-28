@@ -236,7 +236,7 @@ class _ReferralListViewState extends State<ReferralListView> {
           SizedBox(
             height: SizeConfig.padding20,
           ),
-          ListView.builder(
+          ListView.separated(
             shrinkWrap: true,
             padding: EdgeInsets.zero,
             physics: const NeverScrollableScrollPhysics(),
@@ -246,12 +246,16 @@ class _ReferralListViewState extends State<ReferralListView> {
                 return buildCompleteReferrals(i);
               }
 
-              if (filteredReferrals[i].isUserBonusUnlocked ?? false) {
-                return buildIncompleteReferrals(i);
-              } else {
-                return const SizedBox.shrink();
-              }
+              return buildIncompleteReferrals(i);
+              // if (filteredReferrals[i].isUserBonusUnlocked ?? false) {
+              //   return buildIncompleteReferrals(i);
+              // } else {
+              //   return const SizedBox.shrink();
+              // }
             },
+            separatorBuilder: (context, i) => SizedBox(
+              height: SizeConfig.padding20,
+            ),
           ),
         ],
       ),

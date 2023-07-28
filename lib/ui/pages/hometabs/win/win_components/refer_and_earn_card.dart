@@ -150,12 +150,20 @@ class ReferEarnCard extends StatelessWidget {
           ),
         ),
         Positioned(
-          top: SizeConfig.pageHorizontalMargins + SizeConfig.padding14,
+          top: SizeConfig.pageHorizontalMargins,
           right: SizeConfig.pageHorizontalMargins + SizeConfig.padding14,
-          child: Icon(
-            Icons.keyboard_arrow_right,
-            size: SizeConfig.padding28,
-            color: Colors.white,
+          child: GestureDetector(
+            onTap: () {
+              AppState.delegate!.appState.currentAction = PageAction(
+                state: PageState.addPage,
+                page: ReferralDetailsPageConfig,
+              );
+            },
+            child: Icon(
+              Icons.keyboard_arrow_right,
+              size: SizeConfig.padding28,
+              color: Colors.white,
+            ),
           ),
         )
       ],
