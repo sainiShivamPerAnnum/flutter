@@ -1,11 +1,13 @@
 import 'dart:developer';
 
 import 'package:felloapp/core/model/contact_model.dart';
+import 'package:felloapp/feature/referrals/bloc/referral_cubit.dart';
 import 'package:felloapp/feature/referrals/ui/referral_home.dart';
 import 'package:felloapp/util/debouncer.dart';
 import 'package:felloapp/util/extensions/rich_text_extension.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class ContactListWidget extends StatefulWidget {
@@ -37,10 +39,10 @@ class _ContactListWidgetState extends State<ContactListWidget>
             .where((contact) =>
                 contact.displayName.toLowerCase().contains(query.toLowerCase()))
             .toList();
-        log('filteredContacts name: ${filteredContacts[0].displayName}',
-            name: 'ReferralDetailsScreen');
       });
     }
+
+    context.read<ReferralCubit>().refreshContacts();
   }
 
   @override
@@ -66,6 +68,7 @@ class _ContactListWidgetState extends State<ContactListWidget>
 
   @override
   Widget build(BuildContext context) {
+    // log('ContactListWidget build ', name: 'ReferralDetailsScreen');
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: SizeConfig.pageHorizontalMargins,
@@ -105,12 +108,20 @@ class _ContactListWidgetState extends State<ContactListWidget>
             controller: controller,
             onChanged: (query) {
               log('Text changed: $query');
-              _debouncer.call(() => searchContacts(query));
+              _debouncer.call(
+                  () => searchContacts(query)); // will be called after 700ms
             },
           ),
           SizedBox(
             height: SizeConfig.padding20,
           ),
+          if (filteredContacts.isEmpty)
+            Center(
+              child: Text(
+                'No contacts found',
+                style: TextStyles.sourceSans.body3.colour(Colors.white),
+              ),
+            ),
           ListView.separated(
             itemCount: filteredContacts.length,
             shrinkWrap: true,

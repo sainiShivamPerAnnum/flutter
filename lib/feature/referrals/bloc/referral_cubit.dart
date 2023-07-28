@@ -109,4 +109,31 @@ class ReferralCubit extends Cubit<ReferralState> {
       });
     }
   }
+
+  Future<void> refreshContacts() async {
+    var currentState = state;
+
+    if (currentState is ContactsLoaded) {
+      emit(ReferralInitial());
+      emit(currentState.copyWith(contacts: currentState.contacts));
+    }
+  }
+
+// void searchContacts(String query) {
+//   log('searchContacts: $query', name: 'ReferralDetailsScreen');
+//
+//   var currentState = state;
+//   if (currentState is ContactsLoaded) {
+//     List<Contact> filteredContacts = currentState.contacts
+//         .where((contact) =>
+//             contact.displayName.toLowerCase().contains(query.toLowerCase()))
+//         .toList();
+//
+//     log('filteredContacts: ${filteredContacts.length}', name: 'ReferralDetailsScreen');
+//
+//     emit(ReferralInitial());
+//
+//     emit(currentState.copyWith(contacts: filteredContacts));
+//   }
+// }
 }
