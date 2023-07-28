@@ -224,4 +224,6 @@ class AnalyticsEvents {
   static const saveOnce = "Save Once Tapped in Asset Detail Page";
   static const saveDaily = "Save Daily Tapped in Asset Detail Page";
   static const tambolaCarousel = "Tambola Top Carousel Tapped";
+  static const quizCrossTapped = "Cross on Quiz Tapped";
+  static const quizBannerTapped = "Quiz Banner Tapped";
 }

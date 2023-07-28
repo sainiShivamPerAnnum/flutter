@@ -1,8 +1,11 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
@@ -104,6 +107,9 @@ class _QuizWebViewState extends State<QuizWebView> {
                       onPressed: () {
                         AppState.unblockNavigation();
                         AppState.backButtonDispatcher!.didPopRoute();
+
+                        locator<AnalyticsService>()
+                            .track(eventName: AnalyticsEvents.quizCrossTapped);
                       },
                     ),
                   ),
