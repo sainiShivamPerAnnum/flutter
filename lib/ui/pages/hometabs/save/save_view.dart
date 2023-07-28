@@ -183,8 +183,8 @@ class QuizSection extends StatelessWidget {
               // AppState.delegate!.parseRoute(quizSectionData['deeplink']);
 
               //https://fl-quiz-dev.web.app?token=your_token_here
-              var key = _onTapQuizSection(quizSectionData['deeplink']);
-              var url = quizSectionData['deeplink']
+              var key = _onTapQuizSection(quizSectionData['baseUrl']);
+              var url = quizSectionData['baseUrl']
                   /*'https://fl-quiz-dev.web.app' */
                   +
                   "?token=" +
