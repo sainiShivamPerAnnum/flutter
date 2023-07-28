@@ -62,7 +62,8 @@ class _ReferralHomeState extends State<ReferralHome> {
 
     scratchCardService.fetchAndVerifyScratchCardByID().then((value) {
       if (value) {
-        scratchCardService.showInstantScratchCardView(source: GTSOURCE.game);
+        scratchCardService.showInstantScratchCardView(
+            source: GTSOURCE.referral);
       }
     });
   }
@@ -83,7 +84,7 @@ class _ReferralHomeState extends State<ReferralHome> {
                       context
                           .read<ReferralCubit>()
                           .checkPermission(fromRefresh: true);
-                      model.fetchReferalsList(context);
+                      model.fetchReferalsList(context, refresh: true);
                     },
                     child: Scaffold(
                       extendBody: true,

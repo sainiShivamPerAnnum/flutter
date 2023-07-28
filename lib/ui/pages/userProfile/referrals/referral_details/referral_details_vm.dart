@@ -175,13 +175,13 @@ class ReferralDetailsViewModel extends BaseViewModel {
     tabNo = tab;
   }
 
-  fetchReferalsList(BuildContext context) {
+  fetchReferalsList(BuildContext context, {bool refresh = false}) {
     print("Method to fetch");
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);
     final ReferralRepo referralRepo = locator<ReferralRepo>();
 
-    if (!(baseProvider.referralsFetched ?? false)) {
+    if (!(baseProvider.referralsFetched ?? false) || refresh) {
       referralRepo!.getReferralHistory().then((refHisModel) {
         if (refHisModel.isSuccess()) {
           baseProvider.referralsFetched = true;
