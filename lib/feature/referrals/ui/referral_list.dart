@@ -93,7 +93,12 @@ class ReferralList extends StatelessWidget {
                   ],
                 )
               : model.bonusUnlockedReferalPresent(model.referalList!)
-                  ? ReferralListView(referalList: model.referalList!)
+                  ? ReferralListView(
+                      referalList: model.referalList!,
+                      onStateChanged: () {
+                        model.refresh();
+                      },
+                    )
                   : Column(
                       children: [
                         SizedBox(height: SizeConfig.padding16),
@@ -115,9 +120,11 @@ class ReferralListView extends StatefulWidget {
   const ReferralListView({
     required this.referalList,
     super.key,
+    required this.onStateChanged,
   });
 
   final List<ReferralDetail> referalList;
+  final Function onStateChanged;
 
   @override
   State<ReferralListView> createState() => _ReferralListViewState();
@@ -127,6 +134,7 @@ class _ReferralListViewState extends State<ReferralListView> {
   TextEditingController controller = TextEditingController();
   List<ReferralDetail> filteredReferrals = [];
   late final Debouncer _debouncer;
+  bool rebuild = false;
 
   @override
   void initState() {
@@ -149,10 +157,12 @@ class _ReferralListViewState extends State<ReferralListView> {
             .where((contact) =>
                 contact.userName.toLowerCase().contains(query.toLowerCase()))
             .toList();
-        log('searchUser filteredReferrals: $filteredReferrals',
-            name: 'ReferralDetailsScreen');
+        // log('searchUser filteredReferrals: $filteredReferrals',
+        //     name: 'ReferralDetailsScreen');
       });
     }
+
+    widget.onStateChanged();
   }
 
   @override
@@ -236,6 +246,19 @@ class _ReferralListViewState extends State<ReferralListView> {
           SizedBox(
             height: SizeConfig.padding20,
           ),
+          if (filteredReferrals.isEmpty)
+            Column(
+              children: [
+                SizedBox(height: SizeConfig.padding16),
+                SvgPicture.asset(Assets.noReferralAsset),
+                SizedBox(height: SizeConfig.padding16),
+                Text(
+                  'No referrals found',
+                  style: TextStyles.sourceSans.body2.colour(Colors.white),
+                ),
+                SizedBox(height: SizeConfig.padding16),
+              ],
+            ),
           ListView.separated(
             shrinkWrap: true,
             padding: EdgeInsets.zero,
