@@ -19,6 +19,7 @@ import 'package:felloapp/core/model/winners_model.dart';
 import 'package:felloapp/core/repository/base_repo.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/cache_service.dart';
+import 'package:felloapp/ui/pages/hometabs/save/gold_components/gold_rate_graph.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/code_from_freq.dart';
 import 'package:felloapp/util/constants.dart';
@@ -35,6 +36,8 @@ class GetterRepository extends BaseRepo {
   final _cdnBaseUrl = FlavorConfig.isDevelopment()
       ? 'https://d18gbwu7fwwwtf.cloudfront.net/'
       : 'https://d11q4cti75qmcp.cloudfront.net/';
+
+  Map? goldChartData;
 
   Future<ApiResponse> getStatisticsByFreqGameTypeAndCode({
     String? type,
@@ -386,4 +389,43 @@ class GetterRepository extends BaseRepo {
     }
   }
 
+  Future<ApiResponse<Map>> getGoldRatesGraphItems() async {
+    try {
+      if (goldChartData != null) {
+        return ApiResponse(model: goldChartData, code: 200);
+      }
+
+      final token = await getBearerToken();
+      final response = await APIService.instance.getData(
+        ApiPath.goldRatesGraph,
+        cBaseUrl: _baseUrl,
+        token: token,
+      );
+
+      final List rates = response["data"]["rates"];
+
+      final List<ChartData> chartData = [];
+
+      for (int i = 0; i < rates.length; i++) {
+        chartData.add(ChartData(day: i, price: rates[i]["rate"]));
+      }
+
+      List<String> returnsList = [];
+      final Map returnsMap = response["data"]["returns"];
+
+      returnsMap.forEach(
+        (key, value) => returnsList.add(value),
+      );
+
+      final responseMap = {};
+      responseMap["chartDataList"] = chartData;
+      responseMap["returnsList"] = returnsList;
+      log("Gold Rate Data $responseMap");
+      goldChartData = responseMap;
+      return ApiResponse(model: goldChartData, code: 200);
+    } catch (e) {
+      logger.e(e.toString());
+      return ApiResponse.withError("Unable to fetch stories", 400);
+    }
+  }
 }

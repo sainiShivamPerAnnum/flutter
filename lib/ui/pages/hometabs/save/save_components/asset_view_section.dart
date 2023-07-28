@@ -9,7 +9,6 @@ import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/model/portfolio_model.dart';
 import 'package:felloapp/core/model/subscription_models/subscription_model.dart';
-import 'package:felloapp/core/repository/clientComms_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
@@ -19,35 +18,32 @@ import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/helpers/tnc_text.dart';
 import 'package:felloapp/ui/elements/title_subtitle_container.dart';
 import 'package:felloapp/ui/elements/video_player/app_video_player.dart';
-import 'package:felloapp/ui/pages/finance/augmont/gold_buy/augmont_buy_vm.dart';
 import 'package:felloapp/ui/pages/finance/autosave/autosave_setup/autosave_process_view.dart';
 import 'package:felloapp/ui/pages/finance/mini_trans_card/mini_trans_card_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/flo_components/flo_basic_card.dart';
 import 'package:felloapp/ui/pages/hometabs/save/flo_components/flo_premium_section.dart';
+import 'package:felloapp/ui/pages/hometabs/save/gold_components/gold_hero_card.dart';
+import 'package:felloapp/ui/pages/hometabs/save/gold_components/gold_pro_card.dart';
+import 'package:felloapp/ui/pages/hometabs/save/gold_components/gold_rate_widget.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/ui/pages/login/login_components/login_support.dart';
-import 'package:felloapp/ui/pages/static/app_widget.dart';
-import 'package:felloapp/ui/pages/static/gold_rate_card.dart';
 import 'package:felloapp/ui/service_elements/gold_sell_card/sell_card_view.dart';
-import 'package:felloapp/ui/shared/spotlight_controller.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/dynamic_ui_utils.dart';
 import 'package:felloapp/util/extensions/investment_returns_extension.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/preference_helper.dart';
-import 'package:felloapp/util/show_case_key.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:provider/provider.dart';
-import 'package:showcaseview/showcaseview.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
+
+import '../gold_components/gold_rate_graph.dart';
 
 class AssetSectionView extends StatefulWidget {
   AssetSectionView({Key? key, required this.type, UserService? userService})
@@ -85,17 +81,6 @@ class _AssetSectionViewState extends State<AssetSectionView> {
   };
 
   @override
-  void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      SpotLightController.instance.userFlow =
-          widget.type == InvestmentType.AUGGOLD99
-              ? UserFlow.onAssetPageGold
-              : UserFlow.onAssetPageFlo;
-    });
-    super.initState();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return PropertyChangeConsumer<UserService, UserServiceProperties>(
         properties: const [
@@ -106,7 +91,6 @@ class _AssetSectionViewState extends State<AssetSectionView> {
         ],
         builder: (_, model, ___) {
           bool isNewUser = model!.userSegments.contains("NEW_USER");
-          // bool isLendboxNewUser = model.userSegments.contains("LBOX_NEW");
           final balance = widget.type == InvestmentType.AUGGOLD99
               ? model.userFundWallet?.augGoldQuantity ?? 0
               : model.userFundWallet?.wLbBalance ?? 0;
@@ -142,25 +126,19 @@ class _AssetSectionViewState extends State<AssetSectionView> {
                               SizedBox(
                                 height: SizeConfig.padding20,
                               ),
-                              Showcase(
-                                targetShapeBorder: const CircleBorder(),
-                                key: ShowCaseKeys.assetPicture,
-                                description:
-                                    'You can learn more about the asset on this page',
-                                child: Container(
-                                  decoration: BoxDecoration(
-                                    shape: BoxShape.circle,
-                                    boxShadow: [
-                                      BoxShadow(
-                                        color: Colors.white.withOpacity(0.3),
-                                        blurRadius: 50,
-                                      )
-                                    ],
-                                  ),
-                                  child: SvgPicture.asset(
-                                    _getAsset,
-                                    height: SizeConfig.screenHeight! * 0.18,
-                                  ),
+                              Container(
+                                decoration: BoxDecoration(
+                                  shape: BoxShape.circle,
+                                  boxShadow: [
+                                    BoxShadow(
+                                      color: Colors.white.withOpacity(0.3),
+                                      blurRadius: 50,
+                                    )
+                                  ],
+                                ),
+                                child: SvgPicture.asset(
+                                  _getAsset,
+                                  height: SizeConfig.screenHeight! * 0.18,
                                 ),
                               ),
                               SizedBox(
@@ -183,34 +161,19 @@ class _AssetSectionViewState extends State<AssetSectionView> {
                                 height: SizeConfig.padding26,
                               ),
                               if (!isNewUser &&
-                                  widget.type == InvestmentType.AUGGOLD99)
-                                GoldInfoWidget(model: model),
-                              if (isNewUser &&
-                                  widget.type == InvestmentType.AUGGOLD99)
-                                Container(
-                                    margin: EdgeInsets.symmetric(
-                                        horizontal:
-                                            SizeConfig.pageHorizontalMargins),
-                                    padding: EdgeInsets.symmetric(
-                                      horizontal: SizeConfig.padding20,
-                                      vertical: SizeConfig.padding12,
-                                    ),
-                                    decoration: BoxDecoration(
-                                      // color: Colors.white.withOpacity(0.1),
-                                      color: const Color(0xff323D71),
-                                      borderRadius: BorderRadius.circular(
-                                          SizeConfig.roundness16),
-                                      border: Border.all(
-                                        width: 1,
-                                        color: Colors.white,
-                                      ),
-                                    ),
-                                    child: const _GoldRateWidget()),
+                                  widget.type == InvestmentType.AUGGOLD99) ...[
+                                const GoldInfoWidget(),
+                                const GoldRateWidget(),
+                                if (widget.type == InvestmentType.AUGGOLD99)
+                                  const LineGradientChart(),
+                                const GoldProCard()
+                              ],
                               if (balance == 0)
                                 SizedBox(
                                   height: SizeConfig.padding14,
                                 ),
-                              if (balance == 0)
+                              if (balance == 0 &&
+                                  widget.type == InvestmentType.LENDBOXP2P)
                                 Padding(
                                   padding: EdgeInsets.symmetric(
                                       horizontal: SizeConfig.padding40),
@@ -232,16 +195,6 @@ class _AssetSectionViewState extends State<AssetSectionView> {
                               SizedBox(
                                 height: SizeConfig.padding4,
                               ),
-                              if (balance == 0) ...[
-                                if (_isGold)
-                                  SizedBox(
-                                    height: SizeConfig.padding10,
-                                  ),
-                                if (_isGold) _buildInfoSection(),
-                                SizedBox(
-                                  height: SizeConfig.padding10,
-                                ),
-                              ],
                               SizedBox(
                                 height: SizeConfig.padding10,
                               ),
@@ -470,135 +423,6 @@ class _AssetSectionViewState extends State<AssetSectionView> {
 
   Color get _subTitleColor =>
       _isGold ? UiConstants.kBlogTitleColor : UiConstants.kTabBorderColor;
-}
-
-class GoldInfoWidget extends StatelessWidget {
-  const GoldInfoWidget({
-    super.key,
-    required this.model,
-  });
-
-  final UserService model;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin:
-          EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(SizeConfig.roundness16),
-        border: Border.all(width: 1, color: Colors.white),
-      ),
-      child: Column(
-        children: [
-          Container(
-            decoration: BoxDecoration(
-              color: const Color(0xff1F2C65),
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(SizeConfig.roundness16),
-                topRight: Radius.circular(SizeConfig.roundness16),
-              ),
-            ),
-            padding: EdgeInsets.symmetric(
-              horizontal: SizeConfig.padding20,
-              vertical: SizeConfig.padding12,
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Gold Amount",
-                      style: TextStyles.rajdhaniSB.body2
-                          .colour(Colors.white.withOpacity(0.7)),
-                    ),
-                    SizedBox(
-                      height: SizeConfig.padding4,
-                    ),
-                    Selector<UserService, Portfolio>(
-                        selector: (p0, p1) => p1.userPortfolio,
-                        builder: (context, value, child) {
-                          return Row(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              Text(
-                                "₹${BaseUtil.digitPrecision(value.gold.balance ?? 0, 2)}",
-                                textAlign: TextAlign.center,
-                                style: TextStyles.sourceSansSB.title5.colour(
-                                  Colors.white.withOpacity(0.8),
-                                ),
-                              ),
-                              SizedBox(width: SizeConfig.padding6),
-                              Transform.translate(
-                                offset: Offset(0, -SizeConfig.padding4),
-                                child: RotatedBox(
-                                  quarterTurns:
-                                      value.gold.percGains >= 0 ? 0 : 2,
-                                  child: SvgPicture.asset(
-                                    Assets.arrow,
-                                    width: SizeConfig.iconSize3,
-                                    color: value.gold.percGains >= 0
-                                        ? UiConstants.primaryColor
-                                        : Colors.red,
-                                  ),
-                                ),
-                              ),
-                              Text(
-                                  " ${BaseUtil.digitPrecision(
-                                    value.gold.percGains,
-                                    2,
-                                    false,
-                                  )}%",
-                                  style: TextStyles.sourceSans.body3.colour(
-                                      value.gold.percGains >= 0
-                                          ? UiConstants.primaryColor
-                                          : Colors.red)),
-                            ],
-                          );
-                        }),
-                  ],
-                ),
-                Column(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(
-                      "Gold Value",
-                      style: TextStyles.rajdhaniSB.body2
-                          .colour(Colors.white.withOpacity(0.7)),
-                    ),
-                    SizedBox(
-                      height: SizeConfig.padding4,
-                    ),
-                    Text(
-                      "${(model.userFundWallet?.augGoldQuantity ?? 0).toString()} gms",
-                      style: TextStyles.sourceSansSB.title5.colour(
-                        Colors.white.withOpacity(0.8),
-                      ),
-                    )
-                  ],
-                )
-              ],
-            ),
-          ),
-          Container(
-              padding: EdgeInsets.symmetric(
-                horizontal: SizeConfig.padding20,
-                vertical: SizeConfig.padding12,
-              ),
-              decoration: BoxDecoration(
-                color: const Color(0xff323D71),
-                borderRadius: BorderRadius.only(
-                  bottomLeft: Radius.circular(SizeConfig.roundness16),
-                  bottomRight: Radius.circular(SizeConfig.roundness16),
-                ),
-              ),
-              child: const _GoldRateWidget())
-        ],
-      ),
-    );
-  }
 }
 
 class AssetBottomButtons extends StatelessWidget {
@@ -1670,105 +1494,4 @@ class CirclePainter extends CustomPainter {
 
   @override
   bool shouldRepaint(CirclePainter painter) => false;
-}
-
-class _GoldRateWidget extends StatefulWidget {
-  const _GoldRateWidget({Key? key}) : super(key: key);
-
-  @override
-  State<_GoldRateWidget> createState() => _GoldRateWidgetState();
-}
-
-class _GoldRateWidgetState extends State<_GoldRateWidget> {
-  bool switchValue =
-      PreferenceHelper.getBool(PreferenceHelper.GOLD_PRICE_SUBSCRIBE);
-
-  final _repo = locator<ClientCommsRepo>();
-
-  void handleToggle(bool newValue) {
-    setState(() {
-      switchValue = newValue;
-    });
-
-    _repo.subscribeGoldPriceAlert(switchValue ? 1 : 0);
-
-    PreferenceHelper.setBool(PreferenceHelper.GOLD_PRICE_SUBSCRIBE, newValue);
-
-    if (switchValue) {
-      BaseUtil.showPositiveAlert(
-          'We will notify you when the gold prices change!',
-          'Keep saving in Gold with Fello!');
-    }
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: const Color(0xff323D71),
-      child: Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-        Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            Text(
-              "Market Rate",
-              style: TextStyles.sourceSans.body3,
-            ),
-            SizedBox(
-              height: SizeConfig.padding4,
-            ),
-            Text(
-              "Get notified about price\nchanges in Digital Gold",
-              style:
-                  TextStyles.sourceSans.body4.colour(const Color(0xffA9C6D6)),
-            )
-          ],
-        ),
-        BaseView<GoldBuyViewModel>(onModelReady: (model) {
-          // if (fetchGoldRate) {
-          model.fetchGoldRates();
-          // }
-        }, builder: (ctx, model, child) {
-          return Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Row(
-                children: [
-                  model.isGoldRateFetching
-                      ? SpinKitThreeBounce(
-                          size: SizeConfig.body2,
-                          color: Colors.white,
-                        )
-                      : Text(
-                          "₹ ${(model.goldRates != null ? model.goldRates!.goldBuyPrice : 0.0)?.toStringAsFixed(2)}/gm",
-                          style: TextStyles.sourceSansSB.body1
-                              .colour(Colors.white),
-                        ),
-                  NewCurrentGoldPriceWidget(
-                    fetchGoldRates: model.fetchGoldRates,
-                    goldprice: model.goldRates != null
-                        ? model.goldRates!.goldBuyPrice
-                        : 0.0,
-                    isFetching: model.isGoldRateFetching,
-                    mini: true,
-                    textColor: Colors.white,
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: SizeConfig.padding4,
-              ),
-              AppSwitch(
-                onToggle: handleToggle,
-                value: switchValue,
-                isLoading: model.isGoldRateFetching,
-                height: SizeConfig.padding28,
-                width: SizeConfig.padding46,
-                toggleSize: SizeConfig.padding20,
-              ),
-            ],
-          );
-        }),
-      ]),
-    );
-  }
 }

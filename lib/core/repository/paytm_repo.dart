@@ -29,14 +29,16 @@ class PaytmRepository extends BaseRepo {
       : "https://2je5zoqtuc.execute-api.ap-south-1.amazonaws.com/dev";
 
   Future<ApiResponse<CreatePaytmTransactionModel>> createTransaction(
-      double? amount,
-      Map<String, dynamic>? augMap,
-      Map<String, dynamic>? lbMap,
-      String? couponCode,
-      bool? skipMl,
-      String mid,
-      InvestmentType investmentType,
-      AppUse? appUse) async {
+    double? amount,
+    Map<String, dynamic>? augMap,
+    Map<String, dynamic>? lbMap,
+    String? couponCode,
+    bool? skipMl,
+    String mid,
+    InvestmentType investmentType,
+    AppUse? appUse, [
+    Map<String, dynamic>? goldProMap,
+  ]) async {
     try {
       final String? _uid = userService!.baseUser!.uid;
       final Map<String, dynamic> _body = {
@@ -59,9 +61,9 @@ class PaytmRepository extends BaseRepo {
       };
       logger.d("This is header: $_header");
 
-      // final paymentMode = Platform.isAndroid
-      //     ? AppConfig.getValue(AppConfigKey.active_pg_android)
-      //     : AppConfig.getValue(AppConfigKey.active_pg_ios);
+      if (goldProMap != null && goldProMap.isNotEmpty) {
+        _body.addAll(goldProMap);
+      }
 
       final response = await APIService.instance.postData(
         ApiPath.kCreatePaytmTransaction,

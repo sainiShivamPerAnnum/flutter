@@ -18,7 +18,10 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/ui/elements/fello_dialog/fello_in_app_review.dart';
 import 'package:felloapp/ui/pages/campaigns/info_stories/info_stories_view.dart';
-import 'package:felloapp/ui/pages/campaigns/topSavers/top_savers_new.dart';
+import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_buy/gold_pro_buy_view.dart';
+import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_details/gold_pro_details_view.dart';
+import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_sell/gold_pro_sell_view.dart';
+import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_transactions/gold_pro_txns_view.dart';
 import 'package:felloapp/ui/pages/finance/autosave/autosave_details/autosave_details_view.dart';
 import 'package:felloapp/ui/pages/finance/autosave/autosave_onboarding/autosave_onboarding_view.dart';
 import 'package:felloapp/ui/pages/finance/autosave/autosave_setup/autosave_process_view.dart';
@@ -259,7 +262,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           _addPageData(const MyWinningsView(), MyWinningsPageConfig);
           break;
         case Pages.BlockedUser:
-          _addPageData(BlockedUserView(), BlockedUserPageConfig);
+          _addPageData(const BlockedUserView(), BlockedUserPageConfig);
           break;
         case Pages.FreshDeskHelp:
           _addPageData(const FreshDeskHelp(), FreshDeskHelpPageConfig);
@@ -298,9 +301,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.BlogPostWebView:
           _addPageData(const BlogWebView(), BlogPostWebViewConfig);
           break;
-        case Pages.CampaignView:
-          _addPageData(CampaignView(), CampaignViewPageConfig);
-          break;
+        // case Pages.CampaignView:
+        //   _addPageData(CampaignView(), CampaignViewPageConfig);
+        //   break;
         // case Pages.SaveAssetView:
         //   _addPageData(const SaveAssetView(), SaveAssetsViewConfig);
         //   break;
@@ -328,6 +331,19 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           break;
         case Pages.PlayView:
           _addPageData(const Play(), TransactionDetailsPageConfig);
+          break;
+        case Pages.GoldProDetailsView:
+          _addPageData(
+              const GoldProDetailsView(), GoldProDetailsViewPageConfig);
+          break;
+        case Pages.GoldProBuyView:
+          _addPageData(const GoldProBuyView(), GoldProBuyViewPageConfig);
+          break;
+        case Pages.GoldProSellView:
+          _addPageData(const GoldProSellView(), GoldProSellViewPageConfig);
+          break;
+        case Pages.GoldProTxnsView:
+          _addPageData(const GoldProTxnsView(), GoldProTxnsViewPageConfig);
           break;
         case Pages.QuizWebView:
           _addPageData(const QuizWebView(), QuizWebViewConfig);
@@ -652,6 +668,21 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.LendboxBuyView:
         LendboxBuyViewConfig.currentPageAction = action;
         break;
+      case Pages.GoldProDetailsView:
+        GoldenMilestonesViewPageConfig.currentPageAction = action;
+        break;
+      case Pages.GoldProBuyView:
+        GoldProBuyViewPageConfig.currentPageAction = action;
+        break;
+      case Pages.GoldProSellView:
+        GoldProSellViewPageConfig.currentPageAction = action;
+        break;
+      case Pages.GoldProTxnsView:
+        GoldProTxnsViewPageConfig.currentPageAction = action;
+        break;
+      case Pages.GoldProTxnsDetailsView:
+        GoldProTxnsDetailsViewPageConfig.currentPageAction = action;
+        break;
       default:
         break;
     }
@@ -931,24 +962,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case 'blocked':
         pageConfiguration = BlockedUserPageConfig;
         break;
-      case Constants.HS_DAILY_SAVER:
-        openTopSaverScreen(Constants.HS_DAILY_SAVER);
-        break;
-      case Constants.HS_WEEKLY_SAVER:
-        openTopSaverScreen(Constants.HS_WEEKLY_SAVER);
-        break;
-      case Constants.HS_MONTHLY_SAVER:
-        openTopSaverScreen(Constants.HS_MONTHLY_SAVER);
-        break;
-      case 'bugBounty':
-        openTopSaverScreen(Constants.BUG_BOUNTY);
-        break;
-      case 'newFello':
-        openTopSaverScreen(Constants.NEW_FELLO_UI);
-        break;
-      case 'FPL':
-        openTopSaverScreen('FPL');
-        break;
       // BACKWARD COMPATIBILITY --START
       case 'footballHome':
         openWebGame(Constants.GAME_TYPE_FOOTBALL);
@@ -976,7 +989,10 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         if (!(AppConfig.getValue(AppConfigKey.showNewAutosave) as bool)) break;
         pageConfiguration = AutosaveDetailsViewPageConfig;
         break;
-
+      case "autosave":
+        if (!(AppConfig.getValue(AppConfigKey.showNewAutosave) as bool)) break;
+        pageConfiguration = AutosaveOnboardingViewPageConfig;
+        break;
       case 'autosaveTxns':
         openTransactions(InvestmentType.AUGGOLD99);
         break;
@@ -997,6 +1013,15 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         break;
       case "earnMoreReturns":
         pageConfiguration = EarnMoreReturnsViewPageConfig;
+        break;
+      case "goldProDetails":
+        pageConfiguration = GoldProDetailsViewPageConfig;
+        break;
+      case "goldProBuy":
+        pageConfiguration = GoldProBuyViewPageConfig;
+        break;
+      case "goldProSell":
+        pageConfiguration = GoldProSellViewPageConfig;
         break;
     }
     if (pageConfiguration != null) {
@@ -1019,13 +1044,13 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         _rootController.navItems.values.toList().indexOf(item);
   }
 
-  openTopSaverScreen(String eventType) {
-    AppState.delegate!.appState.currentAction = PageAction(
-      page: CampaignViewPageConfig,
-      state: PageState.addWidget,
-      widget: CampaignView(eventType: eventType),
-    );
-  }
+  // openTopSaverScreen(String eventType) {
+  //   AppState.delegate!.appState.currentAction = PageAction(
+  //     page: CampaignViewPageConfig,
+  //     state: PageState.addWidget,
+  //     widget: CampaignView(eventType: eventType),
+  //   );
+  // }
 
   openWebGame(String game) {
     bool isLocked = false;

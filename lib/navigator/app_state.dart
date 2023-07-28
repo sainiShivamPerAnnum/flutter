@@ -69,6 +69,7 @@ class AppState extends ChangeNotifier {
   static bool isFirstTimeSaveOpened = false;
   static bool isFirstTimeAccountsOpened = false;
   static bool isFirstTimeTambolaOpened = false;
+  static bool isGoldProBuyInProgress = false;
 
   // static bool isJourneyFirstTab = false;
   static bool isAutosaveFlow = false;

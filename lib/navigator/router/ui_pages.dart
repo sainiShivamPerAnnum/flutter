@@ -96,6 +96,13 @@ const String LendboxBuyViewPath = "/LendboxBuyViewPath";
 const String AssetSelectionViewPath = "/assetSelectionViewPath";
 const String QuizWebViewPath = "/quizWebViewPath";
 
+//GoldPro
+const String GoldProDetailsPath = "/goldProDetailsPath";
+const String GoldProBuyViewPath = "/goldProBuyPath";
+const String GoldProSellViewPath = "/goldProSellView";
+const String GoldProTxnsViewPath = "/goldProTxnsView";
+const String GoldProTxnsDetailsViewPath = "goldProTxnsDetailsView";
+
 enum Pages {
   Splash,
   Login,
@@ -187,6 +194,12 @@ enum Pages {
   LendboxBuyView,
   AssetSelectionView,
   QuizWebView
+  //GOLDPRO
+  GoldProDetailsView,
+  GoldProBuyView,
+  GoldProSellView,
+  GoldProTxnsView,
+  GoldProTxnsDetailsView,
 }
 
 class PageConfiguration {
@@ -793,3 +806,33 @@ PageConfiguration QuizWebViewConfig = PageConfiguration(
     path: QuizWebViewPath,
     uiPage: Pages.QuizWebView,
     name: "Quiz Web View Screen");
+
+PageConfiguration GoldProDetailsViewPageConfig = PageConfiguration(
+    key: 'GoldProDetailsViewPath',
+    path: GoldProDetailsPath,
+    uiPage: Pages.GoldProDetailsView,
+    name: "Gold X Details View Screen");
+
+PageConfiguration GoldProBuyViewPageConfig = PageConfiguration(
+    key: 'GoldProBuyViewPath',
+    path: GoldProBuyViewPath,
+    uiPage: Pages.GoldProBuyView,
+    name: "Gold X Buy View Screen");
+
+PageConfiguration GoldProSellViewPageConfig = PageConfiguration(
+    key: 'GoldProSellViewPath',
+    path: GoldProSellViewPath,
+    uiPage: Pages.GoldProSellView,
+    name: "Gold X Sell View Screen");
+
+PageConfiguration GoldProTxnsViewPageConfig = PageConfiguration(
+    key: 'GoldProTxnsViewPath',
+    path: GoldProTxnsViewPath,
+    uiPage: Pages.GoldProTxnsView,
+    name: "Gold X Txns View Screen");
+
+PageConfiguration GoldProTxnsDetailsViewPageConfig = PageConfiguration(
+    key: 'GoldProTxnsDetailsViewPath',
+    path: GoldProTxnsDetailsViewPath,
+    uiPage: Pages.GoldProTxnsDetailsView,
+    name: "Gold X Txns Details View Screen");

@@ -129,6 +129,10 @@ class BankAndPanService
     }
   }
 
+  Future<void> verifyAugmontKyc() async {
+    await _bankingRepo.verifyAugmontKyc();
+  }
+
   checkForUserBankAccountDetails() async {
     if (activeBankAccountDetails != null) return;
     final res = await _paymentRepo!.getActiveBankAccountDetails();

@@ -23,7 +23,7 @@ class Blogs extends StatelessWidget {
     S locale = S.of(context);
     return Column(
       children: [
-        SizedBox(height: SizeConfig.padding8),
+        SizedBox(height: SizeConfig.padding14),
         GestureDetector(
           onTap: model.navigateToViewAllBlogs,
           child: Row(

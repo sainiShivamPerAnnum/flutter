@@ -185,9 +185,9 @@ class _ContactListWidgetState extends State<ContactListWidget>
               );
             },
           ),
-          // SizedBox(
-          //   height: SizeConfig.navBarHeight ,
-          // ),
+          SizedBox(
+            height: SizeConfig.padding12,
+          ),
         ],
       ),
     );

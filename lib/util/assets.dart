@@ -310,8 +310,7 @@ class Assets {
   static String journeyIcon = "assets/vectors/icons/journeyIcon.svg";
 
   static String multiAvatars = "assets/vectors/multiAvatars.svg";
-  static String multiRealAvatars = ""
-      "";
+  static String multiRealAvatars = "assets/images/cus_photos.png";
   static String btnBg = "assets/vectors/btnBg.svg";
 
   static String arrow = "assets/vectors/arrow.svg";
@@ -413,4 +412,7 @@ class Assets {
 
   static const String peopleGroup =
       "${assetBaseUrl}revamped-referrals/friends.svg";
+
+  static const String youtubeLogo =
+      "https://upload.wikimedia.org/wikipedia/commons/e/ef/Youtube_logo.png";
 }

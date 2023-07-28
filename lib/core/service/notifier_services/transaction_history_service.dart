@@ -2,8 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collection/collection.dart' show IterableExtension;
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
+import 'package:felloapp/core/model/gold_pro_models/gold_pro_investment_reponse_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
+import 'package:felloapp/core/repository/payment_repo.dart';
 import 'package:felloapp/core/repository/transactions_history_repo.dart';
+import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
@@ -17,8 +20,17 @@ class TxnHistoryService extends ChangeNotifier {
   final BaseUtil? _baseUtil = locator<BaseUtil>();
   final TransactionHistoryRepository? _transactionHistoryRepo =
       locator<TransactionHistoryRepository>();
+  final _paymentRepo = locator<PaymentRepository>();
   List<UserTransaction>? _txnList = [];
-  // String? lastTxnDocId;
+  List<GoldProInvestmentResponseModel> _goldProTxns = [];
+
+  List<GoldProInvestmentResponseModel> get goldProTxns => _goldProTxns;
+
+  set goldProTxns(List<GoldProInvestmentResponseModel> value) {
+    _goldProTxns = value;
+    notifyListeners();
+  } // String? lastTxnDocId;
+
   // String? lastPrizeTxnDocId;
   // String? lastDepositTxnDocId;
   // String? lastWithdrawalTxnDocId;
@@ -165,6 +177,7 @@ class TxnHistoryService extends ChangeNotifier {
   // Clear transactions
   void signOut() {
     // lastTxnDocId = null;
+    goldProTxns = [];
     hasMoreTxns = true;
     hasMorePrizeTxns = true;
     hasMoreDepositTxns = true;
@@ -284,5 +297,65 @@ class TxnHistoryService extends ChangeNotifier {
       return Colors.blue;
     }
     return Colors.black54;
+  }
+
+  //GOLD PRO
+  String getGoldProTitle(String status) {
+    switch (status) {
+      case "active":
+        return "LEASED";
+      case "failed":
+        return "FAILED";
+      case "pending":
+        return "PENDING";
+      case "close":
+        return "UN-LEASED";
+      default:
+        return "";
+    }
+  }
+
+  String getGoldProStatus(String status) {
+    switch (status) {
+      case "active":
+        return "COMPLETED";
+      case "failed":
+        return "FAILED";
+      case "pending":
+        return "PENDING";
+      case "close":
+        return "CLOSED";
+      default:
+        return "";
+    }
+  }
+
+  Color getGoldProColor(String status) {
+    switch (status) {
+      case "active":
+        return UiConstants.primaryColor;
+      case "failed":
+        return Colors.red;
+      case "pending":
+        return UiConstants.secondaryColor;
+      case "close":
+        return Colors.white;
+      default:
+        return Colors.white;
+    }
+  }
+
+  Future<void> getGoldProTransactions({forced = false}) async {
+    if (forced) {
+      goldProTxns = [];
+    }
+    if (goldProTxns.isNotEmpty) return;
+    final ApiResponse<List<GoldProInvestmentResponseModel>> res =
+        await _paymentRepo.getGoldProInvestments();
+    if (res.isSuccess()) {
+      goldProTxns = res.model!;
+    } else {
+      BaseUtil.showNegativeAlert(res.errorMessage, "Please try again later");
+    }
   }
 }
