@@ -367,7 +367,7 @@ class UserRepository extends BaseRepo {
 
             if (notifications[0].misc != null &&
                 notifications[0].misc?.gtId != null) {
-              userService.fcmHandlerReferralGT(notifications[0].misc!.gtId!);
+              ScratchCardService.scratchCardId = notifications[0].misc!.gtId!;
             }
 
             userService.referralAlertDialog = notifications[0];

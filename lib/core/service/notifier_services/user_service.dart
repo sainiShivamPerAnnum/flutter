@@ -106,6 +106,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   bool? showSecurityPrompt;
   bool isAnyUnscratchedGTAvailable = false;
   bool referralFromNotification = false;
+  bool referralFromFCM = false;
 
   User? get firebaseUser => _firebaseUser;
 
@@ -613,7 +614,8 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
         referralAlertDialog?.ctaText != null &&
         (referralAlertDialog?.ctaText?.isNotEmpty ?? false) &&
         referralAlertDialog?.title != null &&
-        AppState.isRootAvailableForIncomingTaskExecution) {
+        AppState.isRootAvailableForIncomingTaskExecution &&
+        ScratchCardService.scratchCardId != null) {
       log("Showing referral alert dialog",
           name: "checkForNewNotifications method");
 
@@ -681,8 +683,9 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     AppState.isRootAvailableForIncomingTaskExecution = false;
   }
 
-  Future<void> fcmHandlerReferralGT(String _gtId) async {
-    ScratchCardService.scratchCardId = _gtId;
+  Future<void> fcmHandlerReferralGT(String? _gtId) async {
+    _logger.d("Handling referral GT");
+    checkForNewNotifications();
   }
 
   void setPageConfigs(DynamicUI dynamicUi) {
