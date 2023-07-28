@@ -317,9 +317,8 @@ class _ReferralListViewState extends State<ReferralListView> {
               width: SizeConfig.padding76,
               child: MaterialButton(
                 onPressed: () {
-                  navigateToWhatsApp(
-                    filteredReferrals[i].mobile!,
-                  );
+                  navigateToWhatsApp(filteredReferrals[i].mobile!,
+                      filteredReferrals[i].shareMsg);
                 },
                 color: Colors.white,
                 minWidth: SizeConfig.padding76,

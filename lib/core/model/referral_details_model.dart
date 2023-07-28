@@ -13,6 +13,7 @@ class ReferralDetail {
   int? _refCount;
   String? mobile;
   RevampedInfo? revampedInfo;
+  String? shareMsg;
   static final helper =
       HelperModel<ReferralDetail>((map) => ReferralDetail.fromMap(map));
   Map<String, dynamic>? _bonusMap;
@@ -30,7 +31,8 @@ class ReferralDetail {
       this._bonusMap,
       this._uid,
       this.mobile,
-      this.revampedInfo);
+      this.revampedInfo,
+      this.shareMsg);
 
   ReferralDetail.base() {
     _userName = '';
@@ -55,6 +57,7 @@ class ReferralDetail {
       rMap["revampedInfo"] == null
           ? null
           : RevampedInfo.fromJson(rMap["revampedInfo"]),
+      rMap["shareMsg"],
     );
   }
 
