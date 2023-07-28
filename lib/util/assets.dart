@@ -22,6 +22,7 @@ class Assets {
   static const String autoSaveOngoing = 'assets/svg/auto_save_ongoing.svg';
   static const String upi = 'assets/images/upi.png';
   static const String rupee = 'assets/vectors/icons/indian_rupee.svg';
+  static const String referralIcon = "assets/vectors/icons/referral_icon.svg";
 
   //APPBAR
 
@@ -122,6 +123,7 @@ class Assets {
   static const String rbi = "assets/svg/rbi.svg";
   static const String icici = "assets/svg/icici.svg";
   static const String sebi = "assets/vectors/icons/sebi_new.svg";
+  static const String graphArrows = "assets/vectors/icons/graph_arrows.svg";
 
   static const String arrowIcon = "assets/svg/raising_arrow.svg";
   static const String timer = "assets/svg/timer.svg";

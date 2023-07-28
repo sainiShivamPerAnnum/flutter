@@ -33,7 +33,9 @@ class GoldProBuyInputView extends StatelessWidget {
               ),
               backgroundColor: Colors.transparent,
               elevation: 0,
+              centerTitle: true,
               title: Row(
+                mainAxisSize: MainAxisSize.min,
                 children: [
                   Image.asset(
                     Assets.digitalGoldBar,
@@ -101,7 +103,7 @@ class GoldProBuyInputView extends StatelessWidget {
                                     duration: const Duration(seconds: 0),
                                     curve: Curves.easeIn,
                                     child: TextField(
-                                      maxLength: 3,
+                                      maxLength: 6,
                                       controller: model.goldFieldController,
                                       keyboardType: TextInputType.number,
                                       onChanged: model.onTextFieldValueChanged,
@@ -196,7 +198,7 @@ class GoldProBuyInputView extends StatelessWidget {
                     ),
                     child: Column(children: [
                       GoldBalanceRow(
-                        lead: "You are adding",
+                        lead: "Saving in ${Constants.ASSET_GOLD_STAKE}",
                         trail: model.totalGoldBalance,
                         isBold: true,
                       ),

@@ -27,6 +27,7 @@ import 'package:felloapp/ui/pages/hometabs/save/gold_components/gold_pro_card.da
 import 'package:felloapp/ui/pages/hometabs/save/gold_components/gold_rate_widget.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/ui/pages/login/login_components/login_support.dart';
+import 'package:felloapp/ui/service_elements/auto_save_card/subscription_card.dart';
 import 'package:felloapp/ui/service_elements/gold_sell_card/sell_card_view.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
@@ -157,12 +158,26 @@ class _AssetSectionViewState extends State<AssetSectionView> {
                                 style: TextStyles.sourceSans.body2
                                     .colour(_subTitleColor),
                               ),
+                              if (balance == 0 &&
+                                  widget.type == InvestmentType.AUGGOLD99)
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: SizeConfig.padding40),
+                                  child: Text(
+                                    __goldDescription,
+                                    textAlign: TextAlign.center,
+                                    style: TextStyles.sourceSans.body3.colour(
+                                      Colors.white.withOpacity(0.6),
+                                    ),
+                                  ),
+                                ),
                               SizedBox(
                                 height: SizeConfig.padding26,
                               ),
-                              if (!isNewUser &&
-                                  widget.type == InvestmentType.AUGGOLD99) ...[
-                                const GoldInfoWidget(),
+                              if (widget.type == InvestmentType.AUGGOLD99) ...[
+                                balance == 0
+                                    ? _buildInfoSection()
+                                    : const GoldInfoWidget(),
                                 const GoldRateWidget(),
                                 if (widget.type == InvestmentType.AUGGOLD99)
                                   const LineGradientChart(),
@@ -178,9 +193,7 @@ class _AssetSectionViewState extends State<AssetSectionView> {
                                   padding: EdgeInsets.symmetric(
                                       horizontal: SizeConfig.padding40),
                                   child: Text(
-                                    _isGold
-                                        ? __goldDescription
-                                        : _floDescription,
+                                    _floDescription,
                                     textAlign: TextAlign.center,
                                     style: TextStyles.sourceSans.body3.colour(
                                       Colors.white.withOpacity(0.6),
@@ -203,6 +216,8 @@ class _AssetSectionViewState extends State<AssetSectionView> {
                               if (!isNewUser) ...[
                                 MiniTransactionCard(
                                     investmentType: widget.type),
+                                const AutosaveCard(
+                                    investmentType: InvestmentType.AUGGOLD99),
                                 if (balance != 0 && _isGold) ...[
                                   Align(
                                     alignment: Alignment.centerLeft,

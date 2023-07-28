@@ -74,7 +74,7 @@ class GoldProBuyViewModel extends BaseViewModel {
     _totalGoldBalance = value;
 
     _additionalGoldBalance = BaseUtil.digitPrecision(
-        max(totalGoldBalance - currentGoldBalance, 0), 4, true);
+        max(totalGoldBalance - currentGoldBalance, 0), 4, false);
     print(
         "Total: $totalGoldBalance && Current: $currentGoldBalance && additional: $additionalGoldBalance");
     updateSliderValueFromGoldBalance();
@@ -348,6 +348,7 @@ class GoldProBuyViewModel extends BaseViewModel {
   }
 
   void onProceedTapped() {
+    Haptic.vibrate();
     if (totalGoldBalance > 10) {
       BaseUtil.showNegativeAlert(
           "Gold grams out of bound", "You can lease at most 10 grams");
@@ -391,13 +392,18 @@ class GoldProBuyViewModel extends BaseViewModel {
         (goldRates?.cgstPercent ?? 0) + (goldRates?.sgstPercent ?? 0);
 
     if (goldBuyPrice != 0.0) {
-      final totalGoldInvestmentCost =
-          BaseUtil.digitPrecision(additionalGoldBalance * goldBuyPrice!, 2);
-      final taxedTotalGoldInvestmentCost = BaseUtil.digitPrecision(
-          totalGoldInvestmentCost +
-              _getTaxOnAmount(totalGoldInvestmentCost, netTax));
+      // final totalGoldInvestmentCost =
+      //     BaseUtil.digitPrecision(additionalGoldBalance * goldBuyPrice!, 2);
+      // final taxedTotalGoldInvestmentCost = BaseUtil.digitPrecision(
+      //     totalGoldInvestmentCost +
+      //         _getTaxOnAmount(totalGoldInvestmentCost, netTax));
       // Mismatch in augmont and ours calculation so adding ₹2 to final amount
-      totalGoldAmount = taxedTotalGoldInvestmentCost + 2;
+      additionalGoldBalance += 0.0004;
+      totalGoldAmount = BaseUtil.digitPrecision(
+          (goldBuyPrice! * additionalGoldBalance) +
+              (netTax * goldBuyPrice! * additionalGoldBalance) / 100,
+          2);
+      //  taxedTotalGoldInvestmentCost + 2;
       // TODO: Need to be fixed
 
       double expectedGoldReturnsAmount = BaseUtil.digitPrecision(

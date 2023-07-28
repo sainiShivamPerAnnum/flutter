@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
+import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/amount_chips_model.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
@@ -16,6 +17,7 @@ import 'package:felloapp/core/repository/subscription_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/ui/pages/finance/autosave/autosave_setup/autosave_process_view.dart';
 import 'package:felloapp/ui/pages/finance/autosave/autosave_setup/autosave_process_vm.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
@@ -522,7 +524,7 @@ class SubService extends ChangeNotifier {
     }
   }
 
-  handleTap() {
+  handleTap({InvestmentType? type}) {
     Haptic.vibrate();
     _analyticsService.track(
         eventName: AnalyticsEvents.asCardTapped,
@@ -532,14 +534,25 @@ class SubService extends ChangeNotifier {
         return BaseUtil.showNegativeAlert(
             "Subscription in processing", "please check back after sometime");
       case AutosaveState.IDLE:
-        return AppState.delegate!.appState.currentAction = PageAction(
-          page: (PreferenceHelper.getBool(
-                  PreferenceHelper.CACHE_IS_AUTOSAVE_FIRST_TIME,
-                  def: true))
-              ? AutosaveOnboardingViewPageConfig
-              : AutosaveProcessViewPageConfig,
-          state: PageState.addPage,
-        );
+        if (type != null) {
+          return AppState.delegate!.appState.currentAction = PageAction(
+            page: AutosaveProcessViewPageConfig,
+            widget: AutosaveProcessView(
+              investmentType: type,
+            ),
+            state: PageState.addWidget,
+          );
+        } else {
+          return AppState.delegate!.appState.currentAction = PageAction(
+            page: (PreferenceHelper.getBool(
+                    PreferenceHelper.CACHE_IS_AUTOSAVE_FIRST_TIME,
+                    def: true))
+                ? AutosaveOnboardingViewPageConfig
+                : AutosaveProcessViewPageConfig,
+            state: PageState.addPage,
+          );
+        }
+
       case AutosaveState.PAUSED:
       case AutosaveState.INACTIVE:
       case AutosaveState.ACTIVE:

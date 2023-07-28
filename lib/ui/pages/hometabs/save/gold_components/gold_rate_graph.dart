@@ -3,10 +3,12 @@ import 'dart:math';
 import 'package:felloapp/core/model/portfolio_model.dart';
 import 'package:felloapp/core/repository/getters_repo.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:google_fonts/google_fonts.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_charts/charts.dart';
@@ -56,7 +58,8 @@ class _LineGradientChartState extends State<LineGradientChart> {
     _selectedIndex = value;
     Future.delayed(const Duration(milliseconds: 100)).then((value) {
       chartData = ogChartData!.sublist(
-          (60 - (12 * (selectedIndex + 1))).toInt(), ogChartData!.length);
+          (ogChartData!.length - (12 * (selectedIndex + 1))).toInt(),
+          ogChartData!.length);
     });
 
     Haptic.vibrate();
@@ -131,9 +134,10 @@ class _LineGradientChartState extends State<LineGradientChart> {
                                 ),
                                 GestureDetector(
                                   onTap: updateChartData2,
-                                  child: Icon(
-                                    Icons.thumbs_up_down,
-                                    size: SizeConfig.iconSize0,
+                                  child: SvgPicture.asset(
+                                    Assets.graphArrows,
+                                    height: SizeConfig.iconSize0,
+                                    width: SizeConfig.iconSize0,
                                     color: Colors.grey,
                                   ),
                                 )
@@ -146,7 +150,7 @@ class _LineGradientChartState extends State<LineGradientChart> {
                                   "${returnsList![selectedIndex]}% ",
                                   style: GoogleFonts.sourceSansPro(
                                       fontWeight: FontWeight.w700,
-                                      fontSize: SizeConfig.title3,
+                                      fontSize: SizeConfig.title2,
                                       color: Colors.white),
                                 ),
                                 Padding(
@@ -182,9 +186,10 @@ class _LineGradientChartState extends State<LineGradientChart> {
                                         ),
                                         GestureDetector(
                                           onTap: updateChartData2,
-                                          child: Icon(
-                                            Icons.thumbs_up_down,
-                                            size: SizeConfig.iconSize0,
+                                          child: SvgPicture.asset(
+                                            Assets.graphArrows,
+                                            height: SizeConfig.iconSize0,
+                                            width: SizeConfig.iconSize0,
                                             color: Colors.grey,
                                           ),
                                         )
@@ -198,7 +203,7 @@ class _LineGradientChartState extends State<LineGradientChart> {
                                           "₹${((portfolio.goldPro.principle * pow((1 + 0.16), selectedIndex + 1)).toInt())}",
                                           style: GoogleFonts.sourceSansPro(
                                               fontWeight: FontWeight.w700,
-                                              fontSize: SizeConfig.title3,
+                                              fontSize: SizeConfig.title2,
                                               color:
                                                   UiConstants.kGoldProPrimary),
                                         ),
@@ -214,17 +219,6 @@ class _LineGradientChartState extends State<LineGradientChart> {
                                                     .kGoldProPrimary),
                                           ),
                                         ),
-                                        Padding(
-                                          padding: EdgeInsets.only(
-                                              bottom: SizeConfig.padding6),
-                                          child: Text(
-                                            "(${chips[selectedIndex]})",
-                                            style: GoogleFonts.sourceSansPro(
-                                                fontSize: SizeConfig.body3,
-                                                color: UiConstants
-                                                    .kGoldProPrimary),
-                                          ),
-                                        )
                                       ],
                                     ),
                                   ],
@@ -313,6 +307,11 @@ class _LineGradientChartState extends State<LineGradientChart> {
                           child: Container(
                             alignment: Alignment.center,
                             decoration: BoxDecoration(
+                                border: Border.all(
+                                  color: index == selectedIndex
+                                      ? Colors.white24
+                                      : Colors.transparent,
+                                ),
                                 borderRadius: BorderRadius.circular(100),
                                 color: index == selectedIndex
                                     ? UiConstants.kBackgroundColor2

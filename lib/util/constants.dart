@@ -22,13 +22,14 @@ class Constants {
 
   //Assets Type
   static const String ASSET_TYPE_AUGMONT = "AUGGOLD99";
+  static const String ASSET_TYPE_AUGMONT_FD = "AUGGOLD99FD";
   static const String ASSET_TYPE_LENDBOX = "LENDBOXP2P";
   static const String ASSET_TYPE_LENDBOX_FD1 = "LENDBOXP2P_FD1";
   static const String ASSET_TYPE_LENDBOX_FD2 = "LENDBOXP2P_FD2";
   static const String ASSET_TYPE_FLO_FELXI = "UNI_FLEXI";
   static const String ASSET_TYPE_FLO_FIXED_3 = "UNI_FIXED_3";
   static const String ASSET_TYPE_FLO_FIXED_6 = "UNI_FIXED_6";
-  static const String ASSET_GOLD_STAKE = "Gold X";
+  static const String ASSET_GOLD_STAKE = "Gold Pro";
 
   //Segments
   static const String US_FLO_OLD = "OLD_LB";

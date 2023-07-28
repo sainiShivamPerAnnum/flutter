@@ -123,7 +123,7 @@ class ProgressGoldProHero extends StatelessWidget {
         Row(
           children: [
             Text(
-              "Get 4.5% extra returns with ${Constants.ASSET_GOLD_STAKE} ",
+              "Save ${0.5 - BaseUtil.digitPrecision(model.userFundWallet?.augGoldQuantity ?? 0.0, 2)}g more to be eligible for Gold Pro",
               style: TextStyles.sourceSansM.body3
                   .colour(UiConstants.kGoldProPrimary),
             ),
@@ -154,12 +154,12 @@ class EligibleGoldProHero extends StatelessWidget {
           style:
               TextStyles.sourceSansB.body1.colour(UiConstants.kGoldProPrimary),
         ),
-        SizedBox(height: SizeConfig.padding16),
+        SizedBox(height: SizeConfig.padding14),
         Row(
           children: [
             Text(
               "You are eligible for 4.5% extra returns",
-              style: TextStyles.sourceSansM.body3
+              style: TextStyles.sourceSansSB.body2
                   .colour(UiConstants.kGoldProPrimary),
             ),
             const Spacer(),

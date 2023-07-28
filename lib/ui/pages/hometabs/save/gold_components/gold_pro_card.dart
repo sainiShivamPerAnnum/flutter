@@ -40,7 +40,7 @@ class GoldProCard extends StatelessWidget {
                       Row(
                         children: [
                           Text(
-                            "Earn 4.5% Extra Returns with ${Constants.ASSET_GOLD_STAKE}",
+                            "Earn 15.5% Extra Returns with ${Constants.ASSET_GOLD_STAKE}",
                             style: TextStyles.rajdhaniSB.body1
                                 .colour(UiConstants.kGoldProPrimary),
                           ),
