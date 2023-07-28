@@ -474,6 +474,7 @@ class RootViewModel extends BaseViewModel {
         if (_userService.userBootUp != null &&
             (_userService.userBootUp!.data?.stateRestricted ?? false)) {
           log("User is from restricted state", name: "UserBootUp");
+          AppState.isRootAvailableForIncomingTaskExecution = false;
           AppState.delegate!.appState.currentAction = PageAction(
               state: PageState.replaceWidget,
               page: BlockedUserPageConfig,
