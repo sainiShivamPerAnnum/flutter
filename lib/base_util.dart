@@ -273,7 +273,17 @@ class BaseUtil extends ChangeNotifier {
     );
   }
 
-  static dynamic openGoldProBuyView() {
+  void openGoldProBuyView() {
+    final bool? isAugDepositBanned = _userService
+        .userBootUp?.data!.banMap?.investments?.deposit?.goldPro?.isBanned;
+    final String? augDepositBanNotice = _userService
+        .userBootUp?.data!.banMap?.investments?.deposit?.goldPro?.reason;
+
+    if (isAugDepositBanned != null && isAugDepositBanned) {
+      BaseUtil.showNegativeAlert(
+          augDepositBanNotice ?? locale.assetNotAvailable, locale.tryLater);
+      return;
+    }
     Haptic.vibrate();
     AppState.delegate!.appState.currentAction =
         PageAction(page: GoldProBuyViewPageConfig, state: PageState.addPage);

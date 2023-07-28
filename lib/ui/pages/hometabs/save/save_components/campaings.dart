@@ -49,6 +49,9 @@ class CampaignCardSection extends StatelessWidget {
                     child: PageView.builder(
                       controller: saveVm.offersController,
                       itemCount: saveVm.ongoingEvents!.length,
+                      onPageChanged: (page) {
+                        saveVm.currentPage = page;
+                      },
                       itemBuilder: (context, index) {
                         final event = saveVm.ongoingEvents![index];
                         return GestureDetector(

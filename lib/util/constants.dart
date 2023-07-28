@@ -22,6 +22,7 @@ class Constants {
 
   //Assets Type
   static const String ASSET_TYPE_AUGMONT = "AUGGOLD99";
+  static const String ASSET_TYPE_AUGMONT_FD = "AUGGOLD99FD";
   static const String ASSET_TYPE_LENDBOX = "LENDBOXP2P";
   static const String ASSET_TYPE_LENDBOX_FD1 = "LENDBOXP2P_FD1";
   static const String ASSET_TYPE_LENDBOX_FD2 = "LENDBOXP2P_FD2";

@@ -9,8 +9,10 @@ import 'package:felloapp/core/repository/payment_repo.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
+import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_sell/gold_pro_sell_components/gold_pro_sell_card.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 
 import '../../../../../../navigator/app_state.dart';
@@ -20,6 +22,7 @@ class GoldProSellViewModel extends BaseViewModel {
   List<GoldProInvestmentResponseModel> leasedGoldList = [];
   final _txnHistoryService = locator<TxnHistoryService>();
   final UserService _userService = locator<UserService>();
+  final S locale = locator<S>();
 
   bool _isSellInProgress = false;
   bool get isSellInProgress => _isSellInProgress;
@@ -34,6 +37,35 @@ class GoldProSellViewModel extends BaseViewModel {
   }
 
   void dump() {}
+
+  void onSellTapped(
+      GoldProInvestmentResponseModel data, GoldProSellViewModel model) {
+    final bool? isGoldProSellLocked = _userService
+        .userBootUp?.data!.banMap?.investments?.withdrawal?.augmont?.isBanned;
+    final String? goldProSellBanNotice = _userService
+        .userBootUp?.data?.banMap?.investments?.withdrawal?.augmont?.reason;
+
+    if (isGoldProSellLocked != null && isGoldProSellLocked) {
+      BaseUtil.showNegativeAlert(
+          goldProSellBanNotice ?? locale.assetNotAvailable, locale.tryLater);
+    }
+    if (!data.isWithdrawable) {
+      BaseUtil.showNegativeAlert(
+          "${Constants.ASSET_GOLD_STAKE} investments have a lock-in of 7 days",
+          "Please try again later");
+    } else {
+      unawaited(BaseUtil.openModalBottomSheet(
+        isBarrierDismissible: false,
+        addToScreenStack: true,
+        isScrollControlled: true,
+        hapticVibrate: true,
+        content: GoldProSellConfirmationModalSheet(
+          data: data,
+          model: model,
+        ),
+      ));
+    }
+  }
 
   Future<void> getGoldProTransactions({bool forced = false}) async {
     setState(ViewState.Busy);

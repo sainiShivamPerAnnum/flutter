@@ -74,7 +74,7 @@ class GoldProBuyViewModel extends BaseViewModel {
     _totalGoldBalance = value;
 
     _additionalGoldBalance = BaseUtil.digitPrecision(
-        max(totalGoldBalance - currentGoldBalance, 0), 4, true);
+        max(totalGoldBalance - currentGoldBalance, 0), 4, false);
     print(
         "Total: $totalGoldBalance && Current: $currentGoldBalance && additional: $additionalGoldBalance");
     updateSliderValueFromGoldBalance();
@@ -137,9 +137,8 @@ class GoldProBuyViewModel extends BaseViewModel {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       _txnService.currentTransactionState = TransactionState.idle;
     });
-    currentGoldBalance = 0;
-    // BaseUtil.digitPrecision(
-    //     userService.userFundWallet!.augGoldQuantity, 4, false);
+    currentGoldBalance = BaseUtil.digitPrecision(
+        userService.userFundWallet!.augGoldQuantity, 4, false);
     totalGoldBalance = chipsList[1].value;
     appMetaList = await UpiUtils.getUpiApps();
     unawaited(fetchGoldRates());
@@ -396,6 +395,7 @@ class GoldProBuyViewModel extends BaseViewModel {
       //     totalGoldInvestmentCost +
       //         _getTaxOnAmount(totalGoldInvestmentCost, netTax));
       // Mismatch in augmont and ours calculation so adding ₹2 to final amount
+      additionalGoldBalance += 0.0004;
       totalGoldAmount = BaseUtil.digitPrecision(
           (goldBuyPrice! * additionalGoldBalance) +
               (netTax * goldBuyPrice! * additionalGoldBalance) / 100,

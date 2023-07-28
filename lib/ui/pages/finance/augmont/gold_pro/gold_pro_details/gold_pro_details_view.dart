@@ -14,6 +14,7 @@ import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/ui/pages/static/save_assets_footer.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -362,7 +363,8 @@ class GoldProDetailsView extends StatelessWidget {
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(
                                   SizeConfig.roundness12)),
-                          onPressed: BaseUtil.openGoldProBuyView,
+                          onPressed: () =>
+                              locator<BaseUtil>().openGoldProBuyView(),
                           minWidth: SizeConfig.screenWidth,
                           color: UiConstants.kGoldProPrimary,
                           child: Text(

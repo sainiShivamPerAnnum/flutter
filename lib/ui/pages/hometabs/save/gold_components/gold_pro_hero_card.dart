@@ -151,12 +151,12 @@ class EligibleGoldProHero extends StatelessWidget {
           style:
               TextStyles.sourceSansB.body1.colour(UiConstants.kGoldProPrimary),
         ),
-        SizedBox(height: SizeConfig.padding16),
+        SizedBox(height: SizeConfig.padding14),
         Row(
           children: [
             Text(
               "You are eligible for 4.5% extra returns",
-              style: TextStyles.sourceSansM.body3
+              style: TextStyles.sourceSansSB.body2
                   .colour(UiConstants.kGoldProPrimary),
             ),
             const Spacer(),

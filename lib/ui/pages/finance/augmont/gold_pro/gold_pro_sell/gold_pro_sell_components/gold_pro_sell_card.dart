@@ -4,7 +4,6 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_sell/gold_pro_sell_vm.dart';
 import 'package:felloapp/ui/pages/hometabs/save/gold_components/gold_balance_brief_row.dart';
 import 'package:felloapp/ui/pages/hometabs/save/gold_components/gold_pro_card.dart';
-import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
@@ -101,22 +100,7 @@ class GoldProSellCard extends StatelessWidget {
                   side: const BorderSide(width: 1.0, color: Colors.white),
                 ),
                 onPressed: () {
-                  if (!data.isWithdrawable) {
-                    BaseUtil.showNegativeAlert(
-                        "${Constants.ASSET_GOLD_STAKE} investments have a lock-in of 7 days",
-                        "Please try again later");
-                  } else {
-                    BaseUtil.openModalBottomSheet(
-                      isBarrierDismissible: false,
-                      addToScreenStack: true,
-                      isScrollControlled: true,
-                      hapticVibrate: true,
-                      content: GoldProSellConfirmationModalSheet(
-                        data: data,
-                        model: model,
-                      ),
-                    );
-                  }
+                  model.onSellTapped(data, model);
                 },
                 child: Text(
                   "UN-LEASE",

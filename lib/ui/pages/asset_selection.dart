@@ -606,7 +606,7 @@ class DigitalGoldPrograms extends StatelessWidget {
         GestureDetector(
           onTap: () {
             if (isPro) {
-              BaseUtil.openGoldProBuyView();
+              locator<BaseUtil>().openGoldProBuyView();
             } else {
               BaseUtil().openRechargeModalSheet(
                   investmentType: InvestmentType.AUGGOLD99);
@@ -638,7 +638,9 @@ class DigitalGoldPrograms extends StatelessWidget {
               children: [
                 Container(
                   padding: EdgeInsets.symmetric(
-                    vertical: SizeConfig.padding12,
+                    vertical: isRecommended
+                        ? SizeConfig.padding12
+                        : SizeConfig.padding8,
                     horizontal: SizeConfig.padding12,
                   ),
                   decoration: BoxDecoration(
@@ -669,7 +671,7 @@ class DigitalGoldPrograms extends StatelessWidget {
                       ),
                       if (showRates)
                         Container(
-                          margin: EdgeInsets.only(top: SizeConfig.padding20),
+                          margin: EdgeInsets.only(top: SizeConfig.padding14),
                           child: Row(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             mainAxisAlignment: MainAxisAlignment.center,

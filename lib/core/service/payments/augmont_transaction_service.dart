@@ -189,7 +189,13 @@ class AugmontTransactionService extends BaseTransactionService {
     final augmontRates = currentGoldPurchaseDetails.goldRates!;
     double netTax = augmontRates.cgstPercent! + augmontRates.sgstPercent!;
     currentTxnGms = currentGoldPurchaseDetails.goldInGrams;
-
+    if (currentGoldPurchaseDetails.isPro && goldProScheme == null) {
+      isGoldBuyInProgress = false;
+      AppState.unblockNavigation();
+      BaseUtil.showNegativeAlert("Gold Scheme not available right now",
+          "Please try again after sometime");
+      return;
+    }
     Map<String, dynamic>? augProMap = {};
     if (currentGoldPurchaseDetails.isPro) {
       augProMap["schemeId"] = goldProScheme!.id;
