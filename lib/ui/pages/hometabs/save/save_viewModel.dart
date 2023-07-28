@@ -560,6 +560,10 @@ class QuickLinks extends StatelessWidget {
                 Haptic.vibrate();
                 AppState.delegate!
                     .parseRoute(Uri.parse(quickLinks[index].deeplink));
+                locator<AnalyticsService>().track(
+                  eventName: AnalyticsEvents.iconTrayTapped,
+                  properties: {'icon': quickLinks[index].name},
+                );
               },
               child: Column(
                 children: [

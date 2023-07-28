@@ -1,10 +1,13 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/model/gold_pro_models/gold_pro_investment_reponse_model.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_sell/gold_pro_sell_vm.dart';
 import 'package:felloapp/ui/pages/hometabs/save/gold_components/gold_balance_brief_row.dart';
 import 'package:felloapp/ui/pages/hometabs/save/gold_components/gold_pro_card.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -60,30 +63,6 @@ class GoldProSellCard extends StatelessWidget {
         SizedBox(height: SizeConfig.padding12),
         Row(
           children: [
-            // RichText(
-            //   text: TextSpan(
-            //     text: "will gain extra ",
-            // style: TextStyles.body3
-            //     .colour(UiConstants.KGoldProPrimaryDark)
-            //     .setHeight(1.3),
-            //     children: [
-            //       TextSpan(
-            //           text: "${data.interest}g gold",
-            //           style:
-            //               TextStyles.sourceSans.body2.colour(Colors.white)),
-            //       TextSpan(
-            //         text: "\non ${DateFormat('dd MMM, yyyy').format(
-            //           DateTime.fromMillisecondsSinceEpoch(data.createdOn
-            //               .toDate()
-            //               .add(
-            //                 Duration(days: data.days),
-            //               )
-            //               .millisecondsSinceEpoch),
-            //         )}",
-            //       )
-            //     ],
-            //   ),
-            // ),
             Expanded(
               child: Text(
                 "${data.message}",
@@ -212,6 +191,12 @@ class _GoldProSellConfirmationModalSheetState
                             MaterialButton(
                               onPressed: () {
                                 Haptic.vibrate();
+                                locator<AnalyticsService>().track(
+                                    eventName: AnalyticsEvents
+                                        .unleaseConfirmationGoldPro,
+                                    properties: {
+                                      "cta tapped": "DO NOT UN_LEASE"
+                                    });
                                 AppState.backButtonDispatcher!.didPopRoute();
                               },
                               color: Colors.white,
@@ -231,6 +216,12 @@ class _GoldProSellConfirmationModalSheetState
                             TextButton(
                               onPressed: () async {
                                 Haptic.vibrate();
+                                locator<AnalyticsService>().track(
+                                    eventName: AnalyticsEvents
+                                        .unleaseConfirmationGoldPro,
+                                    properties: {
+                                      "cta tapped": "UN_LEASE TO GOLD"
+                                    });
                                 isGoldSellInProgress = true;
                                 await widget.model
                                     .preSellGoldProInvestment(widget.data);

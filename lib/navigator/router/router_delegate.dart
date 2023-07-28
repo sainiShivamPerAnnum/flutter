@@ -3,6 +3,7 @@ import 'dart:developer';
 
 // import 'package:apxor_flutter/observer.dart';
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
@@ -157,6 +158,11 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
   }
 
   void _removePage(MaterialPage page) {
+    if ((_pages.last.name ?? "").contains('kyc')) {
+      locator<AnalyticsService>().track(
+        eventName: AnalyticsEvents.backTappedOnKycPage,
+      );
+    }
     AppState.screenStack.removeLast();
     _pages.remove(page);
   }

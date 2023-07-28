@@ -606,7 +606,8 @@ class DigitalGoldPrograms extends StatelessWidget {
         GestureDetector(
           onTap: () {
             if (isPro) {
-              locator<BaseUtil>().openGoldProBuyView();
+              locator<BaseUtil>()
+                  .openGoldProBuyView(location: "Asset Section View");
             } else {
               BaseUtil().openRechargeModalSheet(
                   investmentType: InvestmentType.AUGGOLD99);

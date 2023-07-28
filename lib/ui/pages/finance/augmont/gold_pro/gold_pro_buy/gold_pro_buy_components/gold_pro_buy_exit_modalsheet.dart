@@ -1,3 +1,4 @@
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/elements/title_subtitle_container.dart';
@@ -25,6 +26,10 @@ class _GoldProBuyExitModalSheetState extends State<GoldProBuyExitModalSheet> {
       "Getting more returns elsewhere",
       "Just came here to explore",
     ]);
+    locator<AnalyticsService>().track(
+      eventName: AnalyticsEvents.backTappedOnGoldProOverView,
+      properties: {"location": "Gold Pro Buy Over view"},
+    );
     super.initState();
   }
 
@@ -88,6 +93,12 @@ class _GoldProBuyExitModalSheetState extends State<GoldProBuyExitModalSheet> {
               onPressed: () {
                 AppState.isGoldProBuyInProgress = false;
                 AppState.backButtonDispatcher!.didPopRoute();
+                locator<AnalyticsService>().track(
+                  eventName: AnalyticsEvents.backSurveyContinueTappedGoldPro,
+                  properties: {
+                    "option selected": _sellingReasons[selectedIndex]
+                  },
+                );
               },
               minWidth: SizeConfig.screenWidth! * 0.88,
               height: SizeConfig.padding44,
@@ -106,6 +117,12 @@ class _GoldProBuyExitModalSheetState extends State<GoldProBuyExitModalSheet> {
                 // AppState.backButtonDispatcher!.didPopRoute();
                 AppState.backButtonDispatcher!.didPopRoute();
                 AppState.backButtonDispatcher!.didPopRoute();
+                locator<AnalyticsService>().track(
+                  eventName: AnalyticsEvents.backSurveyGoBackTappedGoldPro,
+                  properties: {
+                    "option selected": _sellingReasons[selectedIndex]
+                  },
+                );
               },
               child: Text(
                 "GO BACK",

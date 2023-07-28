@@ -1,7 +1,9 @@
 import 'dart:math';
 
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/model/portfolio_model.dart';
 import 'package:felloapp/core/repository/getters_repo.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/haptic.dart';
@@ -16,7 +18,7 @@ import 'package:syncfusion_flutter_charts/charts.dart';
 class LineGradientChart extends StatefulWidget {
   const LineGradientChart({Key? key, this.isPro = false}) : super(key: key);
 
-  final bool? isPro;
+  final bool isPro;
   @override
   State<LineGradientChart> createState() => _LineGradientChartState();
 }
@@ -108,14 +110,14 @@ class _LineGradientChartState extends State<LineGradientChart> {
                     padding: EdgeInsets.symmetric(
                         horizontal: SizeConfig.pageHorizontalMargins),
                     child: Row(
-                      mainAxisAlignment: widget.isPro!
+                      mainAxisAlignment: widget.isPro
                           ? (portfolio.goldPro.principle > 0
                               ? MainAxisAlignment.spaceBetween
                               : MainAxisAlignment.center)
                           : MainAxisAlignment.center,
                       children: [
                         Column(
-                          crossAxisAlignment: widget.isPro!
+                          crossAxisAlignment: widget.isPro
                               ? (portfolio.goldPro.principle > 0
                                   ? CrossAxisAlignment.start
                                   : CrossAxisAlignment.center)
@@ -166,10 +168,10 @@ class _LineGradientChartState extends State<LineGradientChart> {
                             ),
                           ],
                         ),
-                        if (widget.isPro!)
+                        if (widget.isPro)
                           portfolio.goldPro.principle > 0
                               ? Column(
-                                  crossAxisAlignment: widget.isPro!
+                                  crossAxisAlignment: widget.isPro
                                       ? CrossAxisAlignment.start
                                       : CrossAxisAlignment.center,
                                   children: [
@@ -261,7 +263,7 @@ class _LineGradientChartState extends State<LineGradientChart> {
                         animationDelay: 0,
                         enableTooltip: true,
                         gradient: LinearGradient(
-                            colors: widget.isPro!
+                            colors: widget.isPro
                                 ? [
                                     UiConstants.KGoldProPrimaryDark,
                                     UiConstants.kBackgroundColor
@@ -276,7 +278,7 @@ class _LineGradientChartState extends State<LineGradientChart> {
                             end: Alignment.bottomCenter),
                       ),
                       SplineSeries(
-                        color: widget.isPro!
+                        color: widget.isPro
                             ? UiConstants.KGoldProPrimaryDark
                             : UiConstants.kSaveDigitalGoldCardBg,
                         width: 1,
@@ -302,7 +304,17 @@ class _LineGradientChartState extends State<LineGradientChart> {
                       chips.length,
                       (index) => Expanded(
                         child: GestureDetector(
-                          onTap: () => selectedIndex = index,
+                          onTap: () {
+                            selectedIndex = index;
+                            locator<AnalyticsService>().track(
+                              eventName: AnalyticsEvents.yearTappedOnGraph,
+                              properties: {
+                                'location':
+                                    widget.isPro ? "GOLD PRO" : "DIGITAL GOLD",
+                                'year number tapped': chips[selectedIndex]
+                              },
+                            );
+                          },
                           child: Container(
                             alignment: Alignment.center,
                             decoration: BoxDecoration(

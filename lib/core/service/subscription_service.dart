@@ -15,6 +15,7 @@ import 'package:felloapp/core/model/subscription_models/subscription_transaction
 import 'package:felloapp/core/repository/getters_repo.dart';
 import 'package:felloapp/core/repository/subscription_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/finance/autosave/autosave_setup/autosave_process_view.dart';
@@ -88,6 +89,7 @@ class SubService extends ChangeNotifier {
   final GetterRepository _getterRepo = locator<GetterRepository>();
   final CustomLogger _logger = locator<CustomLogger>();
   final AnalyticsService _analyticsService = locator<AnalyticsService>();
+  final UserService _userService = locator<UserService>();
 
   //DEPENDENCY - END
 
@@ -534,7 +536,21 @@ class SubService extends ChangeNotifier {
         return BaseUtil.showNegativeAlert(
             "Subscription in processing", "please check back after sometime");
       case AutosaveState.IDLE:
-        if (type != null) {
+        if (type != null && type == InvestmentType.AUGGOLD99) {
+          locator<AnalyticsService>().track(
+            eventName: AnalyticsEvents.autosaveCardInGoldSectionTapped,
+            properties: {
+              'progress_bar_completed':
+                  (_userService.userFundWallet?.augGoldQuantity ?? 0) > 0.5
+                      ? "YES"
+                      : (_userService.userFundWallet?.augGoldQuantity ?? 0) /
+                          0.5,
+              "existing lease amount":
+                  _userService.userPortfolio.goldPro.balance,
+              "existing lease grams":
+                  _userService.userFundWallet?.wAugFdQty ?? 0
+            },
+          );
           return AppState.delegate!.appState.currentAction = PageAction(
             page: AutosaveProcessViewPageConfig,
             widget: AutosaveProcessView(

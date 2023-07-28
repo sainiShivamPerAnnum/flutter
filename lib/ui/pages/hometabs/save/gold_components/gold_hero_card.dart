@@ -1,10 +1,13 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/model/portfolio_model.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/hometabs/save/gold_components/gold_pro_hero_card.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -122,6 +125,23 @@ class GoldInfoWidget extends StatelessWidget {
               onTap: () {
                 Haptic.vibrate();
                 AppState.delegate!.parseRoute(Uri.parse('goldProDetails'));
+                final UserService _userService = locator<UserService>();
+                locator<AnalyticsService>().track(
+                  eventName: AnalyticsEvents.goldProEntryBelowBalanceTapped,
+                  properties: {
+                    'progress_bar_completed':
+                        (_userService.userFundWallet?.augGoldQuantity ?? 0) >
+                                0.5
+                            ? "YES"
+                            : (_userService.userFundWallet?.augGoldQuantity ??
+                                    0) /
+                                0.5,
+                    "existing lease amount":
+                        _userService.userPortfolio.goldPro.balance,
+                    "existing lease grams":
+                        _userService.userFundWallet?.wAugFdQty ?? 0
+                  },
+                );
               },
               child: Container(
                 padding: EdgeInsets.symmetric(

@@ -20,7 +20,7 @@ class Portfolio {
         flo: FloTiers.fromMap(map['flo'] as Map<String, dynamic>),
         rewards: (map['rewards'] ?? 0.0) * 1.0,
         absolute: Asset.fromMap(map['absolute'] as Map<String, dynamic>),
-        goldPro: Asset.fromMap(map['goldFd'] as Map<String, dynamic>));
+        goldPro: Asset.fromMap(map['goldFd']));
   }
 
   factory Portfolio.base() {
@@ -89,7 +89,8 @@ class Asset {
     required this.balance,
   });
 
-  factory Asset.fromMap(Map<String, dynamic> map) {
+  factory Asset.fromMap(Map<String, dynamic>? map) {
+    if (map == null || map.isEmpty) return Asset.base();
     return Asset(
       absGains: (map['absGain'] ?? 0.0) * 1.0,
       percGains: (map['percGain'] ?? 0.0) * 1.0,

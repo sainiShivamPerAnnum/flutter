@@ -33,7 +33,7 @@ class AutosaveCard extends StatelessWidget {
                     ConnectivityStatus.Offline) {
                   return BaseUtil.showNoInternetAlert();
                 }
-                await service.handleTap();
+                await service.handleTap(type: investmentType);
               },
               child: (service.subscriptionData != null)
                   ? ActiveOrPausedAutosaveCard(service: service)
