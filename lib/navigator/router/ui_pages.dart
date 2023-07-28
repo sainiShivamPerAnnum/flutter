@@ -193,7 +193,7 @@ enum Pages {
   PowerPlaySeasonLeaderboard,
   LendboxBuyView,
   AssetSelectionView,
-  QuizWebView
+  QuizWebView,
   //GOLDPRO
   GoldProDetailsView,
   GoldProBuyView,
