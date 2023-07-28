@@ -7,10 +7,8 @@ import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
-import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
-import 'package:path_provider/path_provider.dart';
 import 'package:url_launcher/url_launcher.dart';
 
 class FoundBug extends StatefulWidget {
@@ -144,9 +142,9 @@ class _FoundBugState extends State<FoundBug> {
                           .textTheme
                           .headline6!
                           .copyWith(
-                          height: -10,
-                          color: Colors.transparent,
-                          fontSize: 0),
+                              height: -10,
+                              color: Colors.transparent,
+                              fontSize: 0),
                       errorBorder: const OutlineInputBorder(
                         borderSide: BorderSide(color: Colors.red, width: 1),
                         borderRadius: BorderRadius.only(
@@ -189,12 +187,12 @@ class _FoundBugState extends State<FoundBug> {
                       ),
                     ],
                     onChanged: (val) {
-                      if (_formKey.currentState?.validate() ?? false) {
-                        setState(() {
-                          dropDownValue = val;
-                          dropDownErrorMsg = null;
-                        });
-                      }
+                      // if (_formKey.currentState?.validate() ?? false) {
+                      setState(() {
+                        dropDownValue = val;
+                        dropDownErrorMsg = null;
+                      });
+                      // }
                     },
                     validator: (value) {
                       if (value == null) {
@@ -282,9 +280,9 @@ class _FoundBugState extends State<FoundBug> {
                             .textTheme
                             .headline6!
                             .copyWith(
-                            height: -10,
-                            color: Colors.transparent,
-                            fontSize: 0),
+                                height: -10,
+                                color: Colors.transparent,
+                                fontSize: 0),
                         errorBorder: const OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.red, width: 1),
                           borderRadius: BorderRadius.only(
@@ -310,86 +308,74 @@ class _FoundBugState extends State<FoundBug> {
               SizedBox(
                 height: SizeConfig.padding18,
               ),
-              Text(
-                "Attach Screenshot (Optional)",
-                style: TextStyles.sourceSans.body3,
-              ),
-              SizedBox(
-                height: SizeConfig.padding12,
-              ),
-              GestureDetector(
-                onTap: () {
-                  fetchImage(ImageSource.gallery);
-                },
-                child: Container(
-                  width: SizeConfig.padding72,
-                  height: SizeConfig.padding72,
-                  decoration: BoxDecoration(
-                    borderRadius: const BorderRadius.all(Radius.circular(12)),
-                    border:
-                        Border.all(color: const Color(0xffcacaca), width: 1),
-                    color: const Color(0xff1A1A1A),
-                  ),
-                  child: Center(
-                    //Display captured image
-                    // how to do it
-                    //
-                    child: capturedImage != null
-                        ? FutureBuilder<List<int>>(
-                            future: capturedImage!.readAsBytes(),
-                            builder: (context, snapshot) {
-                              if (snapshot.hasData) {
-                                final bytes =
-                                    Uint8List.fromList(snapshot.data!);
-                                return Image.memory(
-                                  bytes,
-                                  fit: BoxFit.cover,
-                                );
-                              } else if (snapshot.hasError) {
-                                // Handle error case
-                                return const Icon(
-                                  Icons.error,
-                                  color: Colors.white,
-                                  size: 35,
-                                );
-                              } else {
-                                // Display a loading indicator while the image is being loaded
-                                return const CircularProgressIndicator();
-                              }
-                            },
-                          )
-                        : const Icon(
-                            Icons.add,
-                            color: Colors.white,
-                            size: 35,
-                          ),
-                  ),
-                ),
-              ),
-              SizedBox(
-                height: SizeConfig.padding18,
-              ),
+              // Text(
+              //   "Attach Screenshot (Optional)",
+              //   style: TextStyles.sourceSans.body3,
+              // ),
+              // SizedBox(
+              //   height: SizeConfig.padding12,
+              // ),
+              // GestureDetector(
+              //   onTap: () {
+              //     fetchImage(ImageSource.gallery);
+              //   },
+              //   child: Container(
+              //     width: SizeConfig.padding72,
+              //     height: SizeConfig.padding72,
+              //     decoration: BoxDecoration(
+              //       borderRadius: const BorderRadius.all(Radius.circular(12)),
+              //       border:
+              //           Border.all(color: const Color(0xffcacaca), width: 1),
+              //       color: const Color(0xff1A1A1A),
+              //     ),
+              //     child: Center(
+              //       //Display captured image
+              //       // how to do it
+              //       //
+              //       child: capturedImage != null
+              //           ? FutureBuilder<List<int>>(
+              //               future: capturedImage!.readAsBytes(),
+              //               builder: (context, snapshot) {
+              //                 if (snapshot.hasData) {
+              //                   final bytes =
+              //                       Uint8List.fromList(snapshot.data!);
+              //                   return Image.memory(
+              //                     bytes,
+              //                     fit: BoxFit.cover,
+              //                   );
+              //                 } else if (snapshot.hasError) {
+              //                   // Handle error case
+              //                   return const Icon(
+              //                     Icons.error,
+              //                     color: Colors.white,
+              //                     size: 35,
+              //                   );
+              //                 } else {
+              //                   // Display a loading indicator while the image is being loaded
+              //                   return const CircularProgressIndicator();
+              //                 }
+              //               },
+              //             )
+              //           : const Icon(
+              //               Icons.add,
+              //               color: Colors.white,
+              //               size: 35,
+              //             ),
+              //     ),
+              //   ),
+              // ),
+              // SizedBox(
+              //   height: SizeConfig.padding18,
+              // ),
               AppPositiveBtn(
                 btnText: 'SUBMIT',
                 onPressed: () {
                   setState(() {});
-                  if ((_formKey.currentState?.validate() ?? false)
-                      // &&
-                      // (_bugReasonFormKey.currentState?.validate() ?? false)
-                      ) {
+                  if (_formKey.currentState?.validate() ?? false) {
                     log("capturedImage $capturedImage");
                     // Navigator.of(context).pop();
                     openGmail(capturedImage);
                   }
-                  // submitted.value = true;
-
-                  // locator<AnalyticsService>().track(
-                  //   eventName: AnalyticsEvents.reviewPopupSuccess,
-                  //   properties: {
-                  //     "Rating given": selected.value + 1,
-                  //     "Reason": textController.text,
-                  //   },
-                  // );
                 },
               ),
               SizedBox(
@@ -402,7 +388,7 @@ class _FoundBugState extends State<FoundBug> {
     );
   }
 
-  void fetchImage(ImageSource source) async {
+  Future<void> fetchImage(ImageSource source) async {
     try {
       capturedImage =
           await ImagePicker().pickImage(source: ImageSource.gallery);
@@ -449,34 +435,33 @@ class _FoundBugState extends State<FoundBug> {
   }
 
   Future<void> openGmail(XFile? imageFile) async {
-    const recipientEmail = 'recipient@example.com';
-    const subject = 'Found Bug';
-    var body = 'Category: $dropDownValue\nDescription: $reason';
+    var recipientEmail = Uri.encodeComponent('support@fello.in');
+    var subject = Uri.encodeComponent('Found Bug');
+    var body =
+        Uri.encodeComponent('Category: $dropDownValue\n\nDescription: $reason');
 
-    Uri launchUri = Uri(
-      scheme: 'mailto',
-      path: recipientEmail,
-      queryParameters: {
-        'subject': subject,
-        'body': body,
-      },
-    );
+    // if (imageFile != null) {
+    //   final tempDir = await getTemporaryDirectory();
+    //   final fileName = imageFile.path.split('/').last;
+    //   final filePath = '${tempDir.path}/$fileName';
+    //   await imageFile.saveTo(filePath);
+    //   final attachmentUri = Uri.file(filePath);
+    //
+    //   final modifiedQueryParams =
+    //       Map<String, dynamic>.from(launchUri.queryParameters);
+    //   modifiedQueryParams['attachment'] = attachmentUri.toString();
+    //   launchUri = launchUri.replace(queryParameters: modifiedQueryParams);
+    // }
 
-    if (imageFile != null) {
-      final tempDir = await getTemporaryDirectory();
-      final fileName = imageFile.path.split('/').last;
-      final filePath = '${tempDir.path}/$fileName';
-      await imageFile.saveTo(filePath);
-      final attachmentUri = Uri.file(filePath);
+    log(subject);
+    Uri mail = Uri.parse("mailto:$recipientEmail?subject=$subject&body=$body");
 
-      final modifiedQueryParams =
-          Map<String, dynamic>.from(launchUri.queryParameters);
-      modifiedQueryParams['attachment'] = attachmentUri.toString();
-      launchUri = launchUri.replace(queryParameters: modifiedQueryParams);
-    }
-
-    if (await canLaunch(launchUri.toString())) {
-      await launch(launchUri.toString());
+    if (await canLaunchUrl(mail)) {
+      BaseUtil.showPositiveAlert('You can attach media in Gmail',
+          'You can easily attach media, such as images or videos, to your Gmail App.');
+      // add delay of 2 seconds
+      await Future.delayed(const Duration(seconds: 2));
+      await launchUrl(mail);
     } else {
       BaseUtil.openDialog(
         addToScreenStack: true,
@@ -488,6 +473,12 @@ class _FoundBugState extends State<FoundBug> {
         ),
       );
     }
+  }
+
+  @override
+  void dispose() {
+    _bugReasonController.dispose();
+    super.dispose();
   }
 }
 

@@ -181,8 +181,11 @@ class QuizSection extends StatelessWidget {
 
               //https://fl-quiz-dev.web.app?token=your_token_here
               var key = _onTapQuizSection(quizSectionData['deeplink']);
-              var url = /*quizSectionData['deeplink']*/
-                  'https://fl-quiz-dev.web.app' + "?token=" + key;
+              var url = quizSectionData['deeplink']
+                  /*'https://fl-quiz-dev.web.app' */
+                  +
+                  "?token=" +
+                  key;
 
               log("Quiz url: $url", name: "QuizSection");
               AppState.delegate!.appState.currentAction = PageAction(

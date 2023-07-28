@@ -17,7 +17,6 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/show_case_key.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
 import 'package:showcaseview/showcaseview.dart';
 
 class Win extends StatelessWidget {
@@ -75,6 +74,11 @@ class Win extends StatelessWidget {
                   title: 'Rate Us',
                   uri: "",
                   onTap: () => model.showRatingSheet(),
+                ),
+                AccountInfoTiles(
+                  title: 'Found a bug',
+                  uri: "",
+                  onTap: () => model.showFoundBugSheet(),
                 ),
                 //Scratch Cards count and navigation
                 const ScratchCardsInfoStrip(),
