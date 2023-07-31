@@ -427,19 +427,11 @@ class GoldProBuyViewModel extends BaseViewModel {
         (goldRates?.cgstPercent ?? 0) + (goldRates?.sgstPercent ?? 0);
 
     if (goldBuyPrice != 0.0) {
-      // final totalGoldInvestmentCost =
-      //     BaseUtil.digitPrecision(additionalGoldBalance * goldBuyPrice!, 2);
-      // final taxedTotalGoldInvestmentCost = BaseUtil.digitPrecision(
-      //     totalGoldInvestmentCost +
-      //         _getTaxOnAmount(totalGoldInvestmentCost, netTax));
-      // Mismatch in augmont and ours calculation so adding ₹2 to final amount
       additionalGoldBalance += 0.0004;
       totalGoldAmount = BaseUtil.digitPrecision(
           (goldBuyPrice! * additionalGoldBalance) +
               (netTax * goldBuyPrice! * additionalGoldBalance) / 100,
           2);
-      //  taxedTotalGoldInvestmentCost + 2;
-      // TODO: Need to be fixed
 
       double expectedGoldReturnsAmount = BaseUtil.digitPrecision(
           totalGoldBalance * goldBuyPrice! + netTax, 2, false);

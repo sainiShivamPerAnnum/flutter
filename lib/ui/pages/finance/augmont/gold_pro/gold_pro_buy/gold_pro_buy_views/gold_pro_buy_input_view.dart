@@ -102,7 +102,7 @@ class GoldProBuyInputView extends StatelessWidget {
                                     duration: const Duration(seconds: 0),
                                     curve: Curves.easeIn,
                                     child: TextField(
-                                      maxLength: 6,
+                                      maxLength: 3,
                                       controller: model.goldFieldController,
                                       keyboardType: TextInputType.number,
                                       onChanged: model.onTextFieldValueChanged,

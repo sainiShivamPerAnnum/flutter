@@ -303,7 +303,7 @@ class _GoldProBuySuccessViewState extends State<GoldProBuySuccessView>
                   ),
                 ),
                 const AutopaySetupWidget(),
-                Spacer(),
+                const Spacer(),
                 TextButton(
                   onPressed: () {
                     AppState.isRepeated = true;
