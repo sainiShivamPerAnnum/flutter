@@ -136,6 +136,7 @@ class GoldProBuyViewModel extends BaseViewModel {
 
   Future<void> init() async {
     AppState.isGoldProBuyInProgress = false;
+    _isGoldRateFetching = true;
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       _txnService.currentTransactionState = TransactionState.idle;
     });
@@ -143,12 +144,12 @@ class GoldProBuyViewModel extends BaseViewModel {
         userService.userFundWallet!.augGoldQuantity, 4, false);
     totalGoldBalance = chipsList[1].value;
     appMetaList = await UpiUtils.getUpiApps();
-    unawaited(fetchGoldRates());
     await verifyAugmontKyc();
     await getGoldProScheme();
-    unawaited(getAssetOptionsModel().then((_) {
+    await getAssetOptionsModel().then((_) {
       isIntentFlow = assetOptionsModel!.data.intent;
-    }));
+    });
+    unawaited(fetchGoldRates());
   }
 
   void dump() {

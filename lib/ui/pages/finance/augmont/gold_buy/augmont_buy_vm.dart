@@ -269,6 +269,9 @@ class GoldBuyViewModel extends BaseViewModel {
         fieldWidth =
             SizeConfig.padding32 * goldAmountController!.text.length.toDouble();
         updateGoldAmount();
+        goldAmountController!.selection = TextSelection.fromPosition(
+            TextPosition(offset: goldAmountController!.text.length));
+
         FocusScope.of(AppState.delegate!.navigatorKey.currentContext!)
             .unfocus();
       }
