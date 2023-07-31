@@ -1,7 +1,6 @@
 import 'dart:developer';
 
 import 'package:felloapp/core/enums/app_config_keys.dart';
-import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -11,7 +10,6 @@ import 'package:felloapp/feature/referrals/ui/how_it_works_widget.dart';
 import 'package:felloapp/feature/referrals/ui/invite_contact_widget.dart';
 import 'package:felloapp/feature/referrals/ui/referral_list.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
-import 'package:felloapp/ui/elements/appbar/appbar.dart';
 import 'package:felloapp/ui/elements/page_views/height_adaptive_pageview.dart';
 import 'package:felloapp/ui/pages/rewards/instant_scratch_card/gt_instant_view.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
@@ -95,321 +93,320 @@ class _ReferralHomeState extends State<ReferralHome> {
                           statusBarColor: UiConstants.kReferralHeaderColor,
                         ),
                         child: SafeArea(
-                          child: SingleChildScrollView(
+                          child: NestedScrollView(
                             controller: _controller,
                             physics: const ClampingScrollPhysics(),
-                            child: Container(
-                              color: const Color(0xff181818),
-                              child: Column(
-                                children: [
-                                  Stack(
-                                    children: [
-                                      Container(
-                                        decoration: BoxDecoration(
-                                          color:
-                                              UiConstants.kReferralHeaderColor,
-                                          borderRadius: BorderRadius.only(
-                                            bottomLeft: Radius.circular(
-                                                SizeConfig.roundness12),
-                                            bottomRight: Radius.circular(
-                                                SizeConfig.roundness12),
-                                          ),
-                                        ),
-                                        child: Container(
-                                          padding: EdgeInsets.symmetric(
-                                            horizontal: SizeConfig.padding54,
-                                          ),
-                                          child: Column(
-                                            children: [
-                                              SizedBox(
-                                                  height:
-                                                      SizeConfig.screenHeight! *
-                                                          0.28),
-                                              Text.rich(
-                                                TextSpan(
-                                                  children: [
-                                                    TextSpan(
-                                                      text: 'Win ',
-                                                      style: TextStyles
-                                                          .rajdhaniB.title1
-                                                          .colour(Colors.white),
-                                                    ),
-                                                    TextSpan(
-                                                      text:
-                                                          '₹${(AppConfig.getValue(AppConfigKey.revamped_referrals_config)?['rewardValues']?['invest1k'] ?? 50) + (AppConfig.getValue(AppConfigKey.revamped_referrals_config)?['rewardValues']?['invest10kflo12'] ?? 450)}',
-                                                      style: TextStyles
-                                                          .rajdhaniB.title1
-                                                          .colour(const Color(
-                                                              0xFFFFD979)),
-                                                    ),
-                                                  ],
-                                                ),
-                                                textAlign: TextAlign.center,
-                                              ),
-                                              Transform.translate(
-                                                offset: Offset(
-                                                    0, -SizeConfig.padding10),
-                                                child: Text(
-                                                  'per Referral',
-                                                  style: TextStyles
-                                                      .rajdhaniB.title1
-                                                      .colour(Colors.white),
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                  height: SizeConfig.padding6),
-                                              Row(
-                                                crossAxisAlignment:
-                                                    CrossAxisAlignment.center,
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: [
-                                                  Container(
-                                                    width: SizeConfig.padding6,
-                                                    height: SizeConfig.padding6,
-                                                    // margin: EdgeInsets.only(
-                                                    //     top: SizeConfig.padding8),
-                                                    decoration:
-                                                        const ShapeDecoration(
-                                                      color: Color(0xFF61E3C4),
-                                                      shape: OvalBorder(),
-                                                    ),
-                                                  ),
-                                                  SizedBox(
-                                                    width: SizeConfig.padding4,
-                                                  ),
-                                                  Text(
-                                                    subTitle,
-                                                    style: TextStyles.body3
-                                                        .colour(Colors.white70),
-                                                    textAlign: TextAlign.center,
-                                                  ),
-                                                ],
-                                              ),
-                                              SizedBox(
-                                                height: SizeConfig.padding16,
-                                              ),
-                                            ],
-                                          ),
-                                        ),
-                                      ),
-                                      Positioned(
-                                        child: Lottie.asset(
+                            headerSliverBuilder: (BuildContext context,
+                                bool innerBoxIsScrolled) {
+                              return [
+                                SliverAppBar(
+                                  expandedHeight: 350,
+                                  pinned: true,
+                                  backgroundColor:
+                                      UiConstants.kReferralHeaderColor,
+                                  elevation: 0,
+                                  floating: false,
+                                  flexibleSpace: FlexibleSpaceBar(
+                                    background: Column(
+                                      children: [
+                                        Lottie.asset(
                                           'assets/lotties/referral_lottie.json',
                                           // height: SizeConfig.padding140,
                                           width: SizeConfig.screenWidth,
                                           fit: BoxFit.fitWidth,
                                         ),
-                                      ),
-                                      // Positioned(
-                                      //   child: Container(
-                                      //     padding: EdgeInsets.symmetric(
-                                      //       horizontal: SizeConfig
-                                      //           .pageHorizontalMargins,
-                                      //     ),
-                                      //     color: Colors.transparent,
-                                      //     child: Row(
-                                      //       children: [
-                                      //         IconButton(
-                                      //           onPressed: () {
-                                      //             AppState.backButtonDispatcher!
-                                      //                 .didPopRoute();
-                                      //           },
-                                      //           icon: const Icon(
-                                      //             Icons.arrow_back_ios,
-                                      //             color: Colors.white,
-                                      //           ),
-                                      //         ),
-                                      //       ],
-                                      //     ),
-                                      //   ),
-                                      // ),
-                                      const Align(
-                                        alignment: Alignment.topRight,
-                                        child: FAppBar(
-                                          showHelpButton: true,
-                                          type: FaqsType.yourAccount,
-                                          showCoinBar: false,
-                                          showAvatar: false,
-                                          leadingPadding: false,
-                                          // action: Row(children: [NotificationButton()]),
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                  if ((model.totalReferralWon ?? 0) > 1)
-                                    Stack(
-                                      children: [
-                                        Container(
-                                            height: SizeConfig.padding46,
-                                            padding: EdgeInsets.fromLTRB(
-                                                SizeConfig.padding38,
-                                                SizeConfig.padding14,
-                                                SizeConfig.padding20,
-                                                SizeConfig.padding10),
-                                            decoration: BoxDecoration(
-                                              color: const Color(0xFF39393C),
-                                              borderRadius: BorderRadius.only(
-                                                bottomLeft: Radius.circular(
-                                                    SizeConfig.roundness16),
-                                                bottomRight: Radius.circular(
-                                                    SizeConfig.roundness16),
-                                              ),
-                                            ),
-                                            child: Text.rich(
+                                        Column(
+                                          children: [
+                                            Text.rich(
                                               TextSpan(
                                                 children: [
                                                   TextSpan(
-                                                      text: 'You’ve earned ',
-                                                      style: TextStyles
-                                                          .rajdhaniSB.body2
-                                                          .colour(
-                                                              Colors.white)),
+                                                    text: 'Win ',
+                                                    style: TextStyles
+                                                        .rajdhaniB.title1
+                                                        .colour(Colors.white),
+                                                  ),
                                                   TextSpan(
-                                                      text: '₹350',
-                                                      style: TextStyles
-                                                          .rajdhaniB.body2
-                                                          .colour(const Color(
-                                                              0xFFFFD979))),
-                                                  TextSpan(
-                                                      text: ' so far!',
-                                                      style: TextStyles
-                                                          .rajdhaniSB.body2
-                                                          .colour(
-                                                              Colors.white)),
+                                                    text:
+                                                        '₹${(AppConfig.getValue(AppConfigKey.revamped_referrals_config)?['rewardValues']?['invest1k'] ?? 50) + (AppConfig.getValue(AppConfigKey.revamped_referrals_config)?['rewardValues']?['invest10kflo12'] ?? 450)}',
+                                                    style: TextStyles
+                                                        .rajdhaniB.title1
+                                                        .colour(const Color(
+                                                            0xFFFFD979)),
+                                                  ),
                                                 ],
                                               ),
                                               textAlign: TextAlign.center,
-                                            )),
-                                        Positioned(
-                                          left: SizeConfig.padding24,
-                                          top: SizeConfig.padding24,
-                                          child: CustomPaint(
-                                            size: Size(
-                                                SizeConfig.padding8,
-                                                (SizeConfig.padding8 * 1.125)
-                                                    .toDouble()),
-                                            painter:
-                                                ReferralStarCustomPainter(),
-                                          ),
+                                            ),
+                                            Transform.translate(
+                                              offset: Offset(
+                                                  0, -SizeConfig.padding10),
+                                              child: Text(
+                                                'per Referral',
+                                                style: TextStyles
+                                                    .rajdhaniB.title1
+                                                    .colour(Colors.white),
+                                              ),
+                                            ),
+                                            SizedBox(
+                                                height: SizeConfig.padding6),
+                                            Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              mainAxisAlignment:
+                                                  MainAxisAlignment.center,
+                                              children: [
+                                                Container(
+                                                  width: SizeConfig.padding6,
+                                                  height: SizeConfig.padding6,
+                                                  // margin: EdgeInsets.only(
+                                                  //     top: SizeConfig.padding8),
+                                                  decoration:
+                                                      const ShapeDecoration(
+                                                    color: Color(0xFF61E3C4),
+                                                    shape: OvalBorder(),
+                                                  ),
+                                                ),
+                                                SizedBox(
+                                                  width: SizeConfig.padding4,
+                                                ),
+                                                Text(
+                                                  subTitle,
+                                                  style: TextStyles.body3
+                                                      .colour(Colors.white70),
+                                                  textAlign: TextAlign.center,
+                                                ),
+                                              ],
+                                            ),
+                                            SizedBox(
+                                              height: SizeConfig.padding16,
+                                            ),
+                                          ],
                                         ),
-                                        Positioned(
-                                          left: SizeConfig.padding32,
-                                          top: SizeConfig.padding18,
-                                          child: CustomPaint(
-                                            size: Size(
-                                                SizeConfig.padding8,
-                                                (SizeConfig.padding8 * 1.125)
-                                                    .toDouble()),
-                                            painter:
-                                                ReferralStarCustomPainter(),
-                                          ),
-                                        ),
+                                        // SizedBox(
+                                        //   key: const Key('referral_header_sticky'),
+                                        //   height:  SizeConfig.fToolBarHeight / 1.8,
+                                        //
+                                        // ),
                                       ],
                                     ),
-                                  SizedBox(
-                                    height: SizeConfig.padding24,
                                   ),
-                                  HowItWorksWidget(
-                                    isBoxOpen:
-                                        !((model.totalReferralWon ?? 0) > 1),
-                                    onStateChanged: () {
-                                      // _controller.animateTo(
-                                      //     _controller.position.maxScrollExtent,
-                                      //     duration: const Duration(milliseconds: 500),
-                                      //     curve: Curves.ease);
-                                    },
-                                  ),
-                                  SizedBox(
-                                    height: SizeConfig.padding24,
-                                  ),
-                                  Column(
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
+                                ),
+                              ];
+                            },
+                            body: Column(
+                              children: [
+                                Expanded(
+                                  child: SingleChildScrollView(
+                                    child: Container(
+                                      color: const Color(0xff181818),
+                                      child: Column(
                                         children: [
-                                          Expanded(
-                                            child: TextButton(
-                                              onPressed: () {
-                                                FocusScope.of(context)
-                                                    .requestFocus(FocusNode());
-                                                model.switchTab(0);
-                                              },
-                                              child: Text(
-                                                'Your Referrals',
-                                                style: model.tabNo == 0
-                                                    ? _selectedTextStyle
-                                                    : _unselectedTextStyle, // TextStyles.sourceSansSB.body1,
-                                              ),
+                                          if ((model.totalReferralWon ?? 0) > 1)
+                                            Stack(
+                                              children: [
+                                                Container(
+                                                    height:
+                                                        SizeConfig.padding46,
+                                                    padding:
+                                                        EdgeInsets.fromLTRB(
+                                                            SizeConfig
+                                                                .padding38,
+                                                            SizeConfig
+                                                                .padding14,
+                                                            SizeConfig
+                                                                .padding20,
+                                                            SizeConfig
+                                                                .padding10),
+                                                    decoration: BoxDecoration(
+                                                      color: const Color(
+                                                          0xFF39393C),
+                                                      borderRadius:
+                                                          BorderRadius.only(
+                                                        bottomLeft: Radius
+                                                            .circular(SizeConfig
+                                                                .roundness16),
+                                                        bottomRight: Radius
+                                                            .circular(SizeConfig
+                                                                .roundness16),
+                                                      ),
+                                                    ),
+                                                    child: Text.rich(
+                                                      TextSpan(
+                                                        children: [
+                                                          TextSpan(
+                                                              text:
+                                                                  'You’ve earned ',
+                                                              style: TextStyles
+                                                                  .rajdhaniSB
+                                                                  .body2
+                                                                  .colour(Colors
+                                                                      .white)),
+                                                          TextSpan(
+                                                              text:
+                                                                  '₹${model.totalReferralWon}',
+                                                              style: TextStyles
+                                                                  .rajdhaniB
+                                                                  .body2
+                                                                  .colour(const Color(
+                                                                      0xFFFFD979))),
+                                                          TextSpan(
+                                                              text: ' so far!',
+                                                              style: TextStyles
+                                                                  .rajdhaniSB
+                                                                  .body2
+                                                                  .colour(Colors
+                                                                      .white)),
+                                                        ],
+                                                      ),
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                    )),
+                                                Positioned(
+                                                  left: SizeConfig.padding24,
+                                                  top: SizeConfig.padding24,
+                                                  child: CustomPaint(
+                                                    size: Size(
+                                                        SizeConfig.padding8,
+                                                        (SizeConfig.padding8 *
+                                                                1.125)
+                                                            .toDouble()),
+                                                    painter:
+                                                        ReferralStarCustomPainter(),
+                                                  ),
+                                                ),
+                                                Positioned(
+                                                  left: SizeConfig.padding32,
+                                                  top: SizeConfig.padding18,
+                                                  child: CustomPaint(
+                                                    size: Size(
+                                                        SizeConfig.padding8,
+                                                        (SizeConfig.padding8 *
+                                                                1.125)
+                                                            .toDouble()),
+                                                    painter:
+                                                        ReferralStarCustomPainter(),
+                                                  ),
+                                                ),
+                                              ],
                                             ),
+                                          SizedBox(
+                                            height: SizeConfig.padding24,
+                                          ),
+                                          HowItWorksWidget(
+                                            isBoxOpen:
+                                                !((model.totalReferralWon ??
+                                                        0) >
+                                                    1),
+                                            onStateChanged: () {
+                                              // _controller.animateTo(
+                                              //     _controller.position.maxScrollExtent,
+                                              //     duration: const Duration(milliseconds: 500),
+                                              //     curve: Curves.ease);
+                                            },
                                           ),
                                           SizedBox(
-                                            width: SizeConfig.padding16,
+                                            height: SizeConfig.padding24,
                                           ),
-                                          Expanded(
-                                            child: TextButton(
-                                              onPressed: () {
-                                                FocusScope.of(context)
-                                                    .requestFocus(FocusNode());
-                                                model.switchTab(1);
-                                                log("Invite Contacts length ${model.contactsList?.length}");
-                                              },
-                                              child: Text(
-                                                'Invite Contacts',
-                                                style: model.tabNo == 1
-                                                    ? _selectedTextStyle
-                                                    : _unselectedTextStyle, // style: TextStyles.sourceSansSB.body1,
-                                              ),
-                                            ),
-                                          )
-                                        ],
-                                      ),
-                                      Row(
-                                        children: [
-                                          AnimatedContainer(
-                                            duration: const Duration(
-                                                milliseconds: 500),
-                                            height: 5,
-                                            width: model.tabPosWidthFactor,
-                                          ),
-                                          Container(
-                                            color: UiConstants.kTabBorderColor,
-                                            height: 5,
-                                            width:
-                                                SizeConfig.screenWidth! * 0.38,
-                                          )
-                                        ],
-                                      ),
-
-                                      BlocBuilder<ReferralCubit, ReferralState>(
-                                        builder: (context, state) {
-                                          return HeightAdaptivePageView(
-                                            controller: model.pageController,
-                                            onPageChanged: (int page) {
-                                              model.switchTab(page);
-                                            },
+                                          Column(
                                             children: [
-                                              ReferralList(
-                                                model: model,
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  Expanded(
+                                                    child: TextButton(
+                                                      onPressed: () {
+                                                        FocusScope.of(context)
+                                                            .requestFocus(
+                                                                FocusNode());
+                                                        model.switchTab(0);
+                                                      },
+                                                      child: Text(
+                                                        'Your Referrals',
+                                                        style: model.tabNo == 0
+                                                            ? _selectedTextStyle
+                                                            : _unselectedTextStyle, // TextStyles.sourceSansSB.body1,
+                                                      ),
+                                                    ),
+                                                  ),
+                                                  SizedBox(
+                                                    width: SizeConfig.padding16,
+                                                  ),
+                                                  Expanded(
+                                                    child: TextButton(
+                                                      onPressed: () {
+                                                        FocusScope.of(context)
+                                                            .requestFocus(
+                                                                FocusNode());
+                                                        model.switchTab(1);
+                                                        log("Invite Contacts length ${model.contactsList?.length}");
+                                                      },
+                                                      child: Text(
+                                                        'Invite Contacts',
+                                                        style: model.tabNo == 1
+                                                            ? _selectedTextStyle
+                                                            : _unselectedTextStyle, // style: TextStyles.sourceSansSB.body1,
+                                                      ),
+                                                    ),
+                                                  )
+                                                ],
                                               ),
-                                              InviteContactWidget(
-                                                model: model,
+                                              Row(
+                                                children: [
+                                                  AnimatedContainer(
+                                                    duration: const Duration(
+                                                        milliseconds: 500),
+                                                    height: 5,
+                                                    width:
+                                                        model.tabPosWidthFactor,
+                                                  ),
+                                                  Container(
+                                                    color: UiConstants
+                                                        .kTabBorderColor,
+                                                    height: 5,
+                                                    width: SizeConfig
+                                                            .screenWidth! *
+                                                        0.38,
+                                                  )
+                                                ],
                                               ),
+
+                                              BlocBuilder<ReferralCubit,
+                                                  ReferralState>(
+                                                builder: (context, state) {
+                                                  return HeightAdaptivePageView(
+                                                    controller:
+                                                        model.pageController,
+                                                    onPageChanged: (int page) {
+                                                      model.switchTab(page);
+                                                    },
+                                                    children: [
+                                                      ReferralList(
+                                                        model: model,
+                                                      ),
+                                                      InviteContactWidget(
+                                                        model: model,
+                                                      ),
+                                                    ],
+                                                  );
+                                                },
+                                              ),
+                                              // SizedBox(
+                                              //   height: model.tabNo == 0
+                                              //       ? SizeConfig.padding200
+                                              //       : SizeConfig.padding1,
+                                              // )
                                             ],
-                                          );
-                                        },
+                                          ),
+                                        ],
                                       ),
-                                      // SizedBox(
-                                      //   height: model.tabNo == 0
-                                      //       ? SizeConfig.padding200
-                                      //       : SizeConfig.padding1,
-                                      // )
-                                    ],
+                                    ),
                                   ),
-                                ],
-                              ),
+                                ),
+                              ],
                             ),
+                            // child:
                           ),
                         ),
                       ),
@@ -593,10 +590,10 @@ class _ReferralHomeState extends State<ReferralHome> {
 
   @override
   void dispose() {
-    // Change the statusBarColor back to the default color here
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
       statusBarColor: Colors.transparent, // Change to the default color
     ));
+    _controller.dispose();
     super.dispose();
   }
 }
