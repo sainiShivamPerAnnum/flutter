@@ -124,80 +124,89 @@ class _ContactListWidgetState extends State<ContactListWidget>
                 style: TextStyles.sourceSans.body3.colour(Colors.white),
               ),
             ),
-          ListView.separated(
+          ListView.builder(
             itemCount: filteredContacts.length,
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemBuilder: (context, index) {
               final contact = filteredContacts[index];
-              return Row(
+              return Column(
                 children: [
-                  Container(
-                    height: SizeConfig.padding44,
-                    width: SizeConfig.padding44,
-                    padding: EdgeInsets.all(SizeConfig.padding3),
-                    decoration: const ShapeDecoration(
-                      shape: OvalBorder(
-                        side: BorderSide(width: 0.5, color: Color(0xFF1ADAB7)),
-                      ),
-                    ),
-                    child: Container(
-                      height: SizeConfig.padding38,
-                      width: SizeConfig.padding38,
-                      decoration: const BoxDecoration(
-                        color: Color(0xFFD9D9D9),
-                        shape: BoxShape.circle,
-                      ),
-                      child: Center(
-                        child: Text(
-                          contact.displayName.substring(0, 1),
-                          style: TextStyles.rajdhaniSB.body0
-                              .colour(const Color(0xFF3A3A3C)),
+                  GestureDetector(
+                    onTap: () {
+                      navigateToWhatsApp(contact.phoneNumber,
+                          locator<ReferralService>().shareMsg);
+                    },
+                    child: Row(
+                      children: [
+                        Container(
+                          height: SizeConfig.padding44,
+                          width: SizeConfig.padding44,
+                          padding: EdgeInsets.all(SizeConfig.padding3),
+                          decoration: const ShapeDecoration(
+                            shape: OvalBorder(
+                              side: BorderSide(
+                                  width: 0.5, color: Color(0xFF1ADAB7)),
+                            ),
+                          ),
+                          child: Container(
+                            height: SizeConfig.padding38,
+                            width: SizeConfig.padding38,
+                            decoration: const BoxDecoration(
+                              color: Color(0xFFD9D9D9),
+                              shape: BoxShape.circle,
+                            ),
+                            child: Center(
+                              child: Text(
+                                contact.displayName.substring(0, 1),
+                                style: TextStyles.rajdhaniSB.body0
+                                    .colour(const Color(0xFF3A3A3C)),
+                              ),
+                            ),
+                          ),
                         ),
-                      ),
+                        SizedBox(width: SizeConfig.padding8),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              contact.displayName,
+                              style: TextStyles.rajdhaniSB.body2
+                                  .colour(Colors.white),
+                            ),
+                            Text(
+                              (contact.isRegistered ?? false)
+                                  ? "Already on Fello"
+                                  : 'Invite and earn ₹500',
+                              style: TextStyles.sourceSans.body4.colour(
+                                  (contact.isRegistered ?? false)
+                                      ? const Color(0xFF61E3C4)
+                                      : Colors.white.withOpacity(0.48)),
+                            ),
+                          ],
+                        ),
+                        const Spacer(),
+                        if (!(contact.isRegistered ?? false))
+                          Text(
+                            'INVITE',
+                            textAlign: TextAlign.right,
+                            style: TextStyles.rajdhaniB.body3
+                                .colour(const Color(0xFF61E3C4)),
+                          ),
+                      ],
                     ),
                   ),
-                  SizedBox(width: SizeConfig.padding8),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        contact.displayName,
-                        style: TextStyles.rajdhaniSB.body2.colour(Colors.white),
-                      ),
-                      Text(
-                        (contact.isRegistered ?? false)
-                            ? "Already on Fello"
-                            : 'Invite and earn ₹500',
-                        style: TextStyles.sourceSans.body4.colour(
-                            (contact.isRegistered ?? false)
-                                ? const Color(0xFF61E3C4)
-                                : Colors.white.withOpacity(0.48)),
-                      ),
-                    ],
-                  ),
-                  const Spacer(),
-                  if (!(contact.isRegistered ?? false))
-                    GestureDetector(
-                      onTap: () {
-                        navigateToWhatsApp(contact.phoneNumber,
-                            locator<ReferralService>().shareMsg);
-                      },
-                      child: Text(
-                        'INVITE',
-                        textAlign: TextAlign.right,
-                        style: TextStyles.rajdhaniB.body3
-                            .colour(const Color(0xFF61E3C4)),
-                      ),
-                    ),
+                  SizedBox(
+                    height: SizeConfig.padding24,
+                  )
                 ],
               );
             },
-            separatorBuilder: (BuildContext context, int index) {
-              return SizedBox(
-                height: SizeConfig.padding24,
-              );
-            },
+            // separatorBuilder: (BuildContext context, int index) {
+            //   return SizedBox(
+            //     height: SizeConfig.padding24,
+            //   );
+            // },
           ),
           SizedBox(
             height: SizeConfig.padding12,

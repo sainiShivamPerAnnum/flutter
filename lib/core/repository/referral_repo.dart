@@ -73,7 +73,7 @@ class ReferralRepo extends BaseRepo {
   }
 
   Future<ApiResponse<List<ReferralDetail>>> getReferralHistory() async {
-    List<ReferralDetail> referralHistory = [];
+    // List<ReferralDetail> referralHistory = [];
     try {
       final String bearer = await getBearerToken();
       final response = await APIService.instance.getData(

@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:felloapp/core/enums/app_config_keys.dart';
+import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -9,8 +10,8 @@ import 'package:felloapp/feature/referrals/bloc/referral_cubit.dart';
 import 'package:felloapp/feature/referrals/ui/how_it_works_widget.dart';
 import 'package:felloapp/feature/referrals/ui/invite_contact_widget.dart';
 import 'package:felloapp/feature/referrals/ui/referral_list.dart';
-import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
+import 'package:felloapp/ui/elements/appbar/appbar.dart';
 import 'package:felloapp/ui/elements/page_views/height_adaptive_pageview.dart';
 import 'package:felloapp/ui/pages/rewards/instant_scratch_card/gt_instant_view.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
@@ -81,10 +82,10 @@ class _ReferralHomeState extends State<ReferralHome> {
                 Builder(builder: (context) {
                   return RefreshIndicator(
                     onRefresh: () async {
+                      await model.fetchReferalsList(context, refresh: true);
                       context
                           .read<ReferralCubit>()
                           .checkPermission(fromRefresh: true);
-                      model.fetchReferalsList(context, refresh: true);
                     },
                     child: Scaffold(
                       extendBody: true,
@@ -135,7 +136,7 @@ class _ReferralHomeState extends State<ReferralHome> {
                                                     ),
                                                     TextSpan(
                                                       text:
-                                                          '₹${(AppConfig.getValue(AppConfigKey.revamped_referrals_config)['rewardValues']['invest1k'] ?? 50) + (AppConfig.getValue(AppConfigKey.revamped_referrals_config)['rewardValues']['invest10kflo12'] ?? 450)}',
+                                                          '₹${(AppConfig.getValue(AppConfigKey.revamped_referrals_config)?['rewardValues']?['invest1k'] ?? 50) + (AppConfig.getValue(AppConfigKey.revamped_referrals_config)?['rewardValues']?['invest10kflo12'] ?? 450)}',
                                                       style: TextStyles
                                                           .rajdhaniB.title1
                                                           .colour(const Color(
@@ -200,27 +201,38 @@ class _ReferralHomeState extends State<ReferralHome> {
                                           fit: BoxFit.fitWidth,
                                         ),
                                       ),
-                                      Positioned(
-                                        child: Container(
-                                          padding: EdgeInsets.symmetric(
-                                            horizontal: SizeConfig
-                                                .pageHorizontalMargins,
-                                          ),
-                                          color: Colors.transparent,
-                                          child: Row(
-                                            children: [
-                                              IconButton(
-                                                onPressed: () {
-                                                  AppState.backButtonDispatcher!
-                                                      .didPopRoute();
-                                                },
-                                                icon: const Icon(
-                                                  Icons.arrow_back_ios,
-                                                  color: Colors.white,
-                                                ),
-                                              ),
-                                            ],
-                                          ),
+                                      // Positioned(
+                                      //   child: Container(
+                                      //     padding: EdgeInsets.symmetric(
+                                      //       horizontal: SizeConfig
+                                      //           .pageHorizontalMargins,
+                                      //     ),
+                                      //     color: Colors.transparent,
+                                      //     child: Row(
+                                      //       children: [
+                                      //         IconButton(
+                                      //           onPressed: () {
+                                      //             AppState.backButtonDispatcher!
+                                      //                 .didPopRoute();
+                                      //           },
+                                      //           icon: const Icon(
+                                      //             Icons.arrow_back_ios,
+                                      //             color: Colors.white,
+                                      //           ),
+                                      //         ),
+                                      //       ],
+                                      //     ),
+                                      //   ),
+                                      // ),
+                                      const Align(
+                                        alignment: Alignment.topRight,
+                                        child: FAppBar(
+                                          showHelpButton: true,
+                                          type: FaqsType.yourAccount,
+                                          showCoinBar: false,
+                                          showAvatar: false,
+                                          leadingPadding: false,
+                                          // action: Row(children: [NotificationButton()]),
                                         ),
                                       )
                                     ],
@@ -299,6 +311,8 @@ class _ReferralHomeState extends State<ReferralHome> {
                                     height: SizeConfig.padding24,
                                   ),
                                   HowItWorksWidget(
+                                    isBoxOpen:
+                                        !((model.totalReferralWon ?? 0) > 1),
                                     onStateChanged: () {
                                       // _controller.animateTo(
                                       //     _controller.position.maxScrollExtent,
@@ -317,8 +331,11 @@ class _ReferralHomeState extends State<ReferralHome> {
                                         children: [
                                           Expanded(
                                             child: TextButton(
-                                              onPressed: () =>
-                                                  model.switchTab(0),
+                                              onPressed: () {
+                                                FocusScope.of(context)
+                                                    .requestFocus(FocusNode());
+                                                model.switchTab(0);
+                                              },
                                               child: Text(
                                                 'Your Referrals',
                                                 style: model.tabNo == 0
@@ -333,6 +350,8 @@ class _ReferralHomeState extends State<ReferralHome> {
                                           Expanded(
                                             child: TextButton(
                                               onPressed: () {
+                                                FocusScope.of(context)
+                                                    .requestFocus(FocusNode());
                                                 model.switchTab(1);
                                                 log("Invite Contacts length ${model.contactsList?.length}");
                                               },

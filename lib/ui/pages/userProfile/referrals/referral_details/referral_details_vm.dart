@@ -175,7 +175,8 @@ class ReferralDetailsViewModel extends BaseViewModel {
     tabNo = tab;
   }
 
-  fetchReferalsList(BuildContext context, {bool refresh = false}) {
+  Future<void> fetchReferalsList(BuildContext context,
+      {bool refresh = false}) async {
     print("Method to fetch");
     baseProvider = Provider.of<BaseUtil>(context, listen: false);
     dbProvider = Provider.of<DBModel>(context, listen: false);

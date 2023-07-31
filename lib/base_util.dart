@@ -46,6 +46,7 @@ import 'package:felloapp/ui/pages/finance/augmont/gold_buy/gold_buy_view.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_sell/gold_sell_view.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/withdrawal/lendbox_withdrawal_view.dart';
 import 'package:felloapp/ui/pages/games/web/web_home/web_game_modal_sheet.dart';
+import 'package:felloapp/ui/pages/support/bug_report/ui/found_bug.dart';
 import 'package:felloapp/ui/service_elements/username_input/username_input_view.dart';
 import 'package:felloapp/ui/shared/spotlight_controller.dart';
 import 'package:felloapp/util/app_toasts_utils.dart';
@@ -919,6 +920,20 @@ class BaseUtil extends ChangeNotifier {
     Duration difference = endDate.difference(now);
     int remaining = difference.inDays;
     return remaining;
+  }
+
+  void showFoundBugSheet() {
+    Haptic.vibrate();
+
+    BaseUtil.openModalBottomSheet(
+      addToScreenStack: true,
+      enableDrag: false,
+      hapticVibrate: true,
+      isBarrierDismissible: true,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      content: const FoundBug(),
+    );
   }
 
   int getTicketCountForTransaction(double investment) =>

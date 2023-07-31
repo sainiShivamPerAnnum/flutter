@@ -436,9 +436,8 @@ class _FoundBugState extends State<FoundBug> {
 
   Future<void> openGmail(XFile? imageFile) async {
     var recipientEmail = Uri.encodeComponent('support@fello.in');
-    var subject = Uri.encodeComponent('Found Bug');
-    var body =
-        Uri.encodeComponent('Category: $dropDownValue\n\nDescription: $reason');
+    var subject = Uri.encodeComponent('Found Bug: $dropDownValue');
+    var body = Uri.encodeComponent('Description:\n$reason');
 
     // if (imageFile != null) {
     //   final tempDir = await getTemporaryDirectory();
