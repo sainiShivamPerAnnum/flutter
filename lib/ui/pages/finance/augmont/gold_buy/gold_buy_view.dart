@@ -23,10 +23,15 @@ import 'augmont_buy_vm.dart';
 class GoldBuyView extends StatefulWidget {
   final int? amount;
   final bool skipMl;
+  final double? gms;
   final OnAmountChanged onChanged;
 
   const GoldBuyView(
-      {Key? key, this.amount, this.skipMl = false, required this.onChanged})
+      {Key? key,
+      this.amount,
+      this.skipMl = false,
+      required this.onChanged,
+      this.gms})
       : super(key: key);
 
   @override
@@ -109,8 +114,8 @@ class _GoldBuyViewState extends State<GoldBuyView>
                   );
                 },
                 child: BaseView<GoldBuyViewModel>(
-                  onModelReady: (model) =>
-                      model.init(widget.amount, widget.skipMl, this),
+                  onModelReady: (model) => model.init(
+                      widget.amount, widget.skipMl, this, widget.gms),
                   builder: (ctx, model, child) {
                     if (model.state == ViewState.Busy) {
                       return const Center(child: FullScreenLoader());

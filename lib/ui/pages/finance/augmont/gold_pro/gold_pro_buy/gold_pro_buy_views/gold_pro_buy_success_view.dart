@@ -221,9 +221,10 @@ class _GoldProBuySuccessViewState extends State<GoldProBuySuccessView>
                                         Text(
                                             "${BaseUtil.digitPrecision(
                                               widget
-                                                  .txnService
-                                                  .currentGoldPurchaseDetails
-                                                  .leaseQty!,
+                                                      .txnService
+                                                      .currentGoldPurchaseDetails
+                                                      .leaseQty ??
+                                                  0,
                                               2,
                                               false,
                                             )} gms",

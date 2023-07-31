@@ -42,7 +42,7 @@ class GoldProBuyOverView extends StatelessWidget {
               ),
               // SizedBox(width: SizeConfig.padding8),
               Text(
-                'Digital ${Constants.ASSET_GOLD_STAKE}',
+                Constants.ASSET_GOLD_STAKE,
                 style: TextStyles.rajdhaniSB.title5,
               ),
             ],
@@ -58,12 +58,12 @@ class GoldProBuyOverView extends StatelessWidget {
                 "You are investing",
                 style: TextStyles.rajdhaniM.title4.colour(Colors.grey),
               ),
-              SizedBox(height: SizeConfig.screenHeight! * 0.016),
+              SizedBox(height: SizeConfig.screenHeight! * 0.008),
               Text(
                 "${model.totalGoldBalance}gms",
                 style: TextStyles.rajdhaniB.title1.colour(Colors.white),
               ),
-              SizedBox(height: SizeConfig.screenHeight! * 0.02),
+              SizedBox(height: SizeConfig.screenHeight! * 0.04),
               ExpectedGoldProReturnsRow(model: model),
               SizedBox(height: SizeConfig.screenHeight! * 0.02),
               GoldBalanceRow(
@@ -72,10 +72,10 @@ class GoldProBuyOverView extends StatelessWidget {
               ),
               SizedBox(height: SizeConfig.screenHeight! * 0.02),
               GoldBalanceRow(
-                lead: "Additional Gold Balance",
+                lead: "Additional Gold to be added",
                 trail: model.additionalGoldBalance,
               ),
-              SizedBox(height: SizeConfig.screenHeight! * 0.02),
+              SizedBox(height: SizeConfig.screenHeight! * 0.04),
               PriceAdaptiveGoldProOverViewCard(model: model),
             ],
           ),
@@ -111,7 +111,7 @@ class GoldProBuyOverView extends StatelessWidget {
                                       .colour(Colors.white),
                                 ),
                                 Text(
-                                  "Digital ${Constants.ASSET_GOLD_STAKE}",
+                                  "In ${Constants.ASSET_GOLD_STAKE}",
                                   style: TextStyles.rajdhaniSB.body2
                                       .colour(UiConstants.kGoldProPrimary),
                                 )

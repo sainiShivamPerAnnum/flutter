@@ -317,6 +317,7 @@ class BaseUtil extends ChangeNotifier {
   void openRechargeModalSheet({
     int? amt,
     bool? isSkipMl,
+    double? gms,
     required InvestmentType investmentType,
   }) {
     final bool? isAugDepositBanned = _userService
@@ -357,6 +358,7 @@ class BaseUtil extends ChangeNotifier {
           content: GoldBuyView(
             onChanged: (p0) => amount = p0,
             amount: amt,
+            gms: gms,
             skipMl: isSkipMl ?? false,
           ));
     }

@@ -1,4 +1,5 @@
 import 'package:felloapp/core/model/prizes_model.dart';
+import 'package:felloapp/core/model/winners_model.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
@@ -7,14 +8,16 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'winnerbox.dart';
 
 class PrizeWin extends StatefulWidget {
-  final Map<String, int>? winningsMap;
+  final Winners winner;
   final PrizesModel? tPrizes;
+  final bool isEligible;
 
-  const PrizeWin({
-    Key? key,
-    required this.winningsMap,
-    required this.tPrizes,
-  }) : super(key: key);
+  const PrizeWin(
+      {Key? key,
+      required this.winner,
+      required this.tPrizes,
+      required this.isEligible})
+      : super(key: key);
 
   @override
   _PrizeWinState createState() => _PrizeWinState();
@@ -103,9 +106,9 @@ class _PrizeWinState extends State<PrizeWin> {
                   height: 10,
                 ),
                 WinnerBox(
-                  winningsmap: widget.winningsMap,
-                  tPrize: widget.tPrizes,
-                ),
+                    winner: widget.winner,
+                    tPrize: widget.tPrizes,
+                    isEligible: widget.isEligible),
                 SizedBox(
                   height: SizeConfig.screenWidth! * 0.5,
                 ),

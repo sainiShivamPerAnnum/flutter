@@ -145,6 +145,7 @@ class GoldProBuyViewModel extends BaseViewModel {
     appMetaList = await UpiUtils.getUpiApps();
     unawaited(fetchGoldRates());
     await verifyAugmontKyc();
+    await getGoldProScheme();
     unawaited(getAssetOptionsModel().then((_) {
       isIntentFlow = assetOptionsModel!.data.intent;
     }));
@@ -159,6 +160,16 @@ class GoldProBuyViewModel extends BaseViewModel {
   Future<void> verifyAugmontKyc() async {
     if (!_bankAndPanService.userKycData!.augmontKyc) {
       await _bankAndPanService.verifyAugmontKyc();
+    }
+  }
+
+  Future<void> getGoldProScheme() async {
+    final res = await _paymentRepo.getGoldProScheme();
+    if (res.isSuccess()) {
+      _txnService.goldProScheme = res.model;
+    } else {
+      BaseUtil.showNegativeAlert(
+          "Failed to fetch Gold Scheme", res.errorMessage);
     }
   }
 

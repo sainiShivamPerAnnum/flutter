@@ -103,7 +103,7 @@ class GoldProDetailsView extends StatelessWidget {
                                                 height: SizeConfig.padding4,
                                               ),
                                               Text(
-                                                "Digital ${Constants.ASSET_GOLD_STAKE}",
+                                                Constants.ASSET_GOLD_STAKE,
                                                 style: TextStyles
                                                     .rajdhaniSB.title3
                                                     .colour(UiConstants
@@ -368,7 +368,7 @@ class GoldProSellCard extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "Transfer Digital ${Constants.ASSET_GOLD_STAKE}",
+              "Transfer ${Constants.ASSET_GOLD_STAKE}",
               style: TextStyles.sourceSansSB.body0.colour(Colors.black),
             ),
             SizedBox(height: SizeConfig.padding12),
@@ -376,7 +376,7 @@ class GoldProSellCard extends StatelessWidget {
               children: [
                 Expanded(
                     child: Text(
-                  "Transfer your ${Constants.ASSET_GOLD_STAKE} to Gold to withdraw",
+                  "Get the lease back in your Digital Gold wallet",
                   style: TextStyles.sourceSans.body3.colour(Colors.black),
                 )),
                 SizedBox(width: SizeConfig.padding18),
@@ -522,7 +522,7 @@ class HowGoldProWorksSection extends StatelessWidget {
       child: Column(
         children: [
           Text(
-            "How Digital ${Constants.ASSET_GOLD_STAKE} works",
+            "How ${Constants.ASSET_GOLD_STAKE} works",
             style: TextStyles.rajdhaniSB.title3.colour(Colors.white),
           ),
           SizedBox(height: SizeConfig.padding16),
@@ -587,7 +587,7 @@ class WhyGoldProSection extends StatelessWidget {
       child: Column(
         children: [
           Text(
-            "Why Digital ${Constants.ASSET_GOLD_STAKE}?",
+            "Why ${Constants.ASSET_GOLD_STAKE}?",
             style: TextStyles.rajdhaniSB.title3.colour(Colors.white),
           ),
           SizedBox(height: SizeConfig.padding16),

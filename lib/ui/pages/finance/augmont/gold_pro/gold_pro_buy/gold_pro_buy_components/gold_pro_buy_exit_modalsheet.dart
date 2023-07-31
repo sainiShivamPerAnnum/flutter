@@ -21,10 +21,10 @@ class _GoldProBuyExitModalSheetState extends State<GoldProBuyExitModalSheet> {
   @override
   void initState() {
     _sellingReasons.addAll([
-      "Returns & value propositions are not clear",
-      "Unsure about safety of investment",
+      "Need more information about ${Constants.ASSET_GOLD_STAKE}",
+      "I want to change the lease amount",
       "Getting more returns elsewhere",
-      "Just came here to explore",
+      "Not interested in the asset",
     ]);
     locator<AnalyticsService>().track(
       eventName: AnalyticsEvents.backTappedOnGoldProOverView,
@@ -61,7 +61,7 @@ class _GoldProBuyExitModalSheetState extends State<GoldProBuyExitModalSheet> {
               height: SizeConfig.padding32,
             ),
             const TitleSubtitleContainer(
-              title: "Why not earn 4.5% extra returns?",
+              title: "You'll miss out on 4.5% extra returns",
               subTitle:
                   "Select any one option to help us improve your experience",
             ),
@@ -93,6 +93,7 @@ class _GoldProBuyExitModalSheetState extends State<GoldProBuyExitModalSheet> {
               onPressed: () {
                 AppState.isGoldProBuyInProgress = false;
                 AppState.backButtonDispatcher!.didPopRoute();
+                AppState.backButtonDispatcher!.didPopRoute();
                 locator<AnalyticsService>().track(
                   eventName: AnalyticsEvents.backSurveyContinueTappedGoldPro,
                   properties: {
@@ -111,6 +112,7 @@ class _GoldProBuyExitModalSheetState extends State<GoldProBuyExitModalSheet> {
                 style: TextStyles.rajdhaniB.body1.colour(Colors.black),
               ),
             ),
+            SizedBox(height: SizeConfig.padding12),
             TextButton(
               onPressed: () {
                 AppState.isGoldProBuyInProgress = false;
@@ -126,7 +128,7 @@ class _GoldProBuyExitModalSheetState extends State<GoldProBuyExitModalSheet> {
               },
               child: Text(
                 "GO BACK",
-                style: TextStyles.rajdhaniSB.body1.colour(Colors.grey),
+                style: TextStyles.rajdhaniSB.body1.colour(Colors.white),
               ),
             )
           ],

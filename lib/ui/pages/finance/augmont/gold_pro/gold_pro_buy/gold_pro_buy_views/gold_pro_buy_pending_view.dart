@@ -1,7 +1,9 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/transaction_state_enum.dart';
+import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_buy/augmont_buy_vm.dart';
@@ -84,6 +86,8 @@ class GoldProBuyPendingView extends StatelessWidget {
                 txnService.pollingPeriodicTimer?.cancel();
                 txnService.isGoldBuyInProgress = false;
                 txnService.currentTransactionState = TransactionState.idle;
+                unawaited(
+                    locator<TxnHistoryService>().getGoldProTransactions());
                 AppState.unblockNavigation();
                 AppState.isGoldProBuyInProgress = false;
                 log("Screen Stack:${AppState.screenStack.toString()}");

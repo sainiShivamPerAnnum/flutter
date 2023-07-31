@@ -71,6 +71,8 @@ class Assets {
 
   static const String sprout = "assets/vectors/sprout.svg";
   static const String star = "assets/vectors/star.svg";
+  static const String singleTambolaTicket =
+      "assets/vectors/icons/single_tambola_ticket.svg";
 
   //HOME TAB//
 
@@ -133,12 +135,6 @@ class Assets {
 
   static const String happyhourPolygon = "assets/svg/happy_hour_polygons.svg";
   static const String floGold = "assets/vectors/flogold.svg";
-
-  // WIN
-
-  static const String amazonClaim = "assets/images/amazon_claim.png";
-  static const String iphone = "assets/images/iphone.png";
-  static const String iphone2 = "assets/images/iphone2.png";
 
   // TRANSACTIONS
   static const String win1croreBanner = "assets/images/win1crore.webp";

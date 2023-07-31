@@ -514,12 +514,12 @@ class GoldProEligibleModalSheet extends StatelessWidget {
                                   alignment: Alignment.bottomCenter,
                                   child: Container(
                                     margin: EdgeInsets.only(
-                                      left: SizeConfig.padding20,
+                                      left: SizeConfig.padding16,
                                     ),
                                     width: SizeConfig.screenWidth! * 0.39,
                                     child: const AvailabilityOfferWidget(
                                         color: UiConstants.kBlogTitleColor,
-                                        text: "*16% Returns p.a*"),
+                                        text: "*4.5% Extra Returns*"),
                                   ),
                                 ),
                               )

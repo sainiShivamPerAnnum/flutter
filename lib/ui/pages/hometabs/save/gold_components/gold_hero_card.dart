@@ -1,5 +1,6 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/model/portfolio_model.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -124,8 +125,21 @@ class GoldInfoWidget extends StatelessWidget {
             GestureDetector(
               onTap: () {
                 Haptic.vibrate();
-                AppState.delegate!.parseRoute(Uri.parse('goldProDetails'));
+
                 final UserService _userService = locator<UserService>();
+                if ((_userService.userFundWallet?.augGoldQuantity ?? 0) > 0 &&
+                    (_userService.userFundWallet?.augGoldQuantity ?? 0) < 0.5) {
+                  BaseUtil().openRechargeModalSheet(
+                    investmentType: InvestmentType.AUGGOLD99,
+                    gms: BaseUtil.digitPrecision(
+                        0.5 -
+                            (_userService.userFundWallet?.augGoldQuantity ?? 0),
+                        4,
+                        false),
+                  );
+                } else {
+                  AppState.delegate!.parseRoute(Uri.parse('goldProDetails'));
+                }
                 locator<AnalyticsService>().track(
                   eventName: AnalyticsEvents.goldProEntryBelowBalanceTapped,
                   properties: {

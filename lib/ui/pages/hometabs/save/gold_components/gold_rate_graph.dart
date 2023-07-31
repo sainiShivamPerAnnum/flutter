@@ -116,113 +116,113 @@ class _LineGradientChartState extends State<LineGradientChart> {
                               : MainAxisAlignment.center)
                           : MainAxisAlignment.center,
                       children: [
-                        Column(
-                          crossAxisAlignment: widget.isPro
-                              ? (portfolio.goldPro.principle > 0
-                                  ? CrossAxisAlignment.start
-                                  : CrossAxisAlignment.center)
-                              : CrossAxisAlignment.center,
-                          children: [
-                            Wrap(
-                              children: [
-                                Text(
-                                  "Historic Returns  ",
-                                  style: GoogleFonts.rajdhani(
-                                    color: Colors.grey,
-                                    fontWeight: FontWeight.w600,
-                                    fontSize: SizeConfig.body3,
+                        GestureDetector(
+                          onTap: updateChartData2,
+                          child: Column(
+                            crossAxisAlignment: widget.isPro
+                                ? (portfolio.goldPro.principle > 0
+                                    ? CrossAxisAlignment.start
+                                    : CrossAxisAlignment.center)
+                                : CrossAxisAlignment.center,
+                            children: [
+                              Wrap(
+                                children: [
+                                  Text(
+                                    "Historic Returns  ",
+                                    style: GoogleFonts.rajdhani(
+                                      color: Colors.grey,
+                                      fontWeight: FontWeight.w600,
+                                      fontSize: SizeConfig.body3,
+                                    ),
                                   ),
-                                ),
-                                GestureDetector(
-                                  onTap: updateChartData2,
-                                  child: SvgPicture.asset(
+                                  SvgPicture.asset(
                                     Assets.graphArrows,
                                     height: SizeConfig.iconSize0,
                                     width: SizeConfig.iconSize0,
                                     color: Colors.grey,
-                                  ),
-                                )
-                              ],
-                            ),
-                            Wrap(
-                              crossAxisAlignment: WrapCrossAlignment.end,
-                              children: [
-                                Text(
-                                  "${returnsList![selectedIndex]}% ",
-                                  style: GoogleFonts.sourceSansPro(
-                                      fontWeight: FontWeight.w700,
-                                      fontSize: SizeConfig.title2,
-                                      color: Colors.white),
-                                ),
-                                Padding(
-                                  padding: EdgeInsets.only(
-                                      bottom: SizeConfig.padding6),
-                                  child: Text(
-                                    "(${chips[selectedIndex]})",
+                                  )
+                                ],
+                              ),
+                              Wrap(
+                                crossAxisAlignment: WrapCrossAlignment.end,
+                                children: [
+                                  Text(
+                                    "${returnsList![selectedIndex]}% ",
                                     style: GoogleFonts.sourceSansPro(
-                                        fontSize: SizeConfig.body3,
+                                        fontWeight: FontWeight.w700,
+                                        fontSize: SizeConfig.title2,
                                         color: Colors.white),
                                   ),
-                                )
-                              ],
-                            ),
-                          ],
+                                  Padding(
+                                    padding: EdgeInsets.only(
+                                        bottom: SizeConfig.padding6),
+                                    child: Text(
+                                      "(${chips[selectedIndex]})",
+                                      style: GoogleFonts.sourceSansPro(
+                                          fontSize: SizeConfig.body3,
+                                          color: Colors.white),
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ],
+                          ),
                         ),
                         if (widget.isPro)
                           portfolio.goldPro.principle > 0
-                              ? Column(
-                                  crossAxisAlignment: widget.isPro
-                                      ? CrossAxisAlignment.start
-                                      : CrossAxisAlignment.center,
-                                  children: [
-                                    Wrap(
-                                      children: [
-                                        Text(
-                                          "Your Expected Returns  ",
-                                          style: GoogleFonts.rajdhani(
-                                            color: Colors.grey,
-                                            fontWeight: FontWeight.w600,
-                                            fontSize: SizeConfig.body3,
+                              ? GestureDetector(
+                                  onTap: updateChartData2,
+                                  child: Column(
+                                    crossAxisAlignment: widget.isPro
+                                        ? CrossAxisAlignment.start
+                                        : CrossAxisAlignment.center,
+                                    children: [
+                                      Wrap(
+                                        children: [
+                                          Text(
+                                            "Your Expected Returns  ",
+                                            style: GoogleFonts.rajdhani(
+                                              color: Colors.grey,
+                                              fontWeight: FontWeight.w600,
+                                              fontSize: SizeConfig.body3,
+                                            ),
                                           ),
-                                        ),
-                                        GestureDetector(
-                                          onTap: updateChartData2,
-                                          child: SvgPicture.asset(
+                                          SvgPicture.asset(
                                             Assets.graphArrows,
                                             height: SizeConfig.iconSize0,
                                             width: SizeConfig.iconSize0,
                                             color: Colors.grey,
-                                          ),
-                                        )
-                                      ],
-                                    ),
-                                    Wrap(
-                                      crossAxisAlignment:
-                                          WrapCrossAlignment.end,
-                                      children: [
-                                        Text(
-                                          "₹${((portfolio.goldPro.principle * pow((1 + 0.16), selectedIndex + 1)).toInt())}",
-                                          style: GoogleFonts.sourceSansPro(
-                                              fontWeight: FontWeight.w700,
-                                              fontSize: SizeConfig.title2,
-                                              color:
-                                                  UiConstants.kGoldProPrimary),
-                                        ),
-                                        Padding(
-                                          padding: EdgeInsets.only(
-                                              bottom: SizeConfig.padding6),
-                                          child: Text(
-                                            "(16%)",
+                                          )
+                                        ],
+                                      ),
+                                      Wrap(
+                                        crossAxisAlignment:
+                                            WrapCrossAlignment.end,
+                                        children: [
+                                          Text(
+                                            "₹${((portfolio.goldPro.principle * pow((1 + 0.16), selectedIndex + 1)).toInt())}",
                                             style: GoogleFonts.sourceSansPro(
-                                                fontSize:
-                                                    SizeConfig.title4 * 0.7,
+                                                fontWeight: FontWeight.w700,
+                                                fontSize: SizeConfig.title2,
                                                 color: UiConstants
                                                     .kGoldProPrimary),
                                           ),
-                                        ),
-                                      ],
-                                    ),
-                                  ],
+                                          Padding(
+                                            padding: EdgeInsets.only(
+                                                bottom: SizeConfig.padding6),
+                                            child: Text(
+                                              "(15.5%)",
+                                              style: GoogleFonts.sourceSansPro(
+                                                  fontSize:
+                                                      SizeConfig.title4 * 0.7,
+                                                  color: UiConstants
+                                                      .kGoldProPrimary),
+                                            ),
+                                          ),
+                                        ],
+                                      ),
+                                    ],
+                                  ),
                                 )
                               : const SizedBox()
                       ],

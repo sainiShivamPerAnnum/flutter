@@ -248,22 +248,27 @@ class GoldSellInputView extends StatelessWidget {
                     child: Column(children: [
                       Row(
                         children: [
+                          Icon(
+                            Icons.info_outline_rounded,
+                            size: SizeConfig.iconSize2,
+                            color: UiConstants.kFAQDividerColor,
+                          ),
                           Text(
-                            "Leased Gold Amount-",
-                            style: TextStyles.sourceSansM.body1
+                            "  Leased Gold Amount-",
+                            style: TextStyles.sourceSansM.body2
                                 .colour(UiConstants.kFAQDividerColor),
                           ),
                           const Spacer(),
                           Text(
                             "4.4gms",
-                            style: TextStyles.sourceSansB.body0
+                            style: TextStyles.sourceSans.body2
                                 .colour(Colors.white),
                           )
                         ],
                       ),
                       SizedBox(height: SizeConfig.padding8),
                       Text(
-                        "You can un-Lease your Digital gold in Digital ${Constants.ASSET_GOLD_STAKE} section to be make it withdrawable",
+                        "You can un-Lease your Digital gold in ${Constants.ASSET_GOLD_STAKE} section to be make it withdrawable",
                         style: TextStyles.body3.colour(Colors.grey),
                       )
                     ]),
