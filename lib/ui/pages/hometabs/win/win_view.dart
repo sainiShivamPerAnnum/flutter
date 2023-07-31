@@ -11,7 +11,6 @@ import 'package:felloapp/ui/pages/hometabs/win/win_viewModel.dart';
 import 'package:felloapp/ui/pages/static/dev_rel.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
-import 'package:felloapp/ui/service_elements/leaderboards/referral_leaderboard.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/show_case_key.dart';
@@ -92,7 +91,7 @@ class Win extends StatelessWidget {
                 //Refer and Earn
                 const ReferEarnCard(),
                 // Referral Leaderboard
-                const ReferralLeaderboard(),
+                // const ReferralLeaderboard(),
                 //Fello News
                 FelloNewsComponent(model: model),
                 // DEV PURPOSE ONLY

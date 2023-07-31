@@ -30,6 +30,7 @@ class _QuizWebViewState extends State<QuizWebView> {
   void initState() {
     super.initState();
     AppState.blockNavigation();
+    AppState.isQuizInProgress = true;
     _webViewController = WebViewController()
       ..setJavaScriptMode(JavaScriptMode.unrestricted)
       ..setBackgroundColor(const Color(0x00000000))

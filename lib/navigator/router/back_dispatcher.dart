@@ -221,6 +221,19 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
         },
         false,
       );
+    } else if (AppState.isQuizInProgress) {
+      return _confirmExit(
+        "Exit Quiz",
+        "Are you sure you want to leave?",
+        () {
+          AppState.isQuizInProgress = false;
+          didPopRoute();
+          didPopRoute();
+          // _webGameViewModel.handleGameSessionEnd(
+          //     duration: const Duration(milliseconds: 500));
+        },
+        false,
+      );
     } else if (AppState.isUpdateScreen) {
       AppState.isUpdateScreen = false;
       return _routerDelegate!.popRoute();
@@ -242,11 +255,11 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
             .onChange(locator<RootController>().navItems.values.toList()[0]);
         return Future.value(true);
       } else if (AppState.delegate!.appState.rootIndex ==
-              locator<RootController>()
-                  .navItems
-                  .values
-                  .toList()
-                  .indexWhere((element) => element.title == "Save") &&
+          locator<RootController>()
+              .navItems
+              .values
+              .toList()
+              .indexWhere((element) => element.title == "Save") &&
           locator<CardActionsNotifier>().isVerticalView) {
         locator<CardActionsNotifier>().isVerticalView = false;
         return Future.value(true);
