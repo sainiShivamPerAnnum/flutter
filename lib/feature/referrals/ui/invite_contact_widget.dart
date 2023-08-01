@@ -4,6 +4,7 @@ import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/service/referral_service.dart';
 import 'package:felloapp/feature/referrals/bloc/referral_cubit.dart';
 import 'package:felloapp/feature/referrals/ui/contact_list_widget.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/detail_page/flo_premium_details_view.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/userProfile/referrals/referral_details/referral_details_vm.dart';
@@ -17,9 +18,11 @@ class InviteContactWidget extends StatefulWidget {
   const InviteContactWidget({
     Key? key,
     required this.model,
+    required this.scrollController,
   }) : super(key: key);
 
   final ReferralDetailsViewModel model;
+  final ScrollController scrollController;
 
   @override
   State<InviteContactWidget> createState() => _InviteContactWidgetState();
@@ -27,10 +30,28 @@ class InviteContactWidget extends StatefulWidget {
 
 class _InviteContactWidgetState extends State<InviteContactWidget>
     with AutomaticKeepAliveClientMixin<InviteContactWidget> {
+  final ScrollController scrollController = ScrollController();
+  bool _isBouncyScroll = false;
+
   @override
   void initState() {
     super.initState();
     context.read<ReferralCubit>().checkPermission();
+
+    widget.scrollController.addListener(() {
+      if (widget.scrollController.offset ==
+          widget.scrollController.position.maxScrollExtent) {
+        setState(() {
+          _isBouncyScroll = true;
+        });
+      } else {
+        if (_isBouncyScroll) {
+          setState(() {
+            _isBouncyScroll = false;
+          });
+        }
+      }
+    });
   }
 
   void showPermissionBottomSheet() {
@@ -50,79 +71,94 @@ class _InviteContactWidgetState extends State<InviteContactWidget>
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<ReferralCubit, ReferralState>(
-      builder: (context, state) {
-        if (state is NoPermissionState) {
-          return Column(
-            children: [
-              SizedBox(height: SizeConfig.padding20),
-              SvgPicture.asset(
-                'assets/svg/magnifying_glass.svg',
-                height: SizeConfig.padding148,
-              ),
-              Text(
-                'You haven’t added your contacts yet',
-                style: TextStyles.sourceSans.body3
-                    .colour(Colors.white.withOpacity(0.8)),
-              ),
-              SizedBox(height: SizeConfig.padding12),
-              SizedBox(
-                width: SizeConfig.padding200 + SizeConfig.padding54,
+    return SingleChildScrollView(
+      controller: scrollController,
+      physics: _isBouncyScroll
+          ? const BouncingScrollPhysics()
+          : const NeverScrollableScrollPhysics(),
+      child: BlocBuilder<ReferralCubit, ReferralState>(
+        builder: (context, state) {
+          if (state is NoPermissionState) {
+            return Column(
+              children: [
+                SizedBox(height: SizeConfig.padding20),
+                SvgPicture.asset(
+                  'assets/svg/magnifying_glass.svg',
+                  height: SizeConfig.padding148,
+                ),
+                Text(
+                  'You haven’t added your contacts yet',
+                  style: TextStyles.sourceSans.body3
+                      .colour(Colors.white.withOpacity(0.8)),
+                ),
+                SizedBox(height: SizeConfig.padding12),
+                SizedBox(
+                  width: SizeConfig.padding200 + SizeConfig.padding54,
+                  child: Text(
+                    'Over 2000 users have given contact access to Fello',
+                    textAlign: TextAlign.center,
+                    style: TextStyles.rajdhaniSB.body0
+                        .colour(Colors.white.withOpacity(0.8)),
+                  ),
+                ),
+                SizedBox(height: SizeConfig.padding16),
+                MaterialButton(
+                  onPressed: showPermissionBottomSheet,
+                  color: Colors.white,
+                  minWidth: SizeConfig.padding100,
+                  padding: EdgeInsets.symmetric(
+                      horizontal: SizeConfig.padding60,
+                      vertical: SizeConfig.padding12),
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(SizeConfig.roundness5),
+                  ),
+                  height: SizeConfig.padding34,
+                  child: Text(
+                    "SYNC CONTACTS",
+                    style: TextStyles.rajdhaniB.body3.colour(Colors.black),
+                  ),
+                ),
+                SizedBox(height: SizeConfig.padding148),
+              ],
+            );
+          }
+
+          if (state is ContactsLoaded) {
+            return ContactListWidget(
+              contacts: state.contacts,
+              scrollController: scrollController,
+              onStateChanged: (val) {
+                if (_isBouncyScroll) {
+                  setState(() {
+                    _isBouncyScroll = false;
+                  });
+                }
+              },
+            );
+          }
+
+          if (state is ContactsError) {
+            return SizedBox(
+              height: SizeConfig.padding80,
+              child: Center(
                 child: Text(
-                  'Over 2000 users have given contact access to Fello',
-                  textAlign: TextAlign.center,
-                  style: TextStyles.rajdhaniSB.body0
+                  'Error loading contacts',
+                  style: TextStyles.sourceSans.body3
                       .colour(Colors.white.withOpacity(0.8)),
                 ),
               ),
-              SizedBox(height: SizeConfig.padding16),
-              MaterialButton(
-                onPressed: showPermissionBottomSheet,
-                color: Colors.white,
-                minWidth: SizeConfig.padding100,
-                padding: EdgeInsets.symmetric(
-                    horizontal: SizeConfig.padding60,
-                    vertical: SizeConfig.padding12),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(SizeConfig.roundness5),
-                ),
-                height: SizeConfig.padding34,
-                child: Text(
-                  "SYNC CONTACTS",
-                  style: TextStyles.rajdhaniB.body3.colour(Colors.black),
-                ),
-              ),
-              SizedBox(height: SizeConfig.padding148),
-            ],
-          );
-        }
+            );
+          }
 
-        if (state is ContactsLoaded) {
-          return ContactListWidget(
-            contacts: state.contacts,
-          );
-        }
-
-        if (state is ContactsError) {
           return SizedBox(
-            height: SizeConfig.padding80,
-            child: Center(
-              child: Text(
-                'Error loading contacts',
-                style: TextStyles.sourceSans.body3
-                    .colour(Colors.white.withOpacity(0.8)),
-              ),
+            height: SizeConfig.screenHeight! * 0.6,
+            child: const Center(
+              child: CircularProgressIndicator(),
             ),
           );
-        }
-
-        return SizedBox(
-          height: SizeConfig.screenHeight! * 0.6,
-          child: const Center(
-            child: CircularProgressIndicator(),
-          ),
-        );
-      });
+        },
+      ),
+    );
   }
 
   @override
@@ -352,6 +388,7 @@ class PermissionModalSheet extends StatelessWidget {
           ),
           TextButton(
             onPressed: () {
+              AppState.backButtonDispatcher?.didPopRoute();
               if (widget.model.isShareAlreadyClicked == false) {
                 locator<ReferralService>().shareLink();
               }

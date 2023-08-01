@@ -85,6 +85,8 @@ class ReferralCubit extends Cubit<ReferralState> {
 
     if (currentState is ContactsLoaded) {
       List<String> registeredUser = [];
+      await Future.delayed(const Duration(seconds: 5));
+
       await referralRepo
           .getRegisteredUsers(model.phoneNumbers, cacheApi: !fromRefresh)
           .then((res) {

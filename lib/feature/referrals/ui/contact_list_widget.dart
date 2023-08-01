@@ -1,21 +1,26 @@
 import 'dart:developer';
 
 import 'package:felloapp/core/model/contact_model.dart';
-import 'package:felloapp/core/service/referral_service.dart';
 import 'package:felloapp/feature/referrals/bloc/referral_cubit.dart';
 import 'package:felloapp/feature/referrals/ui/referral_home.dart';
 import 'package:felloapp/util/debouncer.dart';
 import 'package:felloapp/util/extensions/rich_text_extension.dart';
-import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class ContactListWidget extends StatefulWidget {
-  const ContactListWidget({super.key, required this.contacts});
+  const ContactListWidget(
+      {super.key,
+      required this.contacts,
+      required this.scrollController,
+      required this.onStateChanged});
 
   final List<Contact> contacts;
+  final ScrollController scrollController;
+  final Function onStateChanged;
 
   @override
   State<ContactListWidget> createState() => _ContactListWidgetState();
@@ -27,12 +32,17 @@ class _ContactListWidgetState extends State<ContactListWidget>
   List<Contact> filteredContacts = []; // List to store filtered contacts
   late final Debouncer _debouncer;
 
+  final int _displayLimit = 30; // Number of contacts to display at a time
+  int _displayedContactsCount = 30; // Number of contacts currently displayed
+  bool _isLoading = false; // Whether more contacts are being loaded
+
   void searchContacts(String query) {
     log('searchContacts: $query', name: 'ReferralDetailsScreen');
     if (query.isEmpty || query.length < 3) {
       // If the query is empty, display all contacts
       setState(() {
         filteredContacts = List.from(widget.contacts);
+        _displayedContactsCount = _displayLimit;
       });
     } else {
       // Filter contacts based on the query
@@ -41,6 +51,10 @@ class _ContactListWidgetState extends State<ContactListWidget>
             .where((contact) =>
                 contact.displayName.toLowerCase().contains(query.toLowerCase()))
             .toList();
+
+        _displayedContactsCount = filteredContacts.length;
+        log('filteredContacts name: ${filteredContacts[0].displayName}',
+            name: 'ReferralDetailsScreen');
       });
     }
 
@@ -52,6 +66,19 @@ class _ContactListWidgetState extends State<ContactListWidget>
     super.initState();
     filteredContacts = widget.contacts;
     _debouncer = Debouncer(delay: const Duration(milliseconds: 700));
+
+    widget.scrollController.addListener(() {
+      log('Scroll offset: ${widget.scrollController.offset}',
+          name: 'ReferralDetailsScreen');
+      if (widget.scrollController.offset ==
+          widget.scrollController.position.maxScrollExtent) {
+        loadNextPage();
+      }
+      if (widget.scrollController.offset <= 0.0) {
+        log('Scrolling up', name: 'ReferralDetailsScreen');
+        widget.onStateChanged(false);
+      }
+    });
   }
 
   String formatCurrency(int amount) {
@@ -66,6 +93,41 @@ class _ContactListWidgetState extends State<ContactListWidget>
     } else {
       return amount.toString();
     }
+  }
+
+  Widget _buildLoadMoreButton() {
+    if (_isLoading) {
+      return const CircularProgressIndicator();
+    } else {
+      return ElevatedButton(
+        onPressed: () {
+          setState(() {
+            _isLoading = true;
+          });
+          // Simulate loading more contacts
+          Future.delayed(const Duration(seconds: 1), () {
+            setState(() {
+              _displayedContactsCount += _displayLimit;
+              _isLoading = false;
+            });
+          });
+        },
+        child: const Text('Load more'),
+      );
+    }
+  }
+
+  void loadNextPage() {
+    setState(() {
+      _isLoading = true;
+    });
+    // Simulate loading more contacts
+    Future.delayed(const Duration(seconds: 1), () {
+      setState(() {
+        _displayedContactsCount += _displayLimit;
+        _isLoading = false;
+      });
+    });
   }
 
   @override
@@ -110,8 +172,9 @@ class _ContactListWidgetState extends State<ContactListWidget>
             controller: controller,
             onChanged: (query) {
               log('Text changed: $query');
-              _debouncer.call(
-                  () => searchContacts(query)); // will be called after 700ms
+              _debouncer.call(() => searchContacts(query));
+              // _debouncer.call(
+              //         () => searchContacts(query)); // will be called after 700ms
             },
           ),
           SizedBox(
@@ -124,93 +187,89 @@ class _ContactListWidgetState extends State<ContactListWidget>
                 style: TextStyles.sourceSans.body3.colour(Colors.white),
               ),
             ),
-          ListView.builder(
-            itemCount: filteredContacts.length,
+          ListView.separated(
+            itemCount: _displayedContactsCount,
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemBuilder: (context, index) {
               final contact = filteredContacts[index];
-              return Column(
+              return Row(
                 children: [
-                  GestureDetector(
-                    onTap: () {
-                      navigateToWhatsApp(contact.phoneNumber,
-                          locator<ReferralService>().shareMsg);
-                    },
-                    child: Row(
-                      children: [
-                        Container(
-                          height: SizeConfig.padding44,
-                          width: SizeConfig.padding44,
-                          padding: EdgeInsets.all(SizeConfig.padding3),
-                          decoration: const ShapeDecoration(
-                            shape: OvalBorder(
-                              side: BorderSide(
-                                  width: 0.5, color: Color(0xFF1ADAB7)),
-                            ),
-                          ),
-                          child: Container(
-                            height: SizeConfig.padding38,
-                            width: SizeConfig.padding38,
-                            decoration: const BoxDecoration(
-                              color: Color(0xFFD9D9D9),
-                              shape: BoxShape.circle,
-                            ),
-                            child: Center(
-                              child: Text(
-                                contact.displayName.substring(0, 1),
-                                style: TextStyles.rajdhaniSB.body0
-                                    .colour(const Color(0xFF3A3A3C)),
-                              ),
-                            ),
-                          ),
+                  Container(
+                    height: SizeConfig.padding44,
+                    width: SizeConfig.padding44,
+                    padding: EdgeInsets.all(SizeConfig.padding3),
+                    decoration: const ShapeDecoration(
+                      shape: OvalBorder(
+                        side: BorderSide(width: 0.5, color: Color(0xFF1ADAB7)),
+                      ),
+                    ),
+                    child: Container(
+                      height: SizeConfig.padding38,
+                      width: SizeConfig.padding38,
+                      decoration: const BoxDecoration(
+                        color: Color(0xFFD9D9D9),
+                        shape: BoxShape.circle,
+                      ),
+                      child: Center(
+                        child: Text(
+                          contact.displayName.substring(0, 1),
+                          style: TextStyles.rajdhaniSB.body0
+                              .colour(const Color(0xFF3A3A3C)),
                         ),
-                        SizedBox(width: SizeConfig.padding8),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              contact.displayName,
-                              style: TextStyles.rajdhaniSB.body2
-                                  .colour(Colors.white),
-                            ),
-                            Text(
-                              (contact.isRegistered ?? false)
-                                  ? "Already on Fello"
-                                  : 'Invite and earn ₹500',
-                              style: TextStyles.sourceSans.body4.colour(
-                                  (contact.isRegistered ?? false)
-                                      ? const Color(0xFF61E3C4)
-                                      : Colors.white.withOpacity(0.48)),
-                            ),
-                          ],
-                        ),
-                        const Spacer(),
-                        if (!(contact.isRegistered ?? false))
-                          Text(
-                            'INVITE',
-                            textAlign: TextAlign.right,
-                            style: TextStyles.rajdhaniB.body3
-                                .colour(const Color(0xFF61E3C4)),
-                          ),
-                      ],
+                      ),
                     ),
                   ),
-                  SizedBox(
-                    height: SizeConfig.padding24,
-                  )
+                  SizedBox(width: SizeConfig.padding8),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        contact.displayName,
+                        style: TextStyles.rajdhaniSB.body2.colour(Colors.white),
+                      ),
+                      Text(
+                        (contact.isRegistered ?? false)
+                            ? "Already on Fello"
+                            : 'Invite and earn ₹500',
+                        style: TextStyles.sourceSans.body4.colour(
+                            (contact.isRegistered ?? false)
+                                ? const Color(0xFF61E3C4)
+                                : Colors.white.withOpacity(0.48)),
+                      ),
+                    ],
+                  ),
+                  const Spacer(),
+                  if (!(contact.isRegistered ?? false))
+                    GestureDetector(
+                      onTap: () {
+                        navigateToWhatsApp(contact.phoneNumber, "");
+                      },
+                      child: Text(
+                        'INVITE',
+                        textAlign: TextAlign.right,
+                        style: TextStyles.rajdhaniB.body3
+                            .colour(const Color(0xFF61E3C4)),
+                      ),
+                    ),
                 ],
               );
             },
-            // separatorBuilder: (BuildContext context, int index) {
-            //   return SizedBox(
-            //     height: SizeConfig.padding24,
-            //   );
-            // },
+            separatorBuilder: (BuildContext context, int index) {
+              return SizedBox(
+                height: SizeConfig.padding24,
+              );
+            },
           ),
           SizedBox(
             height: SizeConfig.padding12,
           ),
+          if (filteredContacts.length > _displayedContactsCount)
+            SpinKitThreeBounce(
+              size: SizeConfig.title5,
+              color: Colors.white,
+            ),
+          // SpinKitThreeBounce()
         ],
       ),
     );

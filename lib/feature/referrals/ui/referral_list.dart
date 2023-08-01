@@ -24,94 +24,97 @@ class ReferralList extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: const Color(0xFF454545).withOpacity(0.3),
-      child: model.referalList == null
-          ? Container(
-              width: SizeConfig.screenWidth,
-              padding: EdgeInsets.symmetric(
-                  vertical: SizeConfig.pageHorizontalMargins),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.center,
-                children: [
-                  const FullScreenLoader(),
-                  SizedBox(height: SizeConfig.padding20),
-                  Text(
-                    'Fetching your referrals. Please wait..',
-                    style: TextStyles.sourceSans.body2.colour(Colors.white),
-                  ),
-                ],
-              ),
-            )
-          : model.referalList!.isEmpty
-              ? Column(
+    return SingleChildScrollView(
+      child: Container(
+        color: const Color(0xFF454545).withOpacity(0.3),
+        child: model.referalList == null
+            ? Container(
+                width: SizeConfig.screenWidth,
+                padding: EdgeInsets.symmetric(
+                    vertical: SizeConfig.pageHorizontalMargins),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    SizedBox(height: SizeConfig.padding46),
-                    SvgPicture.asset(
-                      'assets/svg/winScreen-referalAsset.svg',
-                      // width: SizeConfig.padding32,
-                      height: SizeConfig.padding104,
-                    ),
-                    SizedBox(height: SizeConfig.padding16),
+                    const FullScreenLoader(),
+                    SizedBox(height: SizeConfig.padding20),
                     Text(
-                      'You haven’t made any referrals yet',
-                      style: TextStyles.sourceSans.body3
-                          .colour(Colors.white.withOpacity(0.8)),
-                    ),
-                    SizedBox(height: SizeConfig.padding12),
-                    Text('Earn over ₹1Lakh',
-                        textAlign: TextAlign.center,
-                        style: TextStyles.rajdhaniSB.body0
-                            .colour(Colors.white.withOpacity(0.8))),
-                    SizedBox(
-                      height: SizeConfig.padding16,
-                    ),
-                    MaterialButton(
-                      onPressed: () {
-                        if (model.isShareAlreadyClicked == false) {
-                          locator<ReferralService>().shareLink();
-                        }
-                      },
-                      color: Colors.white,
-                      minWidth: SizeConfig.padding100,
-                      padding: EdgeInsets.symmetric(
-                          horizontal: SizeConfig.padding60,
-                          vertical: SizeConfig.padding12),
-                      shape: RoundedRectangleBorder(
-                        borderRadius:
-                            BorderRadius.circular(SizeConfig.roundness5),
-                      ),
-                      height: SizeConfig.padding34,
-                      child: Text(
-                        "REFER NOW",
-                        style: TextStyles.rajdhaniB.body3.colour(Colors.black),
-                      ),
-                    ),
-                    SizedBox(
-                      height: SizeConfig.padding54,
+                      'Fetching your referrals. Please wait..',
+                      style: TextStyles.sourceSans.body2.colour(Colors.white),
                     ),
                   ],
-                )
-              : model.bonusUnlockedReferalPresent(model.referalList!)
-                  ? ReferralListView(
-                      referalList: model.referalList!,
-                      onStateChanged: () {
-                        model.refresh();
-                      },
-                    )
-                  : Column(
-                      children: [
-                        SizedBox(height: SizeConfig.padding16),
-                        SvgPicture.asset(Assets.noReferralAsset),
-                        SizedBox(height: SizeConfig.padding16),
-                        Text(
-                          'No referrals yet',
-                          style:
-                              TextStyles.sourceSans.body2.colour(Colors.white),
+                ),
+              )
+            : model.referalList!.isEmpty
+                ? Column(
+                    children: [
+                      SizedBox(height: SizeConfig.padding46),
+                      SvgPicture.asset(
+                        'assets/svg/winScreen-referalAsset.svg',
+                        // width: SizeConfig.padding32,
+                        height: SizeConfig.padding104,
+                      ),
+                      SizedBox(height: SizeConfig.padding16),
+                      Text(
+                        'You haven’t made any referrals yet',
+                        style: TextStyles.sourceSans.body3
+                            .colour(Colors.white.withOpacity(0.8)),
+                      ),
+                      SizedBox(height: SizeConfig.padding12),
+                      Text('Earn over ₹1Lakh',
+                          textAlign: TextAlign.center,
+                          style: TextStyles.rajdhaniSB.body0
+                              .colour(Colors.white.withOpacity(0.8))),
+                      SizedBox(
+                        height: SizeConfig.padding16,
+                      ),
+                      MaterialButton(
+                        onPressed: () {
+                          if (model.isShareAlreadyClicked == false) {
+                            locator<ReferralService>().shareLink();
+                          }
+                        },
+                        color: Colors.white,
+                        minWidth: SizeConfig.padding100,
+                        padding: EdgeInsets.symmetric(
+                            horizontal: SizeConfig.padding60,
+                            vertical: SizeConfig.padding12),
+                        shape: RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.circular(SizeConfig.roundness5),
                         ),
-                        SizedBox(height: SizeConfig.padding16),
-                      ],
-                    ),
+                        height: SizeConfig.padding34,
+                        child: Text(
+                          "REFER NOW",
+                          style:
+                              TextStyles.rajdhaniB.body3.colour(Colors.black),
+                        ),
+                      ),
+                      SizedBox(
+                        height: SizeConfig.padding54,
+                      ),
+                    ],
+                  )
+                : model.bonusUnlockedReferalPresent(model.referalList!)
+                    ? ReferralListView(
+                        referalList: model.referalList!,
+                        onStateChanged: () {
+                          model.refresh();
+                        },
+                      )
+                    : Column(
+                        children: [
+                          SizedBox(height: SizeConfig.padding16),
+                          SvgPicture.asset(Assets.noReferralAsset),
+                          SizedBox(height: SizeConfig.padding16),
+                          Text(
+                            'No referrals yet',
+                            style: TextStyles.sourceSans.body2
+                                .colour(Colors.white),
+                          ),
+                          SizedBox(height: SizeConfig.padding16),
+                        ],
+                      ),
+      ),
     );
   }
 }

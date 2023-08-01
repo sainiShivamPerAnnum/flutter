@@ -39,7 +39,9 @@ class RewardTrack extends StatelessWidget {
                 ),
                 height: 1.2,
                 width: SizeConfig.screenWidth! * 0.258,
-                color: const Color(0xFF868686),
+                color: (revampedInfo.stages![1].isComplete ?? false)
+                    ? const Color(0xFF61E3C4)
+                    : const Color(0xFF868686),
               ),
             ),
           Row(
@@ -65,7 +67,7 @@ class RewardTrack extends StatelessWidget {
                   isComplete: revampedInfo.stages![2].isComplete ?? false,
                   tooltipContent: revampedInfo.stages![2].tooltipContent,
                   isPreviousTaskCompleted:
-                      revampedInfo.stages![2].isComplete ?? false,
+                      revampedInfo.stages![1].isComplete ?? false,
                 ),
             ],
           ),
