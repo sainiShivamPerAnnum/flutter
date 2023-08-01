@@ -394,35 +394,40 @@ class GetterRepository extends BaseRepo {
       if (goldChartData != null) {
         return ApiResponse(model: goldChartData, code: 200);
       }
-
       final token = await getBearerToken();
-      final response = await APIService.instance.getData(
-        ApiPath.goldRatesGraph,
-        cBaseUrl: _baseUrl,
-        token: token,
+
+      return await _cacheService.cachedApi(
+        CacheKeys.GOLD_RATES,
+        TTL.ONE_WEEK,
+        () => APIService.instance.getData(
+          ApiPath.goldRatesGraph,
+          cBaseUrl: _baseUrl,
+          token: token,
+        ),
+        (response) {
+          final List rates = response["data"]["rates"];
+
+          final List<ChartData> chartData = [];
+
+          for (int i = 0; i < rates.length; i++) {
+            chartData.add(ChartData(day: i, price: rates[i]["rate"]));
+          }
+
+          List<String> returnsList = [];
+          final Map returnsMap = response["data"]["returns"];
+
+          returnsMap.forEach(
+            (key, value) => returnsList.add(value),
+          );
+
+          final responseMap = {};
+          responseMap["chartDataList"] = chartData;
+          responseMap["returnsList"] = returnsList;
+          log("Gold Rate Data $responseMap");
+          goldChartData = responseMap;
+          return ApiResponse(model: goldChartData, code: 200);
+        },
       );
-
-      final List rates = response["data"]["rates"];
-
-      final List<ChartData> chartData = [];
-
-      for (int i = 0; i < rates.length; i++) {
-        chartData.add(ChartData(day: i, price: rates[i]["rate"]));
-      }
-
-      List<String> returnsList = [];
-      final Map returnsMap = response["data"]["returns"];
-
-      returnsMap.forEach(
-        (key, value) => returnsList.add(value),
-      );
-
-      final responseMap = {};
-      responseMap["chartDataList"] = chartData;
-      responseMap["returnsList"] = returnsList;
-      log("Gold Rate Data $responseMap");
-      goldChartData = responseMap;
-      return ApiResponse(model: goldChartData, code: 200);
     } catch (e) {
       logger.e(e.toString());
       return ApiResponse.withError("Unable to fetch stories", 400);

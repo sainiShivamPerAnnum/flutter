@@ -542,7 +542,7 @@ class QuickLinks extends StatelessWidget {
           color: UiConstants.referralIconColor),
       QuickLinksModel(
           name: "Tickets",
-          asset: Assets.tambola_instant_view,
+          asset: Assets.singleTambolaTicket,
           deeplink: "tambolaHome",
           color: UiConstants.kGoldProBorder),
     ];
@@ -561,6 +561,10 @@ class QuickLinks extends StatelessWidget {
                 Haptic.vibrate();
                 AppState.delegate!
                     .parseRoute(Uri.parse(quickLinks[index].deeplink));
+                locator<AnalyticsService>().track(
+                  eventName: AnalyticsEvents.iconTrayTapped,
+                  properties: {'icon': quickLinks[index].name},
+                );
               },
               child: Column(
                 children: [
@@ -572,11 +576,11 @@ class QuickLinks extends StatelessWidget {
                       width: quickLinks[index].asset == Assets.goldAsset ||
                               quickLinks[index].asset == Assets.floAsset
                           ? SizeConfig.padding56
-                          : SizeConfig.padding40,
+                          : SizeConfig.padding36,
                       height: quickLinks[index].asset == Assets.goldAsset ||
                               quickLinks[index].asset == Assets.floAsset
                           ? SizeConfig.padding56
-                          : SizeConfig.padding40,
+                          : SizeConfig.padding36,
                     ),
                   ),
                   SizedBox(height: SizeConfig.padding8),

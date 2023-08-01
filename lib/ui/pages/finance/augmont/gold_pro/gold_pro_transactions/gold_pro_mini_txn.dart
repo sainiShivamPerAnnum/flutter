@@ -1,6 +1,8 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/gold_pro_models/gold_pro_investment_reponse_model.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -96,6 +98,10 @@ class GoldProTxnListTile extends StatelessWidget {
           state: PageState.addWidget,
           page: GoldProTxnsDetailsViewPageConfig,
           widget: GoldProTransactionsDetailsView(txn: txn),
+        );
+        locator<AnalyticsService>().track(
+          eventName: AnalyticsEvents.transactionTileTapped,
+          properties: {'location': "Gold Pro"},
         );
       },
       dense: true,

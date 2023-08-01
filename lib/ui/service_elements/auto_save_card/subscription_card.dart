@@ -33,7 +33,7 @@ class AutosaveCard extends StatelessWidget {
                     ConnectivityStatus.Offline) {
                   return BaseUtil.showNoInternetAlert();
                 }
-                await service.handleTap();
+                await service.handleTap(type: investmentType);
               },
               child: (service.subscriptionData != null)
                   ? ActiveOrPausedAutosaveCard(service: service)
@@ -74,7 +74,7 @@ class InitAutosaveCard extends HookWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const TitleSubtitleContainer(title: 'Save for your goals'),
+          const TitleSubtitleContainer(title: 'Setup Autosave'),
           SizedBox(height: SizeConfig.padding10),
           Container(
             decoration: BoxDecoration(

@@ -1,6 +1,10 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/faqTypes.dart';
+import 'package:felloapp/core/model/gold_pro_models/gold_pro_investment_reponse_model.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
@@ -99,10 +103,11 @@ class GoldProDetailsView extends StatelessWidget {
                                                 height: SizeConfig.padding4,
                                               ),
                                               Text(
-                                                "Digital Gold",
+                                                Constants.ASSET_GOLD_STAKE,
                                                 style: TextStyles
                                                     .rajdhaniSB.title3
-                                                    .colour(Colors.white),
+                                                    .colour(UiConstants
+                                                        .kGoldProPrimary),
                                               ),
                                               SizedBox(
                                                 height: SizeConfig.padding4,
@@ -193,54 +198,7 @@ class GoldProDetailsView extends StatelessWidget {
                     const HowGoldProWorksSection(),
                     const WhyGoldProSection(),
                     // SizedBox(height: SizeConfig.padding24),
-                    Container(
-                      padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
-                      margin: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
-                      decoration: BoxDecoration(
-                          borderRadius:
-                              BorderRadius.circular(SizeConfig.roundness16),
-                          color: UiConstants.kGoldProPrimaryDark2),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            "Transfer Digital ${Constants.ASSET_GOLD_STAKE}",
-                            style: TextStyles.sourceSansSB.body0
-                                .colour(Colors.black),
-                          ),
-                          SizedBox(height: SizeConfig.padding12),
-                          Row(
-                            children: [
-                              Expanded(
-                                  child: Text(
-                                "Transfer your ${Constants.ASSET_GOLD_STAKE} to Gold to withdraw",
-                                style: TextStyles.sourceSans.body3
-                                    .colour(Colors.black),
-                              )),
-                              SizedBox(width: SizeConfig.padding18),
-                              MaterialButton(
-                                onPressed: () {
-                                  AppState.delegate!
-                                      .parseRoute(Uri.parse("goldProSell"));
-                                },
-                                color: Colors.white,
-                                height: SizeConfig.padding44,
-                                minWidth: SizeConfig.screenWidth! * 0.3,
-                                shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(
-                                      SizeConfig.roundness8),
-                                ),
-                                child: Text(
-                                  "UN-LEASE",
-                                  style: TextStyles.rajdhaniB.body1
-                                      .colour(Colors.black),
-                                ),
-                              )
-                            ],
-                          )
-                        ],
-                      ),
-                    ),
+                    const GoldProSellCard(),
                     // Testomonials(type: InvestmentType.AUGGOLD99),
 
                     SizedBox(height: SizeConfig.pageHorizontalMargins),
@@ -363,8 +321,9 @@ class GoldProDetailsView extends StatelessWidget {
                           shape: RoundedRectangleBorder(
                               borderRadius: BorderRadius.circular(
                                   SizeConfig.roundness12)),
-                          onPressed: () =>
-                              locator<BaseUtil>().openGoldProBuyView(),
+                          onPressed: () => locator<BaseUtil>()
+                              .openGoldProBuyView(
+                                  location: "Gold Pro Details View"),
                           minWidth: SizeConfig.screenWidth,
                           color: UiConstants.kGoldProPrimary,
                           child: Text(
@@ -380,6 +339,73 @@ class GoldProDetailsView extends StatelessWidget {
                 ),
               ),
             ),
+          ],
+        ),
+      ),
+    );
+  }
+}
+
+class GoldProSellCard extends StatelessWidget {
+  const GoldProSellCard({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Selector<TxnHistoryService, List<GoldProInvestmentResponseModel>>(
+      selector: (p0, p1) => p1.goldProTxns,
+      builder: (context, txns, child) {
+        return txns.isNotEmpty ? child! : const SizedBox();
+      },
+      child: Container(
+        padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+        margin: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+        decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(SizeConfig.roundness16),
+            color: UiConstants.kGoldProPrimaryDark2),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Text(
+              "Transfer ${Constants.ASSET_GOLD_STAKE}",
+              style: TextStyles.sourceSansSB.body0.colour(Colors.black),
+            ),
+            SizedBox(height: SizeConfig.padding12),
+            Row(
+              children: [
+                Expanded(
+                    child: Text(
+                  "Get the lease back in your Digital Gold wallet",
+                  style: TextStyles.sourceSans.body3.colour(Colors.black),
+                )),
+                SizedBox(width: SizeConfig.padding18),
+                MaterialButton(
+                  onPressed: () {
+                    AppState.delegate!.parseRoute(Uri.parse("goldProSell"));
+                    final _userService = locator<UserService>();
+                    locator<AnalyticsService>().track(
+                        eventName: AnalyticsEvents.unleaseOnGoldProDetailsPage,
+                        properties: {
+                          "current gold value":
+                              _userService.userPortfolio.goldPro.balance,
+                          "current gold weight":
+                              _userService.userFundWallet?.wAugFdQty ?? 0,
+                        });
+                  },
+                  color: Colors.white,
+                  height: SizeConfig.padding44,
+                  minWidth: SizeConfig.screenWidth! * 0.3,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(SizeConfig.roundness8),
+                  ),
+                  child: Text(
+                    "UN-LEASE",
+                    style: TextStyles.rajdhaniB.body1.colour(Colors.black),
+                  ),
+                )
+              ],
+            )
           ],
         ),
       ),
@@ -496,7 +522,7 @@ class HowGoldProWorksSection extends StatelessWidget {
       child: Column(
         children: [
           Text(
-            "How Digital ${Constants.ASSET_GOLD_STAKE} works",
+            "How ${Constants.ASSET_GOLD_STAKE} works",
             style: TextStyles.rajdhaniSB.title3.colour(Colors.white),
           ),
           SizedBox(height: SizeConfig.padding16),
@@ -506,19 +532,33 @@ class HowGoldProWorksSection extends StatelessWidget {
               scrollDirection: Axis.horizontal,
               padding: EdgeInsets.symmetric(
                   horizontal: SizeConfig.pageHorizontalMargins),
-              itemBuilder: (context, index) => Container(
-                width: SizeConfig.screenWidth! * 0.4,
-                margin: EdgeInsets.only(right: SizeConfig.padding16),
-                decoration: BoxDecoration(
-                  color: UiConstants.KGoldProPrimaryDark,
-                  borderRadius: BorderRadius.circular(
-                    SizeConfig.roundness24,
+              itemBuilder: (context, index) => GestureDetector(
+                onTap: () {
+                  final UserService _userService = locator<UserService>();
+                  locator<AnalyticsService>().track(
+                    eventName: AnalyticsEvents.videoTappedOnGoldPro,
+                    properties: {
+                      "existing lease amount":
+                          _userService.userPortfolio.goldPro.balance,
+                      "existing lease grams":
+                          _userService.userFundWallet?.wAugFdQty ?? 0
+                    },
+                  );
+                },
+                child: Container(
+                  width: SizeConfig.screenWidth! * 0.4,
+                  margin: EdgeInsets.only(right: SizeConfig.padding16),
+                  decoration: BoxDecoration(
+                    color: UiConstants.KGoldProPrimaryDark,
+                    borderRadius: BorderRadius.circular(
+                      SizeConfig.roundness24,
+                    ),
                   ),
-                ),
-                alignment: Alignment.center,
-                child: Image.network(
-                  Assets.youtubeLogo,
-                  width: SizeConfig.padding54,
+                  alignment: Alignment.center,
+                  child: Image.network(
+                    Assets.youtubeLogo,
+                    width: SizeConfig.padding54,
+                  ),
                 ),
               ),
               itemCount: 5,
@@ -547,7 +587,7 @@ class WhyGoldProSection extends StatelessWidget {
       child: Column(
         children: [
           Text(
-            "Why Digital ${Constants.ASSET_GOLD_STAKE}?",
+            "Why ${Constants.ASSET_GOLD_STAKE}?",
             style: TextStyles.rajdhaniSB.title3.colour(Colors.white),
           ),
           SizedBox(height: SizeConfig.padding16),

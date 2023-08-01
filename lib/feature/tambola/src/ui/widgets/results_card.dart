@@ -1,4 +1,5 @@
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/model/winners_model.dart';
 import 'package:felloapp/feature/tambola/src/ui/weekly_results_views/weekly_result.dart';
 import 'package:felloapp/feature/tambola/tambola.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -19,12 +20,12 @@ class TambolaResultCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     // S locale = S.of(context);
-    return Selector<TambolaService, Tuple2<Map<String, int>, bool>>(
+    return Selector<TambolaService, Tuple2<Winners?, bool>>(
         selector: (_, service) => Tuple2(
-              service.ticketCodeWinIndex,
+              service.winnerData,
               service.isEligible,
             ),
-        builder: (context, value, child) => value.item1.isNotEmpty
+        builder: (context, value, child) => value.item1 != null
             ? Padding(
                 padding: EdgeInsets.symmetric(vertical: SizeConfig.padding10),
                 child: GestureDetector(
@@ -33,7 +34,7 @@ class TambolaResultCard extends StatelessWidget {
                     state: PageState.addWidget,
                     page: TWeeklyResultPageConfig,
                     widget: WeeklyResult(
-                      winningsMap: value.item1,
+                      winner: value.item1!,
                       isEligible: value.item2,
                     ),
                   ),

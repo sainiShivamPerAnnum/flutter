@@ -779,13 +779,15 @@ class GoldProBreakdownView extends StatelessWidget {
                   Row(
                     children: [
                       Text(
-                        "Grams of Gold",
-                        style: TextStyles.sourceSans.body2,
+                        "Grams of Gold for Lease",
+                        style: TextStyles.sourceSans.body2
+                            .colour(UiConstants.kGoldProPrimary),
                       ),
                       const Spacer(),
                       Text(
                         "${model.totalGoldBalance}gms",
-                        style: TextStyles.sourceSansSB.body2,
+                        style: TextStyles.sourceSansSB.body2
+                            .colour(UiConstants.kGoldProPrimary),
                       ),
                     ],
                   ),
@@ -890,10 +892,10 @@ class GoldProBreakdownView extends StatelessWidget {
                   //     height: SizeConfig.padding12,
                   //   )
                   // ],
-                  if (showBreakDown)
-                    Divider(
-                        color:
-                            UiConstants.kLastUpdatedTextColor.withOpacity(0.5))
+                  // if (showBreakDown)
+                  //   Divider(
+                  //       color:
+                  //           UiConstants.kLastUpdatedTextColor.withOpacity(0.5))
                 ],
               ),
             // if (showPsp && model.isIntentFlow)

@@ -134,58 +134,7 @@ class _TambolaHomeDetailsViewState extends State<TambolaHomeDetailsView> {
                     SizedBox(
                       height: SizeConfig.blockSizeVertical! * 2,
                     ),
-                    if (widget.showDemoImage) ...[
-                      Stack(
-                        children: [
-                          Center(
-                            child: Image.asset(
-                              "assets/images/blurred_ticket.png",
-                              width: SizeConfig.screenWidth! * 0.9,
-                              fit: BoxFit.cover,
-                            ),
-                          ),
-                          Positioned(
-                            top: SizeConfig.padding54,
-                            left: 0,
-                            right: 0,
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(
-                                  Icons.lock,
-                                  size: SizeConfig.iconSize1 * 2,
-                                  color: Colors.white,
-                                  weight: 700,
-                                  grade: 200,
-                                  opticalSize: 48,
-                                ),
-                                SizedBox(
-                                  height: SizeConfig.padding10,
-                                ),
-                                Text(
-                                  "Unlock your first ticket by saving\n₹${AppConfig.getValue(AppConfigKey.tambola_cost)} on Fello",
-                                  style: TextStyles.rajdhaniB.body1,
-                                  textAlign: TextAlign.center,
-                                )
-                              ],
-                            ),
-                          )
-                        ],
-                      ),
-                      Container(
-                        margin: EdgeInsets.symmetric(
-                            vertical: SizeConfig.padding10),
-                        width: SizeConfig.screenWidth! * 0.9,
-                        child: Text(
-                          '15 numbers on a ticket. 21 numbers picked every week. Cross all numbers to get rewarded!',
-                          textAlign: TextAlign.center,
-                          style: TextStyles.rajdhaniSB.body2.colour(UiConstants
-                              .kProfileBorderColor
-                              .withOpacity(0.41)),
-                        ),
-                      ),
-                      SizedBox(height: SizeConfig.padding20),
-                    ],
+                    if (widget.showDemoImage) const TambolaDemoImage(),
                     const TambolaPrize(),
                     const TambolaLeaderboardView(),
                     const TermsAndConditions(url: Constants.tambolatnc),
@@ -276,6 +225,68 @@ class _TambolaHomeDetailsViewState extends State<TambolaHomeDetailsView> {
           ),
         );
       },
+    );
+  }
+}
+
+class TambolaDemoImage extends StatelessWidget {
+  const TambolaDemoImage({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Stack(
+          children: [
+            Center(
+              child: Image.asset(
+                "assets/images/blurred_ticket.png",
+                width: SizeConfig.screenWidth! * 0.9,
+                fit: BoxFit.cover,
+              ),
+            ),
+            Positioned(
+              top: SizeConfig.padding54,
+              left: 0,
+              right: 0,
+              child: Column(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Icon(
+                    Icons.lock,
+                    size: SizeConfig.iconSize1 * 2,
+                    color: Colors.white,
+                    weight: 700,
+                    grade: 200,
+                    opticalSize: 48,
+                  ),
+                  SizedBox(
+                    height: SizeConfig.padding10,
+                  ),
+                  Text(
+                    "Unlock your first ticket by saving\n₹${AppConfig.getValue(AppConfigKey.tambola_cost)} on Fello",
+                    style: TextStyles.rajdhaniB.body1,
+                    textAlign: TextAlign.center,
+                  )
+                ],
+              ),
+            )
+          ],
+        ),
+        Container(
+          margin: EdgeInsets.symmetric(vertical: SizeConfig.padding10),
+          width: SizeConfig.screenWidth! * 0.9,
+          child: Text(
+            '15 numbers on a ticket. 21 numbers picked every week. Cross all numbers to get rewarded!',
+            textAlign: TextAlign.center,
+            style: TextStyles.rajdhaniSB.body2
+                .colour(UiConstants.kProfileBorderColor.withOpacity(0.41)),
+          ),
+        ),
+        SizedBox(height: SizeConfig.padding20),
+      ],
     );
   }
 }

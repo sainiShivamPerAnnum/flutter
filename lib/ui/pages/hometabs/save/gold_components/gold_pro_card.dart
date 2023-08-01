@@ -1,7 +1,11 @@
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -15,6 +19,18 @@ class GoldProCard extends StatelessWidget {
       onTap: () {
         Haptic.vibrate();
         AppState.delegate!.parseRoute(Uri.parse('goldProDetails'));
+        final UserService _userService = locator<UserService>();
+        locator<AnalyticsService>().track(
+          eventName: AnalyticsEvents.goldProBannerTapped,
+          properties: {
+            'current Gold Balance':
+                _userService.userFundWallet?.augGoldQuantity ?? 0,
+            'isNewUser': _userService.userSegments.contains("NEW_USER"),
+            'current flo balance': _userService.userPortfolio.flo.balance,
+            "existing lease amount": _userService.userPortfolio.goldPro.balance,
+            "existing lease grams": _userService.userFundWallet?.wAugFdQty ?? 0
+          },
+        );
       },
       child: Container(
           width: SizeConfig.screenWidth,

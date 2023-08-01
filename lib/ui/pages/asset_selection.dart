@@ -607,7 +607,8 @@ class DigitalGoldPrograms extends StatelessWidget {
         GestureDetector(
           onTap: () {
             if (isPro) {
-              locator<BaseUtil>().openGoldProBuyView();
+              locator<BaseUtil>()
+                  .openGoldProBuyView(location: "Asset Section View");
             } else {
               BaseUtil().openRechargeModalSheet(
                   investmentType: InvestmentType.AUGGOLD99);
@@ -754,7 +755,7 @@ class DigitalGoldPrograms extends StatelessWidget {
                 width: SizeConfig.screenWidth! * 0.39,
                 child: const AvailabilityOfferWidget(
                     color: UiConstants.kBlogTitleColor,
-                    text: "*16% Returns p.a*"),
+                    text: "*4.5% Extra Returns*"),
               ),
             ),
           ),

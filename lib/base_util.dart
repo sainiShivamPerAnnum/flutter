@@ -276,7 +276,7 @@ class BaseUtil extends ChangeNotifier {
     );
   }
 
-  void openGoldProBuyView() {
+  void openGoldProBuyView({required String location}) {
     final bool? isAugDepositBanned = _userService
         .userBootUp?.data!.banMap?.investments?.deposit?.goldPro?.isBanned;
     final String? augDepositBanNotice = _userService
@@ -290,6 +290,16 @@ class BaseUtil extends ChangeNotifier {
     Haptic.vibrate();
     AppState.delegate!.appState.currentAction =
         PageAction(page: GoldProBuyViewPageConfig, state: PageState.addPage);
+
+    locator<AnalyticsService>().track(
+      eventName: AnalyticsEvents.startNewLeaseTapped,
+      properties: {
+        'location': location,
+        "existing gold balance":
+            _userService.userFundWallet?.augGoldQuantity ?? 0,
+        "existing lease grams": _userService.userFundWallet?.wAugFdQty ?? 0
+      },
+    );
   }
 
   static dynamic openGameModalSheet(String game) {
@@ -310,6 +320,7 @@ class BaseUtil extends ChangeNotifier {
   void openRechargeModalSheet({
     int? amt,
     bool? isSkipMl,
+    double? gms,
     required InvestmentType investmentType,
   }) {
     final bool? isAugDepositBanned = _userService
@@ -350,6 +361,7 @@ class BaseUtil extends ChangeNotifier {
           content: GoldBuyView(
             onChanged: (p0) => amount = p0,
             amount: amt,
+            gms: gms,
             skipMl: isSkipMl ?? false,
           ));
     }

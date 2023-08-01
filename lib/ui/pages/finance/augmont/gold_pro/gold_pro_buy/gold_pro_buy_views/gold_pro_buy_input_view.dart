@@ -44,7 +44,7 @@ class GoldProBuyInputView extends StatelessWidget {
                   ),
                   // SizedBox(width: SizeConfig.padding8),
                   Text(
-                    'Digital ${Constants.ASSET_GOLD_STAKE}',
+                    Constants.ASSET_GOLD_STAKE,
                     style: TextStyles.rajdhaniSB.title5,
                   ),
                 ],
@@ -103,7 +103,7 @@ class GoldProBuyInputView extends StatelessWidget {
                                     duration: const Duration(seconds: 0),
                                     curve: Curves.easeIn,
                                     child: TextField(
-                                      maxLength: 6,
+                                      maxLength: 3,
                                       controller: model.goldFieldController,
                                       keyboardType: TextInputType.number,
                                       onChanged: model.onTextFieldValueChanged,
@@ -197,6 +197,8 @@ class GoldProBuyInputView extends StatelessWidget {
                       color: Colors.black,
                     ),
                     child: Column(children: [
+                      ExpectedGoldProReturnsRow(model: model),
+                      SizedBox(height: SizeConfig.padding18),
                       GoldBalanceRow(
                         lead: "Saving in ${Constants.ASSET_GOLD_STAKE}",
                         trail: model.totalGoldBalance,
@@ -207,8 +209,6 @@ class GoldProBuyInputView extends StatelessWidget {
                         lead: "Current Gold Balance",
                         trail: model.currentGoldBalance,
                       ),
-                      SizedBox(height: SizeConfig.padding18),
-                      ExpectedGoldProReturnsRow(model: model),
                       SizedBox(height: SizeConfig.padding18),
                       Consumer<BankAndPanService>(
                         builder: (context, panService, child) =>

@@ -54,7 +54,7 @@ class GoldProSellView extends StatelessWidget {
                           // SizedBox(width: SizeConfig.padding8),
 
                           Text(
-                            'Un-Lease Digital ${Constants.ASSET_GOLD_STAKE}',
+                            'Un-Lease ${Constants.ASSET_GOLD_STAKE}',
                             style: TextStyles.rajdhaniSB.title5,
                           ),
                           const Spacer()

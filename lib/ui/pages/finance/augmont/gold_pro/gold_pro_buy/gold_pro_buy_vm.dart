@@ -2,12 +2,14 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/transaction_state_enum.dart';
 import 'package:felloapp/core/model/asset_options_model.dart';
 import 'package:felloapp/core/model/aug_gold_rates_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/repository/getters_repo.dart';
 import 'package:felloapp/core/repository/payment_repo.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
@@ -137,6 +139,7 @@ class GoldProBuyViewModel extends BaseViewModel {
 
   Future<void> init() async {
     AppState.isGoldProBuyInProgress = false;
+    _isGoldRateFetching = true;
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       _txnService.currentTransactionState = TransactionState.idle;
     });
@@ -144,11 +147,12 @@ class GoldProBuyViewModel extends BaseViewModel {
         userService.userFundWallet!.augGoldQuantity, 4, false);
     totalGoldBalance = chipsList[1].value;
     appMetaList = await UpiUtils.getUpiApps();
-    unawaited(fetchGoldRates());
     await verifyAugmontKyc();
-    unawaited(getAssetOptionsModel().then((_) {
+    await getGoldProScheme();
+    await getAssetOptionsModel().then((_) {
       isIntentFlow = assetOptionsModel!.data.intent;
-    }));
+    });
+    unawaited(fetchGoldRates());
   }
 
   void dump() {
@@ -163,8 +167,29 @@ class GoldProBuyViewModel extends BaseViewModel {
     }
   }
 
+  Future<void> getGoldProScheme() async {
+    final res = await _paymentRepo.getGoldProScheme();
+    if (res.isSuccess()) {
+      _txnService.goldProScheme = res.model;
+    } else {
+      BaseUtil.showNegativeAlert(
+          "Failed to fetch Gold Scheme", res.errorMessage);
+    }
+  }
+
   Future<void> initiateGoldProTransaction() async {
     AppState.isGoldProBuyInProgress = false;
+    locator<AnalyticsService>().track(
+      eventName: AnalyticsEvents.goldProFinalSaveTapped,
+      properties: {
+        "grams to add": additionalGoldBalance,
+        "amount to add": totalGoldAmount,
+        "total lease value": totalGoldBalance,
+        "current gold balance": currentGoldBalance,
+        "expected returns": expectedGoldReturns,
+        "returns percentage": 15.5
+      },
+    );
     if (additionalGoldBalance == 0) {
       await _initiateLease();
     } else {
@@ -275,6 +300,13 @@ class GoldProBuyViewModel extends BaseViewModel {
         updateSliderValue(1.0);
         break;
     }
+    locator<AnalyticsService>().track(
+      eventName: AnalyticsEvents.goldProGramsSelected,
+      properties: {
+        "grams": chipsList[selectedChipIndex].value,
+        "best flag": chipsList[selectedChipIndex].isBest
+      },
+    );
   }
 
   void updateSliderValueFromGoldBalance() {
@@ -349,6 +381,15 @@ class GoldProBuyViewModel extends BaseViewModel {
 
   void onProceedTapped() {
     Haptic.vibrate();
+    locator<AnalyticsService>().track(
+      eventName: AnalyticsEvents.proceedWithGoldPro,
+      properties: {
+        "total lease value": totalGoldBalance,
+        "current gold balance": currentGoldBalance,
+        "expected returns": expectedGoldReturns,
+        "returns percentage": 15.5
+      },
+    );
     if (totalGoldBalance > 10) {
       BaseUtil.showNegativeAlert(
           "Gold grams out of bound", "You can lease at most 10 grams");
@@ -374,6 +415,15 @@ class GoldProBuyViewModel extends BaseViewModel {
 
   void onCompleteKycTapped() {
     AppState.delegate!.parseRoute(Uri.parse('/kycVerify'));
+    locator<AnalyticsService>().track(
+      eventName: AnalyticsEvents.proceedWithKycGoldPro,
+      properties: {
+        "total lease value": totalGoldBalance,
+        "current gold balance": currentGoldBalance,
+        "expected returns": expectedGoldReturns,
+        "returns percentage": 15.5
+      },
+    );
   }
 
   Future<void> fetchGoldRates() async {
@@ -392,19 +442,11 @@ class GoldProBuyViewModel extends BaseViewModel {
         (goldRates?.cgstPercent ?? 0) + (goldRates?.sgstPercent ?? 0);
 
     if (goldBuyPrice != 0.0) {
-      // final totalGoldInvestmentCost =
-      //     BaseUtil.digitPrecision(additionalGoldBalance * goldBuyPrice!, 2);
-      // final taxedTotalGoldInvestmentCost = BaseUtil.digitPrecision(
-      //     totalGoldInvestmentCost +
-      //         _getTaxOnAmount(totalGoldInvestmentCost, netTax));
-      // Mismatch in augmont and ours calculation so adding ₹2 to final amount
       additionalGoldBalance += 0.0004;
       totalGoldAmount = BaseUtil.digitPrecision(
           (goldBuyPrice! * additionalGoldBalance) +
               (netTax * goldBuyPrice! * additionalGoldBalance) / 100,
           2);
-      //  taxedTotalGoldInvestmentCost + 2;
-      // TODO: Need to be fixed
 
       double expectedGoldReturnsAmount = BaseUtil.digitPrecision(
           totalGoldBalance * goldBuyPrice! + netTax, 2, false);

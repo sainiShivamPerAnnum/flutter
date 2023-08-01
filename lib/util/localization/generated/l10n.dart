@@ -206,7 +206,7 @@ class S {
   /// `You're one step away from 10% returns`
   String get obEnterDetailsTitle {
     return Intl.message(
-      'You\'re one step away from 10% returns',
+      'You\'re one step away from 12% returns',
       name: 'obEnterDetailsTitle',
       desc: '',
       args: [],

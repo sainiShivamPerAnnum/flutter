@@ -30,7 +30,8 @@ enum AppConfigKey {
   enable_truecaller_login,
   payment_brief_view,
   quiz_config,
-  revamped_referrals_config
+  revamped_referrals_config,
+  useNewUrlUserOps
 }
 
 extension AppConfigKeys on String {
@@ -99,6 +100,8 @@ extension AppConfigKeys on String {
         return AppConfigKey.quiz_config;
       case "revampedReferralsConfig":
         return AppConfigKey.revamped_referrals_config;
+      case 'useNewUrlUserOps':
+        return AppConfigKey.useNewUrlUserOps;
       default:
         return AppConfigKey.unknown;
     }

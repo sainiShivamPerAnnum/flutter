@@ -89,13 +89,14 @@ class GoldBalanceBriefRow extends StatelessWidget {
                               Transform.translate(
                                 offset: Offset(0, -SizeConfig.padding4),
                                 child: RotatedBox(
-                                  quarterTurns: goldGains >= 0 ? 0 : 2,
+                                  quarterTurns:
+                                      (percent ?? goldGains) >= 0 ? 0 : 2,
                                   child: SvgPicture.asset(
                                     Assets.arrow,
                                     width: mini
                                         ? SizeConfig.iconSize2
                                         : SizeConfig.iconSize2,
-                                    color: goldGains >= 0
+                                    color: (percent ?? goldGains) >= 0
                                         ? UiConstants.primaryColor
                                         : Colors.red,
                                   ),
@@ -103,12 +104,12 @@ class GoldBalanceBriefRow extends StatelessWidget {
                               ),
                               Text(
                                   " ${BaseUtil.digitPrecision(
-                                    goldGainsPerc,
-                                    2,
+                                    (percent ?? goldGainsPerc),
+                                    isGainInGms ? 4 : 2,
                                     false,
                                   )}${isGainInGms ? "gms" : "%"}",
                                   style: TextStyles.sourceSans.body3.colour(
-                                      goldGains >= 0
+                                      (percent ?? goldGains) >= 0
                                           ? UiConstants.primaryColor
                                           : Colors.red)),
                             ],

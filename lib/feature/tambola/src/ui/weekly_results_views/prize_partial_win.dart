@@ -1,3 +1,4 @@
+import 'package:felloapp/core/model/winners_model.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/elements/buttons/fello_button/large_button.dart';
 import 'package:felloapp/util/styles/styles.dart';
@@ -6,8 +7,10 @@ import 'package:flutter/material.dart';
 import 'winnerbox.dart';
 
 class PrizePWin extends StatefulWidget {
-  final Map<String, int>? winningsMap;
-  const PrizePWin({Key? key, this.winningsMap}) : super(key: key);
+  final Winners winner;
+  final bool isEligible;
+  const PrizePWin({Key? key, required this.winner, required this.isEligible})
+      : super(key: key);
 
   @override
   _PrizePWinState createState() => _PrizePWinState();
@@ -52,8 +55,9 @@ class _PrizePWinState extends State<PrizePWin> {
               child: Stack(
                 children: [
                   WinnerBox(
-                    winningsmap: widget.winningsMap,
+                    winner: widget.winner,
                     tPrize: null,
+                    isEligible: widget.isEligible,
                   ),
                 ],
               ),

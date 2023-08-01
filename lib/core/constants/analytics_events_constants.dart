@@ -226,4 +226,36 @@ class AnalyticsEvents {
   static const tambolaCarousel = "Tambola Top Carousel Tapped";
   static const quizCrossTapped = "Cross on Quiz Tapped";
   static const quizBannerTapped = "Quiz Banner Tapped";
+
+  static const iconTrayTapped = "Icon tray tapped";
+  static const goldProBannerTapped = "Gold Pro Banner Tapped";
+  static const goldProEntryBelowBalanceTapped =
+      "Gold Pro Entry Below Balance Card";
+  static const autosaveCardInGoldSectionTapped =
+      "Autosave Card in Gold Section Tapped";
+  static const paymentSuccessGoldProUpsellCardTapped =
+      "Payment Success Gold Pro Upsell";
+
+  static const yearTappedOnGraph = "Year tapped on graph";
+  static const videoTappedOnGoldPro = "Video Tapped on Gold Pro";
+  static const transactionTileTapped = "Transaction tile tapped";
+  static const startNewLeaseTapped = "Start New Lease Tapped";
+
+  //Lease Flow
+  static const goldProGramsSelected = "Gold Pro Grams Selected";
+  static const proceedWithGoldPro = "Proceed with Gold Pro";
+  static const proceedWithKycGoldPro = "Proceed with Kyc Gold Pro";
+  static const backTappedOnKycPage = "Back Tapped on Kyc Page";
+  static const goldProFinalSaveTapped = "Gold Pro final Save Tapped";
+  static const backTappedOnGoldProOverView = "Back tapped on Gold Pro OverView";
+  static const backSurveyContinueTappedGoldPro =
+      "Back Survey Continue tapped Gold Pro";
+  static const backSurveyGoBackTappedGoldPro =
+      "Back Survey Go Back Tapped Gold Pro";
+  static const doneTappedOnGoldProSuccess = "Done tapped on Gold Pro Success";
+
+  //unlease flow
+  static const unleaseOnGoldProDetailsPage = "Unlease on Gold pro details page";
+  static const unleaseOnLeaseCardGoldPro = "Unlease on Lease card gold pro";
+  static const unleaseConfirmationGoldPro = "Unlease Confirmation Gold Pro";
 }

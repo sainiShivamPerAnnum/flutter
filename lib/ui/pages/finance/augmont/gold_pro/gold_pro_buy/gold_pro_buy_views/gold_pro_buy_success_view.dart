@@ -1,4 +1,6 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/feature/tambola/tambola.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -219,9 +221,10 @@ class _GoldProBuySuccessViewState extends State<GoldProBuySuccessView>
                                         Text(
                                             "${BaseUtil.digitPrecision(
                                               widget
-                                                  .txnService
-                                                  .currentGoldPurchaseDetails
-                                                  .leaseQty!,
+                                                      .txnService
+                                                      .currentGoldPurchaseDetails
+                                                      .leaseQty ??
+                                                  0,
                                               2,
                                               false,
                                             )} gms",
@@ -301,7 +304,7 @@ class _GoldProBuySuccessViewState extends State<GoldProBuySuccessView>
                   ),
                 ),
                 const AutopaySetupWidget(),
-                Spacer(),
+                const Spacer(),
                 TextButton(
                   onPressed: () {
                     AppState.isRepeated = true;
@@ -314,6 +317,19 @@ class _GoldProBuySuccessViewState extends State<GoldProBuySuccessView>
                     locator<TambolaService>().getBestTambolaTickets();
 
                     widget.txnService.showGtIfAvailable();
+                    locator<AnalyticsService>().track(
+                      eventName: AnalyticsEvents.doneTappedOnGoldProSuccess,
+                      properties: {
+                        "grams of gold leased": "${BaseUtil.digitPrecision(
+                          widget
+                              .txnService.currentGoldPurchaseDetails.leaseQty!,
+                          2,
+                          false,
+                        )} gms",
+                        "Amount leased":
+                            "₹ ${BaseUtil.getIntOrDouble(widget.txnService.currentGoldPurchaseDetails.goldBuyAmount!)}"
+                      },
+                    );
                   },
                   child: Text(
                     locale.obDone,

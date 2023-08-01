@@ -100,7 +100,7 @@ class ExpectedGoldProReturnsRow extends StatelessWidget {
                                         text: "₹" +
                                             "${model.expectedGoldReturns.toInt()}"
                                                 .formatToIndianNumberSystem(),
-                                        style: TextStyles.rajdhaniSB.title2
+                                        style: TextStyles.rajdhaniSB.title3
                                             .colour(
                                                 UiConstants.kGoldProPrimary),
                                       ),
@@ -110,7 +110,7 @@ class ExpectedGoldProReturnsRow extends StatelessWidget {
                                             bottom: SizeConfig.padding12),
                                         child: Text(
                                           "*",
-                                          style: TextStyles.rajdhaniB.body0
+                                          style: TextStyles.rajdhaniB.body3
                                               .colour(
                                                   UiConstants.kGoldProPrimary),
                                         ),
@@ -167,7 +167,7 @@ class PriceAdaptiveGoldProOverViewCard extends StatelessWidget {
                     ),
                     SizedBox(height: SizeConfig.padding4),
                     Text(
-                      "more in ${Constants.ASSET_GOLD_STAKE} to lease",
+                      "in Digital Gold to lease",
                       style: TextStyles.body4.colour(Colors.grey),
                     )
                   ],

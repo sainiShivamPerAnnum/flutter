@@ -2,10 +2,12 @@
 import 'dart:async';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/gold_pro_models/gold_pro_investment_reponse_model.dart';
 import 'package:felloapp/core/repository/payment_repo.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
@@ -41,6 +43,14 @@ class GoldProSellViewModel extends BaseViewModel {
 
   void onSellTapped(
       GoldProInvestmentResponseModel data, GoldProSellViewModel model) {
+    locator<AnalyticsService>().track(
+        eventName: AnalyticsEvents.unleaseOnLeaseCardGoldPro,
+        properties: {
+          "current gold value": data.amount,
+          "current gold weight": data.qty,
+          "leased on": data.createdOn,
+          "date of extra returns": data.message
+        });
     final bool? isGoldProSellLocked = _userService
         .userBootUp?.data!.banMap?.investments?.withdrawal?.augmont?.isBanned;
     final String? goldProSellBanNotice = _userService

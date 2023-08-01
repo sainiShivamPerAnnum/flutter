@@ -4,9 +4,11 @@ import 'dart:developer';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/constants/cache_keys.dart';
+import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/enums/ttl.dart';
 import 'package:felloapp/core/model/alert_model.dart';
+import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/flc_pregame_model.dart';
 import 'package:felloapp/core/model/portfolio_model.dart';
@@ -36,9 +38,16 @@ class UserRepository extends BaseRepo {
   final Api? _api = locator<Api>();
   final ApiPath? _apiPaths = locator<ApiPath>();
   final InternalOpsService? _internalOpsService = locator<InternalOpsService>();
-  final _baseUrl = FlavorConfig.isDevelopment()
+  String _baseUrl = FlavorConfig.isDevelopment()
       ? "https://6w37rw51hj.execute-api.ap-south-1.amazonaws.com/dev"
       : "https://7y9layzs7j.execute-api.ap-south-1.amazonaws.com/prod";
+
+  void setUpBaseUrl() {
+    if (FlavorConfig.isDevelopment() &&
+        AppConfig.getValue(AppConfigKey.useNewUrlUserOps)) {
+      _baseUrl = "https://api.fello-dev.net/users";
+    }
+  }
 
   Future<ApiResponse<String>> getCustomUserToken(String? mobileNo) async {
     try {

@@ -6,11 +6,10 @@ class TambolaHomeTicketsViewModel extends BaseViewModel {
   TambolaService? tambolaService;
   void init() {
     tambolaService = locator<TambolaService>();
-    tambolaService!.getPastWeekWinners();
+
     tambolaService!.getTambolaTickets(limit: 1);
-    tambolaService!
-        .fetchWeeklyPicks()
-        .then((value) => tambolaService!.examineTicketsForWins());
+    tambolaService!.fetchWeeklyPicks();
+    tambolaService!.getPastWeekWinners();
   }
 
   @override

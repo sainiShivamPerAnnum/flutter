@@ -22,12 +22,14 @@ import 'package:felloapp/core/service/payments/razorpay_service.dart';
 import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/back_button_actions.dart';
+import 'package:felloapp/ui/pages/finance/augmont/gold_buy/augmont_buy_vm.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/extensions/string_extension.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/services.dart';
 import 'package:upi_pay/upi_pay.dart';
@@ -289,13 +291,9 @@ class AugmontTransactionService extends BaseTransactionService {
                 unawaited(transactionResponseUpdate(
                     gtIds: transactionResponseModel?.data?.gtIds ?? []));
               } else if (txnStatus.data!.fd!.status ==
-                  Constants.GOLD_PRO_TXN_STATUS_PENDING) {
-                // BaseUtil.showNegativeAlert(
-                //     "Gold leasing in pending", "You can close the app");
-              } else if (txnStatus.data!.fd!.status ==
                   Constants.GOLD_PRO_TXN_STATUS_FAILED) {
-                BaseUtil.showNegativeAlert(
-                    "Gold leasing in pending", "You can close the app");
+                showTransactionPendingDialog(
+                    transactionResponseModel?.data?.txnDisplayMsg);
               }
             } else {
               await locator<BaseUtil>().newUserCheck();
@@ -344,6 +342,22 @@ class AugmontTransactionService extends BaseTransactionService {
 
   double _getTaxOnAmount(double amount, double taxRate) {
     return BaseUtil.digitPrecision((amount * taxRate) / (100 + taxRate));
+  }
+
+  void showTransactionPendingDialog(String? subtitle) {
+    S locale = locator<S>();
+    Future.delayed(Duration(seconds: 1), () {
+      BaseUtil.openDialog(
+        addToScreenStack: true,
+        hapticVibrate: true,
+        isBarrierDismissible: false,
+        content: PendingDialog(
+          title: "Oh no!",
+          subtitle: subtitle ?? locale.txnDelay,
+          duration: '15 ${locale.minutes}',
+        ),
+      );
+    });
   }
 }
 
