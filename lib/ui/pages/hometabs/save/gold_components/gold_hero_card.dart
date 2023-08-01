@@ -1,7 +1,6 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
-import 'package:felloapp/core/model/portfolio_model.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -57,47 +56,49 @@ class GoldInfoWidget extends StatelessWidget {
                       SizedBox(
                         height: SizeConfig.padding4,
                       ),
-                      Selector<UserService, Portfolio>(
-                          selector: (p0, p1) => p1.userPortfolio,
-                          builder: (context, value, child) {
-                            return Row(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                Text(
-                                  "₹${BaseUtil.digitPrecision(value.gold.balance ?? 0, 2)}",
-                                  textAlign: TextAlign.center,
-                                  style: TextStyles.sourceSansSB.title5.colour(
-                                    Colors.white.withOpacity(0.8),
-                                  ),
+                      Row(
+                        crossAxisAlignment: CrossAxisAlignment.end,
+                        children: [
+                          Text(
+                            "₹${BaseUtil.digitPrecision(model.userPortfolio.gold.balance ?? 0, 2)}",
+                            textAlign: TextAlign.center,
+                            style: TextStyles.sourceSansSB.title5.colour(
+                              Colors.white.withOpacity(0.8),
+                            ),
+                          ),
+                          SizedBox(width: SizeConfig.padding6),
+                          if ((model.userFundWallet?.augGoldQuantity ?? 0.0) >
+                              0.001)
+                            Transform.translate(
+                              offset: Offset(0, -SizeConfig.padding4),
+                              child: RotatedBox(
+                                quarterTurns:
+                                    model.userPortfolio.gold.percGains >= 0
+                                        ? 0
+                                        : 2,
+                                child: SvgPicture.asset(
+                                  Assets.arrow,
+                                  width: SizeConfig.iconSize3,
+                                  color: model.userPortfolio.gold.percGains >= 0
+                                      ? UiConstants.primaryColor
+                                      : Colors.red,
                                 ),
-                                SizedBox(width: SizeConfig.padding6),
-                                Transform.translate(
-                                  offset: Offset(0, -SizeConfig.padding4),
-                                  child: RotatedBox(
-                                    quarterTurns:
-                                        value.gold.percGains >= 0 ? 0 : 2,
-                                    child: SvgPicture.asset(
-                                      Assets.arrow,
-                                      width: SizeConfig.iconSize3,
-                                      color: value.gold.percGains >= 0
-                                          ? UiConstants.primaryColor
-                                          : Colors.red,
-                                    ),
-                                  ),
-                                ),
-                                Text(
-                                    " ${BaseUtil.digitPrecision(
-                                      value.gold.percGains,
-                                      2,
-                                      false,
-                                    )}%",
-                                    style: TextStyles.sourceSans.body3.colour(
-                                        value.gold.percGains >= 0
-                                            ? UiConstants.primaryColor
-                                            : Colors.red)),
-                              ],
-                            );
-                          }),
+                              ),
+                            ),
+                          if ((model.userFundWallet?.augGoldQuantity ?? 0.0) >
+                              0.001)
+                            Text(
+                                " ${BaseUtil.digitPrecision(
+                                  model.userPortfolio.gold.percGains,
+                                  2,
+                                  false,
+                                )}%",
+                                style: TextStyles.sourceSans.body3.colour(
+                                    model.userPortfolio.gold.percGains >= 0
+                                        ? UiConstants.primaryColor
+                                        : Colors.red)),
+                        ],
+                      ),
                     ],
                   ),
                   Column(
