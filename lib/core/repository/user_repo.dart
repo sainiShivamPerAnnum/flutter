@@ -5,7 +5,6 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/constants/cache_keys.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
-import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/enums/ttl.dart';
 import 'package:felloapp/core/model/alert_model.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
@@ -27,6 +26,7 @@ import 'package:felloapp/util/app_exceptions.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/preference_helper.dart';
 import 'package:flutter/material.dart';
 
 import 'base_repo.dart';
@@ -363,16 +363,16 @@ class UserRepository extends BaseRepo {
         // if the notification is persistent then we need to show the notification only once in 48 hours
         // so we are checking if the notification is created in last 48 hours
 
-        if (!await CacheManager.exits(
-            CacheManager.CACHE_REFERRAL_PERSISTENT_NOTIFACTION_ID)) {
+        if (!PreferenceHelper.exists(
+            PreferenceHelper.CACHE_REFERRAL_PERSISTENT_NOTIFACTION_ID)) {
           int notifTimeInSeconds = int.tryParse(notifTime)!;
           int currentTimeInSeconds =
               DateTime.now().millisecondsSinceEpoch ~/ 1000;
           if (currentTimeInSeconds - notifTimeInSeconds < 172800) {
-            CacheManager.writeCache(
-                key: CacheManager.CACHE_REFERRAL_PERSISTENT_NOTIFACTION_ID,
-                value: notifications[0].id!.toString(),
-                type: CacheType.string);
+            PreferenceHelper.setString(
+              CacheManager.CACHE_REFERRAL_PERSISTENT_NOTIFACTION_ID,
+              notifications[0].id!.toString(),
+            );
 
             if (notifications[0].misc != null &&
                 notifications[0].misc?.gtId != null) {
@@ -383,6 +383,26 @@ class UserRepository extends BaseRepo {
             return ApiResponse<bool>(model: true, code: 200);
           }
         }
+        // if (!await CacheManager.exits(
+        //     CacheManager.CACHE_REFERRAL_PERSISTENT_NOTIFACTION_ID)) {
+        //   int notifTimeInSeconds = int.tryParse(notifTime)!;
+        //   int currentTimeInSeconds =
+        //       DateTime.now().millisecondsSinceEpoch ~/ 1000;
+        //   if (currentTimeInSeconds - notifTimeInSeconds < 172800) {
+        //     CacheManager.writeCache(
+        //         key: CacheManager.CACHE_REFERRAL_PERSISTENT_NOTIFACTION_ID,
+        //         value: notifications[0].id!.toString(),
+        //         type: CacheType.string);
+        //
+        //     if (notifications[0].misc != null &&
+        //         notifications[0].misc?.gtId != null) {
+        //       ScratchCardService.scratchCardId = notifications[0].misc!.gtId!;
+        //     }
+        //
+        //     userService.referralAlertDialog = notifications[0];
+        //     return ApiResponse<bool>(model: true, code: 200);
+        //   }
+        // }
       }
 
       if (latestNotifTime != null) {

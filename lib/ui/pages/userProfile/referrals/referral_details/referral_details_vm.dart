@@ -182,23 +182,24 @@ class ReferralDetailsViewModel extends BaseViewModel {
     dbProvider = Provider.of<DBModel>(context, listen: false);
     final ReferralRepo referralRepo = locator<ReferralRepo>();
 
-    if (!(baseProvider.referralsFetched ?? false) || refresh) {
-      referralRepo!.getReferralHistory().then((refHisModel) {
-        if (refHisModel.isSuccess()) {
-          baseProvider.referralsFetched = true;
-          baseProvider.userReferralsList = refHisModel.model ?? [];
-          _referalList = baseProvider.userReferralsList;
-          log("Referral List: ${_referalList!.length}");
-          notifyListeners();
-        } else {
-          BaseUtil.showNegativeAlert(refHisModel.errorMessage, '');
-        }
-      });
-    } else {
-      _referalList = baseProvider.userReferralsList;
-
-      notifyListeners();
-    }
+    // if (!(baseProvider.referralsFetched ?? false) || refresh) {
+    referralRepo!.getReferralHistory().then((refHisModel) {
+      if (refHisModel.isSuccess()) {
+        // baseProvider.referralsFetched = true;
+        baseProvider.userReferralsList = refHisModel.model ?? [];
+        _referalList = baseProvider.userReferralsList;
+        log("Referral List: ${_referalList!.length}");
+        notifyListeners();
+      } else {
+        BaseUtil.showNegativeAlert(refHisModel.errorMessage, '');
+      }
+      // });
+    });
+    // else {
+    //   _referalList = baseProvider.userReferralsList;
+    //
+    //   notifyListeners();
+    // }
   }
 
   Future<String?> generateLink() async {

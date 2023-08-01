@@ -142,7 +142,7 @@ class FcmHandler extends ChangeNotifier {
           log("Golden Ticket win update fcm response - ${data['payload']}",
               name: "FcmHandler");
           showSnackbar = false;
-          await _userService.fcmHandlerReferralGT(data['payload']['gtId']);
+          await _userService.checkForNewNotifications();
           break;
         case FcmCommands.COMMAND_APPXOR_DIALOG:
           debugPrint("fcm handler: appxor");

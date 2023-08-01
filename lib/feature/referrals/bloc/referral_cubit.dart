@@ -88,7 +88,7 @@ class ReferralCubit extends Cubit<ReferralState> {
       await Future.delayed(const Duration(seconds: 5));
 
       await referralRepo
-          .getRegisteredUsers(model.phoneNumbers, cacheApi: !fromRefresh)
+          .getRegisteredUsers(model.phoneNumbers, forceRefresh: fromRefresh)
           .then((res) {
         if (res.isSuccess()) {
           registeredUser = res.model?.data ?? [];

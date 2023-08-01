@@ -10,12 +10,13 @@ import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/flavor_config.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
 
 import 'base_repo.dart';
 
 class ReferralRepo extends BaseRepo {
-  final _cacheService = CacheService();
+  final _cacheService = locator<CacheService>();
   final _baseUrl = FlavorConfig.isDevelopment()
       ? "https://2k3cus82jj.execute-api.ap-south-1.amazonaws.com/dev"
       : "https://bt3lswjiw1.execute-api.ap-south-1.amazonaws.com/prod";
@@ -122,21 +123,14 @@ class ReferralRepo extends BaseRepo {
 
   Future<ApiResponse<RegisteredUser>> getRegisteredUsers(
       List<String> phoneNumbers,
-      {bool cacheApi = true}) async {
+      {bool forceRefresh = false}) async {
     try {
       final String bearer = await getBearerToken();
 
-      if (!cacheApi) {
-        final response = await APIService.instance.postData(
-          ApiPath.getRegisteredUsers,
-          body: {
-            'phoneNumbers': phoneNumbers,
-          },
-          token: bearer,
-          cBaseUrl: _baseUrl,
+      if (forceRefresh) {
+        await CacheService.invalidateByKey(
+          CacheKeys.REFERRAL_REGISTERED_USERS,
         );
-        logger.d(response);
-        return ApiResponse(model: RegisteredUser.fromJson(response), code: 200);
       }
 
       return await _cacheService.cachedApi(
