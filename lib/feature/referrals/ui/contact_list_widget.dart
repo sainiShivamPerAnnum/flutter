@@ -95,34 +95,13 @@ class _ContactListWidgetState extends State<ContactListWidget>
     }
   }
 
-  Widget _buildLoadMoreButton() {
-    if (_isLoading) {
-      return const CircularProgressIndicator();
-    } else {
-      return ElevatedButton(
-        onPressed: () {
-          setState(() {
-            _isLoading = true;
-          });
-          // Simulate loading more contacts
-          Future.delayed(const Duration(seconds: 1), () {
-            setState(() {
-              _displayedContactsCount += _displayLimit;
-              _isLoading = false;
-            });
-          });
-        },
-        child: const Text('Load more'),
-      );
-    }
-  }
 
   void loadNextPage() {
     setState(() {
       _isLoading = true;
     });
     // Simulate loading more contacts
-    Future.delayed(const Duration(seconds: 1), () {
+    Future.delayed(const Duration(milliseconds: 100), () {
       setState(() {
         _displayedContactsCount += _displayLimit;
         _isLoading = false;
