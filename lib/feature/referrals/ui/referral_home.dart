@@ -579,7 +579,7 @@ class ReferralTabView extends StatelessWidget {
   }
 }
 
-void navigateToWhatsApp(String phoneNumber, String? message) {
+void navigateToWhatsApp(String phoneNumber, [String? message]) {
   var referralService = locator<ReferralService>();
   log('phoneNumber: $phoneNumber', name: 'ReferralDetailsScreen');
 
@@ -590,4 +590,3 @@ void navigateToWhatsApp(String phoneNumber, String? message) {
   log('WhatsApp URL: $url', name: 'ReferralDetailsScreen');
   launch(url);
 }
-

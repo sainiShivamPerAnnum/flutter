@@ -258,7 +258,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           _addPageData(const SupportPage(), SupportPageConfig);
           break;
         case Pages.Notifications:
-          _addPageData(NotificationsPage(), NotificationsConfig);
+          _addPageData(const NotificationsPage(), NotificationsConfig);
           break;
         case Pages.ReferralDetails:
           _addPageData(const ReferralHome(), ReferralDetailsPageConfig);

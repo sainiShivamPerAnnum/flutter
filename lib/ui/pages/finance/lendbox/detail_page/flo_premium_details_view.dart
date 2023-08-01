@@ -1026,18 +1026,19 @@ class FloPremiumHeader extends StatelessWidget {
                       style: TextStyles.rajdhaniSB.title4,
                     ),
                     SizedBox(height: SizeConfig.padding16),
-                    SizedBox(
-                      width: SizeConfig.screenWidth! * 0.5,
-                      child: Stack(
-                        children: [
-                          Row(
-                            children: [
-                              Text(
-                                "Available only for",
-                                style: TextStyles.sourceSans.body3,
-                              ),
-                              SizedBox(width: SizeConfig.padding4),
-                              Container(
+                    if (daysRemaining > 0)
+                      SizedBox(
+                        width: SizeConfig.screenWidth! * 0.5,
+                        child: Stack(
+                          children: [
+                            Row(
+                              children: [
+                                Text(
+                                  "Available only for",
+                                  style: TextStyles.sourceSans.body3,
+                                ),
+                                SizedBox(width: SizeConfig.padding4),
+                                Container(
                                 padding: EdgeInsets.symmetric(
                                     horizontal: SizeConfig.padding12,
                                     vertical: SizeConfig.padding2),

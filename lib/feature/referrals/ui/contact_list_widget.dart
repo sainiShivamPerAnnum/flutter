@@ -1,10 +1,12 @@
 import 'dart:developer';
 
 import 'package:felloapp/core/model/contact_model.dart';
+import 'package:felloapp/core/service/referral_service.dart';
 import 'package:felloapp/feature/referrals/bloc/referral_cubit.dart';
 import 'package:felloapp/feature/referrals/ui/referral_home.dart';
 import 'package:felloapp/util/debouncer.dart';
 import 'package:felloapp/util/extensions/rich_text_extension.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -68,14 +70,13 @@ class _ContactListWidgetState extends State<ContactListWidget>
     _debouncer = Debouncer(delay: const Duration(milliseconds: 700));
 
     widget.scrollController.addListener(() {
-      log('Scroll offset: ${widget.scrollController.offset}',
-          name: 'ReferralDetailsScreen');
+      // log('Scroll offset: ${widget.scrollController.offset}',
+      //     name: 'ReferralDetailsScreen');
       if (widget.scrollController.offset ==
           widget.scrollController.position.maxScrollExtent) {
         loadNextPage();
       }
       if (widget.scrollController.offset <= 0.0) {
-        log('Scrolling up', name: 'ReferralDetailsScreen');
         widget.onStateChanged(false);
       }
     });
@@ -222,7 +223,8 @@ class _ContactListWidgetState extends State<ContactListWidget>
                   if (!(contact.isRegistered ?? false))
                     GestureDetector(
                       onTap: () {
-                        navigateToWhatsApp(contact.phoneNumber, "");
+                        navigateToWhatsApp(contact.phoneNumber,
+                            locator<ReferralService>().shareMsg);
                       },
                       child: Text(
                         'INVITE',

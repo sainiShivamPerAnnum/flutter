@@ -637,7 +637,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
         child: Container(
           width: SizeConfig.screenWidth! * 0.9,
           padding: EdgeInsets.symmetric(
-              horizontal: SizeConfig.padding20, vertical: SizeConfig.padding28),
+              horizontal: SizeConfig.padding22, vertical: SizeConfig.padding28),
           child: Column(
             mainAxisSize: MainAxisSize.min,
             children: [
