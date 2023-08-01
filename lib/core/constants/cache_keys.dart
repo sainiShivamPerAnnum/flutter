@@ -8,4 +8,5 @@ class CacheKeys {
   static const FAQS = 'faqs';
   static const PAGE_CONFIGS = 'pageConfigs';
   static const APPCONFIG = "appConfig";
+  static const GOLD_RATES = "goldRatesData";
 }

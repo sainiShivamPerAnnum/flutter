@@ -239,6 +239,10 @@ class BaseRemoteConfig {
     "paymentBriefView": true
   };
 
+  static const Map<String, bool> _USE_NEW_URL_FOR_USEROPS = {
+    "useNewUrlUserOps": true
+  };
+
   static Map<String, dynamic> DEFAULTS = {
     ..._LOGIN_ASSET_URL,
     ..._DRAW_PICK_TIME,
@@ -310,6 +314,7 @@ class BaseRemoteConfig {
     ..._YOUTUBE_VIDEOS,
     ..._APP_REFERRAL_MESSAGE,
     ..._PAYMENT_BRIEF_VIEW,
+    ..._USE_NEW_URL_FOR_USEROPS,
   };
 
   static Future<bool> init() async {
@@ -491,6 +496,9 @@ class BaseRemoteConfig {
 
   static bool get AUTOSAVE_ACTIVE =>
       remoteConfig.getBool(_AUTOSAVE_ACTIVE.keys.first);
+
+  static bool get USE_NEW_URL_FOR_USEROPS =>
+      remoteConfig.getBool(_USE_NEW_URL_FOR_USEROPS.keys.first);
 
   static String get APP_REFERRAL_MESSAGE =>
       remoteConfig.getString(_APP_REFERRAL_MESSAGE.keys.first);

@@ -128,7 +128,8 @@ class GoldInfoWidget extends StatelessWidget {
 
                 final UserService _userService = locator<UserService>();
                 if ((_userService.userFundWallet?.augGoldQuantity ?? 0) > 0 &&
-                    (_userService.userFundWallet?.augGoldQuantity ?? 0) < 0.5) {
+                    (_userService.userFundWallet?.augGoldQuantity ?? 0) < 0.5 &&
+                    (_userService.userFundWallet?.wAugFdQty ?? 0.0) == 0) {
                   BaseUtil().openRechargeModalSheet(
                     investmentType: InvestmentType.AUGGOLD99,
                     gms: BaseUtil.digitPrecision(
