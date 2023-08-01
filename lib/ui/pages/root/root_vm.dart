@@ -139,7 +139,7 @@ class RootViewModel extends BaseViewModel {
         ]);
 
         unawaited(handleStartUpNotificationData());
-
+        locator<ReferralService>().fetchReferralCode();
         await Future.wait([
           // _userService.checkForNewNotifications(),
           _gtService.updateUnscratchedGTCount(),
