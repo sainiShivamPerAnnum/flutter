@@ -15,7 +15,6 @@ import 'package:felloapp/ui/elements/appbar/appbar.dart';
 import 'package:felloapp/ui/pages/rewards/instant_scratch_card/gt_instant_view.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/userProfile/referrals/referral_details/referral_details_vm.dart';
-import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
@@ -37,19 +36,12 @@ class _ReferralHomeState extends State<ReferralHome> {
   final userService = locator<UserService>();
   final referralService = locator<ReferralService>();
 
-  TextStyle get _selectedTextStyle =>
-      TextStyles.sourceSansSB.body1.colour(UiConstants.titleTextColor);
-
-  TextStyle get _unselectedTextStyle => TextStyles.sourceSans.body1
-      .colour(UiConstants.titleTextColor.withOpacity(0.6));
-
   String get subTitle => AppConfig.getValue<Map<String, dynamic>>(
       AppConfigKey.revamped_referrals_config)['hero']['subtitle'];
 
   @override
   void initState() {
     super.initState();
-
     if (userService.referralFromNotification) {
       WidgetsBinding.instance.addPostFrameCallback((_) {
         _showInstantScratchCard();
@@ -100,8 +92,8 @@ class _ReferralHomeState extends State<ReferralHome> {
                             child: NestedScrollView(
                               controller: _controller,
                               physics: const AlwaysScrollableScrollPhysics(),
-                              headerSliverBuilder: (BuildContext context,
-                                  bool innerBoxIsScrolled) {
+                              headerSliverBuilder:
+                                  (context, innerBoxIsScrolled) {
                                 return [
                                   SliverToBoxAdapter(
                                     child: Stack(
@@ -337,134 +329,9 @@ class _ReferralHomeState extends State<ReferralHome> {
                                   ),
                                 ];
                               },
-                              body: Container(
-                                color: const Color(0xff181818),
-                                child: Column(
-                                  children: [
-                                    // Row(
-                                    //   mainAxisAlignment:
-                                    //   MainAxisAlignment.center,
-                                    //   children: [
-                                    //     Expanded(
-                                    //       child: TextButton(
-                                    //         onPressed: () {
-                                    //           FocusScope.of(context)
-                                    //               .requestFocus(
-                                    //               FocusNode());
-                                    //           model.switchTab(0);
-                                    //         },
-                                    //         child: Text(
-                                    //           'Your Referrals',
-                                    //           style: model.tabNo == 0
-                                    //               ? _selectedTextStyle
-                                    //               : _unselectedTextStyle, // TextStyles.sourceSansSB.body1,
-                                    //         ),
-                                    //       ),
-                                    //     ),
-                                    //     SizedBox(
-                                    //       width: SizeConfig.padding16,
-                                    //     ),
-                                    //     Expanded(
-                                    //       child: TextButton(
-                                    //         onPressed: () {
-                                    //           FocusScope.of(context)
-                                    //               .requestFocus(
-                                    //               FocusNode());
-                                    //           model.switchTab(1);
-                                    //           log("Invite Contacts length ${model.contactsList?.length}");
-                                    //         },
-                                    //         child: Text(
-                                    //           'Invite Contacts',
-                                    //           style: model.tabNo == 1
-                                    //               ? _selectedTextStyle
-                                    //               : _unselectedTextStyle, // style: TextStyles.sourceSansSB.body1,
-                                    //         ),
-                                    //       ),
-                                    //     )
-                                    //   ],
-                                    // ),
-                                    // Row(
-                                    //   children: [
-                                    //     AnimatedContainer(
-                                    //       duration: const Duration(
-                                    //           milliseconds: 500),
-                                    //       height: 5,
-                                    //       width: model.tabPosWidthFactor,
-                                    //     ),
-                                    //     AnimatedContainer(
-                                    //       color:
-                                    //       UiConstants.kTabBorderColor,
-                                    //       height: 5,
-                                    //       width: SizeConfig.screenWidth! *
-                                    //           0.38, duration: const Duration(
-                                    //         milliseconds: 500),
-                                    //     )
-                                    //   ],
-                                    // ),
-                                    TabBar(
-                                      tabs: [
-                                        Tab(
-                                          child: Text(
-                                            'Your Referrals',
-                                            style: model.tabNo == 0
-                                                ? _selectedTextStyle
-                                                : _unselectedTextStyle,
-                                          ),
-                                        ),
-                                        Tab(
-                                          child: Text(
-                                            'Invite Contacts',
-                                            style: model.tabNo == 1
-                                                ? _selectedTextStyle
-                                                : _unselectedTextStyle,
-                                          ),
-                                        ),
-                                      ],
-                                      onTap: (index) {
-                                        FocusScope.of(context)
-                                            .requestFocus(FocusNode());
-                                        model.switchTab(index);
-                                      },
-                                    ),
-
-                                    Expanded(
-                                      child: BlocBuilder<ReferralCubit,
-                                          ReferralState>(
-                                        builder: (context, state) {
-                                          return TabBarView(
-                                            children: [
-                                              ReferralList(
-                                                model: model,
-                                              ),
-                                              InviteContactWidget(
-                                                model: model,
-                                                scrollController: _controller,
-                                              ),
-                                            ],
-                                          );
-
-                                          // return HeightAdaptivePageView(
-                                          //   controller:
-                                          //   model.pageController,
-                                          //   onPageChanged: (int page) {
-                                          //     model.switchTab(page);
-                                          //   },
-                                          //   children: [
-                                          //     ReferralList(
-                                          //       model: model,
-                                          //     ),
-                                          //     InviteContactWidget(
-                                          //       model: model,
-                                          //       scrollController:
-                                          //       _controller,
-                                          //     ),
-                                          //   ],
-                                          // );
-                                        },
-                                      ),
-                                    ),
-                                  ],
-                                ),
+                              body: ReferralTabView(
+                                controller: _controller,
+                                model: model,
                               ),
                               // child:
                             ),
@@ -472,152 +339,7 @@ class _ReferralHomeState extends State<ReferralHome> {
                         ),
                       ),
                     ),
-                    bottomNavigationBar: Container(
-                      padding: EdgeInsets.only(
-                          right: SizeConfig.pageHorizontalMargins,
-                          left: SizeConfig.pageHorizontalMargins,
-                          bottom: SizeConfig.padding16,
-                          top: SizeConfig.padding8),
-                      decoration: BoxDecoration(
-                        color: const Color(0xff3C3C3C),
-                        borderRadius: BorderRadius.only(
-                          topLeft: Radius.circular(SizeConfig.roundness12),
-                          topRight: Radius.circular(SizeConfig.roundness12),
-                        ),
-                      ),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            'Your code',
-                            style: TextStyles.sourceSans.body3
-                                .colour(Colors.white.withOpacity(0.45)),
-                          ),
-                          SizedBox(
-                            height: SizeConfig.padding6,
-                          ),
-                          Row(
-                            children: [
-                              Container(
-                                // height: SizeConfig.padding44,
-                                width: SizeConfig.screenWidth! * 0.55,
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: SizeConfig.padding12,
-                                    vertical: SizeConfig.padding6),
-                                decoration: BoxDecoration(
-                                  color: const Color(0xff1B1B1B),
-                                  borderRadius: BorderRadius.all(
-                                      Radius.circular(SizeConfig.roundness8)),
-                                ),
-                                child: Row(
-                                  crossAxisAlignment: CrossAxisAlignment.center,
-                                  children: [
-                                    Text(
-                                      model.loadingRefCode
-                                          ? '-'
-                                          : model.refCode,
-                                      style: TextStyles.rajdhaniEB.title2
-                                          .colour(const Color(0xff1ADAB7))
-                                          .copyWith(
-                                            letterSpacing: 4.68,
-                                          ),
-                                    ),
-                                    const Spacer(),
-                                    GestureDetector(
-                                      onTap: () {
-                                        model.copyReferCode();
-                                      },
-                                      child: Row(
-                                        children: [
-                                          // Text('COPY',
-                                          //     style: TextStyles
-                                          //         .sourceSans.body3
-                                          //         .colour(UiConstants
-                                          //             .kTextColor3
-                                          //             .withOpacity(0.3))),
-                                          // SizedBox(
-                                          //   width: SizeConfig.padding6,
-                                          // ),
-                                          Icon(
-                                            Icons.copy,
-                                            color: UiConstants.kTextColor3
-                                                .withOpacity(0.5),
-                                            size: SizeConfig.padding24,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                              const Spacer(),
-                              Container(
-                                width: SizeConfig.padding54,
-                                height: SizeConfig.padding48,
-                                padding: EdgeInsets.all(SizeConfig.padding16),
-                                decoration: BoxDecoration(
-                                  color: const Color(0xFF07D2AD),
-                                  borderRadius: BorderRadius.circular(8),
-                                  gradient: const LinearGradient(
-                                    colors: [
-                                      Color(0xff12BC9D),
-                                      Color(0xff249680),
-                                    ],
-                                    begin: Alignment.topCenter,
-                                    end: Alignment.bottomCenter,
-                                  ),
-                                ),
-                                child: GestureDetector(
-                                  onTap: () {
-                                    if (model.isShareAlreadyClicked == false) {
-                                      referralService.shareLink();
-                                    }
-                                  },
-                                  child: Icon(
-                                    Icons.share_outlined,
-                                    color: Colors.white,
-                                    size: SizeConfig.padding24,
-                                  ),
-                                ),
-                              ),
-                              const Spacer(),
-                              GestureDetector(
-                                onTap: () {
-                                  String message = (referralService.shareMsg ??
-                                          'Hey I am gifting you ₹${AppConfig.getValue(AppConfigKey.referralBonus)} and ${AppConfig.getValue(AppConfigKey.referralBonus)} gaming tokens. Lets start saving and playing together! Share this code: *${referralService.refCode}* with your friends.\n') +
-                                      (referralService.referralShortLink ?? "");
-                                  launch('whatsapp://send?text=$message');
-                                },
-                                child: Container(
-                                  width: SizeConfig.padding54,
-                                  height: SizeConfig.padding48,
-                                  padding: EdgeInsets.all(SizeConfig.padding16),
-                                  decoration: BoxDecoration(
-                                    color: const Color(0xFF07D2AD),
-                                    borderRadius: BorderRadius.circular(8),
-                                    gradient: const LinearGradient(
-                                      colors: [
-                                        Color(0xff12BC9D),
-                                        Color(0xff249680),
-                                      ],
-                                      begin: Alignment.topCenter,
-                                      end: Alignment.bottomCenter,
-                                    ),
-                                  ),
-                                  child: SvgPicture.asset(
-                                    'assets/vectors/whatsapp.svg',
-                                    width: 24,
-                                    height: 24,
-                                    color: Colors.white,
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
-                        ],
-                      ),
-                    ),
+                    bottomNavigationBar: buildBottomNav(model),
                   );
                 }),
                 CustomKeyboardSubmitButton(
@@ -634,6 +356,152 @@ class _ReferralHomeState extends State<ReferralHome> {
     );
   }
 
+  Container buildBottomNav(ReferralDetailsViewModel model) {
+    return Container(
+      padding: EdgeInsets.only(
+          right: SizeConfig.pageHorizontalMargins,
+          left: SizeConfig.pageHorizontalMargins,
+          bottom: SizeConfig.padding16,
+          top: SizeConfig.padding8),
+      decoration: BoxDecoration(
+        color: const Color(0xff3C3C3C),
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(SizeConfig.roundness12),
+          topRight: Radius.circular(SizeConfig.roundness12),
+        ),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Text(
+            'Your code',
+            style: TextStyles.sourceSans.body3
+                .colour(Colors.white.withOpacity(0.45)),
+          ),
+          SizedBox(
+            height: SizeConfig.padding6,
+          ),
+          Row(
+            children: [
+              Container(
+                // height: SizeConfig.padding44,
+                width: SizeConfig.screenWidth! * 0.55,
+                padding: EdgeInsets.symmetric(
+                    horizontal: SizeConfig.padding12,
+                    vertical: SizeConfig.padding6),
+                decoration: BoxDecoration(
+                  color: const Color(0xff1B1B1B),
+                  borderRadius:
+                      BorderRadius.all(Radius.circular(SizeConfig.roundness8)),
+                ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Text(
+                      model.loadingRefCode ? '-' : model.refCode,
+                      style: TextStyles.rajdhaniEB.title2
+                          .colour(const Color(0xff1ADAB7))
+                          .copyWith(
+                            letterSpacing: 4.68,
+                          ),
+                    ),
+                    const Spacer(),
+                    GestureDetector(
+                      onTap: () {
+                        model.copyReferCode();
+                      },
+                      child: Row(
+                        children: [
+                          // Text('COPY',
+                          //     style: TextStyles
+                          //         .sourceSans.body3
+                          //         .colour(UiConstants
+                          //             .kTextColor3
+                          //             .withOpacity(0.3))),
+                          // SizedBox(
+                          //   width: SizeConfig.padding6,
+                          // ),
+                          Icon(
+                            Icons.copy,
+                            color: UiConstants.kTextColor3.withOpacity(0.5),
+                            size: SizeConfig.padding24,
+                          ),
+                        ],
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+              const Spacer(),
+              Container(
+                width: SizeConfig.padding54,
+                height: SizeConfig.padding48,
+                padding: EdgeInsets.all(SizeConfig.padding16),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF07D2AD),
+                  borderRadius: BorderRadius.circular(8),
+                  gradient: const LinearGradient(
+                    colors: [
+                      Color(0xff12BC9D),
+                      Color(0xff249680),
+                    ],
+                    begin: Alignment.topCenter,
+                    end: Alignment.bottomCenter,
+                  ),
+                ),
+                child: GestureDetector(
+                  onTap: () {
+                    if (model.isShareAlreadyClicked == false) {
+                      referralService.shareLink();
+                    }
+                  },
+                  child: Icon(
+                    Icons.share_outlined,
+                    color: Colors.white,
+                    size: SizeConfig.padding24,
+                  ),
+                ),
+              ),
+              const Spacer(),
+              GestureDetector(
+                onTap: () {
+                  String message = (referralService.shareMsg ??
+                          'Hey I am gifting you ₹${AppConfig.getValue(AppConfigKey.referralBonus)} and ${AppConfig.getValue(AppConfigKey.referralBonus)} gaming tokens. Lets start saving and playing together! Share this code: *${referralService.refCode}* with your friends.\n') +
+                      (referralService.referralShortLink ?? "");
+                  launch('whatsapp://send?text=$message');
+                },
+                child: Container(
+                  width: SizeConfig.padding54,
+                  height: SizeConfig.padding48,
+                  padding: EdgeInsets.all(SizeConfig.padding16),
+                  decoration: BoxDecoration(
+                    color: const Color(0xFF07D2AD),
+                    borderRadius: BorderRadius.circular(8),
+                    gradient: const LinearGradient(
+                      colors: [
+                        Color(0xff12BC9D),
+                        Color(0xff249680),
+                      ],
+                      begin: Alignment.topCenter,
+                      end: Alignment.bottomCenter,
+                    ),
+                  ),
+                  child: SvgPicture.asset(
+                    'assets/vectors/whatsapp.svg',
+                    width: 24,
+                    height: 24,
+                    color: Colors.white,
+                  ),
+                ),
+              )
+            ],
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   void dispose() {
     SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
@@ -641,6 +509,73 @@ class _ReferralHomeState extends State<ReferralHome> {
     ));
     _controller.dispose();
     super.dispose();
+  }
+}
+
+class ReferralTabView extends StatelessWidget {
+  const ReferralTabView({
+    super.key,
+    required ScrollController controller,
+    required this.model,
+  }) : _controller = controller;
+
+  final ScrollController _controller;
+  final ReferralDetailsViewModel model;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      color: const Color(0xff181818),
+      child: Column(
+        children: [
+          TabBar(
+            tabs: const [
+              Tab(
+                child: Text(
+                  'Your Referrals',
+                ),
+              ),
+              Tab(
+                child: Text(
+                  'Invite Contacts',
+                ),
+              ),
+            ],
+            onTap: (index) {
+              FocusScope.of(context).requestFocus(FocusNode());
+              model.switchTab(index);
+            },
+            labelStyle: TextStyles.sourceSansSB.body1
+                .colour(UiConstants.titleTextColor),
+            unselectedLabelStyle: TextStyles.sourceSans.body1
+                .colour(UiConstants.titleTextColor.withOpacity(0.6)),
+            labelColor: UiConstants.titleTextColor,
+            unselectedLabelColor: Colors.grey,
+            indicatorColor: Colors.blue,
+            indicatorWeight: 3.0,
+            indicatorPadding:
+                EdgeInsets.symmetric(horizontal: SizeConfig.padding16),
+          ),
+          Expanded(
+            child: BlocBuilder<ReferralCubit, ReferralState>(
+              builder: (context, state) {
+                return TabBarView(
+                  children: [
+                    ReferralList(
+                      model: model,
+                    ),
+                    InviteContactWidget(
+                      model: model,
+                      scrollController: _controller,
+                    ),
+                  ],
+                );
+              },
+            ),
+          ),
+        ],
+      ),
+    );
   }
 }
 
@@ -656,128 +591,3 @@ void navigateToWhatsApp(String phoneNumber, String? message) {
   launch(url);
 }
 
-class ReferralRatingSheet extends StatelessWidget {
-  const ReferralRatingSheet({
-    super.key,
-  });
-
-  String get title => AppConfig.getValue<Map<String, dynamic>>(
-      AppConfigKey.revamped_referrals_config)['hero']['subtitle'];
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: SizeConfig.padding24,
-        vertical: SizeConfig.padding16,
-      ),
-      decoration: BoxDecoration(
-        color: const Color(0xff39393C),
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(SizeConfig.padding16),
-          topRight: Radius.circular(SizeConfig.padding16),
-        ),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Container(
-            width: SizeConfig.padding90 + SizeConfig.padding6,
-            height: SizeConfig.padding4,
-            decoration: BoxDecoration(
-              color: const Color(0xffD9D9D9),
-              borderRadius: BorderRadius.circular(SizeConfig.padding4),
-            ),
-          ),
-          SizedBox(
-            height: SizeConfig.padding26,
-          ),
-          Text('Enjoying Fello?',
-              textAlign: TextAlign.center,
-              style: TextStyles.rajdhaniSB.title4.colour(Colors.white)),
-          SizedBox(
-            height: SizeConfig.padding12,
-          ),
-          Text(
-            'Invite your friends and create your community on Fello!',
-            textAlign: TextAlign.center,
-            style: TextStyles.sourceSans.body0.colour(
-              Colors.white.withOpacity(0.8),
-            ),
-          ),
-          SizedBox(
-            height: SizeConfig.padding32,
-          ),
-          SvgPicture.network(
-            Assets.peopleGroup,
-            height: SizeConfig.padding76,
-            width: SizeConfig.padding116,
-          ),
-          SizedBox(
-            height: SizeConfig.padding12,
-          ),
-          Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Container(
-                width: SizeConfig.padding6,
-                height: SizeConfig.padding6,
-                // margin: EdgeInsets.only(
-                //     top: SizeConfig.padding8),
-                decoration: const ShapeDecoration(
-                  color: Color(0xFF61E3C4),
-                  shape: OvalBorder(),
-                ),
-              ),
-              SizedBox(
-                width: SizeConfig.padding4,
-              ),
-              Text(
-                title,
-                style: TextStyles.body3.colour(Colors.white70),
-                textAlign: TextAlign.center,
-              ),
-            ],
-          ),
-          SizedBox(
-            height: SizeConfig.padding16,
-          ),
-          // TextButton(
-          //   onPressed: () {
-          //     if (Platform.isAndroid) {
-          //       BaseUtil.launchUrl(Strings.playStoreUrl);
-          //     } else {
-          //       BaseUtil.launchUrl(Strings.appStoreUrl);
-          //     }
-          //   },
-          //   child: Text('RATE FELLO',
-          //       textAlign: TextAlign.center,
-          //       style: TextStyles.rajdhaniB.body0.colour(Colors.white)),
-          // ),
-          // SizedBox(
-          //   height: SizeConfig.padding16,
-          // ),
-          AppPositiveBtn(
-            btnText: "",
-            height: SizeConfig.padding56,
-            onPressed: () {
-              if (locator<ReferralDetailsViewModel>().isShareAlreadyClicked ==
-                  false) {
-                locator<ReferralService>().shareLink();
-              }
-            },
-            widget: Text(
-              'INVITE & EARN ₹500 PER REFERRAL',
-              textAlign: TextAlign.center,
-              style: TextStyles.rajdhaniB.body0.colour(Colors.white),
-            ),
-          ),
-          SizedBox(
-            height: SizeConfig.padding14,
-          ),
-        ],
-      ),
-    );
-  }
-}

@@ -33,7 +33,7 @@ import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/marketing_event_handler_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
-import 'package:felloapp/feature/referrals/ui/referral_home.dart';
+import 'package:felloapp/feature/referrals/ui/referral_rating_sheet.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/back_button_actions.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
