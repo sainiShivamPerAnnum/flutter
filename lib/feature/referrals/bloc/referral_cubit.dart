@@ -70,13 +70,13 @@ class ReferralCubit extends Cubit<ReferralState> {
     }
   }
 
-  Future<void> _loadContacts() async {
-    if (model.contactsList != null && model.contactsList!.isNotEmpty) {
-      emit(ContactsLoaded(model.contactsList!));
-      getRegisteredUser();
-      return;
-    }
-  }
+  // Future<void> _loadContacts() async {
+  //   if (model.contactsList != null && model.contactsList!.isNotEmpty) {
+  //     emit(ContactsLoaded(model.contactsList!));
+  //     getRegisteredUser();
+  //     return;
+  //   }
+  // }
 
   Future<void> getRegisteredUser({bool fromRefresh = false}) async {
     final ReferralRepo referralRepo = locator<ReferralRepo>();

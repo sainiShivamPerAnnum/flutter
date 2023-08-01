@@ -2,14 +2,12 @@ import 'dart:developer';
 
 import 'package:felloapp/core/model/contact_model.dart';
 import 'package:felloapp/core/service/referral_service.dart';
-import 'package:felloapp/feature/referrals/bloc/referral_cubit.dart';
 import 'package:felloapp/feature/referrals/ui/referral_home.dart';
 import 'package:felloapp/util/debouncer.dart';
 import 'package:felloapp/util/extensions/rich_text_extension.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -55,12 +53,12 @@ class _ContactListWidgetState extends State<ContactListWidget>
             .toList();
 
         _displayedContactsCount = filteredContacts.length;
-        log('filteredContacts name: ${filteredContacts[0].displayName}',
-            name: 'ReferralDetailsScreen');
       });
+      log('filteredContacts name: ${filteredContacts[0].displayName}',
+          name: 'ReferralDetailsScreen');
     }
 
-    context.read<ReferralCubit>().refreshContacts();
+    // context.read<ReferralCubit>().refreshContacts();
   }
 
   @override
@@ -95,7 +93,6 @@ class _ContactListWidgetState extends State<ContactListWidget>
       return amount.toString();
     }
   }
-
 
   void loadNextPage() {
     setState(() {
@@ -167,78 +164,82 @@ class _ContactListWidgetState extends State<ContactListWidget>
                 style: TextStyles.sourceSans.body3.colour(Colors.white),
               ),
             ),
-          ListView.separated(
+          ListView.builder(
             itemCount: _displayedContactsCount,
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemBuilder: (context, index) {
               final contact = filteredContacts[index];
-              return Row(
+              return Column(
                 children: [
-                  Container(
-                    height: SizeConfig.padding44,
-                    width: SizeConfig.padding44,
-                    padding: EdgeInsets.all(SizeConfig.padding3),
-                    decoration: const ShapeDecoration(
-                      shape: OvalBorder(
-                        side: BorderSide(width: 0.5, color: Color(0xFF1ADAB7)),
-                      ),
-                    ),
-                    child: Container(
-                      height: SizeConfig.padding38,
-                      width: SizeConfig.padding38,
-                      decoration: const BoxDecoration(
-                        color: Color(0xFFD9D9D9),
-                        shape: BoxShape.circle,
-                      ),
-                      child: Center(
-                        child: Text(
-                          contact.displayName.substring(0, 1),
-                          style: TextStyles.rajdhaniSB.body0
-                              .colour(const Color(0xFF3A3A3C)),
+                  Row(
+                    children: [
+                      Container(
+                        height: SizeConfig.padding44,
+                        width: SizeConfig.padding44,
+                        padding: EdgeInsets.all(SizeConfig.padding3),
+                        decoration: const ShapeDecoration(
+                          shape: OvalBorder(
+                            side: BorderSide(
+                                width: 0.5, color: Color(0xFF1ADAB7)),
+                          ),
+                        ),
+                        child: Container(
+                          height: SizeConfig.padding38,
+                          width: SizeConfig.padding38,
+                          decoration: const BoxDecoration(
+                            color: Color(0xFFD9D9D9),
+                            shape: BoxShape.circle,
+                          ),
+                          child: Center(
+                            child: Text(
+                              contact.displayName.substring(0, 1),
+                              style: TextStyles.rajdhaniSB.body0
+                                  .colour(const Color(0xFF3A3A3C)),
+                            ),
+                          ),
                         ),
                       ),
-                    ),
-                  ),
-                  SizedBox(width: SizeConfig.padding8),
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        contact.displayName,
-                        style: TextStyles.rajdhaniSB.body2.colour(Colors.white),
-                      ),
-                      Text(
-                        (contact.isRegistered ?? false)
-                            ? "Already on Fello"
-                            : 'Invite and earn ₹500',
-                        style: TextStyles.sourceSans.body4.colour(
+                      SizedBox(width: SizeConfig.padding8),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            contact.displayName,
+                            style: TextStyles.rajdhaniSB.body2
+                                .colour(Colors.white),
+                          ),
+                          Text(
                             (contact.isRegistered ?? false)
-                                ? const Color(0xFF61E3C4)
-                                : Colors.white.withOpacity(0.48)),
+                                ? "Already on Fello"
+                                : 'Invite and earn ₹500',
+                            style: TextStyles.sourceSans.body4.colour(
+                                (contact.isRegistered ?? false)
+                                    ? const Color(0xFF61E3C4)
+                                    : Colors.white.withOpacity(0.48)),
+                          ),
+                        ],
                       ),
+                      const Spacer(),
+                      if (!(contact.isRegistered ?? false))
+                        GestureDetector(
+                          onTap: () {
+                            navigateToWhatsApp(contact.phoneNumber,
+                                locator<ReferralService>().shareMsg);
+                          },
+                          child: Text(
+                            'INVITE',
+                            textAlign: TextAlign.right,
+                            style: TextStyles.rajdhaniB.body3
+                                .colour(const Color(0xFF61E3C4)),
+                          ),
+                        ),
                     ],
                   ),
-                  const Spacer(),
-                  if (!(contact.isRegistered ?? false))
-                    GestureDetector(
-                      onTap: () {
-                        navigateToWhatsApp(contact.phoneNumber,
-                            locator<ReferralService>().shareMsg);
-                      },
-                      child: Text(
-                        'INVITE',
-                        textAlign: TextAlign.right,
-                        style: TextStyles.rajdhaniB.body3
-                            .colour(const Color(0xFF61E3C4)),
-                      ),
-                    ),
+                  SizedBox(
+                    height: SizeConfig.padding24,
+                  )
                 ],
-              );
-            },
-            separatorBuilder: (BuildContext context, int index) {
-              return SizedBox(
-                height: SizeConfig.padding24,
               );
             },
           ),
@@ -250,6 +251,10 @@ class _ContactListWidgetState extends State<ContactListWidget>
               size: SizeConfig.title5,
               color: Colors.white,
             ),
+
+          SizedBox(
+            height: SizeConfig.padding64,
+          ),
           // SpinKitThreeBounce()
         ],
       ),

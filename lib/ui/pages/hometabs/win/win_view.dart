@@ -75,7 +75,7 @@ class Win extends StatelessWidget {
                   onTap: () => model.showRatingSheet(),
                 ),
                 AccountInfoTiles(
-                  title: 'Found a bug',
+                  title: 'Report bug',
                   uri: "",
                   onTap: () => model.showFoundBugSheet(),
                 ),

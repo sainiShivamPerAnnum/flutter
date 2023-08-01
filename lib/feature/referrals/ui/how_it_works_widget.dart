@@ -81,7 +81,7 @@ class _HowItWorksWidgetState extends State<HowItWorksWidget> {
               children: [
                 const Spacer(),
                 Container(
-                  margin: EdgeInsets.only(left: SizeConfig.padding40),
+                  margin: EdgeInsets.only(left: SizeConfig.padding36),
                   child: Text(
                     'How it works',
                     style: TextStyles.rajdhaniSB.body1,
