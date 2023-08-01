@@ -534,6 +534,9 @@ class AvailabilityOfferWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final daysRemaining = BaseUtil.calculateRemainingDays(DateTime(2023, 9, 1));
 
+    if (daysRemaining <= 0) {
+      return const SizedBox();
+    }
     return Stack(
       children: [
         Container(

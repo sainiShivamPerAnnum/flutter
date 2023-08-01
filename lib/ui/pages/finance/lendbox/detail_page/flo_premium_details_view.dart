@@ -1025,7 +1025,8 @@ class FloPremiumHeader extends StatelessWidget {
                       model.is12 ? "12% Returns p.a." : "10% Returns p.a.",
                       style: TextStyles.rajdhaniSB.title4,
                     ),
-                    SizedBox(height: SizeConfig.padding16),
+                    if (daysRemaining > 0)
+                      SizedBox(height: SizeConfig.padding16),
                     if (daysRemaining > 0)
                       SizedBox(
                         width: SizeConfig.screenWidth! * 0.5,
