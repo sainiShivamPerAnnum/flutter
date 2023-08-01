@@ -11,7 +11,8 @@ class GameViewModel {
   GameViewModel(this.gameTiers)
       : _portfolio = locator<UserService>().userPortfolio!;
 
-  double get netWorth => _portfolio.gold.principle + (_portfolio.flo.principle);
+  double get netWorth =>
+      _portfolio.augmont.principle + (_portfolio.flo.principle);
 
   void processData() {
     for (var i = 0; i < gameTiers.length; i++) {

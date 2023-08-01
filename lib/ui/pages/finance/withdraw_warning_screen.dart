@@ -341,7 +341,7 @@ class WithDrawGameViewModel {
     final gamesWillBeLocked = <GameModel?>[];
     final _userPortfolio = locator<UserService>().userPortfolio;
     final netWorth =
-        _userPortfolio.gold.principle + (_userPortfolio.flo.principle);
+        _userPortfolio.augmont.principle + (_userPortfolio.flo.principle);
     final finalAmount = netWorth - withDrawingAmount;
 
     for (var i in model.data) {

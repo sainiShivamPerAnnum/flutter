@@ -216,7 +216,7 @@ class InvestedGoldProHero extends StatelessWidget {
                       Flexible(
                         fit: FlexFit.loose,
                         child: Text(
-                          "₹${BaseUtil.digitPrecision(model.userPortfolio.goldPro.balance)}",
+                          "₹${BaseUtil.digitPrecision(model.userPortfolio.augmont.fd.balance)}",
                           style: TextStyles.sourceSansSB.title4
                               .colour(UiConstants.kGoldProPrimary),
                         ),
@@ -231,7 +231,7 @@ class InvestedGoldProHero extends StatelessWidget {
                                 offset: Offset(0, -SizeConfig.padding4),
                                 child: RotatedBox(
                                   quarterTurns: BaseUtil.digitPrecision(
-                                              model.userPortfolio.goldPro
+                                              model.userPortfolio.augmont.fd
                                                   .absGains,
                                               2) >=
                                           0
@@ -241,7 +241,7 @@ class InvestedGoldProHero extends StatelessWidget {
                                     Assets.arrow,
                                     width: SizeConfig.iconSize2,
                                     color: BaseUtil.digitPrecision(
-                                                model.userPortfolio.goldPro
+                                                model.userPortfolio.augmont.fd
                                                     .absGains,
                                                 2) >=
                                             0
@@ -253,14 +253,15 @@ class InvestedGoldProHero extends StatelessWidget {
                               Text(
                                   " ${BaseUtil.digitPrecision(
                                     BaseUtil.digitPrecision(
-                                        model.userPortfolio.goldPro.percGains,
+                                        model
+                                            .userPortfolio.augmont.fd.percGains,
                                         2),
                                     2,
                                     false,
                                   )}%",
                                   style: TextStyles.sourceSans.body3.colour(
                                       BaseUtil.digitPrecision(
-                                                  model.userPortfolio.goldPro
+                                                  model.userPortfolio.augmont.fd
                                                       .absGains,
                                                   2) >=
                                               0

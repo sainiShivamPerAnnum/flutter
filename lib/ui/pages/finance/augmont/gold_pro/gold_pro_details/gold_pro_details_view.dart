@@ -388,7 +388,7 @@ class GoldProSellCard extends StatelessWidget {
                         eventName: AnalyticsEvents.unleaseOnGoldProDetailsPage,
                         properties: {
                           "current gold value":
-                              _userService.userPortfolio.goldPro.balance,
+                              _userService.userPortfolio.augmont.fd.balance,
                           "current gold weight":
                               _userService.userFundWallet?.wAugFdQty ?? 0,
                         });
@@ -539,7 +539,7 @@ class HowGoldProWorksSection extends StatelessWidget {
                     eventName: AnalyticsEvents.videoTappedOnGoldPro,
                     properties: {
                       "existing lease amount":
-                          _userService.userPortfolio.goldPro.balance,
+                          _userService.userPortfolio.augmont.fd.balance,
                       "existing lease grams":
                           _userService.userFundWallet?.wAugFdQty ?? 0
                     },

@@ -1,35 +1,78 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
 
 class Portfolio {
-  final Asset gold;
+  final AugmontTiers augmont;
   final FloTiers flo;
   final double rewards;
   final Asset absolute;
-  final Asset goldPro;
   Portfolio({
-    required this.gold,
+    required this.augmont,
     required this.flo,
     required this.rewards,
     required this.absolute,
-    required this.goldPro,
   });
 
   factory Portfolio.fromMap(Map<String, dynamic> map) {
     return Portfolio(
-        gold: Asset.fromMap(map['gold'] as Map<String, dynamic>),
-        flo: FloTiers.fromMap(map['flo'] as Map<String, dynamic>),
-        rewards: (map['rewards'] ?? 0.0) * 1.0,
-        absolute: Asset.fromMap(map['absolute'] as Map<String, dynamic>),
-        goldPro: Asset.fromMap(map['goldFd']));
+      augmont: AugmontTiers.fromMap(map['augmont'] as Map<String, dynamic>),
+      flo: FloTiers.fromMap(map['flo'] as Map<String, dynamic>),
+      rewards: (map['rewards'] ?? 0.0) * 1.0,
+      absolute: Asset.fromMap(map['absolute'] as Map<String, dynamic>),
+    );
   }
 
   factory Portfolio.base() {
     return Portfolio(
-      gold: Asset.base(),
+      augmont: AugmontTiers.base(),
       flo: FloTiers.base(),
       rewards: 0.0,
       absolute: Asset.base(),
-      goldPro: Asset.base(),
+    );
+  }
+}
+
+class AugmontTiers {
+  final double absGains;
+  final double percGains;
+  final double principle;
+  final double balance;
+  final Asset gold;
+  final Asset fd;
+  AugmontTiers({
+    required this.absGains,
+    required this.percGains,
+    required this.principle,
+    required this.balance,
+    required this.gold,
+    required this.fd,
+  });
+
+  factory AugmontTiers.fromMap(Map<String, dynamic>? map) {
+    if (map == null || map.isEmpty) return AugmontTiers.base();
+
+    return AugmontTiers(
+      absGains: (map['absGain'] ?? 0.0) * 1.0,
+      percGains: (map['percGain'] ?? 0.0) * 1.0,
+      principle: (map["principle"] ?? 0.0) * 1.0,
+      balance: (map["balance"] ?? 0.0) * 1.0,
+      gold: Asset.fromMap(map['gold']),
+      fd: Asset.fromMap(map['fd']),
+    );
+  }
+
+  @override
+  String toString() {
+    return 'AugmontTiers(absGains: $absGains, percGains: $percGains, principle: $principle, balance: $balance, gold: $gold, fd: $fd)';
+  }
+
+  factory AugmontTiers.base() {
+    return AugmontTiers(
+      absGains: 0.0,
+      percGains: 0.0,
+      principle: 0.0,
+      balance: 0.0,
+      gold: Asset.base(),
+      fd: Asset.base(),
     );
   }
 }

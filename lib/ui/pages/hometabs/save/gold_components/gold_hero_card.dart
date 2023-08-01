@@ -60,7 +60,7 @@ class GoldInfoWidget extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Text(
-                            "₹${BaseUtil.digitPrecision(model.userPortfolio.gold.balance ?? 0, 2)}",
+                            "₹${BaseUtil.digitPrecision(model.userPortfolio.augmont.gold.balance ?? 0, 2)}",
                             textAlign: TextAlign.center,
                             style: TextStyles.sourceSansSB.title5.colour(
                               Colors.white.withOpacity(0.8),
@@ -72,14 +72,17 @@ class GoldInfoWidget extends StatelessWidget {
                             Transform.translate(
                               offset: Offset(0, -SizeConfig.padding4),
                               child: RotatedBox(
-                                quarterTurns:
-                                    model.userPortfolio.gold.percGains >= 0
-                                        ? 0
-                                        : 2,
+                                quarterTurns: model.userPortfolio.augmont.gold
+                                            .percGains >=
+                                        0
+                                    ? 0
+                                    : 2,
                                 child: SvgPicture.asset(
                                   Assets.arrow,
                                   width: SizeConfig.iconSize3,
-                                  color: model.userPortfolio.gold.percGains >= 0
+                                  color: model.userPortfolio.augmont.gold
+                                              .percGains >=
+                                          0
                                       ? UiConstants.primaryColor
                                       : Colors.red,
                                 ),
@@ -89,14 +92,18 @@ class GoldInfoWidget extends StatelessWidget {
                               0.001)
                             Text(
                                 " ${BaseUtil.digitPrecision(
-                                  model.userPortfolio.gold.percGains,
+                                  model.userPortfolio.augmont.gold.percGains,
                                   2,
                                   false,
                                 )}%",
-                                style: TextStyles.sourceSans.body3.colour(
-                                    model.userPortfolio.gold.percGains >= 0
-                                        ? UiConstants.primaryColor
-                                        : Colors.red)),
+                                style: TextStyles.sourceSans.body3.colour(model
+                                            .userPortfolio
+                                            .augmont
+                                            .gold
+                                            .percGains >=
+                                        0
+                                    ? UiConstants.primaryColor
+                                    : Colors.red)),
                         ],
                       ),
                     ],
@@ -153,7 +160,7 @@ class GoldInfoWidget extends StatelessWidget {
                                     0) /
                                 0.5,
                     "existing lease amount":
-                        _userService.userPortfolio.goldPro.balance,
+                        _userService.userPortfolio.augmont.fd.balance,
                     "existing lease grams":
                         _userService.userFundWallet?.wAugFdQty ?? 0
                   },

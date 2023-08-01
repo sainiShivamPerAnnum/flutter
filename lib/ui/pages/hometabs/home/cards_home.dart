@@ -1087,14 +1087,14 @@ class CardContent extends StatelessWidget {
             curve: curve,
             duration: duration,
             height: (SizeConfig.screenWidth! * 0.45 -
-                (SizeConfig.screenWidth! *
-                    0.64 *
-                    0.03 *
-                    (isVerticalView
-                        ? 8
-                        : isHorizontalView
-                        ? 0
-                        : 2))) /
+                    (SizeConfig.screenWidth! *
+                        0.64 *
+                        0.03 *
+                        (isVerticalView
+                            ? 8
+                            : isHorizontalView
+                                ? 0
+                                : 2))) /
                 2,
             decoration: BoxDecoration(
               color: secondaryColor,
@@ -1123,7 +1123,7 @@ class CardContent extends StatelessWidget {
                           Text(
                             title,
                             style:
-                            TextStyles.rajdhaniM.body0.colour(Colors.white),
+                                TextStyles.rajdhaniM.body0.colour(Colors.white),
                           ),
                           if (isVerticalView)
                             Padding(
@@ -1370,7 +1370,7 @@ class CardContent extends StatelessWidget {
       case "Fello Flo":
         return "₹${BaseUtil.digitPrecision(portfolio?.flo.balance ?? 0.0, 2)}";
       case "Digital Gold":
-        return "₹${BaseUtil.digitPrecision(portfolio?.gold.balance ?? 0, 2)}";
+        return "₹${BaseUtil.digitPrecision(portfolio?.augmont.balance ?? 0, 2)}";
       case "Fello Rewards":
         return "₹${wallet?.unclaimedBalance ?? 0}";
       default:
@@ -1384,7 +1384,7 @@ class CardContent extends StatelessWidget {
       case "Fello Flo":
         return "₹${BaseUtil.digitPrecision(portfolio?.flo.principle ?? 0.0, 2)}";
       case "Digital Gold":
-        return "${BaseUtil.digitPrecision(wallet?.augGoldQuantity ?? 0, 4, false)}g";
+        return "${BaseUtil.digitPrecision(wallet?.wAugTotal ?? 0, 4, false)}g";
       case "Fello Rewards":
         return "₹${wallet?.processingRedemptionBalance ?? 0}";
       default:
@@ -1397,7 +1397,7 @@ class CardContent extends StatelessWidget {
       case "Fello Flo":
         return portfolio?.flo.percGains ?? 0.0;
       case "Digital Gold":
-        return portfolio?.gold.percGains ?? 0.0;
+        return portfolio?.augmont.percGains ?? 0.0;
       case "Fello Rewards":
         return 0.0;
       default:
