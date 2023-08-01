@@ -111,7 +111,7 @@ class _LineGradientChartState extends State<LineGradientChart> {
                         horizontal: SizeConfig.pageHorizontalMargins),
                     child: Row(
                       mainAxisAlignment: widget.isPro
-                          ? (portfolio.goldPro.principle > 0
+                          ? (portfolio.augmont.fd.principle > 0
                               ? MainAxisAlignment.spaceBetween
                               : MainAxisAlignment.center)
                           : MainAxisAlignment.center,
@@ -120,7 +120,7 @@ class _LineGradientChartState extends State<LineGradientChart> {
                           onTap: updateChartData2,
                           child: Column(
                             crossAxisAlignment: widget.isPro
-                                ? (portfolio.goldPro.principle > 0
+                                ? (portfolio.augmont.fd.principle > 0
                                     ? CrossAxisAlignment.start
                                     : CrossAxisAlignment.center)
                                 : CrossAxisAlignment.center,
@@ -169,7 +169,7 @@ class _LineGradientChartState extends State<LineGradientChart> {
                           ),
                         ),
                         if (widget.isPro)
-                          portfolio.goldPro.principle > 0
+                          portfolio.augmont.fd.principle > 0
                               ? GestureDetector(
                                   onTap: updateChartData2,
                                   child: Column(
@@ -200,7 +200,7 @@ class _LineGradientChartState extends State<LineGradientChart> {
                                             WrapCrossAlignment.end,
                                         children: [
                                           Text(
-                                            "₹${((portfolio.goldPro.principle * pow((1 + 0.16), selectedIndex + 1)).toInt())}",
+                                            "₹${((portfolio.augmont.fd.principle * pow((1 + 0.16), selectedIndex + 1)).toInt())}",
                                             style: GoogleFonts.sourceSansPro(
                                                 fontWeight: FontWeight.w700,
                                                 fontSize: SizeConfig.title2,

@@ -1060,7 +1060,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
 
   openWebGame(String game) {
     bool isLocked = false;
-    double netWorth = locator<UserService>().userPortfolio.gold.principle +
+    double netWorth = locator<UserService>().userPortfolio.augmont.principle +
         (locator<UserService>().userPortfolio.flo.principle);
     for (var i in locator<GameRepo>().gameTier.data) {
       for (var j in i!.games) {

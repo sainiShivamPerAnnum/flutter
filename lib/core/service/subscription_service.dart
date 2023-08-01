@@ -546,7 +546,7 @@ class SubService extends ChangeNotifier {
                       : (_userService.userFundWallet?.augGoldQuantity ?? 0) /
                           0.5,
               "existing lease amount":
-                  _userService.userPortfolio.goldPro.balance,
+                  _userService.userPortfolio.augmont.fd.balance,
               "existing lease grams":
                   _userService.userFundWallet?.wAugFdQty ?? 0
             },
