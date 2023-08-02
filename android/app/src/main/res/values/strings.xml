@@ -6,5 +6,7 @@
     <string name="partnerKey">nun9-afdnvprkptlthf5fd80oswaklrpyyod53py3bc</string>
     <!-- ProdTrucaller Internal sharing Playstore key -->
     <!-- <string name="partnerKey">fcgMk82803c2ecf5a4bb5be621fd3cbeab448</string> -->
+    <string name="clevertap_account_id">948-479-W96Z</string>
+    <string name="clevertap_account_token">XXXXXX</string>
 </resources>
 
