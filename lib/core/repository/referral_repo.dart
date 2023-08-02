@@ -10,13 +10,12 @@ import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/flavor_config.dart';
-import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
 
 import 'base_repo.dart';
 
 class ReferralRepo extends BaseRepo {
-  final _cacheService = locator<CacheService>();
+  final _cacheService = CacheService();
   final _baseUrl = FlavorConfig.isDevelopment()
       ? "https://2k3cus82jj.execute-api.ap-south-1.amazonaws.com/dev"
       : "https://bt3lswjiw1.execute-api.ap-south-1.amazonaws.com/prod";

@@ -327,10 +327,10 @@ class _ReferralHomeState extends State<ReferralHome> {
                     ),
                   );
                 }),
-                Align(
-                  alignment: Alignment.bottomCenter,
-                  child: buildBottomNav(model),
-                ),
+                // Align(
+                //   alignment: Alignment.bottomCenter,
+                //   child: buildBottomNav(model),
+                // ),
                 CustomKeyboardSubmitButton(
                   onSubmit: () {
                     //hide keyboard
@@ -339,7 +339,7 @@ class _ReferralHomeState extends State<ReferralHome> {
                 ),
               ],
             ),
-            // bottomNavigationBar: buildBottomNav(model),
+            bottomNavigationBar: buildBottomNav(model),
           ),
         );
       },

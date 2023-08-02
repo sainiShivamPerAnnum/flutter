@@ -253,7 +253,7 @@ class _ContactListWidgetState extends State<ContactListWidget>
             ),
 
           SizedBox(
-            height: SizeConfig.padding64,
+            height: SizeConfig.padding24,
           ),
           // SpinKitThreeBounce()
         ],
