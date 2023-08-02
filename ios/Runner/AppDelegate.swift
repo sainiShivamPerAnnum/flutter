@@ -6,6 +6,8 @@ import AppTrackingTransparency
 import AppsFlyerLib
 import Flutter
 import Contacts
+import CleverTapSDK
+import clevertap_plugin
 
 @UIApplicationMain
 @objc class AppDelegate: FlutterAppDelegate {
@@ -25,6 +27,8 @@ import Contacts
 
         let contactChannel = FlutterMethodChannel(name: "methodChannel/contact", binaryMessenger: controller.binaryMessenger)
 
+        CleverTap.autoIntegrate() // integrate CleverTap SDK using the autoIntegrate option
+        CleverTapPlugin.sharedInstance()?.applicationDidLaunch(options: launchOptions)
 
         paymentChannel.setMethodCallHandler{(call: FlutterMethodCall, result: @escaping
                                              FlutterResult) -> Void in
