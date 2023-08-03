@@ -101,7 +101,8 @@ class ReferEarnCard extends StatelessWidget {
                     )
                   ],
                 ),
-                SvgPicture.asset('assets/svg/layer_1.svg',
+                SvgPicture.network(
+                    'https://d37gtxigg82zaw.cloudfront.net/revamped-referrals/icon.svg',
                     height: SizeConfig.padding80),
               ],
             ),

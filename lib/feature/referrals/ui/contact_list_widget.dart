@@ -85,10 +85,6 @@ class _ContactListWidgetState extends State<ContactListWidget>
       // Convert to Lacs
       double lacs = amount / 100000;
       return '${lacs.toStringAsFixed(1)} Lacs';
-    } else if (amount >= 1000) {
-      // Convert to Thousands
-      double thousands = amount / 1000;
-      return '${thousands.toStringAsFixed(1)} Thousand';
     } else {
       return amount.toString();
     }
