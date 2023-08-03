@@ -109,6 +109,7 @@ class FcmHandler extends ChangeNotifier {
 
     // If message has a command payload
     if (data['command'] != null) {
+      log("Fcm command: $command");
       showSnackbar = false;
 
       if (command!.toLowerCase().contains('end')) {
@@ -162,7 +163,7 @@ class FcmHandler extends ChangeNotifier {
                 hapticVibrate: true,
                 content: ApxorDialog(
                   dialogContent:
-                      json.decode(data["payload"]) as Map<String, dynamic>,
+                  json.decode(data["payload"]) as Map<String, dynamic>,
                 ),
               ),
             );

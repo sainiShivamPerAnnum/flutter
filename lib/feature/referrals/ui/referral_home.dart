@@ -533,7 +533,7 @@ class ReferralTabView extends StatelessWidget {
             ],
             onTap: (index) {
               FocusScope.of(context).requestFocus(FocusNode());
-              model.switchTab(index);
+              // model.switchTab(index);
             },
             labelStyle: TextStyles.sourceSansSB.body1
                 .colour(UiConstants.titleTextColor),
