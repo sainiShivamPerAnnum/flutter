@@ -7,12 +7,21 @@ import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class GoldProTransactionsDetailsView extends StatelessWidget {
   const GoldProTransactionsDetailsView({required this.txn, super.key});
 
   final GoldProInvestmentResponseModel txn;
   TxnHistoryService get _txnHistoryService => locator<TxnHistoryService>();
+
+  String get getFormattedDate =>
+      DateFormat('dd MMM, yyyy').format(DateTime.fromMillisecondsSinceEpoch(
+          txn.createdOn.millisecondsSinceEpoch));
+
+  String get formattedTime =>
+      DateFormat('hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(
+          txn.createdOn.millisecondsSinceEpoch));
 
   @override
   Widget build(BuildContext context) {
@@ -84,7 +93,7 @@ class GoldProTransactionsDetailsView extends StatelessWidget {
             ),
             Center(
               child: Text(
-                "${_txnHistoryService.getFormattedDate(txn.createdOn)} at ${_txnHistoryService.getFormattedTime(txn.createdOn)}",
+                "$getFormattedDate at $formattedTime",
                 style: TextStyles.sourceSansSB.body2
                     .colour(const Color(0xffA0A0A0)),
               ),

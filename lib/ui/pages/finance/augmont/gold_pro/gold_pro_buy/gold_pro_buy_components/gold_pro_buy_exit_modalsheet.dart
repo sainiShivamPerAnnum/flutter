@@ -93,7 +93,6 @@ class _GoldProBuyExitModalSheetState extends State<GoldProBuyExitModalSheet> {
               onPressed: () {
                 AppState.isGoldProBuyInProgress = false;
                 AppState.backButtonDispatcher!.didPopRoute();
-                AppState.backButtonDispatcher!.didPopRoute();
                 locator<AnalyticsService>().track(
                   eventName: AnalyticsEvents.backSurveyContinueTappedGoldPro,
                   properties: {

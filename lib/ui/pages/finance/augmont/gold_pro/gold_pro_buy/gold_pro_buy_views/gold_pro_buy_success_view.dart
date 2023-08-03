@@ -162,7 +162,7 @@ class _GoldProBuySuccessViewState extends State<GoldProBuySuccessView>
                             children: [
                               Text("Gold Leased",
                                   style: TextStyles.sourceSans.body2
-                                      .colour(UiConstants.kTextColor2)),
+                                      .colour(UiConstants.kGoldProPrimary)),
                               Text(
                                   "${BaseUtil.digitPrecision(
                                     widget.txnService.currentGoldPurchaseDetails
@@ -170,7 +170,8 @@ class _GoldProBuySuccessViewState extends State<GoldProBuySuccessView>
                                     2,
                                     false,
                                   )} gms",
-                                  style: TextStyles.rajdhaniSB.title3),
+                                  style: TextStyles.rajdhaniSB.title3
+                                      .colour(UiConstants.kGoldProPrimary)),
                             ],
                           ),
                         )
@@ -187,13 +188,21 @@ class _GoldProBuySuccessViewState extends State<GoldProBuySuccessView>
                                           MainAxisAlignment.center,
                                       children: [
                                         SizedBox(height: SizeConfig.padding14),
-                                        Text("Leased Amount",
+                                        Text("Leased grams",
                                             style: TextStyles.sourceSans.body2
                                                 .colour(
                                                     UiConstants.kTextColor2)),
                                         SizedBox(height: SizeConfig.padding12),
                                         Text(
-                                            "₹ ${BaseUtil.getIntOrDouble(widget.txnService.currentGoldPurchaseDetails.goldBuyAmount!)}",
+                                            "${BaseUtil.digitPrecision(
+                                              widget
+                                                      .txnService
+                                                      .currentGoldPurchaseDetails
+                                                      .leaseQty ??
+                                                  0,
+                                              2,
+                                              false,
+                                            )} gms",
                                             style: TextStyles.rajdhaniSB.title3
                                                 .colour(UiConstants
                                                     .kGoldProPrimary)),
@@ -213,7 +222,7 @@ class _GoldProBuySuccessViewState extends State<GoldProBuySuccessView>
                                       mainAxisAlignment:
                                           MainAxisAlignment.center,
                                       children: [
-                                        Text("Leased Grams",
+                                        Text("Gold Bought",
                                             style: TextStyles.sourceSans.body2
                                                 .colour(
                                                     UiConstants.kTextColor2)),
@@ -221,11 +230,10 @@ class _GoldProBuySuccessViewState extends State<GoldProBuySuccessView>
                                         Text(
                                             "${BaseUtil.digitPrecision(
                                               widget
-                                                      .txnService
-                                                      .currentGoldPurchaseDetails
-                                                      .leaseQty ??
-                                                  0,
-                                              2,
+                                                  .txnService
+                                                  .currentGoldPurchaseDetails
+                                                  .goldInGrams,
+                                              4,
                                               false,
                                             )} gms",
                                             style:
@@ -247,18 +255,13 @@ class _GoldProBuySuccessViewState extends State<GoldProBuySuccessView>
                               ),
                               child: Row(children: [
                                 Text(
-                                  "Gold Bought:",
+                                  "Extra Gold Bought Amount:",
                                   style: TextStyles.rajdhani.body3
                                       .colour(UiConstants.kTextColor3),
                                 ),
                                 const Spacer(),
                                 Text(
-                                  "${BaseUtil.digitPrecision(
-                                    widget.txnService.currentGoldPurchaseDetails
-                                        .goldInGrams,
-                                    4,
-                                    false,
-                                  )} gms",
+                                  "₹ ${BaseUtil.getIntOrDouble(widget.txnService.currentGoldPurchaseDetails.goldBuyAmount!)}",
                                   style: TextStyles.sourceSans.body2
                                       .colour(UiConstants.kTextColor),
                                 )
@@ -275,13 +278,13 @@ class _GoldProBuySuccessViewState extends State<GoldProBuySuccessView>
                       left: SizeConfig.pageHorizontalMargins),
                   child: Row(
                     children: [
-                      WinningChips(
-                          title: locale.felloTokens,
-                          tooltip: locale.winChipsTitle1,
-                          asset: Assets.token,
-                          qty: widget.txnService.currentTxnAmount!.toInt()),
-                      if (widget.txnService.currentTxnScratchCardCount > 0)
-                        SizedBox(width: SizeConfig.padding12),
+                      // WinningChips(
+                      //     title: locale.felloTokens,
+                      //     tooltip: locale.winChipsTitle1,
+                      //     asset: Assets.token,
+                      //     qty: widget.txnService.currentTxnAmount!.toInt()),
+                      // if (widget.txnService.currentTxnScratchCardCount > 0)
+                      //   SizedBox(width: SizeConfig.padding12),
                       if (widget.txnService.currentTxnScratchCardCount > 0)
                         WinningChips(
                             title:
