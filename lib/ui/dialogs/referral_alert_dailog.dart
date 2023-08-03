@@ -1,4 +1,6 @@
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/model/alert_model.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
@@ -65,6 +67,12 @@ class ReferralAlertDialog extends StatelessWidget {
                   AppState.backButtonDispatcher?.didPopRoute();
                   AppState.delegate!
                       .parseRoute(Uri.parse(referralAlertDialog!.actionUri!));
+
+                  locator<AnalyticsService>().track(
+                    eventName:
+                        AnalyticsEvents.claimRewardNowReferralAlertTapped,
+                    properties: {'reward amount': null, 'User type': null},
+                  );
                 },
               )
             ],

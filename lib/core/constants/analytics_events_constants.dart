@@ -261,4 +261,17 @@ class AnalyticsEvents {
 
   //Referrals
   static const newReferClaimTapped = "New Refer Claim Tapped";
+  static const referTappedFromAccount = "Refer Tapped from Account";
+  static const inviteFriendsTapped = "Invite Friends Tapped";
+  static const yourReferralsTapped = "Your Referrals Tapped";
+  static const inviteContactsTapped = "Invite Contacts Tapped";
+  static const syncContactsTapped = "Sync Contacts Tapped";
+  static const inviteOnContactCardTapped = "Invite on Contact Card Tapped";
+  static const remindOnReferralCardTapped = "Remind on Referral Card Tapped";
+  static const whatsappButtonTapped = "Whatsapp Button Tapped";
+  static const copyReferralCodeTapped = "Copy Referral Code Tapped";
+  static const inviteFriendsReferralSectionTapped =
+      "Invite Friends Referral Section Tapped";
+  static const claimRewardNowReferralAlertTapped =
+      "Claim Reward Now Referral Alert Tapped";
 }

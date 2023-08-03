@@ -1,6 +1,8 @@
 import 'dart:developer';
 
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/model/contact_model.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/referral_service.dart';
 import 'package:felloapp/feature/referrals/ui/referral_home.dart';
 import 'package:felloapp/util/debouncer.dart';
@@ -247,6 +249,15 @@ class _ContactListWidgetState extends State<ContactListWidget>
                             onTap: () {
                               navigateToWhatsApp(contact.phoneNumber,
                                   locator<ReferralService>().shareMsg);
+
+                              locator<AnalyticsService>().track(
+                                eventName:
+                                    AnalyticsEvents.inviteOnContactCardTapped,
+                                properties: {
+                                  'Contact Name': contact.displayName,
+                                  'Contact Number': contact.phoneNumber,
+                                },
+                              );
                             },
                             child: Text(
                               'INVITE',

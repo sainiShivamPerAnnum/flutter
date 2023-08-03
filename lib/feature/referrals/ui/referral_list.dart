@@ -1,6 +1,8 @@
 import 'dart:developer';
 
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/model/referral_details_model.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/referral_service.dart';
 import 'package:felloapp/feature/referrals/ui/referral_home.dart';
 import 'package:felloapp/feature/referrals/ui/reward_track.dart';
@@ -271,13 +273,7 @@ class _ReferralListViewState extends State<ReferralListView> {
               if (filteredReferrals[i].revampedInfo?.isFullyComplete ?? false) {
                 return buildCompleteReferrals(i);
               }
-
               return buildIncompleteReferrals(i);
-              // if (filteredReferrals[i].isUserBonusUnlocked ?? false) {
-              //   return buildIncompleteReferrals(i);
-              // } else {
-              //   return const SizedBox.shrink();
-              // }
             },
             separatorBuilder: (context, i) => SizedBox(
               height: SizeConfig.padding20,
@@ -322,6 +318,19 @@ class _ReferralListViewState extends State<ReferralListView> {
                 onPressed: () {
                   navigateToWhatsApp(filteredReferrals[i].mobile!,
                       filteredReferrals[i].shareMsg);
+
+                  locator<AnalyticsService>().track(
+                    eventName: AnalyticsEvents.remindOnReferralCardTapped,
+                    properties: {
+                      'Status': (filteredReferrals[i]
+                                  .revampedInfo
+                                  ?.stages?[1]
+                                  .isComplete ??
+                              false)
+                          ? 'Made First investment'
+                          : 'Signed up',
+                    },
+                  );
                 },
                 color: Colors.white,
                 minWidth: SizeConfig.padding76,

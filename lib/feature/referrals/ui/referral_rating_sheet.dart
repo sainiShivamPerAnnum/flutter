@@ -1,5 +1,9 @@
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
+import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/referral_service.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/userProfile/referrals/referral_details/referral_details_vm.dart';
@@ -104,6 +108,16 @@ class ReferralRatingSheet extends StatelessWidget {
                   false) {
                 locator<ReferralService>().shareLink();
               }
+
+              locator<AnalyticsService>().track(
+                eventName: AnalyticsEvents.inviteFriendsTapped,
+                properties: {
+                  'Amount': null,
+                  "Current Balance":
+                      locator<UserService>().userPortfolio.absolute.balance,
+                  "tt": AnalyticsProperties.getTambolaTicketCount(),
+                },
+              );
             },
             widget: Text(
               'INVITE & EARN ₹500 PER REFERRAL',

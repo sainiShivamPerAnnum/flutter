@@ -1,8 +1,11 @@
 import 'dart:developer';
 
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
+import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/referral_service.dart';
@@ -400,6 +403,14 @@ class _ReferralHomeState extends State<ReferralHome> {
                     GestureDetector(
                       onTap: () {
                         model.copyReferCode();
+                        locator<AnalyticsService>().track(
+                          eventName: AnalyticsEvents.copyReferralCodeTapped,
+                          properties: {
+                            'Referral code': model.refCode,
+                            'Total referrals':
+                                AnalyticsProperties.getTotalReferralCount()
+                          },
+                        );
                       },
                       child: Row(
                         children: [
@@ -444,6 +455,12 @@ class _ReferralHomeState extends State<ReferralHome> {
                   onTap: () {
                     if (model.isShareAlreadyClicked == false) {
                       referralService.shareLink();
+
+                      locator<AnalyticsService>().track(
+                        eventName:
+                            AnalyticsEvents.inviteFriendsReferralSectionTapped,
+                        properties: {'location': null},
+                      );
                     }
                   },
                   child: Icon(
@@ -460,6 +477,15 @@ class _ReferralHomeState extends State<ReferralHome> {
                           'Hey I am gifting you ₹${AppConfig.getValue(AppConfigKey.referralBonus)} and ${AppConfig.getValue(AppConfigKey.referralBonus)} gaming tokens. Lets start saving and playing together! Share this code: *${referralService.refCode}* with your friends.\n') +
                       (referralService.referralShortLink ?? "");
                   launch('whatsapp://send?text=$message');
+
+                  locator<AnalyticsService>().track(
+                    eventName: AnalyticsEvents.whatsappButtonTapped,
+                    properties: {
+                      'Referral code': model.refCode,
+                      'Total referrals':
+                          AnalyticsProperties.getTotalReferralCount()
+                    },
+                  );
                 },
                 child: Container(
                   width: SizeConfig.padding54,
@@ -533,7 +559,7 @@ class ReferralTabView extends StatelessWidget {
             ],
             onTap: (index) {
               FocusScope.of(context).requestFocus(FocusNode());
-              // model.switchTab(index);
+              model.switchTab(index);
             },
             labelStyle: TextStyles.sourceSansSB.body1
                 .colour(UiConstants.titleTextColor),

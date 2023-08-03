@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
@@ -79,9 +80,9 @@ class ReferralDetailsViewModel extends BaseViewModel {
   }
 
   String appShareMessage =
-      AppConfig.getValue<String>(AppConfigKey.appShareMessage);
+  AppConfig.getValue<String>(AppConfigKey.appShareMessage);
   String unlockReferralBonus =
-      AppConfig.getValue(AppConfigKey.unlock_referral_amt).toString();
+  AppConfig.getValue(AppConfigKey.unlock_referral_amt).toString();
 
   String? _refUrl = "";
   String? _refCode = "";
@@ -94,6 +95,7 @@ class ReferralDetailsViewModel extends BaseViewModel {
   bool shareWhatsappInProgress = false;
   bool shareLinkInProgress = false;
   bool loadingRefCode = true;
+  bool hasPermission = false;
 
   bool _isReferalsFetched = false;
 
@@ -122,9 +124,11 @@ class ReferralDetailsViewModel extends BaseViewModel {
   }
 
   Future<void> checkPermission() async {
-    PermissionStatus hasPermission = await Permission.contacts.status;
+    PermissionStatus permission = await Permission.contacts.status;
 
-    if (hasPermission == PermissionStatus.granted) {
+    hasPermission = permission == PermissionStatus.granted;
+
+    if (hasPermission) {
       await loadContacts();
     }
   }
@@ -162,17 +166,24 @@ class ReferralDetailsViewModel extends BaseViewModel {
 
   switchTab(int tab) {
     if (tab == tabNo) return;
-
-    tabPosWidthFactor = tabNo == 0
-        ? SizeConfig.screenWidth! / 2 + SizeConfig.pageHorizontalMargins
-        : SizeConfig.pageHorizontalMargins;
-
-    _pageController!.animateToPage(
-      tab,
-      duration: const Duration(milliseconds: 300),
-      curve: Curves.linear,
-    );
     tabNo = tab;
+    tab == 0
+        ? locator<AnalyticsService>().track(
+            eventName: AnalyticsEvents.yourReferralsTapped,
+            properties: {
+              'Earned So far': totalReferralWon,
+              "total referrals": AnalyticsProperties.getTotalReferralCount(),
+            },
+          )
+        : locator<AnalyticsService>().track(
+            eventName: AnalyticsEvents.inviteContactsTapped,
+            properties: {
+              'Earned So far': totalReferralWon,
+              "contact access given": hasPermission,
+              "Current referral count":
+                  AnalyticsProperties.getTotalReferralCount(),
+            },
+          );
   }
 
   Future<void> fetchReferalsList(BuildContext context,
@@ -183,18 +194,18 @@ class ReferralDetailsViewModel extends BaseViewModel {
     final ReferralRepo referralRepo = locator<ReferralRepo>();
 
     // if (!(baseProvider.referralsFetched ?? false) || refresh) {
-    referralRepo!.getReferralHistory().then((refHisModel) {
+    unawaited(referralRepo!.getReferralHistory().then((refHisModel) {
       if (refHisModel.isSuccess()) {
-        // baseProvider.referralsFetched = true;
-        baseProvider.userReferralsList = refHisModel.model ?? [];
-        _referalList = baseProvider.userReferralsList;
+        baseProvider.referralsFetched = true;
+        _referalList = baseProvider.userReferralsList = refHisModel.model ?? [];
+        // _referalList = baseProvider.userReferralsList;
         log("Referral List: ${_referalList!.length}");
         notifyListeners();
       } else {
         BaseUtil.showNegativeAlert(refHisModel.errorMessage, '');
       }
       // });
-    });
+    }));
     // else {
     //   _referalList = baseProvider.userReferralsList;
     //
@@ -258,7 +269,7 @@ class ReferralDetailsViewModel extends BaseViewModel {
     try {
       await Future.delayed(const Duration(milliseconds: 500));
       final List<dynamic>? contacts =
-          await methodChannel.invokeMethod<List<dynamic>>('getContacts');
+      await methodChannel.invokeMethod<List<dynamic>>('getContacts');
       if (contacts != null) {
         // Parse the contacts data
         final Set<String> uniquePhoneNumbers = {};

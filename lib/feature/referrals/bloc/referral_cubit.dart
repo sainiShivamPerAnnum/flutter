@@ -19,13 +19,20 @@ class ReferralCubit extends Cubit<ReferralState> {
   final ReferralDetailsViewModel model;
 
   Future<void> checkPermission({bool fromRefresh = false}) async {
-    PermissionStatus hasPermission = await Permission.contacts.status;
-
-    if (hasPermission == PermissionStatus.granted) {
+    if (model.hasPermission) {
       await getContacts(fromRefresh: fromRefresh);
     } else {
       emit(NoPermissionState());
     }
+
+    // PermissionStatus hasPermission = await Permission.contacts.status;
+    //
+    // if (hasPermission == PermissionStatus.granted) {
+    //
+    //   await getContacts(fromRefresh: fromRefresh);
+    // } else {
+    //   emit(NoPermissionState());
+    // }
   }
 
   Future<void> requestPermission() async {

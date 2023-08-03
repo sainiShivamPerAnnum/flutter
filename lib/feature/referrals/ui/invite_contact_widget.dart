@@ -1,6 +1,9 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
+import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/referral_service.dart';
 import 'package:felloapp/feature/referrals/bloc/referral_cubit.dart';
 import 'package:felloapp/feature/referrals/ui/contact_list_widget.dart';
@@ -67,6 +70,13 @@ class _InviteContactWidgetState extends State<InviteContactWidget>
         widget: widget,
         context: context,
       ),
+    );
+
+    locator<AnalyticsService>().track(
+      eventName: AnalyticsEvents.syncContactsTapped,
+      properties: {
+        'Earned So far': widget.model.totalReferralWon,
+      },
     );
   }
 
@@ -392,6 +402,18 @@ class PermissionModalSheet extends StatelessWidget {
             btnText: 'ALLOW ACCESS TO CONTACTS',
             onPressed: () async {
               await context.read<ReferralCubit>().requestPermission();
+
+              locator<AnalyticsService>().track(
+                eventName: AnalyticsEvents.syncContactsTapped,
+                properties: {
+                  'Earned So far': widget.model.totalReferralWon,
+                  'Current referral count':
+                      AnalyticsProperties.getTotalReferralCount(),
+                  'Data point 1': '${usersFromReferrals.toString()} Users',
+                  'Data point 2': '$referrersCount Referrals',
+                  'Data point 3': '₹$rewardsFromReferrals rewards',
+                },
+              );
             },
           ),
           SizedBox(
