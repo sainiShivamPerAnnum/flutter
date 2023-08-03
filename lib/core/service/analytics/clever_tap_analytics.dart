@@ -16,6 +16,7 @@ class CleverTapAnalytics extends BaseAnalyticsService {
         'Uid': baseUser.uid!,
         'Email': baseUser.email ?? "",
         'Phone': baseUser.mobile ?? "",
+        'Gender': baseUser.gender ?? "",
         'Signed Up': baseUser.isSimpleKycVerified ?? false,
         "KYC Verified": baseUser.isSimpleKycVerified ?? false,
       };
