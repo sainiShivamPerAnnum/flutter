@@ -359,12 +359,16 @@ class UserRepository extends BaseRepo {
           notifications[0].createdTime != null) {
         var notifTime = notifications[0].createdTime!.seconds.toString();
 
+        log('Referral Notification: ${notifications[0].toJson()}');
+
         // notifications[0] is the latest notification
         // if the notification is persistent then we need to show the notification only once in 48 hours
         // so we are checking if the notification is created in last 48 hours
 
         if (!PreferenceHelper.exists(
             PreferenceHelper.CACHE_REFERRAL_PERSISTENT_NOTIFACTION_ID)) {
+          log('Referral Notification Valid');
+
           int notifTimeInSeconds = int.tryParse(notifTime)!;
           int currentTimeInSeconds =
               DateTime.now().millisecondsSinceEpoch ~/ 1000;
@@ -383,26 +387,6 @@ class UserRepository extends BaseRepo {
             return ApiResponse<bool>(model: true, code: 200);
           }
         }
-        // if (!await CacheManager.exits(
-        //     CacheManager.CACHE_REFERRAL_PERSISTENT_NOTIFACTION_ID)) {
-        //   int notifTimeInSeconds = int.tryParse(notifTime)!;
-        //   int currentTimeInSeconds =
-        //       DateTime.now().millisecondsSinceEpoch ~/ 1000;
-        //   if (currentTimeInSeconds - notifTimeInSeconds < 172800) {
-        //     CacheManager.writeCache(
-        //         key: CacheManager.CACHE_REFERRAL_PERSISTENT_NOTIFACTION_ID,
-        //         value: notifications[0].id!.toString(),
-        //         type: CacheType.string);
-        //
-        //     if (notifications[0].misc != null &&
-        //         notifications[0].misc?.gtId != null) {
-        //       ScratchCardService.scratchCardId = notifications[0].misc!.gtId!;
-        //     }
-        //
-        //     userService.referralAlertDialog = notifications[0];
-        //     return ApiResponse<bool>(model: true, code: 200);
-        //   }
-        // }
       }
 
       if (latestNotifTime != null) {

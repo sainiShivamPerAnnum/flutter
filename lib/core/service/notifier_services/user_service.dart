@@ -618,10 +618,13 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
           name: "checkForNewNotifications method");
 
       BaseUtil.openDialog(
-          isBarrierDismissible: true,
-          addToScreenStack: true,
-          hapticVibrate: true,
-          content: ReferralAlertDialog());
+        isBarrierDismissible: true,
+        addToScreenStack: true,
+        hapticVibrate: true,
+        content: ReferralAlertDialog(
+          referralAlertDialog: referralAlertDialog,
+        ),
+      );
       // showReferralAlertDialog();
     }
   }
