@@ -19,6 +19,7 @@ import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
+import 'package:felloapp/feature/tambola/src/ui/widgets/referral_claim_widget.dart';
 import 'package:felloapp/feature/tambola/src/ui/widgets/tambola_mini_info_card.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -296,6 +297,8 @@ class SaveViewModel extends BaseViewModel {
     saveViewItems.addAll([
       const SaveWelcomeCard(),
     ]);
+
+    saveViewItems.add(const ReferralClaimWidget());
 
     DynamicUiUtils.saveViewOrder[1].forEach((key) {
       switch (key) {

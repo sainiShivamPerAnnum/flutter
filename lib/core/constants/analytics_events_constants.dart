@@ -258,4 +258,7 @@ class AnalyticsEvents {
   static const unleaseOnGoldProDetailsPage = "Unlease on Gold pro details page";
   static const unleaseOnLeaseCardGoldPro = "Unlease on Lease card gold pro";
   static const unleaseConfirmationGoldPro = "Unlease Confirmation Gold Pro";
+
+  //Referrals
+  static const newReferClaimTapped = "New Refer Claim Tapped";
 }
