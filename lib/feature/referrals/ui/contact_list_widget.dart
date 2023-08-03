@@ -209,14 +209,38 @@ class _ContactListWidgetState extends State<ContactListWidget>
                             style: TextStyles.rajdhaniSB.body2
                                 .colour(Colors.white),
                           ),
-                          Text(
-                            (contact.isRegistered ?? false)
-                                ? "Already on Fello"
-                                : 'Invite and earn ₹500',
-                            style: TextStyles.sourceSans.body4.colour(
+                          Row(
+                            children: [
+                              Text(
                                 (contact.isRegistered ?? false)
-                                    ? const Color(0xFF61E3C4)
-                                    : Colors.white.withOpacity(0.48)),
+                                    ? "Already on Fello"
+                                    : 'Invite and earn ₹500',
+                                style: TextStyles.sourceSans.body4.colour(
+                                    (contact.isRegistered ?? false)
+                                        ? const Color(0xFF61E3C4)
+                                        : Colors.white.withOpacity(0.48)),
+                              ),
+                              if (contact.isRegistered ?? false)
+                                Container(
+                                    height: SizeConfig.padding12,
+                                    width: SizeConfig.padding12,
+                                    margin: EdgeInsets.symmetric(
+                                        horizontal: SizeConfig.padding4),
+                                    decoration: const BoxDecoration(
+                                      color: Color(0xFF61E3C4),
+                                      shape: BoxShape.circle,
+                                    ),
+                                    child: Center(
+                                      child: Icon(
+                                        Icons.check,
+                                        size: SizeConfig.padding10,
+                                        color: Colors.black,
+                                        weight: 700,
+                                        grade: 200,
+                                        opticalSize: 48,
+                                      ),
+                                    ))
+                            ],
                           ),
                         ],
                       ),
@@ -253,7 +277,7 @@ class _ContactListWidgetState extends State<ContactListWidget>
             ),
 
           SizedBox(
-            height: SizeConfig.padding64,
+            height: SizeConfig.padding24,
           ),
           // SpinKitThreeBounce()
         ],
