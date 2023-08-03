@@ -12,6 +12,7 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
 class ReferEarnCard extends StatelessWidget {
@@ -22,6 +23,185 @@ class ReferEarnCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final S locale = locator<S>();
+
+    return GestureDetector(
+      onTap: () {
+        AppState.delegate!.appState.currentAction = PageAction(
+          state: PageState.addPage,
+          page: ReferralDetailsPageConfig,
+        );
+      },
+      child: Container(
+        margin: EdgeInsets.symmetric(
+          horizontal: SizeConfig.pageHorizontalMargins,
+        ),
+        padding: EdgeInsets.symmetric(
+          horizontal: SizeConfig.padding24,
+          vertical: SizeConfig.padding24,
+        ),
+        decoration: ShapeDecoration(
+          color: Color(0xFF6052A9),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(10),
+          ),
+          shadows: const [
+            BoxShadow(
+              color: Color(0xFF222226),
+              blurRadius: 20,
+              offset: Offset(0, 14),
+              spreadRadius: 0,
+            )
+          ],
+        ),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text.rich(
+                      TextSpan(
+                        children: [
+                          TextSpan(
+                            text: 'Refer ',
+                            style: TextStyles.rajdhaniB.title1
+                                .colour(Colors.white),
+                          ),
+                          TextSpan(
+                            text: "& Earn",
+                            // "${(AppConfig.getValue(AppConfigKey.revamped_referrals_config)?['rewardValues']?['invest1k'] ?? 50) + (AppConfig.getValue(AppConfigKey.revamped_referrals_config)?['rewardValues']?['invest10kflo12'] ?? 450)}\n",
+                            style: TextStyles.rajdhaniB.title1.colour(
+                              const Color(0xFFFFD979),
+                            ),
+                          ),
+                          // TextSpan(
+                          //   text: 'per Referral',
+                          //   style:
+                          //       TextStyles.rajdhaniB.title3.colour(Colors.white),
+                          // ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      height: SizeConfig.padding6,
+                    ),
+                    SizedBox(
+                      width: SizeConfig.screenWidth! * 0.44,
+                      child:
+                          'Earn *₹${(AppConfig.getValue(AppConfigKey.revamped_referrals_config)?['rewardValues']?['invest1k'] ?? 50) + (AppConfig.getValue(AppConfigKey.revamped_referrals_config)?['rewardValues']?['invest10kflo12'] ?? 450)}* when your friend saves in 12% Flo'
+                              .beautify(
+                        style: TextStyles.sourceSans.body2
+                            .colour(Colors.white.withOpacity(0.8)),
+                        boldStyle: TextStyles.sourceSansB.body2.colour(
+                          const Color(0xFFFFD979),
+                        ),
+                      ),
+                    )
+                  ],
+                ),
+                SvgPicture.asset('assets/svg/layer_1.svg',
+                    height: SizeConfig.padding80),
+              ],
+            ),
+            SizedBox(
+              height: SizeConfig.padding22,
+            ),
+            Consumer<ReferralService>(
+              builder: (context, model, child) {
+                return Row(
+                  // mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Container(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: SizeConfig.padding12,
+                          vertical: SizeConfig.padding6),
+                      decoration: BoxDecoration(
+                        color: UiConstants.kArrowButtonBackgroundColor,
+                        borderRadius: BorderRadius.all(
+                            Radius.circular(SizeConfig.roundness8)),
+                      ),
+                      child: Row(
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        children: [
+                          Text(
+                            model.refCode,
+                            style: TextStyles.rajdhaniEB.title2
+                                .colour(Colors.white),
+                          ),
+                          SizedBox(
+                            width: SizeConfig.padding24,
+                          ),
+                          GestureDetector(
+                            onTap: () {
+                              model.copyReferCode();
+                            },
+                            child: Row(
+                              children: [
+                                Text(locale.copy,
+                                    style: TextStyles.sourceSans.body3.colour(
+                                        UiConstants.kTextColor3
+                                            .withOpacity(0.7))),
+                                SizedBox(
+                                  width: SizeConfig.padding6,
+                                ),
+                                Icon(
+                                  Icons.copy,
+                                  color:
+                                      UiConstants.kTextColor3.withOpacity(0.7),
+                                  size: SizeConfig.padding24,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
+                    ),
+                    SizedBox(
+                      width: SizeConfig.padding20,
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        // String message = (referralService.shareMsg ??
+                        //     'Hey I am gifting you ₹${AppConfig.getValue(AppConfigKey.referralBonus)} and ${AppConfig.getValue(AppConfigKey.referralBonus)} gaming tokens. Lets start saving and playing together! Share this code: *${referralService.refCode}* with your friends.\n') +
+                        //     (referralService.referralShortLink ?? "");
+                        // launch('whatsapp://send?text=$message');
+                      },
+                      child: Container(
+                        width: SizeConfig.padding54,
+                        height: SizeConfig.padding48,
+                        padding: EdgeInsets.all(SizeConfig.padding16),
+                        decoration: BoxDecoration(
+                          color: UiConstants.kArrowButtonBackgroundColor,
+
+                          borderRadius: BorderRadius.circular(8),
+                          // gradient: const LinearGradient(
+                          //   colors: [
+                          //     Color(0xff12BC9D),
+                          //     Color(0xff249680),
+                          //   ],
+                          //   begin: Alignment.topCenter,
+                          //   end: Alignment.bottomCenter,
+                          // ),
+                        ),
+                        child: SvgPicture.asset(
+                          'assets/vectors/whatsapp.svg',
+                          width: 24,
+                          height: 24,
+                          color: Colors.white,
+                        ),
+                      ),
+                    )
+                  ],
+                );
+              },
+            ),
+          ],
+        ),
+      ),
+    );
+
     return Stack(
       children: [
         GestureDetector(
@@ -121,7 +301,7 @@ class ReferEarnCard extends StatelessWidget {
                                 padding: EdgeInsets.symmetric(
                                     horizontal: SizeConfig.padding12,
                                     vertical: SizeConfig.padding12),
-                                decoration: BoxDecoration(
+                                decoration: const BoxDecoration(
                                   color:
                                       UiConstants.kArrowButtonBackgroundColor,
                                   shape: BoxShape.circle,
