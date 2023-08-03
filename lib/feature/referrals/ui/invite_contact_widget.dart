@@ -4,6 +4,7 @@ import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/service/referral_service.dart';
 import 'package:felloapp/feature/referrals/bloc/referral_cubit.dart';
 import 'package:felloapp/feature/referrals/ui/contact_list_widget.dart';
+import 'package:felloapp/feature/tambola/src/ui/widgets/loader.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/detail_page/flo_premium_details_view.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
@@ -150,10 +151,20 @@ class _InviteContactWidgetState extends State<InviteContactWidget>
             );
           }
 
-          return SizedBox(
-            height: SizeConfig.screenHeight! * 0.6,
-            child: const Center(
-              child: CircularProgressIndicator(),
+          return Container(
+            width: SizeConfig.screenWidth,
+            padding: EdgeInsets.symmetric(
+                vertical: SizeConfig.pageHorizontalMargins),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                const FullScreenLoader(),
+                SizedBox(height: SizeConfig.padding20),
+                Text(
+                  'Fetching your contacts. Please wait..',
+                  style: TextStyles.sourceSans.body2.colour(Colors.white),
+                ),
+              ],
             ),
           );
         },

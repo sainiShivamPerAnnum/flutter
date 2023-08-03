@@ -281,6 +281,8 @@ class ReferralDetailsViewModel extends BaseViewModel {
             ));
           }
         }
+        // Sort the contacts alphabetically by displayName
+        parsedContacts.sort((a, b) => a.displayName.compareTo(b.displayName));
 
         log('Contacts loaded successfully!', name: 'ReferralDetailsScreen');
         contactsList = parsedContacts;

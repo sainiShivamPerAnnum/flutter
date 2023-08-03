@@ -54,8 +54,8 @@ class _ContactListWidgetState extends State<ContactListWidget>
 
         _displayedContactsCount = filteredContacts.length;
       });
-      log('filteredContacts name: ${filteredContacts[0].displayName}',
-          name: 'ReferralDetailsScreen');
+      // log('filteredContacts name: ${filteredContacts[0].displayName}',
+      //     name: 'ReferralDetailsScreen');
     }
 
     // context.read<ReferralCubit>().refreshContacts();
@@ -169,102 +169,106 @@ class _ContactListWidgetState extends State<ContactListWidget>
             shrinkWrap: true,
             physics: const NeverScrollableScrollPhysics(),
             itemBuilder: (context, index) {
-              final contact = filteredContacts[index];
-              return Column(
-                children: [
-                  Row(
-                    children: [
-                      Container(
-                        height: SizeConfig.padding44,
-                        width: SizeConfig.padding44,
-                        padding: EdgeInsets.all(SizeConfig.padding3),
-                        decoration: const ShapeDecoration(
-                          shape: OvalBorder(
-                            side: BorderSide(
-                                width: 0.5, color: Color(0xFF1ADAB7)),
+              if (index < filteredContacts.length) {
+                final contact = filteredContacts[index];
+                return Column(
+                  children: [
+                    Row(
+                      children: [
+                        Container(
+                          height: SizeConfig.padding44,
+                          width: SizeConfig.padding44,
+                          padding: EdgeInsets.all(SizeConfig.padding3),
+                          decoration: const ShapeDecoration(
+                            shape: OvalBorder(
+                              side: BorderSide(
+                                  width: 0.5, color: Color(0xFF1ADAB7)),
+                            ),
                           ),
-                        ),
-                        child: Container(
-                          height: SizeConfig.padding38,
-                          width: SizeConfig.padding38,
-                          decoration: const BoxDecoration(
-                            color: Color(0xFFD9D9D9),
-                            shape: BoxShape.circle,
-                          ),
-                          child: Center(
-                            child: Text(
-                              contact.displayName.substring(0, 1),
-                              style: TextStyles.rajdhaniSB.body0
-                                  .colour(const Color(0xFF3A3A3C)),
+                          child: Container(
+                            height: SizeConfig.padding38,
+                            width: SizeConfig.padding38,
+                            decoration: const BoxDecoration(
+                              color: Color(0xFFD9D9D9),
+                              shape: BoxShape.circle,
+                            ),
+                            child: Center(
+                              child: Text(
+                                contact.displayName.substring(0, 1),
+                                style: TextStyles.rajdhaniSB.body0
+                                    .colour(const Color(0xFF3A3A3C)),
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      SizedBox(width: SizeConfig.padding8),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            contact.displayName,
-                            style: TextStyles.rajdhaniSB.body2
-                                .colour(Colors.white),
-                          ),
-                          Row(
-                            children: [
-                              Text(
-                                (contact.isRegistered ?? false)
-                                    ? "Already on Fello"
-                                    : 'Invite and earn ₹500',
-                                style: TextStyles.sourceSans.body4.colour(
-                                    (contact.isRegistered ?? false)
-                                        ? const Color(0xFF61E3C4)
-                                        : Colors.white.withOpacity(0.48)),
-                              ),
-                              if (contact.isRegistered ?? false)
-                                Container(
-                                    height: SizeConfig.padding12,
-                                    width: SizeConfig.padding12,
-                                    margin: EdgeInsets.symmetric(
-                                        horizontal: SizeConfig.padding4),
-                                    decoration: const BoxDecoration(
-                                      color: Color(0xFF61E3C4),
-                                      shape: BoxShape.circle,
-                                    ),
-                                    child: Center(
-                                      child: Icon(
-                                        Icons.check,
-                                        size: SizeConfig.padding10,
-                                        color: Colors.black,
-                                        weight: 700,
-                                        grade: 200,
-                                        opticalSize: 48,
+                        SizedBox(width: SizeConfig.padding8),
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              contact.displayName,
+                              style: TextStyles.rajdhaniSB.body2
+                                  .colour(Colors.white),
+                            ),
+                            Row(
+                              children: [
+                                Text(
+                                  (contact.isRegistered ?? false)
+                                      ? "Already on Fello"
+                                      : 'Invite and earn ₹500',
+                                  style: TextStyles.sourceSans.body4.colour(
+                                      (contact.isRegistered ?? false)
+                                          ? const Color(0xFF61E3C4)
+                                          : Colors.white.withOpacity(0.48)),
+                                ),
+                                if (contact.isRegistered ?? false)
+                                  Container(
+                                      height: SizeConfig.padding12,
+                                      width: SizeConfig.padding12,
+                                      margin: EdgeInsets.symmetric(
+                                          horizontal: SizeConfig.padding4),
+                                      decoration: const BoxDecoration(
+                                        color: Color(0xFF61E3C4),
+                                        shape: BoxShape.circle,
                                       ),
-                                    ))
-                            ],
-                          ),
-                        ],
-                      ),
-                      const Spacer(),
-                      if (!(contact.isRegistered ?? false))
-                        GestureDetector(
-                          onTap: () {
-                            navigateToWhatsApp(contact.phoneNumber,
-                                locator<ReferralService>().shareMsg);
-                          },
-                          child: Text(
-                            'INVITE',
-                            textAlign: TextAlign.right,
-                            style: TextStyles.rajdhaniB.body3
-                                .colour(const Color(0xFF61E3C4)),
-                          ),
+                                      child: Center(
+                                        child: Icon(
+                                          Icons.check,
+                                          size: SizeConfig.padding10,
+                                          color: Colors.black,
+                                          weight: 700,
+                                          grade: 200,
+                                          opticalSize: 48,
+                                        ),
+                                      ))
+                              ],
+                            ),
+                          ],
                         ),
-                    ],
-                  ),
-                  SizedBox(
-                    height: SizeConfig.padding24,
-                  )
-                ],
-              );
+                        const Spacer(),
+                        if (!(contact.isRegistered ?? false))
+                          GestureDetector(
+                            onTap: () {
+                              navigateToWhatsApp(contact.phoneNumber,
+                                  locator<ReferralService>().shareMsg);
+                            },
+                            child: Text(
+                              'INVITE',
+                              textAlign: TextAlign.right,
+                              style: TextStyles.rajdhaniB.body3
+                                  .colour(const Color(0xFF61E3C4)),
+                            ),
+                          ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: SizeConfig.padding24,
+                    )
+                  ],
+                );
+              } else {
+                return const SizedBox.shrink();
+              }
             },
           ),
           SizedBox(
