@@ -9,6 +9,7 @@ class CleverTapAnalytics extends BaseAnalyticsService {
 
   @override
   Future<void> login({bool? isOnBoarded, BaseUser? baseUser}) async {
+    CleverTapPlugin.setDebugLevel(1);
     if (isOnBoarded != null && isOnBoarded && baseUser != null) {
       var profile = {
         'Name': baseUser.name ?? "",
@@ -29,6 +30,7 @@ class CleverTapAnalytics extends BaseAnalyticsService {
   @override
   void track({String? eventName, Map<String, dynamic>? properties}) {
     CleverTapPlugin.recordEvent(eventName!, properties ?? {});
+    _logger?.d("CleverTap :: Event tracked: $eventName");
   }
 
   @override
