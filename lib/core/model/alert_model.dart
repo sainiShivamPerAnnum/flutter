@@ -82,7 +82,7 @@ class AlertModel {
 class Misc {
   final String? gtId;
   final String? command;
-  final int? amount;
+  final String? amount;
   final String? userType;
 
   Misc({this.command, this.gtId, this.amount, this.userType});
@@ -90,7 +90,7 @@ class Misc {
   factory Misc.fromJson(Map<String, dynamic> json) => Misc(
         command: json["command"],
         gtId: json["gtId"],
-        amount: json["amount"],
+        amount: json["amount"].toString(),
         userType: json["userType"],
       );
 

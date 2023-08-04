@@ -74,11 +74,6 @@ class Win extends StatelessWidget {
                   uri: "",
                   onTap: () => model.showRatingSheet(),
                 ),
-                AccountInfoTiles(
-                  title: 'Report bug',
-                  uri: "",
-                  onTap: () => model.showFoundBugSheet(),
-                ),
                 //Scratch Cards count and navigation
                 const ScratchCardsInfoStrip(),
                 //Current Winnings Information

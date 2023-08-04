@@ -1,9 +1,12 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
-import 'package:felloapp/util/styles/ui_constants.dart';
+import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:share_plus/share_plus.dart';
@@ -88,31 +91,25 @@ class _QuizWebViewState extends State<QuizWebView> {
                   child: FullScreenLoader(),
                 ),
               ),
-            // Positioned(
-            //   right: SizeConfig.padding8,
-            //   top: SizeConfig.padding8,
-            //   child: Row(
-            //     children: [
-            //       Container(
-            //         decoration: BoxDecoration(
-            //             color: const Color(0xff227c74),
-            //             borderRadius:
-            //                 BorderRadius.circular(SizeConfig.roundness12)),
-            //         child: IconButton(
-            //           icon: const Icon(Icons.close),
-            //           color: Colors.white,
-            //           onPressed: () {
-            //             AppState.unblockNavigation();
-            //             AppState.backButtonDispatcher!.didPopRoute();
-            //
-            //             locator<AnalyticsService>()
-            //                 .track(eventName: AnalyticsEvents.quizCrossTapped);
-            //           },
-            //         ),
-            //       ),
-            //     ],
-            //   ),
-            // )
+            Positioned(
+              right: SizeConfig.padding8,
+              top: SizeConfig.padding8,
+              child: Row(
+                children: [
+                  IconButton(
+                    icon: const Icon(Icons.close),
+                    color: Colors.white,
+                    onPressed: () {
+                      AppState.unblockNavigation();
+                      AppState.backButtonDispatcher!.didPopRoute();
+
+                      locator<AnalyticsService>()
+                          .track(eventName: AnalyticsEvents.quizCrossTapped);
+                    },
+                  ),
+                ],
+              ),
+            )
           ],
         ),
       ),

@@ -22,7 +22,6 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/elements/fello_dialog/fello_in_app_review.dart';
-import 'package:felloapp/ui/pages/support/bug_report/ui/found_bug.dart';
 import 'package:felloapp/ui/pages/userProfile/my_winnings/my_winnings_view.dart';
 import 'package:felloapp/ui/service_elements/last_week/last_week_view.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -82,7 +81,7 @@ class WinViewModel extends BaseViewModel {
 
   Future<void> init() async {
     getFelloFacts();
-    _lbService!.fetchReferralLeaderBoard();
+    // _lbService!.fetchReferralLeaderBoard();
     locator<ScratchCardService>().updateUnscratchedGTCount();
   }
 
@@ -368,20 +367,6 @@ class WinViewModel extends BaseViewModel {
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
       content: const FelloInAppReview(),
-    );
-  }
-
-  void showFoundBugSheet() {
-    Haptic.vibrate();
-
-    BaseUtil.openModalBottomSheet(
-      addToScreenStack: true,
-      enableDrag: false,
-      hapticVibrate: true,
-      isBarrierDismissible: true,
-      backgroundColor: Colors.transparent,
-      isScrollControlled: true,
-      content: const FoundBug(),
     );
   }
 }
