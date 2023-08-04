@@ -53,8 +53,8 @@ class MixpanelAnalytics extends BaseAnalyticsService {
       } else {
         if (properties != null && properties.isNotEmpty) {
           _mixpanel!.track(eventName!, properties: properties);
-          _logger!.i(
-              "Event: $eventName, Properties: ${properties.toString()}. Successfully tracked");
+          // _logger!.i(
+          //     "Event: $eventName, Properties: ${properties.toString()}. Successfully tracked");
         } else {
           _mixpanel!.track(eventName!);
         }

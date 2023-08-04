@@ -1,7 +1,7 @@
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/service/analytics/base_analytics_service.dart';
-import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/custom_logger.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:webengage_flutter/webengage_flutter.dart';
 
 class WebEngageAnalytics extends BaseAnalyticsService {
@@ -55,8 +55,8 @@ class WebEngageAnalytics extends BaseAnalyticsService {
     try {
       if (properties != null && properties.isNotEmpty) {
         WebEngagePlugin.trackEvent(eventName!, properties);
-        _logger!.i(
-            "Event: $eventName, Properties: ${properties.toString()}. Successfully tracked");
+        // _logger!.i(
+        //     "Event: $eventName, Properties: ${properties.toString()}. Successfully tracked");
       } else {
         WebEngagePlugin.trackEvent(eventName!);
       }

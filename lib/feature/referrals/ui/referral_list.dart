@@ -73,6 +73,14 @@ class ReferralList extends StatelessWidget {
                         onPressed: () {
                           if (model.isShareAlreadyClicked == false) {
                             locator<ReferralService>().shareLink();
+
+                            locator<AnalyticsService>().track(
+                              eventName: AnalyticsEvents
+                                  .inviteFriendsReferralSectionTapped,
+                              properties: {
+                                'location': 'null screen',
+                              },
+                            );
                           }
                         },
                         color: Colors.white,

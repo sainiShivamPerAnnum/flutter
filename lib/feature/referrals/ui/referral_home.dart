@@ -13,8 +13,10 @@ import 'package:felloapp/feature/referrals/bloc/referral_cubit.dart';
 import 'package:felloapp/feature/referrals/ui/how_it_works_widget.dart';
 import 'package:felloapp/feature/referrals/ui/invite_contact_widget.dart';
 import 'package:felloapp/feature/referrals/ui/referral_list.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/appbar/appbar.dart';
+import 'package:felloapp/ui/pages/login/login_components/login_support.dart';
 import 'package:felloapp/ui/pages/rewards/instant_scratch_card/gt_instant_view.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/userProfile/referrals/referral_details/referral_details_vm.dart';
@@ -96,227 +98,8 @@ class _ReferralHomeState extends State<ReferralHome> {
                             physics: const BouncingScrollPhysics(),
                             headerSliverBuilder: (context, innerBoxIsScrolled) {
                               return [
-                                SliverToBoxAdapter(
-                                  child: Stack(
-                                    children: [
-                                      Column(
-                                        children: [
-                                          Container(
-                                            decoration: BoxDecoration(
-                                              color: UiConstants
-                                                  .kReferralHeaderColor,
-                                              borderRadius: BorderRadius.only(
-                                                bottomLeft: Radius.circular(
-                                                    SizeConfig.roundness12),
-                                                bottomRight: Radius.circular(
-                                                    SizeConfig.roundness12),
-                                              ),
-                                            ),
-                                            child: Column(
-                                              children: [
-                                                Lottie.asset(
-                                                  'assets/lotties/referral_lottie.json',
-                                                  // height: SizeConfig.padding140,
-                                                  width: SizeConfig.screenWidth,
-                                                  fit: BoxFit.fitWidth,
-                                                ),
-                                                Text.rich(
-                                                  TextSpan(
-                                                    children: [
-                                                      TextSpan(
-                                                        text: 'Win ',
-                                                        style: TextStyles
-                                                            .rajdhaniB.title1
-                                                            .colour(
-                                                                Colors.white),
-                                                      ),
-                                                      TextSpan(
-                                                        text:
-                                                            '₹${(AppConfig.getValue(AppConfigKey.revamped_referrals_config)?['rewardValues']?['invest1k'] ?? 50) + (AppConfig.getValue(AppConfigKey.revamped_referrals_config)?['rewardValues']?['invest10kflo12'] ?? 450)}',
-                                                        style: TextStyles
-                                                            .rajdhaniB.title1
-                                                            .colour(const Color(
-                                                                0xFFFFD979)),
-                                                      ),
-                                                    ],
-                                                  ),
-                                                  textAlign: TextAlign.center,
-                                                ),
-                                                Transform.translate(
-                                                  offset: Offset(
-                                                      0, -SizeConfig.padding10),
-                                                  child: Text(
-                                                    'per Referral',
-                                                    style: TextStyles
-                                                        .rajdhaniB.title1
-                                                        .colour(Colors.white),
-                                                  ),
-                                                ),
-                                                SizedBox(
-                                                    height:
-                                                        SizeConfig.padding6),
-                                                Row(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.center,
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: [
-                                                    Container(
-                                                      width:
-                                                          SizeConfig.padding6,
-                                                      height:
-                                                          SizeConfig.padding6,
-                                                      // margin: EdgeInsets.only(
-                                                      //     top: SizeConfig.padding8),
-                                                      decoration:
-                                                          const ShapeDecoration(
-                                                        color:
-                                                            Color(0xFF61E3C4),
-                                                        shape: OvalBorder(),
-                                                      ),
-                                                    ),
-                                                    SizedBox(
-                                                      width:
-                                                          SizeConfig.padding4,
-                                                    ),
-                                                    Text(
-                                                      subTitle,
-                                                      style: TextStyles.body3
-                                                          .colour(
-                                                              Colors.white70),
-                                                      textAlign:
-                                                          TextAlign.center,
-                                                    ),
-                                                  ],
-                                                ),
-                                                SizedBox(
-                                                  height: SizeConfig.padding16,
-                                                ),
-                                              ],
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                      const Align(
-                                        child: FAppBar(
-                                          showHelpButton: true,
-                                          type: FaqsType.yourAccount,
-                                          showCoinBar: false,
-                                          showAvatar: false,
-                                          leadingPadding: false,
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                                SliverToBoxAdapter(
-                                  child: Container(
-                                    color: const Color(0xff181818),
-                                    child: Column(
-                                      children: [
-                                        if ((model.totalReferralWon ?? 0) > 1)
-                                          Stack(
-                                            children: [
-                                              Container(
-                                                  height: SizeConfig.padding46,
-                                                  padding: EdgeInsets.fromLTRB(
-                                                      SizeConfig.padding38,
-                                                      SizeConfig.padding14,
-                                                      SizeConfig.padding20,
-                                                      SizeConfig.padding10),
-                                                  decoration: BoxDecoration(
-                                                    color:
-                                                        const Color(0xFF39393C),
-                                                    borderRadius:
-                                                        BorderRadius.only(
-                                                      bottomLeft:
-                                                          Radius.circular(
-                                                              SizeConfig
-                                                                  .roundness16),
-                                                      bottomRight:
-                                                          Radius.circular(
-                                                              SizeConfig
-                                                                  .roundness16),
-                                                    ),
-                                                  ),
-                                                  child: Text.rich(
-                                                    TextSpan(
-                                                      children: [
-                                                        TextSpan(
-                                                            text:
-                                                                'You’ve earned ',
-                                                            style: TextStyles
-                                                                .rajdhaniSB
-                                                                .body2
-                                                                .colour(Colors
-                                                                    .white)),
-                                                        TextSpan(
-                                                            text:
-                                                                '₹${model.totalReferralWon}',
-                                                            style: TextStyles
-                                                                .rajdhaniB.body2
-                                                                .colour(const Color(
-                                                                    0xFFFFD979))),
-                                                        TextSpan(
-                                                            text: ' so far!',
-                                                            style: TextStyles
-                                                                .rajdhaniSB
-                                                                .body2
-                                                                .colour(Colors
-                                                                    .white)),
-                                                      ],
-                                                    ),
-                                                    textAlign: TextAlign.center,
-                                                  )),
-                                              Positioned(
-                                                left: SizeConfig.padding24,
-                                                top: SizeConfig.padding24,
-                                                child: CustomPaint(
-                                                  size: Size(
-                                                      SizeConfig.padding8,
-                                                      (SizeConfig.padding8 *
-                                                              1.125)
-                                                          .toDouble()),
-                                                  painter:
-                                                      ReferralStarCustomPainter(),
-                                                ),
-                                              ),
-                                              Positioned(
-                                                left: SizeConfig.padding32,
-                                                top: SizeConfig.padding18,
-                                                child: CustomPaint(
-                                                  size: Size(
-                                                      SizeConfig.padding8,
-                                                      (SizeConfig.padding8 *
-                                                              1.125)
-                                                          .toDouble()),
-                                                  painter:
-                                                      ReferralStarCustomPainter(),
-                                                ),
-                                              ),
-                                            ],
-                                          ),
-                                        SizedBox(
-                                          height: SizeConfig.padding24,
-                                        ),
-                                        HowItWorksWidget(
-                                          isBoxOpen:
-                                              !((model.totalReferralWon ?? 0) >
-                                                  1),
-                                          onStateChanged: () {
-                                            // _controller.animateTo(
-                                            //     _controller.position.maxScrollExtent,
-                                            //     duration: const Duration(milliseconds: 500),
-                                            //     curve: Curves.ease);
-                                          },
-                                        ),
-                                        SizedBox(
-                                          height: SizeConfig.padding24,
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                ),
+                                buildHeaderSliver(model),
+                                buildBodySliver(model),
                               ];
                             },
                             body: ReferralTabView(
@@ -330,10 +113,6 @@ class _ReferralHomeState extends State<ReferralHome> {
                     ),
                   );
                 }),
-                // Align(
-                //   alignment: Alignment.bottomCenter,
-                //   child: buildBottomNav(model),
-                // ),
                 CustomKeyboardSubmitButton(
                   onSubmit: () {
                     //hide keyboard
@@ -346,6 +125,219 @@ class _ReferralHomeState extends State<ReferralHome> {
           ),
         );
       },
+    );
+  }
+
+  SliverToBoxAdapter buildHeaderSliver(ReferralDetailsViewModel model) {
+    return SliverToBoxAdapter(
+      child: Stack(
+        children: [
+          Column(
+            children: [
+              Container(
+                decoration: BoxDecoration(
+                  color: UiConstants.kReferralHeaderColor,
+                  borderRadius: BorderRadius.only(
+                    bottomLeft: Radius.circular(SizeConfig.roundness12),
+                    bottomRight: Radius.circular(SizeConfig.roundness12),
+                  ),
+                ),
+                child: Column(
+                  children: [
+                    Lottie.asset(
+                      'assets/lotties/referral_lottie.json',
+                      // height: SizeConfig.padding140,
+                      width: SizeConfig.screenWidth,
+                      fit: BoxFit.fitWidth,
+                    ),
+                    Text.rich(
+                      TextSpan(
+                        children: [
+                          TextSpan(
+                            text: 'Win ',
+                            style: TextStyles.rajdhaniB.title1
+                                .colour(Colors.white),
+                          ),
+                          TextSpan(
+                            text:
+                                '₹${(AppConfig.getValue(AppConfigKey.revamped_referrals_config)?['rewardValues']?['invest1k'] ?? 50) + (AppConfig.getValue(AppConfigKey.revamped_referrals_config)?['rewardValues']?['invest10kflo12'] ?? 450)}',
+                            style: TextStyles.rajdhaniB.title1
+                                .colour(const Color(0xFFFFD979)),
+                          ),
+                        ],
+                      ),
+                      textAlign: TextAlign.center,
+                    ),
+                    Transform.translate(
+                      offset: Offset(0, -SizeConfig.padding10),
+                      child: Text(
+                        'per Referral',
+                        style: TextStyles.rajdhaniB.title1.colour(Colors.white),
+                      ),
+                    ),
+                    SizedBox(height: SizeConfig.padding6),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        Container(
+                          width: SizeConfig.padding6,
+                          height: SizeConfig.padding6,
+                          // margin: EdgeInsets.only(
+                          //     top: SizeConfig.padding8),
+                          decoration: const ShapeDecoration(
+                            color: Color(0xFF61E3C4),
+                            shape: OvalBorder(),
+                          ),
+                        ),
+                        SizedBox(
+                          width: SizeConfig.padding4,
+                        ),
+                        Text(
+                          subTitle,
+                          style: TextStyles.body3.colour(Colors.white70),
+                          textAlign: TextAlign.center,
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: SizeConfig.padding16,
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          ),
+          Align(
+              alignment: Alignment.topRight,
+              child: GestureDetector(
+                onTap: () {},
+                child: Padding(
+                  padding: EdgeInsets.all(SizeConfig.padding8),
+                  child: FaqPill(
+                    type: FaqsType.referrals,
+                    addEvent: () {
+                      locator<AnalyticsService>().track(
+                        eventName: AnalyticsEvents.referralSectionHelpTapped,
+                        properties: {
+                          'Earned So far': model.totalReferralWon,
+                          "contact access given": model.hasPermission,
+                          "Current referral count":
+                              AnalyticsProperties.getTotalReferralCount(),
+                        },
+                      );
+                    },
+                  ),
+                ),
+              )),
+          Align(
+              alignment: Alignment.topLeft,
+              child: GestureDetector(
+                onTap: () {
+                  AppState.backButtonDispatcher?.didPopRoute();
+                  locator<AnalyticsService>().track(
+                    eventName: AnalyticsEvents.referralSectionBackTapped,
+                    properties: {
+                      'Earned So far': model.totalReferralWon,
+                      "contact access given": model.hasPermission,
+                      "Current referral count":
+                          AnalyticsProperties.getTotalReferralCount(),
+                    },
+                  );
+                },
+                child: Padding(
+                  padding: EdgeInsets.all(SizeConfig.padding8),
+                  child: const Icon(
+                    Icons.arrow_back,
+                    color: Colors.white,
+                  ),
+                ),
+              ))
+        ],
+      ),
+    );
+  }
+
+  SliverToBoxAdapter buildBodySliver(ReferralDetailsViewModel model) {
+    return SliverToBoxAdapter(
+      child: Container(
+        color: const Color(0xff181818),
+        child: Column(
+          children: [
+            if ((model.totalReferralWon ?? 0) > 1)
+              Stack(
+                children: [
+                  Container(
+                      height: SizeConfig.padding46,
+                      padding: EdgeInsets.fromLTRB(
+                          SizeConfig.padding38,
+                          SizeConfig.padding14,
+                          SizeConfig.padding20,
+                          SizeConfig.padding10),
+                      decoration: BoxDecoration(
+                        color: const Color(0xFF39393C),
+                        borderRadius: BorderRadius.only(
+                          bottomLeft: Radius.circular(SizeConfig.roundness16),
+                          bottomRight: Radius.circular(SizeConfig.roundness16),
+                        ),
+                      ),
+                      child: Text.rich(
+                        TextSpan(
+                          children: [
+                            TextSpan(
+                                text: 'You’ve earned ',
+                                style: TextStyles.rajdhaniSB.body2
+                                    .colour(Colors.white)),
+                            TextSpan(
+                                text: '₹${model.totalReferralWon}',
+                                style: TextStyles.rajdhaniB.body2
+                                    .colour(const Color(0xFFFFD979))),
+                            TextSpan(
+                                text: ' so far!',
+                                style: TextStyles.rajdhaniSB.body2
+                                    .colour(Colors.white)),
+                          ],
+                        ),
+                        textAlign: TextAlign.center,
+                      )),
+                  Positioned(
+                    left: SizeConfig.padding24,
+                    top: SizeConfig.padding24,
+                    child: CustomPaint(
+                      size: Size(SizeConfig.padding8,
+                          (SizeConfig.padding8 * 1.125).toDouble()),
+                      painter: ReferralStarCustomPainter(),
+                    ),
+                  ),
+                  Positioned(
+                    left: SizeConfig.padding32,
+                    top: SizeConfig.padding18,
+                    child: CustomPaint(
+                      size: Size(SizeConfig.padding8,
+                          (SizeConfig.padding8 * 1.125).toDouble()),
+                      painter: ReferralStarCustomPainter(),
+                    ),
+                  ),
+                ],
+              ),
+            SizedBox(
+              height: SizeConfig.padding24,
+            ),
+            HowItWorksWidget(
+              isBoxOpen: !((model.totalReferralWon ?? 0) > 1),
+              onStateChanged: () {
+                // _controller.animateTo(
+                //     _controller.position.maxScrollExtent,
+                //     duration: const Duration(milliseconds: 500),
+                //     curve: Curves.ease);
+              },
+            ),
+            SizedBox(
+              height: SizeConfig.padding24,
+            ),
+          ],
+        ),
+      ),
     );
   }
 
@@ -459,7 +451,7 @@ class _ReferralHomeState extends State<ReferralHome> {
                       locator<AnalyticsService>().track(
                         eventName:
                             AnalyticsEvents.inviteFriendsReferralSectionTapped,
-                        properties: {'location': null},
+                        properties: {'location': 'bottom footer'},
                       );
                     }
                   },

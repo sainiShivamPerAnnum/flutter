@@ -274,4 +274,8 @@ class AnalyticsEvents {
       "Invite Friends Referral Section Tapped";
   static const claimRewardNowReferralAlertTapped =
       "Claim Reward Now Referral Alert Tapped";
+  static const referralSectionBackTapped = "Referral Section Back Tapped";
+
+  //Referral Section Help Tapped
+  static const referralSectionHelpTapped = "Referral Section Help Tapped";
 }

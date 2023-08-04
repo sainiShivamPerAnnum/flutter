@@ -14,7 +14,10 @@ import 'package:flutter/material.dart';
 
 class FaqPill extends StatelessWidget {
   final FaqsType? type;
-  const FaqPill({Key? key, this.type}) : super(key: key);
+  final Function? addEvent;
+
+  const FaqPill({Key? key, this.type, this.addEvent}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
@@ -28,9 +31,10 @@ class FaqPill extends StatelessWidget {
             type: type ?? FaqsType.journey,
           ),
         );
+        if (addEvent != null) addEvent!();
       },
       child: Container(
-          key: ValueKey(Constants.HELP_FAB),
+          key: const ValueKey(Constants.HELP_FAB),
           // height: SizeConfig.navBarHeight * 0.5,
           margin: EdgeInsets.symmetric(
             horizontal: SizeConfig.padding8,
