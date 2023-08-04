@@ -71,7 +71,10 @@ class ReferralAlertDialog extends StatelessWidget {
                   locator<AnalyticsService>().track(
                     eventName:
                         AnalyticsEvents.claimRewardNowReferralAlertTapped,
-                    properties: {'reward amount': null, 'User type': null},
+                    properties: {
+                      'reward amount': referralAlertDialog?.misc?.amount,
+                      'User type': referralAlertDialog?.misc?.userType
+                    },
                   );
                 },
               )
