@@ -27,6 +27,7 @@ import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/repository/user_stats_repo.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/analytics/clever_tap_analytics.dart';
 import 'package:felloapp/core/service/analytics/mixpanel_analytics.dart';
 import 'package:felloapp/core/service/analytics/singular_analytics.dart';
 import 'package:felloapp/core/service/analytics/webengage_analytics.dart';
@@ -139,6 +140,7 @@ Future<void> setupLocator() async {
   locator.registerLazySingleton(WebEngageAnalytics.new);
   locator.registerLazySingleton(AppFlyerAnalytics.new);
   locator.registerLazySingleton(SingularAnalytics.new);
+  locator.registerLazySingleton(CleverTapAnalytics.new);
 
   locator.registerLazySingleton(InternalOpsService.new);
   locator.registerLazySingleton(BankAndPanService.new);

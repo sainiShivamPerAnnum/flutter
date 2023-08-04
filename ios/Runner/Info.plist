@@ -89,22 +89,28 @@
 			</array>
 		</dict>
 		<dict>
-      		<key>CFBundleURLSchemes</key>
-     		 <array>
-        		<string>fb523292952050769</string>
-      		</array>
-      </dict>
+			<key>CFBundleURLSchemes</key>
+			<array>
+				<string>fb523292952050769</string>
+			</array>
+		</dict>
 	</array>
 	<key>FacebookAppID</key>
-    <string>523292952050769</string>
-    <key>FacebookDisplayName</key>
-    <string>fello_facebook_events</string>
-    <key>FacebookAutoLogAppEventsEnabled</key>
-    <true/>
-    <key>FacebookAdvertiserIDCollectionEnabled</key>
-    <true/>
+	<string>523292952050769</string>
+	<key>FacebookDisplayName</key>
+	<string>fello_facebook_events</string>
+	<key>FacebookAutoLogAppEventsEnabled</key>
+	<true/>
+	<key>FacebookAdvertiserIDCollectionEnabled</key>
+	<true/>
 	<key>FacebookClientToken</key>
-    <string>bb20099c8e8eb3c3ad3bb4338626b0c8</string>
+	<string>bb20099c8e8eb3c3ad3bb4338626b0c8</string>
+	<key>CleverTapAccountID</key>
+	<string>948-479-W96Z</string>
+	<key>CleverTapToken</key>
+	<string>XXXXXX</string>
+	<key>CleverTapRegion</key>
+	<string>in1</string>
 	<key>CFBundleVersion</key>
 	<string>$(CURRENT_PROJECT_VERSION)</string>
 	<key>FirebaseAppDelegateProxyEnabled</key>
@@ -144,8 +150,8 @@
 	<string>This app needs access to location when in the background.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>This app needs access to location when open.</string>
-    <key>NSContactsUsageDescription</key>
-    <string>We need access to your contacts to find and invite friends.</string>
+	<key>NSContactsUsageDescription</key>
+	<string>We need access to your contacts to find and invite friends.</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>

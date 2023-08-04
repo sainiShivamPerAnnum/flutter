@@ -49,7 +49,7 @@ class AssetSelectionPage extends StatelessWidget {
     if (locator<RootController>().currentNavBarItemModel ==
         RootController.tambolaNavBar) {
       return (locator<TambolaService>().bestTickets?.data?.totalTicketCount ??
-          0) >
+              0) >
           0;
     }
     return true;
@@ -114,23 +114,23 @@ class AssetSelectionPage extends StatelessWidget {
             return !state!.showHappyHourBanner
                 ? const SizedBox()
                 : Consumer<AppState>(
-              builder: (ctx, m, child) {
-                return AnimatedContainer(
-                  height: !(locator<RootController>()
-                      .currentNavBarItemModel ==
-                      RootController.journeyNavBarItem ||
-                      !_showHappyHour())
-                      ? SizeConfig.navBarHeight
-                      : -50,
-                  alignment: Alignment.bottomCenter,
-                  duration: const Duration(milliseconds: 400),
-                  child: HappyHourBanner(
-                    model: locator<HappyHourCampign>(),
-                    isComingFromSave: true,
-                  ),
-                );
-              },
-            );
+                    builder: (ctx, m, child) {
+                      return AnimatedContainer(
+                        height: !(locator<RootController>()
+                                        .currentNavBarItemModel ==
+                                    RootController.journeyNavBarItem ||
+                                !_showHappyHour())
+                            ? SizeConfig.navBarHeight
+                            : -50,
+                        alignment: Alignment.bottomCenter,
+                        duration: const Duration(milliseconds: 400),
+                        child: HappyHourBanner(
+                          model: locator<HappyHourCampign>(),
+                          isComingFromSave: true,
+                        ),
+                      );
+                    },
+                  );
           },
         ),
       ),
@@ -147,7 +147,7 @@ class FloPlanWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     bool isLendboxOldUser =
-    locator<UserService>().userSegments.contains(Constants.US_FLO_OLD);
+        locator<UserService>().userSegments.contains(Constants.US_FLO_OLD);
     List lendboxDetails = AppConfig.getValue(AppConfigKey.lendbox);
 
     return Container(
@@ -222,11 +222,11 @@ class FloPlanWidget extends StatelessWidget {
             isSkipMl: isSkipMl,
             promoText: isLendboxOldUser
                 ? lendboxDetails[2]["tambolaMultiplier"] != null
-                ? "Get *${lendboxDetails[2]["tambolaMultiplier"]}X tickets* on saving"
-                : null
+                    ? "Get *${lendboxDetails[2]["tambolaMultiplier"]}X tickets* on saving"
+                    : null
                 : lendboxDetails[1]["tambolaMultiplier"] != null
-                ? "Get *${lendboxDetails[1]["tambolaMultiplier"]}X tickets* on saving"
-                : null,
+                    ? "Get *${lendboxDetails[1]["tambolaMultiplier"]}X tickets* on saving"
+                    : null,
           ),
           // SizedBox(height: SizeConfig.padding12),
           if (!isLendboxOldUser)
@@ -234,7 +234,7 @@ class FloPlanWidget extends StatelessWidget {
                 percentage: '8%',
                 isRecommended: false,
                 chipString1:
-                lendboxDetails[3]["maturityPeriodText"] ?? "1 Week Lockin",
+                    lendboxDetails[3]["maturityPeriodText"] ?? "1 Week Lockin",
                 chipString2: lendboxDetails[3]["minAmountText"] ?? 'Min - ₹100',
                 floAssetType: Constants.ASSET_TYPE_FLO_FELXI,
                 amount: amount,
@@ -388,7 +388,7 @@ class FelloFloPrograms extends StatelessWidget {
           },
           child: Container(
             margin:
-            EdgeInsets.only(top: isRecommended ? 0 : SizeConfig.padding12),
+                EdgeInsets.only(top: isRecommended ? 0 : SizeConfig.padding12),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(SizeConfig.roundness8),
               color: const Color(0xFF246F74),
@@ -488,9 +488,9 @@ class FelloFloPrograms extends StatelessWidget {
                         SizedBox(width: SizeConfig.padding4),
                         promoText!.beautify(
                           boldStyle:
-                          TextStyles.sourceSansB.body4.colour(Colors.white),
+                              TextStyles.sourceSansB.body4.colour(Colors.white),
                           style:
-                          TextStyles.sourceSans.body4.colour(Colors.white),
+                              TextStyles.sourceSans.body4.colour(Colors.white),
                         ),
                       ],
                     ),
@@ -532,7 +532,8 @@ class AvailabilityOfferWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final daysRemaining = BaseUtil.calculateRemainingDays(DateTime(2023, 9, 1));
+    final daysRemaining =
+        BaseUtil.calculateRemainingDays(DateTime(2023, 12, 31));
 
     if (daysRemaining <= 0) {
       return const SizedBox();

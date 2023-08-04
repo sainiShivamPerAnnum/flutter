@@ -362,7 +362,7 @@ class _ReferralHomeState extends State<ReferralHome> {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           Text(
-            'Your code',
+            'Your Referral Code',
             style: TextStyles.sourceSans.body3
                 .colour(Colors.white.withOpacity(0.45)),
           ),
