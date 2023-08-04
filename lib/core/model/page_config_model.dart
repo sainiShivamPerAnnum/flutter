@@ -53,12 +53,14 @@ class DynamicUI {
 class SaveUi {
   List<String> assets;
   List<String> sections;
+  List<String> sectionsNew;
   final CtaText? ctaText;
   final BadgeText? badgeText;
   final String trendingAsset;
   SaveUi(
       {required this.assets,
       required this.sections,
+      required this.sectionsNew,
       required this.badgeText,
       required this.trendingAsset,
       required this.ctaText});
@@ -75,6 +77,8 @@ class SaveUi {
         assets: List<String>.from(map['assets'].cast<String>() as List<String>),
         sections:
             List<String>.from(map['sections'].cast<String>() as List<String>),
+        sectionsNew: List<String>.from(
+            map['sectionsNew'].cast<String>() as List<String>),
         badgeText: map['badgeText'] != null
             ? BadgeText.fromMap(map['badgeText'])
             : null,

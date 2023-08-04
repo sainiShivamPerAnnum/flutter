@@ -100,7 +100,7 @@ class _ReferralHomeState extends State<ReferralHome> {
                             },
                             child: NestedScrollView(
                               controller: _controller,
-                              physics: const BouncingScrollPhysics(),
+                              physics: const ClampingScrollPhysics(),
                               headerSliverBuilder:
                                   (context, innerBoxIsScrolled) {
                                 return [

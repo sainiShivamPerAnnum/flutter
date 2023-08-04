@@ -180,7 +180,7 @@ class GoldProBuyInputView extends StatelessWidget {
                           child: Slider(
                             value: model.sliderValue,
                             onChanged: model.updateSliderValue,
-                            // divisions: 3,
+                            // divisions: 4,
                             inactiveColor: Colors.grey,
                           ),
                         ),

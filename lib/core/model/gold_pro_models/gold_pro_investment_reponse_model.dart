@@ -18,7 +18,7 @@ class GoldProInvestmentResponseModel {
   final String message;
   final TimestampModel createdOn;
   final TimestampModel updatedOn;
-
+  final String message_un_lease;
   GoldProInvestmentResponseModel({
     required this.id,
     required this.uid,
@@ -35,6 +35,7 @@ class GoldProInvestmentResponseModel {
     required this.message,
     required this.createdOn,
     required this.updatedOn,
+    required this.message_un_lease,
   });
 
   static final helper = HelperModel<GoldProInvestmentResponseModel>(
@@ -42,22 +43,23 @@ class GoldProInvestmentResponseModel {
 
   factory GoldProInvestmentResponseModel.fromMap(Map<String, dynamic> map) {
     return GoldProInvestmentResponseModel(
-      id: map['id'] as String,
-      uid: map['uid'] as String,
-      status: map['status'] as String,
-      fdId: map["fdId"] ?? map["fd_id"] ?? "",
-      schemeId: map['schemeId'] ?? map["scheme_id"] ?? "",
-      days: map['days'] ?? 0,
-      qty: (map['qty'] ?? 0).toDouble() ?? 0.0,
-      interest: (map['interest'] ?? 0).toDouble() ?? 0.0,
-      note: (map['note'] ?? "") as String,
-      amount: (map['amount'] ?? 0).toDouble() ?? 0.0,
-      isWithdrawable: map['isWithdrawable'] ?? false,
-      interest_collected: (map['interest_collected'] ?? 0).toDouble() ?? 0.0,
-      message: map["message"] ?? "",
-      createdOn: TimestampModel.fromMap(map['createdOn']),
-      updatedOn: TimestampModel.fromMap(map['updatedOn']),
-    );
+        id: map['id'] as String,
+        uid: map['uid'] as String,
+        status: map['status'] as String,
+        fdId: map["fdId"] ?? map["fd_id"] ?? "",
+        schemeId: map['schemeId'] ?? map["scheme_id"] ?? "",
+        days: map['days'] ?? 0,
+        qty: (map['qty'] ?? 0).toDouble() ?? 0.0,
+        interest: (map['interest'] ?? 0).toDouble() ?? 0.0,
+        note: (map['note'] ?? "") as String,
+        amount: (map['amount'] ?? 0).toDouble() ?? 0.0,
+        isWithdrawable: map['isWithdrawable'] ?? false,
+        interest_collected: (map['interest_collected'] ?? 0).toDouble() ?? 0.0,
+        message: map["message"] ?? "",
+        createdOn: TimestampModel.fromMap(map['createdOn']),
+        updatedOn: TimestampModel.fromMap(map['updatedOn']),
+        message_un_lease:
+            map["message_un_lease"] ?? "Unable to un-lease at the moment");
   }
 
   @override

@@ -17,11 +17,11 @@ class Portfolio {
 
   factory Portfolio.fromMap(Map<String, dynamic> map) {
     return Portfolio(
-      augmont: AugmontTiers.fromMap(map['augmont'] as Map<String, dynamic>),
-      flo: FloTiers.fromMap(map['flo'] as Map<String, dynamic>),
+      augmont: AugmontTiers.fromMap(map['augmont']),
+      flo: FloTiers.fromMap(map['flo']),
       lifeTimeRewards: (map['lifeTimeRewards'] ?? 0.0) * 1.0,
       rewards: (map['rewards'] ?? 0.0) * 1.0,
-      absolute: Asset.fromMap(map['absolute'] as Map<String, dynamic>),
+      absolute: Asset.fromMap(map['absolute']),
     );
   }
 

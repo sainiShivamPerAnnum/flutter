@@ -85,7 +85,7 @@ class _InviteContactWidgetState extends State<InviteContactWidget>
     return SingleChildScrollView(
       controller: scrollController,
       physics: _isBouncyScroll
-          ? const BouncingScrollPhysics()
+          ? const ClampingScrollPhysics()
           : const NeverScrollableScrollPhysics(),
       child: BlocBuilder<ReferralCubit, ReferralState>(
         builder: (context, state) {
