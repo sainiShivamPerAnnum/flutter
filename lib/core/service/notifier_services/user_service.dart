@@ -604,7 +604,8 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     DynamicUiUtils.playViewOrder = dynamicUi.play;
     DynamicUiUtils.saveViewOrder = [
       dynamicUi.save.assets,
-      dynamicUi.save.sections
+      dynamicUi.save.sections,
+      dynamicUi.save.sectionsNew
     ];
     DynamicUiUtils.helpFab = dynamicUi.journeyFab;
     DynamicUiUtils.navBar = dynamicUi.navBar;

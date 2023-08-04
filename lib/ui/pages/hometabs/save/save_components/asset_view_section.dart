@@ -1225,8 +1225,6 @@ class _WhySection extends StatelessWidget {
         ],
       ),
     ),
-    // Icons.lock_outline: Text("7 days Withdrawal Lock-in",
-    //     style: TextStyles.sourceSans.body2.colour(Color(0xffA7A7A8)))
   };
 
   @override

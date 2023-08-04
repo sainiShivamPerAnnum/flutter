@@ -60,8 +60,7 @@ class GoldProSellViewModel extends BaseViewModel {
           goldProSellBanNotice ?? locale.assetNotAvailable, locale.tryLater);
     } else if (!data.isWithdrawable) {
       BaseUtil.showNegativeAlert(
-          "${Constants.ASSET_GOLD_STAKE} investments have a lock-in of 7 days",
-          "Please try again later");
+          data.message_un_lease, "Please try again later");
     } else {
       unawaited(BaseUtil.openModalBottomSheet(
         isBarrierDismissible: false,

@@ -438,7 +438,7 @@ class GoldProInterestBreakdownWidget extends StatelessWidget {
                         crossAxisAlignment: WrapCrossAlignment.end,
                         children: [
                           Text(
-                            "3.0% ",
+                            "2.75% ",
                             style: TextStyles.sourceSansSB.title4
                                 .colour(UiConstants.kGoldProPrimary),
                           ),
@@ -467,7 +467,7 @@ class GoldProInterestBreakdownWidget extends StatelessWidget {
                       crossAxisAlignment: WrapCrossAlignment.end,
                       children: [
                         Text(
-                          "1.5% ",
+                          "1.75% ",
                           style: TextStyles.sourceSansSB.title4
                               .colour(UiConstants.kGoldProPrimary),
                         ),
@@ -576,7 +576,7 @@ class WhyGoldProSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<Tuple2<String, String>> whyDigitalGoldList = const [
-      Tuple2("7 days", "Lock-In"),
+      Tuple2("48 h", "Lock-In"),
       Tuple2("15.5%", "Returns p.a."),
       Tuple2("4.5%", "Extra Gold"),
     ];

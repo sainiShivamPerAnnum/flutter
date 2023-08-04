@@ -4,6 +4,7 @@ class DynamicUiUtils {
   static List<dynamic> saveViewOrder = [
     ['AG', 'LB'],
     ['AS', 'CH', 'BL'],
+    ['QL', 'CH', 'AST', 'QZ', 'NAS', 'BL']
   ];
 
   static CtaText ctaText = CtaText(
