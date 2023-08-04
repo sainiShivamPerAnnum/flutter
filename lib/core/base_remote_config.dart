@@ -243,6 +243,10 @@ class BaseRemoteConfig {
     "useNewUrlUserOps": true
   };
 
+  static const Map<String, bool> _SPECIAL_EFFECTS_ON_TXN_DETAILS_VIEW = {
+    "specialEffectsTxnDetailsView": true
+  };
+
   static Map<String, dynamic> DEFAULTS = {
     ..._LOGIN_ASSET_URL,
     ..._DRAW_PICK_TIME,
@@ -315,6 +319,7 @@ class BaseRemoteConfig {
     ..._APP_REFERRAL_MESSAGE,
     ..._PAYMENT_BRIEF_VIEW,
     ..._USE_NEW_URL_FOR_USEROPS,
+    ..._SPECIAL_EFFECTS_ON_TXN_DETAILS_VIEW
   };
 
   static Future<bool> init() async {
@@ -505,6 +510,9 @@ class BaseRemoteConfig {
 
   static bool get PAYMENT_BRIEF_VIEW =>
       remoteConfig.getBool(_PAYMENT_BRIEF_VIEW.keys.first);
+
+  static bool get SPECIAL_EFFECTS_ON_TXN_DETAILS_VIEW =>
+      remoteConfig.getBool(_SPECIAL_EFFECTS_ON_TXN_DETAILS_VIEW.keys.first);
 
   static int get invalidationBefore {
     return remoteConfig.getInt(_CACHE_INVALIDATION.keys.first);

@@ -505,13 +505,9 @@ class AssetBottomButtons extends StatelessWidget {
                         ),
                         onPressed: () {
                           Haptic.vibrate();
-                          BaseUtil().openGoldProBuyView(
-                              location: "Digital Gold Details View");
-                          locator<AnalyticsService>().track(
-                              eventName: AnalyticsEvents.saveOnce,
-                              properties: {
-                                'assetType': type.toString(),
-                              });
+                          AppState.delegate!.parseRoute(
+                            Uri.parse('goldProDetails'),
+                          );
                         },
                       ),
                       Transform.translate(

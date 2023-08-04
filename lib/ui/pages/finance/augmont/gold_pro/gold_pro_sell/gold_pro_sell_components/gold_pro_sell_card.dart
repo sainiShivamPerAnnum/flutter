@@ -161,22 +161,40 @@ class _GoldProSellConfirmationModalSheetState
                         .colour(UiConstants.kGoldProPrimary),
                   ),
                   SizedBox(height: SizeConfig.padding8),
-                  Text(
-                    "${widget.data.qty}g gold",
-                    style: TextStyles.sourceSansSB.title3.colour(Colors.white),
+                  RichText(
+                    textAlign: TextAlign.center,
+                    text: TextSpan(
+                      style: TextStyles.sourceSansB.title3.colour(Colors.white),
+                      children: [
+                        TextSpan(
+                            text:
+                                "${BaseUtil.digitPrecision(widget.data.qty * 0.045)}g"),
+                        TextSpan(
+                          text: " (4.5%) ",
+                          style:
+                              TextStyles.sourceSans.body1.colour(Colors.white),
+                        ),
+                        TextSpan(
+                          text: "of gold",
+                          style: TextStyles.sourceSansSB.title5
+                              .colour(Colors.white),
+                        ),
+                      ],
+                    ),
                   ),
-                  SizedBox(height: SizeConfig.padding4),
-                  Text(
-                    "to be credited in your account on ${DateFormat('dd MMM, yyyy').format(
-                      DateTime.fromMillisecondsSinceEpoch(widget.data.createdOn
-                          .toDate()
-                          .add(
-                            Duration(days: widget.data.days),
-                          )
-                          .millisecondsSinceEpoch),
-                    )}",
-                    style: TextStyles.sourceSans.body3.colour(Colors.white70),
-                  ),
+
+                  // SizedBox(height: SizeConfig.padding4),
+                  // Text(
+                  //   "to be credited in your account on ${DateFormat('dd MMM, yyyy').format(
+                  //     DateTime.fromMillisecondsSinceEpoch(widget.data.createdOn
+                  //         .toDate()
+                  //         .add(
+                  //           Duration(days: widget.data.days),
+                  //         )
+                  //         .millisecondsSinceEpoch),
+                  //   )}",
+                  //   style: TextStyles.sourceSans.body3.colour(Colors.white70),
+                  // ),
                   SizedBox(height: SizeConfig.pageHorizontalMargins),
                   isGoldSellInProgress
                       ? Padding(

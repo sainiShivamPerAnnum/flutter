@@ -101,9 +101,14 @@ class FundBreakdownDialog extends StatelessWidget {
                         "₹ ${BaseUtil.digitPrecision(portfolio.augmont.absGains, 2, false).toString()}",
                   ),
                   BreakdownInfoTile(
-                    title: "Rewards on Fello",
+                    title: "Current Rewards",
                     value:
                         "₹ ${BaseUtil.digitPrecision(portfolio.rewards, 2, false).toString()}",
+                  ),
+                  BreakdownInfoTile(
+                    title: "Total Rewards",
+                    value:
+                        "₹ ${BaseUtil.digitPrecision(portfolio.lifeTimeRewards, 2, false).toString()}",
                   ),
                 ]),
               )

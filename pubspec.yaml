@@ -87,7 +87,7 @@ dependencies:
       url: https://github.com/KumarArab/story_view
       ref: 0c9c113
   syncfusion_flutter_gauges: ^22.1.38
-  truecaller_sdk: ^0.1.1
+  truecaller_sdk: ^0.1.2
   upi_pay:
     path: packages/upi/
   url_launcher: ^6.1.8
