@@ -43,7 +43,7 @@
             android:value="@string/APXOR_APP_ID" />
         <meta-data
             android:name="com.truecaller.android.sdk.PartnerKey"
-            android:value="@string/partnerKey" />
+            android:value="o_h9ehduocvkg0dz0s2rz8orereiolp9vrseeehfzcu" />
         <meta-data
             android:name="com.facebook.sdk.ApplicationId"
             android:value="@string/facebook_app_id" />

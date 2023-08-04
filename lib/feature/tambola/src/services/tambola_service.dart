@@ -147,6 +147,7 @@ class TambolaService extends ChangeNotifier {
     final winnersModel = await _winnerService
         .fetchWinnersByGameCode(Constants.GAME_TYPE_TAMBOLA);
     pastWeekWinners = winnersModel!.winners!;
+    //Check if its the winners day
     if (winnersModel.timestamp!.toDate().weekday == DateTime.now().weekday) {
       if (pastWeekWinners!.indexWhere(
               (winner) => winner.userid == _userService.baseUser!.uid) !=

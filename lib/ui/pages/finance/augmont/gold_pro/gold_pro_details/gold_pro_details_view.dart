@@ -1,10 +1,8 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/faqTypes.dart';
-import 'package:felloapp/core/model/gold_pro_models/gold_pro_investment_reponse_model.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
-import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
@@ -353,10 +351,10 @@ class GoldProSellCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Selector<TxnHistoryService, List<GoldProInvestmentResponseModel>>(
-      selector: (p0, p1) => p1.goldProTxns,
-      builder: (context, txns, child) {
-        return txns.isNotEmpty ? child! : const SizedBox();
+    return Selector<UserService, UserFundWallet?>(
+      selector: (p0, p1) => p1.userFundWallet,
+      builder: (context, wallet, child) {
+        return (wallet?.wAugFdQty ?? 0) > 0 ? child! : const SizedBox();
       },
       child: Container(
         padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),

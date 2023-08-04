@@ -15,7 +15,6 @@ import 'package:felloapp/feature/referrals/ui/invite_contact_widget.dart';
 import 'package:felloapp/feature/referrals/ui/referral_list.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
-import 'package:felloapp/ui/elements/appbar/appbar.dart';
 import 'package:felloapp/ui/pages/login/login_components/login_support.dart';
 import 'package:felloapp/ui/pages/rewards/instant_scratch_card/gt_instant_view.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
@@ -78,41 +77,44 @@ class _ReferralHomeState extends State<ReferralHome> {
             resizeToAvoidBottomInset: false,
             body: Stack(
               children: [
-                Builder(builder: (context) {
-                  return AnnotatedRegion<SystemUiOverlayStyle>(
-                    value: SystemUiOverlayStyle(
-                      statusBarColor: UiConstants.kReferralHeaderColor,
-                    ),
-                    child: SafeArea(
-                      child: RefreshIndicator(
-                        onRefresh: () async {
-                          await model.fetchReferalsList(context, refresh: true);
-                          context
-                              .read<ReferralCubit>()
-                              .checkPermission(fromRefresh: true);
-                        },
+                Builder(
+                  builder: (context) {
+                    return AnnotatedRegion<SystemUiOverlayStyle>(
+                      value: SystemUiOverlayStyle(
+                        statusBarColor: UiConstants.kReferralHeaderColor,
+                      ),
+                      child: SafeArea(
                         child: DefaultTabController(
                           length: 2,
-                          child: NestedScrollView(
-                            controller: _controller,
-                            physics: const BouncingScrollPhysics(),
-                            headerSliverBuilder: (context, innerBoxIsScrolled) {
-                              return [
-                                buildHeaderSliver(model),
-                                buildBodySliver(model),
-                              ];
+                          child: RefreshIndicator(
+                            onRefresh: () async {
+                              await model.fetchReferalsList(context,
+                                  refresh: true);
+                              context
+                                  .read<ReferralCubit>()
+                                  .checkPermission(fromRefresh: true);
                             },
-                            body: ReferralTabView(
+                            child: NestedScrollView(
                               controller: _controller,
-                              model: model,
+                              physics: const BouncingScrollPhysics(),
+                              headerSliverBuilder:
+                                  (context, innerBoxIsScrolled) {
+                                return [
+                                  buildHeaderSliver(model),
+                                  buildBodySliver(model),
+                                ];
+                              },
+                              body: ReferralTabView(
+                                controller: _controller,
+                                model: model,
+                              ),
                             ),
-                            // child:
                           ),
                         ),
                       ),
-                    ),
-                  );
-                }),
+                    );
+                  },
+                ),
                 CustomKeyboardSubmitButton(
                   onSubmit: () {
                     //hide keyboard

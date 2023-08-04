@@ -45,7 +45,7 @@ class UserRepository extends BaseRepo {
   void setUpBaseUrl() {
     if (FlavorConfig.isDevelopment() &&
         AppConfig.getValue(AppConfigKey.useNewUrlUserOps)) {
-      _baseUrl = "https://api.fello-dev.net/users";
+      _baseUrl = "https://api2.fello-dev.net/users";
     }
   }
 

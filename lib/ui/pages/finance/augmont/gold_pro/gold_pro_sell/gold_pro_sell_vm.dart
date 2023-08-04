@@ -52,15 +52,14 @@ class GoldProSellViewModel extends BaseViewModel {
           "date of extra returns": data.message
         });
     final bool? isGoldProSellLocked = _userService
-        .userBootUp?.data!.banMap?.investments?.withdrawal?.augmont?.isBanned;
+        .userBootUp?.data!.banMap?.investments?.withdrawal?.goldPro?.isBanned;
     final String? goldProSellBanNotice = _userService
-        .userBootUp?.data?.banMap?.investments?.withdrawal?.augmont?.reason;
+        .userBootUp?.data?.banMap?.investments?.withdrawal?.goldPro?.reason;
 
     if (isGoldProSellLocked != null && isGoldProSellLocked) {
       BaseUtil.showNegativeAlert(
           goldProSellBanNotice ?? locale.assetNotAvailable, locale.tryLater);
-    }
-    if (!data.isWithdrawable) {
+    } else if (!data.isWithdrawable) {
       BaseUtil.showNegativeAlert(
           "${Constants.ASSET_GOLD_STAKE} investments have a lock-in of 7 days",
           "Please try again later");
@@ -96,12 +95,17 @@ class GoldProSellViewModel extends BaseViewModel {
     if (res.isSuccess()) {
       isSellInProgress = false;
       AppState.unblockNavigation();
-      unawaited(_userService.getUserFundWalletData());
+
       unawaited(_userService.updatePortFolio());
       unawaited(AppState.backButtonDispatcher!.didPopRoute().then((_) {
         BaseUtil.showPositiveAlert("You successfully un-leased your gold",
             "Check your wallet for gold credit");
         getGoldProTransactions(forced: true);
+        unawaited(_userService.getUserFundWalletData().then((_) {
+          if ((_userService.userFundWallet?.wAugFdQty ?? 0) == 0) {
+            unawaited(AppState.backButtonDispatcher!.didPopRoute());
+          }
+        }));
         _txnHistoryService.updateTransactions(InvestmentType.AUGGOLD99);
       }));
     } else {

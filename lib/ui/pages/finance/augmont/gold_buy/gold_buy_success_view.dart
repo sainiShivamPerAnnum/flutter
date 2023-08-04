@@ -44,9 +44,7 @@ class _GoldBuySuccessViewState extends State<GoldBuySuccessView>
     _animationController = AnimationController(vsync: this);
     AppState.blockNavigation();
     _playLottieAnimation();
-    Future.delayed(Duration(seconds: 3), () {
-      showGoldProNudgeIfEligible();
-    });
+    Future.delayed(const Duration(seconds: 3), showGoldProNudgeIfEligible);
   }
 
   @override

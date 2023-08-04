@@ -4,12 +4,14 @@ class Portfolio {
   final AugmontTiers augmont;
   final FloTiers flo;
   final double rewards;
+  final double lifeTimeRewards;
   final Asset absolute;
 
   Portfolio({
     required this.augmont,
     required this.flo,
     required this.rewards,
+    required this.lifeTimeRewards,
     required this.absolute,
   });
 
@@ -17,6 +19,7 @@ class Portfolio {
     return Portfolio(
       augmont: AugmontTiers.fromMap(map['augmont'] as Map<String, dynamic>),
       flo: FloTiers.fromMap(map['flo'] as Map<String, dynamic>),
+      lifeTimeRewards: (map['lifeTimeRewards'] ?? 0.0) * 1.0,
       rewards: (map['rewards'] ?? 0.0) * 1.0,
       absolute: Asset.fromMap(map['absolute'] as Map<String, dynamic>),
     );
@@ -26,6 +29,7 @@ class Portfolio {
     return Portfolio(
       augmont: AugmontTiers.base(),
       flo: FloTiers.base(),
+      lifeTimeRewards: 0.0,
       rewards: 0.0,
       absolute: Asset.base(),
     );

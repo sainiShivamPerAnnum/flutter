@@ -139,7 +139,6 @@ class GoldProBuyViewModel extends BaseViewModel {
 
   Future<void> init() async {
     AppState.isGoldProBuyInProgress = false;
-    _isGoldRateFetching = true;
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       _txnService.currentTransactionState = TransactionState.idle;
     });
@@ -162,7 +161,7 @@ class GoldProBuyViewModel extends BaseViewModel {
 //VM Async Call Methods
 
   Future<void> verifyAugmontKyc() async {
-    if (!_bankAndPanService.userKycData!.augmontKyc) {
+    if (!(_bankAndPanService.userKycData?.augmontKyc ?? false)) {
       await _bankAndPanService.verifyAugmontKyc();
     }
   }
@@ -442,11 +441,12 @@ class GoldProBuyViewModel extends BaseViewModel {
         (goldRates?.cgstPercent ?? 0) + (goldRates?.sgstPercent ?? 0);
 
     if (goldBuyPrice != 0.0) {
-      additionalGoldBalance += 0.0004;
+      // additionalGoldBalance += 0.0004;
       totalGoldAmount = BaseUtil.digitPrecision(
-          (goldBuyPrice! * additionalGoldBalance) +
-              (netTax * goldBuyPrice! * additionalGoldBalance) / 100,
-          2);
+              (goldBuyPrice! * additionalGoldBalance) +
+                  (netTax * goldBuyPrice! * additionalGoldBalance) / 100,
+              2) +
+          3;
 
       double expectedGoldReturnsAmount = BaseUtil.digitPrecision(
           totalGoldBalance * goldBuyPrice! + netTax, 2, false);

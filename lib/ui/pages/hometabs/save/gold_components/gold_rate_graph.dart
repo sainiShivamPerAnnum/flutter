@@ -200,7 +200,7 @@ class _LineGradientChartState extends State<LineGradientChart> {
                                             WrapCrossAlignment.end,
                                         children: [
                                           Text(
-                                            "₹${((portfolio.augmont.fd.principle * pow((1 + 0.16), selectedIndex + 1)).toInt())}",
+                                            "₹${((portfolio.augmont.fd.principle * pow((1 + 0.155), selectedIndex + 1)).toInt())}",
                                             style: GoogleFonts.sourceSansPro(
                                                 fontWeight: FontWeight.w700,
                                                 fontSize: SizeConfig.title2,

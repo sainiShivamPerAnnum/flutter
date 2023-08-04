@@ -2,6 +2,7 @@
 import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+//[DEPRECATED]
 class CacheManager {
   // static const CACHE_RATING_HIT_COUNT = "rHitCount";
   // static const CACHE_RATING_DIALOG_OPEN_COUNT = "RDShowCount";
@@ -47,7 +48,7 @@ class CacheManager {
     required CacheType type,
   }) async {
     final SharedPreferences sharedPreferences =
-    await SharedPreferences.getInstance();
+        await SharedPreferences.getInstance();
     if (type == CacheType.int) return sharedPreferences.setInt(key, value);
 
     switch (type) {
@@ -71,19 +72,19 @@ class CacheManager {
 
   static Future deleteCache({required String key}) async {
     final SharedPreferences sharedPreferences =
-    await SharedPreferences.getInstance();
+        await SharedPreferences.getInstance();
     await sharedPreferences.remove(key);
   }
 
   static Future clearCacheMemory() async {
     final SharedPreferences sharedPreferences =
-    await SharedPreferences.getInstance();
+        await SharedPreferences.getInstance();
     await sharedPreferences.clear();
   }
 
   static Future<bool> exits(String key) async {
     final SharedPreferences sharedPreferences =
-    await SharedPreferences.getInstance();
+        await SharedPreferences.getInstance();
     return sharedPreferences.containsKey(key);
   }
 }
