@@ -1,8 +1,10 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/faq_model.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
@@ -12,6 +14,7 @@ import 'package:felloapp/ui/pages/support/bug_report/ui/found_bug.dart';
 import 'package:felloapp/ui/pages/support/faq/faq_page_vm.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -113,7 +116,7 @@ class FAQPage extends StatelessWidget {
           right: 0,
           child: Center(
             child: Container(
-              width: SizeConfig.screenWidth! * 0.36,
+              width: SizeConfig.screenWidth! * 0.38,
               padding: EdgeInsets.symmetric(vertical: SizeConfig.padding16),
               child: OutlinedButton(
                 style: OutlinedButton.styleFrom(
@@ -131,9 +134,13 @@ class FAQPage extends StatelessWidget {
                     isScrollControlled: true,
                     content: const FoundBug(),
                   );
+
+                  locator<AnalyticsService>().track(
+                    eventName: AnalyticsEvents.reportBugTapped,
+                  );
                 },
                 child: Text(
-                  "Report Issue",
+                  "Report an Issue",
                   style: TextStyles.sourceSansB.body2,
                 ),
               ),

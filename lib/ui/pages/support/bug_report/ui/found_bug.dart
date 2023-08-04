@@ -2,6 +2,8 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -40,6 +42,18 @@ class _FoundBugState extends State<FoundBug> {
     super.initState();
     _bugReasonController = TextEditingController();
   }
+
+  final List<String> optionsList = [
+    'Getting started',
+    'Savings',
+    'Autosave',
+    'Withdrawals',
+    'Rewards/Winnings',
+    'Digital Gold',
+    'Fello Flo',
+    'Journey',
+    'Login / SignUp',
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -102,32 +116,32 @@ class _FoundBugState extends State<FoundBug> {
                     decoration: InputDecoration(
                       border: (dropDownErrorMsg == null)
                           ? OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(16),
-                      )
+                              borderRadius: BorderRadius.circular(16),
+                            )
                           : const OutlineInputBorder(
-                        borderSide:
-                        BorderSide(color: Colors.red, width: 1),
-                        borderRadius: BorderRadius.only(
-                          bottomLeft: Radius.circular(8),
-                          topRight: Radius.circular(8),
-                          topLeft: Radius.circular(8),
-                        ),
-                      ),
+                              borderSide:
+                                  BorderSide(color: Colors.red, width: 1),
+                              borderRadius: BorderRadius.only(
+                                bottomLeft: Radius.circular(8),
+                                topRight: Radius.circular(8),
+                                topLeft: Radius.circular(8),
+                              ),
+                            ),
                       contentPadding: EdgeInsets.symmetric(
                           horizontal: SizeConfig.padding10),
                       enabledBorder: (dropDownErrorMsg == null)
                           ? OutlineInputBorder(
-                        borderRadius: BorderRadius.circular(8),
-                      )
+                              borderRadius: BorderRadius.circular(8),
+                            )
                           : const OutlineInputBorder(
-                        borderSide:
-                        BorderSide(color: Colors.red, width: 1),
-                        borderRadius: BorderRadius.only(
-                          bottomLeft: Radius.circular(8),
-                          topRight: Radius.circular(8),
-                          topLeft: Radius.circular(8),
-                        ),
-                      ),
+                              borderSide:
+                                  BorderSide(color: Colors.red, width: 1),
+                              borderRadius: BorderRadius.only(
+                                bottomLeft: Radius.circular(8),
+                                topRight: Radius.circular(8),
+                                topLeft: Radius.circular(8),
+                              ),
+                            ),
                       filled: true,
                       fillColor: const Color(0xff1A1A1A),
                       focusedErrorBorder: const OutlineInputBorder(
@@ -164,27 +178,20 @@ class _FoundBugState extends State<FoundBug> {
                     ),
                     value: dropDownValue,
                     items: [
-                      DropdownMenuItem(
-                        value: 'Gold',
-                        child: Text(
-                          'Gold',
-                          style: TextStyles.sourceSans.body3,
+                      for (String option in optionsList)
+                        DropdownMenuItem(
+                          value: option,
+                          child: Container(
+                            margin: EdgeInsets.only(
+                                left: SizeConfig.padding10,
+                                right: SizeConfig.padding10),
+                            child: Text(
+                              option,
+                              style: TextStyles.sourceSans.body3
+                                  .colour(Colors.white),
+                            ),
+                          ),
                         ),
-                      ),
-                      DropdownMenuItem(
-                        value: 'Flo',
-                        child: Text(
-                          'Flo',
-                          style: TextStyles.sourceSans.body3,
-                        ),
-                      ),
-                      DropdownMenuItem(
-                        value: 'Referrals',
-                        child: Text(
-                          'Referrals',
-                          style: TextStyles.sourceSans.body3,
-                        ),
-                      ),
                     ],
                     onChanged: (val) {
                       // if (_formKey.currentState?.validate() ?? false) {
@@ -253,17 +260,17 @@ class _FoundBugState extends State<FoundBug> {
                         focusedBorder: InputBorder.none,
                         border: (errorMsg == null)
                             ? OutlineInputBorder(
-                          borderRadius: BorderRadius.circular(16),
-                        )
+                                borderRadius: BorderRadius.circular(16),
+                              )
                             : const OutlineInputBorder(
-                          borderSide:
-                          BorderSide(color: Colors.red, width: 1),
-                          borderRadius: BorderRadius.only(
-                            bottomLeft: Radius.circular(8),
-                            topRight: Radius.circular(8),
-                            topLeft: Radius.circular(8),
-                          ),
-                        ),
+                                borderSide:
+                                    BorderSide(color: Colors.red, width: 1),
+                                borderRadius: BorderRadius.only(
+                                  bottomLeft: Radius.circular(8),
+                                  topRight: Radius.circular(8),
+                                  topLeft: Radius.circular(8),
+                                ),
+                              ),
                         enabledBorder: InputBorder.none,
                         disabledBorder: InputBorder.none,
                         isDense: true,
@@ -372,9 +379,15 @@ class _FoundBugState extends State<FoundBug> {
                 onPressed: () {
                   setState(() {});
                   if (_formKey.currentState?.validate() ?? false) {
-                    log("capturedImage $capturedImage");
-                    // Navigator.of(context).pop();
                     openGmail(capturedImage);
+
+                    locator<AnalyticsService>().track(
+                      eventName: AnalyticsEvents.reportBugSubmit,
+                      properties: {
+                        'category': dropDownValue,
+                        'reason': reason,
+                      },
+                    );
                   }
                 },
               ),
@@ -439,18 +452,9 @@ class _FoundBugState extends State<FoundBug> {
     var subject = Uri.encodeComponent('Found Bug: $dropDownValue');
     var body = Uri.encodeComponent('Description:\n$reason');
 
-    // if (imageFile != null) {
-    //   final tempDir = await getTemporaryDirectory();
-    //   final fileName = imageFile.path.split('/').last;
-    //   final filePath = '${tempDir.path}/$fileName';
-    //   await imageFile.saveTo(filePath);
-    //   final attachmentUri = Uri.file(filePath);
-    //
-    //   final modifiedQueryParams =
-    //       Map<String, dynamic>.from(launchUri.queryParameters);
-    //   modifiedQueryParams['attachment'] = attachmentUri.toString();
-    //   launchUri = launchUri.replace(queryParameters: modifiedQueryParams);
-    // }
+    // Add the note text at the bottom of the email
+    body +=
+        '\n\n\nNote: You can attach media such as images or videos to your email.';
 
     log(subject);
     Uri mail = Uri.parse("mailto:$recipientEmail?subject=$subject&body=$body");

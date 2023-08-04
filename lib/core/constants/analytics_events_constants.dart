@@ -278,4 +278,10 @@ class AnalyticsEvents {
 
   //Referral Section Help Tapped
   static const referralSectionHelpTapped = "Referral Section Help Tapped";
+
+  //Report Bug Tapped
+  static const reportBugTapped = "Report Bug Tapped";
+
+  // Report Bug Submit
+  static const reportBugSubmit = "Report Bug Submit";
 }
