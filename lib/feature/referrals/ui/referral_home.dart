@@ -87,6 +87,10 @@ class _ReferralHomeState extends State<ReferralHome> {
                         child: DefaultTabController(
                           length: 2,
                           child: RefreshIndicator(
+                            notificationPredicate: (notification) {
+                              // with NestedScrollView local(depth == 2) OverscrollNotification are not sent
+                              return notification.depth == 2;
+                            },
                             onRefresh: () async {
                               await model.fetchReferalsList(context,
                                   refresh: true);
