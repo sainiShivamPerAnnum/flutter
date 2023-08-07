@@ -4,11 +4,9 @@ import 'package:felloapp/ui/pages/login/login_components/login_support.dart';
 import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
-import 'package:felloapp/util/show_case_key.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
-import 'package:showcaseview/showcaseview.dart';
 
 class FAppBar extends StatelessWidget implements PreferredSizeWidget {
   final FaqsType? type;
@@ -84,13 +82,9 @@ class FAppBar extends StatelessWidget implements PreferredSizeWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             if (showCoinBar)
-              Showcase(
-                key: ShowCaseKeys.floCoinsKey,
-                description:
-                    'For every rupee saved in Digital Gold or Fello Flo, you get 1 Fello token',
-                child: FelloCoinBar(
-                    svgAsset: Assets.token,
-                    key: const ValueKey(Constants.FELLO_COIN_BAR)),
+              FelloCoinBar(
+                svgAsset: Assets.token,
+                key: const ValueKey(Constants.FELLO_COIN_BAR),
               ),
             if (action != null) action!,
             if (type != null) FaqPill(type: type),

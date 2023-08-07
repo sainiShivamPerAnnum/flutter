@@ -46,7 +46,6 @@ import 'package:felloapp/ui/pages/finance/augmont/gold_sell/gold_sell_view.dart'
 import 'package:felloapp/ui/pages/finance/lendbox/withdrawal/lendbox_withdrawal_view.dart';
 import 'package:felloapp/ui/pages/games/web/web_home/web_game_modal_sheet.dart';
 import 'package:felloapp/ui/service_elements/username_input/username_input_view.dart';
-import 'package:felloapp/ui/shared/spotlight_controller.dart';
 import 'package:felloapp/util/app_toasts_utils.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
@@ -749,7 +748,6 @@ class BaseUtil extends ChangeNotifier {
       manualReferralCode = null;
       referrerUserId = null;
       _setRuntimeDefaults();
-      SpotLightController.instance.dispose();
 
       return true;
     } catch (e) {

@@ -2,6 +2,7 @@ import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/model/journey_models/user_journey_stats_model.dart';
 import 'package:felloapp/core/model/portfolio_model.dart';
 import 'package:felloapp/core/model/user_bootup_model.dart';
+import 'package:felloapp/core/service/dio_service.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/feature/tambola/tambola.dart';
@@ -55,12 +56,13 @@ class Root extends StatelessWidget {
                     children: [
                       const RootAppBar(),
                       const HeadAlerts(),
-                      // TextButton(
-                      //   onPressed: () {
-                      //     AppState.delegate?.parseRoute(Uri.parse('/autosave'));
-                      //   },
-                      //   child: Text("Autosave"),
-                      // ),
+                      TextButton(
+                        onPressed: () {
+                          DioService dioService = DioService();
+                          dioService.get();
+                        },
+                        child: Text("Autosave"),
+                      ),
                       Expanded(
                         child: RefreshIndicator(
                           triggerMode: RefreshIndicatorTriggerMode.onEdge,

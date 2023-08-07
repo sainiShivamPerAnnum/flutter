@@ -14,11 +14,11 @@ import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/show_case_key.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:showcaseview/showcaseview.dart';
+
+// import 'package:showcaseview/showcaseview.dart';
 
 import '../widgets/past_week_winners_section.dart';
 
@@ -174,45 +174,40 @@ class _TambolaHomeDetailsViewState extends State<TambolaHomeDetailsView> {
                             ],
                           ),
                         ),
-                        Showcase(
-                          key: ShowCaseKeys.TambolaButton,
-                          description:
-                              'You get a ticket on every ₹500 you save!',
-                          child: AppPositiveBtn(
-                            style: TextStyles.rajdhaniSB.body0,
-                            btnText: 'Unlock your first ticket now',
-                            onPressed: () {
-                              locator<AnalyticsService>().track(
-                                  eventName: (locator<TambolaService>()
-                                              .bestTickets
-                                              ?.data !=
-                                          null)
-                                      ? AnalyticsEvents.tambolaSaveTapped
-                                      : AnalyticsEvents
-                                          .tambolaGetFirstTicketTapped,
-                                  properties: AnalyticsProperties
-                                      .getDefaultPropertiesMap(extraValuesMap: {
-                                    "Time left for draw Tambola (mins)":
-                                        AnalyticsProperties
-                                            .getTimeLeftForTambolaDraw(),
-                                    "Tambola Tickets Owned": AnalyticsProperties
-                                        .getTambolaTicketCount(),
-                                    "Number of Tickets":
-                                        locator<TambolaService>()
-                                                .bestTickets
-                                                ?.data
-                                                ?.totalTicketCount ??
-                                            0,
-                                    "Amount": 500,
-                                  }));
-                              BaseUtil.openDepositOptionsModalSheet(
-                                  amount: 500, //model.ticketSavedAmount,
-                                  subtitle:
-                                      'Save ₹500 in any of the asset & get 1 Free Ticket',
-                                  timer: 0);
-                            },
-                          ),
+                        AppPositiveBtn(
+                          style: TextStyles.rajdhaniSB.body0,
+                          btnText: 'Unlock your first ticket now',
+                          onPressed: () {
+                            locator<AnalyticsService>().track(
+                                eventName: (locator<TambolaService>()
+                                            .bestTickets
+                                            ?.data !=
+                                        null)
+                                    ? AnalyticsEvents.tambolaSaveTapped
+                                    : AnalyticsEvents
+                                        .tambolaGetFirstTicketTapped,
+                                properties: AnalyticsProperties
+                                    .getDefaultPropertiesMap(extraValuesMap: {
+                                  "Time left for draw Tambola (mins)":
+                                      AnalyticsProperties
+                                          .getTimeLeftForTambolaDraw(),
+                                  "Tambola Tickets Owned": AnalyticsProperties
+                                      .getTambolaTicketCount(),
+                                  "Number of Tickets": locator<TambolaService>()
+                                          .bestTickets
+                                          ?.data
+                                          ?.totalTicketCount ??
+                                      0,
+                                  "Amount": 500,
+                                }));
+                            BaseUtil.openDepositOptionsModalSheet(
+                                amount: 500, //model.ticketSavedAmount,
+                                subtitle:
+                                    'Save ₹500 in any of the asset & get 1 Free Ticket',
+                                timer: 0);
+                          },
                         ),
+
                         // if (!widget.isStandAloneScreen)
                         //   SizedBox(
                         //     height: SizeConfig.navBarHeight,
