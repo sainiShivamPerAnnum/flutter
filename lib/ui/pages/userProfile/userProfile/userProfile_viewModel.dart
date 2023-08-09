@@ -45,6 +45,7 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 //Flutter & Dart Imports
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:intl/intl.dart';
 import 'package:permission_handler/permission_handler.dart';
 
 import '../../../../core/repository/user_repo.dart';
@@ -138,6 +139,10 @@ class UserProfileVM extends BaseViewModel {
   String get myEmail => _userService.email ?? "";
 
   String get myGender => _userService.gender ?? "";
+
+  String get joinedData =>
+      DateFormat('dd MMM, yyyy').format(DateTime.fromMillisecondsSinceEpoch(
+          _userService.baseUser!.createdOn.millisecondsSinceEpoch));
 
   String get myMobile => _userService.baseUser?.mobile ?? "";
 

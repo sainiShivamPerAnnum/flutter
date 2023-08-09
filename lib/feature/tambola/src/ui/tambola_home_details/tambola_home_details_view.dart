@@ -10,6 +10,7 @@ import 'package:felloapp/feature/tambola/src/ui/widgets/prizes_section.dart';
 import 'package:felloapp/feature/tambola/tambola.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/helpers/tnc_text.dart';
+import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
@@ -42,15 +43,15 @@ class TambolaHomeDetailsView extends StatefulWidget {
 }
 
 class _TambolaHomeDetailsViewState extends State<TambolaHomeDetailsView> {
-  ScrollController? _scrollController;
+  // ScrollController? _scrollController;
 
   @override
   void initState() {
-    _scrollController = ScrollController();
+    // _scrollController = ScrollController();
 
     if (widget.showPrizeSection) {
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-        _scrollController?.animateTo(SizeConfig.screenWidth! * 1.7,
+        RootController.controller.animateTo(SizeConfig.screenWidth! * 1.7,
             duration: const Duration(milliseconds: 500),
             curve: Curves.fastLinearToSlowEaseIn);
       });
@@ -58,7 +59,7 @@ class _TambolaHomeDetailsViewState extends State<TambolaHomeDetailsView> {
 
     if (widget.showWinners) {
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-        _scrollController?.animateTo(SizeConfig.screenWidth! * 2.6,
+        RootController.controller.animateTo(SizeConfig.screenWidth! * 2.6,
             duration: const Duration(milliseconds: 500),
             curve: Curves.fastLinearToSlowEaseIn);
       });
@@ -67,11 +68,11 @@ class _TambolaHomeDetailsViewState extends State<TambolaHomeDetailsView> {
     super.initState();
   }
 
-  @override
-  void dispose() {
-    _scrollController?.dispose();
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   _scrollController?.dispose();
+  //   super.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -93,7 +94,7 @@ class _TambolaHomeDetailsViewState extends State<TambolaHomeDetailsView> {
             alignment: Alignment.topCenter,
             children: [
               SingleChildScrollView(
-                controller: _scrollController,
+                controller: RootController.controller,
                 child: Column(
                   // mainAxisAlignment: MainAxisAlignment.start,
                   // crossAxisAlignment: CrossAxisAlignment.start,

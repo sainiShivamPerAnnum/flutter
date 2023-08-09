@@ -15,6 +15,7 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/asset_selection.dart';
+import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
@@ -32,7 +33,7 @@ class TambolaHomeTicketsView extends StatefulWidget {
 }
 
 class _TambolaHomeTicketsViewState extends State<TambolaHomeTicketsView> {
-  ScrollController? _scrollController;
+  ScrollController? scrollController;
 
   final GlobalKey<AnimatedBuyTambolaTicketCardState> tambolaBuyTicketCardKey =
       GlobalKey<AnimatedBuyTambolaTicketCardState>();
@@ -40,12 +41,12 @@ class _TambolaHomeTicketsViewState extends State<TambolaHomeTicketsView> {
   @override
   void initState() {
     super.initState();
-    _scrollController = ScrollController();
+    scrollController = ScrollController();
   }
 
   @override
   void dispose() {
-    _scrollController?.dispose();
+    scrollController?.dispose();
     super.dispose();
   }
 
@@ -58,7 +59,7 @@ class _TambolaHomeTicketsViewState extends State<TambolaHomeTicketsView> {
           return Stack(
             children: [
               SingleChildScrollView(
-                controller: _scrollController,
+                controller: RootController.controller,
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -73,7 +74,7 @@ class _TambolaHomeTicketsViewState extends State<TambolaHomeTicketsView> {
                     TicketSection(
                       getTicketsTapped: () {
                         HapticFeedback.vibrate();
-                        _scrollController?.animateTo(
+                        RootController.controller.animateTo(
                             SizeConfig.screenHeight! * 0.7,
                             duration: const Duration(milliseconds: 500),
                             curve: Curves.fastOutSlowIn);

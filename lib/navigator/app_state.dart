@@ -8,7 +8,6 @@ import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
-import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/navigator/router/back_dispatcher.dart';
 import 'package:felloapp/navigator/router/router_delegate.dart';
@@ -151,16 +150,21 @@ class AppState extends ChangeNotifier {
   }
 
   void onItemTapped(int index) {
-    final JourneyService _journeyService = locator<JourneyService>();
-    if (JourneyService.isAvatarAnimationInProgress) return;
+    if (index == _rootIndex) {
+      Haptic.vibrate();
+      RootController.controller.animateTo(
+        0,
+        duration: const Duration(seconds: 2),
+        curve: Curves.easeInExpo,
+      );
+      return;
+    }
     _rootController.onChange(_rootController.navItems.values.toList()[index]);
     setCurrentTabIndex = index;
+
     trackEvent(index);
     Haptic.vibrate();
-    if (_rootController.currentNavBarItemModel ==
-        RootController.journeyNavBarItem) {
-      _journeyService.checkForMilestoneLevelChange();
-    }
+
     executeNavBarItemFirstClick(index);
   }
 

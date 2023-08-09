@@ -532,7 +532,8 @@ class AvailabilityOfferWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final daysRemaining = BaseUtil.calculateRemainingDays(DateTime(2023, 9, 1));
+    final daysRemaining =
+        BaseUtil.calculateRemainingDays(DateTime(2023, 12, 31));
 
     return Stack(
       children: [

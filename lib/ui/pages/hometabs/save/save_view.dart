@@ -13,6 +13,7 @@ import 'package:felloapp/ui/elements/title_subtitle_container.dart';
 import 'package:felloapp/ui/pages/hometabs/home/card_actions_notifier.dart';
 import 'package:felloapp/ui/pages/hometabs/home/cards_home.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
+import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
@@ -21,6 +22,8 @@ import 'package:provider/provider.dart';
 import '../../../../util/styles/styles.dart';
 
 const HtmlEscape htmlEscape = HtmlEscape();
+
+GlobalKey saveViewScrollKey = GlobalKey();
 
 class Save extends StatelessWidget {
   const Save({super.key});
@@ -35,19 +38,6 @@ class Save extends StatelessWidget {
         onModelDispose: (model) => model.dump(),
         builder: (ctx, model, child) {
           log("ROOT: Save view baseview build called");
-          // return ShowCaseWidget(
-          //   enableAutoScroll: true,
-          //   onFinish: () {
-          //     SpotLightController.instance.completer.complete();
-          //     SpotLightController.instance.isTourStarted = false;
-          //     SpotLightController.instance.startShowCase = false;
-          //   },
-          //   onSkipButtonClicked: () {
-          //     SpotLightController.instance.isSkipButtonClicked = true;
-          //     SpotLightController.instance.startShowCase = false;
-          //   },
-          //   builder: Builder(builder: (context) {
-          //     SpotLightController.instance.saveViewContext = context;
           return SaveViewWrapper(model: model)
               // }),
               ;
@@ -58,7 +48,10 @@ class Save extends StatelessWidget {
 }
 
 class SaveViewWrapper extends StatelessWidget {
-  const SaveViewWrapper({Key? key, required this.model}) : super(key: key);
+  const SaveViewWrapper({
+    Key? key,
+    required this.model,
+  }) : super(key: key);
   final SaveViewModel model;
 
   @override
@@ -70,6 +63,7 @@ class SaveViewWrapper extends StatelessWidget {
             ? Stack(
                 children: [
                   SingleChildScrollView(
+                    controller: RootController.controller,
                     child: Stack(
                       children: [
                         Column(
@@ -126,6 +120,7 @@ class SaveViewWrapper extends StatelessWidget {
                 ],
               )
             : ListView(
+                controller: RootController.controller,
                 shrinkWrap: true,
                 physics: const ClampingScrollPhysics(),
                 cacheExtent: 1000,
