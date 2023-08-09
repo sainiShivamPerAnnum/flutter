@@ -19,26 +19,8 @@ class ReferralRepo extends BaseRepo {
 
   Future<ApiResponse<ReferralResponse>> getReferralCode() async {
     try {
-      // final code = PreferenceHelper.getString(PreferenceHelper.REFERRAL_CODE);
-      //
-      // if (code != '') {
-      //   return ApiResponse<ReferralResponse>(
-      //     model: ReferralResponse.fromJson(jsonDecode(code)),
-      //     code: 200,
-      //   );
-      // }
 
       final String bearer = await getBearerToken();
-      // final response = await APIService.instance.getData(
-      //   ApiPath.getReferralCode(userService.baseUser!.uid),
-      //   token: bearer,
-      //   cBaseUrl: _baseUrl,
-      // );
-      //
-      // // final data = response['data'];
-      // // log('getReferralCode $response', name: 'ReferralRepo');
-      // await PreferenceHelper.setString(
-      //     PreferenceHelper.REFERRAL_CODE, jsonEncode(response));
 
       return await _cacheService.cachedApi(
         CacheKeys.REFERRAL_CODE,
@@ -53,11 +35,6 @@ class ReferralRepo extends BaseRepo {
               model: ReferralResponse.fromJson(response), code: 200);
         },
       );
-
-      // return ApiResponse<ReferralResponse>(
-      //   model: ReferralResponse.fromJson(response),
-      //   code: 200,
-      // );
     } catch (e) {
       logger!.e('getReferralCode $e ${userService!.baseUser!.uid}');
       return ApiResponse.withError(e.toString(), 400);
