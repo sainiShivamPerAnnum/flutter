@@ -10,4 +10,5 @@ class CacheKeys {
   static const APPCONFIG = "appConfig";
   static const REFERRAL_REGISTERED_USERS = 'referral/registeredUsers';
   static const GOLD_RATES = "goldRatesData";
+  static const REFERRAL_CODE = 'referral_code';
 }
