@@ -615,7 +615,7 @@ class DigitalGoldPrograms extends StatelessWidget {
                   .openGoldProBuyView(location: "Asset Section View");
             } else {
               BaseUtil().openRechargeModalSheet(
-                  investmentType: InvestmentType.AUGGOLD99, amt: amount!);
+                  investmentType: InvestmentType.AUGGOLD99, amt: amount);
 
               locator<AnalyticsService>().track(
                   eventName: AnalyticsEvents.assetSelectionProceed,

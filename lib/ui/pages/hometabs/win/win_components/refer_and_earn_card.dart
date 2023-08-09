@@ -7,6 +7,7 @@ import 'package:felloapp/core/service/referral_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/util/extensions/rich_text_extension.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -30,6 +31,8 @@ class ReferEarnCard extends StatelessWidget {
       builder: (context, model, child) {
         return GestureDetector(
           onTap: () {
+            Haptic.vibrate();
+
             AppState.delegate!.appState.currentAction = PageAction(
               state: PageState.addPage,
               page: ReferralDetailsPageConfig,

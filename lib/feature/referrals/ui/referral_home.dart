@@ -89,7 +89,7 @@ class _ReferralHomeState extends State<ReferralHome> {
                           child: RefreshIndicator(
                             notificationPredicate: (notification) {
                               // with NestedScrollView local(depth == 2) OverscrollNotification are not sent
-                              return notification.depth == 2;
+                              return notification.depth == 3;
                             },
                             onRefresh: () async {
                               await model.fetchReferalsList(context,
