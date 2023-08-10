@@ -22,7 +22,7 @@ class GoldProHero extends StatelessWidget {
           return InvestedGoldProHero(model: model);
         } else if (goldQuantity <= 0) {
           return NewGoldProHero(model: model);
-        } else if (goldQuantity <= 0.5) {
+        } else if (goldQuantity <= 2) {
           return ProgressGoldProHero(model: model);
         } else {
           return EligibleGoldProHero(model: model);
@@ -84,7 +84,7 @@ class ProgressGoldProHero extends StatelessWidget {
           child: FractionallySizedBox(
             widthFactor: BaseUtil.digitPrecision(
                     model.userFundWallet?.augGoldQuantity ?? 0.0, 2) /
-                0.5,
+                2,
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(100),
@@ -112,7 +112,7 @@ class ProgressGoldProHero extends StatelessWidget {
             ),
             const Spacer(),
             Text(
-              "0.5g",
+              "2g",
               style: TextStyles.sourceSansSB.body0.colour(Colors.white),
             ),
           ],
@@ -121,7 +121,7 @@ class ProgressGoldProHero extends StatelessWidget {
         Row(
           children: [
             Text(
-              "Save ${BaseUtil.digitPrecision(0.5 - (model.userFundWallet?.augGoldQuantity ?? 0.0), 2)}g more to be eligible for Gold Pro",
+              "Save ${BaseUtil.digitPrecision(2 - (model.userFundWallet?.augGoldQuantity ?? 0.0), 4)}g more to be eligible for Gold Pro",
               style: TextStyles.sourceSansM.body3
                   .colour(UiConstants.kGoldProPrimary),
             ),
