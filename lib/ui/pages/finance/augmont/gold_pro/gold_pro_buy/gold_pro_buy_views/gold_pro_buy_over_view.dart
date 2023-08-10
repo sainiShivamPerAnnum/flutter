@@ -3,6 +3,7 @@ import 'package:felloapp/core/enums/transaction_state_enum.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_buy/widgets/view_breakdown.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_buy/gold_pro_buy_components/gold_balance_rows.dart';
+import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_buy/gold_pro_buy_views/gold_pro_buy_input_view.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_buy/gold_pro_buy_vm.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
@@ -77,6 +78,7 @@ class GoldProBuyOverView extends StatelessWidget {
               ),
               SizedBox(height: SizeConfig.screenHeight! * 0.04),
               PriceAdaptiveGoldProOverViewCard(model: model),
+              const GoldProLeaseCompanyDetailsStrip(),
             ],
           ),
         ),

@@ -1,10 +1,8 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/faqTypes.dart';
-import 'package:felloapp/core/model/gold_pro_models/gold_pro_investment_reponse_model.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
-import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
@@ -16,6 +14,7 @@ import 'package:felloapp/ui/pages/hometabs/save/gold_components/gold_rate_graph.
 import 'package:felloapp/ui/pages/login/login_components/login_support.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/ui/pages/static/save_assets_footer.dart';
+import 'package:felloapp/ui/pages/static/youtube_player_view.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
@@ -353,10 +352,10 @@ class GoldProSellCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Selector<TxnHistoryService, List<GoldProInvestmentResponseModel>>(
-      selector: (p0, p1) => p1.goldProTxns,
-      builder: (context, txns, child) {
-        return txns.isNotEmpty ? child! : const SizedBox();
+    return Selector<UserService, UserFundWallet?>(
+      selector: (p0, p1) => p1.userFundWallet,
+      builder: (context, wallet, child) {
+        return (wallet?.wAugFdQty ?? 0) > 0 ? child! : const SizedBox();
       },
       child: Container(
         padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
@@ -388,7 +387,7 @@ class GoldProSellCard extends StatelessWidget {
                         eventName: AnalyticsEvents.unleaseOnGoldProDetailsPage,
                         properties: {
                           "current gold value":
-                              _userService.userPortfolio.goldPro.balance,
+                              _userService.userPortfolio.augmont.fd.balance,
                           "current gold weight":
                               _userService.userFundWallet?.wAugFdQty ?? 0,
                         });
@@ -440,7 +439,7 @@ class GoldProInterestBreakdownWidget extends StatelessWidget {
                         crossAxisAlignment: WrapCrossAlignment.end,
                         children: [
                           Text(
-                            "3.0% ",
+                            "2.75% ",
                             style: TextStyles.sourceSansSB.title4
                                 .colour(UiConstants.kGoldProPrimary),
                           ),
@@ -469,7 +468,7 @@ class GoldProInterestBreakdownWidget extends StatelessWidget {
                       crossAxisAlignment: WrapCrossAlignment.end,
                       children: [
                         Text(
-                          "1.5% ",
+                          "1.75% ",
                           style: TextStyles.sourceSansSB.title4
                               .colour(UiConstants.kGoldProPrimary),
                         ),
@@ -514,6 +513,11 @@ class HowGoldProWorksSection extends StatelessWidget {
   const HowGoldProWorksSection({
     super.key,
   });
+  static const List<String> videos = [
+    "https://youtube.com/shorts/xt2DAiv1VP8",
+    "https://youtube.com/shorts/d1UqNZr1YGw",
+    "https://youtube.com/shorts/YKcgDRJTrS4",
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -532,27 +536,37 @@ class HowGoldProWorksSection extends StatelessWidget {
               scrollDirection: Axis.horizontal,
               padding: EdgeInsets.symmetric(
                   horizontal: SizeConfig.pageHorizontalMargins),
-              itemBuilder: (context, index) => GestureDetector(
+              itemBuilder: (context, i) => GestureDetector(
                 onTap: () {
                   final UserService _userService = locator<UserService>();
+                  BaseUtil.openDialog(
+                      isBarrierDismissible: true,
+                      addToScreenStack: true,
+                      hapticVibrate: true,
+                      barrierColor: Colors.black54,
+                      content:
+                          Dialog(child: YoutubePlayerView(url: videos[i])));
                   locator<AnalyticsService>().track(
                     eventName: AnalyticsEvents.videoTappedOnGoldPro,
                     properties: {
                       "existing lease amount":
-                          _userService.userPortfolio.goldPro.balance,
+                          _userService.userPortfolio.augmont.fd.balance,
                       "existing lease grams":
                           _userService.userFundWallet?.wAugFdQty ?? 0
                     },
                   );
                 },
                 child: Container(
-                  width: SizeConfig.screenWidth! * 0.4,
+                  width: SizeConfig.screenWidth! * 0.36,
                   margin: EdgeInsets.only(right: SizeConfig.padding16),
                   decoration: BoxDecoration(
-                    color: UiConstants.KGoldProPrimaryDark,
-                    borderRadius: BorderRadius.circular(
-                      SizeConfig.roundness24,
+                    // color: UiConstants.KGoldProPrimaryDark,
+                    image: DecorationImage(
+                      image: NetworkImage(
+                          'https://img.youtube.com/vi/${videos[i].substring(videos[i].length - 11)}/0.jpg'),
+                      fit: BoxFit.cover,
                     ),
+                    borderRadius: BorderRadius.circular(SizeConfig.roundness16),
                   ),
                   alignment: Alignment.center,
                   child: Image.network(
@@ -561,7 +575,7 @@ class HowGoldProWorksSection extends StatelessWidget {
                   ),
                 ),
               ),
-              itemCount: 5,
+              itemCount: videos.length,
             ),
           )
         ],
@@ -578,7 +592,7 @@ class WhyGoldProSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     List<Tuple2<String, String>> whyDigitalGoldList = const [
-      Tuple2("7 days", "Lock-In"),
+      Tuple2("48 h", "Lock-In"),
       Tuple2("15.5%", "Returns p.a."),
       Tuple2("4.5%", "Extra Gold"),
     ];

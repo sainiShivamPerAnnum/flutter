@@ -37,8 +37,10 @@ class GoldProBuyViewModel extends BaseViewModel {
   final TxnHistoryService _txnHistoryService = locator<TxnHistoryService>();
   S locale = locator<S>();
   TextEditingController goldFieldController =
-      TextEditingController(text: "2.5");
+      TextEditingController(text: "4.0");
 
+  double minimumGrams = 2;
+  double maximumGrams = 10;
   bool _isDescriptionView = false;
   double _totalGoldBalance = 0.0;
   double _currentGoldBalance = 0.0;
@@ -49,10 +51,10 @@ class GoldProBuyViewModel extends BaseViewModel {
   AugmontRates? goldRates;
 
   List<GoldProChoiceChipsModel> chipsList = [
-    GoldProChoiceChipsModel(isBest: false, isSelected: false, value: 0.5),
-    GoldProChoiceChipsModel(isBest: true, isSelected: true, value: 2.5),
-    GoldProChoiceChipsModel(isBest: false, isSelected: false, value: 5.0),
-    GoldProChoiceChipsModel(isBest: false, isSelected: false, value: 7.5),
+    GoldProChoiceChipsModel(isBest: false, isSelected: false, value: 2),
+    GoldProChoiceChipsModel(isBest: true, isSelected: true, value: 4),
+    GoldProChoiceChipsModel(isBest: false, isSelected: false, value: 6),
+    GoldProChoiceChipsModel(isBest: false, isSelected: false, value: 8),
     GoldProChoiceChipsModel(isBest: false, isSelected: false, value: 10),
   ];
 
@@ -80,6 +82,7 @@ class GoldProBuyViewModel extends BaseViewModel {
     print(
         "Total: $totalGoldBalance && Current: $currentGoldBalance && additional: $additionalGoldBalance");
     updateSliderValueFromGoldBalance();
+    postUpdateChips();
     updateAmount();
     notifyListeners();
   }
@@ -136,7 +139,6 @@ class GoldProBuyViewModel extends BaseViewModel {
 
   Future<void> init() async {
     AppState.isGoldProBuyInProgress = false;
-    _isGoldRateFetching = true;
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       _txnService.currentTransactionState = TransactionState.idle;
     });
@@ -159,7 +161,7 @@ class GoldProBuyViewModel extends BaseViewModel {
 //VM Async Call Methods
 
   Future<void> verifyAugmontKyc() async {
-    if (!_bankAndPanService.userKycData!.augmontKyc) {
+    if (!(_bankAndPanService.userKycData?.augmontKyc ?? false)) {
       await _bankAndPanService.verifyAugmontKyc();
     }
   }
@@ -285,13 +287,13 @@ class GoldProBuyViewModel extends BaseViewModel {
         updateSliderValue(0.0);
         break;
       case 1:
-        updateSliderValue(0.21);
+        updateSliderValue(0.25);
         break;
       case 2:
-        updateSliderValue(0.47);
+        updateSliderValue(0.5);
         break;
       case 3:
-        updateSliderValue(0.74);
+        updateSliderValue(0.75);
         break;
       case 4:
         updateSliderValue(1.0);
@@ -307,18 +309,19 @@ class GoldProBuyViewModel extends BaseViewModel {
   }
 
   void updateSliderValueFromGoldBalance() {
-    double val = BaseUtil.digitPrecision((totalGoldBalance - 0.5) / 9.5, 1);
+    double val = BaseUtil.digitPrecision((totalGoldBalance - 2) / 8, 4);
     if (val >= 0 && val <= 1) sliderValue = val;
   }
 
   void updateSliderValue(double val) {
     sliderValue = val;
-    totalGoldBalance = BaseUtil.digitPrecision(9.5 * val + 0.5, 1);
+    totalGoldBalance = BaseUtil.digitPrecision(8 * val + 2, 1);
     goldFieldController.text = totalGoldBalance.toString();
     postUpdateChips();
   }
 
   void onTextFieldValueChanged(String val) {
+    selectedChipIndex = -1;
     if (double.tryParse(val) != null) {
       totalGoldBalance = double.tryParse(val)!;
     }
@@ -326,8 +329,8 @@ class GoldProBuyViewModel extends BaseViewModel {
 
   void decrementGoldBalance() {
     totalGoldBalance = BaseUtil.digitPrecision(totalGoldBalance, 1);
-    if (totalGoldBalance <= 0.5) {
-      totalGoldBalance = 0.5;
+    if (totalGoldBalance <= minimumGrams) {
+      totalGoldBalance = minimumGrams;
       goldFieldController.text = totalGoldBalance.toString();
       updateSliderValueFromGoldBalance();
       return;
@@ -341,8 +344,8 @@ class GoldProBuyViewModel extends BaseViewModel {
 
   void incrementGoldBalance() {
     totalGoldBalance = BaseUtil.digitPrecision(totalGoldBalance, 1);
-    if (totalGoldBalance >= 10) {
-      totalGoldBalance = 10;
+    if (totalGoldBalance >= maximumGrams) {
+      totalGoldBalance = maximumGrams;
       goldFieldController.text = totalGoldBalance.toString();
       updateSliderValueFromGoldBalance();
       return;
@@ -358,16 +361,16 @@ class GoldProBuyViewModel extends BaseViewModel {
 
   void postUpdateChips() {
     selectedChipIndex = -1;
-    if (totalGoldBalance == 0.5) {
+    if (totalGoldBalance == 2.0) {
       selectedChipIndex = 0;
       Haptic.vibrate();
-    } else if (totalGoldBalance == 2.5) {
+    } else if (totalGoldBalance == 4.0) {
       selectedChipIndex = 1;
       Haptic.vibrate();
-    } else if (totalGoldBalance == 5.0) {
+    } else if (totalGoldBalance == 6.0) {
       selectedChipIndex = 2;
       Haptic.vibrate();
-    } else if (totalGoldBalance == 7.5) {
+    } else if (totalGoldBalance == 8.0) {
       selectedChipIndex = 3;
       Haptic.vibrate();
     } else if (totalGoldBalance == 10.0) {
@@ -387,19 +390,19 @@ class GoldProBuyViewModel extends BaseViewModel {
         "returns percentage": 15.5
       },
     );
-    if (totalGoldBalance > 10) {
-      BaseUtil.showNegativeAlert(
-          "Gold grams out of bound", "You can lease at most 10 grams");
-      totalGoldBalance = 10;
-      goldFieldController.text = "10";
+    if (totalGoldBalance > maximumGrams) {
+      BaseUtil.showNegativeAlert("Gold grams out of bound",
+          "You can lease at most $maximumGrams grams");
+      totalGoldBalance = maximumGrams;
+      goldFieldController.text = "$maximumGrams";
       updateAmount();
       return;
     }
-    if (totalGoldBalance < 0.5) {
+    if (totalGoldBalance < minimumGrams) {
       BaseUtil.showNegativeAlert("Gold grams too low to lease",
-          "You have to lease at least 0.5 grams");
-      totalGoldBalance = 0.5;
-      goldFieldController.text = "0.5";
+          "You have to lease at least $minimumGrams grams");
+      totalGoldBalance = minimumGrams;
+      goldFieldController.text = "$minimumGrams";
       updateAmount();
       return;
     }
@@ -439,11 +442,12 @@ class GoldProBuyViewModel extends BaseViewModel {
         (goldRates?.cgstPercent ?? 0) + (goldRates?.sgstPercent ?? 0);
 
     if (goldBuyPrice != 0.0) {
-      additionalGoldBalance += 0.0004;
+      // additionalGoldBalance += 0.0004;
       totalGoldAmount = BaseUtil.digitPrecision(
-          (goldBuyPrice! * additionalGoldBalance) +
-              (netTax * goldBuyPrice! * additionalGoldBalance) / 100,
-          2);
+              (goldBuyPrice! * additionalGoldBalance) +
+                  (netTax * goldBuyPrice! * additionalGoldBalance) / 100,
+              2) +
+          3;
 
       double expectedGoldReturnsAmount = BaseUtil.digitPrecision(
           totalGoldBalance * goldBuyPrice! + netTax, 2, false);

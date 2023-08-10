@@ -1,9 +1,12 @@
 import 'dart:async';
 
+import 'package:felloapp/core/enums/app_config_keys.dart';
+import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/modalsheets/transaction_details_model_sheet.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
@@ -16,6 +19,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
+import 'package:lottie/lottie.dart';
 import 'package:open_filex/open_filex.dart';
 
 import '../../../../base_util.dart';
@@ -28,7 +32,8 @@ class TransactionDetailsPage extends StatefulWidget {
   State<TransactionDetailsPage> createState() => _TransactionDetailsPageState();
 }
 
-class _TransactionDetailsPageState extends State<TransactionDetailsPage> {
+class _TransactionDetailsPageState extends State<TransactionDetailsPage>
+    with SingleTickerProviderStateMixin {
   bool _showInvoiceButton = false;
 
   bool _showAppliedCoupon = false;
@@ -45,6 +50,8 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage> {
 
   @override
   void initState() {
+    _animationController = AnimationController(vsync: this);
+    _playLottieAnimation();
     if (widget.txn.subType == UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD &&
         widget.txn.type == UserTransaction.TRAN_TYPE_DEPOSIT &&
         widget.txn.tranStatus == UserTransaction.TRAN_STATUS_COMPLETE) {
@@ -83,6 +90,29 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage> {
     return "";
   }
 
+  late AnimationController _animationController;
+  bool _showLottie = false;
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
+  void _playLottieAnimation() {
+    if (AppConfig.getValue(AppConfigKey.specialEffectsOnTxnDetailsView) ??
+        false) {
+      AppState.blockNavigation();
+      Future.delayed(const Duration(seconds: 1), () {
+        setState(() {
+          if (mounted)
+            // ignore: curly_braces_in_flow_control_structures
+            _showLottie = true;
+        });
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final isGold =
@@ -94,7 +124,6 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage> {
         elevation: 0,
       ),
       body: Stack(
-        alignment: Alignment.bottomCenter,
         children: [
           SingleChildScrollView(
             child: Padding(
@@ -171,7 +200,7 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage> {
                       widget.txn.transactionUpdatesMap!.isNotEmpty)
                     Padding(
                       padding:
-                      EdgeInsets.symmetric(horizontal: SizeConfig.padding6),
+                          EdgeInsets.symmetric(horizontal: SizeConfig.padding6),
                       child: Column(
                         children: [
                           Row(
@@ -196,7 +225,7 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage> {
                                     widget.txn.tranStatus!.substring(0, 1) +
                                         widget.txn.tranStatus!
                                             .substring(1,
-                                            widget.txn.tranStatus!.length)
+                                                widget.txn.tranStatus!.length)
                                             .toLowerCase(),
                                     style: TextStyles.sourceSans.colour(
                                         _txnHistoryService!.getTileColor(
@@ -220,7 +249,7 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage> {
                                     horizontal: 2, vertical: 8),
                                 child: Row(
                                   mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
                                       "Purchase Rate",
@@ -242,7 +271,7 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage> {
                                   horizontal: 2, vertical: 8),
                               child: Row(
                                 mainAxisAlignment:
-                                MainAxisAlignment.spaceBetween,
+                                    MainAxisAlignment.spaceBetween,
                                 children: [
                                   Text(
                                     "Gold purchased ",
@@ -266,7 +295,7 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage> {
                                       horizontal: 2, vertical: 8),
                                   child: Row(
                                     mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
+                                        MainAxisAlignment.spaceBetween,
                                     children: [
                                       Row(
                                         children: [
@@ -315,12 +344,12 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage> {
                                     horizontal: 2, vertical: 8),
                                 child: Row(
                                   mainAxisAlignment:
-                                  MainAxisAlignment.spaceBetween,
+                                      MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
                                       "Total Gold (in grams) ",
                                       style:
-                                      TextStyles.sourceSansB.body3.colour(
+                                          TextStyles.sourceSansB.body3.colour(
                                         const Color(0xffE3CD95),
                                       ),
                                     ),
@@ -375,13 +404,13 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage> {
                             Row(
                               children: [
                                 (widget.txn.subType !=
-                                    Constants.ASSET_TYPE_LENDBOX &&
-                                    widget.txn.subType !=
-                                        Constants.ASSET_TYPE_AUGMONT)
+                                            Constants.ASSET_TYPE_LENDBOX &&
+                                        widget.txn.subType !=
+                                            Constants.ASSET_TYPE_AUGMONT)
                                     ? const SizedBox()
                                     : Expanded(
-                                  child: Container(
-                                    decoration: BoxDecoration(
+                                        child: Container(
+                                          decoration: BoxDecoration(
                                               color: const Color(0xff212B31),
                                               borderRadius:
                                                   BorderRadius.circular(8)),
@@ -400,43 +429,43 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage> {
                                                           .TRAN_TYPE_WITHDRAW)
                                                     Text(
                                                       "-  ",
-                                                style: TextStyles
-                                                    .rajdhaniSB.body1,
+                                                      style: TextStyles
+                                                          .rajdhaniSB.body1,
+                                                    ),
+                                                  SvgPicture.asset(
+                                                    Assets.token,
+                                                    height:
+                                                        SizeConfig.padding16,
+                                                  ),
+                                                  SizedBox(
+                                                    width: SizeConfig.padding4,
+                                                  ),
+                                                  Text(
+                                                    widget.txn.amount
+                                                        .toString()
+                                                        .split(".")
+                                                        .first
+                                                        .replaceAll("-", ""),
+                                                    style: TextStyles
+                                                        .rajdhaniSB.body2,
+                                                  ),
+                                                ],
                                               ),
-                                            SvgPicture.asset(
-                                              Assets.token,
-                                              height:
-                                              SizeConfig.padding16,
-                                            ),
-                                            SizedBox(
-                                              width: SizeConfig.padding4,
-                                            ),
-                                            Text(
-                                              widget.txn.amount
-                                                  .toString()
-                                                  .split(".")
-                                                  .first
-                                                  .replaceAll("-", ""),
-                                              style: TextStyles
-                                                  .rajdhaniSB.body2,
-                                            ),
-                                          ],
+                                              SizedBox(
+                                                width: SizeConfig.padding4,
+                                              ),
+                                              Text(
+                                                "Game Tokens",
+                                                style:
+                                                    TextStyles.rajdhaniSB.body4,
+                                              )
+                                            ],
+                                          ),
                                         ),
-                                        SizedBox(
-                                          width: SizeConfig.padding4,
-                                        ),
-                                        Text(
-                                          "Game Tokens",
-                                          style:
-                                          TextStyles.rajdhaniSB.body4,
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                ),
+                                      ),
                                 if ((widget.txn.misMap
-                                    ?.containsKey("tickets") ??
-                                    false) &&
+                                            ?.containsKey("tickets") ??
+                                        false) &&
                                     widget.txn.misMap!["tickets"] != 0)
                                   Expanded(
                                     child: Container(
@@ -473,7 +502,7 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage> {
                                                 widget.txn.misMap!["tickets"]
                                                     .toString(),
                                                 style:
-                                                TextStyles.rajdhaniSB.body2,
+                                                    TextStyles.rajdhaniSB.body2,
                                               ),
                                             ],
                                           ),
@@ -490,17 +519,17 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage> {
                                     ),
                                   ),
                                 if ((widget.txn.misMap?.containsKey("gtId") ??
-                                    false) ||
+                                        false) ||
                                     ((widget.txn.misMap?.containsKey("gtIds") ??
-                                        false) &&
+                                            false) &&
                                         widget
-                                            .txn.misMap?["gtIds"].length >
+                                                .txn.misMap?["gtIds"].length >
                                             0) ||
                                     (widget.txn.couponMap
-                                        ?.containsKey("gtIds") ??
+                                            ?.containsKey("gtIds") ??
                                         false) ||
                                     (widget.txn.misMap
-                                        ?.containsKey("happyHourGtId") ??
+                                            ?.containsKey("happyHourGtId") ??
                                         false))
                                   Expanded(
                                     child: Container(
@@ -514,7 +543,7 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage> {
                                         children: [
                                           Row(
                                             mainAxisAlignment:
-                                            MainAxisAlignment.center,
+                                                MainAxisAlignment.center,
                                             children: [
                                               SvgPicture.asset(
                                                 Assets.scratchCard,
@@ -526,7 +555,7 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage> {
                                               Text(
                                                 "${(widget.txn.misMap!.containsKey("gtId") ? 1 : 0) + (widget.txn.couponMap!.containsKey("gtId") ? 1 : 0) + (widget.txn.misMap!.containsKey("gtIds") ? widget.txn.misMap!["gtIds"].length : 0) + (widget.txn.misMap!.containsKey("happyHourGtId") ? 1 : 0)}",
                                                 style:
-                                                TextStyles.rajdhaniSB.body2,
+                                                    TextStyles.rajdhaniSB.body2,
                                               ),
                                             ],
                                           ),
@@ -557,43 +586,76 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage> {
             ),
           ),
           if (_showInvoiceButton && widget.txn.augmnt?["aLockPrice"] != null)
-            Padding(
-              padding: EdgeInsets.only(bottom: SizeConfig.padding20),
-              child: AppPositiveCustomChildBtn(
-                onPressed: () async {
-                  if (widget.txn.augmnt![UserTransaction.subFldAugTranId] !=
-                      null) {
-                    setState(() {
-                      _isInvoiceLoading = true;
-                    });
-                    String? trnId =
-                    widget.txn.augmnt![UserTransaction.subFldAugTranId];
-                    unawaited(augmontProvider!
-                        .generatePurchaseInvoicePdf(trnId, null)
-                        .then((generatedPdfFilePath) {
-                      _isInvoiceLoading = false;
-                      setState(() {});
-                      if (generatedPdfFilePath != null) {
-                        OpenFilex.open(generatedPdfFilePath);
-                      } else {
-                        BaseUtil.showNegativeAlert(locale.txnInvoiceFailed,
-                            locale.txnTryAfterSomeTime);
-                      }
-                    }));
-                  } else {
-                    BaseUtil.showNegativeAlert(
-                        locale.txnInvoiceFailed, locale.txnTryAfterSomeTime);
-                  }
-                },
-                width: SizeConfig.screenWidth! * 0.8,
-                child: _isInvoiceLoading
-                    ? SpinKitThreeBounce(
-                        size: SizeConfig.padding20,
-                        color: Colors.white,
-                        duration: const Duration(milliseconds: 500),
-                      )
-                    : Text(locale.btnDownloadInvoice.toUpperCase(),
-                        style: TextStyles.rajdhaniSB.body1),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Padding(
+                padding: EdgeInsets.only(bottom: SizeConfig.padding20),
+                child: AppPositiveCustomChildBtn(
+                  onPressed: () async {
+                    if (widget.txn.augmnt![UserTransaction.subFldAugTranId] !=
+                        null) {
+                      setState(() {
+                        _isInvoiceLoading = true;
+                      });
+                      String? trnId =
+                          widget.txn.augmnt![UserTransaction.subFldAugTranId];
+                      unawaited(augmontProvider!
+                          .generatePurchaseInvoicePdf(trnId, null)
+                          .then((generatedPdfFilePath) {
+                        _isInvoiceLoading = false;
+                        setState(() {});
+                        if (generatedPdfFilePath != null) {
+                          OpenFilex.open(generatedPdfFilePath);
+                        } else {
+                          BaseUtil.showNegativeAlert(locale.txnInvoiceFailed,
+                              locale.txnTryAfterSomeTime);
+                        }
+                      }));
+                    } else {
+                      BaseUtil.showNegativeAlert(
+                          locale.txnInvoiceFailed, locale.txnTryAfterSomeTime);
+                    }
+                  },
+                  width: SizeConfig.screenWidth! * 0.8,
+                  child: _isInvoiceLoading
+                      ? SpinKitThreeBounce(
+                          size: SizeConfig.padding20,
+                          color: Colors.white,
+                          duration: const Duration(milliseconds: 500),
+                        )
+                      : Text(locale.btnDownloadInvoice.toUpperCase(),
+                          style: TextStyles.rajdhaniSB.body1),
+                ),
+              ),
+            ),
+          if (_showLottie)
+            Align(
+              alignment: Alignment.center,
+              child: IgnorePointer(
+                ignoring: true,
+                child: Container(
+                  height: SizeConfig.screenHeight,
+                  color: Colors.transparent,
+                  child: Center(
+                    child: Lottie.asset(
+                      Assets.indianFlagKiteLottie,
+                      controller: _animationController,
+                      height: SizeConfig.screenHeight,
+                      onLoaded: (composition) {
+                        _animationController
+                          ..duration = composition.duration
+                          ..forward().whenComplete(() {
+                            if (mounted) {
+                              setState(() {
+                                _showLottie = false;
+                                AppState.unblockNavigation();
+                              });
+                            }
+                          });
+                      },
+                    ),
+                  ),
+                ),
               ),
             ),
         ],

@@ -27,7 +27,8 @@ class GoldProCard extends StatelessWidget {
                 _userService.userFundWallet?.augGoldQuantity ?? 0,
             'isNewUser': _userService.userSegments.contains("NEW_USER"),
             'current flo balance': _userService.userPortfolio.flo.balance,
-            "existing lease amount": _userService.userPortfolio.goldPro.balance,
+            "existing lease amount":
+                _userService.userPortfolio.augmont.fd.balance,
             "existing lease grams": _userService.userFundWallet?.wAugFdQty ?? 0
           },
         );

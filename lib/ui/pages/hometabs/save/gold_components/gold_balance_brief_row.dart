@@ -42,10 +42,10 @@ class GoldBalanceBriefRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<UserService>(
       builder: (context, model, child) {
-        final goldAmount = model.userPortfolio.goldPro.balance;
+        final goldAmount = model.userPortfolio.augmont.fd.balance;
         final goldGrams = model.userFundWallet?.wAugFdQty ?? 0.0;
-        final goldGainsPerc = model.userPortfolio.goldPro.percGains;
-        final goldGains = model.userPortfolio.goldPro.absGains;
+        final goldGainsPerc = model.userPortfolio.augmont.fd.percGains;
+        final goldGains = model.userPortfolio.augmont.fd.absGains;
         return Row(
           children: [
             Expanded(

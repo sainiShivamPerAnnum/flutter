@@ -33,13 +33,13 @@ class GoldProChoiceChip extends StatelessWidget {
     return GestureDetector(
       onTap: () => onTap(),
       child: Container(
-        margin: index == 1
-            ? EdgeInsets.only(right: SizeConfig.padding14)
-            : index == 2 || index == 3
-                ? EdgeInsets.only(
-                    right: SizeConfig.padding10,
-                  )
-                : EdgeInsets.zero,
+        // margin: index == 1
+        //     ? EdgeInsets.only(right: SizeConfig.padding14)
+        //     : index == 2 || index == 3
+        //         ? EdgeInsets.only(
+        //             right: SizeConfig.padding10,
+        //           )
+        //         : EdgeInsets.zero,
         width: SizeConfig.padding54,
         child: Column(
           children: [

@@ -1,18 +1,29 @@
 import 'package:felloapp/core/model/gold_pro_models/gold_pro_investment_reponse_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
+import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/ui/modalsheets/transaction_details_model_sheet.dart';
+import 'package:felloapp/ui/pages/login/login_components/login_support.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class GoldProTransactionsDetailsView extends StatelessWidget {
   const GoldProTransactionsDetailsView({required this.txn, super.key});
 
   final GoldProInvestmentResponseModel txn;
   TxnHistoryService get _txnHistoryService => locator<TxnHistoryService>();
+
+  String get getFormattedDate =>
+      DateFormat('dd MMM, yyyy').format(DateTime.fromMillisecondsSinceEpoch(
+          txn.createdOn.millisecondsSinceEpoch));
+
+  String get formattedTime =>
+      DateFormat('hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(
+          txn.createdOn.millisecondsSinceEpoch));
 
   @override
   Widget build(BuildContext context) {
@@ -43,6 +54,11 @@ class GoldProTransactionsDetailsView extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: const Color(0xff151D22),
         elevation: 0,
+        actions: [
+          Row(
+            children: [const FaqPill(), SizedBox(width: SizeConfig.padding10)],
+          )
+        ],
       ),
       body: Padding(
         padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding16),
@@ -82,12 +98,40 @@ class GoldProTransactionsDetailsView extends StatelessWidget {
             SizedBox(
               height: SizeConfig.padding8,
             ),
-            Center(
-              child: Text(
-                "${_txnHistoryService.getFormattedDate(txn.createdOn)} at ${_txnHistoryService.getFormattedTime(txn.createdOn)}",
-                style: TextStyles.sourceSansSB.body2
-                    .colour(const Color(0xffA0A0A0)),
-              ),
+            // Center(
+            //   child: Text(
+            //     "$getFormattedDate at $formattedTime",
+            //     style: TextStyles.sourceSansSB.body2
+            //         .colour(const Color(0xffA0A0A0)),
+            //   ),
+            // ),
+            Row(
+              children: [
+                SubInfoTile(
+                  title: "Enroll Date",
+                  subtitle: getFormattedDate,
+                ),
+                const SubInfoTile(
+                  title: "Current Tenure",
+                  subtitle: "6 Months",
+                ),
+              ],
+            ),
+            Row(
+              children: [
+                SubInfoTile(
+                  title: "Leased to",
+                  subtitle: locator<AugmontTransactionService>()
+                          .goldProScheme
+                          ?.jewellerUserAccountName ??
+                      "-",
+                ),
+                SubInfoTile(
+                  title: "Interest",
+                  subtitle:
+                      "${locator<AugmontTransactionService>().goldProScheme?.interestRate ?? '-'}%",
+                ),
+              ],
             ),
             Divider(
                 color: Colors.white10,
@@ -120,6 +164,31 @@ class GoldProTransactionsDetailsView extends StatelessWidget {
               summary: summary,
             )
           ],
+        ),
+      ),
+    );
+  }
+}
+
+class SubInfoTile extends StatelessWidget {
+  const SubInfoTile({
+    super.key,
+    required this.title,
+    required this.subtitle,
+  });
+  final String title, subtitle;
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: ListTile(
+        title: Text(
+          title,
+          style: TextStyles.body2.colour(UiConstants.kFAQsAnswerColor),
+        ),
+        subtitle: Text(
+          subtitle,
+          style: TextStyles.body2.colour(Colors.white54),
         ),
       ),
     );

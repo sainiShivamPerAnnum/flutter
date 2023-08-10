@@ -1,3 +1,5 @@
+import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/model/gold_pro_models/gold_pro_scheme_model.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -52,7 +54,7 @@ class GoldProBuyInputView extends StatelessWidget {
             Expanded(
               child: Column(
                 children: [
-                  SizedBox(height: SizeConfig.padding20),
+                  SizedBox(height: SizeConfig.padding16),
                   Text(
                     "Select value to save in ${Constants.ASSET_GOLD_STAKE}",
                     style: TextStyles.rajdhani.body1.colour(Colors.white),
@@ -179,7 +181,7 @@ class GoldProBuyInputView extends StatelessWidget {
                           child: Slider(
                             value: model.sliderValue,
                             onChanged: model.updateSliderValue,
-                            // divisions: 3,
+                            // divisions: 4,
                             inactiveColor: Colors.grey,
                           ),
                         ),
@@ -208,7 +210,11 @@ class GoldProBuyInputView extends StatelessWidget {
                         lead: "Current Gold Balance",
                         trail: model.currentGoldBalance,
                       ),
-                      SizedBox(height: SizeConfig.padding18),
+                      // SizedBox(height: SizeConfig.padding10),
+
+                      const GoldProLeaseCompanyDetailsStrip(),
+
+                      SizedBox(height: SizeConfig.padding10),
                       Consumer<BankAndPanService>(
                         builder: (context, panService, child) =>
                             ReactivePositiveAppButton(
@@ -235,6 +241,108 @@ class GoldProBuyInputView extends StatelessWidget {
           },
         )
       ],
+    );
+  }
+}
+
+class GoldProLeaseCompanyDetailsStrip extends StatelessWidget {
+  const GoldProLeaseCompanyDetailsStrip({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Selector<AugmontTransactionService, GoldProSchemeModel?>(
+      selector: (p0, p1) => p1.goldProScheme,
+      builder: (ctx, scheme, child) => GestureDetector(
+        onTap: () {
+          BaseUtil.openModalBottomSheet(
+              isBarrierDismissible: true,
+              addToScreenStack: true,
+              backgroundColor: UiConstants.kBackgroundColor2,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(SizeConfig.roundness16),
+                topRight: Radius.circular(SizeConfig.roundness16),
+              ),
+              hapticVibrate: true,
+              content: WillPopScope(
+                onWillPop: () async {
+                  AppState.removeOverlay();
+                  return Future.value(true);
+                },
+                child: Container(
+                  margin: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+                  child: scheme != null
+                      ? Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: [
+                            ListTile(
+                              leading: Container(
+                                decoration: BoxDecoration(
+                                  border:
+                                      Border.all(width: 1, color: Colors.white),
+                                  borderRadius: BorderRadius.circular(
+                                      SizeConfig.roundness12),
+                                  image: DecorationImage(
+                                    image: NetworkImage(scheme.logo),
+                                    fit: BoxFit.cover,
+                                  ),
+                                ),
+                                height: SizeConfig.padding54,
+                                width: SizeConfig.padding54,
+                              ),
+                              title: Text(
+                                scheme.jewellerUserAccountName,
+                                style: TextStyles.sourceSansB.body1
+                                    .colour(Colors.white),
+                              ),
+                              subtitle: Text(
+                                "Estd. 2014",
+                                style: TextStyles.body3
+                                    .colour(UiConstants.kFAQsAnswerColor),
+                              ),
+                            ),
+                            ListTile(
+                              title: Text(
+                                "Business Type:",
+                                style: TextStyles.body3.colour(Colors.white60),
+                              ),
+                              trailing: Text(
+                                "Wholesaler, Manufacturer",
+                                style: TextStyles.body3
+                                    .colour(UiConstants.kFAQsAnswerColor),
+                              ),
+                            )
+                          ],
+                        )
+                      : const Center(
+                          child: CircularProgressIndicator.adaptive()),
+                ),
+              ));
+        },
+        child: Container(
+          margin: EdgeInsets.symmetric(vertical: SizeConfig.padding8),
+          child: Row(
+            children: [
+              Text(
+                "Leasing to ",
+                style: TextStyles.rajdhaniM.body2
+                    .colour(UiConstants.kFAQsAnswerColor),
+              ),
+              const Icon(
+                Icons.info_outline,
+                color: UiConstants.kFAQsAnswerColor,
+              ),
+              Expanded(
+                  child: Text(
+                (scheme?.jewellerUserAccountName ?? "-").toUpperCase(),
+                textAlign: TextAlign.end,
+                style: TextStyles.body2.colour(Colors.white60),
+              ))
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

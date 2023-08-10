@@ -68,9 +68,10 @@ class GoldProSellView extends StatelessWidget {
                         child: Text(
                           model.leasedGoldList.isEmpty
                               ? ""
-                              : "Select Lease to Un-Lease to Digital Gold",
+                              : "Tap 'un-lease' to move savings to Digital Gold",
                           style:
                               TextStyles.rajdhaniM.body0.colour(Colors.white),
+                          textAlign: TextAlign.center,
                         ),
                       ),
                     Expanded(

@@ -263,8 +263,9 @@ class GoldBuyViewModel extends BaseViewModel {
       if (gms != null) {
         double netTax =
             (goldRates?.cgstPercent ?? 0) + (goldRates?.sgstPercent ?? 0);
-        goldBuyAmount =
-            ((goldBuyPrice! * gms) + (netTax * goldBuyPrice! * gms) / 100) + 10;
+        goldBuyAmount = convertToNearestCeilMultipleOf100(
+            ((goldBuyPrice! * gms) + (netTax * goldBuyPrice! * gms) / 100) + 4);
+
         goldAmountController!.text = goldBuyAmount!.toInt().toString();
         fieldWidth =
             SizeConfig.padding32 * goldAmountController!.text.length.toDouble();
@@ -299,6 +300,14 @@ class GoldBuyViewModel extends BaseViewModel {
     if (animationController?.status == AnimationStatus.completed) {
       animationController?.reset();
     }
+  }
+
+  double convertToNearestCeilMultipleOf100(double number) {
+    // Round up the number to the nearest multiple of 100
+    int roundedNumber = ((number / 100).ceil() * 100).toInt();
+
+    // Convert back to double and return the result
+    return roundedNumber.toDouble();
   }
 
   resetBuyOptions() {

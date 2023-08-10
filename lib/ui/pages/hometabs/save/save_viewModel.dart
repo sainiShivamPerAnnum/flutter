@@ -296,7 +296,7 @@ class SaveViewModel extends BaseViewModel {
       const SaveWelcomeCard(),
     ]);
 
-    DynamicUiUtils.saveViewOrder[1].forEach((key) {
+    DynamicUiUtils.saveViewOrder[2].forEach((key) {
       switch (key) {
         case "AST":
           saveViewItems.add(SaveAssetsGroupCard(saveViewModel: smodel));

@@ -44,9 +44,7 @@ class _GoldBuySuccessViewState extends State<GoldBuySuccessView>
     _animationController = AnimationController(vsync: this);
     AppState.blockNavigation();
     _playLottieAnimation();
-    Future.delayed(Duration(seconds: 3), () {
-      showGoldProNudgeIfEligible();
-    });
+    Future.delayed(const Duration(seconds: 3), showGoldProNudgeIfEligible);
   }
 
   @override
@@ -361,7 +359,7 @@ class _GoldBuySuccessViewState extends State<GoldBuySuccessView>
   }
 
   void showGoldProNudgeIfEligible() {
-    if ((locator<UserService>().userFundWallet?.augGoldQuantity ?? 0) > 0.5) {
+    if ((locator<UserService>().userFundWallet?.augGoldQuantity ?? 0) > 2) {
       BaseUtil.openModalBottomSheet(
         isBarrierDismissible: true,
         addToScreenStack: true,
