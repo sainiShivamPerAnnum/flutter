@@ -46,7 +46,14 @@ class AugmontTransactionService extends BaseTransactionService {
   DepositFcmResponseModel? depositFcmResponseModel;
   bool _isGoldBuyInProgress = false;
   bool _isGoldSellInProgress = false;
-  GoldProSchemeModel? goldProScheme;
+  GoldProSchemeModel? _goldProScheme;
+
+  GoldProSchemeModel? get goldProScheme => _goldProScheme;
+
+  set goldProScheme(GoldProSchemeModel? value) {
+    _goldProScheme = value;
+    notifyListeners();
+  }
 
   TransactionState get currentTxnState => currentTransactionState;
 

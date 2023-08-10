@@ -51,7 +51,6 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage>
   @override
   void initState() {
     _animationController = AnimationController(vsync: this);
-    AppState.blockNavigation();
     _playLottieAnimation();
     if (widget.txn.subType == UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD &&
         widget.txn.type == UserTransaction.TRAN_TYPE_DEPOSIT &&
@@ -100,16 +99,18 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage>
     super.dispose();
   }
 
-  Future<void> _playLottieAnimation() async {
-    await Future.delayed(const Duration(seconds: 1), () {
-      if (AppConfig.getValue(AppConfigKey.specialEffectsOnTxnDetailsView)) {
+  void _playLottieAnimation() {
+    if (AppConfig.getValue(AppConfigKey.specialEffectsOnTxnDetailsView) ??
+        false) {
+      AppState.blockNavigation();
+      Future.delayed(const Duration(seconds: 1), () {
         setState(() {
           if (mounted)
             // ignore: curly_braces_in_flow_control_structures
             _showLottie = true;
         });
-      }
-    });
+      });
+    }
   }
 
   @override
@@ -123,7 +124,6 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage>
         elevation: 0,
       ),
       body: Stack(
-        alignment: Alignment.bottomCenter,
         children: [
           SingleChildScrollView(
             child: Padding(
@@ -586,66 +586,74 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage>
             ),
           ),
           if (_showInvoiceButton && widget.txn.augmnt?["aLockPrice"] != null)
-            Padding(
-              padding: EdgeInsets.only(bottom: SizeConfig.padding20),
-              child: AppPositiveCustomChildBtn(
-                onPressed: () async {
-                  if (widget.txn.augmnt![UserTransaction.subFldAugTranId] !=
-                      null) {
-                    setState(() {
-                      _isInvoiceLoading = true;
-                    });
-                    String? trnId =
-                        widget.txn.augmnt![UserTransaction.subFldAugTranId];
-                    unawaited(augmontProvider!
-                        .generatePurchaseInvoicePdf(trnId, null)
-                        .then((generatedPdfFilePath) {
-                      _isInvoiceLoading = false;
-                      setState(() {});
-                      if (generatedPdfFilePath != null) {
-                        OpenFilex.open(generatedPdfFilePath);
-                      } else {
-                        BaseUtil.showNegativeAlert(locale.txnInvoiceFailed,
-                            locale.txnTryAfterSomeTime);
-                      }
-                    }));
-                  } else {
-                    BaseUtil.showNegativeAlert(
-                        locale.txnInvoiceFailed, locale.txnTryAfterSomeTime);
-                  }
-                },
-                width: SizeConfig.screenWidth! * 0.8,
-                child: _isInvoiceLoading
-                    ? SpinKitThreeBounce(
-                        size: SizeConfig.padding20,
-                        color: Colors.white,
-                        duration: const Duration(milliseconds: 500),
-                      )
-                    : Text(locale.btnDownloadInvoice.toUpperCase(),
-                        style: TextStyles.rajdhaniSB.body1),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Padding(
+                padding: EdgeInsets.only(bottom: SizeConfig.padding20),
+                child: AppPositiveCustomChildBtn(
+                  onPressed: () async {
+                    if (widget.txn.augmnt![UserTransaction.subFldAugTranId] !=
+                        null) {
+                      setState(() {
+                        _isInvoiceLoading = true;
+                      });
+                      String? trnId =
+                          widget.txn.augmnt![UserTransaction.subFldAugTranId];
+                      unawaited(augmontProvider!
+                          .generatePurchaseInvoicePdf(trnId, null)
+                          .then((generatedPdfFilePath) {
+                        _isInvoiceLoading = false;
+                        setState(() {});
+                        if (generatedPdfFilePath != null) {
+                          OpenFilex.open(generatedPdfFilePath);
+                        } else {
+                          BaseUtil.showNegativeAlert(locale.txnInvoiceFailed,
+                              locale.txnTryAfterSomeTime);
+                        }
+                      }));
+                    } else {
+                      BaseUtil.showNegativeAlert(
+                          locale.txnInvoiceFailed, locale.txnTryAfterSomeTime);
+                    }
+                  },
+                  width: SizeConfig.screenWidth! * 0.8,
+                  child: _isInvoiceLoading
+                      ? SpinKitThreeBounce(
+                          size: SizeConfig.padding20,
+                          color: Colors.white,
+                          duration: const Duration(milliseconds: 500),
+                        )
+                      : Text(locale.btnDownloadInvoice.toUpperCase(),
+                          style: TextStyles.rajdhaniSB.body1),
+                ),
               ),
             ),
           if (_showLottie)
-            IgnorePointer(
-              ignoring: true,
-              child: Container(
-                color: Colors.black.withOpacity(0.8),
-                child: Center(
-                  child: Lottie.asset(
-                    'assets/lotties/whataFello_lottie.json',
-                    controller: _animationController,
-                    onLoaded: (composition) {
-                      _animationController
-                        ..duration = composition.duration
-                        ..forward().whenComplete(() {
-                          if (mounted) {
-                            setState(() {
-                              _showLottie = false;
-                              AppState.unblockNavigation();
-                            });
-                          }
-                        });
-                    },
+            Align(
+              alignment: Alignment.center,
+              child: IgnorePointer(
+                ignoring: true,
+                child: Container(
+                  height: SizeConfig.screenHeight,
+                  color: Colors.transparent,
+                  child: Center(
+                    child: Lottie.asset(
+                      Assets.indianFlagKiteLottie,
+                      controller: _animationController,
+                      height: SizeConfig.screenHeight,
+                      onLoaded: (composition) {
+                        _animationController
+                          ..duration = composition.duration
+                          ..forward().whenComplete(() {
+                            if (mounted) {
+                              setState(() {
+                                _showLottie = false;
+                                AppState.unblockNavigation();
+                              });
+                            }
+                          });
+                      },
+                    ),
                   ),
                 ),
               ),

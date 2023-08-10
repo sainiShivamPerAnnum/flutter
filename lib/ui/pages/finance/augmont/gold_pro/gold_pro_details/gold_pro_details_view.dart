@@ -14,6 +14,7 @@ import 'package:felloapp/ui/pages/hometabs/save/gold_components/gold_rate_graph.
 import 'package:felloapp/ui/pages/login/login_components/login_support.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/ui/pages/static/save_assets_footer.dart';
+import 'package:felloapp/ui/pages/static/youtube_player_view.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
@@ -512,6 +513,11 @@ class HowGoldProWorksSection extends StatelessWidget {
   const HowGoldProWorksSection({
     super.key,
   });
+  static const List<String> videos = [
+    "https://youtube.com/shorts/xt2DAiv1VP8",
+    "https://youtube.com/shorts/d1UqNZr1YGw",
+    "https://youtube.com/shorts/YKcgDRJTrS4",
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -530,9 +536,16 @@ class HowGoldProWorksSection extends StatelessWidget {
               scrollDirection: Axis.horizontal,
               padding: EdgeInsets.symmetric(
                   horizontal: SizeConfig.pageHorizontalMargins),
-              itemBuilder: (context, index) => GestureDetector(
+              itemBuilder: (context, i) => GestureDetector(
                 onTap: () {
                   final UserService _userService = locator<UserService>();
+                  BaseUtil.openDialog(
+                      isBarrierDismissible: true,
+                      addToScreenStack: true,
+                      hapticVibrate: true,
+                      barrierColor: Colors.black54,
+                      content:
+                          Dialog(child: YoutubePlayerView(url: videos[i])));
                   locator<AnalyticsService>().track(
                     eventName: AnalyticsEvents.videoTappedOnGoldPro,
                     properties: {
@@ -544,13 +557,16 @@ class HowGoldProWorksSection extends StatelessWidget {
                   );
                 },
                 child: Container(
-                  width: SizeConfig.screenWidth! * 0.4,
+                  width: SizeConfig.screenWidth! * 0.36,
                   margin: EdgeInsets.only(right: SizeConfig.padding16),
                   decoration: BoxDecoration(
-                    color: UiConstants.KGoldProPrimaryDark,
-                    borderRadius: BorderRadius.circular(
-                      SizeConfig.roundness24,
+                    // color: UiConstants.KGoldProPrimaryDark,
+                    image: DecorationImage(
+                      image: NetworkImage(
+                          'https://img.youtube.com/vi/${videos[i].substring(videos[i].length - 11)}/0.jpg'),
+                      fit: BoxFit.cover,
                     ),
+                    borderRadius: BorderRadius.circular(SizeConfig.roundness16),
                   ),
                   alignment: Alignment.center,
                   child: Image.network(
@@ -559,7 +575,7 @@ class HowGoldProWorksSection extends StatelessWidget {
                   ),
                 ),
               ),
-              itemCount: 5,
+              itemCount: videos.length,
             ),
           )
         ],
