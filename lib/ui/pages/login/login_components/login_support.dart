@@ -24,13 +24,20 @@ class FaqPill extends StatelessWidget {
     return InkWell(
       onTap: () {
         Haptic.vibrate();
-        AppState.delegate!.appState.currentAction = PageAction(
-          state: PageState.addWidget,
-          page: FaqPageConfig,
-          widget: FAQPage(
-            type: type ?? FaqsType.journey,
-          ),
-        );
+        if (type == null) {
+          AppState.delegate!.appState.currentAction = PageAction(
+            state: PageState.addPage,
+            page: FreshDeskHelpPageConfig,
+          );
+        } else {
+          AppState.delegate!.appState.currentAction = PageAction(
+            state: PageState.addWidget,
+            page: FaqPageConfig,
+            widget: FAQPage(
+              type: type ?? FaqsType.journey,
+            ),
+          );
+        }
         if (addEvent != null) addEvent!();
       },
       child: Container(

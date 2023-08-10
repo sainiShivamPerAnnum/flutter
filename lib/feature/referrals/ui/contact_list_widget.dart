@@ -107,13 +107,14 @@ class _ContactListWidgetState extends State<ContactListWidget>
     });
   }
 
-  String get referralAmount =>
-      AppConfig.getValue(AppConfigKey.revamped_referrals_config)?[
-          'rewardValues']?['invest1k'] ??
-      50 +
+  String get referralAmount => ((AppConfig.getValue(
+                      AppConfigKey.revamped_referrals_config)?['rewardValues']
+                  ?['invest1k'] ??
+              50) +
           (AppConfig.getValue(AppConfigKey.revamped_referrals_config)?[
                   'rewardValues']?['invest10kflo12'] ??
-              450);
+              450))
+      .toString();
 
   @override
   Widget build(BuildContext context) {

@@ -359,7 +359,7 @@ class _GoldBuySuccessViewState extends State<GoldBuySuccessView>
   }
 
   void showGoldProNudgeIfEligible() {
-    if ((locator<UserService>().userFundWallet?.augGoldQuantity ?? 0) > 0.5) {
+    if ((locator<UserService>().userFundWallet?.augGoldQuantity ?? 0) > 2) {
       BaseUtil.openModalBottomSheet(
         isBarrierDismissible: true,
         addToScreenStack: true,

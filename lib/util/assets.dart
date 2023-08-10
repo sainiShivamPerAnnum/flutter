@@ -348,6 +348,8 @@ class Assets {
 
   static const String levelUpLottie = "${assetBaseUrl}lotties/levelup.json";
 
+  static const String indianFlagKiteLottie = "assets/lotties/mob.json";
+
   // static const String wohooLottie = "assets/lotties/woohoo.json";
   // static const String gtScratch = "assets/lotties/scratch.json";
 

@@ -136,13 +136,12 @@ class GoldInfoWidget extends StatelessWidget {
 
                 final UserService _userService = locator<UserService>();
                 if ((_userService.userFundWallet?.augGoldQuantity ?? 0) > 0 &&
-                    (_userService.userFundWallet?.augGoldQuantity ?? 0) < 0.5 &&
+                    (_userService.userFundWallet?.augGoldQuantity ?? 0) < 2 &&
                     (_userService.userFundWallet?.wAugFdQty ?? 0.0) == 0) {
                   BaseUtil().openRechargeModalSheet(
                     investmentType: InvestmentType.AUGGOLD99,
                     gms: BaseUtil.digitPrecision(
-                        0.5 -
-                            (_userService.userFundWallet?.augGoldQuantity ?? 0),
+                        2 - (_userService.userFundWallet?.augGoldQuantity ?? 0),
                         4,
                         false),
                   );
@@ -153,12 +152,11 @@ class GoldInfoWidget extends StatelessWidget {
                   eventName: AnalyticsEvents.goldProEntryBelowBalanceTapped,
                   properties: {
                     'progress_bar_completed':
-                        (_userService.userFundWallet?.augGoldQuantity ?? 0) >
-                                0.5
+                        (_userService.userFundWallet?.augGoldQuantity ?? 0) > 2
                             ? "YES"
                             : (_userService.userFundWallet?.augGoldQuantity ??
                                     0) /
-                                0.5,
+                                2,
                     "existing lease amount":
                         _userService.userPortfolio.augmont.fd.balance,
                     "existing lease grams":

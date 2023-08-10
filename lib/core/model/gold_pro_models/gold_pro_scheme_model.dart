@@ -2,26 +2,35 @@
 
 class GoldProSchemeModel {
   final String id;
+  final String jewellerUserAccountName;
+  final String description;
   final String interestRate;
   final String minQtyLease;
   final String isSoldOut;
   final String isFreezeLease;
+  final String logo;
 
   GoldProSchemeModel({
     required this.id,
     required this.interestRate,
     required this.minQtyLease,
-    required this.isSoldOut,
+    required this.description,
     required this.isFreezeLease,
+    required this.jewellerUserAccountName,
+    required this.isSoldOut,
+    required this.logo,
   });
 
   factory GoldProSchemeModel.fromMap(Map<String, dynamic> map) {
     return GoldProSchemeModel(
-      id: map['id'] as String,
-      interestRate: map['interestRate'] as String,
-      minQtyLease: map['minQtyLease'] as String,
-      isSoldOut: map['isSoldOut'] as String,
-      isFreezeLease: map['isFreezeLease'] as String,
+      id: map['id'] ?? "",
+      interestRate: map['interestRate'] ?? "",
+      minQtyLease: map['minQtyLease'] ?? "",
+      isSoldOut: map['isSoldOut'] ?? "",
+      isFreezeLease: map['isFreezeLease'] ?? "",
+      description: map['description'] ?? "",
+      jewellerUserAccountName: map['jewellerUserAccountName'] ?? "",
+      logo: map["profile"]["logo"] ?? "",
     );
   }
 
