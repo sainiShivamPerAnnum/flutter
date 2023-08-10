@@ -211,233 +211,240 @@ class PermissionModalSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext _) {
-    return Container(
-      width: SizeConfig.screenWidth,
-      padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding32),
-      decoration: BoxDecoration(
-        color: const Color(0xff39393C),
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(SizeConfig.padding16),
-          topRight: Radius.circular(SizeConfig.padding16),
+    return WillPopScope(
+      onWillPop: () async {
+        AppState.removeOverlay();
+        return true;
+      },
+      child: Container(
+        width: SizeConfig.screenWidth,
+        padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding32),
+        decoration: BoxDecoration(
+          color: const Color(0xff39393C),
+          borderRadius: BorderRadius.only(
+            topLeft: Radius.circular(SizeConfig.padding16),
+            topRight: Radius.circular(SizeConfig.padding16),
+          ),
         ),
-      ),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        mainAxisAlignment: MainAxisAlignment.center,
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          SizedBox(
-            height: SizeConfig.padding18,
-          ),
-          Container(
-            width: SizeConfig.screenWidth! * 0.247,
-            height: SizeConfig.padding4,
-            decoration: BoxDecoration(
-              color: const Color(0xffD9D9D9),
-              borderRadius: BorderRadius.circular(SizeConfig.padding4),
+        child: Column(
+          mainAxisSize: MainAxisSize.min,
+          mainAxisAlignment: MainAxisAlignment.center,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            SizedBox(
+              height: SizeConfig.padding18,
             ),
-          ),
-          SizedBox(
-            height: SizeConfig.padding24,
-          ),
-          Text(
-            'Allow access to your contacts for a seamless referral',
-            style: TextStyles.rajdhaniSB.title5.colour(Colors.white),
-            textAlign: TextAlign.center,
-          ),
-          SizedBox(
-            height: SizeConfig.padding14,
-          ),
-          Container(
-            width: SizeConfig.screenWidth! * 0.55,
-            padding: EdgeInsets.symmetric(
-                horizontal: SizeConfig.padding4, vertical: SizeConfig.padding4),
-            decoration: BoxDecoration(
-              color: Colors.black,
-              borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+            Container(
+              width: SizeConfig.screenWidth! * 0.247,
+              height: SizeConfig.padding4,
+              decoration: BoxDecoration(
+                color: const Color(0xffD9D9D9),
+                borderRadius: BorderRadius.circular(SizeConfig.padding4),
+              ),
             ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.center,
+            SizedBox(
+              height: SizeConfig.padding24,
+            ),
+            Text(
+              'Allow access to your contacts for a seamless referral',
+              style: TextStyles.rajdhaniSB.title5.colour(Colors.white),
+              textAlign: TextAlign.center,
+            ),
+            SizedBox(
+              height: SizeConfig.padding14,
+            ),
+            Container(
+              width: SizeConfig.screenWidth! * 0.55,
+              padding: EdgeInsets.symmetric(
+                  horizontal: SizeConfig.padding4,
+                  vertical: SizeConfig.padding4),
+              decoration: BoxDecoration(
+                color: Colors.black,
+                borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+              ),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Icon(
+                    Icons.security,
+                    color: const Color(0xff959596),
+                    size: SizeConfig.padding14,
+                  ),
+                  SizedBox(
+                    width: SizeConfig.padding4,
+                  ),
+                  Text(
+                    'Your data is safe with Fello',
+                    style: TextStyles.sourceSans.body3
+                        .colour(Colors.white.withOpacity(0.5)),
+                  ),
+                ],
+              ),
+            ),
+            SizedBox(
+              height: SizeConfig.padding32,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Icon(
-                  Icons.security,
-                  color: const Color(0xff959596),
-                  size: SizeConfig.padding14,
+                Column(
+                  mainAxisAlignment: MainAxisAlignment.start,
+                  children: [
+                    SizedBox(
+                      width: SizeConfig.padding36,
+                      height: SizeConfig.padding38,
+                      child: SvgPicture.asset(
+                        'assets/svg/avatar.svg',
+                        // width: SizeConfig.padding32,
+                        height: SizeConfig.padding48,
+                      ),
+                    ),
+                    SizedBox(
+                      height: SizeConfig.padding8,
+                    ),
+                    SizedBox(
+                      width: SizeConfig.padding88,
+                      child: Text(
+                        '${usersFromReferrals.toString()} Users',
+                        textAlign: TextAlign.center,
+                        style: TextStyles.sourceSans.body3.colour(Colors.white),
+                      ),
+                    )
+                  ],
                 ),
-                SizedBox(
-                  width: SizeConfig.padding4,
+                Column(
+                  children: [
+                    SvgPicture.asset(
+                      'assets/svg/winScreen-referalAsset.svg',
+                      width: SizeConfig.padding32,
+                      height: SizeConfig.padding48,
+                    ),
+                    SizedBox(
+                      width: SizeConfig.padding88,
+                      child: Text(
+                        "$referrersCount Referrals",
+                        textAlign: TextAlign.center,
+                        style: TextStyles.sourceSans.body3.colour(Colors.white),
+                      ),
+                    )
+                  ],
                 ),
-                Text(
-                  'Your data is safe with Fello',
-                  style: TextStyles.sourceSans.body3
-                      .colour(Colors.white.withOpacity(0.5)),
+                Column(
+                  children: [
+                    SvgPicture.asset(
+                      'assets/svg/play_gift.svg',
+                      width: SizeConfig.padding32,
+                      height: SizeConfig.padding44,
+                    ),
+                    SizedBox(
+                      // width: SizeConfig.padding88,
+                      child: Text(
+                        "₹$rewardsFromReferrals rewards",
+                        textAlign: TextAlign.center,
+                        style: TextStyles.sourceSans.body3.colour(Colors.white),
+                      ),
+                    )
+                  ],
+                )
+              ],
+            ),
+            SizedBox(
+              height: SizeConfig.padding38,
+            ),
+            Stack(
+              children: [
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SvgPicture.asset(
+                      'assets/svg/people.svg',
+                      height: SizeConfig.padding16,
+                    ),
+                    SizedBox(
+                      width: SizeConfig.padding6,
+                    ),
+                    Text(
+                      'Fello is even more fun with friends!',
+                      style: TextStyles.sourceSans.body3.colour(
+                        Colors.white.withOpacity(0.64),
+                      ),
+                    )
+                  ],
+                ),
+                Positioned(
+                  left: 35,
+                  top: 5,
+                  child: CustomPaint(
+                    size: Size(SizeConfig.padding8,
+                        (SizeConfig.padding8 * 1.09).toDouble()),
+                    painter: StarCustomPainter(),
+                  ),
+                ),
+                Positioned(
+                  left: 41,
+                  top: 0,
+                  child: CustomPaint(
+                    size: Size(SizeConfig.padding6,
+                        (SizeConfig.padding6 * 1.09).toDouble()),
+                    painter: StarCustomPainter(),
+                  ),
+                ),
+                Positioned(
+                  left: 60,
+                  top: 3,
+                  child: CustomPaint(
+                    size: Size(SizeConfig.padding8,
+                        (SizeConfig.padding8 * 1.09).toDouble()),
+                    painter: StarCustomPainter(),
+                  ),
                 ),
               ],
             ),
-          ),
-          SizedBox(
-            height: SizeConfig.padding32,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Column(
-                mainAxisAlignment: MainAxisAlignment.start,
-                children: [
-                  SizedBox(
-                    width: SizeConfig.padding36,
-                    height: SizeConfig.padding38,
-                    child: SvgPicture.asset(
-                      'assets/svg/avatar.svg',
-                      // width: SizeConfig.padding32,
-                      height: SizeConfig.padding48,
-                    ),
-                  ),
-                  SizedBox(
-                    height: SizeConfig.padding8,
-                  ),
-                  SizedBox(
-                    width: SizeConfig.padding88,
-                    child: Text(
-                      '${usersFromReferrals.toString()} Users',
-                      textAlign: TextAlign.center,
-                      style: TextStyles.sourceSans.body3.colour(Colors.white),
-                    ),
-                  )
-                ],
-              ),
-              Column(
-                children: [
-                  SvgPicture.asset(
-                    'assets/svg/winScreen-referalAsset.svg',
-                    width: SizeConfig.padding32,
-                    height: SizeConfig.padding48,
-                  ),
-                  SizedBox(
-                    width: SizeConfig.padding88,
-                    child: Text(
-                      "$referrersCount Referrals",
-                      textAlign: TextAlign.center,
-                      style: TextStyles.sourceSans.body3.colour(Colors.white),
-                    ),
-                  )
-                ],
-              ),
-              Column(
-                children: [
-                  SvgPicture.asset(
-                    'assets/svg/play_gift.svg',
-                    width: SizeConfig.padding32,
-                    height: SizeConfig.padding44,
-                  ),
-                  SizedBox(
-                    // width: SizeConfig.padding88,
-                    child: Text(
-                      "₹$rewardsFromReferrals rewards",
-                      textAlign: TextAlign.center,
-                      style: TextStyles.sourceSans.body3.colour(Colors.white),
-                    ),
-                  )
-                ],
-              )
-            ],
-          ),
-          SizedBox(
-            height: SizeConfig.padding38,
-          ),
-          Stack(
-            children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                mainAxisAlignment: MainAxisAlignment.center,
-                children: [
-                  SvgPicture.asset(
-                    'assets/svg/people.svg',
-                    height: SizeConfig.padding16,
-                  ),
-                  SizedBox(
-                    width: SizeConfig.padding6,
-                  ),
-                  Text(
-                    'Fello is even more fun with friends!',
-                    style: TextStyles.sourceSans.body3.colour(
-                      Colors.white.withOpacity(0.64),
-                    ),
-                  )
-                ],
-              ),
-              Positioned(
-                left: 35,
-                top: 5,
-                child: CustomPaint(
-                  size: Size(SizeConfig.padding8,
-                      (SizeConfig.padding8 * 1.09).toDouble()),
-                  painter: StarCustomPainter(),
-                ),
-              ),
-              Positioned(
-                left: 41,
-                top: 0,
-                child: CustomPaint(
-                  size: Size(SizeConfig.padding6,
-                      (SizeConfig.padding6 * 1.09).toDouble()),
-                  painter: StarCustomPainter(),
-                ),
-              ),
-              Positioned(
-                left: 60,
-                top: 3,
-                child: CustomPaint(
-                  size: Size(SizeConfig.padding8,
-                      (SizeConfig.padding8 * 1.09).toDouble()),
-                  painter: StarCustomPainter(),
-                ),
-              ),
-            ],
-          ),
-          SizedBox(
-            height: SizeConfig.padding12,
-          ),
-          AppPositiveBtn(
-            btnText: 'ALLOW ACCESS TO CONTACTS',
-            onPressed: () async {
-              await context.read<ReferralCubit>().requestPermission();
+            SizedBox(
+              height: SizeConfig.padding12,
+            ),
+            AppPositiveBtn(
+              btnText: 'ALLOW ACCESS TO CONTACTS',
+              onPressed: () async {
+                await context.read<ReferralCubit>().requestPermission();
 
-              locator<AnalyticsService>().track(
-                eventName: AnalyticsEvents.syncContactsTapped,
-                properties: {
-                  'Earned So far': widget.model.totalReferralWon,
-                  'Current referral count':
-                      AnalyticsProperties.getTotalReferralCount(),
-                  'Data point 1': '${usersFromReferrals.toString()} Users',
-                  'Data point 2': '$referrersCount Referrals',
-                  'Data point 3': '₹$rewardsFromReferrals rewards',
-                },
-              );
-            },
-          ),
-          SizedBox(
-            height: SizeConfig.padding4,
-          ),
-          TextButton(
-            onPressed: () {
-              AppState.backButtonDispatcher?.didPopRoute();
-              if (widget.model.isShareAlreadyClicked == false) {
-                locator<ReferralService>().shareLink();
-              }
-            },
-            child: Text(
-              'INVITE MANUALLY',
-              textAlign: TextAlign.center,
-              style: TextStyles.rajdhaniSB.body0.colour(
-                const Color(0xFF00F2C7),
+                locator<AnalyticsService>().track(
+                  eventName: AnalyticsEvents.syncContactsTapped,
+                  properties: {
+                    'Earned So far': widget.model.totalReferralWon,
+                    'Current referral count':
+                        AnalyticsProperties.getTotalReferralCount(),
+                    'Data point 1': '${usersFromReferrals.toString()} Users',
+                    'Data point 2': '$referrersCount Referrals',
+                    'Data point 3': '₹$rewardsFromReferrals rewards',
+                  },
+                );
+              },
+            ),
+            SizedBox(
+              height: SizeConfig.padding4,
+            ),
+            TextButton(
+              onPressed: () {
+                AppState.backButtonDispatcher?.didPopRoute();
+                if (widget.model.isShareAlreadyClicked == false) {
+                  locator<ReferralService>().shareLink();
+                }
+              },
+              child: Text(
+                'INVITE MANUALLY',
+                textAlign: TextAlign.center,
+                style: TextStyles.rajdhaniSB.body0.colour(
+                  const Color(0xFF00F2C7),
+                ),
               ),
             ),
-          ),
-          SizedBox(
-            height: SizeConfig.padding22,
-          )
-        ],
+            SizedBox(
+              height: SizeConfig.padding22,
+            )
+          ],
+        ),
       ),
     );
   }

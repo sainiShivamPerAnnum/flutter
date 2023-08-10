@@ -1,5 +1,7 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/enums/app_config_keys.dart';
+import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/util/extensions/rich_text_extension.dart';
@@ -43,7 +45,8 @@ class ReferralClaimWidget extends StatelessWidget {
                 height: SizeConfig.padding32,
               ),
               SizedBox(width: SizeConfig.padding16),
-              'Claim *₹50* referral bonus by saving'.beautify(
+              'Claim *₹${AppConfig.getValue(AppConfigKey.revamped_referrals_config)?['rewardValues']?['invest1k'] ?? 50}* referral bonus by saving'
+                  .beautify(
                 style: TextStyles.sourceSans.body2
                     .colour(Colors.white.withOpacity(0.8)),
                 boldStyle: TextStyles.sourceSansB.body2.colour(

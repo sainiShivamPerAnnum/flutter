@@ -43,6 +43,9 @@ class _ReferralHomeState extends State<ReferralHome> {
   String get subTitle => AppConfig.getValue<Map<String, dynamic>>(
       AppConfigKey.revamped_referrals_config)['hero']['subtitle'];
 
+  String get referralShareText =>
+      'Hey I am gifting you ₹${AppConfig.getValue(AppConfigKey.referralBonus)} and ${AppConfig.getValue(AppConfigKey.referralBonus)} gaming tokens. Lets start saving and playing together! Share this code: *${referralService.refCode}* with your friends.\n';
+
   @override
   void initState() {
     super.initState();
@@ -165,8 +168,7 @@ class _ReferralHomeState extends State<ReferralHome> {
                                 .colour(Colors.white),
                           ),
                           TextSpan(
-                            text:
-                                '₹${(AppConfig.getValue(AppConfigKey.revamped_referrals_config)?['rewardValues']?['invest1k'] ?? 50) + (AppConfig.getValue(AppConfigKey.revamped_referrals_config)?['rewardValues']?['invest10kflo12'] ?? 450)}',
+                            text: '₹${model.referralAmount}',
                             style: TextStyles.rajdhaniB.title1
                                 .colour(const Color(0xFFFFD979)),
                           ),
@@ -471,9 +473,9 @@ class _ReferralHomeState extends State<ReferralHome> {
               const Spacer(),
               GestureDetector(
                 onTap: () {
-                  String message = (referralService.shareMsg ??
-                          'Hey I am gifting you ₹${AppConfig.getValue(AppConfigKey.referralBonus)} and ${AppConfig.getValue(AppConfigKey.referralBonus)} gaming tokens. Lets start saving and playing together! Share this code: *${referralService.refCode}* with your friends.\n') +
-                      (referralService.referralShortLink ?? "");
+                  String message =
+                      (referralService.shareMsg ?? referralShareText) +
+                          (referralService.referralShortLink ?? "");
                   launch('whatsapp://send?text=$message');
 
                   locator<AnalyticsService>().track(
@@ -597,8 +599,10 @@ void navigateToWhatsApp(String phoneNumber, [String? message]) {
   var referralService = locator<ReferralService>();
   log('phoneNumber: $phoneNumber', name: 'ReferralDetailsScreen');
 
-  final text = Uri.encodeComponent((message ??
-          'Hey I am gifting you ₹${AppConfig.getValue(AppConfigKey.referralBonus)} and ${AppConfig.getValue(AppConfigKey.referralBonus)} gaming tokens. Lets start saving and playing together! Share this code: *${referralService.refCode}* with your friends.\n') +
+  String referralShareText =
+      'Hey I am gifting you ₹${AppConfig.getValue(AppConfigKey.referralBonus)} and ${AppConfig.getValue(AppConfigKey.referralBonus)} gaming tokens. Lets start saving and playing together! Share this code: *${referralService.refCode}* with your friends.\n';
+
+  final text = Uri.encodeComponent((message ?? referralShareText) +
       (referralService.referralShortLink ?? ""));
   final url = 'https://wa.me/+91$phoneNumber?text=$text';
   log('WhatsApp URL: $url', name: 'ReferralDetailsScreen');

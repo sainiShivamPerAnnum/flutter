@@ -80,9 +80,9 @@ class ReferralDetailsViewModel extends BaseViewModel {
   }
 
   String appShareMessage =
-  AppConfig.getValue<String>(AppConfigKey.appShareMessage);
+      AppConfig.getValue<String>(AppConfigKey.appShareMessage);
   String unlockReferralBonus =
-  AppConfig.getValue(AppConfigKey.unlock_referral_amt).toString();
+      AppConfig.getValue(AppConfigKey.unlock_referral_amt).toString();
 
   String? _refUrl = "";
   String? _refCode = "";
@@ -90,6 +90,7 @@ class ReferralDetailsViewModel extends BaseViewModel {
   List<Contact>? contactsList = [];
   List<String> phoneNumbers = [];
   List<String> registeredUser = [];
+  String? referralAmount;
 
   late String _shareMsg;
   bool shareWhatsappInProgress = false;
@@ -121,6 +122,14 @@ class ReferralDetailsViewModel extends BaseViewModel {
     fetchReferralCode();
     fetchReferalsList(context);
     checkPermission();
+
+    referralAmount = AppConfig.getValue(
+                AppConfigKey.revamped_referrals_config)?['rewardValues']
+            ?['invest1k'] ??
+        50 +
+            (AppConfig.getValue(AppConfigKey.revamped_referrals_config)?[
+                    'rewardValues']?['invest10kflo12'] ??
+                450);
   }
 
   Future<void> checkPermission() async {
@@ -269,7 +278,7 @@ class ReferralDetailsViewModel extends BaseViewModel {
     try {
       await Future.delayed(const Duration(milliseconds: 500));
       final List<dynamic>? contacts =
-      await methodChannel.invokeMethod<List<dynamic>>('getContacts');
+          await methodChannel.invokeMethod<List<dynamic>>('getContacts');
       if (contacts != null) {
         // Parse the contacts data
         final Set<String> uniquePhoneNumbers = {};

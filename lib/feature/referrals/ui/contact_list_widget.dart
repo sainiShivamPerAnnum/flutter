@@ -1,6 +1,8 @@
 import 'dart:developer';
 
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/enums/app_config_keys.dart';
+import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/contact_model.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/referral_service.dart';
@@ -105,6 +107,14 @@ class _ContactListWidgetState extends State<ContactListWidget>
     });
   }
 
+  String get referralAmount =>
+      AppConfig.getValue(AppConfigKey.revamped_referrals_config)?[
+          'rewardValues']?['invest1k'] ??
+      50 +
+          (AppConfig.getValue(AppConfigKey.revamped_referrals_config)?[
+                  'rewardValues']?['invest10kflo12'] ??
+              450);
+
   @override
   Widget build(BuildContext context) {
     // log('ContactListWidget build ', name: 'ReferralDetailsScreen');
@@ -204,7 +214,7 @@ class _ContactListWidgetState extends State<ContactListWidget>
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
                             Text(
-                              contact.displayName,
+                              contact.displayName.checkOverFlow(maxLength: 40),
                               style: TextStyles.rajdhaniSB.body2
                                   .colour(Colors.white),
                             ),
@@ -213,7 +223,7 @@ class _ContactListWidgetState extends State<ContactListWidget>
                                 Text(
                                   (contact.isRegistered ?? false)
                                       ? "Already on Fello"
-                                      : 'Invite and earn ₹500',
+                                      : 'Invite and earn ₹$referralAmount',
                                   style: TextStyles.sourceSans.body4.colour(
                                       (contact.isRegistered ?? false)
                                           ? const Color(0xFF61E3C4)
