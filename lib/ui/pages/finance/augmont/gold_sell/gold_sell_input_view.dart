@@ -234,56 +234,7 @@ class GoldSellInputView extends StatelessWidget {
                             .colour(Colors.red[400]),
                       ),
                     ),
-                  Selector<UserService, UserFundWallet?>(
-                      selector: (p0, p1) => p1.userFundWallet,
-                      builder: (context, wallet, child) {
-                        return (wallet?.wAugFdQty ?? 0) <= 0
-                            ? const SizedBox()
-                            : Container(
-                                margin: EdgeInsets.all(
-                                    SizeConfig.pageHorizontalMargins),
-                                padding: EdgeInsets.symmetric(
-                                  horizontal: SizeConfig.pageHorizontalMargins,
-                                  vertical: SizeConfig.padding16,
-                                ),
-                                decoration: BoxDecoration(
-                                  border: Border.all(
-                                    color: UiConstants.kFAQDividerColor,
-                                    width: 0.5,
-                                  ),
-                                  borderRadius: BorderRadius.circular(
-                                      SizeConfig.roundness16),
-                                ),
-                                child: Column(children: [
-                                  Row(
-                                    children: [
-                                      Icon(
-                                        Icons.info_outline_rounded,
-                                        size: SizeConfig.iconSize2,
-                                        color: UiConstants.kFAQDividerColor,
-                                      ),
-                                      Text(
-                                        "  Leased Gold Amount-",
-                                        style: TextStyles.sourceSansM.body2
-                                            .colour(
-                                                UiConstants.kFAQDividerColor),
-                                      ),
-                                      const Spacer(),
-                                      Text(
-                                        "${BaseUtil.digitPrecision(wallet!.wAugFdQty!, 2)}gms",
-                                        style: TextStyles.sourceSans.body2
-                                            .colour(Colors.white),
-                                      )
-                                    ],
-                                  ),
-                                  SizedBox(height: SizeConfig.padding8),
-                                  Text(
-                                    "You can un-Lease your Digital gold in ${Constants.ASSET_GOLD_STAKE} section to be make it withdrawable",
-                                    style: TextStyles.body3.colour(Colors.grey),
-                                  )
-                                ]),
-                              );
-                      }),
+                  // const GoldLeaseWithdrawInfo(),
                   const Spacer(),
                   augTxnService.isGoldSellInProgress
                       ? Center(
@@ -394,4 +345,61 @@ class GoldSellInputView extends StatelessWidget {
 //   Expanded(child: Text(key,style:TextStyles.sourceSansB),)
 //  ],)
 //   }
+}
+
+class GoldLeaseWithdrawInfo extends StatelessWidget {
+  const GoldLeaseWithdrawInfo({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Selector<UserService, UserFundWallet?>(
+        selector: (p0, p1) => p1.userFundWallet,
+        builder: (context, wallet, child) {
+          return (wallet?.wAugFdQty ?? 0) <= 0
+              ? const SizedBox()
+              : Container(
+                  margin: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: SizeConfig.pageHorizontalMargins,
+                    vertical: SizeConfig.padding16,
+                  ),
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: UiConstants.kFAQDividerColor,
+                      width: 0.5,
+                    ),
+                    borderRadius: BorderRadius.circular(SizeConfig.roundness16),
+                  ),
+                  child: Column(children: [
+                    Row(
+                      children: [
+                        Icon(
+                          Icons.info_outline_rounded,
+                          size: SizeConfig.iconSize2,
+                          color: UiConstants.kFAQDividerColor,
+                        ),
+                        Text(
+                          "  Leased Gold Amount-",
+                          style: TextStyles.sourceSansM.body2
+                              .colour(UiConstants.kFAQDividerColor),
+                        ),
+                        const Spacer(),
+                        Text(
+                          "${BaseUtil.digitPrecision(wallet!.wAugFdQty!, 2)}gms",
+                          style:
+                              TextStyles.sourceSans.body2.colour(Colors.white),
+                        )
+                      ],
+                    ),
+                    SizedBox(height: SizeConfig.padding8),
+                    Text(
+                      "You can un-Lease your Digital gold in ${Constants.ASSET_GOLD_STAKE} section to be make it withdrawable",
+                      style: TextStyles.body3.colour(Colors.grey),
+                    )
+                  ]),
+                );
+        });
+  }
 }
