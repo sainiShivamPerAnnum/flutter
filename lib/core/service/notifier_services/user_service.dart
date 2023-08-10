@@ -602,7 +602,12 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     _logger.d("Looking for new notifications");
     await _userRepo!.checkIfUserHasNewNotifications().then((value) {
       if (value.code == 200) {
-        if (value.model!) hasNewNotifications = true;
+        if (value.model!['notification'] != null) {
+          referralAlertDialog = value.model!['notification'];
+        }
+        if (value.model!['flag'] != null && value.model!['flag'] == true) {
+          hasNewNotifications = true;
+        }
       }
     });
 

@@ -339,7 +339,8 @@ class UserRepository extends BaseRepo {
     }
   }
 
-  Future<ApiResponse<bool>> checkIfUserHasNewNotifications() async {
+  Future<ApiResponse<Map<String, dynamic>>>
+      checkIfUserHasNewNotifications() async {
     try {
       final token = await getBearerToken();
       final latestNotificationsResponse = await APIService.instance.getData(
@@ -383,8 +384,10 @@ class UserRepository extends BaseRepo {
               ScratchCardService.scratchCardId = notifications[0].misc!.gtId!;
             }
 
-            userService.referralAlertDialog = notifications[0];
-            return ApiResponse<bool>(model: true, code: 200);
+            // userService.referralAlertDialog = notifications[0];
+            return ApiResponse(
+                model: {"flag": true, "notification": notifications[0]},
+                code: 200);
           }
         }
       }
@@ -396,13 +399,16 @@ class UserRepository extends BaseRepo {
             ? notifications[0]
             : notifications[1];
         if (latestAlert.createdTime!.seconds > latestTimeInSeconds) {
-          return ApiResponse<bool>(model: true, code: 200);
+          return ApiResponse(
+              model: {"flag": true, "notification": null}, code: 200);
         } else {
-          return ApiResponse<bool>(model: false, code: 200);
+          return ApiResponse(
+              model: {"flag": false, "notification": null}, code: 200);
         }
       } else {
         logger.d("No past notification time found");
-        return ApiResponse<bool>(model: false, code: 200);
+        return ApiResponse(
+            model: {"flag": false, "notification": null}, code: 200);
       }
     } catch (e) {
       logger.e(e);
