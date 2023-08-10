@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -57,208 +58,69 @@ class _FoundBugState extends State<FoundBug> {
 
   @override
   Widget build(BuildContext context) {
-    return SingleChildScrollView(
-      child: Container(
-        padding: EdgeInsets.only(
-          top: SizeConfig.pageHorizontalMargins,
-          left: SizeConfig.pageHorizontalMargins,
-          right: SizeConfig.pageHorizontalMargins,
-          bottom: MediaQuery.of(context).viewInsets.bottom,
-        ),
-        decoration: BoxDecoration(
-          color: const Color(0xff39393C),
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(SizeConfig.roundness16),
-            topRight: Radius.circular(SizeConfig.roundness16),
+    return WillPopScope(
+      onWillPop: () async {
+        AppState.removeOverlay();
+        return true;
+      },
+      child: SingleChildScrollView(
+        child: Container(
+          padding: EdgeInsets.only(
+            top: SizeConfig.pageHorizontalMargins,
+            left: SizeConfig.pageHorizontalMargins,
+            right: SizeConfig.pageHorizontalMargins,
+            bottom: MediaQuery.of(context).viewInsets.bottom,
           ),
-          boxShadow: const [
-            BoxShadow(
-                color: Color(0x29000000),
-                offset: Offset(0, -3),
-                blurRadius: 6,
-                spreadRadius: 0)
-          ],
-          // color: Colors.white,
-        ),
-        child: Form(
-          key: _formKey,
-          child: Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text("Report a Bug", style: TextStyles.sourceSansSB.title5),
-                  GestureDetector(
-                    onTap: () => Navigator.of(context).pop(),
-                    child: const Icon(
-                      Icons.close,
-                      color: Colors.white,
-                    ),
-                  )
-                ],
-              ),
-              SizedBox(
-                height: SizeConfig.padding24,
-              ),
-              Text("Please select a category of the issue",
-                  style: TextStyles.sourceSans.body3),
-              SizedBox(
-                height: SizeConfig.padding8,
-              ),
-              Column(
-                children: [
-                  DropdownButtonFormField<String>(
-                    dropdownColor: UiConstants.kSecondaryBackgroundColor,
-                    iconSize: SizeConfig.padding20,
-                    decoration: InputDecoration(
-                      border: (dropDownErrorMsg == null)
-                          ? OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(16),
-                            )
-                          : const OutlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: Colors.red, width: 1),
-                              borderRadius: BorderRadius.only(
-                                bottomLeft: Radius.circular(8),
-                                topRight: Radius.circular(8),
-                                topLeft: Radius.circular(8),
-                              ),
-                            ),
-                      contentPadding: EdgeInsets.symmetric(
-                          horizontal: SizeConfig.padding10),
-                      enabledBorder: (dropDownErrorMsg == null)
-                          ? OutlineInputBorder(
-                              borderRadius: BorderRadius.circular(8),
-                            )
-                          : const OutlineInputBorder(
-                              borderSide:
-                                  BorderSide(color: Colors.red, width: 1),
-                              borderRadius: BorderRadius.only(
-                                bottomLeft: Radius.circular(8),
-                                topRight: Radius.circular(8),
-                                topLeft: Radius.circular(8),
-                              ),
-                            ),
-                      filled: true,
-                      fillColor: const Color(0xff1A1A1A),
-                      focusedErrorBorder: const OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.red, width: 1),
-                        borderRadius: BorderRadius.only(
-                          bottomLeft: Radius.circular(8),
-                          topRight: Radius.circular(8),
-                          topLeft: Radius.circular(8),
-                        ),
+          decoration: BoxDecoration(
+            color: const Color(0xff39393C),
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(SizeConfig.roundness16),
+              topRight: Radius.circular(SizeConfig.roundness16),
+            ),
+            boxShadow: const [
+              BoxShadow(
+                  color: Color(0x29000000),
+                  offset: Offset(0, -3),
+                  blurRadius: 6,
+                  spreadRadius: 0)
+            ],
+            // color: Colors.white,
+          ),
+          child: Form(
+            key: _formKey,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text("Report a Bug", style: TextStyles.sourceSansSB.title5),
+                    GestureDetector(
+                      onTap: () => Navigator.of(context).pop(),
+                      child: const Icon(
+                        Icons.close,
+                        color: Colors.white,
                       ),
-                      errorStyle: Theme.of(context)
-                          .textTheme
-                          .headline6!
-                          .copyWith(
-                              height: -10,
-                              color: Colors.transparent,
-                              fontSize: 0),
-                      errorBorder: const OutlineInputBorder(
-                        borderSide: BorderSide(color: Colors.red, width: 1),
-                        borderRadius: BorderRadius.only(
-                          bottomLeft: Radius.circular(8),
-                          topRight: Radius.circular(8),
-                          topLeft: Radius.circular(8),
-                        ),
-                      ),
-                    ),
-                    iconEnabledColor: UiConstants.kTextColor,
-                    elevation: 0,
-                    icon: const Icon(Icons.keyboard_arrow_down_rounded),
-                    hint: Text(
-                      'Select One',
-                      style: TextStyles.sourceSans.body4
-                          .colour(UiConstants.kTextColor),
-                    ),
-                    value: dropDownValue,
-                    items: [
-                      for (String option in optionsList)
-                        DropdownMenuItem(
-                          value: option,
-                          child: Container(
-                            margin: EdgeInsets.only(
-                                left: SizeConfig.padding10,
-                                right: SizeConfig.padding10),
-                            child: Text(
-                              option,
-                              style: TextStyles.sourceSans.body3
-                                  .colour(Colors.white),
-                            ),
-                          ),
-                        ),
-                    ],
-                    onChanged: (val) {
-                      // if (_formKey.currentState?.validate() ?? false) {
-                      setState(() {
-                        dropDownValue = val;
-                        dropDownErrorMsg = null;
-                      });
-                      // }
-                    },
-                    validator: (value) {
-                      if (value == null) {
-                        dropDownErrorMsg = "Please Choose One Option";
-                        print("dropDownErrorMsg $dropDownErrorMsg");
-                        return dropDownErrorMsg;
-                      }
-                      return null;
-                    },
-                  ),
-                  if (dropDownErrorMsg != null)
-                    const CommonInputErrorLabel(
-                      errorMessage: "Please Choose One Option",
                     )
-                ],
-              ),
-              SizedBox(
-                height: SizeConfig.padding18,
-              ),
-              Text(
-                "How would you describe the bug?",
-                style: TextStyles.sourceSans.body3,
-              ),
-              SizedBox(
-                height: SizeConfig.padding8,
-              ),
-              Column(
-                children: [
-                  Container(
-                    decoration: BoxDecoration(
-                      color: const Color(0xff1A1A1A),
-                      borderRadius: BorderRadius.circular(SizeConfig.padding8),
-                    ),
-                    child: TextFormField(
-                      controller: _bugReasonController,
-                      maxLines: 5,
-                      onChanged: (val) {
-                        if (_bugReasonFormKey.currentState?.validate() ??
-                            false) {}
-                        setState(() {
-                          reason = val;
-                          errorMsg = null;
-                        });
-                      },
-                      validator: (value) {
-                        if (value == null ||
-                            value.isEmpty ||
-                            value.length < 3) {
-                          errorMsg = "Please be more descriptive";
-                          return errorMsg;
-                        }
-                        return null;
-                      },
+                  ],
+                ),
+                SizedBox(
+                  height: SizeConfig.padding24,
+                ),
+                Text("Please select a category of the issue",
+                    style: TextStyles.sourceSans.body3),
+                SizedBox(
+                  height: SizeConfig.padding8,
+                ),
+                Column(
+                  children: [
+                    DropdownButtonFormField<String>(
+                      dropdownColor: UiConstants.kSecondaryBackgroundColor,
+                      iconSize: SizeConfig.padding20,
                       decoration: InputDecoration(
-                        hintText: 'Start typing here...',
-                        hintStyle: TextStyles.sourceSans.body3
-                            .colour(Colors.white.withOpacity(0.5)),
-                        focusedBorder: InputBorder.none,
-                        border: (errorMsg == null)
+                        border: (dropDownErrorMsg == null)
                             ? OutlineInputBorder(
                                 borderRadius: BorderRadius.circular(16),
                               )
@@ -271,10 +133,23 @@ class _FoundBugState extends State<FoundBug> {
                                   topLeft: Radius.circular(8),
                                 ),
                               ),
-                        enabledBorder: InputBorder.none,
-                        disabledBorder: InputBorder.none,
-                        isDense: true,
-                        contentPadding: EdgeInsets.all(SizeConfig.padding16),
+                        contentPadding: EdgeInsets.symmetric(
+                            horizontal: SizeConfig.padding10),
+                        enabledBorder: (dropDownErrorMsg == null)
+                            ? OutlineInputBorder(
+                                borderRadius: BorderRadius.circular(8),
+                              )
+                            : const OutlineInputBorder(
+                                borderSide:
+                                    BorderSide(color: Colors.red, width: 1),
+                                borderRadius: BorderRadius.only(
+                                  bottomLeft: Radius.circular(8),
+                                  topRight: Radius.circular(8),
+                                  topLeft: Radius.circular(8),
+                                ),
+                              ),
+                        filled: true,
+                        fillColor: const Color(0xff1A1A1A),
                         focusedErrorBorder: const OutlineInputBorder(
                           borderSide: BorderSide(color: Colors.red, width: 1),
                           borderRadius: BorderRadius.only(
@@ -299,102 +174,235 @@ class _FoundBugState extends State<FoundBug> {
                           ),
                         ),
                       ),
-                      autofocus: false,
-                      keyboardType: TextInputType.streetAddress,
-                      style: TextStyles.sourceSans.body3.colour(
-                        UiConstants.kTextColor,
+                      iconEnabledColor: UiConstants.kTextColor,
+                      elevation: 0,
+                      icon: const Icon(Icons.keyboard_arrow_down_rounded),
+                      hint: Text(
+                        'Select One',
+                        style: TextStyles.sourceSans.body4
+                            .colour(UiConstants.kTextColor),
+                      ),
+                      value: dropDownValue,
+                      items: [
+                        for (String option in optionsList)
+                          DropdownMenuItem(
+                            value: option,
+                            child: Container(
+                              margin: EdgeInsets.only(
+                                  left: SizeConfig.padding10,
+                                  right: SizeConfig.padding10),
+                              child: Text(
+                                option,
+                                style: TextStyles.sourceSans.body3
+                                    .colour(Colors.white),
+                              ),
+                            ),
+                          ),
+                      ],
+                      onChanged: (val) {
+                        // if (_formKey.currentState?.validate() ?? false) {
+                        setState(() {
+                          dropDownValue = val;
+                          dropDownErrorMsg = null;
+                        });
+                        // }
+                      },
+                      validator: (value) {
+                        if (value == null) {
+                          dropDownErrorMsg = "Please Choose One Option";
+                          print("dropDownErrorMsg $dropDownErrorMsg");
+                          return dropDownErrorMsg;
+                        }
+                        return null;
+                      },
+                    ),
+                    if (dropDownErrorMsg != null)
+                      const CommonInputErrorLabel(
+                        errorMessage: "Please Choose One Option",
+                      )
+                  ],
+                ),
+                SizedBox(
+                  height: SizeConfig.padding18,
+                ),
+                Text(
+                  "How would you describe the bug?",
+                  style: TextStyles.sourceSans.body3,
+                ),
+                SizedBox(
+                  height: SizeConfig.padding8,
+                ),
+                Column(
+                  children: [
+                    Container(
+                      decoration: BoxDecoration(
+                        color: const Color(0xff1A1A1A),
+                        borderRadius:
+                            BorderRadius.circular(SizeConfig.padding8),
+                      ),
+                      child: TextFormField(
+                        controller: _bugReasonController,
+                        maxLines: 5,
+                        onChanged: (val) {
+                          if (_bugReasonFormKey.currentState?.validate() ??
+                              false) {}
+                          setState(() {
+                            reason = val;
+                            errorMsg = null;
+                          });
+                        },
+                        validator: (value) {
+                          if (value == null ||
+                              value.isEmpty ||
+                              value.length < 3) {
+                            errorMsg = "Please be more descriptive";
+                            return errorMsg;
+                          }
+                          return null;
+                        },
+                        decoration: InputDecoration(
+                          hintText: 'Start typing here...',
+                          hintStyle: TextStyles.sourceSans.body3
+                              .colour(Colors.white.withOpacity(0.5)),
+                          focusedBorder: InputBorder.none,
+                          border: (errorMsg == null)
+                              ? OutlineInputBorder(
+                                  borderRadius: BorderRadius.circular(16),
+                                )
+                              : const OutlineInputBorder(
+                                  borderSide:
+                                      BorderSide(color: Colors.red, width: 1),
+                                  borderRadius: BorderRadius.only(
+                                    bottomLeft: Radius.circular(8),
+                                    topRight: Radius.circular(8),
+                                    topLeft: Radius.circular(8),
+                                  ),
+                                ),
+                          enabledBorder: InputBorder.none,
+                          disabledBorder: InputBorder.none,
+                          isDense: true,
+                          contentPadding: EdgeInsets.all(SizeConfig.padding16),
+                          focusedErrorBorder: const OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.red, width: 1),
+                            borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(8),
+                              topRight: Radius.circular(8),
+                              topLeft: Radius.circular(8),
+                            ),
+                          ),
+                          errorStyle: Theme.of(context)
+                              .textTheme
+                              .headline6!
+                              .copyWith(
+                                  height: -10,
+                                  color: Colors.transparent,
+                                  fontSize: 0),
+                          errorBorder: const OutlineInputBorder(
+                            borderSide: BorderSide(color: Colors.red, width: 1),
+                            borderRadius: BorderRadius.only(
+                              bottomLeft: Radius.circular(8),
+                              topRight: Radius.circular(8),
+                              topLeft: Radius.circular(8),
+                            ),
+                          ),
+                        ),
+                        autofocus: false,
+                        keyboardType: TextInputType.streetAddress,
+                        style: TextStyles.sourceSans.body3.colour(
+                          UiConstants.kTextColor,
+                        ),
                       ),
                     ),
-                  ),
-                  if (errorMsg != null)
-                    const CommonInputErrorLabel(
-                      errorMessage: 'Please be more descriptive',
-                    )
-                ],
-              ),
-              SizedBox(
-                height: SizeConfig.padding18,
-              ),
-              // Text(
-              //   "Attach Screenshot (Optional)",
-              //   style: TextStyles.sourceSans.body3,
-              // ),
-              // SizedBox(
-              //   height: SizeConfig.padding12,
-              // ),
-              // GestureDetector(
-              //   onTap: () {
-              //     fetchImage(ImageSource.gallery);
-              //   },
-              //   child: Container(
-              //     width: SizeConfig.padding72,
-              //     height: SizeConfig.padding72,
-              //     decoration: BoxDecoration(
-              //       borderRadius: const BorderRadius.all(Radius.circular(12)),
-              //       border:
-              //           Border.all(color: const Color(0xffcacaca), width: 1),
-              //       color: const Color(0xff1A1A1A),
-              //     ),
-              //     child: Center(
-              //       //Display captured image
-              //       // how to do it
-              //       //
-              //       child: capturedImage != null
-              //           ? FutureBuilder<List<int>>(
-              //               future: capturedImage!.readAsBytes(),
-              //               builder: (context, snapshot) {
-              //                 if (snapshot.hasData) {
-              //                   final bytes =
-              //                       Uint8List.fromList(snapshot.data!);
-              //                   return Image.memory(
-              //                     bytes,
-              //                     fit: BoxFit.cover,
-              //                   );
-              //                 } else if (snapshot.hasError) {
-              //                   // Handle error case
-              //                   return const Icon(
-              //                     Icons.error,
-              //                     color: Colors.white,
-              //                     size: 35,
-              //                   );
-              //                 } else {
-              //                   // Display a loading indicator while the image is being loaded
-              //                   return const CircularProgressIndicator();
-              //                 }
-              //               },
-              //             )
-              //           : const Icon(
-              //               Icons.add,
-              //               color: Colors.white,
-              //               size: 35,
-              //             ),
-              //     ),
-              //   ),
-              // ),
-              // SizedBox(
-              //   height: SizeConfig.padding18,
-              // ),
-              AppPositiveBtn(
-                btnText: 'SUBMIT',
-                onPressed: () {
-                  setState(() {});
-                  if (_formKey.currentState?.validate() ?? false) {
-                    openGmail(capturedImage);
+                    if (errorMsg != null)
+                      const CommonInputErrorLabel(
+                        errorMessage: 'Please be more descriptive',
+                      )
+                  ],
+                ),
+                SizedBox(
+                  height: SizeConfig.padding18,
+                ),
+                // Text(
+                //   "Attach Screenshot (Optional)",
+                //   style: TextStyles.sourceSans.body3,
+                // ),
+                // SizedBox(
+                //   height: SizeConfig.padding12,
+                // ),
+                // GestureDetector(
+                //   onTap: () {
+                //     fetchImage(ImageSource.gallery);
+                //   },
+                //   child: Container(
+                //     width: SizeConfig.padding72,
+                //     height: SizeConfig.padding72,
+                //     decoration: BoxDecoration(
+                //       borderRadius: const BorderRadius.all(Radius.circular(12)),
+                //       border:
+                //           Border.all(color: const Color(0xffcacaca), width: 1),
+                //       color: const Color(0xff1A1A1A),
+                //     ),
+                //     child: Center(
+                //       //Display captured image
+                //       // how to do it
+                //       //
+                //       child: capturedImage != null
+                //           ? FutureBuilder<List<int>>(
+                //               future: capturedImage!.readAsBytes(),
+                //               builder: (context, snapshot) {
+                //                 if (snapshot.hasData) {
+                //                   final bytes =
+                //                       Uint8List.fromList(snapshot.data!);
+                //                   return Image.memory(
+                //                     bytes,
+                //                     fit: BoxFit.cover,
+                //                   );
+                //                 } else if (snapshot.hasError) {
+                //                   // Handle error case
+                //                   return const Icon(
+                //                     Icons.error,
+                //                     color: Colors.white,
+                //                     size: 35,
+                //                   );
+                //                 } else {
+                //                   // Display a loading indicator while the image is being loaded
+                //                   return const CircularProgressIndicator();
+                //                 }
+                //               },
+                //             )
+                //           : const Icon(
+                //               Icons.add,
+                //               color: Colors.white,
+                //               size: 35,
+                //             ),
+                //     ),
+                //   ),
+                // ),
+                // SizedBox(
+                //   height: SizeConfig.padding18,
+                // ),
+                AppPositiveBtn(
+                  btnText: 'SUBMIT',
+                  onPressed: () {
+                    setState(() {});
+                    if (_formKey.currentState?.validate() ?? false) {
+                      openGmail(capturedImage);
 
-                    locator<AnalyticsService>().track(
-                      eventName: AnalyticsEvents.reportBugSubmit,
-                      properties: {
-                        'category': dropDownValue,
-                        'reason': reason,
-                      },
-                    );
-                  }
-                },
-              ),
-              SizedBox(
-                height: SizeConfig.padding18,
-              )
-            ],
+                      locator<AnalyticsService>().track(
+                        eventName: AnalyticsEvents.reportBugSubmit,
+                        properties: {
+                          'category': dropDownValue,
+                          'reason': reason,
+                        },
+                      );
+                    }
+                  },
+                ),
+                SizedBox(
+                  height: SizeConfig.padding18,
+                )
+              ],
+            ),
           ),
         ),
       ),
