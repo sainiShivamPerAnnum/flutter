@@ -123,13 +123,16 @@ class ReferralDetailsViewModel extends BaseViewModel {
     fetchReferalsList(context);
     checkPermission();
 
-    referralAmount = AppConfig.getValue(
-                AppConfigKey.revamped_referrals_config)?['rewardValues']
-            ?['invest1k'] ??
-        50 +
+    referralAmount = ((AppConfig.getValue(
+                        AppConfigKey.revamped_referrals_config)?['rewardValues']
+                    ?['invest1k'] ??
+                50) +
             (AppConfig.getValue(AppConfigKey.revamped_referrals_config)?[
                     'rewardValues']?['invest10kflo12'] ??
-                450);
+                450))
+        .toString();
+
+    log("referralAmount: $referralAmount");
   }
 
   Future<void> checkPermission() async {
