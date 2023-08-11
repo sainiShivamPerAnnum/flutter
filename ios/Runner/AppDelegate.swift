@@ -56,9 +56,7 @@ import clevertap_plugin
                 self.isAppInstalled(call, result: result)
 
             case "getContacts":
-                self?.loadContacts(completion: { (contacts) in
-                          result(contacts)
-                        })
+                 ContactManager().fetchContacts(result: result)
             default:
                 result(FlutterMethodNotImplemented)
                 return
@@ -68,9 +66,7 @@ import clevertap_plugin
 
         contactChannel.setMethodCallHandler { [weak self] (call: FlutterMethodCall, result: @escaping FlutterResult) in
             if call.method == "getContacts" {
-                self?.loadContacts(completion: { (contacts) in
-                    result(contacts)
-                })
+                ContactManager().fetchContacts(result: result)
             } else {
                 result(FlutterMethodNotImplemented)
             }
@@ -140,12 +136,12 @@ import clevertap_plugin
        return false;
      }
 
-     private func loadContacts(completion: @escaping ([String: Any]) -> Void) {
-         // Your code to load the contacts and put them into a dictionary
-        let contactManager = ContactManager()
-        let contacts = contactManager.fetchContacts()
-        completion(contacts)
-       }
+    //  private func loadContacts(completion: @escaping ([String: Any]) -> Void) {
+    //      // Your code to load the contacts and put them into a dictionary
+    //     let contactManager = ContactManager()
+    //     let contacts = contactManager.fetchContacts()
+    //     completion(contacts)
+    //    }
     
     
     private func launchUri(uri: String) -> Bool {
@@ -195,15 +191,40 @@ import clevertap_plugin
 
 
 class ContactManager {
-    func fetchContacts() -> [[String: String]] {
-        var contactsArray: [[String: String]] = []
-        let contactStore = CNContactStore()
-        let keysToFetch = [CNContactGivenNameKey, CNContactFamilyNameKey, CNContactPhoneNumbersKey]
+    // func fetchContacts() -> [[String: String]] {
+    //     var contactsArray: [[String: String]] = []
+    //     let contactStore = CNContactStore()
+    //     let keysToFetch = [CNContactGivenNameKey, CNContactFamilyNameKey, CNContactPhoneNumbersKey]
 
-        do {
-            try contactStore.enumerateContacts(with: CNContactFetchRequest(keysToFetch: keysToFetch as [CNKeyDescriptor])) { contact, _ in
-                let displayName = "\(contact.givenName) \(contact.familyName)"
-                for phoneNumber in contact.phoneNumbers {
+    //     do {
+    //         try contactStore.enumerateContacts(with: CNContactFetchRequest(keysToFetch: keysToFetch as [CNKeyDescriptor])) { contact, _ in
+    //             let displayName = "\(contact.givenName) \(contact.familyName)"
+    //             for phoneNumber in contact.phoneNumbers {
+    //                 let phoneNumberString = phoneNumber.value.stringValue
+    //                 let contactInfo: [String: String] = [
+    //                     "displayName": displayName,
+    //                     "phoneNumber": phoneNumberString
+    //                 ]
+    //                 contactsArray.append(contactInfo)
+    //             }
+    //         }
+    //     } catch {
+    //         // Handle error
+    //     }
+
+    //     return contactsArray
+    // }
+    func fetchContacts(result: @escaping FlutterResult) {
+    var contactsArray: [[String: Any]] = []
+    
+    let store = CNContactStore()
+    let keysToFetch: [CNKeyDescriptor] = [CNContactGivenNameKey as CNKeyDescriptor, CNContactFamilyNameKey as CNKeyDescriptor, CNContactPhoneNumbersKey as CNKeyDescriptor]
+    
+    do {
+       try store.enumerateContacts(with: CNContactFetchRequest(keysToFetch: keysToFetch as [CNKeyDescriptor])) { contact, _ in
+        var contactMap: [String: Any] = [:]
+                        let displayName = "\(contact.givenName) \(contact.familyName)"
+         for phoneNumber in contact.phoneNumbers {
                     let phoneNumberString = phoneNumber.value.stringValue
                     let contactInfo: [String: String] = [
                         "displayName": displayName,
@@ -211,11 +232,11 @@ class ContactManager {
                     ]
                     contactsArray.append(contactInfo)
                 }
-            }
-        } catch {
-            // Handle error
-        }
-
-        return contactsArray
+      }
+      
+      result(contactsArray)
+    } catch {
+      result(FlutterError(code: "ERROR", message: "Failed to get contacts", details: nil))
     }
+  }
 }
