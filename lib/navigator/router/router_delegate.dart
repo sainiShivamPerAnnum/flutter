@@ -12,6 +12,7 @@ import 'package:felloapp/core/repository/games_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/feature/referrals/ui/referral_home.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/transition_delegate.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -55,10 +56,10 @@ import 'package:felloapp/ui/pages/support/support.dart';
 import 'package:felloapp/ui/pages/userProfile/bank_details/bank_details_view.dart';
 import 'package:felloapp/ui/pages/userProfile/kyc_details/kyc_details_view.dart';
 import 'package:felloapp/ui/pages/userProfile/my_winnings/my_winnings_view.dart';
-import 'package:felloapp/ui/pages/userProfile/referrals/referral_details/referral_details_view.dart';
 import 'package:felloapp/ui/pages/userProfile/settings/settings_view.dart';
 import 'package:felloapp/ui/pages/userProfile/userProfile/userProfile_view.dart';
 import 'package:felloapp/ui/pages/userProfile/verify_email.dart';
+import 'package:felloapp/ui/service_elements/quiz/quiz_web_view.dart';
 import 'package:felloapp/ui/shared/spotlight_controller.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
@@ -257,20 +258,20 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           _addPageData(const SupportPage(), SupportPageConfig);
           break;
         case Pages.Notifications:
-          _addPageData(NotificationsPage(), NotificationsConfig);
+          _addPageData(const NotificationsPage(), NotificationsConfig);
           break;
         case Pages.ReferralDetails:
-          _addPageData(ReferralDetailsView(), ReferralDetailsPageConfig);
+          _addPageData(const ReferralHome(), ReferralDetailsPageConfig);
           break;
 
         case Pages.MyWinnings:
           _addPageData(const MyWinningsView(), MyWinningsPageConfig);
           break;
         case Pages.BlockedUser:
-          _addPageData(BlockedUserView(), BlockedUserPageConfig);
+          _addPageData(const BlockedUserView(), BlockedUserPageConfig);
           break;
         case Pages.FreshDeskHelp:
-          _addPageData(FreshDeskHelp(), FreshDeskHelpPageConfig);
+          _addPageData(const FreshDeskHelp(), FreshDeskHelpPageConfig);
           break;
 
         case Pages.ScratchCardsView:
@@ -349,6 +350,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           break;
         case Pages.GoldProTxnsView:
           _addPageData(const GoldProTxnsView(), GoldProTxnsViewPageConfig);
+          break;
+        case Pages.QuizWebView:
+          _addPageData(const QuizWebView(), QuizWebViewConfig);
           break;
 
         default:

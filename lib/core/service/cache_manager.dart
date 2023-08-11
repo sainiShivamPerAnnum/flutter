@@ -11,6 +11,8 @@ class CacheManager {
   static const CACHE_IS_SUBSCRIPTION_FIRST_TIME = "isSubFirstTime";
   static const CACHE_IS_FIRST_TIME_FOOTBALL = 'firstTimeFootball';
   static const CACHE_LAST_UGT_CHECK_TIME = "lastUGTCheckTime";
+  static const CACHE_REFERRAL_PERSISTENT_NOTIFACTION_ID =
+      "referralPersistentNotificationId";
 
   static Future readCache(
       {required String key, CacheType type = CacheType.string}) async {

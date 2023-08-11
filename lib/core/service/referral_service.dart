@@ -11,6 +11,7 @@ import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/prize_claim_choice.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/aug_gold_rates_model.dart';
+import 'package:felloapp/core/model/referral_response_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/repository/prizing_repo.dart';
 import 'package:felloapp/core/repository/referral_repo.dart';
@@ -60,12 +61,13 @@ class ReferralService extends ChangeNotifier {
   int? _refUnlockAmt;
   String refCode = "---";
   String? appShareMessage;
+  String? referralShortLink;
 
   set refUnlockAmt(value) {
     this._refUnlockAmt = value;
   }
 
-  String? _shareMsg;
+  String? shareMsg;
   int? _minWithdrawPrizeAmt;
 
   String? get minWithdrawPrize => _minWithdrawPrize;
@@ -94,14 +96,17 @@ class ReferralService extends ChangeNotifier {
   }
 
   Future<void> fetchReferralCode() async {
-    final ApiResponse<ReferralResponse> res = await _refRepo!.getReferralCode();
+    final ApiResponse<ReferralResponse> res = await _refRepo.getReferralCode();
     if (res.code == 200) {
-      refCode = res.model!.code;
-      appShareMessage = res.model?.message ?? '';
+      refCode = res.model!.referralData?.code ?? "";
+      appShareMessage = res.model?.referralData?.referralMessage ?? '';
+      referralShortLink = res.model?.referralData?.referralShortLink ?? '';
     }
-    _shareMsg = (appShareMessage != null && appShareMessage!.isNotEmpty)
+    shareMsg = (appShareMessage != null && appShareMessage!.isNotEmpty)
         ? appShareMessage
-        : 'Hey I am gifting you ₹${AppConfig.getValue(AppConfigKey.referralBonus)} and ${AppConfig.getValue(AppConfigKey.referralBonus)} gaming tokens. Lets start saving and playing together! Share this code: $refCode with your friends.\n';
+        : 'Hey I am gifting you ₹${AppConfig.getValue(AppConfigKey.referralBonus)} and '
+            '${AppConfig.getValue(AppConfigKey.referralBonus)} gaming tokens. '
+            'Lets start saving and playing together! Share this code: $refCode with your friends.\n';
 
     notifyListeners();
   }
@@ -130,7 +135,9 @@ class ReferralService extends ChangeNotifier {
     shareLinkInProgress = true;
     notifyListeners();
 
-    String? url = await createDynamicLink(true);
+    // String? url = await createDynamicLink(true);
+
+    String? url = referralShortLink;
 
     shareLinkInProgress = false;
     notifyListeners();
@@ -144,7 +151,7 @@ class ReferralService extends ChangeNotifier {
       if (customMessage != null) {
         await Share.share(customMessage + url);
       } else {
-        await Share.share(_shareMsg! + url);
+        await Share.share(shareMsg! + url);
       }
     }
 
@@ -197,13 +204,15 @@ class ReferralService extends ChangeNotifier {
   sharePrizeDetails(double prizeAmount) async {
     startShareLoading();
     try {
-      String? url = await createDynamicLink(true);
+      // String? url = await createDynamicLink(true);
 
       // final link = await _appFlyer!.inviteLink();
       // if (link['status'] == 'success') {
       //   url = link['payload']['userInviteUrl'];
       //   url ??= link['payload']['userInviteURL'];
       // }
+
+      String? url = referralShortLink;
 
       if (url != null) {
         caputure(

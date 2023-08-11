@@ -980,7 +980,8 @@ class FloPremiumHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final daysRemaining = BaseUtil.calculateRemainingDays(DateTime(2023, 9, 1));
+    final daysRemaining =
+        BaseUtil.calculateRemainingDays(DateTime(2023, 12, 31));
 
     return Padding(
       padding:
@@ -1025,19 +1026,21 @@ class FloPremiumHeader extends StatelessWidget {
                       model.is12 ? "12% Returns p.a." : "10% Returns p.a.",
                       style: TextStyles.rajdhaniSB.title4,
                     ),
-                    SizedBox(height: SizeConfig.padding16),
-                    SizedBox(
-                      width: SizeConfig.screenWidth! * 0.5,
-                      child: Stack(
-                        children: [
-                          Row(
-                            children: [
-                              Text(
-                                "Available only for",
-                                style: TextStyles.sourceSans.body3,
-                              ),
-                              SizedBox(width: SizeConfig.padding4),
-                              Container(
+                    if (daysRemaining > 0)
+                      SizedBox(height: SizeConfig.padding16),
+                    if (daysRemaining > 0)
+                      SizedBox(
+                        width: SizeConfig.screenWidth! * 0.5,
+                        child: Stack(
+                          children: [
+                            Row(
+                              children: [
+                                Text(
+                                  "Available only for",
+                                  style: TextStyles.sourceSans.body3,
+                                ),
+                                SizedBox(width: SizeConfig.padding4),
+                                Container(
                                 padding: EdgeInsets.symmetric(
                                     horizontal: SizeConfig.padding12,
                                     vertical: SizeConfig.padding2),

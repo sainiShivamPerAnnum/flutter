@@ -33,6 +33,7 @@ import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/marketing_event_handler_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/feature/referrals/ui/referral_rating_sheet.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/back_button_actions.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -45,6 +46,7 @@ import 'package:felloapp/ui/pages/finance/augmont/gold_buy/gold_buy_view.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_sell/gold_sell_view.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/withdrawal/lendbox_withdrawal_view.dart';
 import 'package:felloapp/ui/pages/games/web/web_home/web_game_modal_sheet.dart';
+import 'package:felloapp/ui/pages/support/bug_report/ui/found_bug.dart';
 import 'package:felloapp/ui/service_elements/username_input/username_input_view.dart';
 import 'package:felloapp/ui/shared/spotlight_controller.dart';
 import 'package:felloapp/util/app_toasts_utils.dart';
@@ -124,6 +126,7 @@ class BaseUtil extends ChangeNotifier {
   String? zeroBalanceAssetUri;
   static String? manualReferralCode;
   static String? referrerUserId;
+  static String? referredCode;
   static bool? isNewUser, isFirstFetchDone; // = 'jdF1';
 
   ///Flags in various screens defined as global variables
@@ -607,6 +610,8 @@ class BaseUtil extends ChangeNotifier {
   }
 
   static void showFelloRatingSheet() {
+    d.log("qwertyuio", name: "showFelloRatingSheet");
+
     if (PreferenceHelper.getBool(PreferenceHelper.APP_RATING_SUBMITTED) ==
         false) {
       Future.delayed(const Duration(milliseconds: 300), () {
@@ -620,6 +625,20 @@ class BaseUtil extends ChangeNotifier {
           backgroundColor: Colors.transparent,
           isScrollControlled: true,
           content: const FelloInAppReview(),
+        );
+      });
+    } else {
+      Future.delayed(const Duration(milliseconds: 300), () {
+        Haptic.vibrate();
+
+        BaseUtil.openModalBottomSheet(
+          addToScreenStack: true,
+          enableDrag: false,
+          hapticVibrate: true,
+          isBarrierDismissible: true,
+          backgroundColor: Colors.transparent,
+          isScrollControlled: true,
+          content: const ReferralRatingSheet(),
         );
       });
     }
@@ -744,6 +763,7 @@ class BaseUtil extends ChangeNotifier {
       hasMoreTransactionListDocuments = true;
       isOtpResendCount = 0;
       isUpiInfoMissing = true;
+      referredCode = null;
 
       // AppState.delegate!.appState.setCurrentTabIndex = 0;
       manualReferralCode = null;
@@ -912,6 +932,20 @@ class BaseUtil extends ChangeNotifier {
     Duration difference = endDate.difference(now);
     int remaining = difference.inDays;
     return remaining;
+  }
+
+  void showFoundBugSheet() {
+    Haptic.vibrate();
+
+    BaseUtil.openModalBottomSheet(
+      addToScreenStack: true,
+      enableDrag: false,
+      hapticVibrate: true,
+      isBarrierDismissible: true,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      content: const FoundBug(),
+    );
   }
 
   int getTicketCountForTransaction(double investment) =>

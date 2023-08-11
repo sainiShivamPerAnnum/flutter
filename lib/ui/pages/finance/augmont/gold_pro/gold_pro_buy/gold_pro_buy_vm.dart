@@ -109,12 +109,14 @@ class GoldProBuyViewModel extends BaseViewModel {
   }
 
   get isDescriptionView => _isDescriptionView;
+
   set isDescriptionView(value) {
     _isDescriptionView = value;
     notifyListeners();
   }
 
   double _sliderValue = 0.25;
+
   get sliderValue => _sliderValue;
 
   set sliderValue(value) {
@@ -123,6 +125,7 @@ class GoldProBuyViewModel extends BaseViewModel {
   }
 
   int _selectedChipIndex = 1;
+
   get selectedChipIndex => _selectedChipIndex;
 
   set selectedChipIndex(value) {

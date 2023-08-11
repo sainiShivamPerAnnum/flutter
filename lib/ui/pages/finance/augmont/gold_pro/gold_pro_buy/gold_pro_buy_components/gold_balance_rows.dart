@@ -16,6 +16,7 @@ class GoldBalanceRow extends StatelessWidget {
     this.isBold = false,
     super.key,
   });
+
   final String lead;
   final double trail;
   final bool isBold;
@@ -49,6 +50,7 @@ class ExpectedGoldProReturnsRow extends StatelessWidget {
   });
 
   final GoldProBuyViewModel model;
+
   @override
   Widget build(BuildContext context) {
     return Row(

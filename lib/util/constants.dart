@@ -152,9 +152,11 @@ class Constants {
   static const LAST_OPENED = "last_opened";
   static const DATE_TODAY = "date_today";
   static const DAY_OPENED_COUNT = "day_open_count";
+
   //Notices
   static const IS_MSG_NOTICE_AVAILABLE = "isNoticeMessageAvilable";
   static const MSG_NOTICE = "url_message";
+
   //Normal app update dialog show
   static const IS_APP_UPDATE_AVAILABLE = "isAppUpdateAvilable";
 

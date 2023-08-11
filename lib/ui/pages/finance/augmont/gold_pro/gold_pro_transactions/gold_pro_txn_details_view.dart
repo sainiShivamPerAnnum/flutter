@@ -15,6 +15,7 @@ class GoldProTransactionsDetailsView extends StatelessWidget {
   const GoldProTransactionsDetailsView({required this.txn, super.key});
 
   final GoldProInvestmentResponseModel txn;
+
   TxnHistoryService get _txnHistoryService => locator<TxnHistoryService>();
 
   String get getFormattedDate =>
@@ -176,6 +177,7 @@ class SubInfoTile extends StatelessWidget {
     required this.title,
     required this.subtitle,
   });
+
   final String title, subtitle;
 
   @override

@@ -112,6 +112,7 @@ class GoldProSellConfirmationModalSheet extends StatefulWidget {
 class _GoldProSellConfirmationModalSheetState
     extends State<GoldProSellConfirmationModalSheet> {
   bool _isGoldSellInProgress = false;
+
   bool get isGoldSellInProgress => _isGoldSellInProgress;
 
   set isGoldSellInProgress(bool value) {

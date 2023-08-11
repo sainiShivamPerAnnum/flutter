@@ -26,6 +26,7 @@ import 'package:felloapp/util/app_exceptions.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/preference_helper.dart';
 import 'package:flutter/material.dart';
 
 import 'base_repo.dart';
@@ -338,7 +339,8 @@ class UserRepository extends BaseRepo {
     }
   }
 
-  Future<ApiResponse<bool>> checkIfUserHasNewNotifications() async {
+  Future<ApiResponse<Map<String, dynamic>>>
+      checkIfUserHasNewNotifications() async {
     try {
       final token = await getBearerToken();
       final latestNotificationsResponse = await APIService.instance.getData(
@@ -353,6 +355,43 @@ class UserRepository extends BaseRepo {
 
       String? latestNotifTime = await CacheManager.readCache(
           key: CacheManager.CACHE_LATEST_NOTIFICATION_TIME);
+
+      if ((notifications[0].isPersistent ?? false) &&
+          notifications[0].createdTime != null) {
+        var notifTime = notifications[0].createdTime!.seconds.toString();
+
+        log('Referral Notification: ${notifications[0].toJson()}');
+
+        // notifications[0] is the latest notification
+        // if the notification is persistent then we need to show the notification only once in 48 hours
+        // so we are checking if the notification is created in last 48 hours
+
+        if (!PreferenceHelper.exists(
+            PreferenceHelper.CACHE_REFERRAL_PERSISTENT_NOTIFACTION_ID)) {
+          log('Referral Notification Valid');
+
+          int notifTimeInSeconds = int.tryParse(notifTime)!;
+          int currentTimeInSeconds =
+              DateTime.now().millisecondsSinceEpoch ~/ 1000;
+          if (currentTimeInSeconds - notifTimeInSeconds < 172800) {
+            PreferenceHelper.setString(
+              CacheManager.CACHE_REFERRAL_PERSISTENT_NOTIFACTION_ID,
+              notifications[0].id!.toString(),
+            );
+
+            if (notifications[0].misc != null &&
+                notifications[0].misc?.gtId != null) {
+              ScratchCardService.scratchCardId = notifications[0].misc!.gtId!;
+            }
+
+            // userService.referralAlertDialog = notifications[0];
+            return ApiResponse(
+                model: {"flag": true, "notification": notifications[0]},
+                code: 200);
+          }
+        }
+      }
+
       if (latestNotifTime != null) {
         int latestTimeInSeconds = int.tryParse(latestNotifTime)!;
         AlertModel latestAlert = notifications[0].createdTime!.seconds >
@@ -360,13 +399,16 @@ class UserRepository extends BaseRepo {
             ? notifications[0]
             : notifications[1];
         if (latestAlert.createdTime!.seconds > latestTimeInSeconds) {
-          return ApiResponse<bool>(model: true, code: 200);
+          return ApiResponse(
+              model: {"flag": true, "notification": null}, code: 200);
         } else {
-          return ApiResponse<bool>(model: false, code: 200);
+          return ApiResponse(
+              model: {"flag": false, "notification": null}, code: 200);
         }
       } else {
         logger.d("No past notification time found");
-        return ApiResponse<bool>(model: false, code: 200);
+        return ApiResponse(
+            model: {"flag": false, "notification": null}, code: 200);
       }
     } catch (e) {
       logger.e(e);

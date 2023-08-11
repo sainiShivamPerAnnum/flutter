@@ -109,6 +109,7 @@ class FcmHandler extends ChangeNotifier {
 
     // If message has a command payload
     if (data['command'] != null) {
+      log("Fcm command: $command");
       showSnackbar = false;
 
       if (command!.toLowerCase().contains('end')) {
@@ -121,7 +122,7 @@ class FcmHandler extends ChangeNotifier {
           _journeyService
               .fcmHandleJourneyUpdateStats(data as Map<String, dynamic>);
           break;
-        case FcmCommands.COMMAND_GOLDEN_TICKET_WIN:
+        case FcmCommands.COMMAND_TICKET_WIN:
           log("Scratch Card win update fcm response");
           _journeyService
               .fcmHandleJourneyUpdateStats(data as Map<String, dynamic>);
@@ -137,6 +138,12 @@ class FcmHandler extends ChangeNotifier {
           break;
         case FcmCommands.COMMAND_USER_PRIZE_WIN_2:
           await _fcmHandlerDataPayloads.userPrizeWinPrompt();
+          break;
+        case FcmCommands.COMMAND_GOLDEN_TICKET_WIN:
+          log("Golden Ticket win update fcm response - ${data['payload']}",
+              name: "FcmHandler");
+          showSnackbar = false;
+          await _userService.checkForNewNotifications();
           break;
         case FcmCommands.COMMAND_APPXOR_DIALOG:
           debugPrint("fcm handler: appxor");
@@ -156,7 +163,7 @@ class FcmHandler extends ChangeNotifier {
                 hapticVibrate: true,
                 content: ApxorDialog(
                   dialogContent:
-                      json.decode(data["payload"]) as Map<String, dynamic>,
+                  json.decode(data["payload"]) as Map<String, dynamic>,
                 ),
               ),
             );
@@ -171,7 +178,6 @@ class FcmHandler extends ChangeNotifier {
     if (source == MsgSource.Foreground && showSnackbar == true) {
       await handleNotification(title, body);
     }
-    unawaited(_userService.checkForNewNotifications());
     return true;
   }
 

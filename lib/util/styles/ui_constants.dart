@@ -206,6 +206,8 @@ class UiConstants {
   static Color kPowerPlayPrimaryOff = const Color(0xff373E5E);
   static Color kPowerPlaySecondaryOff = const Color(0xff9A5445);
 
+  static Color kReferralHeaderColor = const Color(0xff6052A9);
+
   //GOLD X
   static Color kGoldProPrimary = const Color(0xffFFD979);
   static Color KGoldProSecondary = const Color(0xffFFE9B1);

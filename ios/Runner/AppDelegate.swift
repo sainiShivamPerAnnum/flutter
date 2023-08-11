@@ -5,6 +5,9 @@ import webengage_flutter
 import AppTrackingTransparency
 import AppsFlyerLib
 import Flutter
+import Contacts
+import CleverTapSDK
+import clevertap_plugin
 
 @UIApplicationMain
 @objc class AppDelegate: FlutterAppDelegate {
@@ -20,6 +23,13 @@ import Flutter
         let controller : FlutterViewController = window?.rootViewController as! FlutterViewController
         let paymentChannel = FlutterMethodChannel(name: "methodChannel/deviceData",
                                                   binaryMessenger: controller.binaryMessenger)
+
+
+        let contactChannel = FlutterMethodChannel(name: "methodChannel/contact", binaryMessenger: controller.binaryMessenger)
+
+        CleverTap.autoIntegrate() // integrate CleverTap SDK using the autoIntegrate option
+        CleverTapPlugin.sharedInstance()?.applicationDidLaunch(options: launchOptions)
+
         paymentChannel.setMethodCallHandler{(call: FlutterMethodCall, result: @escaping
                                              FlutterResult) -> Void in
 //            self.resultMyFlutter = result
@@ -44,11 +54,30 @@ import Flutter
                 self.getUniqueDeviceId(result: result)
             case "isAppInstalled":
                 self.isAppInstalled(call, result: result)
+
+            case "getContacts":
+                self?.loadContacts(completion: { (contacts) in
+                          result(contacts)
+                        })
             default:
                 result(FlutterMethodNotImplemented)
                 return
             }
         }
+
+
+        contactChannel.setMethodCallHandler { [weak self] (call: FlutterMethodCall, result: @escaping FlutterResult) in
+            if call.method == "getContacts" {
+                self?.loadContacts(completion: { (contacts) in
+                    result(contacts)
+                })
+            } else {
+                result(FlutterMethodNotImplemented)
+            }
+        }
+
+
+
             
                 
                 if #available(iOS 10.0, *) {
@@ -110,6 +139,13 @@ import Flutter
        }
        return false;
      }
+
+     private func loadContacts(completion: @escaping ([String: Any]) -> Void) {
+         // Your code to load the contacts and put them into a dictionary
+        let contactManager = ContactManager()
+        let contacts = contactManager.fetchContacts()
+        completion(contacts)
+       }
     
     
     private func launchUri(uri: String) -> Bool {
@@ -152,5 +188,34 @@ import Flutter
     // Called when the application sucessfuly registers for push notifications
     override func application(_ application: UIApplication, didRegisterForRemoteNotificationsWithDeviceToken deviceToken: Data) {
         AppsFlyerLib.shared().registerUninstall(deviceToken)
+    }
+}
+
+
+
+
+class ContactManager {
+    func fetchContacts() -> [[String: String]] {
+        var contactsArray: [[String: String]] = []
+        let contactStore = CNContactStore()
+        let keysToFetch = [CNContactGivenNameKey, CNContactFamilyNameKey, CNContactPhoneNumbersKey]
+
+        do {
+            try contactStore.enumerateContacts(with: CNContactFetchRequest(keysToFetch: keysToFetch as [CNKeyDescriptor])) { contact, _ in
+                let displayName = "\(contact.givenName) \(contact.familyName)"
+                for phoneNumber in contact.phoneNumbers {
+                    let phoneNumberString = phoneNumber.value.stringValue
+                    let contactInfo: [String: String] = [
+                        "displayName": displayName,
+                        "phoneNumber": phoneNumberString
+                    ]
+                    contactsArray.append(contactInfo)
+                }
+            }
+        } catch {
+            // Handle error
+        }
+
+        return contactsArray
     }
 }

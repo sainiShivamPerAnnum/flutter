@@ -8,6 +8,7 @@ class QuickLinksModel {
   String asset;
   String deeplink;
   Color color;
+
   QuickLinksModel({
     required this.name,
     required this.asset,

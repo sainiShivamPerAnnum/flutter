@@ -27,6 +27,7 @@ class GoldProSellViewModel extends BaseViewModel {
   final S locale = locator<S>();
 
   bool _isSellInProgress = false;
+
   bool get isSellInProgress => _isSellInProgress;
 
   set isSellInProgress(bool value) {

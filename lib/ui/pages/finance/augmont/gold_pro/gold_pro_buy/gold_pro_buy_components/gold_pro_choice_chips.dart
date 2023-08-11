@@ -6,6 +6,7 @@ class GoldProChoiceChipsModel {
   final double value;
   final bool isBest;
   bool isSelected;
+
   GoldProChoiceChipsModel({
     required this.value,
     required this.isBest,
@@ -28,6 +29,7 @@ class GoldProChoiceChip extends StatelessWidget {
   final String chipValue;
   final bool isBest;
   final int index;
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
@@ -104,6 +106,7 @@ class GoldProChoiceChip extends StatelessWidget {
 class OutlinedTooltipBorder extends CustomPainter {
   final Color color;
   final double width;
+
   OutlinedTooltipBorder({
     required this.color,
     required this.width,

@@ -151,6 +151,7 @@ class ProMap {
   final String status;
   final double qty;
   final String schemeId;
+
   ProMap({
     required this.status,
     required this.qty,

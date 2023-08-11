@@ -55,6 +55,7 @@ class AppState extends ChangeNotifier {
   static bool isWebGamePInProgress = false;
   static bool isOnboardingInProgress = false;
   static bool isUpdateScreen = false;
+  static bool isQuizInProgress = false;
 
   // static bool isDrawerOpened = false;
   static bool isUserSignedIn = false;

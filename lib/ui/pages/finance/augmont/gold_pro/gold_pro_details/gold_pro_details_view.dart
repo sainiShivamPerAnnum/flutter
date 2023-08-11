@@ -513,6 +513,7 @@ class HowGoldProWorksSection extends StatelessWidget {
   const HowGoldProWorksSection({
     super.key,
   });
+
   static const List<String> videos = [
     "https://youtube.com/shorts/xt2DAiv1VP8",
     "https://youtube.com/shorts/d1UqNZr1YGw",

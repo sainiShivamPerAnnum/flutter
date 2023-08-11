@@ -1,4 +1,8 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/ui/elements/appbar/appbar.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -12,6 +16,10 @@ import 'package:flutter_svg/svg.dart';
 import '../static/new_square_background.dart';
 
 class BlockedUserView extends StatelessWidget {
+  const BlockedUserView({super.key, this.isStateRestricted = false});
+
+  final bool isStateRestricted;
+
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context)!;
@@ -27,7 +35,7 @@ class BlockedUserView extends StatelessWidget {
             child: Container(
               height: SizeConfig.screenHeight! * 0.5,
               width: SizeConfig.screenWidth,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,
@@ -49,7 +57,9 @@ class BlockedUserView extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Text(
-                locale.obBlockedTitle,
+                isStateRestricted
+                    ? "Fello is not available in your state"
+                    : locale.obBlockedTitle,
                 style: TextStyles.rajdhaniB.title2,
                 textAlign: TextAlign.center,
               ),
@@ -58,14 +68,16 @@ class BlockedUserView extends StatelessWidget {
                 padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding44),
                 child: RichText(
                   textAlign: TextAlign.center,
-                  text: new TextSpan(
-                    text: locale.obBlockedSubtitle1 + " ",
+                  text: TextSpan(
+                    text: isStateRestricted
+                        ? 'Please read our '
+                        : "${locale.obBlockedSubtitle1} ",
                     style: TextStyles.rajdhani.colour(Colors.grey),
                     children: [
-                      new TextSpan(
+                      TextSpan(
                         text: locale.termsOfService,
                         style: TextStyles.rajdhani.underline,
-                        recognizer: new TapGestureRecognizer()
+                        recognizer: TapGestureRecognizer()
                           ..onTap = () {
                             Haptic.vibrate();
                             Haptic.vibrate();
@@ -87,6 +99,38 @@ class BlockedUserView extends StatelessWidget {
               SizedBox(height: SizeConfig.padding34),
             ],
           ),
+          if (isStateRestricted)
+            Align(
+              child: FAppBar(
+                  title: null,
+                  showAvatar: false,
+                  showCoinBar: false,
+                  showHelpButton: false,
+                  action: Container(
+                    height: SizeConfig.avatarRadius * 2,
+                    padding:
+                        EdgeInsets.symmetric(horizontal: SizeConfig.padding2),
+                    decoration: BoxDecoration(
+                        borderRadius: BorderRadius.circular(100),
+                        border: Border.all(
+                          color: Colors.white,
+                        ),
+                        color: UiConstants.kBackgroundColor),
+                    child: TextButton(
+                      child: Text(
+                        'need help?',
+                        style: TextStyles.sourceSans.body3,
+                      ),
+                      onPressed: () {
+                        Haptic.vibrate();
+                        AppState.delegate!.appState.currentAction = PageAction(
+                          state: PageState.addPage,
+                          page: FreshDeskHelpPageConfig,
+                        );
+                      },
+                    ),
+                  )),
+            )
         ],
       ),
     );

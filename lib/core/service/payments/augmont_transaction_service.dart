@@ -118,7 +118,7 @@ class AugmontTransactionService extends BaseTransactionService {
     currentTxnGms = currentGoldPurchaseDetails.goldInGrams;
     final ApiResponse<CreatePaytmTransactionModel> txnResponse =
         await _paytmRepo.createTransaction(
-      amount,
+          amount,
       augMap,
       {},
       currentGoldPurchaseDetails.couponCode,

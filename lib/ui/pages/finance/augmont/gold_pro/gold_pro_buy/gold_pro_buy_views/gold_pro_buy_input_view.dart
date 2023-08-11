@@ -16,11 +16,11 @@ import 'package:intl/intl.dart';
 import 'package:provider/provider.dart';
 
 class GoldProBuyInputView extends StatelessWidget {
-  const GoldProBuyInputView(
-      {required this.model, required this.txnService, super.key});
+  const GoldProBuyInputView({required this.model, required this.txnService, super.key});
 
   final GoldProBuyViewModel model;
   final AugmontTransactionService txnService;
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -72,7 +72,7 @@ class GoldProBuyInputView extends StatelessWidget {
                         Text(
                           "Gold Value",
                           style:
-                              TextStyles.rajdhaniM.body2.colour(Colors.white54),
+                          TextStyles.rajdhaniM.body2.colour(Colors.white54),
                         ),
                         Row(
                           children: [
@@ -93,12 +93,12 @@ class GoldProBuyInputView extends StatelessWidget {
                                 children: [
                                   AnimatedContainer(
                                     width: (SizeConfig.padding22 +
-                                                SizeConfig.padding1) *
-                                            model.goldFieldController.text
-                                                .replaceAll('.', "")
-                                                .length +
+                                        SizeConfig.padding1) *
+                                        model.goldFieldController.text
+                                            .replaceAll('.', "")
+                                            .length +
                                         (model.goldFieldController.text
-                                                .contains('.')
+                                            .contains('.')
                                             ? SizeConfig.padding6
                                             : 0),
                                     duration: const Duration(seconds: 0),
@@ -110,17 +110,17 @@ class GoldProBuyInputView extends StatelessWidget {
                                       onChanged: model.onTextFieldValueChanged,
                                       inputFormatters: [
                                         TextInputFormatter.withFunction(
-                                            (oldValue, newValue) {
-                                          var decimalSeparator = NumberFormat()
-                                              .symbols
-                                              .DECIMAL_SEP;
-                                          var r = RegExp(r'^\d*(\' +
-                                              decimalSeparator +
-                                              r'\d*)?$');
-                                          return r.hasMatch(newValue.text)
-                                              ? newValue
-                                              : oldValue;
-                                        })
+                                                (oldValue, newValue) {
+                                              var decimalSeparator = NumberFormat()
+                                                  .symbols
+                                                  .DECIMAL_SEP;
+                                              var r = RegExp(r'^\d*(\' +
+                                                  decimalSeparator +
+                                                  r'\d*)?$');
+                                              return r.hasMatch(newValue.text)
+                                                  ? newValue
+                                                  : oldValue;
+                                            })
                                       ],
                                       decoration: const InputDecoration(
                                         counter: Offstage(),
@@ -168,7 +168,7 @@ class GoldProBuyInputView extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: List.generate(
                               model.chipsList.length,
-                              (index) => GoldProChoiceChip(
+                                  (index) => GoldProChoiceChip(
                                 index: index,
                                 chipValue: "${model.chipsList[index].value}g",
                                 isBest: model.chipsList[index].isBest,
@@ -226,7 +226,7 @@ class GoldProBuyInputView extends StatelessWidget {
                                 ? model.onProceedTapped()
                                 : model.onCompleteKycTapped();
                           },
-                        ),
+                            ),
                       )
                     ]),
                   )

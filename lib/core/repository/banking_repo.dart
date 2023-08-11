@@ -28,8 +28,7 @@ class BankingRepository extends BaseRepo {
       ? "https://cqfb61p1m2.execute-api.ap-south-1.amazonaws.com/dev"
       : "https://szqrjkwkka.execute-api.ap-south-1.amazonaws.com/prod";
 
-  Future<ApiResponse<VerifyPanResponseModel>> verifyPan(
-      {String? uid, String? panName, String? panNumber}) async {
+  Future<ApiResponse<VerifyPanResponseModel>> verifyPan({String? uid, String? panName, String? panNumber}) async {
     final Map<String, dynamic> body = {
       "uid": uid,
       "panName": panName,
@@ -47,7 +46,7 @@ class BankingRepository extends BaseRepo {
 
       _logger.d(response);
       VerifyPanResponseModel _verifyPanApiResponse =
-          VerifyPanResponseModel.fromMap(response["data"]);
+      VerifyPanResponseModel.fromMap(response["data"]);
 
       if (_verifyPanApiResponse.flag!) {
         await CacheService.invalidateByKey(CacheKeys.USER);
@@ -72,8 +71,7 @@ class BankingRepository extends BaseRepo {
     }
   }
 
-  Future<ApiResponse<SignedImageUrlModel>> getSignedImageUrl(
-      String filename) async {
+  Future<ApiResponse<SignedImageUrlModel>> getSignedImageUrl(String filename) async {
     final Map<String, String> body = {'fileName': filename};
 
     try {
@@ -85,7 +83,7 @@ class BankingRepository extends BaseRepo {
         cBaseUrl: _baseUrl,
       );
       SignedImageUrlModel responseData =
-          SignedImageUrlModel.fromMap(response["data"]);
+      SignedImageUrlModel.fromMap(response["data"]);
       return ApiResponse(model: responseData, code: 200);
     } catch (e) {
       _logger.e(e.toString());
@@ -99,8 +97,7 @@ class BankingRepository extends BaseRepo {
     }
   }
 
-  Future<ApiResponse<bool>> uploadPanImageFile(
-      String uploadUrl, XFile imageFile) async {
+  Future<ApiResponse<bool>> uploadPanImageFile(String uploadUrl, XFile imageFile) async {
     try {
       var response = await http.put(Uri.parse(uploadUrl),
           body: await File(imageFile.path).readAsBytes(),
@@ -157,7 +154,7 @@ class BankingRepository extends BaseRepo {
         cBaseUrl: _baseUrl,
       );
       final UserKycDataModel panData =
-          UserKycDataModel.fromMap(response["data"]);
+      UserKycDataModel.fromMap(response["data"]);
       return ApiResponse(model: panData, code: 200);
     } catch (e) {
       logger.e(e.toString());

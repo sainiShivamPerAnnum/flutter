@@ -36,37 +36,35 @@ extension RichTextExtension on String {
             if (isBoldOn) {
               isBoldOn = false;
               groups.add(TextSpan(
-                  text: snip,
-                  style: boldStyle ??
-                      style?.bold ??
-                      TextStyles.sourceSansB.body1
-                          .colour(UiConstants.kTextColor),
-                ));
-              } else if (isItalicsOn) {
-                isItalicsOn = false;
-                groups.add(TextSpan(
-                  text: snip,
-                  style: italicStyle ??
-                      style?.italic ??
-                      TextStyles.sourceSans.body1
-                          .colour(UiConstants.kTextColor3)
-                          .italic,
-                ));
-              } else {
-                groups.add(TextSpan(
-                  text: snip,
-                  style: style ??
-                      TextStyles.sourceSans.body1
-                          .colour(UiConstants.kTextColor2),
-                ));
-                if (character == '*') isBoldOn = true;
-                if (character == '_') isItalicsOn = true;
-              }
-              snip = '';
+                text: snip,
+                style: boldStyle ??
+                    style?.bold ??
+                    TextStyles.sourceSansB.body1.colour(UiConstants.kTextColor),
+              ));
+            } else if (isItalicsOn) {
+              isItalicsOn = false;
+              groups.add(TextSpan(
+                text: snip,
+                style: italicStyle ??
+                    style?.italic ??
+                    TextStyles.sourceSans.body1
+                        .colour(UiConstants.kTextColor3)
+                        .italic,
+              ));
+            } else {
+              groups.add(TextSpan(
+                text: snip,
+                style: style ??
+                    TextStyles.sourceSans.body1.colour(UiConstants.kTextColor2),
+              ));
+              if (character == '*') isBoldOn = true;
+              if (character == '_') isItalicsOn = true;
             }
-          } else {
-            snip = snip + character;
+            snip = '';
           }
+        } else {
+          snip = snip + character;
+        }
       }
 
       if (snip != null && snip.isNotEmpty) {
@@ -87,5 +85,11 @@ extension RichTextExtension on String {
         text: const TextSpan(),
       );
     }
+  }
+}
+
+extension OverFlowStringExtension on String {
+  String checkOverFlow({maxLength = 30}) {
+    return length > maxLength ? "${substring(0, maxLength)}..." : this;
   }
 }

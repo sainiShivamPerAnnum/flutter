@@ -9,7 +9,9 @@ import 'package:flutter/material.dart';
 
 class GoldProTxnsView extends StatelessWidget {
   const GoldProTxnsView({super.key});
+
   TxnHistoryService get _txnHistoryService => locator<TxnHistoryService>();
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(

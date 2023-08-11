@@ -719,7 +719,7 @@ class LoginControllerViewModel extends BaseViewModel {
 
     streamSubscription =
         TruecallerSdk.streamCallbackData.listen((truecallerSdkCallback) {
-      logger.i("Access Token : ${truecallerSdkCallback.accessToken}");
+          logger.i("Access Token : ${truecallerSdkCallback.accessToken}");
       switch (truecallerSdkCallback.result) {
         case TruecallerSdkCallbackResult.success:
           String? phNo = truecallerSdkCallback.profile?.phoneNumber;

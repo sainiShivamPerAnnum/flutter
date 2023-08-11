@@ -30,6 +30,9 @@ import `in`.fello.felloapp.R
 import android.widget.RemoteViews
 import android.appwidget.AppWidgetManager
 import android.content.ComponentName
+import android.content.ContentResolver
+import android.database.Cursor
+import android.provider.ContactsContract
 
 
 class MainActivity : FlutterFragmentActivity() {
@@ -38,68 +41,75 @@ class MainActivity : FlutterFragmentActivity() {
     private val UPIINTENTCHANNEL = "methodChannel/upiIntent"
     private val getUpiApps = "getUpiApps"
     private val intiateTransaction = "initiateTransaction"
+    private val CONTACTCHANNEL = "methodChannel/contact"
     private var res: MethodChannel.Result? = null
     private val successRequestCode = 101
-    private lateinit var paymentMethodChannel:MethodChannel
-    private lateinit var context:Context
+    private lateinit var paymentMethodChannel: MethodChannel
+    private lateinit var context: Context
     private lateinit var paymentResult: MethodChannel.Result
-    override fun configureFlutterEngine( flutterEngine: FlutterEngine) {
+    private var contacts: List<Contact> = emptyList()
+    override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
         super.configureFlutterEngine(flutterEngine)
-        context=applicationContext
+        context = applicationContext
 //        flutterEngine.plugins.add(MyPlugin())
         GeneratedPluginRegistrant.registerWith(flutterEngine)
 
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler {
-                // Note: this method is invoked on the main thread.
+            // Note: this method is invoked on the main thread.
                 call, rawResult ->
             val result: MethodChannel.Result = MethodResultWrapper(rawResult)
-            isAlreadyReturend=false
-            res=result
+            isAlreadyReturend = false
+            res = result
 
-            when (call.method){
-                "createNotificationChannel" ->{
+            when (call.method) {
+                "createNotificationChannel" -> {
 
-                    val argData = call.arguments as HashMap<String,String>
+                    val argData = call.arguments as HashMap<String, String>
                     val completed = createNotificationChannel(argData)
 
                     returnResult(completed as Object)
                 }
 
-                getUpiApps->getupiApps()
-                intiateTransaction ->startTransation(call.argument<String>("app").toString(),call.argument<String>("deepLinkUrl").toString())
+                getUpiApps -> getupiApps()
+                intiateTransaction -> startTransation(
+                    call.argument<String>("app").toString(),
+                    call.argument<String>("deepLinkUrl").toString()
+                )
+
                 else -> result.notImplemented();
             }
         }
         //METHOD CHANNEL [2]
-        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, DEVICEDATACHANNEL).setMethodCallHandler {
+        MethodChannel(
+            flutterEngine.dartExecutor.binaryMessenger,
+            DEVICEDATACHANNEL
+        ).setMethodCallHandler {
             // This method is invoked on the main thread.
-            call, rawResult ->
+                call, rawResult ->
             val result: MethodChannel.Result = MethodResultWrapper(rawResult)
             if (call.method == "getInstalledApps") {
-              val installedAppsList = getInstalledApplications()
-              if (installedAppsList.size != 0) {
-                result.success(installedAppsList)
-              } else {
-                result.error("UNAVAILABLE", "Installed Apps information not available", null)
-              }
-            }
-             else if(call.method == "getDeviceId"){
-               val id: String = getUniqueDeviceId(context)
-                 result.success(id)
-             }
-            else if(call.method == "getAndroidId"){
+                val installedAppsList = getInstalledApplications()
+                if (installedAppsList.size != 0) {
+                    result.success(installedAppsList)
+                } else {
+                    result.error("UNAVAILABLE", "Installed Apps information not available", null)
+                }
+            } else if (call.method == "getDeviceId") {
+                val id: String = getUniqueDeviceId(context)
+                result.success(id)
+            } else if (call.method == "getAndroidId") {
                 result.success(getAndroidId())
-            }
-            else if (call.method == "isDeviceRooted") {
+            } else if (call.method == "isDeviceRooted") {
                 result.success(RootCheckService().isDeviceRooted())
             } else if (call.method == "updateHomeScreenWidget") {
                 result.success(updateHomeScreenWidget())
             } else {
                 result.notImplemented()
             }
-          }
+        }
 
-       paymentMethodChannel =  MethodChannel(flutterEngine.dartExecutor.binaryMessenger, UPIINTENTCHANNEL)
+        paymentMethodChannel =
+            MethodChannel(flutterEngine.dartExecutor.binaryMessenger, UPIINTENTCHANNEL)
         paymentMethodChannel.setMethodCallHandler {
             // This method is invoked on the main thread.
                 call, rawResult ->
@@ -109,13 +119,14 @@ class MainActivity : FlutterFragmentActivity() {
                 "initiatePsp" -> {
                     paymentResult = result
                     var argsData = call.arguments as HashMap<*, *>
-                    val intentUrl:String = argsData["redirectUrl"] as String
+                    val intentUrl: String = argsData["redirectUrl"] as String
                     val packageName = argsData["packageName"] as String
                     val i = Intent(Intent.ACTION_VIEW)
                     i.data = Uri.parse(intentUrl)
                     i.setPackage(packageName)
                     startActivityForResult(i, successRequestCode)
                 }
+
                 "getPhonePeVersion" -> {
                     val id: Long = getPhonePeVersionCode(context)
                     result.success(id)
@@ -124,6 +135,26 @@ class MainActivity : FlutterFragmentActivity() {
                 else -> {
                     result.notImplemented()
                 }
+            }
+        }
+
+        MethodChannel(
+            flutterEngine.dartExecutor.binaryMessenger,
+            CONTACTCHANNEL
+        ).setMethodCallHandler {
+            // This method is invoked on the main thread.
+                call, rawResult ->
+            val result: MethodChannel.Result = MethodResultWrapper(rawResult)
+            if (call.method == "getContacts") {
+                loadContacts()
+                result.success(contacts.map { contact ->
+                    mapOf(
+                        "displayName" to contact.displayName,
+                        "phoneNumber" to contact.phoneNumber
+                    )
+                })
+            } else {
+                result.notImplemented()
             }
         }
     }
@@ -212,19 +243,18 @@ class MainActivity : FlutterFragmentActivity() {
                 (it.flags and ApplicationInfo.FLAG_SYSTEM) != ApplicationInfo.FLAG_SYSTEM
             }
             val apps: ArrayList<HashMap<String, Any?>> = ArrayList()
-       for (app in userApps) {
-          val appName =  app.loadLabel(packageManager).toString()
-           val appData : HashMap<String, Any?>
-          = HashMap<String, Any?> ()
-           appData["package_name"] = app.packageName
-           appData["app_name"] = appName
-           apps.add(appData)
-       }
-       return apps;
-   } catch (e: Exception) {
-       println("Failed to query packages with error $e")
-       return ArrayList()
-   }
+            for (app in userApps) {
+                val appName = app.loadLabel(packageManager).toString()
+                val appData: HashMap<String, Any?> = HashMap<String, Any?>()
+                appData["package_name"] = app.packageName
+                appData["app_name"] = appName
+                apps.add(appData)
+            }
+            return apps;
+        } catch (e: Exception) {
+            println("Failed to query packages with error $e")
+            return ArrayList()
+        }
     }
 
     @SuppressLint("HardwareIds")
@@ -232,45 +262,41 @@ class MainActivity : FlutterFragmentActivity() {
         return Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
     }
 
-    private var isAlreadyReturend=false
+    private var isAlreadyReturend = false
 
-    private fun returnResult(re:Object?){
-        if(re==null){
+    private fun returnResult(re: Object?) {
+        if (re == null) {
             return;
         }
-        if(!isAlreadyReturend){
-            isAlreadyReturend=true
+        if (!isAlreadyReturend) {
+            isAlreadyReturend = true
             res?.success(re);
         }
 
     }
-  
+
 
     @SuppressLint("SuspiciousIndentation")
-    private fun startTransation(app:String, deepLink:String){
+    private fun startTransation(app: String, deepLink: String) {
 
         try {
 
 
             val uri = Uri.parse(deepLink)
-            val deepLinkIntent=Intent(Intent.ACTION_VIEW,uri)
+            val deepLinkIntent = Intent(Intent.ACTION_VIEW, uri)
             deepLinkIntent.setPackage(app)
-            if(deepLinkIntent.resolveActivity(context.packageManager)==null){
-                res?.error("400","No App Found","No UPI Apps Found")
+            if (deepLinkIntent.resolveActivity(context.packageManager) == null) {
+                res?.error("400", "No App Found", "No UPI Apps Found")
                 return
-            }
-            else
-            this.startActivityForResult(deepLinkIntent,successRequestCode)
+            } else
+                this.startActivityForResult(deepLinkIntent, successRequestCode)
 
 
-
-        }catch (e: Exception){
-            Log.d("Something went Wrong:" ,"$e")
+        } catch (e: Exception) {
+            Log.d("Something went Wrong:", "$e")
             e.printStackTrace()
         }
     }
-
-
 
 
     private fun getupiApps() {
@@ -306,19 +332,19 @@ class MainActivity : FlutterFragmentActivity() {
                     "icon" to icon,
                     "priority" to it.priority,
                     "preferredOrder" to it.preferredOrder
-            )
-            list.add(
+                )
+                list.add(
                     map as Map<String, String>
-            )
-        }
+                )
+            }
 
 
-            Log.d(list.size.toString(),"List")
+            Log.d(list.size.toString(), "List")
             returnResult(list as Object)
 
         } catch (ex: Exception) {
-            Log.e("UPI",ex.message!!)
-            res?.error("400", "exception",ex.message )
+            Log.e("UPI", ex.message!!)
+            res?.error("400", "exception", ex.message)
         }
     }
 
@@ -355,9 +381,6 @@ class MainActivity : FlutterFragmentActivity() {
     }
 
 
-
-
-
     private fun encodeToBase64(image: Bitmap): String? {
         val byteArrayOS = ByteArrayOutputStream()
         image.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOS)
@@ -365,13 +388,36 @@ class MainActivity : FlutterFragmentActivity() {
     }
 
     private fun getBitmapFromDrawable(drawable: Drawable): Bitmap? {
-        val bmp: Bitmap = Bitmap.createBitmap(drawable.intrinsicWidth, drawable.intrinsicHeight, Bitmap.Config.ARGB_8888)
+        val bmp: Bitmap = Bitmap.createBitmap(
+            drawable.intrinsicWidth,
+            drawable.intrinsicHeight,
+            Bitmap.Config.ARGB_8888
+        )
         val canvas = Canvas(bmp)
         drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight())
         drawable.draw(canvas)
         return bmp
     }
 
+    private fun loadContacts() {
+        val contentResolver: ContentResolver = applicationContext.contentResolver
+        val projection: Array<String> = arrayOf(
+            ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
+            ContactsContract.CommonDataKinds.Phone.NUMBER
+        )
+        val cursor: Cursor? = contentResolver.query(
+            ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+            projection,
+            null,
+            null,
+            null
+        )
+        cursor?.use {
+            contacts = generateSequence { if (cursor.moveToNext()) cursor else null }
+                .map { Contact(it.getString(0), it.getString(1)) }
+                .toList()
+        }
+    }
 }
 
 
@@ -399,3 +445,5 @@ private class MethodResultWrapper internal constructor(private val methodResult:
         handler = Handler(Looper.getMainLooper())
     }
 }
+
+data class Contact(val displayName: String, val phoneNumber: String)

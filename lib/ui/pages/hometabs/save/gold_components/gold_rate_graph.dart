@@ -358,40 +358,40 @@ class _LineGradientChartState extends State<LineGradientChart> {
 class ChartData {
   int day = 0;
   double price = 0.0;
+
   ChartData({
     required this.day,
     required this.price,
   });
 }
 
-
- // chartData = [
-    //   ChartData(day: 18, price: 6547),
-    //   ChartData(day: 19, price: 6562),
-    //   ChartData(day: 20, price: 6585),
-    //   ChartData(day: 21, price: 6345),
-    //   ChartData(day: 22, price: 6953),
-    //   ChartData(day: 23, price: 6467),
-    //   ChartData(day: 24, price: 6925),
-    //   ChartData(day: 25, price: 6638),
-    //   ChartData(day: 26, price: 6385),
-    //   ChartData(day: 27, price: 6836),
-    //   ChartData(day: 28, price: 6653),
-    //   ChartData(day: 29, price: 6958),
-    //   ChartData(day: 30, price: 6284),
-    //   ChartData(day: 31, price: 6594),
-    //   ChartData(day: 32, price: 6136),
-    //   ChartData(day: 33, price: 6956),
-    //   ChartData(day: 34, price: 6355),
-    //   ChartData(day: 35, price: 6764),
-    //   ChartData(day: 36, price: 6938),
-    //   ChartData(day: 37, price: 6630),
-    //   ChartData(day: 38, price: 7000),
-    //   ChartData(day: 39, price: 6374),
-    //   ChartData(day: 40, price: 6468),
-    //   ChartData(day: 41, price: 6938),
-    //   ChartData(day: 42, price: 6368),
-    //   ChartData(day: 43, price: 6732),
-    //   ChartData(day: 44, price: 6793),
-    //   ChartData(day: 45, price: 6544),
-    // ];
+// chartData = [
+//   ChartData(day: 18, price: 6547),
+//   ChartData(day: 19, price: 6562),
+//   ChartData(day: 20, price: 6585),
+//   ChartData(day: 21, price: 6345),
+//   ChartData(day: 22, price: 6953),
+//   ChartData(day: 23, price: 6467),
+//   ChartData(day: 24, price: 6925),
+//   ChartData(day: 25, price: 6638),
+//   ChartData(day: 26, price: 6385),
+//   ChartData(day: 27, price: 6836),
+//   ChartData(day: 28, price: 6653),
+//   ChartData(day: 29, price: 6958),
+//   ChartData(day: 30, price: 6284),
+//   ChartData(day: 31, price: 6594),
+//   ChartData(day: 32, price: 6136),
+//   ChartData(day: 33, price: 6956),
+//   ChartData(day: 34, price: 6355),
+//   ChartData(day: 35, price: 6764),
+//   ChartData(day: 36, price: 6938),
+//   ChartData(day: 37, price: 6630),
+//   ChartData(day: 38, price: 7000),
+//   ChartData(day: 39, price: 6374),
+//   ChartData(day: 40, price: 6468),
+//   ChartData(day: 41, price: 6938),
+//   ChartData(day: 42, price: 6368),
+//   ChartData(day: 43, price: 6732),
+//   ChartData(day: 44, price: 6793),
+//   ChartData(day: 45, price: 6544),
+// ];

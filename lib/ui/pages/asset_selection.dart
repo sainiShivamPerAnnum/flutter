@@ -532,8 +532,12 @@ class AvailabilityOfferWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final daysRemaining = BaseUtil.calculateRemainingDays(DateTime(2023, 9, 1));
+    final daysRemaining =
+        BaseUtil.calculateRemainingDays(DateTime(2023, 12, 31));
 
+    if (daysRemaining <= 0) {
+      return const SizedBox();
+    }
     return Stack(
       children: [
         Container(
@@ -587,6 +591,7 @@ class DigitalGoldPrograms extends StatelessWidget {
   final String? promoText;
   final GoldBuyViewModel model;
   final bool isPro;
+
   const DigitalGoldPrograms({
     required this.title,
     this.isRecommended = false,
@@ -610,7 +615,7 @@ class DigitalGoldPrograms extends StatelessWidget {
                   .openGoldProBuyView(location: "Asset Section View");
             } else {
               BaseUtil().openRechargeModalSheet(
-                  investmentType: InvestmentType.AUGGOLD99);
+                  investmentType: InvestmentType.AUGGOLD99, amt: amount);
 
               locator<AnalyticsService>().track(
                   eventName: AnalyticsEvents.assetSelectionProceed,

@@ -9,6 +9,7 @@ class GoldProSchemeModel {
   final String isSoldOut;
   final String isFreezeLease;
   final String logo;
+
   GoldProSchemeModel({
     required this.id,
     required this.interestRate,

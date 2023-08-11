@@ -159,7 +159,7 @@ class UserFundWallet {
         'wLbBalance': wLbBalance,
         'wLbPrinciple': wLbPrinciple,
         'wLbProcessingAmt': wLbProcessingAmt,
-        'wTmbLifetimeWin': wTmbLifetimeWin
+    'wTmbLifetimeWin': wTmbLifetimeWin
       };
 
   double getEstTotalWealth() {

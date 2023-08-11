@@ -80,9 +80,11 @@ class GoldProMiniTransactions extends StatelessWidget {
 
 class GoldProTxnListTile extends StatelessWidget {
   const GoldProTxnListTile({required this.txn, super.key});
+
   final GoldProInvestmentResponseModel txn;
 
   TxnHistoryService get txnHistoryService => locator<TxnHistoryService>();
+
   @override
   Widget build(BuildContext context) {
     return ListTile(

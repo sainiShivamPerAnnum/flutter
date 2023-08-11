@@ -6,6 +6,7 @@ class Portfolio {
   final double rewards;
   final double lifeTimeRewards;
   final Asset absolute;
+
   Portfolio({
     required this.augmont,
     required this.flo,
@@ -42,6 +43,7 @@ class AugmontTiers {
   final double balance;
   final Asset gold;
   final Asset fd;
+
   AugmontTiers({
     required this.absGains,
     required this.percGains,
