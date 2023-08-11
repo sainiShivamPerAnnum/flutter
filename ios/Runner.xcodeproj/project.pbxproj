@@ -179,6 +179,34 @@
 			remoteGlobalIDString = 6020B2FAA3BAD0D421FDCF328153612A;
 			remoteInfo = flutter_facebook_sdk;
 		};
+		38E43C282A8626AF0091F343 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 53E99B7D2770AA47000F1EEC /* Pods.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 36E70BE67031A10226C4E1F6E9855464;
+			remoteInfo = "CleverTap-iOS-SDK";
+		};
+		38E43C2A2A8626AF0091F343 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 53E99B7D2770AA47000F1EEC /* Pods.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 9AB883AEAA49DF8F751FE06DE22DD69C;
+			remoteInfo = "CleverTap-iOS-SDK-CleverTapSDK";
+		};
+		38E43C2C2A8626AF0091F343 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 53E99B7D2770AA47000F1EEC /* Pods.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 0F4A8DF3D7A89D389325F57F0AC146CD;
+			remoteInfo = clevertap_plugin;
+		};
+		38E43C2E2A8626AF0091F343 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 53E99B7D2770AA47000F1EEC /* Pods.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = B0B214D775196BA7CA8E17E53048A493;
+			remoteInfo = SDWebImage;
+		};
 		38FE549729E3416400F68C3B /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
 			containerPortal = 53E99B7D2770AA47000F1EEC /* Pods.xcodeproj */;
@@ -672,6 +700,9 @@
 				53E99BD02770AA48000F1EEC /* AppAuth */,
 				537E775627BBCB83004DA35F /* appsflyer_sdk */,
 				53C8032A27A85D5C00190100 /* BoringSSL-GRPC */,
+				38E43C292A8626AF0091F343 /* CleverTap-iOS-SDK */,
+				38E43C2B2A8626AF0091F343 /* CleverTap-iOS-SDK-CleverTapSDK */,
+				38E43C2D2A8626AF0091F343 /* clevertap_plugin */,
 				53E99BD42770AA48000F1EEC /* cloud_firestore */,
 				53E99BD62770AA48000F1EEC /* connectivity_plus */,
 				385870BF286B48EE006AA702 /* device_info_plus */,
@@ -736,6 +767,7 @@
 				53E99C422770AA48000F1EEC /* PromisesObjC */,
 				07AE377528BCC63900FC1168 /* razorpay_flutter */,
 				53C8033A27A85D5C00190100 /* ReachabilitySwift */,
+				38E43C2F2A8626AF0091F343 /* SDWebImage */,
 				3869290D2886DEF600813FBA /* share_plus */,
 				38FE549E29E3416400F68C3B /* shared_preferences_foundation */,
 				53C8033C27A85D5C00190100 /* shared_preferences_ios */,
@@ -1047,6 +1079,38 @@
 			name = flutter_facebook_sdk;
 			path = flutter_facebook_sdk.framework;
 			remoteRef = 38CC6DB02966B1E60002C0B9 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		38E43C292A8626AF0091F343 /* CleverTap-iOS-SDK */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			name = "CleverTap-iOS-SDK";
+			path = CleverTapSDK.framework;
+			remoteRef = 38E43C282A8626AF0091F343 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		38E43C2B2A8626AF0091F343 /* CleverTap-iOS-SDK-CleverTapSDK */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			name = "CleverTap-iOS-SDK-CleverTapSDK";
+			path = CleverTapSDK.bundle;
+			remoteRef = 38E43C2A2A8626AF0091F343 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		38E43C2D2A8626AF0091F343 /* clevertap_plugin */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			name = clevertap_plugin;
+			path = clevertap_plugin.framework;
+			remoteRef = 38E43C2C2A8626AF0091F343 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		38E43C2F2A8626AF0091F343 /* SDWebImage */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			name = SDWebImage;
+			path = SDWebImage.framework;
+			remoteRef = 38E43C2E2A8626AF0091F343 /* PBXContainerItemProxy */;
 			sourceTree = BUILT_PRODUCTS_DIR;
 		};
 		38FE549829E3416400F68C3B /* advertising_id */ = {
@@ -1756,7 +1820,7 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 211;
+				CURRENT_PROJECT_VERSION = 214;
 				DEVELOPMENT_TEAM = 7FH5SHLD2G;
 				ENABLE_BITCODE = NO;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = i386;
@@ -1777,7 +1841,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				MARKETING_VERSION = 4.4.3;
+				MARKETING_VERSION = 4.4.4;
 				PACKAGE_CONFIG = /Users/arabkumar/Documents/Fello/Github/felloapp/.dart_tool/package_config.json;
 				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1855,7 +1919,7 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 211;
+				CURRENT_PROJECT_VERSION = 214;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 7FH5SHLD2G;
 				ENABLE_BITCODE = NO;
@@ -1877,7 +1941,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				MARKETING_VERSION = 4.4.3;
+				MARKETING_VERSION = 4.4.4;
 				PACKAGE_CONFIG = /Users/arabkumar/Documents/Fello/Github/felloapp/.dart_tool/package_config.json;
 				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -1954,7 +2018,7 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 211;
+				CURRENT_PROJECT_VERSION = 214;
 				DEVELOPMENT_TEAM = 7FH5SHLD2G;
 				ENABLE_BITCODE = NO;
 				FLUTTER_APPLICATION_PATH = /Users/arabkumar/Documents/Fello/Github/felloapp;
@@ -1974,7 +2038,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				MARKETING_VERSION = 4.4.3;
+				MARKETING_VERSION = 4.4.4;
 				PACKAGE_CONFIG = /Users/arabkumar/Documents/Fello/Github/felloapp/.dart_tool/package_config.json;
 				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2048,7 +2112,7 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 211;
+				CURRENT_PROJECT_VERSION = 214;
 				DEVELOPMENT_TEAM = 7FH5SHLD2G;
 				ENABLE_BITCODE = NO;
 				FLUTTER_APPLICATION_PATH = /Users/arabkumar/Documents/Fello/Github/felloapp;
@@ -2068,7 +2132,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				MARKETING_VERSION = 4.4.3;
+				MARKETING_VERSION = 4.4.4;
 				PACKAGE_CONFIG = /Users/arabkumar/Documents/Fello/Github/felloapp/.dart_tool/package_config.json;
 				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.qa;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2148,7 +2212,7 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 211;
+				CURRENT_PROJECT_VERSION = 214;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 7FH5SHLD2G;
 				ENABLE_BITCODE = NO;
@@ -2172,7 +2236,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				MARKETING_VERSION = 4.4.3;
+				MARKETING_VERSION = 4.4.4;
 				PACKAGE_CONFIG = /Users/arabkumar/Documents/Fello/Github/felloapp/.dart_tool/package_config.json;
 				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2249,7 +2313,7 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 211;
+				CURRENT_PROJECT_VERSION = 214;
 				DEVELOPMENT_TEAM = 7FH5SHLD2G;
 				ENABLE_BITCODE = NO;
 				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = i386;
@@ -2270,7 +2334,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				MARKETING_VERSION = 4.4.3;
+				MARKETING_VERSION = 4.4.4;
 				PACKAGE_CONFIG = /Users/arabkumar/Documents/Fello/Github/felloapp/.dart_tool/package_config.json;
 				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2344,7 +2408,7 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 211;
+				CURRENT_PROJECT_VERSION = 214;
 				DEVELOPMENT_TEAM = 7FH5SHLD2G;
 				ENABLE_BITCODE = NO;
 				FLUTTER_APPLICATION_PATH = /Users/arabkumar/Documents/Fello/Github/felloapp;
@@ -2364,7 +2428,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				MARKETING_VERSION = 4.4.3;
+				MARKETING_VERSION = 4.4.4;
 				PACKAGE_CONFIG = /Users/arabkumar/Documents/Fello/Github/felloapp/.dart_tool/package_config.json;
 				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2496,7 +2560,7 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 211;
+				CURRENT_PROJECT_VERSION = 214;
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 7FH5SHLD2G;
 				ENABLE_BITCODE = NO;
@@ -2519,7 +2583,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				MARKETING_VERSION = 4.4.3;
+				MARKETING_VERSION = 4.4.4;
 				PACKAGE_CONFIG = /Users/arabkumar/Documents/Fello/Github/felloapp/.dart_tool/package_config.json;
 				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
@@ -2542,7 +2606,7 @@
 				CODE_SIGN_ENTITLEMENTS = Runner/Runner.entitlements;
 				CODE_SIGN_IDENTITY = "Apple Development";
 				CODE_SIGN_STYLE = Automatic;
-				CURRENT_PROJECT_VERSION = 211;
+				CURRENT_PROJECT_VERSION = 214;
 				DEVELOPMENT_TEAM = 7FH5SHLD2G;
 				ENABLE_BITCODE = NO;
 				"EXCLUDED_ARCHS[sdk=iphoneos*]" = "armv7 1386";
@@ -2564,7 +2628,7 @@
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
 				);
-				MARKETING_VERSION = 4.4.3;
+				MARKETING_VERSION = 4.4.4;
 				PACKAGE_CONFIG = /Users/arabkumar/Documents/Fello/Github/felloapp/.dart_tool/package_config.json;
 				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
