@@ -414,15 +414,6 @@ class _ReferralHomeState extends State<ReferralHome> {
                       },
                       child: Row(
                         children: [
-                          // Text('COPY',
-                          //     style: TextStyles
-                          //         .sourceSans.body3
-                          //         .colour(UiConstants
-                          //             .kTextColor3
-                          //             .withOpacity(0.3))),
-                          // SizedBox(
-                          //   width: SizeConfig.padding6,
-                          // ),
                           Icon(
                             Icons.copy,
                             color: UiConstants.kTextColor3.withOpacity(0.5),
@@ -520,9 +511,8 @@ class _ReferralHomeState extends State<ReferralHome> {
 
   @override
   void dispose() {
-    SystemChrome.setSystemUIOverlayStyle(const SystemUiOverlayStyle(
-      statusBarColor: Colors.transparent, // Change to the default color
-    ));
+    SystemChrome.setSystemUIOverlayStyle(
+        const SystemUiOverlayStyle(statusBarColor: Colors.transparent));
     _controller.dispose();
     super.dispose();
   }

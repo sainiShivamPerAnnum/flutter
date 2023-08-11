@@ -30,8 +30,7 @@ class ContactListWidget extends StatefulWidget {
   State<ContactListWidget> createState() => _ContactListWidgetState();
 }
 
-class _ContactListWidgetState extends State<ContactListWidget>
-    with WidgetsBindingObserver {
+class _ContactListWidgetState extends State<ContactListWidget> {
   TextEditingController controller = TextEditingController();
   List<Contact> filteredContacts = []; // List to store filtered contacts
   late final Debouncer _debouncer;
@@ -305,6 +304,12 @@ class _ContactListWidgetState extends State<ContactListWidget>
         ],
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    _debouncer.cancel();
   }
 }
 
