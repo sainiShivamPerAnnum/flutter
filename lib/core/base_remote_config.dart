@@ -244,7 +244,7 @@ class BaseRemoteConfig {
   };
 
   static const Map<String, bool> _SPECIAL_EFFECTS_ON_TXN_DETAILS_VIEW = {
-    "specialEffectsTxnDetailsView": true
+    "specialEffectsOnTxnDetailsView": true
   };
 
   static Map<String, dynamic> DEFAULTS = {
