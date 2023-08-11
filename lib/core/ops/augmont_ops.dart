@@ -53,9 +53,9 @@ class AugmontService extends ChangeNotifier {
   String _selectedReasonForSelling = '';
 
   ValueChanged<UserTransaction>? _augmontTxnProcessListener;
-  final String defaultBaseUri =
-      'https://jg628sk4s2.execute-api.ap-south-1.amazonaws.com/prod';
-  String? _baseUri;
+  // final String defaultBaseUri =
+  //     'https://jg628sk4s2.execute-api.ap-south-1.amazonaws.com/prod';
+  // String? _baseUri;
   String? _apiKey;
   late var headers;
 
@@ -78,7 +78,7 @@ class AugmontService extends ChangeNotifier {
     ];
     if (_dbModel == null) return false;
 
-    _baseUri = defaultBaseUri;
+    // _baseUri = defaultBaseUri;
     headers = {'x-api-key': _apiKey};
     return true;
   }
@@ -87,8 +87,6 @@ class AugmontService extends ChangeNotifier {
 
   Future<AugmontRates?> getRates() async {
     if (!isInit()) await _init();
-
-    // New rates api code, requires conformation from augmont for dev enviroment.
     ApiResponse<Map<String, dynamic>> response =
         await _investmentActionsRepository!.getGoldRates();
     if (response.code == 400) {
@@ -96,72 +94,6 @@ class AugmontService extends ChangeNotifier {
       return null;
     } else {
       return AugmontRates.fromMap(response.model!);
-    }
-  }
-
-  Future<double?> getGoldBalance() async {
-    if (!isInit()) await _init();
-    Map<String, String?> _params = {
-      Passbook.fldAugmontUid: _baseProvider!.augmontDetail!.userId,
-    };
-    var _request = http.Request(
-        'GET', Uri.parse(_constructRequest(Passbook.path, _params)));
-    _request.headers.addAll(headers);
-    http.StreamedResponse _response = await _request.send();
-
-    final resMap = await _processResponse(_response);
-    if (resMap == null || !resMap[INTERNAL_FAIL_FLAG]) {
-      log.error('Query Failed');
-      return null;
-    } else {
-      log.debug(resMap[Passbook.resGoldGrams].toString());
-      resMap["flag"] = QUERY_PASSED;
-
-      String goldGrmsStr = resMap[Passbook.resGoldGrams];
-      double goldGrms = 0;
-      try {
-        goldGrms = double.parse(goldGrmsStr);
-        return goldGrms;
-      } catch (e) {
-        return 0.0;
-      }
-    }
-  }
-
-  Future<List<GoldGraphPoint>?> getGoldRateChart(
-      DateTime fromTime, DateTime toTime) async {
-    if (fromTime == null || toTime == null || fromTime.isAfter(toTime))
-      return null;
-    if (!isInit()) await _init();
-
-    var _params = {
-      GetRateChart.fldFromTime: '${fromTime.millisecondsSinceEpoch}',
-      GetRateChart.fldToTime: '${toTime.millisecondsSinceEpoch}',
-    };
-    var _request = http.Request(
-        'GET', Uri.parse(_constructRequest(GetRateChart.path, _params)));
-    _request.headers.addAll(headers);
-    http.StreamedResponse _response = await _request.send();
-
-    final resMap = await _processResponse(_response);
-    if (resMap == null ||
-        resMap['Items'] == null ||
-        !resMap[INTERNAL_FAIL_FLAG]) {
-      log.error('Query Failed');
-      return null;
-    } else {
-      List<GoldGraphPoint> pointData = [];
-      for (var rPoint in resMap['Items']) {
-        try {
-          GoldGraphPoint point = GoldGraphPoint(
-              BaseUtil.toDouble(rPoint['rRate']),
-              DateTime.fromMillisecondsSinceEpoch(rPoint['rTimestamp']));
-          pointData.add(point);
-        } catch (e) {
-          continue;
-        }
-      }
-      return pointData;
     }
   }
 
@@ -229,49 +161,16 @@ class AugmontService extends ChangeNotifier {
     if (res.isSuccess()) {
       resMap = res.model;
     }
-    // var _params = {
-    //   GetInvoice.fldTranId: txnId,
-    // };
-    // var _request = http.Request(
-    //     'GET', Uri.parse(_constructRequest(GetInvoice.path, _params)));
-    // _request.headers
-    //     .addAll({'x-api-key': "aOwnj8SQ8k1TFl1gIZCbq7nrgemhnBAb5YPwzP8z"});
-    // http.StreamedResponse _response = await _request.send();
 
-    // final resMap = await _processResponse(_response);
     if (resMap == null) {
       log.error('Query Failed');
       return null;
     } else {
       log.debug(resMap[GetInvoice.resTransactionId].toString());
       resMap["flag"] = QUERY_PASSED;
-
-      // final pdfFile =
-      //     await PdfInvoiceApi.generate(await generateInvoiceContent());
-      // return pdfFile.path;
       String? _path = await _pdfService.generateInvoice(resMap, userDetails);
       return _path;
     }
-  }
-
-  String _constructRequest(String subPath, Map<String, String?> params) {
-    String _path = '$_baseUri/$subPath';
-    if (params != null && params.length > 0) {
-      String _p = '';
-      if (params.length == 1) {
-        _p = params.keys.elementAt(0) +
-            '=' +
-            Uri.encodeComponent(params.values.elementAt(0)!);
-        _path = '$_path?$_p';
-      } else {
-        params.forEach((key, value) {
-          _p = '$_p$key=$value&';
-        });
-        _p = _p.substring(0, _p.length - 1);
-        _path = '$_path?$_p';
-      }
-    }
-    return _path;
   }
 
   Future<Map<String, dynamic>?> _processResponse(

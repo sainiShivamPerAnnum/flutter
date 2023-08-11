@@ -150,6 +150,8 @@
 	<string>This app needs access to location when in the background.</string>
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>This app needs access to location when open.</string>
+	<key>NSContactsIdentifierUsageDescription</key>
+    <string>We use contact identifiers to link records.</string>
 	<key>NSContactsUsageDescription</key>
 	<string>We need access to your contacts to find and invite friends.</string>
 	<key>UIBackgroundModes</key>
