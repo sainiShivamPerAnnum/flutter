@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/faqTypes.dart';
@@ -569,6 +570,7 @@ class ReferralTabView extends StatelessWidget {
                   children: [
                     ReferralList(
                       model: model,
+                      scrollController: _controller,
                     ),
                     InviteContactWidget(
                       model: model,
@@ -585,7 +587,7 @@ class ReferralTabView extends StatelessWidget {
   }
 }
 
-void navigateToWhatsApp(String phoneNumber, [String? message]) {
+Future<void> navigateToWhatsApp(String phoneNumber, [String? message]) async {
   var referralService = locator<ReferralService>();
   log('phoneNumber: $phoneNumber', name: 'ReferralDetailsScreen');
 
@@ -596,5 +598,11 @@ void navigateToWhatsApp(String phoneNumber, [String? message]) {
       (referralService.referralShortLink ?? ""));
   final url = 'https://wa.me/+91$phoneNumber?text=$text';
   log('WhatsApp URL: $url', name: 'ReferralDetailsScreen');
-  launch(url);
+  try {
+    await launchUrl(Uri.parse(url), mode: LaunchMode.externalApplication);
+  } on Exception catch (e) {
+    log('Exception: $e', name: 'ReferralDetailsScreen');
+    BaseUtil.showNegativeAlert(
+        'Unable to open WhatsApp', 'Please share the referral link manually');
+  }
 }

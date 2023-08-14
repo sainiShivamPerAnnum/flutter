@@ -115,4 +115,10 @@ class _QuizWebViewState extends State<QuizWebView> {
       ),
     );
   }
+
+  @override
+  void dispose() {
+    AppState.isQuizInProgress = false;
+    super.dispose();
+  }
 }
