@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/feature/flo_withdrawals/ui/reinvest_slider.dart';
 import 'package:felloapp/feature/flo_withdrawals/ui/succesful_deposit_sheet.dart';
+import 'package:felloapp/feature/flo_withdrawals/ui/withdraw_feedback.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/extensions/rich_text_extension.dart';
 import 'package:felloapp/util/haptic.dart';
@@ -387,12 +388,12 @@ class ReConfirmationSheet extends HookWidget {
                     isBarrierDismissible: true,
                     backgroundColor: Colors.transparent,
                     isScrollControlled: true,
-                    content: SuccessfulDepositSheet(
-                      investAmount: '140',
-                      maturityAmount: '150',
-                      maturityDate: '${DateTime.now()}',
-                      reInvestmentDate: '${DateTime.now()}',
-                    ),
+                    content: const WithdrawalFeedback(
+                        // investAmount: '140',
+                        // maturityAmount: '150',
+                        // maturityDate: '${DateTime.now()}',
+                        // reInvestmentDate: '${DateTime.now()}',
+                        ),
                   );
                 }
 
@@ -454,7 +455,7 @@ class OptionDecisionContainer extends StatelessWidget {
                   vertical: SizeConfig.padding2,
                 ),
                 decoration: BoxDecoration(
-                  color: Color(0xff62E3C4),
+                  color: const Color(0xff62E3C4),
                   borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(SizeConfig.padding6),
                       topRight: Radius.circular(SizeConfig.padding6)),
