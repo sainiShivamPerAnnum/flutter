@@ -21,13 +21,13 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/services.dart';
 
 class FcmListener {
-  final BaseUtil? _baseUtil = locator<BaseUtil>();
-  final DBModel? _dbModel = locator<DBModel>();
+  final BaseUtil _baseUtil = locator<BaseUtil>();
+  final DBModel _dbModel = locator<DBModel>();
   final CustomLogger? logger = locator<CustomLogger>();
   final FcmHandler _handler;
-  final UserService? _userService = locator<UserService>();
-  final AnalyticsService? _analyticsService = locator<AnalyticsService>();
-  final InternalOpsService? _internalOpsService = locator<InternalOpsService>();
+  final UserService _userService = locator<UserService>();
+  final AnalyticsService _analyticsService = locator<AnalyticsService>();
+  final InternalOpsService _internalOpsService = locator<InternalOpsService>();
   S locale = locator<S>();
   FirebaseMessaging? _fcm;
   bool isTambolaNotificationLoading = false;
@@ -55,14 +55,13 @@ class FcmListener {
         _saveDeviceToken(token);
       });
 
-      _fcm!.getInitialMessage().then((RemoteMessage? message) {
+      unawaited(_fcm!.getInitialMessage().then((RemoteMessage? message) {
         if (message != null) {
-          logger!
-              .d("terminated onMessage received: " + message.data.toString());
+          logger!.d("terminated onMessage received: ${message.data}");
           // _handler.handleMessage(message.data, MsgSource.Terminated);
           AppState.startupNotifMessage = message.data;
         }
-      });
+      }));
 
       final data = PreferenceHelper.getString("fcmData");
 
@@ -71,14 +70,15 @@ class FcmListener {
         PreferenceHelper.remove("fcmData");
       }
 
-      FirebaseMessaging.onMessage.listen((RemoteMessage message) async {
+      FirebaseMessaging.onMessage.listen((message) async {
         RemoteNotification? notification = message.notification;
         if (message.data != null && message.data.isNotEmpty) {
           _handler!.handleMessage(message.data, MsgSource.Foreground);
         } else if (notification != null) {
           logger!.d(
-              "Handle Notification: ${notification.title} ${notification.body}");
-          _handler.handleNotification(notification.title, notification.body);
+              "Handle Notification: ${notification.title} ${notification.body}, ${message.data['command']}");
+          _handler.handleNotification(
+              notification.title, notification.body, message.data['command']);
         }
       });
 
@@ -240,11 +240,11 @@ class FcmListener {
 
   Future<void> refreshTopics() async {
     /**
-   * save the day as iso8601String in cache and whenever app opens, 
-   * check if user has opened on the same day or different day
-   * if(same day) and exit the method
-   * if(different day of empty) update segment and update cache too
-   */
+     * save the day as iso8601String in cache and whenever app opens,
+     * check if user has opened on the same day or different day
+     * if(same day) and exit the method
+     * if(different day of empty) update segment and update cache too
+     */
     final String lastAppOpenTimeStamp =
         PreferenceHelper.getString(PreferenceHelper.CACHE_LAST_APP_OPEN);
     if (lastAppOpenTimeStamp.isEmpty) {

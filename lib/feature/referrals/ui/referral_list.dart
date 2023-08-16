@@ -33,16 +33,35 @@ class ReferralList extends StatefulWidget {
 
 class _ReferralListState extends State<ReferralList> {
   final ScrollController scrollController = ScrollController();
+  bool _isBouncyScroll = false;
 
   @override
   void initState() {
     super.initState();
+
+    widget.scrollController.addListener(() {
+      if (widget.scrollController.offset ==
+          widget.scrollController.position.maxScrollExtent) {
+        setState(() {
+          _isBouncyScroll = true;
+        });
+      } else {
+        if (_isBouncyScroll) {
+          setState(() {
+            _isBouncyScroll = false;
+          });
+        }
+      }
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
       controller: scrollController,
+      physics: _isBouncyScroll
+          ? const ClampingScrollPhysics()
+          : const NeverScrollableScrollPhysics(),
       child: Container(
         color: const Color(0xFF454545).withOpacity(0.3),
         child: widget.model.referalList == null
@@ -74,20 +93,20 @@ class _ReferralListState extends State<ReferralList> {
                       SizedBox(height: SizeConfig.padding16),
                       Text(
                         'You haven’t made any referrals yet',
-              style: TextStyles.sourceSans.body3
-                  .colour(Colors.white.withOpacity(0.8)),
-            ),
-            SizedBox(height: SizeConfig.padding12),
-            Text('Earn over ₹1Lakh',
-                textAlign: TextAlign.center,
-                style: TextStyles.rajdhaniSB.body0
-                    .colour(Colors.white.withOpacity(0.8))),
-            SizedBox(
-              height: SizeConfig.padding16,
-            ),
-            MaterialButton(
-              onPressed: () {
-                if (widget.model.isShareAlreadyClicked == false) {
+                        style: TextStyles.sourceSans.body3
+                            .colour(Colors.white.withOpacity(0.8)),
+                      ),
+                      SizedBox(height: SizeConfig.padding12),
+                      Text('Earn over ₹1Lakh',
+                          textAlign: TextAlign.center,
+                          style: TextStyles.rajdhaniSB.body0
+                              .colour(Colors.white.withOpacity(0.8))),
+                      SizedBox(
+                        height: SizeConfig.padding16,
+                      ),
+                      MaterialButton(
+                        onPressed: () {
+                          if (widget.model.isShareAlreadyClicked == false) {
                             locator<ReferralService>().shareLink();
 
                             locator<AnalyticsService>().track(
@@ -99,17 +118,17 @@ class _ReferralListState extends State<ReferralList> {
                             );
                           }
                         },
-              color: Colors.white,
-              minWidth: SizeConfig.padding100,
-              padding: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.padding60,
-                  vertical: SizeConfig.padding12),
-              shape: RoundedRectangleBorder(
-                borderRadius:
-                BorderRadius.circular(SizeConfig.roundness5),
-              ),
-              height: SizeConfig.padding34,
-              child: Text(
+                        color: Colors.white,
+                        minWidth: SizeConfig.padding100,
+                        padding: EdgeInsets.symmetric(
+                            horizontal: SizeConfig.padding60,
+                            vertical: SizeConfig.padding12),
+                        shape: RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.circular(SizeConfig.roundness5),
+                        ),
+                        height: SizeConfig.padding34,
+                        child: Text(
                           "REFER NOW",
                           style:
                               TextStyles.rajdhaniB.body3.colour(Colors.black),
@@ -123,9 +142,14 @@ class _ReferralListState extends State<ReferralList> {
                 : widget.model
                         .bonusUnlockedReferalPresent(widget.model.referalList!)
                     ? ReferralListView(
-                        referalList: widget.model.referalList!,
-                        onStateChanged: () {
-                          widget.model.refresh();
+          referalList: widget.model.referalList!,
+                        onStateChanged: (val) {
+                          // widget.model.refresh();
+                          if (_isBouncyScroll) {
+                            setState(() {
+                              _isBouncyScroll = false;
+                            });
+                          }
                         },
                         model: widget.model,
                         scrollController: scrollController,
@@ -133,16 +157,16 @@ class _ReferralListState extends State<ReferralList> {
                     : Column(
                         children: [
                           SizedBox(height: SizeConfig.padding16),
-            SvgPicture.asset(Assets.noReferralAsset),
-            SizedBox(height: SizeConfig.padding16),
-            Text(
-              'No referrals yet',
-              style: TextStyles.sourceSans.body2
-                  .colour(Colors.white),
-            ),
-            SizedBox(height: SizeConfig.padding16),
-          ],
-        ),
+                          SvgPicture.asset(Assets.noReferralAsset),
+                          SizedBox(height: SizeConfig.padding16),
+                          Text(
+                            'No referrals yet',
+                            style: TextStyles.sourceSans.body2
+                                .colour(Colors.white),
+                          ),
+                          SizedBox(height: SizeConfig.padding16),
+                        ],
+                      ),
       ),
     );
   }
@@ -187,6 +211,10 @@ class _ReferralListViewState extends State<ReferralListView> {
           widget.scrollController.position.maxScrollExtent) {
         loadMoreReferrals();
       }
+
+      if (widget.scrollController.offset <= 0.0) {
+        widget.onStateChanged(false);
+      }
     });
   }
 
@@ -212,7 +240,7 @@ class _ReferralListViewState extends State<ReferralListView> {
       });
     }
 
-    widget.onStateChanged();
+    // widget.onStateChanged();
   }
 
   Future<void> loadMoreReferrals() async {
