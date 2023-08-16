@@ -12,7 +12,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-enum UserDecision { REINVEST, WITHDRAW, MOVETO8 }
+enum UserDecision { REINVEST, WITHDRAW, MOVETO8, NOTDECIDED }
 
 class ReInvestmentSheet extends StatelessWidget {
   const ReInvestmentSheet({super.key});
@@ -169,38 +169,6 @@ class ReInvestmentSheet extends StatelessWidget {
                 ),
                 const UserDecisionWidget(),
                 SizedBox(height: SizeConfig.padding20),
-                // SlideAction(
-                //   text: "SLIDE TO Re-Invest",
-                //   textStyle: TextStyles.rajdhaniB.body1.colour(Colors.black),
-                //   borderRadius: SizeConfig.padding60,
-                //   height: SizeConfig.padding56,
-                //   // sliderButtonIconSize: SizeConfig.padding14,
-                //   sliderButtonIconPadding: SizeConfig.padding10,
-                //   outerColor: Colors.white,
-                //   innerColor: const Color(0xFF00EAC2),
-                //   sliderRotate: false,
-                //   onSubmit: () {
-                //     //Perform required action here, once the slider is fully transversed
-                //     log("unlocked");
-                //     Haptic.vibrate();
-                //     AppState.backButtonDispatcher?.didPopRoute();
-                //
-                //     BaseUtil.openModalBottomSheet(
-                //       addToScreenStack: true,
-                //       enableDrag: false,
-                //       hapticVibrate: true,
-                //       isBarrierDismissible: true,
-                //       backgroundColor: Colors.transparent,
-                //       isScrollControlled: true,
-                //       content: SuccessfulDepositSheet(
-                //         investAmount: '140',
-                //         maturityAmount: '150',
-                //         maturityDate: '${DateTime.now()}',
-                //         reInvestmentDate: '${DateTime.now()}',
-                //       ),
-                //     );
-                //   },
-                // ),
               ],
             ),
           ),

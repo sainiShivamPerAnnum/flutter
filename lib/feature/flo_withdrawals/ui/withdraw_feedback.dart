@@ -1,4 +1,6 @@
+import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -109,7 +111,13 @@ class WithdrawalFeedback extends HookWidget {
                 "Next",
                 style: TextStyles.rajdhaniB.body1.colour(Colors.black),
               ),
-              onPressed: () {}),
+              onPressed: () {
+                if (locator<BankAndPanService>().isBankDetailsAdded) {
+                } else {
+                  AppState.backButtonDispatcher!.didPopRoute();
+                  AppState.delegate!.parseRoute(Uri.parse("bankDetails"));
+                }
+              }),
           SizedBox(height: SizeConfig.padding12),
         ],
       ),
@@ -118,11 +126,10 @@ class WithdrawalFeedback extends HookWidget {
 }
 
 class WithdrawalOptionContainer extends StatelessWidget {
-  const WithdrawalOptionContainer(
-      {super.key,
-      required this.isSelected,
-      required this.onTap,
-      required this.title});
+  const WithdrawalOptionContainer({super.key,
+    required this.isSelected,
+    required this.onTap,
+    required this.title});
 
   final bool isSelected;
   final VoidCallback onTap;
