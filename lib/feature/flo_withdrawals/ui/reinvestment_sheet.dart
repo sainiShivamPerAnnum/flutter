@@ -4,10 +4,14 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/feature/flo_withdrawals/ui/reinvest_slider.dart';
 import 'package:felloapp/feature/flo_withdrawals/ui/succesful_deposit_sheet.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/util/extensions/rich_text_extension.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+
+enum UserDecision { REINVEST, WITHDRAW, MOVETO8 }
 
 class ReInvestmentSheet extends StatelessWidget {
   const ReInvestmentSheet({super.key});
@@ -36,10 +40,15 @@ class ReInvestmentSheet extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.end,
                   children: [
-                    Icon(
-                      Icons.close,
-                      color: Colors.white,
-                      size: SizeConfig.padding24,
+                    GestureDetector(
+                      onTap: () {
+                        AppState.backButtonDispatcher?.didPopRoute();
+                      },
+                      child: Icon(
+                        Icons.close,
+                        color: Colors.white,
+                        size: SizeConfig.padding24,
+                      ),
                     ),
                   ],
                 ),
@@ -159,42 +168,42 @@ class ReInvestmentSheet extends StatelessWidget {
                 ),
                 const UserDecisionWidget(),
                 SizedBox(height: SizeConfig.padding20),
-                SlideAction(
-                  text: "SLIDE TO Re-Invest",
-                  textStyle: TextStyles.rajdhaniB.body1.colour(Colors.black),
-                  borderRadius: SizeConfig.padding60,
-                  height: SizeConfig.padding56,
-                  // sliderButtonIconSize: SizeConfig.padding14,
-                  sliderButtonIconPadding: SizeConfig.padding10,
-                  outerColor: Colors.white,
-                  innerColor: const Color(0xFF00EAC2),
-                  sliderRotate: false,
-                  onSubmit: () {
-                    //Perform required action here, once the slider is fully transversed
-                    log("unlocked");
-                    Haptic.vibrate();
-                    AppState.backButtonDispatcher?.didPopRoute();
-
-                    BaseUtil.openModalBottomSheet(
-                      addToScreenStack: true,
-                      enableDrag: false,
-                      hapticVibrate: true,
-                      isBarrierDismissible: true,
-                      backgroundColor: Colors.transparent,
-                      isScrollControlled: true,
-                      content: SuccessfulDepositSheet(
-                        investAmount: '140',
-                        maturityAmount: '150',
-                        maturityDate: '${DateTime.now()}',
-                        reInvestmentDate: '${DateTime.now()}',
-                      ),
-                    );
-                  },
-                ),
+                // SlideAction(
+                //   text: "SLIDE TO Re-Invest",
+                //   textStyle: TextStyles.rajdhaniB.body1.colour(Colors.black),
+                //   borderRadius: SizeConfig.padding60,
+                //   height: SizeConfig.padding56,
+                //   // sliderButtonIconSize: SizeConfig.padding14,
+                //   sliderButtonIconPadding: SizeConfig.padding10,
+                //   outerColor: Colors.white,
+                //   innerColor: const Color(0xFF00EAC2),
+                //   sliderRotate: false,
+                //   onSubmit: () {
+                //     //Perform required action here, once the slider is fully transversed
+                //     log("unlocked");
+                //     Haptic.vibrate();
+                //     AppState.backButtonDispatcher?.didPopRoute();
+                //
+                //     BaseUtil.openModalBottomSheet(
+                //       addToScreenStack: true,
+                //       enableDrag: false,
+                //       hapticVibrate: true,
+                //       isBarrierDismissible: true,
+                //       backgroundColor: Colors.transparent,
+                //       isScrollControlled: true,
+                //       content: SuccessfulDepositSheet(
+                //         investAmount: '140',
+                //         maturityAmount: '150',
+                //         maturityDate: '${DateTime.now()}',
+                //         reInvestmentDate: '${DateTime.now()}',
+                //       ),
+                //     );
+                //   },
+                // ),
               ],
             ),
           ),
-          // const ReInvestmentBottomWidget()
+          const ReInvestmentBottomWidget()
         ],
       ),
     );
@@ -223,10 +232,13 @@ class ReInvestmentBottomWidget extends StatelessWidget {
           SizedBox(height: SizeConfig.padding16),
           SlideAction(
             text: "SLIDE TO Re-Invest",
+            textStyle: TextStyles.rajdhaniB.body1.colour(Colors.black),
             borderRadius: SizeConfig.padding60,
             height: SizeConfig.padding56,
+            // sliderButtonIconSize: SizeConfig.padding14,
+            sliderButtonIconPadding: SizeConfig.padding10,
             outerColor: Colors.white,
-            innerColor: const Color(0xFF43544F),
+            innerColor: const Color(0xFF00EAC2),
             sliderRotate: false,
             onSubmit: () {
               //Perform required action here, once the slider is fully transversed
@@ -251,13 +263,265 @@ class ReInvestmentBottomWidget extends StatelessWidget {
             },
           ),
           SizedBox(height: SizeConfig.padding25),
-          Text(
-            'I AM HAPPY WITH 8% RETURNS ONLY',
-            textAlign: TextAlign.center,
-            style: TextStyles.rajdhaniB.body1
-                .colour(const Color(0xFFBDBDBE))
-                .copyWith(decoration: TextDecoration.underline),
+          GestureDetector(
+            onTap: () {
+              BaseUtil.openModalBottomSheet(
+                addToScreenStack: true,
+                enableDrag: false,
+                hapticVibrate: true,
+                isBarrierDismissible: true,
+                backgroundColor: Colors.transparent,
+                isScrollControlled: true,
+                content: const ReConfirmationSheet(),
+              );
+            },
+            child: Text(
+              'I AM HAPPY WITH 8% RETURNS ONLY',
+              textAlign: TextAlign.center,
+              style: TextStyles.rajdhaniB.body1
+                  .colour(const Color(0xFFBDBDBE))
+                  .copyWith(decoration: TextDecoration.underline),
+            ),
           )
+        ],
+      ),
+    );
+  }
+}
+
+class ReConfirmationSheet extends HookWidget {
+  const ReConfirmationSheet({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    final selectedOption = useState(-1);
+
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: SizeConfig.padding22,
+        vertical: SizeConfig.padding18,
+      ),
+      decoration: BoxDecoration(
+        color: const Color(0xff023C40),
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(SizeConfig.padding16),
+          topRight: Radius.circular(SizeConfig.padding16),
+        ),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.end,
+            children: [
+              GestureDetector(
+                onTap: () {
+                  AppState.backButtonDispatcher?.didPopRoute();
+                },
+                child: Icon(
+                  Icons.close,
+                  color: Colors.white,
+                  size: SizeConfig.padding24,
+                ),
+              ),
+            ],
+          ),
+          SizedBox(height: SizeConfig.padding8),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text('Are you sure?',
+                  style: TextStyles.rajdhaniSB.body0.colour(Colors.white))
+            ],
+          ),
+          SizedBox(height: SizeConfig.padding8),
+          Text(
+            'You are missing out on earning 2% extra\nreturns on your investment',
+            textAlign: TextAlign.center,
+            style: TextStyles.sourceSans.body3.colour(Colors.white),
+          ),
+          SizedBox(height: SizeConfig.padding24),
+          OptionDecisionContainer(
+            optionIndex: 1,
+            title: 'Re-invest ₹150 in 10% Flo',
+            description: 'Becomes ₹160 on maturity',
+            isSelected: selectedOption.value == 1,
+            onTap: () {
+              selectedOption.value = 1;
+            },
+            showRecomended: true,
+          ),
+          OptionDecisionContainer(
+            optionIndex: 2,
+            title: "Move ₹150 to 8% Flo",
+            description: 'Becomes ₹160 on maturity',
+            isSelected: selectedOption.value == 2,
+            onTap: () {
+              selectedOption.value = 2;
+            },
+          ),
+          SizedBox(height: SizeConfig.padding16),
+          MaterialButton(
+              minWidth: SizeConfig.screenWidth,
+              color: Colors.white,
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(SizeConfig.roundness5),
+              ),
+              height: SizeConfig.padding44,
+              child: Text(
+                "Done",
+                style: TextStyles.rajdhaniB.body1.colour(Colors.black),
+              ),
+              onPressed: () {}),
+        ],
+      ),
+    );
+  }
+}
+
+class OptionDecisionContainer extends StatelessWidget {
+  final int optionIndex;
+  final String title;
+  final String description;
+  final bool isSelected;
+  final VoidCallback onTap;
+  final bool showRecomended;
+
+  const OptionDecisionContainer({
+    Key? key,
+    required this.optionIndex,
+    required this.title,
+    required this.description,
+    required this.isSelected,
+    required this.onTap,
+    this.showRecomended = false,
+  }) : super(key: key);
+
+  @override
+  Widget build(BuildContext context) {
+    return GestureDetector(
+      onTap: onTap,
+      child: Column(
+        children: [
+          if (showRecomended)
+            Center(
+              child: Container(
+                padding: EdgeInsets.symmetric(
+                  horizontal: SizeConfig.padding8,
+                  vertical: SizeConfig.padding2,
+                ),
+                decoration: BoxDecoration(
+                  color: Color(0xff62E3C4),
+                  borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(SizeConfig.padding6),
+                      topRight: Radius.circular(SizeConfig.padding6)),
+                ),
+                child: Text('Recommended ',
+                    textAlign: TextAlign.center,
+                    style: TextStyles.sourceSansSB.body4
+                        .colour(const Color(0xFF013B3F))),
+              ),
+            ),
+          Container(
+            margin: EdgeInsets.only(
+              bottom: SizeConfig.padding16,
+              left: SizeConfig.padding16,
+              right: SizeConfig.padding16,
+            ),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(
+                  SizeConfig.padding8), // Set rounded corner
+              border: Border.all(
+                  color: isSelected
+                      ? UiConstants
+                          .kTabBorderColor // Change color when selected
+                      : const Color(0xFFD3D3D3).withOpacity(0.6),
+                  width: 0.6),
+            ),
+            child: Column(
+              children: [
+                Container(
+                  padding: EdgeInsets.all(SizeConfig.padding16),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                      topLeft: Radius.circular(SizeConfig.padding8),
+                      topRight: Radius.circular(SizeConfig.padding8),
+                    ),
+                  ),
+                  child: Row(
+                    children: [
+                      Container(
+                          width: SizeConfig.padding24,
+                          height: SizeConfig.padding24,
+                          decoration: BoxDecoration(
+                            shape: BoxShape.circle,
+                            border: Border.all(
+                              color: isSelected
+                                  ? UiConstants.kTabBorderColor
+                                  : const Color(0xFFD3D3D3).withOpacity(0.6),
+                              width: SizeConfig.border1,
+                            ),
+                            // color: isSelected ? Colors.white : null,
+                          ),
+                          child: Container(
+                            margin: EdgeInsets.all(SizeConfig.padding4),
+                            decoration: BoxDecoration(
+                              shape: BoxShape.circle,
+                              color: isSelected
+                                  ? UiConstants.kTabBorderColor
+                                  : null,
+                            ),
+                          )),
+                      SizedBox(
+                        width: SizeConfig.padding16,
+                      ),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            title,
+                            style: TextStyles.rajdhaniB.body1,
+                          ),
+                          SizedBox(
+                            height: SizeConfig.padding2,
+                          ),
+                          Text(
+                            description,
+                            style: TextStyles.sourceSans.body3
+                                .colour(const Color(0xffA9C6D6)),
+                          ),
+                        ],
+                      ),
+                    ],
+                  ),
+                ),
+                Container(
+                  width: SizeConfig.screenWidth,
+                  // height: SizeConfig.padding22,
+                  padding: EdgeInsets.symmetric(
+                    // horizontal: SizeConfig.padding16,
+                    vertical: SizeConfig.padding4,
+                  ),
+                  decoration: ShapeDecoration(
+                    color: Colors.white.withOpacity(0.12),
+                    shape: const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.only(
+                        bottomLeft: Radius.circular(8),
+                        bottomRight: Radius.circular(8),
+                      ),
+                    ),
+                  ),
+                  child: Center(
+                    child: "Get *2X tickets* on saving".beautify(
+                      boldStyle:
+                          TextStyles.sourceSansB.body4.colour(Colors.white),
+                      style: TextStyles.sourceSans.body4.colour(Colors.white),
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
         ],
       ),
     );
