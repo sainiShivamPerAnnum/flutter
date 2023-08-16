@@ -638,10 +638,15 @@ class Successful8MovedSheet extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Icon(
-                Icons.close,
-                color: Colors.white,
-                size: SizeConfig.padding24,
+              GestureDetector(
+                onTap: () {
+                  AppState.backButtonDispatcher?.didPopRoute();
+                },
+                child: Icon(
+                  Icons.close,
+                  color: Colors.white,
+                  size: SizeConfig.padding24,
+                ),
               ),
             ],
           ),

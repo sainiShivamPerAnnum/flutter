@@ -1,4 +1,5 @@
 import 'package:felloapp/feature/flo_withdrawals/ui/reinvestment_sheet.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -36,10 +37,15 @@ class SuccessfulDepositSheet extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
-              Icon(
-                Icons.close,
-                color: Colors.white,
-                size: SizeConfig.padding24,
+              GestureDetector(
+                onTap: () {
+                  AppState.backButtonDispatcher?.didPopRoute();
+                },
+                child: Icon(
+                  Icons.close,
+                  color: Colors.white,
+                  size: SizeConfig.padding24,
+                ),
               ),
             ],
           ),
