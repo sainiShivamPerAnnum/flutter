@@ -1,36 +1,28 @@
 import 'dart:developer';
 
-import 'package:intl/intl.dart';
+import 'package:felloapp/core/model/timestamp_model.dart';
 
 class DateHelper {
-  static String timeAgoSinceDate(String dateString,
+  static String timeAgoSinceDate(TimestampModel date,
       {bool numericDates = true}) {
-    DateTime notificationDate =
-        DateFormat("yyyy-MM-dd HH:mm:ss").parse(dateString);
+    DateTime notificationDate = date.toDate();
     final date2 = DateTime.now();
     final difference = date2.difference(notificationDate);
 
-    // if (difference.inDays > 8) {
-    //   String day = notificationDate.day.toString();
-    //   String month = notificationDate.month.toString();
-    //   String year = notificationDate.year.toString();
-    //   String date = "$day/$month/$year";
-    //   return date;
-    // } else
     if ((difference.inDays / 7).floor() >= 1) {
-      return (numericDates) ? '1 w' : 'Last week';
+      return numericDates ? '1 w' : 'Last week';
     } else if (difference.inDays >= 2) {
       return '${difference.inDays} d';
     } else if (difference.inDays >= 1) {
-      return (numericDates) ? '1 d' : 'Yesterday';
+      return numericDates ? '1 d' : 'Yesterday';
     } else if (difference.inHours >= 2) {
       return '${difference.inHours} h';
     } else if (difference.inHours >= 1) {
-      return (numericDates) ? '1 h' : 'An hour ago';
+      return numericDates ? '1 h' : 'An hour ago';
     } else if (difference.inMinutes >= 2) {
       return '${difference.inMinutes} m';
     } else if (difference.inMinutes >= 1) {
-      return (numericDates) ? '1 m' : 'A minute ago';
+      return numericDates ? '1 m' : 'A minute ago';
     } else if (difference.inSeconds >= 3) {
       return '${difference.inSeconds} s';
     } else {
