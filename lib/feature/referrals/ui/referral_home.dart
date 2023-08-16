@@ -464,11 +464,20 @@ class _ReferralHomeState extends State<ReferralHome> {
               ),
               const Spacer(),
               GestureDetector(
-                onTap: () {
+                onTap: () async {
                   String message =
                       (referralService.shareMsg ?? referralShareText) +
                           (referralService.referralShortLink ?? "");
-                  launch('whatsapp://send?text=$message');
+
+                  if (!await canLaunchUrl(
+                      Uri.parse('whatsapp://send?text=$message'))) {
+                    BaseUtil.showNegativeAlert('Whatsapp not installed',
+                        'Please install whatsapp to share referral link');
+                    return;
+                  }
+
+                  launchUrl(Uri.parse('whatsapp://send?text=$message'),
+                      mode: LaunchMode.externalApplication);
 
                   locator<AnalyticsService>().track(
                     eventName: AnalyticsEvents.whatsappButtonTapped,
