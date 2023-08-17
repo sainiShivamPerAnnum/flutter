@@ -187,6 +187,7 @@ class FcmHandler extends ChangeNotifier {
 
     log("Foreground Fcm handler receives on ${DateFormat('yyyy-MM-dd - hh:mm a').format(DateTime.now())} - $title - $body - $command");
     if (command != null && command == FcmCommands.COMMAND_GOLDEN_TICKET_WIN) {
+      await Future.delayed(const Duration(seconds: 2));
       await _userService.checkForNewNotifications();
       return true;
     }

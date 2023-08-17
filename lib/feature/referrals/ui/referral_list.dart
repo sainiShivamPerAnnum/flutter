@@ -489,7 +489,8 @@ class _ReferralListViewState extends State<ReferralListView> {
                       width: SizeConfig.padding6,
                     ),
                     Text(
-                      'You earned ₹500',
+                      filteredReferrals[i].revampedInfo?.subtitle ??
+                          'You earned ₹500',
                       style: TextStyles.sourceSans.body3.colour(Colors.white),
                     )
                   ],
