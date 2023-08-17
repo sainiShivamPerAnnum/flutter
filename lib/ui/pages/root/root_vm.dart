@@ -152,20 +152,22 @@ class RootViewModel extends BaseViewModel {
   }
 
   void _checkForAppUpdates() {
-    InAppUpdate.checkForUpdate().then((info) {
-      if (info.updateAvailability == UpdateAvailability.updateAvailable) {
-        InAppUpdate.startFlexibleUpdate().then((result) {
-          if (result == AppUpdateResult.success) {
-            InAppUpdate.completeFlexibleUpdate()
-                .catchError((e) => _logger.e(e.toString()));
-          }
-        }).catchError((e) {
-          _logger.e(e.toString());
-        });
-      }
-    }).catchError((e) {
-      _logger.e(e.toString());
-    });
+    if (Platform.isAndroid) {
+      InAppUpdate.checkForUpdate().then((info) {
+        if (info.updateAvailability == UpdateAvailability.updateAvailable) {
+          InAppUpdate.startFlexibleUpdate().then((result) {
+            if (result == AppUpdateResult.success) {
+              InAppUpdate.completeFlexibleUpdate()
+                  .catchError((e) => _logger.e(e.toString()));
+            }
+          }).catchError((e) {
+            _logger.e(e.toString());
+          });
+        }
+      }).catchError((e) {
+        _logger.e(e.toString());
+      });
+    }
   }
 
   void showMarketingCampings() {
