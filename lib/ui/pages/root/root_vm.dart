@@ -45,6 +45,7 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
+import 'package:in_app_update/in_app_update.dart';
 // import 'package:flutter_dynamic_icon/flutter_dynamic_icon.dart';
 
 enum NavBarItem { Journey, Save, Account, Play, Tambola }
@@ -124,7 +125,7 @@ class RootViewModel extends BaseViewModel {
     WidgetsBinding.instance.addPostFrameCallback(
       (timeStamp) async {
         await _userService.userBootUpEE();
-
+        _checkForAppUpdates();
         if (!await verifyUserBootupDetails()) return;
         await checkForBootUpAlerts();
         // if (showNewInstallPopUp()) {
@@ -148,6 +149,23 @@ class RootViewModel extends BaseViewModel {
         _initAdhocNotifications();
       },
     );
+  }
+
+  void _checkForAppUpdates() {
+    InAppUpdate.checkForUpdate().then((info) {
+      if (info.updateAvailability == UpdateAvailability.updateAvailable) {
+        InAppUpdate.startFlexibleUpdate().then((result) {
+          if (result == AppUpdateResult.success) {
+            InAppUpdate.completeFlexibleUpdate()
+                .catchError((e) => _logger.e(e.toString()));
+          }
+        }).catchError((e) {
+          _logger.e(e.toString());
+        });
+      }
+    }).catchError((e) {
+      _logger.e(e.toString());
+    });
   }
 
   void showMarketingCampings() {
