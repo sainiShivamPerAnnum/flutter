@@ -43,9 +43,10 @@ class UserRepository extends BaseRepo {
       : "https://7y9layzs7j.execute-api.ap-south-1.amazonaws.com/prod";
 
   void setUpBaseUrl() {
-    if (FlavorConfig.isDevelopment() &&
-        AppConfig.getValue(AppConfigKey.useNewUrlUserOps)) {
-      _baseUrl = "https://api2.fello-dev.net/users";
+    if (AppConfig.getValue(AppConfigKey.useNewUrlUserOps)) {
+      _baseUrl = FlavorConfig.isProduction()
+          ? "https://api.fello-prod.net/users"
+          : "https://api2.fello-dev.net/users";
     }
   }
 
