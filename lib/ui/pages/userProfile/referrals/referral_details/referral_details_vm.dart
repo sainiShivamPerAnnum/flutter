@@ -74,6 +74,16 @@ class ReferralDetailsViewModel extends BaseViewModel {
 
   List<ReferralDetail>? get referalList => _referalList;
 
+  bool noMoreReferrals = false;
+  int _currentPage = 0;
+
+  int get currentPage => _currentPage;
+
+  set currentPage(int val) {
+    _currentPage = val;
+    notifyListeners();
+  }
+
   set referalList(List<ReferralDetail>? value) {
     _referalList = value;
     notifyListeners();
@@ -205,13 +215,34 @@ class ReferralDetailsViewModel extends BaseViewModel {
     dbProvider = Provider.of<DBModel>(context, listen: false);
     final ReferralRepo referralRepo = locator<ReferralRepo>();
 
+    if (noMoreReferrals) {
+      log("No more data to fetch");
+      return;
+    }
+
     // if (!(baseProvider.referralsFetched ?? false) || refresh) {
-    unawaited(referralRepo!.getReferralHistory().then((refHisModel) {
+    unawaited(referralRepo!
+        .getReferralHistory(currentPage: currentPage)
+        .then((refHisModel) {
       if (refHisModel.isSuccess()) {
         baseProvider.referralsFetched = true;
-        _referalList = baseProvider.userReferralsList = refHisModel.model ?? [];
-        // _referalList = baseProvider.userReferralsList;
+
+        if (currentPage == 0) {
+          _referalList =
+              baseProvider.userReferralsList = refHisModel.model ?? [];
+        } else {
+          _referalList?.addAll(refHisModel.model ?? []);
+        }
+
         log("Referral List: ${_referalList!.length}");
+
+        // If the fetched data count is less than 50, there's no more data to fetch
+        if ((refHisModel.model?.length ?? 0) < 50) {
+          noMoreReferrals = true; // Set the flag to true
+        } else {
+          // Increment the page number for the next fetch
+          currentPage++;
+        }
         notifyListeners();
       } else {
         BaseUtil.showNegativeAlert(refHisModel.errorMessage, '');

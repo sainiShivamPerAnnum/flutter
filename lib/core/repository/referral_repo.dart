@@ -61,12 +61,16 @@ class ReferralRepo extends BaseRepo {
     }
   }
 
-  Future<ApiResponse<List<ReferralDetail>>> getReferralHistory() async {
+  Future<ApiResponse<List<ReferralDetail>>> getReferralHistory(
+      {int currentPage = 0}) async {
     // List<ReferralDetail> referralHistory = [];
     try {
       final String bearer = await getBearerToken();
       final response = await APIService.instance.getData(
         ApiPath.getReferralHistory(userService!.baseUser!.uid),
+        queryParams: {
+          'offset': (50 * currentPage).toString(),
+        },
         token: bearer,
         cBaseUrl: _baseUrl,
       );

@@ -9,7 +9,6 @@ import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -63,40 +62,7 @@ class BlockedUserView extends StatelessWidget {
                 style: TextStyles.rajdhaniB.title2,
                 textAlign: TextAlign.center,
               ),
-              SizedBox(height: SizeConfig.padding24),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding44),
-                child: RichText(
-                  textAlign: TextAlign.center,
-                  text: TextSpan(
-                    text: isStateRestricted
-                        ? 'Please read our '
-                        : "${locale.obBlockedSubtitle1} ",
-                    style: TextStyles.rajdhani.colour(Colors.grey),
-                    children: [
-                      TextSpan(
-                        text: locale.termsOfService,
-                        style: TextStyles.rajdhani.underline,
-                        recognizer: TapGestureRecognizer()
-                          ..onTap = () {
-                            Haptic.vibrate();
-                            Haptic.vibrate();
-                            try {
-                              Haptic.vibrate();
-                              BaseUtil.launchUrl('https://fello.in/policy/tnc');
-                            } catch (e) {
-                              BaseUtil.showNegativeAlert(
-                                locale.obSomeThingWentWrong,
-                                locale.obCouldNotLaunch,
-                              );
-                            }
-                          },
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-              SizedBox(height: SizeConfig.padding34),
+              SizedBox(height: SizeConfig.navBarHeight),
             ],
           ),
           if (isStateRestricted)
@@ -130,7 +96,45 @@ class BlockedUserView extends StatelessWidget {
                       },
                     ),
                   )),
-            )
+            ),
+          if (isStateRestricted)
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: GestureDetector(
+                onTap: () async {
+                  Haptic.vibrate();
+                  try {
+                    await BaseUtil.launchUrl('https://fello.in/policy/tnc');
+                  } catch (e) {
+                    BaseUtil.showNegativeAlert(
+                      locale.obSomeThingWentWrong,
+                      locale.obCouldNotLaunch,
+                    );
+                  }
+                },
+                child: Padding(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: SizeConfig.padding44,
+                      vertical: SizeConfig.padding24),
+                  child: RichText(
+                    textAlign: TextAlign.center,
+                    text: TextSpan(
+                      text: isStateRestricted
+                          ? 'Please read our '
+                          : "${locale.obBlockedSubtitle1} ",
+                      style: TextStyles.rajdhani.colour(Colors.grey),
+                      children: [
+                        TextSpan(
+                          text: locale.termsOfService,
+                          style: TextStyles.rajdhani.underline,
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ),
+          SizedBox(height: SizeConfig.padding34),
         ],
       ),
     );
