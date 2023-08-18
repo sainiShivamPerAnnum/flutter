@@ -89,32 +89,18 @@ class _ReferralHomeState extends State<ReferralHome> {
                       child: SafeArea(
                         child: DefaultTabController(
                           length: 2,
-                          child: RefreshIndicator(
-                            notificationPredicate: (notification) {
-                              // with NestedScrollView local(depth == 2) OverscrollNotification are not sent
-                              return notification.depth == 2;
+                          child: NestedScrollView(
+                            controller: _controller,
+                            physics: const ClampingScrollPhysics(),
+                            headerSliverBuilder: (context, innerBoxIsScrolled) {
+                              return [
+                                buildHeaderSliver(model),
+                                buildBodySliver(model),
+                              ];
                             },
-                            onRefresh: () async {
-                              await model.fetchReferalsList(context,
-                                  refresh: true);
-                              await context
-                                  .read<ReferralCubit>()
-                                  .checkPermission(fromRefresh: true);
-                            },
-                            child: NestedScrollView(
+                            body: ReferralTabView(
                               controller: _controller,
-                              physics: const ClampingScrollPhysics(),
-                              headerSliverBuilder:
-                                  (context, innerBoxIsScrolled) {
-                                return [
-                                  buildHeaderSliver(model),
-                                  buildBodySliver(model),
-                                ];
-                              },
-                              body: ReferralTabView(
-                                controller: _controller,
-                                model: model,
-                              ),
+                              model: model,
                             ),
                           ),
                         ),
