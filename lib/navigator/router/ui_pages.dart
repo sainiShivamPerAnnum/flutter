@@ -95,6 +95,7 @@ const String PowerPlaySeasonLeaderboardPath = "powerplaySeasonLeaderboardPath";
 const String LendboxBuyViewPath = "/LendboxBuyViewPath";
 const String AssetSelectionViewPath = "/assetSelectionViewPath";
 const String QuizWebViewPath = "/quizWebViewPath";
+const String BalloonLottieScreenPath = "/bolloonLottieScreenPath";
 
 //GoldPro
 const String GoldProDetailsPath = "/goldProDetailsPath";
@@ -194,6 +195,7 @@ enum Pages {
   LendboxBuyView,
   AssetSelectionView,
   QuizWebView,
+  BalloonLottieScreen,
   //GOLDPRO
   GoldProDetailsView,
   GoldProBuyView,
@@ -806,6 +808,12 @@ PageConfiguration QuizWebViewConfig = PageConfiguration(
     path: QuizWebViewPath,
     uiPage: Pages.QuizWebView,
     name: "Quiz Web View Screen");
+
+PageConfiguration BalloonLottieScreenViewConfig = PageConfiguration(
+    key: 'BalloonLottieScreenViewPath',
+    path: BalloonLottieScreenPath,
+    uiPage: Pages.BalloonLottieScreen,
+    name: "Balloon Lottie Screen View Screen");
 
 PageConfiguration GoldProDetailsViewPageConfig = PageConfiguration(
     key: 'GoldProDetailsViewPath',

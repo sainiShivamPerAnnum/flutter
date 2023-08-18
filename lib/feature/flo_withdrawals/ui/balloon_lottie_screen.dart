@@ -1,6 +1,8 @@
 import 'dart:developer';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/feature/flo_withdrawals/ui/reinvestment_sheet.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/service_elements/last_week/last_week_bg.dart';
 import 'package:felloapp/util/haptic.dart';
@@ -9,14 +11,14 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lottie/lottie.dart';
 
-class BubbleLottieScreen extends StatefulWidget {
-  const BubbleLottieScreen({super.key});
+class BalloonLottieScreen extends StatefulWidget {
+  const BalloonLottieScreen({super.key});
 
   @override
-  State<BubbleLottieScreen> createState() => _BubbleLottieScreenState();
+  State<BalloonLottieScreen> createState() => _BalloonLottieScreenState();
 }
 
-class _BubbleLottieScreenState extends State<BubbleLottieScreen>
+class _BalloonLottieScreenState extends State<BalloonLottieScreen>
     with SingleTickerProviderStateMixin {
   void _incrementCounter() {
     controller?.reset();
@@ -148,9 +150,14 @@ class _BubbleLottieScreenState extends State<BubbleLottieScreen>
           Positioned(
             top: SizeConfig.padding56,
             left: SizeConfig.padding18,
-            child: const Icon(
-              Icons.arrow_back_ios,
-              color: Colors.white,
+            child: GestureDetector(
+              onTap: () {
+                AppState.backButtonDispatcher!.didPopRoute();
+              },
+              child: const Icon(
+                Icons.arrow_back_ios,
+                color: Colors.white,
+              ),
             ),
           ),
           Positioned(
@@ -219,16 +226,55 @@ class _BubbleLottieScreenState extends State<BubbleLottieScreen>
             ),
           Align(
             alignment: Alignment.bottomCenter,
-            child: Padding(
-              padding: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.padding25,
-                  vertical: SizeConfig.padding16),
-              child: AppPositiveBtn(
-                onPressed: _incrementCounter,
-                btnText: "CHANGE DECISION",
-              ),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: SizeConfig.padding25,
+                      vertical: SizeConfig.padding16),
+                  child: AppPositiveBtn(
+                    onPressed: _incrementCounter,
+                    btnText:
+                        showWithdrawalScreen ? "WITHDRAW" : "CHANGE DECISION",
+                  ),
+                ),
+                if (showWithdrawalScreen)
+                  GestureDetector(
+                    onTap: () {
+                      Haptic.vibrate();
+                      AppState.backButtonDispatcher?.didPopRoute();
+
+                      // Add delay to show the modal sheet
+                      Future.delayed(const Duration(milliseconds: 700), () {
+                        BaseUtil.openModalBottomSheet(
+                          addToScreenStack: true,
+                          enableDrag: false,
+                          hapticVibrate: true,
+                          isBarrierDismissible: true,
+                          backgroundColor: Colors.transparent,
+                          isScrollControlled: true,
+                          content: const ReConfirmationSheet(),
+                        );
+                      });
+                    },
+                    child: Container(
+                      width: SizeConfig.screenWidth! * 0.75,
+                      padding: EdgeInsets.only(
+                          bottom: SizeConfig.padding26,
+                          top: SizeConfig.padding8),
+                      child: Text(
+                        'CHANGE DECISION',
+                        textAlign: TextAlign.center,
+                        style: TextStyles.rajdhaniSB.body0.colour(
+                          const Color(0xFF46BDA4),
+                        ),
+                      ),
+                    ),
+                  )
+              ],
             ),
-          )
+          ),
         ],
       ),
     );
