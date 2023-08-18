@@ -3,7 +3,9 @@ library flutterslidetoact;
 import 'dart:async';
 import 'dart:math';
 
+import 'package:felloapp/util/assets.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 /// Slider call to action component
 class SlideAction extends StatefulWidget {
@@ -222,6 +224,17 @@ class SlideActionState extends State<SlideAction>
                                             .primaryIconTheme
                                             .color,
                                     child: Container(
+                                      decoration: const ShapeDecoration(
+                                        gradient: LinearGradient(
+                                          begin: Alignment(0.00, -1.00),
+                                          end: Alignment(0, 1),
+                                          colors: [
+                                            Color(0xFF00EAC2),
+                                            Color(0xFF43544F),
+                                          ],
+                                        ),
+                                        shape: OvalBorder(),
+                                      ),
                                       padding: EdgeInsets.all(
                                           widget.sliderButtonIconPadding),
                                       child: Transform.rotate(
@@ -230,14 +243,11 @@ class SlideActionState extends State<SlideAction>
                                             : 0,
                                         child: Center(
                                           child: widget.sliderButtonIcon ??
-                                              Icon(
-                                                Icons.arrow_forward,
-                                                size:
+                                              SvgPicture.asset(
+                                                Assets.chevRonRightArrow,
+                                                color: Colors.black,
+                                                height:
                                                     widget.sliderButtonIconSize,
-                                                color: widget.outerColor ??
-                                                    Theme.of(context)
-                                                        .colorScheme
-                                                        .secondary,
                                               ),
                                         ),
                                       ),

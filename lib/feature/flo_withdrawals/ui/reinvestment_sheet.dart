@@ -211,10 +211,10 @@ class ReInvestmentBottomWidget extends StatelessWidget {
             textStyle: TextStyles.rajdhaniB.body1.colour(Colors.black),
             borderRadius: SizeConfig.padding60,
             height: SizeConfig.padding56,
-            // sliderButtonIconSize: SizeConfig.padding14,
-            sliderButtonIconPadding: SizeConfig.padding10,
+            sliderButtonIconSize: SizeConfig.padding24,
+            sliderButtonIconPadding: SizeConfig.padding12,
             outerColor: Colors.white,
-            innerColor: const Color(0xFF00EAC2),
+            // innerColor: const Color(0xFF00EAC2),
             sliderRotate: false,
             onSubmit: () {
               //Perform required action here, once the slider is fully transversed
