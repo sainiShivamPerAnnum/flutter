@@ -1,4 +1,5 @@
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
+import 'package:felloapp/feature/flo_withdrawals/ui/bubble_lottie_screen.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
@@ -112,7 +113,11 @@ class WithdrawalFeedback extends HookWidget {
                 style: TextStyles.rajdhaniB.body1.colour(Colors.black),
               ),
               onPressed: () {
-                if (locator<BankAndPanService>().isBankDetailsAdded) {
+                if (!locator<BankAndPanService>().isBankDetailsAdded) {
+                  MaterialPageRoute route = MaterialPageRoute(
+                      builder: (context) => const BubbleLottieScreen());
+
+                  Navigator.push(context, route);
                 } else {
                   AppState.backButtonDispatcher!.didPopRoute();
                   AppState.delegate!.parseRoute(Uri.parse("bankDetails"));
@@ -126,10 +131,11 @@ class WithdrawalFeedback extends HookWidget {
 }
 
 class WithdrawalOptionContainer extends StatelessWidget {
-  const WithdrawalOptionContainer({super.key,
-    required this.isSelected,
-    required this.onTap,
-    required this.title});
+  const WithdrawalOptionContainer(
+      {super.key,
+      required this.isSelected,
+      required this.onTap,
+      required this.title});
 
   final bool isSelected;
   final VoidCallback onTap;
