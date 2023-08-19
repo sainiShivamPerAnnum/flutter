@@ -10,9 +10,10 @@ import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/bottom_nav_bar_item_model.dart';
 import 'package:felloapp/core/repository/games_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
-import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/feature/referrals/ui/referral_home.dart';
+import 'package:felloapp/feature/tambola/src/ui/onboarding/intro_view/tickets_intro_view.dart';
+import 'package:felloapp/feature/tambola/src/ui/onboarding/onboarding_views/tickets_tutorial_assets_view.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/transition_delegate.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -79,7 +80,6 @@ import '../../core/model/app_config_model.dart';
 class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     with ChangeNotifier, PopNavigatorRouterDelegateMixin {
   final AnalyticsService _analytics = locator<AnalyticsService>();
-  final JourneyService _journeyService = locator<JourneyService>();
 
   final List<Page> _pages = [];
 
@@ -87,8 +87,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
   final GlobalKey<NavigatorState> navigatorKey;
 
   final CustomLogger _logger = locator<CustomLogger>();
-  final BaseUtil _baseUtil =
-      locator<BaseUtil>(); //required to fetch client token
   final AppState appState;
 
   FelloRouterDelegate(this.appState) : navigatorKey = GlobalKey() {
@@ -353,6 +351,14 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           break;
         case Pages.QuizWebView:
           _addPageData(const QuizWebView(), QuizWebViewConfig);
+          break;
+        case Pages.TicketsIntroViewPath:
+          _addPageData(const TicketsIntroView(), TicketsIntroViewPageConfig);
+          break;
+
+        case Pages.TicketsTutorialViewPath:
+          _addPageData(
+              const TicketsTutorialsView(), TicketsTutorialViewPageConfig);
           break;
 
         default:
@@ -688,6 +694,12 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         break;
       case Pages.GoldProTxnsDetailsView:
         GoldProTxnsDetailsViewPageConfig.currentPageAction = action;
+        break;
+      case Pages.TicketsIntroViewPath:
+        TicketsIntroViewPageConfig.currentPageAction = action;
+        break;
+      case Pages.TicketsTutorialViewPath:
+        TicketsTutorialViewPageConfig.currentPageAction = action;
         break;
       default:
         break;
@@ -1028,6 +1040,12 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         break;
       case "goldProSell":
         pageConfiguration = GoldProSellViewPageConfig;
+        break;
+      case "ticketsIntro":
+        pageConfiguration = TicketsIntroViewPageConfig;
+        break;
+      case "ticketsTutorial":
+        pageConfiguration = TicketsTutorialViewPageConfig;
         break;
     }
     if (pageConfiguration != null) {

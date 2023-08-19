@@ -196,7 +196,8 @@ class TicketTag extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: SizeConfig.screenWidth! * 0.5,
+      height: SizeConfig.padding20,
+      width: SizeConfig.padding100,
       child: Stack(
         children: [
           Positioned.fill(

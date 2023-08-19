@@ -415,4 +415,7 @@ class Assets {
 
   static const String youtubeLogo =
       "https://upload.wikimedia.org/wikipedia/commons/e/ef/Youtube_logo.png";
+
+  //Tickets
+  static const String polkaDots = "assets/images/polkadots.png";
 }

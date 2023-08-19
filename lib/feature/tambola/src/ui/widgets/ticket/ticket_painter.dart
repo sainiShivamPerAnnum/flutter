@@ -10,8 +10,8 @@ class TicketPainter extends CustomClipper<Path> {
     path.lineTo(size.width, size.height);
     path.lineTo(size.width, 0.0);
 
-    path.addOval(Rect.fromCircle(center: const Offset(0.0, 40), radius: 10.0));
-    path.addOval(Rect.fromCircle(center: Offset(size.width, 40), radius: 10.0));
+    path.addOval(Rect.fromCircle(center: const Offset(0.0, 65), radius: 10.0));
+    path.addOval(Rect.fromCircle(center: Offset(size.width, 65), radius: 10.0));
 
     return path;
   }
