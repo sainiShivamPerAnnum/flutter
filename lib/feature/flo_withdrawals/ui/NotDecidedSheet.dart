@@ -75,7 +75,7 @@ class NotDecidedModalSheet extends HookWidget {
                       ],
                     ),
                     SizedBox(height: SizeConfig.padding40),
-                    FloAssetInfoWidget(
+                    const FloAssetInfoWidget(
                       investedAmount: '140',
                       investedDate: '3rd June 2023',
                       maturityAmount: '150',
@@ -112,6 +112,8 @@ class NotDecidedModalSheet extends HookWidget {
                       description: 'Becomes ₹160 on maturity',
                       promoText: 'You don’t lose any of your tickets',
                       recommendedText: '1L+ users chose this',
+                      promoContainerColor:
+                          const Color(0xFF1ADAB7).withOpacity(0.35),
                       isSelected: selectedOption.value == 1,
                       onTap: () {
                         selectedOption.value = 1;
@@ -123,6 +125,9 @@ class NotDecidedModalSheet extends HookWidget {
                       title: "Move ₹150 to 8% Flo",
                       description: 'Becomes ₹160 on maturity',
                       promoText: 'You will lose out on *20 tickets*',
+                      promoTextBoldColor: const Color(0xFF61E3C4),
+                      promoContainerColor:
+                          const Color(0xFF1ADAB7).withOpacity(0.35),
                       isSelected: selectedOption.value == 2,
                       onTap: () {
                         selectedOption.value = 2;
@@ -135,6 +140,7 @@ class NotDecidedModalSheet extends HookWidget {
                       promoText: 'You’ll lose *30 tickets* at withdrawal',
                       promoContainerColor:
                           const Color(0xffA5381B).withOpacity(0.6),
+                      promoTextBoldColor: const Color(0xFFF79780),
                       isSelected: selectedOption.value == 3,
                       onTap: () {
                         selectedOption.value = 3;
