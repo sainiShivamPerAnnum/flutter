@@ -255,7 +255,7 @@ class FloAssetInfoWidget extends StatelessWidget {
           Align(
             alignment: Alignment.topCenter,
             child: Transform.translate(
-              offset: Offset(0, -SizeConfig.padding8),
+              offset: Offset(0, -SizeConfig.padding12),
               child: Container(
                 padding: EdgeInsets.symmetric(
                     horizontal: SizeConfig.padding8,
@@ -423,6 +423,8 @@ class ReInvestmentBottomWidget extends StatelessWidget {
 class ReConfirmationSheet extends HookWidget {
   const ReConfirmationSheet({super.key});
 
+  // final UserDecision decision;
+
   @override
   Widget build(BuildContext context) {
     final selectedOption = useState(-1);
@@ -545,6 +547,8 @@ class ReConfirmationSheet extends HookWidget {
                         maturityAmount: '150',
                         maturityDate: '${DateTime.now()}',
                         reInvestmentDate: '${DateTime.now()}',
+                        defaultMovedTo8: false,
+                        // move8flo: decision == UserDecision.MOVETO8,
                       ),
                     );
                   }
@@ -733,7 +737,7 @@ class UserDecisionWidget extends StatelessWidget {
       width: SizeConfig.screenWidth,
       decoration: ShapeDecoration(
         color: Colors.black.withOpacity(0.27),
-        shape: RoundedRectangleBorder(
+        shape: const RoundedRectangleBorder(
           borderRadius: BorderRadius.only(
               bottomLeft: Radius.circular(10),
               bottomRight: Radius.circular(10)),
@@ -755,12 +759,16 @@ class Successful8MovedSheet extends StatelessWidget {
       required this.maturityAmount,
       required this.maturityDate,
       required this.reInvestmentDate,
+      this.defaultMovedTo8 = false,
+      this.startsAt = 0,
       super.key});
 
   final String investAmount;
   final String maturityAmount;
   final String maturityDate;
   final String reInvestmentDate;
+  final bool defaultMovedTo8;
+  final int startsAt;
 
   @override
   Widget build(BuildContext context) {
@@ -811,162 +819,201 @@ class Successful8MovedSheet extends StatelessWidget {
                 ),
                 SizedBox(width: SizeConfig.padding8),
                 Expanded(
-                  child: Text('Your transaction matured on\n3rd September',
-                      style: TextStyles.rajdhaniSB.body0.colour(Colors.white)),
+                  child: Text(
+                    defaultMovedTo8
+                        ? 'Your transaction matured on\n3rd September'
+                        : 'Your New 8% Flo Deposit',
+                    style: TextStyles.rajdhaniSB.body0.colour(Colors.white),
+                  ),
                 )
               ],
             ),
 
             SizedBox(height: SizeConfig.padding22),
-            "Your new transaction has been moved to *8% Flo*".beautify(
-              boldStyle:
-                  TextStyles.sourceSansB.body3.colour(const Color(0xFF61E3C4)),
-              style: TextStyles.sourceSans.body3.colour(
-                const Color(0xFFE1E1E1),
-              ),
-            ),
-            SizedBox(height: SizeConfig.padding12),
-            Container(
-              padding: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.padding18,
-                  vertical: SizeConfig.padding20),
-              // height: SizeConfig.padding152,
-              decoration: ShapeDecoration(
-                color: Colors.black.withOpacity(0.37),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(10),
+            if (defaultMovedTo8)
+              "Your new transaction has been moved to *8% Flo*".beautify(
+                boldStyle: TextStyles.sourceSansB.body3
+                    .colour(const Color(0xFF61E3C4)),
+                style: TextStyles.sourceSans.body3.colour(
+                  const Color(0xFFE1E1E1),
                 ),
-                shadows: const [
-                  BoxShadow(
-                    color: Color(0x3F000000),
-                    blurRadius: 4,
-                    offset: Offset(0, 4),
-                    spreadRadius: 0,
-                  )
-                ],
               ),
-              child: Column(
-                children: [
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            if (defaultMovedTo8) SizedBox(height: SizeConfig.padding12),
+
+            Stack(
+              children: [
+                Container(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: SizeConfig.padding18,
+                      vertical: SizeConfig.padding20),
+                  // height: SizeConfig.padding152,
+                  decoration: ShapeDecoration(
+                    color: Colors.black.withOpacity(0.37),
+                    shape: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                  ),
+                  child: Column(
                     children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        mainAxisAlignment: MainAxisAlignment.start,
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            'Re-investment on',
-                            style: TextStyles.sourceSans.body3
-                                .colour(const Color(0xFFBDBDBE)),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            mainAxisAlignment: MainAxisAlignment.start,
+                            children: [
+                              Text(
+                                'Re-investment on',
+                                style: TextStyles.sourceSans.body3
+                                    .colour(const Color(0xFFBDBDBE)),
+                              ),
+                              SizedBox(height: SizeConfig.padding4),
+                              Container(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: SizeConfig.padding8,
+                                    vertical: SizeConfig.padding4),
+                                decoration: ShapeDecoration(
+                                  color:
+                                      const Color(0xFFD9D9D9).withOpacity(0.20),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(
+                                          SizeConfig.roundness12)),
+                                ),
+                                child: Text(
+                                  '3rd Sept 2023',
+                                  style: TextStyles.sourceSans.body4
+                                      .colour(Colors.white),
+                                ),
+                              )
+                            ],
                           ),
-                          SizedBox(height: SizeConfig.padding4),
-                          Container(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: SizeConfig.padding8,
-                                vertical: SizeConfig.padding4),
-                            decoration: ShapeDecoration(
-                              color: const Color(0xFFD9D9D9).withOpacity(0.20),
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(
-                                      SizeConfig.roundness12)),
-                            ),
-                            child: Text(
-                              '3rd Sept 2023',
-                              style: TextStyles.sourceSans.body4
-                                  .colour(Colors.white),
-                            ),
-                          )
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.end,
+                            children: [
+                              Text(
+                                'Lockin till',
+                                style: TextStyles.sourceSans.body3
+                                    .colour(const Color(0xFFBDBDBE)),
+                              ),
+                              SizedBox(height: SizeConfig.padding4),
+                              Container(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: SizeConfig.padding8,
+                                    vertical: SizeConfig.padding4),
+                                decoration: ShapeDecoration(
+                                  color:
+                                      const Color(0xFFD9D9D9).withOpacity(0.20),
+                                  shape: RoundedRectangleBorder(
+                                      borderRadius: BorderRadius.circular(
+                                          SizeConfig.roundness12)),
+                                ),
+                                child: Text(
+                                  '4th Dec 2023',
+                                  style: TextStyles.sourceSans.body4
+                                      .colour(Colors.white),
+                                ),
+                              )
+                            ],
+                          ),
                         ],
                       ),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.end,
+                      SizedBox(
+                        height: SizeConfig.padding16,
+                      ),
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
                         children: [
-                          Text(
-                            'Matures on',
-                            style: TextStyles.sourceSans.body3
-                                .colour(const Color(0xFFBDBDBE)),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Invested',
+                                style: TextStyles.sourceSans.body3
+                                    .colour(const Color(0xFFBDBDBE)),
+                              ),
+                              SizedBox(height: SizeConfig.padding4),
+                              Text(
+                                '₹$investAmount',
+                                style: TextStyles.sourceSansSB.title5
+                                    .colour(Colors.white),
+                              ),
+                            ],
                           ),
-                          SizedBox(height: SizeConfig.padding4),
-                          Container(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: SizeConfig.padding8,
-                                vertical: SizeConfig.padding4),
-                            decoration: ShapeDecoration(
-                              color: const Color(0xFFD9D9D9).withOpacity(0.20),
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(
-                                      SizeConfig.roundness12)),
+                          Column(children: [
+                            Text('@8% P.A',
+                                style: TextStyles.sourceSansSB.body4.colour(
+                                  const Color(0xFF3DFFD0),
+                                )),
+                            SvgPicture.asset(
+                              'assets/svg/Arrow.svg',
+                              width: SizeConfig.padding64,
                             ),
-                            child: Text(
-                              '4th Dec 2023',
-                              style: TextStyles.sourceSans.body4
+                            Text(
+                              'After 1 Year',
+                              textAlign: TextAlign.center,
+                              style: TextStyles.sourceSans.body3
                                   .colour(Colors.white),
                             ),
-                          )
+                          ]),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.center,
+                            children: [
+                              Text(
+                                'Will become',
+                                style: TextStyles.sourceSans.body3
+                                    .colour(const Color(0xFFBDBDBE)),
+                              ),
+                              SizedBox(height: SizeConfig.padding4),
+                              Text(
+                                '₹$maturityAmount',
+                                style: TextStyles.sourceSansSB.title5
+                                    .colour(const Color(0xFF1AFFD5)),
+                              ),
+                            ],
+                          ),
                         ],
                       ),
                     ],
                   ),
-                  SizedBox(
-                    height: SizeConfig.padding16,
-                  ),
-                  Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Invested',
-                            style: TextStyles.sourceSans.body3
-                                .colour(const Color(0xFFBDBDBE)),
-                          ),
-                          SizedBox(height: SizeConfig.padding4),
-                          Text(
-                            '₹$investAmount',
-                            style: TextStyles.sourceSansSB.title5
-                                .colour(Colors.white),
-                          ),
-                        ],
-                      ),
-                      Column(children: [
-                        Text('@8% P.A',
-                            style: TextStyles.sourceSansSB.body4.colour(
-                              const Color(0xFF3DFFD0),
-                            )),
-                        SvgPicture.asset(
-                          'assets/svg/Arrow.svg',
-                          width: SizeConfig.padding64,
+                ),
+                if (startsAt > 0 && !defaultMovedTo8)
+                  Align(
+                    alignment: Alignment.topCenter,
+                    child: Transform.translate(
+                      offset: Offset(0, -SizeConfig.padding12),
+                      child: Container(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: SizeConfig.padding8,
+                            vertical: SizeConfig.padding2),
+                        decoration: BoxDecoration(
+                          color: const Color(0xFF62E3C4),
+                          borderRadius:
+                              BorderRadius.circular(SizeConfig.roundness16),
                         ),
-                        Text(
-                          'After 1 Year',
-                          textAlign: TextAlign.center,
-                          style:
-                              TextStyles.sourceSans.body3.colour(Colors.white),
+                        child: 'Starts in *7 days*'.beautify(
+                          boldStyle: TextStyles.sourceSansB.body4.colour(
+                            const Color(0xFF013B3F),
+                          ),
+                          style: TextStyles.sourceSansSB.body4.colour(
+                            const Color(0xFF013B3F),
+                          ),
+                          alignment: TextAlign.center,
                         ),
-                      ]),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.center,
-                        children: [
-                          Text(
-                            'Maturity',
-                            style: TextStyles.sourceSans.body3
-                                .colour(const Color(0xFFBDBDBE)),
-                          ),
-                          SizedBox(height: SizeConfig.padding4),
-                          Text(
-                            '₹$maturityAmount',
-                            style: TextStyles.sourceSansSB.title5
-                                .colour(const Color(0xFF1AFFD5)),
-                          ),
-                        ],
                       ),
-                    ],
+                    ),
                   ),
-                ],
-              ),
+              ],
             ),
             SizedBox(height: SizeConfig.padding34),
+            if (!defaultMovedTo8) ...[
+              Text(
+                'Your new transaction will reflect from 3rd Sept',
+                textAlign: TextAlign.center,
+                style:
+                    TextStyles.sourceSans.body3.colour(const Color(0xFFBDBDBE)),
+              ),
+              SizedBox(height: SizeConfig.padding12),
+            ],
             MaterialButton(
                 minWidth: SizeConfig.screenWidth,
                 color: Colors.white,

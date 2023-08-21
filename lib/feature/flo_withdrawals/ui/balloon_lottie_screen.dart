@@ -237,7 +237,6 @@ class _BalloonLottieScreenState extends State<BalloonLottieScreen>
                       Haptic.vibrate();
                       AppState.backButtonDispatcher?.didPopRoute();
 
-                      // Add delay to show the modal sheet
                       Future.delayed(const Duration(milliseconds: 700), () {
                         BaseUtil.openModalBottomSheet(
                           addToScreenStack: true,
@@ -246,7 +245,7 @@ class _BalloonLottieScreenState extends State<BalloonLottieScreen>
                           isBarrierDismissible: true,
                           backgroundColor: Colors.transparent,
                           isScrollControlled: true,
-                          content: const ReConfirmationSheet(),
+                          content: ReConfirmationSheet(),
                         );
                       });
                     },
