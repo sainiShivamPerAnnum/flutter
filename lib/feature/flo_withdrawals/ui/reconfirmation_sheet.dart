@@ -1,15 +1,15 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/feature/flo_withdrawals/ui/succesful_deposit_sheet.dart';
 import 'package:felloapp/feature/flo_withdrawals/ui/success_8_moved_sheet.dart';
 import 'package:felloapp/feature/flo_withdrawals/ui/widgets/flo_option_decision_container.dart';
-import 'package:felloapp/feature/flo_withdrawals/ui/withdraw_feedback.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 
-class OtherOptionsModalSheet extends HookWidget {
-  const OtherOptionsModalSheet({super.key});
+class ReConfirmationSheet extends HookWidget {
+  const ReConfirmationSheet({super.key});
 
   // final UserDecision decision;
 
@@ -53,32 +53,36 @@ class OtherOptionsModalSheet extends HookWidget {
               ],
             ),
             SizedBox(height: SizeConfig.padding8),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text('Are you sure?',
+                    style: TextStyles.rajdhaniSB.body0.colour(Colors.white))
+              ],
+            ),
+            SizedBox(height: SizeConfig.padding8),
             Text(
-              'What do you want to do with the money?',
+              'You are missing out on earning 2% extra\nreturns on your investment',
               textAlign: TextAlign.center,
-              style: TextStyles.sourceSans.body2.colour(Colors.white),
+              style: TextStyles.sourceSans.body3.colour(Colors.white),
             ),
             SizedBox(height: SizeConfig.padding24),
             OptionDecisionContainer(
               optionIndex: 1,
-              title: 'Move ₹150 to 8% Flo',
-              description: 'Becomes ₹155 on maturity',
-              promoText: "You will lose out on *20 tickets*",
-              promoTextBoldColor: const Color(0xFF61E3C4),
-              promoContainerColor: const Color(0xFF1ADAB7).withOpacity(0.35),
+              title: 'Re-invest ₹150 in 10% Flo',
+              description: 'Becomes ₹160 on maturity',
+              promoText: "Get *2X tickets* on saving",
               isSelected: selectedOption.value == 1,
               onTap: () {
                 selectedOption.value = 1;
               },
-              showRecomended: false,
+              showRecomended: true,
             ),
             OptionDecisionContainer(
               optionIndex: 2,
-              title: "Withdraw to Bank",
-              description: '5% less returns with savings accounts',
-              promoText: 'You’ll lose *30 tickets* at withdrawal',
-              promoContainerColor: const Color(0xFFA4371A).withOpacity(0.6),
-              promoTextBoldColor: const Color(0xFFF79780),
+              title: "Move ₹150 to 8% Flo",
+              description: 'Becomes ₹160 on maturity',
+              promoText: 'You are losing out on 30 tickets',
               isSelected: selectedOption.value == 2,
               onTap: () {
                 selectedOption.value = 2;
@@ -97,10 +101,30 @@ class OtherOptionsModalSheet extends HookWidget {
                   style: TextStyles.rajdhaniB.body1.colour(Colors.black),
                 ),
                 onPressed: () {
-                  Haptic.vibrate();
-                  AppState.backButtonDispatcher?.didPopRoute();
-
                   if (selectedOption.value == 1) {
+                    Haptic.vibrate();
+                    AppState.backButtonDispatcher?.didPopRoute();
+
+                    BaseUtil.openModalBottomSheet(
+                      addToScreenStack: true,
+                      enableDrag: false,
+                      hapticVibrate: true,
+                      isBarrierDismissible: true,
+                      backgroundColor: Colors.transparent,
+                      isScrollControlled: true,
+                      content: SuccessfulDepositSheet(
+                        investAmount: '140',
+                        maturityAmount: '150',
+                        maturityDate: '${DateTime.now()}',
+                        reInvestmentDate: '${DateTime.now()}',
+                      ),
+                    );
+                  }
+
+                  if (selectedOption.value == 2) {
+                    Haptic.vibrate();
+                    AppState.backButtonDispatcher?.didPopRoute();
+
                     BaseUtil.openModalBottomSheet(
                       addToScreenStack: true,
                       enableDrag: false,
@@ -116,18 +140,6 @@ class OtherOptionsModalSheet extends HookWidget {
                         defaultMovedTo8: false,
                         // move8flo: decision == UserDecision.MOVETO8,
                       ),
-                    );
-                  }
-
-                  if (selectedOption.value == 2) {
-                    BaseUtil.openModalBottomSheet(
-                      addToScreenStack: true,
-                      enableDrag: false,
-                      hapticVibrate: true,
-                      isBarrierDismissible: true,
-                      backgroundColor: Colors.transparent,
-                      isScrollControlled: true,
-                      content: const WithdrawalFeedback(),
                     );
                   }
                 }),

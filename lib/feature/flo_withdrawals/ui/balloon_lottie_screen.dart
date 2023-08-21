@@ -1,7 +1,7 @@
 import 'dart:developer';
 
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/feature/flo_withdrawals/ui/reinvestment_sheet.dart';
+import 'package:felloapp/feature/flo_withdrawals/ui/reconfirmation_sheet.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/service_elements/last_week/last_week_bg.dart';
@@ -237,7 +237,7 @@ class _BalloonLottieScreenState extends State<BalloonLottieScreen>
                       Haptic.vibrate();
                       AppState.backButtonDispatcher?.didPopRoute();
 
-                      Future.delayed(const Duration(milliseconds: 700), () {
+                      Future.delayed(const Duration(milliseconds: 300), () {
                         BaseUtil.openModalBottomSheet(
                           addToScreenStack: true,
                           enableDrag: false,
@@ -245,7 +245,7 @@ class _BalloonLottieScreenState extends State<BalloonLottieScreen>
                           isBarrierDismissible: true,
                           backgroundColor: Colors.transparent,
                           isScrollControlled: true,
-                          content: ReConfirmationSheet(),
+                          content: const ReConfirmationSheet(),
                         );
                       });
                     },
