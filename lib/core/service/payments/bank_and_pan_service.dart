@@ -51,6 +51,7 @@ class BankAndPanService
   bool _isLockInReached = false;
   bool _isSellLocked = false;
   String? _sellNotice;
+  bool isFromFloWithdrawFlow = false;
 
   double _withdrawableQnt = 0.0;
   double _nonWithdrawableQnt = 0.0;
