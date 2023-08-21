@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/feature/flo_withdrawals/ui/NotDecidedSheet.dart';
 import 'package:felloapp/feature/flo_withdrawals/ui/reinvest_slider.dart';
 import 'package:felloapp/feature/flo_withdrawals/ui/succesful_deposit_sheet.dart';
 import 'package:felloapp/feature/flo_withdrawals/ui/withdraw_feedback.dart';
@@ -15,7 +16,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 enum UserDecision { REINVEST, WITHDRAW, MOVETO8, NOTDECIDED }
 
 class ReInvestmentSheet extends StatelessWidget {
-  const ReInvestmentSheet({super.key});
+  const ReInvestmentSheet({required this.decision, super.key});
+
+  final UserDecision decision;
 
   @override
   Widget build(BuildContext context) {
@@ -60,7 +63,7 @@ class ReInvestmentSheet extends StatelessWidget {
                   ),
                   SizedBox(height: SizeConfig.padding8),
                   Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisAlignment: MainAxisAlignment.start,
                     children: [
                       SvgPicture.asset(
                         'assets/svg/fello_flo.svg',
@@ -74,111 +77,26 @@ class ReInvestmentSheet extends StatelessWidget {
                               TextStyles.rajdhaniSB.body0.colour(Colors.white))
                     ],
                   ),
-                  SizedBox(height: SizeConfig.padding40),
-                  Container(
-                    padding: EdgeInsets.symmetric(
-                        horizontal: SizeConfig.padding14,
-                        vertical: SizeConfig.padding16),
-                    decoration: BoxDecoration(
-                      color: Colors.white.withOpacity(0.10),
-                      borderRadius: BorderRadius.circular(SizeConfig.padding8),
-                    ),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text(
-                              'Invested',
-                              style: TextStyles.sourceSans.body3
-                                  .colour(const Color(0xFFBDBDBE)),
-                            ),
-                            SizedBox(height: SizeConfig.padding4),
-                            Text(
-                              '₹140',
-                              style: TextStyles.sourceSansSB.title5
-                                  .colour(Colors.white),
-                            ),
-                            SizedBox(height: SizeConfig.padding8),
-                            Container(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: SizeConfig.padding8,
-                                    vertical: SizeConfig.padding4),
-                                decoration: ShapeDecoration(
-                                  color:
-                                      const Color(0xFFD9D9D9).withOpacity(0.20),
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(
-                                          SizeConfig.roundness12)),
-                                ),
-                                child: Text(
-                                  '3rd June 2023',
-                                  style: TextStyles.sourceSans.body4
-                                      .colour(Colors.white),
-                                ))
-                          ],
-                        ),
-                        Column(children: [
-                          Text(
-                            '6 months',
-                            textAlign: TextAlign.center,
-                            style: TextStyles.sourceSans.body3
-                                .colour(Colors.white),
-                          ),
-                          CustomPaint(
-                            size: Size(SizeConfig.padding64,
-                                (SizeConfig.padding64 * 0.12).toDouble()),
-                            painter: ArrowCustomPainter(),
-                          ),
-                          SizedBox(height: SizeConfig.padding8),
-                          Text('@10% P.A',
-                              style: TextStyles.sourceSansSB.body4.colour(
-                                const Color(0xFF3DFFD0),
-                              ))
-                        ]),
-                        Column(
-                          crossAxisAlignment: CrossAxisAlignment.center,
-                          children: [
-                            Text(
-                              'Maturity',
-                              style: TextStyles.sourceSans.body3
-                                  .colour(const Color(0xFFBDBDBE)),
-                            ),
-                            SizedBox(height: SizeConfig.padding4),
-                            Text(
-                              '₹150',
-                              style: TextStyles.sourceSansSB.title5
-                                  .colour(const Color(0xFF1AFFD5)),
-                            ),
-                            SizedBox(height: SizeConfig.padding8),
-                            Container(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: SizeConfig.padding8,
-                                    vertical: SizeConfig.padding4),
-                                decoration: ShapeDecoration(
-                                  color:
-                                      const Color(0xFFD9D9D9).withOpacity(0.20),
-                                  shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(
-                                          SizeConfig.roundness12)),
-                                ),
-                                child: Text(
-                                  '3rd Sept 2023',
-                                  style: TextStyles.sourceSans.body4
-                                      .colour(Colors.white),
-                                ))
-                          ],
-                        ),
-                      ],
-                    ),
+                  SizedBox(height: SizeConfig.padding26),
+                  FloAssetInfoWidget(
+                    investedAmount: '140',
+                    investedDate: '3rd June 2023',
+                    maturityAmount: '150',
+                    maturityDate: '3rd Sept 2023',
+                    decision: decision,
                   ),
-                  const UserDecisionWidget(),
-                  SizedBox(height: SizeConfig.padding20),
+                  SizedBox(
+                      height: (decision == UserDecision.MOVETO8 ||
+                              decision == UserDecision.WITHDRAW)
+                          ? SizeConfig.padding20
+                          : SizeConfig.padding10),
                 ],
               ),
             ),
-            const ReInvestmentBottomWidget()
+            ReInvestmentBottomWidget(
+              decision: decision,
+              remainingDay: 7,
+            )
           ],
         ),
       ),
@@ -186,8 +104,202 @@ class ReInvestmentSheet extends StatelessWidget {
   }
 }
 
+class FloAssetInfoWidget extends StatelessWidget {
+  const FloAssetInfoWidget({
+    required this.investedAmount,
+    required this.investedDate,
+    required this.maturityAmount,
+    required this.maturityDate,
+    required this.decision,
+    super.key,
+    this.maturesInDays = 7,
+  });
+
+  final String investedAmount;
+  final String investedDate;
+  final String maturityAmount;
+  final String maturityDate;
+  final int maturesInDays;
+  final UserDecision decision;
+
+  @override
+  Widget build(BuildContext context) {
+    return Stack(
+      children: [
+        Container(
+          decoration: BoxDecoration(
+            shape: BoxShape.rectangle,
+            border: Border.all(
+                width: 1,
+                strokeAlign: BorderSide.strokeAlignOutside,
+                color: const Color(0xFF326164)),
+            borderRadius: BorderRadius.circular(SizeConfig.roundness8),
+            // color: Color(0xff023C40),
+          ),
+          child: Column(
+            children: [
+              Container(
+                padding: EdgeInsets.symmetric(
+                    horizontal: SizeConfig.padding20,
+                    vertical: SizeConfig.padding16),
+                decoration: BoxDecoration(
+                  color: Colors.white.withOpacity(0.10),
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(SizeConfig.roundness8),
+                    topRight: Radius.circular(SizeConfig.roundness8),
+                  ),
+                ),
+                child: Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Invested',
+                          style: TextStyles.sourceSans.body3
+                              .colour(const Color(0xFFBDBDBE)),
+                        ),
+                        SizedBox(height: SizeConfig.padding4),
+                        Text(
+                          '₹$investedAmount',
+                          style: TextStyles.sourceSansSB.title5
+                              .colour(Colors.white),
+                        ),
+                        SizedBox(height: SizeConfig.padding8),
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: SizeConfig.padding8,
+                              vertical: SizeConfig.padding4),
+                          decoration: ShapeDecoration(
+                            color: const Color(0xFFD9D9D9).withOpacity(0.20),
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(
+                                    SizeConfig.roundness12)),
+                          ),
+                          child: Text(
+                            investedDate,
+                            style: TextStyles.sourceSans.body4
+                                .colour(Colors.white),
+                          ),
+                        )
+                      ],
+                    ),
+                    SizedBox(
+                      height: SizeConfig.padding56,
+                      child: Column(
+                        mainAxisAlignment: MainAxisAlignment.spaceAround,
+                        children: [
+                          Text(
+                            '6 months',
+                            textAlign: TextAlign.center,
+                            style: TextStyles.sourceSans.body3
+                                .colour(Colors.white),
+                          ),
+                          SvgPicture.asset(
+                            'assets/svg/Arrow.svg',
+                            width: SizeConfig.padding64,
+                          ),
+                          Text(
+                            '@10% P.A',
+                            style: TextStyles.sourceSansSB.body4.colour(
+                              const Color(0xFF3DFFD0),
+                            ),
+                          )
+                        ],
+                      ),
+                    ),
+                    Column(
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        Text(
+                          'Maturity',
+                          style: TextStyles.sourceSans.body3
+                              .colour(const Color(0xFFBDBDBE)),
+                        ),
+                        SizedBox(height: SizeConfig.padding4),
+                        Text(
+                          '₹$maturityAmount',
+                          style: TextStyles.sourceSansSB.title5
+                              .colour(const Color(0xFF1AFFD5)),
+                        ),
+                        SizedBox(height: SizeConfig.padding8),
+                        Container(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: SizeConfig.padding8,
+                                vertical: SizeConfig.padding4),
+                            decoration: ShapeDecoration(
+                              color: const Color(0xFFD9D9D9).withOpacity(0.20),
+                              shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(
+                                      SizeConfig.roundness12)),
+                            ),
+                            child: Text(
+                              maturityDate,
+                              style: TextStyles.sourceSans.body4
+                                  .colour(Colors.white),
+                            ))
+                      ],
+                    ),
+                  ],
+                ),
+              ),
+              UserDecisionWidget(
+                decision: decision,
+              ),
+            ],
+          ),
+        ),
+        if (maturesInDays > 0)
+          Align(
+            alignment: Alignment.topCenter,
+            child: Transform.translate(
+              offset: Offset(0, -SizeConfig.padding8),
+              child: Container(
+                padding: EdgeInsets.symmetric(
+                    horizontal: SizeConfig.padding8,
+                    vertical: SizeConfig.padding2),
+                decoration: BoxDecoration(
+                  color: const Color(0xFF62E3C4),
+                  borderRadius: BorderRadius.circular(SizeConfig.roundness16),
+                ),
+                child: 'Matures in *7 days*'.beautify(
+                  boldStyle: TextStyles.sourceSansB.body4.colour(
+                    const Color(0xFF013B3F),
+                  ),
+                  style: TextStyles.sourceSansSB.body4.colour(
+                    const Color(0xFF013B3F),
+                  ),
+                  alignment: TextAlign.center,
+                ),
+              ),
+            ),
+          ),
+      ],
+    );
+  }
+}
+
 class ReInvestmentBottomWidget extends StatelessWidget {
-  const ReInvestmentBottomWidget({super.key});
+  const ReInvestmentBottomWidget(
+      {required this.decision, required this.remainingDay, super.key});
+
+  final UserDecision decision;
+  final int remainingDay;
+
+  String getTitle() {
+    switch (decision) {
+      case UserDecision.MOVETO8:
+        return 'SLIDE TO GET 10% RETURNS';
+      case UserDecision.WITHDRAW:
+        return 'SLIDE TO RE-INVEST IN 10%';
+      case UserDecision.NOTDECIDED:
+        return 'MAKE DECISION NOW';
+      case UserDecision.REINVEST:
+        return 'SLIDE TO Re-Invest';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -196,18 +308,26 @@ class ReInvestmentBottomWidget extends StatelessWidget {
         horizontal: SizeConfig.padding24,
         vertical: SizeConfig.padding16,
       ),
-      color: Colors.black.withOpacity(0.37),
+      color: (decision == UserDecision.NOTDECIDED ||
+              decision == UserDecision.REINVEST)
+          ? null
+          : Colors.black.withOpacity(0.37),
       width: SizeConfig.screenWidth,
       child: Column(
         children: [
-          Text(
-            'Get extra 2% on your Investment',
-            textAlign: TextAlign.center,
-            style: TextStyles.rajdhaniSB.body2.colour(Colors.white),
-          ),
-          SizedBox(height: SizeConfig.padding16),
+          if (decision == UserDecision.MOVETO8 ||
+              decision == UserDecision.WITHDRAW) ...[
+            Text(
+              decision == UserDecision.MOVETO8
+                  ? 'Get extra 2% on your Investment'
+                  : 'Get more returns on your investment',
+              textAlign: TextAlign.center,
+              style: TextStyles.rajdhaniSB.body2.colour(Colors.white),
+            ),
+            SizedBox(height: SizeConfig.padding16),
+          ],
           SlideAction(
-            text: "SLIDE TO Re-Invest",
+            text: getTitle(),
             textStyle: TextStyles.rajdhaniB.body1.colour(Colors.black),
             borderRadius: SizeConfig.padding60,
             height: SizeConfig.padding56,
@@ -217,51 +337,83 @@ class ReInvestmentBottomWidget extends StatelessWidget {
             // innerColor: const Color(0xFF00EAC2),
             sliderRotate: false,
             onSubmit: () {
-              //Perform required action here, once the slider is fully transversed
               log("unlocked");
               Haptic.vibrate();
               AppState.backButtonDispatcher?.didPopRoute();
 
-              BaseUtil.openModalBottomSheet(
-                addToScreenStack: true,
-                enableDrag: false,
-                hapticVibrate: true,
-                isBarrierDismissible: true,
-                backgroundColor: Colors.transparent,
-                isScrollControlled: true,
-                content: SuccessfulDepositSheet(
-                  investAmount: '140',
-                  maturityAmount: '150',
-                  maturityDate: '${DateTime.now()}',
-                  reInvestmentDate: '${DateTime.now()}',
-                ),
-              );
+              if (decision == UserDecision.NOTDECIDED) {
+                BaseUtil.openModalBottomSheet(
+                  addToScreenStack: true,
+                  enableDrag: false,
+                  hapticVibrate: true,
+                  isBarrierDismissible: true,
+                  backgroundColor: Colors.transparent,
+                  isScrollControlled: true,
+                  content: const NotDecidedModalSheet(
+                      // investAmount: '140',
+                      // maturityAmount: '150',
+                      // maturityDate: '${DateTime.now()}',
+                      // reInvestmentDate: '${DateTime.now()}',
+                      ),
+                );
+              } else {
+                BaseUtil.openModalBottomSheet(
+                  addToScreenStack: true,
+                  enableDrag: false,
+                  hapticVibrate: true,
+                  isBarrierDismissible: true,
+                  backgroundColor: Colors.transparent,
+                  isScrollControlled: true,
+                  content: SuccessfulDepositSheet(
+                    investAmount: '140',
+                    maturityAmount: '150',
+                    maturityDate: '${DateTime.now()}',
+                    reInvestmentDate: '${DateTime.now()}',
+                  ),
+                );
+              }
             },
           ),
-          SizedBox(height: SizeConfig.padding25),
-          GestureDetector(
-            onTap: () {
-              Haptic.vibrate();
-              AppState.backButtonDispatcher?.didPopRoute();
+          SizedBox(height: SizeConfig.padding18),
+          if (decision == UserDecision.MOVETO8) ...[
+            SizedBox(height: SizeConfig.padding8),
+            GestureDetector(
+              onTap: () {
+                Haptic.vibrate();
+                AppState.backButtonDispatcher?.didPopRoute();
 
-              BaseUtil.openModalBottomSheet(
-                addToScreenStack: true,
-                enableDrag: false,
-                hapticVibrate: true,
-                isBarrierDismissible: true,
-                backgroundColor: Colors.transparent,
-                isScrollControlled: true,
-                content: const ReConfirmationSheet(),
-              );
-            },
-            child: Text(
-              'I AM HAPPY WITH 8% RETURNS ONLY',
-              textAlign: TextAlign.center,
-              style: TextStyles.rajdhaniB.body1
-                  .colour(const Color(0xFFBDBDBE))
-                  .copyWith(decoration: TextDecoration.underline),
+                BaseUtil.openModalBottomSheet(
+                  addToScreenStack: true,
+                  enableDrag: false,
+                  hapticVibrate: true,
+                  isBarrierDismissible: true,
+                  backgroundColor: Colors.transparent,
+                  isScrollControlled: true,
+                  content: const ReConfirmationSheet(),
+                );
+              },
+              child: Text(
+                'I AM HAPPY WITH 8% RETURNS ONLY',
+                textAlign: TextAlign.center,
+                style: TextStyles.rajdhaniB.body1
+                    .colour(const Color(0xFFBDBDBE))
+                    .copyWith(decoration: TextDecoration.underline),
+              ),
             ),
-          )
+          ],
+          if (decision == UserDecision.NOTDECIDED) ...[
+            'Your investment will shift to 8% Flo if you\ndon’t decide in the next *$remainingDay days*'
+                .beautify(
+              boldStyle: TextStyles.sourceSansB.body3.colour(
+                const Color(0xFFA9C5D5),
+              ),
+              style: TextStyles.sourceSans.body3.colour(
+                const Color(0xFFA9C5D5),
+              ),
+              alignment: TextAlign.center,
+            ),
+            SizedBox(height: SizeConfig.padding8),
+          ]
         ],
       ),
     );
@@ -413,12 +565,12 @@ class OptionDecisionContainer extends StatelessWidget {
   final bool showRecomended;
 
   const OptionDecisionContainer({
-    Key? key,
     required this.optionIndex,
     required this.title,
     required this.description,
     required this.isSelected,
     required this.onTap,
+    Key? key,
     this.showRecomended = false,
   }) : super(key: key);
 
@@ -555,8 +707,24 @@ class OptionDecisionContainer extends StatelessWidget {
 
 class UserDecisionWidget extends StatelessWidget {
   const UserDecisionWidget({
+    required this.decision,
     super.key,
   });
+
+  final UserDecision decision;
+
+  String getText() {
+    switch (decision) {
+      case UserDecision.REINVEST:
+        return "You had chosen to re-invest to 10%";
+      case UserDecision.WITHDRAW:
+        return "You have chosen to withdraw to bank";
+      case UserDecision.MOVETO8:
+        return 'You have chosen to move to 8% Flo';
+      case UserDecision.NOTDECIDED:
+        return 'You are yet to decide about your maturity';
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -564,22 +732,16 @@ class UserDecisionWidget extends StatelessWidget {
       height: SizeConfig.padding56,
       width: SizeConfig.screenWidth,
       decoration: ShapeDecoration(
-        color: Colors.black.withOpacity(0.37),
+        color: Colors.black.withOpacity(0.27),
         shape: RoundedRectangleBorder(
-          borderRadius: BorderRadius.circular(10),
+          borderRadius: BorderRadius.only(
+              bottomLeft: Radius.circular(10),
+              bottomRight: Radius.circular(10)),
         ),
-        shadows: const [
-          BoxShadow(
-            color: Color(0x3F000000),
-            blurRadius: 4,
-            offset: Offset(0, 4),
-            spreadRadius: 0,
-          )
-        ],
       ),
       child: Center(
         child: Text(
-          "You had chosen to re-invest to 10%",
+          getText(),
           style: TextStyles.sourceSans.body3.colour(Colors.white),
         ),
       ),
@@ -589,11 +751,11 @@ class UserDecisionWidget extends StatelessWidget {
 
 class Successful8MovedSheet extends StatelessWidget {
   const Successful8MovedSheet(
-      {super.key,
-      required this.investAmount,
+      {required this.investAmount,
       required this.maturityAmount,
       required this.maturityDate,
-      required this.reInvestmentDate});
+      required this.reInvestmentDate,
+      super.key});
 
   final String investAmount;
   final String maturityAmount;
@@ -772,12 +934,10 @@ class Successful8MovedSheet extends StatelessWidget {
                             style: TextStyles.sourceSansSB.body4.colour(
                               const Color(0xFF3DFFD0),
                             )),
-                        CustomPaint(
-                          size: Size(SizeConfig.padding64,
-                              (SizeConfig.padding64 * 0.12).toDouble()),
-                          painter: ArrowCustomPainter(),
+                        SvgPicture.asset(
+                          'assets/svg/Arrow.svg',
+                          width: SizeConfig.padding64,
                         ),
-                        SizedBox(height: SizeConfig.padding8),
                         Text(
                           'After 1 Year',
                           textAlign: TextAlign.center,
@@ -873,14 +1033,14 @@ class ArrowCustomPainter extends CustomPainter {
         size.height * 0.9238913);
     path_0.lineTo(size.width * 0.9900554, size.height * 0.5261438);
     path_0.close();
-    path_0.moveTo(size.width * -0.06724831, size.height * -1.000000);
-    // path_0.lineTo(size.width * 0.06700908, size.height * NaN);
+    path_0.moveTo(size.width * 0.09724831, size.height * 1.000000);
+    path_0.lineTo(size.width * 0.09700908, size.height * 1);
     path_0.lineTo(size.width * 0.9846154, size.height * 0.5444500);
     path_0.lineTo(size.width * 0.9846154, size.height * 0.4194500);
-    path_0.lineTo(size.width * 0.06724831, size.height * -1.000000);
-    // path_0.lineTo(size.width * 0.05162446, size.height * NaN);
-    path_0.lineTo(size.width * -0.06724831, size.height * -1.000000);
-    // path_0.lineTo(size.width * 0.06700908, size.height * NaN);
+    path_0.lineTo(size.width * 0.06724831, size.height * 1.000000);
+    path_0.lineTo(size.width * 0.05162446, size.height * 1);
+    path_0.lineTo(size.width * 0.08724831, size.height * 1.000000);
+    path_0.lineTo(size.width * 0.06700908, size.height * 1.000000);
     path_0.close();
 
     Paint paint_0_fill = Paint()..style = PaintingStyle.fill;

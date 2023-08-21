@@ -1,4 +1,3 @@
-import 'package:felloapp/feature/flo_withdrawals/ui/reinvestment_sheet.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
@@ -173,24 +172,30 @@ class SuccessfulDepositSheet extends StatelessWidget {
                           ),
                         ],
                       ),
-                      Column(children: [
-                        Text(
-                          '3 months',
-                          textAlign: TextAlign.center,
-                          style:
-                              TextStyles.sourceSans.body3.colour(Colors.white),
+                      SizedBox(
+                        height: SizeConfig.padding56,
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.spaceAround,
+                          children: [
+                            Text(
+                              '6 months',
+                              textAlign: TextAlign.center,
+                              style: TextStyles.sourceSans.body3
+                                  .colour(Colors.white),
+                            ),
+                            SvgPicture.asset(
+                              'assets/svg/Arrow.svg',
+                              width: SizeConfig.padding64,
+                            ),
+                            Text(
+                              '@10% P.A',
+                              style: TextStyles.sourceSansSB.body4.colour(
+                                const Color(0xFF3DFFD0),
+                              ),
+                            )
+                          ],
                         ),
-                        CustomPaint(
-                          size: Size(SizeConfig.padding64,
-                              (SizeConfig.padding64 * 0.12).toDouble()),
-                          painter: ArrowCustomPainter(),
-                        ),
-                        SizedBox(height: SizeConfig.padding8),
-                        Text('@10% P.A',
-                            style: TextStyles.sourceSansSB.body4.colour(
-                              const Color(0xFF3DFFD0),
-                            ))
-                      ]),
+                      ),
                       Column(
                         crossAxisAlignment: CrossAxisAlignment.center,
                         children: [

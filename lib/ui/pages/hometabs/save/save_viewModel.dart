@@ -630,7 +630,9 @@ class FloPendingAction extends StatelessWidget {
           isBarrierDismissible: true,
           backgroundColor: Colors.transparent,
           isScrollControlled: true,
-          content: const ReInvestmentSheet(),
+          content: const ReInvestmentSheet(
+            decision: UserDecision.REINVEST,
+          ),
         );
       },
       child: Transform.translate(
