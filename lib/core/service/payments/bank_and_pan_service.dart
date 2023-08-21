@@ -19,27 +19,27 @@ class BankAndPanService
   String? _userPan;
   UserKycDataModel? _userKycData;
 
-  UserKycDataModel? get userKycData => this._userKycData;
+  UserKycDataModel? get userKycData => _userKycData;
 
   set userKycData(value) {
-    this._userKycData = value;
+    _userKycData = value;
     notifyListeners(BankAndPanServiceProperties.kycVerified);
   }
 
-  get userPan => this._userPan;
+  get userPan => _userPan;
 
   set userPan(value) {
-    this._userPan = value;
+    _userPan = value;
     notifyListeners(BankAndPanServiceProperties.kycVerified);
   }
 
   BankAccountDetailsModel? _activeBankAccountDetails;
 
   BankAccountDetailsModel? get activeBankAccountDetails =>
-      this._activeBankAccountDetails;
+      _activeBankAccountDetails;
 
   set activeBankAccountDetails(value) {
-    this._activeBankAccountDetails = value;
+    _activeBankAccountDetails = value;
 
     notifyListeners(BankAndPanServiceProperties.bankDetailsVerified);
     _logger!.d("Bank Details Property Notified");
@@ -55,14 +55,21 @@ class BankAndPanService
   double _withdrawableQnt = 0.0;
   double _nonWithdrawableQnt = 0.0;
 
-  get withdrawableQnt => this._withdrawableQnt;
-  get nonWithdrawableQnt => this._nonWithdrawableQnt;
-  get isLockInReached => this._isLockInReached;
+  get withdrawableQnt => _withdrawableQnt;
+
+  get nonWithdrawableQnt => _nonWithdrawableQnt;
+
+  get isLockInReached => _isLockInReached;
+
   bool get isKYCVerified => _isKYCVerified;
+
   bool get isBankDetailsAdded => _isBankDetailsAdded;
+
   bool get isSellButtonVisible => _isSellButtonVisible;
-  String? get sellNotice => this._sellNotice;
-  bool get isSellLocked => this._isSellLocked;
+
+  String? get sellNotice => _sellNotice;
+
+  bool get isSellLocked => _isSellLocked;
 
   set isKYCVerified(bool val) {
     _isKYCVerified = val;
@@ -75,25 +82,25 @@ class BankAndPanService
   }
 
   set sellNotice(value) {
-    this._sellNotice = value;
+    _sellNotice = value;
     notifyListeners(BankAndPanServiceProperties.augmontSellNotice);
   }
 
   set isSellLocked(value) {
-    this._isSellLocked = value;
+    _isSellLocked = value;
     notifyListeners(BankAndPanServiceProperties.augmontSellDisabled);
   }
 
   set isLockInReached(value) {
-    this._isLockInReached = value;
+    _isLockInReached = value;
   }
 
   set nonWithdrawableQnt(value) {
-    this._nonWithdrawableQnt = value;
+    _nonWithdrawableQnt = value;
   }
 
   set withdrawableQnt(val) {
-    this._withdrawableQnt = val;
+    _withdrawableQnt = val;
   }
 
   Future<void> init() async {

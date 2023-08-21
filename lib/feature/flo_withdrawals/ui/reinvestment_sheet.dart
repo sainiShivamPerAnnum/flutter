@@ -326,74 +326,105 @@ class ReInvestmentBottomWidget extends StatelessWidget {
             ),
             SizedBox(height: SizeConfig.padding16),
           ],
-          SlideAction(
-            text: getTitle(),
-            textStyle: TextStyles.rajdhaniB.body1.colour(Colors.black),
-            borderRadius: SizeConfig.padding60,
-            height: SizeConfig.padding56,
-            sliderButtonIconSize: SizeConfig.padding24,
-            sliderButtonIconPadding: SizeConfig.padding12,
-            outerColor: Colors.white,
-            // innerColor: const Color(0xFF00EAC2),
-            sliderRotate: false,
-            onSubmit: () {
-              log("unlocked");
-              Haptic.vibrate();
-              AppState.backButtonDispatcher?.didPopRoute();
-
-              if (decision == UserDecision.NOTDECIDED) {
-                BaseUtil.openModalBottomSheet(
-                  addToScreenStack: true,
-                  enableDrag: false,
-                  hapticVibrate: true,
-                  isBarrierDismissible: true,
-                  backgroundColor: Colors.transparent,
-                  isScrollControlled: true,
-                  content: const NotDecidedModalSheet(
-                      // investAmount: '140',
-                      // maturityAmount: '150',
-                      // maturityDate: '${DateTime.now()}',
-                      // reInvestmentDate: '${DateTime.now()}',
-                      ),
-                );
-              } else {
-                BaseUtil.openModalBottomSheet(
-                  addToScreenStack: true,
-                  enableDrag: false,
-                  hapticVibrate: true,
-                  isBarrierDismissible: true,
-                  backgroundColor: Colors.transparent,
-                  isScrollControlled: true,
-                  content: SuccessfulDepositSheet(
-                    investAmount: '140',
-                    maturityAmount: '150',
-                    maturityDate: '${DateTime.now()}',
-                    reInvestmentDate: '${DateTime.now()}',
+          decision == UserDecision.NOTDECIDED
+              ? MaterialButton(
+                  minWidth: SizeConfig.screenWidth,
+                  color: Colors.white,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(SizeConfig.roundness5),
                   ),
-                );
-              }
-            },
-          ),
+                  height: SizeConfig.padding44,
+                  child: Text(
+                    'MAKE DECISION NOW',
+                    style: TextStyles.rajdhaniB.body1.colour(Colors.black),
+                  ),
+                  onPressed: () {
+                    Haptic.vibrate();
+                    AppState.backButtonDispatcher?.didPopRoute();
+
+                    BaseUtil.openModalBottomSheet(
+                      addToScreenStack: true,
+                      enableDrag: false,
+                      hapticVibrate: true,
+                      isBarrierDismissible: true,
+                      backgroundColor: Colors.transparent,
+                      isScrollControlled: true,
+                      content: const NotDecidedModalSheet(),
+                    );
+                  })
+              : SlideAction(
+                  text: getTitle(),
+                  textStyle: TextStyles.rajdhaniB.body1.colour(Colors.black),
+                  borderRadius: SizeConfig.padding60,
+                  height: SizeConfig.padding56,
+                  sliderButtonIconSize: SizeConfig.padding24,
+                  sliderButtonIconPadding: SizeConfig.padding12,
+                  outerColor: Colors.white,
+                  // innerColor: const Color(0xFF00EAC2),
+                  sliderRotate: false,
+                  onSubmit: () {
+                    log("unlocked");
+                    Haptic.vibrate();
+                    AppState.backButtonDispatcher?.didPopRoute();
+
+                    if (decision == UserDecision.NOTDECIDED) {
+                      BaseUtil.openModalBottomSheet(
+                        addToScreenStack: true,
+                        enableDrag: false,
+                        hapticVibrate: true,
+                        isBarrierDismissible: true,
+                        backgroundColor: Colors.transparent,
+                        isScrollControlled: true,
+                        content: const NotDecidedModalSheet(
+                            // investAmount: '140',
+                            // maturityAmount: '150',
+                            // maturityDate: '${DateTime.now()}',
+                            // reInvestmentDate: '${DateTime.now()}',
+                            ),
+                      );
+                    } else {
+                      BaseUtil.openModalBottomSheet(
+                        addToScreenStack: true,
+                        enableDrag: false,
+                        hapticVibrate: true,
+                        isBarrierDismissible: true,
+                        backgroundColor: Colors.transparent,
+                        isScrollControlled: true,
+                        content: SuccessfulDepositSheet(
+                          investAmount: '140',
+                          maturityAmount: '150',
+                          maturityDate: '${DateTime.now()}',
+                          reInvestmentDate: '${DateTime.now()}',
+                        ),
+                      );
+                    }
+                  },
+                ),
           SizedBox(height: SizeConfig.padding18),
-          if (decision == UserDecision.MOVETO8) ...[
+          if (decision == UserDecision.MOVETO8 ||
+              decision == UserDecision.WITHDRAW) ...[
             SizedBox(height: SizeConfig.padding8),
             GestureDetector(
               onTap: () {
                 Haptic.vibrate();
                 AppState.backButtonDispatcher?.didPopRoute();
 
-                BaseUtil.openModalBottomSheet(
-                  addToScreenStack: true,
-                  enableDrag: false,
-                  hapticVibrate: true,
-                  isBarrierDismissible: true,
-                  backgroundColor: Colors.transparent,
-                  isScrollControlled: true,
-                  content: const ReConfirmationSheet(),
-                );
+                if (decision == UserDecision.MOVETO8) {
+                  BaseUtil.openModalBottomSheet(
+                    addToScreenStack: true,
+                    enableDrag: false,
+                    hapticVibrate: true,
+                    isBarrierDismissible: true,
+                    backgroundColor: Colors.transparent,
+                    isScrollControlled: true,
+                    content: const ReConfirmationSheet(),
+                  );
+                } else {}
               },
               child: Text(
-                'I AM HAPPY WITH 8% RETURNS ONLY',
+                decision == UserDecision.MOVETO8
+                    ? 'I AM HAPPY WITH 8% RETURNS ONLY'
+                    : 'VIEW OTHER OPTIONS',
                 textAlign: TextAlign.center,
                 style: TextStyles.rajdhaniB.body1
                     .colour(const Color(0xFFBDBDBE))
@@ -483,6 +514,7 @@ class ReConfirmationSheet extends HookWidget {
               optionIndex: 1,
               title: 'Re-invest ₹150 in 10% Flo',
               description: 'Becomes ₹160 on maturity',
+              promoText: "Get *2X tickets* on saving",
               isSelected: selectedOption.value == 1,
               onTap: () {
                 selectedOption.value = 1;
@@ -493,6 +525,7 @@ class ReConfirmationSheet extends HookWidget {
               optionIndex: 2,
               title: "Move ₹150 to 8% Flo",
               description: 'Becomes ₹160 on maturity',
+              promoText: 'You are losing out on 30 tickets',
               isSelected: selectedOption.value == 2,
               onTap: () {
                 selectedOption.value = 2;
@@ -567,6 +600,10 @@ class OptionDecisionContainer extends StatelessWidget {
   final bool isSelected;
   final VoidCallback onTap;
   final bool showRecomended;
+  final String promoText;
+  final Color? promoContainerColor;
+  final String? recommendedText;
+  final Color? promoTextBoldColor;
 
   const OptionDecisionContainer({
     required this.optionIndex,
@@ -574,8 +611,12 @@ class OptionDecisionContainer extends StatelessWidget {
     required this.description,
     required this.isSelected,
     required this.onTap,
+    required this.promoText,
     Key? key,
     this.showRecomended = false,
+    this.promoContainerColor,
+    this.recommendedText,
+    this.promoTextBoldColor,
   }) : super(key: key);
 
   @override
@@ -597,7 +638,7 @@ class OptionDecisionContainer extends StatelessWidget {
                       topLeft: Radius.circular(SizeConfig.padding6),
                       topRight: Radius.circular(SizeConfig.padding6)),
                 ),
-                child: Text('Recommended ',
+                child: Text(recommendedText ?? 'Recommended',
                     textAlign: TextAlign.center,
                     style: TextStyles.sourceSansSB.body4
                         .colour(const Color(0xFF013B3F))),
@@ -614,10 +655,9 @@ class OptionDecisionContainer extends StatelessWidget {
                   SizeConfig.padding8), // Set rounded corner
               border: Border.all(
                   color: isSelected
-                      ? UiConstants
-                          .kTabBorderColor // Change color when selected
+                      ? Colors.white // Change color when selected
                       : const Color(0xFFD3D3D3).withOpacity(0.6),
-                  width: 0.6),
+                  width: isSelected ? 1 : 0.6),
             ),
             child: Column(
               children: [
@@ -684,7 +724,8 @@ class OptionDecisionContainer extends StatelessWidget {
                     vertical: SizeConfig.padding4,
                   ),
                   decoration: ShapeDecoration(
-                    color: Colors.white.withOpacity(0.12),
+                    color:
+                        promoContainerColor ?? Colors.white.withOpacity(0.12),
                     shape: const RoundedRectangleBorder(
                       borderRadius: BorderRadius.only(
                         bottomLeft: Radius.circular(8),
@@ -693,10 +734,24 @@ class OptionDecisionContainer extends StatelessWidget {
                     ),
                   ),
                   child: Center(
-                    child: "Get *2X tickets* on saving".beautify(
-                      boldStyle:
-                          TextStyles.sourceSansB.body4.colour(Colors.white),
-                      style: TextStyles.sourceSans.body4.colour(Colors.white),
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SvgPicture.asset(
+                          'assets/svg/tambola_icon.svg',
+                          height: SizeConfig.screenHeight! * 0.015,
+                          width: SizeConfig.screenHeight! * 0.015,
+                        ),
+                        SizedBox(
+                          width: SizeConfig.padding8,
+                        ),
+                        promoText.beautify(
+                          boldStyle: TextStyles.sourceSansB.body4
+                              .colour(promoTextBoldColor ?? Colors.white),
+                          style:
+                              TextStyles.sourceSans.body4.colour(Colors.white),
+                        ),
+                      ],
                     ),
                   ),
                 )
