@@ -146,8 +146,18 @@ class SaveViewWrapper extends StatelessWidget {
   }
 }
 
-class QuizSection extends StatelessWidget {
+class QuizSection extends StatefulWidget {
   const QuizSection({super.key});
+
+  @override
+  State<QuizSection> createState() => _QuizSectionState();
+}
+
+class _QuizSectionState extends State<QuizSection> {
+  @override
+  void initState() {
+    super.initState();
+  }
 
   String _onTapQuizSection(String deeplink) {
     final jwt = JWT(
@@ -163,7 +173,7 @@ class QuizSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     Map<String, dynamic> quizSectionData =
-        AppConfig.getValue(AppConfigKey.quiz_config);
+    AppConfig.getValue(AppConfigKey.quiz_config);
 
     return Container(
       margin: EdgeInsets.symmetric(
@@ -180,21 +190,10 @@ class QuizSection extends StatelessWidget {
           ),
           GestureDetector(
             onTap: () {
-              // AppState.delegate!.parseRoute(quizSectionData['deeplink']);
-
-              //https://fl-quiz-dev.web.app?token=your_token_here
-              var key = _onTapQuizSection(quizSectionData['baseUrl']);
-              var url = quizSectionData['baseUrl']
-                  /*'https://fl-quiz-dev.web.app' */
-                  +
-                  "?token=" +
-                  key;
-
-              log("Quiz url: $url", name: "QuizSection");
               AppState.delegate!.appState.currentAction = PageAction(
                 page: QuizWebViewConfig,
                 state: PageState.addWidget,
-                widget: QuizWebView(url: url),
+                widget: const QuizWebView(),
               );
 
               locator<AnalyticsService>().track(
@@ -202,13 +201,13 @@ class QuizSection extends StatelessWidget {
                 properties: AnalyticsProperties.getDefaultPropertiesMap(
                   extraValuesMap: {
                     'Total Invested Amount':
-                        AnalyticsProperties.getGoldInvestedAmount() +
-                            AnalyticsProperties.getFelloFloAmount(),
+                    AnalyticsProperties.getGoldInvestedAmount() +
+                        AnalyticsProperties.getFelloFloAmount(),
                     "Gold Invested":
-                        AnalyticsProperties.getGoldInvestedAmount(),
+                    AnalyticsProperties.getGoldInvestedAmount(),
                     "Flo Invested": AnalyticsProperties.getFelloFloAmount(),
                     "Total Tambola Tickets":
-                        AnalyticsProperties.getTambolaTicketCount(),
+                    AnalyticsProperties.getTambolaTicketCount(),
                   },
                 ),
               );

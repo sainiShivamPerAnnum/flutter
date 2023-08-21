@@ -1035,6 +1035,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case "goldProSell":
         pageConfiguration = GoldProSellViewPageConfig;
         break;
+
+      case "quizHome":
+        pageConfiguration = QuizWebViewConfig;
     }
     if (pageConfiguration != null) {
       addPage(pageConfiguration);
