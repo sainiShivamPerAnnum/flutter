@@ -20,20 +20,11 @@ class BalloonLottieScreen extends StatefulWidget {
 
 class _BalloonLottieScreenState extends State<BalloonLottieScreen>
     with SingleTickerProviderStateMixin {
-  void _incrementCounter() {
-    controller?.reset();
-    setState(() {
-      heightFactor = 1;
-      expectedKey = 1;
-      lineColor = const Color(0xff1ADAB7);
-      showWithdrawalScreen = false;
-    });
-  }
-
   AnimationController? controller;
   double heightFactor = 1;
   Color lineColor = const Color(0xff1ADAB7);
   bool showWithdrawalScreen = false;
+  int expectedKey = 1;
 
   @override
   void initState() {
@@ -42,14 +33,15 @@ class _BalloonLottieScreenState extends State<BalloonLottieScreen>
     super.initState();
   }
 
-  @override
-  void dispose() {
-    log("dispose");
-    controller?.dispose();
-    super.dispose();
+  void _reset() {
+    controller?.reset();
+    setState(() {
+      heightFactor = 1;
+      expectedKey = 1;
+      lineColor = const Color(0xff1ADAB7);
+      showWithdrawalScreen = false;
+    });
   }
-
-  int expectedKey = 1;
 
   void _handleTap(int tappedKey) {
     Haptic.vibrate();
@@ -234,7 +226,7 @@ class _BalloonLottieScreenState extends State<BalloonLottieScreen>
                       horizontal: SizeConfig.padding25,
                       vertical: SizeConfig.padding16),
                   child: AppPositiveBtn(
-                    onPressed: _incrementCounter,
+                    onPressed: _reset,
                     btnText:
                         showWithdrawalScreen ? "WITHDRAW" : "CHANGE DECISION",
                   ),
@@ -279,14 +271,27 @@ class _BalloonLottieScreenState extends State<BalloonLottieScreen>
       ),
     );
   }
+
+  @override
+  void dispose() {
+    log("dispose");
+    controller?.dispose();
+    super.dispose();
+  }
 }
 
 class LineIndicator extends StatelessWidget {
   const LineIndicator(
-      {super.key, required this.heightFactor, required this.lineColor});
+      {super.key,
+      required this.heightFactor,
+      required this.lineColor,
+      this.show10label = true,
+      this.show8label = true});
 
   final double heightFactor;
   final Color lineColor;
+  final bool show10label;
+  final bool show8label;
 
   @override
   Widget build(BuildContext context) {
@@ -346,18 +351,20 @@ class LineIndicator extends StatelessWidget {
             ),
           ),
         ),
-        Positioned(
-          top: SizeConfig.screenHeight! * 0.19,
-          left: SizeConfig.padding48,
-          child: Text('10%',
-              style: TextStyles.rajdhaniSB.body2.colour(Colors.white)),
-        ),
-        Positioned(
-          top: SizeConfig.screenHeight! * 0.37,
-          left: SizeConfig.padding48,
-          child: Text('8%',
-              style: TextStyles.rajdhaniSB.body2.colour(Colors.white)),
-        ),
+        if (show10label)
+          Positioned(
+            top: SizeConfig.screenHeight! * 0.19,
+            left: SizeConfig.padding48,
+            child: Text('10%',
+                style: TextStyles.rajdhaniSB.body2.colour(Colors.white)),
+          ),
+        if (show8label)
+          Positioned(
+            top: SizeConfig.screenHeight! * 0.37,
+            left: SizeConfig.padding48,
+            child: Text('8%',
+                style: TextStyles.rajdhaniSB.body2.colour(Colors.white)),
+          ),
         Positioned(
           top: SizeConfig.screenHeight! * 0.51,
           left: SizeConfig.padding48,
