@@ -5,15 +5,16 @@ import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/feature/tambola/src/ui/tambola_home_details/tambola_home_details_view.dart';
 import 'package:felloapp/feature/tambola/src/ui/tambola_home_tickets/tambola_home_tickets_vm.dart';
+import 'package:felloapp/feature/tambola/src/ui/tickets_home/components/slot_machine.dart';
 import 'package:felloapp/feature/tambola/src/ui/widgets/buy_ticket_card.dart';
 import 'package:felloapp/feature/tambola/src/ui/widgets/next_week_info_card.dart';
 import 'package:felloapp/feature/tambola/src/ui/widgets/past_week_winners_section.dart';
 import 'package:felloapp/feature/tambola/src/ui/widgets/results_card.dart';
-import 'package:felloapp/feature/tambola/src/ui/widgets/tambola_picks/today_weekly_pick_card.dart';
 import 'package:felloapp/feature/tambola/src/ui/widgets/ticket/ticket_section.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
+import 'package:felloapp/ui/elements/title_subtitle_container.dart';
 import 'package:felloapp/ui/pages/asset_selection.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/locator.dart';
@@ -21,6 +22,7 @@ import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:tuple/tuple.dart';
 
 class TambolaHomeTicketsView extends StatefulWidget {
   const TambolaHomeTicketsView({
@@ -31,15 +33,20 @@ class TambolaHomeTicketsView extends StatefulWidget {
   State<TambolaHomeTicketsView> createState() => _TambolaHomeTicketsViewState();
 }
 
-class _TambolaHomeTicketsViewState extends State<TambolaHomeTicketsView> {
+class _TambolaHomeTicketsViewState extends State<TambolaHomeTicketsView>
+    with SingleTickerProviderStateMixin {
   ScrollController? _scrollController;
-
+  late AnimationController slotMachineLightsController;
   final GlobalKey<AnimatedBuyTambolaTicketCardState> tambolaBuyTicketCardKey =
       GlobalKey<AnimatedBuyTambolaTicketCardState>();
 
   @override
   void initState() {
     super.initState();
+    slotMachineLightsController = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 1000),
+    );
     _scrollController = ScrollController();
   }
 
@@ -66,7 +73,8 @@ class _TambolaHomeTicketsViewState extends State<TambolaHomeTicketsView> {
                     //1 Cr Lottie
                     TambolaRewardLottieStrip(),
                     //Weekly/Daily Picks Card
-                    const TodayWeeklyPicksCard(),
+                    // const TodayWeeklyPicksCard(),
+                    SlotMachine(dotsController: slotMachineLightsController),
                     //Tambola Results Card
                     const TambolaResultCard(),
                     //Tickets Section
@@ -81,7 +89,8 @@ class _TambolaHomeTicketsViewState extends State<TambolaHomeTicketsView> {
                       },
                     ),
                     const NextWeekTicketInfo(),
-                    // AnimatedBuyTambolaTicketCard(key: tambolaBuyTicketCardKey),
+                    const TicketMultiplierOptionsWidget(),
+                    AnimatedBuyTambolaTicketCard(key: tambolaBuyTicketCardKey),
                     const TambolaLeaderboardView(),
                     // LottieBuilder.network(Assets.bottomBannerLottie),
                     SizedBox(height: SizeConfig.navBarHeight),
@@ -91,6 +100,61 @@ class _TambolaHomeTicketsViewState extends State<TambolaHomeTicketsView> {
             ],
           );
         });
+  }
+}
+
+class TicketMultiplierOptionsWidget extends StatelessWidget {
+  const TicketMultiplierOptionsWidget({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    List<Tuple2<int, int>> multipliers = [
+      const Tuple2(12, 5),
+      Tuple2(10, 3),
+      Tuple2(8, 1),
+    ];
+    return Column(
+      children: [
+        const TitleSubtitleContainer(title: "Tickets Multiplier"),
+        SizedBox(
+          height: SizeConfig.screenWidth! * 0.4,
+          child: ListView.builder(
+            itemCount: multipliers.length,
+            padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding10),
+            scrollDirection: Axis.horizontal,
+            itemBuilder: (ctx, i) => Card(
+              shape: RoundedRectangleBorder(
+                borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+              ),
+              color: UiConstants.kSaveStableFelloCardBg,
+              margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding10),
+              child: Container(
+                padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding16),
+                child: Column(children: [
+                  Text.rich(
+                    TextSpan(
+                      children: [
+                        TextSpan(
+                            text: '${multipliers[i].item1}%',
+                            style: TextStyles.sourceSansB.body1
+                                .colour(Colors.white)),
+                        TextSpan(
+                            text: ' Flo',
+                            style: TextStyles.sourceSans.body2
+                                .colour(Colors.white)),
+                      ],
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ]),
+              ),
+            ),
+          ),
+        )
+      ],
+    );
   }
 }
 

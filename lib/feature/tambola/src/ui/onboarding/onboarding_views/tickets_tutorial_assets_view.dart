@@ -1,10 +1,12 @@
 import 'package:felloapp/feature/tambola/src/ui/onboarding/intro_view/tickets_intro_view.dart';
 import 'package:felloapp/feature/tambola/src/ui/onboarding/onboarding_views/tickets_tutorial_slot_machine_view.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:tuple/tuple.dart';
+import 'package:vibration/vibration.dart';
 
 class TicketsTutorialsView extends StatefulWidget {
   const TicketsTutorialsView({super.key});
@@ -28,26 +30,30 @@ class _TicketsTutorialsViewState extends State<TicketsTutorialsView>
     _controller = AnimationController(
       vsync: this,
       duration: const Duration(seconds: 2),
+      reverseDuration: const Duration(seconds: 1),
     );
 
     _animation1 = CurvedAnimation(
       parent: _controller,
-      curve: const Interval(0.0, 0.33),
+      curve: const Interval(0.0, 0.2),
     );
     _animation2 = CurvedAnimation(
       parent: _controller,
-      curve: const Interval(0.33, 0.67, curve: Curves.easeInOutCirc),
+      curve: const Interval(0.2, 0.5, curve: Curves.easeInOutCirc),
     );
     _animation3 = CurvedAnimation(
       parent: _controller,
-      curve: const Interval(0.67, 1.0, curve: Curves.easeInOutCirc),
+      curve: const Interval(0.5, 0.8, curve: Curves.easeInOutCirc),
     );
     _animation4 = CurvedAnimation(
       parent: _controller,
       curve: const Interval(0.9, 1.0),
     );
 
-    _controller.forward();
+    Future.delayed(const Duration(seconds: 1), () {
+      _controller.forward();
+      Vibration.vibrate(pattern: [150, 80, 300, 80, 500, 80, 600, 100]);
+    });
   }
 
   @override
@@ -83,46 +89,32 @@ class _TicketsTutorialsViewState extends State<TicketsTutorialsView>
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        const SizedBox(height: kToolbarHeight),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Hero(
-                              tag: "mainAsset",
-                              child: SvgPicture.asset(
-                                Assets.tambolaCardAsset,
-                                width: SizeConfig.padding70,
-                              ),
-                            ),
-                            Hero(
-                              tag: "mainTitle",
-                              child: Material(
-                                color: Colors.transparent,
-                                child: Stack(
-                                  children: [
-                                    Text(
-                                      "Tickets",
-                                      style: TextStyles.rajdhaniB.title1
-                                          .colour(Colors.white),
-                                    ),
-                                  ],
-                                ),
-                              ),
-                            ),
-                          ],
-                        ),
+                        const SizedBox(height: kToolbarHeight / 2),
+                        const Head(),
                         SizedBox(height: SizeConfig.padding20),
-                        TicketsAnimatedWidget(
+                        CustomStaggeredAnimatedWidget(
                           animation: _animation1,
                           child: Column(
                             crossAxisAlignment: CrossAxisAlignment.center,
                             children: [
-                              Text(
-                                "Save Min ₹500",
+                              Text.rich(
+                                TextSpan(
+                                  children: [
+                                    const TextSpan(
+                                      text: 'Save Min ',
+                                    ),
+                                    TextSpan(
+                                      text: '₹500',
+                                      style: TextStyles.sourceSansB.title4
+                                          .colour(const Color(0xFFFFD979)),
+                                    ),
+                                  ],
+                                ),
                                 style: TextStyles.sourceSansB.title4
                                     .colour(Colors.white),
                                 textAlign: TextAlign.center,
                               ),
+                              SizedBox(height: SizeConfig.padding10),
                               Text(
                                 "in any of the assets and\nGet Tickets every week with Fello",
                                 style: TextStyles.sourceSansM.body2
@@ -133,7 +125,7 @@ class _TicketsTutorialsViewState extends State<TicketsTutorialsView>
                             ],
                           ),
                         ),
-                        TicketsAnimatedWidget(
+                        CustomStaggeredAnimatedWidget(
                           animation: _animation2,
                           child: const DummyAssetCard(
                             bgColor: UiConstants.kSaveDigitalGoldCardBg,
@@ -147,7 +139,7 @@ class _TicketsTutorialsViewState extends State<TicketsTutorialsView>
                             ],
                           ),
                         ),
-                        TicketsAnimatedWidget(
+                        CustomStaggeredAnimatedWidget(
                           animation: _animation3,
                           child: const DummyAssetCard(
                             bgColor: UiConstants.kSaveStableFelloCardBg,
@@ -161,39 +153,46 @@ class _TicketsTutorialsViewState extends State<TicketsTutorialsView>
                             ],
                           ),
                         ),
-                        const Spacer(),
-                        TicketsAnimatedWidget(
-                          animation: _animation4,
-                          child: MaterialButton(
-                            height: SizeConfig.padding44,
-                            shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(
-                                    SizeConfig.roundness5)),
-                            minWidth: SizeConfig.screenWidth! -
-                                SizeConfig.pageHorizontalMargins * 2,
-                            color: Colors.white,
-                            onPressed: () {
-                              _controller.reverse().then((value) {
-                                Navigator.pushReplacement(
-                                    context,
-                                    MaterialPageRoute(
-                                        builder: (context) =>
-                                            const TicketsTutorialsSlotMachineView()));
-                              });
-                            },
-                            child: Text(
-                              "START WITH TICKETS",
-                              style: TextStyles.rajdhaniB.body0
-                                  .colour(Colors.black),
-                            ),
-                          ),
-                        ),
-                        SizedBox(height: SizeConfig.padding20),
                       ],
                     ),
                   ),
                 ),
               ],
+            ),
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: CustomStaggeredAnimatedWidget(
+                animation: _animation4,
+                child: Padding(
+                  padding: const EdgeInsets.all(8.0),
+                  child: MaterialButton(
+                    height: SizeConfig.padding44,
+                    shape: RoundedRectangleBorder(
+                        borderRadius:
+                            BorderRadius.circular(SizeConfig.roundness5)),
+                    minWidth: SizeConfig.screenWidth! -
+                        SizeConfig.pageHorizontalMargins * 2,
+                    color: Colors.white,
+                    onPressed: () {
+                      Haptic.vibrate();
+                      Vibration.vibrate(
+                        pattern: [10, 80, 150, 80, 200, 50, 300, 50],
+                      );
+                      _controller.reverse().then((value) {
+                        Navigator.pushReplacement(
+                            context,
+                            MaterialPageRoute(
+                                builder: (context) =>
+                                    const TicketsTutorialsSlotMachineView()));
+                      });
+                    },
+                    child: Text(
+                      "START WITH TICKETS",
+                      style: TextStyles.rajdhaniB.body0.colour(Colors.black),
+                    ),
+                  ),
+                ),
+              ),
             )
           ],
         ),
@@ -202,10 +201,10 @@ class _TicketsTutorialsViewState extends State<TicketsTutorialsView>
   }
 }
 
-class TicketsAnimatedWidget extends AnimatedWidget {
+class CustomStaggeredAnimatedWidget extends AnimatedWidget {
   final Animation<double> animation;
   final Widget child;
-  const TicketsAnimatedWidget({
+  const CustomStaggeredAnimatedWidget({
     required this.animation,
     required this.child,
     super.key,
@@ -245,7 +244,7 @@ class DummyAssetCard extends StatelessWidget {
       ),
       color: bgColor,
       child: Container(
-        width: SizeConfig.screenWidth! * 0.72,
+        width: SizeConfig.screenWidth! * 0.68,
         padding: EdgeInsets.all(SizeConfig.padding10),
         child: Column(
           children: [

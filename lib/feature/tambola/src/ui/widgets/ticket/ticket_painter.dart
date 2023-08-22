@@ -1,23 +1,92 @@
 import 'package:flutter/material.dart';
 
-class TicketPainter extends CustomClipper<Path> {
-  const TicketPainter();
+// class TicketPainter extends CustomClipper<Path> {
+//   const TicketPainter();
+//   @override
+//   Path getClip(Size size) {
+//     Path path = Path();
+
+//     path.lineTo(0.0, size.height);
+//     path.lineTo(size.width, size.height);
+//     path.lineTo(size.width, 0.0);
+
+//     path.addOval(Rect.fromCircle(center: const Offset(0.0, 65), radius: 10.0));
+//     path.addOval(Rect.fromCircle(center: Offset(size.width, 65), radius: 10.0));
+
+//     return path;
+//   }
+
+//   @override
+//   bool shouldReclip(CustomClipper<Path> oldClipper) => true;
+// }
+
+class TicketPainter extends CustomPainter {
+  final Color borderColor;
+  const TicketPainter({this.borderColor = Colors.transparent});
   @override
-  Path getClip(Size size) {
-    Path path = Path();
+  void paint(Canvas canvas, Size size) {
+    Path path_0 = Path();
+    path_0.moveTo(0, size.height * 0.01980198);
+    path_0.cubicTo(0, size.height * 0.008865644, size.width * 0.008527905, 0,
+        size.width * 0.01904762, 0);
+    path_0.lineTo(size.width * 0.9809524, 0);
+    path_0.cubicTo(size.width * 0.9914714, 0, size.width,
+        size.height * 0.008865644, size.width, size.height * 0.01980198);
+    path_0.lineTo(size.width, size.height * 0.2178218);
+    path_0.cubicTo(
+        size.width * 0.9842190,
+        size.height * 0.2178218,
+        size.width * 0.9714286,
+        size.height * 0.2311203,
+        size.width * 0.9714286,
+        size.height * 0.2475248);
+    path_0.cubicTo(
+        size.width * 0.9714286,
+        size.height * 0.2639292,
+        size.width * 0.9842190,
+        size.height * 0.2772277,
+        size.width,
+        size.height * 0.2772277);
+    path_0.lineTo(size.width, size.height * 0.9801980);
+    path_0.cubicTo(size.width, size.height * 0.9911337, size.width * 0.9914714,
+        size.height, size.width * 0.9809524, size.height);
+    path_0.lineTo(size.width * 0.01904762, size.height);
+    path_0.cubicTo(size.width * 0.008527905, size.height, 0,
+        size.height * 0.9911337, 0, size.height * 0.9801980);
+    path_0.lineTo(0, size.height * 0.2772277);
+    path_0.cubicTo(
+        size.width * 0.01577957,
+        size.height * 0.2772277,
+        size.width * 0.02857143,
+        size.height * 0.2639292,
+        size.width * 0.02857143,
+        size.height * 0.2475248);
+    path_0.cubicTo(
+        size.width * 0.02857143,
+        size.height * 0.2311203,
+        size.width * 0.01577957,
+        size.height * 0.2178218,
+        0,
+        size.height * 0.2178218);
+    path_0.lineTo(0, size.height * 0.01980198);
+    path_0.close();
 
-    path.lineTo(0.0, size.height);
-    path.lineTo(size.width, size.height);
-    path.lineTo(size.width, 0.0);
+    Paint paint_0_fill = Paint()..style = PaintingStyle.fill;
+    paint_0_fill.color = Color(0xff30363C).withOpacity(1.0);
 
-    path.addOval(Rect.fromCircle(center: const Offset(0.0, 65), radius: 10.0));
-    path.addOval(Rect.fromCircle(center: Offset(size.width, 65), radius: 10.0));
+    final borderPaint = Paint()
+      ..color = borderColor
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = 2.0;
 
-    return path;
+    canvas.drawPath(path_0, paint_0_fill);
+    canvas.drawPath(path_0, borderPaint);
   }
 
   @override
-  bool shouldReclip(CustomClipper<Path> oldClipper) => true;
+  bool shouldRepaint(covariant CustomPainter oldDelegate) {
+    return false;
+  }
 }
 
 class MySeparator extends StatelessWidget {

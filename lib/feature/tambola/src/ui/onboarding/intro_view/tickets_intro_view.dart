@@ -1,12 +1,11 @@
 import 'dart:async';
 
 import 'package:action_slider/action_slider.dart';
-import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/feature/tambola/src/ui/onboarding/onboarding_views/tickets_tutorial_assets_view.dart';
 import 'package:felloapp/feature/tambola/src/ui/widgets/ticket/ticket_painter.dart';
-import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/elements/default_avatar.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -64,158 +63,177 @@ class _TicketsIntroViewState extends State<TicketsIntroView> {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       mainAxisAlignment: MainAxisAlignment.start,
                       children: [
-                        const SizedBox(height: kToolbarHeight),
-                        Hero(
-                          tag: "mainAsset",
-                          child: SvgPicture.asset(
-                            Assets.tambolaCardAsset,
-                            width: SizeConfig.padding152,
-                          ),
-                        ),
-                        SizedBox(height: SizeConfig.padding10),
-                        Hero(
-                          tag: "mainTitle",
-                          child: Material(
-                            color: Colors.transparent,
-                            child: Stack(
-                              children: [
-                                Text(
-                                  "Tickets",
-                                  style: TextStyles.rajdhaniBL.title50
-                                      .colour(UiConstants.kGoldProPrimary)
-                                      .copyWith(
-                                    shadows: [
-                                      const Shadow(
-                                        color: Color(0xff88a19f),
-                                        offset: Offset(3, 2),
-                                      )
-                                    ],
-                                  ),
-                                ),
-                                Text(
-                                  "Tickets",
-                                  style: TextStyles.rajdhaniBL.title50.copyWith(
-                                    foreground: Paint()
-                                      ..style = PaintingStyle.stroke
-                                      ..strokeWidth = 0.05
-                                      ..color = Colors.black,
-                                  ),
-                                ),
-                              ],
+                        Expanded(
+                            child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            const SizedBox(height: kToolbarHeight / 3),
+                            Hero(
+                              tag: "mainAsset",
+                              child: SvgPicture.asset(
+                                Assets.tambolaCardAsset,
+                                width: SizeConfig.padding152,
+                              ),
                             ),
-                          ),
-                        ),
-                        SizedBox(height: SizeConfig.padding10),
-                        Text(
-                          "Participate in daily draw to\nEarn rewards",
-                          style: TextStyles.sourceSansSB.body1
-                              .colour(Colors.white),
-                          textAlign: TextAlign.center,
-                        ),
-                        Container(
-                          padding:
-                              EdgeInsets.all(SizeConfig.pageHorizontalMargins),
-                          child: Stack(
-                            alignment: Alignment.center,
-                            children: [
-                              ClipPath(
-                                clipper: const TicketPainter(),
-                                child: Container(
-                                  padding: EdgeInsets.symmetric(
-                                    horizontal: SizeConfig.padding16,
-                                    vertical: SizeConfig.padding16,
-                                  ),
-                                  width:
-                                      MediaQuery.of(context).size.width * 0.7,
-                                  decoration: BoxDecoration(
-                                    color: UiConstants.kBuyTicketBg,
-                                    borderRadius: BorderRadius.circular(10.0),
-                                    border: Border.all(
-                                        color: UiConstants.kFAQDividerColor
-                                            .withOpacity(0.2),
-                                        width: 1.5),
-                                  ),
-                                  child: Column(
-                                    mainAxisSize: MainAxisSize.min,
-                                    children: [
-                                      Row(
+                            // SizedBox(height: SizeConfig.padding10),
+                            Hero(
+                              tag: "mainTitle",
+                              child: Material(
+                                color: Colors.transparent,
+                                child: Stack(
+                                  children: [
+                                    Text(
+                                      "Tickets",
+                                      style: TextStyles.rajdhaniBL.title50
+                                          .colour(UiConstants.kGoldProPrimary)
+                                          .letterSpace(2)
+                                          .copyWith(
+                                        shadows: [
+                                          const Shadow(
+                                            color: Colors
+                                                .black, // Color(0xff88a19f),
+                                            offset: Offset(3, 2),
+                                          )
+                                        ],
+                                      ),
+                                    ),
+                                    // Text(
+                                    //   "Tickets",
+                                    //   style: TextStyles.rajdhaniBL.title50.copyWith(
+                                    //     foreground: Paint()
+                                    //       ..style = PaintingStyle.stroke
+                                    //       ..strokeWidth = 0.05
+                                    //       ..color = Colors.black,
+                                    //   ),
+                                    // ),
+                                  ],
+                                ),
+                              ),
+                            ),
+                            SizedBox(height: SizeConfig.padding10),
+                            Text(
+                              "Participate in daily draw to\nEarn rewards",
+                              style: TextStyles.sourceSansSB.body1
+                                  .colour(Colors.white),
+                              textAlign: TextAlign.center,
+                            ),
+                            Container(
+                              padding: EdgeInsets.all(
+                                  SizeConfig.pageHorizontalMargins),
+                              child: Stack(
+                                alignment: Alignment.center,
+                                children: [
+                                  CustomPaint(
+                                    painter: const TicketPainter(),
+                                    child: Container(
+                                      padding: EdgeInsets.symmetric(
+                                        horizontal: SizeConfig.padding16,
+                                        vertical: SizeConfig.padding16,
+                                      ),
+                                      width: SizeConfig.screenHeight! * 0.24,
+                                      child: Column(
+                                        mainAxisSize: MainAxisSize.min,
                                         children: [
-                                          Text(
-                                            '#1234567890',
-                                            style: TextStyles.sourceSans.body4
-                                                .colour(
-                                                    UiConstants.kGreyTextColor),
+                                          Row(
+                                            children: [
+                                              Text(
+                                                '#1234567890',
+                                                style: TextStyles
+                                                    .sourceSans.body4
+                                                    .colour(UiConstants
+                                                        .kGreyTextColor),
+                                              ),
+                                            ],
+                                          ),
+                                          Container(
+                                            padding: EdgeInsets.symmetric(
+                                                vertical: SizeConfig.padding20),
+                                            alignment: Alignment.center,
+                                            child: MySeparator(
+                                              color:
+                                                  Colors.white.withOpacity(0.3),
+                                            ),
+                                          ),
+                                          GridView.builder(
+                                            padding: EdgeInsets.zero,
+                                            shrinkWrap: true,
+                                            itemCount: 15,
+                                            physics:
+                                                const NeverScrollableScrollPhysics(),
+                                            gridDelegate:
+                                                const SliverGridDelegateWithFixedCrossAxisCount(
+                                              crossAxisCount: 5,
+                                              mainAxisSpacing: 2,
+                                              crossAxisSpacing: 1,
+                                            ),
+                                            itemBuilder: (ctx, i) {
+                                              return Container(
+                                                alignment: Alignment.center,
+                                                decoration: BoxDecoration(
+                                                  color: Colors.transparent,
+                                                  borderRadius: BorderRadius
+                                                      .circular(SizeConfig
+                                                              .blockSizeHorizontal *
+                                                          1),
+                                                  border: Border.all(
+                                                      color: Colors.white54,
+                                                      width: 0.7),
+                                                  shape: BoxShape.rectangle,
+                                                ),
+                                                child: Stack(
+                                                  children: [
+                                                    Align(
+                                                      alignment:
+                                                          Alignment.center,
+                                                      child: Text(
+                                                        i.toString(),
+                                                        style: TextStyles
+                                                            .rajdhaniB.body2
+                                                            .colour(
+                                                                Colors.white54),
+                                                      ),
+                                                    ),
+                                                    // markStatus(i)
+                                                  ],
+                                                ),
+                                              );
+                                            },
                                           ),
                                         ],
                                       ),
-                                      Container(
-                                        padding: EdgeInsets.symmetric(
-                                            vertical: SizeConfig.padding20),
-                                        alignment: Alignment.center,
-                                        child: MySeparator(
-                                          color: Colors.white.withOpacity(0.3),
-                                        ),
-                                      ),
-                                      GridView.builder(
-                                        padding: EdgeInsets.zero,
-                                        shrinkWrap: true,
-                                        itemCount: 15,
-                                        physics:
-                                            const NeverScrollableScrollPhysics(),
-                                        gridDelegate:
-                                            const SliverGridDelegateWithFixedCrossAxisCount(
-                                          crossAxisCount: 5,
-                                          mainAxisSpacing: 2,
-                                          crossAxisSpacing: 1,
-                                        ),
-                                        itemBuilder: (ctx, i) {
-                                          return Container(
-                                            alignment: Alignment.center,
-                                            decoration: BoxDecoration(
-                                              color: Colors.transparent,
-                                              borderRadius: BorderRadius
-                                                  .circular(SizeConfig
-                                                          .blockSizeHorizontal *
-                                                      1),
-                                              border: Border.all(
-                                                  color: Colors.white54,
-                                                  width: 0.7),
-                                              shape: BoxShape.rectangle,
-                                            ),
-                                            child: Stack(
-                                              children: [
-                                                Align(
-                                                  alignment: Alignment.center,
-                                                  child: Text(
-                                                    i.toString(),
-                                                    style: TextStyles
-                                                        .rajdhaniB.body2
-                                                        .colour(Colors.white54),
-                                                  ),
-                                                ),
-                                                // markStatus(i)
-                                              ],
-                                            ),
-                                          );
-                                        },
-                                      ),
-                                    ],
+                                    ),
                                   ),
-                                ),
+                                ],
                               ),
-                              // const Align(
-                              //     alignment: Alignment.topCenter,
-                              //     child: TicketTag(tag: "New"))
-                            ],
-                          ),
-                        ),
-                        Text(
-                          "Get Tickets by saving min ₹500 in\nany of the assets every week",
-                          style:
-                              TextStyles.sourceSansM.body2.colour(Colors.white),
-                          textAlign: TextAlign.center,
-                        ),
-                        const Spacer(),
+                            ),
+                            // Text(
+                            //   "Get Tickets by saving min ₹500 in\nany of the assets every week",
+                            // style: TextStyles.sourceSansM.body2
+                            //     .colour(Colors.white),
+                            //   textAlign: TextAlign.center,
+                            // ),
+                            Text.rich(
+                              TextSpan(
+                                children: [
+                                  const TextSpan(
+                                    text: 'Get Tickets by saving min ',
+                                  ),
+                                  TextSpan(
+                                    text: '₹500',
+                                    style: TextStyles.sourceSansM.body2
+                                        .colour(const Color(0xFFFFD979)),
+                                  ),
+                                  const TextSpan(
+                                    text: ' in\nany of the assets every week',
+                                  ),
+                                ],
+                              ),
+                              style: TextStyles.sourceSansM.body2
+                                  .colour(Colors.white),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
+                        )),
                         Text(
                           "We will help you know how Tickets work",
                           style:
@@ -228,7 +246,8 @@ class _TicketsIntroViewState extends State<TicketsIntroView> {
                               horizontal: SizeConfig.pageHorizontalMargins),
                           child: ActionSlider.standard(
                             action: (controller) async {
-                              AppState.screenStack.add(ScreenItem.modalsheet);
+                              Haptic.vibrate();
+                              // AppState.screenStack.add(ScreenItem.modalsheet);
                               unawaited(
                                 Navigator.push(
                                   context,

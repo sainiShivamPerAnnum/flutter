@@ -82,8 +82,8 @@ class TambolaTicket extends StatelessWidget {
         Padding(
           padding: EdgeInsets.symmetric(
               horizontal: SizeConfig.pageHorizontalMargins, vertical: 2),
-          child: ClipPath(
-            clipper: const TicketPainter(),
+          child: CustomPaint(
+            painter: const TicketPainter(),
             child: Container(
               padding: EdgeInsets.symmetric(
                 horizontal: SizeConfig.padding16,
