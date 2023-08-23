@@ -6,6 +6,9 @@ import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+
+import '../../../../../../util/assets.dart';
 
 class TicketsPicksWidget extends StatefulWidget {
   const TicketsPicksWidget({super.key});
@@ -49,12 +52,103 @@ class _TicketsPicksWidgetState extends State<TicketsPicksWidget> {
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(SizeConfig.roundness16),
-        color: Colors.black,
+        color: const Color(0xff161d22),
       ),
       margin: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
       child: Column(
         children: [
-          SizedBox(height: kToolbarHeight),
+          Container(
+            padding: EdgeInsets.symmetric(
+                vertical: SizeConfig.padding14,
+                horizontal: SizeConfig.pageHorizontalMargins),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SvgPicture.asset(
+                      Assets.tambolaPrizeAsset,
+                      width: SizeConfig.padding40,
+                    ),
+                    Text(
+                      "  Congratulations!  ",
+                      style: TextStyles.sourceSansB.title4,
+                    ),
+                    SvgPicture.asset(
+                      Assets.tambolaPrizeAsset,
+                      width: SizeConfig.padding40,
+                    ),
+                  ],
+                ),
+                Padding(
+                  padding: EdgeInsets.all(SizeConfig.padding8),
+                  child: Wrap(
+                    crossAxisAlignment: WrapCrossAlignment.center,
+                    children: [
+                      Text(
+                        "Numbers Revealed this Week  ",
+                        style: TextStyles.sourceSansSB.body3
+                            .colour(UiConstants.kFAQsAnswerColor),
+                      ),
+                      Icon(
+                        Icons.arrow_forward_ios_rounded,
+                        color: UiConstants.kFAQsAnswerColor,
+                        size: SizeConfig.padding12,
+                      )
+                    ],
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(
+                    top: SizeConfig.padding12,
+                  ),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      SizedBox(
+                        width: SizeConfig.screenWidth! * 0.36,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "Your Net Reward",
+                              style: TextStyles.rajdhaniM.body2
+                                  .colour(UiConstants.kTextFieldTextColor),
+                            ),
+                            SizedBox(height: SizeConfig.padding6),
+                            Text(
+                              "₹110",
+                              style: TextStyles.sourceSansSB.title4,
+                            )
+                          ],
+                        ),
+                      ),
+                      Spacer(),
+                      SizedBox(
+                        width: SizeConfig.screenWidth! * 0.32,
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              "This week Reward",
+                              style: TextStyles.rajdhaniM.body2
+                                  .colour(UiConstants.kTextFieldTextColor),
+                            ),
+                            SizedBox(height: SizeConfig.padding6),
+                            Text(
+                              "₹10",
+                              style: TextStyles.sourceSansSB.title4
+                                  .colour(UiConstants.kGoldProPrimary),
+                            )
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                )
+              ],
+            ),
+          ),
           Container(
             width: SizeConfig.screenWidth,
             padding: EdgeInsets.only(
@@ -118,7 +212,25 @@ class _TicketsPicksWidgetState extends State<TicketsPicksWidget> {
               ],
             ),
           ),
-          SizedBox(height: kToolbarHeight),
+          Container(
+            padding: EdgeInsets.symmetric(
+                horizontal: SizeConfig.pageHorizontalMargins),
+            height: kToolbarHeight,
+            child: Row(
+              children: [
+                Text(
+                  "Total Won from Tickets",
+                  style: TextStyles.sourceSans.body2,
+                ),
+                const Spacer(),
+                Text(
+                  "₹20",
+                  style: TextStyles.rajdhaniSB.body0
+                      .colour(UiConstants.kGoldProPrimary),
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );

@@ -219,21 +219,28 @@ class BaseUser {
   }
 }
 
-enum Preferences { TAMBOLANOTIFICATIONS, APPLOCK, FLOINVOICEMAIL }
+enum Preferences {
+  TAMBOLANOTIFICATIONS,
+  APPLOCK,
+  FLOINVOICEMAIL,
+  TAMBOLAONBOARDING
+}
 
 class UserPreferences {
   //setup index with firebase keys
   static const Map<Preferences, String> _index = {
     Preferences.TAMBOLANOTIFICATIONS: 'tn',
     Preferences.APPLOCK: 'al',
-    Preferences.FLOINVOICEMAIL: "er"
+    Preferences.FLOINVOICEMAIL: "er",
+    Preferences.TAMBOLAONBOARDING: "to"
   };
 
   //setup defaults
   final Map<Preferences, int> _defValues = {
     Preferences.TAMBOLANOTIFICATIONS: 1,
     Preferences.APPLOCK: 0,
-    Preferences.FLOINVOICEMAIL: 0
+    Preferences.FLOINVOICEMAIL: 0,
+    Preferences.TAMBOLAONBOARDING: 0
   };
 
   //current values

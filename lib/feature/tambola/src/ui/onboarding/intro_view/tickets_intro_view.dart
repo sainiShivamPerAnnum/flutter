@@ -3,21 +3,18 @@ import 'dart:async';
 import 'package:action_slider/action_slider.dart';
 import 'package:felloapp/feature/tambola/src/ui/onboarding/onboarding_views/tickets_tutorial_assets_view.dart';
 import 'package:felloapp/feature/tambola/src/ui/widgets/ticket/ticket_painter.dart';
+import 'package:felloapp/feature/tambola/tambola.dart';
 import 'package:felloapp/ui/elements/default_avatar.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class TicketsIntroView extends StatefulWidget {
+class TicketsIntroView extends StatelessWidget {
   const TicketsIntroView({super.key});
 
-  @override
-  State<TicketsIntroView> createState() => _TicketsIntroViewState();
-}
-
-class _TicketsIntroViewState extends State<TicketsIntroView> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -247,6 +244,7 @@ class _TicketsIntroViewState extends State<TicketsIntroView> {
                           child: ActionSlider.standard(
                             action: (controller) async {
                               Haptic.vibrate();
+                              unawaited(locator<TambolaService>().getPrizes());
                               // AppState.screenStack.add(ScreenItem.modalsheet);
                               unawaited(
                                 Navigator.push(

@@ -54,7 +54,7 @@ class ScratchCardRepository extends BaseRepo {
         token: token,
       );
 
-      final prizesModel = PrizesModel.fromJson(milestoneRespone["data"]);
+      final prizesModel = PrizesModel.fromMap(milestoneRespone["data"]);
       return ApiResponse<PrizesModel>(model: prizesModel, code: 200);
     } catch (e) {
       logger!.e(e.toString());

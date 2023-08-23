@@ -1,6 +1,9 @@
 import 'dart:math';
 
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/model/base_user_model.dart';
+import 'package:felloapp/core/repository/user_repo.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/feature/tambola/src/ui/animations/dotted_border_animation.dart';
 import 'package:felloapp/feature/tambola/src/ui/onboarding/intro_view/tickets_intro_view.dart';
 import 'package:felloapp/feature/tambola/src/ui/onboarding/onboarding_views/tickets_tutorial_assets_view.dart';
@@ -11,6 +14,8 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/asset_selection.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -543,6 +548,30 @@ class _TicketsTutorialsSlotMachineViewState
                             SizeConfig.pageHorizontalMargins * 2,
                         color: Colors.white,
                         onPressed: () {
+                          final _userService = locator<UserService>();
+                          final _userRepo = locator<UserRepository>();
+                          _userRepo.updateUser(
+                            uid: _userService.baseUser!.uid,
+                            dMap: {
+                              'mUserPrefsAl': _userService
+                                      .baseUser!.userPreferences
+                                      .getPreference(
+                                    Preferences.APPLOCK,
+                                  ) ==
+                                  1,
+                              'mUserPrefsTn': _userService
+                                      .baseUser!.userPreferences
+                                      .getPreference(
+                                    Preferences.TAMBOLANOTIFICATIONS,
+                                  ) ==
+                                  1,
+                              'mUserPrefsEr': Preferences.FLOINVOICEMAIL,
+                              'mUserPrefsTo': Preferences.TAMBOLAONBOARDING
+                            },
+                          ).then((value) {
+                            _userService.setBaseUser();
+                            const Log("Preferences updated");
+                          });
                           AppState.delegate!.appState.currentAction =
                               PageAction(
                             page: AssetSelectionViewConfig,
