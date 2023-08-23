@@ -54,6 +54,8 @@ class _HeightAdaptivePageViewState extends State<HeightAdaptivePageView>
 
   @override
   Widget build(BuildContext context) {
+    super.build(context);
+
     return TweenAnimationBuilder<double>(
       curve: Curves.easeInOutCubic,
       duration: const Duration(milliseconds: 300),
@@ -68,8 +70,7 @@ class _HeightAdaptivePageViewState extends State<HeightAdaptivePageView>
     );
   }
 
-  List<Widget> get _sizeReportingChildren =>
-      widget.children
+  List<Widget> get _sizeReportingChildren => widget.children
       .asMap()
       .map(
         (index, child) => MapEntry(

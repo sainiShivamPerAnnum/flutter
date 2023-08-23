@@ -16,8 +16,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 
-import 'ticket_view.dart';
-
 class TicketSection extends StatelessWidget {
   const TicketSection({
     required this.getTicketsTapped,
@@ -45,10 +43,11 @@ class TicketSection extends StatelessWidget {
           // SizedBox(
           //   height: SizeConfig.padding6,
           // ),
-          TicketsView(
-            bestTickets: data.item1,
-            weeklyPicks: data.item2 ?? DailyPick.noPicks(),
-          ),
+          // TicketsView(
+          //   bestTickets: data.item1,
+          //   weeklyPicks: data.item2 ?? DailyPick.noPicks(),
+          // ),
+          TicketMatchesBriefBoxWidget(),
           ViewAllTicketsBar(
             title: "View All Tickets",
             onPressed: () {
@@ -80,6 +79,19 @@ class TicketSection extends StatelessWidget {
             },
           )
         ],
+      ),
+    );
+  }
+}
+
+class TicketMatchesBriefBoxWidget extends StatelessWidget {
+  const TicketMatchesBriefBoxWidget({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(SizeConfig.roundness12),
       ),
     );
   }

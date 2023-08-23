@@ -5,7 +5,7 @@ import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/feature/tambola/src/ui/tambola_home_details/tambola_home_details_view.dart';
 import 'package:felloapp/feature/tambola/src/ui/tambola_home_tickets/tambola_home_tickets_vm.dart';
-import 'package:felloapp/feature/tambola/src/ui/tickets_home/components/slot_machine.dart';
+import 'package:felloapp/feature/tambola/src/ui/tickets_home/components/tickets_picks_widget.dart';
 import 'package:felloapp/feature/tambola/src/ui/widgets/buy_ticket_card.dart';
 import 'package:felloapp/feature/tambola/src/ui/widgets/next_week_info_card.dart';
 import 'package:felloapp/feature/tambola/src/ui/widgets/past_week_winners_section.dart';
@@ -33,20 +33,15 @@ class TambolaHomeTicketsView extends StatefulWidget {
   State<TambolaHomeTicketsView> createState() => _TambolaHomeTicketsViewState();
 }
 
-class _TambolaHomeTicketsViewState extends State<TambolaHomeTicketsView>
-    with SingleTickerProviderStateMixin {
+class _TambolaHomeTicketsViewState extends State<TambolaHomeTicketsView> {
   ScrollController? _scrollController;
-  late AnimationController slotMachineLightsController;
   final GlobalKey<AnimatedBuyTambolaTicketCardState> tambolaBuyTicketCardKey =
       GlobalKey<AnimatedBuyTambolaTicketCardState>();
 
   @override
   void initState() {
     super.initState();
-    slotMachineLightsController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 1000),
-    );
+
     _scrollController = ScrollController();
   }
 
@@ -74,7 +69,7 @@ class _TambolaHomeTicketsViewState extends State<TambolaHomeTicketsView>
                     TambolaRewardLottieStrip(),
                     //Weekly/Daily Picks Card
                     // const TodayWeeklyPicksCard(),
-                    SlotMachine(dotsController: slotMachineLightsController),
+                    const TicketsPicksWidget(),
                     //Tambola Results Card
                     const TambolaResultCard(),
                     //Tickets Section
@@ -116,12 +111,17 @@ class TicketMultiplierOptionsWidget extends StatelessWidget {
       Tuple2(8, 1),
     ];
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        const TitleSubtitleContainer(title: "Tickets Multiplier"),
+        TitleSubtitleContainer(
+          title: "Tickets Multiplier",
+          padding: EdgeInsets.all(SizeConfig.padding14),
+        ),
         SizedBox(
-          height: SizeConfig.screenWidth! * 0.4,
+          height: SizeConfig.screenWidth! * 0.36,
           child: ListView.builder(
             itemCount: multipliers.length,
+            physics: const BouncingScrollPhysics(),
             padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding10),
             scrollDirection: Axis.horizontal,
             itemBuilder: (ctx, i) => Card(
@@ -131,24 +131,60 @@ class TicketMultiplierOptionsWidget extends StatelessWidget {
               color: UiConstants.kSaveStableFelloCardBg,
               margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding10),
               child: Container(
-                padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding16),
-                child: Column(children: [
-                  Text.rich(
-                    TextSpan(
-                      children: [
+                width: SizeConfig.screenWidth! * 0.33,
+                padding: EdgeInsets.symmetric(
+                    horizontal: SizeConfig.padding16,
+                    vertical: SizeConfig.padding10),
+                child: Column(
+                    mainAxisAlignment: MainAxisAlignment.spaceAround,
+                    children: [
+                      Text.rich(
                         TextSpan(
-                            text: '${multipliers[i].item1}%',
-                            style: TextStyles.sourceSansB.body1
-                                .colour(Colors.white)),
-                        TextSpan(
-                            text: ' Flo',
-                            style: TextStyles.sourceSans.body2
-                                .colour(Colors.white)),
-                      ],
-                    ),
-                    textAlign: TextAlign.center,
-                  ),
-                ]),
+                          children: [
+                            TextSpan(
+                                text: '${multipliers[i].item1}%',
+                                style: TextStyles.sourceSansB.body0
+                                    .colour(Colors.white)),
+                            TextSpan(
+                                text: ' Flo',
+                                style: TextStyles.sourceSans.body2
+                                    .colour(Colors.white)),
+                          ],
+                        ),
+                        textAlign: TextAlign.center,
+                      ),
+                      Column(
+                        children: [
+                          Text(
+                            "Get",
+                            style: TextStyles.body4.colour(Colors.white),
+                          ),
+                          SizedBox(height: SizeConfig.padding4),
+                          Text.rich(
+                            TextSpan(
+                              children: [
+                                WidgetSpan(
+                                  child: SvgPicture.asset(
+                                    Assets.singleTambolaTicket,
+                                    width: SizeConfig.padding20,
+                                  ),
+                                ),
+                                TextSpan(
+                                    text: '  ${multipliers[i].item2}X tickets',
+                                    style: TextStyles.sourceSansB.body3
+                                        .colour(Colors.white)),
+                              ],
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          SizedBox(height: SizeConfig.padding4),
+                          Text(
+                            "on saving",
+                            style: TextStyles.body4.colour(Colors.white),
+                          ),
+                        ],
+                      ),
+                    ]),
               ),
             ),
           ),

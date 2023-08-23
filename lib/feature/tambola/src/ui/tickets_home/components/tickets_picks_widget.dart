@@ -1,0 +1,362 @@
+import 'package:felloapp/feature/tambola/src/ui/animations/dotted_border_animation.dart';
+import 'package:felloapp/feature/tambola/src/ui/widgets/tambola_picks/weekly_picks.dart';
+import 'package:felloapp/feature/tambola/tambola.dart';
+import 'package:felloapp/ui/elements/page_views/height_adaptive_pageview.dart';
+import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/styles/styles.dart';
+import 'package:flutter/material.dart';
+
+class TicketsPicksWidget extends StatefulWidget {
+  const TicketsPicksWidget({super.key});
+
+  @override
+  State<TicketsPicksWidget> createState() => _TicketsPicksWidgetState();
+}
+
+class _TicketsPicksWidgetState extends State<TicketsPicksWidget> {
+  PageController? controller;
+  ValueNotifier<double>? pageValue;
+  @override
+  void initState() {
+    pageValue = ValueNotifier(0);
+
+    controller = PageController()
+      ..addListener(() {
+        pageValue!.value = controller!.page ?? 0;
+      });
+    super.initState();
+  }
+
+  @override
+  void dispose() {
+    controller?.dispose();
+    super.dispose();
+  }
+
+  void switchPage() {
+    if (controller!.page == 0) {
+      controller!.animateToPage(1,
+          duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
+    } else {
+      controller!.animateToPage(0,
+          duration: const Duration(milliseconds: 300), curve: Curves.easeIn);
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(SizeConfig.roundness16),
+        color: Colors.black,
+      ),
+      margin: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+      child: Column(
+        children: [
+          SizedBox(height: kToolbarHeight),
+          Container(
+            width: SizeConfig.screenWidth,
+            padding: EdgeInsets.only(
+              left: SizeConfig.pageHorizontalMargins,
+              top: SizeConfig.pageHorizontalMargins,
+              right: SizeConfig.pageHorizontalMargins,
+            ),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(SizeConfig.roundness16),
+              color: UiConstants.darkPrimaryColor,
+            ),
+            child: Column(
+              children: [
+                HeightAdaptivePageView(
+                  controller: controller!,
+                  physics: const BouncingScrollPhysics(),
+                  children: [
+                    KeepAlivePage(child: SlotMachineWidget()),
+                    KeepAlivePage(child: WeeklyPicks()),
+                  ],
+                ),
+                SizedBox(height: SizeConfig.padding14),
+                TextButton(
+                  onPressed: switchPage,
+                  child: ValueListenableBuilder(
+                    valueListenable: pageValue!,
+                    builder: (context, value, child) => value <= 0.5
+                        ? Wrap(
+                            crossAxisAlignment: WrapCrossAlignment.center,
+                            children: [
+                              Text(
+                                "Numbers Revealed this Week  ",
+                                style: TextStyles.sourceSansSB.body2
+                                    .colour(UiConstants.kTealTextColor),
+                              ),
+                              Icon(
+                                Icons.arrow_forward_ios_rounded,
+                                color: UiConstants.kTealTextColor,
+                                size: SizeConfig.padding16,
+                              )
+                            ],
+                          )
+                        : Wrap(
+                            crossAxisAlignment: WrapCrossAlignment.center,
+                            children: [
+                              Icon(
+                                Icons.arrow_back_ios_new_rounded,
+                                color: UiConstants.kTealTextColor,
+                                size: SizeConfig.padding16,
+                              ),
+                              Text(
+                                "  Today's Numbers",
+                                style: TextStyles.sourceSansSB.body2
+                                    .colour(UiConstants.kTealTextColor),
+                              ),
+                            ],
+                          ),
+                  ),
+                ),
+                SizedBox(height: SizeConfig.padding12),
+              ],
+            ),
+          ),
+          SizedBox(height: kToolbarHeight),
+        ],
+      ),
+    );
+  }
+}
+
+class SlotMachineWidget extends StatefulWidget {
+  const SlotMachineWidget({super.key});
+
+  @override
+  State<SlotMachineWidget> createState() => _SlotMachineWidgetState();
+}
+
+class _SlotMachineWidgetState extends State<SlotMachineWidget>
+    with SingleTickerProviderStateMixin {
+  late PageController _controller1, _controller2, _controller3;
+  final _tambolaService = locator<TambolaService>();
+  bool _isSpinning = false;
+
+  bool get isSpinning => _isSpinning;
+
+  set isSpinning(bool value) {
+    setState(() {
+      _isSpinning = value;
+    });
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _tambolaService.ticketsDotLightsController = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 1000));
+    _controller1 = PageController(viewportFraction: 0.6, initialPage: 0);
+    _controller2 = PageController(viewportFraction: 0.6, initialPage: 0);
+    _controller3 = PageController(viewportFraction: 0.6, initialPage: 0);
+  }
+
+  @override
+  void dispose() {
+    _controller1.dispose();
+    _controller2.dispose();
+    _controller3.dispose();
+    super.dispose();
+  }
+
+  void spin() {
+    if (isSpinning) return;
+    isSpinning = true;
+    Haptic.vibrate();
+    _tambolaService.ticketsDotLightsController!.stop();
+    _tambolaService.ticketsDotLightsController!.duration =
+        const Duration(milliseconds: 200);
+    _tambolaService.ticketsDotLightsController!.repeat(reverse: true);
+    _controller1.jumpToPage(0);
+    _controller2.jumpToPage(0);
+    _controller3.jumpToPage(0);
+    Haptic.slotVibrate();
+    _controller1.animateToPage(45,
+        duration: const Duration(seconds: 2), curve: Curves.easeOutExpo);
+    _controller2.animateToPage(16,
+        duration: const Duration(seconds: 3), curve: Curves.easeOutExpo);
+    _controller3.animateToPage(62,
+        duration: const Duration(seconds: 4), curve: Curves.easeOutExpo);
+    Future.delayed(const Duration(seconds: 4), () {
+      _tambolaService.ticketsDotLightsController!.stop();
+      isSpinning = false;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Text(
+          "Reveal numbers to match with Tickets",
+          style: TextStyles.sourceSansB.body2.colour(Colors.white),
+        ),
+        Padding(
+          padding: EdgeInsets.all(SizeConfig.padding16),
+          child: AnimatedDottedRectangle(
+            controller: _tambolaService.ticketsDotLightsController!,
+            child: Container(
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(SizeConfig.roundness16),
+                color: Colors.black,
+              ),
+              margin: EdgeInsets.all(SizeConfig.padding16),
+              child: Row(
+                children: [
+                  Expanded(
+                    child: PageView.builder(
+                      controller: _controller1,
+                      scrollDirection: Axis.vertical,
+                      itemCount: 91,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemBuilder: (ctx, i) => Container(
+                        alignment: Alignment.center,
+                        height: SizeConfig.title50,
+                        child: Text(
+                          i == 0 ? "Spin" : "$i".padLeft(2, '0'),
+                          style:
+                              TextStyles.rajdhaniSB.title1.colour(Colors.white),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: PageView.builder(
+                      controller: _controller2,
+                      scrollDirection: Axis.vertical,
+                      itemCount: 91,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemBuilder: (ctx, i) => Container(
+                        alignment: Alignment.center,
+                        height: SizeConfig.title50,
+                        child: Text(
+                          i == 0 ? "to" : "$i".padLeft(2, '0'),
+                          style:
+                              TextStyles.rajdhaniSB.title1.colour(Colors.white),
+                        ),
+                      ),
+                    ),
+                  ),
+                  Expanded(
+                    child: PageView.builder(
+                      controller: _controller3,
+                      scrollDirection: Axis.vertical,
+                      itemCount: 91,
+                      physics: const NeverScrollableScrollPhysics(),
+                      itemBuilder: (ctx, i) => Container(
+                        alignment: Alignment.center,
+                        height: SizeConfig.title50,
+                        child: Text(
+                          i == 0 ? "Win" : "$i".padLeft(2, '0'),
+                          style:
+                              TextStyles.rajdhaniSB.title1.colour(Colors.white),
+                        ),
+                      ),
+                    ),
+                  ),
+                ],
+              ),
+            ),
+          ),
+        ),
+        AnimatedSwitcher(
+            duration: const Duration(seconds: 1),
+            switchInCurve: Curves.easeOutExpo,
+            switchOutCurve: Curves.easeInExpo,
+            transitionBuilder: (child, animation) {
+              return FadeTransition(
+                opacity: animation,
+                child: ScaleTransition(
+                  scale: animation,
+                  child: child,
+                ),
+              );
+            },
+            child: MaterialButton(
+              height: SizeConfig.padding44,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(SizeConfig.roundness5)),
+              minWidth: SizeConfig.screenWidth! * 0.3,
+              color: isSpinning ? Colors.grey : Colors.white,
+              onPressed: spin,
+              enableFeedback: !isSpinning,
+              child: Text(
+                "SPIN",
+                style: TextStyles.rajdhaniB.body0.colour(Colors.black),
+              ),
+            )
+            // : Container(
+            //     margin: EdgeInsets.symmetric(
+            //       horizontal: SizeConfig.padding16,
+            //       vertical: SizeConfig.padding16,
+            //     ),
+            //     padding: EdgeInsets.symmetric(
+            //         horizontal: SizeConfig.padding16,
+            //         vertical: SizeConfig.padding12),
+            //     decoration: BoxDecoration(
+            //         border: Border.all(
+            //             color: UiConstants.primaryColor, width: 1),
+            //         borderRadius:
+            //             BorderRadius.circular(SizeConfig.roundness12),
+            //         color: Colors.black45),
+            //     child: Row(children: [
+            //       Text(
+            //         "5-7",
+            //         style: TextStyles.rajdhaniB.body1
+            //             .colour(UiConstants.primaryColor),
+            //       ),
+            //       SizedBox(width: SizeConfig.padding4),
+            //       Text(
+            //         "Matches",
+            //         style: TextStyles.body2.colour(Colors.white54),
+            //       ),
+            //       const Spacer(),
+            //       Text(
+            //         "1",
+            //         style: TextStyles.rajdhaniB.body1
+            //             .colour(UiConstants.primaryColor),
+            //       ),
+            //       SizedBox(width: SizeConfig.padding4),
+            //       Text(
+            //         "Ticket",
+            //         style: TextStyles.body2.colour(Colors.white54),
+            //       ),
+            //     ]),
+            //   ),
+            ),
+      ],
+    );
+  }
+}
+
+class KeepAlivePage extends StatefulWidget {
+  KeepAlivePage({
+    Key? key,
+    required this.child,
+  }) : super(key: key);
+
+  final Widget child;
+
+  @override
+  _KeepAlivePageState createState() => _KeepAlivePageState();
+}
+
+class _KeepAlivePageState extends State<KeepAlivePage>
+    with AutomaticKeepAliveClientMixin {
+  @override
+  Widget build(BuildContext context) {
+    /// Dont't forget this
+    super.build(context);
+
+    return widget.child;
+  }
+
+  @override
+  // TODO: implement wantKeepAlive
+  bool get wantKeepAlive => true;
+}

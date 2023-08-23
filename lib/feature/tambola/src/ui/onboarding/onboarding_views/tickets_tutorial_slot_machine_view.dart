@@ -170,7 +170,7 @@ class _TicketsTutorialsSlotMachineViewState
                 .forward()
                 .then((value) => Future.delayed(const Duration(seconds: 1), () {
                       _shakeAnimController.forward();
-                      shakeVibrate();
+                      Haptic.shakeVibrate();
                     }));
           },
         ),
@@ -200,7 +200,7 @@ class _TicketsTutorialsSlotMachineViewState
       _controller3.jumpToPage(0);
       updateAnimationSpeed(300);
       Haptic.vibrate();
-      slotVibrate();
+      Haptic.slotVibrate();
       if (spinCount == 0) {
         _controller1.animateToPage(45,
             duration: const Duration(seconds: 2), curve: Curves.easeOutExpo);
@@ -252,45 +252,6 @@ class _TicketsTutorialsSlotMachineViewState
     _dottedLightsController.duration =
         Duration(seconds: _dottedLightsController.duration!.inSeconds);
     _dottedLightsController.repeat(reverse: true);
-  }
-
-  void slotVibrate() {
-    Vibration.vibrate(
-      pattern: [
-        10,
-        20,
-        30,
-        20,
-        60,
-        20,
-        90,
-        20,
-        110,
-        20,
-        140,
-        20,
-        180,
-        20,
-        240,
-        15,
-        300,
-        15,
-        360,
-        15,
-        420,
-        15,
-        480,
-        10,
-        550,
-        10,
-        620,
-      ],
-    );
-  }
-
-  void shakeVibrate() {
-    Vibration.vibrate(
-        pattern: [10, 20, 80, 20, 150, 20, 200, 20, 300, 20, 400, 20]);
   }
 
   @override

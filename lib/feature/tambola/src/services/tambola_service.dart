@@ -17,7 +17,6 @@ import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
 
 class TambolaService extends ChangeNotifier {
   //LOCATORS
@@ -49,6 +48,7 @@ class TambolaService extends ChangeNotifier {
   bool isEligible = false;
   bool showWinScreen = false;
   bool noMoreTickets = false;
+  AnimationController? ticketsDotLightsController;
 
   //GETTERS SETTERS
   bool get isLoading => _isLoading;
