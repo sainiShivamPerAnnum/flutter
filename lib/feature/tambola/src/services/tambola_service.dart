@@ -18,6 +18,8 @@ import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/cupertino.dart';
 
+enum SlotMachineState { toBeSpinned, Spinnned }
+
 class TambolaService extends ChangeNotifier {
   //LOCATORS
   final CustomLogger _logger = locator<CustomLogger>();
@@ -49,6 +51,14 @@ class TambolaService extends ChangeNotifier {
   bool showWinScreen = false;
   bool noMoreTickets = false;
   AnimationController? ticketsDotLightsController;
+  SlotMachineState _slotMachinState = SlotMachineState.toBeSpinned;
+
+  get slotMachinState => _slotMachinState;
+
+  set slotMachinState(value) {
+    _slotMachinState = value;
+    notifyListeners();
+  }
 
   //GETTERS SETTERS
   bool get isLoading => _isLoading;
