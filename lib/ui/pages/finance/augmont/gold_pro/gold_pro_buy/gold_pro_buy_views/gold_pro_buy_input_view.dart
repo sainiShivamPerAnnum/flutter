@@ -1,7 +1,5 @@
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/model/gold_pro_models/gold_pro_scheme_model.dart';
-import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -11,11 +9,7 @@ import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_buy/gold_pro
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
-import 'package:felloapp/util/haptic.dart';
-import 'package:felloapp/util/localization/generated/l10n.dart';
-import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
-import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
@@ -30,8 +24,6 @@ class GoldProBuyInputView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    S? locale = S.of(context);
-
     return Stack(
       children: [
         Column(
@@ -237,28 +229,6 @@ class GoldProBuyInputView extends StatelessWidget {
                           },
                         ),
                       ),
-                      Padding(
-                        padding: EdgeInsets.fromLTRB(SizeConfig.padding10,
-                            SizeConfig.padding10, SizeConfig.padding10, 0),
-                        child: RichText(
-                          text: TextSpan(
-                            children: [
-                              TextSpan(
-                                text: locale.obAgreeText,
-                                style: TextStyles.sourceSans.body3
-                                    .colour(UiConstants.kTextColor2),
-                              ),
-                              TextSpan(
-                                text: locale.obTermsofService,
-                                style: TextStyles.sourceSans.body3.underline
-                                    .colour(UiConstants.kTextColor),
-                                recognizer: TapGestureRecognizer()
-                                  ..onTap = onTermsAndConditionsClicked,
-                              ),
-                            ],
-                          ),
-                        ),
-                      ),
                     ]),
                   )
                 ],
@@ -273,13 +243,6 @@ class GoldProBuyInputView extends StatelessWidget {
         )
       ],
     );
-  }
-
-  void onTermsAndConditionsClicked() {
-    Haptic.vibrate();
-    BaseUtil.launchUrl('https://fello.in/policy/tnc');
-    locator<AnalyticsService>()
-        .track(eventName: AnalyticsEvents.termsAndConditions);
   }
 }
 
