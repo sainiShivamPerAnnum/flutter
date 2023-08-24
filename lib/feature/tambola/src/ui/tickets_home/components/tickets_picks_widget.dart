@@ -1,12 +1,21 @@
+import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/model/user_funt_wallet_model.dart';
+import 'package:felloapp/core/model/winners_model.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/feature/tambola/src/ui/animations/dotted_border_animation.dart';
+import 'package:felloapp/feature/tambola/src/ui/weekly_results_views/weekly_result.dart';
 import 'package:felloapp/feature/tambola/src/ui/widgets/tambola_picks/weekly_picks.dart';
 import 'package:felloapp/feature/tambola/tambola.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/page_views/height_adaptive_pageview.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:provider/provider.dart';
+import 'package:tuple/tuple.dart';
 
 import '../../../../../../util/assets.dart';
 
@@ -57,98 +66,7 @@ class _TicketsPicksWidgetState extends State<TicketsPicksWidget> {
       margin: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
       child: Column(
         children: [
-          Container(
-            padding: EdgeInsets.symmetric(
-                vertical: SizeConfig.padding14,
-                horizontal: SizeConfig.pageHorizontalMargins),
-            child: Column(
-              children: [
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    SvgPicture.asset(
-                      Assets.tambolaPrizeAsset,
-                      width: SizeConfig.padding40,
-                    ),
-                    Text(
-                      "  Congratulations!  ",
-                      style: TextStyles.sourceSansB.title4,
-                    ),
-                    SvgPicture.asset(
-                      Assets.tambolaPrizeAsset,
-                      width: SizeConfig.padding40,
-                    ),
-                  ],
-                ),
-                Padding(
-                  padding: EdgeInsets.all(SizeConfig.padding8),
-                  child: Wrap(
-                    crossAxisAlignment: WrapCrossAlignment.center,
-                    children: [
-                      Text(
-                        "Numbers Revealed this Week  ",
-                        style: TextStyles.sourceSansSB.body3
-                            .colour(UiConstants.kFAQsAnswerColor),
-                      ),
-                      Icon(
-                        Icons.arrow_forward_ios_rounded,
-                        color: UiConstants.kFAQsAnswerColor,
-                        size: SizeConfig.padding12,
-                      )
-                    ],
-                  ),
-                ),
-                Padding(
-                  padding: EdgeInsets.only(
-                    top: SizeConfig.padding12,
-                  ),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      SizedBox(
-                        width: SizeConfig.screenWidth! * 0.36,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "Your Net Reward",
-                              style: TextStyles.rajdhaniM.body2
-                                  .colour(UiConstants.kTextFieldTextColor),
-                            ),
-                            SizedBox(height: SizeConfig.padding6),
-                            Text(
-                              "₹110",
-                              style: TextStyles.sourceSansSB.title4,
-                            )
-                          ],
-                        ),
-                      ),
-                      Spacer(),
-                      SizedBox(
-                        width: SizeConfig.screenWidth! * 0.32,
-                        child: Column(
-                          crossAxisAlignment: CrossAxisAlignment.start,
-                          children: [
-                            Text(
-                              "This week Reward",
-                              style: TextStyles.rajdhaniM.body2
-                                  .colour(UiConstants.kTextFieldTextColor),
-                            ),
-                            SizedBox(height: SizeConfig.padding6),
-                            Text(
-                              "₹10",
-                              style: TextStyles.sourceSansSB.title4
-                                  .colour(UiConstants.kGoldProPrimary),
-                            )
-                          ],
-                        ),
-                      )
-                    ],
-                  ),
-                )
-              ],
-            ),
-          ),
+          const TicketsSundayWinCard(),
           Container(
             width: SizeConfig.screenWidth,
             padding: EdgeInsets.only(
@@ -166,8 +84,8 @@ class _TicketsPicksWidgetState extends State<TicketsPicksWidget> {
                   controller: controller!,
                   physics: const BouncingScrollPhysics(),
                   children: [
-                    KeepAlivePage(child: SlotMachineWidget()),
-                    KeepAlivePage(child: WeeklyPicks()),
+                    KeepAlivePage(child: const SlotMachineWidget()),
+                    KeepAlivePage(child: const WeeklyPicks()),
                   ],
                 ),
                 SizedBox(height: SizeConfig.padding14),
@@ -212,28 +130,162 @@ class _TicketsPicksWidgetState extends State<TicketsPicksWidget> {
               ],
             ),
           ),
-          Container(
-            padding: EdgeInsets.symmetric(
-                horizontal: SizeConfig.pageHorizontalMargins),
-            height: kToolbarHeight,
-            child: Row(
-              children: [
-                Text(
-                  "Total Won from Tickets",
-                  style: TextStyles.sourceSans.body2,
-                ),
-                const Spacer(),
-                Text(
-                  "₹20",
-                  style: TextStyles.rajdhaniSB.body0
-                      .colour(UiConstants.kGoldProPrimary),
-                ),
-              ],
+          const TicketsTotalWinWidget(),
+        ],
+      ),
+    );
+  }
+}
+
+class TicketsTotalWinWidget extends StatelessWidget {
+  const TicketsTotalWinWidget({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding:
+          EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
+      height: kToolbarHeight,
+      child: Row(
+        children: [
+          Text(
+            "Total Won from Tickets",
+            style: TextStyles.sourceSans.body2,
+          ),
+          const Spacer(),
+          Selector<UserService, UserFundWallet?>(
+            selector: (p0, p1) => p1.userFundWallet,
+            builder: (context, value, child) => Text(
+              "₹${value?.wTmbLifetimeWin ?? 0}",
+              style: TextStyles.rajdhaniSB.body0
+                  .colour(UiConstants.kGoldProPrimary),
             ),
           ),
         ],
       ),
     );
+  }
+}
+
+class TicketsSundayWinCard extends StatelessWidget {
+  const TicketsSundayWinCard({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Selector<TambolaService, Tuple2<Winners?, bool>>(
+        selector: (_, service) => Tuple2(
+              service.winnerData,
+              service.isEligible,
+            ),
+        builder: (context, value, child) => value.item1 != null
+            ? GestureDetector(
+                onTap: () =>
+                    AppState.delegate!.appState.currentAction = PageAction(
+                  state: PageState.addWidget,
+                  page: TWeeklyResultPageConfig,
+                  widget: WeeklyResult(
+                    winner: value.item1!,
+                    isEligible: value.item2,
+                  ),
+                ),
+                child: Container(
+                  padding: EdgeInsets.symmetric(
+                      vertical: SizeConfig.padding14,
+                      horizontal: SizeConfig.pageHorizontalMargins),
+                  child: Column(
+                    children: [
+                      Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SvgPicture.asset(
+                            Assets.tambolaPrizeAsset,
+                            width: SizeConfig.padding40,
+                          ),
+                          Text(
+                            "  Congratulations!  ",
+                            style: TextStyles.sourceSansB.title4,
+                          ),
+                          SvgPicture.asset(
+                            Assets.tambolaPrizeAsset,
+                            width: SizeConfig.padding40,
+                          ),
+                        ],
+                      ),
+                      Padding(
+                        padding: EdgeInsets.all(SizeConfig.padding8),
+                        child: Wrap(
+                          crossAxisAlignment: WrapCrossAlignment.center,
+                          children: [
+                            Text(
+                              "Numbers Revealed this Week  ",
+                              style: TextStyles.sourceSansSB.body3
+                                  .colour(UiConstants.kFAQsAnswerColor),
+                            ),
+                            Icon(
+                              Icons.arrow_forward_ios_rounded,
+                              color: UiConstants.kFAQsAnswerColor,
+                              size: SizeConfig.padding12,
+                            )
+                          ],
+                        ),
+                      ),
+                      Padding(
+                        padding: EdgeInsets.only(
+                          top: SizeConfig.padding12,
+                        ),
+                        child: Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            SizedBox(
+                              width: SizeConfig.screenWidth! * 0.36,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "Your Net Reward",
+                                    style: TextStyles.rajdhaniM.body2.colour(
+                                        UiConstants.kTextFieldTextColor),
+                                  ),
+                                  SizedBox(height: SizeConfig.padding6),
+                                  Text(
+                                    "₹${(locator<UserService>().userFundWallet?.wTmbLifetimeWin ?? 0) + (value.item1?.amount ?? 0)}",
+                                    style: TextStyles.sourceSansSB.title4,
+                                  )
+                                ],
+                              ),
+                            ),
+                            const Spacer(),
+                            SizedBox(
+                              width: SizeConfig.screenWidth! * 0.32,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    "This week Reward",
+                                    style: TextStyles.rajdhaniM.body2.colour(
+                                        UiConstants.kTextFieldTextColor),
+                                  ),
+                                  SizedBox(height: SizeConfig.padding6),
+                                  Text(
+                                    "₹${value.item1!.amount}",
+                                    style: TextStyles.sourceSansSB.title4
+                                        .colour(UiConstants.kGoldProPrimary),
+                                  )
+                                ],
+                              ),
+                            )
+                          ],
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              )
+            : const SizedBox());
   }
 }
 

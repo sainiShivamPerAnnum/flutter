@@ -7,7 +7,7 @@ class TambolaHomeTicketsViewModel extends BaseViewModel {
   void init() {
     tambolaService = locator<TambolaService>();
 
-    tambolaService!.getTambolaTickets(limit: 1);
+    tambolaService!.getBestTambolaTickets();
     tambolaService!.fetchWeeklyPicks();
     tambolaService!.getPastWeekWinners();
   }

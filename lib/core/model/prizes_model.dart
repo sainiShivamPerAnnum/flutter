@@ -30,9 +30,16 @@ class Prizes {
   int? amt;
   int? flc;
   String? displayName;
+  String? displayPrize;
   String? displayAmount;
 
-  Prizes({this.rank, this.amt, this.flc, this.displayName, this.displayAmount});
+  Prizes(
+      {this.rank,
+      this.amt,
+      this.flc,
+      this.displayName,
+      this.displayAmount,
+      this.displayPrize});
 
   static final helper = HelperModel<Prizes>((map) => Prizes.fromMap(map));
 
@@ -43,6 +50,7 @@ class Prizes {
       flc: map['flc'] ?? 0,
       displayName: map['display_name'] ?? "",
       displayAmount: map['display_amount'] ?? "",
+      displayPrize: map['display_prize'] ?? "",
     );
   }
 

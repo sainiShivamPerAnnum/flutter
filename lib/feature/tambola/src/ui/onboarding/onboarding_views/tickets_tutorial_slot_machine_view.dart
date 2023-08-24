@@ -2,6 +2,7 @@ import 'dart:math';
 
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
+import 'package:felloapp/core/model/prizes_model.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/feature/tambola/src/ui/animations/dotted_border_animation.dart';
@@ -9,6 +10,7 @@ import 'package:felloapp/feature/tambola/src/ui/onboarding/intro_view/tickets_in
 import 'package:felloapp/feature/tambola/src/ui/onboarding/onboarding_views/tickets_tutorial_assets_view.dart';
 import 'package:felloapp/feature/tambola/src/ui/widgets/ticket/tambola_ticket.dart';
 import 'package:felloapp/feature/tambola/src/ui/widgets/ticket/ticket_painter.dart';
+import 'package:felloapp/feature/tambola/tambola.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/asset_selection.dart';
@@ -20,6 +22,7 @@ import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lottie/lottie.dart';
+import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 import 'package:vibration/vibration.dart';
 
@@ -83,6 +86,15 @@ class _TicketsTutorialsSlotMachineViewState
   set isSpinning(bool value) {
     setState(() {
       _isSpinning = value;
+    });
+  }
+
+  bool _highlightRow = false;
+  bool get highlightRow => _highlightRow;
+
+  set highlightRow(bool value) {
+    setState(() {
+      _highlightRow = value;
     });
   }
 
@@ -232,10 +244,13 @@ class _TicketsTutorialsSlotMachineViewState
           _dottedLightsController.stop();
           Future.delayed(const Duration(seconds: 1), () {
             _animationController2.forward();
-            _scrollController.animateTo(
-                _scrollController.position.maxScrollExtent,
-                duration: const Duration(seconds: 2),
-                curve: Curves.easeInExpo);
+            _scrollController
+                .animateTo(_scrollController.position.maxScrollExtent,
+                    duration: const Duration(seconds: 2),
+                    curve: Curves.easeInExpo)
+                .then((value) => Future.delayed(Duration(seconds: 1), () {
+                      highlightRow = true;
+                    }));
           });
         }
         spinCount++;
@@ -535,8 +550,11 @@ class _TicketsTutorialsSlotMachineViewState
                       ),
                     ),
                     CustomStaggeredAnimatedWidget(
-                        animation: _prizesAnimation,
-                        child: const TicketsRewardCategoriesWidget()),
+                      animation: _prizesAnimation,
+                      child: TicketsRewardCategoriesWidget(
+                        highlightRow: highlightRow,
+                      ),
+                    ),
                     CustomStaggeredAnimatedWidget(
                       animation: _ctaAnimation,
                       child: MaterialButton(
@@ -814,7 +832,10 @@ class Head extends StatelessWidget {
 class TicketsRewardCategoriesWidget extends StatelessWidget {
   const TicketsRewardCategoriesWidget({
     super.key,
+    required this.highlightRow,
   });
+
+  final bool highlightRow;
 
   @override
   Widget build(BuildContext context) {
@@ -849,35 +870,53 @@ class TicketsRewardCategoriesWidget extends StatelessWidget {
               ),
             ],
           ),
-          ListView.separated(
-            shrinkWrap: true,
-            physics: const NeverScrollableScrollPhysics(),
-            padding: EdgeInsets.symmetric(vertical: SizeConfig.padding14),
-            itemCount: categories.length,
-            itemBuilder: (ctx, index) => ListTile(
-              contentPadding:
-                  EdgeInsets.symmetric(horizontal: SizeConfig.padding10),
-              title: Text(
-                categories[index].item1,
-                style: TextStyles.rajdhaniB.body1.colour(
-                    index == 0 ? UiConstants.primaryColor : Colors.white),
-              ),
-              subtitle: Text(
-                "Per Ticket every week",
-                style: TextStyles.sourceSans.body3.colour(Colors.white38),
-              ),
-              trailing: Text(
-                categories[index].item2,
-                style: TextStyles.sourceSansB.body1.colour(
-                    index == 0 ? UiConstants.primaryColor : Colors.white),
-              ),
-            ),
-            separatorBuilder: (context, index) => index != categories.length - 1
-                ? const Divider(
-                    color: Colors.white10,
-                  )
-                : const SizedBox(),
-          ),
+          Selector<TambolaService, PrizesModel?>(
+              selector: (_, tambolaService) => tambolaService.tambolaPrizes,
+              builder: (context, prizes, child) {
+                return prizes != null
+                    ? ListView.separated(
+                        shrinkWrap: true,
+                        physics: const NeverScrollableScrollPhysics(),
+                        padding: EdgeInsets.symmetric(
+                            vertical: SizeConfig.padding14),
+                        itemCount: prizes.prizes!.length,
+                        itemBuilder: (ctx, index) => AnimatedSwitcher(
+                          duration: const Duration(seconds: 1),
+                          switchInCurve: Curves.easeOutExpo,
+                          switchOutCurve: Curves.easeOutExpo,
+                          child: ListTile(
+                            contentPadding: EdgeInsets.symmetric(
+                                horizontal: SizeConfig.padding10),
+                            title: Text(
+                              prizes.prizes![index].displayName ?? "",
+                              style: TextStyles.rajdhaniB.body1.colour(
+                                  index == 0 && highlightRow
+                                      ? UiConstants.primaryColor
+                                      : Colors.white),
+                            ),
+                            subtitle: Text(
+                              "Per Ticket every week",
+                              style: TextStyles.sourceSans.body3
+                                  .colour(Colors.white38),
+                            ),
+                            trailing: Text(
+                              prizes.prizes![index].displayPrize ?? "",
+                              style: TextStyles.sourceSansB.body1.colour(
+                                  index == 0 && highlightRow
+                                      ? UiConstants.primaryColor
+                                      : Colors.white),
+                            ),
+                          ),
+                        ),
+                        separatorBuilder: (context, index) =>
+                            index != categories.length - 1
+                                ? const Divider(
+                                    color: Colors.white10,
+                                  )
+                                : const SizedBox(),
+                      )
+                    : const SizedBox();
+              }),
           Text(
             "Rewards are distributed every monday among all  the Tickets winning in a catagory",
             style: TextStyles.body3.colour(Colors.white30),

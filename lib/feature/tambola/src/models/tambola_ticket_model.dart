@@ -12,6 +12,7 @@ class TambolaTicketModel {
   final String val;
   final String id;
   final int weekCode;
+  final int winProbability;
   List<String>? encodedTambolaList;
   List<List<int>>? tambolaBoard =
       List.generate(boardHeight, (_) => List.generate(boardLength, (i) => 0));
@@ -26,6 +27,7 @@ class TambolaTicketModel {
       {required this.assignedTime,
       required this.val,
       required this.id,
+      required this.winProbability,
       required this.weekCode}) {
     decodeBoard(val);
   }
@@ -35,6 +37,7 @@ class TambolaTicketModel {
       assignedTime: TimestampModel.fromMap(map['assignedOn']),
       val: map['tval'] ?? '',
       id: map['tid'] ?? 0,
+      winProbability: map['winProbability'] ?? 0,
       weekCode: map['week_code'] ?? 0,
     );
   }
@@ -44,6 +47,7 @@ class TambolaTicketModel {
       assignedTime: TimestampModel.none(),
       val: '',
       id: '',
+      winProbability: 0,
       weekCode: 0,
     );
   }

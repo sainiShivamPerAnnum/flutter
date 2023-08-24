@@ -260,6 +260,26 @@ class TambolaService extends ChangeNotifier {
     }
   }
 
+  String getTicketCategoryFromPrizes(String category) {
+    if (tambolaPrizes == null) {
+      return "";
+    } else {
+      if (category == 'category_1') {
+        return tambolaPrizes!.prizes![0].displayName ?? "";
+      }
+      if (category == 'category_2') {
+        return tambolaPrizes!.prizes![1].displayName ?? "";
+      }
+      if (category == 'category_3') {
+        return tambolaPrizes!.prizes![2].displayName ?? "";
+      }
+      if (category == 'category_4') {
+        return tambolaPrizes!.prizes![3].displayName ?? "";
+      }
+    }
+    return "";
+  }
+
   // Future<void> examineTicketsForWins() async {
   //   if (bestTickets == null ||
   //       bestTickets?.data == null ||

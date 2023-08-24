@@ -89,9 +89,108 @@ class TicketMatchesBriefBoxWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    return Selector<TambolaService, TambolaBestTicketsModel?>(
+        selector: (p0, p1) => p1.bestTickets,
+        builder: (context, bestTickets, child) {
+          return bestTickets != null
+              ? Container(
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+                    color: Colors.black,
+                  ),
+                  margin: EdgeInsets.symmetric(
+                      horizontal: SizeConfig.pageHorizontalMargins),
+                  child: Column(
+                    children: [
+                      SizedBox(height: SizeConfig.padding18),
+                      Text(
+                        "Tickets Winning this week (3)",
+                        style: TextStyles.title5.colour(Colors.white),
+                      ),
+                      GridView.builder(
+                        padding: EdgeInsets.all(SizeConfig.padding20),
+                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                          crossAxisCount: 2,
+                          mainAxisSpacing: SizeConfig.padding14,
+                          crossAxisSpacing: SizeConfig.padding14,
+                          childAspectRatio: 2 / 1,
+                        ),
+                        itemCount: 4,
+                        physics: const NeverScrollableScrollPhysics(),
+                        shrinkWrap: true,
+                        itemBuilder: (context, index) => TicketsWinBriefChip(
+                            title: getTitle(index), value: getValue(index)),
+                      ),
+                    ],
+                  ),
+                )
+              : const SizedBox();
+        });
+  }
+
+  getTitle(int index) {
+    // switch(index){
+    //   case 0:
+    //   return locator<TambolaService>().getTicketCategoryFromPrizes('category_1')
+    // }
+    return "title";
+  }
+
+  getValue(int index) {
+    return 0;
+  }
+}
+
+class TicketsWinBriefChip extends StatelessWidget {
+  const TicketsWinBriefChip({
+    super.key,
+    required this.title,
+    required this.value,
+  });
+
+  final String title;
+  final int value;
+
+  @override
+  Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+        border: Border.all(width: 1, color: UiConstants.primaryColor),
+        color: UiConstants.darkPrimaryColor.withOpacity(0.5),
+        borderRadius: BorderRadius.circular(SizeConfig.padding10),
+      ),
+      padding: EdgeInsets.all(SizeConfig.padding10),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                "$title ",
+                style: TextStyles.rajdhaniB.body1.colour(Colors.white),
+              ),
+              Text(
+                "Matches",
+                style: TextStyles.body2.colour(Colors.white38),
+              )
+            ],
+          ),
+          SizedBox(height: SizeConfig.padding4),
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                "$value ",
+                style: TextStyles.rajdhaniB.body1.colour(Colors.white),
+              ),
+              Text(
+                "Tickets",
+                style: TextStyles.body2.colour(Colors.white38),
+              )
+            ],
+          ),
+        ],
       ),
     );
   }

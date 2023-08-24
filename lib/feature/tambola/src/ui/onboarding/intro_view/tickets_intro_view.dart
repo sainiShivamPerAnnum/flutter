@@ -12,8 +12,19 @@ import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class TicketsIntroView extends StatelessWidget {
+class TicketsIntroView extends StatefulWidget {
   const TicketsIntroView({super.key});
+
+  @override
+  State<TicketsIntroView> createState() => _TicketsIntroViewState();
+}
+
+class _TicketsIntroViewState extends State<TicketsIntroView> {
+  @override
+  void initState() {
+    locator<TambolaService>().getPrizes();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,24 +45,24 @@ class TicketsIntroView extends StatelessWidget {
               right: -SizeConfig.screenWidth! / 3,
               child: const RotatingPolkaDotsWidget(),
             ),
-            Positioned(
-              top: SizeConfig.screenHeight! * 0.38,
-              right: SizeConfig.screenWidth! * 0.03,
-              child: Opacity(
-                opacity: 0.7,
-                child: SvgPicture.asset(Assets.goldAsset,
-                    width: SizeConfig.padding54),
-              ),
-            ),
-            Positioned(
-              top: SizeConfig.screenHeight! * 0.3,
-              left: SizeConfig.screenWidth! * 0.05,
-              child: Opacity(
-                opacity: 0.6,
-                child: SvgPicture.asset(Assets.floAsset,
-                    width: SizeConfig.padding54),
-              ),
-            ),
+            // Positioned(
+            //   top: SizeConfig.screenHeight! * 0.38,
+            //   right: SizeConfig.screenWidth! * 0.03,
+            //   child: Opacity(
+            //     opacity: 0.7,
+            //     child: SvgPicture.asset(Assets.goldAsset,
+            //         width: SizeConfig.padding54),
+            //   ),
+            // ),
+            // Positioned(
+            //   top: SizeConfig.screenHeight! * 0.3,
+            //   left: SizeConfig.screenWidth! * 0.05,
+            //   child: Opacity(
+            //     opacity: 0.6,
+            //     child: SvgPicture.asset(Assets.floAsset,
+            //         width: SizeConfig.padding54),
+            //   ),
+            // ),
             Column(
               children: [
                 Expanded(

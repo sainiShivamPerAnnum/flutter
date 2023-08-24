@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/feature/tambola/src/ui/onboarding/onboarding_views/tickets_tutorial_slot_machine_view.dart';
 import 'package:felloapp/feature/tambola/src/ui/tambola_home_details/tambola_home_details_view.dart';
 import 'package:felloapp/feature/tambola/src/ui/tambola_home_tickets/tambola_home_tickets_vm.dart';
 import 'package:felloapp/feature/tambola/src/ui/tickets_home/components/tickets_picks_widget.dart';
@@ -86,6 +87,7 @@ class _TambolaHomeTicketsViewState extends State<TambolaHomeTicketsView> {
                     const NextWeekTicketInfo(),
                     const TicketMultiplierOptionsWidget(),
                     AnimatedBuyTambolaTicketCard(key: tambolaBuyTicketCardKey),
+                    const TicketsRewardCategoriesWidget(highlightRow: false),
                     const TambolaLeaderboardView(),
                     // LottieBuilder.network(Assets.bottomBannerLottie),
                     SizedBox(height: SizeConfig.navBarHeight),
