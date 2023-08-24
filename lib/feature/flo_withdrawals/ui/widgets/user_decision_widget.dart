@@ -16,7 +16,7 @@ class UserDecisionWidget extends StatelessWidget {
         return "You had chosen to re-invest to 10%";
       case UserDecision.WITHDRAW:
         return "You have chosen to withdraw to bank";
-      case UserDecision.MOVETO8:
+      case UserDecision.MOVETOFLEXI:
         return 'You have chosen to move to 8% Flo';
       case UserDecision.NOTDECIDED:
         return 'You are yet to decide about your maturity';

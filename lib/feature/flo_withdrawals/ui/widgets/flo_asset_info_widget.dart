@@ -12,6 +12,8 @@ class FloAssetInfoWidget extends StatelessWidget {
     required this.maturityAmount,
     required this.maturityDate,
     required this.decision,
+    required this.fdDuration,
+    required this.roiPerc,
     super.key,
     this.maturesInDays = 7,
   });
@@ -22,6 +24,8 @@ class FloAssetInfoWidget extends StatelessWidget {
   final String maturityDate;
   final int maturesInDays;
   final UserDecision decision;
+  final String fdDuration;
+  final String roiPerc;
 
   @override
   Widget build(BuildContext context) {
@@ -93,7 +97,7 @@ class FloAssetInfoWidget extends StatelessWidget {
                         mainAxisAlignment: MainAxisAlignment.spaceAround,
                         children: [
                           Text(
-                            '6 months',
+                            fdDuration,
                             textAlign: TextAlign.center,
                             style: TextStyles.sourceSans.body3
                                 .colour(Colors.white),
@@ -103,7 +107,7 @@ class FloAssetInfoWidget extends StatelessWidget {
                             width: SizeConfig.padding64,
                           ),
                           Text(
-                            '@10% P.A',
+                            '@$roiPerc% P.A',
                             style: TextStyles.sourceSansSB.body4.colour(
                               const Color(0xFF3DFFD0),
                             ),
@@ -165,7 +169,7 @@ class FloAssetInfoWidget extends StatelessWidget {
                   color: const Color(0xFF62E3C4),
                   borderRadius: BorderRadius.circular(SizeConfig.roundness16),
                 ),
-                child: 'Matures in *7 days*'.beautify(
+                child: 'Matures in *$maturesInDays days*'.beautify(
                   boldStyle: TextStyles.sourceSansB.body4.colour(
                     const Color(0xFF013B3F),
                   ),

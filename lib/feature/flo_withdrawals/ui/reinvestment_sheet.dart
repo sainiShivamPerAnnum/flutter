@@ -1,16 +1,41 @@
+import 'package:felloapp/core/model/lendbox_maturity_response.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/feature/flo_withdrawals/ui/widgets/flo_asset_info_widget.dart';
 import 'package:felloapp/feature/flo_withdrawals/ui/widgets/reinvestment_bottom_widget.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-enum UserDecision { REINVEST, WITHDRAW, MOVETO8, NOTDECIDED }
+enum UserDecision { REINVEST, WITHDRAW, MOVETOFLEXI, NOTDECIDED }
 
 class ReInvestmentSheet extends StatelessWidget {
-  const ReInvestmentSheet({required this.decision, super.key});
+  ReInvestmentSheet(
+      {required this.decision, required this.depositData, super.key}) {
+    isLendboxOldUser =
+        locator<UserService>().userSegments.contains(Constants.US_FLO_OLD);
+  }
 
   final UserDecision decision;
+  final Deposit depositData;
+  late final bool isLendboxOldUser;
+
+  String getTitle() {
+    if (depositData.fundType == Constants.ASSET_TYPE_FLO_FIXED_6) {
+      return 'Your 12% Deposit is maturing';
+    } else if (depositData.fundType == Constants.ASSET_TYPE_FLO_FIXED_3) {
+      return 'Your 10% Deposit is maturing';
+    } else if (depositData.fundType == Constants.ASSET_TYPE_FLO_FELXI &&
+        isLendboxOldUser) {
+      return 'Your 10% Deposit is maturing';
+    } else if (depositData.fundType == Constants.ASSET_TYPE_FLO_FELXI &&
+        !isLendboxOldUser) {
+      return 'Your 8% Deposit is maturing';
+    }
+    return 'Your 10% Deposit is maturing';
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,21 +89,24 @@ class ReInvestmentSheet extends StatelessWidget {
                         fit: BoxFit.cover,
                       ),
                       SizedBox(width: SizeConfig.padding8),
-                      Text('Your 10% Deposit is maturing',
+                      Text(getTitle(),
                           style:
                               TextStyles.rajdhaniSB.body0.colour(Colors.white))
                     ],
                   ),
                   SizedBox(height: SizeConfig.padding26),
                   FloAssetInfoWidget(
-                    investedAmount: '140',
+                    investedAmount: (depositData.investedAmt!).toString(),
                     investedDate: '3rd June 2023',
-                    maturityAmount: '150',
+                    maturityAmount: (depositData.maturityAmt!).toString(),
                     maturityDate: '3rd Sept 2023',
                     decision: decision,
+                    maturesInDays: depositData.maturesInDays ?? 0,
+                    fdDuration: depositData.fdDuration!,
+                    roiPerc: depositData.roiPerc!,
                   ),
                   SizedBox(
-                      height: (decision == UserDecision.MOVETO8 ||
+                      height: (decision == UserDecision.MOVETOFLEXI ||
                               decision == UserDecision.WITHDRAW)
                           ? SizeConfig.padding20
                           : SizeConfig.padding10),
@@ -95,4 +123,3 @@ class ReInvestmentSheet extends StatelessWidget {
     );
   }
 }
-

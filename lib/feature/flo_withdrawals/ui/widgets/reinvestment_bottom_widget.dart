@@ -22,7 +22,7 @@ class ReInvestmentBottomWidget extends StatelessWidget {
 
   String getTitle() {
     switch (decision) {
-      case UserDecision.MOVETO8:
+      case UserDecision.MOVETOFLEXI:
         return 'SLIDE TO GET 10% RETURNS';
       case UserDecision.WITHDRAW:
         return 'SLIDE TO RE-INVEST IN 10%';
@@ -47,10 +47,10 @@ class ReInvestmentBottomWidget extends StatelessWidget {
       width: SizeConfig.screenWidth,
       child: Column(
         children: [
-          if (decision == UserDecision.MOVETO8 ||
+          if (decision == UserDecision.MOVETOFLEXI ||
               decision == UserDecision.WITHDRAW) ...[
             Text(
-              decision == UserDecision.MOVETO8
+              decision == UserDecision.MOVETOFLEXI
                   ? 'Get extra 2% on your Investment'
                   : 'Get more returns on your investment',
               textAlign: TextAlign.center,
@@ -133,7 +133,7 @@ class ReInvestmentBottomWidget extends StatelessWidget {
                   },
                 ),
           SizedBox(height: SizeConfig.padding18),
-          if (decision == UserDecision.MOVETO8 ||
+          if (decision == UserDecision.MOVETOFLEXI ||
               decision == UserDecision.WITHDRAW) ...[
             SizedBox(height: SizeConfig.padding8),
             GestureDetector(
@@ -141,7 +141,7 @@ class ReInvestmentBottomWidget extends StatelessWidget {
                 Haptic.vibrate();
                 AppState.backButtonDispatcher?.didPopRoute();
 
-                if (decision == UserDecision.MOVETO8) {
+                if (decision == UserDecision.MOVETOFLEXI) {
                   BaseUtil.openModalBottomSheet(
                     addToScreenStack: true,
                     enableDrag: false,
@@ -164,7 +164,7 @@ class ReInvestmentBottomWidget extends StatelessWidget {
                 }
               },
               child: Text(
-                decision == UserDecision.MOVETO8
+                decision == UserDecision.MOVETOFLEXI
                     ? 'I AM HAPPY WITH 8% RETURNS ONLY'
                     : 'VIEW OTHER OPTIONS',
                 textAlign: TextAlign.center,

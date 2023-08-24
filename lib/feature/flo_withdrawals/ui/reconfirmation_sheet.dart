@@ -11,8 +11,6 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 class ReConfirmationSheet extends HookWidget {
   const ReConfirmationSheet({super.key});
 
-  // final UserDecision decision;
-
   @override
   Widget build(BuildContext context) {
     final selectedOption = useState(-1);

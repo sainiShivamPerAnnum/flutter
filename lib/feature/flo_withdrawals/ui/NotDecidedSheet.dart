@@ -84,6 +84,8 @@ class NotDecidedModalSheet extends HookWidget {
                       maturityAmount: '150',
                       maturityDate: '3rd Sept 2023',
                       decision: UserDecision.NOTDECIDED,
+                      fdDuration: '',
+                      roiPerc: '',
                     ),
                     SizedBox(height: SizeConfig.padding24),
                     Row(

@@ -4,6 +4,7 @@ import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/service/fcm/background_fcm_handler.dart';
 import 'package:felloapp/core/service/journey_service.dart';
+import 'package:felloapp/core/service/lendbox_maturity_service.dart';
 import 'package:felloapp/core/service/notifier_services/connectivity_service.dart';
 import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
@@ -106,7 +107,10 @@ class MyApp extends HookWidget {
           ),
           ChangeNotifierProvider(
             create: (_) => locator<CardActionsNotifier>(),
-          )
+          ),
+          ChangeNotifierProvider(
+            create: (_) => locator<LendboxMaturityService>(),
+          ),
         ],
         child: PropertyChangeProvider<UserService, UserServiceProperties>(
           value: locator<UserService>(),

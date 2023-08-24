@@ -14,6 +14,7 @@ import 'package:felloapp/core/repository/save_repo.dart';
 import 'package:felloapp/core/repository/transactions_history_repo.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/lendbox_maturity_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -602,9 +603,7 @@ class QuickLinks extends StatelessWidget {
             ),
           ),
         ),
-        const FloPendingAction(
-          pendingActionCount: 2,
-        )
+        const FloPendingAction()
       ],
     );
   }
@@ -613,67 +612,71 @@ class QuickLinks extends StatelessWidget {
 class FloPendingAction extends StatelessWidget {
   const FloPendingAction({
     super.key,
-    required this.pendingActionCount,
   });
-
-  final int pendingActionCount;
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: () {
-        Haptic.vibrate();
-        BaseUtil.openModalBottomSheet(
-          addToScreenStack: true,
-          enableDrag: false,
-          hapticVibrate: true,
-          isBarrierDismissible: true,
-          backgroundColor: Colors.transparent,
-          isScrollControlled: true,
-          content: const ReInvestmentSheet(
-            decision: UserDecision.WITHDRAW,
+    return Consumer<LendboxMaturityService>(builder: (context, model, child) {
+      if (model.pendingMaturityCount > 0 &&
+          (model.deposits != null && model.deposits?[0] != null)) {
+        return GestureDetector(
+          onTap: () {
+            Haptic.vibrate();
+            BaseUtil.openModalBottomSheet(
+              addToScreenStack: true,
+              enableDrag: false,
+              hapticVibrate: true,
+              isBarrierDismissible: true,
+              backgroundColor: Colors.transparent,
+              isScrollControlled: true,
+              content: ReInvestmentSheet(
+                decision: model.userDecision,
+                depositData: model.deposits![0],
+              ),
+            );
+          },
+          child: Transform.translate(
+            offset: Offset(-SizeConfig.padding10, -SizeConfig.padding16),
+            child: Stack(
+              children: [
+                CustomPaint(
+                  size: Size(SizeConfig.screenWidth!,
+                      (SizeConfig.screenWidth! * 0.27).toDouble()),
+                  painter: CustomToolTipPainter(),
+                ),
+                Positioned(
+                  top: SizeConfig.padding36 + SizeConfig.padding1,
+                  left: SizeConfig.padding38,
+                  child: Row(
+                    children: [
+                      Text(
+                        'Pending actions on ${model.pendingMaturityCount} Flo transactions',
+                        style: TextStyles.sourceSans.body2.colour(Colors.white),
+                      ),
+                      SizedBox(width: SizeConfig.padding38),
+                      Container(
+                        width: SizeConfig.padding20,
+                        height: SizeConfig.padding20,
+                        decoration: const ShapeDecoration(
+                          color: Color(0xFF1ADAB7),
+                          shape: OvalBorder(),
+                        ),
+                        child: Icon(
+                          Icons.arrow_forward_ios_rounded,
+                          size: SizeConfig.padding12,
+                          color: Colors.black,
+                        ),
+                      )
+                    ],
+                  ),
+                ),
+              ],
+            ),
           ),
         );
-      },
-      child: Transform.translate(
-        offset: Offset(-SizeConfig.padding10, -SizeConfig.padding16),
-        child: Stack(
-          children: [
-            CustomPaint(
-              size: Size(SizeConfig.screenWidth!,
-                  (SizeConfig.screenWidth! * 0.27).toDouble()),
-              painter: CustomToolTipPainter(),
-            ),
-            Positioned(
-              top: SizeConfig.padding36 + SizeConfig.padding1,
-              left: SizeConfig.padding38,
-              child: Row(
-                children: [
-                  Text(
-                    'Pending actions on $pendingActionCount Flo transactions',
-                    style: TextStyles.sourceSans.body2.colour(Colors.white),
-                  ),
-                  SizedBox(width: SizeConfig.padding38),
-                  Container(
-                    width: SizeConfig.padding20,
-                    height: SizeConfig.padding20,
-                    decoration: const ShapeDecoration(
-                      color: Color(0xFF1ADAB7),
-                      shape: OvalBorder(),
-                    ),
-                    child: Icon(
-                      Icons.arrow_forward_ios_rounded,
-                      size: SizeConfig.padding12,
-                      color: Colors.black,
-                    ),
-                  )
-                ],
-              ),
-            ),
-          ],
-        ),
-      ),
-    );
+      }
+      return const SizedBox.shrink();
+    });
   }
 }
 
