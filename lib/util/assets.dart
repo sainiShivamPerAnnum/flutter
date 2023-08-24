@@ -22,6 +22,7 @@ class Assets {
   static const String autoSaveOngoing = 'assets/svg/auto_save_ongoing.svg';
   static const String upi = 'assets/images/upi.png';
   static const String rupee = 'assets/vectors/icons/indian_rupee.svg';
+  static const String referralIcon = "assets/vectors/icons/referral_icon.svg";
 
   //APPBAR
 
@@ -70,6 +71,8 @@ class Assets {
 
   static const String sprout = "assets/vectors/sprout.svg";
   static const String star = "assets/vectors/star.svg";
+  static const String singleTambolaTicket =
+      "assets/vectors/icons/single_tambola_ticket.svg";
 
   //HOME TAB//
 
@@ -122,6 +125,7 @@ class Assets {
   static const String rbi = "assets/svg/rbi.svg";
   static const String icici = "assets/svg/icici.svg";
   static const String sebi = "assets/vectors/icons/sebi_new.svg";
+  static const String graphArrows = "assets/vectors/icons/graph_arrows.svg";
 
   static const String arrowIcon = "assets/svg/raising_arrow.svg";
   static const String timer = "assets/svg/timer.svg";
@@ -131,12 +135,6 @@ class Assets {
 
   static const String happyhourPolygon = "assets/svg/happy_hour_polygons.svg";
   static const String floGold = "assets/vectors/flogold.svg";
-
-  // WIN
-
-  static const String amazonClaim = "assets/images/amazon_claim.png";
-  static const String iphone = "assets/images/iphone.png";
-  static const String iphone2 = "assets/images/iphone2.png";
 
   // TRANSACTIONS
   static const String win1croreBanner = "assets/images/win1crore.webp";
@@ -350,6 +348,8 @@ class Assets {
 
   static const String levelUpLottie = "${assetBaseUrl}lotties/levelup.json";
 
+  static const String indianFlagKiteLottie = "assets/lotties/mob.json";
+
   // static const String wohooLottie = "assets/lotties/woohoo.json";
   // static const String gtScratch = "assets/lotties/scratch.json";
 
@@ -407,4 +407,12 @@ class Assets {
   static const String quizMasterBadge = '${assetBaseUrl}badges/quiz-master.svg';
   static const String tambolaTitanBadge =
       '${assetBaseUrl}badges/tambola-titan.svg';
+  static const String referralReward =
+      "${assetBaseUrl}revamped-referrals/reward.svg";
+
+  static const String peopleGroup =
+      "${assetBaseUrl}revamped-referrals/friends.svg";
+
+  static const String youtubeLogo =
+      "https://upload.wikimedia.org/wikipedia/commons/e/ef/Youtube_logo.png";
 }

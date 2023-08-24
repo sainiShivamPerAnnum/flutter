@@ -9,9 +9,10 @@ import 'package:flutter/foundation.dart';
 class UserBootUpDetailsModel {
   final String? message;
   final Data? data;
+
   UserBootUpDetailsModel({
-    @required this.message,
-    @required this.data,
+    required this.message,
+    required this.data,
   });
 
   UserBootUpDetailsModel copyWith({
@@ -58,15 +59,18 @@ class Data {
   final Notice? notice;
   final bool? signOutUser;
   final BanMap? banMap;
+  final bool? stateRestricted;
+
   Data({
     this.marqueeMessages,
-    @required this.cache,
-    @required this.isBlocked,
-    @required this.isAppUpdateRequired,
-    @required this.isAppForcedUpdateRequired,
-    @required this.notice,
-    @required this.signOutUser,
-    @required this.banMap,
+    required this.cache,
+    required this.isBlocked,
+    required this.isAppUpdateRequired,
+    required this.isAppForcedUpdateRequired,
+    required this.notice,
+    required this.signOutUser,
+    required this.banMap,
+    required this.stateRestricted,
   });
 
   factory Data.fromMap(Map<String, dynamic> map) {
@@ -88,6 +92,7 @@ class Data {
       banMap: map['banMap'] != null
           ? BanMap.fromMap(map['banMap'] as Map<String, dynamic>)
           : BanMap.base(),
+      stateRestricted: map['stateRestricted'] ?? false,
     );
   }
 
@@ -96,7 +101,7 @@ class Data {
 
   @override
   String toString() {
-    return 'Data(cache: $cache, isBlocked: $isBlocked, isAppUpdateRequired: $isAppUpdateRequired, isAppForcedUpdateRequired: $isAppForcedUpdateRequired, notice: $notice, signOutUser: $signOutUser, banMap: $banMap)';
+    return 'Data(cache: $cache, isBlocked: $isBlocked, isAppUpdateRequired: $isAppUpdateRequired, isAppForcedUpdateRequired: $isAppForcedUpdateRequired, notice: $notice, signOutUser: $signOutUser, banMap: $banMap, stateRestricted: $stateRestricted)';
   }
 
   @override
@@ -109,7 +114,8 @@ class Data {
         other.isAppForcedUpdateRequired == isAppForcedUpdateRequired &&
         other.notice == notice &&
         other.signOutUser == signOutUser &&
-        other.banMap == banMap;
+        other.banMap == banMap &&
+        other.stateRestricted == stateRestricted;
   }
 
   @override
@@ -120,16 +126,18 @@ class Data {
         isAppForcedUpdateRequired.hashCode ^
         notice.hashCode ^
         signOutUser.hashCode ^
-        banMap.hashCode;
+        banMap.hashCode ^
+        stateRestricted.hashCode;
   }
 }
 
 class Cache {
   TimestampModel? before;
   List<String>? keys;
+
   Cache({
-    @required this.before,
-    @required this.keys,
+    required this.before,
+    required this.keys,
   });
 
   Cache copyWith({
@@ -183,10 +191,11 @@ class Notice {
   String? message;
   String? url;
   bool? isFullScreen;
+
   Notice({
-    @required this.message,
-    @required this.url,
-    @required this.isFullScreen,
+    required this.message,
+    required this.url,
+    required this.isFullScreen,
   });
 
   Notice.base() {
@@ -194,6 +203,7 @@ class Notice {
     url = '';
     isFullScreen = false;
   }
+
   Notice copyWith({
     String? message,
     String? url,
@@ -247,9 +257,10 @@ class Notice {
 class BanMap {
   GamesBanMap? games;
   InvestmentsBanMap? investments;
+
   BanMap({
-    @required this.games,
-    @required this.investments,
+    required this.games,
+    required this.investments,
   });
 
   BanMap.base() {
@@ -308,15 +319,17 @@ class BanMap {
 class InvestmentsBanMap {
   InvestmentTypeBanMap? deposit;
   InvestmentTypeBanMap? withdrawal;
+
   InvestmentsBanMap({
-    @required this.deposit,
-    @required this.withdrawal,
+    required this.deposit,
+    required this.withdrawal,
   });
 
   InvestmentsBanMap.base() {
     deposit = InvestmentTypeBanMap.base();
     withdrawal = InvestmentTypeBanMap.base();
   }
+
   InvestmentsBanMap copyWith({
     InvestmentTypeBanMap? deposit,
     InvestmentTypeBanMap? withdrawal,
@@ -368,24 +381,29 @@ class InvestmentsBanMap {
 
 class InvestmentTypeBanMap {
   AssetBanMap? augmont;
+  AssetBanMap? goldPro;
   AssetBanMap? lendBox;
   AssetBanMap? lendBoxFd1;
   AssetBanMap? lendBoxFd2;
+
   InvestmentTypeBanMap({
-    @required this.augmont,
+    required this.augmont,
+    required this.goldPro,
     @required this.lendBox,
-    @required this.lendBoxFd1,
-    @required this.lendBoxFd2,
+    required this.lendBoxFd1,
+    required this.lendBoxFd2,
   });
 
   InvestmentTypeBanMap copyWith({
     AssetBanMap? augmont,
+    AssetBanMap? goldPro,
     AssetBanMap? lendBox,
     AssetBanMap? lendBoxFd1,
     AssetBanMap? lendBoxFd2,
   }) {
     return InvestmentTypeBanMap(
       augmont: augmont ?? this.augmont,
+      goldPro: goldPro ?? this.goldPro,
       lendBox: lendBox ?? this.lendBox,
       lendBoxFd1: lendBoxFd1 ?? this.lendBoxFd1,
       lendBoxFd2: lendBoxFd2 ?? this.lendBoxFd2,
@@ -394,6 +412,7 @@ class InvestmentTypeBanMap {
 
   InvestmentTypeBanMap.base() {
     augmont = AssetBanMap.base();
+    goldPro = AssetBanMap.base();
     lendBox = AssetBanMap.base();
     lendBoxFd1 = AssetBanMap.base();
     lendBoxFd2 = AssetBanMap.base();
@@ -402,6 +421,7 @@ class InvestmentTypeBanMap {
   Map<String, dynamic> toMap() {
     return <String, dynamic>{
       'augmont': augmont!.toMap(),
+      'goldPro': goldPro!.toMap(),
       'lendBox': lendBox!.toMap(),
       'lendboxFd1': lendBoxFd1!.toMap(),
       'lendboxFd2': lendBoxFd2!.toMap(),
@@ -414,6 +434,11 @@ class InvestmentTypeBanMap {
           ? AssetBanMap.fromMap(
               map[Constants.ASSET_TYPE_AUGMONT] as Map<String, dynamic>,
               Constants.ASSET_TYPE_AUGMONT)
+          : AssetBanMap.base(),
+      goldPro: map[Constants.ASSET_TYPE_AUGMONT_FD] != null
+          ? AssetBanMap.fromMap(
+              map[Constants.ASSET_TYPE_AUGMONT_FD] as Map<String, dynamic>,
+              Constants.ASSET_TYPE_AUGMONT_FD)
           : AssetBanMap.base(),
       lendBox: map[Constants.ASSET_TYPE_LENDBOX] != null
           ? AssetBanMap.fromMap(
@@ -465,6 +490,7 @@ class GamesBanMap {
   AssetBanMap? knifeHit;
   AssetBanMap? fruitMania;
   AssetBanMap? twoDots;
+
   GamesBanMap({
     required this.cricketMap,
     required this.tambolaMap,
@@ -628,10 +654,11 @@ class AssetBanMap {
   String? reason;
   bool? isBanned;
   String? asset;
+
   AssetBanMap({
-    @required this.reason,
-    @required this.isBanned,
-    @required this.asset,
+    required this.reason,
+    required this.isBanned,
+    required this.asset,
   });
 
   AssetBanMap.base() {
@@ -639,6 +666,7 @@ class AssetBanMap {
     isBanned = false;
     asset = '';
   }
+
   AssetBanMap copyWith({
     String? reason,
     bool? isBanned,

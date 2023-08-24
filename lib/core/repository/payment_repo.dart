@@ -1,5 +1,8 @@
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/model/bank_account_details_model.dart';
+import 'package:felloapp/core/model/gold_pro_models/gold_pro_investment_reponse_model.dart';
+import 'package:felloapp/core/model/gold_pro_models/gold_pro_scheme_model.dart';
 import 'package:felloapp/core/model/withdrawable_gold_details_model.dart';
 import 'package:felloapp/core/repository/base_repo.dart';
 import 'package:felloapp/core/service/api_service.dart';
@@ -8,7 +11,6 @@ import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/app_exceptions.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/base_util.dart';
 
 class PaymentRepository extends BaseRepo {
   final _baseUrl = FlavorConfig.isDevelopment()
@@ -19,7 +21,7 @@ class PaymentRepository extends BaseRepo {
   final BaseUtil? _baseUtil = locator<BaseUtil>();
 
   Future<ApiResponse<WithdrawableGoldResponseModel>>
-      getWithdrawableAugGoldQuantity() async {
+  getWithdrawableAugGoldQuantity() async {
     try {
       String withdrawableQtyResponse = "";
       double balance = 0;
@@ -34,7 +36,7 @@ class PaymentRepository extends BaseRepo {
         token: token,
       );
       WithdrawableGoldResponseModel responseModel =
-          WithdrawableGoldResponseModel.fromMap(quantityResponse);
+      WithdrawableGoldResponseModel.fromMap(quantityResponse);
 
       return ApiResponse(model: responseModel, code: 200);
     } on BadRequestException catch (e) {
@@ -49,8 +51,7 @@ class PaymentRepository extends BaseRepo {
     return ApiResponse();
   }
 
-  Future<ApiResponse<bool>> addBankDetails(
-      {String? bankAccno, String? bankHolderName, String? bankIfsc}) async {
+  Future<ApiResponse<bool>> addBankDetails({String? bankAccno, String? bankHolderName, String? bankIfsc}) async {
     String message = '';
     try {
       final token = await getBearerToken();
@@ -90,7 +91,7 @@ class PaymentRepository extends BaseRepo {
   }
 
   Future<ApiResponse<BankAccountDetailsModel>>
-      getActiveBankAccountDetails() async {
+  getActiveBankAccountDetails() async {
     try {
       final token = await getBearerToken();
       final response = await APIService.instance.getData(
@@ -109,6 +110,94 @@ class PaymentRepository extends BaseRepo {
     } catch (e) {
       logger!.e(e.toString());
       return ApiResponse.withError("Unable to fetch User Upi Id", 400);
+    }
+  }
+
+  Future<ApiResponse<GoldProSchemeModel>> getGoldProScheme() async {
+    try {
+      final token = await getBearerToken();
+      final response = await APIService.instance.getData(
+        ApiPath.goldProScheme,
+        cBaseUrl: _baseUrl,
+        token: token,
+      );
+      final responseData = response["data"]["scheme"];
+      GoldProSchemeModel? goldProSchemeDetails;
+      if (responseData != null) {
+        goldProSchemeDetails =
+            GoldProSchemeModel.fromMap(responseData as Map<String, dynamic>);
+      }
+
+      return ApiResponse(model: goldProSchemeDetails, code: 200);
+    } catch (e) {
+      logger.e(e.toString());
+      return ApiResponse.withError("Unable to fetch User Upi Id", 400);
+    }
+  }
+
+  Future<ApiResponse<GoldProInvestmentResponseModel>> investInGoldPro(
+    double leaseQty,
+    String schemeId,
+  ) async {
+    try {
+      final token = await getBearerToken();
+      final response = await APIService.instance.postData(ApiPath.Fd,
+          cBaseUrl: _baseUrl,
+          token: token,
+          body: {
+            "quantity": leaseQty,
+            "schemeId": schemeId,
+            "uid": userService.baseUser!.uid
+          });
+      final responseData = response["data"]["fd"];
+      GoldProInvestmentResponseModel? goldProInvestmentDetails;
+      if (responseData != null) {
+        goldProInvestmentDetails =
+            GoldProInvestmentResponseModel.fromMap(responseData);
+      }
+
+      return ApiResponse(model: goldProInvestmentDetails, code: 200);
+    } catch (e) {
+      logger.e(e.toString());
+      return ApiResponse.withError(e.toString(), 400);
+    }
+  }
+
+  Future<ApiResponse<List<GoldProInvestmentResponseModel>>>
+      getGoldProInvestments() async {
+    try {
+      final token = await getBearerToken();
+      final response = await APIService.instance.getData(
+        ApiPath.getFds(userService.baseUser!.uid!),
+        cBaseUrl: _baseUrl,
+        token: token,
+      );
+      final responseData = response["data"]["fds"];
+      List<GoldProInvestmentResponseModel>? goldProInvestments;
+      if (responseData != null) {
+        goldProInvestments =
+            GoldProInvestmentResponseModel.helper.fromMapArray(responseData);
+      }
+
+      return ApiResponse(model: goldProInvestments, code: 200);
+    } catch (e) {
+      logger.e(e.toString());
+      return ApiResponse.withError(e.toString(), 400);
+    }
+  }
+
+  Future<ApiResponse<bool>> preCloseGoldProInvestment(String fdId) async {
+    try {
+      final token = await getBearerToken();
+      final response = await APIService.instance.putData(ApiPath.Fd,
+          cBaseUrl: _baseUrl,
+          token: token,
+          body: {"fdId": fdId, "uid": userService.baseUser!.uid});
+
+      return ApiResponse(model: true, code: 200);
+    } catch (e) {
+      logger.e(e.toString());
+      return ApiResponse.withError(e.toString(), 400);
     }
   }
 }

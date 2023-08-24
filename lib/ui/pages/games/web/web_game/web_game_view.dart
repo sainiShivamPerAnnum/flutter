@@ -74,7 +74,8 @@ class GameView extends StatefulWidget {
   WebGameViewModel model;
 
   GameView(
-      {required this.inLandscapeMode,
+      {super.key,
+      required this.inLandscapeMode,
       required this.initialUrl,
       required this.model});
 
@@ -155,11 +156,13 @@ class _GameViewState extends State<GameView> {
 
 class Close extends StatelessWidget {
   final bool inLandScape;
-  Close({this.inLandScape = false});
+
+  const Close({super.key, this.inLandScape = false});
+
   @override
   Widget build(BuildContext context) {
     if (MediaQuery.of(context).padding.top != 0 && inLandScape) {
-      Future.delayed(Duration(seconds: 2), () {
+      Future.delayed(const Duration(seconds: 2), () {
         SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
             overlays: [SystemUiOverlay.bottom]);
       });
@@ -167,14 +170,14 @@ class Close extends StatelessWidget {
     return SafeArea(
       child: CircleAvatar(
         radius: SizeConfig.padding16,
-        backgroundImage: CachedNetworkImageProvider(
+        backgroundImage: const CachedNetworkImageProvider(
             "https://firebasestorage.googleapis.com/v0/b/fello-dev-station.appspot.com/o/test%2Fgame-close-icon.png?alt=media&token=1d52f5d5-edca-4e0c-9b06-3e97aa8001ac"),
         backgroundColor: Colors.red.withOpacity(0.5),
         child: Opacity(
           opacity: 0,
           child: IconButton(
             onPressed: AppState.backButtonDispatcher!.didPopRoute,
-            icon: Icon(
+            icon: const Icon(
               Icons.close,
               color: Colors.white,
             ),

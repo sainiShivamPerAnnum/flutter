@@ -22,6 +22,7 @@ import 'package:felloapp/core/service/notifier_services/marketing_event_handler_
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/core/service/power_play_service.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/negative_dialog.dart';
 import 'package:felloapp/ui/modalsheets/coupon_modal_sheet.dart';
@@ -234,7 +235,8 @@ class GoldBuyViewModel extends BaseViewModel {
 
   bool readOnly = true;
 
-  init(int? amount, bool isSkipMilestone, TickerProvider vsync) async {
+  init(int? amount, bool isSkipMilestone, TickerProvider vsync,
+      double? gms) async {
     // resetBuyOptions();
 
     setState(ViewState.Busy);
@@ -257,7 +259,25 @@ class GoldBuyViewModel extends BaseViewModel {
     if (goldBuyAmount != assetOptionsModel?.data.userOptions[1].value) {
       lastTappedChipIndex = -1;
     }
-    fetchGoldRates();
+    unawaited(fetchGoldRates().then((value) {
+      if (gms != null) {
+        double netTax =
+            (goldRates?.cgstPercent ?? 0) + (goldRates?.sgstPercent ?? 0);
+        goldBuyAmount = convertToNearestCeilMultipleOf100(
+            ((goldBuyPrice! * gms) + (netTax * goldBuyPrice! * gms) / 100) + 4);
+
+        goldAmountController!.text = goldBuyAmount!.toInt().toString();
+        fieldWidth =
+            SizeConfig.padding32 * goldAmountController!.text.length.toDouble();
+        updateGoldAmount();
+        goldAmountController!.selection = TextSelection.fromPosition(
+            TextPosition(offset: goldAmountController!.text.length));
+
+        FocusScope.of(AppState.delegate!.navigatorKey.currentContext!)
+            .unfocus();
+      }
+    }));
+
     // await fetchNotices();
     status = checkAugmontStatus();
     // _paytmService!.getActiveSubscriptionDetails();
@@ -280,6 +300,14 @@ class GoldBuyViewModel extends BaseViewModel {
     if (animationController?.status == AnimationStatus.completed) {
       animationController?.reset();
     }
+  }
+
+  double convertToNearestCeilMultipleOf100(double number) {
+    // Round up the number to the nearest multiple of 100
+    int roundedNumber = ((number / 100).ceil() * 100).toInt();
+
+    // Convert back to double and return the result
+    return roundedNumber.toDouble();
   }
 
   resetBuyOptions() {
@@ -449,42 +477,7 @@ class GoldBuyViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  // UI ESSENTIALS
-
-  // Widget amountChip(int index) {
-
-  //   return AmountChip(
-  //     isActive: lastTappedChipIndex == index,
-  //     amt: amt,
-  //     isBest: index == 2,
-  //     onClick: (int amount) async {
-  //       if (couponApplyInProgress ||
-  //           isGoldBuyInProgress ||
-  //           _augTxnService.isGoldBuyInProgress) return;
-  //       showMaxCapText = false;
-  //       showMinCapText = false;
-  //       Haptic.vibrate();
-  //       lastTappedChipIndex = index;
-  //       // buyFieldNode.unfocus();
-  //       SystemChannels.textInput.invokeMethod('TextInput.hide');
-  //       goldBuyAmount = chipAmountList[index].toDouble();
-  //       goldAmountController.text = goldBuyAmount.toInt().toString();
-  //       updateGoldAmount();
-  //       //checkIfCouponIsStillApplicable();
-  //       appliedCoupon = null;
-  //       _analyticsService.track(
-  //           eventName: AnalyticsEvents.suggestedAmountTapped,
-  //           properties: {
-  //             'order': index,
-  //             'Amount': amt,
-  //             'Best flag': index == 2
-  //           });
-  //       notifyListeners();
-  //     },
-  //   );
-  // }
-
-  updateGoldAmount() {
+  void updateGoldAmount() {
     if ((goldAmountController?.text.isEmpty ?? false) ||
         double.tryParse(goldAmountController?.text ?? "0.0") == null) {
       goldAmountInGrams = 0.0;
@@ -499,6 +492,16 @@ class GoldBuyViewModel extends BaseViewModel {
       if (goldBuyPrice != null && goldBuyPrice != 0.0) {
         goldAmountInGrams =
             BaseUtil.digitPrecision(postTaxAmount / goldBuyPrice!, 4, false);
+
+        print("""
+GOLD BREAKDOWN:
+ entered amount: $enteredAmount\n
+ tax: $netTax\n
+ taxed amount: ${getTaxOnAmount(enteredAmount, netTax)}\n
+ post taxed amount = $postTaxAmount\n
+ gold Buy price: $goldBuyPrice\n
+ gold amount: $goldAmountInGrams\n
+""");
       } else {
         goldAmountInGrams = 0.0;
       }

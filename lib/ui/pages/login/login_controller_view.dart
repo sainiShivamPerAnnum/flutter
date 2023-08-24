@@ -1,10 +1,8 @@
 import 'dart:developer' as dev;
 import 'dart:io';
 
-import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
-import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/ui/animations/welcome_rings/welcome_rings.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/login/login_components/login_support.dart';
@@ -50,13 +48,13 @@ class _LoginControllerViewState extends State<LoginControllerView> {
       onModelReady: (model) {
         model.init(initPage, model);
         if (Platform.isAndroid) {
-          if (AppConfig.getValue<bool?>(AppConfigKey.enable_truecaller_login) ??
-              false) {
-            Future.delayed(const Duration(seconds: 1), () {
-              model.initTruecaller();
-            });
-          }
+          // if (AppConfig.getValue<bool?>(AppConfigKey.enable_truecaller_login) ??
+          //     false) {
+          // Future.delayed(const Duration(seconds: 1), () {
+          //   model.initTruecaller();
+          // });
         }
+        // }
       },
       onModelDispose: (model) => model.exit(),
       builder: (ctx, model, child) {

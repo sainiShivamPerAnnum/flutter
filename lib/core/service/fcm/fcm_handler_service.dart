@@ -109,6 +109,7 @@ class FcmHandler extends ChangeNotifier {
 
     // If message has a command payload
     if (data['command'] != null) {
+      log("Fcm command: $command");
       showSnackbar = false;
 
       if (command!.toLowerCase().contains('end')) {
@@ -121,7 +122,7 @@ class FcmHandler extends ChangeNotifier {
           _journeyService
               .fcmHandleJourneyUpdateStats(data as Map<String, dynamic>);
           break;
-        case FcmCommands.COMMAND_GOLDEN_TICKET_WIN:
+        case FcmCommands.COMMAND_TICKET_WIN:
           log("Scratch Card win update fcm response");
           _journeyService
               .fcmHandleJourneyUpdateStats(data as Map<String, dynamic>);
@@ -137,6 +138,12 @@ class FcmHandler extends ChangeNotifier {
           break;
         case FcmCommands.COMMAND_USER_PRIZE_WIN_2:
           await _fcmHandlerDataPayloads.userPrizeWinPrompt();
+          break;
+        case FcmCommands.COMMAND_GOLDEN_TICKET_WIN:
+          log("Golden Ticket win update fcm response - ${data['payload']}",
+              name: "FcmHandler");
+          showSnackbar = false;
+          await _userService.checkForNewNotifications();
           break;
         case FcmCommands.COMMAND_APPXOR_DIALOG:
           debugPrint("fcm handler: appxor");
@@ -156,7 +163,7 @@ class FcmHandler extends ChangeNotifier {
                 hapticVibrate: true,
                 content: ApxorDialog(
                   dialogContent:
-                      json.decode(data["payload"]) as Map<String, dynamic>,
+                  json.decode(data["payload"]) as Map<String, dynamic>,
                 ),
               ),
             );
@@ -169,14 +176,23 @@ class FcmHandler extends ChangeNotifier {
 
     // If app is in foreground and needs to show a snackbar
     if (source == MsgSource.Foreground && showSnackbar == true) {
-      await handleNotification(title, body);
+      await handleNotification(title, body, command);
     }
-    unawaited(_userService.checkForNewNotifications());
     return true;
   }
 
-  Future<bool> handleNotification(String? title, String? body) async {
-    if (title != null && title.isNotEmpty && body != null && body.isNotEmpty) {
+  Future<bool> handleNotification(
+      String? title, String? body, String? command) async {
+    if (title == null || body == null) return false;
+
+    log("Foreground Fcm handler receives on ${DateFormat('yyyy-MM-dd - hh:mm a').format(DateTime.now())} - $title - $body - $command");
+    if (command != null && command == FcmCommands.COMMAND_GOLDEN_TICKET_WIN) {
+      await Future.delayed(const Duration(seconds: 2));
+      await _userService.checkForNewNotifications();
+      return true;
+    }
+
+    if (title.isNotEmpty && body.isNotEmpty) {
       Map<String, String> _map = {'title': title, 'body': body};
       if (notifListener != null) notifListener!(_map);
     }

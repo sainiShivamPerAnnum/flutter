@@ -18,7 +18,6 @@ import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
-import 'package:felloapp/core/service/referral_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
@@ -82,9 +81,8 @@ class WinViewModel extends BaseViewModel {
 
   Future<void> init() async {
     getFelloFacts();
-    _lbService!.fetchReferralLeaderBoard();
+    // _lbService!.fetchReferralLeaderBoard();
     locator<ScratchCardService>().updateUnscratchedGTCount();
-    locator<ReferralService>().fetchReferralCode();
   }
 
   // Future<void> shareWhatsApp() async {

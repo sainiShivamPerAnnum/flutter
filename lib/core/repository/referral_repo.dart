@@ -1,42 +1,39 @@
-import 'dart:convert';
-
 import 'package:felloapp/core/constants/apis_path_constants.dart';
+import 'package:felloapp/core/constants/cache_keys.dart';
+import 'package:felloapp/core/enums/ttl.dart';
 import 'package:felloapp/core/model/referral_details_model.dart';
+import 'package:felloapp/core/model/referral_registered_user_model.dart';
+import 'package:felloapp/core/model/referral_response_model.dart';
 import 'package:felloapp/core/service/api_service.dart';
+import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/flavor_config.dart';
-import 'package:felloapp/util/preference_helper.dart';
 
 import 'base_repo.dart';
 
 class ReferralRepo extends BaseRepo {
+  final _cacheService = CacheService();
   final _baseUrl = FlavorConfig.isDevelopment()
       ? "https://2k3cus82jj.execute-api.ap-south-1.amazonaws.com/dev"
       : "https://bt3lswjiw1.execute-api.ap-south-1.amazonaws.com/prod";
 
   Future<ApiResponse<ReferralResponse>> getReferralCode() async {
     try {
-      final code = PreferenceHelper.getString(PreferenceHelper.REFERRAL_CODE);
-
-      if (code != '') {
-        return ApiResponse<ReferralResponse>(
-          model: ReferralResponse.fromJson(jsonDecode(code)),
-          code: 200,
-        );
-      }
 
       final String bearer = await getBearerToken();
-      final response = await APIService.instance.getData(
-        ApiPath.getReferralCode(userService!.baseUser!.uid),
-        token: bearer,
-        cBaseUrl: _baseUrl,
-      );
 
-      final data = response['data'];
-      PreferenceHelper.setString(PreferenceHelper.REFERRAL_CODE, jsonEncode(data));
-      return ApiResponse<ReferralResponse>(
-        model: ReferralResponse.fromJson(data),
-        code: 200,
+      return await _cacheService.cachedApi(
+        CacheKeys.REFERRAL_CODE,
+        TTL.ONE_DAY,
+        () => APIService.instance.getData(
+          ApiPath.getReferralCode(userService.baseUser!.uid),
+          token: bearer,
+          cBaseUrl: _baseUrl,
+        ),
+        (response) {
+          return ApiResponse(
+              model: ReferralResponse.fromJson(response), code: 200);
+        },
       );
     } catch (e) {
       logger!.e('getReferralCode $e ${userService!.baseUser!.uid}');
@@ -64,12 +61,16 @@ class ReferralRepo extends BaseRepo {
     }
   }
 
-  Future<ApiResponse<List<ReferralDetail>>> getReferralHistory() async {
-    List<ReferralDetail> referralHistory = [];
+  Future<ApiResponse<List<ReferralDetail>>> getReferralHistory(
+      {int currentPage = 0}) async {
+    // List<ReferralDetail> referralHistory = [];
     try {
       final String bearer = await getBearerToken();
       final response = await APIService.instance.getData(
         ApiPath.getReferralHistory(userService!.baseUser!.uid),
+        queryParams: {
+          'offset': (50 * currentPage).toString(),
+        },
         token: bearer,
         cBaseUrl: _baseUrl,
       );
@@ -111,13 +112,48 @@ class ReferralRepo extends BaseRepo {
       return ApiResponse.withError(e.toString(), 400);
     }
   }
+
+  Future<ApiResponse<RegisteredUser>> getRegisteredUsers(
+      List<String> phoneNumbers,
+      {bool forceRefresh = false}) async {
+    try {
+      final String bearer = await getBearerToken();
+
+      if (forceRefresh) {
+        await CacheService.invalidateByKey(
+          CacheKeys.REFERRAL_REGISTERED_USERS,
+        );
+      }
+
+      return await _cacheService.cachedApi(
+        CacheKeys.REFERRAL_REGISTERED_USERS,
+        TTL.ONE_DAY,
+        () => APIService.instance.postData(
+          ApiPath.getRegisteredUsers,
+          body: {
+            'phoneNumbers': phoneNumbers,
+          },
+          token: bearer,
+          cBaseUrl: _baseUrl,
+        ),
+        (response) {
+          return ApiResponse(
+              model: RegisteredUser.fromJson(response), code: 200);
+        },
+      );
+    } catch (e) {
+      logger.e(e);
+      return ApiResponse.withError(e.toString(), 400);
+    }
+  }
 }
 
-class ReferralResponse {
-  final String code;
-  final String message;
-  ReferralResponse(this.code, this.message);
-
-  factory ReferralResponse.fromJson(Map<String, dynamic> data) =>
-      ReferralResponse(data['code'], data['referralMessage']);
-}
+// class ReferralResponse {
+//   final String code;
+//   final String message;
+//
+//   ReferralResponse(this.code, this.message);
+//
+//   factory ReferralResponse.fromJson(Map<String, dynamic> data) =>
+//       ReferralResponse(data['code'], data['referralMessage']);
+// }

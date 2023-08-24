@@ -1,5 +1,8 @@
+import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/appbar/appbar.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_components/current_winnings_info.dart';
@@ -11,13 +14,13 @@ import 'package:felloapp/ui/pages/hometabs/win/win_viewModel.dart';
 import 'package:felloapp/ui/pages/static/dev_rel.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
-import 'package:felloapp/ui/service_elements/leaderboards/referral_leaderboard.dart';
+import 'package:felloapp/ui/pages/support/bug_report/ui/found_bug.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/show_case_key.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
-import 'package:lottie/lottie.dart';
 import 'package:showcaseview/showcaseview.dart';
 
 class Win extends StatelessWidget {
@@ -88,9 +91,45 @@ class Win extends StatelessWidget {
                 //Refer and Earn
                 const ReferEarnCard(),
                 // Referral Leaderboard
-                const ReferralLeaderboard(),
+                // const ReferralLeaderboard(),
                 //Fello News
                 FelloNewsComponent(model: model),
+                SizedBox(
+                  height: SizeConfig.padding12,
+                ),
+                Center(
+                  child: Container(
+                    width: SizeConfig.screenWidth! * 0.48,
+                    padding:
+                        EdgeInsets.symmetric(vertical: SizeConfig.padding16),
+                    child: OutlinedButton(
+                      style: OutlinedButton.styleFrom(
+                        side: const BorderSide(width: 1.0, color: Colors.white),
+                      ),
+                      onPressed: () {
+                        Haptic.vibrate();
+
+                        BaseUtil.openModalBottomSheet(
+                          addToScreenStack: true,
+                          enableDrag: false,
+                          hapticVibrate: true,
+                          isBarrierDismissible: true,
+                          backgroundColor: Colors.transparent,
+                          isScrollControlled: true,
+                          content: const FoundBug(),
+                        );
+
+                        locator<AnalyticsService>().track(
+                          eventName: AnalyticsEvents.reportBugTapped,
+                        );
+                      },
+                      child: Text(
+                        "Issues with the App?",
+                        style: TextStyles.sourceSansB.body2,
+                      ),
+                    ),
+                  ),
+                ),
                 // DEV PURPOSE ONLY
                 const CacheClearWidget(),
                 SizedBox(

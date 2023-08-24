@@ -1,4 +1,5 @@
 import 'package:felloapp/core/model/prizes_model.dart';
+import 'package:felloapp/core/model/winners_model.dart';
 import 'package:felloapp/feature/tambola/src/services/tambola_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
@@ -11,9 +12,9 @@ import 'prize_win.dart';
 import 'processing.dart';
 
 class WeeklyResult extends StatefulWidget {
-  final Map<String, int>? winningsMap;
-  final bool? isEligible;
-  const WeeklyResult({Key? key, this.isEligible, this.winningsMap})
+  final Winners winner;
+  final bool isEligible;
+  const WeeklyResult({Key? key, required this.winner, required this.isEligible})
       : super(key: key);
 
   @override
@@ -30,8 +31,6 @@ class _WeeklyResultState extends State<WeeklyResult> {
 
   @override
   void initState() {
-    debugPrint(widget.isEligible.toString());
-    debugPrint(widget.winningsMap.toString());
     _pageController = PageController();
     tPrizes = _tambolaService.tambolaPrizes;
     super.initState();
@@ -44,9 +43,7 @@ class _WeeklyResultState extends State<WeeklyResult> {
         setState(() {
           showBack = true;
         });
-        // if (!widget.isEligible && widget.winningsmap.isNotEmpty)
-        //   _pageController.jumpToPage(3);
-        if (widget.winningsMap!.isNotEmpty) {
+        if (widget.winner.amount! > 0) {
           _pageController!.jumpToPage(2);
         } else {
           _pageController!.jumpToPage(1);
@@ -86,9 +83,9 @@ class _WeeklyResultState extends State<WeeklyResult> {
                 const PrizeProcessing(),
                 const Loser(),
                 PrizeWin(
-                  winningsMap: widget.winningsMap,
-                  tPrizes: tPrizes,
-                ),
+                    winner: widget.winner,
+                    tPrizes: tPrizes,
+                    isEligible: widget.isEligible),
               ],
             ),
           ),

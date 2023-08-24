@@ -55,6 +55,7 @@ class AppState extends ChangeNotifier {
   static bool isWebGamePInProgress = false;
   static bool isOnboardingInProgress = false;
   static bool isUpdateScreen = false;
+  static bool isQuizInProgress = false;
 
   // static bool isDrawerOpened = false;
   static bool isUserSignedIn = false;
@@ -69,6 +70,7 @@ class AppState extends ChangeNotifier {
   static bool isFirstTimeSaveOpened = false;
   static bool isFirstTimeAccountsOpened = false;
   static bool isFirstTimeTambolaOpened = false;
+  static bool isGoldProBuyInProgress = false;
 
   // static bool isJourneyFirstTab = false;
   static bool isAutosaveFlow = false;

@@ -21,6 +21,7 @@ import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/preference_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -829,7 +830,7 @@ class _CardsState extends State<Cards> with SingleTickerProviderStateMixin {
                                             Selector<UserService, Portfolio>(
                                               builder: (_, portfolio, child) =>
                                                   Text(
-                                                "₹${(portfolio.absolute.balance).toInt()}",
+                                                "₹${getTotalBalance(portfolio)}",
                                                 style: GoogleFonts.sourceSans3(
                                                   fontWeight: FontWeight.w800,
                                                   color: Colors.white,
@@ -1041,6 +1042,19 @@ class _CardsState extends State<Cards> with SingleTickerProviderStateMixin {
       );
     });
   }
+
+  int getTotalBalance(Portfolio portfolio) {
+    if (portfolio.absolute.balance != 0) {
+      return portfolio.absolute.balance.toInt();
+    } else {
+      String stringBalance =
+          PreferenceHelper.getString(Constants.FELLO_BALANCE);
+
+      double doubleBalance = double.tryParse(stringBalance) ?? 0.0;
+      int intBalance = doubleBalance.toInt();
+      return intBalance;
+    }
+  }
 }
 
 class CardContent extends StatelessWidget {
@@ -1087,14 +1101,14 @@ class CardContent extends StatelessWidget {
             curve: curve,
             duration: duration,
             height: (SizeConfig.screenWidth! * 0.45 -
-                (SizeConfig.screenWidth! *
-                    0.64 *
-                    0.03 *
-                    (isVerticalView
-                        ? 8
-                        : isHorizontalView
-                        ? 0
-                        : 2))) /
+                    (SizeConfig.screenWidth! *
+                        0.64 *
+                        0.03 *
+                        (isVerticalView
+                            ? 8
+                            : isHorizontalView
+                                ? 0
+                                : 2))) /
                 2,
             decoration: BoxDecoration(
               color: secondaryColor,
@@ -1123,7 +1137,7 @@ class CardContent extends StatelessWidget {
                           Text(
                             title,
                             style:
-                            TextStyles.rajdhaniM.body0.colour(Colors.white),
+                                TextStyles.rajdhaniM.body0.colour(Colors.white),
                           ),
                           if (isVerticalView)
                             Padding(
@@ -1370,7 +1384,7 @@ class CardContent extends StatelessWidget {
       case "Fello Flo":
         return "₹${BaseUtil.digitPrecision(portfolio?.flo.balance ?? 0.0, 2)}";
       case "Digital Gold":
-        return "₹${BaseUtil.digitPrecision(portfolio?.gold.balance ?? 0, 2)}";
+        return "₹${BaseUtil.digitPrecision(portfolio?.augmont.balance ?? 0, 2)}";
       case "Fello Rewards":
         return "₹${wallet?.unclaimedBalance ?? 0}";
       default:
@@ -1384,7 +1398,7 @@ class CardContent extends StatelessWidget {
       case "Fello Flo":
         return "₹${BaseUtil.digitPrecision(portfolio?.flo.principle ?? 0.0, 2)}";
       case "Digital Gold":
-        return "${BaseUtil.digitPrecision(wallet?.augGoldQuantity ?? 0, 4, false)}g";
+        return "${BaseUtil.digitPrecision(wallet?.wAugTotal ?? 0, 4, false)}g";
       case "Fello Rewards":
         return "₹${wallet?.processingRedemptionBalance ?? 0}";
       default:
@@ -1397,7 +1411,7 @@ class CardContent extends StatelessWidget {
       case "Fello Flo":
         return portfolio?.flo.percGains ?? 0.0;
       case "Digital Gold":
-        return portfolio?.gold.percGains ?? 0.0;
+        return portfolio?.augmont.percGains ?? 0.0;
       case "Fello Rewards":
         return 0.0;
       default:

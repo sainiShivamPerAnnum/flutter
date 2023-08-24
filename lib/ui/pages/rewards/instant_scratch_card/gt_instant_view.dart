@@ -31,6 +31,7 @@ enum GTSOURCE {
   game,
   prize,
   event,
+  referral
 }
 
 class GTInstantView extends StatefulWidget {

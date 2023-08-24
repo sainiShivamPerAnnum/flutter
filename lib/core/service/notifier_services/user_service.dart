@@ -6,6 +6,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
+import 'package:felloapp/core/model/alert_model.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/journey_models/user_journey_stats_model.dart';
 import 'package:felloapp/core/model/page_config_model.dart';
@@ -25,6 +26,7 @@ import 'package:felloapp/core/service/notifier_services/scratch_card_service.dar
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
+import 'package:felloapp/ui/dialogs/referral_alert_dailog.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/assets.dart';
@@ -35,7 +37,7 @@ import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
-import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/styles.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
@@ -91,6 +93,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   UserBootUpDetailsModel? userBootUp;
   DynamicUI? pageConfigs;
   QuickSaveModel? quickSaveModel;
+  AlertModel? referralAlertDialog;
 
   bool? _isEmailVerified;
   bool? _isSimpleKycVerified;
@@ -100,6 +103,8 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   // bool showOnboardingTutorial = true;
   bool? showSecurityPrompt;
   bool isAnyUnscratchedGTAvailable = false;
+  bool referralFromNotification = false;
+  bool referralFromFCM = false;
 
   User? get firebaseUser => _firebaseUser;
 
@@ -261,7 +266,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   }
 
   setUserAugmontDetails(value) {
-    this._userAugmontDetails = value;
+    _userAugmontDetails = value;
     notifyListeners(UserServiceProperties.myAugmontDetails);
     _logger.d(
         "AgmontDetails :User augmontDetails updated, property listeners notified");
@@ -443,6 +448,8 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
       _isSimpleKycVerified = false;
       showSecurityPrompt = false;
       _userAugmontDetails = null;
+      referralAlertDialog = null;
+
       // _myUpiId = null;
       return true;
     } catch (e) {
@@ -559,7 +566,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
           Constants.FELLO_BALANCE, userFundWallet!.netWorth!.toString());
 
       log('Calling method channel for updateHomeScreenWidget');
-      final platform = MethodChannel('methodChannel/deviceData');
+      final platform = const MethodChannel('methodChannel/deviceData');
       try {
         await platform.invokeMethod('updateHomeScreenWidget');
       } catch (e) {
@@ -595,16 +602,49 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     _logger.d("Looking for new notifications");
     await _userRepo!.checkIfUserHasNewNotifications().then((value) {
       if (value.code == 200) {
-        if (value.model!) hasNewNotifications = true;
+        if (value.model!['notification'] != null) {
+          referralAlertDialog = value.model!['notification'];
+        }
+        if (value.model!['flag'] != null && value.model!['flag'] == true) {
+          hasNewNotifications = true;
+        }
       }
     });
+
+    // showReferralAlertDialog();
+
+    if (referralAlertDialog != null &&
+        referralAlertDialog?.ctaText != null &&
+        (referralAlertDialog?.ctaText?.isNotEmpty ?? false) &&
+        referralAlertDialog?.title != null &&
+        AppState.isRootAvailableForIncomingTaskExecution &&
+        ScratchCardService.scratchCardId != null) {
+      log("Showing referral alert dialog",
+          name: "checkForNewNotifications method");
+
+      BaseUtil.openDialog(
+        isBarrierDismissible: true,
+        addToScreenStack: true,
+        hapticVibrate: true,
+        content: ReferralAlertDialog(
+          referralAlertDialog: referralAlertDialog,
+        ),
+      );
+      // showReferralAlertDialog();
+    }
+  }
+
+  Future<void> fcmHandlerReferralGT(String? _gtId) async {
+    _logger.d("Handling referral GT");
+    checkForNewNotifications();
   }
 
   void setPageConfigs(DynamicUI dynamicUi) {
     DynamicUiUtils.playViewOrder = dynamicUi.play;
     DynamicUiUtils.saveViewOrder = [
       dynamicUi.save.assets,
-      dynamicUi.save.sections
+      dynamicUi.save.sections,
+      dynamicUi.save.sectionsNew
     ];
     DynamicUiUtils.helpFab = dynamicUi.journeyFab;
     DynamicUiUtils.navBar = dynamicUi.navBar;

@@ -1,43 +1,21 @@
 import 'package:felloapp/core/model/prizes_model.dart';
+import 'package:felloapp/core/model/winners_model.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class WinnerBox extends StatelessWidget {
-  final Map<String, int>? winningsmap;
+  final Winners winner;
   final PrizesModel? tPrize;
+  final bool isEligible;
 
-  WinnerBox({Key? key, this.winningsmap, required this.tPrize})
+  WinnerBox(
+      {Key? key,
+      required this.winner,
+      required this.tPrize,
+      required this.isEligible})
       : super(key: key);
-
-  getValue(int val) {
-    switch (val) {
-      case 0:
-        return "Corners";
-        break;
-      case 1:
-        return "One Row";
-        break;
-      case 2:
-        return "Two Rows";
-        break;
-      case 3:
-        return "Full House";
-        break;
-    }
-  }
-
-  getTokenWonAmount(String title) {
-    int? flcAmount = 0;
-    for (PrizesA e in tPrize!.prizesA!) {
-      if (e.displayName == title) {
-        return e.displayAmount;
-      }
-    }
-    // return flcAmount;
-  }
-
-  int totalFlcAmount = 0;
 
   getWinningTicketTiles() {
     List<Color> colorList = [
@@ -45,45 +23,98 @@ class WinnerBox extends StatelessWidget {
       UiConstants.primaryColor,
       const Color(0xff11192B)
     ];
-    List<Widget> ticketTiles = [];
+    List<Widget> ticketTiles = [
+      if ((winner.matchMap?.fullHouse ?? 0) != 0)
+        Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "Full House",
+                  style: TextStyles.sourceSansSB.body2.colour(Colors.white),
+                ),
+                Text(
+                  winner.matchMap!.fullHouse.toString(),
+                  style: TextStyles.sourceSansSB.body2.colour(Colors.white),
+                )
+              ],
+            ),
+            const Divider(
+              color: UiConstants.kFAQsAnswerColor,
+              thickness: 0.1,
+            ),
+          ],
+        ),
+      if ((winner.matchMap?.oneRow ?? 0) != 0)
+        Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "One Row",
+                  style: TextStyles.sourceSansSB.body2.colour(Colors.white),
+                ),
+                Text(
+                  winner.matchMap!.oneRow.toString(),
+                  style: TextStyles.sourceSansSB.body2.colour(Colors.white),
+                )
+              ],
+            ),
+            const Divider(
+              color: UiConstants.kFAQsAnswerColor,
+              thickness: 0.1,
+            ),
+          ],
+        ),
+      if ((winner.matchMap?.twoRows ?? 0) != 0)
+        Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "Two Rows",
+                  style: TextStyles.sourceSansSB.body2.colour(Colors.white),
+                ),
+                Text(
+                  winner.matchMap!.twoRows.toString(),
+                  style: TextStyles.sourceSansSB.body2.colour(Colors.white),
+                )
+              ],
+            ),
+            const Divider(
+              color: UiConstants.kFAQsAnswerColor,
+              thickness: 0.1,
+            ),
+          ],
+        ),
+      if ((winner.matchMap?.corners ?? 0) != 0)
+        Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Text(
+                  "Corners",
+                  style: TextStyles.sourceSansSB.body2.colour(Colors.white),
+                ),
+                Text(
+                  winner.matchMap!.corners.toString(),
+                  style: TextStyles.sourceSansSB.body2.colour(Colors.white),
+                )
+              ],
+            ),
+            const Divider(
+              color: UiConstants.kFAQsAnswerColor,
+              thickness: 0.1,
+            ),
+          ],
+        ),
+    ];
 
-    winningsmap!.forEach((key, value) {
-      ticketTiles.add(Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                getValue(value),
-                style: TextStyles.sourceSansSB.body2.colour(Colors.white),
-              ),
-              Text(
-                "#$key",
-                style: TextStyles.sourceSansSB.body2.colour(Colors.white),
-              )
-            ],
-          ),
-          const Divider(
-            color: UiConstants.kFAQsAnswerColor,
-            thickness: 0.1,
-          ),
-        ],
-      ));
-    });
     return ticketTiles;
-  }
-
-  String getToken() {
-    int token = 0;
-    winningsmap!.forEach((key, value) {
-      for (PrizesA e in tPrize!.prizesA!) {
-        if (e.displayName == getValue(value)) {
-          token += e.flc ?? 0;
-        }
-      }
-    });
-
-    return token.toString();
   }
 
   @override
@@ -112,7 +143,7 @@ class WinnerBox extends StatelessWidget {
                         .colour(UiConstants.kFAQsAnswerColor),
                   ),
                   Text(
-                    "Ticket No",
+                    "Wins",
                     style: TextStyles.sourceSans.body4
                         .colour(UiConstants.kFAQsAnswerColor),
                   ),
@@ -146,18 +177,18 @@ class WinnerBox extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               Text(
-                'Tokens Won',
+                'Rewards Won',
                 style: TextStyles.sourceSans.body3.colour(Colors.white),
               ),
               Row(
                 children: [
                   SvgPicture.asset(
-                    'assets/svg/tokens.svg',
+                    Assets.moneyIcon,
                     height: SizeConfig.padding28,
                     width: SizeConfig.padding28,
                   ),
                   Text(
-                    getToken(),
+                    "₹ ${winner.amount}",
                     style: TextStyles.sourceSansSB.body2.colour(Colors.white),
                   ),
                 ],

@@ -19,6 +19,8 @@ class UiConstants {
   static const Color darkPrimaryColor3 = Color(0xff0C5055);
   static const Color darkPrimaryColor4 = Color(0xff173B3F);
   static const Color secondaryColor = Color.fromARGB(255, 241, 227, 243);
+  static const Color goldSellCardColor = Color(0xff1F2C65);
+  static const Color referralIconColor = Color(0xff6052A9);
 
   // static final Color chipColor = const Color.fromARGB(255, 241, 227, 243);
   static final Color? chipColor = Colors.grey[200];
@@ -203,6 +205,16 @@ class UiConstants {
   static Color kPowerPlaySecondary = const Color(0xff8c3f31);
   static Color kPowerPlayPrimaryOff = const Color(0xff373E5E);
   static Color kPowerPlaySecondaryOff = const Color(0xff9A5445);
+
+  static Color kReferralHeaderColor = const Color(0xff6052A9);
+
+  //GOLD X
+  static Color kGoldProPrimary = const Color(0xffFFD979);
+  static Color KGoldProSecondary = const Color(0xffFFE9B1);
+  static Color KGoldProPrimaryDark = const Color(0xffEFAF4E);
+  static Color kGoldProBorder = const Color(0xffFFD979).withOpacity(0.2);
+  static Color kGoldProBgColor = const Color(0xff323232);
+  static Color kGoldProPrimaryDark2 = const Color(0xffB17518);
 }
 
 extension ColorExtension on String {

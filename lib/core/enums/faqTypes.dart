@@ -12,4 +12,5 @@ enum FaqsType {
   journey,
   onboarding,
   powerPlay,
+  referrals
 }

@@ -82,10 +82,10 @@ class _GoldBuyInputViewState extends State<GoldBuyInputView> {
                   if (!AppState.isRepeated) {
                     locator<BackButtonActions>()
                         .showWantToCloseTransactionBottomSheet(
-                        double.parse(
-                            widget.model.goldAmountController!.text)
-                            .round(),
-                        InvestmentType.AUGGOLD99, () {
+                            double.parse(
+                                    widget.model.goldAmountController!.text)
+                                .round(),
+                            InvestmentType.AUGGOLD99, () {
                       widget.model.initiateBuy();
                       AppState.backButtonDispatcher!.didPopRoute();
                     });
@@ -140,22 +140,22 @@ class _GoldBuyInputViewState extends State<GoldBuyInputView> {
             const Spacer(),
             widget.augTxnService.isGoldBuyInProgress
                 ? Container(
-              height: SizeConfig.screenWidth! * 0.1556,
-              alignment: Alignment.center,
-              width: SizeConfig.screenWidth! * 0.7,
-              child: const LinearProgressIndicator(
-                color: UiConstants.primaryColor,
-                backgroundColor: UiConstants.kDarkBackgroundColor,
-              ),
-            )
+                    height: SizeConfig.screenWidth! * 0.1556,
+                    alignment: Alignment.center,
+                    width: SizeConfig.screenWidth! * 0.7,
+                    child: const LinearProgressIndicator(
+                      color: UiConstants.primaryColor,
+                      backgroundColor: UiConstants.kDarkBackgroundColor,
+                    ),
+                  )
                 : widget.model.goldRates == null
-                ? const SizedBox()
-                : BuyNavBar(
-                model: widget.model,
-                onTap: () async {
+                    ? const SizedBox()
+                    : BuyNavBar(
+                        model: widget.model,
+                        onTap: () async {
                           if (!widget.augTxnService.isGoldBuyInProgress) {
                             FocusScope.of(context).unfocus();
-                            widget.model.initiateBuy();
+                            await widget.model.initiateBuy();
                           }
                         }),
           ],

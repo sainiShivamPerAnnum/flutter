@@ -473,11 +473,13 @@ class ReactivePositiveAppButton extends HookWidget {
     Key? key,
     required this.btnText,
     required this.onPressed,
+    this.isDisabled = false,
     this.width,
   }) : super(key: key);
   final String btnText;
   final Function onPressed;
   final double? width;
+  final bool isDisabled;
 
   @override
   Widget build(BuildContext context) {
@@ -501,9 +503,12 @@ class ReactivePositiveAppButton extends HookWidget {
                           Colors.black,
                         ]
                       : [
-                          const Color.fromARGB(255, 168, 230, 219),
-                          const Color(0xff12BC9D),
-                          const Color(0xff249680),
+                          const Color.fromARGB(255, 168, 230, 219)
+                              .withOpacity(isDisabled ? 0.8 : 1),
+                          const Color(0xff12BC9D)
+                              .withOpacity(isDisabled ? 0.8 : 1),
+                          const Color(0xff249680)
+                              .withOpacity(isDisabled ? 0.8 : 1),
                         ],
                   stops: const [0.01, 0.3, 1],
                   begin: Alignment.topCenter,
@@ -530,7 +535,8 @@ class ReactivePositiveAppButton extends HookWidget {
                         fit: BoxFit.scaleDown,
                         child: Text(
                           btnText.toUpperCase(),
-                          style: TextStyles.rajdhaniB.title5,
+                          style: TextStyles.rajdhaniB.title5.colour(
+                              Colors.white.withOpacity(isDisabled ? 0.8 : 1)),
                         ),
                       ),
               ),
@@ -720,9 +726,6 @@ class CustomKeyboardSubmitButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    debugPrint("size config bottom insets: ${SizeConfig.viewInsets.bottom}");
-    debugPrint(
-        "Media query bottom insets ${MediaQuery.of(context).viewInsets.bottom}");
     return Positioned(
       bottom: MediaQuery.of(context).viewInsets.bottom,
       child: MediaQuery.of(context).viewInsets.bottom >

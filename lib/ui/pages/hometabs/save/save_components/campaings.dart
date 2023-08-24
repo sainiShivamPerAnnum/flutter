@@ -1,17 +1,12 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:felloapp/core/model/event_model.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
-import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
-import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
-import 'package:shimmer/shimmer.dart';
 
 class Campaigns extends StatelessWidget {
   final SaveViewModel model;
@@ -20,13 +15,7 @@ class Campaigns extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        SizedBox(height: SizeConfig.padding24),
-        CampaignCardSection(saveVm: model),
-      ],
-    );
+    return CampaignCardSection(saveVm: model);
   }
 }
 
@@ -37,259 +26,78 @@ class CampaignCardSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(
-        // left: SizeConfig.padding
-        top: SizeConfig.padding8,
-        bottom: 0, // SizeConfig.pageHorizontalMargins
-        // right: SizeConfig.padding16,
-      ),
-      child: SizedBox(
-        height: SizeConfig.screenWidth! * 0.24,
-        width: SizeConfig.screenWidth,
-        child: saveVm.isChallengesLoading
-            ? const SizedBox()
-            : PageView.builder(
-                controller: saveVm.offersController,
-                itemCount: saveVm.ongoingEvents!.length,
-                itemBuilder: (context, index) {
-                  final event = saveVm.ongoingEvents![index];
-                  return GestureDetector(
-                    onTap: () {
-                      saveVm.trackChallengeTapped(
-                          event.bgImage, event.type, index);
-                      AppState.delegate!.parseRoute(Uri.parse(event.type));
-                    },
-                    child: Padding(
-                      padding: EdgeInsets.only(right: SizeConfig.padding10),
-                      child: CampaignCard(
-                        isLoading: saveVm.isChallengesLoading,
-                        topPadding: SizeConfig.padding16,
-                        leftPadding: SizeConfig.padding20,
-                        event: event,
-                        subText: FittedBox(
-                          fit: BoxFit.contain,
+    return saveVm.isChallengesLoading
+        ? const SizedBox()
+        : Container(
+            height: SizeConfig.screenWidth! * 0.4,
+            width: SizeConfig.screenWidth,
+            margin: EdgeInsets.symmetric(
+              vertical: SizeConfig.padding14,
+              horizontal: SizeConfig.pageHorizontalMargins,
+            ),
+            decoration: BoxDecoration(
+              border: Border.all(color: UiConstants.kGoldProBorder, width: 2),
+              borderRadius: BorderRadius.circular(
+                  SizeConfig.padding16 + SizeConfig.padding2),
+            ),
+            child: Stack(
+              children: [
+                Align(
+                  alignment: Alignment.center,
+                  child: ClipRRect(
+                    borderRadius: BorderRadius.circular(SizeConfig.padding16),
+                    child: PageView.builder(
+                      controller: saveVm.offersController,
+                      itemCount: saveVm.ongoingEvents!.length,
+                      onPageChanged: (page) {
+                        saveVm.currentPage = page;
+                      },
+                      itemBuilder: (context, index) {
+                        final event = saveVm.ongoingEvents![index];
+                        return GestureDetector(
+                          onTap: () {
+                            saveVm.trackChallengeTapped(
+                                event.bgImage, event.type, index);
+                            AppState.delegate!
+                                .parseRoute(Uri.parse(event.type));
+                          },
                           child: Container(
-                            width: SizeConfig.screenWidth! * 0.4,
-                            padding: EdgeInsets.only(
-                              top: SizeConfig.padding8,
+                            decoration: BoxDecoration(
+                              borderRadius:
+                                  BorderRadius.circular(SizeConfig.roundness16),
+                              image: DecorationImage(
+                                  image:
+                                      CachedNetworkImageProvider(event.bgImage),
+                                  fit: BoxFit.cover),
                             ),
-                            child: Text(
-                              event.subtitle ?? '',
-                              style: TextStyles.sourceSans.body4,
-                            ),
+                          ),
+                        );
+                      },
+                    ),
+                  ),
+                ),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Padding(
+                    padding: EdgeInsets.all(SizeConfig.padding14),
+                    child: Wrap(
+                      children: List.generate(
+                        saveVm.ongoingEvents!.length,
+                        (index) => Padding(
+                          padding: EdgeInsets.all(SizeConfig.padding2),
+                          child: CircleAvatar(
+                            backgroundColor: saveVm.currentPage == index
+                                ? Colors.white
+                                : Colors.grey,
+                            radius: SizeConfig.padding3,
                           ),
                         ),
                       ),
                     ),
-                  );
-                },
-              ),
-      ),
-    );
-  }
-}
-
-class IOSCampaignCard extends StatelessWidget {
-  final EventModel event;
-  final Widget subText;
-  final bool isLoading;
-  final double topPadding;
-  final double leftPadding;
-
-  const IOSCampaignCard(
-      {required this.event,
-      required this.subText,
-      required this.isLoading,
-      required this.topPadding,
-      required this.leftPadding});
-
-  @override
-  Widget build(BuildContext context) {
-    final i = isLoading ? 0 : event.title.lastIndexOf(' ');
-    final prefix = isLoading ? '' : event.title.substring(0, i);
-    final suffix = isLoading ? '' : event.title.substring(i + 1);
-    final asset = isLoading
-        ? ''
-        : event.type == 'SAVER_MONTHLY'
-            ? Assets.monthlySaver
-            : event.type == 'SAVER_DAILY'
-                ? Assets.dailySaver
-                : Assets.weeklySaver;
-
-    return AnimatedContainer(
-      duration: const Duration(seconds: 1),
-      curve: Curves.easeInCubic,
-      child: isLoading
-          ? Shimmer.fromColors(
-              baseColor: UiConstants.kUserRankBackgroundColor,
-              highlightColor: UiConstants.kBackgroundColor,
-              child: Container(
-                width: SizeConfig.screenWidth,
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-                  color: UiConstants.kBackgroundColor,
-                ),
-                child: Padding(
-                  padding: EdgeInsets.all(SizeConfig.padding16),
-                  child: Container(
-                    height: SizeConfig.screenWidth! * 0.18,
-                    decoration: const BoxDecoration(
-                      color: UiConstants.kSecondaryBackgroundColor,
-                    ),
                   ),
-                ),
-              ),
-            )
-          : Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-                color: UiConstants.kSecondaryBackgroundColor,
-              ),
-              margin: EdgeInsets.only(bottom: SizeConfig.padding16),
-              padding: EdgeInsets.only(
-                  left: leftPadding,
-                  right: SizeConfig.padding24,
-                  top: SizeConfig.viewInsets.top + kToolbarHeight / 2),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Text(
-                        prefix,
-                        style: TextStyles.sourceSans.body1.bold,
-                      ),
-                      Text(
-                        suffix.toUpperCase(),
-                        style: TextStyles.sourceSansEB.title50
-                            .letterSpace(0.6)
-                            .colour(
-                              event.textColor.toColor(),
-                            )
-                            .setHeight(1),
-                      ),
-                      subText,
-                      SizedBox(height: SizeConfig.padding32)
-                    ],
-                  ),
-                  Expanded(
-                    child: SvgPicture.asset(
-                      asset,
-                      fit: BoxFit.fitHeight,
-                    ),
-                  ),
-                ],
-              ),
+                )
+              ],
             ),
-    );
-  }
-}
-
-class CampaignCard extends StatelessWidget {
-  final EventModel event;
-  final Widget subText;
-  final bool isLoading;
-  final double topPadding;
-  final double leftPadding;
-
-  const CampaignCard(
-      {required this.event,
-      required this.subText,
-      required this.isLoading,
-      required this.topPadding,
-      required this.leftPadding});
-
-  @override
-  Widget build(BuildContext context) {
-    final i = isLoading ? 0 : event.title.lastIndexOf(' ');
-    final prefix = isLoading ? '' : event.title.substring(0, i);
-    final suffix = isLoading ? '' : event.title.substring(i + 1);
-    final asset = isLoading
-        ? ''
-        : event.type == 'SAVER_MONTHLY'
-            ? Assets.monthlySaver
-            : event.type == 'SAVER_DAILY'
-                ? Assets.dailySaver
-                : Assets.weeklySaver;
-
-    return isLoading
-        ? Shimmer.fromColors(
-            baseColor: UiConstants.kUserRankBackgroundColor,
-            highlightColor: UiConstants.kBackgroundColor,
-            child: Container(
-              width: SizeConfig.screenWidth,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-                color: UiConstants.kBackgroundColor,
-              ),
-              child: Padding(
-                padding: EdgeInsets.all(SizeConfig.padding16),
-                child: Container(
-                  height: SizeConfig.screenWidth! * 0.18,
-                  decoration: const BoxDecoration(
-                    color: UiConstants.kSecondaryBackgroundColor,
-                  ),
-                ),
-              ),
-            ),
-          )
-        : event.bgImage.isNotEmpty
-            ? Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-                  color: UiConstants.kSecondaryBackgroundColor,
-                  image: DecorationImage(
-                    image: CachedNetworkImageProvider(event.bgImage),
-                    fit: BoxFit.cover,
-                  ),
-                ),
-              )
-            : Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-                  color: UiConstants.kSecondaryBackgroundColor,
-                ),
-                padding: EdgeInsets.only(
-                  left: leftPadding,
-                  right: SizeConfig.padding24,
-                  top: topPadding,
-                ),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Text(
-                          prefix,
-                          style: TextStyles.sourceSans.body1.bold,
-                        ),
-                        Text(
-                          suffix.toUpperCase(),
-                          style: TextStyles.sourceSansEB.title50
-                              .letterSpace(0.6)
-                              .colour(
-                                event.textColor.toColor(),
-                              )
-                              .setHeight(1),
-                        ),
-                        subText
-                      ],
-                    ),
-                    Expanded(
-                      child: SvgPicture.asset(
-                        asset,
-                        fit: BoxFit.fitHeight,
-                      ),
-                    ),
-                  ],
-                ),
-              );
+          );
   }
 }

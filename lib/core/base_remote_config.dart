@@ -239,6 +239,14 @@ class BaseRemoteConfig {
     "paymentBriefView": true
   };
 
+  static const Map<String, bool> _USE_NEW_URL_FOR_USEROPS = {
+    "useNewUrlUserOps": false
+  };
+
+  static const Map<String, bool> _SPECIAL_EFFECTS_ON_TXN_DETAILS_VIEW = {
+    "specialEffectsOnTxnDetailsView": true
+  };
+
   static Map<String, dynamic> DEFAULTS = {
     ..._LOGIN_ASSET_URL,
     ..._DRAW_PICK_TIME,
@@ -310,6 +318,8 @@ class BaseRemoteConfig {
     ..._YOUTUBE_VIDEOS,
     ..._APP_REFERRAL_MESSAGE,
     ..._PAYMENT_BRIEF_VIEW,
+    ..._USE_NEW_URL_FOR_USEROPS,
+    ..._SPECIAL_EFFECTS_ON_TXN_DETAILS_VIEW
   };
 
   static Future<bool> init() async {
@@ -492,11 +502,17 @@ class BaseRemoteConfig {
   static bool get AUTOSAVE_ACTIVE =>
       remoteConfig.getBool(_AUTOSAVE_ACTIVE.keys.first);
 
+  static bool get USE_NEW_URL_FOR_USEROPS =>
+      remoteConfig.getBool(_USE_NEW_URL_FOR_USEROPS.keys.first);
+
   static String get APP_REFERRAL_MESSAGE =>
       remoteConfig.getString(_APP_REFERRAL_MESSAGE.keys.first);
 
   static bool get PAYMENT_BRIEF_VIEW =>
       remoteConfig.getBool(_PAYMENT_BRIEF_VIEW.keys.first);
+
+  static bool get SPECIAL_EFFECTS_ON_TXN_DETAILS_VIEW =>
+      remoteConfig.getBool(_SPECIAL_EFFECTS_ON_TXN_DETAILS_VIEW.keys.first);
 
   static int get invalidationBefore {
     return remoteConfig.getInt(_CACHE_INVALIDATION.keys.first);

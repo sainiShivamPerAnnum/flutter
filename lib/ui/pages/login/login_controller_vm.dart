@@ -719,6 +719,7 @@ class LoginControllerViewModel extends BaseViewModel {
 
     streamSubscription =
         TruecallerSdk.streamCallbackData.listen((truecallerSdkCallback) {
+          logger.i("Access Token : ${truecallerSdkCallback.accessToken}");
       switch (truecallerSdkCallback.result) {
         case TruecallerSdkCallbackResult.success:
           String? phNo = truecallerSdkCallback.profile?.phoneNumber;
@@ -730,11 +731,16 @@ class LoginControllerViewModel extends BaseViewModel {
           AppState.isOnboardingInProgress = true;
           _authenticateTrucallerUser(phNo);
           break;
-        case TruecallerSdkCallbackResult.failure:
+
+        case TruecallerSdkCallbackResult.exception:
           int? errorCode = truecallerSdkCallback.error?.code;
-          print("Error Code: $errorCode");
           logger.e("$errorCode");
           break;
+        case TruecallerSdkCallbackResult.failure:
+          int? errorCode = truecallerSdkCallback.error?.code;
+          logger.e("$errorCode");
+          break;
+
         case TruecallerSdkCallbackResult.verification:
           print("Verification Required!!");
           break;

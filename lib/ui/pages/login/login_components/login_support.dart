@@ -14,23 +14,34 @@ import 'package:flutter/material.dart';
 
 class FaqPill extends StatelessWidget {
   final FaqsType? type;
-  const FaqPill({Key? key, this.type}) : super(key: key);
+  final Function? addEvent;
+
+  const FaqPill({Key? key, this.type, this.addEvent}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
     return InkWell(
       onTap: () {
         Haptic.vibrate();
-        AppState.delegate!.appState.currentAction = PageAction(
-          state: PageState.addWidget,
-          page: FaqPageConfig,
-          widget: FAQPage(
-            type: type ?? FaqsType.journey,
-          ),
-        );
+        if (type == null) {
+          AppState.delegate!.appState.currentAction = PageAction(
+            state: PageState.addPage,
+            page: FreshDeskHelpPageConfig,
+          );
+        } else {
+          AppState.delegate!.appState.currentAction = PageAction(
+            state: PageState.addWidget,
+            page: FaqPageConfig,
+            widget: FAQPage(
+              type: type ?? FaqsType.journey,
+            ),
+          );
+        }
+        if (addEvent != null) addEvent!();
       },
       child: Container(
-          key: ValueKey(Constants.HELP_FAB),
+          key: const ValueKey(Constants.HELP_FAB),
           // height: SizeConfig.navBarHeight * 0.5,
           margin: EdgeInsets.symmetric(
             horizontal: SizeConfig.padding8,

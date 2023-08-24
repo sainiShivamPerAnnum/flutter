@@ -1,10 +1,12 @@
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/rewards/scratch_card/scratch_card_view.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/ui/pages/userProfile/my_winnings/my_winnings_vm.dart';
 import 'package:felloapp/ui/service_elements/winners_prizes/prize_claim_card.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -49,6 +51,7 @@ class MyWinningsView extends StatelessWidget {
                     backgroundColor: Colors.black,
                     onRefresh: () async {
                       model.init();
+                      locator<UserService>().getUserFundWalletData();
                       return Future.value(null);
                     },
                     child: ListView(
