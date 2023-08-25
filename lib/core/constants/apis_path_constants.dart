@@ -249,4 +249,6 @@ class ApiPath {
   static String getFds(String uid) => "/$uid/fd";
 
   static String get goldRatesGraph => "/gold-rates/graph";
+
+  static String get homeScreenCarouselItems => "/home_screen";
 }

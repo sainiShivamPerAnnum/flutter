@@ -83,6 +83,7 @@ class AppState extends ChangeNotifier {
   static InvestmentType? type;
   static double? amt;
   static bool isRepeated = false;
+  static bool isTxnProcessing = false;
   PageAction _currentAction = PageAction();
 
   // BackButtonDispatcher backButtonDispatcher;

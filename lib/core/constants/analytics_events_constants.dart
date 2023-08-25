@@ -196,7 +196,7 @@ class AnalyticsEvents {
   static const installedApps = "Installed Applications";
 
   static const globalSaveTapped = "Global Save Now Tapped";
-  static const videoTileTapped = "Video Tile Tapped";
+  static const carouselItemTapped = "Carousel Item Tapped";
   static const balanceCardTapped = "Balance card tapped";
   static const balanceCardHorizontalSwiped = "Balance card horizontal swipped";
   static const balanceCardVerticalSwiped = "Balance card vertical swipped";

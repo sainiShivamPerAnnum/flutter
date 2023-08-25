@@ -82,10 +82,10 @@ class RazorpayService extends ChangeNotifier {
   void handlePaymentError(PaymentFailureResponse response) {
     _txnService!.currentTransactionState = TransactionState.idle;
     AppState.unblockNavigation();
-    if (response.code == 2)
-      locator<BackButtonActions>().isTransactionCancelled = true;
-    else
-      locator<BackButtonActions>().isTransactionCancelled = false;
+    // if (response.code == 2)
+    //   locator<BackButtonActions>().isTransactionCancelled = true;
+    // else
+    //   locator<BackButtonActions>().isTransactionCancelled = false;
     BaseUtil.showNegativeAlert(locale.txnFailed, locale.txnFailedSubtitle);
     log.debug("ERROR: " + response.code.toString() + " - " + response.message!);
     Map<String, dynamic>? currentTxnDetails =

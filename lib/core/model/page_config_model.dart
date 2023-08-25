@@ -80,7 +80,8 @@ class SaveUi {
         sectionsNew: map['sectionsNew'] != null
             ? List<String>.from(
                 map['sectionsNew'].cast<String>() as List<String>)
-            : List<String>.from(map['sections'].cast<String>() as List<String>),
+            : List<String>.from(
+                map['sectionsNew'].cast<String>() as List<String>),
         badgeText: map['badgeText'] != null
             ? BadgeText.fromMap(map['badgeText'])
             : null,

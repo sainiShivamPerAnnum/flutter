@@ -18,7 +18,6 @@ import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/ui/pages/finance/augmont/gold_buy/augmont_buy_vm.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/augmont_api_util.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -137,18 +136,18 @@ class AugmontService extends ChangeNotifier {
     }
   }
 
-  showTransactionPendingDialog() {
-    BaseUtil.openDialog(
-      addToScreenStack: true,
-      hapticVibrate: true,
-      isBarrierDismissible: false,
-      content: PendingDialog(
-        title: locale.withDrawalProcessing,
-        subtitle: locale.amountWillbeCreditedShortly,
-        duration: '',
-      ),
-    );
-  }
+  // showTransactionPendingDialog() {
+  //   BaseUtil.openDialog(
+  //     addToScreenStack: true,
+  //     hapticVibrate: true,
+  //     isBarrierDismissible: false,
+  //     content: PendingDialog(
+  //       title: locale.withDrawalProcessing,
+  //       subtitle: locale.amountWillbeCreditedShortly,
+  //       duration: '',
+  //     ),
+  //   );
+  // }
 
   ///returns path where invoice is generated and saved
   Future<String?> generatePurchaseInvoicePdf(
