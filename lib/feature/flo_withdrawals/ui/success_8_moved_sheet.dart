@@ -15,6 +15,12 @@ class Successful8MovedSheet extends StatelessWidget {
       required this.maturityAmount,
       required this.maturityDate,
       required this.reInvestmentDate,
+      required this.fdDuration,
+      required this.roiPerc,
+      required this.title,
+      required this.topChipText,
+      required this.footer,
+      required this.isLendboxOldUser,
       this.defaultMovedTo8 = false,
       this.startsAt = 0,
       super.key});
@@ -25,6 +31,12 @@ class Successful8MovedSheet extends StatelessWidget {
   final String reInvestmentDate;
   final bool defaultMovedTo8;
   final int startsAt;
+  final String fdDuration;
+  final String roiPerc;
+  final String title;
+  final String topChipText;
+  final String footer;
+  final bool isLendboxOldUser;
 
   @override
   Widget build(BuildContext context) {
@@ -78,7 +90,7 @@ class Successful8MovedSheet extends StatelessWidget {
                   child: Text(
                     defaultMovedTo8
                         ? 'Your transaction matured on\n3rd September'
-                        : 'Your New 8% Flo Deposit',
+                        : title,
                     style: TextStyles.rajdhaniSB.body0.colour(Colors.white),
                   ),
                 )
@@ -87,7 +99,8 @@ class Successful8MovedSheet extends StatelessWidget {
 
             SizedBox(height: SizeConfig.padding22),
             if (defaultMovedTo8)
-              "Your new transaction has been moved to *8% Flo*".beautify(
+              "Your new transaction has been moved to *${isLendboxOldUser ? 10 : 8}% Flo*"
+                  .beautify(
                 boldStyle: TextStyles.sourceSansB.body3
                     .colour(const Color(0xFF61E3C4)),
                 style: TextStyles.sourceSans.body3.colour(
@@ -136,7 +149,7 @@ class Successful8MovedSheet extends StatelessWidget {
                                           SizeConfig.roundness12)),
                                 ),
                                 child: Text(
-                                  '3rd Sept 2023',
+                                  reInvestmentDate,
                                   style: TextStyles.sourceSans.body4
                                       .colour(Colors.white),
                                 ),
@@ -147,7 +160,7 @@ class Successful8MovedSheet extends StatelessWidget {
                             crossAxisAlignment: CrossAxisAlignment.end,
                             children: [
                               Text(
-                                'Lockin till',
+                                isLendboxOldUser ? "Matures on" : 'Lockin till',
                                 style: TextStyles.sourceSans.body3
                                     .colour(const Color(0xFFBDBDBE)),
                               ),
@@ -164,7 +177,7 @@ class Successful8MovedSheet extends StatelessWidget {
                                           SizeConfig.roundness12)),
                                 ),
                                 child: Text(
-                                  '4th Dec 2023',
+                                  maturityDate,
                                   style: TextStyles.sourceSans.body4
                                       .colour(Colors.white),
                                 ),
@@ -196,7 +209,7 @@ class Successful8MovedSheet extends StatelessWidget {
                             ],
                           ),
                           Column(children: [
-                            Text('@8% P.A',
+                            Text('@$roiPerc% P.A',
                                 style: TextStyles.sourceSansSB.body4.colour(
                                   const Color(0xFF3DFFD0),
                                 )),
@@ -205,7 +218,7 @@ class Successful8MovedSheet extends StatelessWidget {
                               width: SizeConfig.padding64,
                             ),
                             Text(
-                              'After 1 Year',
+                              fdDuration,
                               textAlign: TextAlign.center,
                               style: TextStyles.sourceSans.body3
                                   .colour(Colors.white),
@@ -232,7 +245,7 @@ class Successful8MovedSheet extends StatelessWidget {
                     ],
                   ),
                 ),
-                if (startsAt > 0 && !defaultMovedTo8)
+                if (topChipText != null && !defaultMovedTo8)
                   Align(
                     alignment: Alignment.topCenter,
                     child: Transform.translate(
@@ -246,7 +259,7 @@ class Successful8MovedSheet extends StatelessWidget {
                           borderRadius:
                               BorderRadius.circular(SizeConfig.roundness16),
                         ),
-                        child: 'Starts in *7 days*'.beautify(
+                        child: topChipText.beautify(
                           boldStyle: TextStyles.sourceSansB.body4.colour(
                             const Color(0xFF013B3F),
                           ),
@@ -263,7 +276,7 @@ class Successful8MovedSheet extends StatelessWidget {
             SizedBox(height: SizeConfig.padding34),
             if (!defaultMovedTo8) ...[
               Text(
-                'Your new transaction will reflect from 3rd Sept',
+                footer,
                 textAlign: TextAlign.center,
                 style:
                     TextStyles.sourceSans.body3.colour(const Color(0xFFBDBDBE)),

@@ -14,6 +14,7 @@ class OptionDecisionContainer extends StatelessWidget {
   final Color? promoContainerColor;
   final String? recommendedText;
   final Color? promoTextBoldColor;
+  final String? promotAsset;
 
   const OptionDecisionContainer({
     required this.optionIndex,
@@ -27,6 +28,7 @@ class OptionDecisionContainer extends StatelessWidget {
     this.promoContainerColor,
     this.recommendedText,
     this.promoTextBoldColor,
+    this.promotAsset,
   }) : super(key: key);
 
   @override
@@ -57,8 +59,8 @@ class OptionDecisionContainer extends StatelessWidget {
           Container(
             margin: EdgeInsets.only(
               bottom: SizeConfig.padding16,
-              left: SizeConfig.padding16,
-              right: SizeConfig.padding16,
+              left: SizeConfig.padding8,
+              right: SizeConfig.padding8,
             ),
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(
@@ -112,6 +114,7 @@ class OptionDecisionContainer extends StatelessWidget {
                           Text(
                             title,
                             style: TextStyles.rajdhaniB.body1,
+                            overflow: TextOverflow.ellipsis,
                           ),
                           SizedBox(
                             height: SizeConfig.padding2,
@@ -147,8 +150,9 @@ class OptionDecisionContainer extends StatelessWidget {
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
-                        SvgPicture.asset(
-                          'assets/svg/tambola_icon.svg',
+                        SvgPicture.network(
+                          promotAsset ??
+                              'https://d37gtxigg82zaw.cloudfront.net/under25/tambola.svg',
                           height: SizeConfig.screenHeight! * 0.015,
                           width: SizeConfig.screenHeight! * 0.015,
                         ),

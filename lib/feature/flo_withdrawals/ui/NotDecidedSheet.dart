@@ -1,4 +1,8 @@
+import 'dart:async';
+
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/model/lendbox_maturity_response.dart';
+import 'package:felloapp/core/service/lendbox_maturity_service.dart';
 import 'package:felloapp/feature/flo_withdrawals/ui/chose_other_option_sheet.dart';
 import 'package:felloapp/feature/flo_withdrawals/ui/reconfirmation_sheet.dart';
 import 'package:felloapp/feature/flo_withdrawals/ui/reinvestment_sheet.dart';
@@ -6,19 +10,52 @@ import 'package:felloapp/feature/flo_withdrawals/ui/succesful_deposit_sheet.dart
 import 'package:felloapp/feature/flo_withdrawals/ui/widgets/flo_asset_info_widget.dart';
 import 'package:felloapp/feature/flo_withdrawals/ui/widgets/flo_option_decision_container.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/extensions/rich_text_extension.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart';
 
 class NotDecidedModalSheet extends HookWidget {
-  const NotDecidedModalSheet({super.key});
+  const NotDecidedModalSheet(
+      {super.key,
+      required this.depositData,
+      required this.isLendboxOldUser,
+      required this.decision});
+
+  final Deposit depositData;
+  final UserDecision decision;
+  final bool isLendboxOldUser;
+
+  String formatDate(DateTime dateTime) {
+    final format = DateFormat('dd MMM, yyyy');
+    return format.format(dateTime);
+  }
+
+  String getTitle() {
+    if (depositData.fundType == Constants.ASSET_TYPE_FLO_FIXED_6) {
+      return 'Your 12% Deposit is maturing';
+    } else if (depositData.fundType == Constants.ASSET_TYPE_FLO_FIXED_3) {
+      return 'Your 10% Deposit is maturing';
+    } else if (depositData.fundType == Constants.ASSET_TYPE_FLO_FELXI &&
+        isLendboxOldUser) {
+      return 'Your 10% Deposit is maturing';
+    } else if (depositData.fundType == Constants.ASSET_TYPE_FLO_FELXI &&
+        !isLendboxOldUser) {
+      return 'Your 8% Deposit is maturing';
+    }
+    return 'Your 10% Deposit is maturing';
+  }
 
   @override
   Widget build(BuildContext context) {
     final selectedOption = useState(-1);
+    final showLoading = useState(false);
 
     return WillPopScope(
       onWillPop: () async {
@@ -72,20 +109,23 @@ class NotDecidedModalSheet extends HookWidget {
                           fit: BoxFit.cover,
                         ),
                         SizedBox(width: SizeConfig.padding8),
-                        Text('Your 10% Deposit is maturing',
+                        Text(getTitle(),
                             style: TextStyles.rajdhaniSB.body0
                                 .colour(Colors.white))
                       ],
                     ),
                     SizedBox(height: SizeConfig.padding40),
-                    const FloAssetInfoWidget(
-                      investedAmount: '140',
-                      investedDate: '3rd June 2023',
-                      maturityAmount: '150',
-                      maturityDate: '3rd Sept 2023',
-                      decision: UserDecision.NOTDECIDED,
-                      fdDuration: '',
-                      roiPerc: '',
+                    FloAssetInfoWidget(
+                      investedAmount: (depositData.investedAmt!).toString(),
+                      investedDate: formatDate(depositData.investedOn!),
+                      maturityAmount: (depositData.maturityAmt!).toString(),
+                      maturityDate: formatDate(depositData.maturityOn!),
+                      decision: decision,
+                      maturesInDays: depositData.maturesInDays ?? 0,
+                      fdDuration: depositData.fdDuration!,
+                      roiPerc: depositData.roiPerc!,
+                      fundType: depositData.fundType!,
+                      isLendboxOldUser: isLendboxOldUser,
                     ),
                     SizedBox(height: SizeConfig.padding24),
                     Row(
@@ -113,10 +153,14 @@ class NotDecidedModalSheet extends HookWidget {
                     SizedBox(height: SizeConfig.padding24),
                     OptionDecisionContainer(
                       optionIndex: 1,
-                      title: 'Re-invest ₹150 in 10% Flo',
-                      description: 'Becomes ₹160 on maturity',
-                      promoText: 'You don’t lose any of your tickets',
-                      recommendedText: '1L+ users chose this',
+                      title: depositData.decisionsAvailable![0].title!,
+                      description: depositData.decisionsAvailable![0].subtitle!,
+                      promoText:
+                          depositData.decisionsAvailable![0].footer!.text!,
+                      promotAsset:
+                          depositData.decisionsAvailable![0].footer!.icon!,
+                      recommendedText:
+                          depositData.decisionsAvailable![0].topChip,
                       promoContainerColor:
                           const Color(0xFF1ADAB7).withOpacity(0.35),
                       isSelected: selectedOption.value == 1,
@@ -127,9 +171,12 @@ class NotDecidedModalSheet extends HookWidget {
                     ),
                     OptionDecisionContainer(
                       optionIndex: 2,
-                      title: "Move ₹150 to 8% Flo",
-                      description: 'Becomes ₹160 on maturity',
-                      promoText: 'You will lose out on *20 tickets*',
+                      title: depositData.decisionsAvailable![1].title!,
+                      description: depositData.decisionsAvailable![1].subtitle!,
+                      promoText:
+                          depositData.decisionsAvailable![1].footer!.text!,
+                      promotAsset:
+                          depositData.decisionsAvailable![1].footer!.icon!,
                       promoTextBoldColor: const Color(0xFF61E3C4),
                       promoContainerColor:
                           const Color(0xFF1ADAB7).withOpacity(0.35),
@@ -140,9 +187,12 @@ class NotDecidedModalSheet extends HookWidget {
                     ),
                     OptionDecisionContainer(
                       optionIndex: 3,
-                      title: "Withdraw to Bank",
-                      description: '5% less returns with savings accounts',
-                      promoText: 'You’ll lose *30 tickets* at withdrawal',
+                      title: depositData.decisionsAvailable![2].title!,
+                      description: depositData.decisionsAvailable![2].subtitle!,
+                      promoText:
+                          depositData.decisionsAvailable![2].footer!.text!,
+                      promotAsset:
+                          depositData.decisionsAvailable![2].footer!.icon!,
                       promoContainerColor:
                           const Color(0xffA5381B).withOpacity(0.6),
                       promoTextBoldColor: const Color(0xFFF79780),
@@ -152,7 +202,7 @@ class NotDecidedModalSheet extends HookWidget {
                       },
                     ),
                     SizedBox(height: SizeConfig.padding16),
-                    'This decision will reflect after maturity in *7 Days*'
+                    'This decision will reflect after maturity in *${depositData.maturesInDays} Days*'
                         .beautify(
                       boldStyle: TextStyles.sourceSansB.body3.colour(
                         const Color(0xFFA9C5D5),
@@ -163,64 +213,117 @@ class NotDecidedModalSheet extends HookWidget {
                       alignment: TextAlign.center,
                     ),
                     SizedBox(height: SizeConfig.padding10),
-                    MaterialButton(
-                        minWidth: SizeConfig.screenWidth,
-                        color: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.circular(SizeConfig.roundness5),
-                        ),
-                        height: SizeConfig.padding44,
-                        child: Text(
-                          "CONFIRM DECISION",
-                          style:
-                              TextStyles.rajdhaniB.body1.colour(Colors.black),
-                        ),
-                        onPressed: () {
-                          Haptic.vibrate();
-                          AppState.backButtonDispatcher?.didPopRoute();
+                    showLoading.value
+                        ? SpinKitThreeBounce(
+                            size: SizeConfig.title5,
+                            color: Colors.white,
+                          )
+                        : MaterialButton(
+                            minWidth: SizeConfig.screenWidth,
+                            color: Colors.white,
+                            shape: RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.circular(SizeConfig.roundness5),
+                            ),
+                            height: SizeConfig.padding44,
+                            child: Text(
+                              "CONFIRM DECISION",
+                              style: TextStyles.rajdhaniB.body1
+                                  .colour(Colors.black),
+                            ),
+                            onPressed: () async {
+                              Haptic.vibrate();
 
-                          if (selectedOption.value == 1) {
-                            BaseUtil.openModalBottomSheet(
-                              addToScreenStack: true,
-                              enableDrag: false,
-                              hapticVibrate: true,
-                              isBarrierDismissible: true,
-                              backgroundColor: Colors.transparent,
-                              isScrollControlled: true,
-                              content: SuccessfulDepositSheet(
-                                investAmount: '150',
-                                maturityAmount: '160',
-                                maturityDate: '${DateTime.now()}',
-                                reInvestmentDate: '${DateTime.now()}',
-                              ),
-                            );
-                          }
+                              if (selectedOption.value == 1) {
+                                showLoading.value = true;
+                                await locator<LendboxMaturityService>()
+                                    .updateInvestmentPref(depositData
+                                        .decisionsAvailable![0].pref!);
 
-                          if (selectedOption.value == 2) {
-                            BaseUtil.openModalBottomSheet(
-                              addToScreenStack: true,
-                              enableDrag: false,
-                              hapticVibrate: true,
-                              isBarrierDismissible: true,
-                              backgroundColor: Colors.transparent,
-                              isScrollControlled: true,
-                              content: const ReConfirmationSheet(),
-                            );
-                          }
+                                //add delay to show loading
+                                await Future.delayed(
+                                    const Duration(milliseconds: 700));
 
-                          if (selectedOption.value == 3) {
-                            BaseUtil.openModalBottomSheet(
-                              addToScreenStack: true,
-                              enableDrag: false,
-                              hapticVibrate: true,
-                              isBarrierDismissible: true,
-                              backgroundColor: Colors.transparent,
-                              isScrollControlled: true,
-                              content: const OtherOptionsModalSheet(),
-                            );
-                          }
-                        }),
+                                AppState.backButtonDispatcher?.didPopRoute();
+
+                                unawaited(BaseUtil.openModalBottomSheet(
+                                  addToScreenStack: true,
+                                  enableDrag: false,
+                                  hapticVibrate: true,
+                                  isBarrierDismissible: true,
+                                  backgroundColor: Colors.transparent,
+                                  isScrollControlled: true,
+                                  content: SuccessfulDepositSheet(
+                                    investAmount: depositData
+                                        .decisionsAvailable![0]
+                                        .onDecisionMade!
+                                        .investedAmt
+                                        .toString(),
+                                    maturityAmount: depositData
+                                        .decisionsAvailable![0]
+                                        .onDecisionMade!
+                                        .maturityAmt
+                                        .toString(),
+                                    maturityDate: formatDate(depositData
+                                        .decisionsAvailable![0]
+                                        .onDecisionMade!
+                                        .maturityOn!),
+                                    reInvestmentDate: formatDate(depositData
+                                        .decisionsAvailable![0]
+                                        .onDecisionMade!
+                                        .investedOn!),
+                                    fdDuration: depositData
+                                        .decisionsAvailable![0]
+                                        .onDecisionMade!
+                                        .fdDuration!,
+                                    roiPerc: depositData.decisionsAvailable![0]
+                                        .onDecisionMade!.roiPerc!,
+                                    title: depositData.decisionsAvailable![0]
+                                        .onDecisionMade!.title!,
+                                    topChipText: depositData
+                                        .decisionsAvailable![0]
+                                        .onDecisionMade!
+                                        .topChipText!,
+                                    footer: depositData.decisionsAvailable![0]
+                                        .onDecisionMade!.footer!,
+                                  ),
+                                ));
+                              }
+
+                              if (selectedOption.value == 2) {
+                                AppState.backButtonDispatcher?.didPopRoute();
+                                BaseUtil.openModalBottomSheet(
+                                  addToScreenStack: true,
+                                  enableDrag: false,
+                                  hapticVibrate: true,
+                                  isBarrierDismissible: true,
+                                  backgroundColor: Colors.transparent,
+                                  isScrollControlled: true,
+                                  content: ReConfirmationSheet(
+                                    depositData: depositData,
+                                    isLendboxOldUser: isLendboxOldUser,
+                                    decision: decision,
+                                  ),
+                                );
+                              }
+
+                              if (selectedOption.value == 3) {
+                                AppState.backButtonDispatcher?.didPopRoute();
+                                BaseUtil.openModalBottomSheet(
+                                  addToScreenStack: true,
+                                  enableDrag: false,
+                                  hapticVibrate: true,
+                                  isBarrierDismissible: true,
+                                  backgroundColor: Colors.transparent,
+                                  isScrollControlled: true,
+                                  content: OtherOptionsModalSheet(
+                                    depositData: depositData,
+                                    isLendboxOldUser: isLendboxOldUser,
+                                    decision: decision,
+                                  ),
+                                );
+                              }
+                            }),
                     SizedBox(height: SizeConfig.padding12),
                   ],
                 ),

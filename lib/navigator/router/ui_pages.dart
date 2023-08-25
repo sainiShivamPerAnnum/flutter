@@ -96,6 +96,8 @@ const String LendboxBuyViewPath = "/LendboxBuyViewPath";
 const String AssetSelectionViewPath = "/assetSelectionViewPath";
 const String QuizWebViewPath = "/quizWebViewPath";
 const String BalloonLottieScreenPath = "/bolloonLottieScreenPath";
+const String MaturityWithdrawalSuccessViewPath =
+    "/maturityWithdrawalSuccessViewPath";
 
 //GoldPro
 const String GoldProDetailsPath = "/goldProDetailsPath";
@@ -196,6 +198,7 @@ enum Pages {
   AssetSelectionView,
   QuizWebView,
   BalloonLottieScreen,
+  MaturityWithdrawalSuccessView,
   //GOLDPRO
   GoldProDetailsView,
   GoldProBuyView,
@@ -844,3 +847,9 @@ PageConfiguration GoldProTxnsDetailsViewPageConfig = PageConfiguration(
     path: GoldProTxnsDetailsViewPath,
     uiPage: Pages.GoldProTxnsDetailsView,
     name: "Gold X Txns Details View Screen");
+
+PageConfiguration MaturityWithdrawalSuccessViewPageConfig = PageConfiguration(
+    key: 'MaturityWithdrawalSuccessViewPath',
+    path: MaturityWithdrawalSuccessViewPath,
+    uiPage: Pages.MaturityWithdrawalSuccessView,
+    name: "Maturity Withdrawal Success View Screen");

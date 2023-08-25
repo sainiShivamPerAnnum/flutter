@@ -618,7 +618,8 @@ class FloPendingAction extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<LendboxMaturityService>(builder: (context, model, child) {
       if (model.pendingMaturityCount > 0 &&
-          (model.deposits != null && model.deposits?[0] != null)) {
+          (model.filteredDeposits != null &&
+              model.filteredDeposits?[0] != null)) {
         return GestureDetector(
           onTap: () {
             Haptic.vibrate();
@@ -631,7 +632,7 @@ class FloPendingAction extends StatelessWidget {
               isScrollControlled: true,
               content: ReInvestmentSheet(
                 decision: model.userDecision,
-                depositData: model.deposits![0],
+                depositData: model.filteredDeposits![0],
               ),
             );
           },

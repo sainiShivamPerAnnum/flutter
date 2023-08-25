@@ -120,7 +120,7 @@ class WithdrawalFeedback extends HookWidget {
                 ),
                 onPressed: () {
                   AppState.backButtonDispatcher!.didPopRoute();
-                  if (locator<BankAndPanService>().isBankDetailsAdded) {
+                  if (!locator<BankAndPanService>().isBankDetailsAdded) {
                     AppState.delegate!.appState.currentAction = PageAction(
                       state: PageState.addPage,
                       page: BalloonLottieScreenViewConfig,

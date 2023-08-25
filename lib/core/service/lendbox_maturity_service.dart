@@ -13,7 +13,8 @@ class LendboxMaturityService extends ChangeNotifier {
 
   bool _showPendingMaturity = false;
   int _pendingMaturityCount = 0;
-  List<Deposit>? deposits;
+  List<Deposit>? filteredDeposits;
+  List<Deposit>? allDeposits;
   UserDecision _userDecision = UserDecision.NOTDECIDED;
   bool isLendboxOldUser = false;
 
@@ -52,16 +53,34 @@ class LendboxMaturityService extends ChangeNotifier {
       if (lendboxMaturityData != null &&
           lendboxMaturityData.deposits != null &&
           lendboxMaturityData.deposits!.isNotEmpty) {
-        pendingMaturityCount = lendboxMaturityData.deposits!.length;
-        deposits = lendboxMaturityData.deposits;
+        allDeposits = lendboxMaturityData.deposits;
 
-        if (deposits?[0].decisionMade != null) {
-          setDecision(deposits?[1].decisionMade ?? '3');
+        filteredDeposits = lendboxMaturityData.deposits
+            ?.where((element) => element.hasConfirmed == false)
+            .toList();
+
+        pendingMaturityCount = filteredDeposits!.length;
+        // filteredDeposits = lendboxMaturityData.deposits;
+
+        if (filteredDeposits?[0].decisionMade != null) {
+          setDecision(filteredDeposits?[0].decisionMade ?? '3');
         }
 
         if (pendingMaturityCount > 0) {
           showPendingMaturity = true;
         }
+      }
+    }
+  }
+
+  Future<void> updateInvestmentPref(String pref) async {
+    final deposit = filteredDeposits?[0];
+    if (deposit != null) {
+      final txnId = deposit.txnId;
+      final res = await _lendboxRepo
+          .updateUserInvestmentPreference(txnId!, pref, hasConfirmed: true);
+      if (res.isSuccess()) {
+        await init();
       }
     }
   }

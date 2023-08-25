@@ -8,6 +8,7 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart';
 
 enum UserDecision { REINVEST, WITHDRAW, MOVETOFLEXI, NOTDECIDED }
 
@@ -35,6 +36,11 @@ class ReInvestmentSheet extends StatelessWidget {
       return 'Your 8% Deposit is maturing';
     }
     return 'Your 10% Deposit is maturing';
+  }
+
+  String formatDate(DateTime dateTime) {
+    final format = DateFormat('dd MMM, yyyy');
+    return format.format(dateTime);
   }
 
   @override
@@ -97,13 +103,15 @@ class ReInvestmentSheet extends StatelessWidget {
                   SizedBox(height: SizeConfig.padding26),
                   FloAssetInfoWidget(
                     investedAmount: (depositData.investedAmt!).toString(),
-                    investedDate: '3rd June 2023',
+                    investedDate: formatDate(depositData.investedOn!),
                     maturityAmount: (depositData.maturityAmt!).toString(),
-                    maturityDate: '3rd Sept 2023',
+                    maturityDate: formatDate(depositData.maturityOn!),
                     decision: decision,
                     maturesInDays: depositData.maturesInDays ?? 0,
                     fdDuration: depositData.fdDuration!,
                     roiPerc: depositData.roiPerc!,
+                    fundType: depositData.fundType!,
+                    isLendboxOldUser: isLendboxOldUser,
                   ),
                   SizedBox(
                       height: (decision == UserDecision.MOVETOFLEXI ||
@@ -115,7 +123,9 @@ class ReInvestmentSheet extends StatelessWidget {
             ),
             ReInvestmentBottomWidget(
               decision: decision,
-              remainingDay: 7,
+              remainingDay: depositData.maturesInDays ?? 0,
+              depositData: depositData,
+              isLendboxOldUser: isLendboxOldUser,
             )
           ],
         ),

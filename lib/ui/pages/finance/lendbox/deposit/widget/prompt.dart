@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/repository/lendbox_repo.dart';
+import 'package:felloapp/core/service/lendbox_maturity_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/back_button_actions.dart';
@@ -577,11 +578,13 @@ class MaturityPrefModalSheet extends StatefulWidget {
     required this.amount,
     required this.assetType,
     required this.txnId,
+    this.hasConfirmed = false,
   });
 
   final String amount;
   final String assetType;
   final String txnId;
+  final bool hasConfirmed;
 
   @override
   State<MaturityPrefModalSheet> createState() => _MaturityPrefModalSheetState();
@@ -781,12 +784,21 @@ class _MaturityPrefModalSheetState extends State<MaturityPrefModalSheet> {
 
                       if (!isLoading) {
                         isLoading = true;
+
+                        final LendboxMaturityService maturityService =
+                            locator<LendboxMaturityService>();
+
+                        bool? hasConfirmed = maturityService.filteredDeposits
+                            ?.any((element) => element.txnId == widget.txnId);
+
                         final res = await locator<LendboxRepo>()
                             .updateUserInvestmentPreference(
-                                widget.txnId, maturityPref);
+                                widget.txnId, maturityPref,
+                                hasConfirmed: hasConfirmed ?? false);
                         if (res.isSuccess()) {
                           unawaited(
                               AppState.backButtonDispatcher!.didPopRoute());
+                          locator<LendboxMaturityService>().init();
                           BaseUtil.showPositiveAlert(
                               "You preference recorded successfully",
                               "We'll contact you if required");

@@ -63,11 +63,17 @@ class LendboxRepo extends BaseRepo {
   }
 
   Future<ApiResponse<bool>> updateUserInvestmentPreference(
-      String txnId, String pref) async {
+      String txnId, String pref,
+      {bool hasConfirmed = false}) async {
     try {
-      final uid = userService.baseUser!.uid;
+      final uid = "ipGU7bH4asNlmO0aNypW" ?? userService.baseUser!.uid;
       final String bearer = await getBearerToken();
-      final body = {"uid": uid, "txnId": txnId, "maturityPref": pref};
+      final body = {
+        "uid": uid,
+        "txnId": txnId,
+        "maturityPref": pref,
+        "hasConfirmed": hasConfirmed,
+      };
       final response = await APIService.instance.putData(
           ApiPath.investmentPrefs,
           token: bearer,
@@ -78,15 +84,15 @@ class LendboxRepo extends BaseRepo {
       return ApiResponse(model: true, code: 200);
     } catch (e) {
       logger.e(e);
-      BaseUtil.showNegativeAlert(
-          e.toString(), "Please try again after sometime");
+      // BaseUtil.showNegativeAlert(
+      //     e.toString(), "Please try again after sometime");
       return ApiResponse.withError(e.toString(), 400);
     }
   }
 
   Future<ApiResponse<LendboxMaturityResponse>> getLendboxMaturity() async {
     try {
-      final uid = "ipGU7bH4asNlmO0aNypW" ?? userService!.baseUser!.uid;
+      final uid = userService!.baseUser!.uid;
       final String bearer = await getBearerToken();
 
       final response = await APIService.instance.getData(

@@ -1,19 +1,39 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/model/lendbox_maturity_response.dart';
+import 'package:felloapp/core/service/lendbox_maturity_service.dart';
+import 'package:felloapp/feature/flo_withdrawals/ui/reinvestment_sheet.dart';
 import 'package:felloapp/feature/flo_withdrawals/ui/succesful_deposit_sheet.dart';
 import 'package:felloapp/feature/flo_withdrawals/ui/success_8_moved_sheet.dart';
 import 'package:felloapp/feature/flo_withdrawals/ui/widgets/flo_option_decision_container.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:intl/intl.dart';
 
 class ReConfirmationSheet extends HookWidget {
-  const ReConfirmationSheet({super.key});
+  const ReConfirmationSheet(
+      {super.key,
+      required this.depositData,
+      required this.decision,
+      required this.isLendboxOldUser});
+
+  final Deposit depositData;
+  final UserDecision decision;
+  final bool isLendboxOldUser;
+
+  String formatDate(DateTime dateTime) {
+    final format = DateFormat('dd MMM, yyyy');
+    return format.format(dateTime);
+  }
 
   @override
   Widget build(BuildContext context) {
     final selectedOption = useState(-1);
+    final showLoading = useState(false);
 
     return WillPopScope(
       onWillPop: () async {
@@ -67,9 +87,11 @@ class ReConfirmationSheet extends HookWidget {
             SizedBox(height: SizeConfig.padding24),
             OptionDecisionContainer(
               optionIndex: 1,
-              title: 'Re-invest ₹150 in 10% Flo',
-              description: 'Becomes ₹160 on maturity',
-              promoText: "Get *2X tickets* on saving",
+              title: depositData.decisionsAvailable![0].title!,
+              description: depositData.decisionsAvailable![0].subtitle!,
+              promoText: depositData.decisionsAvailable![0].footer!.text!,
+              promotAsset: depositData.decisionsAvailable![0].footer!.icon!,
+              recommendedText: depositData.decisionsAvailable![0].topChip,
               isSelected: selectedOption.value == 1,
               onTap: () {
                 selectedOption.value = 1;
@@ -78,69 +100,131 @@ class ReConfirmationSheet extends HookWidget {
             ),
             OptionDecisionContainer(
               optionIndex: 2,
-              title: "Move ₹150 to 8% Flo",
-              description: 'Becomes ₹160 on maturity',
-              promoText: 'You are losing out on 30 tickets',
+              title: depositData.decisionsAvailable![1].title!,
+              description: depositData.decisionsAvailable![1].subtitle!,
+              promoText: depositData.decisionsAvailable![1].footer!.text!,
+              promotAsset: depositData.decisionsAvailable![1].footer!.icon!,
               isSelected: selectedOption.value == 2,
               onTap: () {
                 selectedOption.value = 2;
               },
             ),
             SizedBox(height: SizeConfig.padding16),
-            MaterialButton(
-                minWidth: SizeConfig.screenWidth,
-                color: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(SizeConfig.roundness5),
-                ),
-                height: SizeConfig.padding44,
-                child: Text(
-                  "Done",
-                  style: TextStyles.rajdhaniB.body1.colour(Colors.black),
-                ),
-                onPressed: () {
-                  if (selectedOption.value == 1) {
-                    Haptic.vibrate();
-                    AppState.backButtonDispatcher?.didPopRoute();
+            showLoading.value
+                ? SpinKitThreeBounce(
+                    size: SizeConfig.title5,
+                    color: Colors.white,
+                  )
+                : MaterialButton(
+                    minWidth: SizeConfig.screenWidth,
+                    color: Colors.white,
+                    shape: RoundedRectangleBorder(
+                      borderRadius:
+                          BorderRadius.circular(SizeConfig.roundness5),
+                    ),
+                    height: SizeConfig.padding44,
+                    child: Text(
+                      "Done",
+                      style: TextStyles.rajdhaniB.body1.colour(Colors.black),
+                    ),
+                    onPressed: () async {
+                      showLoading.value = true;
 
-                    BaseUtil.openModalBottomSheet(
-                      addToScreenStack: true,
-                      enableDrag: false,
-                      hapticVibrate: true,
-                      isBarrierDismissible: true,
-                      backgroundColor: Colors.transparent,
-                      isScrollControlled: true,
-                      content: SuccessfulDepositSheet(
-                        investAmount: '140',
-                        maturityAmount: '150',
-                        maturityDate: '${DateTime.now()}',
-                        reInvestmentDate: '${DateTime.now()}',
-                      ),
-                    );
-                  }
+                      if (selectedOption.value == 1) {
+                        Haptic.vibrate();
 
-                  if (selectedOption.value == 2) {
-                    Haptic.vibrate();
-                    AppState.backButtonDispatcher?.didPopRoute();
+                        await locator<LendboxMaturityService>()
+                            .updateInvestmentPref(
+                                depositData.decisionsAvailable![0].pref!);
 
-                    BaseUtil.openModalBottomSheet(
-                      addToScreenStack: true,
-                      enableDrag: false,
-                      hapticVibrate: true,
-                      isBarrierDismissible: true,
-                      backgroundColor: Colors.transparent,
-                      isScrollControlled: true,
-                      content: Successful8MovedSheet(
-                        investAmount: '140',
-                        maturityAmount: '150',
-                        maturityDate: '${DateTime.now()}',
-                        reInvestmentDate: '${DateTime.now()}',
-                        defaultMovedTo8: false,
-                        // move8flo: decision == UserDecision.MOVETO8,
-                      ),
-                    );
-                  }
-                }),
+                        // add delay
+                        await Future.delayed(const Duration(milliseconds: 700));
+
+                        AppState.backButtonDispatcher?.didPopRoute();
+
+                        BaseUtil.openModalBottomSheet(
+                          addToScreenStack: true,
+                          enableDrag: false,
+                          hapticVibrate: true,
+                          isBarrierDismissible: true,
+                          backgroundColor: Colors.transparent,
+                          isScrollControlled: true,
+                          content: SuccessfulDepositSheet(
+                            investAmount: depositData.decisionsAvailable![0]
+                                .onDecisionMade!.investedAmt
+                                .toString(),
+                            maturityAmount: depositData.decisionsAvailable![0]
+                                .onDecisionMade!.maturityAmt
+                                .toString(),
+                            maturityDate: formatDate(depositData
+                                .decisionsAvailable![0]
+                                .onDecisionMade!
+                                .maturityOn!),
+                            reInvestmentDate: formatDate(depositData
+                                .decisionsAvailable![0]
+                                .onDecisionMade!
+                                .investedOn!),
+                            fdDuration: depositData.decisionsAvailable![0]
+                                .onDecisionMade!.fdDuration!,
+                            roiPerc: depositData.decisionsAvailable![0]
+                                .onDecisionMade!.roiPerc!,
+                            title: depositData
+                                .decisionsAvailable![0].onDecisionMade!.title!,
+                            topChipText: depositData.decisionsAvailable![0]
+                                .onDecisionMade!.topChipText!,
+                            footer: depositData
+                                .decisionsAvailable![0].onDecisionMade!.footer!,
+                          ),
+                        );
+                      }
+
+                      if (selectedOption.value == 2) {
+                        Haptic.vibrate();
+
+                        await locator<LendboxMaturityService>()
+                            .updateInvestmentPref(
+                                depositData.decisionsAvailable![1].pref!);
+
+                        AppState.backButtonDispatcher?.didPopRoute();
+
+                        BaseUtil.openModalBottomSheet(
+                          addToScreenStack: true,
+                          enableDrag: false,
+                          hapticVibrate: true,
+                          isBarrierDismissible: true,
+                          backgroundColor: Colors.transparent,
+                          isScrollControlled: true,
+                          content: Successful8MovedSheet(
+                            investAmount: depositData.decisionsAvailable![1]
+                                .onDecisionMade!.investedAmt
+                                .toString(),
+                            maturityAmount: depositData.decisionsAvailable![1]
+                                .onDecisionMade!.maturityAmt
+                                .toString(),
+                            maturityDate: formatDate(depositData
+                                .decisionsAvailable![1]
+                                .onDecisionMade!
+                                .maturityOn!),
+                            reInvestmentDate: formatDate(depositData
+                                .decisionsAvailable![1]
+                                .onDecisionMade!
+                                .investedOn!),
+                            defaultMovedTo8: false,
+                            fdDuration: depositData.decisionsAvailable![1]
+                                .onDecisionMade!.fdDuration!,
+                            roiPerc: depositData.decisionsAvailable![1]
+                                .onDecisionMade!.roiPerc!,
+                            title: depositData
+                                .decisionsAvailable![1].onDecisionMade!.title!,
+                            topChipText: depositData.decisionsAvailable![1]
+                                .onDecisionMade!.topChipText!,
+                            footer: depositData
+                                .decisionsAvailable![1].onDecisionMade!.footer!,
+                            isLendboxOldUser: isLendboxOldUser,
+                          ),
+                        );
+                      }
+                    }),
           ],
         ),
       ),

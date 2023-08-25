@@ -14,12 +14,22 @@ class SuccessfulDepositSheet extends StatelessWidget {
       required this.investAmount,
       required this.maturityAmount,
       required this.maturityDate,
-    required this.reInvestmentDate});
+      required this.reInvestmentDate,
+      required this.fdDuration,
+      required this.roiPerc,
+      required this.title,
+      required this.topChipText,
+      required this.footer});
 
   final String investAmount;
   final String maturityAmount;
   final String maturityDate;
   final String reInvestmentDate;
+  final String fdDuration;
+  final String roiPerc;
+  final String title;
+  final String topChipText;
+  final String footer;
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +79,7 @@ class SuccessfulDepositSheet extends StatelessWidget {
                   // fit: BoxFit.cover,
                 ),
                 SizedBox(width: SizeConfig.padding8),
-                Text('Your New 10% Flo Deposit',
+                Text(title,
                     style: TextStyles.rajdhaniSB.body0.colour(Colors.white))
               ],
             ),
@@ -107,13 +117,13 @@ class SuccessfulDepositSheet extends StatelessWidget {
                                     vertical: SizeConfig.padding4),
                                 decoration: ShapeDecoration(
                                   color:
-                                  const Color(0xFFD9D9D9).withOpacity(0.20),
+                                      const Color(0xFFD9D9D9).withOpacity(0.20),
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(
                                           SizeConfig.roundness12)),
                                 ),
                                 child: Text(
-                                  '3rd Sept 2023',
+                                  reInvestmentDate,
                                   style: TextStyles.sourceSans.body4
                                       .colour(Colors.white),
                                 ),
@@ -135,13 +145,13 @@ class SuccessfulDepositSheet extends StatelessWidget {
                                     vertical: SizeConfig.padding4),
                                 decoration: ShapeDecoration(
                                   color:
-                                  const Color(0xFFD9D9D9).withOpacity(0.20),
+                                      const Color(0xFFD9D9D9).withOpacity(0.20),
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(
                                           SizeConfig.roundness12)),
                                 ),
                                 child: Text(
-                                  '4th Dec 2023',
+                                  maturityDate,
                                   style: TextStyles.sourceSans.body4
                                       .colour(Colors.white),
                                 ),
@@ -178,7 +188,7 @@ class SuccessfulDepositSheet extends StatelessWidget {
                               mainAxisAlignment: MainAxisAlignment.spaceAround,
                               children: [
                                 Text(
-                                  '3 months',
+                                  fdDuration,
                                   textAlign: TextAlign.center,
                                   style: TextStyles.sourceSans.body3
                                       .colour(Colors.white),
@@ -188,7 +198,7 @@ class SuccessfulDepositSheet extends StatelessWidget {
                                   width: SizeConfig.padding64,
                                 ),
                                 Text(
-                                  '@10% P.A',
+                                  '@$roiPerc% P.A',
                                   style: TextStyles.sourceSansSB.body4.colour(
                                     const Color(0xFF3DFFD0),
                                   ),
@@ -228,9 +238,9 @@ class SuccessfulDepositSheet extends StatelessWidget {
                       decoration: BoxDecoration(
                         color: const Color(0xFF62E3C4),
                         borderRadius:
-                        BorderRadius.circular(SizeConfig.roundness16),
+                            BorderRadius.circular(SizeConfig.roundness16),
                       ),
-                      child: 'Starts in *7 days*'.beautify(
+                      child: topChipText.beautify(
                         boldStyle: TextStyles.sourceSansB.body4.colour(
                           const Color(0xFF013B3F),
                         ),
@@ -246,10 +256,10 @@ class SuccessfulDepositSheet extends StatelessWidget {
             ),
             SizedBox(height: SizeConfig.padding30),
             Text(
-              'Your new transaction will reflect from 3rd Sept',
+              footer,
               textAlign: TextAlign.center,
               style:
-              TextStyles.sourceSans.body3.colour(const Color(0xFFBDBDBE)),
+                  TextStyles.sourceSans.body3.colour(const Color(0xFFBDBDBE)),
             ),
             SizedBox(height: SizeConfig.padding12),
             MaterialButton(

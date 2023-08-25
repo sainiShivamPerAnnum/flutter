@@ -1,6 +1,8 @@
-import 'dart:developer';
+import 'dart:async';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/model/lendbox_maturity_response.dart';
+import 'package:felloapp/core/service/lendbox_maturity_service.dart';
 import 'package:felloapp/feature/flo_withdrawals/ui/NotDecidedSheet.dart';
 import 'package:felloapp/feature/flo_withdrawals/ui/chose_other_option_sheet.dart';
 import 'package:felloapp/feature/flo_withdrawals/ui/reconfirmation_sheet.dart';
@@ -10,15 +12,23 @@ import 'package:felloapp/feature/flo_withdrawals/ui/succesful_deposit_sheet.dart
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/extensions/rich_text_extension.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 
 class ReInvestmentBottomWidget extends StatelessWidget {
   const ReInvestmentBottomWidget(
-      {required this.decision, required this.remainingDay, super.key});
+      {required this.decision,
+      required this.remainingDay,
+      super.key,
+      required this.depositData,
+      required this.isLendboxOldUser});
 
   final UserDecision decision;
+  final Deposit depositData;
   final int remainingDay;
+  final bool isLendboxOldUser;
 
   String getTitle() {
     switch (decision) {
@@ -31,6 +41,11 @@ class ReInvestmentBottomWidget extends StatelessWidget {
       case UserDecision.REINVEST:
         return 'SLIDE TO Re-Invest';
     }
+  }
+
+  String formatDate(DateTime dateTime) {
+    final format = DateFormat('dd MMM, yyyy');
+    return format.format(dateTime);
   }
 
   @override
@@ -81,11 +96,15 @@ class ReInvestmentBottomWidget extends StatelessWidget {
                       isBarrierDismissible: true,
                       backgroundColor: Colors.transparent,
                       isScrollControlled: true,
-                      content: const NotDecidedModalSheet(),
+                      content: NotDecidedModalSheet(
+                        depositData: depositData,
+                        isLendboxOldUser: isLendboxOldUser,
+                        decision: decision,
+                      ),
                     );
                   })
               : SlideAction(
-                  text: getTitle(),
+            text: depositData.sliderText,
                   textStyle: TextStyles.rajdhaniB.body1.colour(Colors.black),
                   borderRadius: SizeConfig.padding60,
                   height: SizeConfig.padding56,
@@ -94,42 +113,48 @@ class ReInvestmentBottomWidget extends StatelessWidget {
                   outerColor: Colors.white,
                   // innerColor: const Color(0xFF00EAC2),
                   sliderRotate: false,
-                  onSubmit: () {
-                    log("unlocked");
+                  onSubmit: () async {
+                    // showLoading.value = true;
                     Haptic.vibrate();
-                    AppState.backButtonDispatcher?.didPopRoute();
 
-                    if (decision == UserDecision.NOTDECIDED) {
-                      BaseUtil.openModalBottomSheet(
-                        addToScreenStack: true,
-                        enableDrag: false,
-                        hapticVibrate: true,
-                        isBarrierDismissible: true,
-                        backgroundColor: Colors.transparent,
-                        isScrollControlled: true,
-                        content: const NotDecidedModalSheet(
-                            // investAmount: '140',
-                            // maturityAmount: '150',
-                            // maturityDate: '${DateTime.now()}',
-                            // reInvestmentDate: '${DateTime.now()}',
-                            ),
-                      );
-                    } else {
-                      BaseUtil.openModalBottomSheet(
-                        addToScreenStack: true,
-                        enableDrag: false,
-                        hapticVibrate: true,
-                        isBarrierDismissible: true,
-                        backgroundColor: Colors.transparent,
-                        isScrollControlled: true,
-                        content: SuccessfulDepositSheet(
-                          investAmount: '140',
-                          maturityAmount: '150',
-                          maturityDate: '${DateTime.now()}',
-                          reInvestmentDate: '${DateTime.now()}',
-                        ),
-                      );
-                    }
+                    await locator<LendboxMaturityService>()
+                        .updateInvestmentPref("1");
+
+                    AppState.backButtonDispatcher?.didPopRoute();
+                    unawaited(BaseUtil.openModalBottomSheet(
+                      addToScreenStack: true,
+                      enableDrag: false,
+                      hapticVibrate: true,
+                      isBarrierDismissible: true,
+                      backgroundColor: Colors.transparent,
+                      isScrollControlled: true,
+                      content: SuccessfulDepositSheet(
+                        investAmount: depositData
+                            .decisionsAvailable![0].onDecisionMade!.investedAmt
+                            .toString(),
+                        maturityAmount: depositData
+                            .decisionsAvailable![0].onDecisionMade!.maturityAmt
+                            .toString(),
+                        maturityDate: formatDate(depositData
+                            .decisionsAvailable![0]
+                            .onDecisionMade!
+                            .maturityOn!),
+                        reInvestmentDate: formatDate(depositData
+                            .decisionsAvailable![0]
+                            .onDecisionMade!
+                            .investedOn!),
+                        fdDuration: depositData
+                            .decisionsAvailable![0].onDecisionMade!.fdDuration!,
+                        roiPerc: depositData
+                            .decisionsAvailable![0].onDecisionMade!.roiPerc!,
+                        title: depositData
+                            .decisionsAvailable![0].onDecisionMade!.title!,
+                        topChipText: depositData.decisionsAvailable![0]
+                            .onDecisionMade!.topChipText!,
+                        footer: depositData
+                            .decisionsAvailable![0].onDecisionMade!.footer!,
+                      ),
+                    ));
                   },
                 ),
           SizedBox(height: SizeConfig.padding18),
@@ -149,7 +174,11 @@ class ReInvestmentBottomWidget extends StatelessWidget {
                     isBarrierDismissible: true,
                     backgroundColor: Colors.transparent,
                     isScrollControlled: true,
-                    content: const ReConfirmationSheet(),
+                    content: ReConfirmationSheet(
+                      depositData: depositData,
+                      decision: decision,
+                      isLendboxOldUser: isLendboxOldUser,
+                    ),
                   );
                 } else {
                   BaseUtil.openModalBottomSheet(
@@ -159,13 +188,17 @@ class ReInvestmentBottomWidget extends StatelessWidget {
                     isBarrierDismissible: true,
                     backgroundColor: Colors.transparent,
                     isScrollControlled: true,
-                    content: const OtherOptionsModalSheet(),
+                    content: OtherOptionsModalSheet(
+                      depositData: depositData,
+                      isLendboxOldUser: isLendboxOldUser,
+                      decision: decision,
+                    ),
                   );
                 }
               },
               child: Text(
                 decision == UserDecision.MOVETOFLEXI
-                    ? 'I AM HAPPY WITH 8% RETURNS ONLY'
+                    ? 'I AM HAPPY WITH ${isLendboxOldUser ? 10 : 8}% RETURNS ONLY'
                     : 'VIEW OTHER OPTIONS',
                 textAlign: TextAlign.center,
                 style: TextStyles.rajdhaniB.body1
@@ -175,7 +208,7 @@ class ReInvestmentBottomWidget extends StatelessWidget {
             ),
           ],
           if (decision == UserDecision.NOTDECIDED) ...[
-            'Your investment will shift to 8% Flo if you\ndon’t decide in the next *$remainingDay days*'
+            'Your investment will shift to ${isLendboxOldUser ? 10 : 8}% Flo if you\ndon’t decide in the next *$remainingDay days*'
                 .beautify(
               boldStyle: TextStyles.sourceSansB.body3.colour(
                 const Color(0xFFA9C5D5),

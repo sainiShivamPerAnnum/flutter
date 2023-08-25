@@ -1,4 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'dart:developer';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
@@ -7,6 +9,7 @@ import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/lendbox_maturity_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -29,6 +32,7 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
+import 'package:flutter/material.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
@@ -452,7 +456,7 @@ class _FloPremiumDetailsViewState extends State<FloPremiumDetailsView>
                                   textAlign: TextAlign.center,
                                 ),
                                 SizedBox(height: SizeConfig.padding24),
-                                Testomonials(),
+                                const Testomonials(),
 
                                 SizedBox(height: SizeConfig.padding20),
 
@@ -1041,47 +1045,47 @@ class FloPremiumHeader extends StatelessWidget {
                                 ),
                                 SizedBox(width: SizeConfig.padding4),
                                 Container(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: SizeConfig.padding12,
-                                    vertical: SizeConfig.padding2),
-                                decoration: BoxDecoration(
-                                  color: const Color(0xff62E3C4),
-                                  borderRadius: BorderRadius.circular(
-                                      SizeConfig.roundness12),
-                                ),
-                                child: Shimmer.fromColors(
-                                  period: const Duration(milliseconds: 2500),
-                                  baseColor: Colors.grey[900]!,
-                                  highlightColor: Colors.grey[100]!,
-                                  loop: 3,
-                                  child: Text(
-                                    "$daysRemaining days",
-                                    style: TextStyles.sourceSansB.body3
-                                        .colour(Colors.black),
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: SizeConfig.padding12,
+                                      vertical: SizeConfig.padding2),
+                                  decoration: BoxDecoration(
+                                    color: const Color(0xff62E3C4),
+                                    borderRadius: BorderRadius.circular(
+                                        SizeConfig.roundness12),
+                                  ),
+                                  child: Shimmer.fromColors(
+                                    period: const Duration(milliseconds: 2500),
+                                    baseColor: Colors.grey[900]!,
+                                    highlightColor: Colors.grey[100]!,
+                                    loop: 3,
+                                    child: Text(
+                                      "$daysRemaining days",
+                                      style: TextStyles.sourceSansB.body3
+                                          .colour(Colors.black),
+                                    ),
                                   ),
                                 ),
+                              ],
+                            ),
+                            Positioned(
+                              right: 10,
+                              child: CustomPaint(
+                                size: Size(SizeConfig.padding12,
+                                    (SizeConfig.padding12 * 1.09).toDouble()),
+                                painter: StarCustomPainter(),
                               ),
-                            ],
-                          ),
-                          Positioned(
-                            right: 10,
-                            child: CustomPaint(
-                              size: Size(SizeConfig.padding12,
-                                  (SizeConfig.padding12 * 1.09).toDouble()),
-                              painter: StarCustomPainter(),
                             ),
-                          ),
-                          Positioned(
-                            right: 5,
-                            child: CustomPaint(
-                              size: Size(SizeConfig.padding6,
-                                  (SizeConfig.padding6 * 1.09).toDouble()),
-                              painter: StarCustomPainter(),
-                            ),
-                          )
-                        ],
-                      ),
-                    )
+                            Positioned(
+                              right: 5,
+                              child: CustomPaint(
+                                size: Size(SizeConfig.padding6,
+                                    (SizeConfig.padding6 * 1.09).toDouble()),
+                                painter: StarCustomPainter(),
+                              ),
+                            )
+                          ],
+                        ),
+                      )
                   ],
                 ),
               ),
@@ -1107,7 +1111,7 @@ class FloPremiumHeader extends StatelessWidget {
   }
 }
 
-class FloPremiumTransactionsList extends StatelessWidget {
+class FloPremiumTransactionsList extends StatefulWidget {
   final FloPremiumDetailsViewModel model;
   final bool seeAll;
 
@@ -1117,12 +1121,23 @@ class FloPremiumTransactionsList extends StatelessWidget {
     required this.seeAll,
   }) : super(key: key);
 
+  @override
+  State<FloPremiumTransactionsList> createState() =>
+      _FloPremiumTransactionsListState();
+}
+
+class _FloPremiumTransactionsListState
+    extends State<FloPremiumTransactionsList> {
+  bool showConfirm = false;
+  bool showNeedHelp = false;
+  late LendboxMaturityService _lendboxMaturityService;
+
   void trackTransactionCardTap(
       double currentAmount, double investedAmount, String maturityDate) {
     locator<AnalyticsService>().track(
         eventName: AnalyticsEvents.depositCardInFloSlabTapped,
         properties: {
-          "asset name": model.is12 ? "12% Flo" : "10% Flo",
+          "asset name": widget.model.is12 ? "12% Flo" : "10% Flo",
           "new user":
               locator<UserService>().userSegments.contains(Constants.NEW_USER),
           "invested amount": investedAmount,
@@ -1131,12 +1146,11 @@ class FloPremiumTransactionsList extends StatelessWidget {
         });
   }
 
-  void trackDecideButtonTap(
-      double currentAmount, double investedAmount, String maturityDate) {
+  void trackDecideButtonTap(double currentAmount, double investedAmount, String maturityDate) {
     locator<AnalyticsService>().track(
         eventName: AnalyticsEvents.decideOnDepositCardTapped,
         properties: {
-          "asset name": model.is12 ? "12% Flo" : "10% Flo",
+          "asset name": widget.model.is12 ? "12% Flo" : "10% Flo",
           "new user":
               locator<UserService>().userSegments.contains(Constants.NEW_USER),
           "invested amount": investedAmount,
@@ -1146,15 +1160,21 @@ class FloPremiumTransactionsList extends StatelessWidget {
   }
 
   int getLength() {
-    if (model.transactionsList.length > 2) {
-      if (seeAll) {
-        return model.transactionsList.length;
+    if (widget.model.transactionsList.length > 2) {
+      if (widget.seeAll) {
+        return widget.model.transactionsList.length;
       } else {
         return 2;
       }
     } else {
-      return model.transactionsList.length;
+      return widget.model.transactionsList.length;
     }
+  }
+
+  @override
+  void initState() {
+    super.initState();
+    _lendboxMaturityService = locator<LendboxMaturityService>();
   }
 
   @override
@@ -1163,58 +1183,83 @@ class FloPremiumTransactionsList extends StatelessWidget {
       duration: const Duration(seconds: 1),
       curve: Curves.easeIn,
       child: ListView.builder(
-          shrinkWrap: true,
-          itemCount: getLength(),
-          physics: const NeverScrollableScrollPhysics(),
-          itemBuilder: (ctx, i) {
-            String formattedInvestmentDate = DateFormat('dd MMM, yyyy').format(
-                DateTime.fromMillisecondsSinceEpoch(model
-                    .transactionsList[i].timestamp!.millisecondsSinceEpoch));
+        shrinkWrap: true,
+        itemCount: getLength(),
+        physics: const NeverScrollableScrollPhysics(),
+        itemBuilder: (ctx, i) {
+          String formattedInvestmentDate = DateFormat('dd MMM, yyyy').format(
+              DateTime.fromMillisecondsSinceEpoch(widget.model
+                  .transactionsList[i].timestamp!.millisecondsSinceEpoch));
 
-            String formattedMaturityDate = DateFormat('dd MMM, yyyy').format(
-                DateTime.fromMillisecondsSinceEpoch(model.transactionsList[i]
-                    .lbMap.maturityAt!.millisecondsSinceEpoch));
+          String formattedMaturityDate = DateFormat('dd MMM, yyyy').format(
+              DateTime.fromMillisecondsSinceEpoch(widget
+                  .model
+                  .transactionsList[i]
+                  .lbMap
+                  .maturityAt!
+                  .millisecondsSinceEpoch));
 
-            double currentValue = BaseUtil.digitPrecision(
-                model.transactionsList[i].amount +
-                    (model.transactionsList[i].lbMap.gainAmount ?? 0),
-                2);
+          double currentValue = BaseUtil.digitPrecision(
+              widget.model.transactionsList[i].amount +
+                  (widget.model.transactionsList[i].lbMap.gainAmount ?? 0),
+              2);
 
-            double principleValue =
-                BaseUtil.digitPrecision(model.transactionsList[i].amount, 2);
+          double principleValue = BaseUtil.digitPrecision(
+              widget.model.transactionsList[i].amount, 2);
 
-            double gain = BaseUtil.digitPrecision(
-                model.transactionsList[i].lbMap.gainAmount ?? 0, 2, false);
+          double gain = BaseUtil.digitPrecision(
+              widget.model.transactionsList[i].lbMap.gainAmount ?? 0, 2, false);
 
-            bool hasUserDecided =
-                model.transactionsList[i].lbMap.maturityPref != "NA";
-            String userMaturityPref = BaseUtil.getMaturityPref(
-                model.transactionsList[i].lbMap.maturityPref ?? "NA");
+          bool hasUserDecided =
+              widget.model.transactionsList[i].lbMap.maturityPref != "NA";
+          String userMaturityPref = BaseUtil.getMaturityPref(
+              widget.model.transactionsList[i].lbMap.maturityPref ?? "NA");
 
-            return (model.transactionsList[i].lbMap.fundType ?? "").isNotEmpty
-                ? InkWell(
-                    onTap: () {
-                      Haptic.vibrate();
-                      AppState.delegate!.appState.currentAction = PageAction(
-                        state: PageState.addWidget,
-                        page: TransactionDetailsPageConfig,
-                        widget: TransactionDetailsPage(
-                          txn: model.transactionsList[i],
-                        ),
-                      );
-                      trackTransactionCardTap(currentValue, currentValue - gain,
-                          formattedMaturityDate);
-                    },
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.white10,
-                        borderRadius:
-                            BorderRadius.circular(SizeConfig.roundness16),
+          // WidgetsFlutterBinding.ensureInitialized().addPostFrameCallback(
+          //   (timeStamp) {
+          // setState(() {
+          showNeedHelp =
+              widget.model.transactionsList[i].lbMap.hasDecidedPref ?? false;
+          log("showNeedHelp: $showNeedHelp");
+          // });
+
+          if ((_lendboxMaturityService.filteredDeposits?.isNotEmpty ?? false) &&
+              _lendboxMaturityService.filteredDeposits!.any((element) =>
+                  element.txnId == widget.model.transactionsList[i].docKey &&
+                  (element.hasConfirmed ?? true) == false)) {
+            // setState(() {
+            showConfirm = true;
+            // });
+          }
+          // },
+          // );
+
+          return (widget.model.transactionsList[i].lbMap.fundType ?? "")
+                  .isNotEmpty
+              ? InkWell(
+                  onTap: () {
+                    Haptic.vibrate();
+                    AppState.delegate!.appState.currentAction = PageAction(
+                      state: PageState.addWidget,
+                      page: TransactionDetailsPageConfig,
+                      widget: TransactionDetailsPage(
+                        txn: widget.model.transactionsList[i],
                       ),
-                      margin: EdgeInsets.only(
-                          //     horizontal: SizeConfig.pageHorizontalMargins,
-                          bottom: SizeConfig.padding16),
-                      child: Column(children: [
+                    );
+                    trackTransactionCardTap(currentValue, currentValue - gain,
+                        formattedMaturityDate);
+                  },
+                  child: Container(
+                    decoration: BoxDecoration(
+                      color: Colors.white10,
+                      borderRadius:
+                          BorderRadius.circular(SizeConfig.roundness16),
+                    ),
+                    margin: EdgeInsets.only(
+                        //     horizontal: SizeConfig.pageHorizontalMargins,
+                        bottom: SizeConfig.padding16),
+                    child: Column(
+                      children: [
                         Padding(
                           padding: EdgeInsets.only(
                             top: SizeConfig.padding12,
@@ -1226,60 +1271,60 @@ class FloPremiumTransactionsList extends StatelessWidget {
                             children: [
                               Row(
                                 children: [
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "Invested on",
-                                        style: TextStyles.body3.colour(
-                                            UiConstants.kTextFieldTextColor),
-                                      ),
-                                      FloPremiumTierChip(
-                                        value: formattedInvestmentDate,
-                                      )
-                                    ],
-                                  ),
-                                  SizedBox(width: SizeConfig.padding16),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text(
-                                        "Matures on",
-                                        style: TextStyles.body3.colour(
-                                            UiConstants.kTextFieldTextColor),
-                                      ),
-                                      FloPremiumTierChip(
-                                        value: formattedMaturityDate,
-                                      )
-                                    ],
-                                  ),
-                                  const Spacer(),
-                                  const Icon(
-                                    Icons.arrow_forward_ios_rounded,
-                                    color: UiConstants.kTextFieldTextColor,
-                                  )
-                                ],
-                              ),
-                              SizedBox(height: SizeConfig.padding16),
-                              FloBalanceBriefRow(
-                                lead: currentValue,
-                                trail: principleValue,
-                                percent: (gain / principleValue) * 100,
-                                leftAlign: true,
-                                tier: model.is12
+                            Column(
+                              crossAxisAlignment:
+                              CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Invested on",
+                                  style: TextStyles.body3.colour(
+                                      UiConstants.kTextFieldTextColor),
+                                ),
+                                FloPremiumTierChip(
+                                  value: formattedInvestmentDate,
+                                )
+                              ],
+                            ),
+                            SizedBox(width: SizeConfig.padding16),
+                            Column(
+                              crossAxisAlignment:
+                              CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  "Matures on",
+                                  style: TextStyles.body3.colour(
+                                      UiConstants.kTextFieldTextColor),
+                                ),
+                                FloPremiumTierChip(
+                                  value: formattedMaturityDate,
+                                )
+                              ],
+                            ),
+                            const Spacer(),
+                            const Icon(
+                              Icons.arrow_forward_ios_rounded,
+                              color: UiConstants.kTextFieldTextColor,
+                            )
+                          ],
+                        ),
+                        SizedBox(height: SizeConfig.padding16),
+                        FloBalanceBriefRow(
+                          lead: currentValue,
+                          trail: principleValue,
+                          percent: (gain / principleValue) * 100,
+                          leftAlign: true,
+                          tier: widget.model.is12
                                     ? Constants.ASSET_TYPE_FLO_FIXED_6
                                     : Constants.ASSET_TYPE_FLO_FIXED_3,
-                              ),
-                            ],
-                          ),
                         ),
-                        Container(
-                          width: SizeConfig.screenWidth,
-                          padding: EdgeInsets.symmetric(
-                            vertical: SizeConfig.padding8,
-                            horizontal: SizeConfig.padding16,
+                      ],
+                    ),
+                  ),
+                  Container(
+                    width: SizeConfig.screenWidth,
+                    padding: EdgeInsets.symmetric(
+                      vertical: SizeConfig.padding8,
+                      horizontal: SizeConfig.padding16,
                           ),
                           decoration: BoxDecoration(
                             color: Colors.white10,
@@ -1290,61 +1335,81 @@ class FloPremiumTransactionsList extends StatelessWidget {
                                     Radius.circular(SizeConfig.roundness16)),
                           ),
                           alignment: Alignment.center,
-                          child: hasUserDecided
-                              ? Text(
+                          child: Row(
+                            children: [
+                              Expanded(
+                                child: Text(
                                   userMaturityPref,
                                   style: TextStyles.sourceSans.body3,
-                                )
-                              : Row(children: [
-                                  Expanded(
-                                    child: Text(
-                                      userMaturityPref,
-                                      style: TextStyles.sourceSans.body3,
-                                    ),
-                                  ),
-                                  SizedBox(width: SizeConfig.padding10),
-                                  MaterialButton(
-                                    onPressed: () {
-                                      BaseUtil.openModalBottomSheet(
-                                        isBarrierDismissible: false,
-                                        addToScreenStack: true,
-                                        hapticVibrate: true,
-                                        isScrollControlled: true,
-                                        content: MaturityPrefModalSheet(
-                                          amount: "${currentValue - gain}",
-                                          txnId:
-                                              model.transactionsList[i].docKey!,
-                                          assetType: model.is12
-                                              ? Constants.ASSET_TYPE_FLO_FIXED_6
-                                              : Constants
-                                                  .ASSET_TYPE_FLO_FIXED_3,
-                                        ),
-                                      ).then(
-                                          (value) => model.getTransactions());
-                                      trackDecideButtonTap(
-                                        currentValue,
-                                        currentValue - gain,
-                                        formattedMaturityDate,
-                                      );
-                                    },
-                                    color: Colors.white,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(
-                                          SizeConfig.roundness5),
-                                    ),
-                                    child: Text(
-                                      "CHOOSE",
-                                      style: TextStyles.rajdhaniB.body2
-                                          .colour(Colors.black),
-                                    ),
-                                  )
-                                ]),
+                                ),
+                              ),
+                              SizedBox(width: SizeConfig.padding10),
+                              MaterialButton(
+                                elevation:
+                                    (showNeedHelp || showConfirm) ? 0 : 2,
+                                onPressed: () {
+                                  Haptic.vibrate();
+                                  if (showNeedHelp) {
+                                    AppState.delegate!.appState.currentAction =
+                                        PageAction(
+                                      state: PageState.addPage,
+                                      page: FreshDeskHelpPageConfig,
+                                    );
+                                  } else {
+                                    BaseUtil.openModalBottomSheet(
+                                      isBarrierDismissible: false,
+                                      addToScreenStack: true,
+                                      hapticVibrate: true,
+                                      isScrollControlled: true,
+                                      content: MaturityPrefModalSheet(
+                                        amount: "${currentValue - gain}",
+                                        txnId: widget
+                                            .model.transactionsList[i].docKey!,
+                                        assetType: widget.model.is12
+                                            ? Constants.ASSET_TYPE_FLO_FIXED_6
+                                            : Constants.ASSET_TYPE_FLO_FIXED_3,
+                                      ),
+                                    ).then((value) =>
+                                        widget.model.getTransactions());
+                                  }
+
+                                  trackDecideButtonTap(
+                                    currentValue,
+                                    currentValue - gain,
+                                    formattedMaturityDate,
+                                  );
+                                },
+                                color: (showNeedHelp || showConfirm)
+                                    ? Colors.black.withOpacity(0.25)
+                                    : Colors.white,
+                                shape: RoundedRectangleBorder(
+                                  borderRadius: BorderRadius.circular(
+                                      SizeConfig.roundness5),
+                                ),
+                                child: Text(
+                                  showNeedHelp
+                                      ? "NEED HELP"
+                                      : showConfirm
+                                          ? "CONFIRM"
+                                          : hasUserDecided
+                                              ? "CHANGE"
+                                              : "CHOOSE",
+                                  style: TextStyles.rajdhaniB.body2.colour(
+                                      (showNeedHelp || showConfirm)
+                                          ? Colors.white
+                                          : Colors.black),
+                                ),
+                              )
+                            ],
+                          ),
                         )
-                      ]),
+                      ],
                     ),
-                  )
-                : const SizedBox();
-          }),
+                  ),
+                )
+              : const SizedBox();
+        },
+      ),
     );
   }
 }

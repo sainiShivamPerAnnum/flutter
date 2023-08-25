@@ -14,8 +14,10 @@ class FloAssetInfoWidget extends StatelessWidget {
     required this.decision,
     required this.fdDuration,
     required this.roiPerc,
+    required this.fundType,
     super.key,
     this.maturesInDays = 7,
+    required this.isLendboxOldUser,
   });
 
   final String investedAmount;
@@ -26,6 +28,8 @@ class FloAssetInfoWidget extends StatelessWidget {
   final UserDecision decision;
   final String fdDuration;
   final String roiPerc;
+  final String fundType;
+  final bool isLendboxOldUser;
 
   @override
   Widget build(BuildContext context) {
@@ -152,6 +156,8 @@ class FloAssetInfoWidget extends StatelessWidget {
               ),
               UserDecisionWidget(
                 decision: decision,
+                fundType: fundType,
+                isLendboxOldUser: isLendboxOldUser,
               ),
             ],
           ),
