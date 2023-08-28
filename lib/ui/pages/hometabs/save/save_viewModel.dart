@@ -553,6 +553,7 @@ class QuickLinks extends StatelessWidget {
     ];
 
     return Column(
+      mainAxisSize: MainAxisSize.min,
       children: [
         Container(
           margin: EdgeInsets.symmetric(
@@ -564,42 +565,42 @@ class QuickLinks extends StatelessWidget {
               quickLinks.length,
               (index) => Expanded(
                 child: GestureDetector(
-                  onTap: () {
-                    Haptic.vibrate();
-                    AppState.delegate!
-                        .parseRoute(Uri.parse(quickLinks[index].deeplink));
-                    locator<AnalyticsService>().track(
-                      eventName: AnalyticsEvents.iconTrayTapped,
-                      properties: {'icon': quickLinks[index].name},
-                    );
-                  },
-                  child: Column(
-                    children: [
-                      CircleAvatar(
-                        backgroundColor: quickLinks[index].color,
-                        radius: SizeConfig.roundness32,
-                        child: SvgPicture.asset(
-                          quickLinks[index].asset,
-                          width: quickLinks[index].asset == Assets.goldAsset ||
+                      onTap: () {
+                        Haptic.vibrate();
+                        AppState.delegate!
+                            .parseRoute(Uri.parse(quickLinks[index].deeplink));
+                        locator<AnalyticsService>().track(
+                          eventName: AnalyticsEvents.iconTrayTapped,
+                          properties: {'icon': quickLinks[index].name},
+                        );
+                      },
+                      child: Column(
+                        children: [
+                          CircleAvatar(
+                            backgroundColor: quickLinks[index].color,
+                            radius: SizeConfig.roundness32,
+                            child: SvgPicture.asset(
+                              quickLinks[index].asset,
+                              width: quickLinks[index].asset == Assets.goldAsset ||
                                   quickLinks[index].asset == Assets.floAsset
-                              ? SizeConfig.padding56
-                              : SizeConfig.padding36,
-                          height: quickLinks[index].asset == Assets.goldAsset ||
+                                  ? SizeConfig.padding56
+                                  : SizeConfig.padding36,
+                              height: quickLinks[index].asset == Assets.goldAsset ||
                                   quickLinks[index].asset == Assets.floAsset
-                              ? SizeConfig.padding56
-                              : SizeConfig.padding36,
-                        ),
-                      ),
-                      SizedBox(height: SizeConfig.padding8),
-                      Text(
-                        quickLinks[index].name,
-                        style:
+                                  ? SizeConfig.padding56
+                                  : SizeConfig.padding36,
+                            ),
+                          ),
+                          SizedBox(height: SizeConfig.padding8),
+                          Text(
+                            quickLinks[index].name,
+                            style:
                             TextStyles.sourceSansSB.body3.colour(Colors.white),
-                      )
-                    ],
+                          )
+                        ],
+                      ),
+                    ),
                   ),
-                ),
-              ),
             ),
           ),
         ),
@@ -637,13 +638,18 @@ class FloPendingAction extends StatelessWidget {
             );
           },
           child: Transform.translate(
-            offset: Offset(-SizeConfig.padding10, -SizeConfig.padding16),
+            offset: Offset(-SizeConfig.padding14, -SizeConfig.padding14),
             child: Stack(
               children: [
-                CustomPaint(
-                  size: Size(SizeConfig.screenWidth!,
-                      (SizeConfig.screenWidth! * 0.27).toDouble()),
-                  painter: CustomToolTipPainter(),
+                AnimatedContainer(
+                  duration: const Duration(milliseconds: 700),
+                  curve: Curves.bounceInOut,
+                  margin: EdgeInsets.only(left: SizeConfig.padding24),
+                  child: CustomPaint(
+                    size: Size(SizeConfig.screenWidth!,
+                        (SizeConfig.screenWidth! * 0.18).toDouble()),
+                    painter: CustomToolTipPainter(),
+                  ),
                 ),
                 Positioned(
                   top: SizeConfig.padding36 + SizeConfig.padding1,
@@ -685,128 +691,71 @@ class CustomToolTipPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     Path path_0 = Path();
-    path_0.moveTo(size.width * 0.05434783, size.height * 0.3333333);
+    path_0.moveTo(size.width * 0.001524390, size.height * 0.4576271);
     path_0.cubicTo(
-        size.width * 0.05434783,
-        size.height * 0.2775475,
-        size.width * 0.06651413,
-        size.height * 0.2323232,
-        size.width * 0.08152174,
-        size.height * 0.2323232);
-    path_0.lineTo(size.width * 0.123, size.height * 0.2323232);
+        size.width * 0.001524390,
+        size.height * 0.3687000,
+        size.width * 0.01449174,
+        size.height * 0.2966102,
+        size.width * 0.03048780,
+        size.height * 0.2966102);
+    path_0.lineTo(size.width * 0.07657774, size.height * 0.2966102);
     path_0.cubicTo(
-        size.width * 0.1338652,
-        size.height * 0.2323232,
-        size.width * 0.1439611,
-        size.height * 0.2064949,
-        size.width * 0.1479837,
-        size.height * 0.1673879);
-    path_0.lineTo(size.width * 0.1589674, size.height * 0.06060606);
-    path_0.lineTo(size.width * 0.1721984, size.height * 0.1720848);
+        size.width * 0.08984665,
+        size.height * 0.2966102,
+        size.width * 0.1017399,
+        size.height * 0.2511034,
+        size.width * 0.1064787,
+        size.height * 0.1822017);
+    path_0.lineTo(size.width * 0.1174787, size.height * 0.02226458);
+    path_0.lineTo(size.width * 0.1308277, size.height * 0.1904780);
     path_0.cubicTo(
-        size.width * 0.1765438,
-        size.height * 0.2086980,
-        size.width * 0.1862946,
-        size.height * 0.2323232,
-        size.width * 0.1970603,
-        size.height * 0.2323232);
-    path_0.lineTo(size.width * 0.9184783, size.height * 0.2323232);
+        size.width * 0.1359470,
+        size.height * 0.2549864,
+        size.width * 0.1474338,
+        size.height * 0.2966102,
+        size.width * 0.1601165,
+        size.height * 0.2966102);
+    path_0.lineTo(size.width * 0.9695122, size.height * 0.2966102);
     path_0.cubicTo(
-        size.width * 0.9334864,
-        size.height * 0.2323232,
-        size.width * 0.9456522,
-        size.height * 0.2775475,
-        size.width * 0.9456522,
-        size.height * 0.3333333);
-    path_0.lineTo(size.width * 0.9456522, size.height * 0.5555556);
+        size.width * 0.9855091,
+        size.height * 0.2966102,
+        size.width * 0.9984756,
+        size.height * 0.3687000,
+        size.width * 0.9984756,
+        size.height * 0.4576271);
+    path_0.lineTo(size.width * 0.9984756, size.height * 0.8305085);
     path_0.cubicTo(
-        size.width * 0.9456522,
-        size.height * 0.6113414,
-        size.width * 0.9334864,
-        size.height * 0.6565657,
-        size.width * 0.9184783,
-        size.height * 0.6565657);
-    path_0.lineTo(size.width * 0.08152174, size.height * 0.6565657);
+        size.width * 0.9984756,
+        size.height * 0.9194356,
+        size.width * 0.9855091,
+        size.height * 0.9915254,
+        size.width * 0.9695122,
+        size.height * 0.9915254);
+    path_0.lineTo(size.width * 0.03048777, size.height * 0.9915254);
     path_0.cubicTo(
-        size.width * 0.06651386,
-        size.height * 0.6565657,
-        size.width * 0.05434783,
-        size.height * 0.6113414,
-        size.width * 0.05434783,
-        size.height * 0.5555556);
-    path_0.lineTo(size.width * 0.05434783, size.height * 0.3333333);
+        size.width * 0.01449174,
+        size.height * 0.9915254,
+        size.width * 0.001524390,
+        size.height * 0.9194356,
+        size.width * 0.001524390,
+        size.height * 0.8305085);
+    path_0.lineTo(size.width * 0.001524390, size.height * 0.4576271);
     path_0.close();
 
-    Paint paint_0_fill = Paint()..style = PaintingStyle.fill;
-    paint_0_fill.color = const Color(0xff323232).withOpacity(1.0);
-    canvas.drawPath(path_0, paint_0_fill);
-
-    Path path_1 = Path();
-    path_1.moveTo(size.width * 0.05570652, size.height * 0.3333333);
-    path_1.cubicTo(
-        size.width * 0.05570652,
-        size.height * 0.2803364,
-        size.width * 0.06726440,
-        size.height * 0.2373737,
-        size.width * 0.08152174,
-        size.height * 0.2373737);
-    path_1.lineTo(size.width * 0.1226019, size.height * 0.2373737);
-    path_1.cubicTo(
-        size.width * 0.1344285,
-        size.height * 0.2373737,
-        size.width * 0.1450291,
-        size.height * 0.2102535,
-        size.width * 0.1492527,
-        size.height * 0.1691909);
-    path_1.lineTo(size.width * 0.1590571, size.height * 0.07387485);
-    path_1.lineTo(size.width * 0.1709552, size.height * 0.1741232);
-    path_1.cubicTo(
-        size.width * 0.1755179,
-        size.height * 0.2125677,
-        size.width * 0.1857563,
-        size.height * 0.2373737,
-        size.width * 0.1970603,
-        size.height * 0.2373737);
-    path_1.lineTo(size.width * 0.9184783, size.height * 0.2373737);
-    path_1.cubicTo(
-        size.width * 0.9327364,
-        size.height * 0.2373737,
-        size.width * 0.9442935,
-        size.height * 0.2803364,
-        size.width * 0.9442935,
-        size.height * 0.3333333);
-    path_1.lineTo(size.width * 0.9442935, size.height * 0.5555556);
-    path_1.cubicTo(
-        size.width * 0.9442935,
-        size.height * 0.6085525,
-        size.width * 0.9327364,
-        size.height * 0.6515152,
-        size.width * 0.9184783,
-        size.height * 0.6515152);
-    path_1.lineTo(size.width * 0.08152174, size.height * 0.6515152);
-    path_1.cubicTo(
-        size.width * 0.06726440,
-        size.height * 0.6515152,
-        size.width * 0.05570652,
-        size.height * 0.6085525,
-        size.width * 0.05570652,
-        size.height * 0.5555556);
-    path_1.lineTo(size.width * 0.05570652, size.height * 0.3333333);
-    path_1.close();
-
-    Paint paint_1_stroke = Paint()
+    Paint paint0Stroke = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2;
-    paint_1_stroke.color = const Color(0xff1ADAB7).withOpacity(1.0);
-    canvas.drawPath(path_1, paint_1_stroke);
+    paint0Stroke.color = const Color(0xff1ADAB7).withOpacity(1.0);
+    canvas.drawPath(path_0, paint0Stroke);
 
-    Paint paint_1_fill = Paint()..style = PaintingStyle.fill;
-    paint_1_fill.color = const Color(0xff323232).withOpacity(1.0);
-    canvas.drawPath(path_1, paint_1_fill);
+    Paint paint0Fill = Paint()..style = PaintingStyle.fill;
+    paint0Fill.color = const Color(0xff323232).withOpacity(1.0);
+    canvas.drawPath(path_0, paint0Fill);
   }
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return false;
+    return true;
   }
 }

@@ -219,21 +219,22 @@ class SlideActionState extends State<SlideAction>
                                   child: Material(
                                     borderRadius: BorderRadius.circular(
                                         widget.borderRadius),
-                                    color: widget.innerColor ??
-                                        Theme.of(context)
-                                            .primaryIconTheme
-                                            .color,
+                                    // color: widget.innerColor ??
+                                    //     Theme.of(context)
+                                    //         .primaryIconTheme
+                                    //         .color,
                                     child: Container(
-                                      decoration: const ShapeDecoration(
+                                      decoration: ShapeDecoration(
                                         gradient: LinearGradient(
-                                          begin: Alignment(0.00, -1.00),
-                                          end: Alignment(0, 1),
+                                          begin: const Alignment(0.00, -1.00),
+                                          end: const Alignment(0, 1),
                                           colors: [
-                                            Color(0xFF00EAC2),
-                                            Color(0xFF43544F),
+                                            const Color(0xFF00EAC2),
+                                            const Color(0xFF43544F)
+                                                .withOpacity(0.8),
                                           ],
                                         ),
-                                        shape: OvalBorder(),
+                                        shape: const OvalBorder(),
                                       ),
                                       padding: EdgeInsets.all(
                                           widget.sliderButtonIconPadding),

@@ -66,7 +66,7 @@ class LendboxRepo extends BaseRepo {
       String txnId, String pref,
       {bool hasConfirmed = false}) async {
     try {
-      final uid = "ipGU7bH4asNlmO0aNypW" ?? userService.baseUser!.uid;
+      final uid = userService.baseUser!.uid;
       final String bearer = await getBearerToken();
       final body = {
         "uid": uid,
@@ -74,18 +74,12 @@ class LendboxRepo extends BaseRepo {
         "maturityPref": pref,
         "hasConfirmed": hasConfirmed,
       };
-      final response = await APIService.instance.putData(
-          ApiPath.investmentPrefs,
-          token: bearer,
-          cBaseUrl: _baseUrl,
-          body: body);
+      await APIService.instance.putData(ApiPath.investmentPrefs,
+          token: bearer, cBaseUrl: _baseUrl, body: body);
 
-      final data = response['data'];
       return ApiResponse(model: true, code: 200);
     } catch (e) {
       logger.e(e);
-      // BaseUtil.showNegativeAlert(
-      //     e.toString(), "Please try again after sometime");
       return ApiResponse.withError(e.toString(), 400);
     }
   }
@@ -101,7 +95,6 @@ class LendboxRepo extends BaseRepo {
         cBaseUrl: _baseUrl,
       );
 
-      // final data = response['data'];
       return ApiResponse(
           model: LendboxMaturityResponse.fromJson(response), code: 200);
     } catch (e) {

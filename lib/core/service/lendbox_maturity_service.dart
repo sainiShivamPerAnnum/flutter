@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:felloapp/core/model/lendbox_maturity_response.dart';
 import 'package:felloapp/core/repository/lendbox_repo.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -7,8 +9,6 @@ import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
 
 class LendboxMaturityService extends ChangeNotifier {
-  // final UserService _userService = locator<UserService>();
-  // final CustomLogger _logger = locator<CustomLogger>();
   final LendboxRepo _lendboxRepo = locator<LendboxRepo>();
 
   bool _showPendingMaturity = false;
@@ -45,43 +45,52 @@ class LendboxMaturityService extends ChangeNotifier {
   Future<void> init() async {
     isLendboxOldUser =
         locator<UserService>().userSegments.contains(Constants.US_FLO_OLD);
-    final res = await _lendboxRepo.getLendboxMaturity();
+    try {
+      final res = await _lendboxRepo.getLendboxMaturity();
 
-    if (res.isSuccess()) {
-      final lendboxMaturityData = res.model?.data;
+      if (res.isSuccess()) {
+        final lendboxMaturityData = res.model?.data;
 
-      if (lendboxMaturityData != null &&
-          lendboxMaturityData.deposits != null &&
-          lendboxMaturityData.deposits!.isNotEmpty) {
-        allDeposits = lendboxMaturityData.deposits;
+        if (lendboxMaturityData != null &&
+            lendboxMaturityData.deposits != null &&
+            lendboxMaturityData.deposits!.isNotEmpty) {
+          allDeposits = lendboxMaturityData.deposits;
 
-        filteredDeposits = lendboxMaturityData.deposits
-            ?.where((element) => element.hasConfirmed == false)
-            .toList();
+          filteredDeposits = lendboxMaturityData.deposits
+              ?.where((element) => element.hasConfirmed == false)
+              .toList();
+          pendingMaturityCount = filteredDeposits!.length;
 
-        pendingMaturityCount = filteredDeposits!.length;
-        // filteredDeposits = lendboxMaturityData.deposits;
+          if (filteredDeposits != null &&
+              filteredDeposits?[0].decisionMade != null) {
+            setDecision(filteredDeposits?[0].decisionMade ?? '3');
+          }
 
-        if (filteredDeposits?[0].decisionMade != null) {
-          setDecision(filteredDeposits?[0].decisionMade ?? '3');
-        }
-
-        if (pendingMaturityCount > 0) {
-          showPendingMaturity = true;
+          if (pendingMaturityCount > 0) {
+            showPendingMaturity = true;
+          }
         }
       }
+    } on Exception catch (e) {
+      log("Error in getting lendbox maturity data: $e",
+          name: "LendboxMaturityService");
     }
   }
 
   Future<void> updateInvestmentPref(String pref) async {
-    final deposit = filteredDeposits?[0];
-    if (deposit != null) {
-      final txnId = deposit.txnId;
-      final res = await _lendboxRepo
-          .updateUserInvestmentPreference(txnId!, pref, hasConfirmed: true);
-      if (res.isSuccess()) {
-        await init();
+    try {
+      final deposit = filteredDeposits?[0];
+      if (deposit != null) {
+        final txnId = deposit.txnId;
+        final res = await _lendboxRepo
+            .updateUserInvestmentPreference(txnId!, pref, hasConfirmed: true);
+        if (res.isSuccess()) {
+          await init();
+        }
       }
+    } on Exception catch (e) {
+      log("Error in updating investment pref: $e",
+          name: "LendboxMaturityService");
     }
   }
 

@@ -33,7 +33,6 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:shimmer/shimmer.dart';
@@ -1146,7 +1145,8 @@ class _FloPremiumTransactionsListState
         });
   }
 
-  void trackDecideButtonTap(double currentAmount, double investedAmount, String maturityDate) {
+  void trackDecideButtonTap(
+      double currentAmount, double investedAmount, String maturityDate) {
     locator<AnalyticsService>().track(
         eventName: AnalyticsEvents.decideOnDepositCardTapped,
         properties: {
@@ -1215,24 +1215,16 @@ class _FloPremiumTransactionsListState
           String userMaturityPref = BaseUtil.getMaturityPref(
               widget.model.transactionsList[i].lbMap.maturityPref ?? "NA");
 
-          // WidgetsFlutterBinding.ensureInitialized().addPostFrameCallback(
-          //   (timeStamp) {
-          // setState(() {
           showNeedHelp =
               widget.model.transactionsList[i].lbMap.hasDecidedPref ?? false;
           log("showNeedHelp: $showNeedHelp");
-          // });
 
           if ((_lendboxMaturityService.filteredDeposits?.isNotEmpty ?? false) &&
               _lendboxMaturityService.filteredDeposits!.any((element) =>
                   element.txnId == widget.model.transactionsList[i].docKey &&
                   (element.hasConfirmed ?? true) == false)) {
-            // setState(() {
             showConfirm = true;
-            // });
           }
-          // },
-          // );
 
           return (widget.model.transactionsList[i].lbMap.fundType ?? "")
                   .isNotEmpty
@@ -1271,60 +1263,60 @@ class _FloPremiumTransactionsListState
                             children: [
                               Row(
                                 children: [
-                            Column(
-                              crossAxisAlignment:
-                              CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Invested on",
-                                  style: TextStyles.body3.colour(
-                                      UiConstants.kTextFieldTextColor),
-                                ),
-                                FloPremiumTierChip(
-                                  value: formattedInvestmentDate,
-                                )
-                              ],
-                            ),
-                            SizedBox(width: SizeConfig.padding16),
-                            Column(
-                              crossAxisAlignment:
-                              CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  "Matures on",
-                                  style: TextStyles.body3.colour(
-                                      UiConstants.kTextFieldTextColor),
-                                ),
-                                FloPremiumTierChip(
-                                  value: formattedMaturityDate,
-                                )
-                              ],
-                            ),
-                            const Spacer(),
-                            const Icon(
-                              Icons.arrow_forward_ios_rounded,
-                              color: UiConstants.kTextFieldTextColor,
-                            )
-                          ],
-                        ),
-                        SizedBox(height: SizeConfig.padding16),
-                        FloBalanceBriefRow(
-                          lead: currentValue,
-                          trail: principleValue,
-                          percent: (gain / principleValue) * 100,
-                          leftAlign: true,
-                          tier: widget.model.is12
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Invested on",
+                                        style: TextStyles.body3.colour(
+                                            UiConstants.kTextFieldTextColor),
+                                      ),
+                                      FloPremiumTierChip(
+                                        value: formattedInvestmentDate,
+                                      )
+                                    ],
+                                  ),
+                                  SizedBox(width: SizeConfig.padding16),
+                                  Column(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      Text(
+                                        "Matures on",
+                                        style: TextStyles.body3.colour(
+                                            UiConstants.kTextFieldTextColor),
+                                      ),
+                                      FloPremiumTierChip(
+                                        value: formattedMaturityDate,
+                                      )
+                                    ],
+                                  ),
+                                  const Spacer(),
+                                  const Icon(
+                                    Icons.arrow_forward_ios_rounded,
+                                    color: UiConstants.kTextFieldTextColor,
+                                  )
+                                ],
+                              ),
+                              SizedBox(height: SizeConfig.padding16),
+                              FloBalanceBriefRow(
+                                lead: currentValue,
+                                trail: principleValue,
+                                percent: (gain / principleValue) * 100,
+                                leftAlign: true,
+                                tier: widget.model.is12
                                     ? Constants.ASSET_TYPE_FLO_FIXED_6
                                     : Constants.ASSET_TYPE_FLO_FIXED_3,
+                              ),
+                            ],
+                          ),
                         ),
-                      ],
-                    ),
-                  ),
-                  Container(
-                    width: SizeConfig.screenWidth,
-                    padding: EdgeInsets.symmetric(
-                      vertical: SizeConfig.padding8,
-                      horizontal: SizeConfig.padding16,
+                        Container(
+                          width: SizeConfig.screenWidth,
+                          padding: EdgeInsets.symmetric(
+                            vertical: SizeConfig.padding8,
+                            horizontal: SizeConfig.padding16,
                           ),
                           decoration: BoxDecoration(
                             color: Colors.white10,

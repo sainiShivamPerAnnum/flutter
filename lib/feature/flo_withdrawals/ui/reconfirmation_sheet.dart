@@ -92,6 +92,8 @@ class ReConfirmationSheet extends HookWidget {
               promoText: depositData.decisionsAvailable![0].footer!.text!,
               promotAsset: depositData.decisionsAvailable![0].footer!.icon!,
               recommendedText: depositData.decisionsAvailable![0].topChip,
+              promoTextBoldColor: const Color(0xFF61E3C4),
+              promoContainerColor: const Color(0xFF1ADAB7).withOpacity(0.35),
               isSelected: selectedOption.value == 1,
               onTap: () {
                 selectedOption.value = 1;
@@ -104,6 +106,8 @@ class ReConfirmationSheet extends HookWidget {
               description: depositData.decisionsAvailable![1].subtitle!,
               promoText: depositData.decisionsAvailable![1].footer!.text!,
               promotAsset: depositData.decisionsAvailable![1].footer!.icon!,
+              promoContainerColor: const Color(0xFFA4371A).withOpacity(0.6),
+              promoTextBoldColor: const Color(0xFFF79780),
               isSelected: selectedOption.value == 2,
               onTap: () {
                 selectedOption.value = 2;
