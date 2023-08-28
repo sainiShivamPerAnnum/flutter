@@ -1127,8 +1127,6 @@ class FloPremiumTransactionsList extends StatefulWidget {
 
 class _FloPremiumTransactionsListState
     extends State<FloPremiumTransactionsList> {
-  bool showConfirm = false;
-  bool showNeedHelp = false;
   late LendboxMaturityService _lendboxMaturityService;
 
   void trackTransactionCardTap(
@@ -1213,12 +1211,13 @@ class _FloPremiumTransactionsListState
           bool hasUserDecided =
               widget.model.transactionsList[i].lbMap.maturityPref != "NA";
           String userMaturityPref = BaseUtil.getMaturityPref(
-              widget.model.transactionsList[i].lbMap.maturityPref ?? "NA");
-
-          showNeedHelp =
+              widget.model.transactionsList[i].lbMap.maturityPref ?? "NA",
+              widget.key == const ValueKey('10floTxns'));
+          bool showNeedHelp =
               widget.model.transactionsList[i].lbMap.hasDecidedPref ?? false;
           log("showNeedHelp: $showNeedHelp");
 
+          bool showConfirm = false;
           if ((_lendboxMaturityService.filteredDeposits?.isNotEmpty ?? false) &&
               _lendboxMaturityService.filteredDeposits!.any((element) =>
                   element.txnId == widget.model.transactionsList[i].docKey &&
@@ -1341,6 +1340,9 @@ class _FloPremiumTransactionsListState
                                     (showNeedHelp || showConfirm) ? 0 : 2,
                                 onPressed: () {
                                   Haptic.vibrate();
+
+                                  log('showNeedHelp: $showNeedHelp');
+
                                   if (showNeedHelp) {
                                     AppState.delegate!.appState.currentAction =
                                         PageAction(
