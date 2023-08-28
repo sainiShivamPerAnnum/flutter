@@ -72,7 +72,7 @@ class _ReferralListState extends State<ReferralList> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const FullScreenLoader(),
+                    const FullScreenCircularLoader(),
                     SizedBox(height: SizeConfig.padding20),
                     Text(
                       'Fetching your referrals. Please wait..',
@@ -142,7 +142,7 @@ class _ReferralListState extends State<ReferralList> {
                 : widget.model
                         .bonusUnlockedReferalPresent(widget.model.referalList!)
                     ? ReferralListView(
-          referalList: widget.model.referalList!,
+                        referalList: widget.model.referalList!,
                         onStateChanged: (val) {
                           // widget.model.refresh();
                           if (_isBouncyScroll) {

@@ -59,6 +59,7 @@ class _GoldBuyViewState extends State<GoldBuyView>
 
       _txnService.currentTransactionState = TransactionState.idle;
     });
+
     WidgetsBinding.instance.addObserver(this);
   }
 

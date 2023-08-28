@@ -18,13 +18,11 @@ import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/helpers/tnc_text.dart';
 import 'package:felloapp/ui/elements/title_subtitle_container.dart';
 import 'package:felloapp/ui/elements/video_player/app_video_player.dart';
-import 'package:felloapp/ui/pages/asset_selection.dart';
 import 'package:felloapp/ui/pages/finance/autosave/autosave_setup/autosave_process_view.dart';
 import 'package:felloapp/ui/pages/finance/mini_trans_card/mini_trans_card_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/flo_components/flo_basic_card.dart';
 import 'package:felloapp/ui/pages/hometabs/save/flo_components/flo_premium_section.dart';
 import 'package:felloapp/ui/pages/hometabs/save/gold_components/gold_hero_card.dart';
-import 'package:felloapp/ui/pages/hometabs/save/gold_components/gold_pro_card.dart';
 import 'package:felloapp/ui/pages/hometabs/save/gold_components/gold_rate_widget.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/ui/pages/login/login_components/login_support.dart';
@@ -182,7 +180,7 @@ class _AssetSectionViewState extends State<AssetSectionView> {
                                 const GoldRateWidget(),
                                 if (widget.type == InvestmentType.AUGGOLD99)
                                   const LineGradientChart(),
-                                const GoldProCard()
+                                // const GoldProCard()
                               ],
                               if (balance == 0)
                                 SizedBox(
@@ -451,17 +449,111 @@ class AssetBottomButtons extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return type == InvestmentType.AUGGOLD99
-        ? Container(
-            margin: EdgeInsets.only(top: SizeConfig.padding12),
-            width: SizeConfig.screenWidth! * 0.85,
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceAround,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
+    return
+        // type == InvestmentType.AUGGOLD99
+        //     ? Container(
+        //         margin: EdgeInsets.only(top: SizeConfig.padding12),
+        //         width: SizeConfig.screenWidth! * 0.85,
+        //         child: Row(
+        //           mainAxisAlignment: MainAxisAlignment.spaceAround,
+        //           crossAxisAlignment: CrossAxisAlignment.center,
+        //           children: [
+        //             Expanded(
+        //               flex: 5,
+        //               child: MaterialButton(
+        //                 height: SizeConfig.padding44,
+        //                 shape: RoundedRectangleBorder(
+        //                   side: const BorderSide(width: 1.5, color: Colors.white),
+        //                   borderRadius:
+        //                       BorderRadius.circular(SizeConfig.roundness5),
+        //                 ),
+        //                 child: Text(
+        //                   "SAVE IN GOLD",
+        //                   style: TextStyles.rajdhaniB.body1.colour(Colors.white),
+        //                 ),
+        //                 onPressed: () {
+        //                   Haptic.vibrate();
+
+        //                   BaseUtil().openRechargeModalSheet(investmentType: type);
+
+        //                   locator<AnalyticsService>().track(
+        //                       eventName: AnalyticsEvents.saveOnce,
+        //                       properties: {
+        //                         'assetType': type.toString(),
+        //                       });
+        //                 },
+        //               ),
+        //             ),
+        //             SizedBox(width: SizeConfig.padding12),
+        //             Expanded(
+        //               flex: 6,
+        //               child: Stack(
+        //                 children: [
+        //                   MaterialButton(
+        //                     minWidth: SizeConfig.padding156,
+        //                     color: Colors.white,
+        //                     height: SizeConfig.padding44,
+        //                     shape: RoundedRectangleBorder(
+        //                       borderRadius:
+        //                           BorderRadius.circular(SizeConfig.roundness5),
+        //                     ),
+        //                     child: Text(
+        //                       "SAVE IN GOLD PRO",
+        //                       style:
+        //                           TextStyles.rajdhaniB.body1.colour(Colors.black),
+        //                     ),
+        //                     onPressed: () {
+        //                       Haptic.vibrate();
+        //                       AppState.delegate!.parseRoute(
+        //                         Uri.parse('goldProDetails'),
+        //                       );
+        //                     },
+        //                   ),
+        //                   Transform.translate(
+        //                     offset: Offset(0, -SizeConfig.padding12),
+        //                     child: Align(
+        //                       alignment: Alignment.bottomCenter,
+        //                       child: Container(
+        //                         margin: EdgeInsets.only(
+        //                           left: SizeConfig.padding20,
+        //                         ),
+        //                         width: SizeConfig.screenWidth! * 0.39,
+        //                         child: const AvailabilityOfferWidget(
+        //                             color: UiConstants.kBlogTitleColor,
+        //                             text: "*4.5% Extra Returns*"),
+        //                       ),
+        //                     ),
+        //                   )
+        //                 ],
+        //               ),
+        //             ),
+        //           ],
+        //         ),
+        //       )
+        //     :
+        Selector<SubService, SubscriptionModel?>(
+      selector: (_, subService) => subService.subscriptionData,
+      builder: (context, state, child) {
+        // state = SubscriptionModel();
+        var userSegments = locator<UserService>().userSegments;
+
+        // if(state == null && )
+        return SizedBox(
+          width: SizeConfig.screenWidth! * 0.85,
+          child: Row(
+            mainAxisAlignment: state != null
+                ? MainAxisAlignment.center
+                : MainAxisAlignment.spaceAround,
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              if (state == null &&
+                  !userSegments.contains(Constants.NO_SAVE_AUG) &&
+                  !userSegments.contains(Constants.NO_SAVE_LB))
                 Expanded(
-                  flex: 5,
+                  flex: 1,
                   child: MaterialButton(
+                    minWidth: state != null ? null : SizeConfig.padding156,
+                    color: state != null ? Colors.white : null,
                     height: SizeConfig.padding44,
                     shape: RoundedRectangleBorder(
                       side: const BorderSide(width: 1.5, color: Colors.white),
@@ -469,171 +561,71 @@ class AssetBottomButtons extends StatelessWidget {
                           BorderRadius.circular(SizeConfig.roundness5),
                     ),
                     child: Text(
-                      "SAVE IN GOLD",
-                      style: TextStyles.rajdhaniB.body1.colour(Colors.white),
+                      "SAVE DAILY",
+                      style: TextStyles.rajdhaniB.body1
+                          .colour(state != null ? Colors.black : Colors.white),
                     ),
                     onPressed: () {
                       Haptic.vibrate();
 
-                      BaseUtil().openRechargeModalSheet(investmentType: type);
+                      if (state != null) {
+                        BaseUtil().openRechargeModalSheet(investmentType: type);
+                      } else {
+                        AppState.delegate!.appState.currentAction = PageAction(
+                          state: PageState.addWidget,
+                          page: AutosaveProcessViewPageConfig,
+                          widget: AutosaveProcessView(
+                            investmentType: type,
+                          ),
+                        );
+                      }
 
                       locator<AnalyticsService>().track(
-                          eventName: AnalyticsEvents.saveOnce,
+                          eventName: state != null
+                              ? AnalyticsEvents.saveOnce
+                              : AnalyticsEvents.saveDaily,
                           properties: {
                             'assetType': type.toString(),
                           });
                     },
                   ),
                 ),
-                SizedBox(width: SizeConfig.padding12),
-                Expanded(
-                  flex: 6,
-                  child: Stack(
-                    children: [
-                      MaterialButton(
-                        minWidth: SizeConfig.padding156,
-                        color: Colors.white,
-                        height: SizeConfig.padding44,
-                        shape: RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.circular(SizeConfig.roundness5),
-                        ),
-                        child: Text(
-                          "SAVE IN GOLD PRO",
-                          style:
-                              TextStyles.rajdhaniB.body1.colour(Colors.black),
-                        ),
-                        onPressed: () {
-                          Haptic.vibrate();
-                          AppState.delegate!.parseRoute(
-                            Uri.parse('goldProDetails'),
-                          );
-                        },
-                      ),
-                      Transform.translate(
-                        offset: Offset(0, -SizeConfig.padding12),
-                        child: Align(
-                          alignment: Alignment.bottomCenter,
-                          child: Container(
-                            margin: EdgeInsets.only(
-                              left: SizeConfig.padding20,
-                            ),
-                            width: SizeConfig.screenWidth! * 0.39,
-                            child: const AvailabilityOfferWidget(
-                                color: UiConstants.kBlogTitleColor,
-                                text: "*4.5% Extra Returns*"),
-                          ),
-                        ),
-                      )
-                    ],
+              SizedBox(width: SizeConfig.padding12),
+              Expanded(
+                flex: 1,
+                child: MaterialButton(
+                  minWidth: SizeConfig.padding156,
+                  color: Colors.white,
+                  height: SizeConfig.padding44,
+                  shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(SizeConfig.roundness5),
                   ),
+                  child: Text(
+                    (state == null &&
+                            !userSegments.contains(Constants.NO_SAVE_AUG) &&
+                            !userSegments.contains(Constants.NO_SAVE_LB))
+                        ? "SAVE ONCE"
+                        : "SAVE",
+                    style: TextStyles.rajdhaniB.body1.colour(Colors.black),
+                  ),
+                  onPressed: () {
+                    Haptic.vibrate();
+                    BaseUtil().openRechargeModalSheet(investmentType: type);
+                    locator<AnalyticsService>().track(
+                        eventName: AnalyticsEvents.saveOnce,
+                        properties: {
+                          'assetType': type.toString(),
+                        });
+                    // BaseUtil().openRechargeModalSheet(
+                    //     investmentType: widget.type);
+                  },
                 ),
-              ],
-            ),
-          )
-        : Selector<SubService, SubscriptionModel?>(
-            selector: (_, subService) => subService.subscriptionData,
-            builder: (context, state, child) {
-              // state = SubscriptionModel();
-              var userSegments = locator<UserService>().userSegments;
-
-              // if(state == null && )
-              return SizedBox(
-                width: SizeConfig.screenWidth! * 0.85,
-                child: Row(
-                  mainAxisAlignment: state != null
-                      ? MainAxisAlignment.center
-                      : MainAxisAlignment.spaceAround,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    if (state == null &&
-                        !userSegments.contains(Constants.NO_SAVE_AUG) &&
-                        !userSegments.contains(Constants.NO_SAVE_LB))
-                      Expanded(
-                        flex: 1,
-                        child: MaterialButton(
-                          minWidth:
-                              state != null ? null : SizeConfig.padding156,
-                          color: state != null ? Colors.white : null,
-                          height: SizeConfig.padding44,
-                          shape: RoundedRectangleBorder(
-                            side: const BorderSide(
-                                width: 1.5, color: Colors.white),
-                            borderRadius:
-                                BorderRadius.circular(SizeConfig.roundness5),
-                          ),
-                          child: Text(
-                            "SAVE DAILY",
-                            style: TextStyles.rajdhaniB.body1.colour(
-                                state != null ? Colors.black : Colors.white),
-                          ),
-                          onPressed: () {
-                            Haptic.vibrate();
-
-                            if (state != null) {
-                              BaseUtil()
-                                  .openRechargeModalSheet(investmentType: type);
-                            } else {
-                              AppState.delegate!.appState.currentAction =
-                                  PageAction(
-                                state: PageState.addWidget,
-                                page: AutosaveProcessViewPageConfig,
-                                widget: AutosaveProcessView(
-                                  investmentType: type,
-                                ),
-                              );
-                            }
-
-                            locator<AnalyticsService>().track(
-                                eventName: state != null
-                                    ? AnalyticsEvents.saveOnce
-                                    : AnalyticsEvents.saveDaily,
-                                properties: {
-                                  'assetType': type.toString(),
-                                });
-                          },
-                        ),
-                      ),
-                    SizedBox(width: SizeConfig.padding12),
-                    Expanded(
-                      flex: 1,
-                      child: MaterialButton(
-                        minWidth: SizeConfig.padding156,
-                        color: Colors.white,
-                        height: SizeConfig.padding44,
-                        shape: RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.circular(SizeConfig.roundness5),
-                        ),
-                        child: Text(
-                          (state == null &&
-                                  !userSegments
-                                      .contains(Constants.NO_SAVE_AUG) &&
-                                  !userSegments.contains(Constants.NO_SAVE_LB))
-                              ? "SAVE ONCE"
-                              : "SAVE",
-                          style:
-                              TextStyles.rajdhaniB.body1.colour(Colors.black),
-                        ),
-                        onPressed: () {
-                          Haptic.vibrate();
-                          BaseUtil()
-                              .openRechargeModalSheet(investmentType: type);
-                          locator<AnalyticsService>().track(
-                              eventName: AnalyticsEvents.saveOnce,
-                              properties: {
-                                'assetType': type.toString(),
-                              });
-                          // BaseUtil().openRechargeModalSheet(
-                          //     investmentType: widget.type);
-                        },
-                      ),
-                    ),
-                  ],
-                ),
-              );
-            },
-          );
+              ),
+            ],
+          ),
+        );
+      },
+    );
   }
 }
 

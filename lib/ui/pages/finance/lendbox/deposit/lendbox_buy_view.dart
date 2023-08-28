@@ -3,6 +3,7 @@ import 'dart:io';
 import 'package:animations/animations.dart';
 import 'package:felloapp/core/enums/transaction_state_enum.dart';
 import 'package:felloapp/core/enums/transaction_type_enum.dart';
+import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/service/payments/lendbox_transaction_service.dart';
 import 'package:felloapp/navigator/back_button_actions.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
@@ -10,6 +11,7 @@ import 'package:felloapp/ui/pages/finance/lendbox/deposit/lendbox_buy_input_view
 import 'package:felloapp/ui/pages/finance/lendbox/deposit/lendbox_buy_vm.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/lendbox_loading_view.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/lendbox_success_view.dart';
+import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -37,7 +39,7 @@ class LendboxBuyView extends StatefulWidget {
 }
 
 class _LendboxBuyViewState extends State<LendboxBuyView>
-    with WidgetsBindingObserver {
+    with WidgetsBindingObserver, SingleTickerProviderStateMixin {
   final LendboxTransactionService _txnService =
       locator<LendboxTransactionService>();
   AppLifecycleState? appLifecycleState;
@@ -111,15 +113,18 @@ class _LendboxBuyViewState extends State<LendboxBuyView>
                     onModelReady: (model) => model.init(
                       widget.amount,
                       widget.skipMl,
+                      this,
                       assetTypeFlow: widget.floAssetType,
                     ),
                     builder: (ctx, model, child) {
                       _secureScreenshots(lboxTxnService);
 
-                      return _getView(
-                        lboxTxnService,
-                        model,
-                      );
+                      return model.state == ViewState.Busy
+                          ? const Center(child: FullScreenLoader())
+                          : _getView(
+                              lboxTxnService,
+                              model,
+                            );
                     },
                   ),
                 ),

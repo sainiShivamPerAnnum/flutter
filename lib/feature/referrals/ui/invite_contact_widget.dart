@@ -168,7 +168,7 @@ class _InviteContactWidgetState extends State<InviteContactWidget>
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const FullScreenLoader(),
+                const FullScreenCircularLoader(),
                 SizedBox(height: SizeConfig.padding20),
                 Text(
                   'Fetching your contacts. Please wait..',

@@ -118,7 +118,7 @@ class AugmontTransactionService extends BaseTransactionService {
     currentTxnGms = currentGoldPurchaseDetails.goldInGrams;
     final ApiResponse<CreatePaytmTransactionModel> txnResponse =
         await _paytmRepo.createTransaction(
-          amount,
+      amount,
       augMap,
       {},
       currentGoldPurchaseDetails.couponCode,
@@ -353,6 +353,12 @@ class AugmontTransactionService extends BaseTransactionService {
 
   void showTransactionPendingDialog(String? subtitle) {
     S locale = locator<S>();
+    locator<BackButtonActions>().isTransactionCancelled = false;
+    AppState.onTap = null;
+    AppState.amt = 0;
+    AppState.isRepeated = false;
+    AppState.type = null;
+    AppState.isTxnProcessing = true;
     Future.delayed(Duration(seconds: 1), () {
       BaseUtil.openDialog(
         addToScreenStack: true,
