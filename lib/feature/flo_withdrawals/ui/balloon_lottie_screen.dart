@@ -76,7 +76,7 @@ class _BalloonLottieScreenState extends State<BalloonLottieScreen>
             addToScreenStack: true,
             enableDrag: false,
             hapticVibrate: true,
-            isBarrierDismissible: true,
+            isBarrierDismissible: false,
             backgroundColor: Colors.transparent,
             isScrollControlled: true,
             content: ReConfirmationSheet(
@@ -313,7 +313,7 @@ class _BalloonLottieScreenState extends State<BalloonLottieScreen>
                                   addToScreenStack: true,
                                   enableDrag: false,
                                   hapticVibrate: true,
-                                  isBarrierDismissible: true,
+                                  isBarrierDismissible: false,
                                   backgroundColor: Colors.transparent,
                                   isScrollControlled: true,
                                   content: ReConfirmationSheet(

@@ -250,7 +250,7 @@ class NotDecidedModalSheet extends HookWidget {
                                   addToScreenStack: true,
                                   enableDrag: false,
                                   hapticVibrate: true,
-                                  isBarrierDismissible: true,
+                                  isBarrierDismissible: false,
                                   backgroundColor: Colors.transparent,
                                   isScrollControlled: true,
                                   content: SuccessfulDepositSheet(
@@ -296,7 +296,7 @@ class NotDecidedModalSheet extends HookWidget {
                                   addToScreenStack: true,
                                   enableDrag: false,
                                   hapticVibrate: true,
-                                  isBarrierDismissible: true,
+                                  isBarrierDismissible: false,
                                   backgroundColor: Colors.transparent,
                                   isScrollControlled: true,
                                   content: ReConfirmationSheet(
@@ -313,7 +313,7 @@ class NotDecidedModalSheet extends HookWidget {
                                   addToScreenStack: true,
                                   enableDrag: false,
                                   hapticVibrate: true,
-                                  isBarrierDismissible: true,
+                                  isBarrierDismissible: false,
                                   backgroundColor: Colors.transparent,
                                   isScrollControlled: true,
                                   content: OtherOptionsModalSheet(

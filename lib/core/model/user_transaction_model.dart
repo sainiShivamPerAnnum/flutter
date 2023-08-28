@@ -472,13 +472,15 @@ class LbMap {
   String? maturityPref;
   double? gainAmount;
   bool? hasDecidedPref;
+  bool? hasMatured;
 
   LbMap(
       {this.fundType,
       this.maturityAt,
       this.maturityPref,
       this.gainAmount,
-      this.hasDecidedPref});
+      this.hasDecidedPref,
+      this.hasMatured});
 
   factory LbMap.fromMap(Map<String, dynamic> map) {
     return LbMap(
@@ -491,6 +493,7 @@ class LbMap {
       gainAmount:
           map['gainAmount'] != null ? (map['gainAmount'] * 1.0) as double : 1.0,
       hasDecidedPref: map['hasDecidedPref'] ?? false,
+      hasMatured: map['hasMatured'] ?? false,
     );
   }
 }

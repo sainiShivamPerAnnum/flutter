@@ -4,6 +4,7 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/asset_view_section.dart';
 import 'package:felloapp/util/extensions/rich_text_extension.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -274,6 +275,9 @@ class SuccessfulDepositSheet extends StatelessWidget {
                   style: TextStyles.rajdhaniB.body1.colour(Colors.black),
                 ),
                 onPressed: () {
+                  Haptic.vibrate();
+                  AppState.backButtonDispatcher?.didPopRoute();
+
                   AppState.delegate!.appState.currentAction = PageAction(
                     state: PageState.addWidget,
                     page: SaveAssetsViewConfig,

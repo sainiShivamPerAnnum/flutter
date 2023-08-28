@@ -89,7 +89,7 @@ class Successful8MovedSheet extends StatelessWidget {
                 Expanded(
                   child: Text(
                     defaultMovedTo8
-                        ? 'Your transaction matured on\n3rd September'
+                        ? 'Your transaction matured on\n$maturityDate'
                         : title,
                     style: TextStyles.rajdhaniSB.body0.colour(Colors.white),
                   ),
@@ -296,6 +296,8 @@ class Successful8MovedSheet extends StatelessWidget {
                 ),
                 onPressed: () {
                   Haptic.vibrate();
+
+                  AppState.backButtonDispatcher?.didPopRoute();
                   AppState.delegate!.appState.currentAction = PageAction(
                     state: PageState.addWidget,
                     page: SaveAssetsViewConfig,

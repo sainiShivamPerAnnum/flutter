@@ -2,6 +2,7 @@ import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
@@ -119,6 +120,7 @@ class WithdrawalFeedback extends HookWidget {
                   style: TextStyles.rajdhaniB.body1.colour(Colors.black),
                 ),
                 onPressed: () {
+                  Haptic.vibrate();
                   AppState.backButtonDispatcher!.didPopRoute();
                   if (locator<BankAndPanService>().isBankDetailsAdded) {
                     AppState.delegate!.appState.currentAction = PageAction(
