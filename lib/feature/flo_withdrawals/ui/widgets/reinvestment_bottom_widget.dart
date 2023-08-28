@@ -104,7 +104,7 @@ class ReInvestmentBottomWidget extends StatelessWidget {
                     );
                   })
               : SlideAction(
-            text: depositData.sliderText,
+                  text: depositData.sliderText,
                   textStyle: TextStyles.rajdhaniB.body1.colour(Colors.black),
                   borderRadius: SizeConfig.padding60,
                   height: SizeConfig.padding56,

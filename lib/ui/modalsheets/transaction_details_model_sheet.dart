@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/util/locator.dart';
@@ -8,16 +10,18 @@ import 'package:flutter/material.dart';
 
 class TransactionSummary extends StatelessWidget {
   final List<TransactionStatusMapItemModel>? summary;
-  final TxnHistoryService? _txnHistoryService = locator<TxnHistoryService>();
-  TransactionSummary({this.summary});
+  final TxnHistoryService _txnHistoryService = locator<TxnHistoryService>();
+
+  TransactionSummary({super.key, this.summary});
+
   bool isTBD = false;
   int naPoint = 0;
 
   @override
   Widget build(BuildContext context) {
-    summary!.forEach((sum) {
-      print("${sum.toString()}");
-    });
+    for (final sum in summary!) {
+      log(sum.toString());
+    }
     naPoint = summary!.length;
     for (int i = 0; i < summary!.length; i++) {
       if (summary![i].value != null && summary![i].value == 'NA') {
@@ -25,7 +29,7 @@ class TransactionSummary extends StatelessWidget {
       }
     }
     return ListView.builder(
-        physics: NeverScrollableScrollPhysics(),
+        physics: const NeverScrollableScrollPhysics(),
         padding: EdgeInsets.zero,
         shrinkWrap: true,
         itemCount: naPoint,
@@ -34,9 +38,8 @@ class TransactionSummary extends StatelessWidget {
         });
   }
 
-  Widget leadWidget(
-      List<TransactionStatusMapItemModel>? summary, int index, int length) {
-    Widget mainWidget = SizedBox();
+  Widget leadWidget(List<TransactionStatusMapItemModel>? summary, int index, int length) {
+    Widget mainWidget = const SizedBox();
     Color leadColor = Colors.white;
     bool showThread = true;
     String? subtitle;
@@ -122,16 +125,16 @@ class TransactionSummary extends StatelessWidget {
                 children: [
                   Text(
                     summary![index].title!,
-                    style:
-                        TextStyles.sourceSans.body3.colour(Color(0XFFA9C6D6)),
+                    style: TextStyles.sourceSans.body3
+                        .colour(const Color(0XFFA9C6D6)),
                   ),
                   Text(
                     subtitle ??
                         (summary[index].timestamp != null
                             ? "${_txnHistoryService!.getFormattedDateAndTime(summary[index].timestamp!)}"
                             : summary[index].value!),
-                    style:
-                        TextStyles.sourceSans.body4.colour(Color(0xffA0A0A0)),
+                    style: TextStyles.sourceSans.body4
+                        .colour(const Color(0xffA0A0A0)),
                   ),
                 ],
               ),

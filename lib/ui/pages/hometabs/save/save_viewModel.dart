@@ -654,27 +654,32 @@ class FloPendingAction extends StatelessWidget {
                 Positioned(
                   top: SizeConfig.padding36 + SizeConfig.padding1,
                   left: SizeConfig.padding38,
-                  child: Row(
-                    children: [
-                      Text(
-                        'Pending actions on ${model.pendingMaturityCount} Flo transactions',
-                        style: TextStyles.sourceSans.body2.colour(Colors.white),
-                      ),
-                      SizedBox(width: SizeConfig.padding38),
-                      Container(
-                        width: SizeConfig.padding20,
-                        height: SizeConfig.padding20,
-                        decoration: const ShapeDecoration(
-                          color: Color(0xFF1ADAB7),
-                          shape: OvalBorder(),
+                  child: SizedBox(
+                    width: SizeConfig.screenWidth! * 0.9,
+                    child: Row(
+                      children: [
+                        Text(
+                          'Pending actions on ${model.pendingMaturityCount} Flo transactions',
+                          style:
+                              TextStyles.sourceSans.body2.colour(Colors.white),
                         ),
-                        child: Icon(
-                          Icons.arrow_forward_ios_rounded,
-                          size: SizeConfig.padding12,
-                          color: Colors.black,
+                        const Spacer(),
+                        Container(
+                          width: SizeConfig.padding20,
+                          height: SizeConfig.padding20,
+                          decoration: const ShapeDecoration(
+                            color: Color(0xFF1ADAB7),
+                            shape: OvalBorder(),
+                          ),
+                          child: Icon(
+                            Icons.arrow_forward_ios_rounded,
+                            size: SizeConfig.padding12,
+                            color: Colors.black,
+                          ),
                         ),
-                      )
-                    ],
+                        SizedBox(width: SizeConfig.padding16)
+                      ],
+                    ),
                   ),
                 ),
               ],

@@ -78,6 +78,8 @@ class LendboxMaturityService extends ChangeNotifier {
               orElse: Deposit.new);
 
           if (filteredDeposits != null &&
+              filteredDeposits!.isNotEmpty &&
+              filteredDeposits?[0] != null &&
               filteredDeposits?[0].decisionMade != null) {
             setDecision(filteredDeposits?[0].decisionMade ?? '3');
           }

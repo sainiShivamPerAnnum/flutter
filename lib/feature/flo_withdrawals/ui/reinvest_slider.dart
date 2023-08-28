@@ -174,7 +174,7 @@ class SlideActionState extends State<SlideAction>
                               Matrix4.rotationY(widget.reversed ? pi : 0),
                           child: widget.child ??
                               Text(
-                                widget.text ?? 'Slide to act',
+                                widget.text ?? 'Slide',
                                 textAlign: TextAlign.center,
                                 style: widget.textStyle ??
                                     TextStyle(

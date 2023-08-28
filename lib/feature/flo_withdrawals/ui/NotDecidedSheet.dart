@@ -240,10 +240,6 @@ class NotDecidedModalSheet extends HookWidget {
                                     .updateInvestmentPref(depositData
                                         .decisionsAvailable![0].pref!);
 
-                                //add delay to show loading
-                                await Future.delayed(
-                                    const Duration(milliseconds: 700));
-
                                 AppState.backButtonDispatcher?.didPopRoute();
 
                                 unawaited(BaseUtil.openModalBottomSheet(
@@ -292,7 +288,7 @@ class NotDecidedModalSheet extends HookWidget {
 
                               if (selectedOption.value == 2) {
                                 AppState.backButtonDispatcher?.didPopRoute();
-                                BaseUtil.openModalBottomSheet(
+                                unawaited(BaseUtil.openModalBottomSheet(
                                   addToScreenStack: true,
                                   enableDrag: false,
                                   hapticVibrate: true,
@@ -304,12 +300,12 @@ class NotDecidedModalSheet extends HookWidget {
                                     isLendboxOldUser: isLendboxOldUser,
                                     decision: decision,
                                   ),
-                                );
+                                ));
                               }
 
                               if (selectedOption.value == 3) {
                                 AppState.backButtonDispatcher?.didPopRoute();
-                                BaseUtil.openModalBottomSheet(
+                                unawaited(BaseUtil.openModalBottomSheet(
                                   addToScreenStack: true,
                                   enableDrag: false,
                                   hapticVibrate: true,
@@ -321,7 +317,7 @@ class NotDecidedModalSheet extends HookWidget {
                                     isLendboxOldUser: isLendboxOldUser,
                                     decision: decision,
                                   ),
-                                );
+                                ));
                               }
                             }),
                     SizedBox(height: SizeConfig.padding12),
