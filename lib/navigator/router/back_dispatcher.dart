@@ -4,6 +4,7 @@ import 'dart:developer';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/enums/transaction_state_enum.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
@@ -72,8 +73,10 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
   @override
   Future<bool> didPopRoute() {
     AppToasts.flushbar?.dismiss();
-
-    _journeyService.checkForMilestoneLevelChange();
+    if (AppState.screenStack.last == ScreenItem.loader) {
+      return Future.value(true);
+    }
+    // _journeyService.checkForMilestoneLevelChange();
     if (locator<BackButtonActions>().isTransactionCancelled) {
       if (AppState.onTap != null &&
           AppState.type != null &&
@@ -81,7 +84,23 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
         if (AppState.delegate!.currentConfiguration!.key ==
                 'LendboxBuyViewPath' &&
             AppState.screenStack.last != ScreenItem.dialog &&
-            !AppState.isRepeated) {
+            !AppState.isRepeated &&
+            AppState.type == InvestmentType.LENDBOXP2P) {
+          locator<BackButtonActions>().showWantToCloseTransactionBottomSheet(
+            AppState.amt!.round(),
+            AppState.type!,
+            () {
+              AppState.onTap?.call();
+            },
+          );
+          AppState.isRepeated = true;
+          return Future.value(true);
+        } else if (AppState.screenStack[AppState.screenStack.length - 2] !=
+                ScreenItem.dialog &&
+            AppState.screenStack.last == ScreenItem.dialog &&
+            !AppState.isRepeated &&
+            !AppState.isTxnProcessing &&
+            AppState.type == InvestmentType.AUGGOLD99) {
           locator<BackButtonActions>().showWantToCloseTransactionBottomSheet(
             AppState.amt!.round(),
             AppState.type!,
@@ -95,11 +114,6 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
       }
     }
     if (AppState.isInstantGtViewInView) return Future.value(true);
-
-    if (AppState.screenStack.last == ScreenItem.loader) {
-      return Future.value(true);
-    }
-    debugPrint("Page Controller: ${locator<SubService>().pageController}");
 
     // If the top item is anything except a scaffold
     if (AppState.screenStack.last == ScreenItem.dialog ||
@@ -255,11 +269,11 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
             .onChange(locator<RootController>().navItems.values.toList()[0]);
         return Future.value(true);
       } else if (AppState.delegate!.appState.rootIndex ==
-          locator<RootController>()
-              .navItems
-              .values
-              .toList()
-              .indexWhere((element) => element.title == "Save") &&
+              locator<RootController>()
+                  .navItems
+                  .values
+                  .toList()
+                  .indexWhere((element) => element.title == "Save") &&
           locator<CardActionsNotifier>().isVerticalView) {
         locator<CardActionsNotifier>().isVerticalView = false;
         return Future.value(true);

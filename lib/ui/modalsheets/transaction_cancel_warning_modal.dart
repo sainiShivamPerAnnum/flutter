@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -162,8 +164,8 @@ class TransactionCancelBottomSheet extends StatelessWidget {
                     eventName: "Payment Cancel - Exit Tapped",
                     properties: {"amount": amt});
                 locator<BackButtonActions>().isTransactionCancelled = false;
-                AppState.backButtonDispatcher!.didPopRoute().then(
-                    (value) => AppState.backButtonDispatcher!.didPopRoute());
+                unawaited(AppState.backButtonDispatcher!.didPopRoute().then(
+                    (value) => AppState.backButtonDispatcher!.didPopRoute()));
               },
               child: Text(
                 "GO BACK ANYWAY",

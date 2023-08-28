@@ -388,6 +388,8 @@ class _FoundBugState extends State<FoundBug> {
                     if (_formKey.currentState?.validate() ?? false) {
                       openGmail(capturedImage);
 
+                      AppState.backButtonDispatcher?.didPopRoute();
+
                       locator<AnalyticsService>().track(
                         eventName: AnalyticsEvents.reportBugSubmit,
                         properties: {

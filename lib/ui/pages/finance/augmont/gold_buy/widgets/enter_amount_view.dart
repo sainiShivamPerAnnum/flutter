@@ -55,72 +55,68 @@ class EnterAmountView extends StatelessWidget {
                       style: TextStyles.body3.light,
                     ),
                   ),
-                Showcase(
-                  key: ShowCaseKeys.goldInputKey,
-                  description: 'Edit the amount you want to save',
-                  child: AnimatedBuilder(
-                      animation: model.animationController!,
-                      builder: (context, _) {
-                        final sineValue = math.sin(
-                            3 * 2 * math.pi * model.animationController!.value);
-                        return Transform.translate(
-                          offset: Offset(sineValue * 10, 0),
-                          child: Row(
-                            crossAxisAlignment: CrossAxisAlignment.center,
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                "₹",
+                AnimatedBuilder(
+                    animation: model.animationController!,
+                    builder: (context, _) {
+                      final sineValue = math.sin(
+                          3 * 2 * math.pi * model.animationController!.value);
+                      return Transform.translate(
+                        offset: Offset(sineValue * 10, 0),
+                        child: Row(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              "₹",
+                              style: TextStyles.rajdhaniB.title50.colour(
+                                  model.goldAmountController!.text == "0"
+                                      ? UiConstants.kTextColor2
+                                      : UiConstants.kTextColor),
+                            ),
+                            // SizedBox(width: SizeConfig.padding10),
+                            AnimatedContainer(
+                              duration: const Duration(seconds: 0),
+                              curve: Curves.easeIn,
+                              width: model.fieldWidth,
+                              child: TextFormField(
+                                autofocus: true,
+                                readOnly: model.readOnly,
+                                showCursor: true,
+                                controller: model.goldAmountController,
+                                focusNode: model.buyFieldNode,
+                                enabled: !txnService.isGoldBuyInProgress &&
+                                    !model.couponApplyInProgress,
+                                validator: (val) {
+                                  return null;
+                                },
+                                onChanged: model.onBuyValueChanged,
+                                onTap: model.showKeyBoard,
+                                keyboardType:
+                                    const TextInputType.numberWithOptions(
+                                        decimal: true),
+                                inputFormatters: [
+                                  FilteringTextInputFormatter.digitsOnly,
+                                ],
+                                decoration: const InputDecoration(
+                                  focusedBorder: InputBorder.none,
+                                  border: InputBorder.none,
+                                  enabledBorder: InputBorder.none,
+                                  // isCollapse: true,
+                                  disabledBorder: InputBorder.none,
+                                  isDense: true,
+                                ),
+                                textAlign: TextAlign.center,
                                 style: TextStyles.rajdhaniB.title50.colour(
-                                    model.goldAmountController!.text == "0"
-                                        ? UiConstants.kTextColor2
-                                        : UiConstants.kTextColor),
-                              ),
-                              // SizedBox(width: SizeConfig.padding10),
-                              AnimatedContainer(
-                                duration: const Duration(seconds: 0),
-                                curve: Curves.easeIn,
-                                width: model.fieldWidth,
-                                child: TextFormField(
-                                  autofocus: true,
-                                  readOnly: model.readOnly,
-                                  showCursor: true,
-                                  controller: model.goldAmountController,
-                                  focusNode: model.buyFieldNode,
-                                  enabled: !txnService.isGoldBuyInProgress &&
-                                      !model.couponApplyInProgress,
-                                  validator: (val) {
-                                    return null;
-                                  },
-                                  onChanged: model.onBuyValueChanged,
-                                  onTap: model.showKeyBoard,
-                                  keyboardType:
-                                      const TextInputType.numberWithOptions(
-                                          decimal: true),
-                                  inputFormatters: [
-                                    FilteringTextInputFormatter.digitsOnly,
-                                  ],
-                                  decoration: const InputDecoration(
-                                    focusedBorder: InputBorder.none,
-                                    border: InputBorder.none,
-                                    enabledBorder: InputBorder.none,
-                                    // isCollapse: true,
-                                    disabledBorder: InputBorder.none,
-                                    isDense: true,
-                                  ),
-                                  textAlign: TextAlign.center,
-                                  style: TextStyles.rajdhaniB.title50.colour(
-                                    model.goldAmountController!.text == "0"
-                                        ? UiConstants.kTextColor2
-                                        : UiConstants.kTextColor,
-                                  ),
+                                  model.goldAmountController!.text == "0"
+                                      ? UiConstants.kTextColor2
+                                      : UiConstants.kTextColor,
                                 ),
                               ),
-                            ],
-                          ),
-                        );
-                      }),
-                ),
+                            ),
+                          ],
+                        ),
+                      );
+                    }),
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: SizeConfig.padding4),
                   child: Row(

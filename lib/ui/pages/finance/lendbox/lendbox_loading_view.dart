@@ -8,6 +8,7 @@ import 'package:felloapp/core/enums/transaction_type_enum.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/payments/lendbox_transaction_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/back_button_actions.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_buy/augmont_buy_vm.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -88,7 +89,12 @@ class LendboxLoadingView extends StatelessWidget {
                     TransactionState.ongoing) return;
 
                 _txnService!.pollingPeriodicTimer?.cancel();
-
+                locator<BackButtonActions>().isTransactionCancelled = false;
+                AppState.onTap = null;
+                AppState.amt = 0;
+                AppState.isRepeated = false;
+                AppState.isTxnProcessing = true;
+                AppState.type = null;
                 _txnService!.currentTransactionState = TransactionState.idle;
                 unawaited(locator<TxnHistoryService>()
                     .updateTransactions(InvestmentType.LENDBOXP2P));

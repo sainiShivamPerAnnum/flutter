@@ -21,6 +21,7 @@ import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/preference_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:google_fonts/google_fonts.dart';
@@ -829,7 +830,7 @@ class _CardsState extends State<Cards> with SingleTickerProviderStateMixin {
                                             Selector<UserService, Portfolio>(
                                               builder: (_, portfolio, child) =>
                                                   Text(
-                                                "₹${(portfolio.absolute.balance).toInt()}",
+                                                    "₹${getTotalBalance(portfolio)}",
                                                 style: GoogleFonts.sourceSans3(
                                                   fontWeight: FontWeight.w800,
                                                   color: Colors.white,
@@ -1040,6 +1041,19 @@ class _CardsState extends State<Cards> with SingleTickerProviderStateMixin {
         ),
       );
     });
+  }
+
+  int getTotalBalance(Portfolio portfolio) {
+    if (portfolio.absolute.balance != 0) {
+      return portfolio.absolute.balance.toInt();
+    } else {
+      String stringBalance =
+          PreferenceHelper.getString(Constants.FELLO_BALANCE);
+
+      double doubleBalance = double.tryParse(stringBalance) ?? 0.0;
+      int intBalance = doubleBalance.toInt();
+      return intBalance;
+    }
   }
 }
 

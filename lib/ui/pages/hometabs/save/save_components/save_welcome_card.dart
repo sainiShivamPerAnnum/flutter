@@ -83,9 +83,10 @@ class SaveWelcomeCard extends StatelessWidget {
               ],
             ),
           ),
+          SizedBox(height: SizeConfig.padding6),
           const WalthroughVideosSection(),
           SizedBox(
-            height: SizeConfig.padding32,
+            height: SizeConfig.padding26,
           ),
         ],
       ),

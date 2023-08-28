@@ -1,20 +1,16 @@
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/faq_model.dart';
-import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/appbar/appbar.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
-import 'package:felloapp/ui/pages/support/bug_report/ui/found_bug.dart';
 import 'package:felloapp/ui/pages/support/faq/faq_page_vm.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
-import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -32,122 +28,81 @@ class FAQPage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
-    return Stack(
-      children: [
-        Scaffold(
-          backgroundColor: UiConstants.kBackgroundColor,
-          appBar: FAppBar(
-              title: locale.faqs,
-              showAvatar: false,
-              showCoinBar: false,
-              showHelpButton: false,
-              action: Container(
-                height: SizeConfig.avatarRadius * 2,
-                padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding2),
-                decoration: BoxDecoration(
-                    borderRadius: BorderRadius.circular(100),
-                    border: Border.all(
-                      color: Colors.white,
-                    ),
-                    color: UiConstants.kBackgroundColor),
-                child: TextButton(
-                  child: Text(
-                    locale.needHelp,
-                    style: TextStyles.sourceSans.body3,
-                  ),
-                  onPressed: () {
-                    Haptic.vibrate();
-                    AppState.delegate!.appState.currentAction = PageAction(
-                      state: PageState.addPage,
-                      page: FreshDeskHelpPageConfig,
-                    );
-                  },
+    return Scaffold(
+      backgroundColor: UiConstants.kBackgroundColor,
+      appBar: FAppBar(
+          title: locale.faqs,
+          showAvatar: false,
+          showCoinBar: false,
+          showHelpButton: false,
+          action: Container(
+            height: SizeConfig.avatarRadius * 2,
+            padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding2),
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(100),
+                border: Border.all(
+                  color: Colors.white,
                 ),
-              )),
-          body: BaseView<FaqPageViewModel>(
-            onModelReady: (model) => model.init(type!),
-            builder: (ctx, model, child) {
-              return model.state == ViewState.Busy
-                  ? const Center(
-                      child: FullScreenLoader(bottomPadding: true),
-                    )
-                  : Padding(
-                      padding: EdgeInsets.only(top: SizeConfig.padding8),
-                      child: ListView.separated(
-                        itemCount: model.list!.length,
-                        padding: EdgeInsets.only(
-                          bottom: SizeConfig.padding12,
-                        ),
-                        itemBuilder: (context, index) => ListTile(
-                          contentPadding: EdgeInsets.symmetric(
-                              horizontal: SizeConfig.pageHorizontalMargins),
-                          title: Text(
-                            model.list![index].title!,
-                            style: TextStyles.sourceSans.body3,
-                          ),
-                          trailing: Container(
-                            margin: EdgeInsets.only(left: SizeConfig.padding44),
-                            child: const Icon(
-                              Icons.keyboard_arrow_right,
-                              color: UiConstants.kFAQArrowColor,
-                            ),
-                          ),
-                          minVerticalPadding: SizeConfig.padding8,
-                          style: ListTileStyle.list,
-                          onTap: () {
-                            showFaqBottomSheet(context, model.list![index]);
-                          },
-                        ),
-                        separatorBuilder: (context, index) => Divider(
-                          color: UiConstants.kLastUpdatedTextColor,
-                          thickness: 1,
-                          endIndent: SizeConfig.padding20,
-                          indent: SizeConfig.padding20,
-                          height: SizeConfig.padding28,
+                color: UiConstants.kBackgroundColor),
+            child: TextButton(
+              child: Text(
+                locale.needHelp,
+                style: TextStyles.sourceSans.body3,
+              ),
+              onPressed: () {
+                Haptic.vibrate();
+                AppState.delegate!.appState.currentAction = PageAction(
+                  state: PageState.addPage,
+                  page: FreshDeskHelpPageConfig,
+                );
+              },
+            ),
+          )),
+      body: BaseView<FaqPageViewModel>(
+        onModelReady: (model) => model.init(type!),
+        builder: (ctx, model, child) {
+          return model.state == ViewState.Busy
+              ? const Center(
+                  child: FullScreenLoader(bottomPadding: true),
+                )
+              : Padding(
+                  padding: EdgeInsets.only(top: SizeConfig.padding8),
+                  child: ListView.separated(
+                    itemCount: model.list!.length,
+                    padding: EdgeInsets.only(
+                      bottom: SizeConfig.padding12,
+                    ),
+                    itemBuilder: (context, index) => ListTile(
+                      contentPadding: EdgeInsets.symmetric(
+                          horizontal: SizeConfig.pageHorizontalMargins),
+                      title: Text(
+                        model.list![index].title!,
+                        style: TextStyles.sourceSans.body3,
+                      ),
+                      trailing: Container(
+                        margin: EdgeInsets.only(left: SizeConfig.padding44),
+                        child: const Icon(
+                          Icons.keyboard_arrow_right,
+                          color: UiConstants.kFAQArrowColor,
                         ),
                       ),
-                    );
-            },
-          ),
-        ),
-        Positioned(
-          bottom: 0,
-          left: 0,
-          right: 0,
-          child: Center(
-            child: Container(
-              width: SizeConfig.screenWidth! * 0.38,
-              padding: EdgeInsets.symmetric(vertical: SizeConfig.padding16),
-              child: OutlinedButton(
-                style: OutlinedButton.styleFrom(
-                  side: const BorderSide(width: 1.0, color: Colors.white),
-                ),
-                onPressed: () {
-                  Haptic.vibrate();
-
-                  BaseUtil.openModalBottomSheet(
-                    addToScreenStack: true,
-                    enableDrag: false,
-                    hapticVibrate: true,
-                    isBarrierDismissible: true,
-                    backgroundColor: Colors.transparent,
-                    isScrollControlled: true,
-                    content: const FoundBug(),
-                  );
-
-                  locator<AnalyticsService>().track(
-                    eventName: AnalyticsEvents.reportBugTapped,
-                  );
-                },
-                child: Text(
-                  "Report an Issue",
-                  style: TextStyles.sourceSansB.body2,
-                ),
-              ),
-            ),
-          ),
-        )
-      ],
+                      minVerticalPadding: SizeConfig.padding8,
+                      style: ListTileStyle.list,
+                      onTap: () {
+                        showFaqBottomSheet(context, model.list![index]);
+                      },
+                    ),
+                    separatorBuilder: (context, index) => Divider(
+                      color: UiConstants.kLastUpdatedTextColor,
+                      thickness: 1,
+                      endIndent: SizeConfig.padding20,
+                      indent: SizeConfig.padding20,
+                      height: SizeConfig.padding28,
+                    ),
+                  ),
+                );
+        },
+      ),
     );
   }
 

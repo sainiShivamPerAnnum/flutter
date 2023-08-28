@@ -94,14 +94,13 @@ class _ContactListWidgetState extends State<ContactListWidget> {
   }
 
   void loadNextPage() {
-    setState(() {
-      _isLoading = true;
-    });
+    // setState(() {
+    //   _isLoading = true;
+    // });
     // Simulate loading more contacts
     Future.delayed(const Duration(milliseconds: 100), () {
       setState(() {
         _displayedContactsCount += _displayLimit;
-        _isLoading = false;
       });
     });
   }

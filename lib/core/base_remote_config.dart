@@ -240,7 +240,7 @@ class BaseRemoteConfig {
   };
 
   static const Map<String, bool> _USE_NEW_URL_FOR_USEROPS = {
-    "useNewUrlUserOps": true
+    "useNewUrlUserOps": false
   };
 
   static const Map<String, bool> _SPECIAL_EFFECTS_ON_TXN_DETAILS_VIEW = {

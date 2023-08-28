@@ -14,22 +14,57 @@ import 'package:felloapp/util/extensions/rich_text_extension.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class ReferralList extends StatelessWidget {
+class ReferralList extends StatefulWidget {
   const ReferralList({
     required this.model,
     Key? key,
+    required this.scrollController,
   }) : super(key: key);
 
   final ReferralDetailsViewModel model;
+  final ScrollController scrollController;
+
+  @override
+  State<ReferralList> createState() => _ReferralListState();
+}
+
+class _ReferralListState extends State<ReferralList> {
+  final ScrollController scrollController = ScrollController();
+  bool _isBouncyScroll = false;
+
+  @override
+  void initState() {
+    super.initState();
+
+    widget.scrollController.addListener(() {
+      if (widget.scrollController.offset ==
+          widget.scrollController.position.maxScrollExtent) {
+        setState(() {
+          _isBouncyScroll = true;
+        });
+      } else {
+        if (_isBouncyScroll) {
+          setState(() {
+            _isBouncyScroll = false;
+          });
+        }
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
+      controller: scrollController,
+      physics: _isBouncyScroll
+          ? const ClampingScrollPhysics()
+          : const NeverScrollableScrollPhysics(),
       child: Container(
         color: const Color(0xFF454545).withOpacity(0.3),
-        child: model.referalList == null
+        child: widget.model.referalList == null
             ? Container(
                 width: SizeConfig.screenWidth,
                 padding: EdgeInsets.symmetric(
@@ -37,7 +72,7 @@ class ReferralList extends StatelessWidget {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const FullScreenLoader(),
+                    const FullScreenCircularLoader(),
                     SizedBox(height: SizeConfig.padding20),
                     Text(
                       'Fetching your referrals. Please wait..',
@@ -46,7 +81,7 @@ class ReferralList extends StatelessWidget {
                   ],
                 ),
               )
-            : model.referalList!.isEmpty
+            : widget.model.referalList!.isEmpty
                 ? Column(
                     children: [
                       SizedBox(height: SizeConfig.padding46),
@@ -71,7 +106,7 @@ class ReferralList extends StatelessWidget {
                       ),
                       MaterialButton(
                         onPressed: () {
-                          if (model.isShareAlreadyClicked == false) {
+                          if (widget.model.isShareAlreadyClicked == false) {
                             locator<ReferralService>().shareLink();
 
                             locator<AnalyticsService>().track(
@@ -104,12 +139,20 @@ class ReferralList extends StatelessWidget {
                       ),
                     ],
                   )
-                : model.bonusUnlockedReferalPresent(model.referalList!)
+                : widget.model
+                        .bonusUnlockedReferalPresent(widget.model.referalList!)
                     ? ReferralListView(
-                        referalList: model.referalList!,
-                        onStateChanged: () {
-                          model.refresh();
+                        referalList: widget.model.referalList!,
+                        onStateChanged: (val) {
+                          // widget.model.refresh();
+                          if (_isBouncyScroll) {
+                            setState(() {
+                              _isBouncyScroll = false;
+                            });
+                          }
                         },
+                        model: widget.model,
+                        scrollController: scrollController,
                       )
                     : Column(
                         children: [
@@ -130,14 +173,17 @@ class ReferralList extends StatelessWidget {
 }
 
 class ReferralListView extends StatefulWidget {
-  const ReferralListView({
-    required this.referalList,
-    super.key,
-    required this.onStateChanged,
-  });
+  const ReferralListView(
+      {required this.referalList,
+      super.key,
+      required this.onStateChanged,
+      required this.model,
+      required this.scrollController});
 
   final List<ReferralDetail> referalList;
   final Function onStateChanged;
+  final ReferralDetailsViewModel model;
+  final ScrollController scrollController;
 
   @override
   State<ReferralListView> createState() => _ReferralListViewState();
@@ -148,12 +194,28 @@ class _ReferralListViewState extends State<ReferralListView> {
   List<ReferralDetail> filteredReferrals = [];
   late final Debouncer _debouncer;
   bool rebuild = false;
+  bool isLoading = false;
+  int _displayedReferralsCount = 0; // Number of contacts currently displayed
 
   @override
   void initState() {
     super.initState();
     filteredReferrals = widget.referalList;
+    _displayedReferralsCount = widget.referalList.length;
     _debouncer = Debouncer(delay: const Duration(milliseconds: 700));
+
+    widget.scrollController.addListener(() {
+      // log('Scroll offset: ${widget.scrollController.offset}',
+      //     name: 'ReferralDetailsScreen');
+      if (widget.scrollController.offset ==
+          widget.scrollController.position.maxScrollExtent) {
+        loadMoreReferrals();
+      }
+
+      if (widget.scrollController.offset <= 0.0) {
+        widget.onStateChanged(false);
+      }
+    });
   }
 
   void searchUser(String query) {
@@ -162,6 +224,7 @@ class _ReferralListViewState extends State<ReferralListView> {
       // If the query is empty, display all contacts
       setState(() {
         filteredReferrals = widget.referalList;
+        _displayedReferralsCount = filteredReferrals.length;
       });
     } else {
       // Filter contacts based on the query
@@ -170,21 +233,32 @@ class _ReferralListViewState extends State<ReferralListView> {
             .where((contact) =>
                 contact.userName.toLowerCase().contains(query.toLowerCase()))
             .toList();
+
+        _displayedReferralsCount = filteredReferrals.length;
         // log('searchUser filteredReferrals: $filteredReferrals',
         //     name: 'ReferralDetailsScreen');
       });
     }
 
-    widget.onStateChanged();
+    // widget.onStateChanged();
+  }
+
+  Future<void> loadMoreReferrals() async {
+    await widget.model.fetchReferalsList(context);
+    setState(() {
+      isLoading = false;
+      _displayedReferralsCount = filteredReferrals.length;
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+      padding:
+          EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
       child: Column(
         children: [
-          SizedBox(height: SizeConfig.padding10),
+          SizedBox(height: SizeConfig.padding24),
           Row(
             crossAxisAlignment: CrossAxisAlignment.center,
             mainAxisAlignment: MainAxisAlignment.center,
@@ -272,144 +346,177 @@ class _ReferralListViewState extends State<ReferralListView> {
                 SizedBox(height: SizeConfig.padding16),
               ],
             ),
-          ListView.separated(
+          ListView.builder(
             shrinkWrap: true,
             padding: EdgeInsets.zero,
             physics: const NeverScrollableScrollPhysics(),
-            itemCount: filteredReferrals.length,
+            itemCount: _displayedReferralsCount,
             itemBuilder: (context, i) {
-              if (filteredReferrals[i].revampedInfo?.isFullyComplete ?? false) {
-                return buildCompleteReferrals(i);
+              if (i < filteredReferrals.length) {
+                if (filteredReferrals[i].revampedInfo?.isFullyComplete ??
+                    false) {
+                  return buildCompleteReferrals(i);
+                }
+                return buildIncompleteReferrals(i);
               }
-              return buildIncompleteReferrals(i);
+
+              return const SizedBox.shrink();
             },
-            separatorBuilder: (context, i) => SizedBox(
-              height: SizeConfig.padding20,
+          ),
+          if (filteredReferrals.length > _displayedReferralsCount)
+            SpinKitThreeBounce(
+              size: SizeConfig.title5,
+              color: Colors.white,
             ),
+          SizedBox(
+            height: SizeConfig.padding44,
           ),
         ],
       ),
     );
   }
 
-  Container buildIncompleteReferrals(int i) {
-    return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: SizeConfig.padding24,
-        vertical: SizeConfig.padding18,
-      ),
-      decoration: BoxDecoration(
-        color: const Color(0xFF141414),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Column(
-        children: [
-          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Text(
-                  filteredReferrals[i].userName,
-                  style: TextStyles.sourceSansSB.body2.colour(Colors.white),
+  Column buildIncompleteReferrals(int i) {
+    return Column(
+      children: [
+        Container(
+          padding: EdgeInsets.symmetric(
+            horizontal: SizeConfig.padding24,
+            vertical: SizeConfig.padding18,
+          ),
+          decoration: BoxDecoration(
+            color: const Color(0xFF141414),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Column(
+            children: [
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      filteredReferrals[i].userName,
+                      style: TextStyles.sourceSansSB.body2.colour(Colors.white),
+                    ),
+                    Text(
+                      filteredReferrals[i].revampedInfo!.subtitle!,
+                      style: TextStyles.sourceSans.body3.colour(
+                        Colors.white.withOpacity(0.44),
+                      ),
+                    ),
+                  ],
                 ),
-                Text(
-                  filteredReferrals[i].revampedInfo!.subtitle!,
-                  style: TextStyles.sourceSans.body3.colour(
-                    Colors.white.withOpacity(0.44),
+                SizedBox(
+                  width: SizeConfig.padding76,
+                  child: MaterialButton(
+                    onPressed: () {
+                      navigateToWhatsApp(filteredReferrals[i].mobile!,
+                          filteredReferrals[i].shareMsg);
+
+                      locator<AnalyticsService>().track(
+                        eventName: AnalyticsEvents.remindOnReferralCardTapped,
+                        properties: {
+                          'Status': (filteredReferrals[i]
+                                      .revampedInfo
+                                      ?.stages?[1]
+                                      .isComplete ??
+                                  false)
+                              ? 'Made First investment'
+                              : 'Signed up',
+                        },
+                      );
+                    },
+                    color: Colors.white,
+                    minWidth: SizeConfig.padding76,
+                    padding: EdgeInsets.symmetric(
+                        horizontal: SizeConfig.padding14,
+                        vertical: SizeConfig.padding8),
+                    shape: RoundedRectangleBorder(
+                      borderRadius:
+                          BorderRadius.circular(SizeConfig.roundness5),
+                    ),
+                    height: SizeConfig.padding30,
+                    child: Text(
+                      "REMIND",
+                      style: TextStyles.rajdhaniB.body3.colour(Colors.black),
+                    ),
                   ),
                 ),
-              ],
-            ),
-            SizedBox(
-              width: SizeConfig.padding76,
-              child: MaterialButton(
-                onPressed: () {
-                  navigateToWhatsApp(filteredReferrals[i].mobile!,
-                      filteredReferrals[i].shareMsg);
-
-                  locator<AnalyticsService>().track(
-                    eventName: AnalyticsEvents.remindOnReferralCardTapped,
-                    properties: {
-                      'Status': (filteredReferrals[i]
-                                  .revampedInfo
-                                  ?.stages?[1]
-                                  .isComplete ??
-                              false)
-                          ? 'Made First investment'
-                          : 'Signed up',
-                    },
-                  );
-                },
-                color: Colors.white,
-                minWidth: SizeConfig.padding76,
-                padding: EdgeInsets.symmetric(
-                    horizontal: SizeConfig.padding14,
-                    vertical: SizeConfig.padding8),
-                shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(SizeConfig.roundness5),
-                ),
-                height: SizeConfig.padding30,
-                child: Text(
-                  "REMIND",
-                  style: TextStyles.rajdhaniB.body3.colour(Colors.black),
-                ),
+              ]),
+              SizedBox(
+                height: SizeConfig.padding14,
               ),
-            ),
-          ]),
-          SizedBox(
-            height: SizeConfig.padding14,
+              RewardTrack(
+                revampedInfo: filteredReferrals[i].revampedInfo!,
+              )
+            ],
           ),
-          RewardTrack(
-            revampedInfo: filteredReferrals[i].revampedInfo!,
-          )
-        ],
-      ),
+        ),
+        SizedBox(
+          height: SizeConfig.padding24,
+        )
+      ],
     );
   }
 
   Widget buildCompleteReferrals(int i) {
-    return Container(
-      padding: EdgeInsets.symmetric(
-        horizontal: SizeConfig.padding24,
-        vertical: SizeConfig.padding18,
-      ),
-      decoration: BoxDecoration(
-        color: const Color(0xFF125459),
-        borderRadius: BorderRadius.circular(12),
-      ),
-      child: Column(
-        children: [
-          Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
-            Text(
-              filteredReferrals[i].userName,
-              style: TextStyles.sourceSansSB.body2.colour(Colors.white),
-            ),
-            Row(
-              children: [
-                CustomPaint(
-                  size: Size(SizeConfig.padding8,
-                      (SizeConfig.padding8 * 1.125).toDouble()),
-                  painter: ReferralStarCustomPainter(),
-                ),
-                SizedBox(
-                  width: SizeConfig.padding6,
-                ),
-                Text(
-                  'You earned ₹500',
-                  style: TextStyles.sourceSans.body3.colour(Colors.white),
-                )
-              ],
-            )
-          ]),
-          SizedBox(
-            height: SizeConfig.padding14,
+    return Column(
+      children: [
+        Container(
+          padding: EdgeInsets.symmetric(
+            horizontal: SizeConfig.padding24,
+            vertical: SizeConfig.padding18,
           ),
-          RewardTrack(
-            revampedInfo: filteredReferrals[i].revampedInfo!,
-          )
-        ],
-      ),
+          decoration: BoxDecoration(
+            color: const Color(0xFF125459),
+            borderRadius: BorderRadius.circular(12),
+          ),
+          child: Column(
+            children: [
+              Row(mainAxisAlignment: MainAxisAlignment.spaceBetween, children: [
+                Text(
+                  filteredReferrals[i].userName,
+                  style: TextStyles.sourceSansSB.body2.colour(Colors.white),
+                ),
+                Row(
+                  children: [
+                    CustomPaint(
+                      size: Size(SizeConfig.padding8,
+                          (SizeConfig.padding8 * 1.125).toDouble()),
+                      painter: ReferralStarCustomPainter(),
+                    ),
+                    SizedBox(
+                      width: SizeConfig.padding6,
+                    ),
+                    Text(
+                      filteredReferrals[i].revampedInfo?.subtitle ??
+                          'You earned ₹500',
+                      style: TextStyles.sourceSans.body3.colour(Colors.white),
+                    )
+                  ],
+                )
+              ]),
+              SizedBox(
+                height: SizeConfig.padding14,
+              ),
+              RewardTrack(
+                revampedInfo: filteredReferrals[i].revampedInfo!,
+              )
+            ],
+          ),
+        ),
+        SizedBox(
+          height: SizeConfig.padding24,
+        )
+      ],
     );
+  }
+
+  @override
+  void dispose() {
+    widget.scrollController.dispose();
+    _debouncer.cancel();
+    super.dispose();
   }
 }
 

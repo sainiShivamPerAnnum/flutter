@@ -71,101 +71,96 @@ class NotificationsPage extends StatelessWidget {
                                   model.notifications![index].actionUri!
                                       .isNotEmpty) {
                                 print(model.notifications![index].actionUri
-                                  .toString());
-                              AppState.delegate!.parseRoute(Uri.parse(
-                                  model.notifications![index].actionUri!));
-                            }
-                          },
-                          child: Container(
-                            color: model.notifications![index]
-                                .isHighlighted ??
-                                false
-                                ? UiConstants.primaryLight.withOpacity(0.3)
-                                : UiConstants.kBackgroundColor,
-                            padding: EdgeInsets.fromLTRB(
-                                SizeConfig.pageHorizontalMargins,
-                                SizeConfig.padding16,
-                                SizeConfig.pageHorizontalMargins,
-                                0),
-                            child: Column(
-                              children: [
-                                SizedBox(height: SizeConfig.padding12),
-                                Row(
-                                  children: [
-                                    CircleAvatar(
-                                      backgroundColor: UiConstants
-                                          .kFAQsAnswerColor
-                                          .withOpacity(0.1),
-                                      radius:
-                                      SizeConfig.notificationAvatarRadius,
-                                      child: SvgPicture.asset(
-                                        model.getNotificationAsset(model
-                                            .notifications![index].title!),
-                                        color: UiConstants.primaryColor,
-                                        height: SizeConfig.iconSize1,
-                                        fit: BoxFit.contain,
+                                    .toString());
+                                AppState.delegate!.parseRoute(Uri.parse(
+                                    model.notifications![index].actionUri!));
+                              }
+                            },
+                            child: Container(
+                              color: model.notifications![index]
+                                          .isHighlighted ??
+                                      false
+                                  ? UiConstants.primaryLight.withOpacity(0.3)
+                                  : UiConstants.kBackgroundColor,
+                              padding: EdgeInsets.fromLTRB(
+                                  SizeConfig.pageHorizontalMargins,
+                                  SizeConfig.padding16,
+                                  SizeConfig.pageHorizontalMargins,
+                                  0),
+                              child: Column(
+                                children: [
+                                  SizedBox(height: SizeConfig.padding12),
+                                  Row(
+                                    children: [
+                                      CircleAvatar(
+                                        backgroundColor: UiConstants
+                                            .kFAQsAnswerColor
+                                            .withOpacity(0.1),
+                                        radius:
+                                            SizeConfig.notificationAvatarRadius,
+                                        child: SvgPicture.asset(
+                                          model.getNotificationAsset(model
+                                              .notifications![index].title!),
+                                          color: UiConstants.primaryColor,
+                                          height: SizeConfig.iconSize1,
+                                          fit: BoxFit.contain,
+                                        ),
                                       ),
-                                    ),
-                                    SizedBox(width: SizeConfig.padding24),
-                                    Expanded(
-                                      child: Column(
-                                        crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                        mainAxisAlignment:
-                                        MainAxisAlignment.center,
-                                        children: [
-                                          Row(
-                                            crossAxisAlignment:
-                                            CrossAxisAlignment.start,
-                                            children: [
-                                              Expanded(
-                                                child: Text(
-                                                  model.notifications![index]
-                                                      .title ??
-                                                      locale.title,
-                                                  maxLines: 2,
-                                                  overflow:
-                                                  TextOverflow.ellipsis,
-                                                  style: TextStyles.body2.bold
-                                                      .colour(Colors.white),
+                                      SizedBox(width: SizeConfig.padding24),
+                                      Expanded(
+                                        child: Column(
+                                          crossAxisAlignment:
+                                              CrossAxisAlignment.start,
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.start,
+                                              children: [
+                                                Expanded(
+                                                  child: Text(
+                                                    model.notifications![index]
+                                                            .title ??
+                                                        locale.title,
+                                                    maxLines: 2,
+                                                    overflow:
+                                                        TextOverflow.ellipsis,
+                                                    style: TextStyles.body2.bold
+                                                        .colour(Colors.white),
+                                                  ),
                                                 ),
-                                              ),
-                                              SizedBox(
-                                                  width:
-                                                  SizeConfig.padding16),
-                                              Text(
-                                                DateHelper.timeAgoSinceDate(
-                                                  DateTime.fromMillisecondsSinceEpoch(model
-                                                      .notifications![
-                                                  index]
-                                                      .createdTime!
-                                                      .seconds *
-                                                      1000)
-                                                      .toString(),
+                                                SizedBox(
+                                                    width:
+                                                        SizeConfig.padding16),
+                                                Text(
+                                                  DateHelper.timeAgoSinceDate(
+                                                      model
+                                                          .notifications![index]
+                                                          .createdTime!),
+                                                  style: TextStyles.body4
+                                                      .colour(UiConstants
+                                                          .kFAQsAnswerColor)
+                                                      .letterSpace(2),
                                                 ),
-                                                style: TextStyles.body4
-                                                    .colour(UiConstants
-                                                    .kFAQsAnswerColor)
-                                                    .letterSpace(2),
-                                              ),
-                                            ],
-                                          ),
-                                          SizedBox(
-                                              height: SizeConfig.padding6),
-                                          Padding(
-                                            padding: EdgeInsets.only(
-                                                right: SizeConfig.padding28),
-                                            child: Text(
-                                              model.notifications![index]
-                                                  .subtitle ??
-                                                  locale.subTitle,
-                                              style: TextStyles.body4
-                                                  .colour(Colors.white),
+                                              ],
                                             ),
-                                          ),
-                                        ],
-                                      ),
-                                    )
+                                            SizedBox(
+                                                height: SizeConfig.padding6),
+                                            Padding(
+                                              padding: EdgeInsets.only(
+                                                  right: SizeConfig.padding28),
+                                              child: Text(
+                                                model.notifications![index]
+                                                        .subtitle ??
+                                                    locale.subTitle,
+                                                style: TextStyles.body4
+                                                    .colour(Colors.white),
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      )
                                     ],
                                   ),
                                   index != model.notifications!.length
@@ -178,11 +173,11 @@ class NotificationsPage extends StatelessWidget {
                                         )
                                       : const SizedBox.shrink(),
                                 ],
+                              ),
                             ),
                           ),
                         ),
-                  ),
-                ),
+                      ),
               ),
             ),
             if (model.isMoreNotificationsLoading)

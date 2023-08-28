@@ -153,7 +153,7 @@ class _InviteContactWidgetState extends State<InviteContactWidget>
               height: SizeConfig.padding80,
               child: Center(
                 child: Text(
-                  'Error loading contacts',
+                  'No Contacts Found',
                   style: TextStyles.sourceSans.body3
                       .colour(Colors.white.withOpacity(0.8)),
                 ),
@@ -168,7 +168,7 @@ class _InviteContactWidgetState extends State<InviteContactWidget>
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                const FullScreenLoader(),
+                const FullScreenCircularLoader(),
                 SizedBox(height: SizeConfig.padding20),
                 Text(
                   'Fetching your contacts. Please wait..',

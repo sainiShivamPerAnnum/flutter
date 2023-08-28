@@ -89,6 +89,42 @@ class Win extends StatelessWidget {
                 // const ReferralLeaderboard(),
                 //Fello News
                 FelloNewsComponent(model: model),
+                SizedBox(
+                  height: SizeConfig.padding12,
+                ),
+                // Center(
+                //   child: Container(
+                //     width: SizeConfig.screenWidth! * 0.48,
+                //     padding:
+                //         EdgeInsets.symmetric(vertical: SizeConfig.padding16),
+                //     child: OutlinedButton(
+                //       style: OutlinedButton.styleFrom(
+                //         side: const BorderSide(width: 1.0, color: Colors.white),
+                //       ),
+                //       onPressed: () {
+                //         Haptic.vibrate();
+
+                //         BaseUtil.openModalBottomSheet(
+                //           addToScreenStack: true,
+                //           enableDrag: false,
+                //           hapticVibrate: true,
+                //           isBarrierDismissible: true,
+                //           backgroundColor: Colors.transparent,
+                //           isScrollControlled: true,
+                //           content: const FoundBug(),
+                //         );
+
+                //         locator<AnalyticsService>().track(
+                //           eventName: AnalyticsEvents.reportBugTapped,
+                //         );
+                //       },
+                //       child: Text(
+                //         "Issues with the App?",
+                //         style: TextStyles.sourceSansB.body2,
+                //       ),
+                //     ),
+                //   ),
+                // ),
                 // DEV PURPOSE ONLY
                 const CacheClearWidget(),
                 SizedBox(
