@@ -129,7 +129,7 @@ class NotDecidedModalSheet extends HookWidget {
                     ),
                     SizedBox(height: SizeConfig.padding24),
                     Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      // mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
                         Text.rich(
                           TextSpan(
@@ -143,11 +143,11 @@ class NotDecidedModalSheet extends HookWidget {
                             ],
                           ),
                         ),
-                        const Icon(
-                          Icons.info_outline,
-                          color: Colors.white,
-                          size: 15,
-                        ),
+                        // const Icon(
+                        //   Icons.info_outline,
+                        //   color: Colors.white,
+                        //   size: 15,
+                        // ),
                       ],
                     ),
                     SizedBox(height: SizeConfig.padding24),

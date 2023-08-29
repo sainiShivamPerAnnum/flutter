@@ -1215,16 +1215,17 @@ class _FloPremiumTransactionsListState
               widget.key == const ValueKey('10floTxns'));
           bool showNeedHelp =
               widget.model.transactionsList[i].lbMap.hasDecidedPref ?? false;
-          log("showNeedHelp: $showNeedHelp");
 
-          bool showConfirm = false;
-          if ((_lendboxMaturityService.filteredDeposits?.isNotEmpty ?? false) &&
-              _lendboxMaturityService.filteredDeposits!.any((element) =>
-                  element.txnId == widget.model.transactionsList[i].docKey &&
-                  (element.hasConfirmed ?? true) == false)) {
-            showConfirm = true;
-          }
+          log("qwerty => ${widget.model.transactionsList[i].lbMap.hasDecidedPref}");
 
+          bool showConfirm =
+              (_lendboxMaturityService.filteredDeposits?.isNotEmpty ?? false) &&
+                  _lendboxMaturityService.filteredDeposits!.any((element) =>
+                      element.txnId ==
+                          widget.model.transactionsList[i].docKey &&
+                      (element.hasConfirmed ?? true) == false);
+
+          log("showNeedHelp: $showNeedHelp || showConfirm: $showConfirm");
           return (widget.model.transactionsList[i].lbMap.fundType ?? "")
                   .isNotEmpty
               ? InkWell(
@@ -1382,7 +1383,7 @@ class _FloPremiumTransactionsListState
                                 ),
                                 child: Text(
                                   showNeedHelp
-                                      ? "NEED HELP"
+                                      ? "NEED HELP ?"
                                       : showConfirm
                                           ? "CONFIRM"
                                           : hasUserDecided

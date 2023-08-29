@@ -42,22 +42,12 @@ class _BalloonLottieScreenState extends State<BalloonLottieScreen>
   }
 
   Future<void> _reset() async {
-    // controller?.reset();
-    // setState(() {
-    //   heightFactor = 1;
-    //   expectedKey = 1;
-    //   lineColor = const Color(0xff1ADAB7);
-    //   showWithdrawalScreen = false;
-    // });
-
     Haptic.vibrate();
-
     if (showWithdrawalScreen) {
       setState(() {
         showLoading = true;
       });
-      await lendboxMaturityService.updateInvestmentPref(lendboxMaturityService
-          .filteredDeposits![0].decisionsAvailable![0].pref!);
+      await lendboxMaturityService.updateInvestmentPref('0');
 
       //add delay to show loading
       await Future.delayed(const Duration(milliseconds: 700));
@@ -279,72 +269,71 @@ class _BalloonLottieScreenState extends State<BalloonLottieScreen>
                 ),
               ),
             ),
-          showLoading
-              ? SpinKitThreeBounce(
-                  size: SizeConfig.title5,
-                  color: Colors.white,
-                )
-              : Align(
-                  alignment: Alignment.bottomCenter,
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                            horizontal: SizeConfig.padding25,
-                            vertical: SizeConfig.padding16),
-                        child: AppPositiveBtn(
+          Align(
+            alignment: Alignment.bottomCenter,
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                Padding(
+                  padding: EdgeInsets.symmetric(
+                      horizontal: SizeConfig.padding25,
+                      vertical: SizeConfig.padding16),
+                  child: showLoading
+                      ? SpinKitThreeBounce(
+                          size: SizeConfig.title5,
+                          color: Colors.white,
+                        )
+                      : AppPositiveBtn(
                           onPressed: _reset,
                           btnText: showWithdrawalScreen
                               ? "CONFIRM WITHDRAW"
                               : "CHANGE DECISION",
                         ),
-                      ),
-                      if (showWithdrawalScreen)
-                        GestureDetector(
-                          onTap: () {
-                            Haptic.vibrate();
-                            AppState.backButtonDispatcher?.didPopRoute();
-
-                            Future.delayed(
-                              const Duration(milliseconds: 300),
-                              () {
-                                BaseUtil.openModalBottomSheet(
-                                  addToScreenStack: true,
-                                  enableDrag: false,
-                                  hapticVibrate: true,
-                                  isBarrierDismissible: false,
-                                  backgroundColor: Colors.transparent,
-                                  isScrollControlled: true,
-                                  content: ReConfirmationSheet(
-                                    depositData: lendboxMaturityService
-                                        .filteredDeposits![0],
-                                    decision:
-                                        lendboxMaturityService.userDecision,
-                                    isLendboxOldUser:
-                                        lendboxMaturityService.isLendboxOldUser,
-                                  ),
-                                );
-                              },
-                            );
-                          },
-                          child: Container(
-                            width: SizeConfig.screenWidth! * 0.75,
-                            padding: EdgeInsets.only(
-                                bottom: SizeConfig.padding26,
-                                top: SizeConfig.padding8),
-                            child: Text(
-                              'CHANGE DECISION',
-                              textAlign: TextAlign.center,
-                              style: TextStyles.rajdhaniSB.body0.colour(
-                                const Color(0xFF46BDA4),
-                              ),
-                            ),
-                          ),
-                        )
-                    ],
-                  ),
                 ),
+                if (showWithdrawalScreen)
+                  GestureDetector(
+                    onTap: () {
+                      Haptic.vibrate();
+                      AppState.backButtonDispatcher?.didPopRoute();
+
+                      Future.delayed(
+                        const Duration(milliseconds: 300),
+                        () {
+                          BaseUtil.openModalBottomSheet(
+                            addToScreenStack: true,
+                            enableDrag: false,
+                            hapticVibrate: true,
+                            isBarrierDismissible: false,
+                            backgroundColor: Colors.transparent,
+                            isScrollControlled: true,
+                            content: ReConfirmationSheet(
+                              depositData:
+                                  lendboxMaturityService.filteredDeposits![0],
+                              decision: lendboxMaturityService.userDecision,
+                              isLendboxOldUser:
+                                  lendboxMaturityService.isLendboxOldUser,
+                            ),
+                          );
+                        },
+                      );
+                    },
+                    child: Container(
+                      width: SizeConfig.screenWidth! * 0.75,
+                      padding: EdgeInsets.only(
+                          bottom: SizeConfig.padding26,
+                          top: SizeConfig.padding8),
+                      child: Text(
+                        'CHANGE DECISION',
+                        textAlign: TextAlign.center,
+                        style: TextStyles.rajdhaniSB.body0.colour(
+                          const Color(0xFF46BDA4),
+                        ),
+                      ),
+                    ),
+                  )
+              ],
+            ),
+          ),
         ],
       ),
     );
