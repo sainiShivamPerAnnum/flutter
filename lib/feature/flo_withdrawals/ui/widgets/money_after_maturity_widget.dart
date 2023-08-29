@@ -14,8 +14,8 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
 
-class ReConfirmationSheet extends HookWidget {
-  const ReConfirmationSheet(
+class MoneyAfterMaturityWidget extends HookWidget {
+  const MoneyAfterMaturityWidget(
       {super.key,
       required this.depositData,
       required this.decision,
@@ -70,28 +70,36 @@ class ReConfirmationSheet extends HookWidget {
                 ),
               ],
             ),
-            SizedBox(height: SizeConfig.padding8),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
-                Text('Are you sure?',
-                    style: TextStyles.rajdhaniSB.body0.colour(Colors.white))
+                Text.rich(
+                  TextSpan(
+                    text: "What do you want to do ",
+                    style: TextStyles.sourceSans.body2,
+                    children: [
+                      TextSpan(
+                        text: "after maturity",
+                        style: TextStyles.sourceSansB.body2,
+                      ),
+                    ],
+                  ),
+                ),
+                // const Icon(
+                //   Icons.info_outline,
+                //   color: Colors.white,
+                //   size: 15,
+                // ),
               ],
-            ),
-            SizedBox(height: SizeConfig.padding8),
-            Text(
-              'You are missing out on earning 2% extra\nreturns on your investment',
-              textAlign: TextAlign.center,
-              style: TextStyles.sourceSans.body3.colour(Colors.white),
             ),
             SizedBox(height: SizeConfig.padding24),
             OptionDecisionContainer(
               optionIndex: 1,
-              title: depositData.decisionsAvailable![0].title!,
-              description: depositData.decisionsAvailable![0].subtitle!,
-              promoText: depositData.decisionsAvailable![0].footer!.text!,
-              promotAsset: depositData.decisionsAvailable![0].footer!.icon!,
-              recommendedText: depositData.decisionsAvailable![0].topChip,
+              title: depositData.decisionsAvailable![2].title!,
+              description: depositData.decisionsAvailable![2].subtitle!,
+              promoText: depositData.decisionsAvailable![2].footer!.text!,
+              promotAsset: depositData.decisionsAvailable![2].footer!.icon!,
+              recommendedText: depositData.decisionsAvailable![2].topChip,
               promoTextBoldColor: const Color(0xFF61E3C4),
               promoContainerColor: const Color(0xFF1ADAB7).withOpacity(0.35),
               isSelected: selectedOption.value == 1,
@@ -102,10 +110,10 @@ class ReConfirmationSheet extends HookWidget {
             ),
             OptionDecisionContainer(
               optionIndex: 2,
-              title: depositData.decisionsAvailable![1].title!,
-              description: depositData.decisionsAvailable![1].subtitle!,
-              promoText: depositData.decisionsAvailable![1].footer!.text!,
-              promotAsset: depositData.decisionsAvailable![1].footer!.icon!,
+              title: depositData.decisionsAvailable![0].title!,
+              description: depositData.decisionsAvailable![0].subtitle!,
+              promoText: depositData.decisionsAvailable![0].footer!.text!,
+              promotAsset: depositData.decisionsAvailable![0].footer!.icon!,
               promoContainerColor: const Color(0xFFA4371A).withOpacity(0.6),
               promoTextBoldColor: const Color(0xFFF79780),
               isSelected: selectedOption.value == 2,
@@ -144,7 +152,7 @@ class ReConfirmationSheet extends HookWidget {
 
                         await locator<LendboxMaturityService>()
                             .updateInvestmentPref(
-                                depositData.decisionsAvailable![0].pref!);
+                                depositData.decisionsAvailable![2].pref!);
 
                         // add delay
                         await Future.delayed(const Duration(milliseconds: 700));
@@ -192,7 +200,7 @@ class ReConfirmationSheet extends HookWidget {
 
                         await locator<LendboxMaturityService>()
                             .updateInvestmentPref(
-                            depositData.decisionsAvailable![1].pref!);
+                                depositData.decisionsAvailable![0].pref!);
 
                         AppState.backButtonDispatcher?.didPopRoute();
 

@@ -131,8 +131,15 @@ class OtherOptionsModalSheet extends HookWidget {
                       style: TextStyles.rajdhaniB.body1.colour(Colors.black),
                     ),
                     onPressed: () async {
-                      showLoading.value = true;
                       Haptic.vibrate();
+
+                      if (selectedOption.value == -1) {
+                        BaseUtil.showNegativeAlert("Please select an option",
+                            "proceed by choosing an option");
+                        return;
+                      }
+
+                      showLoading.value = true;
 
                       if (selectedOption.value == 1) {
                         await locator<LendboxMaturityService>()

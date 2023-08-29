@@ -234,6 +234,13 @@ class NotDecidedModalSheet extends HookWidget {
                             onPressed: () async {
                               Haptic.vibrate();
 
+                              if (selectedOption.value == -1) {
+                                BaseUtil.showNegativeAlert(
+                                    "Please select an option",
+                                    "proceed by choosing an option");
+                                return;
+                              }
+
                               if (selectedOption.value == 1) {
                                 showLoading.value = true;
                                 await locator<LendboxMaturityService>()

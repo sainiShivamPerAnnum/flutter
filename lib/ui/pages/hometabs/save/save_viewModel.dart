@@ -637,52 +637,52 @@ class FloPendingAction extends StatelessWidget {
               ),
             );
           },
-          child: Transform.translate(
-            offset: Offset(-SizeConfig.padding14, -SizeConfig.padding14),
-            child: Stack(
-              children: [
-                AnimatedContainer(
-                  duration: const Duration(milliseconds: 700),
-                  curve: Curves.bounceInOut,
-                  margin: EdgeInsets.only(left: SizeConfig.padding24),
-                  child: CustomPaint(
+          child: AnimatedContainer(
+            duration: const Duration(milliseconds: 700),
+            curve: Curves.easeIn,
+            margin: EdgeInsets.only(left: SizeConfig.padding24),
+            child: Transform.translate(
+              offset: Offset(-SizeConfig.padding14, -SizeConfig.padding14),
+              child: Stack(
+                children: [
+                  CustomPaint(
                     size: Size(SizeConfig.screenWidth!,
                         (SizeConfig.screenWidth! * 0.18).toDouble()),
                     painter: CustomToolTipPainter(),
                   ),
-                ),
-                Positioned(
-                  top: SizeConfig.padding36 + SizeConfig.padding1,
-                  left: SizeConfig.padding38,
-                  child: SizedBox(
-                    width: SizeConfig.screenWidth! * 0.9,
-                    child: Row(
-                      children: [
-                        Text(
-                          'Pending actions on ${model.pendingMaturityCount} Flo transactions',
-                          style:
-                              TextStyles.sourceSans.body2.colour(Colors.white),
-                        ),
-                        const Spacer(),
-                        Container(
-                          width: SizeConfig.padding20,
-                          height: SizeConfig.padding20,
-                          decoration: const ShapeDecoration(
-                            color: Color(0xFF1ADAB7),
-                            shape: OvalBorder(),
+                  Positioned(
+                    top: SizeConfig.padding36 + SizeConfig.padding1,
+                    left: SizeConfig.padding18,
+                    child: SizedBox(
+                      width: SizeConfig.screenWidth! * 0.9,
+                      child: Row(
+                        children: [
+                          Text(
+                            'Pending actions on ${model.pendingMaturityCount} Flo transactions',
+                            style: TextStyles.sourceSans.body2
+                                .colour(Colors.white),
                           ),
-                          child: Icon(
-                            Icons.arrow_forward_ios_rounded,
-                            size: SizeConfig.padding12,
-                            color: Colors.black,
+                          const Spacer(),
+                          Container(
+                            width: SizeConfig.padding20,
+                            height: SizeConfig.padding20,
+                            decoration: const ShapeDecoration(
+                              color: Color(0xFF1ADAB7),
+                              shape: OvalBorder(),
+                            ),
+                            child: Icon(
+                              Icons.arrow_forward_ios_rounded,
+                              size: SizeConfig.padding12,
+                              color: Colors.black,
+                            ),
                           ),
-                        ),
-                        SizedBox(width: SizeConfig.padding16)
-                      ],
+                          SizedBox(width: SizeConfig.padding16)
+                        ],
+                      ),
                     ),
                   ),
-                ),
-              ],
+                ],
+              ),
             ),
           ),
         );

@@ -3,7 +3,7 @@ import 'dart:developer';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/service/lendbox_maturity_service.dart';
-import 'package:felloapp/feature/flo_withdrawals/ui/reconfirmation_sheet.dart';
+import 'package:felloapp/feature/flo_withdrawals/ui/widgets/money_after_maturity_widget.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
@@ -69,7 +69,7 @@ class _BalloonLottieScreenState extends State<BalloonLottieScreen>
             isBarrierDismissible: false,
             backgroundColor: Colors.transparent,
             isScrollControlled: true,
-            content: ReConfirmationSheet(
+            content: MoneyAfterMaturityWidget(
               depositData: lendboxMaturityService.filteredDeposits![0],
               decision: lendboxMaturityService.userDecision,
               isLendboxOldUser: lendboxMaturityService.isLendboxOldUser,
@@ -105,7 +105,7 @@ class _BalloonLottieScreenState extends State<BalloonLottieScreen>
         expectedKey = 1;
       }
     } else {
-      BaseUtil.showPositiveAlert("Tap in the correct order!", 'OK');
+      BaseUtil.showPositiveAlert("Please Tap on the top most balloon", ' ');
     }
   }
 
@@ -306,7 +306,7 @@ class _BalloonLottieScreenState extends State<BalloonLottieScreen>
                             isBarrierDismissible: false,
                             backgroundColor: Colors.transparent,
                             isScrollControlled: true,
-                            content: ReConfirmationSheet(
+                            content: MoneyAfterMaturityWidget(
                               depositData:
                                   lendboxMaturityService.filteredDeposits![0],
                               decision: lendboxMaturityService.userDecision,

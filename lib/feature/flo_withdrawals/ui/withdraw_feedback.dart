@@ -1,3 +1,4 @@
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -121,6 +122,13 @@ class WithdrawalFeedback extends HookWidget {
                 ),
                 onPressed: () {
                   Haptic.vibrate();
+
+                  if (selectedOption.value == -1) {
+                    BaseUtil.showNegativeAlert("Please select an option",
+                        "proceed by choosing an option");
+                    return;
+                  }
+
                   AppState.backButtonDispatcher!.didPopRoute();
                   if (locator<BankAndPanService>().isBankDetailsAdded) {
                     AppState.delegate!.appState.currentAction = PageAction(

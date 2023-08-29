@@ -14,6 +14,7 @@ class MaturityWithdrawalSuccessView extends StatelessWidget {
   Widget build(BuildContext context) {
     S locale = S.of(context);
     return Scaffold(
+      backgroundColor: UiConstants.kBackgroundColor,
       body: Padding(
         padding: EdgeInsets.symmetric(vertical: SizeConfig.padding32),
         child: Column(
