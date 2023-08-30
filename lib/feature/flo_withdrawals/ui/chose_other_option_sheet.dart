@@ -37,6 +37,15 @@ class OtherOptionsModalSheet extends HookWidget {
     final selectedOption = useState(-1);
     final showLoading = useState(false);
     final val = useState(decision == UserDecision.WITHDRAW ? 0 : 1);
+    final isEnable = useState(false);
+
+    useEffect(() {
+      if (selectedOption.value != -1) {
+        isEnable.value = true;
+      } else {
+        isEnable.value = false;
+      }
+    }, [selectedOption.value]);
 
     return WillPopScope(
       onWillPop: () async {
@@ -119,8 +128,8 @@ class OtherOptionsModalSheet extends HookWidget {
                     color: Colors.white,
                   )
                 : MaterialButton(
-                    minWidth: SizeConfig.screenWidth,
-                    color: Colors.white,
+                minWidth: SizeConfig.screenWidth,
+                    color: Colors.white.withOpacity(isEnable.value ? 1 : 0.5),
                     shape: RoundedRectangleBorder(
                       borderRadius:
                           BorderRadius.circular(SizeConfig.roundness5),

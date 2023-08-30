@@ -18,10 +18,11 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
 
 class MoneyAfterMaturityWidget extends HookWidget {
-  const MoneyAfterMaturityWidget({super.key,
-    required this.depositData,
-    required this.decision,
-    required this.isLendboxOldUser});
+  const MoneyAfterMaturityWidget(
+      {super.key,
+      required this.depositData,
+      required this.decision,
+      required this.isLendboxOldUser});
 
   final Deposit depositData;
   final UserDecision decision;
@@ -38,6 +39,15 @@ class MoneyAfterMaturityWidget extends HookWidget {
     final showLoading = useState(false);
     int optionIndex1 = decision == UserDecision.WITHDRAW ? 2 : 0;
     int optionIndex2 = decision == UserDecision.WITHDRAW ? 0 : 1;
+    final isEnable = useState(false);
+
+    useEffect(() {
+      if (selectedOption.value != -1) {
+        isEnable.value = true;
+      } else {
+        isEnable.value = false;
+      }
+    }, [selectedOption.value]);
 
     return WillPopScope(
       onWillPop: () async {
@@ -135,31 +145,31 @@ class MoneyAfterMaturityWidget extends HookWidget {
             SizedBox(height: SizeConfig.padding16),
             showLoading.value
                 ? SpinKitThreeBounce(
-              size: SizeConfig.title5,
-              color: Colors.white,
-            )
+                    size: SizeConfig.title5,
+                    color: Colors.white,
+                  )
                 : MaterialButton(
-                minWidth: SizeConfig.screenWidth,
-                color: Colors.white,
-                shape: RoundedRectangleBorder(
-                  borderRadius:
-                  BorderRadius.circular(SizeConfig.roundness5),
-                ),
-                height: SizeConfig.padding44,
-                child: Text(
-                  "Done",
-                  style: TextStyles.rajdhaniB.body1.colour(Colors.black),
-                ),
-                onPressed: () async {
-                  if (selectedOption.value == -1) {
-                    BaseUtil.showNegativeAlert("Please select an option",
-                        "proceed by choosing an option");
-                    return;
-                  }
-                  showLoading.value = true;
+                    minWidth: SizeConfig.screenWidth,
+                    color: Colors.white.withOpacity(isEnable.value ? 1 : 0.5),
+                    shape: RoundedRectangleBorder(
+                      borderRadius:
+                          BorderRadius.circular(SizeConfig.roundness5),
+                    ),
+                    height: SizeConfig.padding44,
+                    child: Text(
+                      "Done",
+                      style: TextStyles.rajdhaniB.body1.colour(Colors.black),
+                    ),
+                    onPressed: () async {
+                      if (selectedOption.value == -1) {
+                        BaseUtil.showNegativeAlert("Please select an option",
+                            "proceed by choosing an option");
+                        return;
+                      }
+                      showLoading.value = true;
 
-                  if (selectedOption.value == 1) {
-                    Haptic.vibrate();
+                      if (selectedOption.value == 1) {
+                        Haptic.vibrate();
 
                         await locator<LendboxMaturityService>()
                             .updateInvestmentPref(depositData
@@ -182,17 +192,17 @@ class MoneyAfterMaturityWidget extends HookWidget {
                                 .onDecisionMade!.investedAmt
                                 .toString(),
                             maturityAmount: depositData.decisionsAvailable![0]
-                            .onDecisionMade!.maturityAmt
-                            .toString(),
-                        maturityDate: formatDate(depositData
-                            .decisionsAvailable![0]
-                            .onDecisionMade!
-                            .maturityOn!),
-                        reInvestmentDate: formatDate(depositData
-                            .decisionsAvailable![0]
-                            .onDecisionMade!
-                            .investedOn!),
-                        fdDuration: depositData.decisionsAvailable![0]
+                                .onDecisionMade!.maturityAmt
+                                .toString(),
+                            maturityDate: formatDate(depositData
+                                .decisionsAvailable![0]
+                                .onDecisionMade!
+                                .maturityOn!),
+                            reInvestmentDate: formatDate(depositData
+                                .decisionsAvailable![0]
+                                .onDecisionMade!
+                                .investedOn!),
+                            fdDuration: depositData.decisionsAvailable![0]
                                 .onDecisionMade!.fdDuration!,
                             roiPerc: depositData.decisionsAvailable![0]
                                 .onDecisionMade!.roiPerc!,
@@ -206,8 +216,8 @@ class MoneyAfterMaturityWidget extends HookWidget {
                         ));
                       }
 
-                  if (selectedOption.value == 2) {
-                    Haptic.vibrate();
+                      if (selectedOption.value == 2) {
+                        Haptic.vibrate();
 
                         if (decision == UserDecision.WITHDRAW) {
                           await locator<LendboxMaturityService>()
@@ -266,7 +276,7 @@ class MoneyAfterMaturityWidget extends HookWidget {
                           content: const WithdrawalFeedback(),
                         );
                       }
-                }),
+                    }),
           ],
         ),
       ),

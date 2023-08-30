@@ -16,6 +16,15 @@ class WithdrawalFeedback extends HookWidget {
   @override
   Widget build(BuildContext context) {
     final selectedOption = useState(-1);
+    final isEnable = useState(false);
+
+    useEffect(() {
+      if (selectedOption.value != -1) {
+        isEnable.value = true;
+      } else {
+        isEnable.value = false;
+      }
+    }, [selectedOption.value]);
 
     return WillPopScope(
       onWillPop: () async {
@@ -111,7 +120,7 @@ class WithdrawalFeedback extends HookWidget {
             SizedBox(height: SizeConfig.padding64),
             MaterialButton(
                 minWidth: SizeConfig.screenWidth,
-                color: Colors.white,
+                color: Colors.white.withOpacity(isEnable.value ? 1 : 0.5),
                 shape: RoundedRectangleBorder(
                   borderRadius: BorderRadius.circular(SizeConfig.roundness5),
                 ),

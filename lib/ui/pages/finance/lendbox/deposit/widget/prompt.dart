@@ -594,6 +594,7 @@ class _MaturityPrefModalSheetState extends State<MaturityPrefModalSheet> {
   String maturityPref = "NA";
   int _selectedOption = -1;
   bool _isLoading = false;
+  bool isEnable = false;
 
   @override
   void initState() {
@@ -615,6 +616,7 @@ class _MaturityPrefModalSheetState extends State<MaturityPrefModalSheet> {
   set selectedOption(int value) {
     setState(() {
       _selectedOption = value;
+      isEnable = true;
     });
   }
 
@@ -742,88 +744,61 @@ class _MaturityPrefModalSheetState extends State<MaturityPrefModalSheet> {
             SizedBox(
               height: SizeConfig.padding8,
             ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding6),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  MaterialButton(
-                    minWidth: SizeConfig.screenWidth! * 0.43,
-                    height: SizeConfig.padding40,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5),
-                      side: const BorderSide(color: Colors.white),
-                    ),
-                    padding: const EdgeInsets.symmetric(
-                      vertical: 10,
-                    ),
-                    // color: Colors.white,
-                    onPressed: () {
-                      AppState.backButtonDispatcher?.didPopRoute();
-                    },
-                    child: Center(
-                      child: Text(
-                        'Decide later'.toUpperCase(),
-                        style: TextStyles.rajdhaniB.body1.colour(Colors.white),
-                      ),
-                    ),
-                  ),
-                  MaterialButton(
-                    height: SizeConfig.padding40,
-                    minWidth: SizeConfig.screenWidth! * 0.43,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5)),
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                    color: Colors.white,
-                    onPressed: () async {
-                      if (selectedOption == -1) {
-                        BaseUtil.showNegativeAlert("Please select an option",
-                            "proceed by choosing an option");
-                        return;
-                      }
+            Container(
+              margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding16),
+              child: MaterialButton(
+                height: SizeConfig.padding40,
+                minWidth: SizeConfig.screenWidth!,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(5)),
+                padding: const EdgeInsets.symmetric(vertical: 10),
+                color: Colors.white.withOpacity(isEnable ? 1 : 0.5),
+                onPressed: () async {
+                  if (selectedOption == -1) {
+                    BaseUtil.showNegativeAlert("Please select an option",
+                        "proceed by choosing an option");
+                    return;
+                  }
 
-                      if (!isLoading) {
-                        isLoading = true;
+                  if (!isLoading) {
+                    isLoading = true;
 
-                        final LendboxMaturityService maturityService =
-                            locator<LendboxMaturityService>();
+                    final LendboxMaturityService maturityService =
+                        locator<LendboxMaturityService>();
 
-                        bool? hasConfirmed = maturityService.filteredDeposits
-                            ?.any((element) => element.txnId == widget.txnId);
+                    bool? hasConfirmed = maturityService.filteredDeposits
+                        ?.any((element) => element.txnId == widget.txnId);
 
-                        final res = await locator<LendboxRepo>()
-                            .updateUserInvestmentPreference(
-                                widget.txnId, maturityPref,
-                                hasConfirmed: hasConfirmed ?? false);
-                        if (res.isSuccess()) {
-                          unawaited(
-                              AppState.backButtonDispatcher!.didPopRoute());
-                          locator<LendboxMaturityService>().init();
-                          BaseUtil.showPositiveAlert(
-                              "You preference recorded successfully",
-                              "We'll contact you if required");
-                        } else {
-                          BaseUtil.showNegativeAlert(
-                              res.errorMessage, "Please try again");
-                        }
-                      }
-                    },
-                    child: Center(
-                      child: isLoading
-                          ? SpinKitThreeBounce(
-                              color: Colors.black,
-                              size: SizeConfig.padding24,
-                            )
-                          : Text(
-                              'Proceed'.toUpperCase(),
-                              style: TextStyles.rajdhaniB.body1
-                                  .colour(Colors.black),
-                            ),
-                    ),
-                  ),
-                ],
+                    final res = await locator<LendboxRepo>()
+                        .updateUserInvestmentPreference(
+                            widget.txnId, maturityPref,
+                            hasConfirmed: hasConfirmed ?? false);
+                    if (res.isSuccess()) {
+                      unawaited(AppState.backButtonDispatcher!.didPopRoute());
+                      locator<LendboxMaturityService>().init();
+                      BaseUtil.showPositiveAlert(
+                          "You preference recorded successfully",
+                          "We'll contact you if required");
+                    } else {
+                      BaseUtil.showNegativeAlert(
+                          res.errorMessage, "Please try again");
+                    }
+                  }
+                },
+                child: Center(
+                  child: isLoading
+                      ? SpinKitThreeBounce(
+                          color: Colors.black,
+                          size: SizeConfig.padding24,
+                        )
+                      : Text(
+                          'Proceed'.toUpperCase(),
+                          style:
+                              TextStyles.rajdhaniB.body1.colour(Colors.black),
+                        ),
+                ),
               ),
-            )
+            ),
           ],
         ),
       ),
