@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math' as math;
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
@@ -565,42 +566,42 @@ class QuickLinks extends StatelessWidget {
               quickLinks.length,
               (index) => Expanded(
                 child: GestureDetector(
-                      onTap: () {
-                        Haptic.vibrate();
-                        AppState.delegate!
-                            .parseRoute(Uri.parse(quickLinks[index].deeplink));
-                        locator<AnalyticsService>().track(
-                          eventName: AnalyticsEvents.iconTrayTapped,
-                          properties: {'icon': quickLinks[index].name},
-                        );
-                      },
-                      child: Column(
-                        children: [
-                          CircleAvatar(
-                            backgroundColor: quickLinks[index].color,
-                            radius: SizeConfig.roundness32,
-                            child: SvgPicture.asset(
-                              quickLinks[index].asset,
-                              width: quickLinks[index].asset == Assets.goldAsset ||
+                  onTap: () {
+                    Haptic.vibrate();
+                    AppState.delegate!
+                        .parseRoute(Uri.parse(quickLinks[index].deeplink));
+                    locator<AnalyticsService>().track(
+                      eventName: AnalyticsEvents.iconTrayTapped,
+                      properties: {'icon': quickLinks[index].name},
+                    );
+                  },
+                  child: Column(
+                    children: [
+                      CircleAvatar(
+                        backgroundColor: quickLinks[index].color,
+                        radius: SizeConfig.roundness32,
+                        child: SvgPicture.asset(
+                          quickLinks[index].asset,
+                          width: quickLinks[index].asset == Assets.goldAsset ||
                                   quickLinks[index].asset == Assets.floAsset
-                                  ? SizeConfig.padding56
-                                  : SizeConfig.padding36,
-                              height: quickLinks[index].asset == Assets.goldAsset ||
+                              ? SizeConfig.padding56
+                              : SizeConfig.padding36,
+                          height: quickLinks[index].asset == Assets.goldAsset ||
                                   quickLinks[index].asset == Assets.floAsset
-                                  ? SizeConfig.padding56
-                                  : SizeConfig.padding36,
-                            ),
-                          ),
-                          SizedBox(height: SizeConfig.padding8),
-                          Text(
-                            quickLinks[index].name,
-                            style:
-                            TextStyles.sourceSansSB.body3.colour(Colors.white),
-                          )
-                        ],
+                              ? SizeConfig.padding56
+                              : SizeConfig.padding36,
+                        ),
                       ),
-                    ),
+                      SizedBox(height: SizeConfig.padding8),
+                      Text(
+                        quickLinks[index].name,
+                        style:
+                            TextStyles.sourceSansSB.body3.colour(Colors.white),
+                      )
+                    ],
                   ),
+                ),
+              ),
             ),
           ),
         ),
@@ -610,10 +611,32 @@ class QuickLinks extends StatelessWidget {
   }
 }
 
-class FloPendingAction extends StatelessWidget {
+class FloPendingAction extends StatefulWidget {
   const FloPendingAction({
     super.key,
   });
+
+  @override
+  State<FloPendingAction> createState() => _FloPendingActionState();
+}
+
+class _FloPendingActionState extends State<FloPendingAction>
+    with SingleTickerProviderStateMixin {
+  AnimationController? animationController;
+
+  @override
+  void initState() {
+    super.initState();
+    animationController = AnimationController(
+        vsync: this, duration: const Duration(milliseconds: 500));
+    animationController?.addListener(listener);
+  }
+
+  void listener() {
+    if (animationController?.status == AnimationStatus.completed) {
+      animationController?.reset();
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -621,74 +644,90 @@ class FloPendingAction extends StatelessWidget {
       if (model.pendingMaturityCount > 0 &&
           (model.filteredDeposits != null &&
               model.filteredDeposits?[0] != null)) {
-        return GestureDetector(
-          onTap: () {
-            Haptic.vibrate();
-            BaseUtil.openModalBottomSheet(
-              addToScreenStack: true,
-              enableDrag: false,
-              hapticVibrate: true,
-              isBarrierDismissible: false,
-              backgroundColor: Colors.transparent,
-              isScrollControlled: true,
-              content: ReInvestmentSheet(
-                decision: model.userDecision,
-                depositData: model.filteredDeposits![0],
-              ),
-            );
-          },
-          child: AnimatedContainer(
-            duration: const Duration(milliseconds: 700),
-            curve: Curves.easeIn,
-            margin: EdgeInsets.only(left: SizeConfig.padding24),
-            child: Transform.translate(
-              offset: Offset(-SizeConfig.padding14, -SizeConfig.padding14),
-              child: Stack(
-                children: [
-                  CustomPaint(
-                    size: Size(SizeConfig.screenWidth!,
-                        (SizeConfig.screenWidth! * 0.18).toDouble()),
-                    painter: CustomToolTipPainter(),
-                  ),
-                  Positioned(
-                    top: SizeConfig.padding36 + SizeConfig.padding1,
-                    left: SizeConfig.padding18,
-                    child: SizedBox(
-                      width: SizeConfig.screenWidth! * 0.9,
-                      child: Row(
+        animationController?.forward();
+        return AnimatedBuilder(
+            animation: animationController!,
+            builder: (context, _) {
+              final sineValue =
+                  math.sin(3 * 2 * math.pi * animationController!.value);
+              return Transform.translate(
+                offset: Offset(sineValue * 10, 0),
+                child: GestureDetector(
+                  onTap: () {
+                    Haptic.vibrate();
+                    BaseUtil.openModalBottomSheet(
+                      addToScreenStack: true,
+                      enableDrag: false,
+                      hapticVibrate: true,
+                      isBarrierDismissible: false,
+                      backgroundColor: Colors.transparent,
+                      isScrollControlled: true,
+                      content: ReInvestmentSheet(
+                        decision: model.userDecision,
+                        depositData: model.filteredDeposits![0],
+                      ),
+                    );
+                  },
+                  child: Container(
+                    margin: EdgeInsets.only(left: SizeConfig.padding24),
+                    height: SizeConfig.padding74,
+                    child: Transform.translate(
+                      offset:
+                          Offset(-SizeConfig.padding14, -SizeConfig.padding14),
+                      child: Stack(
                         children: [
-                          Text(
-                            'Pending actions on ${model.pendingMaturityCount} Flo transactions',
-                            style: TextStyles.sourceSans.body2
-                                .colour(Colors.white),
+                          CustomPaint(
+                            size: Size(SizeConfig.screenWidth!,
+                                (SizeConfig.screenWidth! * 0.18).toDouble()),
+                            painter: CustomToolTipPainter(),
                           ),
-                          const Spacer(),
-                          Container(
-                            width: SizeConfig.padding20,
-                            height: SizeConfig.padding20,
-                            decoration: const ShapeDecoration(
-                              color: Color(0xFF1ADAB7),
-                              shape: OvalBorder(),
-                            ),
-                            child: Icon(
-                              Icons.arrow_forward_ios_rounded,
-                              size: SizeConfig.padding12,
-                              color: Colors.black,
+                          Positioned(
+                            top: SizeConfig.padding36 + SizeConfig.padding1,
+                            left: SizeConfig.padding18,
+                            child: SizedBox(
+                              width: SizeConfig.screenWidth! * 0.9,
+                              child: Row(
+                                children: [
+                                  Text(
+                                    'Pending actions on ${model.pendingMaturityCount} Flo transactions',
+                                    style: TextStyles.sourceSans.body2
+                                        .colour(Colors.white),
+                                  ),
+                                  const Spacer(),
+                                  Container(
+                                    width: SizeConfig.padding20,
+                                    height: SizeConfig.padding20,
+                                    decoration: const ShapeDecoration(
+                                      color: Color(0xFF1ADAB7),
+                                      shape: OvalBorder(),
+                                    ),
+                                    child: Icon(
+                                      Icons.arrow_forward_ios_rounded,
+                                      size: SizeConfig.padding12,
+                                      color: Colors.black,
+                                    ),
+                                  ),
+                                  SizedBox(width: SizeConfig.padding16)
+                                ],
+                              ),
                             ),
                           ),
-                          SizedBox(width: SizeConfig.padding16)
                         ],
                       ),
                     ),
                   ),
-                ],
-              ),
-            ),
-          ),
-        );
+                ),
+              );
+            });
       }
       return const SizedBox.shrink();
     });
+  }
+
+  @override
+  void dispose() {
+    animationController?.dispose();
+    super.dispose();
   }
 }
 

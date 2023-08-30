@@ -4,6 +4,7 @@ import 'dart:async';
 import 'dart:math';
 
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -227,13 +228,14 @@ class SlideActionState extends State<SlideAction>
                                       decoration: ShapeDecoration(
                                         gradient: LinearGradient(
                                           begin: const Alignment(0.00, -1.00),
-                                          end: const Alignment(0, 1),
+                                          end: const Alignment(0, 2),
                                           colors: [
                                             const Color(0xFF00EAC2),
                                             const Color(0xFF43544F)
-                                                .withOpacity(0.8),
+                                                .withOpacity(0.6),
                                           ],
                                         ),
+                                        // color: Color(0xFF00EAC2),
                                         shape: const OvalBorder(),
                                       ),
                                       padding: EdgeInsets.all(
@@ -243,13 +245,15 @@ class SlideActionState extends State<SlideAction>
                                             ? -pi * _progress
                                             : 0,
                                         child: Center(
-                                          child: widget.sliderButtonIcon ??
-                                              SvgPicture.asset(
-                                                Assets.chevRonRightArrow,
-                                                color: Colors.black,
-                                                height:
-                                                    widget.sliderButtonIconSize,
-                                              ),
+                                          child: Transform.scale(
+                                            scale: 1.3,
+                                            child: widget.sliderButtonIcon ??
+                                                SvgPicture.asset(
+                                                  Assets.chevRonRightArrow,
+                                                  color: Colors.black,
+                                                  height: SizeConfig.padding24,
+                                                ),
+                                          ),
                                         ),
                                       ),
                                     ),
