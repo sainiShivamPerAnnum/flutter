@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/lendbox_maturity_response.dart';
 import 'package:felloapp/core/service/lendbox_maturity_service.dart';
@@ -5,6 +7,7 @@ import 'package:felloapp/feature/flo_withdrawals/ui/reinvestment_sheet.dart';
 import 'package:felloapp/feature/flo_withdrawals/ui/succesful_deposit_sheet.dart';
 import 'package:felloapp/feature/flo_withdrawals/ui/success_8_moved_sheet.dart';
 import 'package:felloapp/feature/flo_withdrawals/ui/widgets/flo_option_decision_container.dart';
+import 'package:felloapp/feature/flo_withdrawals/ui/withdraw_feedback.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
@@ -15,11 +18,10 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:intl/intl.dart';
 
 class MoneyAfterMaturityWidget extends HookWidget {
-  const MoneyAfterMaturityWidget(
-      {super.key,
-      required this.depositData,
-      required this.decision,
-      required this.isLendboxOldUser});
+  const MoneyAfterMaturityWidget({super.key,
+    required this.depositData,
+    required this.decision,
+    required this.isLendboxOldUser});
 
   final Deposit depositData;
   final UserDecision decision;
@@ -34,6 +36,8 @@ class MoneyAfterMaturityWidget extends HookWidget {
   Widget build(BuildContext context) {
     final selectedOption = useState(-1);
     final showLoading = useState(false);
+    int optionIndex1 = decision == UserDecision.WITHDRAW ? 2 : 0;
+    int optionIndex2 = decision == UserDecision.WITHDRAW ? 0 : 1;
 
     return WillPopScope(
       onWillPop: () async {
@@ -95,11 +99,15 @@ class MoneyAfterMaturityWidget extends HookWidget {
             SizedBox(height: SizeConfig.padding24),
             OptionDecisionContainer(
               optionIndex: 1,
-              title: depositData.decisionsAvailable![2].title!,
-              description: depositData.decisionsAvailable![2].subtitle!,
-              promoText: depositData.decisionsAvailable![2].footer!.text!,
-              promotAsset: depositData.decisionsAvailable![2].footer!.icon!,
-              recommendedText: depositData.decisionsAvailable![2].topChip,
+              title: depositData.decisionsAvailable![optionIndex1].title!,
+              description:
+                  depositData.decisionsAvailable![optionIndex1].subtitle!,
+              promoText:
+                  depositData.decisionsAvailable![optionIndex1].footer!.text!,
+              promotAsset:
+                  depositData.decisionsAvailable![optionIndex1].footer!.icon!,
+              recommendedText:
+                  depositData.decisionsAvailable![optionIndex1].topChip,
               promoTextBoldColor: const Color(0xFF61E3C4),
               promoContainerColor: const Color(0xFF1ADAB7).withOpacity(0.35),
               isSelected: selectedOption.value == 1,
@@ -110,10 +118,13 @@ class MoneyAfterMaturityWidget extends HookWidget {
             ),
             OptionDecisionContainer(
               optionIndex: 2,
-              title: depositData.decisionsAvailable![0].title!,
-              description: depositData.decisionsAvailable![0].subtitle!,
-              promoText: depositData.decisionsAvailable![0].footer!.text!,
-              promotAsset: depositData.decisionsAvailable![0].footer!.icon!,
+              title: depositData.decisionsAvailable![optionIndex2].title!,
+              description:
+                  depositData.decisionsAvailable![optionIndex2].subtitle!,
+              promoText:
+                  depositData.decisionsAvailable![optionIndex2].footer!.text!,
+              promotAsset:
+                  depositData.decisionsAvailable![optionIndex2].footer!.icon!,
               promoContainerColor: const Color(0xFFA4371A).withOpacity(0.6),
               promoTextBoldColor: const Color(0xFFF79780),
               isSelected: selectedOption.value == 2,
@@ -124,42 +135,42 @@ class MoneyAfterMaturityWidget extends HookWidget {
             SizedBox(height: SizeConfig.padding16),
             showLoading.value
                 ? SpinKitThreeBounce(
-                    size: SizeConfig.title5,
-                    color: Colors.white,
-                  )
+              size: SizeConfig.title5,
+              color: Colors.white,
+            )
                 : MaterialButton(
-                    minWidth: SizeConfig.screenWidth,
-                    color: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.circular(SizeConfig.roundness5),
-                    ),
-                    height: SizeConfig.padding44,
-                    child: Text(
-                      "Done",
-                      style: TextStyles.rajdhaniB.body1.colour(Colors.black),
-                    ),
-                    onPressed: () async {
-                      if (selectedOption.value == -1) {
-                        BaseUtil.showNegativeAlert("Please select an option",
-                            "proceed by choosing an option");
-                        return;
-                      }
-                      showLoading.value = true;
+                minWidth: SizeConfig.screenWidth,
+                color: Colors.white,
+                shape: RoundedRectangleBorder(
+                  borderRadius:
+                  BorderRadius.circular(SizeConfig.roundness5),
+                ),
+                height: SizeConfig.padding44,
+                child: Text(
+                  "Done",
+                  style: TextStyles.rajdhaniB.body1.colour(Colors.black),
+                ),
+                onPressed: () async {
+                  if (selectedOption.value == -1) {
+                    BaseUtil.showNegativeAlert("Please select an option",
+                        "proceed by choosing an option");
+                    return;
+                  }
+                  showLoading.value = true;
 
-                      if (selectedOption.value == 1) {
-                        Haptic.vibrate();
+                  if (selectedOption.value == 1) {
+                    Haptic.vibrate();
 
                         await locator<LendboxMaturityService>()
-                            .updateInvestmentPref(
-                                depositData.decisionsAvailable![2].pref!);
+                            .updateInvestmentPref(depositData
+                                .decisionsAvailable![optionIndex1].pref!);
 
                         // add delay
                         await Future.delayed(const Duration(milliseconds: 700));
 
-                        AppState.backButtonDispatcher?.didPopRoute();
+                        unawaited(AppState.backButtonDispatcher?.didPopRoute());
 
-                        BaseUtil.openModalBottomSheet(
+                        unawaited(BaseUtil.openModalBottomSheet(
                           addToScreenStack: true,
                           enableDrag: false,
                           hapticVibrate: true,
@@ -171,17 +182,17 @@ class MoneyAfterMaturityWidget extends HookWidget {
                                 .onDecisionMade!.investedAmt
                                 .toString(),
                             maturityAmount: depositData.decisionsAvailable![0]
-                                .onDecisionMade!.maturityAmt
-                                .toString(),
-                            maturityDate: formatDate(depositData
-                                .decisionsAvailable![0]
-                                .onDecisionMade!
-                                .maturityOn!),
-                            reInvestmentDate: formatDate(depositData
-                                .decisionsAvailable![0]
-                                .onDecisionMade!
-                                .investedOn!),
-                            fdDuration: depositData.decisionsAvailable![0]
+                            .onDecisionMade!.maturityAmt
+                            .toString(),
+                        maturityDate: formatDate(depositData
+                            .decisionsAvailable![0]
+                            .onDecisionMade!
+                            .maturityOn!),
+                        reInvestmentDate: formatDate(depositData
+                            .decisionsAvailable![0]
+                            .onDecisionMade!
+                            .investedOn!),
+                        fdDuration: depositData.decisionsAvailable![0]
                                 .onDecisionMade!.fdDuration!,
                             roiPerc: depositData.decisionsAvailable![0]
                                 .onDecisionMade!.roiPerc!,
@@ -192,18 +203,59 @@ class MoneyAfterMaturityWidget extends HookWidget {
                             footer: depositData
                                 .decisionsAvailable![0].onDecisionMade!.footer!,
                           ),
-                        );
+                        ));
                       }
 
-                      if (selectedOption.value == 2) {
-                        Haptic.vibrate();
+                  if (selectedOption.value == 2) {
+                    Haptic.vibrate();
 
-                        await locator<LendboxMaturityService>()
-                            .updateInvestmentPref(
-                                depositData.decisionsAvailable![0].pref!);
+                        if (decision == UserDecision.WITHDRAW) {
+                          await locator<LendboxMaturityService>()
+                              .updateInvestmentPref(
+                                  depositData.decisionsAvailable![0].pref!);
+
+                          AppState.backButtonDispatcher?.didPopRoute();
+
+                          BaseUtil.openModalBottomSheet(
+                            addToScreenStack: true,
+                            enableDrag: false,
+                            hapticVibrate: true,
+                            isBarrierDismissible: false,
+                            backgroundColor: Colors.transparent,
+                            isScrollControlled: true,
+                            content: Successful8MovedSheet(
+                              investAmount: depositData.decisionsAvailable![1]
+                                  .onDecisionMade!.investedAmt
+                                  .toString(),
+                              maturityAmount: depositData.decisionsAvailable![1]
+                                  .onDecisionMade!.maturityAmt
+                                  .toString(),
+                              maturityDate: formatDate(depositData
+                                  .decisionsAvailable![1]
+                                  .onDecisionMade!
+                                  .maturityOn!),
+                              reInvestmentDate: formatDate(depositData
+                                  .decisionsAvailable![1]
+                                  .onDecisionMade!
+                                  .investedOn!),
+                              defaultMovedTo8: false,
+                              fdDuration: depositData.decisionsAvailable![1]
+                                  .onDecisionMade!.fdDuration!,
+                              roiPerc: depositData.decisionsAvailable![1]
+                                  .onDecisionMade!.roiPerc!,
+                              title: depositData.decisionsAvailable![1]
+                                  .onDecisionMade!.title!,
+                              topChipText: depositData.decisionsAvailable![1]
+                                  .onDecisionMade!.topChipText!,
+                              footer: depositData.decisionsAvailable![1]
+                                  .onDecisionMade!.footer!,
+                              isLendboxOldUser: isLendboxOldUser,
+                            ),
+                          );
+                          return;
+                        }
 
                         AppState.backButtonDispatcher?.didPopRoute();
-
                         BaseUtil.openModalBottomSheet(
                           addToScreenStack: true,
                           enableDrag: false,
@@ -211,37 +263,10 @@ class MoneyAfterMaturityWidget extends HookWidget {
                           isBarrierDismissible: false,
                           backgroundColor: Colors.transparent,
                           isScrollControlled: true,
-                          content: Successful8MovedSheet(
-                            investAmount: depositData.decisionsAvailable![1]
-                                .onDecisionMade!.investedAmt
-                                .toString(),
-                            maturityAmount: depositData.decisionsAvailable![1]
-                                .onDecisionMade!.maturityAmt
-                                .toString(),
-                            maturityDate: formatDate(depositData
-                                .decisionsAvailable![1]
-                                .onDecisionMade!
-                                .maturityOn!),
-                            reInvestmentDate: formatDate(depositData
-                                .decisionsAvailable![1]
-                                .onDecisionMade!
-                                .investedOn!),
-                            defaultMovedTo8: false,
-                            fdDuration: depositData.decisionsAvailable![1]
-                                .onDecisionMade!.fdDuration!,
-                            roiPerc: depositData.decisionsAvailable![1]
-                                .onDecisionMade!.roiPerc!,
-                            title: depositData
-                                .decisionsAvailable![1].onDecisionMade!.title!,
-                            topChipText: depositData.decisionsAvailable![1]
-                                .onDecisionMade!.topChipText!,
-                            footer: depositData
-                                .decisionsAvailable![1].onDecisionMade!.footer!,
-                            isLendboxOldUser: isLendboxOldUser,
-                          ),
+                          content: const WithdrawalFeedback(),
                         );
                       }
-                    }),
+                }),
           ],
         ),
       ),
