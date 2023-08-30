@@ -188,4 +188,14 @@ class LendboxMaturityService extends ChangeNotifier {
     final format = DateFormat('dd MMM, yyyy');
     return format.format(dateTime);
   }
+
+  // dump all the data in the service
+  void dump() {
+    _pendingMaturityCount = 0;
+    filteredDeposits = [];
+    allDeposits = [];
+    _userDecision = UserDecision.NOTDECIDED;
+    isLendboxOldUser = false;
+    _alreadyMaturedDeposit = Deposit();
+  }
 }
