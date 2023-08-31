@@ -209,7 +209,7 @@ class Successful8MovedSheet extends StatelessWidget {
                             ],
                           ),
                           Column(children: [
-                            Text('@$roiPerc% P.A',
+                            Text('@$roiPerc P.A',
                                 style: TextStyles.sourceSansSB.body4.colour(
                                   const Color(0xFF3DFFD0),
                                 )),

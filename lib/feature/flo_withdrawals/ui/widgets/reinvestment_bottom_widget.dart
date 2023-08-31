@@ -114,7 +114,7 @@ class ReInvestmentBottomWidget extends StatelessWidget {
                   // innerColor: const Color(0xFF00EAC2),
                   sliderRotate: false,
                   onSubmit: () async {
-                    // showLoading.value = true;
+                    int val = decision == UserDecision.WITHDRAW ? 2 : 0;
                     Haptic.vibrate();
 
                     await locator<LendboxMaturityService>()
@@ -129,30 +129,30 @@ class ReInvestmentBottomWidget extends StatelessWidget {
                       backgroundColor: Colors.transparent,
                       isScrollControlled: true,
                       content: SuccessfulDepositSheet(
-                        investAmount: depositData
-                            .decisionsAvailable![0].onDecisionMade!.investedAmt
+                        investAmount: depositData.decisionsAvailable![val]
+                            .onDecisionMade!.investedAmt
                             .toString(),
-                        maturityAmount: depositData
-                            .decisionsAvailable![0].onDecisionMade!.maturityAmt
+                        maturityAmount: depositData.decisionsAvailable![val]
+                            .onDecisionMade!.maturityAmt
                             .toString(),
                         maturityDate: formatDate(depositData
-                            .decisionsAvailable![0]
+                            .decisionsAvailable![val]
                             .onDecisionMade!
                             .maturityOn!),
                         reInvestmentDate: formatDate(depositData
-                            .decisionsAvailable![0]
+                            .decisionsAvailable![val]
                             .onDecisionMade!
                             .investedOn!),
-                        fdDuration: depositData
-                            .decisionsAvailable![0].onDecisionMade!.fdDuration!,
+                        fdDuration: depositData.decisionsAvailable![val]
+                            .onDecisionMade!.fdDuration!,
                         roiPerc: depositData
-                            .decisionsAvailable![0].onDecisionMade!.roiPerc!,
+                            .decisionsAvailable![val].onDecisionMade!.roiPerc!,
                         title: depositData
-                            .decisionsAvailable![0].onDecisionMade!.title!,
-                        topChipText: depositData.decisionsAvailable![0]
+                            .decisionsAvailable![val].onDecisionMade!.title!,
+                        topChipText: depositData.decisionsAvailable![val]
                             .onDecisionMade!.topChipText!,
                         footer: depositData
-                            .decisionsAvailable![0].onDecisionMade!.footer!,
+                            .decisionsAvailable![val].onDecisionMade!.footer!,
                       ),
                     ));
                   },
@@ -207,7 +207,7 @@ class ReInvestmentBottomWidget extends StatelessWidget {
               ),
             ),
           ],
-          if (decision == UserDecision.NOTDECIDED) ...[
+          if (decision == UserDecision.NOTDECIDED && remainingDay > 0) ...[
             'Your investment will shift to ${isLendboxOldUser ? 10 : 8}% Flo if you\ndon’t decide in the next *$remainingDay days*'
                 .beautify(
               boldStyle: TextStyles.sourceSansB.body3.colour(

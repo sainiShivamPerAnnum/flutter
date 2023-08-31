@@ -199,7 +199,7 @@ class SuccessfulDepositSheet extends StatelessWidget {
                                   width: SizeConfig.padding64,
                                 ),
                                 Text(
-                                  '@$roiPerc% P.A',
+                                  '@$roiPerc P.A',
                                   style: TextStyles.sourceSansSB.body4.colour(
                                     const Color(0xFF3DFFD0),
                                   ),
