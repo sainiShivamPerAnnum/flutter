@@ -51,33 +51,31 @@ class _BalloonLottieScreenState extends State<BalloonLottieScreen>
       setState(() {
         showLoading = true;
       });
+      var depositData = lendboxMaturityService.filteredDeposits?[0];
+
       await lendboxMaturityService.updateInvestmentPref('0');
 
       //add delay to show loading
       await Future.delayed(const Duration(milliseconds: 700));
 
+      AppState.backButtonDispatcher?.didPopRoute();
+
       AppState.delegate!.appState.currentAction = PageAction(
         state: PageState.addWidget,
         page: MaturityWithdrawalSuccessViewPageConfig,
         widget: MaturityWithdrawalSuccessView(
-          amount: lendboxMaturityService.filteredDeposits?[0].maturityAmt
-                  .toString() ??
-              '',
-          date: lendboxMaturityService.filteredDeposits?[0].maturityOn ??
-              DateTime.now(),
+          amount: depositData?.maturityAmt.toString() ?? '',
+          date: depositData?.maturityOn ?? DateTime.now(),
         ),
       );
 
       locator<AnalyticsService>().track(
         eventName: AnalyticsEvents.confirmWithdrawOnFixedWithdrawal,
         properties: {
-          "Maturity Date": formatDate(
-              lendboxMaturityService.filteredDeposits![0].maturityOn!),
-          "Maturity Amount":
-              lendboxMaturityService.filteredDeposits![0].maturityAmt,
-          "principal amount":
-              lendboxMaturityService.filteredDeposits![0].investedAmt,
-          'asset': lendboxMaturityService.filteredDeposits![0].fundType
+          "Maturity Date": formatDate(depositData!.maturityOn!),
+          "Maturity Amount": depositData?.maturityAmt,
+          "principal amount": depositData?.investedAmt,
+          'asset': depositData?.fundType
         },
       );
     } else {
