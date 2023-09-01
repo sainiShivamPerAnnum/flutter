@@ -133,6 +133,7 @@ class RootViewModel extends BaseViewModel {
         if (!await verifyUserBootupDetails()) return;
         await checkForBootUpAlerts();
         await showLastWeekOverview();
+        locator<LendboxMaturityService>().init();
         showMarketingCampings();
         await Future.wait([
           _referralService.verifyReferral(),
@@ -149,8 +150,6 @@ class RootViewModel extends BaseViewModel {
         ]);
 
         _initAdhocNotifications();
-
-        locator<LendboxMaturityService>().init();
       },
     );
   }

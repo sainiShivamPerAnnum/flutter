@@ -18,7 +18,7 @@ class FloPremiumDetailsViewModel extends BaseViewModel {
 
   double _opacity = 1;
 
-  Offset _offset = Offset(0, 0);
+  Offset _offset = const Offset(0, 0);
 
   double get opacity => _opacity;
 

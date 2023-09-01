@@ -17,11 +17,12 @@ class LendboxMaturityService extends ChangeNotifier {
   final LendboxRepo _lendboxRepo = locator<LendboxRepo>();
 
   int _pendingMaturityCount = 0;
-  List<Deposit>? filteredDeposits;
+  List<Deposit>? _filteredDeposits;
   List<Deposit>? allDeposits;
   UserDecision _userDecision = UserDecision.NOTDECIDED;
   bool isLendboxOldUser = false;
   Deposit? _alreadyMaturedDeposit;
+  bool _callTxnApi = false;
 
   //========= Getters ==========//
   int get pendingMaturityCount => _pendingMaturityCount;
@@ -29,6 +30,10 @@ class LendboxMaturityService extends ChangeNotifier {
   UserDecision get userDecision => _userDecision;
 
   Deposit? get alreadyMaturedDeposit => _alreadyMaturedDeposit;
+
+  List<Deposit>? get filteredDeposits => _filteredDeposits;
+
+  bool get callTxnApi => _callTxnApi;
 
   //========= Setters ==========//
   set pendingMaturityCount(int value) {
@@ -43,6 +48,16 @@ class LendboxMaturityService extends ChangeNotifier {
 
   set alreadyMaturedDeposit(Deposit? value) {
     _alreadyMaturedDeposit = value;
+    notifyListeners();
+  }
+
+  set filteredDeposits(List<Deposit>? value) {
+    _filteredDeposits = value;
+    notifyListeners();
+  }
+
+  set callTxnApi(bool value) {
+    _callTxnApi = value;
     notifyListeners();
   }
 
@@ -68,6 +83,9 @@ class LendboxMaturityService extends ChangeNotifier {
                   element.maturityOn != null &&
                   element.maturityOn!.isAfter(now))
               .toList();
+
+          log("filteredDeposits: $filteredDeposits",
+              name: "LendboxMaturityService");
           pendingMaturityCount = filteredDeposits!.length;
 
           alreadyMaturedDeposit = lendboxMaturityData.deposits!.firstWhere(
@@ -81,7 +99,8 @@ class LendboxMaturityService extends ChangeNotifier {
               filteredDeposits!.isNotEmpty &&
               filteredDeposits?[0] != null &&
               filteredDeposits?[0].decisionMade != null) {
-            setDecision(filteredDeposits?[0].decisionMade ?? '3');
+            userDecision =
+                setDecision(filteredDeposits?[0].decisionMade ?? '3');
           }
         }
 
@@ -103,6 +122,7 @@ class LendboxMaturityService extends ChangeNotifier {
             .updateUserInvestmentPreference(txnId!, pref, hasConfirmed: true);
         if (res.isSuccess()) {
           await init();
+          callTxnApi = true;
         }
       }
     } on Exception catch (e) {
@@ -111,17 +131,17 @@ class LendboxMaturityService extends ChangeNotifier {
     }
   }
 
-  void setDecision(String val) {
+  UserDecision setDecision(String val) {
     int? i = int.tryParse(val);
 
     if (i == 0) {
-      userDecision = UserDecision.WITHDRAW;
+      return UserDecision.WITHDRAW;
     } else if (i == 1) {
-      userDecision = UserDecision.REINVEST;
+      return UserDecision.REINVEST;
     } else if (i == 2) {
-      userDecision = UserDecision.MOVETOFLEXI;
+      return UserDecision.MOVETOFLEXI;
     } else {
-      userDecision = UserDecision.NOTDECIDED;
+      return UserDecision.NOTDECIDED;
     }
   }
 
