@@ -212,6 +212,7 @@ class MoneyAfterMaturityWidget extends HookWidget {
                                 .onDecisionMade!.topChipText!,
                             footer: depositData
                                 .decisionsAvailable![0].onDecisionMade!.footer!,
+                            fundType: depositData.fundType!,
                           ),
                         ));
                       }

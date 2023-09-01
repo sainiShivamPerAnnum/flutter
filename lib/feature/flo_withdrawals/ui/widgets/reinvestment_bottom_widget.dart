@@ -1,7 +1,9 @@
 import 'dart:async';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/model/lendbox_maturity_response.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/lendbox_maturity_service.dart';
 import 'package:felloapp/feature/flo_withdrawals/ui/NotDecidedSheet.dart';
 import 'package:felloapp/feature/flo_withdrawals/ui/chose_other_option_sheet.dart';
@@ -82,7 +84,7 @@ class ReInvestmentBottomWidget extends StatelessWidget {
                   ),
                   height: SizeConfig.padding44,
                   child: Text(
-                    'MAKE DECISION NOW',
+                    'DECIDE NOW',
                     style: TextStyles.rajdhaniB.body1.colour(Colors.black),
                   ),
                   onPressed: () {
@@ -101,6 +103,15 @@ class ReInvestmentBottomWidget extends StatelessWidget {
                         isLendboxOldUser: isLendboxOldUser,
                         decision: decision,
                       ),
+                    );
+
+                    locator<AnalyticsService>().track(
+                      eventName: AnalyticsEvents.makeDecisionNowTapped,
+                      properties: {
+                        "Maturity Date": formatDate(depositData.maturityOn!),
+                        "Maturity Amount": depositData.maturityAmt,
+                        "principal amount": depositData.investedAmt
+                      },
                     );
                   })
               : SlideAction(
@@ -153,8 +164,32 @@ class ReInvestmentBottomWidget extends StatelessWidget {
                             .onDecisionMade!.topChipText!,
                         footer: depositData
                             .decisionsAvailable![val].onDecisionMade!.footer!,
+                        fundType: depositData.fundType!,
                       ),
                     ));
+
+                    if (decision == UserDecision.MOVETOFLEXI) {
+                      locator<AnalyticsService>().track(
+                        eventName:
+                            AnalyticsEvents.slideToReinvestInFlexiWithdrawal10,
+                        properties: {
+                          "Maturity Date": formatDate(depositData.maturityOn!),
+                          "Maturity Amount": depositData.maturityAmt,
+                          "principal amount": depositData.investedAmt,
+                          'asset': depositData.fundType
+                        },
+                      );
+                    } else {
+                      locator<AnalyticsService>().track(
+                        eventName: AnalyticsEvents.slideToReinvestInFixed,
+                        properties: {
+                          "Maturity Date": formatDate(depositData.maturityOn!),
+                          "Maturity Amount": depositData.maturityAmt,
+                          "principal amount": depositData.investedAmt,
+                          'asset': depositData.fundType
+                        },
+                      );
+                    }
                   },
                 ),
           SizedBox(height: SizeConfig.padding18),
@@ -180,6 +215,16 @@ class ReInvestmentBottomWidget extends StatelessWidget {
                       isLendboxOldUser: isLendboxOldUser,
                     ),
                   );
+
+                  locator<AnalyticsService>().track(
+                    eventName: AnalyticsEvents.iAmHappyWithFlexiTapped,
+                    properties: {
+                      "Maturity Date": formatDate(depositData.maturityOn!),
+                      "Maturity Amount": depositData.maturityAmt,
+                      "principal amount": depositData.investedAmt,
+                      'asset': depositData.fundType
+                    },
+                  );
                 } else {
                   BaseUtil.openModalBottomSheet(
                     addToScreenStack: true,
@@ -194,6 +239,17 @@ class ReInvestmentBottomWidget extends StatelessWidget {
                       decision: decision,
                     ),
                   );
+
+                  locator<AnalyticsService>().track(
+                    eventName:
+                        AnalyticsEvents.viewOtherOptionsInFlexiWithdrawal,
+                    properties: {
+                      "Maturity Date": formatDate(depositData.maturityOn!),
+                      "Maturity Amount": depositData.maturityAmt,
+                      "principal amount": depositData.investedAmt,
+                      'asset': depositData.fundType
+                    },
+                  );
                 }
               },
               child: Text(
@@ -207,8 +263,8 @@ class ReInvestmentBottomWidget extends StatelessWidget {
               ),
             ),
           ],
-          if (decision == UserDecision.NOTDECIDED && remainingDay > 0) ...[
-            'Your investment will shift to ${isLendboxOldUser ? 10 : 8}% Flo if you\ndon’t decide in the next *$remainingDay days*'
+          if (decision == UserDecision.NOTDECIDED) ...[
+            'Your investment will shift to ${isLendboxOldUser ? 10 : 8}% Flo if you\ndon’t decide in the next *${remainingDay <= 0 ? "few hours" : '$remainingDay days'}*'
                 .beautify(
               boldStyle: TextStyles.sourceSansB.body3.colour(
                 const Color(0xFFA9C5D5),

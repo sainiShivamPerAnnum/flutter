@@ -1,26 +1,31 @@
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/asset_view_section.dart';
 import 'package:felloapp/util/extensions/rich_text_extension.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class SuccessfulDepositSheet extends StatelessWidget {
-  const SuccessfulDepositSheet(
-      {super.key,
-      required this.investAmount,
-      required this.maturityAmount,
-      required this.maturityDate,
-      required this.reInvestmentDate,
-      required this.fdDuration,
-      required this.roiPerc,
-      required this.title,
-      required this.topChipText,
-      required this.footer});
+  const SuccessfulDepositSheet({
+    super.key,
+    required this.investAmount,
+    required this.maturityAmount,
+    required this.maturityDate,
+    required this.reInvestmentDate,
+    required this.fdDuration,
+    required this.roiPerc,
+    required this.title,
+    required this.topChipText,
+    required this.footer,
+    required this.fundType,
+  });
 
   final String investAmount;
   final String maturityAmount;
@@ -31,6 +36,7 @@ class SuccessfulDepositSheet extends StatelessWidget {
   final String title;
   final String topChipText;
   final String footer;
+  final String fundType;
 
   @override
   Widget build(BuildContext context) {
@@ -60,6 +66,9 @@ class SuccessfulDepositSheet extends StatelessWidget {
                 GestureDetector(
                   onTap: () {
                     AppState.backButtonDispatcher?.didPopRoute();
+                    locator<AnalyticsService>().track(
+                      eventName: AnalyticsEvents.crossTappedOnPendingActions,
+                    );
                   },
                   child: Icon(
                     Icons.close,
@@ -118,7 +127,7 @@ class SuccessfulDepositSheet extends StatelessWidget {
                                     vertical: SizeConfig.padding4),
                                 decoration: ShapeDecoration(
                                   color:
-                                      const Color(0xFFD9D9D9).withOpacity(0.20),
+                                  const Color(0xFFD9D9D9).withOpacity(0.20),
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(
                                           SizeConfig.roundness12)),
@@ -146,7 +155,7 @@ class SuccessfulDepositSheet extends StatelessWidget {
                                     vertical: SizeConfig.padding4),
                                 decoration: ShapeDecoration(
                                   color:
-                                      const Color(0xFFD9D9D9).withOpacity(0.20),
+                                  const Color(0xFFD9D9D9).withOpacity(0.20),
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(
                                           SizeConfig.roundness12)),
@@ -239,7 +248,7 @@ class SuccessfulDepositSheet extends StatelessWidget {
                       decoration: BoxDecoration(
                         color: const Color(0xFF62E3C4),
                         borderRadius:
-                            BorderRadius.circular(SizeConfig.roundness16),
+                        BorderRadius.circular(SizeConfig.roundness16),
                       ),
                       child: topChipText.beautify(
                         boldStyle: TextStyles.sourceSansB.body4.colour(
@@ -260,7 +269,7 @@ class SuccessfulDepositSheet extends StatelessWidget {
               footer,
               textAlign: TextAlign.center,
               style:
-                  TextStyles.sourceSans.body3.colour(const Color(0xFFBDBDBE)),
+              TextStyles.sourceSans.body3.colour(const Color(0xFFBDBDBE)),
             ),
             SizedBox(height: SizeConfig.padding12),
             MaterialButton(
@@ -284,6 +293,16 @@ class SuccessfulDepositSheet extends StatelessWidget {
                     widget: AssetSectionView(
                       type: InvestmentType.LENDBOXP2P,
                     ),
+                  );
+
+                  locator<AnalyticsService>().track(
+                    eventName: AnalyticsEvents.goToTransactionsTapped,
+                    properties: {
+                      'asset': fundType,
+                      "Maturity Date": maturityDate,
+                      "Maturity Amount": maturityAmount,
+                      "principal amount": investAmount,
+                    },
                   );
                 }),
             SizedBox(height: SizeConfig.padding12),

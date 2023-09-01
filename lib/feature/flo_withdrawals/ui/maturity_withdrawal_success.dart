@@ -5,10 +5,20 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 
 class MaturityWithdrawalSuccessView extends StatelessWidget {
-  const MaturityWithdrawalSuccessView({super.key});
+  const MaturityWithdrawalSuccessView(
+      {super.key, required this.amount, required this.date});
+
+  final String amount;
+  final DateTime date;
+
+  String formatDate(DateTime dateTime) {
+    final format = DateFormat('dd MMM, yyyy');
+    return format.format(dateTime);
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -34,7 +44,7 @@ class MaturityWithdrawalSuccessView extends StatelessWidget {
             Padding(
               padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding28),
               child: Text(
-                'Your amount would be credited  to your bank account after maturity on\n(On Business days)',
+                '₹$amount would be credited  to your bank account after ${formatDate(date)} \n(On Business days)',
                 style: TextStyles.sourceSans.body2.setOpacity(0.7),
                 textAlign: TextAlign.center,
               ),

@@ -1,8 +1,11 @@
 import 'dart:developer';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/lendbox_maturity_service.dart';
+import 'package:felloapp/feature/flo_withdrawals/ui/maturity_withdrawal_success.dart';
 import 'package:felloapp/feature/flo_withdrawals/ui/widgets/money_after_maturity_widget.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -14,6 +17,7 @@ import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 
 class BalloonLottieScreen extends StatefulWidget {
@@ -53,8 +57,28 @@ class _BalloonLottieScreenState extends State<BalloonLottieScreen>
       await Future.delayed(const Duration(milliseconds: 700));
 
       AppState.delegate!.appState.currentAction = PageAction(
-        state: PageState.replace,
+        state: PageState.addWidget,
         page: MaturityWithdrawalSuccessViewPageConfig,
+        widget: MaturityWithdrawalSuccessView(
+          amount: lendboxMaturityService.filteredDeposits?[0].maturityAmt
+                  .toString() ??
+              '',
+          date: lendboxMaturityService.filteredDeposits?[0].maturityOn ??
+              DateTime.now(),
+        ),
+      );
+
+      locator<AnalyticsService>().track(
+        eventName: AnalyticsEvents.confirmWithdrawOnFixedWithdrawal,
+        properties: {
+          "Maturity Date": formatDate(
+              lendboxMaturityService.filteredDeposits![0].maturityOn!),
+          "Maturity Amount":
+              lendboxMaturityService.filteredDeposits![0].maturityAmt,
+          "principal amount":
+              lendboxMaturityService.filteredDeposits![0].investedAmt,
+          'asset': lendboxMaturityService.filteredDeposits![0].fundType
+        },
       );
     } else {
       AppState.backButtonDispatcher?.didPopRoute();
@@ -75,6 +99,19 @@ class _BalloonLottieScreenState extends State<BalloonLottieScreen>
               isLendboxOldUser: lendboxMaturityService.isLendboxOldUser,
             ),
           );
+        },
+      );
+
+      locator<AnalyticsService>().track(
+        eventName: AnalyticsEvents.changeDecisionOnBalloonScreen,
+        properties: {
+          "Maturity Date": formatDate(
+              lendboxMaturityService.filteredDeposits![0].maturityOn!),
+          "Maturity Amount":
+              lendboxMaturityService.filteredDeposits![0].maturityAmt,
+          "principal amount":
+              lendboxMaturityService.filteredDeposits![0].investedAmt,
+          'asset': lendboxMaturityService.filteredDeposits![0].fundType
         },
       );
     }
@@ -104,6 +141,19 @@ class _BalloonLottieScreenState extends State<BalloonLottieScreen>
       if (expectedKey > 6) {
         expectedKey = 1;
       }
+
+      locator<AnalyticsService>().track(
+        eventName: AnalyticsEvents.balloonTappedWithdrawalFixed,
+        properties: {
+          "Maturity Date": formatDate(
+              lendboxMaturityService.filteredDeposits![0].maturityOn!),
+          "Maturity Amount":
+              lendboxMaturityService.filteredDeposits![0].maturityAmt,
+          "principal amount":
+              lendboxMaturityService.filteredDeposits![0].investedAmt,
+          'asset': lendboxMaturityService.filteredDeposits![0].fundType
+        },
+      );
     } else {
       BaseUtil.showPositiveAlert("Please Tap on the top most balloon", ' ');
     }
@@ -170,6 +220,11 @@ class _BalloonLottieScreenState extends State<BalloonLottieScreen>
     }
   }
 
+  String formatDate(DateTime dateTime) {
+    final format = DateFormat('dd MMM, yyyy');
+    return format.format(dateTime);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -190,15 +245,15 @@ class _BalloonLottieScreenState extends State<BalloonLottieScreen>
             ),
           ),
           Positioned(
-            top: SizeConfig.padding104,
+            top: SizeConfig.padding108,
             left: 0,
             right: 0,
             child: Text(
               showWithdrawalScreen
                   ? 'We are sorry to\nsee you go'
-                  : 'Tap to pop the balloons',
+                  : 'Tap on balloons to withdraw',
               textAlign: TextAlign.center,
-              style: TextStyles.rajdhaniB.title4.colour(Colors.white),
+              style: TextStyles.rajdhaniB.title3.colour(Colors.white),
             ),
           ),
           const _BackGround(),
@@ -222,10 +277,11 @@ class _BalloonLottieScreenState extends State<BalloonLottieScreen>
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
+                      SizedBox(height: SizeConfig.padding104),
                       SvgPicture.asset(
                         'assets/svg/tissue_box.svg',
                       ),
-                      SizedBox(height: SizeConfig.padding30),
+                      SizedBox(height: SizeConfig.padding70),
                       Padding(
                         padding: EdgeInsets.symmetric(
                             horizontal: SizeConfig.padding25),

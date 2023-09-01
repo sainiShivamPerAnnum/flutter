@@ -1,5 +1,7 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -53,6 +55,9 @@ class WithdrawalFeedback extends HookWidget {
                 GestureDetector(
                   onTap: () {
                     AppState.backButtonDispatcher?.didPopRoute();
+                    locator<AnalyticsService>().track(
+                      eventName: AnalyticsEvents.crossTappedOnPendingActions,
+                    );
                   },
                   child: Icon(
                     Icons.close,
@@ -126,7 +131,7 @@ class WithdrawalFeedback extends HookWidget {
                 ),
                 height: SizeConfig.padding44,
                 child: Text(
-                  "Next",
+                  "NEXT",
                   style: TextStyles.rajdhaniB.body1.colour(Colors.black),
                 ),
                 onPressed: () {
@@ -148,6 +153,19 @@ class WithdrawalFeedback extends HookWidget {
                     AppState.delegate!.parseRoute(Uri.parse("bankDetails"));
                     locator<BankAndPanService>().isFromFloWithdrawFlow = true;
                   }
+
+                  locator<AnalyticsService>().track(
+                    eventName: AnalyticsEvents.reasonSelectedFixedWithdrawal,
+                    properties: {
+                      'Decision': selectedOption.value == 0
+                          ? 'Will re-invest money in 12%'
+                          : selectedOption.value == 1
+                              ? 'Returns aren’t good enough'
+                              : selectedOption.value == 2
+                                  ? 'Maturity period is very long'
+                                  : 'Others',
+                    },
+                  );
                 }),
             SizedBox(height: SizeConfig.padding12),
           ],
@@ -158,10 +176,11 @@ class WithdrawalFeedback extends HookWidget {
 }
 
 class WithdrawalOptionContainer extends StatelessWidget {
-  const WithdrawalOptionContainer({super.key,
-    required this.isSelected,
-    required this.onTap,
-    required this.title});
+  const WithdrawalOptionContainer(
+      {super.key,
+      required this.isSelected,
+      required this.onTap,
+      required this.title});
 
   final bool isSelected;
   final VoidCallback onTap;
@@ -197,7 +216,7 @@ class WithdrawalOptionContainer extends StatelessWidget {
           Text(
             title,
             style: TextStyles.sourceSans.body3.colour(
-              isSelected ? Colors.white : const Color(0xFFBDBDBE),
+              Colors.white,
             ),
           )
         ],

@@ -24,7 +24,7 @@ class UserDecisionWidget extends StatelessWidget {
       case UserDecision.MOVETOFLEXI:
         return 'You have chosen to move to ${isLendboxOldUser ? 10 : 8}% Flo';
       case UserDecision.NOTDECIDED:
-        return 'You are yet to decide about your maturity';
+        return 'You have a decision pending for this investment';
     }
   }
 

@@ -123,7 +123,7 @@ class FloAssetInfoWidget extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.center,
                       children: [
                         Text(
-                          'Maturity',
+                          'You Get',
                           style: TextStyles.sourceSans.body3
                               .colour(const Color(0xFFBDBDBE)),
                         ),

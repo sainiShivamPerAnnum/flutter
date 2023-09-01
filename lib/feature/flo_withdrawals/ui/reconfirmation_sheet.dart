@@ -1,5 +1,7 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/model/lendbox_maturity_response.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/lendbox_maturity_service.dart';
 import 'package:felloapp/feature/flo_withdrawals/ui/reinvestment_sheet.dart';
 import 'package:felloapp/feature/flo_withdrawals/ui/succesful_deposit_sheet.dart';
@@ -70,6 +72,9 @@ class ReConfirmationSheet extends HookWidget {
                 GestureDetector(
                   onTap: () {
                     AppState.backButtonDispatcher?.didPopRoute();
+                    locator<AnalyticsService>().track(
+                      eventName: AnalyticsEvents.crossTappedOnPendingActions,
+                    );
                   },
                   child: Icon(
                     Icons.close,
@@ -192,6 +197,7 @@ class ReConfirmationSheet extends HookWidget {
                                 .onDecisionMade!.topChipText!,
                             footer: depositData
                                 .decisionsAvailable![0].onDecisionMade!.footer!,
+                            fundType: depositData.fundType!,
                           ),
                         );
                       }
@@ -242,6 +248,16 @@ class ReConfirmationSheet extends HookWidget {
                           ),
                         );
                       }
+
+                      locator<AnalyticsService>().track(
+                        eventName:
+                            AnalyticsEvents.flexiFixedFinalDecisionTapped,
+                        properties: {
+                          'decision taken': selectedOption.value == 1
+                              ? 'Reinvest'
+                              : 'move to flexi'
+                        },
+                      );
                     }),
           ],
         ),

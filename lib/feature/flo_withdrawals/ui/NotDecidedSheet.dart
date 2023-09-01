@@ -1,7 +1,9 @@
 import 'dart:async';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/model/lendbox_maturity_response.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/lendbox_maturity_service.dart';
 import 'package:felloapp/feature/flo_withdrawals/ui/chose_other_option_sheet.dart';
 import 'package:felloapp/feature/flo_withdrawals/ui/reconfirmation_sheet.dart';
@@ -98,6 +100,10 @@ class NotDecidedModalSheet extends HookWidget {
                         GestureDetector(
                           onTap: () {
                             AppState.backButtonDispatcher?.didPopRoute();
+                            locator<AnalyticsService>().track(
+                              eventName:
+                                  AnalyticsEvents.crossTappedOnPendingActions,
+                            );
                           },
                           child: Icon(
                             Icons.close,
@@ -146,17 +152,34 @@ class NotDecidedModalSheet extends HookWidget {
                             style: TextStyles.sourceSans.body2,
                             children: [
                               TextSpan(
-                                text: "after maturity",
+                                text: "after maturity?",
                                 style: TextStyles.sourceSansB.body2,
                               ),
                             ],
                           ),
                         ),
-                        // const Icon(
-                        //   Icons.info_outline,
-                        //   color: Colors.white,
-                        //   size: 15,
-                        // ),
+                        Tooltip(
+                          margin: EdgeInsets.symmetric(
+                              horizontal: SizeConfig.pageHorizontalMargins),
+                          triggerMode: TooltipTriggerMode.tap,
+                          preferBelow: false,
+                          decoration: BoxDecoration(
+                            color: Colors.black.withOpacity(0.9),
+                            borderRadius:
+                                BorderRadius.circular(SizeConfig.roundness8),
+                          ),
+                          padding: EdgeInsets.symmetric(
+                              horizontal: SizeConfig.pageHorizontalMargins,
+                              vertical: SizeConfig.pageHorizontalMargins),
+                          showDuration: const Duration(seconds: 10),
+                          message:
+                              "Fello Flo Premium plans allow you to decide what happens to your money after maturity. You can choose what you want to do with your money while you invest. If you do not select a preference, we will contact you and confirm what you want to do with the corpus post maturity.",
+                          child: const Icon(
+                            Icons.info_outline,
+                            color: Colors.white,
+                            size: 15,
+                          ),
+                        ),
                       ],
                     ),
                     SizedBox(height: SizeConfig.padding24),
@@ -211,7 +234,7 @@ class NotDecidedModalSheet extends HookWidget {
                       },
                     ),
                     SizedBox(height: SizeConfig.padding16),
-                    'This decision will reflect after maturity in *${depositData.maturesInDays} Days*'
+                    'This decision will reflect after maturity in *${(depositData.maturesInDays ?? 0) <= 0 ? "few hours" : '${depositData.maturesInDays} days'}*'
                         .beautify(
                       boldStyle: TextStyles.sourceSansB.body3.colour(
                         const Color(0xFFA9C5D5),
@@ -299,6 +322,7 @@ class NotDecidedModalSheet extends HookWidget {
                                         .topChipText!,
                                     footer: depositData.decisionsAvailable![0]
                                         .onDecisionMade!.footer!,
+                                    fundType: depositData.fundType!,
                                   ),
                                 ));
                               }
@@ -336,6 +360,18 @@ class NotDecidedModalSheet extends HookWidget {
                                   ),
                                 ));
                               }
+
+                              locator<AnalyticsService>().track(
+                                eventName:
+                                    AnalyticsEvents.confirmDecisionTapped,
+                                properties: {
+                                  'decision taken': selectedOption.value == 1
+                                      ? "reinvest"
+                                      : selectedOption.value == 2
+                                          ? "move to flexi"
+                                          : "withdraw",
+                                },
+                              );
                             }),
                     SizedBox(height: SizeConfig.padding12),
                   ],

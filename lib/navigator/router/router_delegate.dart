@@ -13,7 +13,6 @@ import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/feature/flo_withdrawals/ui/balloon_lottie_screen.dart';
-import 'package:felloapp/feature/flo_withdrawals/ui/maturity_withdrawal_success.dart';
 import 'package:felloapp/feature/referrals/ui/referral_home.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/transition_delegate.dart';
@@ -360,11 +359,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.BalloonLottieScreen:
           _addPageData(
               const BalloonLottieScreen(), BalloonLottieScreenViewConfig);
-          break;
-
-        case Pages.MaturityWithdrawalSuccessView:
-          _addPageData(const MaturityWithdrawalSuccessView(),
-              MaturityWithdrawalSuccessViewPageConfig);
           break;
 
         default:

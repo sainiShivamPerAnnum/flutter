@@ -667,19 +667,34 @@ class _FloPendingActionState extends State<FloPendingAction>
                         depositData: model.filteredDeposits![0],
                       ),
                     );
+
+                    locator<AnalyticsService>().track(
+                      eventName: AnalyticsEvents.pendingActionsFloTapped,
+                      properties: {
+                        "Transaction count": model.pendingMaturityCount,
+                        "initial decision taken": model.userDecision,
+                        "asset": model.filteredDeposits![0].fundType,
+                        "principal amount":
+                            model.filteredDeposits?[0].investedAmt
+                      },
+                    );
                   },
                   child: Container(
                     margin: EdgeInsets.only(left: SizeConfig.padding24),
                     height: SizeConfig.padding74,
                     child: Transform.translate(
                       offset:
-                          Offset(-SizeConfig.padding14, -SizeConfig.padding14),
+                          Offset(-SizeConfig.padding12, -SizeConfig.padding14),
                       child: Stack(
                         children: [
-                          CustomPaint(
-                            size: Size(SizeConfig.screenWidth!,
-                                (SizeConfig.screenWidth! * 0.18).toDouble()),
-                            painter: CustomToolTipPainter(),
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: SizeConfig.padding10),
+                            child: CustomPaint(
+                              size: Size(SizeConfig.screenWidth!,
+                                  (SizeConfig.screenWidth! * 0.18).toDouble()),
+                              painter: CustomToolTipPainter(),
+                            ),
                           ),
                           Positioned(
                             top: SizeConfig.padding36 + SizeConfig.padding1,
@@ -707,7 +722,7 @@ class _FloPendingActionState extends State<FloPendingAction>
                                       color: Colors.black,
                                     ),
                                   ),
-                                  SizedBox(width: SizeConfig.padding16)
+                                  SizedBox(width: SizeConfig.padding18)
                                 ],
                               ),
                             ),

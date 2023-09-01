@@ -1,7 +1,9 @@
 import 'dart:async';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/model/lendbox_maturity_response.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/lendbox_maturity_service.dart';
 import 'package:felloapp/feature/flo_withdrawals/ui/reinvestment_sheet.dart';
 import 'package:felloapp/feature/flo_withdrawals/ui/success_8_moved_sheet.dart';
@@ -73,6 +75,9 @@ class OtherOptionsModalSheet extends HookWidget {
                 GestureDetector(
                   onTap: () {
                     AppState.backButtonDispatcher?.didPopRoute();
+                    locator<AnalyticsService>().track(
+                      eventName: AnalyticsEvents.crossTappedOnPendingActions,
+                    );
                   },
                   child: Icon(
                     Icons.close,
@@ -84,7 +89,7 @@ class OtherOptionsModalSheet extends HookWidget {
             ),
             SizedBox(height: SizeConfig.padding8),
             Text(
-              'What do you want to do with the money?',
+              'What do you want to do with your investment?',
               textAlign: TextAlign.center,
               style: TextStyles.sourceSans.body2.colour(Colors.white),
             ),
@@ -136,7 +141,7 @@ class OtherOptionsModalSheet extends HookWidget {
                     ),
                     height: SizeConfig.padding44,
                     child: Text(
-                      "Done",
+                      "CONFIRM DECISION",
                       style: TextStyles.rajdhaniB.body1.colour(Colors.black),
                     ),
                     onPressed: () async {
@@ -212,6 +217,19 @@ class OtherOptionsModalSheet extends HookWidget {
                       }
 
                       showLoading.value = false;
+
+                      locator<AnalyticsService>().track(
+                        eventName: AnalyticsEvents.otherOptionsConfirmation,
+                        properties: {
+                          "Maturity Date": formatDate(depositData.maturityOn!),
+                          "Maturity Amount": depositData.maturityAmt,
+                          "principal amount": depositData.investedAmt,
+                          'asset': depositData.fundType,
+                          'Decision': selectedOption.value == 1
+                              ? 'move to flexi'
+                              : 'Withdraw'
+                        },
+                      );
                     }),
           ],
         ),

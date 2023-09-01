@@ -1,29 +1,31 @@
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/asset_view_section.dart';
 import 'package:felloapp/util/extensions/rich_text_extension.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class Successful8MovedSheet extends StatelessWidget {
-  const Successful8MovedSheet(
-      {required this.investAmount,
-      required this.maturityAmount,
-      required this.maturityDate,
-      required this.reInvestmentDate,
-      required this.fdDuration,
-      required this.roiPerc,
-      required this.title,
-      required this.topChipText,
-      required this.footer,
-      required this.isLendboxOldUser,
-      this.defaultMovedTo8 = false,
-      this.startsAt = 0,
-      super.key});
+  const Successful8MovedSheet({required this.investAmount,
+    required this.maturityAmount,
+    required this.maturityDate,
+    required this.reInvestmentDate,
+    required this.fdDuration,
+    required this.roiPerc,
+    required this.title,
+    required this.topChipText,
+    required this.footer,
+    required this.isLendboxOldUser,
+    this.defaultMovedTo8 = false,
+    this.startsAt = 0,
+    super.key});
 
   final String investAmount;
   final String maturityAmount;
@@ -66,6 +68,10 @@ class Successful8MovedSheet extends StatelessWidget {
                 GestureDetector(
                   onTap: () {
                     AppState.backButtonDispatcher?.didPopRoute();
+
+                    locator<AnalyticsService>().track(
+                      eventName: AnalyticsEvents.crossTappedOnPendingActions,
+                    );
                   },
                   child: Icon(
                     Icons.close,
@@ -143,7 +149,7 @@ class Successful8MovedSheet extends StatelessWidget {
                                     vertical: SizeConfig.padding4),
                                 decoration: ShapeDecoration(
                                   color:
-                                      const Color(0xFFD9D9D9).withOpacity(0.20),
+                                  const Color(0xFFD9D9D9).withOpacity(0.20),
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(
                                           SizeConfig.roundness12)),
@@ -171,7 +177,7 @@ class Successful8MovedSheet extends StatelessWidget {
                                     vertical: SizeConfig.padding4),
                                 decoration: ShapeDecoration(
                                   color:
-                                      const Color(0xFFD9D9D9).withOpacity(0.20),
+                                  const Color(0xFFD9D9D9).withOpacity(0.20),
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(
                                           SizeConfig.roundness12)),
@@ -257,7 +263,7 @@ class Successful8MovedSheet extends StatelessWidget {
                         decoration: BoxDecoration(
                           color: const Color(0xFF62E3C4),
                           borderRadius:
-                              BorderRadius.circular(SizeConfig.roundness16),
+                          BorderRadius.circular(SizeConfig.roundness16),
                         ),
                         child: topChipText.beautify(
                           boldStyle: TextStyles.sourceSansB.body4.colour(
@@ -279,7 +285,7 @@ class Successful8MovedSheet extends StatelessWidget {
                 footer,
                 textAlign: TextAlign.center,
                 style:
-                    TextStyles.sourceSans.body3.colour(const Color(0xFFBDBDBE)),
+                TextStyles.sourceSans.body3.colour(const Color(0xFFBDBDBE)),
               ),
               SizedBox(height: SizeConfig.padding12),
             ],
