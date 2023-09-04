@@ -7,7 +7,6 @@ import 'package:felloapp/feature/flo_withdrawals/ui/reinvestment_sheet.dart';
 import 'package:felloapp/feature/flo_withdrawals/ui/succesful_deposit_sheet.dart';
 import 'package:felloapp/feature/flo_withdrawals/ui/success_8_moved_sheet.dart';
 import 'package:felloapp/feature/flo_withdrawals/ui/widgets/flo_option_decision_container.dart';
-import 'package:felloapp/feature/flo_withdrawals/ui/withdraw_feedback.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
@@ -220,53 +219,12 @@ class MoneyAfterMaturityWidget extends HookWidget {
                       if (selectedOption.value == 2) {
                         Haptic.vibrate();
 
-                        if (decision == UserDecision.WITHDRAW) {
-                          await locator<LendboxMaturityService>()
-                              .updateInvestmentPref(
-                                  depositData.decisionsAvailable![0].pref!);
-
-                          AppState.backButtonDispatcher?.didPopRoute();
-
-                          BaseUtil.openModalBottomSheet(
-                            addToScreenStack: true,
-                            enableDrag: false,
-                            hapticVibrate: true,
-                            isBarrierDismissible: false,
-                            backgroundColor: Colors.transparent,
-                            isScrollControlled: true,
-                            content: Successful8MovedSheet(
-                              investAmount: depositData.decisionsAvailable![1]
-                                  .onDecisionMade!.investedAmt
-                                  .toString(),
-                              maturityAmount: depositData.decisionsAvailable![1]
-                                  .onDecisionMade!.maturityAmt
-                                  .toString(),
-                              maturityDate: formatDate(depositData
-                                  .decisionsAvailable![1]
-                                  .onDecisionMade!
-                                  .maturityOn!),
-                              reInvestmentDate: formatDate(depositData
-                                  .decisionsAvailable![1]
-                                  .onDecisionMade!
-                                  .investedOn!),
-                              defaultMovedTo8: false,
-                              fdDuration: depositData.decisionsAvailable![1]
-                                  .onDecisionMade!.fdDuration!,
-                              roiPerc: depositData.decisionsAvailable![1]
-                                  .onDecisionMade!.roiPerc!,
-                              title: depositData.decisionsAvailable![1]
-                                  .onDecisionMade!.title!,
-                              topChipText: depositData.decisionsAvailable![1]
-                                  .onDecisionMade!.topChipText!,
-                              footer: depositData.decisionsAvailable![1]
-                                  .onDecisionMade!.footer!,
-                              isLendboxOldUser: isLendboxOldUser,
-                            ),
-                          );
-                          return;
-                        }
+                        await locator<LendboxMaturityService>()
+                            .updateInvestmentPref(
+                                depositData.decisionsAvailable![0].pref!);
 
                         AppState.backButtonDispatcher?.didPopRoute();
+
                         BaseUtil.openModalBottomSheet(
                           addToScreenStack: true,
                           enableDrag: false,
@@ -274,8 +232,36 @@ class MoneyAfterMaturityWidget extends HookWidget {
                           isBarrierDismissible: false,
                           backgroundColor: Colors.transparent,
                           isScrollControlled: true,
-                          content: const WithdrawalFeedback(),
+                          content: Successful8MovedSheet(
+                            investAmount: depositData.decisionsAvailable![1]
+                                .onDecisionMade!.investedAmt
+                                .toString(),
+                            maturityAmount: depositData.decisionsAvailable![1]
+                                .onDecisionMade!.maturityAmt
+                                .toString(),
+                            maturityDate: formatDate(depositData
+                                .decisionsAvailable![1]
+                                .onDecisionMade!
+                                .maturityOn!),
+                            reInvestmentDate: formatDate(depositData
+                                .decisionsAvailable![1]
+                                .onDecisionMade!
+                                .investedOn!),
+                            defaultMovedTo8: false,
+                            fdDuration: depositData.decisionsAvailable![1]
+                                .onDecisionMade!.fdDuration!,
+                            roiPerc: depositData.decisionsAvailable![1]
+                                .onDecisionMade!.roiPerc!,
+                            title: depositData
+                                .decisionsAvailable![1].onDecisionMade!.title!,
+                            topChipText: depositData.decisionsAvailable![1]
+                                .onDecisionMade!.topChipText!,
+                            footer: depositData
+                                .decisionsAvailable![1].onDecisionMade!.footer!,
+                            isLendboxOldUser: isLendboxOldUser,
+                          ),
                         );
+                        return;
                       }
                     }),
           ],
