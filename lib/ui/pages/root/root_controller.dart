@@ -36,8 +36,8 @@ class RootController {
         navItems.putIfAbsent(const Save(), () => RootController.saveNavBarItem);
         break;
       case "TM":
-        navItems.putIfAbsent(const TambolaHomeView(standAloneScreen: false),
-            () => RootController.tambolaNavBar);
+        navItems.putIfAbsent(
+            const TambolaHomeTicketsView(), () => RootController.tambolaNavBar);
         break;
 
       default:

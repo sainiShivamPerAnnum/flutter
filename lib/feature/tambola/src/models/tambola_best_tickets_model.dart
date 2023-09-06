@@ -46,9 +46,9 @@ class Data {
       category_4 = TambolaTicketModel.helper.fromMapArray(json['category_4']);
     }
 
-    // stats = (json['stats'] != null)
-    //     ? TicketStatsModel.helper.fromMapArray(json['category_4'])
-    //     : TicketStatsModel.base();
+    stats = (json['stats'] != null)
+        ? TicketStatsModel.parseTicketsStats(json['stats'])
+        : TicketStatsModel.getBaseTicketsStats();
   }
 
   // int getTotalTicketsLength() {
@@ -70,9 +70,11 @@ class Data {
 
 class TicketStatsModel {
   final String category;
+  final String displayName;
   final int count;
   TicketStatsModel({
     required this.category,
+    required this.displayName,
     required this.count,
   });
 
@@ -81,14 +83,58 @@ class TicketStatsModel {
   factory TicketStatsModel.fromMap(Map<String, dynamic> map) {
     return TicketStatsModel(
       category: map['category'] ?? "",
+      displayName: map["displayName"] ?? "",
       count: map['count'] ?? "",
     );
   }
 
-  factory TicketStatsModel.base() {
-    return TicketStatsModel(
-      category: "category",
-      count: 0,
-    );
+  static List<TicketStatsModel> parseTicketsStats(Map<String, dynamic> stats) {
+    return [
+      TicketStatsModel(
+        category: "category_1",
+        displayName: "5-7",
+        count: stats["category_1"],
+      ),
+      TicketStatsModel(
+        category: "category_2",
+        displayName: "8-10",
+        count: stats["category_2"],
+      ),
+      TicketStatsModel(
+        category: "category_3",
+        displayName: "11-13",
+        count: stats["category_3"],
+      ),
+      TicketStatsModel(
+        category: "category_4",
+        displayName: "14-15",
+        count: stats["category_4"],
+      )
+    ];
+  }
+
+  static List<TicketStatsModel> getBaseTicketsStats() {
+    return [
+      TicketStatsModel(
+        category: "category_1",
+        displayName: "5-7",
+        count: 0,
+      ),
+      TicketStatsModel(
+        category: "category_2",
+        displayName: "8-10",
+        count: 0,
+      ),
+      TicketStatsModel(
+        category: "category_3",
+        displayName: "11-13",
+        count: 0,
+      ),
+      TicketStatsModel(
+        category: "category_4",
+        displayName: "14-15",
+        count: 0,
+      )
+    ];
   }
 }

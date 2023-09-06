@@ -63,7 +63,10 @@ class _TicketsPicksWidgetState extends State<TicketsPicksWidget> {
         borderRadius: BorderRadius.circular(SizeConfig.roundness16),
         color: const Color(0xff161d22),
       ),
-      margin: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+      margin: EdgeInsets.symmetric(
+        horizontal: SizeConfig.pageHorizontalMargins,
+        vertical: SizeConfig.padding10,
+      ),
       child: Column(
         children: [
           const TicketsSundayWinCard(),
@@ -144,27 +147,35 @@ class TicketsTotalWinWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      padding:
-          EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
-      height: kToolbarHeight,
-      child: Row(
-        children: [
-          Text(
-            "Total Won from Tickets",
-            style: TextStyles.sourceSans.body2,
-          ),
-          const Spacer(),
-          Selector<UserService, UserFundWallet?>(
-            selector: (p0, p1) => p1.userFundWallet,
-            builder: (context, value, child) => Text(
-              "₹${value?.wTmbLifetimeWin ?? 0}",
-              style: TextStyles.rajdhaniSB.body0
-                  .colour(UiConstants.kGoldProPrimary),
-            ),
-          ),
-        ],
+    return Selector<TambolaService, Tuple2<Winners?, bool>>(
+      selector: (_, service) => Tuple2(
+        service.winnerData,
+        service.isEligible,
       ),
+      builder: (context, value, child) => value.item1 == null
+          ? Container(
+              padding: EdgeInsets.symmetric(
+                  horizontal: SizeConfig.pageHorizontalMargins),
+              height: kToolbarHeight,
+              child: Row(
+                children: [
+                  Text(
+                    "Total Won from Tickets",
+                    style: TextStyles.sourceSans.body2,
+                  ),
+                  const Spacer(),
+                  Selector<UserService, UserFundWallet?>(
+                    selector: (p0, p1) => p1.userFundWallet,
+                    builder: (context, value, child) => Text(
+                      "₹${value?.wTmbLifetimeWin ?? 0}",
+                      style: TextStyles.rajdhaniSB.body0
+                          .colour(UiConstants.kGoldProPrimary),
+                    ),
+                  ),
+                ],
+              ),
+            )
+          : const SizedBox(),
     );
   }
 }

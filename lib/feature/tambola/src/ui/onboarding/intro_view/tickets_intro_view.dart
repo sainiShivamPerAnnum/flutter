@@ -253,6 +253,7 @@ class _TicketsIntroViewState extends State<TicketsIntroView> {
                           margin: EdgeInsets.symmetric(
                               horizontal: SizeConfig.pageHorizontalMargins),
                           child: ActionSlider.standard(
+                            height: kToolbarHeight,
                             action: (controller) async {
                               Haptic.vibrate();
                               unawaited(locator<TambolaService>().getPrizes());

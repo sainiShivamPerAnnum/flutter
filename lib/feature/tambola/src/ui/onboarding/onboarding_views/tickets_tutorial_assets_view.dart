@@ -164,7 +164,7 @@ class _TicketsTutorialsViewState extends State<TicketsTutorialsView>
               child: CustomStaggeredAnimatedWidget(
                 animation: _animation4,
                 child: Padding(
-                  padding: const EdgeInsets.all(8.0),
+                  padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
                   child: MaterialButton(
                     height: SizeConfig.padding44,
                     shape: RoundedRectangleBorder(

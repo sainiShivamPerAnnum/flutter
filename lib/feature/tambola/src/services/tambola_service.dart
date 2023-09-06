@@ -39,6 +39,7 @@ class TambolaService extends ChangeNotifier {
   PrizesModel? tambolaPrizes;
   List<Winners>? pastWeekWinners;
   List<TambolaTicketModel> allTickets = [];
+  List<TambolaTicketModel>? allBestTickets = [];
   TambolaBestTicketsModel? _bestTickets;
   int tambolaTicketCount = 0;
   int _matchedTicketCount = 0;
@@ -139,6 +140,7 @@ class TambolaService extends ChangeNotifier {
   Future<int> getTambolaTicketsCount() async {
     await getBestTambolaTickets();
     tambolaTicketCount = bestTickets?.data?.totalTicketCount ?? 0;
+    allBestTickets = bestTickets?.data?.allTickets();
     return tambolaTicketCount;
   }
 
@@ -194,6 +196,7 @@ class TambolaService extends ChangeNotifier {
     final ticketsResponse = await _tambolaRepo.getBestTickets();
     if (ticketsResponse.isSuccess()) {
       bestTickets = ticketsResponse.model;
+      allBestTickets = bestTickets?.data?.allTickets();
     } else {
       //TODO: FAILED TO FETCH TAMBOLA TICKETS. HANDLE FAIL CASE
     }
@@ -222,6 +225,23 @@ class TambolaService extends ChangeNotifier {
 
   Future<void> fetchWeeklyPicks({bool forcedRefresh = false}) async {
     try {
+      //
+      /**
+       * Check if user has spined to slot machine or not 
+       * 
+       * Check from Shared Prefs TT_LAST_CACHE_DAY
+       * 
+       * If day is today && month is this month
+       * --> user has already spined the wheel, show the numbers instead of slot machine
+       * 
+       * else 
+       * --> user has not spned today, show slot machine and set today's picks 
+       *     to slot results
+       * 
+       * if Today's Picks != null 
+       * 
+       * 
+       */
       _logger.i('Requesting for weekly picks');
       final ApiResponse picksResponse = await _tambolaRepo.getWeeklyPicks();
       if (picksResponse.isSuccess()) {
@@ -252,6 +272,7 @@ class TambolaService extends ChangeNotifier {
         }
         if (todaysPicks == null) {
           _logger.i("Today's picks are not generated yet");
+          todaysPicks = [0, 0, 0];
         }
         notifyListeners();
       } else {}

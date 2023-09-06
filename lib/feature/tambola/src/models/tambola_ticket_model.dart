@@ -14,6 +14,7 @@ class TambolaTicketModel {
   final int weekCode;
   final int winProbability;
   List<String>? encodedTambolaList;
+  List<int> ticketsNumList = List.generate(15, (index) => 0);
   List<List<int>>? tambolaBoard =
       List.generate(boardHeight, (_) => List.generate(boardLength, (i) => 0));
   static final helper =
@@ -103,6 +104,9 @@ class TambolaTicketModel {
       indexValueMap = compileEncodedArrayToMap();
       if (indexValueMap.isNotEmpty) {
         tambolaBoard = compileBoardMap();
+        ticketsNumList = tambolaBoard!.expand((x) => x).toList();
+        ticketsNumList.removeWhere((n) => n == 0);
+        print("ticket: $ticketsNumList");
       } else {
         log("indexValueMap is empty");
       }
