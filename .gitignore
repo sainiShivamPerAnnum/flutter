@@ -11,7 +11,6 @@
 .svn/
 out/
 fello.plantuml
-*.lock
 
 # IntelliJ related
 *.iml
@@ -125,7 +124,6 @@ build/ios/
 .packages.generated
 
 # Submodules
-!pubspec.lock
 packages/**/pubspec.lock
 
 # Web related
@@ -144,5 +142,3 @@ lib/generated_plugin_registrant.dart
 !.idea/runConfigurations/
 
 # Exclude pubspec.lock
-pubspec.lock
-/pubspec.lock
