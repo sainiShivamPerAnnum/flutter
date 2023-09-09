@@ -108,7 +108,7 @@
 	<key>CleverTapAccountID</key>
 	<string>948-479-W96Z</string>
 	<key>CleverTapToken</key>
-	<string>XXXXXX</string>
+	<string>ca4-b4c</string>
 	<key>CleverTapRegion</key>
 	<string>in1</string>
 	<key>CFBundleVersion</key>
@@ -151,7 +151,7 @@
 	<key>NSLocationWhenInUseUsageDescription</key>
 	<string>This app needs access to location when open.</string>
 	<key>NSContactsIdentifierUsageDescription</key>
-    <string>We use contact identifiers to link records.</string>
+	<string>We use contact identifiers to link records.</string>
 	<key>NSContactsUsageDescription</key>
 	<string>We need access to your contacts to find and invite friends.</string>
 	<key>UIBackgroundModes</key>
