@@ -1,23 +1,14 @@
 import 'dart:math';
 
-import 'package:felloapp/core/enums/page_state_enum.dart';
-import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/prizes_model.dart';
-import 'package:felloapp/core/repository/user_repo.dart';
-import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/feature/tambola/src/ui/animations/dotted_border_animation.dart';
 import 'package:felloapp/feature/tambola/src/ui/onboarding/intro_view/tickets_intro_view.dart';
 import 'package:felloapp/feature/tambola/src/ui/onboarding/onboarding_views/tickets_tutorial_assets_view.dart';
 import 'package:felloapp/feature/tambola/src/ui/widgets/ticket/tambola_ticket.dart';
 import 'package:felloapp/feature/tambola/src/ui/widgets/ticket/ticket_painter.dart';
 import 'package:felloapp/feature/tambola/tambola.dart';
-import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/navigator/router/ui_pages.dart';
-import 'package:felloapp/ui/pages/asset_selection.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/haptic.dart';
-import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -38,6 +29,24 @@ class _TicketsTutorialsSlotMachineViewState
     extends State<TicketsTutorialsSlotMachineView>
     with TickerProviderStateMixin {
   int spinCount = 0;
+  String _subtitle = "This is a dummy Ticket";
+  String _slotMachineTitle = "Spin to reveal the numbers";
+
+  String get slotMachineTitle => _slotMachineTitle;
+
+  set slotMachineTitle(String value) {
+    setState(() {
+      _slotMachineTitle = value;
+    });
+  }
+
+  String get subtitle => _subtitle;
+
+  set subtitle(String value) {
+    setState(() {
+      _subtitle = value;
+    });
+  }
 
   late PageController _controller1, _controller2, _controller3;
   late ScrollController _scrollController;
@@ -170,14 +179,15 @@ class _TicketsTutorialsSlotMachineViewState
     );
 
 //Initial Animation
-    Future.delayed(const Duration(milliseconds: 100), () {
+    Future.delayed(const Duration(milliseconds: 1500), () {
       showConfetti = true;
       Vibration.vibrate(duration: 200);
     }).then(
       (value) => Future.delayed(const Duration(milliseconds: 2000), () {
         showConfetti = false;
+        subtitle = "";
         isSlotMachineVisible = true;
-        slotMachineHeight = SizeConfig.screenWidth! * 0.89;
+        slotMachineHeight = SizeConfig.screenWidth! * 0.8;
       }).then(
         (value) => Future.delayed(
           const Duration(seconds: 1),
@@ -188,6 +198,7 @@ class _TicketsTutorialsSlotMachineViewState
                 .then((value) => Future.delayed(const Duration(seconds: 1), () {
                       _shakeAnimController.forward();
                       Haptic.shakeVibrate();
+                      subtitle = "Reveal the numbers to match\nwith tickets";
                     }));
           },
         ),
@@ -239,11 +250,16 @@ class _TicketsTutorialsSlotMachineViewState
         if (spinCount == 0) {
           updateAnimationSpeed(1000);
           calledDigits.addAll([46, 17, 63]);
+          slotMachineTitle = "3 numbers matched!!";
+          subtitle = "Spin to reveal rewards";
         } else {
           calledDigits.addAll([79, 4, 20]);
           _dottedLightsController.stop();
+          subtitle = "";
+          slotMachineTitle = "Congratulations! 5 Numbers matched";
           Future.delayed(const Duration(seconds: 1), () {
             _animationController2.forward();
+            slotMachineHeight = SizeConfig.screenWidth! * 0.68;
             _scrollController
                 .animateTo(_scrollController.position.maxScrollExtent,
                     duration: const Duration(seconds: 2),
@@ -313,9 +329,12 @@ class _TicketsTutorialsSlotMachineViewState
                   mainAxisAlignment: MainAxisAlignment.start,
                   children: [
                     const SizedBox(height: kToolbarHeight / 2),
-                    const Head(),
+                    CustomStaggeredAnimatedWidget(
+                      animation: _subtitle1Animation,
+                      child: const Head(),
+                    ),
                     SizedBox(height: SizeConfig.padding10),
-                    TopInfoWidget(subtitle1Animation: _subtitle1Animation),
+                    TopInfoWidget(subtitle: subtitle),
                     AnimatedContainer(
                       duration: const Duration(milliseconds: 1500),
                       height: slotMachineHeight,
@@ -336,7 +355,7 @@ class _TicketsTutorialsSlotMachineViewState
                           child: Column(
                             children: [
                               Text(
-                                "Reveal numbers to match with Tickets",
+                                slotMachineTitle,
                                 style: TextStyles.sourceSansB.body2
                                     .colour(Colors.white),
                               ),
@@ -439,95 +458,39 @@ class _TicketsTutorialsSlotMachineViewState
                                   );
                                 },
                                 child: spinCount < 2
-                                    ? Column(
-                                        children: [
-                                          Text(
-                                            "${2 - spinCount}/2 Spins Left",
-                                            style: TextStyles.body4
-                                                .colour(Colors.white),
+                                    ? AnimatedBuilder(
+                                        animation: _shakeAnimController,
+                                        builder: (ctx, child) {
+                                          final sineValue = sin(5 *
+                                              2 *
+                                              pi *
+                                              _shakeAnimController.value);
+                                          return Transform.translate(
+                                            offset: Offset(sineValue * 5, 0),
+                                            child: child,
+                                          );
+                                        },
+                                        child: MaterialButton(
+                                          height: SizeConfig.padding44,
+                                          shape: RoundedRectangleBorder(
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                      SizeConfig.roundness5)),
+                                          minWidth:
+                                              SizeConfig.screenWidth! * 0.3,
+                                          enableFeedback: !isSpinning,
+                                          color: isSpinning
+                                              ? Colors.grey
+                                              : Colors.white,
+                                          onPressed: spin,
+                                          child: Text(
+                                            "SPIN : ${2 - spinCount}",
+                                            style: TextStyles.rajdhaniB.body0
+                                                .colour(Colors.black),
                                           ),
-                                          SizedBox(
-                                              height: SizeConfig.padding16),
-                                          AnimatedBuilder(
-                                            animation: _shakeAnimController,
-                                            builder: (ctx, child) {
-                                              final sineValue = sin(5 *
-                                                  2 *
-                                                  pi *
-                                                  _shakeAnimController.value);
-                                              return Transform.translate(
-                                                offset:
-                                                    Offset(sineValue * 5, 0),
-                                                child: child,
-                                              );
-                                            },
-                                            child: MaterialButton(
-                                              height: SizeConfig.padding44,
-                                              shape: RoundedRectangleBorder(
-                                                  borderRadius:
-                                                      BorderRadius.circular(
-                                                          SizeConfig
-                                                              .roundness5)),
-                                              minWidth:
-                                                  SizeConfig.screenWidth! * 0.3,
-                                              enableFeedback: !isSpinning,
-                                              color: isSpinning
-                                                  ? Colors.grey
-                                                  : Colors.white,
-                                              onPressed: spin,
-                                              child: Text(
-                                                "SPIN",
-                                                style: TextStyles
-                                                    .rajdhaniB.body0
-                                                    .colour(Colors.black),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      )
-                                    : Container(
-                                        margin: EdgeInsets.symmetric(
-                                          horizontal: SizeConfig.padding16,
-                                          vertical: SizeConfig.padding16,
                                         ),
-                                        padding: EdgeInsets.symmetric(
-                                            horizontal: SizeConfig.padding16,
-                                            vertical: SizeConfig.padding12),
-                                        decoration: BoxDecoration(
-                                            border: Border.all(
-                                                color: UiConstants.primaryColor,
-                                                width: 1),
-                                            borderRadius: BorderRadius.circular(
-                                                SizeConfig.roundness12),
-                                            color: Colors.black45),
-                                        child: Row(children: [
-                                          Text(
-                                            "5-7",
-                                            style: TextStyles.rajdhaniB.body1
-                                                .colour(
-                                                    UiConstants.primaryColor),
-                                          ),
-                                          SizedBox(width: SizeConfig.padding4),
-                                          Text(
-                                            "Matches",
-                                            style: TextStyles.body2
-                                                .colour(Colors.white54),
-                                          ),
-                                          const Spacer(),
-                                          Text(
-                                            "1",
-                                            style: TextStyles.rajdhaniB.body1
-                                                .colour(
-                                                    UiConstants.primaryColor),
-                                          ),
-                                          SizedBox(width: SizeConfig.padding4),
-                                          Text(
-                                            "Ticket",
-                                            style: TextStyles.body2
-                                                .colour(Colors.white54),
-                                          ),
-                                        ]),
-                                      ),
+                                      )
+                                    : const SizedBox(),
                               )
                             ],
                           ),
@@ -539,14 +502,56 @@ class _TicketsTutorialsSlotMachineViewState
                       calledDigits: calledDigits,
                       ticketNumbers: ticketNumbers,
                     ),
-                    SizedBox(height: SizeConfig.padding16),
                     CustomStaggeredAnimatedWidget(
                       animation: _subtitle2Animation,
-                      child: Text(
-                        "Rewards are calculated every\nmonday with top 10 of your Tickets",
-                        style:
-                            TextStyles.sourceSansB.body1.colour(Colors.white),
-                        textAlign: TextAlign.center,
+                      child: Column(
+                        children: [
+                          Text(
+                            "5 Numbers Matched",
+                            style: TextStyles.sourceSansB.body1
+                                .colour(Colors.white),
+                            textAlign: TextAlign.center,
+                          ),
+                          Container(
+                            margin: EdgeInsets.symmetric(
+                              horizontal: SizeConfig.pageHorizontalMargins,
+                              vertical: SizeConfig.padding16,
+                            ),
+                            padding: EdgeInsets.symmetric(
+                                horizontal: SizeConfig.padding16,
+                                vertical: SizeConfig.padding12),
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                  color: UiConstants.primaryColor, width: 1),
+                              borderRadius:
+                                  BorderRadius.circular(SizeConfig.roundness12),
+                              color: UiConstants.kFloContainerColor,
+                            ),
+                            child: Row(children: [
+                              Text(
+                                "1",
+                                style: TextStyles.rajdhaniB.body1
+                                    .colour(Colors.white),
+                              ),
+                              SizedBox(width: SizeConfig.padding4),
+                              Text(
+                                "Ticket",
+                                style: TextStyles.body2.colour(Colors.white54),
+                              ),
+                              const Spacer(),
+                              Text(
+                                "5-7",
+                                style: TextStyles.rajdhaniB.body1
+                                    .colour(Colors.white),
+                              ),
+                              SizedBox(width: SizeConfig.padding4),
+                              Text(
+                                "Matches",
+                                style: TextStyles.body2.colour(Colors.white54),
+                              ),
+                            ]),
+                          )
+                        ],
                       ),
                     ),
                     CustomStaggeredAnimatedWidget(
@@ -566,37 +571,46 @@ class _TicketsTutorialsSlotMachineViewState
                             SizeConfig.pageHorizontalMargins * 2,
                         color: Colors.white,
                         onPressed: () {
-                          final _userService = locator<UserService>();
-                          final _userRepo = locator<UserRepository>();
-                          _userRepo.updateUser(
-                            uid: _userService.baseUser!.uid,
-                            dMap: {
-                              'mUserPrefsAl': _userService
-                                      .baseUser!.userPreferences
-                                      .getPreference(
-                                    Preferences.APPLOCK,
-                                  ) ==
-                                  1,
-                              'mUserPrefsTn': _userService
-                                      .baseUser!.userPreferences
-                                      .getPreference(
-                                    Preferences.TAMBOLANOTIFICATIONS,
-                                  ) ==
-                                  1,
-                              'mUserPrefsEr': Preferences.FLOINVOICEMAIL,
-                              'mUserPrefsTo': Preferences.TAMBOLAONBOARDING
-                            },
-                          ).then((value) {
-                            _userService.setBaseUser();
-                            const Log("Preferences updated");
-                          });
-                          AppState.delegate!.appState.currentAction =
-                              PageAction(
-                            page: AssetSelectionViewConfig,
-                            widget:
-                                const AssetSelectionPage(showOnlyFlo: false),
-                            state: PageState.replaceWidget,
+                          Haptic.vibrate();
+                          Navigator.push(
+                            context,
+                            PageRouteBuilder(
+                              transitionDuration: const Duration(seconds: 1),
+                              pageBuilder: (_, __, ___) =>
+                                  const TicketsTutorialsView(),
+                            ),
                           );
+                          // final _userService = locator<UserService>();
+                          // final _userRepo = locator<UserRepository>();
+                          // _userRepo.updateUser(
+                          //   uid: _userService.baseUser!.uid,
+                          //   dMap: {
+                          //     'mUserPrefsAl': _userService
+                          //             .baseUser!.userPreferences
+                          //             .getPreference(
+                          //           Preferences.APPLOCK,
+                          //         ) ==
+                          //         1,
+                          //     'mUserPrefsTn': _userService
+                          //             .baseUser!.userPreferences
+                          //             .getPreference(
+                          //           Preferences.TAMBOLANOTIFICATIONS,
+                          //         ) ==
+                          //         1,
+                          //     'mUserPrefsEr': Preferences.FLOINVOICEMAIL,
+                          //     'mUserPrefsTo': Preferences.TAMBOLAONBOARDING
+                          //   },
+                          // ).then((value) {
+                          //   _userService.setBaseUser();
+                          //   const Log("Preferences updated");
+                          // });
+                          // AppState.delegate!.appState.currentAction =
+                          //     PageAction(
+                          //   page: AssetSelectionViewConfig,
+                          //   widget:
+                          //       const AssetSelectionPage(showOnlyFlo: false),
+                          //   state: PageState.replaceWidget,
+                          // );
                         },
                         child: Text(
                           "GET YOUR 1ST TICKET",
@@ -761,34 +775,33 @@ class WinningTicketWidget extends StatelessWidget {
 }
 
 class TopInfoWidget extends StatelessWidget {
-  const TopInfoWidget({
-    super.key,
-    required Animation<double> subtitle1Animation,
-  }) : _subtitle1Animation = subtitle1Animation;
+  final String subtitle;
 
-  final Animation<double> _subtitle1Animation;
+  const TopInfoWidget({super.key, required this.subtitle});
 
   @override
   Widget build(BuildContext context) {
-    return CustomStaggeredAnimatedWidget(
-      animation: _subtitle1Animation,
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        children: [
-          Text(
-            "Spin to reveal numbers everyday",
-            style: TextStyles.sourceSansSB.body2.colour(Colors.white),
-            textAlign: TextAlign.center,
-          ),
-          SizedBox(height: SizeConfig.padding10),
-          Text(
-            "( Don’t worry, if you forget we will do it for you )",
-            style:
-                TextStyles.sourceSansSB.body3.colour(UiConstants.primaryColor),
-            textAlign: TextAlign.center,
-          ),
-        ],
-      ),
+    return
+        // CustomStaggeredAnimatedWidget(
+        //   animation: _subtitle1Animation,
+        //   child:
+        Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        Text(
+          subtitle,
+          style: TextStyles.sourceSansSB.body0.colour(Colors.white),
+          textAlign: TextAlign.center,
+        ),
+        // SizedBox(height: SizeConfig.padding10),
+        // Text(
+        //   "( Don’t worry, if you forget we will do it for you )",
+        //   style:
+        //       TextStyles.sourceSansSB.body3.colour(UiConstants.primaryColor),
+        //   textAlign: TextAlign.center,
+        // ),
+      ],
+      // ),
     );
   }
 }
@@ -848,7 +861,7 @@ class TicketsRewardCategoriesWidget extends StatelessWidget {
     return Container(
       margin: EdgeInsets.symmetric(
         horizontal: SizeConfig.pageHorizontalMargins,
-        vertical: SizeConfig.padding26,
+        vertical: SizeConfig.padding16,
       ),
       padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
       decoration: BoxDecoration(

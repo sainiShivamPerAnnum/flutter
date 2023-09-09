@@ -1,8 +1,9 @@
 import 'dart:async';
 
 import 'package:action_slider/action_slider.dart';
-import 'package:felloapp/feature/tambola/src/ui/onboarding/onboarding_views/tickets_tutorial_assets_view.dart';
+import 'package:felloapp/feature/tambola/src/ui/onboarding/onboarding_views/tickets_tutorial_slot_machine_view.dart';
 import 'package:felloapp/feature/tambola/src/ui/widgets/ticket/ticket_painter.dart';
+import 'package:felloapp/feature/tambola/src/ui/widgets/ticket_cost_info.dart';
 import 'package:felloapp/feature/tambola/tambola.dart';
 import 'package:felloapp/ui/elements/default_avatar.dart';
 import 'package:felloapp/util/assets.dart';
@@ -73,9 +74,9 @@ class _TicketsIntroViewState extends State<TicketsIntroView> {
                       children: [
                         Expanded(
                             child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
+                          mainAxisAlignment: MainAxisAlignment.start,
                           children: [
-                            const SizedBox(height: kToolbarHeight / 3),
+                            const SizedBox(height: kToolbarHeight / 2),
                             Hero(
                               tag: "mainAsset",
                               child: SvgPicture.asset(
@@ -120,7 +121,7 @@ class _TicketsIntroViewState extends State<TicketsIntroView> {
                             ),
                             SizedBox(height: SizeConfig.padding10),
                             Text(
-                              "Participate in daily draw to\nEarn rewards",
+                              "Win every week with tickets",
                               style: TextStyles.sourceSansSB.body1
                                   .colour(Colors.white),
                               textAlign: TextAlign.center,
@@ -220,26 +221,7 @@ class _TicketsIntroViewState extends State<TicketsIntroView> {
                             //     .colour(Colors.white),
                             //   textAlign: TextAlign.center,
                             // ),
-                            Text.rich(
-                              TextSpan(
-                                children: [
-                                  const TextSpan(
-                                    text: 'Get Tickets by saving min ',
-                                  ),
-                                  TextSpan(
-                                    text: '₹500',
-                                    style: TextStyles.sourceSansM.body2
-                                        .colour(const Color(0xFFFFD979)),
-                                  ),
-                                  const TextSpan(
-                                    text: ' in\nany of the assets every week',
-                                  ),
-                                ],
-                              ),
-                              style: TextStyles.sourceSansM.body2
-                                  .colour(Colors.white),
-                              textAlign: TextAlign.center,
-                            ),
+                            const TambolaTicketInfo()
                           ],
                         )),
                         Text(
@@ -258,17 +240,13 @@ class _TicketsIntroViewState extends State<TicketsIntroView> {
                               Haptic.vibrate();
                               unawaited(locator<TambolaService>().getPrizes());
                               // AppState.screenStack.add(ScreenItem.modalsheet);
-                              unawaited(
-                                Navigator.push(
-                                  context,
-                                  PageRouteBuilder(
-                                    transitionDuration:
-                                        const Duration(seconds: 1),
-                                    pageBuilder: (_, __, ___) =>
-                                        const TicketsTutorialsView(),
-                                  ),
+                              unawaited(Navigator.push(
+                                context,
+                                MaterialPageRoute(
+                                  builder: (context) =>
+                                      const TicketsTutorialsSlotMachineView(),
                                 ),
-                              );
+                              ));
                             },
                             toggleColor: UiConstants.primaryColor,
                             child: Text(

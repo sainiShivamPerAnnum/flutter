@@ -209,6 +209,7 @@ class Assets {
   static const String winScreenHighestScorers =
       "assets/svg/highest_scorers.svg";
 
+  static const String trophySvg = "assets/vectors/trophy.svg";
   static const String dailyAppBonusHero =
       "assets/vectors/dailyAppBonusHero.svg";
 
