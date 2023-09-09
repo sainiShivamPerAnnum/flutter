@@ -1804,7 +1804,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
-				SUPPORTED_PLATFORMS = iphoneos;
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};
@@ -1823,10 +1823,8 @@
 				CURRENT_PROJECT_VERSION = 214;
 				DEVELOPMENT_TEAM = 7FH5SHLD2G;
 				ENABLE_BITCODE = NO;
-				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = i386;
-				FLUTTER_APPLICATION_PATH = /Users/arabkumar/Documents/Fello/Github/felloapp;
-				FLUTTER_ROOT = /Users/arabkumar/Developer/flutter;
-				FLUTTER_TARGET = /Users/arabkumar/Documents/Fello/Github/felloapp/lib/main_prod.dart;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "i386 arm64";
+				FLUTTER_TARGET = lib/main_prod.dart;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
@@ -1842,7 +1840,6 @@
 					"$(PROJECT_DIR)/Flutter",
 				);
 				MARKETING_VERSION = 4.4.4;
-				PACKAGE_CONFIG = /Users/arabkumar/Documents/Fello/Github/felloapp/.dart_tool/package_config.json;
 				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -1905,6 +1902,7 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = "Debug-qa";
@@ -1923,10 +1921,8 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 7FH5SHLD2G;
 				ENABLE_BITCODE = NO;
-				FLUTTER_APPLICATION_PATH = /Users/arabkumar/Documents/Fello/Github/felloapp;
 				FLUTTER_BUILD_DIR = build/ios;
-				FLUTTER_ROOT = /Users/arabkumar/Developer/flutter;
-				FLUTTER_TARGET = /Users/arabkumar/Documents/Fello/Github/felloapp/lib/main_qa.dart;
+				FLUTTER_TARGET = lib/main_qa.dart;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
@@ -1942,7 +1938,6 @@
 					"$(PROJECT_DIR)/Flutter",
 				);
 				MARKETING_VERSION = 4.4.4;
-				PACKAGE_CONFIG = /Users/arabkumar/Documents/Fello/Github/felloapp/.dart_tool/package_config.json;
 				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -2000,7 +1995,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
-				SUPPORTED_PLATFORMS = iphoneos;
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -2021,9 +2016,7 @@
 				CURRENT_PROJECT_VERSION = 214;
 				DEVELOPMENT_TEAM = 7FH5SHLD2G;
 				ENABLE_BITCODE = NO;
-				FLUTTER_APPLICATION_PATH = /Users/arabkumar/Documents/Fello/Github/felloapp;
-				FLUTTER_ROOT = /Users/arabkumar/Developer/flutter;
-				FLUTTER_TARGET = /Users/arabkumar/Documents/Fello/Github/felloapp/lib/main_qa.dart;
+				FLUTTER_TARGET = lib/main_qa.dart;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
@@ -2039,7 +2032,6 @@
 					"$(PROJECT_DIR)/Flutter",
 				);
 				MARKETING_VERSION = 4.4.4;
-				PACKAGE_CONFIG = /Users/arabkumar/Documents/Fello/Github/felloapp/.dart_tool/package_config.json;
 				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -2096,7 +2088,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
-				SUPPORTED_PLATFORMS = iphoneos;
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};
@@ -2115,9 +2107,8 @@
 				CURRENT_PROJECT_VERSION = 214;
 				DEVELOPMENT_TEAM = 7FH5SHLD2G;
 				ENABLE_BITCODE = NO;
-				FLUTTER_APPLICATION_PATH = /Users/arabkumar/Documents/Fello/Github/felloapp;
-				FLUTTER_ROOT = /Users/arabkumar/Developer/flutter;
-				FLUTTER_TARGET = /Users/arabkumar/Documents/Fello/Github/felloapp/lib/main_qa.dart;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "arm64 i386";
+				FLUTTER_TARGET = lib/main_qa.dart;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
@@ -2133,7 +2124,6 @@
 					"$(PROJECT_DIR)/Flutter",
 				);
 				MARKETING_VERSION = 4.4.4;
-				PACKAGE_CONFIG = /Users/arabkumar/Documents/Fello/Github/felloapp/.dart_tool/package_config.json;
 				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.qa;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -2196,6 +2186,7 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = "Debug-dev";
@@ -2217,11 +2208,9 @@
 				DEVELOPMENT_TEAM = 7FH5SHLD2G;
 				ENABLE_BITCODE = NO;
 				"EXCLUDED_ARCHS[sdk=iphoneos*]" = "armv7 i386";
-				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = i386;
-				FLUTTER_APPLICATION_PATH = /Users/arabkumar/Documents/Fello/Github/felloapp;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "i386 arm64";
 				FLUTTER_BUILD_DIR = build/ios;
-				FLUTTER_ROOT = /Users/arabkumar/Developer/flutter;
-				FLUTTER_TARGET = /Users/arabkumar/Documents/Fello/Github/felloapp/lib/main_dev.dart;
+				FLUTTER_TARGET = lib/main_dev.dart;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
@@ -2237,7 +2226,6 @@
 					"$(PROJECT_DIR)/Flutter",
 				);
 				MARKETING_VERSION = 4.4.4;
-				PACKAGE_CONFIG = /Users/arabkumar/Documents/Fello/Github/felloapp/.dart_tool/package_config.json;
 				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -2295,7 +2283,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
-				SUPPORTED_PLATFORMS = iphoneos;
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -2316,10 +2304,8 @@
 				CURRENT_PROJECT_VERSION = 214;
 				DEVELOPMENT_TEAM = 7FH5SHLD2G;
 				ENABLE_BITCODE = NO;
-				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = i386;
-				FLUTTER_APPLICATION_PATH = /Users/arabkumar/Documents/Fello/Github/felloapp;
-				FLUTTER_ROOT = /Users/arabkumar/Developer/flutter;
-				FLUTTER_TARGET = /Users/arabkumar/Documents/Fello/Github/felloapp/lib/main_dev.dart;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "i386 arm64";
+				FLUTTER_TARGET = lib/main_dev.dart;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
@@ -2335,7 +2321,6 @@
 					"$(PROJECT_DIR)/Flutter",
 				);
 				MARKETING_VERSION = 4.4.4;
-				PACKAGE_CONFIG = /Users/arabkumar/Documents/Fello/Github/felloapp/.dart_tool/package_config.json;
 				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -2392,7 +2377,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
-				SUPPORTED_PLATFORMS = iphoneos;
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
 				TARGETED_DEVICE_FAMILY = "1,2";
 				VALIDATE_PRODUCT = YES;
 			};
@@ -2411,9 +2396,8 @@
 				CURRENT_PROJECT_VERSION = 214;
 				DEVELOPMENT_TEAM = 7FH5SHLD2G;
 				ENABLE_BITCODE = NO;
-				FLUTTER_APPLICATION_PATH = /Users/arabkumar/Documents/Fello/Github/felloapp;
-				FLUTTER_ROOT = /Users/arabkumar/Developer/flutter;
-				FLUTTER_TARGET = /Users/arabkumar/Documents/Fello/Github/felloapp/lib/main_dev.dart;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "arm64 i386";
+				FLUTTER_TARGET = lib/main_dev.dart;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
@@ -2429,7 +2413,6 @@
 					"$(PROJECT_DIR)/Flutter",
 				);
 				MARKETING_VERSION = 4.4.4;
-				PACKAGE_CONFIG = /Users/arabkumar/Documents/Fello/Github/felloapp/.dart_tool/package_config.json;
 				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS.dev;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -2492,6 +2475,7 @@
 				MTL_ENABLE_DEBUG_INFO = YES;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = "Debug-prod";
@@ -2542,7 +2526,7 @@
 				MTL_ENABLE_DEBUG_INFO = NO;
 				ONLY_ACTIVE_ARCH = YES;
 				SDKROOT = iphoneos;
-				SUPPORTED_PLATFORMS = iphoneos;
+				SUPPORTED_PLATFORMS = "iphonesimulator iphoneos";
 				SWIFT_COMPILATION_MODE = wholemodule;
 				SWIFT_OPTIMIZATION_LEVEL = "-O";
 				TARGETED_DEVICE_FAMILY = "1,2";
@@ -2564,11 +2548,9 @@
 				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
 				DEVELOPMENT_TEAM = 7FH5SHLD2G;
 				ENABLE_BITCODE = NO;
-				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = i386;
-				FLUTTER_APPLICATION_PATH = /Users/arabkumar/Documents/Fello/Github/felloapp;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "i386 arm64";
 				FLUTTER_BUILD_DIR = build/ios;
-				FLUTTER_ROOT = /Users/arabkumar/Developer/flutter;
-				FLUTTER_TARGET = /Users/arabkumar/Documents/Fello/Github/felloapp/lib/main_prod.dart;
+				FLUTTER_TARGET = lib/main_prod.dart;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
@@ -2584,7 +2566,6 @@
 					"$(PROJECT_DIR)/Flutter",
 				);
 				MARKETING_VERSION = 4.4.4;
-				PACKAGE_CONFIG = /Users/arabkumar/Documents/Fello/Github/felloapp/.dart_tool/package_config.json;
 				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
@@ -2610,10 +2591,8 @@
 				DEVELOPMENT_TEAM = 7FH5SHLD2G;
 				ENABLE_BITCODE = NO;
 				"EXCLUDED_ARCHS[sdk=iphoneos*]" = "armv7 1386";
-				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = i386;
-				FLUTTER_APPLICATION_PATH = /Users/arabkumar/Documents/Fello/Github/felloapp;
-				FLUTTER_ROOT = /Users/arabkumar/Developer/flutter;
-				FLUTTER_TARGET = /Users/arabkumar/Documents/Fello/Github/felloapp/lib/main_prod.dart;
+				"EXCLUDED_ARCHS[sdk=iphonesimulator*]" = "i386 arm64";
+				FLUTTER_TARGET = lib/main_prod.dart;
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Flutter",
@@ -2629,7 +2608,6 @@
 					"$(PROJECT_DIR)/Flutter",
 				);
 				MARKETING_VERSION = 4.4.4;
-				PACKAGE_CONFIG = /Users/arabkumar/Documents/Fello/Github/felloapp/.dart_tool/package_config.json;
 				PRODUCT_BUNDLE_IDENTIFIER = in.fello.felloappiOS;
 				PRODUCT_NAME = "$(TARGET_NAME)";
 				PROVISIONING_PROFILE_SPECIFIER = "";
