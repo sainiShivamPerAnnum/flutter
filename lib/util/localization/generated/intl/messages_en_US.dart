@@ -178,7 +178,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "blogs": MessageLookupByLibrary.simpleMessage("Blogs"),
         "blogsSubTitle": MessageLookupByLibrary.simpleMessage(
             "Read about the world of finance"),
-        "blogsTitle": MessageLookupByLibrary.simpleMessage("Fin-gyan"),
+        "blogsTitle": MessageLookupByLibrary.simpleMessage("Fin-gyan by Fello"),
         "bought": MessageLookupByLibrary.simpleMessage("Bought"),
         "boxFloTitles1":
             MessageLookupByLibrary.simpleMessage("10% returns per annum"),
@@ -688,7 +688,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "Please enter the email where you would like to receive all transaction and support related updates"),
         "obEnterDetails": MessageLookupByLibrary.simpleMessage("Enter Details"),
         "obEnterDetailsTitle": MessageLookupByLibrary.simpleMessage(
-            "You\'re one step away from 10% returns"),
+            "You\'re one step away from 12% returns"),
         "obEnterMobile": MessageLookupByLibrary.simpleMessage(
             " Enter your 10 digit phone number"),
         "obEnterOTP": MessageLookupByLibrary.simpleMessage("Enter the OTP"),
