@@ -106,9 +106,9 @@
 	<key>FacebookClientToken</key>
 	<string>6f9d18f671142554dff9da869d835363</string>
 	<key>CleverTapAccountID</key>
-	<string>948-479-W96Z</string>
+	<string>$(CleverTapAccountID)</string>
 	<key>CleverTapToken</key>
-	<string>ca4-b4c</string>
+	<string>$(CleverTapToken)</string>
 	<key>CleverTapRegion</key>
 	<string>in1</string>
 	<key>CFBundleVersion</key>
