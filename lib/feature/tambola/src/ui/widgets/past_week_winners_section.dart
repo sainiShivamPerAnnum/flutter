@@ -80,8 +80,8 @@ class _TambolaLeaderboardViewState extends State<TambolaLeaderboardView> {
                   height: SizeConfig.pageHorizontalMargins,
                 ),
                 Text(
-                  "Last Week Winners",
-                  style: TextStyles.rajdhaniSB.body0,
+                  "Leaderboard",
+                  style: TextStyles.sourceSansSB.title3,
                 ),
                 SizedBox(
                   height: SizeConfig.pageHorizontalMargins,
@@ -115,178 +115,169 @@ class _TambolaLeaderboardViewState extends State<TambolaLeaderboardView> {
                               text: "Leaderboard will be updated soon",
                             ),
                           )
-                        : Column(
-                            children: [
-                              Row(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Text(
-                                    "#",
-                                    style: TextStyles.sourceSans.body3
-                                        .colour(UiConstants.kTextColor2),
-                                  ),
-                                  SizedBox(width: SizeConfig.padding32),
-                                  Text("Names",
-                                      style: TextStyles.sourceSans.body3
-                                          .colour(UiConstants.kTextColor2)),
-                                  const Spacer(),
-                                  Text(
-                                    'Tickets Owned',
-                                    style: TextStyles.sourceSans.body3
-                                        .colour(UiConstants.kTextColor2),
-                                    maxLines: 2,
-                                  ),
-                                  SizedBox(width: SizeConfig.padding16),
-                                  Text(
-                                    'Rewards',
-                                    style: TextStyles.sourceSans.body3
-                                        .colour(UiConstants.kTextColor2),
-                                  )
-                                ],
-                              ),
-                              Column(
-                                children: List.generate(
-                                  _seeAll
-                                      ? winners.length
-                                      : winners.length > 10
-                                          ? 10
-                                          : winners.length,
-                                  (i) {
-                                    return Column(
-                                      children: [
-                                        Container(
-                                          width: SizeConfig.screenWidth,
-                                          padding: EdgeInsets.symmetric(
-                                              vertical: SizeConfig.padding12),
-                                          margin: EdgeInsets.symmetric(
-                                            vertical: SizeConfig.padding4,
-                                          ),
-                                          decoration: BoxDecoration(
-                                            color: Colors.transparent,
-                                            borderRadius: BorderRadius.circular(
-                                                SizeConfig.roundness16),
-                                          ),
-                                          child: Row(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: [
-                                              Text(
-                                                "${i + 1}",
-                                                style: TextStyles
-                                                    .sourceSans.body2
-                                                    .colour(Colors.white),
-                                              ),
-                                              SizedBox(
-                                                  width: SizeConfig.padding24),
-                                              DefaultAvatar(),
-                                              SizedBox(
-                                                  width: SizeConfig.padding12),
-                                              Expanded(
-                                                child: Column(
-                                                  crossAxisAlignment:
-                                                      CrossAxisAlignment.start,
-                                                  mainAxisAlignment:
-                                                      MainAxisAlignment.center,
-                                                  children: [
-                                                    Text(
-                                                        //"avc",
-                                                        winners[i]
-                                                            .username!
-                                                            .replaceAll(
-                                                                '@', '.'),
-                                                        style: TextStyles
-                                                            .sourceSans.body2
-                                                            .colour(
-                                                                Colors.white)),
-                                                    SizedBox(
-                                                        height: SizeConfig
-                                                            .padding4),
-                                                    Text(
-                                                      getWinnersCategory(
-                                                              winners, i) ??
-                                                          "",
-                                                      style: TextStyles
-                                                          .sourceSans.body4
-                                                          .colour(Colors.white
-                                                              .withOpacity(
-                                                                  0.5)),
-                                                      maxLines: 2,
-                                                      textAlign:
-                                                          TextAlign.start,
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                              SizedBox(
-                                                width: SizeConfig.padding64,
-                                              ),
-                                              SizedBox(
-                                                // color: Colors.red,
-                                                width: SizeConfig.padding54,
-                                                child: Text(
-                                                  "${winners[i].ticketOwned ?? "00"}",
-                                                  style: TextStyles
-                                                      .sourceSans.body2
-                                                      .colour(Colors.white),
-                                                ),
-                                              ),
-                                              // SizedBox(width: SizeConfig.padding16),
-                                              SizedBox(
-                                                width: SizeConfig.padding64,
-                                                // color: Colors.blue,
-                                                child: Text(
-                                                  "₹ ${winners[i].amount?.toInt() ?? "00"}",
-                                                  style: TextStyles
-                                                      .sourceSans.body2
-                                                      .colour(Colors.white),
-                                                ),
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                        if (i + 1 < winners.length)
-                                          const Divider(
-                                            color: Colors.white,
-                                            thickness: 0.2,
-                                          )
-                                      ],
-                                    );
-                                  },
-                                ),
-                              ),
-                              SizedBox(
-                                height: SizeConfig.padding16,
-                              ),
-                              !_seeAll
-                                  ? GestureDetector(
-                                      onTap: () {
-                                        setState(() {
-                                          _seeAll = true;
-                                        });
-                                      },
-                                      child: Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
+                        : Container(
+                            decoration: BoxDecoration(
+                              color: UiConstants.kTambolaMidTextColor,
+                              borderRadius:
+                                  BorderRadius.circular(SizeConfig.roundness16),
+                            ),
+                            // margin: EdgeInsets.symmetric(
+                            //     horizontal: SizeConfig.pageHorizontalMargins),
+                            // padding: EdgeInsets.all(SizeConfig.padding10),
+                            child: Column(
+                              children: [
+                                // Row(
+                                //   crossAxisAlignment: CrossAxisAlignment.start,
+                                //   children: [
+                                //     Text(
+                                //       "#",
+                                //       style: TextStyles.sourceSans.body3
+                                //           .colour(UiConstants.kTextColor2),
+                                //     ),
+                                //     SizedBox(width: SizeConfig.padding32),
+                                //     Text("Names",
+                                //         style: TextStyles.sourceSans.body3
+                                //             .colour(UiConstants.kTextColor2)),
+                                //     const Spacer(),
+                                //     Text(
+                                //       'Tickets Owned',
+                                //       style: TextStyles.sourceSans.body3
+                                //           .colour(UiConstants.kTextColor2),
+                                //       maxLines: 2,
+                                //     ),
+                                //     SizedBox(width: SizeConfig.padding16),
+                                //     Text(
+                                //       'Rewards',
+                                //       style: TextStyles.sourceSans.body3
+                                //           .colour(UiConstants.kTextColor2),
+                                //     )
+                                //   ],
+                                // ),
+                                Column(
+                                  children: List.generate(
+                                    _seeAll
+                                        ? winners.length
+                                        : winners.length > 10
+                                            ? 10
+                                            : winners.length,
+                                    (i) {
+                                      return Column(
                                         children: [
-                                          Text(
-                                            "See all",
-                                            style: TextStyles.sourceSansSB.body2
-                                                .colour(Colors.white),
+                                          Container(
+                                            width: SizeConfig.screenWidth,
+                                            padding: EdgeInsets.symmetric(
+                                                vertical: SizeConfig.padding12),
+                                            margin: EdgeInsets.symmetric(
+                                              vertical: SizeConfig.padding4,
+                                            ),
+                                            decoration: BoxDecoration(
+                                              color: Colors.transparent,
+                                              borderRadius:
+                                                  BorderRadius.circular(
+                                                      SizeConfig.roundness16),
+                                            ),
+                                            child: Row(
+                                              crossAxisAlignment:
+                                                  CrossAxisAlignment.center,
+                                              children: [
+                                                // Text(
+                                                //   "${i + 1}",
+                                                //   style: TextStyles
+                                                //       .sourceSans.body2
+                                                //       .colour(Colors.white),
+                                                // ),
+                                                SizedBox(
+                                                    width:
+                                                        SizeConfig.padding24),
+                                                DefaultAvatar(),
+                                                SizedBox(
+                                                    width:
+                                                        SizeConfig.padding12),
+                                                Expanded(
+                                                  child: Text(
+                                                      //"avc",
+                                                      winners[i]
+                                                          .username!
+                                                          .replaceAll('@', '.'),
+                                                      style: TextStyles
+                                                          .sourceSans.body2
+                                                          .colour(
+                                                              Colors.white)),
+                                                ),
+                                                SizedBox(
+                                                  width: SizeConfig.padding64,
+                                                ),
+                                                SizedBox(
+                                                  // color: Colors.red,
+                                                  width: SizeConfig.padding54,
+                                                  child: Text(
+                                                    "Earned",
+                                                    style: TextStyles
+                                                        .sourceSans.body2
+                                                        .colour(Colors.white),
+                                                  ),
+                                                ),
+                                                // SizedBox(width: SizeConfig.padding16),
+                                                SizedBox(
+                                                  width: SizeConfig.padding64,
+                                                  // color: Colors.blue,
+                                                  child: Text(
+                                                    "₹ ${winners[i].amount?.toInt() ?? "00"}",
+                                                    style: TextStyles
+                                                        .sourceSansSB.body2
+                                                        .colour(UiConstants
+                                                            .kGoldProPrimary),
+                                                  ),
+                                                )
+                                              ],
+                                            ),
                                           ),
-                                          SizedBox(
-                                            width: SizeConfig.padding8,
-                                          ),
-                                          Transform.rotate(
-                                              angle: math.pi / 2,
-                                              child: SvgPicture.asset(
-                                                Assets.chevRonRightArrow,
-                                                color: UiConstants.primaryColor,
-                                              ))
+                                          if (i + 1 < winners.length)
+                                            const Divider(
+                                              color: Colors.white,
+                                              thickness: 0.2,
+                                            )
                                         ],
-                                      ),
-                                    )
-                                  : const SizedBox()
-                            ],
+                                      );
+                                    },
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: SizeConfig.padding16,
+                                ),
+                                !_seeAll
+                                    ? TextButton(
+                                        onPressed: () {
+                                          setState(() {
+                                            _seeAll = true;
+                                          });
+                                        },
+                                        child: Row(
+                                          mainAxisAlignment:
+                                              MainAxisAlignment.center,
+                                          children: [
+                                            Text(
+                                              "See all",
+                                              style: TextStyles
+                                                  .sourceSansSB.body2
+                                                  .colour(Colors.white),
+                                            ),
+                                            SizedBox(
+                                              width: SizeConfig.padding8,
+                                            ),
+                                            Transform.rotate(
+                                                angle: math.pi / 2,
+                                                child: SvgPicture.asset(
+                                                  Assets.chevRonRightArrow,
+                                                  color:
+                                                      UiConstants.primaryColor,
+                                                ))
+                                          ],
+                                        ),
+                                      )
+                                    : const SizedBox()
+                              ],
+                            ),
                           )),
               ],
             ),

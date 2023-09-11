@@ -1,4 +1,5 @@
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
 import 'package:felloapp/core/model/winners_model.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -9,8 +10,10 @@ import 'package:felloapp/feature/tambola/tambola.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/page_views/height_adaptive_pageview.dart';
+import 'package:felloapp/ui/pages/asset_selection.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -91,7 +94,7 @@ class _TicketsPicksWidgetState extends State<TicketsPicksWidget> {
                     KeepAlivePage(child: const WeeklyPicks()),
                   ],
                 ),
-                SizedBox(height: SizeConfig.padding14),
+                // SizedBox(height: SizeConfig.padding14),
                 TextButton(
                   onPressed: switchPage,
                   child: ValueListenableBuilder(
@@ -326,9 +329,34 @@ class _SlotMachineWidgetState extends State<SlotMachineWidget>
     super.initState();
     _tambolaService.ticketsDotLightsController = AnimationController(
         vsync: this, duration: const Duration(milliseconds: 1000));
-    _controller1 = PageController(viewportFraction: 0.6, initialPage: 0);
-    _controller2 = PageController(viewportFraction: 0.6, initialPage: 0);
-    _controller3 = PageController(viewportFraction: 0.6, initialPage: 0);
+    String lastSpinTimeInIsoString = PreferenceHelper.getString(
+        PreferenceHelper.CACHE_TICKETS_LAST_SPIN_TIMESTAMP);
+    if (lastSpinTimeInIsoString.isNotEmpty) {
+      TimestampModel lastSpinTime =
+          TimestampModel.fromIsoString(lastSpinTimeInIsoString);
+
+      if (lastSpinTime.toDate().day == DateTime.now().day &&
+          lastSpinTime.toDate().month == DateTime.now().month) {
+        _controller1 = PageController(
+            viewportFraction: 0.6,
+            initialPage: _tambolaService.todaysPicks![0]);
+        _controller2 = PageController(
+            viewportFraction: 0.6,
+            initialPage: _tambolaService.todaysPicks![1]);
+        _controller3 = PageController(
+            viewportFraction: 0.6,
+            initialPage: _tambolaService.todaysPicks![2]);
+        _tambolaService.ticketsDotLightsController!.stop();
+      } else {
+        _controller1 = PageController(viewportFraction: 0.6, initialPage: 0);
+        _controller2 = PageController(viewportFraction: 0.6, initialPage: 0);
+        _controller3 = PageController(viewportFraction: 0.6, initialPage: 0);
+      }
+    } else {
+      _controller1 = PageController(viewportFraction: 0.6, initialPage: 0);
+      _controller2 = PageController(viewportFraction: 0.6, initialPage: 0);
+      _controller3 = PageController(viewportFraction: 0.6, initialPage: 0);
+    }
   }
 
   @override
@@ -351,15 +379,16 @@ class _SlotMachineWidgetState extends State<SlotMachineWidget>
     _controller2.jumpToPage(0);
     _controller3.jumpToPage(0);
     Haptic.slotVibrate();
-    _controller1.animateToPage(45,
+    _controller1.animateToPage(_tambolaService.todaysPicks![0],
         duration: const Duration(seconds: 2), curve: Curves.easeOutExpo);
-    _controller2.animateToPage(16,
+    _controller2.animateToPage(_tambolaService.todaysPicks![1],
         duration: const Duration(seconds: 3), curve: Curves.easeOutExpo);
-    _controller3.animateToPage(62,
+    _controller3.animateToPage(_tambolaService.todaysPicks![2],
         duration: const Duration(seconds: 4), curve: Curves.easeOutExpo);
     Future.delayed(const Duration(seconds: 4), () {
       _tambolaService.ticketsDotLightsController!.stop();
       isSpinning = false;
+      _tambolaService.postSlotSpin();
     });
   }
 
@@ -440,70 +469,62 @@ class _SlotMachineWidgetState extends State<SlotMachineWidget>
           ),
         ),
         AnimatedSwitcher(
-            duration: const Duration(seconds: 1),
-            switchInCurve: Curves.easeOutExpo,
-            switchOutCurve: Curves.easeInExpo,
-            transitionBuilder: (child, animation) {
-              return FadeTransition(
-                opacity: animation,
-                child: ScaleTransition(
-                  scale: animation,
-                  child: child,
-                ),
-              );
-            },
-            child: MaterialButton(
-              height: SizeConfig.padding44,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(SizeConfig.roundness5)),
-              minWidth: SizeConfig.screenWidth! * 0.3,
-              color: isSpinning ? Colors.grey : Colors.white,
-              onPressed: spin,
-              enableFeedback: !isSpinning,
-              child: Text(
-                "SPIN",
-                style: TextStyles.rajdhaniB.body0.colour(Colors.black),
+          duration: const Duration(seconds: 1),
+          switchInCurve: Curves.easeOutExpo,
+          switchOutCurve: Curves.easeInExpo,
+          transitionBuilder: (child, animation) {
+            return FadeTransition(
+              opacity: animation,
+              child: ScaleTransition(
+                scale: animation,
+                child: child,
               ),
-            )
-            // : Container(
-            //     margin: EdgeInsets.symmetric(
-            //       horizontal: SizeConfig.padding16,
-            //       vertical: SizeConfig.padding16,
-            //     ),
-            //     padding: EdgeInsets.symmetric(
-            //         horizontal: SizeConfig.padding16,
-            //         vertical: SizeConfig.padding12),
-            //     decoration: BoxDecoration(
-            //         border: Border.all(
-            //             color: UiConstants.primaryColor, width: 1),
-            //         borderRadius:
-            //             BorderRadius.circular(SizeConfig.roundness12),
-            //         color: Colors.black45),
-            //     child: Row(children: [
-            //       Text(
-            //         "5-7",
-            //         style: TextStyles.rajdhaniB.body1
-            //             .colour(UiConstants.primaryColor),
-            //       ),
-            //       SizedBox(width: SizeConfig.padding4),
-            //       Text(
-            //         "Matches",
-            //         style: TextStyles.body2.colour(Colors.white54),
-            //       ),
-            //       const Spacer(),
-            //       Text(
-            //         "1",
-            //         style: TextStyles.rajdhaniB.body1
-            //             .colour(UiConstants.primaryColor),
-            //       ),
-            //       SizedBox(width: SizeConfig.padding4),
-            //       Text(
-            //         "Ticket",
-            //         style: TextStyles.body2.colour(Colors.white54),
-            //       ),
-            //     ]),
-            //   ),
-            ),
+            );
+          },
+          child: _tambolaService.todaysPicks!.contains(-1)
+              ? MaterialButton(
+                  height: SizeConfig.padding44,
+                  shape: RoundedRectangleBorder(
+                      borderRadius:
+                          BorderRadius.circular(SizeConfig.roundness5)),
+                  minWidth: SizeConfig.screenWidth! * 0.8,
+                  color: isSpinning ? Colors.grey : Colors.white,
+                  onPressed: () {
+                    AppState.delegate!.appState.currentAction = PageAction(
+                      page: AssetSelectionViewConfig,
+                      widget: const AssetSelectionPage(
+                          isTicketsFlow: true, showOnlyFlo: false),
+                      state: PageState.addWidget,
+                    );
+                  },
+                  child: Text(
+                    "GET YOUR FIRST TICKET",
+                    style: TextStyles.rajdhaniB.body0.colour(Colors.black),
+                  ),
+                )
+              : _tambolaService.showSpinButton
+                  ? MaterialButton(
+                      height: SizeConfig.padding44,
+                      shape: RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.circular(SizeConfig.roundness5)),
+                      minWidth: SizeConfig.screenWidth! * 0.3,
+                      color: isSpinning ? Colors.grey : Colors.white,
+                      onPressed: spin,
+                      enableFeedback: !isSpinning,
+                      child: Text(
+                        "SPIN",
+                        style: TextStyles.rajdhaniB.body0.colour(Colors.black),
+                      ),
+                    )
+                  : Padding(
+                      padding: const EdgeInsets.all(8.0),
+                      child: Text(
+                        "Next Spin at 6 PM tomorrow",
+                        style: TextStyles.sourceSansB.body1,
+                      ),
+                    ),
+        ),
       ],
     );
   }

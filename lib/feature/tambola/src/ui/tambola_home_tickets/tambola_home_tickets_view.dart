@@ -93,8 +93,31 @@ class _TambolaHomeTicketsViewState extends State<TambolaHomeTicketsView> {
                           const TicketMultiplierOptionsWidget(),
                           AnimatedBuyTambolaTicketCard(
                               key: tambolaBuyTicketCardKey),
-                          const TicketsRewardCategoriesWidget(
-                              highlightRow: false),
+                          Container(
+                            decoration: BoxDecoration(
+                              color: UiConstants.gameCardColor,
+                              borderRadius:
+                                  BorderRadius.circular(SizeConfig.roundness16),
+                            ),
+                            padding: EdgeInsets.symmetric(
+                              horizontal: SizeConfig.padding12,
+                              vertical: SizeConfig.padding18,
+                            ),
+                            margin: EdgeInsets.symmetric(
+                              horizontal: SizeConfig.pageHorizontalMargins,
+                            ),
+                            child: Column(
+                              children: [
+                                Text(
+                                  "Winners announced every Monday",
+                                  style: TextStyles.body3.colour(Colors.grey),
+                                ),
+                                SizedBox(height: SizeConfig.padding12),
+                                const TicketsRewardCategoriesWidget(
+                                    hasMargin: false, highlightRow: false),
+                              ],
+                            ),
+                          ),
                           const TambolaLeaderboardView(),
                           // LottieBuilder.network(Assets.bottomBannerLottie),
                           SizedBox(height: SizeConfig.navBarHeight),

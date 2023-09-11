@@ -53,7 +53,7 @@ class WeeklyPicks extends StatelessWidget {
       ),
       child: Center(
         child: Text(
-          ball == -1 ? '-' : ball.toString(),
+          ball == -1 || ball == 0 ? '-' : ball.toString(),
           style: TextStyle(
             fontSize: SizeConfig.mediumTextSize! * 1,
             fontWeight: FontWeight.w500,
@@ -67,9 +67,8 @@ class WeeklyPicks extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Selector<TambolaService, DailyPick?>(
-      selector: (_, tambolaService) => tambolaService.weeklyPicks,
-      builder: (context, weeklyPicks, child) {
+    return Consumer<TambolaService>(
+      builder: (context, ts, child) {
         final columns = List<Widget>.generate(
           7,
           (i) => Row(
@@ -80,7 +79,7 @@ class WeeklyPicks extends StatelessWidget {
                 style: TextStyles.sourceSans.body3.colour(Colors.white),
               ),
               SizedBox(width: SizeConfig.padding12),
-              _getDrawBallRow(weeklyPicks, i + 1),
+              _getDrawBallRow(ts.weeklyPicks, i + 1),
             ],
           ),
         );

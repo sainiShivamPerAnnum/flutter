@@ -42,10 +42,7 @@ class TicketSection extends StatelessWidget {
             activeTambolaCardCount: data.item1?.data?.totalTicketCount ?? 0,
             // getTicketsTapped: getTicketsTapped,
           ),
-          ((
-                      // data.item1?.data?.totalTicketCount ??
-                      0) ==
-                  0)
+          ((data.item1?.data?.totalTicketCount ?? 0) == 0)
               ? Container(
                   margin: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
                   decoration: BoxDecoration(
@@ -222,20 +219,20 @@ class BestTicketsSection extends StatelessWidget {
                               curve: Curves.decelerate,
                               alignment: Alignment.center,
                               decoration: BoxDecoration(
-                                color: model.todaysPicks!.contains(model
+                                color: model.weeklyPicksList.contains(model
                                         .allBestTickets![index]
                                         .ticketsNumList[i])
                                     ? UiConstants.kSaveDigitalGoldCardBg
                                         .withOpacity(0.7)
                                     : Colors.transparent,
-                                borderRadius: (model.todaysPicks!.contains(model
-                                        .allBestTickets![index]
-                                        .ticketsNumList[i]))
+                                borderRadius: (model.weeklyPicksList.contains(
+                                        model.allBestTickets![index]
+                                            .ticketsNumList[i]))
                                     ? BorderRadius.circular(100)
                                     : BorderRadius.circular(
                                         SizeConfig.blockSizeHorizontal * 1),
                                 border: Border.all(
-                                    color: (model.todaysPicks!.contains(
+                                    color: (model.weeklyPicksList.contains(
                                       model.allBestTickets![index]
                                           .ticketsNumList[i],
                                     ))
@@ -246,7 +243,7 @@ class BestTicketsSection extends StatelessWidget {
                                                 0
                                             ? 0.4
                                             : 0.7),
-                                    width: model.todaysPicks!.contains(model
+                                    width: model.weeklyPicksList.contains(model
                                             .allBestTickets![index]
                                             .ticketsNumList[i])
                                         ? 0.0
@@ -265,14 +262,14 @@ class BestTicketsSection extends StatelessWidget {
                                           .ticketsNumList[i]
                                           .toString(),
                                       style: TextStyles.rajdhaniB.body2.colour(
-                                          model.todaysPicks!.contains(model
+                                          model.weeklyPicksList.contains(model
                                                   .allBestTickets![index]
                                                   .ticketsNumList[i])
                                               ? Colors.white
                                               : Colors.white54),
                                     ),
                                   ),
-                                  model.todaysPicks!.contains(model
+                                  model.weeklyPicksList.contains(model
                                           .allBestTickets![index]
                                           .ticketsNumList[i])
                                       ? const DigitStrike()
@@ -333,21 +330,22 @@ class TicketMatchesBriefBoxWidget extends StatelessWidget {
                     SizedBox(height: SizeConfig.padding6),
                     GridView(
                       padding: EdgeInsets.symmetric(
-                        horizontal: SizeConfig.padding20,
+                        horizontal: SizeConfig.padding10,
                         vertical: SizeConfig.padding10,
                       ),
                       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        mainAxisSpacing: SizeConfig.padding14,
-                        crossAxisSpacing: SizeConfig.padding14,
-                        childAspectRatio: 2.2 / 1,
+                        crossAxisCount: 3,
+                        mainAxisSpacing: SizeConfig.padding8,
+                        crossAxisSpacing: SizeConfig.padding8,
+                        childAspectRatio: 1.6 / 1,
                       ),
                       physics: const NeverScrollableScrollPhysics(),
                       shrinkWrap: true,
                       children: bestTickets.data!.stats!
                           .map((e) => TicketsWinBriefChip(
                               title: e.displayName, value: e.count))
-                          .toList(),
+                          .toList()
+                          .sublist(0, 3),
                     ),
                     SizedBox(height: SizeConfig.padding8),
                   ],
@@ -380,6 +378,7 @@ class TicketsWinBriefChip extends StatelessWidget {
       padding: EdgeInsets.all(SizeConfig.padding10),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
+        mainAxisAlignment: MainAxisAlignment.center,
         children: [
           Row(
             mainAxisAlignment: MainAxisAlignment.center,

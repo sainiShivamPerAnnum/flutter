@@ -3,6 +3,7 @@ import 'dart:developer';
 
 import 'package:felloapp/core/model/game_model.dart';
 import 'package:felloapp/core/model/prizes_model.dart';
+import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/core/model/winners_model.dart';
 import 'package:felloapp/core/repository/games_repo.dart';
 import 'package:felloapp/core/repository/scratch_card_repo.dart';
@@ -16,6 +17,7 @@ import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/preference_helper.dart';
 import 'package:flutter/cupertino.dart';
 
 enum SlotMachineState { toBeSpinned, Spinnned }
@@ -51,6 +53,14 @@ class TambolaService extends ChangeNotifier {
   bool isEligible = false;
   bool showWinScreen = false;
   bool noMoreTickets = false;
+  bool _showSpinButton = false;
+  bool get showSpinButton => _showSpinButton;
+
+  set showSpinButton(bool value) {
+    _showSpinButton = value;
+    notifyListeners();
+  }
+
   AnimationController? ticketsDotLightsController;
   SlotMachineState _slotMachinState = SlotMachineState.toBeSpinned;
 
@@ -75,6 +85,12 @@ class TambolaService extends ChangeNotifier {
     _isScreenLoading = value;
     notifyListeners();
   }
+
+  List<int> _weeklyPicksList = [];
+
+  List<int> get weeklyPicksList => _weeklyPicksList;
+
+  set weeklyPicksList(List<int> value) => _weeklyPicksList = value;
 
   List<int>? get todaysPicks => _todaysPicks;
 
@@ -227,18 +243,31 @@ class TambolaService extends ChangeNotifier {
     try {
       //
       /**
-       * Check if user has spined to slot machine or not 
        * 
-       * Check from Shared Prefs TT_LAST_CACHE_DAY
+       * if Today's Picks != null 
+       * {
+       *     Check if user has spined to slot machine or not 
+       * 
+       *     Check from Shared Prefs TT_LAST_CACHE_DAY
        * 
        * If day is today && month is this month
        * --> user has already spined the wheel, show the numbers instead of slot machine
+       * --> show today's numbers at slot machine numbers
+       * --> no spin button
        * 
        * else 
-       * --> user has not spned today, show slot machine and set today's picks 
+       * --> user has not spined today, show slot machine and set today's picks 
        *     to slot results
+       * --> set slot result to today's picks and
        * 
-       * if Today's Picks != null 
+       * 
+       * }
+       * 
+       * else {
+       * -->  show all picks
+       * }
+       * 
+       * 
        * 
        * 
        */
@@ -246,6 +275,7 @@ class TambolaService extends ChangeNotifier {
       final ApiResponse picksResponse = await _tambolaRepo.getWeeklyPicks();
       if (picksResponse.isSuccess()) {
         weeklyPicks = picksResponse.model!;
+        weeklyPicksList = weeklyPicks?.toList() ?? [];
         // weeklyDrawFetched = true;
         switch (DateTime.now().weekday) {
           case 1:
@@ -272,13 +302,96 @@ class TambolaService extends ChangeNotifier {
         }
         if (todaysPicks == null) {
           _logger.i("Today's picks are not generated yet");
-          todaysPicks = [0, 0, 0];
+          todaysPicks = [-1, -1, -1];
         }
+        if (!todaysPicks!.contains(-1)) {
+          String lastSpinTimeInIsoString = PreferenceHelper.getString(
+              PreferenceHelper.CACHE_TICKETS_LAST_SPIN_TIMESTAMP);
+          if (lastSpinTimeInIsoString.isNotEmpty) {
+            TimestampModel lastSpinTime =
+                TimestampModel.fromIsoString(lastSpinTimeInIsoString);
+
+            if (lastSpinTime.toDate().day == DateTime.now().day &&
+                lastSpinTime.toDate().month == DateTime.now().month) {
+              //user has already spinned the slot machine
+            } else {
+              handleSlotPreSpin();
+            }
+          } else {
+            handleSlotPreSpin();
+          }
+        }
+
         notifyListeners();
       } else {}
     } catch (e) {
       _logger.e('$e');
     }
+  }
+
+  void handleSlotPreSpin() {
+    //remove today's picks from weeklyPicksList
+    for (final tp in todaysPicks!) {
+      weeklyPicksList.removeWhere((wp) => wp == tp);
+    }
+    switch (DateTime.now().weekday) {
+      case 1:
+        weeklyPicks!.mon = [-1, -1, -1];
+        break;
+      case 2:
+        weeklyPicks!.tue = [-1, -1, -1];
+        break;
+      case 3:
+        weeklyPicks!.wed = [-1, -1, -1];
+        break;
+      case 4:
+        weeklyPicks!.thu = [-1, -1, -1];
+        break;
+      case 5:
+        weeklyPicks!.fri = [-1, -1, -1];
+        break;
+      case 6:
+        weeklyPicks!.sat = [-1, -1, -1];
+        break;
+      case 7:
+        weeklyPicks!.sun = [-1, -1, -1];
+        break;
+    }
+    showSpinButton = true;
+    notifyListeners();
+  }
+
+  void postSlotSpin() {
+    weeklyPicksList.addAll(todaysPicks!);
+    switch (DateTime.now().weekday) {
+      case 1:
+        weeklyPicks!.mon = todaysPicks;
+        break;
+      case 2:
+        weeklyPicks!.tue = todaysPicks;
+        break;
+      case 3:
+        weeklyPicks!.wed = todaysPicks;
+        break;
+      case 4:
+        weeklyPicks!.thu = todaysPicks;
+        break;
+      case 5:
+        weeklyPicks!.fri = todaysPicks;
+        break;
+      case 6:
+        weeklyPicks!.sat = todaysPicks;
+        break;
+      case 7:
+        weeklyPicks!.sun = todaysPicks;
+        break;
+    }
+    showSpinButton = false;
+    weeklyPicks = weeklyPicks;
+
+    PreferenceHelper.setString(
+        PreferenceHelper.CACHE_TICKETS_LAST_SPIN_TIMESTAMP,
+        DateTime.now().toIso8601String());
   }
 
   String getTicketCategoryFromPrizes(String category) {

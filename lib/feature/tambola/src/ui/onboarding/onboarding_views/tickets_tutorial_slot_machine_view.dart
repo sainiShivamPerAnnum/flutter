@@ -843,12 +843,11 @@ class Head extends StatelessWidget {
 }
 
 class TicketsRewardCategoriesWidget extends StatelessWidget {
-  const TicketsRewardCategoriesWidget({
-    super.key,
-    required this.highlightRow,
-  });
+  const TicketsRewardCategoriesWidget(
+      {super.key, required this.highlightRow, this.hasMargin = true});
 
   final bool highlightRow;
+  final bool hasMargin;
 
   @override
   Widget build(BuildContext context) {
@@ -859,10 +858,12 @@ class TicketsRewardCategoriesWidget extends StatelessWidget {
       const Tuple2("14-15 Matches", "iPhone"),
     ];
     return Container(
-      margin: EdgeInsets.symmetric(
-        horizontal: SizeConfig.pageHorizontalMargins,
-        vertical: SizeConfig.padding16,
-      ),
+      margin: hasMargin
+          ? EdgeInsets.symmetric(
+              horizontal: SizeConfig.pageHorizontalMargins,
+              vertical: SizeConfig.padding16,
+            )
+          : EdgeInsets.zero,
       padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
       decoration: BoxDecoration(
         color: UiConstants.kArrowButtonBackgroundColor,
