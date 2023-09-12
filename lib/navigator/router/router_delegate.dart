@@ -12,8 +12,8 @@ import 'package:felloapp/core/model/bottom_nav_bar_item_model.dart';
 import 'package:felloapp/core/repository/games_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/feature/fello_badges/ui/fello_badges_home.dart';
 import 'package:felloapp/feature/flo_withdrawals/ui/balloon_lottie_screen.dart';
-import 'package:felloapp/feature/referrals/ui/referral_home.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/transition_delegate.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -263,7 +263,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           _addPageData(const NotificationsPage(), NotificationsConfig);
           break;
         case Pages.ReferralDetails:
-          _addPageData(const ReferralHome(), ReferralDetailsPageConfig);
+          _addPageData(const FelloBadgeHome(), ReferralDetailsPageConfig);
           break;
 
         case Pages.MyWinnings:
