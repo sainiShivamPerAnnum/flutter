@@ -1,8 +1,6 @@
-// import 'package:device_preview/device_preview.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
-import 'package:felloapp/core/service/fcm/background_fcm_handler.dart';
 import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/lendbox_maturity_service.dart';
 import 'package:felloapp/core/service/notifier_services/connectivity_service.dart';
@@ -28,11 +26,8 @@ import 'package:felloapp/ui/shared/spotlight_controller.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/app_theme.dart';
 //Pub imports
-import 'package:firebase_core/firebase_core.dart';
-import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -43,28 +38,13 @@ import 'package:showcaseview/showcaseview.dart';
 
 import 'core/service/notifier_services/user_coin_service.dart';
 
-Future mainInit() async {
-  WidgetsFlutterBinding.ensureInitialized();
-  await setupLocator();
-
-  try {
-    await PreferenceHelper.initiate();
-
-    await Firebase.initializeApp();
-  } catch (e) {
-    print('Firebase initialisation error: $e');
-  }
-  FirebaseMessaging.onBackgroundMessage(
-      BackgroundFcmHandler.myBackgroundMessageHandler);
-}
-
 class MyApp extends HookWidget {
   const MyApp({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final appState = useMemoized(() => AppState());
-    final parser = useMemoized(() => FelloParser());
+    final appState = useMemoized(AppState.new);
+    final parser = useMemoized(FelloParser.new);
     final delegate = useMemoized(() => FelloRouterDelegate(appState));
     final backButtonDispatcher =
         useMemoized(() => FelloBackButtonDispatcher(delegate));
@@ -73,6 +53,7 @@ class MyApp extends HookWidget {
       AppState.backButtonDispatcher = backButtonDispatcher;
       AppState.delegate = delegate;
       delegate.setNewRoutePath(SplashPageConfig);
+      return null;
     }, []);
 
     return AnnotatedRegion<SystemUiOverlayStyle>(

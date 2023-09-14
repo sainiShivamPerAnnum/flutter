@@ -1,3 +1,4 @@
+import 'package:felloapp/core/service/analytics/mixpanel_analytics.dart';
 import 'package:felloapp/util/credentials_stage.dart';
 import 'package:flutter/material.dart';
 
@@ -45,11 +46,78 @@ class FlavorConfig {
 
   factory FlavorConfig(
       {required Flavor flavor,
-      Color color: Colors.blue,
-      required FlavorValues values}) {
+      required FlavorValues values,
+      Color color = Colors.blue}) {
     _instance ??=
         FlavorConfig._internal(flavor, flavor.toString(), color, values);
     return _instance!;
+  }
+
+  factory FlavorConfig.configureQa() {
+    return FlavorConfig(
+      flavor: Flavor.QA,
+      color: const Color(0xffa32638),
+      values: FlavorValues(
+        awsAugmontStage: AWSAugmontStage.PROD,
+        awsIciciStage: AWSIciciStage.PROD,
+        freshchatStage: FreshchatStage.DEV,
+        razorpayStage: RazorpayStage.DEV,
+        signzyStage: SignzyStage.PROD,
+        signzyPanStage: SignzyPanStage.PROD,
+        paytmStage: PaytmStage.DEV,
+        baseUriUS: 'us-central1-fello-d3a9c.cloudfunctions.net',
+        baseUriAsia: 'asia-south1-fello-d3a9c.cloudfunctions.net',
+        mixpanelToken: MixpanelAnalytics.PROD_TOKEN,
+        dynamicLinkPrefix: 'https://fello.in',
+        gameApiTokenSecret:
+            "3565d165c367a0f1c615c27eb957dddfef33565b3f5ad1dda3fe2efd07326c1f",
+        dummyMobileNo: '8888800002',
+      ),
+    );
+  }
+  factory FlavorConfig.configureProd() {
+    return FlavorConfig(
+      flavor: Flavor.PROD,
+      color: Colors.deepPurpleAccent,
+      values: FlavorValues(
+        awsAugmontStage: AWSAugmontStage.PROD,
+        awsIciciStage: AWSIciciStage.PROD,
+        freshchatStage: FreshchatStage.DEV,
+        razorpayStage: RazorpayStage.PROD,
+        signzyStage: SignzyStage.PROD,
+        signzyPanStage: SignzyPanStage.PROD,
+        paytmStage: PaytmStage.PROD,
+        baseUriUS: 'us-central1-fello-d3a9c.cloudfunctions.net',
+        baseUriAsia: 'asia-south1-fello-d3a9c.cloudfunctions.net',
+        mixpanelToken: MixpanelAnalytics.PROD_TOKEN,
+        dynamicLinkPrefix: 'https://fello.in',
+        gameApiTokenSecret:
+            "bb34f35f0a0f7424fb8a25708b58ec142df5216ff05ffbb186108744cd340c85",
+        dummyMobileNo: '9999900002',
+      ),
+    );
+  }
+  factory FlavorConfig.configureDev() {
+    return FlavorConfig(
+      flavor: Flavor.DEV,
+      color: Colors.green,
+      values: FlavorValues(
+        awsAugmontStage: AWSAugmontStage.DEV,
+        awsIciciStage: AWSIciciStage.PROD,
+        freshchatStage: FreshchatStage.DEV,
+        razorpayStage: RazorpayStage.DEV,
+        signzyStage: SignzyStage.PROD,
+        signzyPanStage: SignzyPanStage.DEV,
+        paytmStage: PaytmStage.DEV,
+        baseUriUS: 'us-central1-fello-dev-station.cloudfunctions.net',
+        baseUriAsia: 'asia-south1-fello-dev-station.cloudfunctions.net',
+        mixpanelToken: MixpanelAnalytics.DEV_TOKEN,
+        dynamicLinkPrefix: 'https://dev.fello.in/test',
+        gameApiTokenSecret:
+            "3565d165c367a0f1c615c27eb957dddfef33565b3f5ad1dda3fe2efd07326c1f",
+        dummyMobileNo: '8888800002',
+      ),
+    );
   }
 
   FlavorConfig._internal(this.flavor, this.name, this.color, this.values);
