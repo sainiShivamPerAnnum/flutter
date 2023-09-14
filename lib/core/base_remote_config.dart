@@ -230,6 +230,14 @@ class BaseRemoteConfig {
     ]
   };
 
+  static const Map<String, List<String>> _TICKETS_YOUTUBE_VIDEOS = {
+    'ticketsYoutubeVideos': [
+      "https://www.youtube.com/watchv=mzaIjBjUM1Y",
+      "https://www.youtube.com/watch?v=CDokUdux0rc",
+      "https://www.youtube.com/watch?v=zFhYJRqz_xk"
+    ]
+  };
+
   static const Map<String, String> _APP_REFERRAL_MESSAGE = {
     "appReferralMessage":
         "Earn upto *₹20* and *200* tokens from every scratch card. Highest referrer wins an iPad every month"
@@ -319,7 +327,8 @@ class BaseRemoteConfig {
     ..._APP_REFERRAL_MESSAGE,
     ..._PAYMENT_BRIEF_VIEW,
     ..._USE_NEW_URL_FOR_USEROPS,
-    ..._SPECIAL_EFFECTS_ON_TXN_DETAILS_VIEW
+    ..._SPECIAL_EFFECTS_ON_TXN_DETAILS_VIEW,
+    ..._TICKETS_YOUTUBE_VIDEOS
   };
 
   static Future<bool> init() async {

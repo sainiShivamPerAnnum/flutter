@@ -35,7 +35,7 @@ class TitleSubtitleContainer extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title, style: TextStyles.rajdhaniSB.title3.merge(titleStyle)),
+          Text(title, style: TextStyles.sourceSansSB.title3.merge(titleStyle)),
           if (subTitle != null && subTitle!.isNotEmpty)
             Padding(
               padding: padding ?? EdgeInsets.only(top: SizeConfig.padding4),

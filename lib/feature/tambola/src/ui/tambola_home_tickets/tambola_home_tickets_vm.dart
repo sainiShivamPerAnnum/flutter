@@ -12,6 +12,8 @@ class TambolaHomeTicketsViewModel extends BaseViewModel {
     tambolaService = locator<TambolaService>();
     await tambolaService!.getBestTambolaTickets();
     await tambolaService!.fetchWeeklyPicks();
+    unawaited(tambolaService!.getOffers());
+    unawaited(tambolaService!.getPrizes());
     unawaited(tambolaService!.getPastWeekWinners());
     setState(ViewState.Idle);
   }

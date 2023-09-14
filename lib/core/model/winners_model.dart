@@ -9,6 +9,8 @@ class WinnersModel {
   List<Winners>? winners;
   String? code;
   TimestampModel? timestamp;
+  TimestampModel? createdOn;
+  TimestampModel? updatedOn;
   String? gametype;
   static final helper = HelperModel<WinnersModel>(
     WinnersModel.fromMap,
@@ -20,6 +22,8 @@ class WinnersModel {
     this.winners,
     this.code,
     this.timestamp,
+    this.createdOn,
+    this.updatedOn,
     this.gametype,
   });
 
@@ -29,6 +33,8 @@ class WinnersModel {
     List<Winners>? winners,
     String? code,
     TimestampModel? timestamp,
+    TimestampModel? createdOn,
+    TimestampModel? updatedOn,
     String? gametype,
   }) {
     return WinnersModel(
@@ -37,6 +43,8 @@ class WinnersModel {
       winners: winners ?? this.winners,
       code: code ?? this.code,
       timestamp: timestamp ?? this.timestamp,
+      createdOn: createdOn ?? this.createdOn,
+      updatedOn: updatedOn ?? this.updatedOn,
       gametype: gametype ?? this.gametype,
     );
   }
@@ -47,18 +55,9 @@ class WinnersModel {
     winners = [];
     code = '';
     timestamp = TimestampModel.currentTimeStamp();
+    createdOn = TimestampModel.currentTimeStamp();
+    updatedOn = TimestampModel.currentTimeStamp();
     gametype = '';
-  }
-
-  Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      'id': id ?? '',
-      'freq': freq ?? '',
-      'winners': winners!.map((x) => x.toMap()).toList(),
-      'code': code ?? '',
-      'timestamp': timestamp!.toMap(),
-      'gametype': gametype ?? '',
-    };
   }
 
   factory WinnersModel.fromMap(Map<String, dynamic> map) {
@@ -72,11 +71,11 @@ class WinnersModel {
       ),
       code: map['code'] as String?,
       timestamp: TimestampModel.fromMap(map['timestamp']),
+      createdOn: TimestampModel.fromMap(map['createdOn']),
+      updatedOn: TimestampModel.fromMap(map['updatedOn']),
       gametype: map['gametype'] as String?,
     );
   }
-
-  String toJson() => json.encode(toMap());
 
   factory WinnersModel.fromJson(String source) =>
       WinnersModel.fromMap(json.decode(source) as Map<String, dynamic>);

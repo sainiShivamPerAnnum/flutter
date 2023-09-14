@@ -1,5 +1,5 @@
 import 'package:felloapp/core/enums/page_state_enum.dart';
-import 'package:felloapp/feature/tambola/src/ui/onboarding/intro_view/tickets_intro_view.dart';
+import 'package:felloapp/feature/tambola/src/ui/onboarding/tickets_intro_view.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/default_avatar.dart';
@@ -99,146 +99,156 @@ class _TicketsTutorialsViewState extends State<TicketsTutorialsView>
                       style: TextStyles.rajdhaniB.title2.colour(Colors.white),
                       textAlign: TextAlign.center,
                     ),
-                    SizedBox(height: SizeConfig.padding20),
-                    CustomStaggeredAnimatedWidget(
-                      animation: _animation1,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(
-                            SizeConfig.roundness16,
-                          ),
-                          color: const Color(0xffA5E4FF),
-                          boxShadow: const [
-                            BoxShadow(
-                                color: Color(0xff495DB2),
-                                offset: Offset(10, 10),
-                                blurRadius: 0,
-                                spreadRadius: 0)
-                          ],
-                        ),
-                        margin: EdgeInsets.symmetric(
-                            horizontal: SizeConfig.pageHorizontalMargins,
-                            vertical: SizeConfig.padding10),
-                        child: Padding(
-                          padding:
-                              EdgeInsets.all(SizeConfig.pageHorizontalMargins),
-                          child: Row(children: [
-                            SvgPicture.asset(Assets.goldAsset,
-                                width: SizeConfig.padding60),
-                            Expanded(
-                                child: Column(
-                              children: [
-                                Text(
-                                  "Get Tickets every week by saving ₹500",
-                                  style: TextStyles.sourceSansSB.body2
-                                      .colour(Colors.black),
-                                  textAlign: TextAlign.center,
-                                ),
-                                SizedBox(height: SizeConfig.padding12),
-                                Text(
-                                  "In any of the Fello assets",
-                                  style: TextStyles.body4.colour(Colors.black),
-                                )
-                              ],
-                            )),
-                            SvgPicture.asset(Assets.floAsset,
-                                width: SizeConfig.padding60),
-                          ]),
-                        ),
-                      ),
-                    ),
-                    CustomStaggeredAnimatedWidget(
-                      animation: _animation2,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(
-                            SizeConfig.roundness16,
-                          ),
-                          color: const Color(0xffF79780),
-                          boxShadow: const [
-                            BoxShadow(
-                                color: Color(0xffC34B29),
-                                offset: Offset(10, 10),
-                                blurRadius: 0,
-                                spreadRadius: 0)
-                          ],
-                        ),
-                        margin: EdgeInsets.symmetric(
-                            horizontal: SizeConfig.pageHorizontalMargins,
-                            vertical: SizeConfig.padding10),
-                        child: Padding(
-                          padding:
-                              EdgeInsets.all(SizeConfig.pageHorizontalMargins),
-                          child: Column(
-                            children: [
-                              Text(
-                                "Spin everyday to match numbers",
-                                style: TextStyles.sourceSansSB.body2
-                                    .colour(Colors.black),
-                                textAlign: TextAlign.center,
+                    SizedBox(height: SizeConfig.padding10),
+                    Expanded(
+                        child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        CustomStaggeredAnimatedWidget(
+                          animation: _animation1,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(
+                                SizeConfig.roundness16,
                               ),
-                              SizedBox(height: SizeConfig.padding12),
-                              Text(
-                                "Don’t worry even if you don’t, Numbers are matched with your Tickets everyday",
-                                style: TextStyles.body4.colour(Colors.black),
-                                textAlign: TextAlign.center,
-                              )
-                            ],
-                          ),
-                        ),
-                      ),
-                    ),
-                    CustomStaggeredAnimatedWidget(
-                      animation: _animation3,
-                      child: Container(
-                        decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(
-                            SizeConfig.roundness16,
-                          ),
-                          color: const Color(0xffFFD979),
-                          boxShadow: const [
-                            BoxShadow(
-                                color: Color(0xffB17518),
-                                offset: Offset(10, 10),
-                                blurRadius: 0,
-                                spreadRadius: 0)
-                          ],
-                        ),
-                        margin: EdgeInsets.symmetric(
-                            horizontal: SizeConfig.pageHorizontalMargins,
-                            vertical: SizeConfig.padding10),
-                        child: Padding(
-                          padding:
-                              EdgeInsets.all(SizeConfig.pageHorizontalMargins),
-                          child: Row(children: [
-                            SvgPicture.asset(
-                              Assets.trophySvg,
-                              width: SizeConfig.padding60,
-                              height: SizeConfig.padding60,
-                            ),
-                            Expanded(
-                                child: Column(
-                              children: [
-                                Text(
-                                  "Rewards distributed every Sunday",
-                                  style: TextStyles.sourceSansSB.body2
-                                      .colour(Colors.black),
-                                  textAlign: TextAlign.center,
-                                ),
-                                SizedBox(height: SizeConfig.padding12),
-                                Text(
-                                  "Catagory rewards are distributed among all the Tickets winning in a catagory",
-                                  style: TextStyles.body4.colour(Colors.black),
-                                  textAlign: TextAlign.center,
-                                )
+                              color: const Color(0xffA5E4FF),
+                              boxShadow: const [
+                                BoxShadow(
+                                    color: Color(0xff495DB2),
+                                    offset: Offset(10, 10),
+                                    blurRadius: 0,
+                                    spreadRadius: 0)
                               ],
-                            )),
-                            SvgPicture.asset(Assets.dailyAppBonusHero,
-                                width: SizeConfig.padding60),
-                          ]),
+                            ),
+                            margin: EdgeInsets.symmetric(
+                                horizontal: SizeConfig.pageHorizontalMargins,
+                                vertical: SizeConfig.padding10),
+                            child: Padding(
+                              padding: EdgeInsets.all(
+                                  SizeConfig.pageHorizontalMargins),
+                              child: Row(children: [
+                                SvgPicture.asset(Assets.goldAsset,
+                                    width: SizeConfig.padding60),
+                                Expanded(
+                                    child: Column(
+                                  children: [
+                                    Text(
+                                      "Get Tickets every week by saving ₹500",
+                                      style: TextStyles.sourceSansSB.body2
+                                          .colour(Colors.black),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    SizedBox(height: SizeConfig.padding12),
+                                    Text(
+                                      "In any of the Fello assets",
+                                      style:
+                                          TextStyles.body4.colour(Colors.black),
+                                    )
+                                  ],
+                                )),
+                                SvgPicture.asset(Assets.floAsset,
+                                    width: SizeConfig.padding60),
+                              ]),
+                            ),
+                          ),
                         ),
-                      ),
-                    ),
+                        CustomStaggeredAnimatedWidget(
+                          animation: _animation2,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(
+                                SizeConfig.roundness16,
+                              ),
+                              color: const Color(0xffF79780),
+                              boxShadow: const [
+                                BoxShadow(
+                                    color: Color(0xffC34B29),
+                                    offset: Offset(10, 10),
+                                    blurRadius: 0,
+                                    spreadRadius: 0)
+                              ],
+                            ),
+                            margin: EdgeInsets.symmetric(
+                                horizontal: SizeConfig.pageHorizontalMargins,
+                                vertical: SizeConfig.padding10),
+                            child: Padding(
+                              padding: EdgeInsets.all(
+                                  SizeConfig.pageHorizontalMargins),
+                              child: Column(
+                                children: [
+                                  Text(
+                                    "Spin everyday to match numbers",
+                                    style: TextStyles.sourceSansSB.body2
+                                        .colour(Colors.black),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  SizedBox(height: SizeConfig.padding12),
+                                  Text(
+                                    "Don’t worry even if you don’t, Numbers are matched with your Tickets everyday",
+                                    style:
+                                        TextStyles.body4.colour(Colors.black),
+                                    textAlign: TextAlign.center,
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                        CustomStaggeredAnimatedWidget(
+                          animation: _animation3,
+                          child: Container(
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(
+                                SizeConfig.roundness16,
+                              ),
+                              color: const Color(0xffFFD979),
+                              boxShadow: const [
+                                BoxShadow(
+                                    color: Color(0xffB17518),
+                                    offset: Offset(10, 10),
+                                    blurRadius: 0,
+                                    spreadRadius: 0)
+                              ],
+                            ),
+                            margin: EdgeInsets.symmetric(
+                                horizontal: SizeConfig.pageHorizontalMargins,
+                                vertical: SizeConfig.padding10),
+                            child: Padding(
+                              padding: EdgeInsets.all(
+                                  SizeConfig.pageHorizontalMargins),
+                              child: Row(children: [
+                                SvgPicture.asset(
+                                  Assets.trophySvg,
+                                  width: SizeConfig.padding60,
+                                  height: SizeConfig.padding60,
+                                ),
+                                Expanded(
+                                    child: Column(
+                                  children: [
+                                    Text(
+                                      "Rewards distributed every Sunday",
+                                      style: TextStyles.sourceSansSB.body2
+                                          .colour(Colors.black),
+                                      textAlign: TextAlign.center,
+                                    ),
+                                    SizedBox(height: SizeConfig.padding12),
+                                    Text(
+                                      "Catagory rewards are distributed among all the Tickets winning in a catagory",
+                                      style:
+                                          TextStyles.body4.colour(Colors.black),
+                                      textAlign: TextAlign.center,
+                                    )
+                                  ],
+                                )),
+                                SvgPicture.asset(Assets.dailyAppBonusHero,
+                                    width: SizeConfig.padding60),
+                              ]),
+                            ),
+                          ),
+                        ),
+                      ],
+                    )),
+                    SizedBox(height: SizeConfig.screenHeight! * 0.3),
                   ],
                 ),
               ),

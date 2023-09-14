@@ -140,17 +140,20 @@ class _AllTambolaTicketsState extends State<AllTambolaTickets> {
 }
 
 class SingleTicket extends StatelessWidget {
-  const SingleTicket(
-      {super.key,
-      required this.index,
-      required this.weeklyPicks,
-      required this.ticket});
+  const SingleTicket({
+    super.key,
+    required this.index,
+    required this.weeklyPicks,
+    required this.ticket,
+  });
   final int index;
   final List<int> weeklyPicks;
   final TambolaTicketModel ticket;
 
   @override
   Widget build(BuildContext context) {
+    final int matchCount =
+        ticket.ticketsNumList.where(weeklyPicks.contains).toList().length;
     return Container(
       margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding10),
       child: Stack(
@@ -158,7 +161,7 @@ class SingleTicket extends StatelessWidget {
         children: [
           CustomPaint(
             painter: TicketPainter(
-                borderColor: index % 2 == 0
+                borderColor: matchCount >= 5
                     ? UiConstants.primaryColor
                     : Colors.transparent),
             child: Container(
@@ -177,30 +180,35 @@ class SingleTicket extends StatelessWidget {
               child: Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Row(
-                    children: [
-                      Text(
-                        '#${ticket.getTicketNumber()}',
-                        style: TextStyles.sourceSans.body4
-                            .colour(UiConstants.kGreyTextColor),
-                      ),
-                      const Spacer(),
-                      AnimatedCrossFade(
-                        crossFadeState: CrossFadeState.showFirst,
-                        duration: const Duration(seconds: 1),
-                        sizeCurve: Curves.easeOutExpo,
-                        firstChild: Text(
-                          "5 Matches",
-                          style: TextStyles.sourceSansB.body3
-                              .colour(UiConstants.primaryColor),
+                  Transform.translate(
+                    offset: Offset(0, SizeConfig.padding6),
+                    child: Row(
+                      children: [
+                        Text(
+                          '#${ticket.getTicketNumber()}',
+                          style: TextStyles.sourceSans.body4
+                              .colour(UiConstants.kGreyTextColor),
                         ),
-                        secondChild: Text(
-                          "",
-                          style: TextStyles.sourceSansB.body4
-                              .colour(UiConstants.primaryColor),
-                        ),
-                      )
-                    ],
+                        const Spacer(),
+                        AnimatedCrossFade(
+                          crossFadeState: matchCount > 0
+                              ? CrossFadeState.showFirst
+                              : CrossFadeState.showSecond,
+                          duration: const Duration(seconds: 1),
+                          sizeCurve: Curves.easeOutExpo,
+                          firstChild: Text(
+                            "$matchCount Matches",
+                            style: TextStyles.sourceSansB.body3
+                                .colour(UiConstants.primaryColor),
+                          ),
+                          secondChild: Text(
+                            "",
+                            style: TextStyles.sourceSansB.body4
+                                .colour(UiConstants.primaryColor),
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                   Container(
                     padding:
@@ -273,7 +281,7 @@ class SingleTicket extends StatelessWidget {
                       );
                     },
                   ),
-                  if (index % 2 == 0)
+                  if (matchCount >= 5)
                     Padding(
                       padding: EdgeInsets.only(top: SizeConfig.padding8),
                       child: Text(

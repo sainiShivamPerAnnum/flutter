@@ -87,26 +87,35 @@ class WeeklyPicks extends StatelessWidget {
         // Divide the list in two parts
         final side1 = columns.sublist(0, 4);
         final side2 = columns.sublist(4);
-        return Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        return Column(
           children: [
-            Expanded(
-              child: ListView.builder(
-                padding: EdgeInsets.zero,
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: side1.length,
-                itemBuilder: (context, index) => side1[index],
-              ),
+            Text(
+              "Numbers Revealed this Week",
+              style: TextStyles.rajdhaniSB.body1.colour(Colors.white),
             ),
-            Expanded(
-              child: ListView.builder(
-                padding: EdgeInsets.zero,
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: side2.length,
-                itemBuilder: (context, index) => side2[index],
-              ),
+            SizedBox(height: SizeConfig.padding12),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: ListView.builder(
+                    padding: EdgeInsets.zero,
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: side1.length,
+                    itemBuilder: (context, index) => side1[index],
+                  ),
+                ),
+                Expanded(
+                  child: ListView.builder(
+                    padding: EdgeInsets.zero,
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: side2.length,
+                    itemBuilder: (context, index) => side2[index],
+                  ),
+                ),
+              ],
             ),
           ],
         );

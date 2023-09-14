@@ -81,9 +81,16 @@ class _TicketsPicksWidgetState extends State<TicketsPicksWidget> {
               right: SizeConfig.pageHorizontalMargins,
             ),
             decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(SizeConfig.roundness16),
-              color: UiConstants.darkPrimaryColor,
-            ),
+                borderRadius: BorderRadius.circular(SizeConfig.roundness16),
+                color: UiConstants.kSaveStableFelloCardBg,
+                boxShadow: [
+                  BoxShadow(
+                    color: Colors.black26,
+                    offset: Offset(0, 10),
+                    blurRadius: 5,
+                    spreadRadius: 0,
+                  )
+                ]),
             child: Column(
               children: [
                 HeightAdaptivePageView(
@@ -398,7 +405,7 @@ class _SlotMachineWidgetState extends State<SlotMachineWidget>
       children: [
         Text(
           "Reveal numbers to match with Tickets",
-          style: TextStyles.sourceSansB.body2.colour(Colors.white),
+          style: TextStyles.rajdhaniSB.body1.colour(Colors.white),
         ),
         Padding(
           padding: EdgeInsets.all(SizeConfig.padding16),
@@ -469,62 +476,69 @@ class _SlotMachineWidgetState extends State<SlotMachineWidget>
           ),
         ),
         AnimatedSwitcher(
-          duration: const Duration(seconds: 1),
-          switchInCurve: Curves.easeOutExpo,
-          switchOutCurve: Curves.easeInExpo,
-          transitionBuilder: (child, animation) {
-            return FadeTransition(
-              opacity: animation,
-              child: ScaleTransition(
-                scale: animation,
-                child: child,
-              ),
-            );
-          },
-          child: _tambolaService.todaysPicks!.contains(-1)
-              ? MaterialButton(
-                  height: SizeConfig.padding44,
-                  shape: RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.circular(SizeConfig.roundness5)),
-                  minWidth: SizeConfig.screenWidth! * 0.8,
-                  color: isSpinning ? Colors.grey : Colors.white,
-                  onPressed: () {
-                    AppState.delegate!.appState.currentAction = PageAction(
-                      page: AssetSelectionViewConfig,
-                      widget: const AssetSelectionPage(
-                          isTicketsFlow: true, showOnlyFlo: false),
-                      state: PageState.addWidget,
-                    );
-                  },
-                  child: Text(
-                    "GET YOUR FIRST TICKET",
-                    style: TextStyles.rajdhaniB.body0.colour(Colors.black),
-                  ),
-                )
-              : _tambolaService.showSpinButton
+            duration: const Duration(seconds: 1),
+            switchInCurve: Curves.easeOutExpo,
+            switchOutCurve: Curves.easeInExpo,
+            transitionBuilder: (child, animation) {
+              return FadeTransition(
+                opacity: animation,
+                child: ScaleTransition(
+                  scale: animation,
+                  child: child,
+                ),
+              );
+            },
+            child: AnimatedSwitcher(
+              duration: const Duration(seconds: 1),
+              child: _tambolaService.todaysPicks!.contains(-1)
                   ? MaterialButton(
                       height: SizeConfig.padding44,
                       shape: RoundedRectangleBorder(
                           borderRadius:
                               BorderRadius.circular(SizeConfig.roundness5)),
-                      minWidth: SizeConfig.screenWidth! * 0.3,
+                      minWidth: SizeConfig.screenWidth! * 0.8,
                       color: isSpinning ? Colors.grey : Colors.white,
-                      onPressed: spin,
-                      enableFeedback: !isSpinning,
+                      onPressed: () {
+                        AppState.delegate!.appState.currentAction = PageAction(
+                          page: AssetSelectionViewConfig,
+                          widget: const AssetSelectionPage(
+                              isTicketsFlow: true, showOnlyFlo: false),
+                          state: PageState.addWidget,
+                        );
+                      },
                       child: Text(
-                        "SPIN",
+                        (_tambolaService.bestTickets?.data?.totalTicketCount ??
+                                    0) >
+                                0
+                            ? "GET TICKETS TO EARN"
+                            : "GET YOUR FIRST TICKET",
                         style: TextStyles.rajdhaniB.body0.colour(Colors.black),
                       ),
                     )
-                  : Padding(
-                      padding: const EdgeInsets.all(8.0),
-                      child: Text(
-                        "Next Spin at 6 PM tomorrow",
-                        style: TextStyles.sourceSansB.body1,
-                      ),
-                    ),
-        ),
+                  : _tambolaService.showSpinButton
+                      ? MaterialButton(
+                          height: SizeConfig.padding44,
+                          shape: RoundedRectangleBorder(
+                              borderRadius:
+                                  BorderRadius.circular(SizeConfig.roundness5)),
+                          minWidth: SizeConfig.screenWidth! * 0.3,
+                          color: isSpinning ? Colors.grey : Colors.white,
+                          onPressed: spin,
+                          enableFeedback: !isSpinning,
+                          child: Text(
+                            "SPIN",
+                            style:
+                                TextStyles.rajdhaniB.body0.colour(Colors.black),
+                          ),
+                        )
+                      : Padding(
+                          padding: const EdgeInsets.all(0),
+                          child: Text(
+                            "Next Spin at 6 PM tomorrow",
+                            style: TextStyles.sourceSansB.body1,
+                          ),
+                        ),
+            )),
       ],
     );
   }

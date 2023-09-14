@@ -1,11 +1,10 @@
+// ignore_for_file: lines_longer_than_80_chars
+
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/feature/tambola/src/models/daily_pick_model.dart';
 import 'package:felloapp/feature/tambola/src/models/tambola_best_tickets_model.dart';
 import 'package:felloapp/feature/tambola/src/services/tambola_service.dart';
 import 'package:felloapp/feature/tambola/src/ui/tambola_all_tickets/tambola_all_tickets_view.dart';
-import 'package:felloapp/feature/tambola/src/ui/tambola_home_details/tambola_home_details_view.dart';
-import 'package:felloapp/feature/tambola/src/ui/widgets/ticket/tambola_ticket.dart';
-import 'package:felloapp/feature/tambola/src/ui/widgets/ticket/ticket_painter.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/asset_selection.dart';
@@ -20,13 +19,8 @@ import 'package:tuple/tuple.dart';
 
 class TicketSection extends StatelessWidget {
   const TicketSection({
-    // required this.getTicketsTapped,
-    // required this.model,
     Key? key,
   }) : super(key: key);
-
-  // final TambolaHomeViewModel model;
-  // final VoidCallback getTicketsTapped;
 
   @override
   Widget build(BuildContext context) {
@@ -40,7 +34,6 @@ class TicketSection extends StatelessWidget {
         children: [
           TicketHeader(
             activeTambolaCardCount: data.item1?.data?.totalTicketCount ?? 0,
-            // getTicketsTapped: getTicketsTapped,
           ),
           ((data.item1?.data?.totalTicketCount ?? 0) == 0)
               ? Container(
@@ -79,41 +72,10 @@ class TicketSection extends StatelessWidget {
                         width: SizeConfig.padding60),
                   ]),
                 )
-              : Column(
+              : const Column(
                   children: [
-                    const TicketMatchesBriefBoxWidget(),
-                    const BestTicketsSection(),
-                    ViewallBestTicketsBar(
-                      title: "View All Tickets",
-                      onPressed: () {
-                        Haptic.vibrate();
-                        AppState.delegate!.appState.currentAction = PageAction(
-                          state: PageState.addWidget,
-                          page: AllTambolaTicketsPageConfig,
-                          widget: AllTambolaTickets(
-                            weeklyPicks:
-                                locator<TambolaService>().weeklyPicks ??
-                                    DailyPick.noPicks(),
-                          ),
-                        );
-                      },
-                    ),
-                    ViewallBestTicketsBar(
-                      title: "Reward Categories",
-                      onPressed: () {
-                        Haptic.vibrate();
-                        AppState.delegate!.appState.currentAction = PageAction(
-                          state: PageState.addWidget,
-                          page: TambolaNewUser,
-                          widget: const TambolaHomeDetailsView(
-                            isStandAloneScreen: true,
-                            showPrizeSection: true,
-                            showBottomButton: false,
-                            showDemoImage: false,
-                          ),
-                        );
-                      },
-                    )
+                    TicketMatchesBriefBoxWidget(),
+                    BestTicketsSection(),
                   ],
                 )
         ],
@@ -136,168 +98,51 @@ class BestTicketsSection extends StatelessWidget {
         height: SizeConfig.screenWidth! * 0.6,
         width: SizeConfig.screenWidth,
         child: ListView.builder(
-          itemCount: model.allBestTickets!.length,
+          itemCount: model.allBestTickets!.length + 1,
           padding: EdgeInsets.symmetric(
             horizontal: SizeConfig.pageHorizontalMargins - SizeConfig.padding10,
           ),
           physics: const BouncingScrollPhysics(),
           scrollDirection: Axis.horizontal,
-          itemBuilder: (context, index) => Container(
-            margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding10),
-            child: Stack(
-              alignment: Alignment.center,
-              children: [
-                CustomPaint(
-                  painter: TicketPainter(
-                      borderColor: index % 2 == 0
-                          ? UiConstants.primaryColor
-                          : Colors.transparent),
-                  child: Container(
-                    padding: EdgeInsets.only(
-                      left: SizeConfig.padding16,
-                      right: SizeConfig.padding16,
-                      top: SizeConfig.padding16,
-                      bottom: SizeConfig.padding12,
-                    ),
-                    width: MediaQuery.of(context).size.width * 0.6,
-                    height: MediaQuery.of(context).size.width * 0.6,
-                    decoration: BoxDecoration(
-                      // color: UiConstants.kBuyTicketBg,
-                      borderRadius:
-                          BorderRadius.circular(SizeConfig.roundness5),
-                    ),
+          itemBuilder: (context, index) => index == model.allBestTickets!.length
+              ? GestureDetector(
+                  onTap: () {
+                    Haptic.vibrate();
+                    AppState.delegate!.appState.currentAction = PageAction(
+                      state: PageState.addWidget,
+                      page: AllTambolaTicketsPageConfig,
+                      widget: AllTambolaTickets(
+                        weeklyPicks: locator<TambolaService>().weeklyPicks ??
+                            DailyPick.noPicks(),
+                      ),
+                    );
+                  },
+                  child: SizedBox(
+                    width: SizeConfig.screenWidth! * 0.5,
                     child: Column(
-                      mainAxisSize: MainAxisSize.min,
-                      children: [
-                        Row(
-                          children: [
-                            Text(
-                              '#${model.allBestTickets![index].getTicketNumber()}',
-                              style: TextStyles.sourceSans.body4
-                                  .colour(UiConstants.kGreyTextColor),
+                        crossAxisAlignment: CrossAxisAlignment.center,
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          CircleAvatar(
+                            backgroundColor: UiConstants.darkPrimaryColor,
+                            child: SvgPicture.asset(
+                              Assets.chevRonRightArrow,
+                              color: Colors.white,
                             ),
-                            const Spacer(),
-                            AnimatedCrossFade(
-                              crossFadeState: CrossFadeState.showFirst,
-                              duration: const Duration(seconds: 1),
-                              sizeCurve: Curves.easeOutExpo,
-                              firstChild: Text(
-                                "5 Matches",
-                                style: TextStyles.sourceSansB.body3
-                                    .colour(UiConstants.primaryColor),
-                              ),
-                              secondChild: Text(
-                                "",
-                                style: TextStyles.sourceSansB.body4
-                                    .colour(UiConstants.primaryColor),
-                              ),
-                            )
-                          ],
-                        ),
-                        Container(
-                          padding: EdgeInsets.symmetric(
-                              vertical: SizeConfig.padding20),
-                          alignment: Alignment.center,
-                          child: MySeparator(
-                            color: Colors.white.withOpacity(0.3),
                           ),
-                        ),
-                        GridView.builder(
-                          padding: EdgeInsets.zero,
-                          shrinkWrap: true,
-                          itemCount: 15,
-                          physics: const NeverScrollableScrollPhysics(),
-                          gridDelegate:
-                              const SliverGridDelegateWithFixedCrossAxisCount(
-                            crossAxisCount: 5,
-                            mainAxisSpacing: 2,
-                            crossAxisSpacing: 1,
-                          ),
-                          itemBuilder: (ctx, i) {
-                            return AnimatedContainer(
-                              duration: const Duration(seconds: 2),
-                              curve: Curves.decelerate,
-                              alignment: Alignment.center,
-                              decoration: BoxDecoration(
-                                color: model.weeklyPicksList.contains(model
-                                        .allBestTickets![index]
-                                        .ticketsNumList[i])
-                                    ? UiConstants.kSaveDigitalGoldCardBg
-                                        .withOpacity(0.7)
-                                    : Colors.transparent,
-                                borderRadius: (model.weeklyPicksList.contains(
-                                        model.allBestTickets![index]
-                                            .ticketsNumList[i]))
-                                    ? BorderRadius.circular(100)
-                                    : BorderRadius.circular(
-                                        SizeConfig.blockSizeHorizontal * 1),
-                                border: Border.all(
-                                    color: (model.weeklyPicksList.contains(
-                                      model.allBestTickets![index]
-                                          .ticketsNumList[i],
-                                    ))
-                                        ? const Color(0xff93B5FE)
-                                        : Colors.white.withOpacity(model
-                                                    .allBestTickets![index]
-                                                    .ticketsNumList[i] ==
-                                                0
-                                            ? 0.4
-                                            : 0.7),
-                                    width: model.weeklyPicksList.contains(model
-                                            .allBestTickets![index]
-                                            .ticketsNumList[i])
-                                        ? 0.0
-                                        : model.allBestTickets![index]
-                                                    .ticketsNumList[i] ==
-                                                0
-                                            ? 0.5
-                                            : 0.7),
-                              ),
-                              child: Stack(
-                                children: [
-                                  Align(
-                                    alignment: Alignment.center,
-                                    child: Text(
-                                      model.allBestTickets![index]
-                                          .ticketsNumList[i]
-                                          .toString(),
-                                      style: TextStyles.rajdhaniB.body2.colour(
-                                          model.weeklyPicksList.contains(model
-                                                  .allBestTickets![index]
-                                                  .ticketsNumList[i])
-                                              ? Colors.white
-                                              : Colors.white54),
-                                    ),
-                                  ),
-                                  model.weeklyPicksList.contains(model
-                                          .allBestTickets![index]
-                                          .ticketsNumList[i])
-                                      ? const DigitStrike()
-                                      : const SizedBox()
-                                ],
-                              ),
-                            );
-                          },
-                        ),
-                        if (index % 2 == 0)
-                          Padding(
-                            padding: EdgeInsets.only(top: SizeConfig.padding8),
-                            child: Text(
-                              "Winning Ticket",
-                              style: TextStyles.body3
-                                  .colour(UiConstants.primaryColor),
-                            ),
+                          SizedBox(height: SizeConfig.padding12),
+                          Text(
+                            "See All Tickets",
+                            style: TextStyles.body3.colour(Colors.white),
                           )
-                      ],
-                    ),
+                        ]),
                   ),
+                )
+              : SingleTicket(
+                  index: index,
+                  weeklyPicks: model.weeklyPicksList,
+                  ticket: model.allBestTickets![index],
                 ),
-                const Align(
-                    alignment: Alignment.topCenter,
-                    child: TicketTag(tag: "New"))
-              ],
-            ),
-          ),
         ),
       );
     });
@@ -312,46 +157,115 @@ class TicketMatchesBriefBoxWidget extends StatelessWidget {
     return Selector<TambolaService, TambolaBestTicketsModel?>(
       selector: (p0, p1) => p1.bestTickets,
       builder: (context, bestTickets, child) {
-        return bestTickets != null
-            ? Container(
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-                  color: Colors.black,
+        if (bestTickets != null) {
+          int totalWinningTickets = 0;
+          List<TicketsWinBriefChip> matchList = (bestTickets.data!.stats ?? [])
+              .where((e) => e.count > 0)
+              .map((e) {
+            totalWinningTickets += e.count;
+            return TicketsWinBriefChip(title: e.displayName, value: e.count);
+          }).toList();
+
+          return Container(
+            decoration: const BoxDecoration(
+              color: Colors.black,
+            ),
+            width: SizeConfig.screenWidth,
+            margin: EdgeInsets.only(top: SizeConfig.padding12),
+            child: Column(
+              children: [
+                SizedBox(height: SizeConfig.padding12),
+                Text(
+                  "Tickets Winning this week ($totalWinningTickets)",
+                  style: TextStyles.body1.colour(Colors.white),
                 ),
-                margin: EdgeInsets.symmetric(
-                    horizontal: SizeConfig.pageHorizontalMargins),
-                child: Column(
-                  children: [
-                    SizedBox(height: SizeConfig.padding12),
-                    Text(
-                      "Tickets Winning this week (3)",
-                      style: TextStyles.body1.colour(Colors.white),
+                SizedBox(height: SizeConfig.padding6),
+                if (matchList.length == 1)
+                  Container(
+                    margin: EdgeInsets.symmetric(
+                      horizontal: SizeConfig.pageHorizontalMargins,
+                      vertical: SizeConfig.padding16,
                     ),
-                    SizedBox(height: SizeConfig.padding6),
-                    GridView(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: SizeConfig.padding10,
-                        vertical: SizeConfig.padding10,
-                      ),
-                      gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 3,
-                        mainAxisSpacing: SizeConfig.padding8,
-                        crossAxisSpacing: SizeConfig.padding8,
-                        childAspectRatio: 1.6 / 1,
-                      ),
-                      physics: const NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      children: bestTickets.data!.stats!
-                          .map((e) => TicketsWinBriefChip(
-                              title: e.displayName, value: e.count))
-                          .toList()
-                          .sublist(0, 3),
+                    padding: EdgeInsets.symmetric(
+                        horizontal: SizeConfig.padding16,
+                        vertical: SizeConfig.padding12),
+                    decoration: BoxDecoration(
+                      border:
+                          Border.all(color: UiConstants.primaryColor, width: 1),
+                      borderRadius:
+                          BorderRadius.circular(SizeConfig.roundness12),
+                      color: UiConstants.kFloContainerColor,
                     ),
-                    SizedBox(height: SizeConfig.padding8),
-                  ],
+                    child: Row(children: [
+                      Text(
+                        "${matchList[0].value}",
+                        style: TextStyles.rajdhaniB.body1.colour(Colors.white),
+                      ),
+                      SizedBox(width: SizeConfig.padding4),
+                      Text(
+                        "Ticket${matchList[0].value > 1 ? 's' : ''}",
+                        style: TextStyles.body4.colour(Colors.white38),
+                      ),
+                      const Spacer(),
+                      Text(
+                        "5-7",
+                        style: TextStyles.rajdhaniB.body1.colour(Colors.white),
+                      ),
+                      SizedBox(width: SizeConfig.padding4),
+                      Text(
+                        "Matches",
+                        style: TextStyles.body4.colour(Colors.white38),
+                      ),
+                    ]),
+                  ),
+                if (matchList.length == 2 || matchList.length == 3)
+                  Padding(
+                    padding: EdgeInsets.symmetric(
+                        vertical: SizeConfig.padding12,
+                        horizontal: SizeConfig.padding14),
+                    child: Row(
+                      children: List.generate(
+                        matchList.length,
+                        (i) => Expanded(
+                            child: Padding(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: SizeConfig.padding6),
+                          child: matchList[i],
+                        )),
+                      ),
+                    ),
+                  ),
+                if (matchList.length == 4)
+                  GridView(
+                    padding: EdgeInsets.symmetric(
+                      horizontal: SizeConfig.padding10,
+                      vertical: SizeConfig.padding10,
+                    ),
+                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                      crossAxisCount: 2,
+                      mainAxisSpacing: SizeConfig.padding20,
+                      crossAxisSpacing: SizeConfig.padding20,
+                      childAspectRatio: 2.4 / 1,
+                    ),
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    children: bestTickets.data!.stats!
+                        .map((e) => TicketsWinBriefChip(
+                            title: e.displayName, value: e.count))
+                        .toList(),
+                  ),
+                SizedBox(height: SizeConfig.padding8),
+                Text(
+                  "Rewards distributed every Sunday",
+                  style: TextStyles.body4.colour(UiConstants.kTabBorderColor),
                 ),
-              )
-            : const SizedBox();
+                SizedBox(height: SizeConfig.padding16),
+              ],
+            ),
+          );
+        } else {
+          return SizedBox();
+        }
       },
     );
   }
@@ -373,7 +287,7 @@ class TicketsWinBriefChip extends StatelessWidget {
       decoration: BoxDecoration(
         border: Border.all(width: 1, color: UiConstants.primaryColor),
         color: UiConstants.darkPrimaryColor.withOpacity(0.5),
-        borderRadius: BorderRadius.circular(SizeConfig.padding16),
+        borderRadius: BorderRadius.circular(SizeConfig.padding12),
       ),
       padding: EdgeInsets.all(SizeConfig.padding10),
       child: Column(
@@ -385,11 +299,11 @@ class TicketsWinBriefChip extends StatelessWidget {
             children: [
               Text(
                 "$title ",
-                style: TextStyles.rajdhaniB.body3.colour(Colors.white),
+                style: TextStyles.rajdhaniB.body2.colour(Colors.white),
               ),
               Text(
                 "Matches",
-                style: TextStyles.body3.colour(Colors.white38),
+                style: TextStyles.body4.colour(Colors.white38),
               )
             ],
           ),
@@ -471,7 +385,7 @@ class TicketHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.symmetric(
-        horizontal: SizeConfig.padding26,
+        horizontal: SizeConfig.pageHorizontalMargins,
         vertical: SizeConfig.padding6,
       ),
       child: Row(
@@ -484,12 +398,8 @@ class TicketHeader extends StatelessWidget {
             children: [
               Row(
                 children: [
-                  SvgPicture.asset(Assets.ticket_icon),
-                  SizedBox(
-                    width: SizeConfig.padding8,
-                  ),
-                  Text("Tickets ($activeTambolaCardCount)",
-                      style: TextStyles.rajdhaniSB.body1),
+                  Text(" Your Tickets ($activeTambolaCardCount)",
+                      style: TextStyles.sourceSansSB.title5),
                 ],
               ),
               Selector<TambolaService, int>(
@@ -510,26 +420,6 @@ class TicketHeader extends StatelessWidget {
                           maxLines: 2,
                           textAlign: TextAlign.start,
                         ),
-                        // GestureDetector(
-                        //   onTap: () {
-                        //     // AppState.delegate!.appState.currentAction =
-                        //     //     PageAction(
-                        //     //   state: PageState.addWidget,
-                        //     //   page: FaqPageConfig,
-                        //     //   widget: const FAQPage(
-                        //     //     type: FaqsType.play,
-                        //     //   ),
-                        //     // );
-                        //   },
-                        //   child: Text(
-                        //     "Know More",
-                        //     style: TextStyles.sourceSansSB.body4
-                        //         .colour(UiConstants.kBlogTitleColor)
-                        //         .copyWith(
-                        //             decorationStyle: TextDecorationStyle.solid,
-                        //             decoration: TextDecoration.underline),
-                        //   ),
-                        // ),
                       ],
                     );
                   } else {
@@ -550,13 +440,14 @@ class TicketHeader extends StatelessWidget {
               );
               // AppState.delegate!.parseRoute(Uri.parse('assetBuy'));
             },
+            height: SizeConfig.padding40,
             color: Colors.white,
             shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(8),
+              borderRadius: BorderRadius.circular(SizeConfig.roundness5),
             ),
             child: Text(
-              "+ Get Tickets",
-              style: TextStyles.rajdhaniB.body2.colour(Colors.black),
+              "GET TICKETS",
+              style: TextStyles.rajdhaniB.body1.colour(Colors.black),
             ),
           ),
         ],

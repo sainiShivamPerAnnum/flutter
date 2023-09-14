@@ -3,9 +3,11 @@ import 'dart:developer';
 
 import 'package:felloapp/core/model/game_model.dart';
 import 'package:felloapp/core/model/prizes_model.dart';
+import 'package:felloapp/core/model/tambola_offers_model.dart';
 import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/core/model/winners_model.dart';
 import 'package:felloapp/core/repository/games_repo.dart';
+import 'package:felloapp/core/repository/getters_repo.dart';
 import 'package:felloapp/core/repository/scratch_card_repo.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/notifier_services/winners_service.dart';
@@ -29,6 +31,7 @@ class TambolaService extends ChangeNotifier {
   final ScratchCardRepository _scRepo = locator<ScratchCardRepository>();
   final WinnerService _winnerService = locator<WinnerService>();
   final GameRepo _gameRepo = locator<GameRepo>();
+  final GetterRepository _getterRepo = locator<GetterRepository>();
   final UserService _userService = locator<UserService>();
 
   //STATIC VARIABLES
@@ -48,12 +51,30 @@ class TambolaService extends ChangeNotifier {
   int expiringTicketsCount = 0;
   Winners? winnerData;
 
+  List<TicketsOffers> _ticketsOffers = [];
+
+  get ticketsOffers => _ticketsOffers;
+
+  set ticketsOffers(value) {
+    _ticketsOffers = value;
+    notifyListeners();
+  }
+
   bool _isScreenLoading = true;
   bool _isLoading = false;
   bool isEligible = false;
   bool showWinScreen = false;
   bool noMoreTickets = false;
   bool _showSpinButton = false;
+  bool _isCollapsed = false;
+
+  bool get isCollapsed => _isCollapsed;
+
+  set isCollapsed(bool value) {
+    _isCollapsed = value;
+    notifyListeners();
+  }
+
   bool get showSpinButton => _showSpinButton;
 
   set showSpinButton(bool value) {
@@ -176,7 +197,7 @@ class TambolaService extends ChangeNotifier {
         .fetchWinnersByGameCode(Constants.GAME_TYPE_TAMBOLA);
     pastWeekWinners = winnersModel!.winners!;
     //Check if its the winners day
-    if (winnersModel.timestamp!.toDate().weekday == DateTime.now().weekday) {
+    if (winnersModel.createdOn!.toDate().weekday == DateTime.now().weekday) {
       if (pastWeekWinners!.indexWhere(
               (winner) => winner.userid == _userService.baseUser!.uid) !=
           -1) {
@@ -213,8 +234,18 @@ class TambolaService extends ChangeNotifier {
     if (ticketsResponse.isSuccess()) {
       bestTickets = ticketsResponse.model;
       allBestTickets = bestTickets?.data?.allTickets();
+      if (allBestTickets?.isNotEmpty ?? false) {
+        isCollapsed = true;
+      }
     } else {
       //TODO: FAILED TO FETCH TAMBOLA TICKETS. HANDLE FAIL CASE
+    }
+  }
+
+  Future<void> getOffers() async {
+    final res = await _getterRepo.getTambolaOffers();
+    if (res.isSuccess()) {
+      ticketsOffers = res.model;
     }
   }
 

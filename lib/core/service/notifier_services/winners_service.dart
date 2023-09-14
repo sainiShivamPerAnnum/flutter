@@ -10,7 +10,6 @@ import '../../ops/db_ops.dart';
 
 class WinnerService extends ChangeNotifier {
   final CustomLogger? _logger = locator<CustomLogger>();
-  // final GameRepo _gamesRepo = locator<GameRepo>();
   final GetterRepository? _getterRepo = locator<GetterRepository>();
   final DBModel? _dbModel = locator<DBModel>();
   Map<String, List<Winners>> gameWinnersMap = {};

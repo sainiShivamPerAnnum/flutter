@@ -2,6 +2,7 @@ import 'dart:async';
 
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/constants/cache_keys.dart';
+import 'package:felloapp/core/enums/ttl.dart';
 import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/core/repository/base_repo.dart';
 import 'package:felloapp/core/service/api_service.dart';
@@ -29,19 +30,22 @@ class TambolaRepo extends BaseRepo {
 
       // await preProcessTambolaTickets();
 
-      final response = await APIService.instance.getData(
-        ApiPath.tambolaBestTickets(uid!),
-        token: token,
-        cBaseUrl: _baseUrl,
-      );
-      bestTickets = TambolaBestTicketsModel.fromJson(response);
-      // await postProcessTambolaTickets(response);
-      expiringTicketCount = response["data"]["expiringTicketsCount"] ?? 0;
+      return await _cacheService.cachedApi(
+          CacheKeys.TAMBOLA_TICKETS,
+          TTL.UPTO_SIX_PM,
+          () => APIService.instance.getData(
+                ApiPath.tambolaBestTickets(uid!),
+                token: token,
+                cBaseUrl: _baseUrl,
+              ), (dynamic response) {
+        bestTickets = TambolaBestTicketsModel.fromJson(response);
+        expiringTicketCount = response["data"]["expiringTicketsCount"] ?? 0;
 
-      return ApiResponse<TambolaBestTicketsModel>(
-        model: bestTickets,
-        code: 200,
-      );
+        return ApiResponse<TambolaBestTicketsModel>(
+          model: bestTickets,
+          code: 200,
+        );
+      });
     } catch (e) {
       logger.e('Failed to get best tickets: $e');
       return ApiResponse.withError(e.toString(), 400);
@@ -50,26 +54,27 @@ class TambolaRepo extends BaseRepo {
 
   Future<ApiResponse<List<TambolaTicketModel>>> getTickets(
       int offset, int limit) async {
-    // try {
-    final uid = userService.baseUser!.uid;
-    final token = await getBearerToken();
-
-    // await preProcessTambolaTickets();
-
-    final response = await APIService.instance.getData(
-      ApiPath.tambolaTickets(uid),
-      token: token,
-      queryParams: {'limit': limit.toString(), 'offset': offset.toString()},
-      cBaseUrl: _baseUrl,
-    );
-    List<TambolaTicketModel>? tickets =
-        TambolaTicketModel.helper.fromMapArray(response['data']['tickets']);
-    expiringTicketCount = response["data"]["expiringTicketsCount"] ?? 0;
-    // await postProcessTambolaTickets(response);
-    return ApiResponse<List<TambolaTicketModel>>(
-      model: tickets ?? [],
-      code: 200,
-    );
+    try {
+      final uid = userService.baseUser!.uid;
+      final token = await getBearerToken();
+      final response = await APIService.instance.getData(
+        ApiPath.tambolaTickets(uid),
+        token: token,
+        queryParams: {'limit': limit.toString(), 'offset': offset.toString()},
+        cBaseUrl: _baseUrl,
+      );
+      List<TambolaTicketModel>? tickets =
+          TambolaTicketModel.helper.fromMapArray(response['data']['tickets']);
+      expiringTicketCount = response["data"]["expiringTicketsCount"] ?? 0;
+      // await postProcessTambolaTickets(response);
+      return ApiResponse<List<TambolaTicketModel>>(
+        model: tickets ?? [],
+        code: 200,
+      );
+    } catch (e) {
+      logger.e('Failed to get tickets: $e');
+      return ApiResponse.withError(e.toString(), 400);
+    }
   }
 
   Future<ApiResponse<dynamic>> getWeeklyPicks() async {

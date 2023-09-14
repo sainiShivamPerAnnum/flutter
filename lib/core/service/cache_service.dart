@@ -3,7 +3,9 @@ import 'dart:developer';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
+import 'package:felloapp/core/enums/ttl.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
+import 'package:felloapp/util/date_helper.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -116,7 +118,10 @@ class CacheService {
       final cache = CacheModel(
         key: key,
         ttl: ttl,
-        expireAfterTimestamp: now + (ttl * 60 * 1000),
+        expireAfterTimestamp: now +
+            (ttl == TTL.UPTO_SIX_PM
+                ? DateHelper.getMillisecondsTillNextSixPm()
+                : (ttl * 60 * 1000)),
         data: data,
       );
       _logger!.d('cache: write $cache');
