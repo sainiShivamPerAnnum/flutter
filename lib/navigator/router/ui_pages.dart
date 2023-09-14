@@ -98,6 +98,7 @@ const String QuizWebViewPath = "/quizWebViewPath";
 const String BalloonLottieScreenPath = "/bolloonLottieScreenPath";
 const String MaturityWithdrawalSuccessViewPath =
     "/maturityWithdrawalSuccessViewPath";
+const String FelloBadgeHomePath = "/felloBadgeHomePath";
 
 //GoldPro
 const String GoldProDetailsPath = "/goldProDetailsPath";
@@ -203,6 +204,7 @@ enum Pages {
   QuizWebView,
   BalloonLottieScreen,
   MaturityWithdrawalSuccessView,
+  FelloBadgeHome,
   //GOLDPRO
   GoldProDetailsView,
   GoldProBuyView,
@@ -869,3 +871,9 @@ PageConfiguration MaturityWithdrawalSuccessViewPageConfig = PageConfiguration(
     path: MaturityWithdrawalSuccessViewPath,
     uiPage: Pages.MaturityWithdrawalSuccessView,
     name: "Maturity Withdrawal Success View Screen");
+
+PageConfiguration FelloBadgeHomeViewPageConfig = PageConfiguration(
+    key: 'FelloBadgeHomeViewPath',
+    path: FelloBadgeHomePath,
+    uiPage: Pages.FelloBadgeHome,
+    name: "Fello Badge Home View Screen");
