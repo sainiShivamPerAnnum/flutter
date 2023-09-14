@@ -9,12 +9,14 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/elements/appbar/appbar.dart';
 import 'package:felloapp/ui/elements/coin_bar/coin_bar_view.dart';
 import 'package:felloapp/ui/elements/default_avatar.dart';
+import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/extensions/rich_text_extension.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 
@@ -29,68 +31,48 @@ class _FelloBadgeHomeState extends State<FelloBadgeHome> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+      appBar: FAppBar(
+        showHelpButton: true,
+        type: FaqsType.yourAccount,
+        showCoinBar: false,
+        showAvatar: false,
+        leadingPadding: false,
+        action: Row(children: [
+          Selector2<UserService, ScratchCardService, Tuple2<Portfolio?, int>>(
+            builder: (context, value, child) => FelloInfoBar(
+              svgAsset: Assets.scratchCard,
+              size: SizeConfig.padding16,
+              child: "₹${value.item1?.rewards.toInt() ?? 0}",
+              onPressed: () {
+                Haptic.vibrate();
+                AppState.delegate!.parseRoute(Uri.parse("myWinnings"));
+              },
+              mark: value.item2 > 0,
+            ),
+            selector: (p0, userService, scratchCardService) => Tuple2(
+                userService.userPortfolio,
+                scratchCardService.unscratchedTicketsCount),
+          ),
+        ]),
+      ),
+      backgroundColor: const Color(0xFF191919),
       body: FelloBadgesBackground(
         child: SingleChildScrollView(
           child: Column(
             children: [
-              FAppBar(
-                showHelpButton: true,
-                type: FaqsType.yourAccount,
-                showCoinBar: false,
-                showAvatar: false,
-                leadingPadding: false,
-                action: Row(children: [
-                  Selector2<UserService, ScratchCardService,
-                      Tuple2<Portfolio?, int>>(
-                    builder: (context, value, child) => FelloInfoBar(
-                      svgAsset: Assets.scratchCard,
-                      size: SizeConfig.padding16,
-                      child: "₹${value.item1?.rewards.toInt() ?? 0}",
-                      onPressed: () {
-                        Haptic.vibrate();
-                        AppState.delegate!.parseRoute(Uri.parse("myWinnings"));
-                      },
-                      mark: value.item2 > 0,
-                    ),
-                    selector: (p0, userService, scratchCardService) => Tuple2(
-                        userService.userPortfolio,
-                        scratchCardService.unscratchedTicketsCount),
-                  ),
-                ]),
-              ),
               SizedBox(
                 height: SizeConfig.padding32,
               ),
-              Stack(
-                children: [
-                  Text(
-                    'Super Fello',
-                    textAlign: TextAlign.center,
-                    style: TextStyles.rajdhaniB.title1.colour(
-                      Colors.white,
-                    ),
-                  ),
-                  // Transform.translate(
-                  //   offset: Offset(-1, -2),
-                  //   child: Text(
-                  //     'Super Fello',
-                  //     textAlign: TextAlign.center,
-                  //     style: TextStyles.rajdhaniB.title1.copyWith(
-                  //       // color: Colors.white,
-                  //
-                  //       foreground: Paint()
-                  //         ..style = PaintingStyle.stroke
-                  //         ..strokeWidth = 1
-                  //         ..color = Colors.black,
-                  //     ),
-                  //   ),
-                  // ),
-                ],
+              SvgPicture.network(
+                  'https://fello-dev-uploads.s3.ap-south-1.amazonaws.com/super_fello_title.svg'),
+              SizedBox(
+                height: SizeConfig.padding12,
               ),
-              // SizedBox(
-              //   height: SizeConfig.padding16,
-              // ),
-              const UserBadgeContainer(),
+              const UserBadgeContainer(
+                badgeColor: Color(0xFFFFD979),
+                badgeUrl:
+                    'https://d37gtxigg82zaw.cloudfront.net/loyalty/level-2.svg',
+              ),
               SizedBox(
                 height: SizeConfig.padding12,
               ),
@@ -191,6 +173,13 @@ class _FelloBadgeHomeState extends State<FelloBadgeHome> {
                     )
                   ],
                 ),
+              ),
+              SizedBox(
+                height: SizeConfig.padding28,
+              ),
+              LottieBuilder.network(Assets.bottomBannerLottie),
+              SizedBox(
+                height: SizeConfig.padding18,
               ),
             ],
           ),
@@ -925,7 +914,10 @@ class FelloBadgeDetails extends StatelessWidget {
 }
 
 class UserBadgeContainer extends StatelessWidget {
-  const UserBadgeContainer({super.key});
+  const UserBadgeContainer({super.key, this.badgeUrl, this.badgeColor});
+
+  final String? badgeUrl;
+  final Color? badgeColor;
 
   @override
   Widget build(BuildContext context) {
@@ -962,6 +954,8 @@ class UserBadgeContainer extends StatelessWidget {
                               ),
                             ),
                           ),
+
+                          /// user profile
                           Positioned(
                             left: 0,
                             top: 0,
@@ -973,12 +967,12 @@ class UserBadgeContainer extends StatelessWidget {
                                   Positioned(
                                     left: 0,
                                     top: 0,
-                                    child: Container(
+                                    child: SizedBox(
                                       width: 72.24,
                                       height: 72.85,
-                                      decoration: const ShapeDecoration(
-                                        color: Color(0xFFCEC4FF),
-                                        shape: OvalBorder(),
+                                      child: ProfileImageSE(
+                                        radius: SizeConfig.avatarRadius * 0.7,
+                                        reactive: false,
                                       ),
                                     ),
                                   ),
@@ -990,16 +984,19 @@ class UserBadgeContainer extends StatelessWidget {
                       ),
                     ),
                   ),
+
+                  /// outer border
                   Positioned(
                     left: 16.22,
                     top: 16.36,
                     child: Container(
                       width: 78.99,
                       height: 79.66,
-                      decoration: const ShapeDecoration(
+                      decoration: ShapeDecoration(
                         shape: OvalBorder(
-                          side:
-                              BorderSide(width: 2.25, color: Color(0xFFA7A7A8)),
+                          side: BorderSide(
+                              width: 3,
+                              color: badgeColor ?? const Color(0xFFA7A7A8)),
                         ),
                       ),
                     ),
@@ -1030,8 +1027,7 @@ class UserBadgeContainer extends StatelessWidget {
                       decoration: ShapeDecoration(
                         shape: OvalBorder(
                           side: BorderSide(
-                              width: 0.58,
-                              color: Colors.white.withOpacity(0.3)),
+                              width: 1.3, color: Colors.white.withOpacity(0.3)),
                         ),
                       ),
                     ),
@@ -1045,7 +1041,7 @@ class UserBadgeContainer extends StatelessWidget {
                       decoration: ShapeDecoration(
                         shape: OvalBorder(
                           side: BorderSide(
-                              width: 0.30,
+                              width: 0.8,
                               color: const Color(0xFF727272).withOpacity(0.5)),
                         ),
                       ),
@@ -1059,8 +1055,8 @@ class UserBadgeContainer extends StatelessWidget {
             left: 12.11,
             top: 35.68,
             child: Container(
-              width: 2.53,
-              height: 2.55,
+              width: 3,
+              height: 3,
               decoration: const ShapeDecoration(
                 color: Color(0xFFD9D9D9),
                 shape: OvalBorder(),
@@ -1071,8 +1067,8 @@ class UserBadgeContainer extends StatelessWidget {
             left: 102.89,
             top: 54.38,
             child: Container(
-              width: 4.21,
-              height: 4.25,
+              width: 5,
+              height: 5,
               decoration: ShapeDecoration(
                 color: const Color(0xFFD9D9D9).withOpacity(0.3),
                 shape: const OvalBorder(),
@@ -1083,8 +1079,8 @@ class UserBadgeContainer extends StatelessWidget {
             left: 0,
             top: 64.57,
             child: Container(
-              width: 2.53,
-              height: 2.55,
+              width: 3,
+              height: 3,
               decoration: ShapeDecoration(
                 color: const Color(0xFFD9D9D9).withOpacity(0.3),
                 shape: const OvalBorder(),
@@ -1095,8 +1091,8 @@ class UserBadgeContainer extends StatelessWidget {
             left: 76.35,
             top: 97.71,
             child: Container(
-              width: 2.53,
-              height: 2.55,
+              width: 3,
+              height: 3,
               decoration: ShapeDecoration(
                 color: const Color(0xFFD9D9D9).withOpacity(0.3),
                 shape: const OvalBorder(),
@@ -1107,14 +1103,25 @@ class UserBadgeContainer extends StatelessWidget {
             left: 92.15,
             top: 12.53,
             child: Container(
-              width: 1.68,
-              height: 1.70,
+              width: 2,
+              height: 2,
               decoration: ShapeDecoration(
                 color: const Color(0xFFD9D9D9).withOpacity(0.75),
                 shape: const OvalBorder(),
               ),
             ),
           ),
+          Positioned(
+            right: 22,
+            bottom: 18,
+            // alignment: Alignment.bottomRight,
+            child: SvgPicture.network(
+              badgeUrl ?? "",
+              height: SizeConfig.padding34,
+              width: SizeConfig.padding40,
+              fit: BoxFit.fill,
+            ),
+          )
         ],
       ),
     );
@@ -1232,7 +1239,7 @@ class FelloBadgesBackground extends StatelessWidget {
           Column(
             children: [
               SizedBox(
-                height: SizeConfig.fToolBarHeight * 1.6,
+                height: SizeConfig.fToolBarHeight * 1,
               ),
               Row(
                 children: [
@@ -1579,11 +1586,11 @@ class UserBadgeCustomPainter extends CustomPainter {
     Paint paint_0_stroke = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = size.width * 0.01903558;
-    paint_0_stroke.color = Color(0xff101626).withOpacity(1.0);
+    paint_0_stroke.color = const Color(0xff101626).withOpacity(1.0);
     canvas.drawPath(path_0, paint_0_stroke);
 
     Paint paint_0_fill = Paint()..style = PaintingStyle.fill;
-    paint_0_fill.color = Color(0xffFFDA72).withOpacity(1.0);
+    paint_0_fill.color = const Color(0xffFFDA72).withOpacity(1.0);
     canvas.drawPath(path_0, paint_0_fill);
 
     Path path_1 = Path();
@@ -1598,11 +1605,11 @@ class UserBadgeCustomPainter extends CustomPainter {
     Paint paint_1_stroke = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = size.width * 0.01903558;
-    paint_1_stroke.color = Color(0xff101626).withOpacity(1.0);
+    paint_1_stroke.color = const Color(0xff101626).withOpacity(1.0);
     canvas.drawPath(path_1, paint_1_stroke);
 
     Paint paint_1_fill = Paint()..style = PaintingStyle.fill;
-    paint_1_fill.color = Color(0xffFFDA72).withOpacity(1.0);
+    paint_1_fill.color = const Color(0xffFFDA72).withOpacity(1.0);
     canvas.drawPath(path_1, paint_1_fill);
 
     Path path_2 = Path();
@@ -1617,10 +1624,10 @@ class UserBadgeCustomPainter extends CustomPainter {
     paint_2_fill.shader = ui.Gradient.linear(
         Offset(size.width * 0.1187269, size.height * 0.4137562),
         Offset(size.width * 0.8817577, size.height * 0.4137562), [
-      Color(0xffFFF5A8).withOpacity(1),
-      Color(0xffBD8100).withOpacity(1),
-      Color(0xffE0BE58).withOpacity(1),
-      Color(0xffF1DC83).withOpacity(1)
+      const Color(0xffFFF5A8).withOpacity(1),
+      const Color(0xffBD8100).withOpacity(1),
+      const Color(0xffE0BE58).withOpacity(1),
+      const Color(0xffF1DC83).withOpacity(1)
     ], [
       0,
       0.31,
@@ -1640,11 +1647,11 @@ class UserBadgeCustomPainter extends CustomPainter {
     Paint paint_3_stroke = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = size.width * 0.02855335;
-    paint_3_stroke.color = Color(0xff101626).withOpacity(1.0);
+    paint_3_stroke.color = const Color(0xff101626).withOpacity(1.0);
     canvas.drawPath(path_3, paint_3_stroke);
 
     Paint paint_3_fill = Paint()..style = PaintingStyle.fill;
-    paint_3_fill.color = Color(0xffFFDA72).withOpacity(1.0);
+    paint_3_fill.color = const Color(0xffFFDA72).withOpacity(1.0);
     canvas.drawPath(path_3, paint_3_fill);
 
     Path path_4 = Path();
