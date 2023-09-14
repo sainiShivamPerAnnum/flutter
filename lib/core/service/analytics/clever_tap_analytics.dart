@@ -3,13 +3,14 @@ import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/service/analytics/base_analytics_service.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:flutter/foundation.dart';
 
 class CleverTapAnalytics extends BaseAnalyticsService {
   final CustomLogger _logger = locator<CustomLogger>();
 
   @override
   Future<void> login({bool? isOnBoarded, BaseUser? baseUser}) async {
-    await CleverTapPlugin.setDebugLevel(1);
+    await CleverTapPlugin.setDebugLevel(kReleaseMode ? -1 : 1);
     if (isOnBoarded != null && isOnBoarded && baseUser != null) {
       var profile = {
         'Name': baseUser.name ?? "",

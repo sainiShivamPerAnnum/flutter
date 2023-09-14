@@ -49,7 +49,6 @@ class MainActivity : FlutterFragmentActivity() {
     private lateinit var paymentResult: MethodChannel.Result
     private var contacts: List<Contact> = emptyList()
     override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
-        super.configureFlutterEngine(flutterEngine)
         context = applicationContext
 //        flutterEngine.plugins.add(MyPlugin())
         GeneratedPluginRegistrant.registerWith(flutterEngine)
