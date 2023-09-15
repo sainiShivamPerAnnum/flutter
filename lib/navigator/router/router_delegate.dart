@@ -7,6 +7,7 @@ import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
+import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/bottom_nav_bar_item_model.dart';
 import 'package:felloapp/core/repository/games_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
@@ -963,7 +964,15 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case 'tambolaHome':
         if (_rootController.navItems
             .containsValue(RootController.tambolaNavBar)) {
-          onTapItem(RootController.tambolaNavBar);
+          if (locator<UserService>()
+                  .baseUser!
+                  .userPreferences
+                  .getPreference(Preferences.TAMBOLAONBOARDING) ==
+              1) {
+            onTapItem(RootController.tambolaNavBar);
+          } else {
+            pageConfiguration = TicketsIntroViewPageConfig;
+          }
           break;
         }
         pageConfiguration = THomePageConfig;
@@ -1059,6 +1068,16 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     while (AppState.screenStack.length > 1) {
       AppState.backButtonDispatcher!.didPopRoute();
     }
+    // if (item.title == "Tickets") {
+    //   if (locator<UserService>()
+    //           .baseUser!
+    //           .userPreferences
+    //           .getPreference(Preferences.TAMBOLAONBOARDING) !=
+    //       1) {
+    //     AppState.delegate!.parseRoute(Uri.parse("ticketsIntro"));
+    //     return;
+    //   }
+    // }
     var _rootController = locator<RootController>();
 
     _rootController.onChange(_rootController.navItems.values

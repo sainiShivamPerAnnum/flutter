@@ -546,7 +546,7 @@ class QuickLinks extends StatelessWidget {
       QuickLinksModel(
           name: "Tickets",
           asset: Assets.singleTambolaTicket,
-          deeplink: "ticketsIntro",
+          deeplink: "tambolaHome",
           color: UiConstants.kGoldProBorder),
     ];
 

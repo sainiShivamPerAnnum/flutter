@@ -1,11 +1,11 @@
 import 'dart:async';
 
 import 'package:action_slider/action_slider.dart';
+import 'package:felloapp/feature/tambola/src/ui/onboarding/tickets_tutorial_assets_view.dart';
 import 'package:felloapp/feature/tambola/src/ui/onboarding/tickets_tutorial_slot_machine_view.dart';
 import 'package:felloapp/feature/tambola/src/ui/widgets/ticket/ticket_painter.dart';
 import 'package:felloapp/feature/tambola/src/ui/widgets/ticket_cost_info.dart';
 import 'package:felloapp/feature/tambola/tambola.dart';
-import 'package:felloapp/ui/elements/default_avatar.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
@@ -264,35 +264,11 @@ class _TicketsIntroViewState extends State<TicketsIntroView> {
                 ),
                 Container(
                   color: UiConstants.kSaveStableFelloCardBg,
-                  height:
-                      SizeConfig.viewInsets.bottom + kBottomNavigationBarHeight,
-                  child: ListTile(
-                    leading: DefaultAvatar(),
-                    title: Text(
-                      "Ashiwin Singh",
-                      style: TextStyles.sourceSansB.body2.colour(Colors.white),
-                    ),
-                    trailing: RichText(
-                      textAlign: TextAlign.end,
-                      text: TextSpan(
-                        text: "Earned ",
-                        style: TextStyles.rajdhaniSB.body3.colour(Colors.white),
-                        children: [
-                          TextSpan(
-                            text: "₹ 10,123\n",
-                            style: TextStyles.rajdhaniSB.body3.colour(
-                              const Color(0xffF6CC60),
-                            ),
-                          ),
-                          TextSpan(
-                            text: "from tickets last week",
-                            style: TextStyles.rajdhaniSB.body3
-                                .colour(Colors.white),
-                          )
-                        ],
-                      ),
-                    ),
-                  ),
+                  alignment: Alignment.topCenter,
+                  height: SizeConfig.viewInsets.bottom +
+                      kBottomNavigationBarHeight +
+                      SizeConfig.padding10,
+                  child: const TicketsWinnersSlider(),
                 )
               ],
             )

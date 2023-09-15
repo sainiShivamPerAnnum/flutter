@@ -96,7 +96,7 @@ class TambolaVideosSection extends StatelessWidget {
         SizedBox(
           height: SizeConfig.pageHorizontalMargins - SizeConfig.padding16,
         ),
-        const TitleSubtitleContainer(title: "How Tickets Work"),
+        const TitleSubtitleContainer(title: "How Tickets Work?"),
         SizedBox(height: SizeConfig.padding12),
         SizedBox(
           height: SizeConfig.screenWidth! * 0.32,

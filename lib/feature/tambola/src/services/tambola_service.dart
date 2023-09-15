@@ -46,10 +46,18 @@ class TambolaService extends ChangeNotifier {
   List<TambolaTicketModel> allTickets = [];
   List<TambolaTicketModel>? allBestTickets = [];
   TambolaBestTicketsModel? _bestTickets;
-  int tambolaTicketCount = 0;
+  int _tambolaTicketCount = 0;
+
   int _matchedTicketCount = 0;
   int expiringTicketsCount = 0;
   Winners? winnerData;
+
+  int get tambolaTicketCount => _tambolaTicketCount;
+
+  set tambolaTicketCount(int value) {
+    _tambolaTicketCount = value;
+    notifyListeners();
+  }
 
   List<TicketsOffers> _ticketsOffers = [];
 

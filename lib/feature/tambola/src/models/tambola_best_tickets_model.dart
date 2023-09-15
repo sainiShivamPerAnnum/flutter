@@ -20,7 +20,9 @@ class Data {
   List<TambolaTicketModel>? category_2;
   List<TambolaTicketModel>? category_3;
   List<TambolaTicketModel>? category_4;
+  List<TambolaTicketModel>? best;
   List<TicketStatsModel>? stats;
+  int? ticketCap;
 
   Data({
     this.totalTicketCount = 0,
@@ -29,6 +31,8 @@ class Data {
     this.category_3,
     this.category_4,
     this.stats,
+    this.best,
+    this.ticketCap = 10,
   });
 
   Data.fromJson(Map<String, dynamic> json) {
@@ -45,10 +49,15 @@ class Data {
     if (json['category_4'] != null) {
       category_4 = TambolaTicketModel.helper.fromMapArray(json['category_4']);
     }
+    if (json['best'] != null) {
+      best = TambolaTicketModel.helper.fromMapArray(json['best']);
+    }
 
     stats = (json['stats'] != null)
         ? TicketStatsModel.parseTicketsStats(json['stats'])
         : TicketStatsModel.getBaseTicketsStats();
+
+    ticketCap = json["ticketCap"] ?? 10;
   }
 
   // int getTotalTicketsLength() {
@@ -59,12 +68,7 @@ class Data {
   // }
 
   List<TambolaTicketModel> allTickets() {
-    return [
-      ...category_1 ?? [],
-      ...category_2 ?? [],
-      ...category_3 ?? [],
-      ...category_4 ?? [],
-    ];
+    return best ?? [];
   }
 }
 

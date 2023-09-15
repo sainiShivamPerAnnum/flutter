@@ -57,7 +57,6 @@ import 'package:felloapp/core/service/referral_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/feature/tambola/src/repos/tambola_repo.dart';
 import 'package:felloapp/feature/tambola/src/services/tambola_service.dart';
-import 'package:felloapp/feature/tambola/src/ui/tambola_home/tambola_home_vm.dart';
 import 'package:felloapp/feature/tambola/src/ui/tambola_home_details/tambola_home_details_vm.dart';
 import 'package:felloapp/feature/tambola/src/ui/tambola_home_tickets/tambola_home_tickets_vm.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -221,7 +220,7 @@ Future<void> setupLocator() async {
   locator.registerFactory(BankDetailsViewModel.new);
   locator.registerFactory(GoldBuyViewModel.new);
   locator.registerFactory(GoldSellViewModel.new);
-  locator.registerFactory(TambolaHomeViewModel.new);
+  // locator.registerFactory(TambolaHomeViewModel.new);
   locator.registerFactory(TambolaHomeTicketsViewModel.new);
   locator.registerFactory(TambolaHomeDetailsViewModel.new);
   locator.registerFactory(WebHomeViewModel.new);

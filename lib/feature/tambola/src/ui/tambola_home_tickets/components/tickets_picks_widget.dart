@@ -83,7 +83,7 @@ class _TicketsPicksWidgetState extends State<TicketsPicksWidget> {
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(SizeConfig.roundness16),
                 color: UiConstants.kSaveStableFelloCardBg,
-                boxShadow: [
+                boxShadow: const [
                   BoxShadow(
                     color: Colors.black26,
                     offset: Offset(0, 10),
@@ -476,22 +476,28 @@ class _SlotMachineWidgetState extends State<SlotMachineWidget>
           ),
         ),
         AnimatedSwitcher(
-            duration: const Duration(seconds: 1),
-            switchInCurve: Curves.easeOutExpo,
-            switchOutCurve: Curves.easeInExpo,
-            transitionBuilder: (child, animation) {
-              return FadeTransition(
-                opacity: animation,
-                child: ScaleTransition(
-                  scale: animation,
-                  child: child,
-                ),
-              );
-            },
-            child: AnimatedSwitcher(
-              duration: const Duration(seconds: 1),
-              child: _tambolaService.todaysPicks!.contains(-1)
-                  ? MaterialButton(
+          duration: const Duration(seconds: 1),
+          switchInCurve: Curves.easeOutExpo,
+          switchOutCurve: Curves.easeInExpo,
+          transitionBuilder: (child, animation) {
+            return FadeTransition(
+              opacity: animation,
+              child: ScaleTransition(
+                scale: animation,
+                child: child,
+              ),
+            );
+          },
+          child: _tambolaService.todaysPicks!.contains(-1)
+              ? ((_tambolaService.bestTickets?.data?.totalTicketCount ?? 0) > 0
+                  ? Padding(
+                      padding: const EdgeInsets.all(0),
+                      child: Text(
+                        "Next Spin at 6 PM today",
+                        style: TextStyles.sourceSansB.body1,
+                      ),
+                    )
+                  : MaterialButton(
                       height: SizeConfig.padding44,
                       shape: RoundedRectangleBorder(
                           borderRadius:
@@ -507,38 +513,33 @@ class _SlotMachineWidgetState extends State<SlotMachineWidget>
                         );
                       },
                       child: Text(
-                        (_tambolaService.bestTickets?.data?.totalTicketCount ??
-                                    0) >
-                                0
-                            ? "GET TICKETS TO EARN"
-                            : "GET YOUR FIRST TICKET",
+                        "GET YOUR FIRST TICKET",
+                        style: TextStyles.rajdhaniB.body0.colour(Colors.black),
+                      ),
+                    ))
+              : _tambolaService.showSpinButton
+                  ? MaterialButton(
+                      height: SizeConfig.padding44,
+                      shape: RoundedRectangleBorder(
+                          borderRadius:
+                              BorderRadius.circular(SizeConfig.roundness5)),
+                      minWidth: SizeConfig.screenWidth! * 0.3,
+                      color: isSpinning ? Colors.grey : Colors.white,
+                      onPressed: spin,
+                      enableFeedback: !isSpinning,
+                      child: Text(
+                        "SPIN",
                         style: TextStyles.rajdhaniB.body0.colour(Colors.black),
                       ),
                     )
-                  : _tambolaService.showSpinButton
-                      ? MaterialButton(
-                          height: SizeConfig.padding44,
-                          shape: RoundedRectangleBorder(
-                              borderRadius:
-                                  BorderRadius.circular(SizeConfig.roundness5)),
-                          minWidth: SizeConfig.screenWidth! * 0.3,
-                          color: isSpinning ? Colors.grey : Colors.white,
-                          onPressed: spin,
-                          enableFeedback: !isSpinning,
-                          child: Text(
-                            "SPIN",
-                            style:
-                                TextStyles.rajdhaniB.body0.colour(Colors.black),
-                          ),
-                        )
-                      : Padding(
-                          padding: const EdgeInsets.all(0),
-                          child: Text(
-                            "Next Spin at 6 PM tomorrow",
-                            style: TextStyles.sourceSansB.body1,
-                          ),
-                        ),
-            )),
+                  : Padding(
+                      padding: const EdgeInsets.all(0),
+                      child: Text(
+                        "Next Spin at 6 PM tomorrow",
+                        style: TextStyles.sourceSansB.body1,
+                      ),
+                    ),
+        ),
       ],
     );
   }

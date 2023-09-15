@@ -828,6 +828,10 @@ class UserProfileVM extends BaseViewModel {
               Preferences.FLOINVOICEMAIL,
             ) ==
             1,
+        'mUserPrefsTo': _userService.baseUser!.userPreferences.getPreference(
+              Preferences.TAMBOLAONBOARDING,
+            ) ==
+            1,
       },
     ).then((value) {
       _userService.setBaseUser();
@@ -854,7 +858,11 @@ class UserProfileVM extends BaseViewModel {
               Preferences.TAMBOLANOTIFICATIONS,
             ) ==
             1,
-        'mUserPrefsEr': val
+        'mUserPrefsEr': val,
+        'mUserPrefsTo': _userService.baseUser!.userPreferences.getPreference(
+              Preferences.TAMBOLAONBOARDING,
+            ) ==
+            1,
       },
     ).then((value) {
       _userService.setBaseUser();
@@ -880,6 +888,10 @@ class UserProfileVM extends BaseViewModel {
               1,
           'mUserPrefsEr': _userService.baseUser!.userPreferences.getPreference(
                 Preferences.FLOINVOICEMAIL,
+              ) ==
+              1,
+          'mUserPrefsTo': _userService.baseUser!.userPreferences.getPreference(
+                Preferences.TAMBOLAONBOARDING,
               ) ==
               1,
         },

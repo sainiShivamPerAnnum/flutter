@@ -8,6 +8,7 @@ import 'package:felloapp/feature/tambola/src/ui/widgets/ticket/tambola_ticket.da
 import 'package:felloapp/feature/tambola/src/ui/widgets/ticket/ticket_painter.dart';
 import 'package:felloapp/feature/tambola/tambola.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/extensions/rich_text_extension.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
@@ -559,6 +560,7 @@ class _TicketsTutorialsSlotMachineViewState
                       animation: _prizesAnimation,
                       child: TicketsRewardCategoriesWidget(
                         highlightRow: highlightRow,
+                        isOpen: true,
                       ),
                     ),
                     CustomStaggeredAnimatedWidget(
@@ -581,30 +583,7 @@ class _TicketsTutorialsSlotMachineViewState
                                   const TicketsTutorialsView(),
                             ),
                           );
-                          // final _userService = locator<UserService>();
-                          // final _userRepo = locator<UserRepository>();
-                          // _userRepo.updateUser(
-                          //   uid: _userService.baseUser!.uid,
-                          //   dMap: {
-                          //     'mUserPrefsAl': _userService
-                          //             .baseUser!.userPreferences
-                          //             .getPreference(
-                          //           Preferences.APPLOCK,
-                          //         ) ==
-                          //         1,
-                          //     'mUserPrefsTn': _userService
-                          //             .baseUser!.userPreferences
-                          //             .getPreference(
-                          //           Preferences.TAMBOLANOTIFICATIONS,
-                          //         ) ==
-                          //         1,
-                          //     'mUserPrefsEr': Preferences.FLOINVOICEMAIL,
-                          //     'mUserPrefsTo': Preferences.TAMBOLAONBOARDING
-                          //   },
-                          // ).then((value) {
-                          //   _userService.setBaseUser();
-                          //   const Log("Preferences updated");
-                          // });
+
                           // AppState.delegate!.appState.currentAction =
                           //     PageAction(
                           //   page: AssetSelectionViewConfig,
@@ -614,7 +593,7 @@ class _TicketsTutorialsSlotMachineViewState
                           // );
                         },
                         child: Text(
-                          "GET YOUR 1ST TICKET",
+                          "HOW TO WIN REWARDS",
                           style:
                               TextStyles.rajdhaniB.body0.colour(Colors.black),
                         ),
@@ -848,11 +827,13 @@ class TicketsRewardCategoriesWidget extends StatelessWidget {
       {super.key,
       this.color,
       required this.highlightRow,
+      this.isOpen = false,
       this.hasMargin = true});
 
   final bool highlightRow;
   final bool hasMargin;
   final Color? color;
+  final bool isOpen;
 
   @override
   Widget build(BuildContext context) {
@@ -880,25 +861,25 @@ class TicketsRewardCategoriesWidget extends StatelessWidget {
           builder: (context, value, child) {
             return Column(
               children: [
-                Row(
-                  children: [
-                    SvgPicture.asset(
-                      Assets.tambolaPrizeAsset,
-                      width: SizeConfig.padding36,
-                    ),
-                    SizedBox(width: SizeConfig.padding12),
-                    Text(
-                      "Reward Categories",
-                      style:
-                          TextStyles.sourceSansSB.title4.colour(Colors.white),
-                    ),
-                    const Spacer(),
-                    IconButton(
-                      onPressed: () {
-                        locator<TambolaService>().isCollapsed =
-                            !locator<TambolaService>().isCollapsed;
-                      },
-                      icon: value.item2
+                GestureDetector(
+                  onTap: () {
+                    locator<TambolaService>().isCollapsed =
+                        !locator<TambolaService>().isCollapsed;
+                  },
+                  child: Row(
+                    children: [
+                      SvgPicture.asset(
+                        Assets.tambolaPrizeAsset,
+                        width: SizeConfig.padding36,
+                      ),
+                      SizedBox(width: SizeConfig.padding6),
+                      Text(
+                        "Reward Categories",
+                        style:
+                            TextStyles.sourceSansSB.title5.colour(Colors.white),
+                      ),
+                      const Spacer(),
+                      value.item2
                           ? Icon(
                               Icons.keyboard_arrow_up_rounded,
                               color: Colors.grey,
@@ -909,12 +890,11 @@ class TicketsRewardCategoriesWidget extends StatelessWidget {
                               color: Colors.grey,
                               size: SizeConfig.iconSize0,
                             ),
-                    )
-                  ],
+                    ],
+                  ),
                 ),
-                value.item2
-                    ? const SizedBox()
-                    : Column(
+                isOpen
+                    ? Column(
                         children: [
                           value.item1 != null
                               ? ListView.separated(
@@ -928,32 +908,45 @@ class TicketsRewardCategoriesWidget extends StatelessWidget {
                                     switchInCurve: Curves.easeOutExpo,
                                     switchOutCurve: Curves.easeOutExpo,
                                     child: ListTile(
-                                      contentPadding: EdgeInsets.symmetric(
-                                          horizontal: SizeConfig.padding10),
-                                      title: Text(
-                                        value.item1!.prizes![index]
-                                                .displayName ??
-                                            "",
-                                        style: TextStyles.rajdhaniB.body1
-                                            .colour(index == 0 && highlightRow
-                                                ? UiConstants.primaryColor
-                                                : Colors.white),
-                                      ),
-                                      subtitle: Text(
-                                        "Per Ticket every week",
-                                        style: TextStyles.sourceSans.body3
-                                            .colour(Colors.white38),
-                                      ),
-                                      trailing: Text(
-                                        value.item1!.prizes![index]
-                                                .displayPrize ??
-                                            "",
-                                        style: TextStyles.sourceSansB.body1
-                                            .colour(index == 0 && highlightRow
-                                                ? UiConstants.primaryColor
-                                                : Colors.white),
-                                      ),
-                                    ),
+                                        contentPadding: EdgeInsets.symmetric(
+                                            horizontal: SizeConfig.padding10),
+                                        title: Text(
+                                          value.item1!.prizes![index]
+                                                  .displayName ??
+                                              "",
+                                          style: TextStyles.rajdhaniB.body1
+                                              .colour(index == 0 && highlightRow
+                                                  ? UiConstants.primaryColor
+                                                  : Colors.white),
+                                        ),
+                                        subtitle: Text(
+                                          "Category",
+                                          style: TextStyles.sourceSans.body3
+                                              .colour(Colors.white38),
+                                        ),
+                                        trailing: (value.item1!.prizes![index]
+                                                    .displayPrize ??
+                                                "")
+                                            .beautify(
+                                          style: TextStyles.sourceSans.body1
+                                              .colour(index == 0 && highlightRow
+                                                  ? UiConstants.primaryColor
+                                                  : Colors.white),
+                                          boldStyle: TextStyles.sourceSans.body1
+                                              .colour(index == 0 && highlightRow
+                                                  ? UiConstants.primaryColor
+                                                  : Colors.white),
+                                        )
+                                        //  Text(
+                                        //   value.item1!.prizes![index]
+                                        //           .displayPrize. ??
+                                        //       "",
+                                        // style: TextStyles.sourceSansB.body1
+                                        //     .colour(index == 0 && highlightRow
+                                        //         ? UiConstants.primaryColor
+                                        //         : Colors.white),
+                                        // ),
+                                        ),
                                   ),
                                   separatorBuilder: (context, index) =>
                                       index != categories.length - 1
@@ -964,12 +957,93 @@ class TicketsRewardCategoriesWidget extends StatelessWidget {
                                 )
                               : const SizedBox(),
                           Text(
-                            "Rewards are distributed every monday among all  the Tickets winning in a catagory",
+                            "Rewards are distributed every monday among all the Tickets winning in a category",
                             style: TextStyles.body3.colour(Colors.white30),
                             textAlign: TextAlign.center,
                           )
                         ],
                       )
+                    : value.item2
+                        ? const SizedBox()
+                        : Column(
+                            children: [
+                              value.item1 != null
+                                  ? ListView.separated(
+                                      shrinkWrap: true,
+                                      physics:
+                                          const NeverScrollableScrollPhysics(),
+                                      padding: EdgeInsets.symmetric(
+                                          vertical: SizeConfig.padding14),
+                                      itemCount: value.item1!.prizes!.length,
+                                      itemBuilder: (ctx, index) =>
+                                          AnimatedSwitcher(
+                                        duration: const Duration(seconds: 1),
+                                        switchInCurve: Curves.easeOutExpo,
+                                        switchOutCurve: Curves.easeOutExpo,
+                                        child: ListTile(
+                                            contentPadding:
+                                                EdgeInsets.symmetric(
+                                                    horizontal:
+                                                        SizeConfig.padding10),
+                                            title: Text(
+                                              value.item1!.prizes![index]
+                                                      .displayName ??
+                                                  "",
+                                              style: TextStyles.rajdhaniB.body1
+                                                  .colour(index == 0 &&
+                                                          highlightRow
+                                                      ? UiConstants.primaryColor
+                                                      : Colors.white),
+                                            ),
+                                            subtitle: Text(
+                                              "Category",
+                                              style: TextStyles.sourceSans.body3
+                                                  .colour(Colors.white38),
+                                            ),
+                                            trailing: (value
+                                                        .item1!
+                                                        .prizes![index]
+                                                        .displayPrize ??
+                                                    "")
+                                                .beautify(
+                                              style: TextStyles.sourceSans.body1
+                                                  .colour(index == 0 &&
+                                                          highlightRow
+                                                      ? UiConstants.primaryColor
+                                                      : Colors.white),
+                                              boldStyle: TextStyles
+                                                  .sourceSans.body1
+                                                  .colour(index == 0 &&
+                                                          highlightRow
+                                                      ? UiConstants.primaryColor
+                                                      : Colors.white),
+                                            )
+                                            //  Text(
+                                            //   value.item1!.prizes![index]
+                                            //           .displayPrize. ??
+                                            //       "",
+                                            // style: TextStyles.sourceSansB.body1
+                                            //     .colour(index == 0 && highlightRow
+                                            //         ? UiConstants.primaryColor
+                                            //         : Colors.white),
+                                            // ),
+                                            ),
+                                      ),
+                                      separatorBuilder: (context, index) =>
+                                          index != categories.length - 1
+                                              ? const Divider(
+                                                  color: Colors.white10,
+                                                )
+                                              : const SizedBox(),
+                                    )
+                                  : const SizedBox(),
+                              Text(
+                                "Rewards are distributed every monday among all the Tickets winning in a category",
+                                style: TextStyles.body3.colour(Colors.white30),
+                                textAlign: TextAlign.center,
+                              )
+                            ],
+                          )
               ],
             );
           }),

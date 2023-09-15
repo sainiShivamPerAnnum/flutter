@@ -1,4 +1,9 @@
+import 'dart:async';
+
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/model/base_user_model.dart';
+import 'package:felloapp/core/repository/user_repo.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/feature/tambola/src/ui/onboarding/tickets_intro_view.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -6,6 +11,8 @@ import 'package:felloapp/ui/elements/default_avatar.dart';
 import 'package:felloapp/ui/pages/asset_selection.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -102,7 +109,7 @@ class _TicketsTutorialsViewState extends State<TicketsTutorialsView>
                     SizedBox(height: SizeConfig.padding10),
                     Expanded(
                         child: Column(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      mainAxisAlignment: MainAxisAlignment.start,
                       children: [
                         CustomStaggeredAnimatedWidget(
                           animation: _animation1,
@@ -152,6 +159,7 @@ class _TicketsTutorialsViewState extends State<TicketsTutorialsView>
                             ),
                           ),
                         ),
+                        SizedBox(height: SizeConfig.screenHeight! * 0.028),
                         CustomStaggeredAnimatedWidget(
                           animation: _animation2,
                           child: Container(
@@ -184,7 +192,7 @@ class _TicketsTutorialsViewState extends State<TicketsTutorialsView>
                                   ),
                                   SizedBox(height: SizeConfig.padding12),
                                   Text(
-                                    "Don’t worry even if you don’t, Numbers are matched with your Tickets everyday",
+                                    "Numbers will be automatically matched with your Tickets, even if you forget to spin",
                                     style:
                                         TextStyles.body4.colour(Colors.black),
                                     textAlign: TextAlign.center,
@@ -194,6 +202,7 @@ class _TicketsTutorialsViewState extends State<TicketsTutorialsView>
                             ),
                           ),
                         ),
+                        SizedBox(height: SizeConfig.screenHeight! * 0.028),
                         CustomStaggeredAnimatedWidget(
                           animation: _animation3,
                           child: Container(
@@ -226,14 +235,14 @@ class _TicketsTutorialsViewState extends State<TicketsTutorialsView>
                                     child: Column(
                                   children: [
                                     Text(
-                                      "Rewards distributed every Sunday",
+                                      "Rewards distributed every Monday",
                                       style: TextStyles.sourceSansSB.body2
                                           .colour(Colors.black),
                                       textAlign: TextAlign.center,
                                     ),
                                     SizedBox(height: SizeConfig.padding12),
                                     Text(
-                                      "Catagory rewards are distributed among all the Tickets winning in a catagory",
+                                      "Rewards are distributed for your top 10 winning tickets in a week",
                                       style:
                                           TextStyles.body4.colour(Colors.black),
                                       textAlign: TextAlign.center,
@@ -248,7 +257,6 @@ class _TicketsTutorialsViewState extends State<TicketsTutorialsView>
                         ),
                       ],
                     )),
-                    SizedBox(height: SizeConfig.screenHeight! * 0.3),
                   ],
                 ),
               ),
@@ -262,39 +270,7 @@ class _TicketsTutorialsViewState extends State<TicketsTutorialsView>
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      ListTile(
-                        leading: DefaultAvatar(),
-                        title: Text(
-                          "Ashiwin Singh",
-                          style:
-                              TextStyles.sourceSansB.body2.colour(Colors.white),
-                        ),
-                        trailing: RichText(
-                          textAlign: TextAlign.end,
-                          text: TextSpan(
-                            text: "Earned ",
-                            style: TextStyles.rajdhaniSB.body3
-                                .colour(Colors.white),
-                            children: [
-                              TextSpan(
-                                text: "₹ 10,123\n",
-                                style: TextStyles.rajdhaniSB.body3.colour(
-                                  const Color(0xffF6CC60),
-                                ),
-                              ),
-                              TextSpan(
-                                text: "from tickets last week",
-                                style: TextStyles.rajdhaniSB.body3
-                                    .colour(Colors.white),
-                              )
-                            ],
-                          ),
-                        ),
-                        contentPadding: EdgeInsets.symmetric(
-                          vertical: SizeConfig.padding10,
-                          horizontal: SizeConfig.pageHorizontalMargins,
-                        ),
-                      ),
+                      const TicketsWinnersSlider(),
                       Padding(
                         padding: EdgeInsets.symmetric(
                             horizontal: SizeConfig.pageHorizontalMargins),
@@ -312,6 +288,34 @@ class _TicketsTutorialsViewState extends State<TicketsTutorialsView>
                               pattern: [10, 80, 150, 80, 200, 50, 300, 50],
                             );
                             _controller.reverse().then((value) {
+                              final _userService = locator<UserService>();
+                              final _userRepo = locator<UserRepository>();
+                              _userRepo.updateUser(
+                                uid: _userService.baseUser!.uid,
+                                dMap: {
+                                  'mUserPrefsAl': _userService
+                                          .baseUser!.userPreferences
+                                          .getPreference(
+                                        Preferences.APPLOCK,
+                                      ) ==
+                                      1,
+                                  'mUserPrefsTn': _userService
+                                          .baseUser!.userPreferences
+                                          .getPreference(
+                                        Preferences.TAMBOLANOTIFICATIONS,
+                                      ) ==
+                                      1,
+                                  'mUserPrefsEr': _userService
+                                          .baseUser!.userPreferences
+                                          .getPreference(
+                                        Preferences.FLOINVOICEMAIL,
+                                      ) ==
+                                      1,
+                                  'mUserPrefsTo': true
+                                },
+                              ).then((value) {
+                                const Log("Preferences updated");
+                              });
                               AppState.delegate!.appState.currentAction =
                                   PageAction(
                                 page: AssetSelectionViewConfig,
@@ -319,6 +323,7 @@ class _TicketsTutorialsViewState extends State<TicketsTutorialsView>
                                     isTicketsFlow: true, showOnlyFlo: false),
                                 state: PageState.replaceWidget,
                               );
+
                               // Navigator.pushReplacement(
                               //     context,
                               //     MaterialPageRoute(
@@ -327,7 +332,7 @@ class _TicketsTutorialsViewState extends State<TicketsTutorialsView>
                             });
                           },
                           child: Text(
-                            "START WITH TICKETS",
+                            "GET YOUR 1ST TICKET",
                             style:
                                 TextStyles.rajdhaniB.body0.colour(Colors.black),
                           ),
@@ -441,6 +446,98 @@ class DummyAssetCard extends StatelessWidget {
             SizedBox(height: SizeConfig.padding10)
           ],
         ),
+      ),
+    );
+  }
+}
+
+class TicketsWinnersSlider extends StatefulWidget {
+  const TicketsWinnersSlider({super.key});
+
+  @override
+  State<TicketsWinnersSlider> createState() => _TicketsWinnersSliderState();
+}
+
+class _TicketsWinnersSliderState extends State<TicketsWinnersSlider> {
+  late final PageController _controller = PageController(initialPage: 0);
+
+  Timer? _timer;
+  int _currentPage = 0;
+
+  final List<Tuple2<String, String>> winnersData = [
+    const Tuple2('Ashwin Singh', "87,234"),
+    const Tuple2('Akshay Kumar', "34,234"),
+    const Tuple2('Momo Singh', "5,234"),
+  ];
+
+  @override
+  void initState() {
+    super.initState();
+
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      _timer = Timer.periodic(const Duration(seconds: 5), (timer) {
+        if (_currentPage < 3) {
+          _currentPage++;
+        } else {
+          _currentPage = 0;
+        }
+        if (_controller.hasClients) {
+          _controller.animateToPage(
+            _currentPage,
+            duration: const Duration(milliseconds: 350),
+            curve: Curves.easeIn,
+          );
+        }
+      });
+    });
+  }
+
+  @override
+  void dispose() {
+    _timer?.cancel();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return SizedBox(
+      height: SizeConfig.padding60,
+      width: SizeConfig.screenWidth,
+      child: PageView.builder(
+        controller: _controller,
+        itemCount: 3,
+        itemBuilder: (context, i) {
+          return ListTile(
+            leading: DefaultAvatar(),
+            title: Text(
+              winnersData[i].item1,
+              style: TextStyles.sourceSansB.body2.colour(Colors.white),
+            ),
+            trailing: RichText(
+              textAlign: TextAlign.end,
+              text: TextSpan(
+                text: "Earned ",
+                style: TextStyles.rajdhaniSB.body3.colour(Colors.white),
+                children: [
+                  TextSpan(
+                    text: "₹ ${winnersData[i].item2}\n",
+                    style: TextStyles.rajdhaniSB.body3.colour(
+                      const Color(0xffF6CC60),
+                    ),
+                  ),
+                  TextSpan(
+                    text: "from tickets last week",
+                    style: TextStyles.rajdhaniSB.body3.colour(Colors.white),
+                  )
+                ],
+              ),
+            ),
+            contentPadding: EdgeInsets.symmetric(
+              vertical: SizeConfig.padding4,
+              horizontal: SizeConfig.pageHorizontalMargins,
+            ),
+          );
+        },
       ),
     );
   }

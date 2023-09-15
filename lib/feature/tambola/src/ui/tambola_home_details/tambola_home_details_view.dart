@@ -4,9 +4,9 @@ import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/feature/tambola/src/ui/onboarding/tickets_tutorial_slot_machine_view.dart';
 import 'package:felloapp/feature/tambola/src/ui/tambola_home_details/tambola_home_details_vm.dart';
 import 'package:felloapp/feature/tambola/src/ui/widgets/header.dart';
-import 'package:felloapp/feature/tambola/src/ui/widgets/prizes_section.dart';
 import 'package:felloapp/feature/tambola/tambola.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/helpers/tnc_text.dart';
@@ -133,7 +133,10 @@ class _TambolaHomeDetailsViewState extends State<TambolaHomeDetailsView> {
                       height: SizeConfig.blockSizeVertical! * 2,
                     ),
                     if (widget.showDemoImage) const TambolaDemoImage(),
-                    const TambolaPrize(),
+                    TicketsRewardCategoriesWidget(
+                        isOpen: true,
+                        color: UiConstants.kTambolaMidTextColor,
+                        highlightRow: false),
                     const TambolaLeaderboardView(),
                     const TermsAndConditions(url: Constants.tambolatnc),
                     SizedBox(
