@@ -9,9 +9,11 @@ class FelloBadgesLoading extends FelloBadgesState {}
 
 class FelloBadgesSuccess extends FelloBadgesState {
   final FelloBadgesData felloBadgesModel;
-  final FelloBadges currentLevel;
+  final FelloBadges currentBadge;
+  final int currentLevel;
 
-  FelloBadgesSuccess(this.felloBadgesModel, {required this.currentLevel});
+  FelloBadgesSuccess(this.felloBadgesModel, {required this.currentBadge})
+      : currentLevel = felloBadgesModel.currentLevel ?? 1;
 }
 
 class FelloBadgesError extends FelloBadgesState {

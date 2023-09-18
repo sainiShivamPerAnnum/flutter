@@ -25,7 +25,6 @@ import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 
 import '../../tambola/src/ui/widgets/loader.dart';
-import 'widgets/badges_custom_painters.dart';
 
 class FelloBadgeHome extends StatelessWidget {
   const FelloBadgeHome({super.key});
@@ -111,39 +110,24 @@ class _FelloBadgeUiState extends State<FelloBadgeUi> {
                     SizedBox(
                       height: SizeConfig.padding12,
                     ),
-                    "Become a *Super Fello* by\nwinning all the badges below"
-                        .beautify(
+                    state.felloBadgesModel.title!.beautify(
                       style: TextStyles.rajdhaniB.body1.colour(
-                        Colors.white,
+                        state.felloBadgesModel.titleColor!.toColor(),
                       ),
                       boldStyle: TextStyles.rajdhaniB.body1.colour(
                         const Color(0xFF26F1CC),
                       ),
                       alignment: TextAlign.center,
                     ),
-                    Stack(
-                      children: [
-                        // BadgesProgressIndicator(
-                        //   level: 3,
-                        //   isSuperFello: false,
-                        //   width: SizeConfig.padding104,
-                        // ),
-                        const UserProgressIndicator(),
-                        Positioned(
-                          right: SizeConfig.padding18,
-                          top: SizeConfig.padding12,
-                          child: CustomPaint(
-                            size: Size(SizeConfig.padding26,
-                                (SizeConfig.padding26 * 1).toDouble()),
-                            painter: StarCustomPainter(),
-                          ),
-                        ),
-                      ],
+                    UserProgressIndicator(
+                      level: state.currentLevel,
                     ),
                     SizedBox(
                       height: SizeConfig.padding34,
                     ),
-                    FelloBadgeDetails(),
+                    FelloBadgeDetails(
+                      levelsData: state.felloBadgesModel.levels,
+                    ),
                     SizedBox(
                       height: SizeConfig.padding34,
                     ),

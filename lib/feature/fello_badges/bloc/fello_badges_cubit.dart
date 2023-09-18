@@ -43,7 +43,7 @@ class FelloBadgesCubit extends Cubit<FelloBadgesState> {
       await _repo.getFelloBadges().then((res) {
         if (res.isSuccess()) {
           emit(FelloBadgesSuccess(res.model!.data!,
-              currentLevel: updateLevel(res.model!.data!.level ?? 1)));
+              currentBadge: updateLevel(res.model!.data!.currentLevel ?? 1)));
         } else {
           emit(FelloBadgesError(res.model?.message ?? "Something went wrong!"));
         }
