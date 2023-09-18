@@ -20,7 +20,7 @@ class TicketMultiplierOptionsWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     List<Tuple2<int, int>> multipliers = [
       const Tuple2(12, 5),
-      const Tuple2(10, 3),
+      const Tuple2(10, 2),
       const Tuple2(8, 1),
       const Tuple2(99, 1)
     ];

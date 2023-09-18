@@ -46,7 +46,7 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
-// import 'package:flutter_dynamic_icon/flutter_dynamic_icon.dart';
+import 'package:in_app_update/in_app_update.dart';
 
 enum NavBarItem { Journey, Save, Account, Play, Tambola }
 
@@ -93,19 +93,17 @@ class RootViewModel extends BaseViewModel {
   final MarketingEventHandlerService _marketingService =
       locator<MarketingEventHandlerService>();
   final RootController _rootController = locator<RootController>();
-
   Future<void> pullToRefresh() async {
     if (_rootController.currentNavBarItemModel ==
         RootController.tambolaNavBar) {
+      await Future.wait([_tambolaService.getBestTambolaTickets(forced: true)]);
       return;
     }
 
     await Future.wait([
       _userCoinService.getUserCoinBalance(),
       _userService.getUserFundWalletData(),
-      // _journeyService.checkForMilestoneLevelChange(),
       _gtService.updateUnscratchedGTCount(),
-      // _journeyService.getUnscratchedGT(),
       _subscriptionService.getSubscription(),
     ]);
 
@@ -128,7 +126,7 @@ class RootViewModel extends BaseViewModel {
     WidgetsBinding.instance.addPostFrameCallback(
       (timeStamp) async {
         await _userService.userBootUpEE();
-
+        _checkForAppUpdates();
         if (!await verifyUserBootupDetails()) return;
         await checkForBootUpAlerts();
         await showLastWeekOverview();
@@ -139,7 +137,7 @@ class RootViewModel extends BaseViewModel {
         ]);
 
         unawaited(handleStartUpNotificationData());
-        locator<ReferralService>().fetchReferralCode();
+        unawaited(locator<ReferralService>().fetchReferralCode());
         await Future.wait([
           // _userService.checkForNewNotifications(),
           _gtService.updateUnscratchedGTCount(),
@@ -150,6 +148,25 @@ class RootViewModel extends BaseViewModel {
         _initAdhocNotifications();
       },
     );
+  }
+
+  void _checkForAppUpdates() {
+    if (Platform.isAndroid) {
+      InAppUpdate.checkForUpdate().then((info) {
+        if (info.updateAvailability == UpdateAvailability.updateAvailable) {
+          InAppUpdate.startFlexibleUpdate().then((result) {
+            if (result == AppUpdateResult.success) {
+              InAppUpdate.completeFlexibleUpdate()
+                  .catchError((e) => _logger.e(e.toString()));
+            }
+          }).catchError((e) {
+            _logger.e(e.toString());
+          });
+        }
+      }).catchError((e) {
+        _logger.e(e.toString());
+      });
+    }
   }
 
   void showMarketingCampings() {
@@ -180,50 +197,6 @@ class RootViewModel extends BaseViewModel {
       });
     }
   }
-
-  // bool showNewInstallPopUp() {
-  //   if (!PreferenceHelper.getBool(PreferenceHelper.NEW_INSTALL_POPUP,
-  //           def: false) &&
-  //       AppState.isRootAvailableForIncomingTaskExecution) {
-  //     fetchCampaign = false;
-  //     AppState.isRootAvailableForIncomingTaskExecution = false;
-  //     BaseUtil.openDialog(
-  //         isBarrierDismissible: true,
-  //         addToScreenStack: true,
-  //         content: Dialog(
-  //           shape: RoundedRectangleBorder(
-  //             borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-  //           ),
-  //           child: WillPopScope(
-  //             onWillPop: () async {
-  //               if (AppState.screenStack.last == ScreenItem.dialog) {
-  //                 AppState.screenStack.removeLast();
-  //                 AppState.isRootAvailableForIncomingTaskExecution = true;
-
-  //                 showMarketingCampings();
-  //               }
-  //               return Future.value(true);
-  //             },
-  //             child: GestureDetector(
-  //               onTap: () async {
-  //                 AppState.backButtonDispatcher!.didPopRoute();
-  //                 AppState.isRootAvailableForIncomingTaskExecution = true;
-
-  //                 showMarketingCampings();
-  //               },
-  //               child: Image.asset(
-  //                   _userService.userSegments.contains(Constants.US_FLO_OLD)
-  //                       ? Assets.oldUserPopUp
-  //                       : Assets.newUserPopUp),
-  //             ),
-  //           ),
-  //         ));
-  //     PreferenceHelper.setBool(PreferenceHelper.NEW_INSTALL_POPUP, true);
-  //     return false;
-  //   } else {
-  //     return true;
-  //   }
-  // }
 
   FileType getFileType(String fileUrl) {
     String extension = fileUrl.toLowerCase().split('.').last;

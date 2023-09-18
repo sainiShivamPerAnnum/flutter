@@ -332,7 +332,13 @@ class _TicketsTutorialsViewState extends State<TicketsTutorialsView>
                             });
                           },
                           child: Text(
-                            "GET YOUR 1ST TICKET",
+                            (locator<UserService>()
+                                            .userFundWallet
+                                            ?.tickets?["total"] ??
+                                        0) >
+                                    0
+                                ? "CONTINUE"
+                                : "GET YOUR 1ST TICKET",
                             style:
                                 TextStyles.rajdhaniB.body0.colour(Colors.black),
                           ),

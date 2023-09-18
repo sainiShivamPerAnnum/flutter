@@ -38,7 +38,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:provider/provider.dart';
-import 'package:showcaseview/showcaseview.dart';
+// import 'package:showcaseview/showcaseview.dart';
 
 import 'core/service/notifier_services/user_coin_service.dart';
 
@@ -113,29 +113,28 @@ class MyApp extends HookWidget {
           child: MaterialApp.router(
             title: Constants.APP_NAME,
             theme: FelloTheme.darkMode(),
-            useInheritedMediaQuery: true,
             debugShowCheckedModeBanner: false,
             // showPerformanceOverlay: true,
             backButtonDispatcher: backButtonDispatcher,
-            builder: (context, child) {
-              return ShowCaseWidget(
-                onSkipButtonClicked: () {
-                  SpotLightController.instance.isSkipButtonClicked = true;
-                  SpotLightController.instance.startShowCase = false;
-                },
-                onFinish: () {
-                  SpotLightController.instance.isTourStarted = false;
-                  SpotLightController.instance.startShowCase = false;
-                  SpotLightController.instance.completer.complete();
-                },
-                builder: Builder(
-                  builder: (_) {
-                    SpotLightController.instance.currentContext = _;
-                    return child ?? Container();
-                  },
-                ),
-              );
-            },
+            // builder: (context, child) {
+            //   return ShowCaseWidget(
+            //     onSkipButtonClicked: () {
+            //       SpotLightController.instance.isSkipButtonClicked = true;
+            //       SpotLightController.instance.startShowCase = false;
+            //     },
+            //     onFinish: () {
+            //       SpotLightController.instance.isTourStarted = false;
+            //       SpotLightController.instance.startShowCase = false;
+            //       SpotLightController.instance.completer.complete();
+            //     },
+            //     builder: Builder(
+            //       builder: (_) {
+            //         SpotLightController.instance.currentContext = _;
+            //         return child ?? Container();
+            //       },
+            //     ),
+            //   );
+            // },
 
             routerDelegate: delegate,
             routeInformationParser: parser,

@@ -8,7 +8,10 @@ import 'package:felloapp/feature/tambola/src/ui/widgets/next_week_info_card.dart
 import 'package:felloapp/feature/tambola/src/ui/widgets/past_week_winners_section.dart';
 import 'package:felloapp/feature/tambola/src/ui/widgets/ticket/ticket_section.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
+import 'package:felloapp/ui/elements/helpers/tnc_text.dart';
+import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 
@@ -25,20 +28,20 @@ class TambolaHomeTicketsView extends StatefulWidget {
 }
 
 class _TambolaHomeTicketsViewState extends State<TambolaHomeTicketsView> {
-  ScrollController? _scrollController;
+  ScrollController? scrollController;
+
   final GlobalKey<AnimatedBuyTambolaTicketCardState> tambolaBuyTicketCardKey =
       GlobalKey<AnimatedBuyTambolaTicketCardState>();
 
   @override
   void initState() {
     super.initState();
-
-    _scrollController = ScrollController();
+    scrollController = ScrollController();
   }
 
   @override
   void dispose() {
-    _scrollController?.dispose();
+    scrollController?.dispose();
     super.dispose();
   }
 
@@ -59,7 +62,7 @@ class _TambolaHomeTicketsViewState extends State<TambolaHomeTicketsView> {
                         top: SizeConfig.padding16,
                         bottom: SizeConfig.navBarHeight,
                       ),
-                      controller: _scrollController,
+                      controller: RootController.controller,
                       children: const [
                         TambolaRewardLottieStrip(),
                         TicketsPicksWidget(),
@@ -69,6 +72,7 @@ class _TambolaHomeTicketsViewState extends State<TambolaHomeTicketsView> {
                         TicketMultiplierOptionsWidget(),
                         TicketsRewardSection(),
                         TambolaLeaderboardView(),
+                        TermsAndConditions(url: Constants.tambolatnc),
                       ],
                     ),
                   ],

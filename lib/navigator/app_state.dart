@@ -13,7 +13,6 @@ import 'package:felloapp/navigator/router/back_dispatcher.dart';
 import 'package:felloapp/navigator/router/router_delegate.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
-import 'package:felloapp/ui/shared/spotlight_controller.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -162,8 +161,18 @@ class AppState extends ChangeNotifier {
     //     return;
     //   }
     // }
+    if (index == _rootIndex) {
+      Haptic.vibrate();
+      RootController.controller.animateTo(
+        0,
+        duration: const Duration(seconds: 1),
+        curve: Curves.easeInCirc,
+      );
+      return;
+    }
     _rootController.onChange(_rootController.navItems.values.toList()[index]);
     setCurrentTabIndex = index;
+
     trackEvent(index);
     Haptic.vibrate();
 
@@ -233,17 +242,17 @@ class AppState extends ChangeNotifier {
         executeForFirstJourneyTabClick(index);
         break;
       case "Save":
-        executeForFirstSaveTabClick(index);
+        // executeForFirstSaveTabClick(index);
         break;
       case "Play":
-        executeForFirstPlayTabClick(index);
+        // executeForFirstPlayTabClick(index);
         break;
       case "Tambola":
         // executeForFirstTambolaClick(index);
         break;
       case "Account":
       case "Win":
-        executeForFirstAccountsTabClick(index);
+        // executeForFirstAccountsTabClick(index);
         break;
       default:
         break;
@@ -266,16 +275,6 @@ class AppState extends ChangeNotifier {
     //     // _journeyService.buildJourney();
     //   }
     // }
-  }
-
-  executeForFirstSaveTabClick(index) {}
-
-  executeForFirstPlayTabClick(index) {
-    SpotLightController.instance.userFlow = UserFlow.onPlayTab;
-  }
-
-  executeForFirstAccountsTabClick(index) {
-    SpotLightController.instance.userFlow = UserFlow.onWinPage;
   }
 
   void trackEvent(int index) {

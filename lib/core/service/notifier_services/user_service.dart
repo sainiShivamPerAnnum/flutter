@@ -563,7 +563,9 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
                 prefs.getString(Constants.FELLO_BALANCE) !=
                     userFundWallet!.netWorth!.toString())) {
       prefs.setString(
-          Constants.FELLO_BALANCE, userFundWallet!.netWorth!.toString());
+        Constants.FELLO_BALANCE,
+        userFundWallet!.netWorth!.toString(),
+      );
 
       log('Calling method channel for updateHomeScreenWidget');
       final platform = const MethodChannel('methodChannel/deviceData');

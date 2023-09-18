@@ -42,13 +42,15 @@ class BottomNavBar extends StatelessWidget {
                       return superModel.getCurrentTabIndex == index
                           ? Expanded(
                               key: ValueKey(navbarItems.title),
-                              child: NavBarIcon(
-                                callBack: () => superModel.onItemTapped(index),
-                                key: ValueKey(navbarItems.title),
-                                animate: true,
-                                item: navbarItems,
-                                style: TextStyles.rajdhaniSB
-                                    .colour(UiConstants.kTextColor),
+                              child: GestureDetector(
+                                onTap: () => superModel.onItemTapped(index),
+                                child: NavBarIcon(
+                                  key: ValueKey(navbarItems.title),
+                                  animate: true,
+                                  item: navbarItems,
+                                  style: TextStyles.rajdhaniSB
+                                      .colour(UiConstants.kTextColor),
+                                ),
                               ),
                             )
                           : Expanded(
@@ -62,9 +64,6 @@ class BottomNavBar extends StatelessWidget {
                                   alignment: Alignment.center,
                                   color: Colors.transparent,
                                   child: NavBarIcon(
-                                    callBack: () {
-                                      superModel.onItemTapped(index);
-                                    },
                                     animate: false,
                                     item: navbarItems,
                                     style: TextStyles.rajdhaniSB
@@ -88,13 +87,11 @@ class NavBarIcon extends StatelessWidget {
   final Key? key;
   final NavBarItemModel item;
   final TextStyle style;
-  final VoidCallback callBack;
 
   const NavBarIcon({
     required this.animate,
     required this.item,
     required this.style,
-    required this.callBack,
     this.key,
   }) : super(key: key);
 

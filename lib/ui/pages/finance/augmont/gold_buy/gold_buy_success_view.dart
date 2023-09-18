@@ -44,6 +44,7 @@ class _GoldBuySuccessViewState extends State<GoldBuySuccessView>
     _animationController = AnimationController(vsync: this);
     AppState.blockNavigation();
     _playLottieAnimation();
+    locator<TambolaService>().getBestTambolaTickets(forced: true);
     // Future.delayed(const Duration(seconds: 3), showGoldProNudgeIfEligible);
   }
 

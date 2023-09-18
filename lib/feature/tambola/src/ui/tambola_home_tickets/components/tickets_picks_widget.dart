@@ -11,6 +11,7 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/page_views/height_adaptive_pageview.dart';
 import 'package:felloapp/ui/pages/asset_selection.dart';
+import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
@@ -242,7 +243,7 @@ class TicketsSundayWinCard extends StatelessWidget {
                           crossAxisAlignment: WrapCrossAlignment.center,
                           children: [
                             Text(
-                              "Numbers Revealed this Week  ",
+                              "View Winning Categories  ",
                               style: TextStyles.sourceSansSB.body3
                                   .colour(UiConstants.kFAQsAnswerColor),
                             ),
@@ -395,6 +396,11 @@ class _SlotMachineWidgetState extends State<SlotMachineWidget>
     Future.delayed(const Duration(seconds: 4), () {
       _tambolaService.ticketsDotLightsController!.stop();
       isSpinning = false;
+      RootController.controller.animateTo(
+        SizeConfig.screenWidth! * 0.6,
+        duration: const Duration(seconds: 1),
+        curve: Curves.easeInCirc,
+      );
       _tambolaService.postSlotSpin();
     });
   }

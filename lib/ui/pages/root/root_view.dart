@@ -57,7 +57,8 @@ class Root extends StatelessWidget {
                       const HeadAlerts(),
                       // TextButton(
                       //   onPressed: () {
-                      //     AppState.delegate?.parseRoute(Uri.parse('/autosave'));
+                      //     DioService dioService = DioService();
+                      //     dioService.get();
                       //   },
                       //   child: Text("Autosave"),
                       // ),

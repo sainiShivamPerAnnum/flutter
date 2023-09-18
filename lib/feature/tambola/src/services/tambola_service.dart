@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:felloapp/core/constants/cache_keys.dart';
 import 'package:felloapp/core/model/game_model.dart';
 import 'package:felloapp/core/model/prizes_model.dart';
 import 'package:felloapp/core/model/tambola_offers_model.dart';
@@ -9,6 +10,7 @@ import 'package:felloapp/core/model/winners_model.dart';
 import 'package:felloapp/core/repository/games_repo.dart';
 import 'package:felloapp/core/repository/getters_repo.dart';
 import 'package:felloapp/core/repository/scratch_card_repo.dart';
+import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/notifier_services/winners_service.dart';
 import 'package:felloapp/feature/tambola/src/models/daily_pick_model.dart';
@@ -237,7 +239,10 @@ class TambolaService extends ChangeNotifier {
     }
   }
 
-  Future<void> getBestTambolaTickets() async {
+  Future<void> getBestTambolaTickets({bool forced = false}) async {
+    if (forced) {
+      await CacheService.invalidateByKey(CacheKeys.TAMBOLA_TICKETS);
+    }
     final ticketsResponse = await _tambolaRepo.getBestTickets();
     if (ticketsResponse.isSuccess()) {
       bestTickets = ticketsResponse.model;

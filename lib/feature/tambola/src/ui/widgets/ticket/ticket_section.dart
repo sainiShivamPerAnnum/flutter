@@ -274,7 +274,12 @@ class TicketMatchesBriefBoxWidget extends StatelessWidget {
                             ),
                             const Spacer(),
                             Text(
-                              "$totalWinningTickets/${bestTickets.data!.ticketCap}",
+                              "$totalWinningTickets",
+                              style: TextStyles.sourceSansB.body1
+                                  .colour(Colors.white),
+                            ),
+                            Text(
+                              "/${bestTickets.data!.ticketCap}",
                               style: TextStyles.body1.colour(Colors.white),
                             )
                           ],
@@ -299,17 +304,6 @@ class TicketMatchesBriefBoxWidget extends StatelessWidget {
                           ),
                           child: Row(children: [
                             Text(
-                              "${matchList[0].value}",
-                              style: TextStyles.rajdhaniB.body1
-                                  .colour(Colors.white),
-                            ),
-                            SizedBox(width: SizeConfig.padding4),
-                            Text(
-                              "Ticket${matchList[0].value > 1 ? 's' : ''}",
-                              style: TextStyles.body4.colour(Colors.white38),
-                            ),
-                            const Spacer(),
-                            Text(
                               "5-7",
                               style: TextStyles.rajdhaniB.body1
                                   .colour(Colors.white),
@@ -317,6 +311,17 @@ class TicketMatchesBriefBoxWidget extends StatelessWidget {
                             SizedBox(width: SizeConfig.padding4),
                             Text(
                               "Matches",
+                              style: TextStyles.body4.colour(Colors.white38),
+                            ),
+                            const Spacer(),
+                            Text(
+                              "${matchList[0].value}",
+                              style: TextStyles.rajdhaniB.body1
+                                  .colour(Colors.white),
+                            ),
+                            SizedBox(width: SizeConfig.padding4),
+                            Text(
+                              "Ticket${matchList[0].value > 1 ? 's' : ''}",
                               style: TextStyles.body4.colour(Colors.white38),
                             ),
                           ]),

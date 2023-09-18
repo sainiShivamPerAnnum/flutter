@@ -34,7 +34,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:provider/provider.dart';
-import 'package:showcaseview/showcaseview.dart';
 
 class LendboxBuyInputView extends StatefulWidget {
   final int? amount;
@@ -249,15 +248,10 @@ class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
           SizedBox(
             height: SizeConfig.padding8,
           ),
-          Showcase(
-            key: ShowCaseKeys.floKYCKey,
-            description:
-                'Complete your KYC to start your journey towards 12% returns',
-            child: AppNegativeBtn(
-              btnText: locale.completeKYCText,
-              onPressed: model.navigateToKycScreen,
-              width: SizeConfig.screenWidth,
-            ),
+          AppNegativeBtn(
+            btnText: locale.completeKYCText,
+            onPressed: model.navigateToKycScreen,
+            width: SizeConfig.screenWidth,
           ),
           SizedBox(
             height: SizeConfig.padding16,

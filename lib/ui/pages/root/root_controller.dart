@@ -25,8 +25,14 @@ class RootController {
 
   Map<Widget, NavBarItemModel> navItems = {};
 
+  static ScrollController controller = ScrollController();
+
   void onChange(NavBarItemModel model) {
     log("onChange ${model.title}");
+    if (currentNavBarItemModel.title == model.title) {
+      controller.animateTo(0,
+          duration: const Duration(seconds: 2), curve: Curves.decelerate);
+    }
     currentNavBarItemModel = model;
   }
 

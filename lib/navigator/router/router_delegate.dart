@@ -790,7 +790,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         } else if (segment.startsWith('c-', 0)) {
           appState.scrollHome(num.tryParse(segment.split('-').last) as int);
         } else if (segment.startsWith('story-')) {
-          openStoryView(segment.split('-').last);
+          // openStoryView(segment.split('-').last);
         } else {
           screenCheck(segment);
         }
@@ -831,30 +831,30 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     }
   }
 
-  void openStoryView(String topic) {
-    AppState.screenStack.add(ScreenItem.dialog);
-    Navigator.of(AppState.delegate!.navigatorKey.currentContext!).push(
-      PageRouteBuilder(
-        pageBuilder: (context, animation, anotherAnimation) {
-          return InfoStories(
-            topic: topic,
-          );
-        },
-        transitionDuration: const Duration(milliseconds: 500),
-        transitionsBuilder: (context, animation, anotherAnimation, child) {
-          animation =
-              CurvedAnimation(curve: Curves.easeInCubic, parent: animation);
-          return Align(
-            child: SizeTransition(
-              sizeFactor: animation,
-              child: child,
-              axisAlignment: 0.0,
-            ),
-          );
-        },
-      ),
-    );
-  }
+  // void openStoryView(String topic) {
+  //   AppState.screenStack.add(ScreenItem.dialog);
+  //   Navigator.of(AppState.delegate!.navigatorKey.currentContext!).push(
+  //     PageRouteBuilder(
+  //       pageBuilder: (context, animation, anotherAnimation) {
+  //         return InfoStories(
+  //           topic: topic,
+  //         );
+  //       },
+  //       transitionDuration: const Duration(milliseconds: 500),
+  //       transitionsBuilder: (context, animation, anotherAnimation, child) {
+  //         animation =
+  //             CurvedAnimation(curve: Curves.easeInCubic, parent: animation);
+  //         return Align(
+  //           child: SizeTransition(
+  //             sizeFactor: animation,
+  //             child: child,
+  //             axisAlignment: 0.0,
+  //           ),
+  //         );
+  //       },
+  //     ),
+  //   );
+  // }
 
   void screenCheck(String screenKey) {
     PageConfiguration? pageConfiguration;
@@ -913,8 +913,8 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         break;
 
       case 'quickTour':
-        Future.delayed(const Duration(seconds: 2),
-            SpotLightController.instance.startQuickTour);
+        // Future.delayed(const Duration(seconds: 2),
+        //     SpotLightController.instance.startQuickTour);
 
         break;
 

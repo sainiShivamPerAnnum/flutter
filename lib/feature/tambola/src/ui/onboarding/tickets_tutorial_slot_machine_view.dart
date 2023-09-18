@@ -7,6 +7,7 @@ import 'package:felloapp/feature/tambola/src/ui/onboarding/tickets_tutorial_asse
 import 'package:felloapp/feature/tambola/src/ui/widgets/ticket/tambola_ticket.dart';
 import 'package:felloapp/feature/tambola/src/ui/widgets/ticket/ticket_painter.dart';
 import 'package:felloapp/feature/tambola/tambola.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/extensions/rich_text_extension.dart';
 import 'package:felloapp/util/haptic.dart';
@@ -32,7 +33,7 @@ class _TicketsTutorialsSlotMachineViewState
     with TickerProviderStateMixin {
   int spinCount = 0;
   String _subtitle = "This is a dummy Ticket";
-  String _slotMachineTitle = "Spin to reveal the numbers";
+  String _slotMachineTitle = "Reveal Numbers to match with Tickets";
 
   String get slotMachineTitle => _slotMachineTitle;
 
@@ -225,6 +226,7 @@ class _TicketsTutorialsSlotMachineViewState
     _shakeAnimController.stop();
     if (!_isSpinning && spinCount < 2) {
       isSpinning = true;
+      AppState.blockNavigation();
       _controller1.jumpToPage(0);
       _controller2.jumpToPage(0);
       _controller3.jumpToPage(0);
@@ -272,7 +274,7 @@ class _TicketsTutorialsSlotMachineViewState
           });
         }
         spinCount++;
-
+        AppState.unblockNavigation();
         isSpinning = false;
       });
     }
@@ -876,17 +878,17 @@ class TicketsRewardCategoriesWidget extends StatelessWidget {
                       Text(
                         "Reward Categories",
                         style:
-                            TextStyles.sourceSansSB.title5.colour(Colors.white),
+                            TextStyles.sourceSansSB.body1.colour(Colors.white),
                       ),
                       const Spacer(),
                       value.item2
                           ? Icon(
-                              Icons.keyboard_arrow_up_rounded,
+                              Icons.keyboard_arrow_down_rounded,
                               color: Colors.grey,
                               size: SizeConfig.iconSize0,
                             )
                           : Icon(
-                              Icons.keyboard_arrow_down_rounded,
+                              Icons.keyboard_arrow_up_rounded,
                               color: Colors.grey,
                               size: SizeConfig.iconSize0,
                             ),

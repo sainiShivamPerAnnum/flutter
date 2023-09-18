@@ -31,35 +31,6 @@ class _TambolaLeaderboardViewState extends State<TambolaLeaderboardView> {
     });
   }
 
-  String? getWinnersCategory(List<Winners> winners, int index) {
-    MatchMap? data = winners[index].matchMap;
-    List<String> temp = [];
-    if ((data?.corners ?? 0) > 0) {
-      data!.corners == 1
-          ? temp.add('1 Corner')
-          : temp.add('${data.corners} Corners');
-    }
-    if ((data?.fullHouse ?? 0) > 0) {
-      temp.add('${data!.fullHouse} Full House');
-    }
-    if ((data?.oneRow ?? 0) > 0) {
-      data!.oneRow == 1
-          ? temp.add('1 One Row')
-          : temp.add('${data.oneRow} One Rows');
-    }
-    if ((data?.twoRows ?? 0) > 0) {
-      data!.twoRows == 1
-          ? temp.add('1 Two Row')
-          : temp.add('${data.twoRows} Two Rows');
-    }
-
-    return temp.length > 1
-        ? temp.join(", ")
-        : temp.isEmpty
-            ? ""
-            : temp[0];
-  }
-
   @override
   void dispose() {
     _seeAll = false;
@@ -83,7 +54,7 @@ class _TambolaLeaderboardViewState extends State<TambolaLeaderboardView> {
                       SizeConfig.pageHorizontalMargins - SizeConfig.padding16,
                 ),
                 Text(
-                  "Leaderboard",
+                  "Weekly Leaderboard",
                   style: TextStyles.sourceSansSB.title3,
                 ),
                 SizedBox(
@@ -129,33 +100,34 @@ class _TambolaLeaderboardViewState extends State<TambolaLeaderboardView> {
                             // padding: EdgeInsets.all(SizeConfig.padding10),
                             child: Column(
                               children: [
-                                // Row(
-                                //   crossAxisAlignment: CrossAxisAlignment.start,
-                                //   children: [
-                                //     Text(
-                                //       "#",
-                                //       style: TextStyles.sourceSans.body3
-                                //           .colour(UiConstants.kTextColor2),
-                                //     ),
-                                //     SizedBox(width: SizeConfig.padding32),
-                                //     Text("Names",
-                                //         style: TextStyles.sourceSans.body3
-                                //             .colour(UiConstants.kTextColor2)),
-                                //     const Spacer(),
-                                //     Text(
-                                //       'Tickets Owned',
-                                //       style: TextStyles.sourceSans.body3
-                                //           .colour(UiConstants.kTextColor2),
-                                //       maxLines: 2,
-                                //     ),
-                                //     SizedBox(width: SizeConfig.padding16),
-                                //     Text(
-                                //       'Rewards',
-                                //       style: TextStyles.sourceSans.body3
-                                //           .colour(UiConstants.kTextColor2),
-                                //     )
-                                //   ],
-                                // ),
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                      top: SizeConfig.padding16,
+                                      bottom: SizeConfig.padding10),
+                                  child: Row(
+                                    crossAxisAlignment:
+                                        CrossAxisAlignment.start,
+                                    children: [
+                                      SizedBox(width: SizeConfig.padding24),
+                                      Text(
+                                        "#",
+                                        style: TextStyles.sourceSans.body3
+                                            .colour(UiConstants.kTextColor2),
+                                      ),
+                                      SizedBox(width: SizeConfig.padding54),
+                                      Text("Name",
+                                          style: TextStyles.sourceSans.body3
+                                              .colour(UiConstants.kTextColor2)),
+                                      const Spacer(),
+                                      Text(
+                                        'Earned',
+                                        style: TextStyles.sourceSans.body3
+                                            .colour(UiConstants.kTextColor2),
+                                      ),
+                                      SizedBox(width: SizeConfig.padding20),
+                                    ],
+                                  ),
+                                ),
                                 Column(
                                   children: [
                                     if (winners.indexWhere((winner) =>
@@ -210,16 +182,6 @@ class _TambolaLeaderboardViewState extends State<TambolaLeaderboardView> {
                                               ),
                                               SizedBox(
                                                   width: SizeConfig.padding4),
-                                              SizedBox(
-                                                // color: Colors.red,
-                                                width: SizeConfig.padding54,
-                                                child: Text(
-                                                  "Earned",
-                                                  style: TextStyles
-                                                      .sourceSans.body2
-                                                      .colour(Colors.white),
-                                                ),
-                                              ),
                                               Text(
                                                 "₹${winners[winners.indexWhere((winner) => winner.userid == locator<UserService>().baseUser!.uid)].amount?.toInt() ?? "00"}",
                                                 style: TextStyles
@@ -291,17 +253,6 @@ class _TambolaLeaderboardViewState extends State<TambolaLeaderboardView> {
                                                   SizedBox(
                                                     width: SizeConfig.padding4,
                                                   ),
-                                                  SizedBox(
-                                                    // color: Colors.red,
-                                                    width: SizeConfig.padding54,
-                                                    child: Text(
-                                                      "Earned",
-                                                      style: TextStyles
-                                                          .sourceSans.body2
-                                                          .colour(Colors.white),
-                                                    ),
-                                                  ),
-                                                  // SizedBox(width: SizeConfig.padding16),
                                                   SizedBox(
                                                     width: SizeConfig.padding64,
                                                     // color: Colors.blue,

@@ -320,7 +320,6 @@ class SaveViewModel extends BaseViewModel {
         case "QZ":
           saveViewItems.add(const QuizSection());
           break;
-
         case 'CH':
           saveViewItems.add(Campaigns(model: smodel));
           break;

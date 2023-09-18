@@ -63,7 +63,6 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/back_button_actions.dart';
 import 'package:felloapp/ui/elements/coin_bar/coin_bar_vm.dart';
 import 'package:felloapp/ui/elements/faq_card/faq_card_vm.dart';
-import 'package:felloapp/ui/pages/campaigns/info_stories/info_stories_vm.dart';
 import 'package:felloapp/ui/pages/campaigns/topSavers/top_saver_vm.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_buy/augmont_buy_vm.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_buy/gold_pro_buy_vm.dart';
@@ -241,7 +240,6 @@ Future<void> setupLocator() async {
   locator.registerFactory(FaqPageViewModel.new);
   locator.registerFactory(LendboxBuyViewModel.new);
   locator.registerFactory(LendboxWithdrawalViewModel.new);
-  locator.registerFactory(InfoStoriesViewModel.new);
   locator.registerFactory(SettingsViewModel.new);
   locator.registerFactory(PowerPlayHomeViewModel.new);
   locator.registerFactory(LeaderBoardViewModel.new);
