@@ -252,4 +252,6 @@ class ApiPath {
 
   static String getComponent(ComponentType componentType) =>
       '/component/${componentType.value}';
+
+  static String felloBadges(String? uid) => "/super-fello?uid=$uid";
 }

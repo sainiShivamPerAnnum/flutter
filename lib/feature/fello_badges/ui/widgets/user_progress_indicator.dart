@@ -27,7 +27,7 @@ class UserProgressIndicator extends StatelessWidget {
                         color: const Color(0xFFF79780),
                         shape: RoundedRectangleBorder(
                             borderRadius:
-                                BorderRadius.circular(SizeConfig.roundness5)),
+                            BorderRadius.circular(SizeConfig.roundness5)),
                       ),
                     ),
                   ),
@@ -39,7 +39,7 @@ class UserProgressIndicator extends StatelessWidget {
                         color: const Color(0xFFD9D9D9).withOpacity(0.25),
                         shape: RoundedRectangleBorder(
                             borderRadius:
-                                BorderRadius.circular(SizeConfig.roundness5)),
+                            BorderRadius.circular(SizeConfig.roundness5)),
                       ),
                     ),
                   ),
@@ -51,7 +51,7 @@ class UserProgressIndicator extends StatelessWidget {
                         color: const Color(0xFFD9D9D9).withOpacity(0.25),
                         shape: RoundedRectangleBorder(
                             borderRadius:
-                                BorderRadius.circular(SizeConfig.roundness5)),
+                            BorderRadius.circular(SizeConfig.roundness5)),
                       ),
                     ),
                   )
