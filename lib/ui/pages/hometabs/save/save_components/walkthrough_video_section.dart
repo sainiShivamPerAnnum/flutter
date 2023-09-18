@@ -3,6 +3,7 @@ import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/elements/title_subtitle_container.dart';
 import 'package:felloapp/ui/pages/static/youtube_player_view.dart';
 import 'package:felloapp/util/assets.dart';
@@ -96,7 +97,30 @@ class TambolaVideosSection extends StatelessWidget {
         SizedBox(
           height: SizeConfig.pageHorizontalMargins - SizeConfig.padding16,
         ),
-        const TitleSubtitleContainer(title: "How Tickets Work?"),
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          crossAxisAlignment: CrossAxisAlignment.center,
+          children: [
+            const TitleSubtitleContainer(title: "How Tickets Work?"),
+            Padding(
+              padding: EdgeInsets.only(
+                right: SizeConfig.pageHorizontalMargins,
+              ),
+              child: OutlinedButton(
+                style: OutlinedButton.styleFrom(
+                  side: const BorderSide(width: 1.0, color: Colors.white),
+                ),
+                onPressed: () {
+                  AppState.delegate!.parseRoute(Uri.parse('ticketsIntro'));
+                },
+                child: Text(
+                  "Play Tutorial",
+                  style: TextStyles.rajdhaniSB.body3.colour(Colors.white),
+                ),
+              ),
+            )
+          ],
+        ),
         SizedBox(height: SizeConfig.padding12),
         SizedBox(
           height: SizeConfig.screenWidth! * 0.32,
