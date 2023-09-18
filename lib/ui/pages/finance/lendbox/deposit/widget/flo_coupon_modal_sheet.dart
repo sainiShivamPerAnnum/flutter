@@ -2,7 +2,6 @@ import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/model/coupon_card_model.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/ui/pages/finance/augmont/gold_buy/augmont_buy_vm.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/deposit/lendbox_buy_vm.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
@@ -110,7 +109,7 @@ class FloCouponModalSheet extends StatelessWidget {
                 ),
                 validator: (val) {
                   if (val!.trim().isEmpty) return locale.txnEnterCode;
-                  if (val.trim().length < 3 || val.trim().length > 10) {
+                  if (val.trim().length < 3 || val.trim().length > 20) {
                     return locale.txnInvalidCouponCode;
                   }
                   return null;

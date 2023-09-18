@@ -169,7 +169,7 @@ class GoldProBuyInputView extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: List.generate(
                               model.chipsList.length,
-                              (index) => GoldProChoiceChip(
+                                  (index) => GoldProChoiceChip(
                                 index: index,
                                 chipValue: "${model.chipsList[index].value}g",
                                 isBest: model.chipsList[index].isBest,

@@ -23,6 +23,7 @@ class WalthroughVideosSection extends StatefulWidget {
 
 class _WalthroughVideosSectionState extends State<WalthroughVideosSection> {
   List<HomeScreenCarouselItemsModel>? listItems;
+
   @override
   void initState() {
     locator<GetterRepository>().getHomeScreenItems().then((value) {

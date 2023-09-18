@@ -4,6 +4,7 @@ import 'package:flutter/material.dart';
 class FullScreenCircularLoader extends StatelessWidget {
   final double? size;
   final bool bottomPadding;
+
   const FullScreenCircularLoader(
       {Key? key, this.size, this.bottomPadding = false})
       : super(key: key);

@@ -18,7 +18,8 @@ class FloPremiumDetailsViewModel extends BaseViewModel {
 
   double _opacity = 1;
 
-  Offset _offset = Offset(0, 0);
+  Offset _offset = const Offset(0, 0);
+
   double get opacity => _opacity;
 
   set opacity(double value) {
@@ -65,8 +66,8 @@ class FloPremiumDetailsViewModel extends BaseViewModel {
     "How does Lendbox (P2P Lending partner) manage the risk of default on my money?",
     "What happens to my money after maturity?",
     "How can I withdraw my money after maturity?",
-    "How is maturity different from a lock-in?"
-        "Can I withdraw my money before Maturity in 10/12% returns ?"
+    "How is maturity different from a lock-in?",
+    "Can I withdraw my money before Maturity in 10/12% returns ?"
   ];
   List<String?> faqResponses = [
     "Your funds are safe and secure with our lending partner Lendbox. To safeguard the investments, a lender's money is distributed across borrowers who are assessed on 200+ parameters to check the creditworthiness of the borrowers to ensure the credibility of borrowers.",
@@ -78,6 +79,7 @@ class FloPremiumDetailsViewModel extends BaseViewModel {
   ];
 
   List<UserTransaction> transactionsList = [];
+
   void init(bool is12View) {
     flo12Description = lendboxDetails[0]["descText"];
     flo10Description = lendboxDetails[1]["descText"];

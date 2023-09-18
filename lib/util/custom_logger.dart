@@ -94,10 +94,9 @@ class CustomLogger {
       throw ArgumentError('Logger has already been closed.');
     } else if (error != null && error is StackTrace) {
       throw ArgumentError('Error parameter cannot take a StackTrace!');
-    } else if (level == Level.nothing) {
-      throw ArgumentError('Log events cannot have Level.nothing');
     }
-    var logEvent = LogEvent(level, message, error, stackTrace);
+    var logEvent =
+        LogEvent(level, message, error: error, stackTrace: stackTrace);
     if (_filter.shouldLog(logEvent)) {
       var output = _printer.log(logEvent);
 
@@ -116,10 +115,50 @@ class CustomLogger {
   }
 
   /// Closes the logger and releases all resources.
-  void close() {
-    _active = false;
-    _filter.destroy();
-    _printer.destroy();
-    _output.destroy();
+  /// Once this is called, all subsequent calls to [log] will fail.
+  /// This is an asynchronous operation and returns a [Future] that completes
+  /// once all resources have been released.
+  /// This method is idempotent.
+  /// Calling it multiple times will not result in an error.
+  /// However, only the first call will trigger the actual closing of resources.
+  /// The returned [Future] will complete with a value of `null`.
+  /// If an error occurs during closing, the [Future] will complete with an
+  /// error.
+  /// The [Future] will complete with an error if it is called after the logger
+  /// has already been closed.
+  /// The [Future] will complete with an error if it is called before the
+  /// logger has been initialized.
+  /// Where to use this method.
+  /// This method should be called when the application is shutting down.
+  /// for example, in the `onStop` method of an Android `Activity`.
+  /// for flutter app, where to call this method.
+  /// This method should be called in the `onPause` method of the `State` object
+  /// of the `StatefulWidget` that represents the root of the application.
+  /// For example, in the `onPause` method of the `State` object of the
+  /// `StatefulWidget` that is passed to the `runApp` method.
+  /// This method should NOT be called in the `dispose` method of the `State`
+  /// object of the `StatefulWidget` that represents the root of the
+  /// application.
+  /// For example, in the `dispose` method of the `State` object of the
+  /// `StatefulWidget` that is passed to the `runApp` method.
+  /// This is because the `dispose` method of the `State` object of the
+  /// `StatefulWidget` that represents the root of the application is not
+  /// guaranteed to be called.
+  /// For example, if the application is terminated by the user, then the
+  /// `dispose` method of the `State` object of the `StatefulWidget` that
+  /// represents the root of the application will not be called.
+  /// my root widget is a `MaterialApp`, which is a HookWidget.
+  /// what to do now. Don't want to create another statefull for this.
+  /// where is the pause state in hookWidget.
+  /// https://stackoverflow.com/questions/63492211/how-to-detect-app-is-in-background-in-flutter
+  ///
+  ///
+  Future<void> close() async {
+    if (_active) {
+      _active = false;
+      await _output.destroy();
+      await _printer.destroy();
+      await _filter.destroy();
+    }
   }
 }

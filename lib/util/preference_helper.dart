@@ -35,6 +35,7 @@ class PreferenceHelper {
   static const GOLD_PRICE_SUBSCRIBE = "gold_price_subscribe";
   static const CACHE_REFERRAL_PERSISTENT_NOTIFACTION_ID =
       "referralPersistentNotificationId";
+  static const CACHE_LIST_OUTDATED_FLO_ASSET = "listOutdatedFloAsset";
 
   static Future<SharedPreferences?> initiate() async {
     if (_prefs == null) {

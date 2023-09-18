@@ -449,14 +449,14 @@ class BaseUtil extends ChangeNotifier {
     }
   }
 
-  static String getMaturityPref(String maturityEnum) {
+  static String getMaturityPref(String maturityEnum, bool isFrom10) {
     switch (maturityEnum) {
       case '0':
         return "Withdrawing to your bank account after maturity";
       case '1':
-        return "Auto-investing in 12% Flo on maturity";
+        return "Auto-investing in ${isFrom10 ? 10 : 12}% Flo on maturity";
       case '2':
-        return "Move to Flo Basic after maturity";
+        return "Move to ${isFrom10 ? 8 : 10} Flo after maturity";
       default:
         return "What will happen to your investment after maturity?";
     }
