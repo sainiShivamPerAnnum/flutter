@@ -133,9 +133,7 @@ class _FelloBadgeUiState extends State<FelloBadgeUi> {
                     ),
                     HowSuperFelloWorksWidget(
                       isBoxOpen: false,
-                      onStateChanged: () {
-                        // setState(() {});
-                      },
+                      superFelloWorks: state.felloBadgesModel.superFelloWorks!,
                     ),
                     SizedBox(
                       height: SizeConfig.padding32,
