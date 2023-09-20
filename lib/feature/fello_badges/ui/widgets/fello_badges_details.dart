@@ -48,18 +48,20 @@ class _FelloBadgeDetailsState extends State<FelloBadgeDetails> {
   void initState() {
     super.initState();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      Scrollable.ensureVisible(
-        context,
-        duration: const Duration(milliseconds: 800),
-        curve: Curves.easeInOut,
-        alignment: 0.8,
-      );
-
-      _scrollController.animateTo(
-          (getIndex() * SizeConfig.screenWidth!) -
-              SizeConfig.pageHorizontalMargins,
+      Future.delayed(const Duration(seconds: 1), () {
+        Scrollable.ensureVisible(
+          context,
           duration: const Duration(milliseconds: 800),
-          curve: Curves.easeInOut);
+          curve: Curves.easeInOut,
+          alignment: 0.8,
+        );
+
+        _scrollController.animateTo(
+            (getIndex() * SizeConfig.screenWidth!) -
+                SizeConfig.pageHorizontalMargins,
+            duration: const Duration(milliseconds: 800),
+            curve: Curves.easeInOut);
+      });
     });
   }
 
@@ -378,7 +380,7 @@ class BadgeDetailsContainer extends StatelessWidget {
                     itemCount: 3,
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
-                    itemBuilder: (context, index) {
+                    itemBuilder: (context, i) {
                       return GestureDetector(
                         onTap: () {
                           BaseUtil.openModalBottomSheet(
@@ -390,10 +392,9 @@ class BadgeDetailsContainer extends StatelessWidget {
                             isScrollControlled: true,
                             content: ProgressBottomSheet(
                               badgeUrl: Assets.tambolaTitanBadge,
-                              title: levelDetails?.lvlData?[index].title ?? '',
+                              title: levelDetails?.lvlData?[i].title ?? '',
                               description:
-                                  levelDetails?.lvlData?[index].barHeading ??
-                                      '',
+                                  levelDetails?.lvlData?[i].barHeading ?? '',
                               buttonText: 'GET MORE TICKETS',
                               onButtonPressed: () {
                                 // Navigator.pop(context);
@@ -434,15 +435,13 @@ class BadgeDetailsContainer extends StatelessWidget {
                                           MainAxisAlignment.spaceBetween,
                                       children: [
                                         Text(
-                                          levelDetails?.lvlData?[index].title ??
-                                              '',
+                                          levelDetails?.lvlData?[i].title ?? '',
                                           style: TextStyles.sourceSans.body3
                                               .colour(
                                             Colors.white,
                                           ),
                                         ),
-                                        ((levelDetails?.lvlData?[index]
-                                                        .achieve ??
+                                        ((levelDetails?.lvlData?[i].achieve ??
                                                     1) !=
                                                 100)
                                             ? const Icon(
@@ -482,8 +481,7 @@ class BadgeDetailsContainer extends StatelessWidget {
                                       height: SizeConfig.padding4,
                                     ),
                                     Text(
-                                      levelDetails
-                                              ?.lvlData?[index].barHeading ??
+                                      levelDetails?.lvlData?[i].barHeading ??
                                           '',
                                       style: TextStyles.sourceSans.body4.colour(
                                         Colors.white.withOpacity(0.8),
@@ -492,8 +490,7 @@ class BadgeDetailsContainer extends StatelessWidget {
                                     SizedBox(
                                       height: SizeConfig.padding4,
                                     ),
-                                    if ((levelDetails
-                                                ?.lvlData?[index].achieve ??
+                                    if ((levelDetails?.lvlData?[i].achieve ??
                                             1) !=
                                         100)
                                       Row(
@@ -529,7 +526,7 @@ class BadgeDetailsContainer extends StatelessWidget {
                                                         Alignment.bottomCenter,
                                                     width: ((levelDetails
                                                                     ?.lvlData?[
-                                                                        index]
+                                                                        i]
                                                                     .achieve ??
                                                                 1) /
                                                             100) *
@@ -539,8 +536,11 @@ class BadgeDetailsContainer extends StatelessWidget {
                                                         milliseconds: 500),
                                                     curve: Curves.easeInExpo,
                                                     decoration: ShapeDecoration(
-                                                      color: const Color(
-                                                          0xFFFFCCBF),
+                                                      color: i == 0
+                                                          ? const Color(
+                                                              0xFFFFCCBF)
+                                                          : const Color(
+                                                              0xFFA5E4FF),
                                                       shape:
                                                           RoundedRectangleBorder(
                                                               borderRadius:
@@ -555,7 +555,7 @@ class BadgeDetailsContainer extends StatelessWidget {
                                             ),
                                           ),
                                           Text(
-                                            '${levelDetails?.lvlData?[index].achieve ?? 0} %',
+                                            '${levelDetails?.lvlData?[i].achieve ?? 0} %',
                                             textAlign: TextAlign.right,
                                             style: TextStyles.sourceSans.body4
                                                 .colour(
@@ -572,11 +572,11 @@ class BadgeDetailsContainer extends StatelessWidget {
                         ),
                       );
                     },
-                    separatorBuilder: (context, index) => SizedBox(
+                    separatorBuilder: (context, i) => SizedBox(
                       height: SizeConfig.padding12,
                     ),
                   ),
-                ),
+                )
               ],
             ),
           )

@@ -235,7 +235,7 @@ class _FelloBadgeUiState extends State<FelloBadgeUi> {
                     ),
                     LottieBuilder.network(Assets.bottomBannerLottie),
                     SizedBox(
-                      height: SizeConfig.padding18,
+                      height: SizeConfig.padding8,
                     ),
                   ],
                 ),
