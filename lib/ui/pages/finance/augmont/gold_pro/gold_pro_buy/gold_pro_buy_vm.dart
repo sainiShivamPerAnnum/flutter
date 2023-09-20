@@ -18,6 +18,7 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_buy/widgets/view_breakdown.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_buy/gold_pro_buy_components/gold_pro_choice_chips.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/installed_upi_apps_finder.dart';
@@ -48,6 +49,7 @@ class GoldProBuyViewModel extends BaseViewModel {
   double _expectedGoldReturns = 0.0;
   double _totalGoldAmount = 0;
   bool _isGoldRateFetching = true;
+  bool _isChecked = false;
   AugmontRates? goldRates;
 
   List<GoldProChoiceChipsModel> chipsList = [
@@ -140,6 +142,13 @@ class GoldProBuyViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  bool get isChecked => _isChecked;
+
+  set isChecked(bool value) {
+    _isChecked = value;
+    notifyListeners();
+  }
+
   Future<void> init() async {
     AppState.isGoldProBuyInProgress = false;
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
@@ -180,6 +189,11 @@ class GoldProBuyViewModel extends BaseViewModel {
   }
 
   Future<void> initiateGoldProTransaction() async {
+    if (!isChecked) {
+      BaseUtil.showNegativeAlert("Please accept the terms and conditions",
+          "to continue saving in ${Constants.ASSET_GOLD_STAKE}");
+      return;
+    }
     AppState.isGoldProBuyInProgress = false;
     locator<AnalyticsService>().track(
       eventName: AnalyticsEvents.goldProFinalSaveTapped,
@@ -411,6 +425,7 @@ class GoldProBuyViewModel extends BaseViewModel {
     }
     if (isGoldRateFetching) {
       BaseUtil.showNegativeAlert("Fetching latest gold rates", "Please wait");
+      return;
     }
     _txnService.currentTransactionState = TransactionState.overView;
     AppState.isGoldProBuyInProgress = true;

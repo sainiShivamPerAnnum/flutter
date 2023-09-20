@@ -1,4 +1,6 @@
+import 'dart:async';
 import 'dart:developer';
+import 'dart:math' as math;
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
@@ -6,7 +8,6 @@ import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/bank_and_pan_enum.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
-import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/happy_hour_campign.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
@@ -20,7 +21,6 @@ import 'package:felloapp/ui/pages/finance/lendbox/deposit/lendbox_buy_vm.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/deposit/widget/flo_coupon.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/lendbox_app_bar.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
-import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -57,7 +57,45 @@ class LendboxBuyInputView extends StatefulWidget {
 class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
   @override
   void initState() {
-    // SpotLightController.instance.userFlow = UserFlow.floInputView;
+    locator<BackButtonActions>().isTransactionCancelled = true;
+    AppState.type = InvestmentType.LENDBOXP2P;
+    AppState.amt = (widget.model.buyAmount ?? 0) * 1.0;
+    AppState.onTap = () async {
+      await AppState.backButtonDispatcher!.didPopRoute();
+      locator<AnalyticsService>()
+          .track(eventName: AnalyticsEvents.saveInitiate, properties: {
+        "investmentType": InvestmentType.AUGGOLD99.name,
+      });
+      if (widget.model.isIntentFlow) {
+        unawaited(BaseUtil.openModalBottomSheet(
+          isBarrierDismissible: true,
+          addToScreenStack: true,
+          content: FloBreakdownView(
+            model: widget.model,
+            showBreakDown: AppConfig.getValue(AppConfigKey.payment_brief_view),
+          ),
+          hapticVibrate: true,
+          isScrollControlled: true,
+        ));
+      } else {
+        {
+          locator<AnalyticsService>()
+              .track(eventName: AnalyticsEvents.saveInitiate, properties: {
+            "investmentType": InvestmentType.LENDBOXP2P.name,
+          });
+          if ((widget.model.buyAmount ?? 0) < widget.model.minAmount) {
+            BaseUtil.showNegativeAlert("Invalid Amount",
+                "Please Enter Amount Greater than ${widget.model.minAmount}");
+            return;
+          }
+
+          if (!widget.model.isBuyInProgress) {
+            FocusScope.of(context).unfocus();
+            widget.model.initiateBuy();
+          }
+        }
+      }
+    };
     super.initState();
   }
 
@@ -67,15 +105,7 @@ class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
 
     S locale = S.of(context);
     final AnalyticsService analyticsService = locator<AnalyticsService>();
-    if (widget.model.state == ViewState.Busy) {
-      return const Center(child: FullScreenLoader());
-    }
-    AppState.onTap = () {
-      widget.model.initiateBuy();
-      AppState.backButtonDispatcher!.didPopRoute();
-    };
-    AppState.type = InvestmentType.LENDBOXP2P;
-    AppState.amt = double.tryParse(widget.model.amountController!.text) ?? 0;
+
     return PropertyChangeProvider<BankAndPanService,
         BankAndPanServiceProperties>(
       value: locator<BankAndPanService>(),
@@ -131,27 +161,40 @@ class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
                       ? locator()
                       : null,
                 ),
-                AmountInputView(
-                  amountController: widget.model.amountController,
-                  focusNode: widget.model.buyFieldNode,
-                  chipAmounts: widget.model.assetOptionsModel!.data.userOptions,
-                  isEnabled:
-                      !widget.model.isBuyInProgress || !widget.model.forcedBuy,
-                  maxAmount: widget.model.maxAmount,
-                  maxAmountMsg: widget.model.floAssetType ==
-                          Constants.ASSET_TYPE_FLO_FIXED_6
-                      ? 'Upto ₹ 99,999 can be invested at one go'
-                      : locale.upto50000,
-                  minAmount: widget.model.minAmount.toDouble(),
-                  minAmountMsg:
-                      "Minimum purchase amount is ₹ ${widget.model.minAmount.toInt()}",
-                  notice: widget.model.buyNotice,
-                  onAmountChange: (int amount) {},
-                  bestChipIndex: 2,
-                  readOnly: widget.model.readOnly,
-                  onTap: () => widget.model.showKeyBoard(),
-                  model: widget.model,
-                ),
+                if (widget.model.animationController != null)
+                  AnimatedBuilder(
+                      animation: widget.model.animationController!,
+                      builder: (context, _) {
+                        final sineValue = math.sin(3 *
+                            2 *
+                            math.pi *
+                            widget.model.animationController!.value);
+                        return Transform.translate(
+                          offset: Offset(sineValue * 10, 0),
+                          child: AmountInputView(
+                            amountController: widget.model.amountController,
+                            focusNode: widget.model.buyFieldNode,
+                            chipAmounts: widget
+                                .model.assetOptionsModel!.data.userOptions,
+                            isEnabled: !widget.model.isBuyInProgress ||
+                                !widget.model.forcedBuy,
+                            maxAmount: widget.model.maxAmount,
+                            maxAmountMsg: widget.model.floAssetType ==
+                                    Constants.ASSET_TYPE_FLO_FIXED_6
+                                ? 'Upto ₹ 99,999 can be invested at one go'
+                                : locale.upto50000,
+                            minAmount: widget.model.minAmount.toDouble(),
+                            minAmountMsg:
+                                "Minimum purchase amount is ₹ ${widget.model.minAmount.toInt()}",
+                            notice: widget.model.buyNotice,
+                            onAmountChange: (int amount) {},
+                            bestChipIndex: 2,
+                            readOnly: widget.model.readOnly,
+                            onTap: () => widget.model.showKeyBoard(),
+                            model: widget.model,
+                          ),
+                        );
+                      }),
                 SizedBox(
                   height: SizeConfig.padding24,
                 ),

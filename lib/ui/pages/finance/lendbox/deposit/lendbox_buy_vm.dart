@@ -58,6 +58,7 @@ class LendboxBuyViewModel extends BaseViewModel {
   bool _isBuyInProgress = false;
 
   TextEditingController? amountController;
+  AnimationController? animationController;
 
   // TextEditingController? vpaController;
 
@@ -206,12 +207,15 @@ class LendboxBuyViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  Future<void> init(int? amount, bool isSkipMilestone,
+  Future<void> init(int? amount, bool isSkipMilestone, TickerProvider vsync,
       {required String assetTypeFlow}) async {
     setState(ViewState.Busy);
     floAssetType = assetTypeFlow;
     _txnService.floAssetType = floAssetType;
     showHappyHour = locator<MarketingEventHandlerService>().showHappyHourBanner;
+    animationController = AnimationController(
+        vsync: vsync, duration: const Duration(milliseconds: 500));
+    animationController?.addListener(listener);
     isLendboxOldUser =
         locator<UserService>().userSegments.contains(Constants.US_FLO_OLD);
     appMetaList = await UpiUtils.getUpiApps();
@@ -241,6 +245,12 @@ class LendboxBuyViewModel extends BaseViewModel {
     getAvailableCoupons();
 
     setState(ViewState.Idle);
+  }
+
+  void listener() {
+    if (animationController?.status == AnimationStatus.completed) {
+      animationController?.reset();
+    }
   }
 
   void updateMinValues() {
@@ -572,6 +582,8 @@ class LendboxBuyViewModel extends BaseViewModel {
       buyAmount = 0;
     }
 
+    AppState.amt = (buyAmount ?? 0) * 1.0;
+
     updateFieldWidth();
 
     appliedCoupon = null;
@@ -701,13 +713,16 @@ class LendboxBuyViewModel extends BaseViewModel {
       if (response.model!.flag == true) {
         if (response.model!.minAmountRequired != null &&
             response.model!.minAmountRequired.toString().isNotEmpty &&
-            response.model!.minAmountRequired != 0) {
+            response.model!.minAmountRequired != 0 &&
+            (buyAmount ?? 0) < response.model!.minAmountRequired!) {
           amountController!.text =
               response.model!.minAmountRequired!.toInt().toString();
           buyAmount = response.model!.minAmountRequired?.toInt();
           // updateGoldAmount();
           showMaxCapText = false;
           showMinCapText = false;
+          animationController?.forward();
+          updateFieldWidth();
         }
         checkForSpecialCoupon(response.model!);
 

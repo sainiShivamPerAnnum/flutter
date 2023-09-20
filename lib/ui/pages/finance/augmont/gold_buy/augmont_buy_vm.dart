@@ -283,7 +283,7 @@ class GoldBuyViewModel extends BaseViewModel {
     // _paytmService!.getActiveSubscriptionDetails();
     getAvailableCoupons();
     userAugmontState = await CacheManager.readCache(key: "UserAugmontState");
-
+    // setBackButtonActions();
     setState(ViewState.Idle);
   }
 
@@ -492,16 +492,6 @@ class GoldBuyViewModel extends BaseViewModel {
       if (goldBuyPrice != null && goldBuyPrice != 0.0) {
         goldAmountInGrams =
             BaseUtil.digitPrecision(postTaxAmount / goldBuyPrice!, 4, false);
-
-        print("""
-GOLD BREAKDOWN:
- entered amount: $enteredAmount\n
- tax: $netTax\n
- taxed amount: ${getTaxOnAmount(enteredAmount, netTax)}\n
- post taxed amount = $postTaxAmount\n
- gold Buy price: $goldBuyPrice\n
- gold amount: $goldAmountInGrams\n
-""");
       } else {
         goldAmountInGrams = 0.0;
       }
@@ -511,6 +501,7 @@ GOLD BREAKDOWN:
                 (goldAmountController?.text.isNotEmpty ?? false))
             ? (goldAmountController?.text ?? "0").length.toDouble()
             : 0.5);
+    AppState.amt = goldBuyAmount;
     refresh();
   }
 
@@ -676,7 +667,8 @@ GOLD BREAKDOWN:
       if (response.model!.flag == true) {
         if (response.model!.minAmountRequired != null &&
             response.model!.minAmountRequired.toString().isNotEmpty &&
-            response.model!.minAmountRequired != 0) {
+            response.model!.minAmountRequired != 0 &&
+            (goldBuyAmount ?? 0) < response.model!.minAmountRequired!) {
           goldAmountController!.text =
               response.model!.minAmountRequired!.toInt().toString();
           goldBuyAmount = response.model!.minAmountRequired;

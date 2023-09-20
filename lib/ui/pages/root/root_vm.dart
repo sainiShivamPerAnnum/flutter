@@ -132,7 +132,6 @@ class RootViewModel extends BaseViewModel {
         await _userService.userBootUpEE();
         _checkForAppUpdates();
         if (!await verifyUserBootupDetails()) return;
-        await checkForBootUpAlerts();
         await showLastWeekOverview();
         showMarketingCampings();
         await Future.wait([
@@ -328,67 +327,6 @@ class RootViewModel extends BaseViewModel {
     });
   }
 
-  Future<void> checkForBootUpAlerts() async {
-    bool updateAvailable =
-        PreferenceHelper.getBool(Constants.IS_APP_UPDATE_AVAILABLE, def: false);
-    bool isMsgNoticeAvailable =
-        PreferenceHelper.getBool(Constants.IS_MSG_NOTICE_AVAILABLE, def: false);
-    if (AppState.isRootAvailableForIncomingTaskExecution == false) return;
-    if (updateAvailable) {
-      AppState.isRootAvailableForIncomingTaskExecution = false;
-      unawaited(BaseUtil.openDialog(
-        isBarrierDismissible: false,
-        hapticVibrate: true,
-        addToScreenStack: true,
-        content: ConfirmationDialog(
-          title: "App Update Available",
-          description:
-              "A new version of the app is available. Update now to enjoy the hassle free experience.",
-          buttonText: "Update Now",
-          cancelBtnText: "Not now",
-          confirmAction: () {
-            try {
-              if (Platform.isIOS) {
-                BaseUtil.launchUrl(Constants.APPLE_STORE_APP_LINK);
-              } else if (Platform.isAndroid) {
-                BaseUtil.launchUrl(Constants.PLAY_STORE_APP_LINK);
-              }
-            } catch (e) {
-              _logger?.e(e.toString());
-            }
-            AppState.backButtonDispatcher!.didPopRoute();
-          },
-          cancelAction: () {
-            AppState.backButtonDispatcher!.didPopRoute();
-            return false;
-          },
-        ),
-      ));
-    } else if (isMsgNoticeAvailable) {
-      AppState.isRootAvailableForIncomingTaskExecution = false;
-      String msg = PreferenceHelper.getString(Constants.MSG_NOTICE);
-      unawaited(BaseUtil.openDialog(
-        isBarrierDismissible: false,
-        hapticVibrate: true,
-        addToScreenStack: true,
-        content: ConfirmationDialog(
-          title: "Notice",
-          description: msg,
-          buttonText: "Ok",
-          cancelBtnText: "Cancel",
-          confirmAction: () {
-            AppState.backButtonDispatcher!.didPopRoute();
-            return true;
-          },
-          cancelAction: () {
-            AppState.backButtonDispatcher!.didPopRoute();
-            return false;
-          },
-        ),
-      ));
-    }
-  }
-
   Future<void> handleStartUpNotificationData() async {
     if (AppState.isRootAvailableForIncomingTaskExecution == true &&
         AppState.startupNotifMessage != null) {
@@ -461,6 +399,20 @@ class RootViewModel extends BaseViewModel {
           return;
         }
 
+        //2. Check if app is in maintenance mode
+        if (_userService.userBootUp != null &&
+            (_userService.userBootUp!.data?.isAppInMaintenance ?? false)) {
+          log("User is from restricted state", name: "UserBootUp");
+          AppState.isRootAvailableForIncomingTaskExecution = false;
+          AppState.delegate!.appState.currentAction = PageAction(
+              state: PageState.replaceWidget,
+              page: BlockedUserPageConfig,
+              widget: const BlockedUserView(
+                isMaintenanceMode: true,
+              ));
+          return;
+        }
+
         // 3.Checking for forced App Update
         if (_userService.userBootUp!.data!.isAppForcedUpdateRequired != null &&
             _userService.userBootUp!.data!.isAppForcedUpdateRequired == true) {
@@ -502,16 +454,44 @@ class RootViewModel extends BaseViewModel {
         }
 
         //5. App update present (Not forced)
-        if (_userService.userBootUp!.data!.isAppUpdateRequired != null) {
-          PreferenceHelper.setBool(Constants.IS_APP_UPDATE_AVAILABLE,
-              _userService.userBootUp!.data!.isAppUpdateRequired!);
-        } else {
-          PreferenceHelper.setBool(Constants.IS_APP_UPDATE_AVAILABLE, false);
+        if (_userService.userBootUp!.data!.isAppUpdateRequired) {
+          AppState.isRootAvailableForIncomingTaskExecution = false;
+          unawaited(
+            BaseUtil.openDialog(
+              isBarrierDismissible: false,
+              hapticVibrate: true,
+              addToScreenStack: true,
+              content: ConfirmationDialog(
+                title: "App Update Available",
+                description:
+                    "A new version of the app is available. Update now to enjoy the hassle free experience.",
+                buttonText: "Update Now",
+                cancelBtnText: "Not now",
+                confirmAction: () {
+                  try {
+                    if (Platform.isIOS) {
+                      BaseUtil.launchUrl(Constants.APPLE_STORE_APP_LINK);
+                    } else if (Platform.isAndroid) {
+                      BaseUtil.launchUrl(Constants.PLAY_STORE_APP_LINK);
+                    }
+                  } catch (e) {
+                    _logger?.e(e.toString());
+                  }
+                  AppState.backButtonDispatcher!.didPopRoute();
+                },
+                cancelAction: () {
+                  AppState.backButtonDispatcher!.didPopRoute();
+                  return false;
+                },
+              ),
+            ),
+          );
+          return;
         }
 
         //6. Clear all the caches
         if (_userService.userBootUp!.data!.cache!.keys != null) {
-          for (String id
+          for (final String id
               in _userService.userBootUp!.data!.cache!.keys as List<String>) {
             CacheService.invalidateByKey(id);
           }
@@ -521,11 +501,30 @@ class RootViewModel extends BaseViewModel {
         if (_userService.userBootUp?.data?.notice != null) {
           if (_userService.userBootUp!.data!.notice!.message != null &&
               _userService.userBootUp!.data!.notice!.message != "") {
-            PreferenceHelper.setBool(Constants.IS_MSG_NOTICE_AVAILABLE, true);
-            PreferenceHelper.setString(Constants.MSG_NOTICE,
-                _userService.userBootUp!.data!.notice!.message!);
-          } else {
-            PreferenceHelper.setBool(Constants.IS_MSG_NOTICE_AVAILABLE, false);
+            AppState.isRootAvailableForIncomingTaskExecution = false;
+            String msg = PreferenceHelper.getString(Constants.MSG_NOTICE);
+            unawaited(
+              BaseUtil.openDialog(
+                isBarrierDismissible: false,
+                hapticVibrate: true,
+                addToScreenStack: true,
+                content: ConfirmationDialog(
+                  title: "Notice",
+                  description: msg,
+                  buttonText: "Ok",
+                  cancelBtnText: "Cancel",
+                  confirmAction: () {
+                    AppState.backButtonDispatcher!.didPopRoute();
+                    return true;
+                  },
+                  cancelAction: () {
+                    AppState.backButtonDispatcher!.didPopRoute();
+                    return false;
+                  },
+                ),
+              ),
+            );
+            return;
           }
 
           if (_userService.userBootUp!.data!.notice!.url != null &&
@@ -540,7 +539,7 @@ class RootViewModel extends BaseViewModel {
             } catch (e) {
               _logger?.d(e.toString());
             }
-          } else {}
+          }
         }
       }
     });

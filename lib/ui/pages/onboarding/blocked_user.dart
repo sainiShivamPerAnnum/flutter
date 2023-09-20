@@ -15,9 +15,14 @@ import 'package:flutter_svg/svg.dart';
 import '../static/new_square_background.dart';
 
 class BlockedUserView extends StatelessWidget {
-  const BlockedUserView({super.key, this.isStateRestricted = false});
+  const BlockedUserView({
+    super.key,
+    this.isStateRestricted = false,
+    this.isMaintenanceMode = false,
+  });
 
   final bool isStateRestricted;
+  final bool isMaintenanceMode;
 
   @override
   Widget build(BuildContext context) {
@@ -56,9 +61,11 @@ class BlockedUserView extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Text(
-                isStateRestricted
-                    ? "Fello is not available in your state"
-                    : locale.obBlockedTitle,
+                isMaintenanceMode
+                    ? "App is under maintenance"
+                    : isStateRestricted
+                        ? "Fello is not available in your state"
+                        : locale.obBlockedTitle,
                 style: TextStyles.rajdhaniB.title2,
                 textAlign: TextAlign.center,
               ),

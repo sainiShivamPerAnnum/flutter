@@ -1,5 +1,10 @@
+import 'dart:async';
+
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
+import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/happy_hour_campign.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
@@ -17,6 +22,8 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 // import 'package:showcaseview/showcaseview.dart';
+
+import 'widgets/view_breakdown.dart';
 
 class GoldBuyInputView extends StatefulWidget {
   final bool? skipMl;
@@ -40,18 +47,39 @@ class _GoldBuyInputViewState extends State<GoldBuyInputView> {
   @override
   void initState() {
     super.initState();
+    locator<BackButtonActions>().isTransactionCancelled = true;
+    AppState.type = InvestmentType.AUGGOLD99;
+
+    AppState.amt = widget.model.goldBuyAmount;
+    AppState.onTap = () async {
+      unawaited(AppState.backButtonDispatcher!.didPopRoute());
+
+      locator<AnalyticsService>()
+          .track(eventName: AnalyticsEvents.saveInitiate, properties: {
+        "investmentType": InvestmentType.AUGGOLD99.name,
+      });
+      if (widget.model.isIntentFlow) {
+        unawaited(BaseUtil.openModalBottomSheet(
+          isBarrierDismissible: true,
+          backgroundColor: const Color(0xff1A1A1A),
+          addToScreenStack: true,
+          isScrollControlled: true,
+          content: GoldBreakdownView(
+            model: widget.model,
+            showBreakDown: AppConfig.getValue(AppConfigKey.payment_brief_view),
+          ),
+        ));
+      } else {
+        if (!widget.augTxnService.isGoldBuyInProgress) {
+          await widget.model.initiateBuy();
+        }
+      }
+    };
   }
 
   @override
   Widget build(BuildContext context) {
     final AnalyticsService analyticsService = locator<AnalyticsService>();
-    AppState.onTap = () {
-      widget.model.initiateBuy();
-      AppState.backButtonDispatcher!.didPopRoute();
-    };
-    AppState.type = InvestmentType.AUGGOLD99;
-    AppState.amt =
-        double.tryParse(widget.model.goldAmountController!.text) ?? 0;
     return Stack(
       children: [
         Column(
@@ -153,7 +181,8 @@ class _GoldBuyInputViewState extends State<GoldBuyInputView> {
                             FocusScope.of(context).unfocus();
                             await widget.model.initiateBuy();
                           }
-                        }),
+                        },
+                      ),
           ],
         ),
         CustomKeyboardSubmitButton(

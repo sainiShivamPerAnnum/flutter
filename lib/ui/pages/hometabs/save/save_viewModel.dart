@@ -299,7 +299,7 @@ class SaveViewModel extends BaseViewModel {
     ]);
 
     saveViewItems.add(const ReferralClaimWidget());
-
+    print(DynamicUiUtils.saveViewOrder[2]);
     DynamicUiUtils.saveViewOrder[2].forEach((key) {
       switch (key) {
         case "AST":

@@ -336,6 +336,10 @@ class BaseUtil extends ChangeNotifier {
     }
 
     double amount = 0;
+    AppState.isRepeated = false;
+    AppState.onTap = null;
+    AppState.isTxnProcessing = false;
+    locator<BackButtonActions>().isTransactionCancelled = false;
 
     if (investmentType == InvestmentType.LENDBOXP2P) {
       AppState.delegate!.appState.currentAction = PageAction(
@@ -364,10 +368,6 @@ class BaseUtil extends ChangeNotifier {
             skipMl: isSkipMl ?? false,
           ));
     }
-
-    AppState.isRepeated = false;
-    AppState.onTap = null;
-    locator<BackButtonActions>().isTransactionCancelled = false;
   }
 
   static void openFloBuySheet(
@@ -375,6 +375,11 @@ class BaseUtil extends ChangeNotifier {
     final UserService _userService = locator<UserService>();
     final S locale = locator<S>();
     bool isUserBanned = false;
+
+    AppState.isRepeated = false;
+    AppState.onTap = null;
+    AppState.isTxnProcessing = false;
+    locator<BackButtonActions>().isTransactionCancelled = false;
     switch (floAssetType) {
       case Constants.ASSET_TYPE_FLO_FIXED_6:
         final bool? islBoxDepositBanned = _userService.userBootUp?.data!.banMap
@@ -431,10 +436,6 @@ class BaseUtil extends ChangeNotifier {
         floAssetType: floAssetType,
       ),
     );
-
-    AppState.isRepeated = false;
-    AppState.onTap = null;
-    locator<BackButtonActions>().isTransactionCancelled = false;
   }
 
   Future<void> newUserCheck() async {

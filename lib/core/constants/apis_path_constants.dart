@@ -251,4 +251,5 @@ class ApiPath {
   static String get goldRatesGraph => "/gold-rates/graph";
 
   static String get tambolaOffers => "/tambola/offers";
+  static String get homeScreenCarouselItems => "/home_screen";
 }

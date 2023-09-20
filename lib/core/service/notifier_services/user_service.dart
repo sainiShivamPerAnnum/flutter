@@ -334,7 +334,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
       Map<String, dynamic> response =
           await _internalOpsService!.initDeviceInfo();
       deviceId = response["deviceId"];
-      platform = response["platform"];
+      platform = Platform.isAndroid ? 'android' : 'ios';
 
       PackageInfo packageInfo = await PackageInfo.fromPlatform();
       appVersion = packageInfo.buildNumber;

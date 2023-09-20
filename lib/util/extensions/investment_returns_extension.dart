@@ -39,7 +39,7 @@ extension ReturnInvestments on int {
     int interest = 1;
 
     if (floAssetType == Constants.ASSET_TYPE_FLO_FELXI && !isLendboxOldUser) {
-      interest = 8;
+      interest = 10;
     } else {
       interest = floAssetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? 12 : 10;
     }

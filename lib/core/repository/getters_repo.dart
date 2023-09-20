@@ -10,6 +10,7 @@ import 'package:felloapp/core/model/amount_chips_model.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/asset_options_model.dart';
 import 'package:felloapp/core/model/faq_model.dart';
+import 'package:felloapp/core/model/home_screen_carousel_items.dart';
 import 'package:felloapp/core/model/page_config_model.dart';
 import 'package:felloapp/core/model/promo_cards_model.dart';
 import 'package:felloapp/core/model/quick_save_model.dart';
@@ -464,6 +465,31 @@ class GetterRepository extends BaseRepo {
           return ApiResponse(model: goldChartData, code: 200);
         },
       );
+    } catch (e) {
+      logger.e(e.toString());
+      return ApiResponse.withError("Unable to fetch stories", 400);
+    }
+  }
+
+  Future<ApiResponse<List<HomeScreenCarouselItemsModel>>>
+      getHomeScreenItems() async {
+    try {
+      final token = await getBearerToken();
+
+      return await _cacheService.cachedApi(
+          CacheKeys.HOME_SCREEN_ITEMS,
+          TTL.ONE_MIN,
+          () => APIService.instance.getData(
+                ApiPath.homeScreenCarouselItems,
+                cBaseUrl: _baseUrl,
+                token: token,
+              ), (response) {
+        List<HomeScreenCarouselItemsModel> items = HomeScreenCarouselItemsModel
+            .helper
+            .fromMapArray(response['data']["items"]);
+        return ApiResponse<List<HomeScreenCarouselItemsModel>>(
+            model: items, code: 200);
+      });
     } catch (e) {
       logger.e(e.toString());
       return ApiResponse.withError("Unable to fetch stories", 400);
