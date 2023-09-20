@@ -72,7 +72,7 @@ class _ReferralListState extends State<ReferralList> {
                 child: Column(
                   crossAxisAlignment: CrossAxisAlignment.center,
                   children: [
-                    const FullScreenCircleLoader(),
+                    const FullScreenCircularLoader(),
                     SizedBox(height: SizeConfig.padding20),
                     Text(
                       'Fetching your referrals. Please wait..',

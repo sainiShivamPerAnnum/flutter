@@ -2,6 +2,7 @@ import 'dart:developer';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/bank_account_details_model.dart';
 import 'package:felloapp/core/repository/payment_repo.dart';
@@ -9,6 +10,7 @@ import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/analytics/base_analytics_service.dart';
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -16,9 +18,9 @@ import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
 
 class BankDetailsViewModel extends BaseViewModel {
-  final BaseAnalyticsService? _analyticsService = locator<AnalyticsService>();
-  final BankAndPanService? _sellService = locator<BankAndPanService>();
-  final PaymentRepository? _paymentRepo = locator<PaymentRepository>();
+  final BaseAnalyticsService _analyticsService = locator<AnalyticsService>();
+  final BankAndPanService _sellService = locator<BankAndPanService>();
+  final PaymentRepository _paymentRepo = locator<PaymentRepository>();
   S locale = locator<S>();
   final formKey = GlobalKey<FormState>();
   bool _isDetailsUpdating = false;
@@ -27,6 +29,7 @@ class BankDetailsViewModel extends BaseViewModel {
   FocusNode nameFocusNode = FocusNode();
 
   BankAccountDetailsModel? activeBankDetails;
+
   // UserAugmontDetail augmontDetails;
   TextEditingController? bankHolderNameController;
   TextEditingController? bankAccNoController;
@@ -38,12 +41,12 @@ class BankDetailsViewModel extends BaseViewModel {
   String? cnfBankAccNo;
   String? ifscCode;
 
-  get isDetailsUpdating => this._isDetailsUpdating;
+  get isDetailsUpdating => _isDetailsUpdating;
 
-  get inEditMode => this._inEditMode;
+  get inEditMode => _inEditMode;
 
   set inEditMode(value) {
-    this._inEditMode = value;
+    _inEditMode = value;
     notifyListeners();
   }
 
@@ -55,7 +58,7 @@ class BankDetailsViewModel extends BaseViewModel {
   }
 
   set isDetailsUpdating(value) {
-    this._isDetailsUpdating = value;
+    _isDetailsUpdating = value;
     notifyListeners();
   }
 
@@ -82,19 +85,21 @@ class BankDetailsViewModel extends BaseViewModel {
     }
 
     setState(ViewState.Idle);
-    Future.delayed(Duration(milliseconds: 500), () {
+    Future.delayed(const Duration(milliseconds: 500), () {
       if (inEditMode) nameFocusNode.requestFocus();
     });
   }
 
   updateBankDetails() async {
-    if (checkIfDetailsAreSame())
+    if (checkIfDetailsAreSame()) {
       return BaseUtil.showNegativeAlert(
           locale.noChangesDetected, locale.makeSomeChanges);
+    }
     setUpDataValues();
-    if (!confirmBankAccountNumber())
+    if (!confirmBankAccountNumber()) {
       return BaseUtil.showNegativeAlert(
           locale.feildsMismatch, locale.bankAccDidNotMatch);
+    }
     isDetailsUpdating = true;
 
     final ApiResponse<bool> response = await _paymentRepo!.addBankDetails(
@@ -111,7 +116,15 @@ class BankDetailsViewModel extends BaseViewModel {
           locale.bankDetailsUpdatedTitle, locale.bankDetailsUpdatedSubTitle);
       inEditMode = false;
       isDetailsUpdating = false;
-      AppState.backButtonDispatcher!.didPopRoute();
+
+      if (_sellService.isFromFloWithdrawFlow) {
+        AppState.delegate!.appState.currentAction = PageAction(
+          state: PageState.replace,
+          page: BalloonLottieScreenViewConfig,
+        );
+      } else {
+        AppState.backButtonDispatcher!.didPopRoute();
+      }
     } else {
       BaseUtil.showNegativeAlert(response.errorMessage ?? locale.updateFailed,
           locale.obPleaseTryAgain);
@@ -119,11 +132,12 @@ class BankDetailsViewModel extends BaseViewModel {
     }
   }
 
-  checkIfDetailsAreSame() => (activeBankDetails != null &&
+  checkIfDetailsAreSame() =>
+      activeBankDetails != null &&
       bankAccNoController!.text == activeBankDetails!.account &&
       bankHolderNameController!.text == activeBankDetails!.name &&
       bankAccNoConfirmController!.text == activeBankDetails!.account &&
-      bankIfscController!.text == activeBankDetails!.ifsc);
+      bankIfscController!.text == activeBankDetails!.ifsc;
 
   setUpDataValues() {
     bankHoldername = bankHolderNameController!.text.trim().toUpperCase();

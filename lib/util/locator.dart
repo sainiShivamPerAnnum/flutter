@@ -37,6 +37,7 @@ import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
 import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/lcl_db_api.dart';
+import 'package:felloapp/core/service/lendbox_maturity_service.dart';
 import 'package:felloapp/core/service/notifier_services/connectivity_service.dart';
 import 'package:felloapp/core/service/notifier_services/google_sign_in_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
@@ -165,6 +166,7 @@ Future<void> setupLocator() async {
   locator.registerLazySingleton(MarketingEventHandlerService.new);
   locator.registerLazySingleton(SubService.new);
   locator.registerLazySingleton(PowerPlayService.new);
+  locator.registerLazySingleton(LendboxMaturityService.new);
 
   //Repository
   locator.registerLazySingleton(DBModel.new);

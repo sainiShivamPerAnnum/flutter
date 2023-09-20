@@ -1,5 +1,5 @@
-import 'package:felloapp/main.dart';
+// import 'package:felloapp/main.dart';
 
-main() async {
-  await mainInit();
-}
+// main() async {
+//   await mainInit();
+// }

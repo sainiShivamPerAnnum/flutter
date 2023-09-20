@@ -14,6 +14,7 @@ import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/analytics/base_analytics.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
 import 'package:felloapp/core/service/journey_service.dart';
+import 'package:felloapp/core/service/lendbox_maturity_service.dart';
 import 'package:felloapp/core/service/notifier_services/google_sign_in_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/marketing_event_handler_service.dart';
@@ -591,6 +592,7 @@ class UserProfileVM extends BaseViewModel {
                 _appstate.dump();
                 locator<SubService>().dump();
                 _tambolaService!.dump();
+                locator<LendboxMaturityService>().dump();
                 AppState.backButtonDispatcher!.didPopRoute();
 
                 AppState.delegate!.appState.currentAction = PageAction(

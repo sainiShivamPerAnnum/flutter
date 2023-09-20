@@ -37,6 +37,7 @@ class PreferenceHelper {
       "referralPersistentNotificationId";
   static const CACHE_TICKETS_LAST_SPIN_TIMESTAMP =
       "tickets_last_spin_timestamp";
+  static const CACHE_LIST_OUTDATED_FLO_ASSET = "listOutdatedFloAsset";
 
   static Future<SharedPreferences?> initiate() async {
     if (_prefs == null) {

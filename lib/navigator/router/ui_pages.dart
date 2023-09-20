@@ -95,6 +95,9 @@ const String PowerPlaySeasonLeaderboardPath = "powerplaySeasonLeaderboardPath";
 const String LendboxBuyViewPath = "/LendboxBuyViewPath";
 const String AssetSelectionViewPath = "/assetSelectionViewPath";
 const String QuizWebViewPath = "/quizWebViewPath";
+const String BalloonLottieScreenPath = "/bolloonLottieScreenPath";
+const String MaturityWithdrawalSuccessViewPath =
+    "/maturityWithdrawalSuccessViewPath";
 
 //GoldPro
 const String GoldProDetailsPath = "/goldProDetailsPath";
@@ -198,6 +201,8 @@ enum Pages {
   LendboxBuyView,
   AssetSelectionView,
   QuizWebView,
+  BalloonLottieScreen,
+  MaturityWithdrawalSuccessView,
   //GOLDPRO
   GoldProDetailsView,
   GoldProBuyView,
@@ -814,6 +819,12 @@ PageConfiguration QuizWebViewConfig = PageConfiguration(
     uiPage: Pages.QuizWebView,
     name: "Quiz Web View Screen");
 
+PageConfiguration BalloonLottieScreenViewConfig = PageConfiguration(
+    key: 'BalloonLottieScreenViewPath',
+    path: BalloonLottieScreenPath,
+    uiPage: Pages.BalloonLottieScreen,
+    name: "Balloon Lottie Screen View Screen");
+
 PageConfiguration GoldProDetailsViewPageConfig = PageConfiguration(
     key: 'GoldProDetailsViewPath',
     path: GoldProDetailsPath,
@@ -855,3 +866,8 @@ PageConfiguration TicketsTutorialViewPageConfig = PageConfiguration(
     path: TicketsTutorialViewPath,
     uiPage: Pages.TicketsTutorialViewPath,
     name: "Tickets Tutorial View Screen");
+PageConfiguration MaturityWithdrawalSuccessViewPageConfig = PageConfiguration(
+    key: 'MaturityWithdrawalSuccessViewPath',
+    path: MaturityWithdrawalSuccessViewPath,
+    uiPage: Pages.MaturityWithdrawalSuccessView,
+    name: "Maturity Withdrawal Success View Screen");

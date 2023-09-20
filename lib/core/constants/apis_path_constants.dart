@@ -252,4 +252,6 @@ class ApiPath {
 
   static String get tambolaOffers => "/tambola/offers";
   static String get homeScreenCarouselItems => "/home_screen";
+
+  static String lbMaturity(String? uid) => "/lb/fd/maturities?uid=$uid";
 }

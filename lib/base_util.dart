@@ -61,6 +61,7 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
@@ -242,7 +243,7 @@ class BaseUtil extends ChangeNotifier {
 
   void openProfileDetailsScreen() {
     AppState.delegate!.parseRoute(Uri.parse("accounts"));
-    _analyticsService!.track(
+    _analyticsService.track(
         eventName: AnalyticsEvents.profileClicked,
         properties: AnalyticsProperties.getDefaultPropertiesMap(
             extraValuesMap: {"location": getLocationForCurrentTab()}));
@@ -317,10 +318,10 @@ class BaseUtil extends ChangeNotifier {
   }
 
   void openRechargeModalSheet({
+    required InvestmentType investmentType,
     int? amt,
     bool? isSkipMl,
     double? gms,
-    required InvestmentType investmentType,
   }) {
     final bool? isAugDepositBanned = _userService
         .userBootUp?.data!.banMap?.investments?.deposit?.augmont?.isBanned;
@@ -371,8 +372,8 @@ class BaseUtil extends ChangeNotifier {
   }
 
   static void openFloBuySheet(
-      {int? amt, bool? isSkipMl, required String floAssetType}) {
-    final UserService _userService = locator<UserService>();
+      {required String floAssetType, int? amt, bool? isSkipMl}) {
+    final UserService userService = locator<UserService>();
     final S locale = locator<S>();
     bool isUserBanned = false;
 
@@ -382,9 +383,9 @@ class BaseUtil extends ChangeNotifier {
     locator<BackButtonActions>().isTransactionCancelled = false;
     switch (floAssetType) {
       case Constants.ASSET_TYPE_FLO_FIXED_6:
-        final bool? islBoxDepositBanned = _userService.userBootUp?.data!.banMap
+        final bool? islBoxDepositBanned = userService.userBootUp?.data!.banMap
             ?.investments?.deposit?.lendBoxFd2?.isBanned;
-        final String? lBoxDepositBanNotice = _userService
+        final String? lBoxDepositBanNotice = userService
             .userBootUp?.data!.banMap?.investments?.deposit?.lendBoxFd2?.reason;
         if (islBoxDepositBanned != null && islBoxDepositBanned) {
           BaseUtil.showNegativeAlert(
@@ -396,9 +397,9 @@ class BaseUtil extends ChangeNotifier {
         break;
 
       case Constants.ASSET_TYPE_FLO_FIXED_3:
-        final bool? islBoxDepositBanned = _userService.userBootUp?.data!.banMap
+        final bool? islBoxDepositBanned = userService.userBootUp?.data!.banMap
             ?.investments?.deposit?.lendBoxFd1?.isBanned;
-        final String? lBoxDepositBanNotice = _userService
+        final String? lBoxDepositBanNotice = userService
             .userBootUp?.data!.banMap?.investments?.deposit?.lendBoxFd1?.reason;
         if (islBoxDepositBanned != null && islBoxDepositBanned) {
           BaseUtil.showNegativeAlert(
@@ -409,9 +410,9 @@ class BaseUtil extends ChangeNotifier {
         }
         break;
       case Constants.ASSET_TYPE_FLO_FELXI:
-        final bool? islBoxDepositBanned = _userService
+        final bool? islBoxDepositBanned = userService
             .userBootUp?.data!.banMap?.investments?.deposit?.lendBox?.isBanned;
-        final String? lBoxDepositBanNotice = _userService
+        final String? lBoxDepositBanNotice = userService
             .userBootUp?.data!.banMap?.investments?.deposit?.lendBox?.reason;
         if (islBoxDepositBanned != null && islBoxDepositBanned) {
           BaseUtil.showNegativeAlert(
@@ -447,14 +448,14 @@ class BaseUtil extends ChangeNotifier {
     }
   }
 
-  static String getMaturityPref(String maturityEnum) {
+  static String getMaturityPref(String maturityEnum, bool isFrom10) {
     switch (maturityEnum) {
       case '0':
         return "Withdrawing to your bank account after maturity";
       case '1':
-        return "Auto-investing in 12% Flo on maturity";
+        return "Auto-investing in ${isFrom10 ? 10 : 12}% Flo on maturity";
       case '2':
-        return "Move to Flo Basic after maturity";
+        return "Move to ${isFrom10 ? 8 : 10} Flo after maturity";
       default:
         return "What will happen to your investment after maturity?";
     }
@@ -553,10 +554,10 @@ class BaseUtil extends ChangeNotifier {
   }
 
   static Future<void> openDialog({
+    required bool isBarrierDismissible,
     Widget? content,
     bool? addToScreenStack,
     bool? hapticVibrate,
-    required bool isBarrierDismissible,
     ValueChanged<dynamic>? callback,
     Color? barrierColor,
   }) async {
@@ -575,11 +576,11 @@ class BaseUtil extends ChangeNotifier {
   }
 
   static Future<void> openModalBottomSheet({
+    required bool isBarrierDismissible,
     Widget? content,
     bool? addToScreenStack,
     bool? hapticVibrate,
     Color? backgroundColor,
-    required bool isBarrierDismissible,
     BorderRadius? borderRadius,
     bool isScrollControlled = false,
     BoxConstraints? boxContraints,
@@ -769,6 +770,7 @@ class BaseUtil extends ChangeNotifier {
       manualReferralCode = null;
       referrerUserId = null;
       _setRuntimeDefaults();
+      await FirebaseMessaging.instance.deleteToken();
 
       return true;
     } catch (e) {
@@ -842,7 +844,7 @@ class BaseUtil extends ChangeNotifier {
 
   static T? _cast<T>(x) => x is T ? x : null;
 
-  static double toDouble(dynamic x) {
+  static double toDouble(x) {
     if (x == null) return 0.0;
     try {
       int? y = _cast<int>(x);
@@ -857,7 +859,7 @@ class BaseUtil extends ChangeNotifier {
     return 0.0;
   }
 
-  static int toInt(dynamic x) {
+  static int toInt(x) {
     if (x == null) return 0;
     try {
       int? y = _cast<int>(x);
@@ -1095,7 +1097,7 @@ class BaseUtil extends ChangeNotifier {
     notifyListeners();
   }
 
-  get isGoogleSignInProgress => _isGoogleSignInProgress;
+  bool? get isGoogleSignInProgress => _isGoogleSignInProgress;
 
   set isGoogleSignInProgress(value) {
     _isGoogleSignInProgress = value;
@@ -1141,7 +1143,7 @@ class CompleteProfileDialog extends StatelessWidget {
     S locale = S.of(context);
     return WillPopScope(
       onWillPop: () async {
-        AppState.backButtonDispatcher!.didPopRoute();
+        await AppState.backButtonDispatcher!.didPopRoute();
         return Future.value(true);
       },
       child: MoreInfoDialog(

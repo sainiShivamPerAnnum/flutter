@@ -174,7 +174,7 @@ class LastWeekBg extends StatelessWidget {
               child: CustomPaint(
                 size: Size(SizeConfig.padding34,
                     (SizeConfig.padding34 * 0.30303030303030304).toDouble()),
-                painter: RPSCustomPainter(),
+                painter: CloudCustomPainter(),
               )),
           Positioned(
             top: SizeConfig.padding54,
@@ -232,7 +232,7 @@ class LastWeekBg extends StatelessWidget {
   }
 }
 
-class RPSCustomPainter extends CustomPainter {
+class CloudCustomPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     Path path_0 = Path();

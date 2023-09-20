@@ -12,13 +12,13 @@ import 'package:felloapp/core/model/bottom_nav_bar_item_model.dart';
 import 'package:felloapp/core/repository/games_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/feature/flo_withdrawals/ui/balloon_lottie_screen.dart';
 import 'package:felloapp/feature/referrals/ui/referral_home.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/transition_delegate.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/ui/elements/fello_dialog/fello_in_app_review.dart';
-import 'package:felloapp/ui/pages/campaigns/info_stories/info_stories_view.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_buy/gold_pro_buy_view.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_details/gold_pro_details_view.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_sell/gold_pro_sell_view.dart';
@@ -60,7 +60,6 @@ import 'package:felloapp/ui/pages/userProfile/settings/settings_view.dart';
 import 'package:felloapp/ui/pages/userProfile/userProfile/userProfile_view.dart';
 import 'package:felloapp/ui/pages/userProfile/verify_email.dart';
 import 'package:felloapp/ui/service_elements/quiz/quiz_web_view.dart';
-import 'package:felloapp/ui/shared/spotlight_controller.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -360,6 +359,11 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.TicketsTutorialViewPath:
           _addPageData(
               const TicketsTutorialsView(), TicketsTutorialViewPageConfig);
+          break;
+
+        case Pages.BalloonLottieScreen:
+          _addPageData(
+              const BalloonLottieScreen(), BalloonLottieScreenViewConfig);
           break;
 
         default:
@@ -1055,6 +1059,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         break;
       case "ticketsTutorial":
         pageConfiguration = TicketsTutorialViewPageConfig;
+        break;
+      case "quizHome":
+        pageConfiguration = QuizWebViewConfig;
         break;
     }
     if (pageConfiguration != null) {

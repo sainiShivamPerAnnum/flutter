@@ -709,7 +709,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "obIncorrectOTP": MessageLookupByLibrary.simpleMessage(
             "ओटीपी गलत है, कृपया पुन: प्रयास करें"),
         "obIsOlder": MessageLookupByLibrary.simpleMessage(
-            "आगे बढ़कर, आप सहमति देते हैं कि आपकी आयु 18 वर्ष और अधिक है।"),
+            "आगे बढ़ते हुए, आप सहमत हैं कि आपकी आयु 18 वर्ष या उससे अधिक है और आप तमिलनाडु में नहीं रहते हैं।"),
         "obJoinUsBottomTitle": MessageLookupByLibrary.simpleMessage(
             "हमारे साथ बचत करने और जीतने वाले 5 लाख से अधिक \nउपयोगकर्ताओं से जुड़ें!"),
         "obKYCDetailsLabel":

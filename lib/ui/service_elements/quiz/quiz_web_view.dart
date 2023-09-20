@@ -1,8 +1,12 @@
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/enums/app_config_keys.dart';
+import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/util/locator.dart';
@@ -13,9 +17,7 @@ import 'package:share_plus/share_plus.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class QuizWebView extends StatefulWidget {
-  const QuizWebView({super.key, this.url});
-
-  final String? url;
+  const QuizWebView({super.key});
 
   @override
   State<QuizWebView> createState() => _QuizWebViewState();
@@ -25,9 +27,32 @@ class _QuizWebViewState extends State<QuizWebView> {
   WebViewController? _webViewController;
   bool isLoading = true;
 
+  String _onTapQuizSection() {
+    final jwt = JWT(
+      {'uid': locator<UserService>().baseUser!.uid},
+    );
+    String token = jwt.sign(
+        SecretKey(
+            '3565d165c367a0f1c615c27eb957dddfef33565b3f5ad1dda3fe2efd07326c1f'),
+        expiresIn: const Duration(hours: 1));
+    return token;
+  }
+
+  String constructBaseUrl() {
+    Map<String, dynamic> quizSectionData =
+        AppConfig.getValue(AppConfigKey.quiz_config);
+
+    var key = _onTapQuizSection();
+
+    return "${quizSectionData['baseUrl']}?token=$key";
+  }
+
   @override
   void initState() {
     super.initState();
+
+    String finalUrl = constructBaseUrl();
+
     AppState.blockNavigation();
     AppState.isQuizInProgress = true;
     _webViewController = WebViewController()
@@ -53,7 +78,7 @@ class _QuizWebViewState extends State<QuizWebView> {
           });
         },
       ))
-      ..loadRequest(Uri.parse(widget.url ?? ""));
+      ..loadRequest(Uri.parse(finalUrl));
   }
 
   @override

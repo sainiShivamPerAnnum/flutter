@@ -1,10 +1,11 @@
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 
-class FullScreenCircleLoader extends StatelessWidget {
+class FullScreenCircularLoader extends StatelessWidget {
   final double? size;
   final bool bottomPadding;
-  const FullScreenCircleLoader(
+
+  const FullScreenCircularLoader(
       {Key? key, this.size, this.bottomPadding = false})
       : super(key: key);
 

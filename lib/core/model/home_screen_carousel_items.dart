@@ -6,6 +6,7 @@ class HomeScreenCarouselItemsModel {
   final String thumbnail;
   final String action;
   final int order;
+
   HomeScreenCarouselItemsModel({
     required this.type,
     required this.thumbnail,
