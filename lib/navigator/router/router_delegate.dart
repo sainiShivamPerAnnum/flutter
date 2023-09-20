@@ -1,7 +1,6 @@
 //Project Imports
 import 'dart:developer';
 
-// goto/checkout-view//?amount=20&typ=gold
 // import 'package:apxor_flutter/observer.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
