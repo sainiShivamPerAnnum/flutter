@@ -210,6 +210,7 @@ class Assets {
       "assets/svg/highest_scorers.svg";
 
   static const String trophySvg = "assets/vectors/trophy.svg";
+  static const String trophyGlitterSvg = "assets/vectors/trophyGlitter.svg";
   static const String dailyAppBonusHero =
       "assets/vectors/dailyAppBonusHero.svg";
 

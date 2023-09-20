@@ -10,11 +10,12 @@ class TambolaHomeTicketsViewModel extends BaseViewModel {
   Future<void> init() async {
     setState(ViewState.Busy);
     tambolaService = locator<TambolaService>();
-    await tambolaService!.getBestTambolaTickets();
     await tambolaService!.fetchWeeklyPicks();
+    await tambolaService!.getBestTambolaTickets();
     unawaited(tambolaService!.getOffers());
     unawaited(tambolaService!.getPrizes());
     unawaited(tambolaService!.getPastWeekWinners());
+    unawaited(tambolaService!.getTambolaTickets(limit: 1));
     setState(ViewState.Idle);
   }
 

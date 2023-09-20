@@ -108,7 +108,7 @@ class _AmountInputViewState extends State<AmountInputView> {
   @override
   Widget build(BuildContext context) {
     final currentAmt = double.tryParse(widget.amountController!.text) ?? 0;
-    widget.amountController!.text = "0.0";
+    // widget.amountController!.text = "0.0";
     final AnalyticsService analyticsService = locator<AnalyticsService>();
     return Column(
       children: [

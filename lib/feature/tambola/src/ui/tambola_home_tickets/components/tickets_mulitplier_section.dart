@@ -153,7 +153,7 @@ class TicketMultiplierOptionsWidget extends StatelessWidget {
                                       ),
                                       SizedBox(height: SizeConfig.padding4),
                                       Text(
-                                        "on saving",
+                                        "on savings",
                                         style: TextStyles.body4
                                             .colour(Colors.white),
                                       ),

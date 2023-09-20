@@ -388,17 +388,17 @@ class GoldBuyViewModel extends BaseViewModel {
     //   return false;
     // }
 
-    bool _disabled = await _dbModel!.isAugmontBuyDisabled();
-    if (_disabled != null && _disabled) {
-      isGoldBuyInProgress = false;
-      BaseUtil.showNegativeAlert(
-        locale.purchaseFailed,
-        locale.goldBuyHold,
-      );
-      trackCheckOOutEvent(
-          "Purchase Failed,'Gold buying is currently on hold. Please try again after sometime.");
-      return false;
-    }
+    // bool _disabled = await _dbModel!.isAugmontBuyDisabled();
+    // if (_disabled != null && _disabled) {
+    //   isGoldBuyInProgress = false;
+    //   BaseUtil.showNegativeAlert(
+    //     locale.purchaseFailed,
+    //     locale.goldBuyHold,
+    //   );
+    //   trackCheckOOutEvent(
+    //       "Purchase Failed,'Gold buying is currently on hold. Please try again after sometime.");
+    //   return false;
+    // }
 
     trackCheckOOutEvent("");
     return true;

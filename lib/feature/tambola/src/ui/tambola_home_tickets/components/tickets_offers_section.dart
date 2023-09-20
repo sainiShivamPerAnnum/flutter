@@ -30,7 +30,8 @@ class TicketsOffersSection extends StatelessWidget {
                           right: SizeConfig.pageHorizontalMargins,
                           bottom: SizeConfig.padding12)),
                   SizedBox(
-                    height: SizeConfig.screenWidth! * 0.36,
+                    height: SizeConfig.screenWidth! * 0.4,
+                    width: SizeConfig.screenWidth,
                     child: ListView.builder(
                       itemCount: offers!.length,
                       physics: const BouncingScrollPhysics(),
@@ -46,7 +47,7 @@ class TicketsOffersSection extends StatelessWidget {
                         child: Container(
                           height: SizeConfig.padding128,
                           width: SizeConfig.screenWidth! -
-                              SizeConfig.pageHorizontalMargins * 2,
+                              SizeConfig.pageHorizontalMargins * 2.5,
                           decoration: BoxDecoration(
                             // color: Colors.red,
                             borderRadius:
@@ -54,7 +55,10 @@ class TicketsOffersSection extends StatelessWidget {
                           ),
                           margin: EdgeInsets.symmetric(
                               horizontal: SizeConfig.padding10),
-                          child: getChild(offers[i].image),
+                          child: ClipRRect(
+                              borderRadius:
+                                  BorderRadius.circular(SizeConfig.roundness12),
+                              child: getChild(offers[i].image)),
                         ),
                       ),
                     ),

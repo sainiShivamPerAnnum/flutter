@@ -10,6 +10,7 @@ class TambolaHomeDetailsViewModel extends BaseViewModel {
     tambolaService = locator<TambolaService>();
     tambolaGameData = tambolaService!.tambolaGameData;
     tambolaService!.getPastWeekWinners();
+    tambolaService!.getTambolaTickets(limit: 1);
     tambolaService!.getPrizes();
   }
 

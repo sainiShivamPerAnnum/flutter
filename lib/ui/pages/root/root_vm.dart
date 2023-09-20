@@ -93,10 +93,14 @@ class RootViewModel extends BaseViewModel {
   final MarketingEventHandlerService _marketingService =
       locator<MarketingEventHandlerService>();
   final RootController _rootController = locator<RootController>();
+
   Future<void> pullToRefresh() async {
     if (_rootController.currentNavBarItemModel ==
         RootController.tambolaNavBar) {
-      await Future.wait([_tambolaService.getBestTambolaTickets(forced: true)]);
+      await Future.wait([
+        _tambolaService.getTambolaTickets(limit: 1),
+        _tambolaService.getBestTambolaTickets(forced: true)
+      ]);
       return;
     }
 

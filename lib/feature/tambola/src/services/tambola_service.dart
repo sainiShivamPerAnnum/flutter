@@ -49,10 +49,26 @@ class TambolaService extends ChangeNotifier {
   List<TambolaTicketModel>? allBestTickets = [];
   TambolaBestTicketsModel? _bestTickets;
   int _tambolaTicketCount = 0;
+  bool _showPastWeekWinStrip = false;
+  String _slotMachineTitle = "Reveal today's picks";
+
+  String get slotMachineTitle => _slotMachineTitle;
+
+  set slotMachineTitle(String value) {
+    _slotMachineTitle = value;
+  }
+
+  bool get showPastWeekWinStrip => _showPastWeekWinStrip;
+
+  set showPastWeekWinStrip(bool value) {
+    _showPastWeekWinStrip = value;
+    notifyListeners();
+  }
 
   int _matchedTicketCount = 0;
   int expiringTicketsCount = 0;
   Winners? winnerData;
+  Winners? pastWinnerData;
 
   int get tambolaTicketCount => _tambolaTicketCount;
 
@@ -173,6 +189,12 @@ class TambolaService extends ChangeNotifier {
 
   //MAIN METHODS
 
+  Future<void> refreshTickets() async {
+    await fetchWeeklyPicks();
+    await getBestTambolaTickets();
+    unawaited(getTambolaTickets(limit: 1));
+  }
+
   Future<bool> getGameDetails() async {
     final gameRes =
         await _gameRepo.getGameByCode(gameCode: Constants.GAME_TYPE_TAMBOLA);
@@ -215,6 +237,16 @@ class TambolaService extends ChangeNotifier {
             (winner) => winner.userid == _userService.baseUser!.uid);
       }
     }
+    if (DateTime.now().weekday < 4) {
+      if (pastWeekWinners!.indexWhere(
+              (winner) => winner.userid == _userService.baseUser!.uid) !=
+          -1) {
+        pastWinnerData = pastWeekWinners!.firstWhere(
+            (winner) => winner.userid == _userService.baseUser!.uid);
+        _showPastWeekWinStrip = true;
+      }
+    }
+
     notifyListeners();
   }
 
@@ -249,6 +281,7 @@ class TambolaService extends ChangeNotifier {
       allBestTickets = bestTickets?.data?.allTickets();
       if (allBestTickets?.isNotEmpty ?? false) {
         isCollapsed = true;
+        slotMachineTitle = "Reveal numbers to match with Tickets";
       }
     } else {
       //TODO: FAILED TO FETCH TAMBOLA TICKETS. HANDLE FAIL CASE
@@ -347,8 +380,8 @@ class TambolaService extends ChangeNotifier {
         if (todaysPicks == null) {
           _logger.i("Today's picks are not generated yet");
           todaysPicks = [-1, -1, -1];
-        }
-        if (!todaysPicks!.contains(-1)) {
+          slotMachineTitle = "Numbers will be revealed at 6pm today";
+        } else {
           String lastSpinTimeInIsoString = PreferenceHelper.getString(
               PreferenceHelper.CACHE_TICKETS_LAST_SPIN_TIMESTAMP);
           if (lastSpinTimeInIsoString.isNotEmpty) {
@@ -358,6 +391,7 @@ class TambolaService extends ChangeNotifier {
             if (lastSpinTime.toDate().day == DateTime.now().day &&
                 lastSpinTime.toDate().month == DateTime.now().month) {
               //user has already spinned the slot machine
+              slotMachineTitle = "Today's Picks";
             } else {
               handleSlotPreSpin();
             }
@@ -432,7 +466,7 @@ class TambolaService extends ChangeNotifier {
     }
     showSpinButton = false;
     weeklyPicks = weeklyPicks;
-
+    slotMachineTitle = "Today's Picks";
     PreferenceHelper.setString(
         PreferenceHelper.CACHE_TICKETS_LAST_SPIN_TIMESTAMP,
         DateTime.now().toIso8601String());
@@ -458,91 +492,7 @@ class TambolaService extends ChangeNotifier {
     return "";
   }
 
-  // Future<void> examineTicketsForWins() async {
-  //   if (bestTickets == null ||
-  //       bestTickets?.data == null ||
-  //       weeklyPicks == null ||
-  //       weeklyPicks!.toList().length != 7 * 3 ||
-  //       weeklyPicks!.toList().contains(-1) ||
-  //       DateTime.now().weekday != 7) {
-  //     _logger.i('Testing is not ready yet');
-  //     return;
-  //   }
-  //   final tambolaTickets = bestTickets?.data?.allTickets();
-  //   for (final boardObj in tambolaTickets!) {
-  //     if (boardObj.assignedTime.toDate().weekday == 7 &&
-  //         boardObj.assignedTime.toDate().hour > 18) continue;
-  //     if (getCornerOdds(
-  //             boardObj, weeklyPicks!.getPicksPostDate(DateTime.monday)) ==
-  //         0) {
-  //       if (boardObj.getTicketNumber() != 'NA') {
-  //         ticketCodeWinIndex[boardObj.getTicketNumber()] =
-  //             Constants.CORNERS_COMPLETED;
-  //       }
-  //     }
-  //     if (getOneRowOdds(
-  //             boardObj, weeklyPicks!.getPicksPostDate(DateTime.monday)) ==
-  //         0) {
-  //       if (boardObj.getTicketNumber() != 'NA') {
-  //         ticketCodeWinIndex[boardObj.getTicketNumber()] =
-  //             Constants.ONE_ROW_COMPLETED;
-  //       }
-  //     }
-  //     if (getTwoRowOdds(
-  //             boardObj, weeklyPicks!.getPicksPostDate(DateTime.monday)) ==
-  //         0) {
-  //       if (boardObj.getTicketNumber() != 'NA') {
-  //         ticketCodeWinIndex[boardObj.getTicketNumber()] =
-  //             Constants.TWO_ROWS_COMPLETED;
-  //       }
-  //     }
-  //     if (getFullHouseOdds(
-  //             boardObj, weeklyPicks!.getPicksPostDate(DateTime.monday)) ==
-  //         0) {
-  //       if (boardObj.getTicketNumber() != 'NA') {
-  //         ticketCodeWinIndex[boardObj.getTicketNumber()] =
-  //             Constants.FULL_HOUSE_COMPLETED;
-  //       }
-  //     }
-  //   }
-  //   showWinScreen = PreferenceHelper.getBool(
-  //       PreferenceHelper.SHOW_TAMBOLA_PROCESSING,
-  //       def: true);
-
-  //   double totalInvestedPrinciple =
-  //       locator<UserService>().userFundWallet!.augGoldPrinciple;
-  // isEligible = totalInvestedPrinciple >=
-  //     BaseUtil.toInt(
-  //       AppConfig.getValue(AppConfigKey.unlock_referral_amt),
-  //     );
-
-  //   isEligible = true;
-  //   _logger.i('Resultant wins: ${ticketCodeWinIndex.toString()}');
-  //   await getPrizes();
-  //   if (showWinScreen) {
-  //     AppState.delegate!.appState.currentAction = PageAction(
-  //       state: PageState.addWidget,
-  //       page: TWeeklyResultPageConfig,
-  //       widget: WeeklyResult(
-  //         winningsMap: ticketCodeWinIndex,
-  //         isEligible: isEligible,
-  //       ),
-  //     );
-  //   }
-  //   showWinScreen = false;
-  //   unawaited(PreferenceHelper.setBool(
-  //       PreferenceHelper.SHOW_TAMBOLA_PROCESSING, showWinScreen));
-  //   S locale = locator<S>();
-  //   if (ticketCodeWinIndex.isNotEmpty && showWinScreen) {
-  //     BaseUtil.showPositiveAlert(
-  //       locale.tambolaTicketWinAlert1,
-  //       locale.tambolaTicketWinAlert2,
-  //     );
-  //   }
-
-  //   if (DateTime.now().weekday == DateTime.sunday &&
-  //       DateTime.now().hour >= 18) {
-  //     notifyListeners();
-  //   }
-  // }
+  void setSlotMachineTitle() {
+    _slotMachineTitle = "Today's Picks";
+  }
 }

@@ -1,14 +1,10 @@
 import 'dart:async';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:felloapp/core/enums/app_config_keys.dart';
-import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/faq_model.dart';
 import 'package:felloapp/core/service/api.dart';
 import 'package:felloapp/util/api_response.dart';
-import 'package:felloapp/util/credentials_stage.dart';
 import 'package:felloapp/util/custom_logger.dart';
-import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:firebase_crashlytics/firebase_crashlytics.dart';
@@ -60,106 +56,106 @@ class DBModel extends ChangeNotifier {
   //   return null;
   // }
 
-  Future<bool> isAugmontBuyDisabled() async {
-    try {
-      String _awsKeyIndex =
-          AppConfig.getValue(AppConfigKey.aws_augmont_key_index).toString();
-      if (_awsKeyIndex == '' || _awsKeyIndex.isEmpty) _awsKeyIndex = '1';
-      int keyIndex = 1;
-      try {
-        keyIndex = int.parse(_awsKeyIndex);
-      } catch (e) {
-        log.error('Aws Index key parsing failed: ' + e.toString());
-        keyIndex = 1;
-      }
-      logger!.i("CALLING: getCredentialsByTypeAndStage");
-      QuerySnapshot querySnapshot = await _api!.getCredentialsByTypeAndStage(
-          'aws-augmont',
-          FlavorConfig.instance!.values.awsAugmontStage.value(),
-          keyIndex);
-      if (querySnapshot.docs.length == 1) {
-        DocumentSnapshot snapshot = querySnapshot.docs[0];
-        Map<String, dynamic>? _doc = snapshot.data() as Map<String, dynamic>?;
-        if (snapshot.exists &&
-            _doc != null &&
-            _doc['isDepLocked'] != null &&
-            _doc['isDepLocked']) {
-          return true;
-        }
-      }
-    } catch (e) {
-      logger!.e(e.toString());
-    }
-    return false;
-  }
+  // Future<bool> isAugmontBuyDisabled() async {
+  //   try {
+  //     String _awsKeyIndex =
+  //         AppConfig.getValue(AppConfigKey.aws_augmont_key_index).toString();
+  //     if (_awsKeyIndex == '' || _awsKeyIndex.isEmpty) _awsKeyIndex = '1';
+  //     int keyIndex = 1;
+  //     try {
+  //       keyIndex = int.parse(_awsKeyIndex);
+  //     } catch (e) {
+  //       log.error('Aws Index key parsing failed: ' + e.toString());
+  //       keyIndex = 1;
+  //     }
+  //     logger!.i("CALLING: getCredentialsByTypeAndStage");
+  //     QuerySnapshot querySnapshot = await _api!.getCredentialsByTypeAndStage(
+  //         'aws-augmont',
+  //         FlavorConfig.instance!.values.awsAugmontStage.value(),
+  //         keyIndex);
+  //     if (querySnapshot.docs.length == 1) {
+  //       DocumentSnapshot snapshot = querySnapshot.docs[0];
+  //       Map<String, dynamic>? _doc = snapshot.data() as Map<String, dynamic>?;
+  //       if (snapshot.exists &&
+  //           _doc != null &&
+  //           _doc['isDepLocked'] != null &&
+  //           _doc['isDepLocked']) {
+  //         return true;
+  //       }
+  //     }
+  //   } catch (e) {
+  //     logger!.e(e.toString());
+  //   }
+  //   return false;
+  // }
 
-  Future<String?> showAugmontSellNotice() async {
-    try {
-      String _awsKeyIndex =
-          AppConfig.getValue(AppConfigKey.aws_augmont_key_index).toString();
-      if (_awsKeyIndex == '' || _awsKeyIndex.isEmpty) _awsKeyIndex = '1';
-      int keyIndex = 1;
-      try {
-        keyIndex = int.parse(_awsKeyIndex);
-      } catch (e) {
-        log.error('Aws Index key parsing failed: ' + e.toString());
-        keyIndex = 1;
-      }
-      logger!.i("CALLING: getCredentialsByTypeAndStage");
-      QuerySnapshot querySnapshot = await _api!.getCredentialsByTypeAndStage(
-          'aws-augmont',
-          FlavorConfig.instance!.values.awsAugmontStage.value(),
-          keyIndex);
-      if (querySnapshot.docs.length == 1) {
-        DocumentSnapshot snapshot = querySnapshot.docs[0];
-        Map<String, dynamic>? _doc = snapshot.data() as Map<String, dynamic>?;
-        if (snapshot.exists &&
-            _doc != null &&
-            _doc['sellNotice'] != null &&
-            _doc['sellNotice'].isNotEmpty) {
-          return _doc['sellNotice'];
-        }
-      }
-    } catch (e) {
-      logger!.e(e.toString());
-    }
+  // Future<String?> showAugmontSellNotice() async {
+  //   try {
+  //     String _awsKeyIndex =
+  //         AppConfig.getValue(AppConfigKey.aws_augmont_key_index).toString();
+  //     if (_awsKeyIndex == '' || _awsKeyIndex.isEmpty) _awsKeyIndex = '1';
+  //     int keyIndex = 1;
+  //     try {
+  //       keyIndex = int.parse(_awsKeyIndex);
+  //     } catch (e) {
+  //       log.error('Aws Index key parsing failed: ' + e.toString());
+  //       keyIndex = 1;
+  //     }
+  //     logger!.i("CALLING: getCredentialsByTypeAndStage");
+  //     QuerySnapshot querySnapshot = await _api!.getCredentialsByTypeAndStage(
+  //         'aws-augmont',
+  //         FlavorConfig.instance!.values.awsAugmontStage.value(),
+  //         keyIndex);
+  //     if (querySnapshot.docs.length == 1) {
+  //       DocumentSnapshot snapshot = querySnapshot.docs[0];
+  //       Map<String, dynamic>? _doc = snapshot.data() as Map<String, dynamic>?;
+  //       if (snapshot.exists &&
+  //           _doc != null &&
+  //           _doc['sellNotice'] != null &&
+  //           _doc['sellNotice'].isNotEmpty) {
+  //         return _doc['sellNotice'];
+  //       }
+  //     }
+  //   } catch (e) {
+  //     logger!.e(e.toString());
+  //   }
 
-    return null;
-  }
+  //   return null;
+  // }
 
-  Future<bool> isAugmontSellDisabled() async {
-    try {
-      String _awsKeyIndex =
-          AppConfig.getValue(AppConfigKey.aws_augmont_key_index).toString();
-      if (_awsKeyIndex == '' || _awsKeyIndex.isEmpty) _awsKeyIndex = '1';
-      int keyIndex = 1;
-      try {
-        keyIndex = int.parse(_awsKeyIndex);
-      } catch (e) {
-        log.error('Aws Index key parsing failed: ' + e.toString());
-        keyIndex = 1;
-      }
-      logger!.i("CALLING: getCredentialsByTypeAndStage");
-      QuerySnapshot querySnapshot = await _api!.getCredentialsByTypeAndStage(
-          'aws-augmont',
-          FlavorConfig.instance!.values.awsAugmontStage.value(),
-          keyIndex);
-      if (querySnapshot.docs.length == 1) {
-        DocumentSnapshot snapshot = querySnapshot.docs[0];
-        Map<String, dynamic>? _doc = snapshot.data() as Map<String, dynamic>?;
-        if (snapshot.exists &&
-            _doc != null &&
-            _doc['isSellLocked'] != null &&
-            _doc['isSellLocked']) {
-          return true;
-        }
-      }
-    } catch (e) {
-      logger!.e(e.toString());
-    }
+  // Future<bool> isAugmontSellDisabled() async {
+  //   try {
+  //     String _awsKeyIndex =
+  //         AppConfig.getValue(AppConfigKey.aws_augmont_key_index).toString();
+  //     if (_awsKeyIndex == '' || _awsKeyIndex.isEmpty) _awsKeyIndex = '1';
+  //     int keyIndex = 1;
+  //     try {
+  //       keyIndex = int.parse(_awsKeyIndex);
+  //     } catch (e) {
+  //       log.error('Aws Index key parsing failed: ' + e.toString());
+  //       keyIndex = 1;
+  //     }
+  //     logger!.i("CALLING: getCredentialsByTypeAndStage");
+  //     QuerySnapshot querySnapshot = await _api!.getCredentialsByTypeAndStage(
+  //         'aws-augmont',
+  //         FlavorConfig.instance!.values.awsAugmontStage.value(),
+  //         keyIndex);
+  //     if (querySnapshot.docs.length == 1) {
+  //       DocumentSnapshot snapshot = querySnapshot.docs[0];
+  //       Map<String, dynamic>? _doc = snapshot.data() as Map<String, dynamic>?;
+  //       if (snapshot.exists &&
+  //           _doc != null &&
+  //           _doc['isSellLocked'] != null &&
+  //           _doc['isSellLocked']) {
+  //         return true;
+  //       }
+  //     }
+  //   } catch (e) {
+  //     logger!.e(e.toString());
+  //   }
 
-    return false;
-  }
+  //   return false;
+  // }
 
   Future<String?> getUserDP(String? uid) async {
     try {
