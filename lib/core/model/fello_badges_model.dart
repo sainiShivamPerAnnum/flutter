@@ -115,62 +115,37 @@ class LevelDetails {
 }
 
 class LvlDatum {
-  final int? smartSaver;
+  final int? value;
   final int? achieve;
   final String? title;
   final String? barHeading;
-  final int? ticketWiz;
-  final int? achiev;
-  final int? badgeLevel;
-  final bool? isCompleted;
-  final int? referral;
-  final int? proSaver;
-  final int? playQuiz;
+  final String? badgeUrl;
   final String? barheading;
 
   LvlDatum({
-    this.smartSaver,
+    this.value,
     this.achieve,
     this.title,
     this.barHeading,
-    this.ticketWiz,
-    this.achiev,
-    this.badgeLevel,
-    this.isCompleted,
-    this.referral,
-    this.proSaver,
-    this.playQuiz,
+    this.badgeUrl,
     this.barheading,
   });
 
   factory LvlDatum.fromJson(Map<String, dynamic> json) => LvlDatum(
-        smartSaver: json["smartSaver"],
+        value: json["value"],
         achieve: json["achieve"],
         title: json["title"],
         barHeading: json["barHeading"],
-        ticketWiz: json["ticketWiz"],
-        achiev: json["achiev"],
-        badgeLevel: json["badgeLevel"],
-        isCompleted: json["isCompleted"],
-        referral: json["referral"],
-        proSaver: json["proSaver"],
-        playQuiz: json["playQuiz"],
+        badgeUrl: json["badgeUrl"],
         barheading: json["barheading"],
       );
 
-  Map<String, dynamic> toJson() =>
-      {
-        "smartSaver": smartSaver,
+  Map<String, dynamic> toJson() => {
+        "value": value,
         "achieve": achieve,
         "title": title,
         "barHeading": barHeading,
-        "ticketWiz": ticketWiz,
-        "achiev": achiev,
-        "badgeLevel": badgeLevel,
-        "isCompleted": isCompleted,
-        "referral": referral,
-        "proSaver": proSaver,
-        "playQuiz": playQuiz,
+        "badgeUrl": badgeUrl,
         "barheading": barheading,
       };
 }

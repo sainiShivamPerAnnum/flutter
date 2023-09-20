@@ -53,40 +53,40 @@ class ProfileBadgeWidget extends StatelessWidget {
                           'https://d37gtxigg82zaw.cloudfront.net/loyalty/level-2.svg',
                     ),
                   ),
-                  GestureDetector(
-                    onTap: () {
-                      //  BaseUtil.openDialog(
-                      //   addToScreenStack: true,
-                      //   isBarrierDismissible: false,
-                      //   hapticVibrate: true,
-                      //   content: UserAvatarSelectionDialog(
-                      //     onCustomAvatarSelection: handleDPOperation,
-                      //     onPresetAvatarSelection: updateUserAvatar,
-                      //   ),
-                      // );
-                    },
-                    child: Positioned(
-                      top: 10,
-                      right: 15,
-                      child: Container(
-                        width: SizeConfig.padding28,
-                        height: SizeConfig.padding28,
-                        decoration: const BoxDecoration(
-                          color: Colors.white,
-                          shape: BoxShape.circle,
-                        ),
-                        child: Center(
-                          // make icon bold
-
-                          child: Icon(
-                            Icons.add,
-                            color: Colors.black,
-                            size: SizeConfig.padding22,
-                          ),
-                        ),
-                      ),
-                    ),
-                  )
+                  // GestureDetector(
+                  //   onTap: () {
+                  //     //  BaseUtil.openDialog(
+                  //     //   addToScreenStack: true,
+                  //     //   isBarrierDismissible: false,
+                  //     //   hapticVibrate: true,
+                  //     //   content: UserAvatarSelectionDialog(
+                  //     //     onCustomAvatarSelection: handleDPOperation,
+                  //     //     onPresetAvatarSelection: updateUserAvatar,
+                  //     //   ),
+                  //     // );
+                  //   },
+                  //   child: Positioned(
+                  //     top: 10,
+                  //     right: 15,
+                  //     child: Container(
+                  //       width: SizeConfig.padding28,
+                  //       height: SizeConfig.padding28,
+                  //       decoration: const BoxDecoration(
+                  //         color: Colors.white,
+                  //         shape: BoxShape.circle,
+                  //       ),
+                  //       child: Center(
+                  //         // make icon bold
+                  //
+                  //         child: Icon(
+                  //           Icons.add,
+                  //           color: Colors.black,
+                  //           size: SizeConfig.padding22,
+                  //         ),
+                  //       ),
+                  //     ),
+                  //   ),
+                  // )
                 ],
               ),
             ),

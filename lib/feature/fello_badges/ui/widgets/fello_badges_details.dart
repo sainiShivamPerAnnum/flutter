@@ -148,7 +148,7 @@ class BadgeDetailsContainer extends StatelessWidget {
                           ),
                     ),
                     SvgPicture.network(
-                       imageUrl[index],
+                      imageUrl[index],
                       height: SizeConfig.padding78,
                     ),
                   ],
@@ -365,7 +365,8 @@ class BadgeDetailsContainer extends StatelessWidget {
                                         MainAxisAlignment.spaceBetween,
                                     children: [
                                       Text(
-                                        'Smart Saver',
+                                        levelDetails?.lvlData?[index].title ??
+                                            '',
                                         style:
                                             TextStyles.sourceSans.body3.colour(
                                           Colors.white,
@@ -385,7 +386,8 @@ class BadgeDetailsContainer extends StatelessWidget {
                                     height: SizeConfig.padding4,
                                   ),
                                   Text(
-                                    'Make your first savings',
+                                    levelDetails?.lvlData?[index].barHeading ??
+                                        '',
                                     style: TextStyles.sourceSans.body4.colour(
                                       Colors.white.withOpacity(0.8),
                                     ),
@@ -402,45 +404,51 @@ class BadgeDetailsContainer extends StatelessWidget {
                                         height: SizeConfig.padding6,
                                         child: Stack(
                                           children: [
-                                            Positioned(
-                                              left: 0.28,
-                                              top: 0,
-                                              child: Container(
-                                                width: SizeConfig.padding168,
-                                                height: SizeConfig.padding6,
-                                                decoration: ShapeDecoration(
-                                                  color: Colors.white
-                                                      .withOpacity(0.25),
-                                                  shape: RoundedRectangleBorder(
+                                            Container(
+                                              width: SizeConfig.padding168,
+                                              height: SizeConfig.padding6,
+                                              decoration: ShapeDecoration(
+                                                color: const Color(0xFFD9D9D9)
+                                                    .withOpacity(0.25),
+                                                shape: RoundedRectangleBorder(
                                                     borderRadius:
                                                         BorderRadius.circular(
-                                                            4),
-                                                  ),
-                                                ),
+                                                            4)),
                                               ),
                                             ),
-                                            Positioned(
-                                              left: 0,
-                                              top: 0,
-                                              child: Container(
-                                                width: SizeConfig.padding132,
+                                            Container(
+                                              alignment: Alignment.centerLeft,
+                                              height: SizeConfig.padding6,
+                                              child: AnimatedContainer(
+                                                alignment:
+                                                    Alignment.bottomCenter,
+                                                width: ((levelDetails
+                                                                ?.lvlData?[
+                                                                    index]
+                                                                .achieve ??
+                                                            1) /
+                                                        100) *
+                                                    (SizeConfig.padding168),
                                                 height: SizeConfig.padding6,
+                                                duration: const Duration(
+                                                    milliseconds: 500),
+                                                curve: Curves.easeInExpo,
                                                 decoration: ShapeDecoration(
                                                   color:
                                                       const Color(0xFFFFCCBF),
                                                   shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            4),
-                                                  ),
+                                                      borderRadius:
+                                                          BorderRadius.circular(
+                                                              4)),
                                                 ),
+                                                // color: const Color(0xFFF79780),
                                               ),
                                             ),
                                           ],
                                         ),
                                       ),
                                       Text(
-                                        '80 %',
+                                        '${levelDetails?.lvlData?[index].achieve ?? 0} %',
                                         textAlign: TextAlign.right,
                                         style:
                                             TextStyles.sourceSans.body4.colour(
