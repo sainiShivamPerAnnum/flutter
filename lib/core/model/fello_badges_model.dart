@@ -39,13 +39,15 @@ class FelloBadgesData {
   final int? currentLevel;
   final List<LevelDetails>? levels;
   final SuperFelloWorks? superFelloWorks;
+  final List<FelloBadge>? bagdes;
 
   FelloBadgesData(
       {this.title,
       this.levels,
       this.superFelloWorks,
       this.currentLevel,
-      this.titleColor});
+      this.titleColor,
+      this.bagdes});
 
   factory FelloBadgesData.fromJson(Map<String, dynamic> json) =>
       FelloBadgesData(
@@ -59,10 +61,13 @@ class FelloBadgesData {
         superFelloWorks: json["superFelloWorks"] == null
             ? null
             : SuperFelloWorks.fromJson(json["superFelloWorks"]),
+        bagdes: json["bagdes"] == null
+            ? []
+            : List<FelloBadge>.from(
+                json["bagdes"]!.map((x) => FelloBadge.fromJson(x))),
       );
 
-  Map<String, dynamic> toJson() =>
-      {
+  Map<String, dynamic> toJson() => {
         "title": title,
         "titleColor": titleColor,
         "currentLevel": currentLevel,
@@ -70,6 +75,9 @@ class FelloBadgesData {
             ? []
             : List<dynamic>.from(levels!.map((x) => x.toJson())),
         "superFelloWorks": superFelloWorks?.toJson(),
+        "bagdes": bagdes == null
+            ? []
+            : List<dynamic>.from(bagdes!.map((x) => x.toJson())),
       };
 }
 
@@ -101,8 +109,7 @@ class LevelDetails {
                 json["lvl_data"]!.map((x) => LvlDatum.fromJson(x))),
       );
 
-  Map<String, dynamic> toJson() =>
-      {
+  Map<String, dynamic> toJson() => {
         "badgeUrl": badgeUrl,
         "benefits":
             benefits == null ? [] : List<dynamic>.from(benefits!.map((x) => x)),
@@ -170,5 +177,37 @@ class SuperFelloWorks {
   Map<String, dynamic> toJson() => {
         "title": title,
         "list": list == null ? [] : List<dynamic>.from(list!.map((x) => x)),
+      };
+}
+
+class FelloBadge {
+  final String? url;
+  final String? title;
+  final bool? enable;
+  final String? description;
+  final String? cta;
+
+  FelloBadge({
+    this.url,
+    this.title,
+    this.enable,
+    this.description,
+    this.cta,
+  });
+
+  factory FelloBadge.fromJson(Map<String, dynamic> json) => FelloBadge(
+        url: json["url"],
+        title: json["title"],
+        enable: json["enable"],
+        description: json["description"],
+        cta: json["cta"],
+      );
+
+  Map<String, dynamic> toJson() => {
+        "url": url,
+        "title": title,
+        "enable": enable,
+        "description": description,
+        "cta": cta,
       };
 }

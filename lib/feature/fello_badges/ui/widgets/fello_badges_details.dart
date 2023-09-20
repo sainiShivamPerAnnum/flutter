@@ -153,6 +153,12 @@ class BadgeDetailsContainer extends StatelessWidget {
     'https://d37gtxigg82zaw.cloudfront.net/loyalty/level-2.svg',
   ];
 
+  final List<Color> borderColor = const [
+    Color(0xFFE19366),
+    Color(0xff394B72),
+    Color(0xffFFD979),
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -164,10 +170,12 @@ class BadgeDetailsContainer extends StatelessWidget {
       decoration: ShapeDecoration(
         color: backgroundColor,
         shape: RoundedRectangleBorder(
-          side: const BorderSide(
+          side: BorderSide(
             width: 2,
             strokeAlign: BorderSide.strokeAlignOutside,
-            color: Colors.white,
+            color: (levelDetails?.isCompleted ?? false)
+                ? borderColor[index]
+                : Colors.white,
           ),
           borderRadius: BorderRadius.circular(16),
         ),
@@ -536,7 +544,7 @@ class BadgeDetailsContainer extends StatelessWidget {
                                                         milliseconds: 500),
                                                     curve: Curves.easeInExpo,
                                                     decoration: ShapeDecoration(
-                                                      color: i == 0
+                                                      color: index == 0
                                                           ? const Color(
                                                               0xFFFFCCBF)
                                                           : const Color(

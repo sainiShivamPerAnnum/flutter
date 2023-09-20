@@ -13,6 +13,7 @@ import 'package:felloapp/feature/fello_badges/ui/widgets/user_progress_indicator
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/elements/appbar/appbar.dart';
 import 'package:felloapp/ui/elements/coin_bar/coin_bar_view.dart';
+import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/extensions/rich_text_extension.dart';
 import 'package:felloapp/util/haptic.dart';
@@ -23,8 +24,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
-
-import '../../tambola/src/ui/widgets/loader.dart';
 
 class FelloBadgeHome extends StatelessWidget {
   const FelloBadgeHome({super.key});
@@ -181,7 +180,9 @@ class _FelloBadgeUiState extends State<FelloBadgeUi> {
                     SizedBox(
                       height: SizeConfig.padding16,
                     ),
-                    const FelloBadgeList(),
+                    FelloBadgeList(
+                      badges: state.felloBadgesModel.bagdes,
+                    ),
                     SizedBox(
                       height: SizeConfig.padding16,
                     ),
@@ -246,7 +247,7 @@ class _FelloBadgeUiState extends State<FelloBadgeUi> {
               width: SizeConfig.screenWidth,
               padding: EdgeInsets.symmetric(
                   vertical: SizeConfig.pageHorizontalMargins),
-              child: const FullScreenCircularLoader(),
+              child: const FullScreenLoader(),
             );
           },
         ),
