@@ -711,7 +711,7 @@ class LendboxBuyViewModel extends BaseViewModel {
   }
 
   Future<void> applyCoupon(String? couponCode, bool isManuallyTyped) async {
-    if (couponApplyInProgress || isBuyInProgress) return;
+    if (couponCode == null || couponApplyInProgress || isBuyInProgress) return;
 
     int order = -1;
     int? minTransaction = -1;

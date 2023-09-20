@@ -662,8 +662,9 @@ class GoldBuyViewModel extends BaseViewModel {
     }
   }
 
-  Future applyCoupon(String? couponCode, bool isManuallyTyped) async {
-    if (couponApplyInProgress ||
+  Future<void> applyCoupon(String? couponCode, bool isManuallyTyped) async {
+    if (couponCode == null ||
+        couponApplyInProgress ||
         isGoldBuyInProgress ||
         _augTxnService.isGoldBuyInProgress) return;
 
