@@ -1,6 +1,8 @@
 import 'dart:math';
 
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/fello_badges_model.dart';
+import 'package:felloapp/feature/fello_badges/ui/widgets/progress_bottom_sheet.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
@@ -377,139 +379,139 @@ class BadgeDetailsContainer extends StatelessWidget {
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     itemBuilder: (context, index) {
-                      return Container(
-                        height: SizeConfig.padding86,
-                        padding: EdgeInsets.symmetric(
-                            horizontal: SizeConfig.padding16,
-                            vertical: SizeConfig.padding8),
-                        decoration: ShapeDecoration(
-                          color: Colors.black.withOpacity(0.2),
-                          shape: RoundedRectangleBorder(
-                            borderRadius: BorderRadius.circular(12),
+                      return GestureDetector(
+                        onTap: () {
+                          BaseUtil.openModalBottomSheet(
+                            addToScreenStack: true,
+                            enableDrag: false,
+                            hapticVibrate: true,
+                            isBarrierDismissible: true,
+                            backgroundColor: Colors.transparent,
+                            isScrollControlled: true,
+                            content: ProgressBottomSheet(
+                              badgeUrl: Assets.tambolaTitanBadge,
+                              title: levelDetails?.lvlData?[index].title ?? '',
+                              description:
+                                  levelDetails?.lvlData?[index].barHeading ??
+                                      '',
+                              buttonText: 'GET MORE TICKETS',
+                              onButtonPressed: () {
+                                // Navigator.pop(context);
+                              },
+                            ),
+                          );
+                        },
+                        child: Container(
+                          height: SizeConfig.padding86,
+                          padding: EdgeInsets.symmetric(
+                              horizontal: SizeConfig.padding16,
+                              vertical: SizeConfig.padding8),
+                          decoration: ShapeDecoration(
+                            color: Colors.black.withOpacity(0.2),
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
                           ),
-                        ),
-                        child: Row(
-                          children: [
-                            SvgPicture.network(
-                              Assets.tambolaTitanBadge,
-                              height: SizeConfig.padding56,
-                              width: SizeConfig.padding50,
-                              fit: BoxFit.fill,
-                            ),
-                            SizedBox(
-                              width: SizeConfig.padding12,
-                            ),
-                            SizedBox(
-                              width: SizeConfig.screenWidth! * 0.53,
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                children: [
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        levelDetails?.lvlData?[index].title ??
-                                            '',
-                                        style:
-                                            TextStyles.sourceSans.body3.colour(
-                                          Colors.white,
-                                        ),
-                                      ),
-                                      ((levelDetails?.lvlData?[index].achieve ??
-                                                  1) !=
-                                              100)
-                                          ? const Icon(
-                                              Icons.arrow_forward_ios,
-                                              color: Colors.white,
-                                              size: 12,
-                                              weight: 700,
-                                              grade: 200,
-                                              opticalSize: 48,
-                                            )
-                                          : Transform.translate(
-                                              offset: const Offset(0, 6),
-                                              child: Container(
-                                                height: SizeConfig.padding20,
-                                                width: SizeConfig.padding20,
-                                                decoration: BoxDecoration(
-                                                  border: Border.all(
-                                                    color:
-                                                        const Color(0xff62E3C4),
-                                                    width: 1,
-                                                  ),
-                                                  shape: BoxShape.circle,
-                                                ),
-                                                child: const Icon(
-                                                  Icons.done,
-                                                  color: Color(0xff62E3C4),
-                                                  size: 12,
-                                                  weight: 700,
-                                                  grade: 200,
-                                                  opticalSize: 48,
-                                                ),
-                                              ),
-                                            )
-                                    ],
-                                  ),
-                                  SizedBox(
-                                    height: SizeConfig.padding4,
-                                  ),
-                                  Text(
-                                    levelDetails?.lvlData?[index].barHeading ??
-                                        '',
-                                    style: TextStyles.sourceSans.body4.colour(
-                                      Colors.white.withOpacity(0.8),
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: SizeConfig.padding4,
-                                  ),
-                                  if ((levelDetails?.lvlData?[index].achieve ??
-                                          1) !=
-                                      100)
+                          child: Row(
+                            children: [
+                              SvgPicture.network(
+                                Assets.tambolaTitanBadge,
+                                height: SizeConfig.padding56,
+                                width: SizeConfig.padding50,
+                                fit: BoxFit.fill,
+                              ),
+                              SizedBox(
+                                width: SizeConfig.padding12,
+                              ),
+                              SizedBox(
+                                width: SizeConfig.screenWidth! * 0.53,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  mainAxisAlignment: MainAxisAlignment.center,
+                                  children: [
                                     Row(
                                       mainAxisAlignment:
                                           MainAxisAlignment.spaceBetween,
                                       children: [
-                                        SizedBox(
-                                          width: 153.28,
-                                          height: SizeConfig.padding6,
-                                          child: Stack(
-                                            children: [
-                                              Container(
-                                                width: SizeConfig.padding168,
-                                                height: SizeConfig.padding6,
-                                                decoration: ShapeDecoration(
-                                                  color: const Color(0xFFD9D9D9)
-                                                      .withOpacity(0.25),
-                                                  shape: RoundedRectangleBorder(
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                              4)),
+                                        Text(
+                                          levelDetails?.lvlData?[index].title ??
+                                              '',
+                                          style: TextStyles.sourceSans.body3
+                                              .colour(
+                                            Colors.white,
+                                          ),
+                                        ),
+                                        ((levelDetails?.lvlData?[index]
+                                                        .achieve ??
+                                                    1) !=
+                                                100)
+                                            ? const Icon(
+                                                Icons.arrow_forward_ios,
+                                                color: Colors.white,
+                                                size: 12,
+                                                weight: 700,
+                                                grade: 200,
+                                                opticalSize: 48,
+                                              )
+                                            : Transform.translate(
+                                                offset: const Offset(0, 6),
+                                                child: Container(
+                                                  height: SizeConfig.padding20,
+                                                  width: SizeConfig.padding20,
+                                                  decoration: BoxDecoration(
+                                                    border: Border.all(
+                                                      color: const Color(
+                                                          0xff62E3C4),
+                                                      width: 1,
+                                                    ),
+                                                    shape: BoxShape.circle,
+                                                  ),
+                                                  child: const Icon(
+                                                    Icons.done,
+                                                    color: Color(0xff62E3C4),
+                                                    size: 12,
+                                                    weight: 700,
+                                                    grade: 200,
+                                                    opticalSize: 48,
+                                                  ),
                                                 ),
-                                              ),
-                                              Container(
-                                                alignment: Alignment.centerLeft,
-                                                height: SizeConfig.padding6,
-                                                child: AnimatedContainer(
-                                                  alignment:
-                                                      Alignment.bottomCenter,
-                                                  width: ((levelDetails
-                                                                  ?.lvlData?[
-                                                                      index]
-                                                                  .achieve ??
-                                                              1) /
-                                                          100) *
-                                                      (SizeConfig.padding168),
+                                              )
+                                      ],
+                                    ),
+                                    SizedBox(
+                                      height: SizeConfig.padding4,
+                                    ),
+                                    Text(
+                                      levelDetails
+                                              ?.lvlData?[index].barHeading ??
+                                          '',
+                                      style: TextStyles.sourceSans.body4.colour(
+                                        Colors.white.withOpacity(0.8),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      height: SizeConfig.padding4,
+                                    ),
+                                    if ((levelDetails
+                                                ?.lvlData?[index].achieve ??
+                                            1) !=
+                                        100)
+                                      Row(
+                                        mainAxisAlignment:
+                                            MainAxisAlignment.spaceBetween,
+                                        children: [
+                                          SizedBox(
+                                            width: 153.28,
+                                            height: SizeConfig.padding6,
+                                            child: Stack(
+                                              children: [
+                                                Container(
+                                                  width: SizeConfig.padding168,
                                                   height: SizeConfig.padding6,
-                                                  duration: const Duration(
-                                                      milliseconds: 500),
-                                                  curve: Curves.easeInExpo,
                                                   decoration: ShapeDecoration(
                                                     color:
-                                                        const Color(0xFFFFCCBF),
+                                                        const Color(0xFFD9D9D9)
+                                                            .withOpacity(0.25),
                                                     shape:
                                                         RoundedRectangleBorder(
                                                             borderRadius:
@@ -517,26 +519,56 @@ class BadgeDetailsContainer extends StatelessWidget {
                                                                     .circular(
                                                                         4)),
                                                   ),
-                                                  // color: const Color(0xFFF79780),
                                                 ),
-                                              ),
-                                            ],
+                                                Container(
+                                                  alignment:
+                                                      Alignment.centerLeft,
+                                                  height: SizeConfig.padding6,
+                                                  child: AnimatedContainer(
+                                                    alignment:
+                                                        Alignment.bottomCenter,
+                                                    width: ((levelDetails
+                                                                    ?.lvlData?[
+                                                                        index]
+                                                                    .achieve ??
+                                                                1) /
+                                                            100) *
+                                                        (SizeConfig.padding168),
+                                                    height: SizeConfig.padding6,
+                                                    duration: const Duration(
+                                                        milliseconds: 500),
+                                                    curve: Curves.easeInExpo,
+                                                    decoration: ShapeDecoration(
+                                                      color: const Color(
+                                                          0xFFFFCCBF),
+                                                      shape:
+                                                          RoundedRectangleBorder(
+                                                              borderRadius:
+                                                                  BorderRadius
+                                                                      .circular(
+                                                                          4)),
+                                                    ),
+                                                    // color: const Color(0xFFF79780),
+                                                  ),
+                                                ),
+                                              ],
+                                            ),
                                           ),
-                                        ),
-                                        Text(
-                                          '${levelDetails?.lvlData?[index].achieve ?? 0} %',
-                                          textAlign: TextAlign.right,
-                                          style: TextStyles.sourceSans.body4
-                                              .colour(
-                                            Colors.white.withOpacity(0.75),
-                                          ),
-                                        )
-                                      ],
-                                    )
-                                ],
-                              ),
-                            )
-                          ],
+                                          Text(
+                                            '${levelDetails?.lvlData?[index].achieve ?? 0} %',
+                                            textAlign: TextAlign.right,
+                                            style: TextStyles.sourceSans.body4
+                                                .colour(
+                                              Colors.white.withOpacity(0.75),
+                                            ),
+                                          )
+                                        ],
+                                      )
+                                  ],
+                                ),
+                              )
+                            ],
+                          ),
                         ),
                       );
                     },
