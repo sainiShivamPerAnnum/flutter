@@ -201,17 +201,17 @@ class UserBadgeContainer extends StatelessWidget {
               ),
             ),
           ),
-          Positioned(
-            right: 22,
-            bottom: 18,
-            // alignment: Alignment.bottomRight,
-            child: SvgPicture.network(
-              badgeUrl ?? "",
-              height: SizeConfig.padding34,
-              width: SizeConfig.padding40,
-              fit: BoxFit.fill,
-            ),
-          )
+          if (badgeUrl != null)
+            Positioned(
+              right: 22,
+              bottom: 18,
+              child: SvgPicture.network(
+                badgeUrl ?? "",
+                height: SizeConfig.padding34,
+                width: SizeConfig.padding40,
+                fit: BoxFit.fill,
+              ),
+            )
         ],
       ),
     );

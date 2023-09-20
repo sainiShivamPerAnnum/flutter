@@ -6,11 +6,18 @@ import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class FelloBadgeDetails extends StatelessWidget {
-  FelloBadgeDetails({required this.levelsData, super.key});
+class FelloBadgeDetails extends StatefulWidget {
+  const FelloBadgeDetails(
+      {required this.levelsData, required this.currentLevel, super.key});
 
   final List<LevelDetails>? levelsData;
+  final int currentLevel;
 
+  @override
+  State<FelloBadgeDetails> createState() => _FelloBadgeDetailsState();
+}
+
+class _FelloBadgeDetailsState extends State<FelloBadgeDetails> {
   final List<Color> colors = [
     const Color(0xFF5B413E),
     const Color(0xFF394B71),
@@ -23,12 +30,44 @@ class FelloBadgeDetails extends StatelessWidget {
     "Super\nFello Level"
   ];
 
+  double getIndex() {
+    if (widget.currentLevel == 1) {
+      return 1.0;
+    } else if (widget.currentLevel == 2) {
+      return 1.0;
+    } else {
+      return 2.0;
+    }
+  }
+
+  final ScrollController _scrollController = ScrollController();
+
+  @override
+  void initState() {
+    super.initState();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      Scrollable.ensureVisible(
+        context,
+        duration: const Duration(milliseconds: 800),
+        curve: Curves.easeInOut,
+        alignment: 0.8,
+      );
+
+      _scrollController.animateTo(
+          (getIndex() * SizeConfig.screenWidth!) -
+              SizeConfig.pageHorizontalMargins,
+          duration: const Duration(milliseconds: 800),
+          curve: Curves.easeInOut);
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     return SizedBox(
       width: SizeConfig.screenWidth!,
       height: SizeConfig.screenHeight! * 0.765,
       child: ListView.builder(
+          controller: _scrollController,
           padding: EdgeInsets.symmetric(
               horizontal: SizeConfig.pageHorizontalMargins,
               vertical: SizeConfig.padding2),
@@ -41,7 +80,7 @@ class FelloBadgeDetails extends StatelessWidget {
               index: index,
               backgroundColor: colors[index],
               title: title[index],
-              levelDetails: levelsData?[index],
+              levelDetails: widget.levelsData?[index],
             );
           }),
     );
@@ -82,6 +121,12 @@ class FelloBadgeDetails extends StatelessWidget {
         ],
       ),
     );
+  }
+
+  @override
+  void dispose() {
+    _scrollController.dispose();
+    super.dispose();
   }
 }
 

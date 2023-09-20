@@ -46,11 +46,42 @@ class FelloBadgeUi extends StatefulWidget {
 }
 
 class _FelloBadgeUiState extends State<FelloBadgeUi> {
+  Color badgeBorderColor = const Color(0xFFFFD979);
+  String badgeUrl = 'https://d37gtxigg82zaw.cloudfront.net/loyalty/level-0.svg';
+
   @override
   void initState() {
     super.initState();
 
     BlocProvider.of<FelloBadgesCubit>(context).getFelloBadges();
+  }
+
+  void updateUserBadge(int? level) {
+    switch (level) {
+      case 1:
+        badgeBorderColor = Colors.white.withOpacity(0.30);
+        badgeUrl = '';
+        break;
+      case 2:
+        badgeBorderColor = const Color(0xFFF79780);
+        badgeUrl = 'https://d37gtxigg82zaw.cloudfront.net/loyalty/level-0.svg';
+        break;
+
+      case 3:
+        badgeBorderColor = const Color(0xFF93B5FE);
+        badgeUrl = 'https://d37gtxigg82zaw.cloudfront.net/loyalty/level-1.svg';
+        break;
+
+      case 4:
+        badgeBorderColor = const Color(0xFFFFDA72);
+        badgeUrl = 'https://d37gtxigg82zaw.cloudfront.net/loyalty/level-2.svg';
+        break;
+
+      default:
+        badgeBorderColor = Colors.white.withOpacity(0.30);
+        badgeUrl = '';
+        break;
+    }
   }
 
   @override
@@ -91,6 +122,8 @@ class _FelloBadgeUiState extends State<FelloBadgeUi> {
             }
 
             if (state is FelloBadgesSuccess) {
+              updateUserBadge(state.currentLevel);
+
               return SingleChildScrollView(
                 child: Column(
                   children: [
@@ -102,10 +135,9 @@ class _FelloBadgeUiState extends State<FelloBadgeUi> {
                     SizedBox(
                       height: SizeConfig.padding12,
                     ),
-                    const UserBadgeContainer(
-                      badgeColor: Color(0xFFFFD979),
-                      badgeUrl:
-                          'https://d37gtxigg82zaw.cloudfront.net/loyalty/level-2.svg',
+                    UserBadgeContainer(
+                      badgeColor: badgeBorderColor,
+                      badgeUrl: badgeUrl,
                     ),
                     SizedBox(
                       height: SizeConfig.padding12,
@@ -127,6 +159,7 @@ class _FelloBadgeUiState extends State<FelloBadgeUi> {
                     ),
                     FelloBadgeDetails(
                       levelsData: state.felloBadgesModel.levels,
+                      currentLevel: state.currentLevel,
                     ),
                     SizedBox(
                       height: SizeConfig.padding34,
@@ -171,7 +204,7 @@ class _FelloBadgeUiState extends State<FelloBadgeUi> {
                           GridView.builder(
                             physics: const NeverScrollableScrollPhysics(),
                             gridDelegate:
-                                SliverGridDelegateWithFixedCrossAxisCount(
+                            SliverGridDelegateWithFixedCrossAxisCount(
                               crossAxisCount: 3,
                               crossAxisSpacing: SizeConfig.padding18,
                               mainAxisSpacing: SizeConfig.padding86,
@@ -187,13 +220,13 @@ class _FelloBadgeUiState extends State<FelloBadgeUi> {
                           SizedBox(
                             height: SizeConfig.padding84,
                           ),
-                          Text(
-                            'LOAD MORE',
-                            textAlign: TextAlign.center,
-                            style: TextStyles.rajdhaniSB.body3.colour(
-                              const Color(0xFF1ADAB7),
-                            ),
-                          )
+                          // Text(
+                          //   'LOAD MORE',
+                          //   textAlign: TextAlign.center,
+                          //   style: TextStyles.rajdhaniSB.body3.colour(
+                          //     const Color(0xFF1ADAB7),
+                          //   ),
+                          // )
                         ],
                       ),
                     ),
