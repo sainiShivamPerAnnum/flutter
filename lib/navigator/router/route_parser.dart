@@ -7,11 +7,18 @@ class FelloParser extends RouteInformationParser<PageConfiguration> {
   Future<PageConfiguration> parseRouteInformation(
     RouteInformation routeInformation,
   ) async {
-    final uri = Uri.parse(routeInformation.location!);
-
-    if (uri.pathSegments.isEmpty) {
+    // Provides the splash config if initial location is `/`.
+    if (routeInformation.location == Navigator.defaultRouteName) {
       return SplashPageConfig;
     }
+
+    final uri = Uri.parse(routeInformation.location!);
+
+    // To make sure that at this point segments are not empty.
+    assert(
+      uri.pathSegments.isNotEmpty,
+      'Expected one or more path segments, but found empty',
+    );
 
     final path = uri.pathSegments[0];
 

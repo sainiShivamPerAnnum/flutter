@@ -243,7 +243,7 @@ class BaseUtil extends ChangeNotifier {
 
   void openProfileDetailsScreen() {
     AppState.delegate!.parseRoute(Uri.parse("accounts"));
-    _analyticsService!.track(
+    _analyticsService.track(
         eventName: AnalyticsEvents.profileClicked,
         properties: AnalyticsProperties.getDefaultPropertiesMap(
             extraValuesMap: {"location": getLocationForCurrentTab()}));
@@ -318,11 +318,20 @@ class BaseUtil extends ChangeNotifier {
   }
 
   void openRechargeModalSheet({
+    required InvestmentType investmentType,
     int? amt,
     bool? isSkipMl,
     double? gms,
-    required InvestmentType investmentType,
+    Map<String, String>? queryParams,
   }) {
+    final coupon = queryParams?['coupon'];
+    final amount = queryParams?['amount'];
+    final parsedAmount =
+        int.tryParse(amount ?? ''); // For parsing default value to null.
+    final grams = queryParams?['grams'];
+    final parsedGrams =
+        double.tryParse(grams ?? ''); // For parsing default value to null.
+
     final bool? isAugDepositBanned = _userService
         .userBootUp?.data!.banMap?.investments?.deposit?.augmont?.isBanned;
     final String? augDepositBanNotice = _userService
@@ -336,7 +345,6 @@ class BaseUtil extends ChangeNotifier {
       return;
     }
 
-    double amount = 0;
     AppState.isRepeated = false;
     AppState.onTap = null;
     AppState.isTxnProcessing = false;
@@ -356,25 +364,35 @@ class BaseUtil extends ChangeNotifier {
 
     if (investmentType == InvestmentType.AUGGOLD99) {
       BaseUtil.openModalBottomSheet(
-          addToScreenStack: true,
-          enableDrag: false,
-          hapticVibrate: true,
-          isBarrierDismissible: false,
-          backgroundColor: Colors.transparent,
-          isScrollControlled: true,
-          content: GoldBuyView(
-            onChanged: (p0) => amount = p0,
-            amount: amt,
-            gms: gms,
-            skipMl: isSkipMl ?? false,
-          ));
+        addToScreenStack: true,
+        enableDrag: false,
+        hapticVibrate: true,
+        isBarrierDismissible: false,
+        backgroundColor: Colors.transparent,
+        isScrollControlled: true,
+        content: GoldBuyView(
+          amount: parsedAmount ?? amt,
+          initialCoupon: coupon,
+          gms: parsedGrams ?? gms,
+          skipMl: isSkipMl ?? false,
+        ),
+      );
     }
   }
 
-  static void openFloBuySheet(
-      {int? amt, bool? isSkipMl, required String floAssetType}) {
-    final UserService _userService = locator<UserService>();
-    final S locale = locator<S>();
+  static void openFloBuySheet({
+    required String floAssetType,
+    int? amt,
+    Map<String, String>? queryParams,
+    bool? isSkipMl,
+  }) {
+    final coupon = queryParams?['coupon'];
+    final amount = queryParams?['amount'];
+    final parsedAmount =
+        int.tryParse(amount ?? ''); // For parsing default value to null.
+
+    final userService = locator<UserService>();
+    final locale = locator<S>();
     bool isUserBanned = false;
 
     AppState.isRepeated = false;
@@ -383,9 +401,9 @@ class BaseUtil extends ChangeNotifier {
     locator<BackButtonActions>().isTransactionCancelled = false;
     switch (floAssetType) {
       case Constants.ASSET_TYPE_FLO_FIXED_6:
-        final bool? islBoxDepositBanned = _userService.userBootUp?.data!.banMap
+        final bool? islBoxDepositBanned = userService.userBootUp?.data!.banMap
             ?.investments?.deposit?.lendBoxFd2?.isBanned;
-        final String? lBoxDepositBanNotice = _userService
+        final String? lBoxDepositBanNotice = userService
             .userBootUp?.data!.banMap?.investments?.deposit?.lendBoxFd2?.reason;
         if (islBoxDepositBanned != null && islBoxDepositBanned) {
           BaseUtil.showNegativeAlert(
@@ -397,9 +415,9 @@ class BaseUtil extends ChangeNotifier {
         break;
 
       case Constants.ASSET_TYPE_FLO_FIXED_3:
-        final bool? islBoxDepositBanned = _userService.userBootUp?.data!.banMap
+        final bool? islBoxDepositBanned = userService.userBootUp?.data!.banMap
             ?.investments?.deposit?.lendBoxFd1?.isBanned;
-        final String? lBoxDepositBanNotice = _userService
+        final String? lBoxDepositBanNotice = userService
             .userBootUp?.data!.banMap?.investments?.deposit?.lendBoxFd1?.reason;
         if (islBoxDepositBanned != null && islBoxDepositBanned) {
           BaseUtil.showNegativeAlert(
@@ -410,9 +428,9 @@ class BaseUtil extends ChangeNotifier {
         }
         break;
       case Constants.ASSET_TYPE_FLO_FELXI:
-        final bool? islBoxDepositBanned = _userService
+        final bool? islBoxDepositBanned = userService
             .userBootUp?.data!.banMap?.investments?.deposit?.lendBox?.isBanned;
-        final String? lBoxDepositBanNotice = _userService
+        final String? lBoxDepositBanNotice = userService
             .userBootUp?.data!.banMap?.investments?.deposit?.lendBox?.reason;
         if (islBoxDepositBanned != null && islBoxDepositBanned) {
           BaseUtil.showNegativeAlert(
@@ -431,7 +449,8 @@ class BaseUtil extends ChangeNotifier {
       page: LendboxBuyViewConfig,
       state: PageState.addWidget,
       widget: LendboxBuyView(
-        amount: amt,
+        amount: parsedAmount ?? amt,
+        initialCouponCode: coupon,
         skipMl: isSkipMl ?? false,
         onChanged: (p0) => p0,
         floAssetType: floAssetType,
@@ -554,10 +573,10 @@ class BaseUtil extends ChangeNotifier {
   }
 
   static Future<void> openDialog({
+    required bool isBarrierDismissible,
     Widget? content,
     bool? addToScreenStack,
     bool? hapticVibrate,
-    required bool isBarrierDismissible,
     ValueChanged<dynamic>? callback,
     Color? barrierColor,
   }) async {
@@ -576,11 +595,11 @@ class BaseUtil extends ChangeNotifier {
   }
 
   static Future<void> openModalBottomSheet({
+    required bool isBarrierDismissible,
     Widget? content,
     bool? addToScreenStack,
     bool? hapticVibrate,
     Color? backgroundColor,
-    required bool isBarrierDismissible,
     BorderRadius? borderRadius,
     bool isScrollControlled = false,
     BoxConstraints? boxContraints,
@@ -844,7 +863,7 @@ class BaseUtil extends ChangeNotifier {
 
   static T? _cast<T>(x) => x is T ? x : null;
 
-  static double toDouble(dynamic x) {
+  static double toDouble(x) {
     if (x == null) return 0.0;
     try {
       int? y = _cast<int>(x);
@@ -859,7 +878,7 @@ class BaseUtil extends ChangeNotifier {
     return 0.0;
   }
 
-  static int toInt(dynamic x) {
+  static int toInt(x) {
     if (x == null) return 0;
     try {
       int? y = _cast<int>(x);
@@ -1097,7 +1116,7 @@ class BaseUtil extends ChangeNotifier {
     notifyListeners();
   }
 
-  get isGoogleSignInProgress => _isGoogleSignInProgress;
+  bool? get isGoogleSignInProgress => _isGoogleSignInProgress;
 
   set isGoogleSignInProgress(value) {
     _isGoogleSignInProgress = value;
@@ -1143,7 +1162,7 @@ class CompleteProfileDialog extends StatelessWidget {
     S locale = S.of(context);
     return WillPopScope(
       onWillPop: () async {
-        AppState.backButtonDispatcher!.didPopRoute();
+        await AppState.backButtonDispatcher!.didPopRoute();
         return Future.value(true);
       },
       child: MoreInfoDialog(

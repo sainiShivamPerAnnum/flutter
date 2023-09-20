@@ -1,6 +1,9 @@
+// ignore_for_file: empty_catches, avoid_setters_without_getters
+
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:collection/collection.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
@@ -86,6 +89,7 @@ class LendboxBuyViewModel extends BaseViewModel {
   bool _showMaxCapText = false;
   bool _showMinCapText = false;
   String? couponCode;
+  String? _initialCouponCode;
   bool isSpecialCoupon = true;
   bool showCouponAppliedText = false;
   bool _addSpecialCoupon = false;
@@ -164,7 +168,7 @@ class LendboxBuyViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  get fieldWidth => _fieldWidth;
+  double get fieldWidth => _fieldWidth;
 
   set fieldWidth(value) {
     _fieldWidth = value;
@@ -179,21 +183,21 @@ class LendboxBuyViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  get showMaxCapText => _showMaxCapText;
+  bool get showMaxCapText => _showMaxCapText;
 
   set showMaxCapText(value) {
     _showMaxCapText = value;
     notifyListeners();
   }
 
-  get showMinCapText => _showMinCapText;
+  bool get showMinCapText => _showMinCapText;
 
   set showMinCapText(value) {
     _showMinCapText = value;
     notifyListeners();
   }
 
-  get addSpecialCoupon => _addSpecialCoupon;
+  bool get addSpecialCoupon => _addSpecialCoupon;
 
   set addSpecialCoupon(value) {
     _addSpecialCoupon = value;
@@ -207,9 +211,15 @@ class LendboxBuyViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  Future<void> init(int? amount, bool isSkipMilestone, TickerProvider vsync,
-      {required String assetTypeFlow}) async {
+  Future<void> init(
+    int? amount,
+    bool isSkipMilestone,
+    TickerProvider vsync, {
+    required String assetTypeFlow,
+    String? initialCouponCode,
+  }) async {
     setState(ViewState.Busy);
+    _initialCouponCode = initialCouponCode;
     floAssetType = assetTypeFlow;
     _txnService.floAssetType = floAssetType;
     showHappyHour = locator<MarketingEventHandlerService>().showHappyHourBanner;
@@ -242,7 +252,7 @@ class LendboxBuyViewModel extends BaseViewModel {
             .indexWhere((element) => element.best) ??
         1;
 
-    getAvailableCoupons();
+    await getAvailableCoupons();
 
     setState(ViewState.Idle);
   }
@@ -480,6 +490,11 @@ class LendboxBuyViewModel extends BaseViewModel {
       couponList = couponsRes.model;
       if (couponList?[0].priority == 1) focusCoupon = couponList?[0];
       showCoupons = true;
+
+      await applyProvidedCouponIfAvailable(
+        couponList ?? [],
+        _initialCouponCode,
+      );
     }
   }
 
@@ -534,7 +549,7 @@ class LendboxBuyViewModel extends BaseViewModel {
     return '+$totalTickets Tickets';
   }
 
-  onChipClick(int index) {
+  void onChipClick(int index) {
     log("_isBuyInProgress $_isBuyInProgress");
     if (couponApplyInProgress || _isBuyInProgress || forcedBuy) return;
     Haptic.vibrate();
@@ -563,7 +578,7 @@ class LendboxBuyViewModel extends BaseViewModel {
   onValueChanged(String val) {
     if (showMaxCapText) showMaxCapText = false;
     if (showMinCapText) showMinCapText = false;
-    if (val != null && val.isNotEmpty) {
+    if (val.isNotEmpty) {
       if (int.tryParse(val.trim())! > maxAmount) {
         buyAmount = maxAmount.toInt();
         showMaxCapText = true;
@@ -676,7 +691,26 @@ class LendboxBuyViewModel extends BaseViewModel {
     );
   }
 
-  Future applyCoupon(String? couponCode, bool isManuallyTyped) async {
+  /// Filters [coupons] if there is any matching coupon to [coupon] and if
+  /// there is any match then apply the coupon.
+  Future<void> applyProvidedCouponIfAvailable(
+    List<CouponModel> coupons,
+    String? coupon,
+  ) async {
+    if (coupon == null || coupons.isEmpty) return;
+
+    final couponModel = coupons.firstWhereOrNull(
+      (c) => c.code == coupon,
+    );
+
+    if (couponModel != null) {
+      try {
+        await applyCoupon(couponModel.code, false);
+      } catch (e) {}
+    }
+  }
+
+  Future<void> applyCoupon(String? couponCode, bool isManuallyTyped) async {
     if (couponApplyInProgress || isBuyInProgress) return;
 
     int order = -1;
@@ -684,7 +718,7 @@ class LendboxBuyViewModel extends BaseViewModel {
     int counter = 0;
     isSpecialCoupon = true;
     String description = '';
-    for (final CouponModel c in couponList!) {
+    for (final c in couponList!) {
       if (c.code == couponCode) {
         order = counter;
         isSpecialCoupon = false;
@@ -721,7 +755,7 @@ class LendboxBuyViewModel extends BaseViewModel {
           // updateGoldAmount();
           showMaxCapText = false;
           showMinCapText = false;
-          animationController?.forward();
+          await animationController?.forward();
           updateFieldWidth();
         }
         checkForSpecialCoupon(response.model!);

@@ -25,14 +25,16 @@ class LendboxBuyView extends StatefulWidget {
   final bool skipMl;
   final OnAmountChanged? onChanged;
   final String floAssetType;
+  final String? initialCouponCode;
 
-  const LendboxBuyView(
-      {Key? key,
-      this.amount = 250,
-      this.skipMl = false,
-      required this.onChanged,
-      required this.floAssetType})
-      : super(key: key);
+  const LendboxBuyView({
+    required this.onChanged,
+    required this.floAssetType,
+    super.key,
+    this.amount = 250,
+    this.skipMl = false,
+    this.initialCouponCode,
+  });
 
   @override
   State<LendboxBuyView> createState() => _LendboxBuyViewState();
@@ -94,19 +96,19 @@ class _LendboxBuyViewState extends State<LendboxBuyView>
             duration: const Duration(milliseconds: 500),
             child: Stack(
               children: [
-                _getBackground(lboxTxnService!),
+                _getBackground(lboxTxnService),
                 PageTransitionSwitcher(
                   duration: const Duration(milliseconds: 500),
                   transitionBuilder: (
-                    Widget child,
-                    Animation<double> animation,
-                    Animation<double> secondaryAnimation,
+                    child,
+                    animation,
+                    secondaryAnimation,
                   ) {
                     return FadeThroughTransition(
                       fillColor: Colors.transparent,
-                      child: child,
                       animation: animation,
                       secondaryAnimation: secondaryAnimation,
+                      child: child,
                     );
                   },
                   child: BaseView<LendboxBuyViewModel>(
@@ -115,6 +117,7 @@ class _LendboxBuyViewState extends State<LendboxBuyView>
                       widget.skipMl,
                       this,
                       assetTypeFlow: widget.floAssetType,
+                      initialCouponCode: widget.initialCouponCode,
                     ),
                     builder: (ctx, model, child) {
                       _secureScreenshots(lboxTxnService);
@@ -146,9 +149,9 @@ class _LendboxBuyViewState extends State<LendboxBuyView>
     }
     if (Platform.isIOS) {
       if (txnService.currentTransactionState == TransactionState.ongoing) {
-        iosScreenShotChannel.invokeMethod('secureiOS');
+        await iosScreenShotChannel.invokeMethod('secureiOS');
       } else {
-        iosScreenShotChannel.invokeMethod("unSecureiOS");
+        await iosScreenShotChannel.invokeMethod("unSecureiOS");
       }
     }
   }
@@ -159,24 +162,25 @@ class _LendboxBuyViewState extends State<LendboxBuyView>
   ) {
     const type = TransactionType.DEPOSIT;
 
-    if (lboxTxnService.currentTransactionState == TransactionState.idle) {
-      return LendboxBuyInputView(
-        amount: widget.amount,
-        skipMl: widget.skipMl,
-        model: model,
-        // floAssetType: widget.floAssetType,
-      );
-    } else if (lboxTxnService.currentTransactionState ==
-        TransactionState.ongoing) {
-      return LendboxLoadingView(transactionType: type);
-    } else if (lboxTxnService.currentTransactionState ==
-        TransactionState.success) {
-      return const LendboxSuccessView(
-        transactionType: type,
-      );
-    }
+    switch (lboxTxnService.currentTransactionState) {
+      case TransactionState.idle:
+        return LendboxBuyInputView(
+          amount: widget.amount,
+          skipMl: widget.skipMl,
+          model: model,
+        );
 
-    return LendboxLoadingView(transactionType: type);
+      case TransactionState.ongoing:
+      case TransactionState.overView:
+        return LendboxLoadingView(
+          transactionType: type,
+        );
+
+      case TransactionState.success:
+        return const LendboxSuccessView(
+          transactionType: type,
+        );
+    }
   }
 
   double? _getHeight(lboxTxnService) {
@@ -192,7 +196,7 @@ class _LendboxBuyViewState extends State<LendboxBuyView>
     return 0;
   }
 
-  _getBackground(LendboxTransactionService lboxTxnService) {
+  Widget _getBackground(LendboxTransactionService lboxTxnService) {
     if (lboxTxnService.currentTransactionState == TransactionState.idle) {
       return Container(
         decoration: BoxDecoration(

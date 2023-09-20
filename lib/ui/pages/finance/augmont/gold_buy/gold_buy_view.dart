@@ -4,7 +4,6 @@ import 'package:animations/animations.dart';
 import 'package:felloapp/core/enums/transaction_state_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
-import 'package:felloapp/navigator/back_button_actions.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_buy/gold_buy_input_view.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_buy/gold_buy_loading_view.dart';
@@ -24,15 +23,15 @@ class GoldBuyView extends StatefulWidget {
   final int? amount;
   final bool skipMl;
   final double? gms;
-  final OnAmountChanged onChanged;
+  final String? initialCoupon;
 
-  const GoldBuyView(
-      {Key? key,
-      this.amount,
-      this.skipMl = false,
-      required this.onChanged,
-      this.gms})
-      : super(key: key);
+  const GoldBuyView({
+    super.key,
+    this.amount,
+    this.skipMl = false,
+    this.gms,
+    this.initialCoupon,
+  });
 
   @override
   State<GoldBuyView> createState() => _GoldBuyViewState();
@@ -99,24 +98,29 @@ class _GoldBuyViewState extends State<GoldBuyView>
           duration: const Duration(milliseconds: 500),
           child: Stack(
             children: [
-              _getBackground(txnService!),
+              _getBackground(txnService),
               PageTransitionSwitcher(
                 duration: const Duration(milliseconds: 500),
                 transitionBuilder: (
-                  Widget child,
-                  Animation<double> animation,
-                  Animation<double> secondaryAnimation,
+                  child,
+                  animation,
+                  secondaryAnimation,
                 ) {
                   return FadeThroughTransition(
                     fillColor: Colors.transparent,
-                    child: child,
                     animation: animation,
                     secondaryAnimation: secondaryAnimation,
+                    child: child,
                   );
                 },
                 child: BaseView<GoldBuyViewModel>(
                   onModelReady: (model) => model.init(
-                      widget.amount, widget.skipMl, this, widget.gms),
+                    widget.amount,
+                    widget.skipMl,
+                    this,
+                    widget.gms,
+                    initialCouponCode: widget.initialCoupon,
+                  ),
                   builder: (ctx, model, child) {
                     if (model.state == ViewState.Busy) {
                       return const Center(child: FullScreenLoader());
@@ -134,22 +138,23 @@ class _GoldBuyViewState extends State<GoldBuyView>
     );
   }
 
-  Widget _getView(
-      AugmontTransactionService txnService, GoldBuyViewModel model) {
-    if (txnService.currentTransactionState == TransactionState.idle) {
-      return GoldBuyInputView(
-        amount: widget.amount,
-        skipMl: widget.skipMl,
-        model: model,
-        augTxnService: txnService,
-      );
-    } else if (txnService.currentTransactionState == TransactionState.ongoing) {
-      return GoldBuyLoadingView(model: model);
-    } else if (txnService.currentTransactionState == TransactionState.success) {
-      return const GoldBuySuccessView();
-    }
+  Widget _getView(AugmontTransactionService service, GoldBuyViewModel model) {
+    switch (service.currentTransactionState) {
+      case TransactionState.idle:
+        return GoldBuyInputView(
+          amount: widget.amount,
+          skipMl: widget.skipMl,
+          model: model,
+          augTxnService: service,
+        );
 
-    return GoldBuyLoadingView(model: model);
+      case TransactionState.ongoing:
+      case TransactionState.overView:
+        return GoldBuyLoadingView(model: model);
+
+      case TransactionState.success:
+        return const GoldBuySuccessView();
+    }
   }
 
   double? _getHeight(txnService) {
@@ -163,7 +168,7 @@ class _GoldBuyViewState extends State<GoldBuyView>
     return 0;
   }
 
-  _secureScreenshots(AugmontTransactionService txnService) async {
+  Future<void> _secureScreenshots(AugmontTransactionService txnService) async {
     if (Platform.isAndroid) {
       if (txnService.currentTransactionState == TransactionState.ongoing) {
         await FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
@@ -173,14 +178,14 @@ class _GoldBuyViewState extends State<GoldBuyView>
     }
     if (Platform.isIOS) {
       if (txnService.currentTransactionState == TransactionState.ongoing) {
-        iosScreenShotChannel.invokeMethod('secureiOS');
+        await iosScreenShotChannel.invokeMethod('secureiOS');
       } else {
-        iosScreenShotChannel.invokeMethod("unSecureiOS");
+        await iosScreenShotChannel.invokeMethod("unSecureiOS");
       }
     }
   }
 
-  _getBackground(AugmontTransactionService txnService) {
+  Widget _getBackground(AugmontTransactionService txnService) {
     if (txnService.currentTransactionState == TransactionState.idle) {
       return Container(
         decoration: BoxDecoration(
@@ -210,6 +215,6 @@ class _GoldBuyViewState extends State<GoldBuyView>
         color: UiConstants.kBackgroundColor2,
       );
     }
-    return Container();
+    return const SizedBox.shrink();
   }
 }

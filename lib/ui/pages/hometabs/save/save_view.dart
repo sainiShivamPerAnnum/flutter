@@ -67,7 +67,7 @@ class Save extends StatelessWidget {
 }
 
 class SaveViewWrapper extends StatelessWidget {
-  const SaveViewWrapper({Key? key, required this.model}) : super(key: key);
+  const SaveViewWrapper({required this.model, Key? key}) : super(key: key);
   final SaveViewModel model;
 
   @override
@@ -173,7 +173,7 @@ class _QuizSectionState extends State<QuizSection> {
   @override
   Widget build(BuildContext context) {
     Map<String, dynamic> quizSectionData =
-    AppConfig.getValue(AppConfigKey.quiz_config);
+        AppConfig.getValue(AppConfigKey.quiz_config);
 
     return Container(
       margin: EdgeInsets.symmetric(
@@ -201,13 +201,13 @@ class _QuizSectionState extends State<QuizSection> {
                 properties: AnalyticsProperties.getDefaultPropertiesMap(
                   extraValuesMap: {
                     'Total Invested Amount':
-                    AnalyticsProperties.getGoldInvestedAmount() +
-                        AnalyticsProperties.getFelloFloAmount(),
+                        AnalyticsProperties.getGoldInvestedAmount() +
+                            AnalyticsProperties.getFelloFloAmount(),
                     "Gold Invested":
-                    AnalyticsProperties.getGoldInvestedAmount(),
+                        AnalyticsProperties.getGoldInvestedAmount(),
                     "Flo Invested": AnalyticsProperties.getFelloFloAmount(),
                     "Total Tambola Tickets":
-                    AnalyticsProperties.getTambolaTicketCount(),
+                        AnalyticsProperties.getTambolaTicketCount(),
                   },
                 ),
               );

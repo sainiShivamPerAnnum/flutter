@@ -212,9 +212,7 @@ class PageConfiguration {
   final String path;
   final Pages uiPage;
   final String? name;
-
   PageAction? currentPageAction;
-  var returnValue;
 
   PageConfiguration({
     required this.key,
@@ -226,7 +224,7 @@ class PageConfiguration {
 
   @override
   String toString() {
-    return 'PageConfiguration(key: $key, path: $path, uiPage: $uiPage, name: $name, currentPageAction: $currentPageAction, returnValue: $returnValue)';
+    return 'PageConfiguration(key: $key, path: $path, uiPage: $uiPage, name: $name, currentPageAction: $currentPageAction)';
   }
 }
 
