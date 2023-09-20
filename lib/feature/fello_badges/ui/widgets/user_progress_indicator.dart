@@ -17,7 +17,7 @@ class _UserProgressIndicatorState extends State<UserProgressIndicator> {
   double level2 = 0.0;
 
   void _updateProgress() {
-    switch (widget.level) {
+    switch (2) {
       case 2:
         setState(() {
           level0 = 1.0;
@@ -46,14 +46,17 @@ class _UserProgressIndicatorState extends State<UserProgressIndicator> {
   void initState() {
     super.initState();
 
-    _updateProgress();
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      _updateProgress();
+    });
   }
 
   @override
   Widget build(BuildContext context) {
     return Stack(
       children: [
-        Container(
+        AnimatedContainer(
+          duration: const Duration(milliseconds: 800),
           margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding24),
           child: Column(
             mainAxisSize: MainAxisSize.min,
@@ -86,7 +89,7 @@ class _UserProgressIndicatorState extends State<UserProgressIndicator> {
                               alignment: Alignment.bottomCenter,
                               width: level0 * (SizeConfig.padding120),
                               height: SizeConfig.padding6,
-                              duration: const Duration(milliseconds: 500),
+                              duration: const Duration(milliseconds: 800),
                               curve: Curves.easeInExpo,
                               decoration: ShapeDecoration(
                                 color: const Color(0xFFF79780),
@@ -118,7 +121,7 @@ class _UserProgressIndicatorState extends State<UserProgressIndicator> {
                               alignment: Alignment.bottomCenter,
                               width: level1 * (SizeConfig.padding120),
                               height: SizeConfig.padding6,
-                              duration: const Duration(milliseconds: 500),
+                              duration: const Duration(milliseconds: 800),
                               curve: Curves.easeInExpo,
                               decoration: ShapeDecoration(
                                 color: const Color(0xFF93B5FE),
@@ -151,7 +154,7 @@ class _UserProgressIndicatorState extends State<UserProgressIndicator> {
                               alignment: Alignment.bottomCenter,
                               width: level2 * (SizeConfig.padding120),
                               height: SizeConfig.padding6,
-                              duration: const Duration(milliseconds: 500),
+                              duration: const Duration(milliseconds: 800),
                               curve: Curves.easeInExpo,
                               decoration: ShapeDecoration(
                                 color: const Color(0xFFFFD979),

@@ -417,14 +417,40 @@ class BadgeDetailsContainer extends StatelessWidget {
                                           Colors.white,
                                         ),
                                       ),
-                                      const Icon(
-                                        Icons.arrow_forward_ios,
-                                        color: Colors.white,
-                                        size: 12,
-                                        weight: 700,
-                                        grade: 200,
-                                        opticalSize: 48,
-                                      )
+                                      ((levelDetails?.lvlData?[index].achieve ??
+                                                  1) !=
+                                              100)
+                                          ? const Icon(
+                                              Icons.arrow_forward_ios,
+                                              color: Colors.white,
+                                              size: 12,
+                                              weight: 700,
+                                              grade: 200,
+                                              opticalSize: 48,
+                                            )
+                                          : Transform.translate(
+                                              offset: const Offset(0, 6),
+                                              child: Container(
+                                                height: SizeConfig.padding20,
+                                                width: SizeConfig.padding20,
+                                                decoration: BoxDecoration(
+                                                  border: Border.all(
+                                                    color:
+                                                        const Color(0xff62E3C4),
+                                                    width: 1,
+                                                  ),
+                                                  shape: BoxShape.circle,
+                                                ),
+                                                child: const Icon(
+                                                  Icons.done,
+                                                  color: Color(0xff62E3C4),
+                                                  size: 12,
+                                                  weight: 700,
+                                                  grade: 200,
+                                                  opticalSize: 48,
+                                                ),
+                                              ),
+                                            )
                                     ],
                                   ),
                                   SizedBox(
@@ -440,68 +466,73 @@ class BadgeDetailsContainer extends StatelessWidget {
                                   SizedBox(
                                     height: SizeConfig.padding4,
                                   ),
-                                  Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      SizedBox(
-                                        width: 153.28,
-                                        height: SizeConfig.padding6,
-                                        child: Stack(
-                                          children: [
-                                            Container(
-                                              width: SizeConfig.padding168,
-                                              height: SizeConfig.padding6,
-                                              decoration: ShapeDecoration(
-                                                color: const Color(0xFFD9D9D9)
-                                                    .withOpacity(0.25),
-                                                shape: RoundedRectangleBorder(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            4)),
-                                              ),
-                                            ),
-                                            Container(
-                                              alignment: Alignment.centerLeft,
-                                              height: SizeConfig.padding6,
-                                              child: AnimatedContainer(
-                                                alignment:
-                                                    Alignment.bottomCenter,
-                                                width: ((levelDetails
-                                                                ?.lvlData?[
-                                                                    index]
-                                                                .achieve ??
-                                                            1) /
-                                                        100) *
-                                                    (SizeConfig.padding168),
+                                  if ((levelDetails?.lvlData?[index].achieve ??
+                                          1) !=
+                                      100)
+                                    Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        SizedBox(
+                                          width: 153.28,
+                                          height: SizeConfig.padding6,
+                                          child: Stack(
+                                            children: [
+                                              Container(
+                                                width: SizeConfig.padding168,
                                                 height: SizeConfig.padding6,
-                                                duration: const Duration(
-                                                    milliseconds: 500),
-                                                curve: Curves.easeInExpo,
                                                 decoration: ShapeDecoration(
-                                                  color:
-                                                      const Color(0xFFFFCCBF),
+                                                  color: const Color(0xFFD9D9D9)
+                                                      .withOpacity(0.25),
                                                   shape: RoundedRectangleBorder(
                                                       borderRadius:
                                                           BorderRadius.circular(
                                                               4)),
                                                 ),
-                                                // color: const Color(0xFFF79780),
                                               ),
-                                            ),
-                                          ],
+                                              Container(
+                                                alignment: Alignment.centerLeft,
+                                                height: SizeConfig.padding6,
+                                                child: AnimatedContainer(
+                                                  alignment:
+                                                      Alignment.bottomCenter,
+                                                  width: ((levelDetails
+                                                                  ?.lvlData?[
+                                                                      index]
+                                                                  .achieve ??
+                                                              1) /
+                                                          100) *
+                                                      (SizeConfig.padding168),
+                                                  height: SizeConfig.padding6,
+                                                  duration: const Duration(
+                                                      milliseconds: 500),
+                                                  curve: Curves.easeInExpo,
+                                                  decoration: ShapeDecoration(
+                                                    color:
+                                                        const Color(0xFFFFCCBF),
+                                                    shape:
+                                                        RoundedRectangleBorder(
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .circular(
+                                                                        4)),
+                                                  ),
+                                                  // color: const Color(0xFFF79780),
+                                                ),
+                                              ),
+                                            ],
+                                          ),
                                         ),
-                                      ),
-                                      Text(
-                                        '${levelDetails?.lvlData?[index].achieve ?? 0} %',
-                                        textAlign: TextAlign.right,
-                                        style:
-                                            TextStyles.sourceSans.body4.colour(
-                                          Colors.white.withOpacity(0.75),
-                                        ),
-                                      )
-                                    ],
-                                  )
+                                        Text(
+                                          '${levelDetails?.lvlData?[index].achieve ?? 0} %',
+                                          textAlign: TextAlign.right,
+                                          style: TextStyles.sourceSans.body4
+                                              .colour(
+                                            Colors.white.withOpacity(0.75),
+                                          ),
+                                        )
+                                      ],
+                                    )
                                 ],
                               ),
                             )
