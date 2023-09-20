@@ -45,25 +45,21 @@ class FelloBadgeList extends StatelessWidget {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      (badges?[index].enable ?? false)
-                          ? SvgPicture.network(
-                              Assets.tambolaTitanBadge,
-                              height: SizeConfig.padding80,
-                              width: SizeConfig.padding68,
-                              fit: BoxFit.fill,
-                            )
-                          : ColorFiltered(
-                              colorFilter: const ColorFilter.mode(
-                                Color(0xFF191919),
-                                BlendMode.saturation,
-                              ),
-                              child: SvgPicture.network(
-                                Assets.tambolaTitanBadge,
-                                height: SizeConfig.padding80,
-                                width: SizeConfig.padding68,
-                                fit: BoxFit.fill,
-                              ),
-                            ),
+                      ClipRRect(
+                        child: ColorFiltered(
+                          colorFilter: ColorFilter.mode(
+                            (badges?[index].enable ?? false)
+                                ? Colors.transparent
+                                : const Color(0xFF191919),
+                            BlendMode.saturation,
+                          ),
+                          child: SvgPicture.network(
+                            Assets.tambolaTitanBadge,
+                            height: SizeConfig.padding80,
+                            width: SizeConfig.padding68,
+                          ),
+                        ),
+                      ),
                       SizedBox(
                         height: SizeConfig.padding6,
                       ),

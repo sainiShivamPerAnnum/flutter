@@ -56,7 +56,7 @@ class _UserProgressIndicatorState extends State<UserProgressIndicator> {
     return Stack(
       children: [
         AnimatedContainer(
-          duration: const Duration(milliseconds: 800),
+          duration: const Duration(seconds: 1),
           margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding24),
           child: Column(
             mainAxisSize: MainAxisSize.min,

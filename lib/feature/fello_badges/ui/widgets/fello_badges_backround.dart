@@ -14,7 +14,7 @@ class FelloBadgesBackground extends StatelessWidget {
       height: SizeConfig.screenHeight,
       decoration: const BoxDecoration(
         color: Color(0xFF191919),
-        backgroundBlendMode: BlendMode.darken,
+        // backgroundBlendMode: BlendMode.darken,
       ),
       child: Stack(
         children: [

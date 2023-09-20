@@ -159,6 +159,18 @@ class BadgeDetailsContainer extends StatelessWidget {
     Color(0xffFFD979),
   ];
 
+  final List<Color> benefitContainerColor = [
+    const Color(0xFFF79780).withOpacity(0.2),
+    const Color(0xFF93B5FE).withOpacity(0.2),
+    const Color(0xFFCEF8F5).withOpacity(0.2),
+  ];
+
+  final List<Color> titleColor = [
+    const Color(0xFFEFD7D2),
+    const Color(0xFFA4E3FF),
+    const Color(0xFFFFD979),
+  ];
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -297,7 +309,7 @@ class BadgeDetailsContainer extends StatelessWidget {
                       horizontal: SizeConfig.padding12,
                       vertical: SizeConfig.padding12),
                   decoration: ShapeDecoration(
-                    color: const Color(0xFFF79780).withOpacity(0.4),
+                    color: benefitContainerColor[index],
                     shape: RoundedRectangleBorder(
                       borderRadius: BorderRadius.circular(12),
                     ),
@@ -318,7 +330,7 @@ class BadgeDetailsContainer extends StatelessWidget {
                             'Benefits you get',
                             textAlign: TextAlign.right,
                             style: TextStyles.sourceSansSB.body1.colour(
-                              const Color(0xFFEFD7D2),
+                              titleColor[index],
                             ),
                           )
                         ],
@@ -367,7 +379,7 @@ class BadgeDetailsContainer extends StatelessWidget {
                 Text(
                   'Unlock Beginner Benefits',
                   style: TextStyles.sourceSansSB.body2.colour(
-                    const Color(0xFFEFD7D2),
+                    titleColor[index],
                   ),
                 ),
                 Text(
