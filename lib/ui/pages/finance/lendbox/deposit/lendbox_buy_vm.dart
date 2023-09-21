@@ -253,13 +253,13 @@ class LendboxBuyViewModel extends BaseViewModel {
             .indexWhere((element) => element.best) ??
         1;
 
+    setState(ViewState.Idle);
+
     await getAvailableCoupons();
 
     await _applyInitialCoupon(
       _initialCouponCode,
     );
-
-    setState(ViewState.Idle);
   }
 
   void listener() {

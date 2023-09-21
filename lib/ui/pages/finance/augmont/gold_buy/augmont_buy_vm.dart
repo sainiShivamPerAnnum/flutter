@@ -288,6 +288,8 @@ class GoldBuyViewModel extends BaseViewModel {
     // await fetchNotices();
     status = checkAugmontStatus();
     // _paytmService!.getActiveSubscriptionDetails();
+    setState(ViewState.Idle);
+
     await getAvailableCoupons();
 
     await _applyInitialCoupon(
@@ -296,7 +298,6 @@ class GoldBuyViewModel extends BaseViewModel {
 
     userAugmontState = await CacheManager.readCache(key: "UserAugmontState");
     // setBackButtonActions();
-    setState(ViewState.Idle);
   }
 
   bool hideKeyboard = false;
