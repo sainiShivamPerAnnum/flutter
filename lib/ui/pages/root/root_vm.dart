@@ -46,6 +46,7 @@ import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/styles.dart';
+import 'package:firebase_instance_id/firebase_instance_id.dart';
 import 'package:flutter/material.dart';
 import 'package:in_app_update/in_app_update.dart';
 
@@ -140,7 +141,7 @@ class RootViewModel extends BaseViewModel {
           _referralService.verifyReferral(),
           _referralService.initDynamicLinks(),
         ]);
-
+        unawaited(getFirebaseAppInstanceId());
         unawaited(handleStartUpNotificationData());
         unawaited(locator<ReferralService>().fetchReferralCode());
         await Future.wait([
@@ -153,6 +154,12 @@ class RootViewModel extends BaseViewModel {
         _initAdhocNotifications();
       },
     );
+  }
+
+  Future<void> getFirebaseAppInstanceId() async {
+    var instanceId =
+        await FirebaseInstanceId.appInstanceId ?? 'Unknown installation id';
+    _logger.i("Firebase app instance id: $instanceId");
   }
 
   void _checkForAppUpdates() {
