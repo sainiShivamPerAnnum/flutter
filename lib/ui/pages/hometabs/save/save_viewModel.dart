@@ -671,7 +671,7 @@ class _FloPendingActionState extends State<FloPendingAction>
                       eventName: AnalyticsEvents.pendingActionsFloTapped,
                       properties: {
                         "Transaction count": model.pendingMaturityCount,
-                        "initial decision taken": model.userDecision,
+                        "initial decision taken": model.userDecision.name,
                         "asset": model.filteredDeposits![0].fundType,
                         "principal amount":
                             model.filteredDeposits?[0].investedAmt

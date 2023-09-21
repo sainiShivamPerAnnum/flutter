@@ -4,6 +4,7 @@ import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/date_helper.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -16,6 +17,7 @@ class TransactionSummary extends StatelessWidget {
   final InvestmentType assetType;
   final String? txnType;
   final TimestampModel createdOn;
+  final LbMap? lbMap;
   final TxnHistoryService _txnHistoryService = locator<TxnHistoryService>();
 
   TransactionSummary(
@@ -23,7 +25,8 @@ class TransactionSummary extends StatelessWidget {
       this.summary,
       required this.assetType,
       required this.txnType,
-      required this.createdOn});
+      required this.createdOn,
+      this.lbMap});
 
   bool isTBD = false;
   int naPoint = 0;
@@ -47,6 +50,29 @@ class TransactionSummary extends StatelessWidget {
         itemBuilder: (ctx, i) {
           return leadWidget(summary, i, naPoint);
         });
+  }
+
+  String getPendingSubtitle() {
+    if (assetType == InvestmentType.LENDBOXP2P) {
+      if (lbMap != null) {
+        if (lbMap!.fundType != Constants.ASSET_TYPE_FLO_FELXI) {
+          if ((txnType ?? '') == UserTransaction.TRAN_TYPE_WITHDRAW) {
+            if (DateTime.now().isBefore(
+              createdOn.toDate().add(
+                    const Duration(days: 5),
+                  ),
+            )) {
+              return "Amount will be credited to your bank account by ${DateHelper.getDateInHumanReadableFormat(
+                createdOn.toDate().add(
+                      const Duration(days: 5),
+                    ),
+              )}";
+            }
+          }
+        }
+      }
+    }
+    return "-";
   }
 
   Widget leadWidget(
@@ -100,19 +126,7 @@ class TransactionSummary extends StatelessWidget {
       );
       leadColor = UiConstants.tertiarySolid;
       isTBD = true;
-      subtitle = assetType == InvestmentType.LENDBOXP2P &&
-              (txnType ?? '') == UserTransaction.TRAN_TYPE_WITHDRAW &&
-              DateTime.now().isBefore(
-                createdOn.toDate().add(
-                      const Duration(days: 5),
-                    ),
-              )
-          ? "Amount will be credited to your bank account by ${DateHelper.getDateInHumanReadableFormat(
-              createdOn.toDate().add(
-                    const Duration(days: 5),
-                  ),
-            )}"
-          : '-';
+      subtitle = getPendingSubtitle();
     }
 
     return Row(

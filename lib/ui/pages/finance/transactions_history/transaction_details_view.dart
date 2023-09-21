@@ -272,6 +272,7 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage>
                                   ? InvestmentType.AUGGOLD99
                                   : InvestmentType.LENDBOXP2P,
                               txnType: widget.txn.type,
+                              lbMap: !isGold ? widget.txn.lbMap : null,
                               createdOn: TimestampModel.fromTimestamp(
                                 widget.txn.timestamp ??
                                     Timestamp.fromDate(
