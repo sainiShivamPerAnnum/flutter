@@ -53,7 +53,9 @@ class ReferralService extends ChangeNotifier {
       locator<TxnHistoryService>();
   final AppFlyerAnalytics _appFlyer = locator<AppFlyerAnalytics>();
   final AnalyticsService _analyticsService = locator<AnalyticsService>();
-  final InternalOpsService? _internalOpsService = locator<InternalOpsService>();
+  final InternalOpsService _internalOpsService = locator<InternalOpsService>();
+  // ignore: cancel_subscriptions, unused_field
+  StreamSubscription<PendingDynamicLinkData>? _dynamicLinkSubscription;
   final S locale = locator<S>();
   final GlobalKey imageKey = GlobalKey();
   String? _minWithdrawPrize;
@@ -64,7 +66,7 @@ class ReferralService extends ChangeNotifier {
   String? referralShortLink;
 
   set refUnlockAmt(value) {
-    this._refUnlockAmt = value;
+    _refUnlockAmt = value;
   }
 
   String? shareMsg;
@@ -86,9 +88,9 @@ class ReferralService extends ChangeNotifier {
   bool _isShareLoading = false;
 
   bool get isShareLoading => _isShareLoading;
-  String _refUrl = "";
+  final String _refUrl = "";
 
-  get refUrl => _refUrl;
+  String get refUrl => _refUrl;
 
   void init() {
     fetchBasicConstantValues();
@@ -237,12 +239,12 @@ class ReferralService extends ChangeNotifier {
         BaseUtil.referrerUserId,
       );
       _logger.d('referral processed from link');
-      PreferenceHelper.setBool(PreferenceHelper.REFERRAL_PROCESSED, true);
+      await PreferenceHelper.setBool(PreferenceHelper.REFERRAL_PROCESSED, true);
     } else if (BaseUtil.manualReferralCode != null) {
       if (BaseUtil.manualReferralCode!.length == 4) {
-        _verifyFirebaseManualReferral();
+        await _verifyFirebaseManualReferral();
       } else {
-        _verifyOneLinkManualReferral();
+        await _verifyOneLinkManualReferral();
       }
     }
   }
@@ -283,7 +285,7 @@ class ReferralService extends ChangeNotifier {
       if (deepLink.startsWith(prefix)) {
         String referee = deepLink.replaceAll(prefix, '');
         _logger.d(referee);
-        if (prefix.length > 0 && prefix != userId) {
+        if (prefix.isNotEmpty && prefix != userId) {
           return _refRepo.createReferral(userId, referee).then((res) {
             return res.model!;
           });
@@ -299,35 +301,44 @@ class ReferralService extends ChangeNotifier {
     }
   }
 
-  Future<dynamic> initDynamicLinks() async {
-    FirebaseDynamicLinks.instance.onLink.listen((event) {
-      final Uri? deepLink = event.link;
-      if (deepLink == null) return null;
-      _logger.d('Received deep link. Process the referral');
-      return _processDynamicLink(_userService.baseUser!.uid, deepLink);
-    });
+  Future<void> initDynamicLinks() async {
+    await FirebaseDynamicLinks.instance.getInitialLink().then(_processDeepLink);
+    _dynamicLinkSubscription = FirebaseDynamicLinks.instance.onLink.listen(
+      _processDeepLink,
+    );
+  }
 
-    final PendingDynamicLinkData? data =
-        await FirebaseDynamicLinks.instance.getInitialLink();
+  Future<void> _processDeepLink(PendingDynamicLinkData? data) async {
     final Uri? deepLink = data?.link;
     if (deepLink != null) {
       _logger.d('Received deep link. Process the referral');
-      return _processDynamicLink(_userService.baseUser!.uid, deepLink);
+      await _processDynamicLink(_userService.baseUser!.uid, deepLink);
     }
   }
 
-  _processDynamicLink(String? userId, Uri deepLink) async {
-    String _uri = deepLink.toString();
+  Future<void> _processDynamicLink(String? userId, Uri deepLink) async {
+    String uri = deepLink.toString();
 
-    if (_uri.startsWith(Constants.APP_DOWNLOAD_LINK)) {
-      _submitTrack(_uri);
-    } else if (_uri.startsWith(Constants.APP_NAVIGATION_LINK)) {
+    if (uri.startsWith(Constants.APP_DOWNLOAD_LINK)) {
+      _submitTrack(uri);
+    } else if (uri.startsWith(Constants.APP_NAVIGATION_LINK)) {
       try {
+        final timer = Stopwatch();
+        timer.start();
+
+        while (!AppState.isRootAvailableForIncomingTaskExecution) {
+          await Future.delayed(const Duration(seconds: 1));
+          if (timer.elapsed.inSeconds >= 10) {
+            break;
+          }
+        }
+
         final path =
-            _uri.substring(Constants.APP_NAVIGATION_LINK.length, _uri.length);
+            uri.substring(Constants.APP_NAVIGATION_LINK.length, uri.length);
         if (AppState.isRootAvailableForIncomingTaskExecution) {
-          AppState.delegate!.parseRoute(Uri.parse(path));
           AppState.isRootAvailableForIncomingTaskExecution = false;
+          AppState.delegate!.parseRoute(Uri.parse(path));
+          AppState.isRootAvailableForIncomingTaskExecution = true;
         }
       } catch (error) {
         _logger.e(error);
@@ -337,13 +348,13 @@ class ReferralService extends ChangeNotifier {
           null; //make manual Code null in case user used both link and code
 
       //Referral dynamic link
-      bool _flag = await _submitReferral(
+      bool flag = await _submitReferral(
         _userService.baseUser!.uid,
         _userService.myUserName,
-        _uri,
+        uri,
       );
 
-      if (_flag) {
+      if (flag) {
         _logger.d('Rewards added');
       }
     }
@@ -354,7 +365,7 @@ class ReferralService extends ChangeNotifier {
       String prefix = '${Constants.APP_DOWNLOAD_LINK}/campaign/';
       if (deepLink.startsWith(prefix)) {
         String campaignId = deepLink.replaceAll(prefix, '');
-        if (campaignId.isNotEmpty || campaignId == null) {
+        if (campaignId.isNotEmpty) {
           _logger.d(campaignId);
           _analyticsService.trackInstall(campaignId);
           return true;
@@ -376,7 +387,7 @@ class ReferralService extends ChangeNotifier {
     appShareMessage = AppConfig.getValue(AppConfigKey.appShareMessage);
   }
 
-  getRedeemAsset(double walletBalnce) {
+  dynamic getRedeemAsset(double walletBalnce) {
     if (walletBalnce == 0) {
       return Assets.prizeClaimAssets[0];
     } else if (walletBalnce <= 10) {
@@ -404,7 +415,7 @@ class ReferralService extends ChangeNotifier {
       properties: AnalyticsProperties.getDefaultPropertiesMap(
         extraValuesMap: {
           "Total Winnings Amount":
-              _userService?.userFundWallet?.prizeLifetimeWin ?? 0
+              _userService.userFundWallet?.prizeLifetimeWin ?? 0
         },
       ),
     );
@@ -414,14 +425,14 @@ class ReferralService extends ChangeNotifier {
       hapticVibrate: true,
       content: ConfirmationDialog(
         confirmAction: () async {
-          await claim(choice, _userService!.userFundWallet!.unclaimedBalance);
+          await claim(choice, _userService.userFundWallet!.unclaimedBalance);
         },
         title: locale.confirmation,
         description: choice == PrizeClaimChoice.AMZ_VOUCHER
             ? locale.redeemAmznGiftVchr(BaseUtil.digitPrecision(
-                _userService!.userFundWallet!.unclaimedBalance, 2, false))
+                _userService.userFundWallet!.unclaimedBalance, 2, false))
             : locale.redeemDigitalGold(BaseUtil.digitPrecision(
-                _userService!.userFundWallet!.unclaimedBalance, 2, false)),
+                _userService.userFundWallet!.unclaimedBalance, 2, false)),
         buttonText: locale.btnYes,
         cancelBtnText: locale.btnNo,
         cancelAction: AppState.backButtonDispatcher!.didPopRoute,
@@ -448,7 +459,7 @@ class ReferralService extends ChangeNotifier {
       properties: AnalyticsProperties.getDefaultPropertiesMap(
         extraValuesMap: {
           "Total Winnings Amount":
-              _userService?.userFundWallet?.prizeLifetimeWin ?? 0
+              _userService.userFundWallet?.prizeLifetimeWin ?? 0
         },
       ),
     );
@@ -472,7 +483,7 @@ class ReferralService extends ChangeNotifier {
       widget: RedeemSucessfulScreen(
           subTitleWidget: getSubtitleWidget(subtitle),
           claimPrize: claimPrize,
-          dpUrl: _userService!.myUserDpUrl,
+          dpUrl: _userService.myUserDpUrl,
           choice: choice,
           wonGrams: gramsWon //await getGramsWon(claimPrize),
           ),
@@ -490,14 +501,15 @@ class ReferralService extends ChangeNotifier {
     log("response.isSuccess() ${response.isSuccess()}");
 
     if (response.isSuccess()) {
-      _userService!.getUserFundWalletData();
-      _transactionHistoryService!.updateTransactions(InvestmentType.AUGGOLD99);
+      await _userService.getUserFundWalletData();
+      await _transactionHistoryService
+          .updateTransactions(InvestmentType.AUGGOLD99);
       // await _localDBModel!.savePrizeClaimChoice(choice);
-      AppState.backButtonDispatcher!.didPopRoute();
+      await AppState.backButtonDispatcher!.didPopRoute();
 
       return true;
     } else {
-      AppState.backButtonDispatcher!.didPopRoute();
+      await AppState.backButtonDispatcher!.didPopRoute();
       BaseUtil.showNegativeAlert(
         locale.withDrawalFailed,
         response.errorMessage ?? locale.tryLater,
@@ -546,29 +558,29 @@ class ReferralService extends ChangeNotifier {
           try {
             if (Platform.isIOS) {
               Share.share(shareMessage).catchError((onError) {
-                if (_userService!.baseUser!.uid != null) {
+                if (_userService.baseUser!.uid != null) {
                   Map<String, dynamic> errorDetails = {
                     'error_msg': 'Share reward text in My winnings failed'
                   };
-                  _internalOpsService!.logFailure(_userService!.baseUser!.uid,
+                  _internalOpsService.logFailure(_userService.baseUser!.uid,
                       FailType.FelloRewardTextShareFailed, errorDetails);
                 }
-                _logger!.e(onError);
+                _logger.e(onError);
               });
             } else {
               Share.share(shareMessage).catchError((onError) {
-                if (_userService!.baseUser!.uid != null) {
+                if (_userService.baseUser!.uid != null) {
                   Map<String, dynamic> errorDetails = {
                     'error_msg': 'Share reward text in My winnings failed'
                   };
-                  _internalOpsService!.logFailure(_userService!.baseUser!.uid,
+                  _internalOpsService.logFailure(_userService.baseUser!.uid,
                       FailType.FelloRewardTextShareFailed, errorDetails);
                 }
-                _logger!.e(onError);
+                _logger.e(onError);
               });
             }
           } catch (e) {
-            _logger!.e(e.toString());
+            _logger.e(e.toString());
           }
         }
       });
@@ -585,15 +597,15 @@ class ReferralService extends ChangeNotifier {
 
       return pngBytes;
     } catch (e) {
-      if (_userService!.baseUser!.uid != null) {
+      if (_userService.baseUser!.uid != null) {
         Map<String, dynamic> errorDetails = {
           'error_msg': 'Share reward card creation failed'
         };
-        _internalOpsService!.logFailure(_userService!.baseUser!.uid,
+        await _internalOpsService.logFailure(_userService.baseUser!.uid,
             FailType.FelloRewardCardShareFailed, errorDetails);
       }
 
-      AppState.backButtonDispatcher!.didPopRoute();
+      await AppState.backButtonDispatcher!.didPopRoute();
       print(e.toString());
       BaseUtil.showNegativeAlert(locale.taskFailed, locale.unableToCapture);
     }
@@ -605,18 +617,18 @@ class ReferralService extends ChangeNotifier {
       if (Platform.isAndroid) {
         final directory = (await getExternalStorageDirectory())!.path;
         String dt = DateTime.now().toString();
-        File imgg = new File('$directory/fello-reward-$dt.png');
+        File imgg = File('$directory/fello-reward-$dt.png');
         imgg.writeAsBytesSync(image);
-        Share.shareFiles(
+        await Share.shareFiles(
           [imgg.path],
           subject: 'Fello Rewards',
           text: shareMessage ?? "",
         ).catchError((onError) {
-          if (_userService!.baseUser!.uid != null) {
+          if (_userService.baseUser!.uid != null) {
             Map<String, dynamic> errorDetails = {
               'error_msg': 'Share reward card in card.dart failed'
             };
-            _internalOpsService!.logFailure(_userService!.baseUser!.uid,
+            _internalOpsService.logFailure(_userService.baseUser!.uid,
                 FailType.FelloRewardCardShareFailed, errorDetails);
           }
           print(onError);
@@ -628,21 +640,21 @@ class ReferralService extends ChangeNotifier {
         if (!await directory.exists()) await directory.create(recursive: true);
 
         final File imgg =
-            await new File('${directory.path}/fello-reward-$dt.jpg').create();
+            await File('${directory.path}/fello-reward-$dt.jpg').create();
         imgg.writeAsBytesSync(image);
 
-        _logger!.d("Image file created and sharing, ${imgg.path}");
+        _logger.d("Image file created and sharing, ${imgg.path}");
 
-        Share.shareFiles(
+        await Share.shareFiles(
           [imgg.path],
           subject: 'Fello Rewards',
           text: shareMessage ?? "",
         ).catchError((onError) {
-          if (_userService!.baseUser!.uid != null) {
+          if (_userService.baseUser!.uid != null) {
             Map<String, dynamic> errorDetails = {
               'error_msg': 'Share reward card in card.dart failed'
             };
-            _internalOpsService!.logFailure(_userService!.baseUser!.uid,
+            _internalOpsService.logFailure(_userService.baseUser!.uid,
                 FailType.FelloRewardCardShareFailed, errorDetails);
           }
           print(onError);

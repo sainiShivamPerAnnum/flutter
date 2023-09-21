@@ -38,14 +38,14 @@ class MarketingEventHandlerService
     notifyListeners(MarketingEventsHandlerProperties.DailyAppCheckIn);
   }
 
-  get isDailyAppBonusClaimed => _isDailyAppBonusClaimed;
+  bool get isDailyAppBonusClaimed => _isDailyAppBonusClaimed;
 
   set isDailyAppBonusClaimed(value) {
     _isDailyAppBonusClaimed = value;
     notifyListeners(MarketingEventsHandlerProperties.DailyAppCheckIn);
   }
 
-  get isDailyAppBonusClaimInProgress => _isDailyAppBonusClaimInProgress;
+  bool get isDailyAppBonusClaimInProgress => _isDailyAppBonusClaimInProgress;
 
   set isDailyAppBonusClaimInProgress(value) {
     _isDailyAppBonusClaimInProgress = value;
@@ -88,10 +88,10 @@ class MarketingEventHandlerService
 
       // [PREBUZZ]
       if (data.happyHourType == HappyHourType.preBuzz) {
-        locator<BaseUtil>().showHappyHourDialog(campaign.model!);
-        _sharePreference.remove('duringHappyHourVisited');
-        _sharePreference.remove('timStampOfHappyHour');
-        _sharePreference.remove('showedAfterHappyHourDialog');
+        await locator<BaseUtil>().showHappyHourDialog(campaign.model!);
+        await _sharePreference.remove('duringHappyHourVisited');
+        await _sharePreference.remove('timStampOfHappyHour');
+        await _sharePreference.remove('showedAfterHappyHourDialog');
         return;
       }
 
@@ -102,9 +102,9 @@ class MarketingEventHandlerService
       //[Live]
       if (data.happyHourType == HappyHourType.live) {
         if (!_isDuringHappyHourVisited && !AppState.isFirstTime) {
-          locator<BaseUtil>().showHappyHourDialog(campaign.model!);
-          _sharePreference.setBool("duringHappyHourVisited", true);
-          _sharePreference.setString(
+          await locator<BaseUtil>().showHappyHourDialog(campaign.model!);
+          await _sharePreference.setBool("duringHappyHourVisited", true);
+          await _sharePreference.setString(
               'timStampOfHappyHour', DateTime.now().toString());
         }
         showHappyHourBanner = true;
@@ -122,8 +122,8 @@ class MarketingEventHandlerService
       if (DateTime.now().isAfter(endTime) &&
           !_isDuringHappyHourVisited &&
           !alreadyShowed) {
-        locator<BaseUtil>().showHappyHourDialog(campaign.model!);
-        _sharePreference.setBool("showedAfterHappyHourDialog", true);
+        await locator<BaseUtil>().showHappyHourDialog(campaign.model!);
+        await _sharePreference.setBool("showedAfterHappyHourDialog", true);
       }
     }
   }
@@ -182,6 +182,7 @@ class MarketingEventHandlerService
           content: const DailyAppCheckInEventModalSheet(),
         );
       }
+      AppState.isRootAvailableForIncomingTaskExecution = true;
     } else {
       _logger.d(
           "DAILY APP BONUS GET: ERROR :: ${dailyAppBonusEventResponse.errorMessage}");

@@ -121,8 +121,6 @@
 		<string>https://fello.in/app/referral</string>
 		<string>https://fello.in/claim/goldenticket</string>
 	</array>
-	<key>FlutterDeepLinkingEnabled</key>
-	<true/>
 	<key>LSApplicationCategoryType</key>
 	<string></string>
 	<key>LSApplicationQueriesSchemes</key>
