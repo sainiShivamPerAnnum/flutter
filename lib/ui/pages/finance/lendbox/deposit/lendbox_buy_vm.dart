@@ -3,7 +3,6 @@
 import 'dart:async';
 import 'dart:developer';
 
-import 'package:collection/collection.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
@@ -29,6 +28,7 @@ import 'package:felloapp/ui/pages/finance/lendbox/deposit/widget/flo_coupon_moda
 import 'package:felloapp/ui/pages/finance/lendbox/deposit/widget/prompt.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/installed_upi_apps_finder.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -47,6 +47,7 @@ class LendboxBuyViewModel extends BaseViewModel {
       locator<LendboxTransactionService>();
   final AnalyticsService analyticsService = locator<AnalyticsService>();
   final CouponRepository _couponRepo = locator<CouponRepository>();
+  final CustomLogger _logger = locator<CustomLogger>();
 
   S locale = locator<S>();
 
@@ -253,6 +254,10 @@ class LendboxBuyViewModel extends BaseViewModel {
         1;
 
     await getAvailableCoupons();
+
+    await _applyInitialCoupon(
+      _initialCouponCode,
+    );
 
     setState(ViewState.Idle);
   }
@@ -490,11 +495,6 @@ class LendboxBuyViewModel extends BaseViewModel {
       couponList = couponsRes.model;
       if (couponList?[0].priority == 1) focusCoupon = couponList?[0];
       showCoupons = true;
-
-      await applyProvidedCouponIfAvailable(
-        couponList ?? [],
-        _initialCouponCode,
-      );
     }
   }
 
@@ -691,22 +691,12 @@ class LendboxBuyViewModel extends BaseViewModel {
     );
   }
 
-  /// Filters [coupons] if there is any matching coupon to [coupon] and if
-  /// there is any match then apply the coupon.
-  Future<void> applyProvidedCouponIfAvailable(
-    List<CouponModel> coupons,
-    String? coupon,
-  ) async {
-    if (coupon == null || coupons.isEmpty) return;
-
-    final couponModel = coupons.firstWhereOrNull(
-      (c) => c.code == coupon,
-    );
-
-    if (couponModel != null) {
-      try {
-        await applyCoupon(couponModel.code, false);
-      } catch (e) {}
+  Future<void> _applyInitialCoupon(String? coupon) async {
+    if (coupon == null) return;
+    try {
+      await applyCoupon(coupon, false);
+    } catch (e, stack) {
+      _logger.e('Failed to apply initial coupon', e, stack);
     }
   }
 

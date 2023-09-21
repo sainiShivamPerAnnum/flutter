@@ -2,7 +2,6 @@
 
 import 'dart:async';
 
-import 'package:collection/collection.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
@@ -290,6 +289,11 @@ class GoldBuyViewModel extends BaseViewModel {
     status = checkAugmontStatus();
     // _paytmService!.getActiveSubscriptionDetails();
     await getAvailableCoupons();
+
+    await _applyInitialCoupon(
+      _initialCouponCode,
+    );
+
     userAugmontState = await CacheManager.readCache(key: "UserAugmontState");
     // setBackButtonActions();
     setState(ViewState.Idle);
@@ -635,30 +639,15 @@ class GoldBuyViewModel extends BaseViewModel {
       couponList = couponsRes.model;
       if (couponList![0].priority == 1) focusCoupon = couponList![0];
       showCoupons = true;
-
-      await applyProvidedCouponIfAvailable(
-        couponList ?? [],
-        _initialCouponCode,
-      );
     }
   }
 
-  /// Filters [coupons] if there is any matching coupon to [coupon] and if
-  /// there is any match then apply the coupon.
-  Future<void> applyProvidedCouponIfAvailable(
-    List<CouponModel> coupons,
-    String? coupon,
-  ) async {
-    if (coupon == null || coupons.isEmpty) return;
-
-    final couponModel = coupons.firstWhereOrNull(
-      (c) => c.code == coupon,
-    );
-
-    if (couponModel != null) {
-      try {
-        await applyCoupon(couponModel.code, false);
-      } catch (e) {}
+  Future<void> _applyInitialCoupon(String? coupon) async {
+    if (coupon == null) return;
+    try {
+      await applyCoupon(coupon, false);
+    } catch (e, stack) {
+      _logger.e('Failed to apply initial coupon', e, stack);
     }
   }
 
