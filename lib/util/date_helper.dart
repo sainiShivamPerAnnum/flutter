@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:felloapp/core/model/timestamp_model.dart';
+import 'package:intl/intl.dart';
 
 class DateHelper {
   static String timeAgoSinceDate(TimestampModel date,
@@ -80,5 +81,10 @@ class DateHelper {
 
     print('Duration in milliseconds: $durationMillis');
     return durationMillis;
+  }
+
+  static String getDateInHumanReadableFormat(DateTime dateTime) {
+    final format = DateFormat('dd MMM, yyyy');
+    return format.format(dateTime);
   }
 }

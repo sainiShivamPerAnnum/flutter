@@ -471,12 +471,12 @@ class UserRepository extends BaseRepo {
 
       return ApiResponse<bool>(model: true, code: 200);
     } catch (e) {
-      logger!.e(e);
-      locator<InternalOpsService>().logFailure(
+      logger.e(e);
+      unawaited(locator<InternalOpsService>().logFailure(
         uid,
         FailType.UpdateUserFailed,
         {'message': "Update user failed"},
-      );
+      ));
       return ApiResponse.withError(
         e.toString() ?? "Unable to update user",
         400,

@@ -6,9 +6,11 @@ import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
+import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/router/back_dispatcher.dart';
 import 'package:felloapp/navigator/router/router_delegate.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -152,16 +154,16 @@ class AppState extends ChangeNotifier {
   }
 
   void onItemTapped(int index) {
-    // if (_rootController.navItems.values.toList()[index].title == "Tickets") {
-    //   if (locator<UserService>()
-    //           .baseUser!
-    //           .userPreferences
-    //           .getPreference(Preferences.TAMBOLAONBOARDING) !=
-    //       1) {
-    //     AppState.delegate!.parseRoute(Uri.parse("ticketsIntro"));
-    //     return;
-    //   }
-    // }
+    if (_rootController.navItems.values.toList()[index].title == "Tickets") {
+      if (locator<UserService>()
+              .baseUser!
+              .userPreferences
+              .getPreference(Preferences.TAMBOLAONBOARDING) !=
+          1) {
+        AppState.delegate!.parseRoute(Uri.parse("ticketsIntro"));
+        return;
+      }
+    }
     if (index == _rootIndex) {
       Haptic.vibrate();
       RootController.controller.animateTo(

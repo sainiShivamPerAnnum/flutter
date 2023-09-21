@@ -542,6 +542,7 @@ class TicketHeader extends StatelessWidget {
           ),
           MaterialButton(
             onPressed: () {
+              Haptic.vibrate();
               AppState.delegate!.appState.currentAction = PageAction(
                 page: AssetSelectionViewConfig,
                 state: PageState.addWidget,

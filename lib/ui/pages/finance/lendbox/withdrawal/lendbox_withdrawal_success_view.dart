@@ -1,5 +1,6 @@
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/date_helper.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -32,7 +33,7 @@ class LendboxWithdrawalSuccessView extends StatelessWidget {
           Padding(
             padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding28),
             child: Text(
-              locale.txnWithDrawReq,
+              "Your withdrawal request has been placed and the money will be credited to your account by ${DateHelper.getDateInHumanReadableFormat(DateTime.now().add(Duration(days: 5)))}",
               style: TextStyles.sourceSans.body2.setOpacity(0.7),
               textAlign: TextAlign.center,
             ),

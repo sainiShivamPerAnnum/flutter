@@ -191,7 +191,7 @@ class TambolaService extends ChangeNotifier {
 
   Future<void> refreshTickets() async {
     await fetchWeeklyPicks();
-    await getBestTambolaTickets();
+    await getBestTambolaTickets(forced: true);
     unawaited(getTambolaTickets(limit: 1));
   }
 
@@ -281,7 +281,11 @@ class TambolaService extends ChangeNotifier {
       allBestTickets = bestTickets?.data?.allTickets();
       if (allBestTickets?.isNotEmpty ?? false) {
         isCollapsed = true;
-        slotMachineTitle = "Reveal numbers to match with Tickets";
+        if (todaysPicks != null &&
+            todaysPicks!.isNotEmpty &&
+            !todaysPicks!.contains(-1)) {
+          slotMachineTitle = "Reveal numbers to match with Tickets";
+        }
       }
     } else {
       //TODO: FAILED TO FETCH TAMBOLA TICKETS. HANDLE FAIL CASE
@@ -380,7 +384,7 @@ class TambolaService extends ChangeNotifier {
         if (todaysPicks == null) {
           _logger.i("Today's picks are not generated yet");
           todaysPicks = [-1, -1, -1];
-          slotMachineTitle = "Numbers will be revealed at 6pm today";
+          slotMachineTitle = "Numbers will be revealed at 6pm";
         } else {
           String lastSpinTimeInIsoString = PreferenceHelper.getString(
               PreferenceHelper.CACHE_TICKETS_LAST_SPIN_TIMESTAMP);

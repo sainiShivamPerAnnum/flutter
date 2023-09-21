@@ -62,7 +62,7 @@ class BlockedUserView extends StatelessWidget {
             children: [
               Text(
                 isMaintenanceMode
-                    ? "App is under maintenance"
+                    ? "App under maintenance"
                     : isStateRestricted
                         ? "Fello is not available in your state"
                         : locale.obBlockedTitle,
@@ -72,7 +72,7 @@ class BlockedUserView extends StatelessWidget {
               SizedBox(height: SizeConfig.navBarHeight),
             ],
           ),
-          if (isStateRestricted)
+          if (isStateRestricted || isMaintenanceMode)
             Align(
               child: FAppBar(
                   title: null,
@@ -107,39 +107,46 @@ class BlockedUserView extends StatelessWidget {
           if (isStateRestricted)
             Align(
               alignment: Alignment.bottomCenter,
-              child: GestureDetector(
-                onTap: () async {
-                  Haptic.vibrate();
-                  try {
-                    await BaseUtil.launchUrl('https://fello.in/policy/tnc');
-                  } catch (e) {
-                    BaseUtil.showNegativeAlert(
-                      locale.obSomeThingWentWrong,
-                      locale.obCouldNotLaunch,
-                    );
-                  }
-                },
-                child: Padding(
-                  padding: EdgeInsets.symmetric(
-                      horizontal: SizeConfig.padding44,
-                      vertical: SizeConfig.padding24),
-                  child: RichText(
-                    textAlign: TextAlign.center,
-                    text: TextSpan(
-                      text: isStateRestricted
-                          ? 'Please read our '
-                          : "${locale.obBlockedSubtitle1} ",
+              child: isMaintenanceMode
+                  ? Text(
+                      "Fello is under maintenance. We'll be back again very soon!\nDon't worry, your investments are safe with us",
                       style: TextStyles.rajdhani.colour(Colors.grey),
-                      children: [
-                        TextSpan(
-                          text: locale.termsOfService,
-                          style: TextStyles.rajdhani.underline,
+                      textAlign: TextAlign.center,
+                    )
+                  : GestureDetector(
+                      onTap: () async {
+                        Haptic.vibrate();
+                        try {
+                          await BaseUtil.launchUrl(
+                              'https://fello.in/policy/tnc');
+                        } catch (e) {
+                          BaseUtil.showNegativeAlert(
+                            locale.obSomeThingWentWrong,
+                            locale.obCouldNotLaunch,
+                          );
+                        }
+                      },
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: SizeConfig.padding44,
+                            vertical: SizeConfig.padding24),
+                        child: RichText(
+                          textAlign: TextAlign.center,
+                          text: TextSpan(
+                            text: isStateRestricted
+                                ? 'Please read our '
+                                : "${locale.obBlockedSubtitle1} ",
+                            style: TextStyles.rajdhani.colour(Colors.grey),
+                            children: [
+                              TextSpan(
+                                text: locale.termsOfService,
+                                style: TextStyles.rajdhani.underline,
+                              ),
+                            ],
+                          ),
                         ),
-                      ],
+                      ),
                     ),
-                  ),
-                ),
-              ),
             ),
           SizedBox(height: SizeConfig.padding34),
         ],

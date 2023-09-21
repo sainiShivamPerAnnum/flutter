@@ -458,10 +458,8 @@ class _SlotMachineWidgetState extends State<SlotMachineWidget>
         Selector<TambolaService, String>(
           builder: (context, value, child) => Text(
             value,
-            // (value ?? 0) > 0
-            //     ? "Reveal numbers to match with Tickets"
-            //     : "Reveal today's picks",
             style: TextStyles.rajdhaniSB.body1.colour(Colors.white),
+            textAlign: TextAlign.center,
           ),
           selector: (p0, p1) => p1.slotMachineTitle,
         ),

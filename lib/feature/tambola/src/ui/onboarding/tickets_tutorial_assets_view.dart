@@ -288,24 +288,24 @@ class _TicketsTutorialsViewState extends State<TicketsTutorialsView>
                               pattern: [10, 80, 150, 80, 200, 50, 300, 50],
                             );
                             _controller.reverse().then((value) {
-                              final _userService = locator<UserService>();
-                              final _userRepo = locator<UserRepository>();
-                              _userRepo.updateUser(
-                                uid: _userService.baseUser!.uid,
+                              final userService = locator<UserService>();
+                              final userRepo = locator<UserRepository>();
+                              userRepo.updateUser(
+                                uid: userService.baseUser!.uid,
                                 dMap: {
-                                  'mUserPrefsAl': _userService
+                                  'mUserPrefsAl': userService
                                           .baseUser!.userPreferences
                                           .getPreference(
                                         Preferences.APPLOCK,
                                       ) ==
                                       1,
-                                  'mUserPrefsTn': _userService
+                                  'mUserPrefsTn': userService
                                           .baseUser!.userPreferences
                                           .getPreference(
                                         Preferences.TAMBOLANOTIFICATIONS,
                                       ) ==
                                       1,
-                                  'mUserPrefsEr': _userService
+                                  'mUserPrefsEr': userService
                                           .baseUser!.userPreferences
                                           .getPreference(
                                         Preferences.FLOINVOICEMAIL,
@@ -314,6 +314,7 @@ class _TicketsTutorialsViewState extends State<TicketsTutorialsView>
                                   'mUserPrefsTo': true
                                 },
                               ).then((value) {
+                                userService.setBaseUser();
                                 const Log("Preferences updated");
                               });
                               AppState.delegate!.appState.currentAction =

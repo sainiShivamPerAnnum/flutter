@@ -215,7 +215,7 @@ class BaseUser {
 
   @override
   String toString() {
-    return 'BaseUser(uid: $uid, mobile: $mobile, name: $name, email: $email, dob: $dob, gender: $gender, username: $username, verifiedName: $verifiedName, client_token: $client_token, isInvested: $isInvested, isIciciOnboarded: $isIciciOnboarded, isAugmontOnboarded: $isAugmontOnboarded, isSimpleKycVerified: $isSimpleKycVerified, isBlocked: $isBlocked, isKycVerified: $isKycVerified, kycName: $kycName, pendingTxnId: $pendingTxnId, isIciciEnabled: $isIciciEnabled, isAugmontEnabled: $isAugmontEnabled, isEmailVerified: $isEmailVerified, userPreferences: $userPreferences, createdOn: $createdOn, appFlyerId: $appFlyerId, avatarId: $avatarId)';
+    return 'BaseUser(uid: $uid, mobile: $mobile, name: $name, email: $email, dob: $dob, gender: $gender, username: $username, verifiedName: $verifiedName, client_token: $client_token, isInvested: $isInvested, isIciciOnboarded: $isIciciOnboarded, isAugmontOnboarded: $isAugmontOnboarded, isSimpleKycVerified: $isSimpleKycVerified, isBlocked: $isBlocked, isKycVerified: $isKycVerified, kycName: $kycName, pendingTxnId: $pendingTxnId, isIciciEnabled: $isIciciEnabled, isAugmontEnabled: $isAugmontEnabled, isEmailVerified: $isEmailVerified, userPreferences: ${userPreferences.toString()}, createdOn: $createdOn, appFlyerId: $appFlyerId, avatarId: $avatarId)';
   }
 }
 
@@ -252,8 +252,10 @@ class UserPreferences {
       int? defValue = _defValues[p];
       _activePrefs[fKey] = (remValues != {} &&
               remValues![fKey] != null &&
-              remValues[fKey] is int)
-          ? remValues[fKey]
+              (remValues[fKey] is int || remValues[fKey] is bool))
+          ? ((remValues[fKey].runtimeType == bool)
+              ? (remValues[fKey] == true ? 1 : 0)
+              : remValues[fKey])
           : defValue;
     }
   }
@@ -263,4 +265,9 @@ class UserPreferences {
   setPreference(Preferences p, int val) => _activePrefs[_index[p]] = val;
 
   toJson() => _activePrefs;
+
+  @override
+  String toString() {
+    return "$_activePrefs";
+  }
 }

@@ -1,6 +1,6 @@
 import 'dart:async';
 
-import 'package:action_slider/action_slider.dart';
+import 'package:felloapp/feature/flo_withdrawals/ui/reinvest_slider.dart';
 import 'package:felloapp/feature/tambola/src/ui/onboarding/tickets_tutorial_assets_view.dart';
 import 'package:felloapp/feature/tambola/src/ui/onboarding/tickets_tutorial_slot_machine_view.dart';
 import 'package:felloapp/feature/tambola/src/ui/widgets/ticket/ticket_painter.dart';
@@ -234,12 +234,21 @@ class _TicketsIntroViewState extends State<TicketsIntroView> {
                         Container(
                           margin: EdgeInsets.symmetric(
                               horizontal: SizeConfig.pageHorizontalMargins),
-                          child: ActionSlider.standard(
-                            height: kToolbarHeight,
-                            action: (controller) async {
+                          child: SlideAction(
+                            text: "GET STARTED WITH TICKETS",
+                            textStyle:
+                                TextStyles.rajdhaniB.body1.colour(Colors.black),
+                            borderRadius: SizeConfig.padding60,
+                            height: SizeConfig.padding56,
+                            sliderButtonIconSize: SizeConfig.padding24,
+                            sliderButtonIconPadding: SizeConfig.padding12,
+                            outerColor: Colors.white,
+                            animationDuration:
+                                const Duration(milliseconds: 500),
+                            sliderRotate: false,
+                            onSubmit: () async {
                               Haptic.vibrate();
                               unawaited(locator<TambolaService>().getPrizes());
-                              // AppState.screenStack.add(ScreenItem.modalsheet);
                               unawaited(Navigator.push(
                                 context,
                                 MaterialPageRoute(
@@ -248,13 +257,6 @@ class _TicketsIntroViewState extends State<TicketsIntroView> {
                                 ),
                               ));
                             },
-                            toggleColor: UiConstants.primaryColor,
-                            child: Text(
-                              "GET STARTED WITH TICKETS",
-                              style: TextStyles.rajdhaniB.body2
-                                  .colour(Colors.black),
-                              textAlign: TextAlign.center,
-                            ),
                           ),
                         ),
                         SizedBox(height: SizeConfig.padding16),

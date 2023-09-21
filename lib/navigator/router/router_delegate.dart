@@ -1075,16 +1075,16 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     while (AppState.screenStack.length > 1) {
       AppState.backButtonDispatcher!.didPopRoute();
     }
-    // if (item.title == "Tickets") {
-    //   if (locator<UserService>()
-    //           .baseUser!
-    //           .userPreferences
-    //           .getPreference(Preferences.TAMBOLAONBOARDING) !=
-    //       1) {
-    //     AppState.delegate!.parseRoute(Uri.parse("ticketsIntro"));
-    //     return;
-    //   }
-    // }
+    if (item.title == "Tickets") {
+      if (locator<UserService>()
+              .baseUser!
+              .userPreferences
+              .getPreference(Preferences.TAMBOLAONBOARDING) !=
+          1) {
+        AppState.delegate!.parseRoute(Uri.parse("ticketsIntro"));
+        return;
+      }
+    }
     var _rootController = locator<RootController>();
 
     _rootController.onChange(_rootController.navItems.values
