@@ -1,3 +1,5 @@
+// ignore_for_file: empty_catches
+
 import 'dart:async';
 import 'dart:developer';
 
@@ -6,7 +8,7 @@ import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/constants/cache_keys.dart';
 import 'package:felloapp/core/enums/ttl.dart';
 import 'package:felloapp/core/model/alert_model.dart';
-import 'package:felloapp/core/model/app_config_model.dart';
+import 'package:felloapp/core/model/app_environment.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/flc_pregame_model.dart';
 import 'package:felloapp/core/model/portfolio_model.dart';
@@ -278,7 +280,10 @@ class UserRepository extends BaseRepo {
       required bool? isPhysicalDevice,
       String? integrity}) async {
     try {
-      final appInstanceId = await FirebaseAnalytics.instance.appInstanceId;
+      String? appInstanceId;
+      try {
+        appInstanceId = await FirebaseAnalytics.instance.appInstanceId;
+      } catch (e) {}
       final token = await getBearerToken();
       Map<String, dynamic> body = {
         "uid": uid ?? "",
@@ -575,7 +580,10 @@ class UserRepository extends BaseRepo {
       required int dayOpenCount}) async {
     UserBootUpDetailsModel userBootUp;
 
-    final appInstanceId = await FirebaseAnalytics.instance.appInstanceId;
+    String? appInstanceId;
+    try {
+      appInstanceId = await FirebaseAnalytics.instance.appInstanceId;
+    } catch (e) {}
 
     // try {
     Map<String, dynamic> queryParameters = {

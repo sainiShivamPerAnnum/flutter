@@ -1,7 +1,7 @@
 import 'dart:async';
 
 import 'package:felloapp/core/constants/apis_path_constants.dart';
-import 'package:felloapp/core/model/app_config_model.dart';
+import 'package:felloapp/core/model/app_environment.dart';
 import 'package:felloapp/core/model/game_stats_model.dart';
 import 'package:felloapp/core/repository/base_repo.dart';
 import 'package:felloapp/core/service/api.dart';

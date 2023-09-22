@@ -2,7 +2,7 @@
 import 'dart:developer';
 
 import 'package:felloapp/core/constants/apis_path_constants.dart';
-import 'package:felloapp/core/model/app_config_model.dart';
+import 'package:felloapp/core/model/app_environment.dart';
 import 'package:felloapp/core/model/daily_bonus_event_model.dart';
 import 'package:felloapp/core/model/prizes_model.dart';
 import 'package:felloapp/core/model/scratch_card_model.dart';
