@@ -1094,6 +1094,18 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         _rootController.navItems.values.toList().indexOf(item);
   }
 
+  void onSilentTapItem(NavBarItemModel item) {
+    log('onSilentTapItem ${item.title}');
+
+    var _rootController = locator<RootController>();
+
+    _rootController.onChange(_rootController.navItems.values
+        .toList()[_rootController.navItems.values.toList().indexOf(item)]);
+
+    appState.setCurrentTabIndex =
+        _rootController.navItems.values.toList().indexOf(item);
+  }
+
   // openTopSaverScreen(String eventType) {
   //   AppState.delegate!.appState.currentAction = PageAction(
   //     page: CampaignViewPageConfig,

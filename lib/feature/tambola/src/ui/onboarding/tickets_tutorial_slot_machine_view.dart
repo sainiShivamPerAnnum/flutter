@@ -1,6 +1,8 @@
 import 'dart:math';
 
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/model/prizes_model.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/feature/tambola/src/ui/animations/dotted_border_animation.dart';
 import 'package:felloapp/feature/tambola/src/ui/onboarding/tickets_intro_view.dart';
 import 'package:felloapp/feature/tambola/src/ui/onboarding/tickets_tutorial_assets_view.dart';
@@ -256,6 +258,8 @@ class _TicketsTutorialsSlotMachineViewState
           calledDigits.addAll([46, 17, 63]);
           slotMachineTitle = "3 numbers matched!!";
           subtitle = "Spin to reveal rewards";
+          locator<AnalyticsService>()
+              .track(eventName: AnalyticsEvents.spin1InTutorial);
         } else {
           calledDigits.addAll([79, 4, 20]);
           _dottedLightsController.stop();
@@ -272,6 +276,8 @@ class _TicketsTutorialsSlotMachineViewState
                       highlightRow = true;
                     }));
           });
+          locator<AnalyticsService>()
+              .track(eventName: AnalyticsEvents.spin2InTutorial);
         }
         spinCount++;
         AppState.unblockNavigation();
@@ -585,7 +591,8 @@ class _TicketsTutorialsSlotMachineViewState
                                   const TicketsTutorialsView(),
                             ),
                           );
-
+                          locator<AnalyticsService>().track(
+                              eventName: AnalyticsEvents.howTicketsWorkTapped);
                           // AppState.delegate!.appState.currentAction =
                           //     PageAction(
                           //   page: AssetSelectionViewConfig,
@@ -839,12 +846,12 @@ class TicketsRewardCategoriesWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<Tuple2<String, String>> categories = [
-      const Tuple2("5-7 Matches", "₹ 50,000"),
-      const Tuple2("8-9 Matches", "₹ 70,000"),
-      const Tuple2("10-13 Matches", "₹ 100,000"),
-      const Tuple2("14-15 Matches", "iPhone"),
-    ];
+    // final List<Tuple2<String, String>> categories = [
+    //   const Tuple2("5-7 Matches", "₹ 50,000"),
+    //   const Tuple2("8-9 Matches", "₹ 70,000"),
+    //   const Tuple2("10-13 Matches", "₹ 100,000"),
+    //   const Tuple2("14-15 Matches", "iPhone"),
+    // ];
     return Container(
       margin: hasMargin
           ? EdgeInsets.symmetric(
@@ -951,7 +958,7 @@ class TicketsRewardCategoriesWidget extends StatelessWidget {
                                         ),
                                   ),
                                   separatorBuilder: (context, index) =>
-                                      index != categories.length - 1
+                                      index != value.item1!.prizes!.length - 1
                                           ? const Divider(
                                               color: Colors.white10,
                                             )
@@ -1032,7 +1039,9 @@ class TicketsRewardCategoriesWidget extends StatelessWidget {
                                             ),
                                       ),
                                       separatorBuilder: (context, index) =>
-                                          index != categories.length - 1
+                                          index !=
+                                                  value.item1!.prizes!.length -
+                                                      1
                                               ? const Divider(
                                                   color: Colors.white10,
                                                 )

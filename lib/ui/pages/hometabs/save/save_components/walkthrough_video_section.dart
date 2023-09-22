@@ -41,13 +41,13 @@ class _WalthroughVideosSectionState extends State<WalthroughVideosSection> {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height: SizeConfig.screenWidth! * 0.4 / 0.84,
-      width: SizeConfig.screenWidth,
-      child: listItems == null
-          ? const HomeScreenShimmer()
-          : listItems!.isNotEmpty
-              ? ListView.builder(
+    return listItems == null
+        ? const HomeScreenShimmer()
+        : listItems!.isNotEmpty
+            ? SizedBox(
+                height: SizeConfig.screenWidth! * 0.4 / 0.84,
+                width: SizeConfig.screenWidth,
+                child: ListView.builder(
                   physics: const BouncingScrollPhysics(),
                   padding:
                       EdgeInsets.symmetric(horizontal: SizeConfig.padding14),
@@ -86,9 +86,9 @@ class _WalthroughVideosSectionState extends State<WalthroughVideosSection> {
                       ),
                     ),
                   ),
-                )
-              : const SizedBox(),
-    );
+                ),
+              )
+            : const SizedBox();
   }
 
   void decideAction(HomeScreenCarouselItemsModel item) {
@@ -121,27 +121,31 @@ class HomeScreenShimmer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return ListView.builder(
-      physics: const BouncingScrollPhysics(),
-      padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding14),
-      scrollDirection: Axis.horizontal,
-      itemCount: 5,
-      itemBuilder: (ctx, i) => Shimmer(
-        gradient: const LinearGradient(
-          colors: [Colors.white24, Colors.grey, Colors.black],
-          begin: Alignment.topLeft,
-          end: Alignment.bottomRight,
-        ),
-        child: Card(
-          shape: RoundedRectangleBorder(
-              borderRadius: BorderRadius.circular(SizeConfig.roundness12)),
-          color: Colors.black,
-          margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding8),
-          child: Container(
-            width: SizeConfig.screenWidth! * 0.4,
-            decoration: BoxDecoration(
-                color: Colors.black,
+    return SizedBox(
+      height: SizeConfig.screenWidth! * 0.4 / 0.84,
+      width: SizeConfig.screenWidth,
+      child: ListView.builder(
+        physics: const BouncingScrollPhysics(),
+        padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding14),
+        scrollDirection: Axis.horizontal,
+        itemCount: 5,
+        itemBuilder: (ctx, i) => Shimmer(
+          gradient: const LinearGradient(
+            colors: [Colors.white24, Colors.grey, Colors.black],
+            begin: Alignment.topLeft,
+            end: Alignment.bottomRight,
+          ),
+          child: Card(
+            shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(SizeConfig.roundness12)),
+            color: Colors.black,
+            margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding8),
+            child: Container(
+              width: SizeConfig.screenWidth! * 0.4,
+              decoration: BoxDecoration(
+                  color: Colors.black,
+                  borderRadius: BorderRadius.circular(SizeConfig.roundness12)),
+            ),
           ),
         ),
       ),
@@ -156,13 +160,7 @@ class TambolaVideosSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List videos =
-        AppConfig.getValue(AppConfigKey.tickets_youtube_videos) ??
-            [
-              "https://www.youtube.com/watch?v=mzaIjBjUM1Y",
-              "https://www.youtube.com/watch?v=CDokUdux0rc",
-              "https://www.youtube.com/watch?v=zFhYJRqz_xk"
-            ];
+    final List videos = AppConfig.getValue(AppConfigKey.tickets_youtube_videos);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -184,6 +182,8 @@ class TambolaVideosSection extends StatelessWidget {
                 ),
                 onPressed: () {
                   AppState.delegate!.parseRoute(Uri.parse('ticketsIntro'));
+                  locator<AnalyticsService>().track(
+                      eventName: AnalyticsEvents.ticketsPlayTutorialTapped);
                 },
                 child: Text(
                   "Play Tutorial",

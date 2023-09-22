@@ -1,5 +1,7 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
+import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/ui/elements/title_subtitle_container.dart';
 import 'package:felloapp/ui/pages/hometabs/save/gold_components/gold_pro_card.dart';
@@ -18,10 +20,18 @@ class TicketMultiplierOptionsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    List lendboxDetails = AppConfig.getValue(AppConfigKey.lendbox);
+    bool isLendboxOldUser =
+        locator<UserService>().userSegments.contains(Constants.US_FLO_OLD);
+
+    int floFixed6multiplier = lendboxDetails[0]["tambolaMultiplier"] ?? 4;
+    int floFixed3multiplier = lendboxDetails[1]["tambolaMultiplier"] ?? 3;
+    int floFlexi3multiplier = lendboxDetails[2]["tambolaMultiplier"] ?? 1;
+    int floFlexiMultiplier = lendboxDetails[3]["tambolaMultiplier"] ?? 1;
     List<Tuple2<int, int>> multipliers = [
-      const Tuple2(12, 5),
-      const Tuple2(10, 2),
-      const Tuple2(8, 1),
+      Tuple2(12, floFixed6multiplier),
+      Tuple2(10, isLendboxOldUser ? floFlexi3multiplier : floFixed3multiplier),
+      Tuple2(8, floFlexiMultiplier),
       const Tuple2(99, 1)
     ];
     return Column(

@@ -49,6 +49,7 @@ class TambolaService extends ChangeNotifier {
   List<TambolaTicketModel>? allBestTickets = [];
   TambolaBestTicketsModel? _bestTickets;
   int _tambolaTicketCount = 0;
+  bool hasUserSpinedForToday = false;
   bool _showPastWeekWinStrip = false;
   String _slotMachineTitle = "Reveal today's picks";
 
@@ -56,6 +57,7 @@ class TambolaService extends ChangeNotifier {
 
   set slotMachineTitle(String value) {
     _slotMachineTitle = value;
+    notifyListeners();
   }
 
   bool get showPastWeekWinStrip => _showPastWeekWinStrip;
@@ -88,7 +90,15 @@ class TambolaService extends ChangeNotifier {
 
   bool _isScreenLoading = true;
   bool _isLoading = false;
-  bool isEligible = false;
+  bool _isEligible = false;
+
+  bool get isEligible => _isEligible;
+
+  set isEligible(value) {
+    _isEligible = value;
+    notifyListeners();
+  }
+
   bool showWinScreen = false;
   bool noMoreTickets = false;
   bool _showSpinButton = false;
@@ -275,7 +285,12 @@ class TambolaService extends ChangeNotifier {
     if (forced) {
       await CacheService.invalidateByKey(CacheKeys.TAMBOLA_TICKETS);
     }
-    final ticketsResponse = await _tambolaRepo.getBestTickets();
+    bool postSpin = false;
+    if (DateTime.now().hour > 18 && hasUserSpinedForToday) {
+      postSpin = true;
+    }
+    final ticketsResponse =
+        await _tambolaRepo.getBestTickets(postSpinStats: postSpin);
     if (ticketsResponse.isSuccess()) {
       bestTickets = ticketsResponse.model;
       allBestTickets = bestTickets?.data?.allTickets();
@@ -283,8 +298,9 @@ class TambolaService extends ChangeNotifier {
         isCollapsed = true;
         if (todaysPicks != null &&
             todaysPicks!.isNotEmpty &&
-            !todaysPicks!.contains(-1)) {
-          slotMachineTitle = "Reveal numbers to match with Tickets";
+            !todaysPicks!.contains(-1) &&
+            !hasUserSpinedForToday) {
+          slotMachineTitle = "Reveal Numbers to match with Tickets";
         }
       }
     } else {
@@ -395,6 +411,8 @@ class TambolaService extends ChangeNotifier {
             if (lastSpinTime.toDate().day == DateTime.now().day &&
                 lastSpinTime.toDate().month == DateTime.now().month) {
               //user has already spinned the slot machine
+              hasUserSpinedForToday = true;
+              isEligible = true;
               slotMachineTitle = "Today's Picks";
             } else {
               handleSlotPreSpin();
@@ -474,6 +492,9 @@ class TambolaService extends ChangeNotifier {
     PreferenceHelper.setString(
         PreferenceHelper.CACHE_TICKETS_LAST_SPIN_TIMESTAMP,
         DateTime.now().toIso8601String());
+    hasUserSpinedForToday = true;
+    getBestTambolaTickets(forced: true);
+    getPastWeekWinners(refresh: true).then((value) => isEligible = true);
   }
 
   String getTicketCategoryFromPrizes(String category) {

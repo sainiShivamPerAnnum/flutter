@@ -100,7 +100,7 @@ class RootViewModel extends BaseViewModel {
     if (_rootController.currentNavBarItemModel ==
         RootController.tambolaNavBar) {
       await Future.wait([
-        _tambolaService.getTambolaTickets(limit: 1),
+        // _tambolaService.getTambolaTickets(limit: 1),
         _tambolaService.getBestTambolaTickets(forced: true)
       ]);
       return;
@@ -402,8 +402,11 @@ class RootViewModel extends BaseViewModel {
           AppState.delegate!.appState.currentAction = PageAction(
               state: PageState.replaceWidget,
               page: BlockedUserPageConfig,
-              widget: const BlockedUserView(
+              widget: BlockedUserView(
                 isStateRestricted: true,
+                blockTitle: _userService.userBootUp!.data?.blockTitle ?? '',
+                blockSubtitle:
+                    _userService.userBootUp!.data?.blockSubtitle ?? '',
               ));
           return;
         }
@@ -416,8 +419,11 @@ class RootViewModel extends BaseViewModel {
           AppState.delegate!.appState.currentAction = PageAction(
               state: PageState.replaceWidget,
               page: BlockedUserPageConfig,
-              widget: const BlockedUserView(
+              widget: BlockedUserView(
                 isMaintenanceMode: true,
+                blockTitle: _userService.userBootUp!.data?.blockTitle ?? '',
+                blockSubtitle:
+                    _userService.userBootUp!.data?.blockSubtitle ?? '',
               ));
           return;
         }

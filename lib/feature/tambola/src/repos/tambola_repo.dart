@@ -22,7 +22,8 @@ class TambolaRepo extends BaseRepo {
       ? 'https://qv53yko0b0.execute-api.ap-south-1.amazonaws.com/dev'
       : 'https://7icbm6j9e7.execute-api.ap-south-1.amazonaws.com/prod';
 
-  Future<ApiResponse<TambolaBestTicketsModel>> getBestTickets() async {
+  Future<ApiResponse<TambolaBestTicketsModel>> getBestTickets(
+      {bool postSpinStats = false}) async {
     TambolaBestTicketsModel? bestTickets;
     try {
       final uid = userService.baseUser!.uid;
@@ -36,6 +37,7 @@ class TambolaRepo extends BaseRepo {
           () => APIService.instance.getData(
                 ApiPath.tambolaBestTickets(uid!),
                 token: token,
+                queryParams: {'spinFlag': postSpinStats.toString()},
                 cBaseUrl: _baseUrl,
               ), (dynamic response) {
         bestTickets = TambolaBestTicketsModel.fromJson(response);
