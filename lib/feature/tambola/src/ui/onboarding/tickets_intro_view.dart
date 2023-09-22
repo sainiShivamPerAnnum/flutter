@@ -1,5 +1,7 @@
 import 'dart:async';
 
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/feature/flo_withdrawals/ui/reinvest_slider.dart';
 import 'package:felloapp/feature/tambola/src/ui/onboarding/tickets_tutorial_assets_view.dart';
 import 'package:felloapp/feature/tambola/src/ui/onboarding/tickets_tutorial_slot_machine_view.dart';
@@ -249,13 +251,18 @@ class _TicketsIntroViewState extends State<TicketsIntroView> {
                             onSubmit: () async {
                               Haptic.vibrate();
                               unawaited(locator<TambolaService>().getPrizes());
-                              unawaited(Navigator.push(
-                                context,
-                                MaterialPageRoute(
-                                  builder: (context) =>
-                                      const TicketsTutorialsSlotMachineView(),
+                              unawaited(
+                                Navigator.push(
+                                  context,
+                                  MaterialPageRoute(
+                                    builder: (context) =>
+                                        const TicketsTutorialsSlotMachineView(),
+                                  ),
                                 ),
-                              ));
+                              );
+                              locator<AnalyticsService>().track(
+                                  eventName: AnalyticsEvents
+                                      .ticketTutorialsSwipeStart);
                             },
                           ),
                         ),

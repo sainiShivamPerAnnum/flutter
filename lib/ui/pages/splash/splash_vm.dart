@@ -105,11 +105,11 @@ class LauncherViewModel extends BaseViewModel {
     try {
       await CacheService.initialize();
       //Initialize every time
-      await Future.wait([
-        userService.init(),
-        _getterRepo.setUpAppConfigs(),
-      ]);
+
+      await _getterRepo.setUpAppConfigs();
       locator<UserRepository>().setUpBaseUrl();
+      await userService.init();
+
       //Initialize only if user is onboarded
       if (userService.isUserOnboarded) {
         await Future.wait([

@@ -1,7 +1,9 @@
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
 import 'package:felloapp/core/model/winners_model.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/feature/tambola/src/ui/animations/dotted_border_animation.dart';
 import 'package:felloapp/feature/tambola/src/ui/weekly_results_views/weekly_result.dart';
@@ -99,7 +101,11 @@ class _TicketsPicksWidgetState extends State<TicketsPicksWidget> {
                   controller: controller!,
                   physics: const BouncingScrollPhysics(),
                   children: [
-                    KeepAlivePage(child: const SlotMachineWidget()),
+                    KeepAlivePage(child: SlotMachineWidget(
+                      onTimerEnd: () {
+                        setState(() {});
+                      },
+                    )),
                     KeepAlivePage(child: const WeeklyPicks()),
                   ],
                 ),
@@ -164,7 +170,7 @@ class TicketsTotalWinWidget extends StatelessWidget {
         service.winnerData,
         service.isEligible,
       ),
-      builder: (context, value, child) => value.item1 == null
+      builder: (context, value, child) => !(value.item1 != null && value.item2)
           ? Container(
               padding: EdgeInsets.symmetric(
                   vertical: SizeConfig.padding10,
@@ -189,37 +195,41 @@ class TicketsTotalWinWidget extends StatelessWidget {
                       ),
                     ],
                   ),
-                  SizedBox(height: SizeConfig.padding8),
                   Selector<TambolaService, Tuple2<Winners?, bool>>(
                     builder: (context, value, child) => value.item2
-                        ? InkWell(
-                            onTap: () {
-                              Haptic.strongVibrate();
-                              AppState.delegate!.appState.currentAction =
-                                  PageAction(
-                                state: PageState.addWidget,
-                                page: TWeeklyResultPageConfig,
-                                widget: WeeklyResult(
-                                  winner: value.item1!,
-                                  isEligible: true,
+                        ? Column(
+                            children: [
+                              SizedBox(height: SizeConfig.padding8),
+                              InkWell(
+                                onTap: () {
+                                  Haptic.strongVibrate();
+                                  AppState.delegate!.appState.currentAction =
+                                      PageAction(
+                                    state: PageState.addWidget,
+                                    page: TWeeklyResultPageConfig,
+                                    widget: WeeklyResult(
+                                      winner: value.item1!,
+                                      isEligible: true,
+                                    ),
+                                  );
+                                },
+                                child: Row(
+                                  children: [
+                                    Text(
+                                      "See what you won last week",
+                                      style: TextStyles.sourceSans.body3
+                                          .colour(UiConstants.kFAQsAnswerColor),
+                                    ),
+                                    const Spacer(),
+                                    Icon(
+                                      Icons.arrow_forward_ios_rounded,
+                                      size: SizeConfig.iconSize4,
+                                      color: UiConstants.kFAQsAnswerColor,
+                                    )
+                                  ],
                                 ),
-                              );
-                            },
-                            child: Row(
-                              children: [
-                                Text(
-                                  "See what you won last week",
-                                  style: TextStyles.sourceSans.body3
-                                      .colour(UiConstants.kFAQsAnswerColor),
-                                ),
-                                const Spacer(),
-                                Icon(
-                                  Icons.arrow_forward_ios_rounded,
-                                  size: SizeConfig.iconSize4,
-                                  color: UiConstants.kFAQsAnswerColor,
-                                )
-                              ],
-                            ),
+                              ),
+                            ],
                           )
                         : const SizedBox(),
                     selector: (p0, p1) =>
@@ -246,7 +256,7 @@ class TicketsSundayWinCard extends StatelessWidget {
               service.winnerData,
               service.isEligible,
             ),
-        builder: (context, value, child) => value.item1 != null
+        builder: (context, value, child) => value.item1 != null && value.item2
             ? GestureDetector(
                 onTap: () =>
                     AppState.delegate!.appState.currentAction = PageAction(
@@ -355,7 +365,9 @@ class TicketsSundayWinCard extends StatelessWidget {
 }
 
 class SlotMachineWidget extends StatefulWidget {
-  const SlotMachineWidget({super.key});
+  const SlotMachineWidget({super.key, required this.onTimerEnd});
+
+  final VoidCallback onTimerEnd;
 
   @override
   State<SlotMachineWidget> createState() => _SlotMachineWidgetState();
@@ -443,13 +455,20 @@ class _SlotMachineWidgetState extends State<SlotMachineWidget>
       _tambolaService.ticketsDotLightsController!.stop();
       isSpinning = false;
       RootController.controller.animateTo(
-        SizeConfig.screenWidth! * 0.6,
+        SizeConfig.screenWidth! * 0.8,
         duration: const Duration(seconds: 1),
         curve: Curves.easeInCirc,
       );
       _tambolaService.postSlotSpin();
+      Future.delayed(const Duration(seconds: 1), () {
+        widget.onTimerEnd();
+      });
     });
+    locator<AnalyticsService>()
+        .track(eventName: AnalyticsEvents.ticketSpinTapped);
   }
+
+  bool showButton = false;
 
   @override
   Widget build(BuildContext context) {
@@ -552,79 +571,129 @@ class _SlotMachineWidgetState extends State<SlotMachineWidget>
                 ),
               );
             },
-            child: tService.todaysPicks!.contains(-1)
-                ? ((tService.bestTickets?.data?.totalTicketCount ?? 0) > 0
-                    ? Padding(
-                        padding: const EdgeInsets.all(0),
-                        child: Row(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          children: [
-                            Text(
-                              "Next Spin in ",
-                              style: TextStyles.sourceSansB.body1,
-                            ),
-                            AppCountdownTimer(
-                              style: TextStyles.sourceSansB.body1,
-                              endTime: TimestampModel.fromIsoString(
-                                DateTime(
-                                  DateTime.now().year,
-                                  DateTime.now().month,
-                                  DateTime.now().day,
-                                  18,
-                                  0,
-                                  10,
-                                ).toIso8601String(),
+            child:
+                // !showButton
+                //     ? Row(
+                //         mainAxisAlignment: MainAxisAlignment.center,
+                //         children: [
+                //           Text(
+                //             "Next Spin in ",
+                //             style: TextStyles.sourceSansB.body1,
+                //           ),
+                //           AppCountdownTimer(
+                //             style: TextStyles.sourceSansB.body1,
+                //             endTime: TimestampModel.fromIsoString(
+                //               DateTime(
+                //                 DateTime.now().year,
+                //                 DateTime.now().month,
+                //                 DateTime.now().day,
+                //                 12,
+                //                 36,
+                //                 10,
+                //               ).toIso8601String(),
+                //             ),
+                //             onTimerEnd: () async {
+                //               // await tService.refreshTickets();
+                //               setState(() {
+                //                 showButton = true;
+                //               });
+                //               widget.onTimerEnd();
+                //             },
+                //           )
+                //         ],
+                //       )
+                //     : MaterialButton(
+                //         height: SizeConfig.padding40,
+                //         shape: RoundedRectangleBorder(
+                //             borderRadius:
+                //                 BorderRadius.circular(SizeConfig.roundness5)),
+                //         minWidth: SizeConfig.screenWidth! * 0.8,
+                //         color: isSpinning ? Colors.grey : Colors.white,
+                //         onPressed: () {
+                //           AppState.delegate!.appState.currentAction = PageAction(
+                //             page: AssetSelectionViewConfig,
+                //             widget: const AssetSelectionPage(
+                //                 isTicketsFlow: true, showOnlyFlo: false),
+                //             state: PageState.addWidget,
+                //           );
+                //         },
+                //         child: Text(
+                //           "GET YOUR FIRST TICKET",
+                //           style: TextStyles.rajdhaniB.body0.colour(Colors.black),
+                //         ),
+                //       )
+
+                tService.todaysPicks!.contains(-1)
+                    ? ((tService.bestTickets?.data?.totalTicketCount ?? 0) > 0
+                        ? Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                "Next Spin in ",
+                                style: TextStyles.sourceSansB.body1,
                               ),
-                              onTimerEnd: () => tService.refreshTickets(),
-                            )
-                          ],
-                        ),
-                      )
-                    : MaterialButton(
-                        height: SizeConfig.padding44,
-                        shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.circular(SizeConfig.roundness5)),
-                        minWidth: SizeConfig.screenWidth! * 0.8,
-                        color: isSpinning ? Colors.grey : Colors.white,
-                        onPressed: () {
-                          AppState.delegate!.appState.currentAction =
-                              PageAction(
-                            page: AssetSelectionViewConfig,
-                            widget: const AssetSelectionPage(
-                                isTicketsFlow: true, showOnlyFlo: false),
-                            state: PageState.addWidget,
-                          );
-                        },
-                        child: Text(
-                          "GET YOUR FIRST TICKET",
-                          style:
-                              TextStyles.rajdhaniB.body0.colour(Colors.black),
-                        ),
-                      ))
-                : tService.showSpinButton
-                    ? MaterialButton(
-                        height: SizeConfig.padding44,
-                        shape: RoundedRectangleBorder(
-                            borderRadius:
-                                BorderRadius.circular(SizeConfig.roundness5)),
-                        minWidth: SizeConfig.screenWidth! * 0.3,
-                        color: isSpinning ? Colors.grey : Colors.white,
-                        onPressed: spin,
-                        enableFeedback: !isSpinning,
-                        child: Text(
-                          "SPIN",
-                          style:
-                              TextStyles.rajdhaniB.body0.colour(Colors.black),
-                        ),
-                      )
-                    : Padding(
-                        padding: const EdgeInsets.all(0),
-                        child: Text(
-                          "Next Spin at 6 PM tomorrow",
-                          style: TextStyles.sourceSansB.body1,
-                        ),
-                      ),
+                              AppCountdownTimer(
+                                style: TextStyles.sourceSansB.body1,
+                                endTime: TimestampModel.fromIsoString(
+                                  DateTime(
+                                    DateTime.now().year,
+                                    DateTime.now().month,
+                                    DateTime.now().day,
+                                    18,
+                                    0,
+                                    10,
+                                  ).toIso8601String(),
+                                ),
+                                onTimerEnd: () async {
+                                  await tService.refreshTickets();
+                                  setState(() {});
+                                  widget.onTimerEnd();
+                                },
+                              )
+                            ],
+                          )
+                        : MaterialButton(
+                            height: SizeConfig.padding44,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(
+                                    SizeConfig.roundness5)),
+                            minWidth: SizeConfig.screenWidth! * 0.8,
+                            color: isSpinning ? Colors.grey : Colors.white,
+                            onPressed: () {
+                              AppState.delegate!.appState.currentAction =
+                                  PageAction(
+                                page: AssetSelectionViewConfig,
+                                widget: const AssetSelectionPage(
+                                    isTicketsFlow: true, showOnlyFlo: false),
+                                state: PageState.addWidget,
+                              );
+                            },
+                            child: Text(
+                              "GET YOUR FIRST TICKET",
+                              style: TextStyles.rajdhaniB.body0
+                                  .colour(Colors.black),
+                            ),
+                          ))
+                    : tService.showSpinButton
+                        ? MaterialButton(
+                            height: SizeConfig.padding44,
+                            shape: RoundedRectangleBorder(
+                                borderRadius: BorderRadius.circular(
+                                    SizeConfig.roundness5)),
+                            minWidth: SizeConfig.screenWidth! * 0.3,
+                            color: isSpinning ? Colors.grey : Colors.white,
+                            onPressed: spin,
+                            enableFeedback: !isSpinning,
+                            child: Text(
+                              "SPIN",
+                              style: TextStyles.rajdhaniB.body0
+                                  .colour(Colors.black),
+                            ),
+                          )
+                        : Text(
+                            "Next Spin at 6 PM tomorrow",
+                            style: TextStyles.sourceSansB.body1,
+                          ),
           ),
         ),
       ],

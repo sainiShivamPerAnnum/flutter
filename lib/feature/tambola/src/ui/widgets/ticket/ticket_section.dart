@@ -1,6 +1,8 @@
 // ignore_for_file: lines_longer_than_80_chars
 
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/feature/tambola/src/models/daily_pick_model.dart';
 import 'package:felloapp/feature/tambola/src/models/tambola_best_tickets_model.dart';
 import 'package:felloapp/feature/tambola/src/services/tambola_service.dart';
@@ -550,7 +552,8 @@ class TicketHeader extends StatelessWidget {
                   showOnlyFlo: false,
                 ),
               );
-              // AppState.delegate!.parseRoute(Uri.parse('assetBuy'));
+              locator<AnalyticsService>()
+                  .track(eventName: AnalyticsEvents.getTicketsTapped);
             },
             height: SizeConfig.padding40,
             color: Colors.white,

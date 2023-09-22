@@ -409,7 +409,6 @@ class _LendboxSuccessViewState extends State<LendboxSuccessView>
                         DynamicUiUtils.navBar
                             .indexWhere((element) => element == 'SV');
 
-                    locator<TambolaService>().getBestTambolaTickets();
                     showGtIfAvailable();
                   },
                   child: Text(

@@ -61,6 +61,8 @@ class Data {
   final BanMap? banMap;
   final bool? stateRestricted;
   final bool? isAppInMaintenance;
+  final String blockTitle;
+  final String blockSubtitle;
 
   Data({
     this.marqueeMessages,
@@ -73,29 +75,34 @@ class Data {
     required this.banMap,
     required this.stateRestricted,
     required this.isAppInMaintenance,
+    required this.blockTitle,
+    required this.blockSubtitle,
   });
 
   factory Data.fromMap(Map<String, dynamic> map) {
     return Data(
-        marqueeMessages: map["marqueeMessages"] != null
-            ? (List<String>.from(
-                map['marqueeMessages'].cast<String>() as List<String>))
-            : [],
-        cache: map['cache'] != null
-            ? Cache.fromMap(map['cache'] as Map<String, dynamic>)
-            : Cache.base(),
-        isBlocked: map['isBlocked'] ?? false,
-        isAppUpdateRequired: map['isAppUpdateRequired'] ?? false,
-        isAppForcedUpdateRequired: map['isAppForcedUpdateRequired'] ?? false,
-        notice: map['notice'] != null
-            ? Notice.fromMap(map['notice'] as Map<String, dynamic>)
-            : Notice.base(),
-        signOutUser: map['signOutUser'] ?? false,
-        banMap: map['banMap'] != null
-            ? BanMap.fromMap(map['banMap'] as Map<String, dynamic>)
-            : BanMap.base(),
-        stateRestricted: map['stateRestricted'] ?? false,
-        isAppInMaintenance: map['isAppInMaintenance'] ?? false);
+      marqueeMessages: map["marqueeMessages"] != null
+          ? (List<String>.from(
+              map['marqueeMessages'].cast<String>() as List<String>))
+          : [],
+      cache: map['cache'] != null
+          ? Cache.fromMap(map['cache'] as Map<String, dynamic>)
+          : Cache.base(),
+      isBlocked: map['isBlocked'] ?? false,
+      isAppUpdateRequired: map['isAppUpdateRequired'] ?? false,
+      isAppForcedUpdateRequired: map['isAppForcedUpdateRequired'] ?? false,
+      notice: map['notice'] != null
+          ? Notice.fromMap(map['notice'] as Map<String, dynamic>)
+          : Notice.base(),
+      signOutUser: map['signOutUser'] ?? false,
+      banMap: map['banMap'] != null
+          ? BanMap.fromMap(map['banMap'] as Map<String, dynamic>)
+          : BanMap.base(),
+      stateRestricted: map['stateRestricted'] ?? false,
+      isAppInMaintenance: map['isAppInMaintenance'] ?? false,
+      blockTitle: map['blockTitle'] ?? '',
+      blockSubtitle: map["blockSubtitle"] ?? "",
+    );
   }
 
   factory Data.fromJson(String source) =>
@@ -103,7 +110,7 @@ class Data {
 
   @override
   String toString() {
-    return 'Data(cache: $cache, isBlocked: $isBlocked, isAppUpdateRequired: $isAppUpdateRequired, isAppForcedUpdateRequired: $isAppForcedUpdateRequired, notice: $notice, signOutUser: $signOutUser, banMap: $banMap, stateRestricted: $stateRestricted)';
+    return 'Data(cache: $cache, isBlocked: $isBlocked, isAppUpdateRequired: $isAppUpdateRequired, isAppForcedUpdateRequired: $isAppForcedUpdateRequired, notice: $notice, signOutUser: $signOutUser, banMap: $banMap, stateRestricted: $stateRestricted) blockTitle : $blockTitle, blockSubtitle: $blockSubtitle';
   }
 
   @override

@@ -1,14 +1,17 @@
 import 'dart:async';
 
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/feature/tambola/src/ui/onboarding/tickets_intro_view.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/default_avatar.dart';
 import 'package:felloapp/ui/pages/asset_selection.dart';
+import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
@@ -290,33 +293,38 @@ class _TicketsTutorialsViewState extends State<TicketsTutorialsView>
                             _controller.reverse().then((value) {
                               final userService = locator<UserService>();
                               final userRepo = locator<UserRepository>();
-                              userRepo.updateUser(
-                                uid: userService.baseUser!.uid,
-                                dMap: {
-                                  'mUserPrefsAl': userService
-                                          .baseUser!.userPreferences
-                                          .getPreference(
-                                        Preferences.APPLOCK,
-                                      ) ==
-                                      1,
-                                  'mUserPrefsTn': userService
-                                          .baseUser!.userPreferences
-                                          .getPreference(
-                                        Preferences.TAMBOLANOTIFICATIONS,
-                                      ) ==
-                                      1,
-                                  'mUserPrefsEr': userService
-                                          .baseUser!.userPreferences
-                                          .getPreference(
-                                        Preferences.FLOINVOICEMAIL,
-                                      ) ==
-                                      1,
-                                  'mUserPrefsTo': true
-                                },
-                              ).then((value) {
-                                userService.setBaseUser();
-                                const Log("Preferences updated");
-                              });
+                              if (userService.baseUser!.userPreferences
+                                      .getPreference(
+                                          Preferences.TAMBOLAONBOARDING) !=
+                                  1) {
+                                userRepo.updateUser(
+                                  uid: userService.baseUser!.uid,
+                                  dMap: {
+                                    'mUserPrefsAl': userService
+                                            .baseUser!.userPreferences
+                                            .getPreference(
+                                          Preferences.APPLOCK,
+                                        ) ==
+                                        1,
+                                    'mUserPrefsTn': userService
+                                            .baseUser!.userPreferences
+                                            .getPreference(
+                                          Preferences.TAMBOLANOTIFICATIONS,
+                                        ) ==
+                                        1,
+                                    'mUserPrefsEr': userService
+                                            .baseUser!.userPreferences
+                                            .getPreference(
+                                          Preferences.FLOINVOICEMAIL,
+                                        ) ==
+                                        1,
+                                    'mUserPrefsTo': true
+                                  },
+                                ).then((value) {
+                                  userService.setBaseUser();
+                                  const Log("Preferences updated");
+                                });
+                              }
                               AppState.delegate!.appState.currentAction =
                                   PageAction(
                                 page: AssetSelectionViewConfig,
@@ -324,12 +332,11 @@ class _TicketsTutorialsViewState extends State<TicketsTutorialsView>
                                     isTicketsFlow: true, showOnlyFlo: false),
                                 state: PageState.replaceWidget,
                               );
-
-                              // Navigator.pushReplacement(
-                              //     context,
-                              //     MaterialPageRoute(
-                              //         builder: (context) =>
-                              //             const TicketsTutorialsSlotMachineView()));
+                              locator<AnalyticsService>().track(
+                                  eventName:
+                                      AnalyticsEvents.completeTutorialTapped);
+                              AppState.delegate!.onSilentTapItem(
+                                  RootController.tambolaNavBar);
                             });
                           },
                           child: Text(

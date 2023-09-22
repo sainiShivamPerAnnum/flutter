@@ -1,7 +1,10 @@
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/model/tambola_offers_model.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/feature/tambola/tambola.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/elements/title_subtitle_container.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -43,6 +46,12 @@ class TicketsOffersSection extends StatelessWidget {
                         onTap: () {
                           AppState.delegate!
                               .parseRoute(Uri.parse(offers[i].deep_uri));
+                          locator<AnalyticsService>().track(
+                              eventName: AnalyticsEvents.ticketsOfferTapped,
+                              properties: {
+                                'order': i,
+                                'deepLink': offers[i].deep_uri
+                              });
                         },
                         child: Container(
                           height: SizeConfig.padding128,
