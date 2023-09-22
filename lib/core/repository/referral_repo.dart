@@ -68,7 +68,7 @@ class ReferralRepo extends BaseRepo {
           'offset': (50 * currentPage).toString(),
         },
         token: bearer,
-        cBaseUrl: AppEnvironment.instance.rewards,
+        cBaseUrl: AppEnvironment.instance.referral,
       );
 
       final data = response['data'];
@@ -98,7 +98,7 @@ class ReferralRepo extends BaseRepo {
           'rid': referee,
         },
         token: bearer,
-        cBaseUrl: AppEnvironment.instance.rewards,
+        cBaseUrl: AppEnvironment.instance.referral,
       );
 
       logger.d(response);
@@ -130,7 +130,7 @@ class ReferralRepo extends BaseRepo {
             'phoneNumbers': phoneNumbers,
           },
           token: bearer,
-          cBaseUrl: AppEnvironment.instance.rewards,
+          cBaseUrl: AppEnvironment.instance.referral,
         ),
         (response) {
           return ApiResponse(
