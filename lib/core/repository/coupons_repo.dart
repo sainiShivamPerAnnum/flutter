@@ -1,55 +1,51 @@
 import 'package:felloapp/core/constants/apis_path_constants.dart';
+import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/coupon_card_model.dart';
 import 'package:felloapp/core/model/eligible_coupon_model.dart';
 import 'package:felloapp/core/repository/base_repo.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/custom_logger.dart';
-import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/rsa_encryption.dart';
 
 class CouponRepository extends BaseRepo {
-  final CustomLogger? _logger = locator<CustomLogger>();
-  final _rsaEncryption = new RSAEncryption();
-  final String _baseUrl = FlavorConfig.isDevelopment()
-      ? "https://64w9v5hct9.execute-api.ap-south-1.amazonaws.com/dev"
-      : "https://mwl33qq6sd.execute-api.ap-south-1.amazonaws.com/prod";
+  final CustomLogger _logger = locator<CustomLogger>();
+  final _rsaEncryption = RSAEncryption();
 
   Future<ApiResponse<EligibleCouponResponseModel>> getEligibleCoupon(
-      {String? uid,
+      {required String assetType,
+      String? uid,
       String? couponcode,
-      int? amount,
-      required String assetType}) async {
+      int? amount}) async {
     try {
-      final String _bearer = await getBearerToken();
-      Map<String, dynamic> _body = {
+      final String bearer = await getBearerToken();
+      Map<String, dynamic> body = {
         "uid": uid,
         "type": assetType,
         "couponCode": couponcode,
         "amt": amount,
       };
-      _logger!.d("initiateUserDeposit:: Pre encryption: $_body");
+      _logger.d("initiateUserDeposit:: Pre encryption: $body");
       if (await _rsaEncryption.init()) {
-        _body = _rsaEncryption.encryptRequestBody(_body);
-        _logger!
-            .d("initiateUserDeposit:: Post encryption: ${_body.toString()}");
+        body = _rsaEncryption.encryptRequestBody(body);
+        _logger.d("initiateUserDeposit:: Post encryption: ${body.toString()}");
       } else {
-        _logger!.e("Encrypter initialization failed!! exiting method");
+        _logger.e("Encrypter initialization failed!! exiting method");
       }
       final res = await APIService.instance.postData(
         ApiPath.kFelloCoupons,
-        body: _body,
-        token: _bearer,
-        cBaseUrl: _baseUrl,
+        body: body,
+        token: bearer,
+        cBaseUrl: AppEnvironment.instance.coupons,
       );
-      EligibleCouponResponseModel _reponseModel =
+      EligibleCouponResponseModel reponseModel =
           EligibleCouponResponseModel.fromMap(res["data"]);
 
       return ApiResponse(
-          model: _reponseModel, code: 200, errorMessage: res["message"]);
+          model: reponseModel, code: 200, errorMessage: res["message"]);
     } catch (e) {
-      _logger!.e(e.toString());
+      _logger.e(e.toString());
       return ApiResponse.withError(e.toString(), 400);
     }
   }
@@ -60,7 +56,7 @@ class CouponRepository extends BaseRepo {
       final token = await getBearerToken();
       final couponResponse = await APIService.instance.getData(
         ApiPath.getCoupons,
-        cBaseUrl: _baseUrl,
+        cBaseUrl: AppEnvironment.instance.coupons,
         token: token,
         queryParams: {
           "type": assetType,
@@ -74,7 +70,7 @@ class CouponRepository extends BaseRepo {
           model: coupons, code: 200, errorMessage: couponResponse['message']);
     } catch (e) {
       return ApiResponse.withError(
-        e?.toString() ?? "Unable to fetch coupons",
+        e.toString() ?? "Unable to fetch coupons",
         400,
       );
     }
