@@ -479,9 +479,9 @@ class _TicketsWinnersSliderState extends State<TicketsWinnersSlider> {
   int _currentPage = 0;
 
   final List<Tuple2<String, String>> winnersData = [
-    const Tuple2('Ashwin Singh', "87,234"),
-    const Tuple2('Akshay Kumar', "34,234"),
-    const Tuple2('Momo Singh', "5,234"),
+    const Tuple2('Maryada Umarani', "30,390"),
+    const Tuple2('Manvendra S. Rathore', "27,821"),
+    const Tuple2('Maryada Manish', "18,139"),
   ];
 
   @override

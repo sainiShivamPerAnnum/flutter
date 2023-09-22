@@ -298,6 +298,7 @@ class TambolaService extends ChangeNotifier {
         isCollapsed = true;
         if (todaysPicks != null &&
             todaysPicks!.isNotEmpty &&
+            !todaysPicks!.contains(-1) &&
             !hasUserSpinedForToday) {
           slotMachineTitle = "Reveal Numbers to match with Tickets";
         }
@@ -491,6 +492,7 @@ class TambolaService extends ChangeNotifier {
     PreferenceHelper.setString(
         PreferenceHelper.CACHE_TICKETS_LAST_SPIN_TIMESTAMP,
         DateTime.now().toIso8601String());
+    hasUserSpinedForToday = true;
     getBestTambolaTickets(forced: true);
     getPastWeekWinners(refresh: true).then((value) => isEligible = true);
   }
