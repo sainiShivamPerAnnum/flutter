@@ -278,6 +278,7 @@ class UserRepository extends BaseRepo {
       required bool? isPhysicalDevice,
       String? integrity}) async {
     try {
+      final appInstanceId = await FirebaseAnalytics.instance.appInstanceId;
       final token = await getBearerToken();
       Map<String, dynamic> body = {
         "uid": uid ?? "",
@@ -288,7 +289,7 @@ class UserRepository extends BaseRepo {
         "version": version ?? "",
         "isPhysicalDevice": isPhysicalDevice ?? true,
         "integrity": integrity ?? "",
-        'firebaseAppInstanceId': FirebaseAnalytics.instance.appInstanceId,
+        'firebaseAppInstanceId': appInstanceId,
       };
       logger.d("Device info: $body");
       await APIService.instance.postData(
@@ -574,6 +575,8 @@ class UserRepository extends BaseRepo {
       required int dayOpenCount}) async {
     UserBootUpDetailsModel userBootUp;
 
+    final appInstanceId = await FirebaseAnalytics.instance.appInstanceId;
+
     // try {
     Map<String, dynamic> queryParameters = {
       'deviceId': deviceId,
@@ -581,7 +584,7 @@ class UserRepository extends BaseRepo {
       'appVersion': appVersion,
       'lastOpened': lastOpened,
       'dayOpenCount': dayOpenCount.toString(),
-      'firebaseAppInstanceId': FirebaseAnalytics.instance.appInstanceId,
+      'firebaseAppInstanceId': appInstanceId,
     };
 
     final token = await getBearerToken();
