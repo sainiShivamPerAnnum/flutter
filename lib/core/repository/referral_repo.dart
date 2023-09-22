@@ -1,25 +1,21 @@
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/constants/cache_keys.dart';
 import 'package:felloapp/core/enums/ttl.dart';
+import 'package:felloapp/core/model/app_environment.dart';
 import 'package:felloapp/core/model/referral_details_model.dart';
 import 'package:felloapp/core/model/referral_registered_user_model.dart';
 import 'package:felloapp/core/model/referral_response_model.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/util/api_response.dart';
-import 'package:felloapp/util/flavor_config.dart';
 
 import 'base_repo.dart';
 
 class ReferralRepo extends BaseRepo {
   final _cacheService = CacheService();
-  final _baseUrl = FlavorConfig.isDevelopment()
-      ? "https://2k3cus82jj.execute-api.ap-south-1.amazonaws.com/dev"
-      : "https://bt3lswjiw1.execute-api.ap-south-1.amazonaws.com/prod";
 
   Future<ApiResponse<ReferralResponse>> getReferralCode() async {
     try {
-
       final String bearer = await getBearerToken();
 
       return await _cacheService.cachedApi(
@@ -28,7 +24,7 @@ class ReferralRepo extends BaseRepo {
         () => APIService.instance.getData(
           ApiPath.getReferralCode(userService.baseUser!.uid),
           token: bearer,
-          cBaseUrl: _baseUrl,
+          cBaseUrl: AppEnvironment.instance.referral,
         ),
         (response) {
           return ApiResponse(
@@ -36,7 +32,7 @@ class ReferralRepo extends BaseRepo {
         },
       );
     } catch (e) {
-      logger!.e('getReferralCode $e ${userService!.baseUser!.uid}');
+      logger.e('getReferralCode $e ${userService.baseUser!.uid}');
       return ApiResponse.withError(e.toString(), 400);
     }
   }
@@ -47,7 +43,7 @@ class ReferralRepo extends BaseRepo {
       final response = await APIService.instance.getData(
         ApiPath.getUserIdByRefCode(code),
         token: bearer,
-        cBaseUrl: _baseUrl,
+        cBaseUrl: AppEnvironment.instance.referral,
       );
 
       final data = response['data'];
@@ -56,7 +52,7 @@ class ReferralRepo extends BaseRepo {
         code: 200,
       );
     } catch (e) {
-      logger!.e('getUserIdByRefCode $e');
+      logger.e('getUserIdByRefCode $e');
       return ApiResponse.withError(e.toString() ?? 'Failed to get user', 400);
     }
   }
@@ -67,23 +63,23 @@ class ReferralRepo extends BaseRepo {
     try {
       final String bearer = await getBearerToken();
       final response = await APIService.instance.getData(
-        ApiPath.getReferralHistory(userService!.baseUser!.uid),
+        ApiPath.getReferralHistory(userService.baseUser!.uid),
         queryParams: {
           'offset': (50 * currentPage).toString(),
         },
         token: bearer,
-        cBaseUrl: _baseUrl,
+        cBaseUrl: AppEnvironment.instance.rewards,
       );
 
       final data = response['data'];
-      logger!.d(data);
+      logger.d(data);
 
       return ApiResponse<List<ReferralDetail>>(
         model: ReferralDetail.helper.fromMapArray(data),
         code: 200,
       );
     } catch (e) {
-      logger!.e('Referral History fetch error $e');
+      logger.e('Referral History fetch error $e');
       return ApiResponse.withError(e.toString(), 400);
     }
   }
@@ -102,13 +98,13 @@ class ReferralRepo extends BaseRepo {
           'rid': referee,
         },
         token: bearer,
-        cBaseUrl: _baseUrl,
+        cBaseUrl: AppEnvironment.instance.rewards,
       );
 
-      logger!.d(response);
+      logger.d(response);
       return ApiResponse(model: true, code: 200);
     } catch (e) {
-      logger!.e(e);
+      logger.e(e);
       return ApiResponse.withError(e.toString(), 400);
     }
   }
@@ -134,7 +130,7 @@ class ReferralRepo extends BaseRepo {
             'phoneNumbers': phoneNumbers,
           },
           token: bearer,
-          cBaseUrl: _baseUrl,
+          cBaseUrl: AppEnvironment.instance.rewards,
         ),
         (response) {
           return ApiResponse(
