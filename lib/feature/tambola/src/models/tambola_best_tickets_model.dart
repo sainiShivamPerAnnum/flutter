@@ -97,22 +97,22 @@ class TicketStatsModel {
       TicketStatsModel(
         category: "category_1",
         displayName: "5-7",
-        count: stats["category_1"],
+        count: stats["category_1"] ?? 0,
       ),
       TicketStatsModel(
         category: "category_2",
         displayName: "8-10",
-        count: stats["category_2"],
+        count: stats["category_2"] ?? 0,
       ),
       TicketStatsModel(
         category: "category_3",
         displayName: "11-13",
-        count: stats["category_3"],
+        count: stats["category_3"] ?? 0,
       ),
       TicketStatsModel(
         category: "category_4",
         displayName: "14-15",
-        count: stats["category_4"],
+        count: stats["category_4"] ?? 0,
       )
     ];
   }

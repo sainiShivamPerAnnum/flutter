@@ -540,7 +540,7 @@ class _TicketsWinnersSliderState extends State<TicketsWinnersSlider> {
                     ),
                   ),
                   TextSpan(
-                    text: "from tickets last week",
+                    text: "from tickets last year",
                     style: TextStyles.rajdhaniSB.body3.colour(Colors.white),
                   )
                 ],
