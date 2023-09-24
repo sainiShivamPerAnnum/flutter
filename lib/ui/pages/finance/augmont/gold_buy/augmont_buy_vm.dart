@@ -60,7 +60,7 @@ class GoldBuyViewModel extends BaseViewModel {
   S locale = locator<S>();
   AssetOptionsModel? assetOptionsModel;
   double? incomingAmount;
-  String? _initialCouponCode;
+
   List<ApplicationMeta> appMetaList = [];
   UpiApplication? upiApplication;
   ApplicationMeta? selectedUpiApplication;
@@ -246,7 +246,6 @@ class GoldBuyViewModel extends BaseViewModel {
     String? initialCouponCode,
   }) async {
     setState(ViewState.Busy);
-    _initialCouponCode = initialCouponCode;
     appMetaList = await UpiUtils.getUpiApps();
     showHappyHour = locator<MarketingEventHandlerService>().showHappyHourBanner;
     animationController = AnimationController(
@@ -293,7 +292,7 @@ class GoldBuyViewModel extends BaseViewModel {
     await getAvailableCoupons();
 
     await _applyInitialCoupon(
-      _initialCouponCode,
+      initialCouponCode,
     );
 
     userAugmontState = await CacheManager.readCache(key: "UserAugmontState");

@@ -90,7 +90,6 @@ class LendboxBuyViewModel extends BaseViewModel {
   bool _showMaxCapText = false;
   bool _showMinCapText = false;
   String? couponCode;
-  String? _initialCouponCode;
   bool isSpecialCoupon = true;
   bool showCouponAppliedText = false;
   bool _addSpecialCoupon = false;
@@ -220,7 +219,6 @@ class LendboxBuyViewModel extends BaseViewModel {
     String? initialCouponCode,
   }) async {
     setState(ViewState.Busy);
-    _initialCouponCode = initialCouponCode;
     floAssetType = assetTypeFlow;
     _txnService.floAssetType = floAssetType;
     showHappyHour = locator<MarketingEventHandlerService>().showHappyHourBanner;
@@ -258,7 +256,7 @@ class LendboxBuyViewModel extends BaseViewModel {
     await getAvailableCoupons();
 
     await _applyInitialCoupon(
-      _initialCouponCode,
+      initialCouponCode,
     );
   }
 
