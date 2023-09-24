@@ -329,6 +329,7 @@ class ReferralService extends ChangeNotifier {
         while (!AppState.isRootAvailableForIncomingTaskExecution) {
           await Future.delayed(const Duration(seconds: 1));
           if (timer.elapsed.inSeconds >= 10) {
+            timer.stop();
             break;
           }
         }
