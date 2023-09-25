@@ -73,7 +73,7 @@ class RootViewModel extends BaseViewModel {
   final AppState appState = locator<AppState>();
   final SubService _subscriptionService = locator<SubService>();
   final S locale;
-  int _bottomNavBarIndex = 0;
+  final int _bottomNavBarIndex = 0;
   static bool canExecuteStartupNotification = true;
   bool showHappyHourBanner = false;
   bool fetchCampaign = true;
@@ -133,7 +133,7 @@ class RootViewModel extends BaseViewModel {
         if (!await verifyUserBootupDetails()) return;
         await checkForBootUpAlerts();
         await showLastWeekOverview();
-        locator<LendboxMaturityService>().init();
+        await locator<LendboxMaturityService>().init();
         showMarketingCampings();
         await Future.wait([
           _referralService.verifyReferral(),
@@ -141,7 +141,7 @@ class RootViewModel extends BaseViewModel {
         ]);
 
         unawaited(handleStartUpNotificationData());
-        locator<ReferralService>().fetchReferralCode();
+        await locator<ReferralService>().fetchReferralCode();
         await Future.wait([
           // _userService.checkForNewNotifications(),
           _gtService.updateUnscratchedGTCount(),
@@ -171,16 +171,14 @@ class RootViewModel extends BaseViewModel {
   }
 
   void _initAdhocNotifications() {
-    if (_fcmListener != null && _baseUtil != null) {
-      _fcmHandler.addIncomingMessageListener((valueMap) {
-        if (valueMap['title'] != null && valueMap['body'] != null) {
-          if (AppState.screenStack.last == ScreenItem.dialog ||
-              AppState.screenStack.last == ScreenItem.modalsheet) return;
-          BaseUtil.showPositiveAlert(valueMap['title'], valueMap['body'],
-              seconds: 5);
-        }
-      });
-    }
+    _fcmHandler.addIncomingMessageListener((valueMap) {
+      if (valueMap['title'] != null && valueMap['body'] != null) {
+        if (AppState.screenStack.last == ScreenItem.dialog ||
+            AppState.screenStack.last == ScreenItem.modalsheet) return;
+        BaseUtil.showPositiveAlert(valueMap['title'], valueMap['body'],
+            seconds: 5);
+      }
+    });
   }
 
   // bool showNewInstallPopUp() {
@@ -361,7 +359,7 @@ class RootViewModel extends BaseViewModel {
     if (AppState.isRootAvailableForIncomingTaskExecution == false) return;
     if (updateAvailable) {
       AppState.isRootAvailableForIncomingTaskExecution = false;
-      unawaited(BaseUtil.openDialog(
+      await BaseUtil.openDialog(
         isBarrierDismissible: false,
         hapticVibrate: true,
         addToScreenStack: true,
@@ -379,7 +377,7 @@ class RootViewModel extends BaseViewModel {
                 BaseUtil.launchUrl(Constants.PLAY_STORE_APP_LINK);
               }
             } catch (e) {
-              _logger?.e(e.toString());
+              _logger.e(e.toString());
             }
             AppState.backButtonDispatcher!.didPopRoute();
           },
@@ -388,11 +386,12 @@ class RootViewModel extends BaseViewModel {
             return false;
           },
         ),
-      ));
+      );
+      AppState.isRootAvailableForIncomingTaskExecution = true;
     } else if (isMsgNoticeAvailable) {
       AppState.isRootAvailableForIncomingTaskExecution = false;
       String msg = PreferenceHelper.getString(Constants.MSG_NOTICE);
-      unawaited(BaseUtil.openDialog(
+      await BaseUtil.openDialog(
         isBarrierDismissible: false,
         hapticVibrate: true,
         addToScreenStack: true,
@@ -410,7 +409,8 @@ class RootViewModel extends BaseViewModel {
             return false;
           },
         ),
-      ));
+      );
+      AppState.isRootAvailableForIncomingTaskExecution = true;
     }
   }
 
@@ -422,8 +422,9 @@ class RootViewModel extends BaseViewModel {
         AppState.startupNotifMessage,
         MsgSource.Terminated,
       );
+      AppState.isRootAvailableForIncomingTaskExecution = true;
     }
-    unawaited(_userService.checkForNewNotifications());
+    await _userService.checkForNewNotifications();
   }
 
   Future<void> checkIfAppLockModalSheetIsRequired() async {
@@ -505,13 +506,13 @@ class RootViewModel extends BaseViewModel {
           _userService.signOut(() async {
             _analyticsService.track(eventName: AnalyticsEvents.signOut);
             _analyticsService.signOut();
-            await _userRepo?.removeUserFCM(_userService.baseUser!.uid);
+            await _userRepo.removeUserFCM(_userService.baseUser!.uid);
           }).then((flag) async {
             if (flag) {
               await BaseUtil().signOut();
-              _tambolaService?.dispose();
+              _tambolaService.dispose();
               _analyticsService.signOut();
-              _bankAndKycService?.dump();
+              _bankAndKycService.dump();
               _subscriptionService.dispose();
               _powerPlayService.dump();
               AppState.delegate!.appState.currentAction = PageAction(
@@ -536,7 +537,7 @@ class RootViewModel extends BaseViewModel {
 
         //6. Clear all the caches
         if (_userService.userBootUp!.data!.cache!.keys != null) {
-          for (String id
+          for (final String id
               in _userService.userBootUp!.data!.cache!.keys as List<String>) {
             CacheService.invalidateByKey(id);
           }
@@ -563,7 +564,7 @@ class RootViewModel extends BaseViewModel {
                 BaseUtil.launchUrl(_userService.userBootUp!.data!.notice!.url!);
               }
             } catch (e) {
-              _logger?.d(e.toString());
+              _logger.d(e.toString());
             }
           } else {}
         }
