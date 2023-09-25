@@ -201,7 +201,7 @@ class UserBadgeContainer extends StatelessWidget {
               ),
             ),
           ),
-          if (badgeUrl != null)
+          if (badgeUrl != null && badgeUrl!.isNotEmpty)
             Positioned(
               right: 22,
               bottom: 18,

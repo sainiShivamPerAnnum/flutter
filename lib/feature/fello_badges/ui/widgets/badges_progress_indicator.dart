@@ -49,7 +49,7 @@ class _BadgesProgressIndicatorState extends State<BadgesProgressIndicator> {
 
   @override
   Widget build(BuildContext context) {
-    return widget.isSuperFello
+    return widget.level == 4
         ? const SizedBox.shrink()
         : Row(
             mainAxisSize: MainAxisSize.min,
