@@ -1,7 +1,12 @@
-import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
+import 'package:cached_network_image/cached_network_image.dart';
+import 'package:felloapp/core/enums/user_service_enum.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:property_change_notifier/property_change_notifier.dart';
 
 class UserBadgeContainer extends StatelessWidget {
   const UserBadgeContainer({super.key, this.badgeUrl, this.badgeColor});
@@ -49,24 +54,43 @@ class UserBadgeContainer extends StatelessWidget {
                           Positioned(
                             left: 0,
                             top: 0,
-                            child: SizedBox(
+                            child: Container(
+                              constraints: const BoxConstraints(
+                                minWidth: 72.24,
+                                minHeight: 72.85,
+                              ),
                               width: 72.24,
                               height: 72.85,
-                              child: Stack(
-                                children: [
-                                  Positioned(
-                                    left: 0,
-                                    top: 0,
-                                    child: SizedBox(
-                                      width: 72.24,
-                                      height: 72.85,
-                                      child: ProfileImageSE(
-                                        radius: SizeConfig.avatarRadius * 0.7,
-                                        reactive: false,
-                                      ),
-                                    ),
-                                  ),
+                              child: PropertyChangeConsumer<UserService,
+                                  UserServiceProperties>(
+                                properties: const [
+                                  UserServiceProperties.myUserDpUrl,
+                                  UserServiceProperties.myAvatarId
                                 ],
+                                builder: (context, model, properties) {
+                                  return CircleAvatar(
+                                    key: const ValueKey(Constants.PROFILE),
+                                    radius: SizeConfig.avatarRadius,
+                                    backgroundColor: Colors.black,
+                                    child: model!.avatarId != null &&
+                                            model.avatarId != 'CUSTOM'
+                                        ? SvgPicture.asset(
+                                            "assets/vectors/userAvatars/${model.avatarId}.svg",
+                                            fit: BoxFit.cover,
+                                          )
+                                        : const SizedBox(),
+                                    backgroundImage: (model.avatarId != null &&
+                                            model.avatarId == 'CUSTOM' &&
+                                            model.myUserDpUrl != null &&
+                                            model.myUserDpUrl!.isNotEmpty)
+                                        ? CachedNetworkImageProvider(
+                                            model.myUserDpUrl!,
+                                          )
+                                        : const AssetImage(
+                                            Assets.profilePic,
+                                          ) as ImageProvider<Object>?,
+                                  );
+                                },
                               ),
                             ),
                           ),

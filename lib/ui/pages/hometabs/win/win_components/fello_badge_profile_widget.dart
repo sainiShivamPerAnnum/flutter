@@ -91,7 +91,7 @@ class _ProfileBadgeWidgetState extends State<ProfileBadgeWidget> {
     } else if (userLevel == 4) {
       return const Color(0xFFFFD979);
     } else {
-      return const Color(0xFF191919);
+      return Colors.white.withOpacity(0.30);
     }
   }
 

@@ -66,6 +66,7 @@ class FAppBar extends StatelessWidget implements PreferredSizeWidget {
                   child: ProfileImageSE(
                     key: K.userAvatarKey,
                     radius: SizeConfig.avatarRadius * 0.9,
+                    showBadge: true,
                   ),
                 )
               : const SizedBox(),
