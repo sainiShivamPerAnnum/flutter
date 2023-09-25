@@ -3,6 +3,7 @@ import 'package:felloapp/core/model/portfolio_model.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/feature/fello_badges/bloc/fello_badges_cubit.dart';
+import 'package:felloapp/feature/fello_badges/ui/widgets/badges_loading_screen.dart';
 import 'package:felloapp/feature/fello_badges/ui/widgets/badges_top_user_widget.dart';
 import 'package:felloapp/feature/fello_badges/ui/widgets/fello_badges_backround.dart';
 import 'package:felloapp/feature/fello_badges/ui/widgets/fello_badges_details.dart';
@@ -22,7 +23,6 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
-import 'package:shimmer/shimmer.dart';
 import 'package:tuple/tuple.dart';
 
 class FelloBadgeHome extends StatelessWidget {
@@ -86,30 +86,7 @@ class _FelloBadgeUiState extends State<FelloBadgeUi> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: FAppBar(
-        showHelpButton: true,
-        type: FaqsType.yourAccount,
-        showCoinBar: false,
-        showAvatar: false,
-        leadingPadding: false,
-        action: Row(children: [
-          Selector2<UserService, ScratchCardService, Tuple2<Portfolio?, int>>(
-            builder: (context, value, child) => FelloInfoBar(
-              svgAsset: Assets.scratchCard,
-              size: SizeConfig.padding16,
-              child: "₹${value.item1?.rewards.toInt() ?? 0}",
-              onPressed: () {
-                Haptic.vibrate();
-                AppState.delegate!.parseRoute(Uri.parse("myWinnings"));
-              },
-              mark: value.item2 > 0,
-            ),
-            selector: (p0, userService, scratchCardService) => Tuple2(
-                userService.userPortfolio,
-                scratchCardService.unscratchedTicketsCount),
-          ),
-        ]),
-      ),
+      appBar: buildFAppBar(),
       backgroundColor: const Color(0xFF191919),
       body: FelloBadgesBackground(
         child: BlocBuilder<FelloBadgesCubit, FelloBadgesState>(
@@ -123,124 +100,10 @@ class _FelloBadgeUiState extends State<FelloBadgeUi> {
             if (state is FelloBadgesSuccess) {
               updateUserBadge(state.currentLevel);
 
-              return SingleChildScrollView(
-                child: Column(
-                  children: [
-                    SizedBox(
-                      height: SizeConfig.padding32,
-                    ),
-                    SvgPicture.network(
-                        'https://fello-dev-uploads.s3.ap-south-1.amazonaws.com/super_fello_title.svg'),
-                    SizedBox(
-                      height: SizeConfig.padding12,
-                    ),
-                    Hero(
-                      tag: 'user_badge',
-                      child: UserBadgeContainer(
-                        badgeColor: badgeBorderColor,
-                        badgeUrl: badgeUrl,
-                      ),
-                    ),
-                    SizedBox(
-                      height: SizeConfig.padding12,
-                    ),
-                    state.felloBadgesModel.title!.beautify(
-                      style: TextStyles.rajdhaniB.body1.colour(
-                        state.felloBadgesModel.titleColor!.toColor(),
-                      ),
-                      boldStyle: TextStyles.rajdhaniB.body1.colour(
-                        const Color(0xFF26F1CC),
-                      ),
-                      alignment: TextAlign.center,
-                    ),
-                    UserProgressIndicator(
-                      level: state.currentLevel,
-                    ),
-                    SizedBox(
-                      height: SizeConfig.padding34,
-                    ),
-                    FelloBadgeDetails(
-                      levelsData: state.felloBadgesModel.levels,
-                      currentLevel: state.currentLevel,
-                    ),
-                    SizedBox(
-                      height: SizeConfig.padding34,
-                    ),
-                    HowSuperFelloWorksWidget(
-                      isBoxOpen: false,
-                      superFelloWorks: state.felloBadgesModel.superFelloWorks!,
-                    ),
-                    SizedBox(
-                      height: SizeConfig.padding32,
-                    ),
-                    Text(
-                      'Other Badges on Fello',
-                      textAlign: TextAlign.center,
-                      style: TextStyles.rajdhaniB.body2.colour(
-                        Colors.white,
-                      ),
-                    ),
-                    SizedBox(
-                      height: SizeConfig.padding16,
-                    ),
-                    FelloBadgeList(
-                      badges: state.badgesLeaderBoardModel?.data?.otherBadges,
-                    ),
-                    SizedBox(
-                      height: SizeConfig.padding16,
-                    ),
-                    SvgPicture.network(
-                      'https://fello-dev-uploads.s3.ap-south-1.amazonaws.com/Group+1244832512.svg',
-                      height: SizeConfig.padding80,
-                      width: SizeConfig.padding68,
-                      fit: BoxFit.fill,
-                    ),
-                    Container(
-                      width: SizeConfig.screenWidth,
-                      // height: 500,
-                      padding: EdgeInsets.symmetric(
-                          horizontal: SizeConfig.padding28,
-                          vertical: SizeConfig.padding42),
-                      decoration: const BoxDecoration(color: Color(0xFF1B3637)),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          GridView.builder(
-                            physics: const NeverScrollableScrollPhysics(),
-                            gridDelegate:
-                                SliverGridDelegateWithFixedCrossAxisCount(
-                              crossAxisCount: 3,
-                              crossAxisSpacing: SizeConfig.padding18,
-                              mainAxisSpacing: SizeConfig.padding86,
-                              // childAspectRatio: 3,
-                            ),
-                            padding: EdgeInsets.zero,
-                            itemCount: state.badgesLeaderBoardModel?.data
-                                    ?.leaderBoard?.length ??
-                                0,
-                            shrinkWrap: true,
-                            itemBuilder: (context, index) {
-                              return BadgesTopUserWidget(
-                                leaderBoard: state.badgesLeaderBoardModel?.data
-                                    ?.leaderBoard?[index],
-                              );
-                            },
-                          ),
-                          SizedBox(
-                            height: SizeConfig.padding44,
-                          ),
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      height: SizeConfig.padding28,
-                    ),
-                    LottieBuilder.network(Assets.bottomBannerLottie),
-                    SizedBox(
-                      height: SizeConfig.padding8,
-                    ),
-                  ],
-                ),
+              return FelloBadgeSuccessScreen(
+                badgeBorderColor: badgeBorderColor,
+                badgeUrl: badgeUrl,
+                state: state,
               );
             }
 
@@ -253,17 +116,46 @@ class _FelloBadgeUiState extends State<FelloBadgeUi> {
       ),
     );
   }
+
+  FAppBar buildFAppBar() {
+    return FAppBar(
+      showHelpButton: true,
+      type: FaqsType.yourAccount,
+      showCoinBar: false,
+      showAvatar: false,
+      leadingPadding: false,
+      action: Row(children: [
+        Selector2<UserService, ScratchCardService, Tuple2<Portfolio?, int>>(
+          builder: (context, value, child) => FelloInfoBar(
+            svgAsset: Assets.scratchCard,
+            size: SizeConfig.padding16,
+            child: "₹${value.item1?.rewards.toInt() ?? 0}",
+            onPressed: () {
+              Haptic.vibrate();
+              AppState.delegate!.parseRoute(Uri.parse("myWinnings"));
+            },
+            mark: value.item2 > 0,
+          ),
+          selector: (p0, userService, scratchCardService) => Tuple2(
+              userService.userPortfolio,
+              scratchCardService.unscratchedTicketsCount),
+        ),
+      ]),
+    );
+  }
 }
 
-class FelloBadgeLoadingScreen extends StatelessWidget {
-  const FelloBadgeLoadingScreen({
+class FelloBadgeSuccessScreen extends StatelessWidget {
+  const FelloBadgeSuccessScreen({
     super.key,
     required this.badgeBorderColor,
     required this.badgeUrl,
+    required this.state,
   });
 
   final Color badgeBorderColor;
   final String badgeUrl;
+  final FelloBadgesSuccess state;
 
   @override
   Widget build(BuildContext context) {
@@ -288,59 +180,104 @@ class FelloBadgeLoadingScreen extends StatelessWidget {
           SizedBox(
             height: SizeConfig.padding12,
           ),
-          Transform.translate(
-            offset: Offset(0, SizeConfig.padding1),
-            child: Shimmer.fromColors(
-              baseColor: Colors.grey[300]!.withOpacity(0.1),
-              highlightColor: UiConstants.kBackgroundColor,
-              child: Container(
-                height: SizeConfig.padding108,
-                width: SizeConfig.screenWidth! * 0.9,
-                decoration: ShapeDecoration(
-                  color: Colors.white,
-                  shape: RoundedRectangleBorder(
-                    side: const BorderSide(width: 1, color: Colors.white),
-                    borderRadius: BorderRadius.circular(16),
-                  ),
-                ),
-                margin: EdgeInsets.symmetric(
-                    horizontal: SizeConfig.pageHorizontalMargins),
+          Padding(
+            padding: EdgeInsets.symmetric(
+                horizontal: SizeConfig.pageHorizontalMargins),
+            child: state.felloBadgesModel.title!.beautify(
+              style: TextStyles.rajdhaniB.body1.colour(
+                state.felloBadgesModel.titleColor!.toColor(),
               ),
+              boldStyle: TextStyles.rajdhaniB.body1.colour(
+                const Color(0xFF26F1CC),
+              ),
+              alignment: TextAlign.center,
             ),
+          ),
+          UserProgressIndicator(
+            level: state.currentLevel,
           ),
           SizedBox(
             height: SizeConfig.padding34,
           ),
+          FelloBadgeDetails(
+            levelsData: state.felloBadgesModel.levels,
+            currentLevel: state.currentLevel,
+          ),
           SizedBox(
-            width: SizeConfig.screenWidth!,
-            height: SizeConfig.screenHeight! * 0.765,
-            child: ListView.builder(
-                padding: EdgeInsets.symmetric(
-                    horizontal: SizeConfig.pageHorizontalMargins,
-                    vertical: SizeConfig.padding2),
-                itemCount: 3,
-                scrollDirection: Axis.horizontal,
-                shrinkWrap: true,
-                physics: const AlwaysScrollableScrollPhysics(),
-                itemBuilder: (context, index) {
-                  return Shimmer.fromColors(
-                    baseColor: Colors.grey[300]!.withOpacity(0.1),
-                    highlightColor: UiConstants.kBackgroundColor,
-                    child: Container(
-                      height: SizeConfig.screenHeight! * 0.765,
-                      width: SizeConfig.screenWidth! * 0.9,
-                      decoration: ShapeDecoration(
-                        color: Colors.white,
-                        shape: RoundedRectangleBorder(
-                          side: const BorderSide(width: 1, color: Colors.white),
-                          borderRadius: BorderRadius.circular(16),
-                        ),
-                      ),
-                      margin: EdgeInsets.only(right: SizeConfig.padding12),
-                    ),
-                  );
-                }),
-          )
+            height: SizeConfig.padding34,
+          ),
+          HowSuperFelloWorksWidget(
+            isBoxOpen: false,
+            superFelloWorks: state.felloBadgesModel.superFelloWorks!,
+          ),
+          SizedBox(
+            height: SizeConfig.padding32,
+          ),
+          Text(
+            'Other Badges on Fello',
+            textAlign: TextAlign.center,
+            style: TextStyles.rajdhaniB.body2.colour(
+              Colors.white,
+            ),
+          ),
+          SizedBox(
+            height: SizeConfig.padding16,
+          ),
+          FelloBadgeList(
+            badges: state.badgesLeaderBoardModel?.data?.otherBadges,
+          ),
+          SizedBox(
+            height: SizeConfig.padding16,
+          ),
+          SvgPicture.network(
+            'https://fello-dev-uploads.s3.ap-south-1.amazonaws.com/Group+1244832512.svg',
+            height: SizeConfig.padding80,
+            width: SizeConfig.padding68,
+            fit: BoxFit.fill,
+          ),
+          Container(
+            width: SizeConfig.screenWidth,
+            // height: 500,
+            padding: EdgeInsets.symmetric(
+                horizontal: SizeConfig.padding28,
+                vertical: SizeConfig.padding42),
+            decoration: const BoxDecoration(color: Color(0xFF1B3637)),
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              children: [
+                GridView.builder(
+                  physics: const NeverScrollableScrollPhysics(),
+                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                    crossAxisCount: 3,
+                    crossAxisSpacing: SizeConfig.padding18,
+                    mainAxisSpacing: SizeConfig.padding86,
+                    // childAspectRatio: 3,
+                  ),
+                  padding: EdgeInsets.zero,
+                  itemCount:
+                      state.badgesLeaderBoardModel?.data?.leaderBoard?.length ??
+                          0,
+                  shrinkWrap: true,
+                  itemBuilder: (context, index) {
+                    return BadgesTopUserWidget(
+                      leaderBoard: state
+                          .badgesLeaderBoardModel?.data?.leaderBoard?[index],
+                    );
+                  },
+                ),
+                SizedBox(
+                  height: SizeConfig.padding44,
+                ),
+              ],
+            ),
+          ),
+          SizedBox(
+            height: SizeConfig.padding28,
+          ),
+          LottieBuilder.network(Assets.bottomBannerLottie),
+          SizedBox(
+            height: SizeConfig.padding8,
+          ),
         ],
       ),
     );

@@ -79,22 +79,23 @@ class _FelloBadgeDetailsState extends State<FelloBadgeDetails> {
       width: SizeConfig.screenWidth!,
       height: SizeConfig.screenHeight! * 0.765,
       child: ListView.builder(
-          controller: _scrollController,
-          padding: EdgeInsets.symmetric(
-              horizontal: SizeConfig.pageHorizontalMargins,
-              vertical: SizeConfig.padding2),
-          itemCount: 3,
-          scrollDirection: Axis.horizontal,
-          shrinkWrap: true,
-          physics: const AlwaysScrollableScrollPhysics(),
-          itemBuilder: (context, index) {
-            return BadgeDetailsContainer(
-              index: index,
-              backgroundColor: colors[index],
-              title: title[index],
-              levelDetails: widget.levelsData?[index],
-            );
-          }),
+        controller: _scrollController,
+        padding: EdgeInsets.symmetric(
+            horizontal: SizeConfig.pageHorizontalMargins,
+            vertical: SizeConfig.padding2),
+        itemCount: 3,
+        scrollDirection: Axis.horizontal,
+        shrinkWrap: true,
+        physics: const AlwaysScrollableScrollPhysics(),
+        itemBuilder: (context, index) {
+          return BadgeDetailsContainer(
+            index: index,
+            backgroundColor: colors[index],
+            title: title[index],
+            levelDetails: widget.levelsData?[index],
+          );
+        },
+      ),
     );
   }
 
