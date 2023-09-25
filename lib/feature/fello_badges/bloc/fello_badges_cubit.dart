@@ -80,7 +80,7 @@ class FelloBadgesCubit extends Cubit<FelloBadgesState> {
         );
       }
     } catch (e) {
-      print(e.toString());
+      log(e.toString(), name: "BadgesLeaderBoardModel");
     }
   }
 

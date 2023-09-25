@@ -141,122 +141,92 @@ class _ProfileBadgeWidgetState extends State<ProfileBadgeWidget> {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Padding(
-              padding: EdgeInsets.only(left: SizeConfig.padding8),
-              child: Stack(
-                children: [
-                  Transform.scale(
+            Expanded(
+              child: Padding(
+                padding: EdgeInsets.only(left: SizeConfig.padding8),
+                child: Hero(
+                  tag: 'user_badge',
+                  child: Transform.scale(
                     scale: 1.2,
                     child: UserBadgeContainer(
                       badgeColor: getBorderColor(),
                       badgeUrl: getBadgeUrl(),
                     ),
                   ),
-                  // GestureDetector(
-                  //   onTap: () {
-                  //     //  BaseUtil.openDialog(
-                  //     //   addToScreenStack: true,
-                  //     //   isBarrierDismissible: false,
-                  //     //   hapticVibrate: true,
-                  //     //   content: UserAvatarSelectionDialog(
-                  //     //     onCustomAvatarSelection: handleDPOperation,
-                  //     //     onPresetAvatarSelection: updateUserAvatar,
-                  //     //   ),
-                  //     // );
-                  //   },
-                  //   child: Positioned(
-                  //     top: 10,
-                  //     right: 15,
-                  //     child: Container(
-                  //       width: SizeConfig.padding28,
-                  //       height: SizeConfig.padding28,
-                  //       decoration: const BoxDecoration(
-                  //         color: Colors.white,
-                  //         shape: BoxShape.circle,
-                  //       ),
-                  //       child: Center(
-                  //         // make icon bold
-                  //
-                  //         child: Icon(
-                  //           Icons.add,
-                  //           color: Colors.black,
-                  //           size: SizeConfig.padding22,
-                  //         ),
-                  //       ),
-                  //     ),
-                  //   ),
-                  // )
-                ],
+                ),
               ),
             ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                PropertyChangeConsumer<UserService, UserServiceProperties>(
-                  properties: const [UserServiceProperties.myName],
-                  builder: (context, model, child) {
-                    return Text(
-                      (model!.baseUser!.kycName!.isNotEmpty
-                              ? model.baseUser!.kycName!
-                              : model.baseUser!.name!.isNotEmpty
-                                  ? model.baseUser!.name!
-                                  : "User")
-                          .trim()
-                          .split(' ')
-                          .first
-                          .capitalize(),
-                      style: TextStyles.rajdhaniSB.title4.colour(Colors.white),
-                      overflow: TextOverflow.fade,
-                      maxLines: 1,
-                    );
-                  },
-                ),
-                Text(
-                  getTitle(),
-                  style: TextStyles.sourceSans.body3.colour(
-                    getTextColor(),
+            Expanded(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  PropertyChangeConsumer<UserService, UserServiceProperties>(
+                    properties: const [UserServiceProperties.myName],
+                    builder: (context, model, child) {
+                      return Text(
+                        (model!.baseUser!.kycName!.isNotEmpty
+                                ? model.baseUser!.kycName!
+                                : model.baseUser!.name!.isNotEmpty
+                                    ? model.baseUser!.name!
+                                    : "User")
+                            .trim()
+                            .split(' ')
+                            .first
+                            .capitalize(),
+                        style:
+                            TextStyles.rajdhaniSB.title4.colour(Colors.white),
+                        overflow: TextOverflow.fade,
+                        maxLines: 1,
+                      );
+                    },
                   ),
-                ),
-                SizedBox(height: SizeConfig.padding12),
-                BadgesProgressIndicator(
-                  level: userLevel,
-                  isSuperFello: false,
-                  width: SizeConfig.padding50,
-                ),
-                SizedBox(height: SizeConfig.padding20),
-                Container(
-                  // width: 141.11,
-                  // height: SizeC,
-                  padding: EdgeInsets.symmetric(
-                    horizontal: SizeConfig.padding8,
-                    vertical: SizeConfig.padding4,
-                  ),
-                  decoration: ShapeDecoration(
-                    color: Colors.white,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10.69),
+                  Text(
+                    getTitle(),
+                    style: TextStyles.sourceSans.body3.colour(
+                      getTextColor(),
                     ),
                   ),
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        getContainerText(),
-                        style: TextStyles.sourceSansSB.body4.colour(
-                          const Color(0xFF191919),
-                        ),
-                      ),
-                      SizedBox(width: SizeConfig.padding6),
-                      Icon(
-                        Icons.arrow_forward_ios,
-                        size: SizeConfig.padding12,
-                        color: Colors.black,
-                      )
-                    ],
+                  SizedBox(height: SizeConfig.padding12),
+                  BadgesProgressIndicator(
+                    level: userLevel,
+                    isSuperFello: false,
+                    width: SizeConfig.padding50,
                   ),
-                )
-              ],
+                  SizedBox(height: SizeConfig.padding20),
+                  Container(
+                    // width: 141.11,
+                    // height: SizeC,
+                    padding: EdgeInsets.symmetric(
+                      horizontal: SizeConfig.padding8,
+                      vertical: SizeConfig.padding4,
+                    ),
+                    decoration: ShapeDecoration(
+                      color: Colors.white,
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(10.69),
+                      ),
+                    ),
+                    child: Row(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Text(
+                          getContainerText(),
+                          style: TextStyles.sourceSansSB.body4.colour(
+                            const Color(0xFF191919),
+                          ),
+                        ),
+                        SizedBox(width: SizeConfig.padding6),
+                        Icon(
+                          Icons.arrow_forward_ios,
+                          size: SizeConfig.padding12,
+                          color: Colors.black,
+                        )
+                      ],
+                    ),
+                  )
+                ],
+              ),
             )
           ],
         ),
