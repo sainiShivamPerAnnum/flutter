@@ -88,10 +88,9 @@
                 android:name="io.flutter.embedding.android.NormalTheme"
                 android:resource="@style/NormalTheme" />
                               
-              />
-              <meta-data android:name="com.google.firebase.messaging.default_notification_channel_id" android:value="high_importance_channel" />
-
-
+            <meta-data 
+                android:name="com.google.firebase.messaging.default_notification_channel_id" 
+                android:value="high_importance_channel" />
             
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
@@ -100,12 +99,11 @@
 
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
             <intent-filter>
                 <action android:name="FLUTTER_NOTIFICATION_CLICK" />
-
                 <category android:name="android.intent.category.DEFAULT" />
             </intent-filter>
 
@@ -115,7 +113,6 @@
 
             <intent-filter android:autoVerify="true">
                 <action android:name="android.intent.action.VIEW" />
-
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
 
@@ -123,10 +120,16 @@
                     android:host="fello.onelink.me"
                     android:pathPrefix="/uxu0"
                     android:scheme="https" />
+                    
                 <data
                     android:host="app.fello.in"
                     android:pathPrefix="/uxu0"
                     android:scheme="https" />
+                
+                <data
+                    android:host="fello.in"
+                    android:scheme="https" />
+
             </intent-filter>
         </activity>
 

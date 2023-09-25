@@ -10,137 +10,105 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class CouponWidget extends StatelessWidget {
-  const CouponWidget(this.coupon, this.model, {Key? key, required this.onTap})
-      : super(key: key);
-  final List<CouponModel>? coupon;
+  final List<CouponModel> _coupons;
   final Function(CouponModel coupon) onTap;
   final GoldBuyViewModel model;
 
+  const CouponWidget(
+    List<CouponModel>? coupons,
+    this.model, {
+    required this.onTap,
+    super.key,
+  }) : _coupons = coupons ?? const <CouponModel>[];
+
+  void _onTapApply() {
+    model.buyFieldNode.unfocus();
+    model.showOfferModal(model);
+  }
+
   @override
   Widget build(BuildContext context) {
-    S locale = S.of(context);
-    return coupon == null
-        ? const SizedBox()
-        : SizedBox(
-            height: SizeConfig.screenHeight! * 0.17,
-            child: Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+    if (_coupons.isEmpty) return const SizedBox.shrink();
+    final locale = S.of(context);
+    return SizedBox(
+      height: SizeConfig.screenHeight! * 0.17,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Padding(
+            padding: EdgeInsets.symmetric(
+                horizontal: SizeConfig.pageHorizontalMargins),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                Padding(
-                  padding: EdgeInsets.symmetric(
-                      horizontal: SizeConfig.pageHorizontalMargins),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Text(
-                        locale.btnApplyCoupon,
-                        style: TextStyles.sourceSansSB.body1,
-                      ),
-
-                      GestureDetector(
-                        onTap: () {
-                          model.buyFieldNode.unfocus();
-                          model.showOfferModal(model);
-                        },
-                        child: Text(
-                          'Add Manually',
-                          style: TextStyles.sourceSans.body3
-                              .colour(UiConstants.kTabBorderColor),
-                        ),
-                      ),
-                      // SizedBox(width: SizeConfig.padding10),
-                      // if (model.couponApplyInProgress && model.isSpecialCoupon)
-                      //   SizedBox(
-                      //       width: SizeConfig.padding16,
-                      //       height: SizeConfig.padding16,
-                      //       child: const CircularProgressIndicator(
-                      //         color: UiConstants.primaryColor,
-                      //         strokeWidth: 2,
-                      //       )),
-                    ],
+                Text(
+                  locale.btnApplyCoupon,
+                  style: TextStyles.sourceSansSB.body1,
+                ),
+                GestureDetector(
+                  onTap: _onTapApply,
+                  child: Text(
+                    'Add Manually',
+                    style: TextStyles.sourceSans.body3
+                        .colour(UiConstants.kTabBorderColor),
                   ),
                 ),
-                const SizedBox(
-                  height: 18,
-                ),
-                coupon != null
-                    ? Expanded(
-                        child: ListView.builder(
-                          scrollDirection: Axis.horizontal,
-                          itemBuilder: (context, index) {
-                            return Padding(
-                              padding: index == 0
-                                  ? EdgeInsets.only(
-                                      left: SizeConfig.pageHorizontalMargins)
-                                  : index == coupon!.length - 1
-                                      ? EdgeInsets.only(
-                                          right:
-                                              SizeConfig.pageHorizontalMargins,
-                                          left: SizeConfig.padding14)
-                                      : EdgeInsets.only(
-                                          left: SizeConfig.padding14),
-                              child: _CouponView(
-                                model: coupon![index],
-                                goldBuyViewModel: model,
-                                onTap: onTap,
-                              ),
-                            );
-                          },
-                          itemCount: coupon!.length,
-                        ),
-                      )
-                    : const SizedBox(),
-                // const SizedBox(
-                //   height: 12,
-                // ),
-                // Padding(
-                //   padding:
-                //       EdgeInsets.only(left: SizeConfig.pageHorizontalMargins),
-                //   child: RichText(
-                //     text: TextSpan(
-                //       text: locale.txnHavDiffCoupunCode,
-                //       style: TextStyles.sourceSans.body4,
-                //       children: [
-                //         TextSpan(
-                //             text: locale.txnEnterHereText,
-                //             style: TextStyles.sourceSans.body4
-                //                 .copyWith(decoration: TextDecoration.underline),
-                //             recognizer: TapGestureRecognizer()
-                //               ..onTap = () {
-                //                 model.buyFieldNode.unfocus();
-                //                 model.showOfferModal(model);
-                //               }),
-                //       ],
-                //     ),
-                //   ),
-                // )
               ],
             ),
-          );
+          ),
+          const SizedBox(
+            height: 18,
+          ),
+          Expanded(
+            child: ListView.builder(
+              scrollDirection: Axis.horizontal,
+              itemCount: _coupons.length,
+              itemBuilder: (context, index) {
+                return Padding(
+                  padding: index == 0
+                      ? EdgeInsets.only(left: SizeConfig.pageHorizontalMargins)
+                      : index == _coupons.length - 1
+                          ? EdgeInsets.only(
+                              right: SizeConfig.pageHorizontalMargins,
+                              left: SizeConfig.padding14)
+                          : EdgeInsets.only(left: SizeConfig.padding14),
+                  child: _CouponView(
+                    model: _coupons[index],
+                    goldBuyViewModel: model,
+                    onTap: onTap,
+                  ),
+                );
+              },
+            ),
+          )
+        ],
+      ),
+    );
   }
 }
 
 class _CouponView extends StatelessWidget {
-  const _CouponView(
-      {required this.model,
-      required this.goldBuyViewModel,
-      Key? key,
-      required this.onTap})
-      : super(key: key);
+  const _CouponView({
+    required this.model,
+    required this.goldBuyViewModel,
+    required this.onTap,
+  });
   final CouponModel model;
   final Function(CouponModel coupon) onTap;
   final GoldBuyViewModel goldBuyViewModel;
 
+  void _onTapCoupon() {
+    if (goldBuyViewModel.appliedCoupon == null ||
+        goldBuyViewModel.appliedCoupon?.code != model.code) {
+      if (!goldBuyViewModel.couponApplyInProgress) onTap(model);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
-    S locale = S.of(context);
+    final locale = S.of(context);
     return GestureDetector(
-      onTap: () {
-        if (goldBuyViewModel.appliedCoupon == null ||
-            goldBuyViewModel.appliedCoupon?.code != model.code) {
-          if (!goldBuyViewModel.couponApplyInProgress) onTap(model);
-        }
-      },
+      onTap: _onTapCoupon,
       child: Container(
         width: SizeConfig.screenWidth! * .7,
         height: SizeConfig.padding80,
