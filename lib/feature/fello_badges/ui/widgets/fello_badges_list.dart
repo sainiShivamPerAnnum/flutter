@@ -35,6 +35,7 @@ class FelloBadgeList extends StatelessWidget {
                       isScrollControlled: true,
                       content: ProgressBottomSheet(
                         badgeUrl: Assets.tambolaTitanBadge,
+                        // TODO: Replace with badges?[index].imageUrl
                         title: badges?[index].title ?? '',
                         description: badges?[index].description ?? '',
                         buttonText: 'GET MORE TICKETS',

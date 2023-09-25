@@ -3,7 +3,6 @@ import 'dart:math';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/fello_badges_model.dart';
 import 'package:felloapp/feature/fello_badges/ui/widgets/progress_bottom_sheet.dart';
-import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -33,12 +32,16 @@ class _FelloBadgeDetailsState extends State<FelloBadgeDetails> {
   ];
 
   double getIndex() {
-    if (widget.currentLevel == 1) {
-      return 1.0;
-    } else if (widget.currentLevel == 2) {
-      return 1.0;
-    } else {
-      return 2.0;
+    switch (widget.currentLevel) {
+      case 1:
+        return 0.0;
+      case 2:
+        return 1.0;
+      case 3:
+      case 4:
+        return 2.0;
+      default:
+        return 0.0;
     }
   }
 
@@ -416,7 +419,8 @@ class BadgeDetailsContainer extends StatelessWidget {
                             backgroundColor: Colors.transparent,
                             isScrollControlled: true,
                             content: ProgressBottomSheet(
-                              badgeUrl: Assets.tambolaTitanBadge,
+                              badgeUrl:
+                                  levelDetails?.lvlData?[i].badgeurl ?? '',
                               title: levelDetails?.lvlData?[i].title ?? '',
                               description:
                                   levelDetails?.lvlData?[i].barHeading ?? '',
@@ -441,7 +445,7 @@ class BadgeDetailsContainer extends StatelessWidget {
                           child: Row(
                             children: [
                               SvgPicture.network(
-                                Assets.tambolaTitanBadge,
+                                levelDetails?.lvlData?[i].badgeurl ?? '',
                                 height: SizeConfig.padding56,
                                 width: SizeConfig.padding50,
                                 fit: BoxFit.fill,

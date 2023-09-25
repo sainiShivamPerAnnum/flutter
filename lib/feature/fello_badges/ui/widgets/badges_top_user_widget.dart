@@ -1,3 +1,4 @@
+import 'package:felloapp/core/model/badges_leader_board_model.dart';
 import 'package:felloapp/feature/fello_badges/ui/widgets/badges_custom_painters.dart';
 import 'package:felloapp/feature/fello_badges/ui/widgets/user_badge_custom_painter.dart';
 import 'package:felloapp/ui/elements/default_avatar.dart';
@@ -6,8 +7,11 @@ import 'package:flutter/material.dart';
 
 class BadgesTopUserWidget extends StatelessWidget {
   const BadgesTopUserWidget({
+    required this.leaderBoard,
     super.key,
   });
+
+  final LeaderBoard? leaderBoard;
 
   @override
   Widget build(BuildContext context) {
@@ -50,7 +54,7 @@ class BadgesTopUserWidget extends StatelessWidget {
           child: Align(
             alignment: Alignment.bottomCenter,
             child: Text(
-              'Ajay',
+              leaderBoard?.name ?? 'User',
               textAlign: TextAlign.center,
               style: TextStyles.sourceSans.body4.colour(
                 Colors.white,
@@ -59,15 +63,16 @@ class BadgesTopUserWidget extends StatelessWidget {
           ),
         ),
         Transform.translate(
-          offset: const Offset(5, 25),
+          offset: const Offset(0, 25),
           child: Align(
-              alignment: Alignment.bottomCenter,
-              child: Text(
-                'Saved  ₹1L+',
-                style: TextStyles.sourceSans.body4.colour(
-                  const Color(0xFFBDBDBE).withOpacity(0.8),
-                ),
-              )),
+            alignment: Alignment.bottomCenter,
+            child: Text(
+              leaderBoard?.totalSaving.toString() ?? "",
+              style: TextStyles.sourceSans.body4.colour(
+                const Color(0xFFBDBDBE).withOpacity(0.8),
+              ),
+            ),
+          ),
         ),
       ],
     );

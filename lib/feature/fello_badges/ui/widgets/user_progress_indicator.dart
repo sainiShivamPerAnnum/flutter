@@ -17,7 +17,7 @@ class _UserProgressIndicatorState extends State<UserProgressIndicator> {
   double level2 = 0.0;
 
   void _updateProgress() {
-    switch (2) {
+    switch (widget.level) {
       case 2:
         setState(() {
           level0 = 1.0;

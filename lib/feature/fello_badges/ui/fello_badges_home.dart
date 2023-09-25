@@ -205,29 +205,27 @@ class _FelloBadgeUiState extends State<FelloBadgeUi> {
                           GridView.builder(
                             physics: const NeverScrollableScrollPhysics(),
                             gridDelegate:
-                            SliverGridDelegateWithFixedCrossAxisCount(
+                                SliverGridDelegateWithFixedCrossAxisCount(
                               crossAxisCount: 3,
                               crossAxisSpacing: SizeConfig.padding18,
                               mainAxisSpacing: SizeConfig.padding86,
                               // childAspectRatio: 3,
                             ),
                             padding: EdgeInsets.zero,
-                            itemCount: 6,
+                            itemCount: state.badgesLeaderBoardModel?.data
+                                    ?.leaderBoard?.length ??
+                                0,
                             shrinkWrap: true,
                             itemBuilder: (context, index) {
-                              return const BadgesTopUserWidget();
+                              return BadgesTopUserWidget(
+                                leaderBoard: state.badgesLeaderBoardModel?.data
+                                    ?.leaderBoard?[index],
+                              );
                             },
                           ),
                           SizedBox(
-                            height: SizeConfig.padding84,
+                            height: SizeConfig.padding44,
                           ),
-                          // Text(
-                          //   'LOAD MORE',
-                          //   textAlign: TextAlign.center,
-                          //   style: TextStyles.rajdhaniSB.body3.colour(
-                          //     const Color(0xFF1ADAB7),
-                          //   ),
-                          // )
                         ],
                       ),
                     ),
