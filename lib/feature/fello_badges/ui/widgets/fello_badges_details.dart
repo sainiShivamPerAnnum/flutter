@@ -12,7 +12,7 @@ class FelloBadgeDetails extends StatefulWidget {
   const FelloBadgeDetails(
       {required this.levelsData, required this.currentLevel, super.key});
 
-  final List<LevelDetails>? levelsData;
+  final List<Level>? levelsData;
   final int currentLevel;
 
   @override
@@ -47,22 +47,27 @@ class _FelloBadgeDetailsState extends State<FelloBadgeDetails> {
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      Future.delayed(const Duration(seconds: 1), () {
-        Scrollable.ensureVisible(
-          context,
-          duration: const Duration(milliseconds: 800),
-          curve: Curves.easeInOut,
-          alignment: 0.8,
-        );
+    WidgetsBinding.instance.addPostFrameCallback(
+      (timeStamp) {
+        Future.delayed(
+          const Duration(milliseconds: 800),
+          () {
+            Scrollable.ensureVisible(
+              context,
+              duration: const Duration(milliseconds: 800),
+              curve: Curves.easeInOut,
+              alignment: 0.8,
+            );
 
-        _scrollController.animateTo(
-            (getIndex() * SizeConfig.screenWidth!) -
-                SizeConfig.pageHorizontalMargins,
-            duration: const Duration(milliseconds: 800),
-            curve: Curves.easeInOut);
-      });
-    });
+            _scrollController.animateTo(
+                (getIndex() * SizeConfig.screenWidth!) -
+                    SizeConfig.pageHorizontalMargins,
+                duration: const Duration(milliseconds: 800),
+                curve: Curves.easeInOut);
+          },
+        );
+      },
+    );
   }
 
   @override
@@ -143,7 +148,7 @@ class BadgeDetailsContainer extends StatelessWidget {
       this.levelDetails});
 
   final int index;
-  final LevelDetails? levelDetails;
+  final Level? levelDetails;
   final Color backgroundColor;
   final String title;
 

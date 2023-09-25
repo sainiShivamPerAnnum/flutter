@@ -1,5 +1,5 @@
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/model/fello_badges_model.dart';
+import 'package:felloapp/core/model/badges_leader_board_model.dart';
 import 'package:felloapp/feature/fello_badges/ui/widgets/progress_bottom_sheet.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/styles.dart';
@@ -9,7 +9,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 class FelloBadgeList extends StatelessWidget {
   const FelloBadgeList({super.key, this.badges});
 
-  final List<FelloBadge>? badges;
+  final List<OtherBadge>? badges;
 
   @override
   Widget build(BuildContext context) {
@@ -45,18 +45,22 @@ class FelloBadgeList extends StatelessWidget {
                   child: Column(
                     mainAxisSize: MainAxisSize.min,
                     children: [
-                      ClipRRect(
-                        child: ColorFiltered(
-                          colorFilter: ColorFilter.mode(
-                            (badges?[index].enable ?? false)
-                                ? Colors.transparent
-                                : const Color(0xFF191919),
-                            BlendMode.saturation,
-                          ),
-                          child: SvgPicture.network(
-                            Assets.tambolaTitanBadge,
-                            height: SizeConfig.padding80,
-                            width: SizeConfig.padding68,
+                      ClipPath(
+                        clipper: HexagonClipper(),
+                        child: Transform.translate(
+                          offset: Offset(SizeConfig.padding1, 0),
+                          child: ColorFiltered(
+                            colorFilter: ColorFilter.mode(
+                              (badges?[index].enable ?? false)
+                                  ? Colors.transparent
+                                  : const Color(0xFF191919),
+                              BlendMode.saturation,
+                            ),
+                            child: SvgPicture.network(
+                              'https://fello-dev-uploads.s3.ap-south-1.amazonaws.com/badges/saving_marvel.svg',
+                              height: SizeConfig.padding80,
+                              width: SizeConfig.padding68,
+                            ),
                           ),
                         ),
                       ),
@@ -79,5 +83,29 @@ class FelloBadgeList extends StatelessWidget {
             );
           }),
     );
+  }
+}
+
+class HexagonClipper extends CustomClipper<Path> {
+  @override
+  Path getClip(Size size) {
+    final path = Path();
+    final h = 70.0;
+    final w = 65.0;
+
+    path.moveTo(w / 2, 0); // Move to the top center
+    path.lineTo(w, h / 4); // Line to the top-right
+    path.lineTo(w, (3 * h) / 4); // Line to the bottom-right
+    path.lineTo(w / 2, h); // Line to the bottom center
+    path.lineTo(0, (3 * h) / 4); // Line to the bottom-left
+    path.lineTo(0, h / 4); // Line to the top-left
+    path.close(); // Close the path to complete the hexagon
+
+    return path;
+  }
+
+  @override
+  bool shouldReclip(covariant CustomClipper<Path> oldClipper) {
+    return false;
   }
 }

@@ -181,7 +181,7 @@ class _FelloBadgeUiState extends State<FelloBadgeUi> {
                       height: SizeConfig.padding16,
                     ),
                     FelloBadgeList(
-                      badges: state.felloBadgesModel.bagdes,
+                      badges: state.badgesLeaderBoardModel?.data?.otherBadges,
                     ),
                     SizedBox(
                       height: SizeConfig.padding16,

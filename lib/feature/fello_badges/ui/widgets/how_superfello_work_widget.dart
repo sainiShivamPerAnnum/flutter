@@ -6,7 +6,6 @@ class HowSuperFelloWorksWidget extends StatefulWidget {
   const HowSuperFelloWorksWidget(
       {super.key, this.isBoxOpen = true, required this.superFelloWorks});
 
-  // final Function onStateChanged;
   final bool isBoxOpen;
   final SuperFelloWorks superFelloWorks;
 
@@ -27,8 +26,11 @@ class _HowSuperFelloWorksWidgetState extends State<HowSuperFelloWorksWidget> {
   @override
   Widget build(BuildContext context) {
     return AnimatedContainer(
-      duration: const Duration(milliseconds: 200),
+      duration: const Duration(milliseconds: 300),
+      curve: Curves.ease,
       width: SizeConfig.screenWidth,
+      // height:
+      //     isBoxOpen ? SizeConfig.screenHeight! * 0.33 : SizeConfig.padding64,
       margin: EdgeInsets.symmetric(
         horizontal: SizeConfig.padding24,
       ),
@@ -61,7 +63,7 @@ class _HowSuperFelloWorksWidgetState extends State<HowSuperFelloWorksWidget> {
                 Container(
                   margin: EdgeInsets.only(left: SizeConfig.padding36),
                   child: Text(
-                    widget.superFelloWorks.title ?? 'How SuperFello works?',
+                    widget.superFelloWorks.mainText ?? 'How SuperFello works?',
                     style: TextStyles.rajdhaniSB.body1,
                   ),
                 ),
@@ -80,101 +82,97 @@ class _HowSuperFelloWorksWidgetState extends State<HowSuperFelloWorksWidget> {
               height: SizeConfig.padding20,
             ),
           isBoxOpen
-              ? AnimatedContainer(
-            duration: const Duration(milliseconds: 1200),
-            curve: Curves.easeIn,
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                Text(
-                  widget.superFelloWorks.list?[0] ?? '',
-                        textAlign: TextAlign.center,
-                        style: TextStyles.sourceSans.body2.colour(
-                          Colors.white,
-                        ),
+              ? Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      widget.superFelloWorks.subText?[0] ?? '',
+                      textAlign: TextAlign.center,
+                      style: TextStyles.sourceSans.body2.colour(
+                        Colors.white,
                       ),
-                SizedBox(
-                  height: SizeConfig.padding8,
-                ),
-                SizedBox(
-                  height: 24,
-                  child: ListView.builder(
-                      padding: EdgeInsets.zero,
-                      physics: const NeverScrollableScrollPhysics(),
-                      shrinkWrap: true,
-                      itemCount: 10,
-                      itemBuilder: (context, index) {
-                        return Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Container(
-                              width: SizeConfig.padding1,
-                              height: SizeConfig.padding4,
-                              decoration: const BoxDecoration(
-                                color: Color(0xffA5FCE7),
-                                shape: BoxShape.rectangle,
-                              ),
-                            ),
-                            SizedBox(
-                              height: SizeConfig.padding4,
-                            ),
-                          ],
-                        );
-                      }),
-                ),
-                SizedBox(
-                  height: SizeConfig.padding8,
-                ),
-                Text(
-                  widget.superFelloWorks.list?[1] ?? '',
-                        textAlign: TextAlign.center,
-                        style: TextStyles.sourceSans.body2.colour(
-                          Colors.white,
-                        ),
+                    ),
+                    SizedBox(
+                      height: SizeConfig.padding8,
+                    ),
+                    SizedBox(
+                      height: 24,
+                      child: ListView.builder(
+                          padding: EdgeInsets.zero,
+                          physics: const NeverScrollableScrollPhysics(),
+                          shrinkWrap: true,
+                          itemCount: 10,
+                          itemBuilder: (context, index) {
+                            return Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Container(
+                                  width: SizeConfig.padding1,
+                                  height: SizeConfig.padding4,
+                                  decoration: const BoxDecoration(
+                                    color: Color(0xffA5FCE7),
+                                    shape: BoxShape.rectangle,
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: SizeConfig.padding4,
+                                ),
+                              ],
+                            );
+                          }),
+                    ),
+                    SizedBox(
+                      height: SizeConfig.padding8,
+                    ),
+                    Text(
+                      widget.superFelloWorks.subText?[1] ?? '',
+                      textAlign: TextAlign.center,
+                      style: TextStyles.sourceSans.body2.colour(
+                        Colors.white,
                       ),
-                SizedBox(
-                  height: SizeConfig.padding8,
-                ),
-                SizedBox(
-                  height: 24,
-                  child: ListView.builder(
-                      padding: EdgeInsets.zero,
-                      itemCount: 10,
-                      itemBuilder: (context, index) {
-                        return Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            Container(
-                              width: SizeConfig.padding1,
-                              height: SizeConfig.padding4,
-                              decoration: const BoxDecoration(
-                                color: Color(0xffA5FCE7),
-                                shape: BoxShape.rectangle,
-                              ),
-                            ),
-                            SizedBox(
-                              height: SizeConfig.padding4,
-                            ),
-                          ],
-                        );
-                      }),
-                ),
-                SizedBox(
-                  height: SizeConfig.padding8,
-                ),
-                Text(
-                        widget.superFelloWorks.list?[2] ?? '',
-                        textAlign: TextAlign.center,
-                        style: TextStyles.sourceSans.body2.colour(
-                          Colors.white,
-                        ),
+                    ),
+                    SizedBox(
+                      height: SizeConfig.padding8,
+                    ),
+                    SizedBox(
+                      height: 24,
+                      child: ListView.builder(
+                          padding: EdgeInsets.zero,
+                          itemCount: 10,
+                          itemBuilder: (context, index) {
+                            return Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Container(
+                                  width: SizeConfig.padding1,
+                                  height: SizeConfig.padding4,
+                                  decoration: const BoxDecoration(
+                                    color: Color(0xffA5FCE7),
+                                    shape: BoxShape.rectangle,
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: SizeConfig.padding4,
+                                ),
+                              ],
+                            );
+                          }),
+                    ),
+                    SizedBox(
+                      height: SizeConfig.padding8,
+                    ),
+                    Text(
+                      widget.superFelloWorks.subText?[2] ?? '',
+                      textAlign: TextAlign.center,
+                      style: TextStyles.sourceSans.body2.colour(
+                        Colors.white,
                       ),
-                SizedBox(
-                  height: SizeConfig.padding16,
-                ),
-              ],
-            ),
-          )
+                    ),
+                    SizedBox(
+                      height: SizeConfig.padding16,
+                    ),
+                  ],
+                )
               : const SizedBox()
         ],
       ),

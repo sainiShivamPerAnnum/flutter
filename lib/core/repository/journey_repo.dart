@@ -5,7 +5,6 @@ import 'dart:math';
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/constants/cache_keys.dart';
 import 'package:felloapp/core/enums/ttl.dart';
-import 'package:felloapp/core/model/fello_badges_model.dart';
 import 'package:felloapp/core/model/journey_models/journey_level_model.dart';
 import 'package:felloapp/core/model/journey_models/journey_page_model.dart';
 import 'package:felloapp/core/model/journey_models/user_journey_stats_model.dart';
@@ -313,28 +312,6 @@ class JourneyRepository extends BaseRepo {
       return ApiResponse(model: journeyLevels, code: 200);
     } catch (e) {
       logger.e(e.toString());
-      return ApiResponse.withError(e.toString(), 400);
-    }
-  }
-
-  Future<ApiResponse<FelloBadgesModel>> getFelloBadges() async {
-    try {
-      final uid = userService.baseUser!.uid;
-      final token = await getBearerToken();
-      final res = await APIService.instance.getData(
-        ApiPath.felloBadges(uid!),
-        cBaseUrl: _baseUrlStats,
-        token: token,
-      );
-
-      if (res != null && res['data'] != null && res['data'].isNotEmpty) {
-        return ApiResponse<FelloBadgesModel>(
-            model: FelloBadgesModel.fromJson(res), code: 200);
-      } else {
-        return ApiResponse<FelloBadgesModel>(model: null, code: 200);
-      }
-    } catch (e) {
-      logger.d(e);
       return ApiResponse.withError(e.toString(), 400);
     }
   }

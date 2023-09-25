@@ -254,4 +254,7 @@ class ApiPath {
       '/component/${componentType.value}';
 
   static String felloBadges(String? uid) => "/super-fello?uid=$uid";
+
+  static String badgesLeaderBoard(String? uid) =>
+      "/super-fello/leaderboard?uid=$uid";
 }

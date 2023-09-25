@@ -39,6 +39,7 @@ class PreferenceHelper {
       "tickets_last_spin_timestamp";
   static const CACHE_LIST_OUTDATED_FLO_ASSET = "listOutdatedFloAsset";
   static const _preferredPaymentIntents = 'preferred_payment_intents';
+  static const CACHE_SUPERFELLO_BADGE_API_TIMESTAMP = "superfelloBadgeApiTime";
 
   static Future<SharedPreferences?> initiate() async {
     if (_prefs == null) {
