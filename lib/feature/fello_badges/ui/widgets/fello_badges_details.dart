@@ -424,8 +424,13 @@ class BadgeDetailsContainer extends StatelessWidget {
                                   levelDetails?.lvlData?[i].badgeurl ?? '',
                               title: levelDetails?.lvlData?[i].title ?? '',
                               description:
-                                  levelDetails?.lvlData?[i].barHeading ?? '',
-                              buttonText: 'GET MORE TICKETS',
+                                  levelDetails?.lvlData?[i].bottomSheetText ??
+                                      '',
+                              buttonText: (levelDetails?.lvlData?[i].achieve ??
+                                          1) >=
+                                      100.0
+                                  ? 'GET MORE TICKETS'
+                                  : levelDetails!.lvlData![i].bottomSheetCta!,
                               onButtonPressed: () {
                                 // Navigator.pop(context);
                               },

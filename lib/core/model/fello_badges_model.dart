@@ -101,6 +101,10 @@ class LvlDatum {
   final String? title;
   final String? barHeading;
   final String? badgeurl;
+  final String? referText;
+  final String? bottomSheetText;
+  final String? bottomSheetCta;
+  final String? ctaUrl;
   final DateTime? updatedAt;
 
   LvlDatum({
@@ -108,6 +112,10 @@ class LvlDatum {
     this.title,
     this.barHeading,
     this.badgeurl,
+    this.referText,
+    this.bottomSheetText,
+    this.bottomSheetCta,
+    this.ctaUrl,
     this.updatedAt,
   });
 
@@ -116,17 +124,24 @@ class LvlDatum {
         title: json["title"],
         barHeading: json["barHeading"],
         badgeurl: json["badgeurl"],
+        referText: json["referText"],
+        bottomSheetText: json["bottomSheetText"],
+        bottomSheetCta: json["bottomSheetCta"],
+        ctaUrl: json["cta_url"],
         updatedAt: json["updatedAt"] == null
             ? null
             : DateTime.parse(json["updatedAt"]),
       );
 
-  Map<String, dynamic> toJson() =>
-      {
+  Map<String, dynamic> toJson() => {
         "achieve": achieve,
         "title": title,
         "barHeading": barHeading,
         "badgeurl": badgeurl,
+        "referText": referText,
+        "bottomSheetText": bottomSheetText,
+        "bottomSheetCta": bottomSheetCta,
+        "cta_url": ctaUrl,
         "updatedAt": updatedAt?.toIso8601String(),
       };
 }

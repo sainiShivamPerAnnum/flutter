@@ -89,6 +89,10 @@ class OtherBadge {
   final String? description;
   final String? action;
   final String? buttonText;
+  final String? referText;
+  final String? bottomSheetText;
+  final String? bottomSheetCta;
+  final String? ctaUrl;
 
   OtherBadge({
     this.url,
@@ -97,6 +101,10 @@ class OtherBadge {
     this.description,
     this.action,
     this.buttonText,
+    this.referText,
+    this.bottomSheetText,
+    this.bottomSheetCta,
+    this.ctaUrl,
   });
 
   factory OtherBadge.fromJson(Map<String, dynamic> json) => OtherBadge(
@@ -106,6 +114,10 @@ class OtherBadge {
         description: json["description"],
         action: json["action"],
         buttonText: json["buttonText"],
+        referText: json["referText"],
+        bottomSheetText: json["bottomSheetText"],
+        bottomSheetCta: json["bottomSheetCta"],
+        ctaUrl: json["cta_url"],
       );
 
   Map<String, dynamic> toJson() => {
@@ -115,6 +127,10 @@ class OtherBadge {
         "description": description,
         "action": action,
         "buttonText": buttonText,
+        "referText": referText,
+        "bottomSheetText": bottomSheetText,
+        "bottomSheetCta": bottomSheetCta,
+        "cta_url": ctaUrl,
       };
 }
 
