@@ -3,6 +3,7 @@ import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
+import 'package:felloapp/ui/keys/keys.dart';
 import 'package:felloapp/ui/pages/static/app_footer.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
@@ -41,6 +42,7 @@ class UserProfileDetails extends StatelessWidget {
             model.state == ViewState.Busy
                 ? const Center(child: FullScreenLoader())
                 : ListView(
+                    key: K.profileScrollableKey,
                     shrinkWrap: true,
                     physics: const ClampingScrollPhysics(),
                     children: [
@@ -57,9 +59,9 @@ class UserProfileDetails extends StatelessWidget {
 
 class UserProfileForm extends StatelessWidget {
   const UserProfileForm({
-    Key? key,
     required this.locale,
     required this.model,
+    Key? key,
   }) : super(key: key);
 
   final S locale;
@@ -76,7 +78,7 @@ class UserProfileForm extends StatelessWidget {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             AppTextFieldLabel(
-              locale!.obNameLabel,
+              locale.obNameLabel,
             ),
             AppTextField(
               textEditingController: model.nameController,
@@ -109,7 +111,7 @@ class UserProfileForm extends StatelessWidget {
               height: SizeConfig.padding16,
             ),
             AppTextFieldLabel(
-              locale!.obEmailLabel,
+              locale.obEmailLabel,
             ),
             model.inEditMode && !model.isEmailVerified
                 ? (model.isEmailEnabled
@@ -119,7 +121,7 @@ class UserProfileForm extends StatelessWidget {
                         autoFocus: true,
                         isEnabled: true,
                         focusNode: model.emailFocusNode,
-                        hintText: locale!.obEmailHint,
+                        hintText: locale.obEmailHint,
                         // suffixIcon: UserEmailVerificationButton(),
                         autovalidateMode: AutovalidateMode.onUserInteraction,
                         validator: (value) {
@@ -175,7 +177,7 @@ class UserProfileForm extends StatelessWidget {
               height: SizeConfig.padding16,
             ),
             AppTextFieldLabel(
-              locale!.obGenderLabel,
+              locale.obGenderLabel,
             ),
             AppDropDownField(
               onChanged: (value) {
@@ -184,26 +186,26 @@ class UserProfileForm extends StatelessWidget {
               },
               value: model.gen,
               disabledHintText: model.genderController!.text,
-              hintText: locale!.obGenderHint,
+              hintText: locale.obGenderHint,
               isEnabled: model.inEditMode,
               items: model.inEditMode
                   ? [
                       DropdownMenuItem(
                         value: 1,
                         child: Text(
-                          locale!.obGenderMale,
+                          locale.obGenderMale,
                         ),
                       ),
                       DropdownMenuItem(
                         value: 0,
                         child: Text(
-                          locale!.obGenderFemale,
+                          locale.obGenderFemale,
                         ),
                       ),
                       DropdownMenuItem(
                         value: -1,
                         child: Text(
-                          locale!.obGenderOthers,
+                          locale.obGenderOthers,
                           style: const TextStyle(),
                         ),
                       ),
@@ -214,7 +216,7 @@ class UserProfileForm extends StatelessWidget {
               height: SizeConfig.padding16,
             ),
             AppTextFieldLabel(
-              locale!.obDobLabel,
+              locale.obDobLabel,
             ),
 
             model.inEditMode && model.isDateEnabled
@@ -243,7 +245,7 @@ class UserProfileForm extends StatelessWidget {
                           fieldWidth: SizeConfig.screenWidth! * 0.12,
                           labelText: "dd",
                           maxlength: 2,
-                          validate: (String? val) {
+                          validate: (val) {
                             if (val == null || val.isEmpty) {
                               model.dateInputError = locale.obDateFieldVal;
                             } else if (int.tryParse(val)! > 31 ||
@@ -266,7 +268,7 @@ class UserProfileForm extends StatelessWidget {
                             fieldWidth: SizeConfig.screenWidth! * 0.12,
                             labelText: "mm",
                             maxlength: 2,
-                            validate: (String? val) {
+                            validate: (val) {
                               if (val == null || val.isEmpty) {
                                 // setState(() {
                                 model.dateInputError = locale.obDateFieldVal;
@@ -293,7 +295,7 @@ class UserProfileForm extends StatelessWidget {
                           fieldWidth: SizeConfig.screenWidth! * 0.16,
                           labelText: "yyyy",
                           maxlength: 4,
-                          validate: (String? val) {
+                          validate: (val) {
                             if (val == null || val.isEmpty) {
                               // setState(() {
                               model.dateInputError = locale.obDateFieldVal;
@@ -415,7 +417,7 @@ class UserProfileForm extends StatelessWidget {
                   validator: (val) {
                     return null;
                   },
-                  inputFormatters: [],
+                  inputFormatters: const [],
                 ),
               ],
             ),
@@ -458,7 +460,7 @@ class UserProfileForm extends StatelessWidget {
                   color: UiConstants.kTextColor2,
                   thickness: 0.5,
                 ),
-                Container(
+                SizedBox(
                   height: SizeConfig.padding40,
                   child: Row(
                     children: [
@@ -469,8 +471,7 @@ class UserProfileForm extends StatelessWidget {
                       ),
                       const Spacer(),
                       AppSwitch(
-                        onToggle: (val) =>
-                            model.onAppLockPreferenceChanged(val),
+                        onToggle: model.onAppLockPreferenceChanged,
                         value: model.applock,
                         isLoading: model.isApplockLoading,
                         height: SizeConfig.screenWidth! * 0.059,
@@ -535,6 +536,7 @@ class UserProfileForm extends StatelessWidget {
             SizedBox(height: SizeConfig.padding6),
             Center(
               child: TextButton(
+                key: K.singOutButtonKey,
                 onPressed: model.signout,
                 child: Text(
                   locale.btnSignout,

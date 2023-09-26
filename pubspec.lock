@@ -17,6 +17,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.17"
+  action_slider:
+    dependency: "direct main"
+    description:
+      name: action_slider
+      sha256: fad0720cde9bf06c12594c15da17dba087556a3285875a91aee3d3a64a3072e2
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.7.0"
   adaptive_number:
     dependency: transitive
     description:
@@ -855,6 +863,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_vibrate:
+    dependency: "direct main"
+    description:
+      name: flutter_vibrate
+      sha256: "9cc9b32cf52c90dd34c1cf396ed40010b2c74e69adbb0ff16005afa900971ad8"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.3.0"
   flutter_web_plugins:
     dependency: transitive
     description: flutter
@@ -1168,10 +1184,10 @@ packages:
     dependency: "direct main"
     description:
       name: logger
-      sha256: ba3bc83117b2b49bdd723c0ea7848e8285a0fbc597ba09203b20d329d020c24a
+      sha256: db2ff852ed77090ba9f62d3611e4208a3d11dfa35991a81ae724c113fcb3e3f7
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.2"
+    version: "1.3.0"
   logging:
     dependency: transitive
     description:
@@ -1728,22 +1744,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.4.3"
-  sse:
-    dependency: transitive
-    description:
-      name: sse
-      sha256: "3ff9088cac3f45aa8b91336f1962e3ea6c81baaba0bbba361c05f8aa7fb59442"
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.1.2"
-  sse_channel:
-    dependency: "direct main"
-    description:
-      name: sse_channel
-      sha256: ba2b1382b9423c58fa83e1f01a3a40fbaa16a0594aa984870c88bad0b45d4ca4
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.0.3"
   stack_trace:
     dependency: transitive
     description:
@@ -1960,6 +1960,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.4"
+  vibration:
+    dependency: "direct main"
+    description:
+      name: vibration
+      sha256: "2938d4bf4ecfdb1cdac6b8f20f40cd3e7b7783edd6ca551a46d144a134473626"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.7.7"
   video_player:
     dependency: "direct main"
     description:

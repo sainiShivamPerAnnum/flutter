@@ -2,6 +2,7 @@ import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/appbar/appbar.dart';
+import 'package:felloapp/ui/keys/keys.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_components/current_winnings_info.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_components/news_component.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_components/refer_and_earn_card.dart';
@@ -59,8 +60,16 @@ class Win extends StatelessWidget {
                 //     SpotLightController.instance.startQuickTour();
                 //   },
                 // ),
-                AccountInfoTiles(title: locale.abMyProfile, uri: "/profile"),
-                const AccountInfoTiles(title: "KYC Details", uri: "/kycVerify"),
+                AccountInfoTiles(
+                  key: K.userProfileEntryCTAKey,
+                  title: locale.abMyProfile,
+                  uri: "/profile",
+                ),
+
+                const AccountInfoTiles(
+                  title: "KYC Details",
+                  uri: "/kycVerify",
+                ),
 
                 AccountInfoTiles(
                     title: locale.bankAccDetails, uri: "/bankDetails"),

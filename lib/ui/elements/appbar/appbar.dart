@@ -1,5 +1,6 @@
 import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/ui/elements/coin_bar/coin_bar_view.dart';
+import 'package:felloapp/ui/keys/keys.dart';
 import 'package:felloapp/ui/pages/login/login_components/login_support.dart';
 import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
 import 'package:felloapp/util/assets.dart';
@@ -65,6 +66,7 @@ class FAppBar extends StatelessWidget implements PreferredSizeWidget {
               ? Transform.translate(
                   offset: Offset(0, SizeConfig.padding2),
                   child: ProfileImageSE(
+                    key: K.userAvatarKey,
                     radius: SizeConfig.avatarRadius * 0.9,
                   ),
                 )

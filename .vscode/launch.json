@@ -10,8 +10,8 @@
             "source.organizeImports": true,
             "source.fixAll": true
         }
-    }, 
-    "configurations": [     
+    },
+    "configurations": [
         {
             "name": "felloapp-dev",
             "request": "launch",
@@ -21,7 +21,17 @@
                 "--flavor",
                 "dev",
                 "--debug",
-                
+            ]
+        },
+        {
+            "name": "Integration Test: Run Test",
+            "request": "launch",
+            "type": "dart",
+            "program": "integration_test/login.dart",
+            "args": [
+                "--flavor",
+                "dev",
+                // "--[no-]failFast"
             ]
         },
         {
@@ -78,7 +88,7 @@
                 "--flavor",
                 "dev",
                 "--release"
-              ]
+            ]
         },
         {
             "name": "felloapp-prod-release",
@@ -89,7 +99,7 @@
                 "--flavor",
                 "prod",
                 "--release"
-              ]
+            ]
         },
         {
             "name": "felloapp-qa",
@@ -100,7 +110,7 @@
                 "--flavor",
                 "qa",
                 "--debug"
-              ]
+            ]
         },
     ]
 }
