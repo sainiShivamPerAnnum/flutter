@@ -322,7 +322,16 @@ class BaseUtil extends ChangeNotifier {
     int? amt,
     bool? isSkipMl,
     double? gms,
+    Map<String, String>? queryParams,
   }) {
+    final coupon = queryParams?['coupon'];
+    final amount = queryParams?['amount'];
+    final parsedAmount =
+        int.tryParse(amount ?? ''); // For parsing default value to null.
+    final grams = queryParams?['grams'];
+    final parsedGrams =
+        double.tryParse(grams ?? ''); // For parsing default value to null.
+
     final bool? isAugDepositBanned = _userService
         .userBootUp?.data!.banMap?.investments?.deposit?.augmont?.isBanned;
     final String? augDepositBanNotice = _userService
@@ -336,7 +345,6 @@ class BaseUtil extends ChangeNotifier {
       return;
     }
 
-    double amount = 0;
     AppState.isRepeated = false;
     AppState.onTap = null;
     AppState.isTxnProcessing = false;
@@ -356,25 +364,35 @@ class BaseUtil extends ChangeNotifier {
 
     if (investmentType == InvestmentType.AUGGOLD99) {
       BaseUtil.openModalBottomSheet(
-          addToScreenStack: true,
-          enableDrag: false,
-          hapticVibrate: true,
-          isBarrierDismissible: false,
-          backgroundColor: Colors.transparent,
-          isScrollControlled: true,
-          content: GoldBuyView(
-            onChanged: (p0) => amount = p0,
-            amount: amt,
-            gms: gms,
-            skipMl: isSkipMl ?? false,
-          ));
+        addToScreenStack: true,
+        enableDrag: false,
+        hapticVibrate: true,
+        isBarrierDismissible: false,
+        backgroundColor: Colors.transparent,
+        isScrollControlled: true,
+        content: GoldBuyView(
+          amount: parsedAmount ?? amt,
+          initialCoupon: coupon,
+          gms: parsedGrams ?? gms,
+          skipMl: isSkipMl ?? false,
+        ),
+      );
     }
   }
 
-  static void openFloBuySheet(
-      {required String floAssetType, int? amt, bool? isSkipMl}) {
-    final UserService userService = locator<UserService>();
-    final S locale = locator<S>();
+  static void openFloBuySheet({
+    required String floAssetType,
+    int? amt,
+    Map<String, String>? queryParams,
+    bool? isSkipMl,
+  }) {
+    final coupon = queryParams?['coupon'];
+    final amount = queryParams?['amount'];
+    final parsedAmount =
+        int.tryParse(amount ?? ''); // For parsing default value to null.
+
+    final userService = locator<UserService>();
+    final locale = locator<S>();
     bool isUserBanned = false;
 
     AppState.isRepeated = false;
@@ -431,7 +449,8 @@ class BaseUtil extends ChangeNotifier {
       page: LendboxBuyViewConfig,
       state: PageState.addWidget,
       widget: LendboxBuyView(
-        amount: amt,
+        amount: parsedAmount ?? amt,
+        initialCouponCode: coupon,
         skipMl: isSkipMl ?? false,
         onChanged: (p0) => p0,
         floAssetType: floAssetType,
