@@ -830,7 +830,7 @@ class _CardsState extends State<Cards> with SingleTickerProviderStateMixin {
                                             Selector<UserService, Portfolio>(
                                               builder: (_, portfolio, child) =>
                                                   Text(
-                                                    "₹${getTotalBalance(portfolio)}",
+                                                "₹${getTotalBalance(portfolio)}",
                                                 style: GoogleFonts.sourceSans3(
                                                   fontWeight: FontWeight.w800,
                                                   color: Colors.white,
@@ -949,7 +949,6 @@ class _CardsState extends State<Cards> with SingleTickerProviderStateMixin {
                       color: Colors.white,
                       onPressed: () {
                         BaseUtil.openDepositOptionsModalSheet(timer: 100);
-
                         locator<AnalyticsService>().track(
                             eventName: AnalyticsEvents.globalSaveTapped,
                             properties: {

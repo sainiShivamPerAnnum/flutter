@@ -209,6 +209,8 @@ class Assets {
   static const String winScreenHighestScorers =
       "assets/svg/highest_scorers.svg";
 
+  static const String trophySvg = "assets/vectors/trophy.svg";
+  static const String trophyGlitterSvg = "assets/vectors/trophyGlitter.svg";
   static const String dailyAppBonusHero =
       "assets/vectors/dailyAppBonusHero.svg";
 
@@ -415,4 +417,7 @@ class Assets {
 
   static const String youtubeLogo =
       "https://upload.wikimedia.org/wikipedia/commons/e/ef/Youtube_logo.png";
+
+  //Tickets
+  static const String polkaDots = "assets/images/polkadots.png";
 }

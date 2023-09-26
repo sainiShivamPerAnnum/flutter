@@ -53,7 +53,7 @@ class WeeklyPicks extends StatelessWidget {
       ),
       child: Center(
         child: Text(
-          ball == -1 ? '-' : ball.toString(),
+          ball == -1 || ball == 0 ? '-' : ball.toString(),
           style: TextStyle(
             fontSize: SizeConfig.mediumTextSize! * 1,
             fontWeight: FontWeight.w500,
@@ -67,9 +67,8 @@ class WeeklyPicks extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Selector<TambolaService, DailyPick?>(
-      selector: (_, tambolaService) => tambolaService.weeklyPicks,
-      builder: (context, weeklyPicks, child) {
+    return Consumer<TambolaService>(
+      builder: (context, ts, child) {
         final columns = List<Widget>.generate(
           7,
           (i) => Row(
@@ -80,7 +79,7 @@ class WeeklyPicks extends StatelessWidget {
                 style: TextStyles.sourceSans.body3.colour(Colors.white),
               ),
               SizedBox(width: SizeConfig.padding12),
-              _getDrawBallRow(weeklyPicks, i + 1),
+              _getDrawBallRow(ts.weeklyPicks, i + 1),
             ],
           ),
         );
@@ -88,26 +87,35 @@ class WeeklyPicks extends StatelessWidget {
         // Divide the list in two parts
         final side1 = columns.sublist(0, 4);
         final side2 = columns.sublist(4);
-        return Row(
-          crossAxisAlignment: CrossAxisAlignment.start,
+        return Column(
           children: [
-            Expanded(
-              child: ListView.builder(
-                padding: EdgeInsets.zero,
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: side1.length,
-                itemBuilder: (context, index) => side1[index],
-              ),
+            Text(
+              "Numbers Revealed this Week",
+              style: TextStyles.rajdhaniSB.body1.colour(Colors.white),
             ),
-            Expanded(
-              child: ListView.builder(
-                padding: EdgeInsets.zero,
-                physics: const NeverScrollableScrollPhysics(),
-                shrinkWrap: true,
-                itemCount: side2.length,
-                itemBuilder: (context, index) => side2[index],
-              ),
+            SizedBox(height: SizeConfig.padding12),
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: ListView.builder(
+                    padding: EdgeInsets.zero,
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: side1.length,
+                    itemBuilder: (context, index) => side1[index],
+                  ),
+                ),
+                Expanded(
+                  child: ListView.builder(
+                    padding: EdgeInsets.zero,
+                    physics: const NeverScrollableScrollPhysics(),
+                    shrinkWrap: true,
+                    itemCount: side2.length,
+                    itemBuilder: (context, index) => side2[index],
+                  ),
+                ),
+              ],
             ),
           ],
         );

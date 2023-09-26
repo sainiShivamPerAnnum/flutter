@@ -51,6 +51,7 @@ class _LendboxSuccessViewState extends State<LendboxSuccessView>
     _animationController = AnimationController(vsync: this);
     AppState.blockNavigation();
     _playLottieAnimation();
+    locator<TambolaService>().getBestTambolaTickets(forced: true);
   }
 
   @override
@@ -385,8 +386,8 @@ class _LendboxSuccessViewState extends State<LendboxSuccessView>
                           title: 'Ticket ${getTicketMultiplier()}',
                           tooltip: '',
                           asset: Assets.singleTmbolaTicket,
-                          qty: _txnService.currentTxnTambolaTicketsCount
-                              .toInt(),
+                          qty:
+                              _txnService.currentTxnTambolaTicketsCount.toInt(),
                         )
                     ],
                   ),
@@ -408,7 +409,6 @@ class _LendboxSuccessViewState extends State<LendboxSuccessView>
                         DynamicUiUtils.navBar
                             .indexWhere((element) => element == 'SV');
 
-                    locator<TambolaService>().getBestTambolaTickets();
                     showGtIfAvailable();
                   },
                   child: Text(

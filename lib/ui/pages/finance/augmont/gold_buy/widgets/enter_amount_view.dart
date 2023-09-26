@@ -13,7 +13,6 @@ import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:showcaseview/showcaseview.dart';
 
 class EnterAmountView extends StatelessWidget {
   const EnterAmountView(
@@ -186,68 +185,63 @@ class EnterAmountView extends StatelessWidget {
           SizedBox(
             height: SizeConfig.padding16,
           ),
-          Showcase(
-            key: ShowCaseKeys.currentGoldRates,
-            description: 'These are the current gold rates',
-            child: Container(
-              // width: SizeConfig.screenWidth! * 0.72,
-              decoration: BoxDecoration(
-                color: UiConstants.kArrowButtonBackgroundColor.withOpacity(0.4),
-                borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-              ),
-              // margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding64),
-              height: SizeConfig.padding38,
-              padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding16),
-              child: IntrinsicHeight(
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    model.isGoldRateFetching
-                        ? SpinKitThreeBounce(
-                            size: SizeConfig.body2,
-                            color: UiConstants.primaryColor,
-                          )
-                        : Text(
-                            "₹ ${(model.goldRates != null ? model.goldRates!.goldBuyPrice : 0.0)?.toStringAsFixed(2)}/gm",
-                            style: TextStyles.sourceSans.body4.colour(
-                                UiConstants.kModalSheetMutedTextBackgroundColor
-                                    .withOpacity(0.8)),
-                          ),
-                    SizedBox(
-                      width: SizeConfig.padding10,
+          Container(
+            decoration: BoxDecoration(
+              color: UiConstants.kArrowButtonBackgroundColor.withOpacity(0.4),
+              borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+            ),
+            // margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding64),
+            height: SizeConfig.padding38,
+            padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding16),
+            child: IntrinsicHeight(
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  model.isGoldRateFetching
+                      ? SpinKitThreeBounce(
+                          size: SizeConfig.body2,
+                          color: UiConstants.primaryColor,
+                        )
+                      : Text(
+                          "₹ ${(model.goldRates != null ? model.goldRates!.goldBuyPrice : 0.0)?.toStringAsFixed(2)}/gm",
+                          style: TextStyles.sourceSans.body4.colour(UiConstants
+                              .kModalSheetMutedTextBackgroundColor
+                              .withOpacity(0.8)),
+                        ),
+                  SizedBox(
+                    width: SizeConfig.padding10,
+                  ),
+                  Padding(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: SizeConfig.padding12),
+                    child: Text(
+                      "${model.goldAmountInGrams}${locale.gms}",
+                      style: TextStyles.sourceSans.body3,
                     ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: SizeConfig.padding12),
-                      child: Text(
-                        "${model.goldAmountInGrams}${locale.gms}",
-                        style: TextStyles.sourceSans.body3,
-                      ),
-                    ),
-                    SizedBox(
-                      width: SizeConfig.padding20,
-                    ),
-                    VerticalDivider(
-                      color: UiConstants.kModalSheetSecondaryBackgroundColor
-                          .withOpacity(0.2),
-                      width: 4,
-                    ),
-                    SizedBox(
-                      width: SizeConfig.padding20,
-                    ),
-                    NewCurrentGoldPriceWidget(
-                      fetchGoldRates: model.fetchGoldRates,
-                      goldprice: model.goldRates != null
-                          ? model.goldRates!.goldBuyPrice
-                          : 0.0,
-                      isFetching: model.isGoldRateFetching,
-                      mini: true,
-                    ),
-                  ],
-                ),
+                  ),
+                  SizedBox(
+                    width: SizeConfig.padding20,
+                  ),
+                  VerticalDivider(
+                    color: UiConstants.kModalSheetSecondaryBackgroundColor
+                        .withOpacity(0.2),
+                    width: 4,
+                  ),
+                  SizedBox(
+                    width: SizeConfig.padding20,
+                  ),
+                  NewCurrentGoldPriceWidget(
+                    fetchGoldRates: model.fetchGoldRates,
+                    goldprice: model.goldRates != null
+                        ? model.goldRates!.goldBuyPrice
+                        : 0.0,
+                    isFetching: model.isGoldRateFetching,
+                    mini: true,
+                  ),
+                ],
               ),
             ),
-          )
+          ),
         ],
       ),
     );

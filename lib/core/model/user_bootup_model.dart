@@ -54,12 +54,15 @@ class Data {
   final List<String>? marqueeMessages;
   final Cache? cache;
   final bool? isBlocked;
-  final bool? isAppUpdateRequired;
+  final bool isAppUpdateRequired;
   final bool? isAppForcedUpdateRequired;
   final Notice? notice;
   final bool? signOutUser;
   final BanMap? banMap;
   final bool? stateRestricted;
+  final bool? isAppInMaintenance;
+  final String blockTitle;
+  final String blockSubtitle;
 
   Data({
     this.marqueeMessages,
@@ -71,6 +74,9 @@ class Data {
     required this.signOutUser,
     required this.banMap,
     required this.stateRestricted,
+    required this.isAppInMaintenance,
+    required this.blockTitle,
+    required this.blockSubtitle,
   });
 
   factory Data.fromMap(Map<String, dynamic> map) {
@@ -93,6 +99,9 @@ class Data {
           ? BanMap.fromMap(map['banMap'] as Map<String, dynamic>)
           : BanMap.base(),
       stateRestricted: map['stateRestricted'] ?? false,
+      isAppInMaintenance: map['isAppInMaintenance'] ?? false,
+      blockTitle: map['blockTitle'] ?? '',
+      blockSubtitle: map["blockSubtitle"] ?? "",
     );
   }
 
@@ -101,7 +110,7 @@ class Data {
 
   @override
   String toString() {
-    return 'Data(cache: $cache, isBlocked: $isBlocked, isAppUpdateRequired: $isAppUpdateRequired, isAppForcedUpdateRequired: $isAppForcedUpdateRequired, notice: $notice, signOutUser: $signOutUser, banMap: $banMap, stateRestricted: $stateRestricted)';
+    return 'Data(cache: $cache, isBlocked: $isBlocked, isAppUpdateRequired: $isAppUpdateRequired, isAppForcedUpdateRequired: $isAppForcedUpdateRequired, notice: $notice, signOutUser: $signOutUser, banMap: $banMap, stateRestricted: $stateRestricted) blockTitle : $blockTitle, blockSubtitle: $blockSubtitle';
   }
 
   @override

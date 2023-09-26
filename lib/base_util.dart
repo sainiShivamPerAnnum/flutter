@@ -48,7 +48,6 @@ import 'package:felloapp/ui/pages/finance/lendbox/withdrawal/lendbox_withdrawal_
 import 'package:felloapp/ui/pages/games/web/web_home/web_game_modal_sheet.dart';
 import 'package:felloapp/ui/pages/support/bug_report/ui/found_bug.dart';
 import 'package:felloapp/ui/service_elements/username_input/username_input_view.dart';
-import 'package:felloapp/ui/shared/spotlight_controller.dart';
 import 'package:felloapp/util/app_toasts_utils.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
@@ -62,6 +61,7 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
@@ -789,7 +789,7 @@ class BaseUtil extends ChangeNotifier {
       manualReferralCode = null;
       referrerUserId = null;
       _setRuntimeDefaults();
-      SpotLightController.instance.dispose();
+      await FirebaseMessaging.instance.deleteToken();
 
       return true;
     } catch (e) {

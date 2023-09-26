@@ -1,9 +1,5 @@
 import 'package:felloapp/feature/tambola/src/models/daily_pick_model.dart';
 import 'package:felloapp/feature/tambola/src/models/tambola_best_tickets_model.dart';
-import 'package:felloapp/feature/tambola/src/models/tambola_ticket_model.dart';
-import 'package:felloapp/feature/tambola/src/ui/widgets/page_view_with_indicator.dart';
-import 'package:felloapp/feature/tambola/src/ui/widgets/ticket/no_ticket_widget.dart';
-import 'package:felloapp/feature/tambola/src/ui/widgets/ticket/tambola_ticket.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 
@@ -116,58 +112,58 @@ class _TicketsViewState extends State<TicketsView>
             SizedBox(
               height: SizeConfig.padding16,
             ),
-            AnimatedSwitcher(
-              duration: const Duration(milliseconds: 500),
-              child: _buildTabContent(),
-            ),
+            // AnimatedSwitcher(
+            //   duration: const Duration(milliseconds: 500),
+            //   child: _buildTabContent(),
+            // ),
           ],
         ),
       ),
     );
   }
 
-  Widget _buildTabContent() {
-    // Widget buildObject = NoTicketWidget();
-    final bestTicketsData = widget.bestTickets?.data;
-    if (bestTicketsData == null) return const NoTicketWidget();
-    List<TambolaTicketModel> tickets = [];
-    switch (_tabController.index) {
-      case 0:
-        if (bestTicketsData.oneRow != null) {
-          tickets.addAll(bestTicketsData.oneRow!);
-        }
-        break;
-      case 1:
-        if (bestTicketsData.twoRows != null) {
-          tickets.addAll(bestTicketsData.twoRows!);
-        }
-        break;
-      case 2:
-        if (bestTicketsData.corners != null) {
-          tickets.addAll(bestTicketsData.corners!);
-        }
-        break;
-      case 3:
-        if (bestTicketsData.fullHouse != null) {
-          tickets.addAll(bestTicketsData.fullHouse!);
-        }
-        break;
-    }
-    if (tickets.isNotEmpty) {
-      return PageViewWithIndicator(
-        showIndicator: tickets.length > 1,
-        controller: controller,
-        children: tickets
-            .map(
-              (e) => TambolaTicket(
-                board: e,
-                calledDigits: widget.weeklyPicks.toList(),
-              ),
-            )
-            .toList(),
-      );
-    } else {
-      return const NoTicketWidget();
-    }
-  }
+  // Widget _buildTabContent() {
+  //   // Widget buildObject = NoTicketWidget();
+  //   final bestTicketsData = widget.bestTickets?.data;
+  //   if (bestTicketsData == null) return const NoTicketWidget();
+  //   List<TambolaTicketModel> tickets = [];
+  //   switch (_tabController.index) {
+  //     case 0:
+  //       if (bestTicketsData.oneRow != null) {
+  //         tickets.addAll(bestTicketsData.oneRow!);
+  //       }
+  //       break;
+  //     case 1:
+  //       if (bestTicketsData.twoRows != null) {
+  //         tickets.addAll(bestTicketsData.twoRows!);
+  //       }
+  //       break;
+  //     case 2:
+  //       if (bestTicketsData.corners != null) {
+  //         tickets.addAll(bestTicketsData.corners!);
+  //       }
+  //       break;
+  //     case 3:
+  //       if (bestTicketsData.fullHouse != null) {
+  //         tickets.addAll(bestTicketsData.fullHouse!);
+  //       }
+  //       break;
+  //   }
+  //   if (tickets.isNotEmpty) {
+  //     return PageViewWithIndicator(
+  //       showIndicator: tickets.length > 1,
+  //       controller: controller,
+  //       children: tickets
+  //           .map(
+  //             (e) => TambolaTicket(
+  //               board: e,
+  //               calledDigits: widget.weeklyPicks.toList(),
+  //             ),
+  //           )
+  //           .toList(),
+  //     );
+  //   } else {
+  //     return const NoTicketWidget();
+  //   }
+  // }
 }

@@ -13,10 +13,8 @@ import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/show_case_key.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
-import 'package:showcaseview/showcaseview.dart';
 
 class Win extends StatelessWidget {
   const Win({Key? key}) : super(key: key);
@@ -77,12 +75,7 @@ class Win extends StatelessWidget {
                 //Scratch Cards count and navigation
                 const ScratchCardsInfoStrip(),
                 //Current Winnings Information
-                Showcase(
-                  key: ShowCaseKeys.CurrentWinnings,
-                  description:
-                      'Your winnings from scratch cards and coupons show here. Redeem your winnings as Digital Gold when you reach ₹200',
-                  child: const CurrentWinningsInfo(),
-                ),
+                const CurrentWinningsInfo(),
                 //Refer and Earn
                 const ReferEarnCard(),
                 // Referral Leaderboard

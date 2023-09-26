@@ -11,6 +11,7 @@ import 'package:felloapp/core/model/happy_hour_campign.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/marketing_event_handler_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/feature/tambola/src/ui/onboarding/tickets_tutorial_slot_machine_view.dart';
 import 'package:felloapp/feature/tambola/tambola.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
@@ -22,6 +23,7 @@ import 'package:felloapp/ui/pages/static/gold_rate_card.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/extensions/rich_text_extension.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
@@ -37,12 +39,14 @@ class AssetSelectionPage extends StatelessWidget {
       Key? key,
       this.amount,
       this.isSkipMl,
+      this.isTicketsFlow = false,
       this.isFromGlobal = false})
       : super(key: key);
 
   final bool showOnlyFlo;
   final int? amount;
   final bool? isSkipMl;
+  final bool isTicketsFlow;
   final bool isFromGlobal;
 
   bool _showHappyHour() {
@@ -62,45 +66,103 @@ class AssetSelectionPage extends StatelessWidget {
 
     return Scaffold(
       backgroundColor: const Color(0xff232326),
-      body: SingleChildScrollView(
-        physics: const BouncingScrollPhysics(),
-        child: Padding(
-          padding: EdgeInsets.symmetric(
-              horizontal: SizeConfig.pageHorizontalMargins),
-          child: Column(
-            children: [
-              if (isFromGlobal) SizedBox(height: SizeConfig.fToolBarHeight / 2),
-              AppBar(
-                elevation: 0,
-                backgroundColor: Colors.transparent,
-                leading: IconButton(
-                  icon: const Icon(
-                    Icons.arrow_back_ios,
-                    color: Colors.white,
-                  ),
-                  onPressed: () {
-                    locator<AnalyticsService>().track(
-                      eventName: AnalyticsEvents.savePageClosed,
-                    );
+      body: SafeArea(
+        child: SingleChildScrollView(
+          physics: const BouncingScrollPhysics(),
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+                horizontal: SizeConfig.pageHorizontalMargins),
+            child: Column(
+              children: [
+                if (isFromGlobal)
+                  SizedBox(height: SizeConfig.fToolBarHeight / 2),
+                isTicketsFlow
+                    ? SafeArea(
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.center,
+                          children: [
+                            SizedBox(
+                              child: Row(
+                                mainAxisAlignment: MainAxisAlignment.end,
+                                children: [
+                                  TextButton(
+                                    onPressed: () {
+                                      Haptic.vibrate();
+                                      AppState.backButtonDispatcher!
+                                          .didPopRoute();
+                                    },
+                                    child: Text(
+                                      "SAVE LATER >>",
+                                      style: TextStyles.rajdhaniB.body2
+                                          .colour(UiConstants.primaryColor),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                            SizedBox(height: SizeConfig.padding10),
+                            const Head(),
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: SizeConfig.pageHorizontalMargins),
+                              child: Text(
+                                "Select min ₹500 in any asset to invest and get Tickets",
+                                style: TextStyles.sourceSansM.body3
+                                    .colour(Colors.white),
+                                textAlign: TextAlign.center,
+                              ),
+                            ),
+                            SizedBox(
+                              height: SizeConfig.padding16,
+                            ),
+                            ListTile(
+                              contentPadding: EdgeInsets.zero,
+                              title: Text(
+                                "Current Tickets:",
+                                style: TextStyles.rajdhani.body2
+                                    .colour(Colors.grey),
+                              ),
+                              trailing: Text(
+                                "${locator<UserService>().userFundWallet?.tickets?["total"] ?? 0}",
+                                style: TextStyles.sourceSansM.body0
+                                    .colour(Colors.white),
+                              ),
+                            )
+                          ],
+                        ),
+                      )
+                    : AppBar(
+                        elevation: 0,
+                        backgroundColor: Colors.transparent,
+                        leading: IconButton(
+                          icon: const Icon(
+                            Icons.arrow_back_ios,
+                            color: Colors.white,
+                          ),
+                          onPressed: () {
+                            locator<AnalyticsService>().track(
+                              eventName: AnalyticsEvents.savePageClosed,
+                            );
 
-                    AppState.backButtonDispatcher?.didPopRoute();
-                  },
-                ),
-                title: Text(
-                  'Select plan to save',
-                  style: TextStyles.rajdhaniSB.title5,
-                ),
-              ),
-              if (!showOnlyFlo) SizedBox(height: SizeConfig.padding24),
-              if (!showOnlyFlo)
-                GoldPlanWidget(
-                  fetchGoldRate: !showOnlyFlo,
-                  isSkipMl: isSkipMl,
-                  amount: amount,
-                ),
-              SizedBox(height: SizeConfig.padding24),
-              FloPlanWidget(amount: amount, isSkipMl: isSkipMl),
-            ],
+                            AppState.backButtonDispatcher?.didPopRoute();
+                          },
+                        ),
+                        title: Text(
+                          'Select plan to save',
+                          style: TextStyles.rajdhaniSB.title5,
+                        ),
+                      ),
+                if (!showOnlyFlo) SizedBox(height: SizeConfig.padding14),
+                if (!showOnlyFlo)
+                  GoldPlanWidget(
+                    fetchGoldRate: !showOnlyFlo,
+                    isSkipMl: isSkipMl,
+                    amount: amount,
+                  ),
+                SizedBox(height: SizeConfig.padding24),
+                FloPlanWidget(amount: amount, isSkipMl: isSkipMl),
+              ],
+            ),
           ),
         ),
       ),
@@ -121,7 +183,7 @@ class AssetSelectionPage extends StatelessWidget {
                                     RootController.journeyNavBarItem ||
                                 !_showHappyHour())
                             ? SizeConfig.navBarHeight
-                            : -50,
+                            : 0,
                         alignment: Alignment.bottomCenter,
                         duration: const Duration(milliseconds: 400),
                         child: HappyHourBanner(

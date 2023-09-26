@@ -7,6 +7,7 @@ import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
+import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/bottom_nav_bar_item_model.dart';
 import 'package:felloapp/core/repository/games_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
@@ -18,7 +19,6 @@ import 'package:felloapp/navigator/router/transition_delegate.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/ui/elements/fello_dialog/fello_in_app_review.dart';
-import 'package:felloapp/ui/pages/campaigns/info_stories/info_stories_view.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_buy/gold_pro_buy_view.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_details/gold_pro_details_view.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_sell/gold_pro_sell_view.dart';
@@ -60,7 +60,6 @@ import 'package:felloapp/ui/pages/userProfile/settings/settings_view.dart';
 import 'package:felloapp/ui/pages/userProfile/userProfile/userProfile_view.dart';
 import 'package:felloapp/ui/pages/userProfile/verify_email.dart';
 import 'package:felloapp/ui/service_elements/quiz/quiz_web_view.dart';
-import 'package:felloapp/ui/shared/spotlight_controller.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -75,6 +74,8 @@ import 'package:flutter/material.dart';
 
 import '../../core/enums/app_config_keys.dart';
 import '../../core/model/app_config_model.dart';
+import '../../feature/tambola/src/ui/onboarding/tickets_intro_view.dart';
+import '../../feature/tambola/src/ui/onboarding/tickets_tutorial_assets_view.dart';
 
 class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     with ChangeNotifier, PopNavigatorRouterDelegateMixin {
@@ -347,6 +348,14 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           break;
         case Pages.QuizWebView:
           _addPageData(const QuizWebView(), QuizWebViewConfig);
+          break;
+        case Pages.TicketsIntroViewPath:
+          _addPageData(const TicketsIntroView(), TicketsIntroViewPageConfig);
+          break;
+
+        case Pages.TicketsTutorialViewPath:
+          _addPageData(
+              const TicketsTutorialsView(), TicketsTutorialViewPageConfig);
           break;
 
         case Pages.BalloonLottieScreen:
@@ -685,6 +694,12 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.GoldProTxnsDetailsView:
         GoldProTxnsDetailsViewPageConfig.currentPageAction = action;
         break;
+      case Pages.TicketsIntroViewPath:
+        TicketsIntroViewPageConfig.currentPageAction = action;
+        break;
+      case Pages.TicketsTutorialViewPath:
+        TicketsTutorialViewPageConfig.currentPageAction = action;
+        break;
       default:
         break;
     }
@@ -778,7 +793,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         } else if (segment.startsWith('c-', 0)) {
           appState.scrollHome(num.tryParse(segment.split('-').last) as int);
         } else if (segment.startsWith('story-')) {
-          openStoryView(segment.split('-').last);
+          // openStoryView(segment.split('-').last);
         } else {
           screenCheck(segment, uri.queryParameters);
         }
@@ -819,30 +834,30 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     }
   }
 
-  void openStoryView(String topic) {
-    AppState.screenStack.add(ScreenItem.dialog);
-    Navigator.of(AppState.delegate!.navigatorKey.currentContext!).push(
-      PageRouteBuilder(
-        pageBuilder: (context, animation, anotherAnimation) {
-          return InfoStories(
-            topic: topic,
-          );
-        },
-        transitionDuration: const Duration(milliseconds: 500),
-        transitionsBuilder: (context, animation, anotherAnimation, child) {
-          animation =
-              CurvedAnimation(curve: Curves.easeInCubic, parent: animation);
-          return Align(
-            child: SizeTransition(
-              sizeFactor: animation,
-              axisAlignment: 0.0,
-              child: child,
-            ),
-          );
-        },
-      ),
-    );
-  }
+  // void openStoryView(String topic) {
+  //   AppState.screenStack.add(ScreenItem.dialog);
+  //   Navigator.of(AppState.delegate!.navigatorKey.currentContext!).push(
+  //     PageRouteBuilder(
+  //       pageBuilder: (context, animation, anotherAnimation) {
+  //         return InfoStories(
+  //           topic: topic,
+  //         );
+  //       },
+  //       transitionDuration: const Duration(milliseconds: 500),
+  //       transitionsBuilder: (context, animation, anotherAnimation, child) {
+  //         animation =
+  //             CurvedAnimation(curve: Curves.easeInCubic, parent: animation);
+  //         return Align(
+  //           child: SizeTransition(
+  //             sizeFactor: animation,
+  //             child: child,
+  //             axisAlignment: 0.0,
+  //           ),
+  //         );
+  //       },
+  //     ),
+  //   );
+  // }
 
   void screenCheck(String screenKey, [Map<String, String>? queryParams]) {
     PageConfiguration? pageConfiguration;
@@ -901,8 +916,8 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         break;
 
       case 'quickTour':
-        Future.delayed(const Duration(seconds: 2),
-            SpotLightController.instance.startQuickTour);
+        // Future.delayed(const Duration(seconds: 2),
+        //     SpotLightController.instance.startQuickTour);
 
         break;
 
@@ -965,7 +980,15 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case 'tambolaHome':
         if (rootController.navItems
             .containsValue(RootController.tambolaNavBar)) {
-          onTapItem(RootController.tambolaNavBar);
+          if (locator<UserService>()
+                  .baseUser!
+                  .userPreferences
+                  .getPreference(Preferences.TAMBOLAONBOARDING) ==
+              1) {
+            onTapItem(RootController.tambolaNavBar);
+          } else {
+            pageConfiguration = TicketsIntroViewPageConfig;
+          }
           break;
         }
         pageConfiguration = THomePageConfig;
@@ -1043,9 +1066,15 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case "goldProSell":
         pageConfiguration = GoldProSellViewPageConfig;
         break;
-
+      case "ticketsIntro":
+        pageConfiguration = TicketsIntroViewPageConfig;
+        break;
+      case "ticketsTutorial":
+        pageConfiguration = TicketsTutorialViewPageConfig;
+        break;
       case "quizHome":
         pageConfiguration = QuizWebViewConfig;
+        break;
     }
     if (pageConfiguration != null) {
       addPage(pageConfiguration);
@@ -1058,13 +1087,35 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     while (AppState.screenStack.length > 1) {
       AppState.backButtonDispatcher!.didPopRoute();
     }
-    var rootController = locator<RootController>();
+    if (item.title == "Tickets") {
+      if (locator<UserService>()
+              .baseUser!
+              .userPreferences
+              .getPreference(Preferences.TAMBOLAONBOARDING) !=
+          1) {
+        AppState.delegate!.parseRoute(Uri.parse("ticketsIntro"));
+        return;
+      }
+    }
+    var _rootController = locator<RootController>();
 
-    rootController.onChange(rootController.navItems.values
-        .toList()[rootController.navItems.values.toList().indexOf(item)]);
+    _rootController.onChange(_rootController.navItems.values
+        .toList()[_rootController.navItems.values.toList().indexOf(item)]);
 
     appState.setCurrentTabIndex =
-        rootController.navItems.values.toList().indexOf(item);
+        _rootController.navItems.values.toList().indexOf(item);
+  }
+
+  void onSilentTapItem(NavBarItemModel item) {
+    log('onSilentTapItem ${item.title}');
+
+    var _rootController = locator<RootController>();
+
+    _rootController.onChange(_rootController.navItems.values
+        .toList()[_rootController.navItems.values.toList().indexOf(item)]);
+
+    appState.setCurrentTabIndex =
+        _rootController.navItems.values.toList().indexOf(item);
   }
 
   // openTopSaverScreen(String eventType) {

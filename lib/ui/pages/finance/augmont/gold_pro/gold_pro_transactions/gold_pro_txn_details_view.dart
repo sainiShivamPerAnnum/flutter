@@ -1,3 +1,4 @@
+import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/model/gold_pro_models/gold_pro_investment_reponse_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
@@ -162,7 +163,10 @@ class GoldProTransactionsDetailsView extends StatelessWidget {
               ],
             ),
             TransactionSummary(
+              assetType: InvestmentType.GOLDPRO,
+              txnType: txn.status,
               summary: summary,
+              createdOn: txn.createdOn,
             )
           ],
         ),

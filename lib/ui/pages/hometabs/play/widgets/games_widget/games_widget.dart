@@ -11,9 +11,6 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
-import 'package:showcaseview/showcaseview.dart';
-
-import '../../../../../../util/show_case_key.dart';
 
 class GamesWidget extends StatelessWidget {
   const GamesWidget({super.key, required this.model});
@@ -68,12 +65,7 @@ class GamesWidget extends StatelessWidget {
                   ),
                 );
                 if (index == 0) {
-                  return Showcase(
-                    key: ShowCaseKeys.GamesKey,
-                    description:
-                        'Use these tokens to play games. Each time you score above a minimum score, you get a scratch card!',
-                    child: child,
-                  );
+                  return child;
                 }
                 return child;
               },

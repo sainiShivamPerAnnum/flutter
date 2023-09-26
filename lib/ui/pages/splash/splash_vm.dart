@@ -28,7 +28,7 @@ class LauncherViewModel extends BaseViewModel {
   Timer? _timer3;
   Stopwatch? _logoWatch;
   bool _isPerformanceCollectionEnabled = false, _isFetchingData = true;
-  String _performanceCollectionMessage =
+  final String _performanceCollectionMessage =
       'Unknown status of performance collection.';
   final navigator = AppState.delegate!.appState;
 
@@ -105,11 +105,8 @@ class LauncherViewModel extends BaseViewModel {
     try {
       await CacheService.initialize();
       //Initialize every time
-      await Future.wait([
-        userService.init(),
-        _getterRepo.setUpAppConfigs(),
-      ]);
-      locator<UserRepository>().setUpBaseUrl();
+      await _getterRepo.setUpAppConfigs();
+      await userService.init();
       //Initialize only if user is onboarded
       if (userService.isUserOnboarded) {
         await Future.wait([

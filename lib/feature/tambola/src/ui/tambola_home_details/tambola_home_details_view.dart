@@ -4,21 +4,20 @@ import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/feature/tambola/src/ui/onboarding/tickets_tutorial_slot_machine_view.dart';
 import 'package:felloapp/feature/tambola/src/ui/tambola_home_details/tambola_home_details_vm.dart';
 import 'package:felloapp/feature/tambola/src/ui/widgets/header.dart';
-import 'package:felloapp/feature/tambola/src/ui/widgets/prizes_section.dart';
 import 'package:felloapp/feature/tambola/tambola.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/helpers/tnc_text.dart';
+import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/show_case_key.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:showcaseview/showcaseview.dart';
 
 import '../widgets/past_week_winners_section.dart';
 
@@ -42,15 +41,15 @@ class TambolaHomeDetailsView extends StatefulWidget {
 }
 
 class _TambolaHomeDetailsViewState extends State<TambolaHomeDetailsView> {
-  ScrollController? _scrollController;
+  // ScrollController? _scrollController;
 
   @override
   void initState() {
-    _scrollController = ScrollController();
+    // _scrollController = ScrollController();
 
     if (widget.showPrizeSection) {
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-        _scrollController?.animateTo(SizeConfig.screenWidth! * 1.7,
+        RootController.controller.animateTo(SizeConfig.screenWidth! * 1.7,
             duration: const Duration(milliseconds: 500),
             curve: Curves.fastLinearToSlowEaseIn);
       });
@@ -58,7 +57,7 @@ class _TambolaHomeDetailsViewState extends State<TambolaHomeDetailsView> {
 
     if (widget.showWinners) {
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-        _scrollController?.animateTo(SizeConfig.screenWidth! * 2.6,
+        RootController.controller.animateTo(SizeConfig.screenWidth! * 2.6,
             duration: const Duration(milliseconds: 500),
             curve: Curves.fastLinearToSlowEaseIn);
       });
@@ -67,11 +66,11 @@ class _TambolaHomeDetailsViewState extends State<TambolaHomeDetailsView> {
     super.initState();
   }
 
-  @override
-  void dispose() {
-    _scrollController?.dispose();
-    super.dispose();
-  }
+  // @override
+  // void dispose() {
+  //   _scrollController?.dispose();
+  //   super.dispose();
+  // }
 
   @override
   Widget build(BuildContext context) {
@@ -93,7 +92,7 @@ class _TambolaHomeDetailsViewState extends State<TambolaHomeDetailsView> {
             alignment: Alignment.topCenter,
             children: [
               SingleChildScrollView(
-                controller: _scrollController,
+                controller: RootController.controller,
                 child: Column(
                   // mainAxisAlignment: MainAxisAlignment.start,
                   // crossAxisAlignment: CrossAxisAlignment.start,
@@ -135,7 +134,10 @@ class _TambolaHomeDetailsViewState extends State<TambolaHomeDetailsView> {
                       height: SizeConfig.blockSizeVertical! * 2,
                     ),
                     if (widget.showDemoImage) const TambolaDemoImage(),
-                    const TambolaPrize(),
+                    TicketsRewardCategoriesWidget(
+                        isOpen: true,
+                        color: UiConstants.kTambolaMidTextColor,
+                        highlightRow: false),
                     const TambolaLeaderboardView(),
                     const TermsAndConditions(url: Constants.tambolatnc),
                     SizedBox(
@@ -174,45 +176,40 @@ class _TambolaHomeDetailsViewState extends State<TambolaHomeDetailsView> {
                             ],
                           ),
                         ),
-                        Showcase(
-                          key: ShowCaseKeys.TambolaButton,
-                          description:
-                              'You get a ticket on every ₹500 you save!',
-                          child: AppPositiveBtn(
-                            style: TextStyles.rajdhaniSB.body0,
-                            btnText: 'Unlock your first ticket now',
-                            onPressed: () {
-                              locator<AnalyticsService>().track(
-                                  eventName: (locator<TambolaService>()
-                                              .bestTickets
-                                              ?.data !=
-                                          null)
-                                      ? AnalyticsEvents.tambolaSaveTapped
-                                      : AnalyticsEvents
-                                          .tambolaGetFirstTicketTapped,
-                                  properties: AnalyticsProperties
-                                      .getDefaultPropertiesMap(extraValuesMap: {
-                                    "Time left for draw Tambola (mins)":
-                                        AnalyticsProperties
-                                            .getTimeLeftForTambolaDraw(),
-                                    "Tambola Tickets Owned": AnalyticsProperties
-                                        .getTambolaTicketCount(),
-                                    "Number of Tickets":
-                                        locator<TambolaService>()
-                                                .bestTickets
-                                                ?.data
-                                                ?.totalTicketCount ??
-                                            0,
-                                    "Amount": 500,
-                                  }));
-                              BaseUtil.openDepositOptionsModalSheet(
-                                  amount: 500, //model.ticketSavedAmount,
-                                  subtitle:
-                                      'Save ₹500 in any of the asset & get 1 Free Ticket',
-                                  timer: 0);
-                            },
-                          ),
+                        AppPositiveBtn(
+                          style: TextStyles.rajdhaniSB.body0,
+                          btnText: 'Unlock your first ticket now',
+                          onPressed: () {
+                            locator<AnalyticsService>().track(
+                                eventName: (locator<TambolaService>()
+                                            .bestTickets
+                                            ?.data !=
+                                        null)
+                                    ? AnalyticsEvents.tambolaSaveTapped
+                                    : AnalyticsEvents
+                                        .tambolaGetFirstTicketTapped,
+                                properties: AnalyticsProperties
+                                    .getDefaultPropertiesMap(extraValuesMap: {
+                                  "Time left for draw Tambola (mins)":
+                                      AnalyticsProperties
+                                          .getTimeLeftForTambolaDraw(),
+                                  "Tambola Tickets Owned": AnalyticsProperties
+                                      .getTambolaTicketCount(),
+                                  "Number of Tickets": locator<TambolaService>()
+                                          .bestTickets
+                                          ?.data
+                                          ?.totalTicketCount ??
+                                      0,
+                                  "Amount": 500,
+                                }));
+                            BaseUtil.openDepositOptionsModalSheet(
+                                amount: 500, //model.ticketSavedAmount,
+                                subtitle:
+                                    'Save ₹500 in any of the asset & get 1 Free Ticket',
+                                timer: 0);
+                          },
                         ),
+
                         // if (!widget.isStandAloneScreen)
                         //   SizedBox(
                         //     height: SizeConfig.navBarHeight,

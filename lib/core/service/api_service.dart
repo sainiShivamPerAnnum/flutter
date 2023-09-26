@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:encrypt/encrypt.dart';
+import 'package:felloapp/core/repository/base_repo.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/util/app_exceptions.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -349,6 +350,7 @@ class APIService implements API {
         throw BadRequestException(responseJson['message']);
 
       case 401:
+        BaseRepo.refreshToken = true;
         throw BadRequestException(responseJson['message']);
       case 403:
         throw UnauthorizedException(response.body.toString());

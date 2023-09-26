@@ -27,16 +27,18 @@ class TitleSubtitleContainer extends StatelessWidget {
     return Padding(
       padding: zeroPadding
           ? EdgeInsets.zero
-          : EdgeInsets.only(
-              left:
-                  leadingPadding ? SizeConfig.padding24 : SizeConfig.padding14),
+          : padding ??
+              EdgeInsets.only(
+                  left: leadingPadding
+                      ? SizeConfig.padding24
+                      : SizeConfig.padding14),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Text(title, style: TextStyles.rajdhaniSB.title3.merge(titleStyle)),
+          Text(title, style: TextStyles.sourceSansSB.title3.merge(titleStyle)),
           if (subTitle != null && subTitle!.isNotEmpty)
             Padding(
-              padding:padding??EdgeInsets.only(top: SizeConfig.padding4),
+              padding: padding ?? EdgeInsets.only(top: SizeConfig.padding4),
               child: Text(
                 subTitle!,
                 style: TextStyles.sourceSans.body4

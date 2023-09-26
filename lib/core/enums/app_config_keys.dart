@@ -26,6 +26,7 @@ enum AppConfigKey {
   predictScreen,
   lendbox,
   youtube_videos,
+  tickets_youtube_videos,
   app_referral_message,
   enable_truecaller_login,
   payment_brief_view,
@@ -91,6 +92,8 @@ extension AppConfigKeys on String {
         return AppConfigKey.lendbox;
       case 'youtubeVideos':
         return AppConfigKey.youtube_videos;
+      case 'ticketsYoutubeVideos':
+        return AppConfigKey.tickets_youtube_videos;
       case "appReferralMessage":
         return AppConfigKey.app_referral_message;
       case "enableTruecallerLogin":

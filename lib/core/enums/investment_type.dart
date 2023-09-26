@@ -1,1 +1,1 @@
-enum InvestmentType { LENDBOXP2P, AUGGOLD99 }
+enum InvestmentType { LENDBOXP2P, AUGGOLD99, GOLDPRO }

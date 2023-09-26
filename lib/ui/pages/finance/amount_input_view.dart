@@ -16,9 +16,6 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:showcaseview/showcaseview.dart';
-
-import '../../../util/show_case_key.dart';
 
 class AmountInputView extends StatefulWidget {
   final TextEditingController? amountController;
@@ -138,73 +135,68 @@ class _AmountInputViewState extends State<AmountInputView> {
                     style: TextStyles.body3.light,
                   ),
                 ),
-              Showcase(
-                key: ShowCaseKeys.floAmountKey,
-                description:
-                    'Edit or change the amount to deposit in Fello Flo',
-                child: Row(
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Padding(
-                      padding: const EdgeInsets.only(bottom: 8),
-                      child: Text(
-                        "₹",
-                        style: TextStyles.rajdhaniB.title50.colour(
-                          widget.amountController!.text == "0"
-                              ? UiConstants.kTextColor2
-                              : UiConstants.kTextColor,
-                        ),
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.center,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Padding(
+                    padding: const EdgeInsets.only(bottom: 8),
+                    child: Text(
+                      "₹",
+                      style: TextStyles.rajdhaniB.title50.colour(
+                        widget.amountController!.text == "0"
+                            ? UiConstants.kTextColor2
+                            : UiConstants.kTextColor,
                       ),
                     ),
-                    AnimatedContainer(
-                      duration: const Duration(seconds: 0),
-                      curve: Curves.easeIn,
-                      width: widget.model.fieldWidth,
-                      child: TextFormField(
-                        autofocus: true,
-                        showCursor: true,
-                        readOnly: widget.readOnly,
-                        onTap: () {
-                          widget.onTap();
-                        },
-                        controller: widget.amountController,
-                        focusNode: widget.focusNode,
-                        enabled: widget.isEnabled,
-                        validator: (val) {
-                          return null;
-                        },
-                        maxLength: widget.maxAmount.toString().length,
-                        keyboardType: const TextInputType.numberWithOptions(
-                          decimal: true,
-                        ),
-                        inputFormatters: [
-                          FilteringTextInputFormatter.digitsOnly,
-                        ],
-                        onChanged: (val) {
-                          widget.model.onValueChanged(val);
+                  ),
+                  AnimatedContainer(
+                    duration: const Duration(seconds: 0),
+                    curve: Curves.easeIn,
+                    width: widget.model.fieldWidth,
+                    child: TextFormField(
+                      autofocus: true,
+                      showCursor: true,
+                      readOnly: widget.readOnly,
+                      onTap: () {
+                        widget.onTap();
+                      },
+                      controller: widget.amountController,
+                      focusNode: widget.focusNode,
+                      enabled: widget.isEnabled,
+                      validator: (val) {
+                        return null;
+                      },
+                      maxLength: widget.maxAmount.toString().length,
+                      keyboardType: const TextInputType.numberWithOptions(
+                        decimal: true,
+                      ),
+                      inputFormatters: [
+                        FilteringTextInputFormatter.digitsOnly,
+                      ],
+                      onChanged: (val) {
+                        widget.model.onValueChanged(val);
 
-                          // setState(updateFieldWidth);
-                        },
-                        decoration: const InputDecoration(
-                          focusedBorder: InputBorder.none,
-                          border: InputBorder.none,
-                          enabledBorder: InputBorder.none,
-                          // isCollapse: true,
-                          disabledBorder: InputBorder.none,
-                          isDense: true,
-                          counter: Offstage(),
-                        ),
-                        textAlign: TextAlign.center,
-                        style: TextStyles.rajdhaniB.title50.colour(
-                          widget.amountController!.text == "0"
-                              ? UiConstants.kTextColor2
-                              : UiConstants.kTextColor,
-                        ),
+                        // setState(updateFieldWidth);
+                      },
+                      decoration: const InputDecoration(
+                        focusedBorder: InputBorder.none,
+                        border: InputBorder.none,
+                        enabledBorder: InputBorder.none,
+                        // isCollapse: true,
+                        disabledBorder: InputBorder.none,
+                        isDense: true,
+                        counter: Offstage(),
+                      ),
+                      textAlign: TextAlign.center,
+                      style: TextStyles.rajdhaniB.title50.colour(
+                        widget.amountController!.text == "0"
+                            ? UiConstants.kTextColor2
+                            : UiConstants.kTextColor,
                       ),
                     ),
-                  ],
-                ),
+                  ),
+                ],
               ),
               Padding(
                 padding: EdgeInsets.only(bottom: SizeConfig.padding4),

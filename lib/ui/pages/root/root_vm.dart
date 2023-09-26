@@ -46,8 +46,9 @@ import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/styles.dart';
+import 'package:firebase_instance_id/firebase_instance_id.dart';
 import 'package:flutter/material.dart';
-// import 'package:flutter_dynamic_icon/flutter_dynamic_icon.dart';
+import 'package:in_app_update/in_app_update.dart';
 
 enum NavBarItem { Journey, Save, Account, Play, Tambola }
 
@@ -98,15 +99,17 @@ class RootViewModel extends BaseViewModel {
   Future<void> pullToRefresh() async {
     if (_rootController.currentNavBarItemModel ==
         RootController.tambolaNavBar) {
+      await Future.wait([
+        // _tambolaService.getTambolaTickets(limit: 1),
+        _tambolaService.getBestTambolaTickets(forced: true)
+      ]);
       return;
     }
 
     await Future.wait([
       _userCoinService.getUserCoinBalance(),
       _userService.getUserFundWalletData(),
-      // _journeyService.checkForMilestoneLevelChange(),
       _gtService.updateUnscratchedGTCount(),
-      // _journeyService.getUnscratchedGT(),
       _subscriptionService.getSubscription(),
     ]);
 
@@ -129,9 +132,8 @@ class RootViewModel extends BaseViewModel {
     WidgetsBinding.instance.addPostFrameCallback(
       (timeStamp) async {
         await _userService.userBootUpEE();
-
+        _checkForAppUpdates();
         if (!await verifyUserBootupDetails()) return;
-        await checkForBootUpAlerts();
         await showLastWeekOverview();
         locator<LendboxMaturityService>().init();
         showMarketingCampings();
@@ -139,9 +141,9 @@ class RootViewModel extends BaseViewModel {
           _referralService.verifyReferral(),
           _referralService.initDynamicLinks(),
         ]);
-
+        unawaited(getFirebaseAppInstanceId());
         unawaited(handleStartUpNotificationData());
-        locator<ReferralService>().fetchReferralCode();
+        unawaited(locator<ReferralService>().fetchReferralCode());
         await Future.wait([
           // _userService.checkForNewNotifications(),
           _gtService.updateUnscratchedGTCount(),
@@ -152,6 +154,31 @@ class RootViewModel extends BaseViewModel {
         _initAdhocNotifications();
       },
     );
+  }
+
+  Future<void> getFirebaseAppInstanceId() async {
+    var instanceId =
+        await FirebaseInstanceId.appInstanceId ?? 'Unknown installation id';
+    _logger.i("Firebase app instance id: $instanceId");
+  }
+
+  void _checkForAppUpdates() {
+    if (Platform.isAndroid) {
+      InAppUpdate.checkForUpdate().then((info) {
+        if (info.updateAvailability == UpdateAvailability.updateAvailable) {
+          InAppUpdate.startFlexibleUpdate().then((result) {
+            if (result == AppUpdateResult.success) {
+              InAppUpdate.completeFlexibleUpdate()
+                  .catchError((e) => _logger.e(e.toString()));
+            }
+          }).catchError((e) {
+            _logger.e(e.toString());
+          });
+        }
+      }).catchError((e) {
+        _logger.e(e.toString());
+      });
+    }
   }
 
   void showMarketingCampings() {
@@ -182,50 +209,6 @@ class RootViewModel extends BaseViewModel {
       });
     }
   }
-
-  // bool showNewInstallPopUp() {
-  //   if (!PreferenceHelper.getBool(PreferenceHelper.NEW_INSTALL_POPUP,
-  //           def: false) &&
-  //       AppState.isRootAvailableForIncomingTaskExecution) {
-  //     fetchCampaign = false;
-  //     AppState.isRootAvailableForIncomingTaskExecution = false;
-  //     BaseUtil.openDialog(
-  //         isBarrierDismissible: true,
-  //         addToScreenStack: true,
-  //         content: Dialog(
-  //           shape: RoundedRectangleBorder(
-  //             borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-  //           ),
-  //           child: WillPopScope(
-  //             onWillPop: () async {
-  //               if (AppState.screenStack.last == ScreenItem.dialog) {
-  //                 AppState.screenStack.removeLast();
-  //                 AppState.isRootAvailableForIncomingTaskExecution = true;
-
-  //                 showMarketingCampings();
-  //               }
-  //               return Future.value(true);
-  //             },
-  //             child: GestureDetector(
-  //               onTap: () async {
-  //                 AppState.backButtonDispatcher!.didPopRoute();
-  //                 AppState.isRootAvailableForIncomingTaskExecution = true;
-
-  //                 showMarketingCampings();
-  //               },
-  //               child: Image.asset(
-  //                   _userService.userSegments.contains(Constants.US_FLO_OLD)
-  //                       ? Assets.oldUserPopUp
-  //                       : Assets.newUserPopUp),
-  //             ),
-  //           ),
-  //         ));
-  //     PreferenceHelper.setBool(PreferenceHelper.NEW_INSTALL_POPUP, true);
-  //     return false;
-  //   } else {
-  //     return true;
-  //   }
-  // }
 
   FileType getFileType(String fileUrl) {
     String extension = fileUrl.toLowerCase().split('.').last;
@@ -353,67 +336,6 @@ class RootViewModel extends BaseViewModel {
     });
   }
 
-  Future<void> checkForBootUpAlerts() async {
-    bool updateAvailable =
-        PreferenceHelper.getBool(Constants.IS_APP_UPDATE_AVAILABLE, def: false);
-    bool isMsgNoticeAvailable =
-        PreferenceHelper.getBool(Constants.IS_MSG_NOTICE_AVAILABLE, def: false);
-    if (AppState.isRootAvailableForIncomingTaskExecution == false) return;
-    if (updateAvailable) {
-      AppState.isRootAvailableForIncomingTaskExecution = false;
-      unawaited(BaseUtil.openDialog(
-        isBarrierDismissible: false,
-        hapticVibrate: true,
-        addToScreenStack: true,
-        content: ConfirmationDialog(
-          title: "App Update Available",
-          description:
-              "A new version of the app is available. Update now to enjoy the hassle free experience.",
-          buttonText: "Update Now",
-          cancelBtnText: "Not now",
-          confirmAction: () {
-            try {
-              if (Platform.isIOS) {
-                BaseUtil.launchUrl(Constants.APPLE_STORE_APP_LINK);
-              } else if (Platform.isAndroid) {
-                BaseUtil.launchUrl(Constants.PLAY_STORE_APP_LINK);
-              }
-            } catch (e) {
-              _logger?.e(e.toString());
-            }
-            AppState.backButtonDispatcher!.didPopRoute();
-          },
-          cancelAction: () {
-            AppState.backButtonDispatcher!.didPopRoute();
-            return false;
-          },
-        ),
-      ));
-    } else if (isMsgNoticeAvailable) {
-      AppState.isRootAvailableForIncomingTaskExecution = false;
-      String msg = PreferenceHelper.getString(Constants.MSG_NOTICE);
-      unawaited(BaseUtil.openDialog(
-        isBarrierDismissible: false,
-        hapticVibrate: true,
-        addToScreenStack: true,
-        content: ConfirmationDialog(
-          title: "Notice",
-          description: msg,
-          buttonText: "Ok",
-          cancelBtnText: "Cancel",
-          confirmAction: () {
-            AppState.backButtonDispatcher!.didPopRoute();
-            return true;
-          },
-          cancelAction: () {
-            AppState.backButtonDispatcher!.didPopRoute();
-            return false;
-          },
-        ),
-      ));
-    }
-  }
-
   Future<void> handleStartUpNotificationData() async {
     if (AppState.isRootAvailableForIncomingTaskExecution == true &&
         AppState.startupNotifMessage != null) {
@@ -480,8 +402,28 @@ class RootViewModel extends BaseViewModel {
           AppState.delegate!.appState.currentAction = PageAction(
               state: PageState.replaceWidget,
               page: BlockedUserPageConfig,
-              widget: const BlockedUserView(
+              widget: BlockedUserView(
                 isStateRestricted: true,
+                blockTitle: _userService.userBootUp!.data?.blockTitle ?? '',
+                blockSubtitle:
+                    _userService.userBootUp!.data?.blockSubtitle ?? '',
+              ));
+          return;
+        }
+
+        //2. Check if app is in maintenance mode
+        if (_userService.userBootUp != null &&
+            (_userService.userBootUp!.data?.isAppInMaintenance ?? false)) {
+          log("User is from restricted state", name: "UserBootUp");
+          AppState.isRootAvailableForIncomingTaskExecution = false;
+          AppState.delegate!.appState.currentAction = PageAction(
+              state: PageState.replaceWidget,
+              page: BlockedUserPageConfig,
+              widget: BlockedUserView(
+                isMaintenanceMode: true,
+                blockTitle: _userService.userBootUp!.data?.blockTitle ?? '',
+                blockSubtitle:
+                    _userService.userBootUp!.data?.blockSubtitle ?? '',
               ));
           return;
         }
@@ -527,16 +469,44 @@ class RootViewModel extends BaseViewModel {
         }
 
         //5. App update present (Not forced)
-        if (_userService.userBootUp!.data!.isAppUpdateRequired != null) {
-          PreferenceHelper.setBool(Constants.IS_APP_UPDATE_AVAILABLE,
-              _userService.userBootUp!.data!.isAppUpdateRequired!);
-        } else {
-          PreferenceHelper.setBool(Constants.IS_APP_UPDATE_AVAILABLE, false);
+        if (_userService.userBootUp!.data!.isAppUpdateRequired) {
+          AppState.isRootAvailableForIncomingTaskExecution = false;
+          unawaited(
+            BaseUtil.openDialog(
+              isBarrierDismissible: false,
+              hapticVibrate: true,
+              addToScreenStack: true,
+              content: ConfirmationDialog(
+                title: "App Update Available",
+                description:
+                    "A new version of the app is available. Update now to enjoy the hassle free experience.",
+                buttonText: "Update Now",
+                cancelBtnText: "Not now",
+                confirmAction: () {
+                  try {
+                    if (Platform.isIOS) {
+                      BaseUtil.launchUrl(Constants.APPLE_STORE_APP_LINK);
+                    } else if (Platform.isAndroid) {
+                      BaseUtil.launchUrl(Constants.PLAY_STORE_APP_LINK);
+                    }
+                  } catch (e) {
+                    _logger?.e(e.toString());
+                  }
+                  AppState.backButtonDispatcher!.didPopRoute();
+                },
+                cancelAction: () {
+                  AppState.backButtonDispatcher!.didPopRoute();
+                  return false;
+                },
+              ),
+            ),
+          );
+          return;
         }
 
         //6. Clear all the caches
         if (_userService.userBootUp!.data!.cache!.keys != null) {
-          for (String id
+          for (final String id
               in _userService.userBootUp!.data!.cache!.keys as List<String>) {
             CacheService.invalidateByKey(id);
           }
@@ -546,11 +516,30 @@ class RootViewModel extends BaseViewModel {
         if (_userService.userBootUp?.data?.notice != null) {
           if (_userService.userBootUp!.data!.notice!.message != null &&
               _userService.userBootUp!.data!.notice!.message != "") {
-            PreferenceHelper.setBool(Constants.IS_MSG_NOTICE_AVAILABLE, true);
-            PreferenceHelper.setString(Constants.MSG_NOTICE,
-                _userService.userBootUp!.data!.notice!.message!);
-          } else {
-            PreferenceHelper.setBool(Constants.IS_MSG_NOTICE_AVAILABLE, false);
+            AppState.isRootAvailableForIncomingTaskExecution = false;
+            String msg = PreferenceHelper.getString(Constants.MSG_NOTICE);
+            unawaited(
+              BaseUtil.openDialog(
+                isBarrierDismissible: false,
+                hapticVibrate: true,
+                addToScreenStack: true,
+                content: ConfirmationDialog(
+                  title: "Notice",
+                  description: msg,
+                  buttonText: "Ok",
+                  cancelBtnText: "Cancel",
+                  confirmAction: () {
+                    AppState.backButtonDispatcher!.didPopRoute();
+                    return true;
+                  },
+                  cancelAction: () {
+                    AppState.backButtonDispatcher!.didPopRoute();
+                    return false;
+                  },
+                ),
+              ),
+            );
+            return;
           }
 
           if (_userService.userBootUp!.data!.notice!.url != null &&
@@ -565,7 +554,7 @@ class RootViewModel extends BaseViewModel {
             } catch (e) {
               _logger?.d(e.toString());
             }
-          } else {}
+          }
         }
       }
     });
