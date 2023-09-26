@@ -33,7 +33,8 @@ enum AppConfigKey {
   quiz_config,
   revamped_referrals_config,
   useNewUrlUserOps,
-  specialEffectsOnTxnDetailsView
+  specialEffectsOnTxnDetailsView,
+  ticketsCategories
 }
 
 extension AppConfigKeys on String {
@@ -108,6 +109,8 @@ extension AppConfigKeys on String {
         return AppConfigKey.useNewUrlUserOps;
       case 'specialEffectsOnTxnDetailsView':
         return AppConfigKey.specialEffectsOnTxnDetailsView;
+      case 'ticketsCategories':
+        return AppConfigKey.ticketsCategories;
       default:
         return AppConfigKey.unknown;
     }

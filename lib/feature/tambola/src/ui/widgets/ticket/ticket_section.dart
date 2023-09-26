@@ -1,7 +1,9 @@
 // ignore_for_file: lines_longer_than_80_chars
 
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/feature/tambola/src/models/daily_pick_model.dart';
 import 'package:felloapp/feature/tambola/src/models/tambola_best_tickets_model.dart';
@@ -252,7 +254,11 @@ class TicketMatchesBriefBoxWidget extends StatelessWidget {
               .where((e) => e.count > 0)
               .map((e) {
             totalWinningTickets += e.count;
-            return TicketsWinBriefChip(title: e.displayName, value: e.count);
+            return TicketsWinBriefChip(
+              title: e.displayName,
+              value: e.count,
+              i: (int.tryParse(e.category.split('_').last) ?? 1) - 1,
+            );
           }).toList();
 
           return totalWinningTickets > 0
@@ -305,15 +311,33 @@ class TicketMatchesBriefBoxWidget extends StatelessWidget {
                             color: UiConstants.kFloContainerColor,
                           ),
                           child: Row(children: [
-                            Text(
-                              "5-7",
-                              style: TextStyles.rajdhaniB.body1
-                                  .colour(Colors.white),
-                            ),
-                            SizedBox(width: SizeConfig.padding4),
-                            Text(
-                              "Matches",
-                              style: TextStyles.body4.colour(Colors.white38),
+                            RichText(
+                              text: TextSpan(
+                                text: (AppConfig.getValue(AppConfigKey
+                                            .ticketsCategories)['category_1'] ??
+                                        "5-7")
+                                    .toString()
+                                    .split(' ')
+                                    .first,
+                                style: TextStyles.rajdhaniB.body1
+                                    .colour(Colors.white),
+                                children: [
+                                  WidgetSpan(
+                                      child:
+                                          SizedBox(width: SizeConfig.padding4)),
+                                  TextSpan(
+                                    text: (AppConfig.getValue(AppConfigKey
+                                                    .ticketsCategories)[
+                                                'category_1'] ??
+                                            "5-7")
+                                        .toString()
+                                        .split(' ')
+                                        .last,
+                                    style:
+                                        TextStyles.body4.colour(Colors.white38),
+                                  )
+                                ],
+                              ),
                             ),
                             const Spacer(),
                             Text(
@@ -345,7 +369,7 @@ class TicketMatchesBriefBoxWidget extends StatelessWidget {
                             ),
                           ),
                         ),
-                      if (matchList.length == 4)
+                      if (matchList.length >= 4)
                         GridView(
                           padding: EdgeInsets.symmetric(
                             horizontal: SizeConfig.padding10,
@@ -360,10 +384,13 @@ class TicketMatchesBriefBoxWidget extends StatelessWidget {
                           ),
                           physics: const NeverScrollableScrollPhysics(),
                           shrinkWrap: true,
-                          children: bestTickets.data!.stats!
-                              .map((e) => TicketsWinBriefChip(
-                                  title: e.displayName, value: e.count))
-                              .toList(),
+                          children: List.generate(
+                              bestTickets.data!.stats!.length,
+                              (i) => TicketsWinBriefChip(
+                                  title:
+                                      bestTickets.data!.stats![i].displayName,
+                                  value: bestTickets.data!.stats![i].count,
+                                  i: i)),
                         ),
                       SizedBox(height: SizeConfig.padding8),
                       Text(
@@ -389,10 +416,12 @@ class TicketsWinBriefChip extends StatelessWidget {
     super.key,
     required this.title,
     required this.value,
+    required this.i,
   });
 
   final String title;
   final int value;
+  final int i;
 
   @override
   Widget build(BuildContext context) {
@@ -407,18 +436,29 @@ class TicketsWinBriefChip extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.center,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              Text(
-                "$title ",
-                style: TextStyles.rajdhaniB.body2.colour(Colors.white),
-              ),
-              Text(
-                "Matches",
-                style: TextStyles.body4.colour(Colors.white38),
-              )
-            ],
+          RichText(
+            text: TextSpan(
+              text: (AppConfig.getValue(AppConfigKey.ticketsCategories)[
+                          'category_${i + 1}'] ??
+                      "5-7")
+                  .toString()
+                  .split(' ')
+                  .first,
+              style: TextStyles.rajdhaniB.body2.colour(Colors.white),
+              children: [
+                WidgetSpan(child: SizedBox(width: SizeConfig.padding4)),
+                TextSpan(
+                  text: (AppConfig.getValue(AppConfigKey.ticketsCategories)[
+                              'category_${i + 1}'] ??
+                          "5-7")
+                      .toString()
+                      .split(' ')
+                      .last,
+                  style: TextStyles.body4.colour(Colors.white38),
+                )
+              ],
+            ),
+            textAlign: TextAlign.center,
           ),
           SizedBox(height: SizeConfig.padding4),
           Row(
