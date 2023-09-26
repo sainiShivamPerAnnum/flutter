@@ -7,7 +7,6 @@ import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/appbar/appbar.dart';
 import 'package:felloapp/ui/pages/power_play/completed_match_details/completed_match_details_vm.dart';
-import 'package:felloapp/ui/pages/power_play/leaderboard/prediction_leaderboard_view.dart';
 import 'package:felloapp/ui/pages/power_play/shared_widgets/power_play_bg.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/locator.dart';
@@ -19,10 +18,13 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 
+import '../leaderboard/widgets/your_prediction_sheet.dart';
+import '../shared_widgets/ipl_teams_score_widget.dart';
+
 class CompletedMatchDetailsView extends StatelessWidget {
   const CompletedMatchDetailsView({
-    super.key,
     required this.matchData,
+    super.key,
   });
 
   final MatchData matchData;
@@ -96,7 +98,7 @@ class CompletedMatchDetailsView extends StatelessWidget {
 }
 
 class FooterCta extends StatelessWidget {
-  const FooterCta({super.key, required this.location});
+  const FooterCta({required this.location, super.key});
 
   final String location;
 
@@ -129,7 +131,7 @@ class FooterCta extends StatelessWidget {
 }
 
 class CorrectPredictorsListView extends StatelessWidget {
-  const CorrectPredictorsListView({super.key, required this.model});
+  const CorrectPredictorsListView({required this.model, super.key});
 
   final CompletedMatchDetailsVM model;
 
@@ -233,7 +235,7 @@ class CorrectPredictorsListView extends StatelessWidget {
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          "${model.winners[i].uname}",
+                                          model.winners[i].uname,
                                           style: TextStyles.sourceSans.body3,
                                         ),
                                         SizedBox(height: SizeConfig.padding2),
@@ -285,7 +287,7 @@ class CorrectPredictorsListView extends StatelessWidget {
 
 class UserPredictionsButton extends StatelessWidget {
   const UserPredictionsButton(
-      {super.key, required this.model, this.margin = true});
+      {required this.model, super.key, this.margin = true});
   final model;
   final bool margin;
   @override
@@ -369,8 +371,8 @@ class CustomDivider extends StatelessWidget {
 
 class WinTextWidget extends StatelessWidget {
   WinTextWidget({
-    super.key,
     required this.model,
+    super.key,
   });
 
   CompletedMatchDetailsVM model;
@@ -462,6 +464,60 @@ class PowerPlayTotalWinWidget extends StatelessWidget {
         'Total Won From PowerPlay : ₹100',
         style: TextStyles.sourceSansSB.body2,
       ),
+    );
+  }
+}
+
+class MatchBriefDetailsWidget extends StatelessWidget {
+  final MatchData matchData;
+
+  const MatchBriefDetailsWidget({required this.matchData, super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Text(
+          matchData.matchTitle ?? "",
+          style: TextStyles.sourceSansB.body2.colour(Colors.white),
+        ),
+        const SizedBox(
+          height: 20,
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(
+              horizontal: SizeConfig.pageHorizontalMargins),
+          child: IplTeamsScoreWidget(
+            matchData: matchData,
+          ),
+        ),
+        const SizedBox(
+          height: 20,
+        ),
+        Text(
+          matchData.verdictText ?? "",
+          style: TextStyles.sourceSans.body2.colour(Colors.white),
+        ),
+        SizedBox(height: SizeConfig.padding4),
+        Center(
+          child: Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text(
+                "Chasing score: ",
+                style: TextStyles.sourceSansSB.body2,
+              ),
+              Text(
+                "${matchData.target}",
+                style: TextStyles.sourceSans.body2,
+              )
+            ],
+          ),
+        ),
+        const SizedBox(
+          height: 20,
+        ),
+      ],
     );
   }
 }

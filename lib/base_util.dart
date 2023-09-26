@@ -162,9 +162,6 @@ class BaseUtil extends ChangeNotifier {
   static bool? isDeviceOffline, ticketRequestSent, playScreenFirst;
   static int? ticketCountBeforeRequest, infoSliderIndex;
 
-  BuildContext get rootContext =>
-      AppState.delegate!.navigatorKey.currentContext!;
-
   _setRuntimeDefaults() {
     isNewUser = false;
     isFirstFetchDone = true;
@@ -532,11 +529,7 @@ class BaseUtil extends ChangeNotifier {
   }
 
   static void openDepositOptionsModalSheet(
-      {int? amount,
-      bool isSkipMl = false,
-      String? title,
-      String? subtitle,
-      int timer = 500}) {
+      {int? amount, bool isSkipMl = false, int timer = 500}) {
     locator<AnalyticsService>()
         .track(eventName: AnalyticsEvents.assetOptionsModalTapped);
     Haptic.vibrate();
@@ -608,7 +601,6 @@ class BaseUtil extends ChangeNotifier {
     if (addToScreenStack != null && addToScreenStack == true) {
       AppState.screenStack.add(ScreenItem.dialog);
     }
-    Haptic.vibrate();
     d.log("Current Stack: ${AppState.screenStack}");
     await showModalBottomSheet(
       enableDrag: enableDrag,

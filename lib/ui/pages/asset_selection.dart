@@ -660,6 +660,7 @@ class DigitalGoldPrograms extends StatelessWidget {
 
   const DigitalGoldPrograms({
     required this.title,
+    required this.model,
     this.isRecommended = false,
     this.showRates = false,
     Key? key,
@@ -667,7 +668,6 @@ class DigitalGoldPrograms extends StatelessWidget {
     this.isSkipMl = false,
     this.promoText,
     this.isPro = false,
-    required this.model,
   }) : super(key: key);
 
   @override

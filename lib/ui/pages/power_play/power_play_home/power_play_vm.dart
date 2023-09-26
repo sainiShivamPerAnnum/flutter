@@ -13,13 +13,14 @@ import 'package:felloapp/core/repository/transactions_history_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
-import 'package:felloapp/ui/pages/power_play/leaderboard/prediction_leaderboard_view.dart';
 import 'package:felloapp/ui/pages/power_play/power_play_home/widgets/live_match.dart';
 import 'package:felloapp/ui/pages/power_play/power_play_home/widgets/power_play_matches.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
+
+import '../leaderboard/widgets/make_prediction_sheet.dart';
 
 // enum MatchStatus { active, upcoming, completed }
 
@@ -32,14 +33,14 @@ class PowerPlayHomeViewModel extends BaseViewModel {
   ScrollController? scrollController;
 
   final List<String> _tabs = ["Live", "Upcoming", "Completed"];
-  List<MatchData?>? _liveMatchData = [];
-  List<MatchData?>? _upcomingMatchData = [];
+  List<MatchData>? _liveMatchData = [];
+  List<MatchData>? _upcomingMatchData = [];
 
   List<MatchData>? _completedMatchData;
   List<UserTransaction>? _predictions = [];
   bool _isPredictionInProgress = false;
 
-  get isPredictionInProgress => _isPredictionInProgress;
+  bool get isPredictionInProgress => _isPredictionInProgress;
 
   set isPredictionInProgress(value) {
     _isPredictionInProgress = value;
@@ -93,15 +94,15 @@ class PowerPlayHomeViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  List<MatchData?>? get liveMatchData => _liveMatchData;
+  List<MatchData>? get liveMatchData => _liveMatchData;
 
-  set liveMatchData(List<MatchData?>? value) {
+  set liveMatchData(List<MatchData>? value) {
     _liveMatchData = value;
   }
 
-  List<MatchData?>? get upcomingMatchData => _upcomingMatchData;
+  List<MatchData>? get upcomingMatchData => _upcomingMatchData;
 
-  set upcomingMatchData(List<MatchData?>? value) {
+  set upcomingMatchData(List<MatchData>? value) {
     _upcomingMatchData = value;
   }
 
@@ -134,7 +135,7 @@ class PowerPlayHomeViewModel extends BaseViewModel {
 
     if (liveMatchData!.isNotEmpty) {
       liveMatchData = liveMatchData;
-      matchData = liveMatchData![0]!;
+      matchData = liveMatchData![0];
       unawaited(
           _powerPlayService.getUserTransactionHistory(matchData: matchData!));
     }
@@ -221,16 +222,17 @@ class PowerPlayHomeViewModel extends BaseViewModel {
   }
 
   Future<void> getUserPredictionCount() async {
-    if (liveMatchData == null) return;
+    if (liveMatchData == null || liveMatchData!.isEmpty) return;
+
     isPredictionsLoading = true;
     final response = await _txnRepo.getPowerPlayUserTransactions(
-        startTime: liveMatchData![0]!.startsAt,
-        endTime: liveMatchData![0]!.status == MatchStatus.active.name
-            ? TimestampModel.currentTimeStamp()
-            : (liveMatchData![0]!.predictionEndedAt ??
-                liveMatchData![0]!.endsAt),
-        type: 'DEPOSIT',
-        status: 'COMPLETE');
+      startTime: liveMatchData![0].startsAt,
+      endTime: liveMatchData![0].status == MatchStatus.active.name
+          ? TimestampModel.currentTimeStamp()
+          : (liveMatchData![0].predictionEndedAt ?? liveMatchData![0].endsAt),
+      type: 'DEPOSIT',
+      status: 'COMPLETE',
+    );
     isPredictionsLoading = false;
     if (response.isSuccess()) {
       predictions = response.model!.transactions;
@@ -244,12 +246,12 @@ class PowerPlayHomeViewModel extends BaseViewModel {
     await getMatchesByStatus(MatchStatus.active.name, 0, 0);
 
     await getMatchesByStatus(MatchStatus.upcoming.name, 0, 0);
-    print(liveMatchData![0]!.status);
+    print(liveMatchData![0].status);
     if (liveMatchData!.isEmpty) {
       BaseUtil.showNegativeAlert("No live matches at the moment",
           "come again tomorrow to make more predictions");
     } else if (liveMatchData!.isNotEmpty &&
-        liveMatchData![0]!.status == MatchStatus.half_complete.name) {
+        liveMatchData![0].status == MatchStatus.half_complete.name) {
       BaseUtil.showNegativeAlert("Predictions are over", "Try again tomorrow");
     } else {
       unawaited(
@@ -257,7 +259,7 @@ class PowerPlayHomeViewModel extends BaseViewModel {
           isBarrierDismissible: true,
           addToScreenStack: true,
           enableDrag: Platform.isIOS,
-          backgroundColor: const Color(0xff21284A),
+          backgroundColor: UiConstants.kGoldProBgColor,
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(SizeConfig.roundness32),
             topRight: Radius.circular(SizeConfig.roundness32),
@@ -265,7 +267,7 @@ class PowerPlayHomeViewModel extends BaseViewModel {
           isScrollControlled: true,
           hapticVibrate: true,
           content: MakePredictionSheet(
-            matchData: liveMatchData![0]!,
+            matchData: liveMatchData![0],
           ),
         ),
       );
@@ -284,10 +286,10 @@ class PowerPlayHomeViewModel extends BaseViewModel {
     return liveMatchData?.isEmpty ?? true
         ? (upcomingMatchData!.isEmpty ||
                 upcomingMatchData?[0] == null ||
-                (upcomingMatchData?[0]?.startsAt == null))
+                (upcomingMatchData?[0].startsAt == null))
             ? const SizedBox()
             : NoLiveMatch(
-                timeStamp: upcomingMatchData?[0]?.startsAt,
+                timeStamp: upcomingMatchData?[0].startsAt,
                 matchStatus: MatchStatus.active)
         : LiveMatch(model: this);
   }

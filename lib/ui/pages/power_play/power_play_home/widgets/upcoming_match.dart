@@ -6,8 +6,7 @@ import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/ui/pages/power_play/power_play_home/power_play_vm.dart';
 import 'package:felloapp/ui/pages/power_play/shared_widgets/ipl_teams_score_widget.dart';
-import 'package:felloapp/util/styles/size_config.dart';
-import 'package:felloapp/util/styles/textStyles.dart';
+import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
@@ -15,20 +14,20 @@ import 'power_play_matches.dart';
 
 class UpcomingMatch extends StatelessWidget {
   const UpcomingMatch({
-    super.key,
     required this.model,
+    super.key,
   });
 
   final PowerPlayHomeViewModel model;
 
   String getDate(int index) {
     return DateFormat('d MMMM, yyyy')
-        .format(model.upcomingMatchData![index]!.startsAt!.toDate());
+        .format(model.upcomingMatchData![index].startsAt!.toDate());
   }
 
   String getTime(int index) {
     return DateFormat('hh:mm a')
-        .format(model.upcomingMatchData![index]!.startsAt!.toDate());
+        .format(model.upcomingMatchData![index].startsAt!.toDate());
   }
 
   @override
@@ -55,31 +54,36 @@ class UpcomingMatch extends StatelessWidget {
                     children: [
                       Container(
                         decoration: BoxDecoration(
-                            borderRadius: BorderRadius.circular(5),
-                            color: const Color(0xff3B4E6E).withOpacity(0.8),
-                            boxShadow: [
-                              BoxShadow(
-                                color: Colors.black26,
-                                offset: Offset(2, 2),
-                                blurRadius: SizeConfig.roundness5,
-                                spreadRadius: SizeConfig.padding2,
-                              )
-                            ]),
+                          gradient: LinearGradient(colors: [
+                            UiConstants.kTambolaMidTextColor,
+                            const Color(0xff272727),
+                          ]),
+                          borderRadius: BorderRadius.circular(5),
+                          boxShadow: [
+                            BoxShadow(
+                              color: Colors.black26,
+                              offset: const Offset(2, 2),
+                              blurRadius: SizeConfig.roundness5,
+                              spreadRadius: SizeConfig.padding2,
+                            )
+                          ],
+                        ),
                         child: Column(
                           children: [
                             Container(
                               padding: const EdgeInsets.symmetric(
                                   horizontal: 22, vertical: 8),
                               decoration: const BoxDecoration(
-                                  borderRadius: BorderRadius.only(
-                                      topLeft: Radius.circular(5),
-                                      topRight: Radius.circular(5)),
-                                  color: Color(0xff273C60)),
+                                borderRadius: BorderRadius.vertical(
+                                  top: Radius.circular(5),
+                                ),
+                                color: UiConstants.kBackgroundColor2,
+                              ),
                               child: Row(
                                 children: [
                                   Text(
                                     model.upcomingMatchData?[index]
-                                            ?.matchTitle ??
+                                            .matchTitle ??
                                         'IPL MATCH',
                                     style: TextStyles.sourceSansB.body2
                                         .colour(Colors.white),
@@ -116,7 +120,7 @@ class UpcomingMatch extends StatelessWidget {
                               padding: EdgeInsets.symmetric(
                                   horizontal: SizeConfig.padding16),
                               child: IplTeamsScoreWidget(
-                                matchData: model.upcomingMatchData![index]!,
+                                matchData: model.upcomingMatchData![index],
                                 isUpcoming: true,
                               ),
                             ),
@@ -125,7 +129,7 @@ class UpcomingMatch extends StatelessWidget {
                             ),
                             Center(
                               child: Text(
-                                model.upcomingMatchData?[index]?.headsUpText ??
+                                model.upcomingMatchData?[index].headsUpText ??
                                     '',
                                 style: TextStyles.sourceSans.copyWith(
                                     fontSize: SizeConfig.screenWidth! * 0.030),
@@ -138,17 +142,17 @@ class UpcomingMatch extends StatelessWidget {
                               padding: EdgeInsets.symmetric(
                                   vertical: SizeConfig.padding8),
                               decoration: BoxDecoration(
-                                  color:
-                                      const Color(0xff000000).withOpacity(0.3),
-                                  borderRadius: const BorderRadius.only(
-                                      bottomLeft: Radius.circular(5),
-                                      bottomRight: Radius.circular(5))),
+                                color: const Color(0xff000000).withOpacity(0.3),
+                                borderRadius: const BorderRadius.vertical(
+                                  bottom: Radius.circular(5),
+                                ),
+                              ),
                               child: Center(
                                 child: index == 0
                                     ? CountdownTimerWidget(
                                         model: model,
                                         endTime: model
-                                            .upcomingMatchData![0]!.startsAt!)
+                                            .upcomingMatchData![0].startsAt!)
                                     : Text(
                                         'Predictions start on ${getDate(index)}',
                                         style: TextStyles.sourceSans.body3
@@ -175,7 +179,7 @@ class CountdownTimerWidget extends StatefulWidget {
   final PowerPlayHomeViewModel model;
 
   const CountdownTimerWidget(
-      {super.key, required this.endTime, required this.model});
+      {required this.endTime, required this.model, super.key});
 
   @override
   _CountdownTimerWidgetState createState() => _CountdownTimerWidgetState();

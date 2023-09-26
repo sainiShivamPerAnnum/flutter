@@ -2,15 +2,14 @@ import 'package:felloapp/core/model/power_play_models/get_matches_model.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
-import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class IplTeamsScoreWidget extends StatelessWidget {
   const IplTeamsScoreWidget(
-      {super.key,
+      {required this.matchData,
+      super.key,
       this.padding,
-      required this.matchData,
       this.isUpcoming = false});
 
   final EdgeInsets? padding;
@@ -31,21 +30,24 @@ class IplTeamsScoreWidget extends StatelessWidget {
           Expanded(
               child: Row(
             children: [
-              Container(
-                  width: SizeConfig.iconSize1 * 2,
-                  height: SizeConfig.iconSize1 * 2,
-                  decoration: const BoxDecoration(shape: BoxShape.circle),
-                  child: SvgPicture.network(
-                    matchData.teamLogoMap?[matchData.teams?[0]] ??
-                        Assets.bangaloreIcon,
-                    fit: BoxFit.cover,
-                    placeholderBuilder: (context) => Center(
-                      child: Container(
-                          decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              border: Border.all(color: Colors.white))),
+              SizedBox.square(
+                dimension: SizeConfig.iconSize1 * 2,
+                child: SvgPicture.network(
+                  matchData.teamLogoMap?[matchData.teams?[0]] ??
+                      Assets.bangaloreIcon,
+                  fit: BoxFit.cover,
+                  placeholderBuilder: (context) => Center(
+                    child: Container(
+                      height: SizeConfig.iconSize1 * 2,
+                      width: SizeConfig.iconSize1 * 2,
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        border: Border.all(color: Colors.white),
+                      ),
                     ),
-                  )),
+                  ),
+                ),
+              ),
               SizedBox(width: SizeConfig.padding12),
               Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
@@ -65,13 +67,9 @@ class IplTeamsScoreWidget extends StatelessWidget {
               ),
             ],
           )),
-          CircleAvatar(
-            backgroundColor: UiConstants.kPowerPlayPrimaryOff,
-            radius: SizeConfig.iconSize2,
-            child: Text(
-              'VS',
-              style: TextStyles.sourceSansB.body4,
-            ),
+          Text(
+            'VS',
+            style: TextStyles.sourceSansB.body4,
           ),
           Expanded(
             child: Row(

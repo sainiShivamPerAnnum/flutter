@@ -9,12 +9,13 @@ import 'package:felloapp/ui/pages/power_play/shared_widgets/power_play_bg.dart';
 import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
-import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class PowerPlayWelcomePage extends StatelessWidget {
-  const PowerPlayWelcomePage({Key? key}) : super(key: key);
+  const PowerPlayWelcomePage({
+    super.key,
+  });
 
   String get videoUrl => AppConfig.getValue<Map<String, dynamic>>(
           AppConfigKey.powerplayConfig)['howScreen']['predictionCondition']
@@ -51,20 +52,10 @@ class PowerPlayWelcomePage extends StatelessWidget {
                     SizedBox(
                       height: SizeConfig.padding16,
                     ),
-                    // Center(
-                    //   child: Text(
-                    //     "Invest your Predictions",
-                    //     style: TextStyles.rajdhaniSB.body1.colour(Colors.white),
-                    //   ),
-                    // ),
-                    // const SizedBox(
-                    //   height: 20,
-                    // ),
                     Container(
                       height: SizeConfig.screenHeight! * 0.4,
                       decoration: BoxDecoration(
                         borderRadius: BorderRadius.circular(5),
-                        // color: Colors.black,
                       ),
                       child: AppVideoPlayer(videoUrl),
                     ),
@@ -193,31 +184,6 @@ class PowerPlayWelcomePage extends StatelessWidget {
                 showCoinBar: false,
                 showHelpButton: false,
                 showLeading: false,
-              ),
-            ),
-          ),
-          Align(
-            alignment: Alignment.bottomCenter,
-            child: IgnorePointer(
-              child: Container(
-                alignment: Alignment.bottomCenter,
-                height: SizeConfig.navBarHeight * 4,
-                decoration: BoxDecoration(
-                  gradient: LinearGradient(
-                    colors: [
-                      UiConstants.kPowerPlaySecondary,
-                      UiConstants.kPowerPlaySecondary,
-                      UiConstants.kPowerPlaySecondary,
-                      UiConstants.kPowerPlaySecondary.withOpacity(0.5),
-                      UiConstants.kPowerPlaySecondary.withOpacity(0.3),
-                      UiConstants.kPowerPlaySecondary.withOpacity(0.1),
-                      UiConstants.kPowerPlaySecondary.withOpacity(0)
-                    ],
-                    begin: Alignment.bottomCenter,
-                    end: Alignment.topCenter,
-                  ),
-                ),
-                padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
               ),
             ),
           ),

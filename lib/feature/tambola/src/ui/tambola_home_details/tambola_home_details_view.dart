@@ -81,7 +81,7 @@ class _TambolaHomeDetailsViewState extends State<TambolaHomeDetailsView> {
       onModelDispose: (model) => model.dump(),
       builder: (context, model, child) {
         return Scaffold(
-          backgroundColor: const Color(0XF2a2a2a),
+          backgroundColor: const Color(0x0f2a2a2a),
           appBar: widget.isStandAloneScreen
               ? AppBar(
                   elevation: 0,
@@ -204,8 +204,7 @@ class _TambolaHomeDetailsViewState extends State<TambolaHomeDetailsView> {
                                 }));
                             BaseUtil.openDepositOptionsModalSheet(
                                 amount: 500, //model.ticketSavedAmount,
-                                subtitle:
-                                    'Save ₹500 in any of the asset & get 1 Free Ticket',
+
                                 timer: 0);
                           },
                         ),

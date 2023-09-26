@@ -80,7 +80,7 @@ class UiConstants {
   static const Color kDividerColor = Color(0xFF9EA1A1);
   static const Color kBackgroundDividerColor = Color(0xFF23272B);
   static const Color kFirstRankPillerColor = Color(0xFFF2B826);
-  static const Color kSecondRankPillerColor = Color(0xF5371EE);
+  static const Color kSecondRankPillerColor = Color(0x0f5371ee);
   static const Color kThirdRankPillerColor = Color(0xFF34C3A7);
   static Color kUserRankBackgroundColor =
       const Color(0xFF000000).withOpacity(0.3);
@@ -205,6 +205,8 @@ class UiConstants {
   static Color kPowerPlaySecondary = const Color(0xff8c3f31);
   static Color kPowerPlayPrimaryOff = const Color(0xff373E5E);
   static Color kPowerPlaySecondaryOff = const Color(0xff9A5445);
+  static Color kPowerPlayGradientPrimary = const Color(0xff33266A);
+  static Color kPowerPlayGradientSecondary = const Color(0xff683077);
 
   static Color kReferralHeaderColor = const Color(0xff6052A9);
 
@@ -226,5 +228,6 @@ extension ColorExtension on String {
     if (hexColor.length == 8) {
       return Color(int.parse("0x$hexColor"));
     }
+    return null;
   }
 }

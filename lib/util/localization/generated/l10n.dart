@@ -8175,6 +8175,16 @@ class S {
       args: [],
     );
   }
+
+  /// `Predict | Save | Win`
+  String get powerPlaySlog {
+    return Intl.message(
+      'Predict | Save | Win',
+      name: 'powerPlaySlog',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

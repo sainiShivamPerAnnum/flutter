@@ -148,12 +148,8 @@ class UserProfileForm extends StatelessWidget {
                       ))
                 : AppTextField(
                     readOnly: true,
-                    isEnabled: model.isEmailVerified || model.myEmail.isEmpty
-                        ? false
-                        : true,
-                    validator: (va) {
-                      return null;
-                    },
+                    isEnabled:
+                        !(model.isEmailVerified || model.myEmail.isEmpty),
                     focusNode: model.emailOptionsFocusNode,
                     suffixIcon: UserEmailVerificationButton(),
                     textEditingController: model.emailController,
@@ -179,30 +175,30 @@ class UserProfileForm extends StatelessWidget {
             AppTextFieldLabel(
               locale.obGenderLabel,
             ),
-            AppDropDownField(
+            AppDropDownField<int>(
               onChanged: (value) {
                 model.gen = value;
                 model.genderController!.text = model.setGenderField();
               },
-              value: model.gen,
+              value: model.gen!,
               disabledHintText: model.genderController!.text,
               hintText: locale.obGenderHint,
               isEnabled: model.inEditMode,
               items: model.inEditMode
                   ? [
-                      DropdownMenuItem(
+                      DropdownMenuItem<int>(
                         value: 1,
                         child: Text(
                           locale.obGenderMale,
                         ),
                       ),
-                      DropdownMenuItem(
+                      DropdownMenuItem<int>(
                         value: 0,
                         child: Text(
                           locale.obGenderFemale,
                         ),
                       ),
-                      DropdownMenuItem(
+                      DropdownMenuItem<int>(
                         value: -1,
                         child: Text(
                           locale.obGenderOthers,
