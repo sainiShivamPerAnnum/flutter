@@ -1,6 +1,3 @@
-import 'package:felloapp/core/constants/analytics_events_constants.dart';
-import 'package:felloapp/core/model/alert_model.dart';
-import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
@@ -11,9 +8,18 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class BadgeUnlockDialog extends StatelessWidget {
-  const BadgeUnlockDialog({super.key, this.unlockBadgeData});
+  const BadgeUnlockDialog({
+    super.key,
+    this.title,
+    this.subtitle,
+    this.imageUrl,
+    this.actionUri,
+  });
 
-  final AlertModel? unlockBadgeData;
+  final String? title;
+  final String? subtitle;
+  final String? imageUrl;
+  final String? actionUri;
 
   @override
   Widget build(BuildContext context) {
@@ -36,13 +42,13 @@ class BadgeUnlockDialog extends StatelessWidget {
             mainAxisSize: MainAxisSize.min,
             children: [
               SvgPicture.network(
-                unlockBadgeData?.imageUrl ??
+                imageUrl ??
                     "https://d37gtxigg82zaw.cloudfront.net/revamped-referrals/rupee-coin.svg",
                 height: SizeConfig.padding104,
                 width: SizeConfig.padding188,
               ),
               SizedBox(height: SizeConfig.padding28),
-              unlockBadgeData!.title!.beautify(
+              title!.beautify(
                 style: TextStyles.rajdhaniSB.title4.colour(
                   Colors.white,
                 ),
@@ -53,7 +59,7 @@ class BadgeUnlockDialog extends StatelessWidget {
               ),
               SizedBox(height: SizeConfig.padding8),
               Text(
-                unlockBadgeData?.subtitle ?? "",
+                subtitle ?? "",
                 style: TextStyles.sourceSans.body3.colour(
                   const Color(0xFFBDBDBE),
                 ),
@@ -61,21 +67,20 @@ class BadgeUnlockDialog extends StatelessWidget {
               ),
               SizedBox(height: SizeConfig.padding36),
               AppPositiveBtn(
-                btnText: unlockBadgeData?.ctaText ?? "Claim",
+                btnText: 'TELL EVERYONE NOW',
                 onPressed: () {
                   locator<UserService>().referralFromNotification = true;
                   AppState.backButtonDispatcher?.didPopRoute();
-                  AppState.delegate!
-                      .parseRoute(Uri.parse(unlockBadgeData!.actionUri!));
+                  AppState.delegate!.parseRoute(Uri.parse(actionUri!));
 
-                  locator<AnalyticsService>().track(
-                    eventName:
-                        AnalyticsEvents.claimRewardNowReferralAlertTapped,
-                    properties: {
-                      'reward amount': unlockBadgeData?.misc?.amount,
-                      'User type': unlockBadgeData?.misc?.userType
-                    },
-                  );
+                  // locator<AnalyticsService>().track(
+                  //   eventName:
+                  //       AnalyticsEvents.claimRewardNowReferralAlertTapped,
+                  //   properties: {
+                  //     'reward amount': unlockBadgeData?.misc?.amount,
+                  //     'User type': unlockBadgeData?.misc?.userType
+                  //   },
+                  // );
                 },
               )
             ],

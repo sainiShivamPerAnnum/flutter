@@ -10,12 +10,30 @@ class FelloBadgesLoading extends FelloBadgesState {}
 class FelloBadgesSuccess extends FelloBadgesState {
   final FelloBadgesData felloBadgesModel;
   final FelloBadges currentBadge;
-  final int currentLevel;
+  int currentLevel;
   final BadgesLeaderBoardModel? badgesLeaderBoardModel;
 
-  FelloBadgesSuccess(this.felloBadgesModel,
-      {required this.currentBadge, this.badgesLeaderBoardModel})
-      : currentLevel = felloBadgesModel.currentLevel ?? 1;
+  FelloBadgesSuccess(
+    this.felloBadgesModel, {
+    required this.currentBadge,
+    this.badgesLeaderBoardModel,
+    this.currentLevel = 1,
+  }) {
+    currentLevel = getUserLevel(locator<UserService>().userSegments);
+  }
+
+  int getUserLevel(List<dynamic> segments) {
+    log("UserSegments: $segments");
+    if (segments.contains(Constants.SF_COMPLETED)) {
+      return 4;
+    } else if (segments.contains(Constants.SF_ONGOING)) {
+      return 3;
+    } else if (segments.contains(Constants.SF_INTERMEDIATE)) {
+      return 2;
+    } else {
+      return 1;
+    }
+  }
 
   FelloBadgesSuccess copyWith({
     FelloBadgesData? felloBadgesModel,

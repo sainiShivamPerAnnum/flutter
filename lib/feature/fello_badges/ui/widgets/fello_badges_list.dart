@@ -72,17 +72,18 @@ class FelloBadgeList extends StatelessWidget {
                         badges?[index].title ?? "",
                         style: TextStyles.sourceSans.body4.colour(
                           Colors.white,
-                        ),
                       ),
-                    ],
-                  ),
+                    ),
+                  ],
                 ),
-                SizedBox(
-                  width: SizeConfig.padding32,
-                ),
-              ],
-            );
-          }),
+              ),
+              SizedBox(
+                width: SizeConfig.padding32,
+              ),
+            ],
+          );
+        },
+      ),
     );
   }
 }
@@ -91,22 +92,33 @@ class HexagonClipper extends CustomClipper<Path> {
   @override
   Path getClip(Size size) {
     final path = Path();
-    final h = 70.0;
-    final w = 65.0;
+    final h = SizeConfig.padding72;
+    final w = SizeConfig.padding70;
 
-    path.moveTo(w / 2, 0); // Move to the top center
-    path.lineTo(w, h / 4); // Line to the top-right
-    path.lineTo(w, (3 * h) / 4); // Line to the bottom-right
-    path.lineTo(w / 2, h); // Line to the bottom center
-    path.lineTo(0, (3 * h) / 4); // Line to the bottom-left
-    path.lineTo(0, h / 4); // Line to the top-left
-    path.close(); // Close the path to complete the hexagon
+    path.moveTo(w / SizeConfig.padding4, 0); // Move to the top center
+    path.lineTo(w, h / SizeConfig.padding6); // Line to the top-right
+    path.lineTo(
+        w,
+        (SizeConfig.padding4 * h) /
+            SizeConfig.padding2); // Line to the bottom-right
+    path.lineTo(w / SizeConfig.padding4, h); // Line to the bottom center
+    path.lineTo(
+        0,
+        (SizeConfig.padding6 * h) /
+            SizeConfig.padding4); // Line to the bottom-left
+    path.lineTo(0, h / SizeConfig.padding4); // Line to the top-left
 
     return path;
   }
 
   @override
   bool shouldReclip(covariant CustomClipper<Path> oldClipper) {
-    return false;
+    return true;
   }
 }
+// path.moveTo(w / SizeConfig.padding2, 0); // Move to the top center
+// path.lineTo(w, h / SizeConfig.padding4); // Line to the top-right
+// path.lineTo(w, (SizeConfig.padding3 * h) / SizeConfig.padding4); // Line to the bottom-right
+// path.lineTo(w / SizeConfig.padding2, h); // Line to the bottom center
+// path.lineTo(0, (SizeConfig.padding3 * h) / SizeConfig.padding4); // Line to the bottom-left
+// path.lineTo(0, h / SizeConfig.padding4); // Line to the top-left

@@ -15,18 +15,20 @@ class BadgesTopUserWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    print(
+        "---- ${MediaQuery.of(context).size.width} || ${SizeConfig.screenWidth! * 0.27}");
     return Stack(
       children: [
         CustomPaint(
-          size: const Size(97, 142),
+          size: Size(SizeConfig.screenWidth! * 0.27, SizeConfig.padding144),
           painter: RPSCustomPainter(),
         ),
         Transform.translate(
-          offset: const Offset(12, -8),
+          offset: Offset(SizeConfig.padding16, -SizeConfig.padding8),
           child: Align(
             alignment: Alignment.topRight,
             child: CustomPaint(
-              size: const Size(26, 32),
+              size: Size(SizeConfig.padding26, SizeConfig.padding34),
               painter: UserBadgeCustomPainter(),
             ),
           ),
@@ -34,7 +36,7 @@ class BadgesTopUserWidget extends StatelessWidget {
         Align(
           alignment: Alignment.center,
           child: Transform.translate(
-            offset: const Offset(3, 0),
+            offset: Offset(SizeConfig.padding3, 0),
             child: Container(
               width: SizeConfig.padding68,
               height: SizeConfig.padding68,
@@ -50,7 +52,7 @@ class BadgesTopUserWidget extends StatelessWidget {
           ),
         ),
         Transform.translate(
-          offset: const Offset(0, 10),
+          offset: Offset(0, SizeConfig.padding10),
           child: Align(
             alignment: Alignment.bottomCenter,
             child: Text(
@@ -63,7 +65,7 @@ class BadgesTopUserWidget extends StatelessWidget {
           ),
         ),
         Transform.translate(
-          offset: const Offset(0, 25),
+          offset: Offset(0, SizeConfig.padding26),
           child: Align(
             alignment: Alignment.bottomCenter,
             child: Text(

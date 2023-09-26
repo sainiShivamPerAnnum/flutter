@@ -5,6 +5,7 @@ import 'package:felloapp/feature/fello_badges/ui/widgets/badges_progress_indicat
 import 'package:felloapp/feature/fello_badges/ui/widgets/user_badges_container.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/extensions/string_extension.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
@@ -30,11 +31,15 @@ class _ProfileBadgeWidgetState extends State<ProfileBadgeWidget> {
   }
 
   void getUserLevel(List<dynamic> segments) {
-    if (segments.contains("SuperFello")) {
+    if (segments.contains(Constants.SF_COMPLETED)) {
       setState(() {
         userLevel = 4;
       });
-    } else if (segments.contains("Intermediate")) {
+    } else if (segments.contains(Constants.SF_ONGOING)) {
+      setState(() {
+        userLevel = 3;
+      });
+    } else if (segments.contains(Constants.SF_INTERMEDIATE)) {
       setState(() {
         userLevel = 2;
       });

@@ -93,7 +93,10 @@ class _FelloBadgeUiState extends State<FelloBadgeUi> {
           builder: (context, state) {
             if (state is FelloBadgesError) {
               return Center(
-                child: Text(state.errorMsg!),
+                child: Text(
+                  state.errorMsg!,
+                  style: TextStyles.sourceSans.title3.colour(Colors.white),
+                ),
               );
             }
 

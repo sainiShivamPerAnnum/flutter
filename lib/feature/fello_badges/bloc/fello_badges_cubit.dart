@@ -5,7 +5,9 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/badges_leader_board_model.dart';
 import 'package:felloapp/core/model/fello_badges_model.dart';
 import 'package:felloapp/core/repository/campaigns_repo.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/feature/fello_badges/ui/widgets/badge_unlock_popup.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
 import 'package:flutter/material.dart';
@@ -53,7 +55,8 @@ class FelloBadgesCubit extends Cubit<FelloBadgesState> {
 
           callLeaderBoardApi();
         } else {
-          emit(FelloBadgesError(res.model?.message ?? "Something went wrong!"));
+          emit(FelloBadgesError(res.model?.message ??
+              "Something went wrong!\nPlease Try Again later"));
         }
       });
     } catch (e) {
@@ -100,7 +103,12 @@ class FelloBadgesCubit extends Cubit<FelloBadgesState> {
         if (temp.isBefore(levelDetails[i].lvlData![j].updatedAt!)) {
           log("Badge Unlocked => ${levelDetails[i].lvlData![j].toJson()}");
 
-          // showPopUp();
+          showPopUp(
+            title: levelDetails[i].lvlData![j].title,
+            subtitle: levelDetails[i].lvlData![j].barHeading,
+            imageUrl: levelDetails[i].lvlData![j].badgeurl,
+            actionUri: '',
+          );
         } else {
           log("Badge Not Updated");
         }
@@ -108,12 +116,18 @@ class FelloBadgesCubit extends Cubit<FelloBadgesState> {
     }
   }
 
-  void showPopUp() {
+  void showPopUp(
+      {String? title, String? subtitle, String? imageUrl, String? actionUri}) {
     BaseUtil.openDialog(
       isBarrierDismissible: true,
       addToScreenStack: true,
       hapticVibrate: true,
-      content: const BadgeUnlockDialog(),
+      content: BadgeUnlockDialog(
+        title: title,
+        subtitle: subtitle,
+        imageUrl: imageUrl,
+        actionUri: actionUri,
+      ),
     );
 
     /// Storing the timeStamp of the Api call
