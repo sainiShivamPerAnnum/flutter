@@ -1,9 +1,11 @@
 import 'dart:developer';
 
 import 'package:bloc/bloc.dart';
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/badges_leader_board_model.dart';
 import 'package:felloapp/core/model/fello_badges_model.dart';
 import 'package:felloapp/core/repository/campaigns_repo.dart';
+import 'package:felloapp/feature/fello_badges/ui/widgets/badge_unlock_popup.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
 import 'package:flutter/material.dart';
@@ -50,11 +52,6 @@ class FelloBadgesCubit extends Cubit<FelloBadgesState> {
               currentBadge: updateLevel(1)));
 
           callLeaderBoardApi();
-
-          /// Storing the timeStamp of the Api call
-          PreferenceHelper.setInt(
-              PreferenceHelper.CACHE_SUPERFELLO_BADGE_API_TIMESTAMP,
-              DateTime.now().millisecondsSinceEpoch);
         } else {
           emit(FelloBadgesError(res.model?.message ?? "Something went wrong!"));
         }
@@ -75,6 +72,8 @@ class FelloBadgesCubit extends Cubit<FelloBadgesState> {
               log("BadgesLeaderBoardModel: ${res.model?.toJson()}");
 
               emit(currentState.copyWith(badgesLeaderBoardModel: res.model));
+
+              // checkBadgeUpdate(currentState.felloBadgesModel.levels!);
             }
           },
         );
@@ -89,17 +88,37 @@ class FelloBadgesCubit extends Cubit<FelloBadgesState> {
 // if the CACHE_SUPERFELLO_BADGE_API_TIMESTAMP is less than the LevelDetails[i].updateAt, then update the badge
 // else, do nothing
 
-  void checkBadgeUpdate(List<LvlDatum> levelDetails) {
-    final currentTimeStamp = PreferenceHelper.getInt(
+  Future<void> checkBadgeUpdate(List<Level> levelDetails) async {
+    final currentTimeStamp = PreferenceHelper.getString(
         PreferenceHelper.CACHE_SUPERFELLO_BADGE_API_TIMESTAMP,
-        def: DateTime.now().millisecondsSinceEpoch);
+        def: DateTime.now().toString());
 
-    // for (int i = 0; i < levelDetails.length; i++) {
-    //   if (currentTimeStamp < levelDetails[i].updatedAt && (levelDetails[i].achieve ?? 0) >= 100) {
-    //     updateLevel(i);
-    //   }
-    // }
+    var temp = DateTime.parse(currentTimeStamp);
+
+    for (int i = 0; i < levelDetails.length; i++) {
+      for (int j = 0; j < levelDetails[i].lvlData!.length; j++) {
+        if (temp.isBefore(levelDetails[i].lvlData![j].updatedAt!)) {
+          log("Badge Unlocked => ${levelDetails[i].lvlData![j].toJson()}");
+
+          // showPopUp();
+        } else {
+          log("Badge Not Updated");
+        }
+      }
+    }
   }
 
-  void showPopUp() {}
+  void showPopUp() {
+    BaseUtil.openDialog(
+      isBarrierDismissible: true,
+      addToScreenStack: true,
+      hapticVibrate: true,
+      content: const BadgeUnlockDialog(),
+    );
+
+    /// Storing the timeStamp of the Api call
+    PreferenceHelper.setString(
+        PreferenceHelper.CACHE_SUPERFELLO_BADGE_API_TIMESTAMP,
+        DateTime.now().toString());
+  }
 }
