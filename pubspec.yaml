@@ -81,7 +81,7 @@ dependencies:
   shimmer: ^2.0.0
   # showcaseview:
   #   path: packages/flutter_showcaseview
-  sms_autofill: ^2.0.0
+  sms_autofill: ^2.3.0
   # story_view:
   #   git:
   #     url: https://github.com/KumarArab/story_view

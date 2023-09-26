@@ -234,7 +234,7 @@ class GoldSellInputView extends StatelessWidget {
                             .colour(Colors.red[400]),
                       ),
                     ),
-                  // const GoldLeaseWithdrawInfo(),
+                  const GoldLeaseWithdrawInfo(),
                   const Spacer(),
                   augTxnService.isGoldSellInProgress
                       ? Center(
