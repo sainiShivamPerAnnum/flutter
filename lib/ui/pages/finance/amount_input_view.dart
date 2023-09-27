@@ -24,8 +24,8 @@ class AmountInputView extends StatefulWidget {
   final int bestChipIndex;
   final String? notice;
   final bool isEnabled;
-  final double maxAmount;
-  final double minAmount;
+  final num maxAmount;
+  final num minAmount;
   final String maxAmountMsg;
   final String minAmountMsg;
   final FocusNode focusNode;

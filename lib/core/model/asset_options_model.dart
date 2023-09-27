@@ -1,15 +1,13 @@
-// To parse this JSON data, do
-//
-//     final assetOptionsModel = assetOptionsModelFromJson(jsonString);
+// ignore_for_file: unnecessary_lambdas
 
 class AssetOptionsModel {
-  AssetOptionsModel({
+  const AssetOptionsModel({
     required this.message,
     required this.data,
   });
 
-  String message;
-  Data data;
+  final String message;
+  final Data data;
 
   factory AssetOptionsModel.fromJson(Map<String, dynamic> json) =>
       AssetOptionsModel(
@@ -19,68 +17,70 @@ class AssetOptionsModel {
 }
 
 class Data {
-  Data({
+  const Data({
     required this.banner,
     required this.userOptions,
     this.maturityAt,
     this.intent = false,
+    this.minAmount = 0,
+    this.maxAmount = 0,
   });
 
-  Banner banner;
-  List<UserOption> userOptions;
+  final Banner banner;
+  final List<UserOption> userOptions;
   final DateTime? maturityAt;
   final bool intent;
+  final num minAmount;
+  final num maxAmount;
 
-  factory Data.fromJson(Map<String, dynamic> json) => Data(
+  factory Data.fromJson(Map<String, dynamic> json) {
+    final userOptions = (json['userOptions'] ?? []) as List<dynamic>;
+    return Data(
       banner: Banner.fromJson(json["banner"]),
       userOptions: List<UserOption>.from(
-          json["userOptions"].map((x) => UserOption.fromJson(x))),
+        userOptions.map(
+          (e) => UserOption.fromJson(e),
+        ),
+      ),
       maturityAt: json["maturityAt"] == null
           ? null
           : DateTime.parse(json["maturityAt"]),
-      intent: json['intent'] ?? false);
+      intent: json['intent'] ?? false,
+      minAmount: json['minAmount'] ?? 0,
+      maxAmount: json['maxAmount'] ?? 0,
+    );
+  }
 }
 
 class Banner {
-  Banner({
+  const Banner({
     required this.image,
     required this.title,
   });
 
-  String image;
-  String title;
+  final String image;
+  final String title;
 
   factory Banner.fromJson(Map<String, dynamic> json) => Banner(
         image: json["image"],
         title: json["title"],
       );
-
-  Map<String, dynamic> toJson() => {
-        "image": image,
-        "title": title,
-      };
 }
 
 class UserOption {
   UserOption({
     required this.order,
     required this.value,
-    required this.best,
+    this.best = false,
   });
 
-  int order;
-  int value;
-  bool best;
+  final int order;
+  final int value;
+  final bool best;
 
   factory UserOption.fromJson(Map<String, dynamic> json) => UserOption(
         order: json["order"],
         value: json["value"],
-        best: json["best"] == null ? false : json["best"],
+        best: json["best"] ?? false,
       );
-
-  Map<String, dynamic> toJson() => {
-        "order": order,
-        "value": value,
-        "best": best == null ? false : best,
-      };
 }

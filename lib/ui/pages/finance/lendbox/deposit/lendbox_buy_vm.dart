@@ -66,8 +66,8 @@ class LendboxBuyViewModel extends BaseViewModel {
 
   // TextEditingController? vpaController;
 
-  int minAmount = 100;
-  double maxAmount = 50000;
+  num minAmount = 100;
+  num maxAmount = 50000;
   AssetOptionsModel? assetOptionsModel;
   List<CouponModel>? _couponList;
   int? numberOfTambolaTickets;
@@ -228,13 +228,9 @@ class LendboxBuyViewModel extends BaseViewModel {
     isLendboxOldUser =
         locator<UserService>().userSegments.contains(Constants.US_FLO_OLD);
     appMetaList = await UpiUtils.getUpiApps();
-    updateMinValues();
     await getAssetOptionsModel();
     isIntentFlow = assetOptionsModel!.data.intent;
     log("isLendboxOldUser $isLendboxOldUser");
-    if (floAssetType == Constants.ASSET_TYPE_FLO_FIXED_6) {
-      maxAmount = 99999;
-    }
     skipMl = isSkipMilestone;
 
     int? data = assetOptionsModel?.data.userOptions
@@ -266,41 +262,16 @@ class LendboxBuyViewModel extends BaseViewModel {
     }
   }
 
-  void updateMinValues() {
-    List lendboxDetails = AppConfig.getValue(AppConfigKey.lendbox);
-
-    if (floAssetType == Constants.ASSET_TYPE_FLO_FELXI) {
-      final int lendboxIndex = isLendboxOldUser ? 2 : 3;
-      final lendboxData = lendboxDetails[lendboxIndex];
-
-      minAmount = BaseUtil.extractIntFromString(lendboxData['minAmountText']);
-      tambolaMultiplier = lendboxData['tambolaMultiplier'] ?? 1;
-    }
-    if (floAssetType == Constants.ASSET_TYPE_FLO_FIXED_3) {
-      minAmount =
-          BaseUtil.extractIntFromString(lendboxDetails[1]['minAmountText']);
-      tambolaMultiplier = lendboxDetails[1]['tambolaMultiplier'] ?? 1;
-    }
-    if (floAssetType == Constants.ASSET_TYPE_FLO_FIXED_6) {
-      minAmount =
-          BaseUtil.extractIntFromString(lendboxDetails[0]['minAmountText']);
-      tambolaMultiplier = lendboxDetails[0]['tambolaMultiplier'] ?? 1;
-    }
-  }
-
-  resetBuyOptions() {
-    buyAmount = assetOptionsModel?.data.userOptions[1].value.toInt();
-    forcedBuy = false;
-    amountController?.text = assetOptionsModel!.data.userOptions[2].toString();
-    lastTappedChipIndex = 2;
-    notifyListeners();
-  }
-
   Future<void> getAssetOptionsModel() async {
     final res = await locator<GetterRepository>().getAssetOptions(
         'weekly', 'flo',
         subType: floAssetType, isOldLendboxUser: isLendboxOldUser);
-    if (res.code == 200) assetOptionsModel = res.model;
+    final model = res.model;
+    if (res.code == 200 && model != null) {
+      assetOptionsModel = model;
+      minAmount = model.data.minAmount;
+      maxAmount = model.data.maxAmount;
+    }
     log(res.model?.message ?? '');
   }
 
@@ -583,7 +554,7 @@ class LendboxBuyViewModel extends BaseViewModel {
         amountController!.text = buyAmount!.toInt().toString();
       } else {
         buyAmount = int.tryParse(val);
-        if ((buyAmount ?? 0.0) < 10.0) showMinCapText = true;
+        if ((buyAmount ?? 0.0) < minAmount) showMinCapText = true;
         for (int i = 0; i < assetOptionsModel!.data.userOptions.length; i++) {
           if (buyAmount == assetOptionsModel!.data.userOptions[i].value) {
             lastTappedChipIndex = i;
