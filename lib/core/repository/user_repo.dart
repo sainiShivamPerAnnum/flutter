@@ -331,16 +331,24 @@ class UserRepository extends BaseRepo {
           notifications[0].createdTime != null) {
         var notifTime = notifications[0].createdTime!.seconds.toString();
 
-        log('Referral Notification: ${notifications[0].toJson()}');
-
-        // notifications[0] is the latest notification
-        // if the notification is persistent then we need to show the notification only once in 48 hours
-        // so we are checking if the notification is created in last 48 hours
-
         if (!PreferenceHelper.exists(
             PreferenceHelper.CACHE_REFERRAL_PERSISTENT_NOTIFACTION_ID)) {
-          log('Referral Notification Valid');
+          if (notifications[0].misc != null &&
+              notifications[0].misc!.isSuperFello!) {
+            await PreferenceHelper.setString(
+              CacheManager.CACHE_REFERRAL_PERSISTENT_NOTIFACTION_ID,
+              notifications[0].id!.toString(),
+            );
 
+            return ApiResponse(
+                model: {"flag": true, "notification": notifications[0]},
+                code: 200);
+          }
+
+          log('Referral Notification Valid');
+          // notifications[0] is the latest notification
+          // if the notification is persistent then we need to show the notification only once in 48 hours
+          // so we are checking if the notification is created in last 48 hours
           int notifTimeInSeconds = int.tryParse(notifTime)!;
           int currentTimeInSeconds =
               DateTime.now().millisecondsSinceEpoch ~/ 1000;

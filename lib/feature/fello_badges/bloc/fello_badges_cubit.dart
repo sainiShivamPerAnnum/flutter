@@ -76,7 +76,7 @@ class FelloBadgesCubit extends Cubit<FelloBadgesState> {
 
               emit(currentState.copyWith(badgesLeaderBoardModel: res.model));
 
-              // checkBadgeUpdate(currentState.felloBadgesModel.levels!);
+              checkBadgeUpdate(currentState.felloBadgesModel.levels!);
             }
           },
         );
@@ -100,7 +100,8 @@ class FelloBadgesCubit extends Cubit<FelloBadgesState> {
 
     for (int i = 0; i < levelDetails.length; i++) {
       for (int j = 0; j < levelDetails[i].lvlData!.length; j++) {
-        if (temp.isBefore(levelDetails[i].lvlData![j].updatedAt!)) {
+        if (temp.isBefore(levelDetails[i].lvlData![j].updatedAt!) ||
+            temp.isAtSameMomentAs(levelDetails[i].lvlData![j].updatedAt!)) {
           log("Badge Unlocked => ${levelDetails[i].lvlData![j].toJson()}");
 
           showPopUp(
@@ -109,6 +110,7 @@ class FelloBadgesCubit extends Cubit<FelloBadgesState> {
             imageUrl: levelDetails[i].lvlData![j].badgeurl,
             actionUri: '',
           );
+          break;
         } else {
           log("Badge Not Updated");
         }
