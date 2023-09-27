@@ -34,7 +34,9 @@ enum AppConfigKey {
   revamped_referrals_config,
   useNewUrlUserOps,
   specialEffectsOnTxnDetailsView,
-  ticketsCategories
+  ticketsCategories,
+  goldProMinimumInvestment,
+  goldProInvestmentChips,
 }
 
 extension AppConfigKeys on String {
@@ -111,6 +113,10 @@ extension AppConfigKeys on String {
         return AppConfigKey.specialEffectsOnTxnDetailsView;
       case 'ticketsCategories':
         return AppConfigKey.ticketsCategories;
+      case 'minimumGoldProInvestment':
+        return AppConfigKey.goldProMinimumInvestment;
+      case 'goldProInvestmentChips':
+        return AppConfigKey.goldProInvestmentChips;
       default:
         return AppConfigKey.unknown;
     }

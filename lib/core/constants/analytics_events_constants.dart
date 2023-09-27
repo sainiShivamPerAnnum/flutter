@@ -322,4 +322,6 @@ class AnalyticsEvents {
   static const ticketsPlayTutorialTapped = "Tickets play tutorial tapped";
   static const ticketsOfferTapped = "Tickets Offer tapped";
   static const ticketsVideoTapped = "Tickets video tapped";
+  static const ticketsMultiplierBannerTapped =
+      "Tickets multiplier banner tapped";
 }

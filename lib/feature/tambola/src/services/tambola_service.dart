@@ -253,7 +253,7 @@ class TambolaService extends ChangeNotifier {
           -1) {
         pastWinnerData = pastWeekWinners!.firstWhere(
             (winner) => winner.userid == _userService.baseUser!.uid);
-        _showPastWeekWinStrip = true;
+        showPastWeekWinStrip = true;
       }
     }
 
