@@ -29,6 +29,7 @@ import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/negative_dialog.dart';
 import 'package:felloapp/ui/modalsheets/coupon_modal_sheet.dart';
 import 'package:felloapp/util/api_response.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/installed_upi_apps_finder.dart';
@@ -113,8 +114,14 @@ class GoldBuyViewModel extends BaseViewModel {
   }
 
   Future<void> getAssetOptionsModel() async {
-    final res =
-        await locator<GetterRepository>().getAssetOptions('weekly', 'gold');
+    final isNewUser = locator<UserService>().userSegments.contains(
+          Constants.US_FLO_OLD,
+        );
+    final res = await locator<GetterRepository>().getAssetOptions(
+      'weekly',
+      'gold',
+      isNewUser: isNewUser,
+    );
     final model = res.model;
     if (res.code == 200 && model != null) {
       assetOptionsModel = model;

@@ -110,7 +110,7 @@ class GoldProBuyViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  get isDescriptionView => _isDescriptionView;
+  bool get isDescriptionView => _isDescriptionView;
 
   set isDescriptionView(value) {
     _isDescriptionView = value;
@@ -119,7 +119,7 @@ class GoldProBuyViewModel extends BaseViewModel {
 
   double _sliderValue = 0.25;
 
-  get sliderValue => _sliderValue;
+  double get sliderValue => _sliderValue;
 
   set sliderValue(value) {
     _sliderValue = value;
@@ -128,14 +128,14 @@ class GoldProBuyViewModel extends BaseViewModel {
 
   int _selectedChipIndex = 1;
 
-  get selectedChipIndex => _selectedChipIndex;
+  int get selectedChipIndex => _selectedChipIndex;
 
   set selectedChipIndex(value) {
     _selectedChipIndex = value;
     notifyListeners();
   }
 
-  get isGoldRateFetching => _isGoldRateFetching;
+  bool get isGoldRateFetching => _isGoldRateFetching;
 
   set isGoldRateFetching(value) {
     _isGoldRateFetching = value;
@@ -288,8 +288,14 @@ class GoldProBuyViewModel extends BaseViewModel {
 //VM Async Helper Methods:
 
   Future<void> getAssetOptionsModel() async {
-    final res =
-        await locator<GetterRepository>().getAssetOptions('weekly', 'gold');
+    final isNewUser = locator<UserService>().userSegments.contains(
+          Constants.US_FLO_OLD,
+        );
+    final res = await locator<GetterRepository>().getAssetOptions(
+      'weekly',
+      'gold',
+      isNewUser: isNewUser,
+    );
     if (res.code == 200) assetOptionsModel = res.model;
   }
 

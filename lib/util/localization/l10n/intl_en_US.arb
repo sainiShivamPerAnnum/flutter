@@ -171,6 +171,14 @@
       }
     }
   },
+  "minAmountLabel": "Min - ₹{amount}",
+  "@minAmountLabel": {
+    "placeholders": {
+      "amount": {
+        "type": "num"
+      }
+    }
+  },
   "transactionProgress": "Your transaction is in progress",
   "invested": "Invested",
   "bought": "Bought",

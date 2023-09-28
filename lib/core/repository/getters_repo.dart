@@ -114,23 +114,19 @@ class GetterRepository extends BaseRepo {
 
   Future<ApiResponse<AssetOptionsModel>> getAssetOptions(
       String freq, String type,
-      {String? subType, bool? isOldLendboxUser}) async {
+      {String? subType, bool? isOldLendboxUser, bool? isNewUser}) async {
     try {
-      Map<String, dynamic>? map;
+      Map<String, dynamic>? map = {
+        "type": type,
+        "freq": freq,
+        "isNewUser": isNewUser.toString(),
+      };
 
       if (type == "flo") {
-        map = {
-          "type": type,
-          "freq": freq,
+        map.addAll({
           "subType": subType,
           "isOldLbUser": isOldLendboxUser.toString(),
-        };
-      }
-      if (type == "gold") {
-        map = {
-          "type": type,
-          "freq": freq,
-        };
+        });
       }
 
       final token = await getBearerToken();
@@ -153,8 +149,8 @@ class GetterRepository extends BaseRepo {
   }
 
   Future setUpAppConfigs() async {
-    final _appConfig = await getAppConfig();
-    if (_appConfig.code != 200) {
+    final appConfig = await getAppConfig();
+    if (appConfig.code != 200) {
       AppConfig.instance({
         "message": "Default Values",
         "data": BaseRemoteConfig.DEFAULTS,

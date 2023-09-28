@@ -1588,6 +1588,16 @@ class S {
     );
   }
 
+  /// `Min - ₹{amount}`
+  String minAmountLabel(num amount) {
+    return Intl.message(
+      'Min - ₹$amount',
+      name: 'minAmountLabel',
+      desc: '',
+      args: [amount],
+    );
+  }
+
   /// `Your transaction is in progress`
   String get transactionProgress {
     return Intl.message(
