@@ -289,7 +289,7 @@ class GoldProBuyViewModel extends BaseViewModel {
 
   Future<void> getAssetOptionsModel() async {
     final isNewUser = locator<UserService>().userSegments.contains(
-          Constants.US_FLO_OLD,
+          Constants.NEW_USER,
         );
     final res = await locator<GetterRepository>().getAssetOptions(
       'weekly',
