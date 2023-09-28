@@ -136,7 +136,7 @@ class _TicketsIntroViewState extends State<TicketsIntroView> {
                                           .baseUser!
                                           .createdOn
                                           .toDate()
-                                          .isBefore(DateTime(2023, 9, 28))
+                                          .isBefore(DateTime(2023, 9, 27))
                                       ? "We have revamped Fello Tickets!"
                                       : "Keep Saving and Win every week with tickets",
                                   style: TextStyles.sourceSansSB.body1
@@ -264,7 +264,7 @@ class _TicketsIntroViewState extends State<TicketsIntroView> {
                                     .baseUser!
                                     .createdOn
                                     .toDate()
-                                    .isBefore(DateTime(2023, 9, 28))
+                                    .isBefore(DateTime(2023, 9, 27))
                                 ? "Play the tutorial and view your Tickets"
                                 : "We will help you know how Tickets work",
                             style: TextStyles.sourceSansB.body2
