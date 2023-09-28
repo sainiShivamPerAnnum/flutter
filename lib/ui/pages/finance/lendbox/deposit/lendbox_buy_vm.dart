@@ -263,9 +263,16 @@ class LendboxBuyViewModel extends BaseViewModel {
   }
 
   Future<void> getAssetOptionsModel() async {
+    final isNewUser = locator<UserService>().userSegments.contains(
+          Constants.NEW_USER,
+        );
     final res = await locator<GetterRepository>().getAssetOptions(
-        'weekly', 'flo',
-        subType: floAssetType, isOldLendboxUser: isLendboxOldUser);
+      'weekly',
+      'flo',
+      subType: floAssetType,
+      isOldLendboxUser: isLendboxOldUser,
+      isNewUser: isNewUser,
+    );
     final model = res.model;
     if (res.code == 200 && model != null) {
       assetOptionsModel = model;
