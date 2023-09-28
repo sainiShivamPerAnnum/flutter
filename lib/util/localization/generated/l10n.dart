@@ -1568,33 +1568,23 @@ class S {
     );
   }
 
-  /// `Upto ₹ 50,000 can be invested at one go`
-  String get upto50000 {
+  /// `Upto ₹ {amount} can be invested at one go`
+  String maxAmountMessage(num amount) {
     return Intl.message(
-      'Upto ₹ 50,000 can be invested at one go',
-      name: 'upto50000',
+      'Upto ₹ $amount can be invested at one go',
+      name: 'maxAmountMessage',
       desc: '',
-      args: [],
+      args: [amount],
     );
   }
 
-  /// `Minimum purchase amount is ₹ 10`
-  String get minPurchaseText {
+  /// `Minimum purchase amount is ₹ {amount} `
+  String minAmountMessage(num amount) {
     return Intl.message(
-      'Minimum purchase amount is ₹ 10',
-      name: 'minPurchaseText',
+      'Minimum purchase amount is ₹ $amount ',
+      name: 'minAmountMessage',
       desc: '',
-      args: [],
-    );
-  }
-
-  /// `Minimum purchase amount is ₹ 100`
-  String get minPurchaseText1 {
-    return Intl.message(
-      'Minimum purchase amount is ₹ 100',
-      name: 'minPurchaseText1',
-      desc: '',
-      args: [],
+      args: [amount],
     );
   }
 
