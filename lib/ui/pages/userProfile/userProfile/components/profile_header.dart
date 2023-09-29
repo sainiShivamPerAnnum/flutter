@@ -4,9 +4,9 @@ import 'package:felloapp/ui/pages/userProfile/userProfile/userProfile_viewModel.
 import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 
 class ProfileHeader extends StatelessWidget {
   const ProfileHeader({
@@ -51,15 +51,18 @@ class ProfileHeader extends StatelessWidget {
           SizedBox(height: SizeConfig.padding6),
           // if (!model.isNewUser)
           UserBrief(model: model),
-          // if (model.isNewUser)
-          //   Text(
-          //     locale.obChangeAvatar,
-          //     textAlign: TextAlign.center,
-          //     style:
-          //         TextStyles.sourceSans.body2.colour(UiConstants.kTextColor2),
-          //   ),
-          // if (!model.isNewUser)
-          SizedBox(height: SizeConfig.padding24)
+          SizedBox(height: SizeConfig.padding12),
+          Container(
+            width: SizeConfig.screenWidth,
+            margin: EdgeInsets.symmetric(
+                horizontal: SizeConfig.pageHorizontalMargins),
+            alignment: Alignment.center,
+            child: Text(
+              "Joined Fello on ${model.joinedData}",
+              style: TextStyles.body4.colour(Colors.white38),
+            ),
+          ),
+          SizedBox(height: SizeConfig.padding12),
         ],
       ),
     );

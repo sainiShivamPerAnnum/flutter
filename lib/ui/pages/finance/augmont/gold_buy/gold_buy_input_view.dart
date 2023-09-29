@@ -18,11 +18,11 @@ import 'package:felloapp/ui/pages/finance/banner_widget.dart';
 import 'package:felloapp/ui/pages/finance/coupon_widget.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/show_case_key.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:showcaseview/showcaseview.dart';
+
+// import 'package:showcaseview/showcaseview.dart';
 
 import 'widgets/view_breakdown.dart';
 
@@ -33,12 +33,12 @@ class GoldBuyInputView extends StatefulWidget {
   final GoldBuyViewModel model;
 
   const GoldBuyInputView({
-    Key? key,
-    this.skipMl,
     required this.model,
     required this.augTxnService,
+    super.key,
+    this.skipMl,
     this.amount,
-  }) : super(key: key);
+  });
 
   @override
   State<GoldBuyInputView> createState() => _GoldBuyInputViewState();
@@ -51,7 +51,7 @@ class _GoldBuyInputViewState extends State<GoldBuyInputView> {
     locator<BackButtonActions>().isTransactionCancelled = true;
     AppState.type = InvestmentType.AUGGOLD99;
 
-    AppState.amt = widget.model.goldBuyAmount;
+    AppState.amt = widget.model.goldBuyAmount?.toDouble();
     AppState.onTap = () async {
       unawaited(AppState.backButtonDispatcher!.didPopRoute());
 
@@ -150,17 +150,18 @@ class _GoldBuyInputViewState extends State<GoldBuyInputView> {
               height: SizeConfig.padding24,
             ),
             if (widget.model.showCoupons)
-              Showcase(
-                key: ShowCaseKeys.couponKey,
-                description: 'You can apply a coupon to get extra gold!',
-                child: CouponWidget(
-                  widget.model.couponList,
-                  widget.model,
-                  onTap: (coupon) {
-                    widget.model.applyCoupon(coupon.code, false);
-                  },
-                ),
+              // Showcase(
+              //   key: ShowCaseKeys.couponKey,
+              //   description: 'You can apply a coupon to get extra gold!',
+              //   child:
+              CouponWidget(
+                widget.model.couponList,
+                widget.model,
+                onTap: (coupon) {
+                  widget.model.applyCoupon(coupon.code, false);
+                },
               ),
+            // ),
             const Spacer(),
             widget.augTxnService.isGoldBuyInProgress
                 ? Container(

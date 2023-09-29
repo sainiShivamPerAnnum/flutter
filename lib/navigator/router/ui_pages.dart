@@ -106,6 +106,10 @@ const String GoldProSellViewPath = "/goldProSellView";
 const String GoldProTxnsViewPath = "/goldProTxnsView";
 const String GoldProTxnsDetailsViewPath = "goldProTxnsDetailsView";
 
+//Tickets
+const String TicketsIntroViewPath = "/ticketsIntroViewPath";
+const String TicketsTutorialViewPath = "/ticketsTutorialViewPath";
+
 enum Pages {
   Splash,
   Login,
@@ -205,6 +209,9 @@ enum Pages {
   GoldProSellView,
   GoldProTxnsView,
   GoldProTxnsDetailsView,
+  //TICKETS
+  TicketsIntroViewPath,
+  TicketsTutorialViewPath
 }
 
 class PageConfiguration {
@@ -212,9 +219,7 @@ class PageConfiguration {
   final String path;
   final Pages uiPage;
   final String? name;
-
   PageAction? currentPageAction;
-  var returnValue;
 
   PageConfiguration({
     required this.key,
@@ -226,7 +231,7 @@ class PageConfiguration {
 
   @override
   String toString() {
-    return 'PageConfiguration(key: $key, path: $path, uiPage: $uiPage, name: $name, currentPageAction: $currentPageAction, returnValue: $returnValue)';
+    return 'PageConfiguration(key: $key, path: $path, uiPage: $uiPage, name: $name, currentPageAction: $currentPageAction)';
   }
 }
 
@@ -848,6 +853,17 @@ PageConfiguration GoldProTxnsDetailsViewPageConfig = PageConfiguration(
     uiPage: Pages.GoldProTxnsDetailsView,
     name: "Gold X Txns Details View Screen");
 
+PageConfiguration TicketsIntroViewPageConfig = PageConfiguration(
+    key: 'TicketsIntroViewPath',
+    path: TicketsIntroViewPath,
+    uiPage: Pages.TicketsIntroViewPath,
+    name: "Tickets Intro View Screen");
+
+PageConfiguration TicketsTutorialViewPageConfig = PageConfiguration(
+    key: 'TicketsTutorialViewPath',
+    path: TicketsTutorialViewPath,
+    uiPage: Pages.TicketsTutorialViewPath,
+    name: "Tickets Tutorial View Screen");
 PageConfiguration MaturityWithdrawalSuccessViewPageConfig = PageConfiguration(
     key: 'MaturityWithdrawalSuccessViewPath',
     path: MaturityWithdrawalSuccessViewPath,

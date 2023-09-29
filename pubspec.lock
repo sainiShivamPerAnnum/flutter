@@ -17,6 +17,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.0.17"
+  action_slider:
+    dependency: "direct main"
+    description:
+      name: action_slider
+      sha256: fad0720cde9bf06c12594c15da17dba087556a3285875a91aee3d3a64a3072e2
+      url: "https://pub.dev"
+    source: hosted
+    version: "0.7.0"
   adaptive_number:
     dependency: transitive
     description:
@@ -641,6 +649,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "0.2.1+34"
+  firebase_instance_id:
+    dependency: "direct main"
+    description:
+      name: firebase_instance_id
+      sha256: "6dbf9a332cc39ea125376f12c5c6da06acb0b867a72b34c91b590967709cdd65"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.0.0"
   firebase_messaging:
     dependency: "direct main"
     description:
@@ -855,6 +871,14 @@ packages:
     description: flutter
     source: sdk
     version: "0.0.0"
+  flutter_vibrate:
+    dependency: "direct main"
+    description:
+      name: flutter_vibrate
+      sha256: "9cc9b32cf52c90dd34c1cf396ed40010b2c74e69adbb0ff16005afa900971ad8"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.3.0"
   flutter_web_plugins:
     dependency: transitive
     description: flutter
@@ -1044,22 +1068,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.6.3"
-  in_app_review:
+  in_app_update:
     dependency: "direct main"
     description:
-      name: in_app_review
-      sha256: "16328b8202d36522322b95804ae5d975577aa9f584d634985849ba1099645850"
+      name: in_app_update
+      sha256: cc7e96b4f09b6f968598b804157c279e34d3ab661d1e3bea333751826496eb5f
       url: "https://pub.dev"
     source: hosted
-    version: "2.0.6"
-  in_app_review_platform_interface:
-    dependency: transitive
-    description:
-      name: in_app_review_platform_interface
-      sha256: b12ec9aaf6b34d3a72aa95895eb252b381896246bdad4ef378d444affe8410ef
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.0.4"
+    version: "3.0.0"
   intl:
     dependency: "direct main"
     description:
@@ -1549,7 +1565,7 @@ packages:
     source: hosted
     version: "1.3.0"
   rxdart:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: rxdart
       sha256: "0c7c0cedd93788d996e33041ffecda924cc54389199cde4e6a34b440f50044cb"
@@ -1589,7 +1605,7 @@ packages:
     source: hosted
     version: "2.0.18"
   shared_preferences_android:
-    dependency: "direct main"
+    dependency: transitive
     description:
       name: shared_preferences_android
       sha256: ad423a80fe7b4e48b50d6111b3ea1027af0e959e49d485712e134863d9c1c521
@@ -1604,14 +1620,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.5"
-  shared_preferences_ios:
-    dependency: "direct main"
-    description:
-      name: shared_preferences_ios
-      sha256: "585a14cefec7da8c9c2fb8cd283a3bb726b4155c0952afe6a0caaa7b2272de34"
-      url: "https://pub.dev"
-    source: hosted
-    version: "2.1.1"
   shared_preferences_linux:
     dependency: transitive
     description:
@@ -1668,13 +1676,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.0.0"
-  showcaseview:
-    dependency: "direct main"
-    description:
-      path: "packages/flutter_showcaseview"
-      relative: true
-    source: path
-    version: "2.0.1"
   singular_flutter_sdk:
     dependency: "direct main"
     description:
@@ -1728,22 +1729,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.4.3"
-  sse:
-    dependency: transitive
-    description:
-      name: sse
-      sha256: "3ff9088cac3f45aa8b91336f1962e3ea6c81baaba0bbba361c05f8aa7fb59442"
-      url: "https://pub.dev"
-    source: hosted
-    version: "4.1.2"
-  sse_channel:
-    dependency: "direct main"
-    description:
-      name: sse_channel
-      sha256: ba2b1382b9423c58fa83e1f01a3a40fbaa16a0594aa984870c88bad0b45d4ca4
-      url: "https://pub.dev"
-    source: hosted
-    version: "0.0.3"
   stack_trace:
     dependency: transitive
     description:
@@ -1752,15 +1737,6 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "1.11.0"
-  story_view:
-    dependency: "direct main"
-    description:
-      path: "."
-      ref: "0c9c113"
-      resolved-ref: "0c9c113fac07b00124594c5091a2a7ccaa3e0d86"
-      url: "https://github.com/KumarArab/story_view"
-    source: git
-    version: "0.13.2"
   stream_channel:
     dependency: transitive
     description:
@@ -1960,6 +1936,14 @@ packages:
       url: "https://pub.dev"
     source: hosted
     version: "2.1.4"
+  vibration:
+    dependency: "direct main"
+    description:
+      name: vibration
+      sha256: "2938d4bf4ecfdb1cdac6b8f20f40cd3e7b7783edd6ca551a46d144a134473626"
+      url: "https://pub.dev"
+    source: hosted
+    version: "1.7.7"
   video_player:
     dependency: "direct main"
     description:

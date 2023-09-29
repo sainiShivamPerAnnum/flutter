@@ -189,7 +189,7 @@ class GoldShimmerWidget extends StatelessWidget {
 
   Color getPrimaryColor() {
     if (primary != null) return primary!;
-    return UiConstants.KGoldProSecondary.withOpacity(0.05);
+    return UiConstants.KGoldProSecondary.withOpacity(0.1);
   }
 
   double getSecondaryHeight() {
@@ -233,7 +233,7 @@ class GoldShimmerWidget extends StatelessWidget {
 
   Color getSecondaryColor() {
     if (secondary != null) return secondary!;
-    return UiConstants.KGoldProSecondary.withOpacity(0.05);
+    return UiConstants.KGoldProSecondary.withOpacity(0.1);
   }
 
   double getTertiaryHeight() {
@@ -272,7 +272,7 @@ class GoldShimmerWidget extends StatelessWidget {
     return tertiary ??
         (size == ShimmerSizeEnum.small
             ? Colors.white24
-            : UiConstants.KGoldProSecondary.withOpacity(0.05));
+            : UiConstants.KGoldProSecondary.withOpacity(0.1));
   }
 
   @override

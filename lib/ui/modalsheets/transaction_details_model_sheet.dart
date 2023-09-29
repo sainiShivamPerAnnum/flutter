@@ -1,7 +1,11 @@
 import 'dart:developer';
 
+import 'package:felloapp/core/enums/investment_type.dart';
+import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
+import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/date_helper.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -10,9 +14,19 @@ import 'package:flutter/material.dart';
 
 class TransactionSummary extends StatelessWidget {
   final List<TransactionStatusMapItemModel>? summary;
+  final InvestmentType assetType;
+  final String? txnType;
+  final TimestampModel createdOn;
+  final LbMap? lbMap;
   final TxnHistoryService _txnHistoryService = locator<TxnHistoryService>();
 
-  TransactionSummary({super.key, this.summary});
+  TransactionSummary(
+      {super.key,
+      this.summary,
+      required this.assetType,
+      required this.txnType,
+      required this.createdOn,
+      this.lbMap});
 
   bool isTBD = false;
   int naPoint = 0;
@@ -38,7 +52,31 @@ class TransactionSummary extends StatelessWidget {
         });
   }
 
-  Widget leadWidget(List<TransactionStatusMapItemModel>? summary, int index, int length) {
+  String getPendingSubtitle() {
+    if (assetType == InvestmentType.LENDBOXP2P) {
+      if (lbMap != null) {
+        if (lbMap!.fundType != Constants.ASSET_TYPE_FLO_FELXI) {
+          if ((txnType ?? '') == UserTransaction.TRAN_TYPE_WITHDRAW) {
+            if (DateTime.now().isBefore(
+              createdOn.toDate().add(
+                    const Duration(days: 5),
+                  ),
+            )) {
+              return "Amount will be credited to your bank account by ${DateHelper.getDateInHumanReadableFormat(
+                createdOn.toDate().add(
+                      const Duration(days: 5),
+                    ),
+              )}";
+            }
+          }
+        }
+      }
+    }
+    return "-";
+  }
+
+  Widget leadWidget(
+      List<TransactionStatusMapItemModel>? summary, int index, int length) {
     Widget mainWidget = const SizedBox();
     Color leadColor = Colors.white;
     bool showThread = true;
@@ -54,6 +92,7 @@ class TransactionSummary extends StatelessWidget {
         ),
       );
       subtitle = '-';
+      // Amount will be credited to your bank account by currentdate+5 days
       leadColor = UiConstants.gameCardColor;
     } else if (summary![index].timestamp != null) {
       mainWidget = Container(
@@ -87,7 +126,7 @@ class TransactionSummary extends StatelessWidget {
       );
       leadColor = UiConstants.tertiarySolid;
       isTBD = true;
-      subtitle = '-';
+      subtitle = getPendingSubtitle();
     }
 
     return Row(

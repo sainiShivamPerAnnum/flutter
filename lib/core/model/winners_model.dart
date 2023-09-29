@@ -2,6 +2,7 @@ import 'dart:convert';
 
 import 'package:felloapp/core/model/helper_model.dart';
 import 'package:felloapp/core/model/timestamp_model.dart';
+import 'package:felloapp/feature/tambola/src/models/tambola_best_tickets_model.dart';
 
 class WinnersModel {
   String? id;
@@ -9,6 +10,8 @@ class WinnersModel {
   List<Winners>? winners;
   String? code;
   TimestampModel? timestamp;
+  TimestampModel? createdOn;
+  TimestampModel? updatedOn;
   String? gametype;
   static final helper = HelperModel<WinnersModel>(
     WinnersModel.fromMap,
@@ -20,6 +23,8 @@ class WinnersModel {
     this.winners,
     this.code,
     this.timestamp,
+    this.createdOn,
+    this.updatedOn,
     this.gametype,
   });
 
@@ -29,6 +34,8 @@ class WinnersModel {
     List<Winners>? winners,
     String? code,
     TimestampModel? timestamp,
+    TimestampModel? createdOn,
+    TimestampModel? updatedOn,
     String? gametype,
   }) {
     return WinnersModel(
@@ -37,6 +44,8 @@ class WinnersModel {
       winners: winners ?? this.winners,
       code: code ?? this.code,
       timestamp: timestamp ?? this.timestamp,
+      createdOn: createdOn ?? this.createdOn,
+      updatedOn: updatedOn ?? this.updatedOn,
       gametype: gametype ?? this.gametype,
     );
   }
@@ -47,18 +56,9 @@ class WinnersModel {
     winners = [];
     code = '';
     timestamp = TimestampModel.currentTimeStamp();
+    createdOn = TimestampModel.currentTimeStamp();
+    updatedOn = TimestampModel.currentTimeStamp();
     gametype = '';
-  }
-
-  Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      'id': id ?? '',
-      'freq': freq ?? '',
-      'winners': winners!.map((x) => x.toMap()).toList(),
-      'code': code ?? '',
-      'timestamp': timestamp!.toMap(),
-      'gametype': gametype ?? '',
-    };
   }
 
   factory WinnersModel.fromMap(Map<String, dynamic> map) {
@@ -72,11 +72,11 @@ class WinnersModel {
       ),
       code: map['code'] as String?,
       timestamp: TimestampModel.fromMap(map['timestamp']),
+      createdOn: TimestampModel.fromMap(map['createdOn']),
+      updatedOn: TimestampModel.fromMap(map['updatedOn']),
       gametype: map['gametype'] as String?,
     );
   }
-
-  String toJson() => json.encode(toMap());
 
   factory WinnersModel.fromJson(String source) =>
       WinnersModel.fromMap(json.decode(source) as Map<String, dynamic>);
@@ -96,7 +96,7 @@ class Winners {
   final String? gameType;
   final double? score;
   final String? displayScore;
-  final MatchMap? matchMap;
+  final List<TicketStatsModel>? matchMap;
   final int? ticketOwned;
 
   Winners({
@@ -112,43 +112,30 @@ class Winners {
     this.ticketOwned,
   });
 
-  Winners copyWith(
-      {int? amount,
-      bool? isMockUser,
-      String? username,
-      int? flc,
-      String? userid,
-      double? score,
-      String? gameType,
-      MatchMap? matchMap,
-      String? displayScore,
-      int? ticketOwned}) {
+  Winners copyWith({
+    int? amount,
+    bool? isMockUser,
+    String? username,
+    int? flc,
+    String? userid,
+    double? score,
+    String? gameType,
+    List<TicketStatsModel>? matchMap,
+    String? displayScore,
+    int? ticketOwned,
+  }) {
     return Winners(
-        amount: amount ?? this.amount,
-        isMockUser: isMockUser ?? this.isMockUser,
-        username: username ?? this.username,
-        flc: flc ?? this.flc,
-        userid: userid ?? this.userid,
-        score: score ?? this.score,
-        gameType: gameType ?? this.gameType,
-        matchMap: matchMap ?? this.matchMap,
-        displayScore: displayScore ?? this.displayScore,
-        ticketOwned: ticketOwned ?? this.ticketOwned);
-  }
-
-  Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      'amount': amount,
-      'isMockUser': isMockUser,
-      'username': username,
-      'flc': flc,
-      'userid': userid,
-      'score': score,
-      'gameType': gameType,
-      "matchMap": matchMap?.toMap(),
-      'displayScore': displayScore,
-      'ticketOwned': ticketOwned,
-    };
+      amount: amount ?? this.amount,
+      isMockUser: isMockUser ?? this.isMockUser,
+      username: username ?? this.username,
+      flc: flc ?? this.flc,
+      userid: userid ?? this.userid,
+      score: score ?? this.score,
+      gameType: gameType ?? this.gameType,
+      matchMap: matchMap ?? this.matchMap,
+      displayScore: displayScore ?? this.displayScore,
+      ticketOwned: ticketOwned ?? this.ticketOwned,
+    );
   }
 
   factory Winners.fromMap(Map<String, dynamic> map, String? gameType) {
@@ -160,12 +147,12 @@ class Winners {
         userid: map['userid'] ?? '',
         score: (map['score'] ?? 0).toDouble(),
         gameType: gameType ?? '',
-        matchMap: MatchMap.fromMap(map["matchMap"] ?? {}),
+        matchMap: (map['matchMap'] != null)
+            ? TicketStatsModel.parseTicketsStats(map['matchMap'])
+            : TicketStatsModel.getBaseTicketsStats(),
         displayScore: map['displayScore'] ?? '',
         ticketOwned: map['totalTickets'] ?? 0);
   }
-
-  String toJson() => json.encode(toMap());
 
   factory Winners.fromJson(String source, String gameType) =>
       Winners.fromMap(json.decode(source) as Map<String, dynamic>, gameType);

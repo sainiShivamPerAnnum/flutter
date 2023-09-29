@@ -119,7 +119,7 @@ class TambolaPrize extends StatelessWidget {
                                                 CrossAxisAlignment.end,
                                             children: [
                                               Text(
-                                                "${prizes.prizesA![index].displayAmount}",
+                                                "${prizes.prizesA![index].displayPrize}",
                                                 style: TextStyles
                                                     .sourceSans.body3
                                                     .colour(Colors.white),

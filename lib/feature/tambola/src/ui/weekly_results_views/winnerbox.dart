@@ -23,96 +23,32 @@ class WinnerBox extends StatelessWidget {
       UiConstants.primaryColor,
       const Color(0xff11192B)
     ];
-    List<Widget> ticketTiles = [
-      if ((winner.matchMap?.fullHouse ?? 0) != 0)
-        Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+    List<Widget> ticketTiles = List.generate(
+      winner.matchMap!.length,
+      (index) => winner.matchMap![index].count > 0
+          ? Column(
               children: [
-                Text(
-                  "Full House",
-                  style: TextStyles.sourceSansSB.body2.colour(Colors.white),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      winner.matchMap![index].displayName,
+                      style: TextStyles.sourceSansSB.body2.colour(Colors.white),
+                    ),
+                    Text(
+                      winner.matchMap![index].count.toString(),
+                      style: TextStyles.sourceSansSB.body2.colour(Colors.white),
+                    )
+                  ],
                 ),
-                Text(
-                  winner.matchMap!.fullHouse.toString(),
-                  style: TextStyles.sourceSansSB.body2.colour(Colors.white),
-                )
-              ],
-            ),
-            const Divider(
-              color: UiConstants.kFAQsAnswerColor,
-              thickness: 0.1,
-            ),
-          ],
-        ),
-      if ((winner.matchMap?.oneRow ?? 0) != 0)
-        Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "One Row",
-                  style: TextStyles.sourceSansSB.body2.colour(Colors.white),
+                const Divider(
+                  color: UiConstants.kFAQsAnswerColor,
+                  thickness: 0.1,
                 ),
-                Text(
-                  winner.matchMap!.oneRow.toString(),
-                  style: TextStyles.sourceSansSB.body2.colour(Colors.white),
-                )
               ],
-            ),
-            const Divider(
-              color: UiConstants.kFAQsAnswerColor,
-              thickness: 0.1,
-            ),
-          ],
-        ),
-      if ((winner.matchMap?.twoRows ?? 0) != 0)
-        Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "Two Rows",
-                  style: TextStyles.sourceSansSB.body2.colour(Colors.white),
-                ),
-                Text(
-                  winner.matchMap!.twoRows.toString(),
-                  style: TextStyles.sourceSansSB.body2.colour(Colors.white),
-                )
-              ],
-            ),
-            const Divider(
-              color: UiConstants.kFAQsAnswerColor,
-              thickness: 0.1,
-            ),
-          ],
-        ),
-      if ((winner.matchMap?.corners ?? 0) != 0)
-        Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Text(
-                  "Corners",
-                  style: TextStyles.sourceSansSB.body2.colour(Colors.white),
-                ),
-                Text(
-                  winner.matchMap!.corners.toString(),
-                  style: TextStyles.sourceSansSB.body2.colour(Colors.white),
-                )
-              ],
-            ),
-            const Divider(
-              color: UiConstants.kFAQsAnswerColor,
-              thickness: 0.1,
-            ),
-          ],
-        ),
-    ];
+            )
+          : const SizedBox(),
+    );
 
     return ticketTiles;
   }
@@ -189,7 +125,8 @@ class WinnerBox extends StatelessWidget {
                   ),
                   Text(
                     "₹ ${winner.amount}",
-                    style: TextStyles.sourceSansSB.body2.colour(Colors.white),
+                    style: TextStyles.sourceSansB.body0
+                        .colour(UiConstants.kGoldProPrimary),
                   ),
                 ],
               ),

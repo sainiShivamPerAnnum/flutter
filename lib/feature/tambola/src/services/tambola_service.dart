@@ -1,11 +1,16 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:felloapp/core/constants/cache_keys.dart';
 import 'package:felloapp/core/model/game_model.dart';
 import 'package:felloapp/core/model/prizes_model.dart';
+import 'package:felloapp/core/model/tambola_offers_model.dart';
+import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/core/model/winners_model.dart';
 import 'package:felloapp/core/repository/games_repo.dart';
+import 'package:felloapp/core/repository/getters_repo.dart';
 import 'package:felloapp/core/repository/scratch_card_repo.dart';
+import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/notifier_services/winners_service.dart';
 import 'package:felloapp/feature/tambola/src/models/daily_pick_model.dart';
@@ -16,8 +21,10 @@ import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/preference_helper.dart';
 import 'package:flutter/cupertino.dart';
-import 'package:flutter/foundation.dart';
+
+enum SlotMachineState { toBeSpinned, Spinnned }
 
 class TambolaService extends ChangeNotifier {
   //LOCATORS
@@ -26,6 +33,7 @@ class TambolaService extends ChangeNotifier {
   final ScratchCardRepository _scRepo = locator<ScratchCardRepository>();
   final WinnerService _winnerService = locator<WinnerService>();
   final GameRepo _gameRepo = locator<GameRepo>();
+  final GetterRepository _getterRepo = locator<GetterRepository>();
   final UserService _userService = locator<UserService>();
 
   //STATIC VARIABLES
@@ -38,17 +46,87 @@ class TambolaService extends ChangeNotifier {
   PrizesModel? tambolaPrizes;
   List<Winners>? pastWeekWinners;
   List<TambolaTicketModel> allTickets = [];
+  List<TambolaTicketModel>? allBestTickets = [];
   TambolaBestTicketsModel? _bestTickets;
-  int tambolaTicketCount = 0;
+  int _tambolaTicketCount = 0;
+  bool hasUserSpinedForToday = false;
+  bool _showPastWeekWinStrip = false;
+  String _slotMachineTitle = "Reveal today's picks";
+
+  String get slotMachineTitle => _slotMachineTitle;
+
+  set slotMachineTitle(String value) {
+    _slotMachineTitle = value;
+    notifyListeners();
+  }
+
+  bool get showPastWeekWinStrip => _showPastWeekWinStrip;
+
+  set showPastWeekWinStrip(bool value) {
+    _showPastWeekWinStrip = value;
+    notifyListeners();
+  }
+
   int _matchedTicketCount = 0;
   int expiringTicketsCount = 0;
   Winners? winnerData;
+  Winners? pastWinnerData;
+
+  int get tambolaTicketCount => _tambolaTicketCount;
+
+  set tambolaTicketCount(int value) {
+    _tambolaTicketCount = value;
+    notifyListeners();
+  }
+
+  List<TicketsOffers> _ticketsOffers = [];
+
+  get ticketsOffers => _ticketsOffers;
+
+  set ticketsOffers(value) {
+    _ticketsOffers = value;
+    notifyListeners();
+  }
 
   bool _isScreenLoading = true;
   bool _isLoading = false;
-  bool isEligible = false;
+  bool _isEligible = false;
+
+  bool get isEligible => _isEligible;
+
+  set isEligible(value) {
+    _isEligible = value;
+    notifyListeners();
+  }
+
   bool showWinScreen = false;
   bool noMoreTickets = false;
+  bool _showSpinButton = false;
+  bool _isCollapsed = false;
+
+  bool get isCollapsed => _isCollapsed;
+
+  set isCollapsed(bool value) {
+    _isCollapsed = value;
+    notifyListeners();
+  }
+
+  bool get showSpinButton => _showSpinButton;
+
+  set showSpinButton(bool value) {
+    _showSpinButton = value;
+    notifyListeners();
+  }
+
+  AnimationController? ticketsDotLightsController;
+  SlotMachineState _slotMachinState = SlotMachineState.toBeSpinned;
+
+  get slotMachinState => _slotMachinState;
+
+  set slotMachinState(value) {
+    _slotMachinState = value;
+    notifyListeners();
+  }
 
   //GETTERS SETTERS
   bool get isLoading => _isLoading;
@@ -64,6 +142,12 @@ class TambolaService extends ChangeNotifier {
     _isScreenLoading = value;
     notifyListeners();
   }
+
+  List<int> _weeklyPicksList = [];
+
+  List<int> get weeklyPicksList => _weeklyPicksList;
+
+  set weeklyPicksList(List<int> value) => _weeklyPicksList = value;
 
   List<int>? get todaysPicks => _todaysPicks;
 
@@ -115,6 +199,12 @@ class TambolaService extends ChangeNotifier {
 
   //MAIN METHODS
 
+  Future<void> refreshTickets() async {
+    await fetchWeeklyPicks();
+    await getBestTambolaTickets(forced: true);
+    unawaited(getTambolaTickets(limit: 1));
+  }
+
   Future<bool> getGameDetails() async {
     final gameRes =
         await _gameRepo.getGameByCode(gameCode: Constants.GAME_TYPE_TAMBOLA);
@@ -129,6 +219,7 @@ class TambolaService extends ChangeNotifier {
   Future<int> getTambolaTicketsCount() async {
     await getBestTambolaTickets();
     tambolaTicketCount = bestTickets?.data?.totalTicketCount ?? 0;
+    allBestTickets = bestTickets?.data?.allTickets();
     return tambolaTicketCount;
   }
 
@@ -148,7 +239,7 @@ class TambolaService extends ChangeNotifier {
         .fetchWinnersByGameCode(Constants.GAME_TYPE_TAMBOLA);
     pastWeekWinners = winnersModel!.winners!;
     //Check if its the winners day
-    if (winnersModel.timestamp!.toDate().weekday == DateTime.now().weekday) {
+    if (winnersModel.createdOn!.toDate().weekday == DateTime.now().weekday) {
       if (pastWeekWinners!.indexWhere(
               (winner) => winner.userid == _userService.baseUser!.uid) !=
           -1) {
@@ -156,6 +247,16 @@ class TambolaService extends ChangeNotifier {
             (winner) => winner.userid == _userService.baseUser!.uid);
       }
     }
+    if (DateTime.now().weekday < 4) {
+      if (pastWeekWinners!.indexWhere(
+              (winner) => winner.userid == _userService.baseUser!.uid) !=
+          -1) {
+        pastWinnerData = pastWeekWinners!.firstWhere(
+            (winner) => winner.userid == _userService.baseUser!.uid);
+        showPastWeekWinStrip = true;
+      }
+    }
+
     notifyListeners();
   }
 
@@ -180,12 +281,37 @@ class TambolaService extends ChangeNotifier {
     }
   }
 
-  Future<void> getBestTambolaTickets() async {
-    final ticketsResponse = await _tambolaRepo.getBestTickets();
+  Future<void> getBestTambolaTickets({bool forced = false}) async {
+    if (forced) {
+      await CacheService.invalidateByKey(CacheKeys.TAMBOLA_TICKETS);
+    }
+    bool postSpin = false;
+    if (DateTime.now().hour > 18 && hasUserSpinedForToday) {
+      postSpin = true;
+    }
+    final ticketsResponse =
+        await _tambolaRepo.getBestTickets(postSpinStats: postSpin);
     if (ticketsResponse.isSuccess()) {
       bestTickets = ticketsResponse.model;
+      allBestTickets = bestTickets?.data?.allTickets();
+      if (allBestTickets?.isNotEmpty ?? false) {
+        isCollapsed = true;
+        if (todaysPicks != null &&
+            todaysPicks!.isNotEmpty &&
+            !todaysPicks!.contains(-1) &&
+            !hasUserSpinedForToday) {
+          slotMachineTitle = "Reveal Numbers to match with Tickets";
+        }
+      }
     } else {
       //TODO: FAILED TO FETCH TAMBOLA TICKETS. HANDLE FAIL CASE
+    }
+  }
+
+  Future<void> getOffers() async {
+    final res = await _getterRepo.getTambolaOffers();
+    if (res.isSuccess()) {
+      ticketsOffers = res.model;
     }
   }
 
@@ -212,10 +338,41 @@ class TambolaService extends ChangeNotifier {
 
   Future<void> fetchWeeklyPicks({bool forcedRefresh = false}) async {
     try {
+      //
+      /**
+       * 
+       * if Today's Picks != null 
+       * {
+       *     Check if user has spined to slot machine or not 
+       * 
+       *     Check from Shared Prefs TT_LAST_CACHE_DAY
+       * 
+       * If day is today && month is this month
+       * --> user has already spined the wheel, show the numbers instead of slot machine
+       * --> show today's numbers at slot machine numbers
+       * --> no spin button
+       * 
+       * else 
+       * --> user has not spined today, show slot machine and set today's picks 
+       *     to slot results
+       * --> set slot result to today's picks and
+       * 
+       * 
+       * }
+       * 
+       * else {
+       * -->  show all picks
+       * }
+       * 
+       * 
+       * 
+       * 
+       */
       _logger.i('Requesting for weekly picks');
       final ApiResponse picksResponse = await _tambolaRepo.getWeeklyPicks();
       if (picksResponse.isSuccess()) {
         weeklyPicks = picksResponse.model!;
+        weeklyPicksList = weeklyPicks?.toList() ?? [];
         // weeklyDrawFetched = true;
         switch (DateTime.now().weekday) {
           case 1:
@@ -242,7 +399,29 @@ class TambolaService extends ChangeNotifier {
         }
         if (todaysPicks == null) {
           _logger.i("Today's picks are not generated yet");
+          todaysPicks = [-1, -1, -1];
+          slotMachineTitle = "Numbers will be revealed at 6pm";
+        } else {
+          String lastSpinTimeInIsoString = PreferenceHelper.getString(
+              PreferenceHelper.CACHE_TICKETS_LAST_SPIN_TIMESTAMP);
+          if (lastSpinTimeInIsoString.isNotEmpty) {
+            TimestampModel lastSpinTime =
+                TimestampModel.fromIsoString(lastSpinTimeInIsoString);
+
+            if (lastSpinTime.toDate().day == DateTime.now().day &&
+                lastSpinTime.toDate().month == DateTime.now().month) {
+              //user has already spinned the slot machine
+              hasUserSpinedForToday = true;
+              isEligible = true;
+              slotMachineTitle = "Today's Picks";
+            } else {
+              handleSlotPreSpin();
+            }
+          } else {
+            handleSlotPreSpin();
+          }
         }
+
         notifyListeners();
       } else {}
     } catch (e) {
@@ -250,91 +429,95 @@ class TambolaService extends ChangeNotifier {
     }
   }
 
-  // Future<void> examineTicketsForWins() async {
-  //   if (bestTickets == null ||
-  //       bestTickets?.data == null ||
-  //       weeklyPicks == null ||
-  //       weeklyPicks!.toList().length != 7 * 3 ||
-  //       weeklyPicks!.toList().contains(-1) ||
-  //       DateTime.now().weekday != 7) {
-  //     _logger.i('Testing is not ready yet');
-  //     return;
-  //   }
-  //   final tambolaTickets = bestTickets?.data?.allTickets();
-  //   for (final boardObj in tambolaTickets!) {
-  //     if (boardObj.assignedTime.toDate().weekday == 7 &&
-  //         boardObj.assignedTime.toDate().hour > 18) continue;
-  //     if (getCornerOdds(
-  //             boardObj, weeklyPicks!.getPicksPostDate(DateTime.monday)) ==
-  //         0) {
-  //       if (boardObj.getTicketNumber() != 'NA') {
-  //         ticketCodeWinIndex[boardObj.getTicketNumber()] =
-  //             Constants.CORNERS_COMPLETED;
-  //       }
-  //     }
-  //     if (getOneRowOdds(
-  //             boardObj, weeklyPicks!.getPicksPostDate(DateTime.monday)) ==
-  //         0) {
-  //       if (boardObj.getTicketNumber() != 'NA') {
-  //         ticketCodeWinIndex[boardObj.getTicketNumber()] =
-  //             Constants.ONE_ROW_COMPLETED;
-  //       }
-  //     }
-  //     if (getTwoRowOdds(
-  //             boardObj, weeklyPicks!.getPicksPostDate(DateTime.monday)) ==
-  //         0) {
-  //       if (boardObj.getTicketNumber() != 'NA') {
-  //         ticketCodeWinIndex[boardObj.getTicketNumber()] =
-  //             Constants.TWO_ROWS_COMPLETED;
-  //       }
-  //     }
-  //     if (getFullHouseOdds(
-  //             boardObj, weeklyPicks!.getPicksPostDate(DateTime.monday)) ==
-  //         0) {
-  //       if (boardObj.getTicketNumber() != 'NA') {
-  //         ticketCodeWinIndex[boardObj.getTicketNumber()] =
-  //             Constants.FULL_HOUSE_COMPLETED;
-  //       }
-  //     }
-  //   }
-  //   showWinScreen = PreferenceHelper.getBool(
-  //       PreferenceHelper.SHOW_TAMBOLA_PROCESSING,
-  //       def: true);
+  void handleSlotPreSpin() {
+    //remove today's picks from weeklyPicksList
+    for (final tp in todaysPicks!) {
+      weeklyPicksList.removeWhere((wp) => wp == tp);
+    }
+    switch (DateTime.now().weekday) {
+      case 1:
+        weeklyPicks!.mon = [-1, -1, -1];
+        break;
+      case 2:
+        weeklyPicks!.tue = [-1, -1, -1];
+        break;
+      case 3:
+        weeklyPicks!.wed = [-1, -1, -1];
+        break;
+      case 4:
+        weeklyPicks!.thu = [-1, -1, -1];
+        break;
+      case 5:
+        weeklyPicks!.fri = [-1, -1, -1];
+        break;
+      case 6:
+        weeklyPicks!.sat = [-1, -1, -1];
+        break;
+      case 7:
+        weeklyPicks!.sun = [-1, -1, -1];
+        break;
+    }
+    showSpinButton = true;
+    notifyListeners();
+  }
 
-  //   double totalInvestedPrinciple =
-  //       locator<UserService>().userFundWallet!.augGoldPrinciple;
-  // isEligible = totalInvestedPrinciple >=
-  //     BaseUtil.toInt(
-  //       AppConfig.getValue(AppConfigKey.unlock_referral_amt),
-  //     );
+  void postSlotSpin() {
+    weeklyPicksList.addAll(todaysPicks!);
+    switch (DateTime.now().weekday) {
+      case 1:
+        weeklyPicks!.mon = todaysPicks;
+        break;
+      case 2:
+        weeklyPicks!.tue = todaysPicks;
+        break;
+      case 3:
+        weeklyPicks!.wed = todaysPicks;
+        break;
+      case 4:
+        weeklyPicks!.thu = todaysPicks;
+        break;
+      case 5:
+        weeklyPicks!.fri = todaysPicks;
+        break;
+      case 6:
+        weeklyPicks!.sat = todaysPicks;
+        break;
+      case 7:
+        weeklyPicks!.sun = todaysPicks;
+        break;
+    }
+    showSpinButton = false;
+    weeklyPicks = weeklyPicks;
+    slotMachineTitle = "Today's Picks";
+    PreferenceHelper.setString(
+        PreferenceHelper.CACHE_TICKETS_LAST_SPIN_TIMESTAMP,
+        DateTime.now().toIso8601String());
+    hasUserSpinedForToday = true;
+    getBestTambolaTickets(forced: true);
+    getPastWeekWinners(refresh: true).then((value) => isEligible = true);
+  }
 
-  //   isEligible = true;
-  //   _logger.i('Resultant wins: ${ticketCodeWinIndex.toString()}');
-  //   await getPrizes();
-  //   if (showWinScreen) {
-  //     AppState.delegate!.appState.currentAction = PageAction(
-  //       state: PageState.addWidget,
-  //       page: TWeeklyResultPageConfig,
-  //       widget: WeeklyResult(
-  //         winningsMap: ticketCodeWinIndex,
-  //         isEligible: isEligible,
-  //       ),
-  //     );
-  //   }
-  //   showWinScreen = false;
-  //   unawaited(PreferenceHelper.setBool(
-  //       PreferenceHelper.SHOW_TAMBOLA_PROCESSING, showWinScreen));
-  //   S locale = locator<S>();
-  //   if (ticketCodeWinIndex.isNotEmpty && showWinScreen) {
-  //     BaseUtil.showPositiveAlert(
-  //       locale.tambolaTicketWinAlert1,
-  //       locale.tambolaTicketWinAlert2,
-  //     );
-  //   }
+  String getTicketCategoryFromPrizes(String category) {
+    if (tambolaPrizes == null) {
+      return "";
+    } else {
+      if (category == 'category_1') {
+        return tambolaPrizes!.prizes![0].displayName ?? "";
+      }
+      if (category == 'category_2') {
+        return tambolaPrizes!.prizes![1].displayName ?? "";
+      }
+      if (category == 'category_3') {
+        return tambolaPrizes!.prizes![2].displayName ?? "";
+      }
+      if (category == 'category_4') {
+        return tambolaPrizes!.prizes![3].displayName ?? "";
+      }
+    }
+    return "";
+  }
 
-  //   if (DateTime.now().weekday == DateTime.sunday &&
-  //       DateTime.now().hour >= 18) {
-  //     notifyListeners();
-  //   }
-  // }
+  void setSlotMachineTitle() {
+    _slotMachineTitle = "Today's Picks";
+  }
 }
