@@ -1,4 +1,6 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/app_config_keys.dart';
+import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/ui/pages/hometabs/save/gold_components/gold_pro_card.dart';
 import 'package:felloapp/util/assets.dart';
@@ -22,7 +24,8 @@ class GoldProHero extends StatelessWidget {
           return InvestedGoldProHero(model: model);
         } else if (goldQuantity <= 0) {
           return NewGoldProHero(model: model);
-        } else if (goldQuantity <= 2) {
+        } else if (goldQuantity <=
+            AppConfig.getValue(AppConfigKey.goldProMinimumInvestment)) {
           return ProgressGoldProHero(model: model);
         } else {
           return EligibleGoldProHero(model: model);
@@ -86,7 +89,7 @@ class ProgressGoldProHero extends StatelessWidget {
           child: FractionallySizedBox(
             widthFactor: BaseUtil.digitPrecision(
                     model.userFundWallet?.augGoldQuantity ?? 0.0, 2) /
-                2,
+                AppConfig.getValue(AppConfigKey.goldProMinimumInvestment),
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(100),
@@ -114,7 +117,7 @@ class ProgressGoldProHero extends StatelessWidget {
             ),
             const Spacer(),
             Text(
-              "2g",
+              "${AppConfig.getValue(AppConfigKey.goldProMinimumInvestment)}g",
               style: TextStyles.sourceSansSB.body0.colour(Colors.white),
             ),
           ],
@@ -123,7 +126,7 @@ class ProgressGoldProHero extends StatelessWidget {
         Row(
           children: [
             Text(
-              "Save ${BaseUtil.digitPrecision(2 - (model.userFundWallet?.augGoldQuantity ?? 0.0), 4)}g more to be eligible for Gold Pro",
+              "Save ${BaseUtil.digitPrecision(AppConfig.getValue(AppConfigKey.goldProMinimumInvestment) - (model.userFundWallet?.augGoldQuantity ?? 0.0), 4)}g more to be eligible for Gold Pro",
               style: TextStyles.sourceSansM.body3
                   .colour(UiConstants.kGoldProPrimary),
             ),
@@ -235,7 +238,7 @@ class InvestedGoldProHero extends StatelessWidget {
                                 offset: Offset(0, -SizeConfig.padding4),
                                 child: RotatedBox(
                                   quarterTurns: BaseUtil.digitPrecision(
-                                      model.userPortfolio.augmont.fd
+                                              model.userPortfolio.augmont.fd
                                                   .absGains,
                                               2) >=
                                           0
@@ -245,7 +248,7 @@ class InvestedGoldProHero extends StatelessWidget {
                                     Assets.arrow,
                                     width: SizeConfig.iconSize2,
                                     color: BaseUtil.digitPrecision(
-                                        model.userPortfolio.augmont.fd
+                                                model.userPortfolio.augmont.fd
                                                     .absGains,
                                                 2) >=
                                             0
@@ -265,7 +268,7 @@ class InvestedGoldProHero extends StatelessWidget {
                                   )}%",
                                   style: TextStyles.sourceSans.body3.colour(
                                       BaseUtil.digitPrecision(
-                                          model.userPortfolio.augmont.fd
+                                                  model.userPortfolio.augmont.fd
                                                       .absGains,
                                                   2) >=
                                               0

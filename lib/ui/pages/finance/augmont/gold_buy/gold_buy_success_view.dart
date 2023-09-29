@@ -1,5 +1,7 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/enums/app_config_keys.dart';
+import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/subscription_models/subscription_model.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -45,7 +47,7 @@ class _GoldBuySuccessViewState extends State<GoldBuySuccessView>
     AppState.blockNavigation();
     _playLottieAnimation();
     locator<TambolaService>().getBestTambolaTickets(forced: true);
-    // Future.delayed(const Duration(seconds: 3), showGoldProNudgeIfEligible);
+    Future.delayed(const Duration(seconds: 3), showGoldProNudgeIfEligible);
   }
 
   @override
@@ -356,7 +358,8 @@ class _GoldBuySuccessViewState extends State<GoldBuySuccessView>
   }
 
   void showGoldProNudgeIfEligible() {
-    if ((locator<UserService>().userFundWallet?.augGoldQuantity ?? 0) > 2) {
+    if ((locator<UserService>().userFundWallet?.augGoldQuantity ?? 0) >
+        AppConfig.getValue(AppConfigKey.goldProMinimumInvestment)) {
       BaseUtil.openModalBottomSheet(
         isBarrierDismissible: true,
         addToScreenStack: true,

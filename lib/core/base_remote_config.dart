@@ -259,8 +259,8 @@ class BaseRemoteConfig {
     "minimumGoldProInvestment": 5
   };
 
-  static const Map<String, List<int>> _GOLDPRO_INVESTMENT_CHIPS = {
-    "goldProInvestmentChips": [5, 10, 15, 20, 25]
+  static const Map<String, List<double>> _GOLDPRO_INVESTMENT_CHIPS = {
+    "goldProInvestmentChips": [5.0, 10.0, 15.0, 20.0, 25.0]
   };
 
   static Map<String, dynamic> DEFAULTS = {

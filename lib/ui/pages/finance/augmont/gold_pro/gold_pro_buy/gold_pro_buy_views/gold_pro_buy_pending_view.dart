@@ -4,6 +4,7 @@ import 'dart:developer';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/transaction_state_enum.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_buy/augmont_buy_vm.dart';
@@ -94,7 +95,7 @@ class GoldProBuyPendingView extends StatelessWidget {
 
                 AppState.backButtonDispatcher!.didPopRoute();
                 log("Screen Stack:${AppState.screenStack.toString()}");
-
+                unawaited(locator<UserService>().getUserFundWalletData());
                 showTransactionPendingDialog();
                 log("Screen Stack:${AppState.screenStack.toString()}");
               },

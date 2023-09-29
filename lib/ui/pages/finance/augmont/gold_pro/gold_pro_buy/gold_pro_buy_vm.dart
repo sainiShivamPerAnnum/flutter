@@ -3,7 +3,9 @@ import 'dart:math';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/transaction_state_enum.dart';
+import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/asset_options_model.dart';
 import 'package:felloapp/core/model/aug_gold_rates_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
@@ -37,11 +39,14 @@ class GoldProBuyViewModel extends BaseViewModel {
   final PaymentRepository _paymentRepo = locator<PaymentRepository>();
   final TxnHistoryService _txnHistoryService = locator<TxnHistoryService>();
   S locale = locator<S>();
-  TextEditingController goldFieldController =
-      TextEditingController(text: "4.0");
+  TextEditingController goldFieldController = TextEditingController(
+      text: AppConfig.getValue(AppConfigKey.goldProInvestmentChips)[1]
+          .toString());
 
-  double minimumGrams = 2;
-  double maximumGrams = 10;
+  double minimumGrams =
+      AppConfig.getValue(AppConfigKey.goldProInvestmentChips)[0];
+  double maximumGrams =
+      AppConfig.getValue(AppConfigKey.goldProInvestmentChips)[4];
   bool _isDescriptionView = false;
   double _totalGoldBalance = 0.0;
   double _currentGoldBalance = 0.0;
@@ -53,11 +58,31 @@ class GoldProBuyViewModel extends BaseViewModel {
   AugmontRates? goldRates;
 
   List<GoldProChoiceChipsModel> chipsList = [
-    GoldProChoiceChipsModel(isBest: false, isSelected: false, value: 2),
-    GoldProChoiceChipsModel(isBest: true, isSelected: true, value: 4),
-    GoldProChoiceChipsModel(isBest: false, isSelected: false, value: 6),
-    GoldProChoiceChipsModel(isBest: false, isSelected: false, value: 8),
-    GoldProChoiceChipsModel(isBest: false, isSelected: false, value: 10),
+    GoldProChoiceChipsModel(
+      isBest: false,
+      isSelected: false,
+      value: AppConfig.getValue(AppConfigKey.goldProInvestmentChips)[0],
+    ),
+    GoldProChoiceChipsModel(
+      isBest: true,
+      isSelected: true,
+      value: AppConfig.getValue(AppConfigKey.goldProInvestmentChips)[1],
+    ),
+    GoldProChoiceChipsModel(
+      isBest: false,
+      isSelected: false,
+      value: AppConfig.getValue(AppConfigKey.goldProInvestmentChips)[2],
+    ),
+    GoldProChoiceChipsModel(
+      isBest: false,
+      isSelected: false,
+      value: AppConfig.getValue(AppConfigKey.goldProInvestmentChips)[3],
+    ),
+    GoldProChoiceChipsModel(
+      isBest: false,
+      isSelected: false,
+      value: AppConfig.getValue(AppConfigKey.goldProInvestmentChips)[4],
+    ),
   ];
 
   List<ApplicationMeta> appMetaList = [];
@@ -332,13 +357,13 @@ class GoldProBuyViewModel extends BaseViewModel {
   }
 
   void updateSliderValueFromGoldBalance() {
-    double val = BaseUtil.digitPrecision((totalGoldBalance - 2) / 8, 4);
+    double val = BaseUtil.digitPrecision((totalGoldBalance - 5) / 20, 4);
     if (val >= 0 && val <= 1) sliderValue = val;
   }
 
   void updateSliderValue(double val) {
     sliderValue = val;
-    totalGoldBalance = BaseUtil.digitPrecision(8 * val + 2, 1);
+    totalGoldBalance = BaseUtil.digitPrecision(20 * val + 5, 1);
     goldFieldController.text = totalGoldBalance.toString();
     postUpdateChips();
   }
@@ -384,19 +409,24 @@ class GoldProBuyViewModel extends BaseViewModel {
 
   void postUpdateChips() {
     selectedChipIndex = -1;
-    if (totalGoldBalance == 2.0) {
+    if (totalGoldBalance ==
+        AppConfig.getValue(AppConfigKey.goldProInvestmentChips)[0]) {
       selectedChipIndex = 0;
       Haptic.vibrate();
-    } else if (totalGoldBalance == 4.0) {
+    } else if (totalGoldBalance ==
+        AppConfig.getValue(AppConfigKey.goldProInvestmentChips)[1]) {
       selectedChipIndex = 1;
       Haptic.vibrate();
-    } else if (totalGoldBalance == 6.0) {
+    } else if (totalGoldBalance ==
+        AppConfig.getValue(AppConfigKey.goldProInvestmentChips)[2]) {
       selectedChipIndex = 2;
       Haptic.vibrate();
-    } else if (totalGoldBalance == 8.0) {
+    } else if (totalGoldBalance ==
+        AppConfig.getValue(AppConfigKey.goldProInvestmentChips)[3]) {
       selectedChipIndex = 3;
       Haptic.vibrate();
-    } else if (totalGoldBalance == 10.0) {
+    } else if (totalGoldBalance ==
+        AppConfig.getValue(AppConfigKey.goldProInvestmentChips)[4]) {
       selectedChipIndex = 4;
       Haptic.vibrate();
     }
