@@ -1,3 +1,5 @@
+// ignore_for_file: empty_catches
+
 import 'dart:async';
 
 import 'package:felloapp/base_util.dart';
@@ -58,6 +60,7 @@ class GoldBuyViewModel extends BaseViewModel {
   S locale = locator<S>();
   AssetOptionsModel? assetOptionsModel;
   double? incomingAmount;
+
   List<ApplicationMeta> appMetaList = [];
   UpiApplication? upiApplication;
   ApplicationMeta? selectedUpiApplication;
@@ -78,7 +81,7 @@ class GoldBuyViewModel extends BaseViewModel {
   double _fieldWidth = 0.0;
   AnimationController? animationController;
 
-  get fieldWidth => _fieldWidth;
+  double get fieldWidth => _fieldWidth;
 
   set fieldWidth(value) {
     _fieldWidth = value;
@@ -90,7 +93,7 @@ class GoldBuyViewModel extends BaseViewModel {
   // bool _isSubscriptionInProgress = false;
   bool _couponApplyInProgress = false;
   bool _showCoupons = false;
-  bool _augmontSecondFetchDone = false;
+  final bool _augmontSecondFetchDone = false;
 
   AugmontRates? goldRates;
   String? userAugmontState;
@@ -113,7 +116,7 @@ class GoldBuyViewModel extends BaseViewModel {
     if (res.code == 200) assetOptionsModel = res.model;
   }
 
-  get goldAmountInGrams => _goldAmountInGrams;
+  double get goldAmountInGrams => _goldAmountInGrams;
 
   set goldAmountInGrams(value) {
     _goldAmountInGrams = value;
@@ -140,37 +143,37 @@ class GoldBuyViewModel extends BaseViewModel {
 
   double? get goldBuyPrice => goldRates != null ? goldRates!.goldBuyPrice : 0.0;
 
-  get isGoldBuyInProgress => _isGoldBuyInProgress;
+  bool get isGoldBuyInProgress => _isGoldBuyInProgress;
 
-  get augmontObjectSecondFetchDone => _augmontSecondFetchDone;
+  bool get augmontObjectSecondFetchDone => _augmontSecondFetchDone;
 
   set isGoldBuyInProgress(value) {
     _isGoldBuyInProgress = value;
     notifyListeners();
   }
 
-  get status => _status;
+  int get status => _status;
 
   set status(value) {
     _status = value;
     notifyListeners();
   }
 
-  get showMaxCapText => _showMaxCapText;
+  bool get showMaxCapText => _showMaxCapText;
 
   set showMaxCapText(value) {
     _showMaxCapText = value;
     notifyListeners();
   }
 
-  get showMinCapText => _showMinCapText;
+  bool get showMinCapText => _showMinCapText;
 
   set showMinCapText(value) {
     _showMinCapText = value;
     notifyListeners();
   }
 
-  get isGoldRateFetching => _isGoldRateFetching;
+  bool get isGoldRateFetching => _isGoldRateFetching;
 
   set isGoldRateFetching(value) {
     _isGoldRateFetching = value;
@@ -204,7 +207,7 @@ class GoldBuyViewModel extends BaseViewModel {
     _skipMl = value;
   }
 
-  get addSpecialCoupon => _addSpecialCoupon;
+  bool get addSpecialCoupon => _addSpecialCoupon;
 
   set addSpecialCoupon(value) {
     _addSpecialCoupon = value;
@@ -235,10 +238,13 @@ class GoldBuyViewModel extends BaseViewModel {
 
   bool readOnly = true;
 
-  init(int? amount, bool isSkipMilestone, TickerProvider vsync,
-      double? gms) async {
-    // resetBuyOptions();
-
+  Future<void> init(
+    int? amount,
+    bool isSkipMilestone,
+    TickerProvider vsync,
+    double? gms, {
+    String? initialCouponCode,
+  }) async {
     setState(ViewState.Busy);
     appMetaList = await UpiUtils.getUpiApps();
     showHappyHour = locator<MarketingEventHandlerService>().showHappyHourBanner;
@@ -281,10 +287,16 @@ class GoldBuyViewModel extends BaseViewModel {
     // await fetchNotices();
     status = checkAugmontStatus();
     // _paytmService!.getActiveSubscriptionDetails();
-    getAvailableCoupons();
+    setState(ViewState.Idle);
+
+    await getAvailableCoupons();
+
+    await _applyInitialCoupon(
+      initialCouponCode,
+    );
+
     userAugmontState = await CacheManager.readCache(key: "UserAugmontState");
     // setBackButtonActions();
-    setState(ViewState.Idle);
   }
 
   bool hideKeyboard = false;
@@ -388,17 +400,17 @@ class GoldBuyViewModel extends BaseViewModel {
     //   return false;
     // }
 
-    bool _disabled = await _dbModel!.isAugmontBuyDisabled();
-    if (_disabled != null && _disabled) {
-      isGoldBuyInProgress = false;
-      BaseUtil.showNegativeAlert(
-        locale.purchaseFailed,
-        locale.goldBuyHold,
-      );
-      trackCheckOOutEvent(
-          "Purchase Failed,'Gold buying is currently on hold. Please try again after sometime.");
-      return false;
-    }
+    // bool _disabled = await _dbModel!.isAugmontBuyDisabled();
+    // if (_disabled != null && _disabled) {
+    //   isGoldBuyInProgress = false;
+    //   BaseUtil.showNegativeAlert(
+    //     locale.purchaseFailed,
+    //     locale.goldBuyHold,
+    //   );
+    //   trackCheckOOutEvent(
+    //       "Purchase Failed,'Gold buying is currently on hold. Please try again after sometime.");
+    //   return false;
+    // }
 
     trackCheckOOutEvent("");
     return true;
@@ -426,7 +438,7 @@ class GoldBuyViewModel extends BaseViewModel {
           : false,
       "Error message": errorMessage,
     };
-    _analyticsService!.track(
+    _analyticsService.track(
         eventName: AnalyticsEvents.saveCheckout,
         properties:
             AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
@@ -447,7 +459,7 @@ class GoldBuyViewModel extends BaseViewModel {
         }));
   }
 
-  onChipClick(int index) {
+  void onChipClick(int index) {
     if (couponApplyInProgress ||
         isGoldBuyInProgress ||
         _augTxnService.isGoldBuyInProgress) return;
@@ -511,7 +523,7 @@ class GoldBuyViewModel extends BaseViewModel {
 
   Future<void> fetchGoldRates() async {
     isGoldRateFetching = true;
-    goldRates = await _augmontModel!.getRates();
+    goldRates = await _augmontModel.getRates();
     updateGoldAmount();
     if (goldRates == null) {
       BaseUtil.showNegativeAlert(
@@ -523,11 +535,11 @@ class GoldBuyViewModel extends BaseViewModel {
   }
 
   onBuyValueChanged(String val) {
-    _logger!.d("Value: $val");
+    _logger.d("Value: $val");
     if (showMaxCapText) showMaxCapText = false;
     if (showMinCapText) showMinCapText = false;
     addSpecialCoupon = false;
-    if (val != null && val.isNotEmpty) {
+    if (val.isNotEmpty) {
       if (double.tryParse(val.trim())! > 50000.0) {
         goldBuyAmount = 50000;
         goldAmountController!.text = goldBuyAmount!.toInt().toString();
@@ -557,32 +569,32 @@ class GoldBuyViewModel extends BaseViewModel {
 
   int checkAugmontStatus() {
     //check who is allowed to deposit
-    String _perm =
+    String perm =
         AppConfig.getValue(AppConfigKey.augmont_deposit_permission).toString();
 
-    int _isGeneralUserAllowed = 1;
-    bool _isAllowed = false;
-    if (_perm != null && _perm.isNotEmpty) {
+    int isGeneralUserAllowed = 1;
+    bool isAllowed = false;
+    if (perm.isNotEmpty) {
       try {
-        _isGeneralUserAllowed = int.parse(_perm);
+        isGeneralUserAllowed = int.parse(perm);
       } catch (e) {
-        _isGeneralUserAllowed = 1;
+        isGeneralUserAllowed = 1;
       }
     }
-    if (_isGeneralUserAllowed == 0) {
+    if (isGeneralUserAllowed == 0) {
       //General permission is denied. Check if specific user permission granted
-      if (_userService!.baseUser!.isAugmontEnabled != null &&
-          _userService!.baseUser!.isAugmontEnabled!) {
+      if (_userService.baseUser!.isAugmontEnabled != null &&
+          _userService.baseUser!.isAugmontEnabled!) {
         //this specific user is allowed to use Augmont
-        _isAllowed = true;
+        isAllowed = true;
       } else {
-        _isAllowed = false;
+        isAllowed = false;
       }
     } else {
-      _isAllowed = true;
+      isAllowed = true;
     }
 
-    if (!_isAllowed) {
+    if (!isAllowed) {
       return STATUS_UNAVAILABLE;
     } else {
       return STATUS_OPEN;
@@ -607,7 +619,7 @@ class GoldBuyViewModel extends BaseViewModel {
     );
   }
 
-  getAmount(double amount) {
+  num getAmount(double amount) {
     if (amount > amount.toInt()) {
       return amount;
     } else {
@@ -617,7 +629,7 @@ class GoldBuyViewModel extends BaseViewModel {
 
 //----------------------------------------------- COUPON LOGIC -------------------------------
 
-  getAvailableCoupons() async {
+  Future<void> getAvailableCoupons() async {
     final ApiResponse<List<CouponModel>> couponsRes =
         await _couponRepo.getCoupons(assetType: "AUGGOLD");
 
@@ -630,8 +642,18 @@ class GoldBuyViewModel extends BaseViewModel {
     }
   }
 
-  Future applyCoupon(String? couponCode, bool isManuallyTyped) async {
-    if (couponApplyInProgress ||
+  Future<void> _applyInitialCoupon(String? coupon) async {
+    if (coupon == null) return;
+    try {
+      await applyCoupon(coupon, false);
+    } catch (e, stack) {
+      _logger.e('Failed to apply initial coupon', e, stack);
+    }
+  }
+
+  Future<void> applyCoupon(String? couponCode, bool isManuallyTyped) async {
+    if (couponCode == null ||
+        couponApplyInProgress ||
         isGoldBuyInProgress ||
         _augTxnService.isGoldBuyInProgress) return;
 
@@ -654,8 +676,8 @@ class GoldBuyViewModel extends BaseViewModel {
     couponApplyInProgress = true;
 
     ApiResponse<EligibleCouponResponseModel> response =
-        await _couponRepo!.getEligibleCoupon(
-      uid: _userService!.baseUser!.uid,
+        await _couponRepo.getEligibleCoupon(
+      uid: _userService.baseUser!.uid,
       amount: goldBuyAmount!.toInt(),
       couponcode: couponCode,
       assetType: "AUGGOLD",
@@ -675,30 +697,30 @@ class GoldBuyViewModel extends BaseViewModel {
           updateGoldAmount();
           showMaxCapText = false;
           showMinCapText = false;
-          animationController?.forward();
+          await animationController?.forward();
         }
         checkForSpecialCoupon(response.model!);
 
         appliedCoupon = response.model;
 
         BaseUtil.showPositiveAlert(
-            locale.couponAppliedSucc, response?.model?.message);
+            locale.couponAppliedSucc, response.model?.message);
       } else {
         BaseUtil.showNegativeAlert(
-            locale.couponCannotBeApplied, response?.model?.message);
+            locale.couponCannotBeApplied, response.model?.message);
       }
     } else if (response.code == 400) {
       BaseUtil.showNegativeAlert(locale.couponNotApplied,
-          response?.errorMessage ?? locale.anotherCoupon);
+          response.errorMessage ?? locale.anotherCoupon);
     } else {
       BaseUtil.showNegativeAlert(locale.couponNotApplied, locale.anotherCoupon);
     }
-    _analyticsService!
+    _analyticsService
         .track(eventName: AnalyticsEvents.saveBuyCoupon, properties: {
       "Manual Code entry": isManuallyTyped,
       "Order of coupon in list": order == -1 ? "Not in list" : order.toString(),
       "Coupon Name": couponCode,
-      "Error message": response.code == 400 ? response?.model?.message : "",
+      "Error message": response.code == 400 ? response.model?.message : "",
       "Asset": "Gold",
       "Min transaction": minTransaction == -1 ? "Not fetched" : minTransaction,
     });
@@ -769,10 +791,10 @@ class PendingDialog extends StatelessWidget {
   final String title, subtitle, duration;
 
   const PendingDialog(
-      {super.key,
-      required this.title,
+      {required this.title,
       required this.subtitle,
-      required this.duration});
+      required this.duration,
+      super.key});
 
   @override
   Widget build(BuildContext context) {

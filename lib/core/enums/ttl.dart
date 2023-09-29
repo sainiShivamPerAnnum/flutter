@@ -8,4 +8,5 @@ class TTL {
   static const FIVE_MIN = 5;
   static const FOUR_MIN = 4;
   static const ONE_MIN = 1;
+  static const UPTO_SIX_PM = -1;
 }

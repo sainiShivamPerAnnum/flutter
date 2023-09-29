@@ -23,6 +23,7 @@ import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
+import 'package:felloapp/feature/tambola/src/services/tambola_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
@@ -333,7 +334,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
       Map<String, dynamic> response =
           await _internalOpsService!.initDeviceInfo();
       deviceId = response["deviceId"];
-      platform = response["platform"];
+      platform = Platform.isAndroid ? 'android' : 'ios';
 
       PackageInfo packageInfo = await PackageInfo.fromPlatform();
       appVersion = packageInfo.buildNumber;
@@ -546,9 +547,20 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
       if (temp == null) {
         _compileUserWallet();
       } else {
+        unawaited(checkForTicketsRefresh(
+          userFundWallet?.tickets?["total"] ?? 0,
+          temp.tickets?["total"] ?? 0,
+        ));
         userFundWallet = temp;
         _triggerHomeScreenWidgetUpdate();
       }
+    }
+  }
+
+  Future<void> checkForTicketsRefresh(
+      int oldTicketsCount, int newTicketsCount) async {
+    if (oldTicketsCount != newTicketsCount) {
+      await locator<TambolaService>().refreshTickets();
     }
   }
 
@@ -563,7 +575,9 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
                 prefs.getString(Constants.FELLO_BALANCE) !=
                     userFundWallet!.netWorth!.toString())) {
       prefs.setString(
-          Constants.FELLO_BALANCE, userFundWallet!.netWorth!.toString());
+        Constants.FELLO_BALANCE,
+        userFundWallet!.netWorth!.toString(),
+      );
 
       log('Calling method channel for updateHomeScreenWidget');
       final platform = const MethodChannel('methodChannel/deviceData');

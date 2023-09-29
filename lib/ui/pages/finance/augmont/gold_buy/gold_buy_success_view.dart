@@ -44,7 +44,7 @@ class _GoldBuySuccessViewState extends State<GoldBuySuccessView>
     _animationController = AnimationController(vsync: this);
     AppState.blockNavigation();
     _playLottieAnimation();
-    // Future.delayed(const Duration(seconds: 3), showGoldProNudgeIfEligible);
+    locator<TambolaService>().getBestTambolaTickets(forced: true);
   }
 
   @override
@@ -307,10 +307,6 @@ class _GoldBuySuccessViewState extends State<GoldBuySuccessView>
                   AppState.delegate!.appState.setCurrentTabIndex =
                       DynamicUiUtils.navBar
                           .indexWhere((element) => element == 'SV');
-
-                  final _tambolaService = locator<TambolaService>();
-                  // _tambolaService.weeklyTicksFetched = false;
-                  _tambolaService.getBestTambolaTickets();
 
                   _augTxnService.showGtIfAvailable();
                 },

@@ -15,9 +15,18 @@ import 'package:flutter_svg/svg.dart';
 import '../static/new_square_background.dart';
 
 class BlockedUserView extends StatelessWidget {
-  const BlockedUserView({super.key, this.isStateRestricted = false});
+  const BlockedUserView({
+    super.key,
+    this.isStateRestricted = false,
+    this.isMaintenanceMode = false,
+    this.blockTitle = '',
+    this.blockSubtitle = '',
+  });
 
   final bool isStateRestricted;
+  final bool isMaintenanceMode;
+  final String blockTitle;
+  final String blockSubtitle;
 
   @override
   Widget build(BuildContext context) {
@@ -56,16 +65,17 @@ class BlockedUserView extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.end,
             children: [
               Text(
-                isStateRestricted
-                    ? "Fello is not available in your state"
-                    : locale.obBlockedTitle,
+                getTitle(locale),
                 style: TextStyles.rajdhaniB.title2,
                 textAlign: TextAlign.center,
               ),
-              SizedBox(height: SizeConfig.navBarHeight),
+              Container(
+                  margin: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+                  child: getSubTitle(locale)),
+              SizedBox(height: SizeConfig.navBarHeight / 2),
             ],
           ),
-          if (isStateRestricted)
+          if (isStateRestricted || isMaintenanceMode)
             Align(
               child: FAppBar(
                   title: null,
@@ -97,45 +107,101 @@ class BlockedUserView extends StatelessWidget {
                     ),
                   )),
             ),
-          if (isStateRestricted)
-            Align(
-              alignment: Alignment.bottomCenter,
-              child: GestureDetector(
-                onTap: () async {
-                  Haptic.vibrate();
-                  try {
-                    await BaseUtil.launchUrl('https://fello.in/policy/tnc');
-                  } catch (e) {
-                    BaseUtil.showNegativeAlert(
-                      locale.obSomeThingWentWrong,
-                      locale.obCouldNotLaunch,
-                    );
-                  }
-                },
-                child: Padding(
-                  padding: EdgeInsets.symmetric(
-                      horizontal: SizeConfig.padding44,
-                      vertical: SizeConfig.padding24),
-                  child: RichText(
-                    textAlign: TextAlign.center,
-                    text: TextSpan(
-                      text: isStateRestricted
-                          ? 'Please read our '
-                          : "${locale.obBlockedSubtitle1} ",
-                      style: TextStyles.rajdhani.colour(Colors.grey),
-                      children: [
-                        TextSpan(
-                          text: locale.termsOfService,
-                          style: TextStyles.rajdhani.underline,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-              ),
-            ),
           SizedBox(height: SizeConfig.padding34),
         ],
+      ),
+    );
+  }
+
+  String getTitle(S locale) {
+    if (blockTitle.isNotEmpty) {
+      return blockTitle;
+    }
+    if (isMaintenanceMode) {
+      return "App under maintenance";
+    }
+    if (isStateRestricted) {
+      return "Fello is not available in your state";
+    }
+    return locale.obBlockedTitle;
+  }
+
+  Widget getSubTitle(S locale) {
+    if (blockSubtitle.isNotEmpty) {
+      return Text(
+        blockSubtitle,
+        style: TextStyles.rajdhani.colour(Colors.grey),
+        textAlign: TextAlign.center,
+      );
+    }
+    if (isMaintenanceMode) {
+      return Text(
+        "Fello is under maintenance. We'll be back again very soon!\nDon't worry, your investments are safe with us",
+        style: TextStyles.rajdhani.colour(Colors.grey),
+        textAlign: TextAlign.center,
+      );
+    }
+    if (isStateRestricted) {
+      return GestureDetector(
+        onTap: () async {
+          Haptic.vibrate();
+          try {
+            await BaseUtil.launchUrl('https://fello.in/policy/tnc');
+          } catch (e) {
+            BaseUtil.showNegativeAlert(
+              locale.obSomeThingWentWrong,
+              locale.obCouldNotLaunch,
+            );
+          }
+        },
+        child: Padding(
+          padding: EdgeInsets.symmetric(
+              horizontal: SizeConfig.padding44, vertical: SizeConfig.padding24),
+          child: RichText(
+            textAlign: TextAlign.center,
+            text: TextSpan(
+              text: 'Please read our ',
+              style: TextStyles.rajdhani.colour(Colors.grey),
+              children: [
+                TextSpan(
+                  text: locale.termsOfService,
+                  style: TextStyles.rajdhani.underline,
+                ),
+              ],
+            ),
+          ),
+        ),
+      );
+    }
+
+    return GestureDetector(
+      onTap: () async {
+        Haptic.vibrate();
+        try {
+          await BaseUtil.launchUrl('https://fello.in/policy/tnc');
+        } catch (e) {
+          BaseUtil.showNegativeAlert(
+            locale.obSomeThingWentWrong,
+            locale.obCouldNotLaunch,
+          );
+        }
+      },
+      child: Padding(
+        padding: EdgeInsets.symmetric(
+            horizontal: SizeConfig.padding44, vertical: SizeConfig.padding24),
+        child: RichText(
+          textAlign: TextAlign.center,
+          text: TextSpan(
+            text: "${locale.obBlockedSubtitle1} ",
+            style: TextStyles.rajdhani.colour(Colors.grey),
+            children: [
+              TextSpan(
+                text: locale.termsOfService,
+                style: TextStyles.rajdhani.underline,
+              ),
+            ],
+          ),
+        ),
       ),
     );
   }

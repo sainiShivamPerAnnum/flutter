@@ -4,7 +4,6 @@ import 'dart:ui';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/journey_service_enum.dart';
-import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/journey_models/avatar_path_model.dart';
 import 'package:felloapp/core/model/journey_models/journey_level_model.dart';
 import 'package:felloapp/core/model/journey_models/journey_page_model.dart';
@@ -19,7 +18,6 @@ import 'package:felloapp/core/service/notifier_services/scratch_card_service.dar
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
-import 'package:felloapp/ui/pages/campaigns/info_stories/info_stories_view.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -829,7 +827,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
       });
   }
 
-  animateAvatar() async {
+  Future<void> animateAvatar() async {
     if (avatarPath == null || !isThereAnyMilestoneLevelChange()!) return;
     isAvatarAnimationInProgress = true;
     if (checkIfUserHasCompletedJourneyLevel()) {
@@ -837,64 +835,59 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
           vsync: vsync!, duration: const Duration(seconds: 3));
       showLevelUpAnimation = true;
 
-      levelUpLottieController!.forward().then((value) {
+      unawaited(levelUpLottieController!.forward().then((value) {
         showLevelUpAnimation = false;
-      });
+      }));
       Future.delayed(const Duration(milliseconds: 800), () {});
     }
     controller?.reset();
     await scrollPageToAvatarPosition();
     await _gtService.fetchAndVerifyScratchCardByPrizeSubtype();
-    controller!.forward().whenComplete(() async {
+    unawaited(controller!.forward().whenComplete(() async {
       log("Animation Complete");
-      // int gameLevelChangeResult = checkForGameLevelChange();
-      // if (gameLevelChangeResult != 0)
-      // BaseUtil.showPositiveAlert("Milestone $avatarRemoteMlIndex unlocked!!",
-      //     "New Milestones on your way!");
-      updateRewardSTooltips();
-      checkIfUserIsOldAndNeedsStoryView();
+      unawaited(updateRewardSTooltips());
       updateAvatarLocalLevel();
       baseGlow = 1;
       Future.delayed(const Duration(milliseconds: 500),
           () => isAvatarAnimationInProgress = false);
       // _gtService.showInstantGoldenTicketView(
       //     title: 'Congratulations!', source: GTSOURCE.newuser, onJourney: true);
-    });
+    }));
   }
 
-  checkIfUserIsOldAndNeedsStoryView() {
-    Future.delayed(
-      const Duration(seconds: 2),
-      () {
-        if (_userService!.baseUser!.isOldUser! && avatarRemoteMlIndex == 2) {
-          isJourneyOnboardingInView = true;
-          PreferenceHelper.setBool(
-              PreferenceHelper.CACHE_IS_USER_JOURNEY_ONBOARDED, true);
-          AppState.screenStack.add(ScreenItem.dialog);
-          Navigator.of(AppState.delegate!.navigatorKey.currentContext!).push(
-            PageRouteBuilder(
-              pageBuilder: (context, animation, anotherAnimation) {
-                return const InfoStories(
-                  topic: "onboarding",
-                );
-              },
-              transitionDuration: const Duration(milliseconds: 500),
-              transitionsBuilder:
-                  (context, animation, anotherAnimation, child) {
-                animation = CurvedAnimation(
-                    curve: Curves.easeInCubic, parent: animation);
-                return Align(
-                  child: SizeTransition(
-                    sizeFactor: animation,
-                    child: child,
-                    axisAlignment: 0.0,
-                  ),
-                );
-              },
-            ),
-          );
-        }
-      },
-    );
-  }
+  // checkIfUserIsOldAndNeedsStoryView() {
+  //   Future.delayed(
+  //     const Duration(seconds: 2),
+  //     () {
+  //       if (_userService!.baseUser!.isOldUser! && avatarRemoteMlIndex == 2) {
+  //         isJourneyOnboardingInView = true;
+  //         PreferenceHelper.setBool(
+  //             PreferenceHelper.CACHE_IS_USER_JOURNEY_ONBOARDED, true);
+  //         AppState.screenStack.add(ScreenItem.dialog);
+  //         Navigator.of(AppState.delegate!.navigatorKey.currentContext!).push(
+  //           PageRouteBuilder(
+  //             pageBuilder: (context, animation, anotherAnimation) {
+  //               return const InfoStories(
+  //                 topic: "onboarding",
+  //               );
+  //             },
+  //             transitionDuration: const Duration(milliseconds: 500),
+  //             transitionsBuilder:
+  //                 (context, animation, anotherAnimation, child) {
+  //               animation = CurvedAnimation(
+  //                   curve: Curves.easeInCubic, parent: animation);
+  //               return Align(
+  //                 child: SizeTransition(
+  //                   sizeFactor: animation,
+  //                   child: child,
+  //                   axisAlignment: 0.0,
+  //                 ),
+  //               );
+  //             },
+  //           ),
+  //         );
+  //       }
+  //     },
+  //   );
+  // }
 }

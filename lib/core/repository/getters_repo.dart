@@ -16,6 +16,7 @@ import 'package:felloapp/core/model/promo_cards_model.dart';
 import 'package:felloapp/core/model/quick_save_model.dart';
 import 'package:felloapp/core/model/story_model.dart';
 import 'package:felloapp/core/model/sub_combos_model.dart';
+import 'package:felloapp/core/model/tambola_offers_model.dart';
 import 'package:felloapp/core/model/winners_model.dart';
 import 'package:felloapp/core/repository/base_repo.dart';
 import 'package:felloapp/core/service/api_service.dart';
@@ -77,16 +78,33 @@ class GetterRepository extends BaseRepo {
   }) async {
     try {
       final token = await getBearerToken();
-      final winnersResponse = await APIService.instance.getData(
-        ApiPath.getWinners(type, freq),
-        cBaseUrl: _baseUrl,
-        token: token,
+      return await _cacheService.cachedApi<WinnersModel>(
+        CacheKeys.TICKETS_LB,
+        TTL.UPTO_SIX_PM,
+        () => APIService.instance.getData(
+          ApiPath.getWinners(type, freq),
+          cBaseUrl: _baseUrl,
+          token: token,
+        ),
+        (p0) {
+          logger.d("Winners for $type: ${p0.toString()}");
+          return ApiResponse(
+            model: WinnersModel.fromMap(p0["data"]),
+            code: 200,
+          );
+        },
       );
 
-      return ApiResponse(
-        model: WinnersModel.fromMap(winnersResponse["data"]),
-        code: 200,
-      );
+      // final winnersResponse = await APIService.instance.getData(
+      //   ApiPath.getWinners(type, freq),
+      //   cBaseUrl: _baseUrl,
+      //   token: token,
+      // );
+
+      // return ApiResponse(
+      //   model: WinnersModel.fromMap(winnersResponse["data"]),
+      //   code: 200,
+      // );
     } catch (e) {
       logger.e(e.toString());
       return ApiResponse.withError(
@@ -384,6 +402,24 @@ class GetterRepository extends BaseRepo {
 
       return ApiResponse<List>(
           model: response["data"]["earnMoreRewards"], code: 200);
+    } catch (e) {
+      logger.e(e.toString());
+      return ApiResponse.withError("Unable to fetch stories", 400);
+    }
+  }
+
+  Future<ApiResponse<List<TicketsOffers>>> getTambolaOffers() async {
+    try {
+      final token = await getBearerToken();
+      final response = await APIService.instance.getData(
+        ApiPath.tambolaOffers,
+        cBaseUrl: _baseUrl,
+        token: token,
+      );
+
+      return ApiResponse<List<TicketsOffers>>(
+          model: TicketsOffers.helper.fromMapArray(response["data"]["offers"]),
+          code: 200);
     } catch (e) {
       logger.e(e.toString());
       return ApiResponse.withError("Unable to fetch stories", 400);

@@ -18,11 +18,10 @@ import 'package:felloapp/ui/pages/finance/banner_widget.dart';
 import 'package:felloapp/ui/pages/finance/coupon_widget.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/show_case_key.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:showcaseview/showcaseview.dart';
+// import 'package:showcaseview/showcaseview.dart';
 
 import 'widgets/view_breakdown.dart';
 
@@ -150,17 +149,18 @@ class _GoldBuyInputViewState extends State<GoldBuyInputView> {
               height: SizeConfig.padding24,
             ),
             if (widget.model.showCoupons)
-              Showcase(
-                key: ShowCaseKeys.couponKey,
-                description: 'You can apply a coupon to get extra gold!',
-                child: CouponWidget(
-                  widget.model.couponList,
-                  widget.model,
-                  onTap: (coupon) {
-                    widget.model.applyCoupon(coupon.code, false);
-                  },
-                ),
+              // Showcase(
+              //   key: ShowCaseKeys.couponKey,
+              //   description: 'You can apply a coupon to get extra gold!',
+              //   child:
+              CouponWidget(
+                widget.model.couponList,
+                widget.model,
+                onTap: (coupon) {
+                  widget.model.applyCoupon(coupon.code, false);
+                },
               ),
+            // ),
             const Spacer(),
             widget.augTxnService.isGoldBuyInProgress
                 ? Container(

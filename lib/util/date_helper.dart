@@ -1,6 +1,7 @@
 import 'dart:developer';
 
 import 'package:felloapp/core/model/timestamp_model.dart';
+import 'package:intl/intl.dart';
 
 class DateHelper {
   static String timeAgoSinceDate(TimestampModel date,
@@ -54,5 +55,36 @@ class DateHelper {
     );
 
     return adultDate.isBefore(today);
+  }
+
+  static int getMillisecondsTillNextSixPm() {
+    // Get the current date and time
+    final currentTime = DateTime.now();
+
+    // Calculate the next 6 PM
+    final nextSixPM =
+        DateTime(currentTime.year, currentTime.month, currentTime.day, 18, 0);
+
+    // Calculate the duration in milliseconds
+    int durationMillis;
+
+    // Check if the current time is before 6 PM
+    if (currentTime.isBefore(nextSixPM)) {
+      durationMillis =
+          nextSixPM.millisecondsSinceEpoch - currentTime.millisecondsSinceEpoch;
+    } else {
+      // Calculate the duration until the next day's 6 PM
+      final tomorrowSixPM = nextSixPM.add(Duration(days: 1));
+      durationMillis = tomorrowSixPM.millisecondsSinceEpoch -
+          currentTime.millisecondsSinceEpoch;
+    }
+
+    print('Duration in milliseconds: $durationMillis');
+    return durationMillis;
+  }
+
+  static String getDateInHumanReadableFormat(DateTime dateTime) {
+    final format = DateFormat('dd MMM, yyyy');
+    return format.format(dateTime);
   }
 }
