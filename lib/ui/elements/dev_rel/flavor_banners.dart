@@ -10,7 +10,7 @@ class DEVBanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FlavorConfig.isDevelopment()
-        ? Container(
+        ? SizedBox(
             width: SizeConfig.screenWidth,
             child: Banner(
               message: FlavorConfig.getStage(),
@@ -18,7 +18,7 @@ class DEVBanner extends StatelessWidget {
               color: FlavorConfig.instance!.color,
             ),
           )
-        : SizedBox();
+        : const SizedBox();
   }
 }
 
@@ -29,7 +29,7 @@ class QABanner extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return FlavorConfig.isQA()
-        ? Container(
+        ? SizedBox(
             width: SizeConfig.screenWidth,
             child: Banner(
               message: FlavorConfig.getStage(),
@@ -37,6 +37,6 @@ class QABanner extends StatelessWidget {
               color: FlavorConfig.instance!.color,
             ),
           )
-        : SizedBox();
+        : const SizedBox();
   }
 }

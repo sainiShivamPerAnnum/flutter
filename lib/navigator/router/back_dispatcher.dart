@@ -1,12 +1,16 @@
 //Project Imports
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
+import 'package:felloapp/core/enums/transaction_state_enum.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/back_button_actions.dart';
@@ -14,11 +18,14 @@ import 'package:felloapp/navigator/router/router_delegate.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
 import 'package:felloapp/ui/modalsheets/autosave_confirm_exit_modalsheet.dart';
+import 'package:felloapp/ui/modalsheets/autosave_survey_modalsheet.dart';
+import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_buy/gold_pro_buy_components/gold_pro_buy_exit_modalsheet.dart';
 import 'package:felloapp/ui/pages/games/web/web_game/web_game_vm.dart';
+import 'package:felloapp/ui/pages/hometabs/home/card_actions_notifier.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
-import 'package:felloapp/ui/shared/spotlight_controller.dart';
 import 'package:felloapp/util/app_toasts_utils.dart';
 import 'package:felloapp/util/custom_logger.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -30,6 +37,8 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
   final CustomLogger? logger = locator<CustomLogger>();
   final UserService _userService = locator<UserService>();
   final WebGameViewModel _webGameViewModel = locator<WebGameViewModel>();
+  final AugmontTransactionService _augTxnService =
+      locator<AugmontTransactionService>();
   final JourneyService _journeyService = locator<JourneyService>();
   final AnalyticsService _analyticsService = locator<AnalyticsService>();
 
@@ -64,37 +73,34 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
   @override
   Future<bool> didPopRoute() {
     AppToasts.flushbar?.dismiss();
-
-    // if (AppState.showAutosaveBt &&
-    //     AppState.screenStack.last != ScreenItem.dialog) {
-    //   AppState.showAutosaveBt = false;
-    //   _analyticsService.track(eventName: AnalyticsEvents.asHardBackTapped);
-    //   BaseUtil.openModalBottomSheet(
-    //       isBarrierDismissible: true,
-    //       addToScreenStack: true,
-    //       backgroundColor: UiConstants.kBackgroundColor,
-    //       borderRadius: BorderRadius.only(
-    //         topLeft: Radius.circular(SizeConfig.roundness32),
-    //         topRight: Radius.circular(SizeConfig.roundness32),
-    //       ),
-    //       isScrollControlled: true,
-    //       hapticVibrate: true,
-    //       content: AutosaveConfirmExitModalSheet());
-    //   return Future.value(true);
-    // }
-
-    if (SpotLightController.instance.startShowCase) {
-      SpotLightController.instance.startShowCase = false;
-      SpotLightController.instance.init();
-
-      SpotLightController.instance.userFlow = UserFlow.onSaveTab;
+    if (AppState.screenStack.last == ScreenItem.loader) {
+      return Future.value(true);
     }
-
+    // _journeyService.checkForMilestoneLevelChange();
     if (locator<BackButtonActions>().isTransactionCancelled) {
       if (AppState.onTap != null &&
           AppState.type != null &&
           AppState.amt != null) {
-        if (!AppState.isRepeated) {
+        if (AppState.delegate!.currentConfiguration!.key ==
+                'LendboxBuyViewPath' &&
+            AppState.screenStack.last != ScreenItem.dialog &&
+            !AppState.isRepeated &&
+            AppState.type == InvestmentType.LENDBOXP2P) {
+          locator<BackButtonActions>().showWantToCloseTransactionBottomSheet(
+            AppState.amt!.round(),
+            AppState.type!,
+            () {
+              AppState.onTap?.call();
+            },
+          );
+          AppState.isRepeated = true;
+          return Future.value(true);
+        } else if (AppState.screenStack[AppState.screenStack.length - 2] !=
+                ScreenItem.dialog &&
+            AppState.screenStack.last == ScreenItem.dialog &&
+            !AppState.isRepeated &&
+            !AppState.isTxnProcessing &&
+            AppState.type == InvestmentType.AUGGOLD99) {
           locator<BackButtonActions>().showWantToCloseTransactionBottomSheet(
             AppState.amt!.round(),
             AppState.type!,
@@ -109,25 +115,66 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
     }
     if (AppState.isInstantGtViewInView) return Future.value(true);
 
-    if (AppState.screenStack.last == ScreenItem.loader)
-      return Future.value(true);
-    print("Page Controller: ${locator<SubService>().pageController}");
-
     // If the top item is anything except a scaffold
     if (AppState.screenStack.last == ScreenItem.dialog ||
         AppState.screenStack.last == ScreenItem.modalsheet) {
+      log("AppState.screenStack.last ${AppState.screenStack.last.name}");
+
       Navigator.pop(_routerDelegate!.navigatorKey.currentContext!);
       AppState.screenStack.removeLast();
       print("Current Stack: ${AppState.screenStack}");
       return Future.value(true);
     }
 
-    if (SpotLightController.instance.isTourStarted) {
-      SpotLightController.instance.dismissSpotLight();
+    if (_augTxnService.currentTransactionState == TransactionState.overView) {
+      Haptic.vibrate();
+      if (AppState.isGoldProBuyInProgress) {
+        AppState.isGoldProBuyInProgress = false;
+        BaseUtil.openModalBottomSheet(
+          isBarrierDismissible: true,
+          addToScreenStack: true,
+          backgroundColor: UiConstants.kArrowButtonBackgroundColor,
+          borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(SizeConfig.roundness24),
+              topRight: Radius.circular(SizeConfig.roundness24)),
+          hapticVibrate: true,
+          isScrollControlled: true,
+          content: const GoldProBuyExitModalSheet(),
+        );
+      } else {
+        _augTxnService.currentTransactionState = TransactionState.idle;
+      }
       return Future.value(true);
     }
 
+    if (AppState.showAutoSaveSurveyBt) {
+      final PageController apgController =
+          locator<SubService>().pageController!;
+      if (apgController.hasClients) {
+        if (apgController.page!.toInt() > 0) {
+          AppState.showAutoSaveSurveyBt = false;
+          BaseUtil.openModalBottomSheet(
+              isBarrierDismissible: true,
+              addToScreenStack: true,
+              backgroundColor: UiConstants.kBackgroundColor,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(SizeConfig.roundness32),
+                topRight: Radius.circular(SizeConfig.roundness32),
+              ),
+              isScrollControlled: true,
+              hapticVibrate: true,
+              content: const AutoSaveSurvey());
+          return Future.value(true);
+        }
+      }
+    }
+
     if (AppState.showAutosaveBt) {
+      if (AppState.autosaveMiddleFlow) {
+        AppState.showAutoSaveSurveyBt = false;
+        AppState.autosaveMiddleFlow = false;
+        return _routerDelegate!.popRoute();
+      }
       if (locator<SubService>().pageController?.hasClients ?? false) {
         final PageController apgController =
             locator<SubService>().pageController!;
@@ -149,7 +196,7 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
               ),
               isScrollControlled: true,
               hapticVibrate: true,
-              content: AutosaveConfirmExitModalSheet());
+              content: const AutosaveConfirmExitModalSheet());
           return Future.value(true);
         }
       }
@@ -162,7 +209,7 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
       return Future.value(true);
     }
     //If the cricket game is in progress
-    else if (AppState.isWebGameLInProgress)
+    else if (AppState.isWebGameLInProgress) {
       return _confirmExit(
         "Exit Game",
         "Are you sure you want to leave?",
@@ -171,11 +218,11 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
           AppState.isWebGameLInProgress = false;
           didPopRoute();
           didPopRoute();
-          _webGameViewModel!.handleGameSessionEnd();
+          _webGameViewModel.handleGameSessionEnd();
         },
         true,
       );
-    else if (AppState.isWebGamePInProgress)
+    } else if (AppState.isWebGamePInProgress) {
       return _confirmExit(
         "Exit Game",
         "Are you sure you want to leave?",
@@ -183,12 +230,25 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
           AppState.isWebGamePInProgress = false;
           didPopRoute();
           didPopRoute();
-          _webGameViewModel!
-              .handleGameSessionEnd(duration: Duration(milliseconds: 500));
+          _webGameViewModel.handleGameSessionEnd(
+              duration: const Duration(milliseconds: 500));
         },
         false,
       );
-    else if (AppState.isUpdateScreen) {
+    } else if (AppState.isQuizInProgress) {
+      return _confirmExit(
+        "Exit Quiz",
+        "Are you sure you want to leave?",
+        () {
+          AppState.isQuizInProgress = false;
+          didPopRoute();
+          didPopRoute();
+          // _webGameViewModel.handleGameSessionEnd(
+          //     duration: const Duration(milliseconds: 500));
+        },
+        false,
+      );
+    } else if (AppState.isUpdateScreen) {
       AppState.isUpdateScreen = false;
       return _routerDelegate!.popRoute();
     }
@@ -200,18 +260,26 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
     }
     // If the root tab is not 0 at the time of exit
 
-    else if (_userService!.isUserOnboarded &&
-        AppState.screenStack.length == 1 &&
-        AppState.delegate!.appState.rootIndex != 0) {
+    else if (_userService.isUserOnboarded && AppState.screenStack.length == 1) {
       logger!.w("Checking if app can be closed");
-      AppState.delegate!.appState.setCurrentTabIndex = 0;
-      locator<RootController>()
-          .onChange(locator<RootController>().navItems.values.toList()[0]);
 
-      _journeyService!.checkForMilestoneLevelChange();
-      return Future.value(true);
+      if (AppState.delegate!.appState.rootIndex != 0) {
+        AppState.delegate!.appState.setCurrentTabIndex = 0;
+        locator<RootController>()
+            .onChange(locator<RootController>().navItems.values.toList()[0]);
+        return Future.value(true);
+      } else if (AppState.delegate!.appState.rootIndex ==
+              locator<RootController>()
+                  .navItems
+                  .values
+                  .toList()
+                  .indexWhere((element) => element.title == "Save") &&
+          locator<CardActionsNotifier>().isVerticalView) {
+        locator<CardActionsNotifier>().isVerticalView = false;
+        return Future.value(true);
+      }
     }
-
+    Haptic.vibrate();
     return _routerDelegate!.popRoute();
   }
 }

@@ -13,15 +13,14 @@ import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/payment_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
-import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
+import 'package:felloapp/feature/tambola/tambola.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
-import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -49,6 +48,7 @@ class GoldSellViewModel extends BaseViewModel {
   bool _isQntFetching = false;
   double _fieldWidth = 2;
   int? _deductedTokensCount = 0;
+
   int? get deductedTokensCount => this._deductedTokensCount;
 
   set deductedTokensCount(int? value) {
@@ -65,6 +65,7 @@ class GoldSellViewModel extends BaseViewModel {
 
   bool _showMaxCap = false;
   bool _showMinCap = false;
+
   bool get showMaxCap => this._showMaxCap;
 
   set showMaxCap(bool value) {
@@ -97,7 +98,7 @@ class GoldSellViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  double? goldSellGrams = 0;
+  double goldSellGrams = 0;
   double _goldAmountFromGrams = 0.0;
 
   double? nonWithdrawableQnt = 0.0;
@@ -175,6 +176,14 @@ class GoldSellViewModel extends BaseViewModel {
     if (val == null || val.isEmpty) {
       val = '0';
     }
+    // print(val);
+    // print(val.split('').where((element) => element == '.').toList().length);
+    // if (val.split('').where((element) => element == '.').toList().isNotEmpty &&
+    //     val.characters.last == '.') {
+    //   val = val.substring(0, val.length - 1);
+    //   goldAmountController!.text = val;
+    //   refresh();
+    // }
     if (val.isNotEmpty) {
       if (val.contains('.')) {
         if (val.split('.').last.length > 4) {
@@ -189,10 +198,10 @@ class GoldSellViewModel extends BaseViewModel {
           sellFieldNode.unfocus();
         }
       }
-      goldSellGrams = double.tryParse(val);
+      goldSellGrams = double.tryParse(val) ?? 0;
       if (goldSellPrice != 0.0) {
         _goldAmountFromGrams =
-            BaseUtil.digitPrecision(goldSellGrams! * goldSellPrice!, 4, false);
+            BaseUtil.digitPrecision(goldSellGrams * goldSellPrice!, 4, false);
         if (_goldAmountFromGrams < 10) showMinCap = true;
         if (_goldAmountFromGrams > 50000) showMaxCap = true;
       } else
@@ -206,7 +215,7 @@ class GoldSellViewModel extends BaseViewModel {
 
   late WithdrawableGoldResponseModel responseModel;
 
-  fetchLockedGoldQnt() async {
+  Future<void> fetchLockedGoldQnt() async {
     isQntFetching = true;
     refresh();
     await _userService!.getUserFundWalletData();
@@ -361,7 +370,7 @@ class GoldSellViewModel extends BaseViewModel {
     _transactionHistoryService!.updateTransactions(InvestmentType.AUGGOLD99);
     _userService!.getUserFundWalletData();
     final response = json.decode(data);
-    _tambolaService!.weeklyTicksFetched = false;
+    // _tambolaService!.weeklyTicksFetched = false;
     AppState.unblockNavigation();
     print(response['status']);
     if (_augTxnService!.currentTransactionState == TransactionState.ongoing) {

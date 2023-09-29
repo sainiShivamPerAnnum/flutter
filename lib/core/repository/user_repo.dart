@@ -1,13 +1,16 @@
+import 'dart:async';
 import 'dart:developer';
-import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/constants/cache_keys.dart';
+import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/ttl.dart';
 import 'package:felloapp/core/model/alert_model.dart';
+import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/flc_pregame_model.dart';
+import 'package:felloapp/core/model/portfolio_model.dart';
 import 'package:felloapp/core/model/user_augmont_details_model.dart';
 import 'package:felloapp/core/model/user_bootup_model.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
@@ -19,23 +22,33 @@ import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/util/api_response.dart';
+import 'package:felloapp/util/app_exceptions.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:app_set_id/app_set_id.dart';
+import 'package:felloapp/util/preference_helper.dart';
+import 'package:flutter/material.dart';
 
 import 'base_repo.dart';
 
 class UserRepository extends BaseRepo {
   final AppFlyerAnalytics? _appsFlyerService = locator<AppFlyerAnalytics>();
-  final _cacheService = new CacheService();
+  final _cacheService = CacheService();
 
   final Api? _api = locator<Api>();
   final ApiPath? _apiPaths = locator<ApiPath>();
   final InternalOpsService? _internalOpsService = locator<InternalOpsService>();
-  final _baseUrl = FlavorConfig.isDevelopment()
+  String _baseUrl = FlavorConfig.isDevelopment()
       ? "https://6w37rw51hj.execute-api.ap-south-1.amazonaws.com/dev"
       : "https://7y9layzs7j.execute-api.ap-south-1.amazonaws.com/prod";
+
+  void setUpBaseUrl() {
+    if (AppConfig.getValue(AppConfigKey.useNewUrlUserOps)) {
+      _baseUrl = FlavorConfig.isProduction()
+          ? "https://api.fello-prod.net/users"
+          : "https://api2.fello-dev.net/users";
+    }
+  }
 
   Future<ApiResponse<String>> getCustomUserToken(String? mobileNo) async {
     try {
@@ -43,9 +56,19 @@ class UserRepository extends BaseRepo {
         "mobileNumber": mobileNo,
       };
       final res = await APIService.instance.postData(
-          _apiPaths!.kCustomAuthToken,
-          body: _body,
-          isAuthTokenAvailable: false);
+        _apiPaths!.kCustomAuthToken,
+        body: _body,
+        cBaseUrl: _baseUrl,
+        headers: {
+          'authKey':
+              '.c;a/>12-1-x[/2130x0821x/0-=0.-x02348x042n23x9023[4np0823wacxlonluco3q8',
+        },
+      );
+
+      if (res['token'] == null) {
+        return ApiResponse.withError("Unable to signup using truecaller", 400);
+      }
+
       return ApiResponse(model: res['token'], code: 200);
     } catch (e) {
       return ApiResponse.withError("Unable to signup using truecaller", 400);
@@ -93,7 +116,7 @@ class UserRepository extends BaseRepo {
     try {
       final token = await getBearerToken();
 
-      return await (_cacheService.cachedApi(
+      return await _cacheService.cachedApi(
           CacheKeys.USER,
           TTL.ONE_DAY,
           () => APIService.instance.getData(
@@ -105,8 +128,9 @@ class UserRepository extends BaseRepo {
           if (res != null && res['data'] != null && res['data'].isNotEmpty) {
             final _user = BaseUser.fromMap(res['data'], id!);
             return ApiResponse<BaseUser>(model: _user, code: 200);
-          } else
+          } else {
             return ApiResponse<BaseUser>(model: null, code: 200);
+          }
         } catch (e) {
           locator<InternalOpsService>().logFailure(
             id,
@@ -115,7 +139,7 @@ class UserRepository extends BaseRepo {
           );
           return ApiResponse.withError("User data corrupted", 400);
         }
-      }));
+      });
     } catch (e) {
       logger!.d(e.toString());
       return ApiResponse.withError(e.toString() ?? "Unable to get user", 400);
@@ -139,6 +163,7 @@ class UserRepository extends BaseRepo {
       await APIService.instance.putData(
         _apiPaths!.kUpdateUserAppflyer,
         body: body,
+        cBaseUrl: _baseUrl,
         token: token,
       );
 
@@ -189,13 +214,15 @@ class UserRepository extends BaseRepo {
       );
 
       return ApiResponse(code: 200, model: res['data']['token']);
+    } on UnauthorizedException catch (_) {
+      return ApiResponse.withError("Invalid Otp", 400);
     } catch (e) {
-      logger!.d(e);
-      locator<InternalOpsService>().logFailure(
+      logger!.d("verifyOtp error $e");
+      unawaited(locator<InternalOpsService>().logFailure(
         mobile,
         FailType.VerifyOtpFailed,
         {'message': "Verify Otp failed"},
-      );
+      ));
       return ApiResponse.withError(e.toString() ?? "send OTP failed", 400);
     }
   }
@@ -299,7 +326,7 @@ class UserRepository extends BaseRepo {
       final token = await getBearerToken();
       final augmontRespone = await APIService.instance.getData(
         ApiPath.getAugmontDetail(
-          this.userService!.baseUser!.uid,
+          userService!.baseUser!.uid,
         ),
         cBaseUrl: _baseUrl,
         token: token,
@@ -313,11 +340,12 @@ class UserRepository extends BaseRepo {
     }
   }
 
-  Future<ApiResponse<bool>> checkIfUserHasNewNotifications() async {
+  Future<ApiResponse<Map<String, dynamic>>>
+      checkIfUserHasNewNotifications() async {
     try {
       final token = await getBearerToken();
       final latestNotificationsResponse = await APIService.instance.getData(
-        ApiPath.getLatestNotification(this.userService!.baseUser!.uid),
+        ApiPath.getLatestNotification(userService!.baseUser!.uid),
         cBaseUrl: _baseUrl,
         token: token,
       );
@@ -326,21 +354,62 @@ class UserRepository extends BaseRepo {
         latestNotificationsResponse["data"],
       );
 
-      String? latestNotifTime = await (CacheManager.readCache(
-          key: CacheManager.CACHE_LATEST_NOTIFICATION_TIME));
+      String? latestNotifTime = await CacheManager.readCache(
+          key: CacheManager.CACHE_LATEST_NOTIFICATION_TIME);
+
+      if ((notifications[0].isPersistent ?? false) &&
+          notifications[0].createdTime != null) {
+        var notifTime = notifications[0].createdTime!.seconds.toString();
+
+        log('Referral Notification: ${notifications[0].toJson()}');
+
+        // notifications[0] is the latest notification
+        // if the notification is persistent then we need to show the notification only once in 48 hours
+        // so we are checking if the notification is created in last 48 hours
+
+        if (!PreferenceHelper.exists(
+            PreferenceHelper.CACHE_REFERRAL_PERSISTENT_NOTIFACTION_ID)) {
+          log('Referral Notification Valid');
+
+          int notifTimeInSeconds = int.tryParse(notifTime)!;
+          int currentTimeInSeconds =
+              DateTime.now().millisecondsSinceEpoch ~/ 1000;
+          if (currentTimeInSeconds - notifTimeInSeconds < 172800) {
+            PreferenceHelper.setString(
+              CacheManager.CACHE_REFERRAL_PERSISTENT_NOTIFACTION_ID,
+              notifications[0].id!.toString(),
+            );
+
+            if (notifications[0].misc != null &&
+                notifications[0].misc?.gtId != null) {
+              ScratchCardService.scratchCardId = notifications[0].misc!.gtId!;
+            }
+
+            // userService.referralAlertDialog = notifications[0];
+            return ApiResponse(
+                model: {"flag": true, "notification": notifications[0]},
+                code: 200);
+          }
+        }
+      }
+
       if (latestNotifTime != null) {
         int latestTimeInSeconds = int.tryParse(latestNotifTime)!;
         AlertModel latestAlert = notifications[0].createdTime!.seconds >
                 notifications[1].createdTime!.seconds
             ? notifications[0]
             : notifications[1];
-        if (latestAlert.createdTime!.seconds > latestTimeInSeconds)
-          return ApiResponse<bool>(model: true, code: 200);
-        else
-          return ApiResponse<bool>(model: false, code: 200);
+        if (latestAlert.createdTime!.seconds > latestTimeInSeconds) {
+          return ApiResponse(
+              model: {"flag": true, "notification": null}, code: 200);
+        } else {
+          return ApiResponse(
+              model: {"flag": false, "notification": null}, code: 200);
+        }
       } else {
         logger.d("No past notification time found");
-        return ApiResponse<bool>(model: false, code: 200);
+        return ApiResponse(
+            model: {"flag": false, "notification": null}, code: 200);
       }
     } catch (e) {
       logger.e(e);
@@ -357,7 +426,7 @@ class UserRepository extends BaseRepo {
     try {
       final token = await getBearerToken();
       final userNotifications = await APIService.instance.getData(
-        ApiPath.getNotifications(this.userService!.baseUser!.uid),
+        ApiPath.getNotifications(userService!.baseUser!.uid),
         cBaseUrl: _baseUrl,
         queryParams: {
           "lastDocId": lastDocId,
@@ -518,39 +587,39 @@ class UserRepository extends BaseRepo {
       required int dayOpenCount}) async {
     UserBootUpDetailsModel userBootUp;
 
-    try {
-      Map<String, dynamic> queryParameters = {
-        'deviceId': deviceId,
-        'platform': platform,
-        'appVersion': appVersion,
-        'lastOpened': lastOpened,
-        'dayOpenCount': dayOpenCount.toString(),
-      };
+    // try {
+    Map<String, dynamic> queryParameters = {
+      'deviceId': deviceId,
+      'platform': platform,
+      'appVersion': appVersion,
+      'lastOpened': lastOpened,
+      'dayOpenCount': dayOpenCount.toString(),
+    };
 
-      final token = await getBearerToken();
+    final token = await getBearerToken();
 
-      final respone = await APIService.instance.getData(
-        ApiPath.userBootUp(
-          userService.baseUser?.uid,
-        ),
-        token: token,
-        queryParams: queryParameters,
-        cBaseUrl: _baseUrl,
-      );
+    final respone = await APIService.instance.getData(
+      ApiPath.userBootUp(
+        userService.baseUser?.uid,
+      ),
+      token: token,
+      queryParams: queryParameters,
+      cBaseUrl: _baseUrl,
+    );
+    debugPrint("Bootup Response: $respone");
+    userBootUp = UserBootUpDetailsModel.fromMap(respone);
 
-      userBootUp = UserBootUpDetailsModel.fromMap(respone);
-
-      return ApiResponse<UserBootUpDetailsModel>(model: userBootUp, code: 200);
-    } catch (e) {
-      logger!.d("Unable to fetch user boot up ee ${e.toString()}");
-      locator<InternalOpsService>().logFailure(
-        userService.baseUser?.uid ?? "",
-        FailType.UserBootUpDetailsFetchFailed,
-        {'message': "User Bootup details fetch failed"},
-      );
-      return ApiResponse.withError(
-          e.toString() ?? "Unable to get user bootup details", 400);
-    }
+    return ApiResponse<UserBootUpDetailsModel>(model: userBootUp, code: 200);
+    // } catch (e) {
+    //   logger!.d("Unable to fetch user boot up ee ${e.toString()}");
+    //   locator<InternalOpsService>().logFailure(
+    //     userService.baseUser?.uid ?? "",
+    //     FailType.UserBootUpDetailsFetchFailed,
+    //     {'message': "User Bootup details fetch failed"},
+    //   );
+    //   return ApiResponse.withError(
+    //       e.toString() ?? "Unable to get user bootup details", 400);
+    // }
   }
 
   Future<ApiResponse<bool>> isEmailRegistered(String email) async {
@@ -582,6 +651,20 @@ class UserRepository extends BaseRepo {
       final res = await APIService.instance.getData(ApiPath.isUsernameAvailable,
           queryParams: query, cBaseUrl: _baseUrl, token: token);
       return ApiResponse(code: 200, model: res['data']['isAvailable']);
+    } catch (e) {
+      logger.d(e);
+      return ApiResponse.withError(e.toString(), 400);
+    }
+  }
+
+  Future<ApiResponse<Portfolio>> getPortfolioData() async {
+    try {
+      final uid = userService.baseUser!.uid;
+      final token = await getBearerToken();
+      final res = await APIService.instance
+          .getData(ApiPath.portfolio(uid!), cBaseUrl: _baseUrl, token: token);
+      final Portfolio portfolio = Portfolio.fromMap(res['data']);
+      return ApiResponse(code: 200, model: portfolio);
     } catch (e) {
       logger.d(e);
       return ApiResponse.withError(e.toString(), 400);

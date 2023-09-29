@@ -17,6 +17,9 @@ import 'package:provider/provider.dart';
 
 class GoldSellView extends StatelessWidget {
   final iosScreenShotChannel = const MethodChannel('secureScreenshotChannel');
+
+  const GoldSellView({Key? key}) : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Consumer<AugmontTransactionService>(
@@ -38,15 +41,15 @@ class GoldSellView extends StatelessWidget {
               PageTransitionSwitcher(
                 duration: const Duration(milliseconds: 500),
                 transitionBuilder: (
-                  Widget child,
-                  Animation<double> animation,
-                  Animation<double> secondaryAnimation,
+                  child,
+                  animation,
+                  secondaryAnimation,
                 ) {
                   return FadeThroughTransition(
                     fillColor: Colors.transparent,
-                    child: child,
                     animation: animation,
                     secondaryAnimation: secondaryAnimation,
+                    child: child,
                   );
                 },
                 child: BaseView<GoldSellViewModel>(

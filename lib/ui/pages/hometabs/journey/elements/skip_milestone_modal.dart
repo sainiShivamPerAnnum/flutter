@@ -68,7 +68,6 @@ class _SkipMilestoneModalSheetState extends State<SkipMilestoneModalSheet> {
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
-    print("Skip Map: ${widget.milestone!.skipCost}");
     return WillPopScope(
       onWillPop: () async {
         log("Milestone details Modalsheet closed");
@@ -120,7 +119,7 @@ class _SkipMilestoneModalSheetState extends State<SkipMilestoneModalSheet> {
                           TextStyles.body3.colour(Colors.grey.withOpacity(0.6)),
                     ),
                     SizedBox(height: SizeConfig.padding40),
-                    if (widget.milestone!.skipCost!.containsKey('amt'))
+                    if (widget.milestone!.skipCost!.containsKey('rupee'))
                       Column(
                           crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
@@ -135,7 +134,7 @@ class _SkipMilestoneModalSheetState extends State<SkipMilestoneModalSheet> {
                                   height: SizeConfig.iconSize1),
                               SizedBox(width: SizeConfig.padding10),
                               Text(
-                                "₹ ${widget.milestone!.skipCost!['amt']}",
+                                "₹ ${widget.milestone!.skipCost!['rupee']}",
                                 style: TextStyles.rajdhaniSB.title4
                                     .colour(Colors.white),
                               ),
@@ -180,7 +179,7 @@ class _SkipMilestoneModalSheetState extends State<SkipMilestoneModalSheet> {
                         : Column(
                             children: [
                               if (widget.milestone!.skipCost!
-                                  .containsKey('amt'))
+                                  .containsKey('rupee'))
                                 AppPositiveBtn(
                                     btnText: locale.btnSaveNow,
                                     onPressed: () {
@@ -191,8 +190,8 @@ class _SkipMilestoneModalSheetState extends State<SkipMilestoneModalSheet> {
                                       return BaseUtil
                                           .openDepositOptionsModalSheet(
                                         isSkipMl: true,
-                                        amount:
-                                            widget.milestone!.skipCost!['amt'],
+                                        amount: widget
+                                            .milestone!.skipCost!['rupee'],
                                       );
                                     },
                                     width: SizeConfig.screenWidth),

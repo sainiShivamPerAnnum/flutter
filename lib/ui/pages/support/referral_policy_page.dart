@@ -13,6 +13,8 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:path_provider/path_provider.dart';
 
 class ReferralPolicy extends StatefulWidget {
+  const ReferralPolicy({super.key});
+
   @override
   State createState() => _ReferralPolicyState();
 }

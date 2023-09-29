@@ -9,6 +9,7 @@ import 'package:felloapp/ui/pages/rewards/detailed_scratch_card/gt_detailed_view
 import 'package:felloapp/ui/pages/rewards/instant_scratch_card/gt_instant_vm.dart';
 import 'package:felloapp/ui/pages/rewards/scratch_card_utils.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/extensions/rich_text_extension.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -30,19 +31,25 @@ enum GTSOURCE {
   game,
   prize,
   event,
+  referral
 }
 
 class GTInstantView extends StatefulWidget {
   final String? title;
   final GTSOURCE source;
   final double? amount;
+  final bool showRatingDialog;
 
   final bool showAutosavePrompt;
-  GTInstantView(
-      {this.title,
+
+ const GTInstantView(
+      {super.key,
+      this.title,
       required this.source,
       this.amount,
+      this.showRatingDialog = true,
       this.showAutosavePrompt = false});
+
   @override
   State<GTInstantView> createState() => _GTInstantViewState();
 }
@@ -60,7 +67,7 @@ class _GTInstantViewState extends State<GTInstantView>
     });
     _controller = AnimationController(
       vsync: this,
-      duration: Duration(
+      duration: const Duration(
         milliseconds: 100,
       ),
       lowerBound: 0.0,
@@ -75,7 +82,7 @@ class _GTInstantViewState extends State<GTInstantView>
     WidgetsBinding.instance.addPostFrameCallback((_) {
       locator<MarketingEventHandlerService>().showModalsheet = true;
     });
-    this._controller.dispose();
+    _controller.dispose();
     super.dispose();
   }
 
@@ -95,7 +102,7 @@ class _GTInstantViewState extends State<GTInstantView>
       builder: (ctx, model, child) {
         return Scaffold(
           backgroundColor: Colors.black.withOpacity(0.7),
-          body: Container(
+          body: SizedBox(
             width: SizeConfig.screenWidth,
             height: SizeConfig.screenHeight,
             child: Stack(
@@ -114,7 +121,7 @@ class _GTInstantViewState extends State<GTInstantView>
                 Align(
                   alignment: Alignment.topCenter,
                   child: SafeArea(
-                      child: Container(
+                      child: SizedBox(
                     height: kToolbarHeight,
                     child: Row(
                       children: [
@@ -122,7 +129,7 @@ class _GTInstantViewState extends State<GTInstantView>
                           width: SizeConfig.pageHorizontalMargins,
                         ),
                         FelloAppBarBackButton(),
-                        Spacer(),
+                        const Spacer(),
                         FelloCoinBar(),
                         SizedBox(width: SizeConfig.padding20)
                       ],
@@ -137,7 +144,7 @@ class _GTInstantViewState extends State<GTInstantView>
                       //if (model.showMainContent)
                       AnimatedOpacity(
                         opacity: model.showMainContent ? 1 : 0,
-                        duration: Duration(milliseconds: 100),
+                        duration: const Duration(milliseconds: 100),
                         curve: Curves.easeInCubic,
                         child: Column(
                           mainAxisAlignment: MainAxisAlignment.center,
@@ -148,11 +155,11 @@ class _GTInstantViewState extends State<GTInstantView>
                               width: SizeConfig.screenWidth! * 0.6,
                               alignment: Alignment.center,
                               child: AnimatedRotation(
-                                duration: Duration(milliseconds: 300),
+                                duration: const Duration(milliseconds: 300),
                                 curve: Curves.easeInCubic,
                                 turns: model.showMainContent ? 0.0 : -0.1,
                                 child: AnimatedContainer(
-                                  duration: Duration(milliseconds: 300),
+                                  duration: const Duration(milliseconds: 300),
                                   curve: Curves.easeInCubic,
                                   width: model.showMainContent
                                       ? SizeConfig.screenWidth! * 0.6
@@ -182,7 +189,7 @@ class _GTInstantViewState extends State<GTInstantView>
                                             model.isShimmerEnabled = true;
 
                                             Future.delayed(
-                                                Duration(
+                                                const Duration(
                                                   seconds: 3,
                                                 ), () {
                                               model.isShimmerEnabled = false;
@@ -192,7 +199,8 @@ class _GTInstantViewState extends State<GTInstantView>
                                                     _controller.reverse());
                                           }
 
-                                          model.redeemTicket();
+                                          model.redeemTicket(
+                                              widget.showRatingDialog);
                                         },
                                         image: Image.asset(
                                           model.scratchCard!.isLevelChange!
@@ -205,7 +213,7 @@ class _GTInstantViewState extends State<GTInstantView>
                                           width: SizeConfig.screenWidth! * 0.6,
                                         ),
                                         child: model.state == ViewState.Busy
-                                            ? Container(
+                                            ? SizedBox(
                                                 width: SizeConfig.screenWidth! *
                                                     0.6,
                                                 height:
@@ -225,8 +233,8 @@ class _GTInstantViewState extends State<GTInstantView>
                             ),
                             SizedBox(height: SizeConfig.padding24),
                             AnimatedContainer(
-                              decoration: BoxDecoration(),
-                              duration: Duration(seconds: 1),
+                              decoration: const BoxDecoration(),
+                              duration: const Duration(seconds: 1),
                               curve: Curves.easeIn,
                               width: SizeConfig.screenWidth,
                               alignment: Alignment.center,
@@ -238,19 +246,24 @@ class _GTInstantViewState extends State<GTInstantView>
                                   textAlign: TextAlign.center),
                             ),
                             AnimatedContainer(
-                              decoration: BoxDecoration(),
-                              duration: Duration(seconds: 1),
+                              decoration: const BoxDecoration(),
+                              duration: const Duration(seconds: 1),
                               curve: Curves.easeIn,
                               width: SizeConfig.screenWidth,
                               alignment: Alignment.center,
                               margin: EdgeInsets.symmetric(
                                   horizontal:
                                       SizeConfig.pageHorizontalMargins * 2),
-                              child: Text(
-                                  model.scratchCard!.note ?? locale.wonGT,
-                                  style: TextStyles.sourceSans.body3
-                                      .colour(Colors.grey),
-                                  textAlign: TextAlign.center),
+                              child: model.isCardScratched
+                                  ? (model.scratchCard!.note ?? locale.wonGT)
+                                      .beautify(
+                                          style: TextStyles.sourceSans.body3
+                                              .colour(Colors.grey),
+                                          alignment: TextAlign.center)
+                                  : Text("You won a new scratch card",
+                                      style: TextStyles.sourceSans.body3
+                                          .colour(Colors.grey),
+                                      textAlign: TextAlign.center),
                             ),
                             SizedBox(height: SizeConfig.padding24),
                           ],
@@ -301,13 +314,14 @@ class _GTInstantViewState extends State<GTInstantView>
   }
 
   getGTTitle() {
-    if (widget.source == GTSOURCE.deposit)
+    if (widget.source == GTSOURCE.deposit) {
       return locale.hurray;
-    else {
-      if (widget.title != null && widget.title!.isNotEmpty)
+    } else {
+      if (widget.title != null && widget.title!.isNotEmpty) {
         return widget.title;
-      else
+      } else {
         return locale.hurray;
+      }
     }
   }
 
@@ -332,10 +346,11 @@ class _GTInstantViewState extends State<GTInstantView>
   getButtonText(GTInstantViewModel model, GTSOURCE source) {
     String title;
     if (source == GTSOURCE.deposit || source == GTSOURCE.autosave) {
-      if (widget.showAutosavePrompt != null && !model.isAutosaveAlreadySetup)
+      if (widget.showAutosavePrompt != null && !model.isAutosaveAlreadySetup) {
         title = locale.btnContinue;
-      else
+      } else {
         title = locale.btnStartPlaying;
+      }
     } else {
       title = locale.btnContinue;
     }

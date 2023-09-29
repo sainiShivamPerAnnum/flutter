@@ -1,3 +1,7 @@
+//ignore_for_file: avoid_classes_with_only_static_members
+
+const assetBaseUrl = 'https://d37gtxigg82zaw.cloudfront.net/';
+
 class Assets {
   static const String logoMaxSize = 'images/fello_logo.png';
   static const String logoShortform = 'assets/svg/fello-short-logo.svg';
@@ -10,8 +14,6 @@ class Assets {
       'images/onboard_collage-small.png';
 
   static const String noTransaction = "assets/vectors/no-transactions.png";
-  static const inAppScrollAnimation =
-      "assets/lotties/Inapp scroll animation.json";
   static const String augmontShare = "images/augmont-share.png";
   static const String preAutosave = "assets/images/preautosave.png";
   static const String customAvatar = 'assets/vectors/userAvatars/CUSTOM.svg';
@@ -20,6 +22,8 @@ class Assets {
   static const String autoSaveOngoing = 'assets/svg/auto_save_ongoing.svg';
   static const String upi = 'assets/images/upi.png';
   static const String rupee = 'assets/vectors/icons/indian_rupee.svg';
+  static const String referralIcon = "assets/vectors/icons/referral_icon.svg";
+
   //APPBAR
 
   static const String alerts = "assets/vectors/icons/alerts.svg";
@@ -45,11 +49,14 @@ class Assets {
   static const String prizeRankOne = "assets/vectors/rank_first.svg";
   static const String prizeRankTwo = "assets/vectors/rank_second.svg";
   static const String prizeRankThird = "assets/vectors/rank_third.svg";
+
 // ONBOARDING
   static const String bankLottie = "assets/lotties/bank.json";
   static const String truecaller = "assets/images/truecaller.png";
-  static const String journeyOnbLottie = "assets/lotties/journey_onb.json";
+
+  // static const String journeyOnbLottie = "assets/lotties/journey_onb.json";
   static const String support = "assets/images/support.png";
+
   // WANT MORE MODAL
   static const String wmtsaveMoney = "assets/vectors/icons/wmt_save_money.svg";
   static const String wmtShare = "assets/vectors/icons/wmt_share.svg";
@@ -64,6 +71,9 @@ class Assets {
 
   static const String sprout = "assets/vectors/sprout.svg";
   static const String star = "assets/vectors/star.svg";
+  static const String singleTambolaTicket =
+      "assets/vectors/icons/single_tambola_ticket.svg";
+
   //HOME TAB//
 
   // PLAY
@@ -82,6 +92,7 @@ class Assets {
   static const String tambola_instant_view =
       "assets/svg/tambola_instant_view.svg";
   static const String tambola_space = "assets/svg/tambola_space.svg";
+
   // SAVE
   static const String whiteRays = "assets/images/white_rays.png";
   static const String moneyIcon = "assets/images/icons/money.png";
@@ -113,7 +124,8 @@ class Assets {
   static const String goldAsset = "assets/svg/digital_gold.svg";
   static const String rbi = "assets/svg/rbi.svg";
   static const String icici = "assets/svg/icici.svg";
-  static const String sebi = "assets/svg/sebi.svg";
+  static const String sebi = "assets/vectors/icons/sebi_new.svg";
+  static const String graphArrows = "assets/vectors/icons/graph_arrows.svg";
 
   static const String arrowIcon = "assets/svg/raising_arrow.svg";
   static const String timer = "assets/svg/timer.svg";
@@ -124,12 +136,6 @@ class Assets {
   static const String happyhourPolygon = "assets/svg/happy_hour_polygons.svg";
   static const String floGold = "assets/vectors/flogold.svg";
 
-  // WIN
-
-  static const String amazonClaim = "assets/images/amazon_claim.png";
-  static const String iphone = "assets/images/iphone.png";
-  static const String iphone2 = "assets/images/iphone2.png";
-
   // TRANSACTIONS
   static const String win1croreBanner = "assets/images/win1crore.webp";
 
@@ -137,6 +143,7 @@ class Assets {
   static const String txnHistory = "assets/vectors/icons/txnHistory.svg";
   static const String bank = "assets/vectors/icons/bank.svg";
   static const String repeat = "assets/vectors/icons/repeat.svg";
+  static const String bankLogo = "assets/vectors/bankLogo.svg";
 
   // REFERRAL
   static const String google = "assets/vectors/icons/google.svg";
@@ -169,6 +176,7 @@ class Assets {
 
   static const String aTambolaTicket = 'assets/vectors/icons/frame_svg.svg';
   static const String gift = 'assets/vectors/icons/gift_svg.svg';
+
   // Play Info Section Asset
   // static final String ludoGameAsset = 'assets/svg/play_ludo.svg';
   // static final String leaderboardGameAsset = 'assets/svg/play_leaderboard.svg';
@@ -236,6 +244,7 @@ class Assets {
   static const String chevRonRightArrow =
       "assets/vectors/icons/chevron_right_arrow.svg";
   static const String arrowTreading = "assets/svg/arrow_trending.svg";
+
   //Golden Tickeets screen
   static const String unredemmedScratchCardBG = "assets/svg/unredeemed_gt.svg";
   static const String levelUpUnRedeemedScratchCardBG =
@@ -296,8 +305,13 @@ class Assets {
     "assets/vectors/aus3.svg",
   ];
 
+  static String journeyIcon = "assets/vectors/icons/journeyIcon.svg";
+
   static String multiAvatars = "assets/vectors/multiAvatars.svg";
   static String multiRealAvatars = "assets/images/cus_photos.png";
+  static String btnBg = "assets/vectors/btnBg.svg";
+
+  static String arrow = "assets/vectors/arrow.svg";
   static final String infoWhyPan =
       'Your PAN Card is used as your unique ID to set up your investment profile in different assets';
 
@@ -310,31 +324,34 @@ class Assets {
   static const String felloSplashZoomOutLogo =
       'assets/lotties/fello_splash_out.json';
   static const String goldDepostLoadingLottie =
-      "assets/lotties/gold_deposit_progress.json";
+      "${assetBaseUrl}lotties/gold_deposit_progress.json";
   static const String goldDepostSuccessLottie =
-      "assets/lotties/gold_deposit_complete.json";
+      "${assetBaseUrl}lotties/gold_deposit_complete.json";
   static const String goldSellCompleteLottie =
-      "assets/lotties/gold_sell_complete.json";
+      "${assetBaseUrl}lotties/gold_sell_complete.json";
   static const String floDepostLoadingLottie =
-      "assets/lotties/flo_deposit_progress.json";
+      "${assetBaseUrl}lotties/flo_deposit_progress.json";
   static const String floDepositSuccessLottie =
-      "assets/lotties/flo_deposit_complete.json";
+      "${assetBaseUrl}lotties/flo_deposit_complete.json";
   static const String floSellCompleteLottie =
-      "assets/lotties/flo_sell_complete.json";
-  static const String fullScreenLoaderLottie = "assets/lotties/loader.json";
+      "${assetBaseUrl}lotties/flo_sell_complete.json";
+  static const String fullScreenLoaderLottie =
+      "${assetBaseUrl}lotties/loader.json";
 
   static const String floatingTokenIslandLottie =
-      "assets/lotties/floating_token.json";
+      "${assetBaseUrl}lotties/floating_token.json";
   static const String floatingTambolaTicketIslandLottie =
-      "assets/lotties/floating_tambola_ticket.json";
+      "${assetBaseUrl}lotties/floating_tambola_ticket.json";
   static const String floatingScratchCardIslandLottie =
-      "assets/lotties/floating_golden_ticket.json";
-  static const String jarLottie = "assets/lotties/jarLottie.json";
+      "${assetBaseUrl}lotties/floating_golden_ticket.json";
+  static const String jarLottie = "${assetBaseUrl}lotties/jar_lottie.json";
 
-  static const String levelUpLottie = "assets/lotties/levelup.json";
-  static const String wohooLottie = "assets/lotties/woohoo.json";
-  static const String gtScratch = "assets/lotties/scratch.json";
-  static const String multiReward = "assets/lotties/multiReward.json";
+  static const String levelUpLottie = "${assetBaseUrl}lotties/levelup.json";
+
+  static const String indianFlagKiteLottie = "assets/lotties/mob.json";
+
+  // static const String wohooLottie = "assets/lotties/woohoo.json";
+  // static const String gtScratch = "assets/lotties/scratch.json";
 
   static const String crypto = "assets/svg/crypto.svg";
   static const String single_gold_brick = "assets/svg/single_gold_brick.svg";
@@ -351,7 +368,9 @@ class Assets {
   static const String bottomBannerLottie =
       'https://d37gtxigg82zaw.cloudfront.net/scroll-animation.json';
   static const String tambolaTopBannerLottie =
-      'assets/lotties/tambola_animation.json';
+      '${assetBaseUrl}lotties/tambola_animation.json';
+  static const String tambolaTopBannerTharLottie =
+      'assets/lotties/tambola_thar.json';
 
   //POWER PLAY ASSETS
   static const String powerPlayMain =
@@ -362,4 +381,38 @@ class Assets {
       "https://d37gtxigg82zaw.cloudfront.net/powerplay/teams/KKR.svg";
   static const bangaloreIcon =
       "https://d37gtxigg82zaw.cloudfront.net/powerplay/teams/RCB.svg";
+  static const goldCoinIcon =
+      "https://d37gtxigg82zaw.cloudfront.net/weekly-recap/investments.svg";
+
+  static const carGoalsBg = "${assetBaseUrl}autosave/save-for-car.svg";
+  static const iphoneGoalsBg = "${assetBaseUrl}autosave/save-for-iphone.svg";
+  static const goaGoalsBg = "${assetBaseUrl}autosave/save-for-goa.svg";
+  static const baliGoalsBg = "${assetBaseUrl}autosave/save-for-bali.svg";
+
+  static const String inAppReviewBg = 'assets/svg/in_app_review_success_bg.svg';
+
+  static const String sevenDayChampBadge =
+      '${assetBaseUrl}badges/7-day-champ.svg';
+  static const String gamingLegendBadge =
+      '${assetBaseUrl}badges/gaming-legend.svg';
+  static const String savingsMarvelBadge =
+      '${assetBaseUrl}badges/savings-marvel.svg';
+  static const String referralNinjaBadge =
+      '${assetBaseUrl}badges/referral-ninja.svg';
+  static const String explorerBadge = '${assetBaseUrl}badges/explorer.svg';
+  static const String whatAFelloBadge =
+      '${assetBaseUrl}badges/what-a-fello.svg';
+  static const String defaultBadge = '${assetBaseUrl}badges/default.svg';
+  static const String happyFelloBadge = '${assetBaseUrl}badges/happy-fello.svg';
+  static const String quizMasterBadge = '${assetBaseUrl}badges/quiz-master.svg';
+  static const String tambolaTitanBadge =
+      '${assetBaseUrl}badges/tambola-titan.svg';
+  static const String referralReward =
+      "${assetBaseUrl}revamped-referrals/reward.svg";
+
+  static const String peopleGroup =
+      "${assetBaseUrl}revamped-referrals/friends.svg";
+
+  static const String youtubeLogo =
+      "https://upload.wikimedia.org/wikipedia/commons/e/ef/Youtube_logo.png";
 }

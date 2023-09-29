@@ -41,9 +41,11 @@ class ProfileHeader extends StatelessWidget {
         children: [
           NewProfileImage(
             // isNewUser: model.isNewUser,
+
             updateProfilePicture: model.showCustomAvatarsDialog,
             image: ProfileImageSE(
               radius: SizeConfig.screenWidth! * 0.25,
+              reactive: false,
             ),
           ),
           SizedBox(height: SizeConfig.padding6),

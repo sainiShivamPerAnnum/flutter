@@ -14,7 +14,7 @@ class UserCoinService extends ChangeNotifier {
   int? get flcBalance => _flcBalance;
 
   Future<void> init() async {
-    getUserCoinBalance();
+    await getUserCoinBalance();
   }
 
   void setFlcBalance(int? balance) {

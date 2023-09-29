@@ -1,8 +1,8 @@
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/service/analytics/base_analytics_service.dart';
+import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/custom_logger.dart';
 import 'package:mixpanel_flutter/mixpanel_flutter.dart';
 
 class MixpanelAnalytics extends BaseAnalyticsService {
@@ -17,13 +17,13 @@ class MixpanelAnalytics extends BaseAnalyticsService {
     try {
       _mixpanel = await Mixpanel.init(
         FlavorConfig.instance!.values.mixpanelToken,
-        optOutTrackingDefault: false, trackAutomaticEvents: false,
+        optOutTrackingDefault: false,
+        trackAutomaticEvents: false,
       );
 
       if (isOnBoarded != null && isOnBoarded && baseUser != null) {
         _mixpanel!.identify(baseUser.uid!);
         _mixpanel!.getPeople().set("Mobile", baseUser.mobile ?? '');
-        _mixpanel!.getPeople().set("Name", baseUser.name ?? '');
         _mixpanel!.getPeople().set("Email", baseUser.email ?? '');
         _mixpanel!.getPeople().set("Age", getAge(baseUser.dob, _logger));
         _mixpanel!.getPeople().set("Gender", baseUser.gender ?? 'O');
@@ -53,8 +53,8 @@ class MixpanelAnalytics extends BaseAnalyticsService {
       } else {
         if (properties != null && properties.isNotEmpty) {
           _mixpanel!.track(eventName!, properties: properties);
-          _logger!.i(
-              "Event: $eventName, Properties: ${properties.toString()}. Successfully tracked");
+          // _logger!.i(
+          //     "Event: $eventName, Properties: ${properties.toString()}. Successfully tracked");
         } else {
           _mixpanel!.track(eventName!);
         }

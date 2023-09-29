@@ -1,3 +1,4 @@
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/prize_claim_choice.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -12,10 +13,11 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:lottie/lottie.dart';
 
-class RedeemSucessfulScreen extends StatelessWidget {
-  RedeemSucessfulScreen(
+class RedeemSucessfulScreen extends HookWidget {
+  const RedeemSucessfulScreen(
       {required this.subTitleWidget,
       required this.claimPrize,
       required this.choice,
@@ -32,6 +34,7 @@ class RedeemSucessfulScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    useEffect(() => BaseUtil.showFelloRatingSheet, []);
     S locale = S.of(context);
     return Scaffold(
       body: Stack(
@@ -49,7 +52,7 @@ class RedeemSucessfulScreen extends StatelessWidget {
           SafeArea(
             child: Column(
               children: [
-                Lottie.asset(
+                Lottie.network(
                   Assets.goldDepostSuccessLottie,
                   width: double.infinity,
                 ),
@@ -71,7 +74,7 @@ class RedeemSucessfulScreen extends StatelessWidget {
                 ),
                 Padding(
                   padding:
-                      EdgeInsets.symmetric(horizontal: SizeConfig.padding26),
+                  EdgeInsets.symmetric(horizontal: SizeConfig.padding26),
                   child: subTitleWidget,
                 ),
                 SizedBox(
@@ -157,11 +160,11 @@ class RedeemSucessfulScreen extends StatelessWidget {
                             vertical: SizeConfig.padding12),
                         decoration: BoxDecoration(
                           color:
-                              UiConstants.kModalSheetSecondaryBackgroundColor,
+                          UiConstants.kModalSheetSecondaryBackgroundColor,
                           borderRadius: BorderRadius.only(
                             bottomLeft: Radius.circular(SizeConfig.roundness16),
                             bottomRight:
-                                Radius.circular(SizeConfig.roundness16),
+                            Radius.circular(SizeConfig.roundness16),
                           ),
                         ),
                         child: Row(

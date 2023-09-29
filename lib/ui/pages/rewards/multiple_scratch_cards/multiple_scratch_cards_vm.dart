@@ -29,11 +29,11 @@ class MultipleScratchCardsViewModel extends BaseViewModel {
 
   double _currentCardScratchPercentage = 0.0;
 
-  get currentCardScratchPercentage => this._currentCardScratchPercentage;
+  get currentCardScratchPercentage => _currentCardScratchPercentage;
 
   set currentCardScratchPercentage(value) {
     if (value > 0 && showScratchGuideLabel) showScratchGuideLabel = false;
-    this._currentCardScratchPercentage = value;
+    _currentCardScratchPercentage = value;
   }
 
   // bool _isCardScratched = false;
@@ -44,47 +44,52 @@ class MultipleScratchCardsViewModel extends BaseViewModel {
   // }
 
   bool _isCurrentScratchCardLoading = false;
-  bool get isCurrentScratchCardLoading => this._isCurrentScratchCardLoading;
+
+  bool get isCurrentScratchCardLoading => _isCurrentScratchCardLoading;
   set isCurrentScratchCardLoading(value) {
-    this._isCurrentScratchCardLoading = value;
+    _isCurrentScratchCardLoading = value;
     notifyListeners();
   }
 
   bool _showScratchGuideLabel = false;
-  bool get showScratchGuideLabel => this._showScratchGuideLabel;
+
+  bool get showScratchGuideLabel => _showScratchGuideLabel;
   set showScratchGuideLabel(bool value) {
-    this._showScratchGuideLabel = value;
+    _showScratchGuideLabel = value;
     notifyListeners();
   }
 
   List<bool> _isScratchCardRedeemed = [];
-  get isScratchCardRedeemed => this._isScratchCardRedeemed;
+
+  get isScratchCardRedeemed => _isScratchCardRedeemed;
   set isScratchCardRedeemed(value) {
-    this._isScratchCardRedeemed = value;
+    _isScratchCardRedeemed = value;
     notifyListeners();
   }
 
   bool _showConfetti = false;
-  get showConfetti => this._showConfetti;
+
+  get showConfetti => _showConfetti;
   set showConfetti(value) {
-    this._showConfetti = value;
+    _showConfetti = value;
     notifyListeners();
   }
 
   bool _showRewardLottie = false;
 
-  get showRewardLottie => this._showRewardLottie;
+  get showRewardLottie => _showRewardLottie;
 
   set showRewardLottie(value) {
-    this._showRewardLottie = value;
+    _showRewardLottie = value;
     notifyListeners();
   }
 
   double _cardScale = 0.8;
-  double get cardScale => this._cardScale;
+
+  double get cardScale => _cardScale;
 
   set cardScale(double value) {
-    this._cardScale = value;
+    _cardScale = value;
     notifyListeners();
   }
 
@@ -117,10 +122,10 @@ class MultipleScratchCardsViewModel extends BaseViewModel {
     _performPreScratchProcessing(0).then((value) {
       // ScratchCardService.scratchCardsList?.clear();
       showRewardLottie = false;
-      Future.delayed(Duration(milliseconds: 50), () {
+      Future.delayed(const Duration(milliseconds: 50), () {
         cardScale = 1;
       });
-      Future.delayed(Duration(seconds: 2), () {
+      Future.delayed(const Duration(seconds: 2), () {
         if (currentCardScratchPercentage == 0) showScratchGuideLabel = true;
       });
     });
@@ -152,15 +157,15 @@ class MultipleScratchCardsViewModel extends BaseViewModel {
   Future<void> _performPostScratchProcessing(int index) async {
     if (index < scratchCardList.length - 1) {
       int nextPageIndex = index + 1;
-      Future.delayed(Duration(milliseconds: 500), () {
+      Future.delayed(const Duration(milliseconds: 500), () {
         pageController!.animateToPage(nextPageIndex,
-            duration: Duration(seconds: 1), curve: Curves.easeInCubic);
+            duration: const Duration(seconds: 1), curve: Curves.easeInCubic);
         _performPreScratchProcessing(nextPageIndex);
       });
     } else {
       log("Last scratch card, exiting view");
       AppState.isInstantGtViewInView = true;
-      Future.delayed(Duration(seconds: 2), () {
+      Future.delayed(const Duration(seconds: 2), () {
         AppState.isInstantGtViewInView = false;
         AppState.backButtonDispatcher!.didPopRoute();
       });
@@ -186,7 +191,7 @@ class MultipleScratchCardsViewModel extends BaseViewModel {
     AppState.blockNavigation();
     if (scratchCardList[index].isRewarding ?? false) showConfetti = true;
     isScratchCardRedeemed[index] = true;
-    Future.delayed(Duration(seconds: 2), () => showConfetti = false);
+    Future.delayed(const Duration(seconds: 2), () => showConfetti = false);
     try {
       _scRepo.redeemReward(scratchCardList[index].gtId).then(
         (_) {

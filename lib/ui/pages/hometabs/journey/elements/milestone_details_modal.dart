@@ -31,8 +31,10 @@ class JourneyMilestoneDetailsModalSheet extends StatefulWidget {
   final MilestoneModel milestone;
   final JOURNEY_MILESTONE_STATUS status;
   final String version;
+
   JourneyMilestoneDetailsModalSheet(
       {required this.milestone, required this.status, required this.version});
+
   @override
   State<JourneyMilestoneDetailsModalSheet> createState() =>
       _JourneyMilestoneDetailsModalSheetState();
@@ -210,12 +212,8 @@ class _JourneyMilestoneDetailsModalSheetState
                                       ),
                                     ),
                                     TextSpan(
-                                      text: " " +
-                                          locale.winATicket(
-                                              getTicketType(
-                                                  widget.milestone.index),
-                                              BaseUtil.getRandomRewardAmount(
-                                                  widget.milestone.index)),
+                                      text:
+                                          " ${locale.winATicket(getTicketType(widget.milestone.index), BaseUtil.getRandomRewardAmount(widget.milestone.index))}",
                                     )
                                   ]),
                             ),
@@ -432,15 +430,15 @@ class _JourneyMilestoneDetailsModalSheetState
   ) {
     switch (type) {
       case Constants.GT_REWARD_FLC:
-        return " " + locale.tokens.toLowerCase();
+        return " ${locale.tokens.toLowerCase()}";
       case Constants.GT_REWARD_AMT:
         return "";
       case Constants.GT_REWARD_RUPEE:
         return "";
       case Constants.GT_REWARD_GOLD:
-        return " " + locale.worthOfGold;
+        return " ${locale.worthOfGold}";
       case Constants.GT_REWARD_TAMBOLA_TICKET:
-        return " " + locale.tTicket;
+        return " Ticket";
       default:
         return "";
     }

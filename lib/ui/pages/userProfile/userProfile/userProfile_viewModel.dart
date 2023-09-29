@@ -10,21 +10,22 @@ import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/journey_repo.dart';
-import 'package:felloapp/core/repository/ticket_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/analytics/base_analytics.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
 import 'package:felloapp/core/service/journey_service.dart';
+import 'package:felloapp/core/service/lendbox_maturity_service.dart';
 import 'package:felloapp/core/service/notifier_services/google_sign_in_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/marketing_event_handler_service.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
-import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
+import 'package:felloapp/feature/tambola/src/repos/tambola_repo.dart';
+import 'package:felloapp/feature/tambola/src/services/tambola_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
@@ -44,7 +45,6 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 //Flutter & Dart Imports
 import 'package:flutter/material.dart';
-//Pub Imports
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
 
@@ -57,9 +57,10 @@ class UserProfileVM extends BaseViewModel {
   UsernameResponse? response;
   Debouncer? _debouncer;
 
-  Log log = new Log('User Profile');
+  Log log = Log('User Profile');
   bool _inEditMode = false;
   bool _isgmailFieldEnabled = true;
+
   // bool _isNewUser = false;
   bool _isEmailEnabled = false;
   bool _isContinuedWithGoogle = false;
@@ -71,23 +72,23 @@ class UserProfileVM extends BaseViewModel {
   bool? isValid = false;
 
   final UserRepository _userRepo = locator<UserRepository>();
-  final UserService? _userService = locator<UserService>();
-  final BaseUtil? _baseUtil = locator<BaseUtil>();
+  final UserService _userService = locator<UserService>();
+  final BaseUtil _baseUtil = locator<BaseUtil>();
   final FcmListener? fcmlistener = locator<FcmListener>();
-  final TxnHistoryService? _txnHistoryService = locator<TxnHistoryService>();
+  final TxnHistoryService _txnHistoryService = locator<TxnHistoryService>();
   S locale = locator<S>();
   final AppState _appstate = locator<AppState>();
-  final TambolaService? _tambolaService = locator<TambolaService>();
-  final AnalyticsService? _analyticsService = locator<AnalyticsService>();
-  final S? _locale = locator<S>();
+  final TambolaService _tambolaService = locator<TambolaService>();
+  final AnalyticsService _analyticsService = locator<AnalyticsService>();
+  final S _locale = locator<S>();
   final BaseUtil? baseProvider = locator<BaseUtil>();
-  final InternalOpsService? _internalOpsService = locator<InternalOpsService>();
-  final JourneyService? _journeyService = locator<JourneyService>();
-  final GoogleSignInService? _googleSignInService =
+  final InternalOpsService _internalOpsService = locator<InternalOpsService>();
+  final JourneyService _journeyService = locator<JourneyService>();
+  final GoogleSignInService _googleSignInService =
       locator<GoogleSignInService>();
-  final BankAndPanService? _bankAndKycService = locator<BankAndPanService>();
+  final BankAndPanService _bankAndKycService = locator<BankAndPanService>();
   final DBModel? dbProvider = locator<DBModel>();
-  final ScratchCardService? _gtService = locator<ScratchCardService>();
+  final ScratchCardService _gtService = locator<ScratchCardService>();
   final PowerPlayService _powerPlayService = locator<PowerPlayService>();
 
   final MarketingEventHandlerService _marketingService =
@@ -100,6 +101,8 @@ class UserProfileVM extends BaseViewModel {
   bool _isUpdaingUserDetails = false;
   bool _isTambolaNotificationLoading = false;
   bool _isApplockLoading = false;
+  bool _isFloInvoiceMailLoading = false;
+
   bool _hasInputError = false;
   int? _gen;
   String? gender;
@@ -108,7 +111,7 @@ class UserProfileVM extends BaseViewModel {
   String username = "";
   double _errorPadding = 0;
 
-  final GlobalKey<FormState> formKey = new GlobalKey<FormState>();
+  final GlobalKey<FormState> formKey = GlobalKey<FormState>();
 
   //controllers
   TextEditingController? nameController,
@@ -125,38 +128,65 @@ class UserProfileVM extends BaseViewModel {
   FocusNode emailOptionsFocusNode = FocusNode();
   FocusNode emailFocusNode = FocusNode();
 
-  String? get myUserDpUrl => _userService!.myUserDpUrl;
-  String get myname => _userService!.name ?? "";
-  String get myUsername => _userService!.baseUser?.username ?? "";
-  String get myDob => _userService!.dob ?? "";
-  String get myEmail => _userService!.email ?? "";
-  String get myGender => _userService!.gender ?? "";
-  String get myMobile => _userService!.baseUser!.mobile ?? "";
-  bool get isEmailVerified => _userService!.isEmailVerified;
+  String? get myUserDpUrl => _userService.myUserDpUrl;
+
+  String get myname => _userService.name ?? "";
+
+  String get myUsername => _userService.baseUser?.username ?? "";
+
+  String get myDob => _userService.dob ?? "";
+
+  String get myEmail => _userService.email ?? "";
+
+  String get myGender => _userService.gender ?? "";
+
+  String get myMobile => _userService.baseUser?.mobile ?? "";
+
+  bool get isEmailVerified => _userService.isEmailVerified;
+
   bool get isTambolaNotificationLoading => _isTambolaNotificationLoading;
+
   bool get isApplockLoading => _isApplockLoading;
+  bool get isFloInvoiceMailLoading => _isFloInvoiceMailLoading;
+
   bool get hasInputError => _hasInputError;
+
   get isEmailEnabled => this._isEmailEnabled;
+
   get isContinuedWithGoogle => this._isContinuedWithGoogle;
+
   bool get isSigningInWithGoogle => _isSigningInWithGoogle;
+
   bool get inEditMode => this._inEditMode;
 
   bool get applock =>
-      _userService!.baseUser!.userPreferences
+      _userService.baseUser!.userPreferences
           .getPreference(Preferences.APPLOCK) ==
       1;
+
+  bool get floInvoiceEmail =>
+      _userService.baseUser!.userPreferences
+          .getPreference(Preferences.FLOINVOICEMAIL) ==
+      1;
+
   bool get tambolaNotification =>
-      _userService!.baseUser!.userPreferences
+      _userService.baseUser!.userPreferences
           .getPreference(Preferences.TAMBOLANOTIFICATIONS) ==
       1;
+
   int? get gen => _gen;
 
   String get dateInputError => _dateInputError;
+
   bool get isUpdaingUserDetails => this._isUpdaingUserDetails;
+
   // get isNewUser => this._isNewUser;
   get isgmailFieldEnabled => this._isgmailFieldEnabled;
+
   get errorPadding => this._errorPadding;
+
   get isNameEnabled => this._isNameEnabled;
+
   get isDateEnabled => this._isDateEnabled;
 
   // Setters
@@ -190,11 +220,10 @@ class UserProfileVM extends BaseViewModel {
     notifyListeners();
   }
 
-  // set isNewUser(value) {
-  //   this._isNewUser = value;
-
-  //   notifyListeners();
-  // }
+  set isFloInvoiceMailLoading(bool value) {
+    _isFloInvoiceMailLoading = value;
+    notifyListeners();
+  }
 
   set isEmailEnabled(value) {
     this._isEmailEnabled = value;
@@ -233,14 +262,14 @@ class UserProfileVM extends BaseViewModel {
   init() {
     // isNewUser = inu;
     // if (isNewUser) enableEdit();
-    nameController = new TextEditingController(text: myname);
-    dobController = new TextEditingController(text: myDob);
-    genderController = new TextEditingController(text: gender);
+    nameController = TextEditingController(text: myname);
+    dobController = TextEditingController(text: myDob);
+    genderController = TextEditingController(text: gender);
     setDate();
     setGender();
-    emailController = new TextEditingController(text: myEmail);
-    mobileController = new TextEditingController(text: myMobile);
-    if (_userService!.isEmailVerified) isgmailFieldEnabled = false;
+    emailController = TextEditingController(text: myEmail);
+    mobileController = TextEditingController(text: myMobile);
+    if (_userService.isEmailVerified) isgmailFieldEnabled = false;
     // if (isNewUser) usernameController = TextEditingController();
     checkIfUserIsKYCVerified();
   }
@@ -266,17 +295,16 @@ class UserProfileVM extends BaseViewModel {
 
   setGender() {
     if (myGender == "M") {
-      gender = _locale!.obGenderMale;
-      genderController = new TextEditingController(text: locale.obMale);
+      gender = _locale.obGenderMale;
+      genderController = TextEditingController(text: locale.obMale);
       gen = 1;
     } else if (myGender == "F") {
-      gender = _locale!.obGenderFemale;
-      genderController = new TextEditingController(text: locale.obFemale);
+      gender = _locale.obGenderFemale;
+      genderController = TextEditingController(text: locale.obFemale);
       gen = 0;
     } else if (myGender == "O") {
-      gender = _locale!.obGenderOthers;
-      genderController =
-          new TextEditingController(text: locale.obPreferNotToSay);
+      gender = _locale.obGenderOthers;
+      genderController = TextEditingController(text: locale.obPreferNotToSay);
       gen = -1;
     }
   }
@@ -284,13 +312,13 @@ class UserProfileVM extends BaseViewModel {
   setDate() {
     if (myDob != null && myDob.isNotEmpty) {
       String dob = myDob.replaceAll('/', '-');
-      dateFieldController = new TextEditingController(text: dob.split("-")[2]);
-      monthFieldController = new TextEditingController(text: dob.split("-")[1]);
-      yearFieldController = new TextEditingController(text: dob.split("-")[0]);
+      dateFieldController = TextEditingController(text: dob.split("-")[2]);
+      monthFieldController = TextEditingController(text: dob.split("-")[1]);
+      yearFieldController = TextEditingController(text: dob.split("-")[0]);
     } else {
-      dateFieldController = new TextEditingController(text: "");
-      monthFieldController = new TextEditingController(text: "");
-      yearFieldController = new TextEditingController(text: "");
+      dateFieldController = TextEditingController(text: "");
+      monthFieldController = TextEditingController(text: "");
+      yearFieldController = TextEditingController(text: "");
     }
   }
 
@@ -303,7 +331,7 @@ class UserProfileVM extends BaseViewModel {
       builder: (BuildContext context, Widget? child) {
         return Theme(
           data: ThemeData.dark().copyWith(
-            colorScheme: ColorScheme.dark(
+            colorScheme: const ColorScheme.dark(
               onPrimary: Colors.black, // selected text color
               onSurface: Colors.white70, // default text color
               primary: UiConstants.primaryColor, // circle color
@@ -344,7 +372,7 @@ class UserProfileVM extends BaseViewModel {
   enableEdit() {
     inEditMode = true;
     notifyListeners();
-    Future.delayed(Duration(seconds: 1), () {
+    Future.delayed(const Duration(seconds: 1), () {
       nameFocusNode.requestFocus();
     });
   }
@@ -352,7 +380,7 @@ class UserProfileVM extends BaseViewModel {
   checkIfUserIsKYCVerified() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       setState(ViewState.Busy);
-      if (_bankAndKycService!.isKYCVerified) {
+      if (_bankAndKycService.isKYCVerified) {
         // nameController!.text =
         //     _userService!.baseUser!.kycName ?? _userService!.baseUser!.name!;
         isNameEnabled = false;
@@ -367,35 +395,36 @@ class UserProfileVM extends BaseViewModel {
       if (_checkForChanges() && checkForNullData()) {
         if (checkIfAdult()) {
           isUpdaingUserDetails = true;
-          if (isNameEnabled)
-            _userService!.baseUser!.name = nameController!.text.trim();
-          if (isDateEnabled)
-            _userService!.baseUser!.dob =
+          if (isNameEnabled) {
+            _userService.baseUser!.name = nameController!.text.trim();
+          }
+          if (isDateEnabled) {
+            _userService.baseUser!.dob =
                 "${yearFieldController!.text}-${monthFieldController!.text}-${dateFieldController!.text}";
-          _userService!.baseUser!.gender = getGender();
-          _userService!.baseUser!.isEmailVerified =
-              _userService!.isEmailVerified;
-          _userService!.baseUser!.email = emailController!.text.trim();
-          _userService!.baseUser!.username =
+          }
+          _userService.baseUser!.gender = getGender();
+          _userService.baseUser!.isEmailVerified = _userService.isEmailVerified;
+          _userService.baseUser!.email = emailController!.text.trim();
+          _userService.baseUser!.username =
               // isNewUser ? username : _userService!.baseUser!.username;
               await _userRepo.updateUser(
-            uid: _userService!.baseUser!.uid,
+            uid: _userService.baseUser!.uid,
             dMap: {
-              BaseUser.fldName: _userService!.baseUser!.name!
+              BaseUser.fldName: _userService.baseUser!.name!
                   .trim()
-                  .replaceAll(new RegExp(r"\s+\b|\b\s"), " "),
-              BaseUser.fldDob: _userService!.baseUser!.dob,
-              BaseUser.fldGender: _userService!.baseUser!.gender,
+                  .replaceAll(RegExp(r"\s+\b|\b\s"), " "),
+              BaseUser.fldDob: _userService.baseUser!.dob,
+              BaseUser.fldGender: _userService.baseUser!.gender,
               BaseUser.fldIsEmailVerified:
-                  _userService!.baseUser!.isEmailVerified,
-              BaseUser.fldEmail: _userService!.baseUser!.email,
-              BaseUser.fldAvatarId: _userService!.avatarId,
-              BaseUser.fldUsername: _userService!.baseUser!.username
+                  _userService.baseUser!.isEmailVerified,
+              BaseUser.fldEmail: _userService.baseUser!.email,
+              BaseUser.fldAvatarId: _userService.avatarId,
+              BaseUser.fldUsername: _userService.baseUser!.username
             },
           ).then((ApiResponse<bool> res) async {
             if (res.isSuccess()) {
-              await _userRepo!.getUserById(id: _userService!.baseUser!.uid);
-              await _userService!.setBaseUser();
+              await _userRepo.getUserById(id: _userService.baseUser!.uid);
+              await _userService.setBaseUser();
               // _userService!.setMyUserName(_userService?.baseUser?.kycName ??
               //     _userService!.baseUser!.name);
               // _userService!.setEmail(_userService!.baseUser!.email);
@@ -403,8 +432,8 @@ class UserProfileVM extends BaseViewModel {
               // _userService!.setGender(_userService!.baseUser!.gender);
               setGender();
               setDate();
-              nameController!.text = _userService!.name!;
-              dobController!.text = _userService!.baseUser!.dob!;
+              nameController!.text = _userService.name!;
+              dobController!.text = _userService.baseUser!.dob!;
               isUpdaingUserDetails = false;
               inEditMode = false;
               // if (isNewUser) AppState.backButtonDispatcher!.didPopRoute();
@@ -429,15 +458,17 @@ class UserProfileVM extends BaseViewModel {
           );
         }
       }
-    } else
+    } else {
       BaseUtil.showNegativeAlert(locale.invalidDetails, locale.checkFeilds);
+    }
   }
 
   bool checkIfAdult() {
-    if (selectedDate == null && !isDateEnabled)
+    if (selectedDate == null && !isDateEnabled) {
       return true;
-    else
+    } else {
       return DateHelper.isAdult(selectedDate);
+    }
   }
 
   // Future<bool> usernameIsValid() async {
@@ -481,46 +512,50 @@ class UserProfileVM extends BaseViewModel {
   bool isDOBChanged() {
     String newDob =
         "${yearFieldController!.text}-${monthFieldController!.text}-${dateFieldController!.text}";
-    if (newDob == myDob)
+    if (newDob == myDob) {
       return false;
-    else
+    } else {
       return true;
+    }
   }
 
   bool isGenderChanged() {
     if ((gen == 1 && myGender == "M") ||
         (gen == 0 && myGender == "F") ||
-        (gen == -1 && myGender == "O"))
+        (gen == -1 && myGender == "O")) {
       return false;
-    else
+    } else {
       return true;
+    }
   }
 
   getGender() {
-    if (gen == 1)
+    if (gen == 1) {
       return "M";
-    else if (gen == 0)
+    } else if (gen == 0) {
       return "F";
-    else if (gen == -1)
+    } else if (gen == -1) {
       return "O";
-    else
+    } else {
       return "M";
+    }
   }
 
-  setGenderField() {
-    if (gen == 1)
+  String setGenderField() {
+    if (gen == 1) {
       return "Male";
-    else if (gen == 0)
+    } else if (gen == 0) {
       return "Female";
-    else if (gen == -1)
+    } else if (gen == -1) {
       return "Others";
-    else
+    } else {
       return "Male";
+    }
   }
 
-  signout() async {
+  Future<void> signout() async {
     if (await BaseUtil.showNoInternetAlert()) return;
-    BaseUtil.openDialog(
+    unawaited(BaseUtil.openDialog(
       isBarrierDismissible: false,
       addToScreenStack: true,
       content: ConfirmationDialog(
@@ -535,27 +570,26 @@ class UserProfileVM extends BaseViewModel {
           confirmAction: () {
             Haptic.vibrate();
 
-            _userService!.signOut(() async {
-              _analyticsService!.track(eventName: AnalyticsEvents.signOut);
-              _analyticsService!.signOut();
-              await _userRepo!.removeUserFCM(_userService!.baseUser!.uid);
+            _userService.signOut(() async {
+              _analyticsService.track(eventName: AnalyticsEvents.signOut);
+              _analyticsService.signOut();
             }).then((flag) async {
               if (flag) {
-                await _baseUtil!.signOut();
-                _journeyService!.dump();
+                await _baseUtil.signOut();
                 _marketingService.dump();
                 _txnHistoryService!.signOut();
-                _tambolaService!.signOut();
                 _analyticsService!.signOut();
                 _bankAndKycService!.dump();
                 _powerPlayService.dump();
-                ScratchCardService.dump();
+                _gtService.dump();
                 _tambolaRepo.dump();
                 locator<JourneyRepository>().dump();
                 _appstate.dump();
                 locator<SubService>().dump();
+                _tambolaService!.dump();
+                locator<LendboxMaturityService>().dump();
                 AppState.backButtonDispatcher!.didPopRoute();
-                locator<PowerPlayService>().dump();
+
                 AppState.delegate!.appState.currentAction = PageAction(
                     state: PageState.replaceAll, page: SplashPageConfig);
                 BaseUtil.showPositiveAlert(
@@ -574,7 +608,7 @@ class UserProfileVM extends BaseViewModel {
           cancelAction: () {
             AppState.backButtonDispatcher!.didPopRoute();
           }),
-    );
+    ));
   }
 
   bool isValidDate() {
@@ -619,7 +653,7 @@ class UserProfileVM extends BaseViewModel {
           description: locale.galleryAccess,
           buttonText: locale.btnContinue,
           asset: Padding(
-            padding: EdgeInsets.symmetric(vertical: 8),
+            padding: const EdgeInsets.symmetric(vertical: 8),
             child: Image.asset(
               "images/gallery.png",
               height: SizeConfig.screenWidth! * 0.24,
@@ -701,17 +735,18 @@ class UserProfileVM extends BaseViewModel {
   }
 
   updateUserAvatar({String? avatarId}) async {
-    final res = await _userRepo!.updateUser(
+    final res = await _userRepo.updateUser(
         dMap: {BaseUser.fldAvatarId: avatarId},
-        uid: _userService!.baseUser!.uid);
+        uid: _userService.baseUser!.uid);
     AppState.backButtonDispatcher!.didPopRoute();
     if (res.isSuccess() && res.model!) {
-      _userService!.setMyAvatarId(avatarId);
+      _userService.setMyAvatarId(avatarId);
 
       return BaseUtil.showPositiveAlert(
           locale.updatedSuccessfully, locale.profileUpdated);
-    } else
+    } else {
       BaseUtil.showNegativeAlert(locale.obSomeThingWentWrong, locale.tryLater);
+    }
   }
 
   //Model should never user Widgets in it. We should never pass context here...
@@ -738,7 +773,7 @@ class UserProfileVM extends BaseViewModel {
           cancelBtnText: locale.btnDiscard,
           description: locale.profileUpdateAlert,
           confirmAction: () {
-            _userService!.updateProfilePicture(selectedProfilePicture).then(
+            _userService.updateProfilePicture(selectedProfilePicture).then(
                   (flag) => _postProfilePictureUpdate(flag),
                 );
           },
@@ -754,9 +789,10 @@ class UserProfileVM extends BaseViewModel {
   }
 
   verifyEmail() {
-    if (!isEmailVerified)
+    if (!isEmailVerified) {
       AppState.delegate!.appState.currentAction =
           PageAction(state: PageState.addPage, page: VerifyEmailPageConfig);
+    }
   }
 
   _postProfilePictureUpdate(bool flag) {
@@ -775,58 +811,94 @@ class UserProfileVM extends BaseViewModel {
     AppState.backButtonDispatcher!.didPopRoute();
   }
 
-  onAppLockPreferenceChanged(val) async {
+  Future<void> onAppLockPreferenceChanged(bool val) async {
     if (await BaseUtil.showNoInternetAlert()) return;
     isApplockLoading = true;
-    _userService!.baseUser!.userPreferences.setPreference(
+    _userService.baseUser!.userPreferences.setPreference(
       Preferences.APPLOCK,
       (val) ? 1 : 0,
     );
-    await _userRepo!.updateUser(
-      uid: _userService!.baseUser!.uid,
+    await _userRepo.updateUser(
+      uid: _userService.baseUser!.uid,
       dMap: {
         'mUserPrefsAl': val,
-        'mUserPrefsTn': _userService!.baseUser!.userPreferences.getPreference(
+        'mUserPrefsTn': _userService.baseUser!.userPreferences.getPreference(
               Preferences.TAMBOLANOTIFICATIONS,
+            ) ==
+            1,
+        'mUserPrefsEr': _userService.baseUser!.userPreferences.getPreference(
+              Preferences.FLOINVOICEMAIL,
             ) ==
             1,
       },
     ).then((value) {
-      _userService!.setBaseUser();
-      Log("Preferences updated");
+      _userService.setBaseUser();
+      const Log("Preferences updated");
     });
     isApplockLoading = false;
   }
 
-  onTambolaNotificationPreferenceChanged(val) async {
+  Future<void> onFloInvoiceEmailPreferenceChanged(bool val) async {
+    if (await BaseUtil.showNoInternetAlert()) return;
+    isFloInvoiceMailLoading = true;
+    _userService.baseUser!.userPreferences.setPreference(
+      Preferences.FLOINVOICEMAIL,
+      val ? 1 : 0,
+    );
+    await _userRepo.updateUser(
+      uid: _userService.baseUser!.uid,
+      dMap: {
+        'mUserPrefsAl': _userService.baseUser!.userPreferences.getPreference(
+              Preferences.APPLOCK,
+            ) ==
+            1,
+        'mUserPrefsTn': _userService.baseUser!.userPreferences.getPreference(
+              Preferences.TAMBOLANOTIFICATIONS,
+            ) ==
+            1,
+        'mUserPrefsEr': val
+      },
+    ).then((value) {
+      _userService.setBaseUser();
+      const Log("Preferences updated");
+    });
+    isFloInvoiceMailLoading = false;
+  }
+
+  Future<void> onTambolaNotificationPreferenceChanged(bool val) async {
     if (await BaseUtil.showNoInternetAlert()) return;
     isTambolaNotificationLoading = true;
     bool res = await fcmlistener!.toggleTambolaDrawNotificationStatus(val);
     if (res) {
-      _userService!.baseUser!.userPreferences
+      _userService.baseUser!.userPreferences
           .setPreference(Preferences.TAMBOLANOTIFICATIONS, (val) ? 1 : 0);
-      await _userRepo!.updateUser(
-        uid: _userService!.baseUser!.uid,
+      await _userRepo.updateUser(
+        uid: _userService.baseUser!.uid,
         dMap: {
           'mUserPrefsTn': val,
-          'mUserPrefsAl': _userService!.baseUser!.userPreferences.getPreference(
+          'mUserPrefsAl': _userService.baseUser!.userPreferences.getPreference(
                 Preferences.APPLOCK,
+              ) ==
+              1,
+          'mUserPrefsEr': _userService.baseUser!.userPreferences.getPreference(
+                Preferences.FLOINVOICEMAIL,
               ) ==
               1,
         },
       ).then(
         (value) {
-          if (val)
-            Log("Preferences updated");
-          else
-            Log("Preference update error");
+          if (val) {
+            const Log("Preferences updated");
+          } else {
+            const Log("Preference update error");
+          }
         },
       );
     }
     isTambolaNotificationLoading = false;
   }
 
-  showEmailOptions() {
+  void showEmailOptions() {
     baseProvider!.isGoogleSignInProgress = false;
     emailOptionsFocusNode.unfocus();
     BaseUtil.openModalBottomSheet(
@@ -845,14 +917,14 @@ class UserProfileVM extends BaseViewModel {
   continueWithEmail() {
     isEmailEnabled = true;
     AppState.backButtonDispatcher!.didPopRoute();
-    Future.delayed(Duration(milliseconds: 200), () {
+    Future.delayed(const Duration(milliseconds: 200), () {
       emailFocusNode.requestFocus();
     });
   }
 
   void handleSignInWithGoogle() async {
     isSigningInWithGoogle = true;
-    String? email = await _googleSignInService!.signInWithGoogle();
+    String? email = await _googleSignInService.signInWithGoogle();
     if (email != null) {
       AppState.backButtonDispatcher!.didPopRoute();
       isgmailFieldEnabled = false;
@@ -864,25 +936,31 @@ class UserProfileVM extends BaseViewModel {
 
   Future updateUsername() async {
     if (isUpdaingUserDetails || isUsernameLoading) return;
-    if (usernameController!.text.isEmpty)
+    if (usernameController!.text.isEmpty) {
       return BaseUtil.showNegativeAlert(
           "No username entered", "Please add a good username to continue");
+    }
+    if (usernameController!.text.length < 4) {
+      return BaseUtil.showNegativeAlert("Username too small",
+          "Please try a username with more than 3 characters");
+    }
     AppState.blockNavigation();
     isUpdaingUserDetails = true;
     inEditMode = false;
+
     final res = await _userRepo
         .updateUser(dMap: {BaseUser.fldUsername: usernameController?.text});
     isUpdaingUserDetails = false;
     AppState.unblockNavigation();
     if (res.isSuccess()) {
-      await _userService!.setBaseUser();
+      await _userService.setBaseUser();
       isUsernameUpdated = true;
       notifyListeners();
       AppState.backButtonDispatcher!.didPopRoute();
       BaseUtil.showPositiveAlert(
           locale.userNameSuccess,
           locale.userNameSuccessSubtitle(
-              _userService!.baseUser?.username.toString() ?? ''));
+              _userService.baseUser?.username.toString() ?? ''));
       return true;
     } else {
       inEditMode = true;
@@ -894,7 +972,7 @@ class UserProfileVM extends BaseViewModel {
     print("Response " + response.toString());
 
     if (isValid == null || isUsernameUpdated) {
-      return SizedBox();
+      return const SizedBox();
     }
     if (isUsernameLoading) {
       return Row(
@@ -902,61 +980,62 @@ class UserProfileVM extends BaseViewModel {
           Container(
             height: SizeConfig.padding16,
             width: SizeConfig.padding16,
-            child: CircularProgressIndicator(
+            child: const CircularProgressIndicator(
               strokeWidth: 2,
             ),
           ),
         ],
       );
-    } else if (response == UsernameResponse.EMPTY)
+    } else if (response == UsernameResponse.EMPTY) {
       return Text(
         locale.userNameEmptyAlert,
-        style: TextStyle(color: Colors.red, fontWeight: FontWeight.w500),
+        style: const TextStyle(color: Colors.red, fontWeight: FontWeight.w500),
       );
-    else if (response == UsernameResponse.UNAVAILABLE)
+    } else if (response == UsernameResponse.UNAVAILABLE) {
       return Text(
         "@${usernameController!.text.trim()} " + locale.isNotAvailable,
-        style: TextStyle(
+        style: const TextStyle(
           color: Colors.red,
           fontWeight: FontWeight.w500,
         ),
       );
-    else if (response == UsernameResponse.AVAILABLE) {
+    } else if (response == UsernameResponse.AVAILABLE) {
       return Text(
         "@${usernameController!.text.trim()} " + locale.isAvailable,
-        style: TextStyle(
+        style: const TextStyle(
           color: UiConstants.primaryColor,
           fontWeight: FontWeight.w500,
         ),
       );
     } else if (response == UsernameResponse.INVALID) {
-      if (usernameController!.text.trim().length < 4)
+      if (usernameController!.text.trim().length < 4) {
         return Text(
           locale.userNameVal1,
           maxLines: 2,
-          style: TextStyle(
+          style: const TextStyle(
             color: Colors.red,
             fontWeight: FontWeight.w500,
           ),
         );
-      else if (usernameController!.text.trim().length > 20)
+      } else if (usernameController!.text.trim().length > 20) {
         return Text(
           locale.userNameVal2,
           maxLines: 2,
-          style: TextStyle(
+          style: const TextStyle(
             color: Colors.red,
             fontWeight: FontWeight.w500,
           ),
         );
-      else
+      } else {
         return Text(
           "@${usernameController!.text.trim()}" + locale.isValid,
           maxLines: 2,
-          style: TextStyle(
+          style: const TextStyle(
             color: Colors.red,
             fontWeight: FontWeight.w500,
           ),
         );
+      }
     }
 
     return SizedBox(
@@ -995,10 +1074,11 @@ class UserProfileVM extends BaseViewModel {
         if (apiResponse.isSuccess()) res = apiResponse.model ?? false;
         // dbProvider!.checkIfUsernameIsAvailable(username.replaceAll('.', '@'));
         isValid = res;
-        if (res)
+        if (res) {
           response = UsernameResponse.AVAILABLE;
-        else
+        } else {
           response = UsernameResponse.UNAVAILABLE;
+        }
       } else {
         isValid = false;
         response = UsernameResponse.INVALID;
@@ -1012,7 +1092,7 @@ class UserProfileVM extends BaseViewModel {
 
   navigateToKycScreen() {
     Haptic.vibrate();
-    _analyticsService!.track(eventName: AnalyticsEvents.kycDetailsTapped);
+    _analyticsService.track(eventName: AnalyticsEvents.kycDetailsTapped);
     AppState.delegate!.appState.currentAction = PageAction(
       state: PageState.replace,
       page: KycDetailsPageConfig,
@@ -1020,7 +1100,7 @@ class UserProfileVM extends BaseViewModel {
   }
 
   navigateToBankDetailsScreen() {
-    _analyticsService!.track(eventName: AnalyticsEvents.bankDetailsTapped);
+    _analyticsService.track(eventName: AnalyticsEvents.bankDetailsTapped);
 
     Haptic.vibrate();
     AppState.delegate!.appState.currentAction = PageAction(

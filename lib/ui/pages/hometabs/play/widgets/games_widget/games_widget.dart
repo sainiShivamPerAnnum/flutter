@@ -17,67 +17,68 @@ import '../../../../../../util/show_case_key.dart';
 
 class GamesWidget extends StatelessWidget {
   const GamesWidget({super.key, required this.model});
+
   final PlayViewModel model;
+
   @override
   Widget build(BuildContext context) {
     return PropertyChangeConsumer<UserService, UserServiceProperties>(
-      properties: [
+      properties: const [
         UserServiceProperties.myUserWallet,
         UserServiceProperties.myUserFund
       ],
       builder: (_, prop, ___) {
-        if (model.isGamesListDataLoading || prop?.userFundWallet == null)
+        if (model.isGamesListDataLoading || prop?.userFundWallet == null) {
           return Container(
             width: SizeConfig.screenWidth,
             margin: EdgeInsets.symmetric(
                 vertical: SizeConfig.pageHorizontalMargins / 2),
             child: GridView.builder(
-              physics: BouncingScrollPhysics(),
+              physics: const BouncingScrollPhysics(),
               itemCount: 3,
               shrinkWrap: true,
               padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding24),
               itemBuilder: (ctx, index) {
-                return TrendingGamesShimmer();
+                return const TrendingGamesShimmer();
               },
-              gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
                   crossAxisCount: 3,
                   childAspectRatio: .63,
                   crossAxisSpacing: 12,
                   mainAxisSpacing: 12),
             ),
           );
+        }
 
-        if (model.gameTier == null) return SizedBox();
+        if (model.gameTier == null) return const SizedBox();
         final _viewModel = GameViewModel.fromGameTier(model.gameTier!)
           ..processData();
-        return Container(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              ...List.generate(
-                _viewModel.gameTiers.length,
-                (index) {
-                  final child = Padding(
-                    padding:
-                        EdgeInsets.symmetric(vertical: SizeConfig.padding8),
-                    child: _GameTierWidget(
-                      gameTier: _viewModel.gameTiers[index],
-                      model: model,
-                    ),
+        return Column(
+          mainAxisAlignment: MainAxisAlignment.start,
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            ...List.generate(
+              _viewModel.gameTiers.length,
+              (index) {
+                final child = Padding(
+                  padding: EdgeInsets.symmetric(vertical: SizeConfig.padding8),
+                  child: _GameTierWidget(
+                    gameTier: _viewModel.gameTiers[index],
+                    model: model,
+                  ),
+                );
+                if (index == 0) {
+                  return Showcase(
+                    key: ShowCaseKeys.GamesKey,
+                    description:
+                        'Use these tokens to play games. Each time you score above a minimum score, you get a scratch card!',
+                    child: child,
                   );
-                  if (index == 0)
-                    return Showcase(
-                      key: ShowCaseKeys.GamesKey,
-                      description:
-                          'Use these tokens to play games. Each time you score above a minimum score, you get a scratch card!',
-                      child: child,
-                    );
-                  return child;
-                },
-              ),
-            ],
-          ),
+                }
+                return child;
+              },
+            ),
+          ],
         );
       },
     );
@@ -89,6 +90,7 @@ class _GameTierWidget extends StatelessWidget {
 
   final GameTier gameTier;
   final PlayViewModel model;
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -139,7 +141,7 @@ class _GameTierWidget extends StatelessWidget {
                       children: gameTier.games
                           .map(
                             (e) => SizedBox(
-                              height: SizeConfig.screenHeight! * 0.22,
+                              height: SizeConfig.screenHeight! * 0.18,
                               width: SizeConfig.screenWidth! * 0.272,
                               child: TrendingGames(
                                 model: model,
@@ -167,6 +169,7 @@ class _GameTierWidget extends StatelessWidget {
 
 class _LockedState extends StatelessWidget {
   const _LockedState({required this.gameTier});
+
   final GameTier gameTier;
 
   @override
@@ -182,13 +185,14 @@ class _LockedState extends StatelessWidget {
           BaseUtil.openDepositOptionsModalSheet(
               amount: gameTier.amountToCompleteLevel.round(),
               title: "Save in any asset to unlock ${gameTier.title}",
-              subtitle: 'Earn 1 token with every Rupee saved');
+              subtitle: 'Earn 1 token with every Rupee saved',
+              timer: 0);
         }
       },
       child: Container(
         decoration: BoxDecoration(
           gradient: LinearGradient(
-            colors: [Colors.black, Colors.transparent],
+            colors: const [Colors.black, Colors.transparent],
             begin: Alignment.bottomCenter,
             stops: [gameTier.shadow, 1],
             end: Alignment.topCenter,
@@ -267,6 +271,7 @@ class CustomProgressBar extends CustomPainter {
   final int reamingAmount;
 
   CustomProgressBar(this.minAmount, this.netWorth, this.reamingAmount);
+
   @override
   void paint(Canvas canvas, Size size) {
     final _center = Offset(size.width / 2, 0);
@@ -286,7 +291,7 @@ class CustomProgressBar extends CustomPainter {
           Radius.circular(SizeConfig.padding26),
         ),
         Paint()
-          ..color = Color(0xff297264)
+          ..color = const Color(0xff297264)
           ..style = PaintingStyle.fill);
 
     // _drawText(canvas, size);

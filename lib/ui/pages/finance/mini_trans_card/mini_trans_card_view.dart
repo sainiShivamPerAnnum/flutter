@@ -34,7 +34,7 @@ class MiniTransactionCard extends StatelessWidget {
       },
       builder: (ctx, model, child) {
         return AnimatedContainer(
-          duration: Duration(milliseconds: 2000),
+          duration: const Duration(milliseconds: 2000),
           curve: Curves.easeInOutCubic,
           child: Consumer<TxnHistoryService>(
             builder: (ctx, m, child) {
@@ -52,11 +52,11 @@ class MiniTransactionCard extends StatelessWidget {
                           child: Row(children: [
                             TitleSubtitleContainer(
                                 title: locale.txns, leadingPadding: false),
-                            Spacer(),
-                            Container(
+                            const Spacer(),
+                            SizedBox(
                               width: SizeConfig.avatarRadius,
                               height: SizeConfig.avatarRadius,
-                              child: CircularProgressIndicator(
+                              child: const CircularProgressIndicator(
                                 strokeWidth: 0.5,
                                 color: UiConstants.primaryColor,
                               ),
@@ -80,7 +80,7 @@ class MiniTransactionCard extends StatelessWidget {
                                       TitleSubtitleContainer(
                                           title: locale.txns,
                                           leadingPadding: false),
-                                      Spacer(),
+                                      const Spacer(),
                                       model.state == ViewState.Idle &&
                                               m.txnList != null &&
                                               m.txnList!.isNotEmpty &&
@@ -102,7 +102,7 @@ class MiniTransactionCard extends StatelessWidget {
                                                   model.viewAllTransaction(
                                                       investmentType),
                                             )
-                                          : SizedBox(),
+                                          : const SizedBox(),
                                       SizedBox(
                                         width: SizeConfig.pageHorizontalMargins,
                                       )

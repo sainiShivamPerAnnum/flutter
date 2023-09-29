@@ -19,6 +19,8 @@ import 'package:lottie/lottie.dart';
 import 'package:scratcher/widgets.dart';
 
 class MultipleScratchCardsView extends StatefulWidget {
+  const MultipleScratchCardsView({Key? key}) : super(key: key);
+
   @override
   State<MultipleScratchCardsView> createState() =>
       _MultipleScratchCardsViewState();
@@ -41,7 +43,7 @@ class _MultipleScratchCardsViewState extends State<MultipleScratchCardsView> {
       onModelDispose: (model) => model.dump(),
       builder: (context, model, child) => Scaffold(
         backgroundColor: Colors.black.withOpacity(0.75),
-        body: Container(
+        body: SizedBox(
           width: SizeConfig.screenWidth,
           height: SizeConfig.screenHeight,
           child: Stack(
@@ -61,7 +63,7 @@ class _MultipleScratchCardsViewState extends State<MultipleScratchCardsView> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   SafeArea(
-                    child: Container(
+                    child: SizedBox(
                       height: kToolbarHeight,
                       child: Row(
                         children: [
@@ -69,7 +71,7 @@ class _MultipleScratchCardsViewState extends State<MultipleScratchCardsView> {
                             width: SizeConfig.pageHorizontalMargins,
                           ),
                           FelloAppBarBackButton(),
-                          Spacer(),
+                          const Spacer(),
                           FelloCoinBar(),
                           SizedBox(width: SizeConfig.padding20)
                         ],
@@ -79,17 +81,17 @@ class _MultipleScratchCardsViewState extends State<MultipleScratchCardsView> {
                   //Scratch Card Pageview
                   if (!model.showRewardLottie)
                     AnimatedScale(
-                      duration: Duration(milliseconds: 200),
+                      duration: const Duration(milliseconds: 200),
                       curve: Curves.easeInCubic,
                       scale: model.cardScale,
                       child: Column(
                         children: [
-                          Container(
+                          SizedBox(
                             width: SizeConfig.screenWidth,
                             height: SizeConfig.screenWidth! * 0.5,
                             child: PageView.builder(
                               controller: model.pageController,
-                              physics: NeverScrollableScrollPhysics(),
+                              physics: const NeverScrollableScrollPhysics(),
                               itemCount: model.scratchCardList.length,
                               itemBuilder: (ctx, i) {
                                 return ValueListenableBuilder(
@@ -107,8 +109,8 @@ class _MultipleScratchCardsViewState extends State<MultipleScratchCardsView> {
                                             height:
                                                 SizeConfig.screenWidth! * 0.7,
                                             child: AnimatedSwitcher(
-                                              duration:
-                                                  Duration(milliseconds: 500),
+                                              duration: const Duration(
+                                                  milliseconds: 500),
                                               child: model.scratchCardList[i]
                                                           .gtId?.isEmpty ??
                                                       true
@@ -130,9 +132,9 @@ class _MultipleScratchCardsViewState extends State<MultipleScratchCardsView> {
                                                         model.showScratchGuideLabel =
                                                             false;
                                                       },
-                                                      onChange: ((value) =>
-                                                          model.currentCardScratchPercentage =
-                                                              value),
+                                                      onChange: (value) => model
+                                                              .currentCardScratchPercentage =
+                                                          value,
                                                       onThreshold: () {
                                                         model.redeemScratchCard(
                                                             i);
@@ -172,8 +174,8 @@ class _MultipleScratchCardsViewState extends State<MultipleScratchCardsView> {
                             child: Column(children: [
                               SizedBox(height: SizeConfig.padding24),
                               AnimatedContainer(
-                                decoration: BoxDecoration(),
-                                duration: Duration(seconds: 1),
+                                decoration: const BoxDecoration(),
+                                duration: const Duration(seconds: 1),
                                 curve: Curves.easeIn,
                                 width: SizeConfig.screenWidth,
                                 alignment: Alignment.center,
@@ -192,7 +194,7 @@ class _MultipleScratchCardsViewState extends State<MultipleScratchCardsView> {
                                     horizontal:
                                         SizeConfig.pageHorizontalMargins * 2),
                                 child: AnimatedSwitcher(
-                                  duration: Duration(seconds: 1),
+                                  duration: const Duration(seconds: 1),
                                   child:
                                       (model
                                                   .scratchCardList[model

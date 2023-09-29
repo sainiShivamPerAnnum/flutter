@@ -1,22 +1,22 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
-import 'dart:collection';
 import 'dart:convert';
 
 import 'package:cloud_firestore/cloud_firestore.dart';
-import 'package:flutter/foundation.dart';
-
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/util/logger.dart';
+import 'package:flutter/foundation.dart';
 
 parseTimeStamp(dynamic data) {
   if (data != null) {
-    if (data.runtimeType == Timestamp)
+    if (data.runtimeType == Timestamp) {
       return data;
-    else
+    } else {
       return Timestamp(data["_seconds"], data["_nanoseconds"]);
-  } else
+    }
+  } else {
     return null;
+  }
 }
 
 parseTransactionStatusSummary(Map? summary) {
@@ -25,26 +25,28 @@ parseTransactionStatusSummary(Map? summary) {
     summary.forEach((key, value) {
       TimestampModel? timeStamp;
       String? result;
-      if (value.runtimeType == String)
+      if (value.runtimeType == String) {
         result = value;
-      else
+      } else {
         timeStamp = TimestampModel.fromMap(value as Map<String, dynamic>);
+      }
 
       if (timeStamp != null) {
         txnSummary.add(
             TransactionStatusMapItemModel(title: key, timestamp: timeStamp));
-      } else if (result != null)
+      } else if (result != null) {
         txnSummary
             .add(TransactionStatusMapItemModel(title: key, value: result));
-      else
+      } else {
         txnSummary.add(TransactionStatusMapItemModel(title: key, value: "NA"));
+      }
     });
   }
   return txnSummary;
 }
 
 class UserTransaction {
-  static Log log = new Log('UserTransaction');
+  static Log log = const Log('UserTransaction');
   String? _docKey;
   double _amount;
   double _closingBalance;
@@ -64,59 +66,60 @@ class UserTransaction {
   Timestamp? _timestamp;
   Timestamp? _updatedTime;
   Map<String, dynamic>? couponMap;
+  LbMap lbMap;
   List<TransactionStatusMapItemModel>? transactionUpdatesMap;
 
-  static final String fldAmount = 'tAmount';
-  static final String fldPaytmMap = 'paytmMap';
-  static final String fldClosingBalance = 'tClosingBalance';
-  static final String fldNote = 'tNote';
-  static final String fldSubType = 'tSubtype';
-  static final String fldRedeemType = 'tRedeemType';
-  static final String fldType = 'tType';
-  static final String fldTicketUpCount = 'tTicketUpdCount';
-  static final String fldTranStatus = 'tTranStatus';
+  static const String fldAmount = 'tAmount';
+  static const String fldPaytmMap = 'paytmMap';
+  static const String fldClosingBalance = 'tClosingBalance';
+  static const String fldNote = 'tNote';
+  static const String fldSubType = 'tSubtype';
+  static const String fldRedeemType = 'tRedeemType';
+  static const String fldType = 'tType';
+  static const String fldTicketUpCount = 'tTicketUpdCount';
+  static const String fldTranStatus = 'tTranStatus';
   static const String fldCouponCode = 'tCouponCode';
-  static final String fldRzpMap = 'tRzpMap';
-  static final String fldAugmontMap = 'tAugmontMap';
-  static final String fldIciciMap = 'tIciciMap';
-  static final String fldUserId = 'tUserId';
-  static final String fldTimestamp = 'timestamp';
-  static final String fldUpdatedTime = 'tUpdateTime';
+  static const String fldRzpMap = 'tRzpMap';
+  static const String fldAugmontMap = 'tAugmontMap';
+  static const String fldIciciMap = 'tIciciMap';
+  static const String fldUserId = 'tUserId';
+  static const String fldTimestamp = 'timestamp';
+  static const String fldUpdatedTime = 'tUpdateTime';
   static const String fldtransactionUpdatesMap = "transactionUpdatesMap";
 
   ///paytm submap feilds
-  static final String subFldPaytmBankName = 'bankName';
-  static final String subFldPaytmBankTranId = 'bankTxnId';
-  static final String subFldPaytmGatewayName = 'gatewayName';
-  static final String subFldPaytmPaymentMode = 'paymentMode';
-  static final String subFldPaytmStatus = 'status';
-  static final String subFldPaytmTxnAmount = 'txnAmount';
-  static final String subFldPaytmTxnDate = 'txnDate';
-  static final String subFldPaytmTxnId = 'txnId';
+  static const String subFldPaytmBankName = 'bankName';
+  static const String subFldPaytmBankTranId = 'bankTxnId';
+  static const String subFldPaytmGatewayName = 'gatewayName';
+  static const String subFldPaytmPaymentMode = 'paymentMode';
+  static const String subFldPaytmStatus = 'status';
+  static const String subFldPaytmTxnAmount = 'txnAmount';
+  static const String subFldPaytmTxnDate = 'txnDate';
+  static const String subFldPaytmTxnId = 'txnId';
 
   ///razorpay submap fields
-  static final String subFldRzpOrderId = 'rOrderId';
-  static final String subFldRzpPaymentId = 'rPaymentId';
-  static final String subFldRzpStatus = 'rStatus';
+  static const String subFldRzpOrderId = 'rOrderId';
+  static const String subFldRzpPaymentId = 'rPaymentId';
+  static const String subFldRzpStatus = 'rStatus';
 
   ///augmont submap fields
-  static final String subFldAugBlockId = 'aBlockId';
-  static final String subFldAugLockPrice = 'aLockPrice';
-  static final String subFldAugPaymode = 'aPaymode';
-  static final String subFldMerchantTranId = 'aTranId';
-  static final String subFldAugTranId = 'aAugTranId';
-  static final String subFldAugCurrentGoldGm = 'aGoldInTxn';
-  static final String subFldAugTotalGoldGm = 'aGoldBalance';
-  static final String subFldAugPostTaxTotal = 'aTaxedGoldBalance';
+  static const String subFldAugBlockId = 'aBlockId';
+  static const String subFldAugLockPrice = 'aLockPrice';
+  static const String subFldAugPaymode = 'aPaymode';
+  static const String subFldMerchantTranId = 'aTranId';
+  static const String subFldAugTranId = 'aAugTranId';
+  static const String subFldAugCurrentGoldGm = 'aGoldInTxn';
+  static const String subFldAugTotalGoldGm = 'aGoldBalance';
+  static const String subFldAugPostTaxTotal = 'aTaxedGoldBalance';
 
   ///Icici submap fields
-  static final String subFldIciciTranId = 'iTranId';
-  static final String subFldIciciWithdrawType = 'iWithType';
-  static final String subFldIciciMultipleId = 'iMultipleId';
-  static final String subFldIciciBankRnn = 'iBankRnn';
-  static final String subFldIciciUpiTime = 'iUpiDateTime';
-  static final String subFldIciciTxnOtpId = 'iWthlOtpId';
-  static final String subFldIciciTxnOtpVerified = 'iWthOtpVerified';
+  static const String subFldIciciTranId = 'iTranId';
+  static const String subFldIciciWithdrawType = 'iWithType';
+  static const String subFldIciciMultipleId = 'iMultipleId';
+  static const String subFldIciciBankRnn = 'iBankRnn';
+  static const String subFldIciciUpiTime = 'iUpiDateTime';
+  static const String subFldIciciTxnOtpId = 'iWthlOtpId';
+  static const String subFldIciciTxnOtpVerified = 'iWthOtpVerified';
 
   ///Transaction statuses
   static const String TRAN_STATUS_PENDING = 'PENDING';
@@ -167,11 +170,10 @@ class UserTransaction {
     this._timestamp,
     this._paytmMap,
     this._updatedTime,
-    
     this.transactionUpdatesMap,
     this.misMap,
     this.couponMap,
-    
+    this.lbMap,
   );
 
   UserTransaction.fromMap(Map<String, dynamic> data, String documentID)
@@ -196,6 +198,7 @@ class UserTransaction {
           parseTransactionStatusSummary(data[fldtransactionUpdatesMap]) ?? '',
           data['miscMap'] ?? {},
           data["coupon"] ?? {},
+          LbMap.fromMap(data["lbMap"] ?? {}),
         );
 
   UserTransaction.fromJSON(Map<String, dynamic> data, String documentID)
@@ -220,6 +223,7 @@ class UserTransaction {
           data[fldtransactionUpdatesMap],
           data['miscMap'],
           data["coupon"],
+          LbMap.fromMap(data["lbMap"] ?? {}),
         );
 
   //Augmont gold investment initiated by investor
@@ -303,7 +307,7 @@ class UserTransaction {
   bool isExpired() {
     DateTime txnTime = _updatedTime!.toDate();
     DateTime nowTime = DateTime.now();
-    DateTime txnExpireTime = txnTime.add(new Duration(hours: 1));
+    DateTime txnExpireTime = txnTime.add(const Duration(hours: 1));
 
     return nowTime.isAfter(txnExpireTime);
   }
@@ -460,4 +464,36 @@ class TransactionStatusMapItemModel {
 
   @override
   int get hashCode => title.hashCode ^ timestamp.hashCode ^ value.hashCode;
+}
+
+class LbMap {
+  String? fundType;
+  TimestampModel? maturityAt;
+  String? maturityPref;
+  double? gainAmount;
+  bool? hasDecidedPref;
+  bool? hasMatured;
+
+  LbMap(
+      {this.fundType,
+      this.maturityAt,
+      this.maturityPref,
+      this.gainAmount,
+      this.hasDecidedPref,
+      this.hasMatured});
+
+  factory LbMap.fromMap(Map<String, dynamic> map) {
+    return LbMap(
+      fundType: map['fundType'] != null ? map['fundType'] as String : "",
+      maturityAt: map['maturityAt'] != null
+          ? TimestampModel.fromMap(map['maturityAt'])
+          : TimestampModel.currentTimeStamp(),
+      maturityPref:
+          map['maturityPref'] != null ? map['maturityPref'] as String : "NA",
+      gainAmount:
+          map['gainAmount'] != null ? (map['gainAmount'] * 1.0) as double : 1.0,
+      hasDecidedPref: map['hasDecidedPref'] ?? false,
+      hasMatured: map['hasMatured'] ?? false,
+    );
+  }
 }

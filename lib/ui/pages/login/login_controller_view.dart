@@ -1,10 +1,6 @@
 import 'dart:developer' as dev;
-import 'dart:developer';
 import 'dart:io';
 
-import 'package:advertising_id/advertising_id.dart';
-import 'package:app_set_id/app_set_id.dart';
-import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/ui/animations/welcome_rings/welcome_rings.dart';
@@ -23,7 +19,6 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
 
@@ -31,7 +26,7 @@ class LoginControllerView extends StatefulWidget {
   final int? initPage;
   static String? mobileno;
 
-  LoginControllerView({this.initPage});
+  const LoginControllerView({Key? key, this.initPage}) : super(key: key);
 
   @override
   State<LoginControllerView> createState() =>
@@ -39,7 +34,7 @@ class LoginControllerView extends StatefulWidget {
 }
 
 class _LoginControllerViewState extends State<LoginControllerView> {
-  final Log log = new Log("LoginController View");
+  final Log log = const Log("LoginController View");
   final int? initPage;
 
   _LoginControllerViewState(this.initPage);
@@ -53,10 +48,13 @@ class _LoginControllerViewState extends State<LoginControllerView> {
       onModelReady: (model) {
         model.init(initPage, model);
         if (Platform.isAndroid) {
-          Future.delayed(Duration(seconds: 1), () {
-            model.initTruecaller();
-          });
+          // if (AppConfig.getValue<bool?>(AppConfigKey.enable_truecaller_login) ??
+          //     false) {
+          // Future.delayed(const Duration(seconds: 1), () {
+          //   model.initTruecaller();
+          // });
         }
+        // }
       },
       onModelDispose: (model) => model.exit(),
       builder: (ctx, model, child) {
@@ -65,21 +63,21 @@ class _LoginControllerViewState extends State<LoginControllerView> {
           resizeToAvoidBottomInset: false,
           body: Stack(
             children: <Widget>[
-              NewSquareBackground(
+              const NewSquareBackground(
                   backgroundColor: UiConstants
                       .kRechargeModalSheetAmountSectionBackgroundColor),
               SingleChildScrollView(
                 reverse: true,
                 child: Column(
                   children: [
-                    Container(
+                    SizedBox(
                       width: SizeConfig.screenWidth,
                       height: SizeConfig.screenHeight,
                       child: Column(
                         children: [
                           Expanded(
                             child: PageView.builder(
-                              physics: NeverScrollableScrollPhysics(),
+                              physics: const NeverScrollableScrollPhysics(),
                               scrollDirection: Axis.horizontal,
                               controller: model.controller,
                               itemCount: model.pages.length,
@@ -110,7 +108,7 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                       margin: EdgeInsets.only(
                           top: SizeConfig.pageHorizontalMargins / 2,
                           right: SizeConfig.pageHorizontalMargins),
-                      child: FaqPill(type: FaqsType.onboarding)),
+                      child: const FaqPill(type: FaqsType.onboarding)),
                 ),
               ),
               if (keyboardIsOpen)
@@ -161,7 +159,7 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                             )
                           ],
                         )
-                      : SizedBox(),
+                      : const SizedBox(),
                 ),
               ),
               if (model.currentPage == 0 &&
@@ -170,7 +168,7 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                   !model.loginUsingTrueCaller)
                 Positioned(
                   bottom: 0,
-                  child: Container(
+                  child: SizedBox(
                     width: SizeConfig.screenWidth,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,
@@ -209,18 +207,18 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                           padding: EdgeInsets.fromLTRB(SizeConfig.padding10,
                               SizeConfig.padding16, SizeConfig.padding10, 0),
                           child: RichText(
-                            text: new TextSpan(
+                            text: TextSpan(
                               children: [
-                                new TextSpan(
+                                TextSpan(
                                   text: locale.obAgreeText,
                                   style: TextStyles.sourceSans.body3
                                       .colour(UiConstants.kTextColor2),
                                 ),
-                                new TextSpan(
+                                TextSpan(
                                   text: locale.obTermsofService,
                                   style: TextStyles.sourceSans.body3.underline
                                       .colour(UiConstants.kTextColor),
-                                  recognizer: new TapGestureRecognizer()
+                                  recognizer: TapGestureRecognizer()
                                     ..onTap = () {
                                       model.onTermsAndConditionsClicked();
                                     },
@@ -255,25 +253,26 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                               Text(
                                 locale.obLoggingInWith,
                                 style: TextStyles.body3.bold
-                                    .colour(Color(0xff1180FF)),
+                                    .colour(UiConstants.primaryColor),
                               ),
                               Image.asset(
                                 Assets.truecaller,
+                                color: UiConstants.primaryColor,
                                 height: SizeConfig.body1,
                               ),
                               SizedBox(
                                 width: SizeConfig.padding4,
                               ),
                               SpinKitThreeBounce(
-                                color: Color(0xff1180FF),
+                                color: UiConstants.primaryColor,
                                 size: SizeConfig.body1,
                               )
                             ],
                           )
-                        : SizedBox()),
+                        : const SizedBox()),
               ),
               if (FlavorConfig.isDevelopment())
-                Container(
+                SizedBox(
                   width: SizeConfig.screenWidth,
                   child: Banner(
                     message: FlavorConfig.getStage(),
@@ -282,7 +281,7 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                   ),
                 ),
               if (FlavorConfig.isQA())
-                Container(
+                SizedBox(
                   width: SizeConfig.screenWidth,
                   child: Banner(
                     message: FlavorConfig.getStage(),

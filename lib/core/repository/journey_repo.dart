@@ -19,7 +19,8 @@ import 'package:flutter/foundation.dart';
 import 'package:path_provider/path_provider.dart';
 
 class JourneyRepository extends BaseRepo {
-  final _cacheService = new CacheService();
+  final _cacheService = CacheService();
+
   //Local Variables
   static const String PAGE_DIRECTION_UP = "up";
   static const String PAGE_DIRECTION_DOWN = "down";
@@ -42,21 +43,24 @@ class JourneyRepository extends BaseRepo {
 
   //Initiating instance for local directory of Android || iOS
   Future<void> init() async {
-    if (_filePathDirectory == null) {
+    if (_filePathDirectory?.isEmpty ?? true) {
       if (Platform.isAndroid) {
         final directory = await getApplicationDocumentsDirectory();
-        if (!await directory.exists()) await directory.create(recursive: true);
+        if (directory.existsSync()) await directory.create(recursive: true);
         _filePathDirectory = '${directory.path}/journey_assets/';
+        logger.d("Android Directory Created with path : $_filePathDirectory");
       } else if (Platform.isIOS) {
         final directory = await getTemporaryDirectory();
-        if (!await directory.exists()) await directory.create(recursive: true);
+        if (directory.existsSync()) await directory.create(recursive: true);
         _filePathDirectory = '${directory.path}/journey_assets/';
+        logger.d("IOS Directory Created with path : $_filePathDirectory");
       }
     }
   }
 
   void dump() {
     journeyPages.clear();
+    if (_filePathDirectory == null) return;
     if (Directory(_filePathDirectory!).existsSync()) {
       Directory(_filePathDirectory!).deleteSync(recursive: true);
     }
@@ -67,7 +71,7 @@ class JourneyRepository extends BaseRepo {
   //Regex for network url and asset extension can be added.
 
   Future<bool> downloadAndSaveFile(String url) async {
-    HttpClient httpClient = new HttpClient();
+    HttpClient httpClient = HttpClient();
     String filePath = '';
     try {
       String fileName = url.split('/').last;
@@ -99,7 +103,7 @@ class JourneyRepository extends BaseRepo {
     if (Platform.isAndroid) {
       try {
         filePath = '$_filePathDirectory$fileName';
-        File file = await new File(filePath).create(recursive: true);
+        File file = await File(filePath).create(recursive: true);
         file.writeAsBytesSync(svgBytes);
         logger!.d(
             "JOURNEYREPO:: Android asset file successfully saved to local directory with path: ${file.path}");
@@ -111,7 +115,7 @@ class JourneyRepository extends BaseRepo {
     } else if (Platform.isIOS) {
       try {
         filePath = '$_filePathDirectory$fileName';
-        File file = await new File(filePath).create(recursive: true);
+        File file = await File(filePath).create(recursive: true);
         file.writeAsBytesSync(svgBytes);
         logger!.d(
             "JOURNEYREPO:: IOS asset file successfully saved to local directory with path: ${file.path}");
@@ -141,8 +145,8 @@ class JourneyRepository extends BaseRepo {
   //only check in shared prefs and cannot ensure if the
   //file exists on the device or not!
   bool checkIfAssetIsAvailableLocally(String assetKey) {
-    return (PreferenceHelper.exists(assetKey) &&
-        File(PreferenceHelper.getString(assetKey)).existsSync());
+    return PreferenceHelper.exists(assetKey) &&
+        File(PreferenceHelper.getString(assetKey)).existsSync();
   }
 
   //Returns the local filepath of the asset from Shared Prefs
@@ -158,7 +162,7 @@ class JourneyRepository extends BaseRepo {
   ) async {
     try {
       final isUp = direction == PAGE_DIRECTION_UP;
-      final limit = 1; // inclusive limit so actually 2 pages are returned
+      const limit = 1; // inclusive limit so actually 2 pages are returned
 
       final startPage = max(isUp ? page : page - limit, 1);
       final endPage = isUp ? page + limit : page;
@@ -166,7 +170,7 @@ class JourneyRepository extends BaseRepo {
       final token = await getBearerToken();
       final queryParams = {"page": page.toString(), "direction": direction};
 
-      return (await (_cacheService.paginatedCachedApi(
+      return (await _cacheService.paginatedCachedApi(
           CacheKeys.JOURNEY_PAGE,
           startPage,
           endPage,
@@ -183,15 +187,16 @@ class JourneyRepository extends BaseRepo {
         List<dynamic>? items = responseData["items"];
 
         List<JourneyPage> journeyPages = [];
-        if (items!.isEmpty)
+        if (items!.isEmpty) {
           return ApiResponse<List<JourneyPage>>(model: [], code: 200);
+        }
 
         for (int i = start; i <= end; i++) {
           journeyPages.add(JourneyPage.fromMap(items[i - start as int], i));
         }
 
         return ApiResponse<List<JourneyPage>>(model: journeyPages, code: 200);
-      }))) as ApiResponse<List<JourneyPage>>;
+      })) as ApiResponse<List<JourneyPage>>;
     } on FetchDataException catch (e) {
       logger.e(e.toString());
       return ApiResponse.withError(e.toString(), 500);
@@ -218,16 +223,17 @@ class JourneyRepository extends BaseRepo {
       print(journeyPages.length);
 
       if (journeyPages.isNotEmpty) {
-        if (journeyPages.length - 1 >= endPage)
+        if (journeyPages.length - 1 >= endPage) {
           return ApiResponse(
               model: [journeyPages[startPage], journeyPages[endPage]],
               code: 200);
-        else {
-          if (page > journeyPages.length)
+        } else {
+          if (page > journeyPages.length) {
             return ApiResponse(model: [], code: 200);
-          else
+          } else {
             return ApiResponse(
                 model: journeyPages.sublist(startPage), code: 200);
+          }
         }
       }
       // final response = await APIService.instance.getData(
@@ -262,8 +268,9 @@ class JourneyRepository extends BaseRepo {
               ), (responseData) {
         List<dynamic>? items = responseData;
 
-        if (items!.isEmpty)
+        if (items!.isEmpty) {
           return ApiResponse<List<JourneyPage>>(model: [], code: 200);
+        }
 
         for (int i = 0; i < items.length; i++) {
           journeyPages.add(JourneyPage.fromMap(items[i], i + 1));

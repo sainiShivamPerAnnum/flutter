@@ -31,32 +31,32 @@ class MarketingEventHandlerService
   bool _isDailyAppBonusClaimInProgress = false;
   bool _isDailyAppBonusClaimed = false;
   bool _showModalsheet = true;
-  bool get showModalsheet => this._showModalsheet;
+  bool get showModalsheet => _showModalsheet;
 
   set showModalsheet(bool value) {
-    this._showModalsheet = value;
+    _showModalsheet = value;
     notifyListeners(MarketingEventsHandlerProperties.DailyAppCheckIn);
   }
 
-  get isDailyAppBonusClaimed => this._isDailyAppBonusClaimed;
+  bool get isDailyAppBonusClaimed => _isDailyAppBonusClaimed;
 
   set isDailyAppBonusClaimed(value) {
-    this._isDailyAppBonusClaimed = value;
+    _isDailyAppBonusClaimed = value;
     notifyListeners(MarketingEventsHandlerProperties.DailyAppCheckIn);
   }
 
-  get isDailyAppBonusClaimInProgress => this._isDailyAppBonusClaimInProgress;
+  bool get isDailyAppBonusClaimInProgress => _isDailyAppBonusClaimInProgress;
 
   set isDailyAppBonusClaimInProgress(value) {
-    this._isDailyAppBonusClaimInProgress = value;
+    _isDailyAppBonusClaimInProgress = value;
     notifyListeners(MarketingEventsHandlerProperties.DailyAppCheckIn);
   }
 
   DailyAppCheckInEventModel? get dailyAppCheckInEventData =>
-      this._dailyAppCheckInEventData;
+      _dailyAppCheckInEventData;
 
   set dailyAppCheckInEventData(DailyAppCheckInEventModel? value) {
-    this._dailyAppCheckInEventData = value;
+    _dailyAppCheckInEventData = value;
     notifyListeners(MarketingEventsHandlerProperties.DailyAppCheckIn);
   }
 
@@ -88,10 +88,10 @@ class MarketingEventHandlerService
 
       // [PREBUZZ]
       if (data.happyHourType == HappyHourType.preBuzz) {
-        locator<BaseUtil>().showHappyHourDialog(campaign.model!);
-        _sharePreference.remove('duringHappyHourVisited');
-        _sharePreference.remove('timStampOfHappyHour');
-        _sharePreference.remove('showedAfterHappyHourDialog');
+        await locator<BaseUtil>().showHappyHourDialog(campaign.model!);
+        await _sharePreference.remove('duringHappyHourVisited');
+        await _sharePreference.remove('timStampOfHappyHour');
+        await _sharePreference.remove('showedAfterHappyHourDialog');
         return;
       }
 
@@ -102,9 +102,9 @@ class MarketingEventHandlerService
       //[Live]
       if (data.happyHourType == HappyHourType.live) {
         if (!_isDuringHappyHourVisited && !AppState.isFirstTime) {
-          locator<BaseUtil>().showHappyHourDialog(campaign.model!);
-          _sharePreference.setBool("duringHappyHourVisited", true);
-          _sharePreference.setString(
+          await locator<BaseUtil>().showHappyHourDialog(campaign.model!);
+          await _sharePreference.setBool("duringHappyHourVisited", true);
+          await _sharePreference.setString(
               'timStampOfHappyHour', DateTime.now().toString());
         }
         showHappyHourBanner = true;
@@ -122,8 +122,8 @@ class MarketingEventHandlerService
       if (DateTime.now().isAfter(endTime) &&
           !_isDuringHappyHourVisited &&
           !alreadyShowed) {
-        locator<BaseUtil>().showHappyHourDialog(campaign.model!);
-        _sharePreference.setBool("showedAfterHappyHourDialog", true);
+        await locator<BaseUtil>().showHappyHourDialog(campaign.model!);
+        await _sharePreference.setBool("showedAfterHappyHourDialog", true);
       }
     }
   }
@@ -179,9 +179,10 @@ class MarketingEventHandlerService
           backgroundColor: Colors.transparent,
           hapticVibrate: true,
           isScrollControlled: true,
-          content: DailyAppCheckInEventModalSheet(),
+          content: const DailyAppCheckInEventModalSheet(),
         );
       }
+      AppState.isRootAvailableForIncomingTaskExecution = true;
     } else {
       _logger.d(
           "DAILY APP BONUS GET: ERROR :: ${dailyAppBonusEventResponse.errorMessage}");
@@ -213,10 +214,11 @@ class MarketingEventHandlerService
     _isDailyAppBonusClaimed = true;
     isDailyAppBonusClaimInProgress = false;
     showModalsheet = false;
-    Future.delayed(Duration(milliseconds: 250), () {
+    Future.delayed(const Duration(milliseconds: 250), () {
       _gtService.showInstantScratchCardView(
         source: GTSOURCE.game,
         onJourney: true,
+        showRatingDialog: false,
       );
     });
   }

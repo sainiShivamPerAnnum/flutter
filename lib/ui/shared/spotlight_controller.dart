@@ -6,7 +6,6 @@ import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/rewards/instant_scratch_card/gt_instant_view.dart';
-import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/show_case_key.dart';
@@ -53,15 +52,15 @@ class SpotLightController {
     _stream.distinct().listen(_listener);
   }
 
-  void _listener(List<UserFlow> flow) async {
-    BaseUtil.openDialog(
+  Future<void> _listener(List<UserFlow> flow) async {
+    unawaited(BaseUtil.openDialog(
       isBarrierDismissible: false,
       content: Container(),
       barrierColor: Colors.transparent,
       addToScreenStack: true,
-    );
-    await Future.delayed(Duration(seconds: 1));
-    AppState.backButtonDispatcher!.didPopRoute();
+    ));
+    await Future.delayed(const Duration(seconds: 1));
+    unawaited(AppState.backButtonDispatcher!.didPopRoute());
 
     isSkipButtonClicked = false;
     switch (flow.last) {
@@ -213,11 +212,7 @@ class SpotLightController {
   void startQuickTour() async {
     if (AppState.screenStack.last != ScreenItem.dialog &&
         AppState.screenStack.last != ScreenItem.modalsheet) {
-      AppState.delegate!.appState.setCurrentTabIndex = locator<RootController>()
-          .navItems
-          .values
-          .toList()
-          .indexWhere((element) => element == RootController.saveNavBarItem);
+      AppState.delegate!.parseRoute(Uri.parse('save'));
       SpotLightController.instance.isQuickTour = true;
       SpotLightController.instance.init();
 

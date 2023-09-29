@@ -56,8 +56,8 @@ class CouponModel {
       'id': id,
       'code': code,
       'description': description,
-      'expiresOn': expiresOn!.toMap(),
-      'createdOn': createdOn!.toMap(),
+      'expiresOn': expiresOn?.toMap(),
+      'createdOn': createdOn?.toMap(),
       'maxUse': maxUse,
       'priority': priority,
       'minPurchase': minPurchase,
@@ -67,7 +67,7 @@ class CouponModel {
 
   factory CouponModel.fromMap(Map<String, dynamic> map) {
     return CouponModel(
-      id: map['id'] ?? '',
+      id: map['id'].toString() ?? '',
       code: map['code'] ?? '',
       description: map['description'] ?? '',
       expiresOn: TimestampModel.fromMap(map['expiresOn']),

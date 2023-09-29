@@ -20,6 +20,8 @@ import 'package:in_app_review/in_app_review.dart';
 class FelloRatingDialog extends StatefulWidget {
   static const MAX_DAILOG_SHOW_COUNT = 3;
 
+  const FelloRatingDialog({Key? key}) : super(key: key);
+
   @override
   State<FelloRatingDialog> createState() => _FelloRatingDialogState();
 }
@@ -27,11 +29,11 @@ class FelloRatingDialog extends StatefulWidget {
 class _FelloRatingDialogState extends State<FelloRatingDialog> {
   double rating = 0;
   final CustomLogger? logger = locator<CustomLogger>();
-  final AnalyticsService? _analyticsService = locator<AnalyticsService>();
+  final AnalyticsService _analyticsService = locator<AnalyticsService>();
   bool showEmptyRatingError = false;
   bool showButtons = true;
 
-  showLoading(bool value) {
+  void showLoading(bool value) {
     setState(() {
       showButtons = !value;
     });
@@ -75,9 +77,9 @@ class _FelloRatingDialogState extends State<FelloRatingDialog> {
               glowColor: UiConstants.tertiarySolid.withOpacity(0.5),
               unratedColor: Colors.grey.withOpacity(0.5),
               itemCount: 5,
-              itemPadding: EdgeInsets.symmetric(horizontal: 4.0),
+              itemPadding: const EdgeInsets.symmetric(horizontal: 4.0),
               itemSize: SizeConfig.screenWidth! / 10,
-              itemBuilder: (context, _) => Icon(
+              itemBuilder: (context, _) => const Icon(
                 Icons.star,
                 color: UiConstants.tertiarySolid,
               ),
@@ -99,25 +101,19 @@ class _FelloRatingDialogState extends State<FelloRatingDialog> {
           SizedBox(height: SizeConfig.padding12),
           !showButtons
               ? Container(
-                  alignment: Alignment.center,
+            alignment: Alignment.center,
                   height: SizeConfig.padding64,
-                  child: Container(
-                    child: CircularProgressIndicator(
-                      strokeWidth: 2,
-                      color: UiConstants.primaryColor,
-                      backgroundColor: UiConstants.tertiarySolid,
-                    ),
+                  child: const CircularProgressIndicator(
+                    strokeWidth: 2,
+                    color: UiConstants.primaryColor,
+                    backgroundColor: UiConstants.tertiarySolid,
                   ),
                 )
               : Column(
                   children: [
-                    Container(
+                    SizedBox(
                       width: SizeConfig.screenWidth,
                       child: FelloButtonLg(
-                        child: Text(
-                          locale.rate,
-                          style: TextStyles.body3.bold.colour(Colors.white),
-                        ),
                         color: UiConstants.primaryColor,
                         height: SizeConfig.padding54,
                         onPressed: () async {
@@ -132,11 +128,12 @@ class _FelloRatingDialogState extends State<FelloRatingDialog> {
                               eventName: "App Rating",
                               properties: {"rating": rating});
                           try {
-                            if (rating > 3)
+                            if (rating > 3) {
                               PreferenceHelper.setBool(
                                 PreferenceHelper.CACHE_RATING_IS_RATED,
                                 true,
                               );
+                            }
                           } catch (e) {
                             showLoading(false);
                             logger!.e(e.toString());
@@ -158,12 +155,13 @@ class _FelloRatingDialogState extends State<FelloRatingDialog> {
                               }
                             } catch (e) {
                               logger!.e(e.toString());
-                              if (Platform.isAndroid)
+                              if (Platform.isAndroid) {
                                 BaseUtil.launchUrl(
                                     'https://play.google.com/store/apps/details?id=in.fello.felloapp');
-                              else
+                              } else {
                                 BaseUtil.launchUrl(
                                     'https://apps.apple.com/in/app/fello-save-play-win/id1558445254');
+                              }
                             }
                           } else {
                             BaseUtil.showPositiveAlert(locale.feedBackGreeting1,
@@ -171,21 +169,25 @@ class _FelloRatingDialogState extends State<FelloRatingDialog> {
                           }
                           AppState.backButtonDispatcher!.didPopRoute();
                         },
+                        child: Text(
+                          locale.rate,
+                          style: TextStyles.body3.bold.colour(Colors.white),
+                        ),
                       ),
                     ),
                     SizedBox(height: SizeConfig.padding12),
-                    Container(
+                    SizedBox(
                       width: SizeConfig.screenWidth,
                       child: FelloButtonLg(
-                        child: Text(
-                          locale.mayBeLater,
-                          style: TextStyles.body3.bold,
-                        ),
                         color: Colors.grey.withOpacity(0.5),
                         height: SizeConfig.padding54,
                         onPressed: () async {
                           AppState.backButtonDispatcher!.didPopRoute();
                         },
+                        child: Text(
+                          locale.mayBeLater,
+                          style: TextStyles.body3.bold,
+                        ),
                       ),
                     ),
                   ],

@@ -1,7 +1,14 @@
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/enums/app_config_keys.dart';
+import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/asset_options_model.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/ui/pages/finance/amount_chip.dart';
+import 'package:felloapp/ui/pages/finance/augmont/gold_buy/widgets/view_breakdown.dart';
+import 'package:felloapp/ui/pages/finance/lendbox/deposit/lendbox_buy_vm.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/list_utils.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -28,6 +35,8 @@ class AmountInputView extends StatefulWidget {
   final Function(int val) onAmountChange;
   final bool readOnly;
   final void Function() onTap;
+  final LendboxBuyViewModel? model;
+  final bool isbuyView;
 
   const AmountInputView(
       {Key? key,
@@ -43,7 +52,9 @@ class AmountInputView extends StatefulWidget {
       this.bestChipIndex = 1,
       this.notice,
       required this.readOnly,
-      required this.onTap})
+      required this.onTap,
+      this.isbuyView = true,
+      this.model})
       : super(key: key);
 
   @override
@@ -51,39 +62,63 @@ class AmountInputView extends StatefulWidget {
 }
 
 class _AmountInputViewState extends State<AmountInputView> {
-  double _fieldWidth = 0;
-  int _selectedIndex = 1;
-
   @override
   void initState() {
     super.initState();
-    if (widget.chipAmounts.isNotEmpty) {
-      _selectedIndex = widget.chipAmounts.firstWhere((e) => e.best).order;
-    } else {
-      widget.amountController!.text = '1';
-    }
-    updateFieldWidth();
+    widget.model?.updateFieldWidth();
   }
 
-  void updateFieldWidth() {
-    int n = widget.amountController!.text.length;
-    if (n == 0) n++;
-    _fieldWidth = (SizeConfig.padding40 * n.toDouble());
-    widget.amountController!.selection = TextSelection.fromPosition(
-        TextPosition(offset: widget.amountController!.text.length));
+  List lendboxDetails = AppConfig.getValue(AppConfigKey.lendbox);
+
+  String getString() {
+    switch (widget.model!.floAssetType) {
+      case Constants.ASSET_TYPE_FLO_FIXED_6:
+        return lendboxDetails[0]['minAmountText'];
+
+      case Constants.ASSET_TYPE_FLO_FIXED_3:
+        return lendboxDetails[1]['minAmountText'];
+
+      case Constants.ASSET_TYPE_FLO_FELXI:
+        return locator<UserService>()
+                .userSegments
+                .contains(Constants.US_FLO_OLD)
+            ? lendboxDetails[2]['minAmountText']
+            : lendboxDetails[3]['minAmountText'];
+      default:
+        return "";
+    }
+  }
+
+  String getSubString() {
+    switch (widget.model!.floAssetType) {
+      case Constants.ASSET_TYPE_FLO_FIXED_6:
+        return lendboxDetails[0]['maturityPeriodText'];
+
+      case Constants.ASSET_TYPE_FLO_FIXED_3:
+        return lendboxDetails[1]['maturityPeriodText'];
+
+      case Constants.ASSET_TYPE_FLO_FELXI:
+        return locator<UserService>()
+                .userSegments
+                .contains(Constants.US_FLO_OLD)
+            ? lendboxDetails[2]['maturityPeriodText']
+            : lendboxDetails[3]['maturityPeriodText'];
+      default:
+        return "";
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     final currentAmt = double.tryParse(widget.amountController!.text) ?? 0;
     if (currentAmt == null) widget.amountController!.text = "0.0";
-    final AnalyticsService? _analyticsService = locator<AnalyticsService>();
+    final AnalyticsService analyticsService = locator<AnalyticsService>();
     return Column(
       children: [
         Container(
           padding: EdgeInsets.symmetric(
             horizontal: SizeConfig.padding12,
-            vertical: SizeConfig.padding20,
+            vertical: SizeConfig.padding16,
           ),
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
@@ -112,19 +147,21 @@ class _AmountInputViewState extends State<AmountInputView> {
                   crossAxisAlignment: CrossAxisAlignment.center,
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
-                    Text(
-                      "₹",
-                      style: TextStyles.rajdhaniB.title0.colour(
-                        widget.amountController!.text == "0"
-                            ? UiConstants.kTextColor2
-                            : UiConstants.kTextColor,
+                    Padding(
+                      padding: const EdgeInsets.only(bottom: 8),
+                      child: Text(
+                        "₹",
+                        style: TextStyles.rajdhaniB.title50.colour(
+                          widget.amountController!.text == "0"
+                              ? UiConstants.kTextColor2
+                              : UiConstants.kTextColor,
+                        ),
                       ),
                     ),
-                    SizedBox(width: SizeConfig.padding10),
                     AnimatedContainer(
-                      duration: Duration(seconds: 0),
+                      duration: const Duration(seconds: 0),
                       curve: Curves.easeIn,
-                      width: _fieldWidth,
+                      width: widget.model?.fieldWidth ?? 0.0,
                       child: TextFormField(
                         autofocus: true,
                         showCursor: true,
@@ -139,18 +176,18 @@ class _AmountInputViewState extends State<AmountInputView> {
                           return null;
                         },
                         maxLength: widget.maxAmount.toString().length,
-                        keyboardType: TextInputType.numberWithOptions(
+                        keyboardType: const TextInputType.numberWithOptions(
                           decimal: true,
                         ),
                         inputFormatters: [
                           FilteringTextInputFormatter.digitsOnly,
                         ],
                         onChanged: (String val) {
-                          setState(() {
-                            this.updateFieldWidth();
-                          });
+                          widget.model?.onValueChanged(val);
+
+                          // setState(updateFieldWidth);
                         },
-                        decoration: InputDecoration(
+                        decoration: const InputDecoration(
                           focusedBorder: InputBorder.none,
                           border: InputBorder.none,
                           enabledBorder: InputBorder.none,
@@ -160,7 +197,7 @@ class _AmountInputViewState extends State<AmountInputView> {
                           counter: Offstage(),
                         ),
                         textAlign: TextAlign.center,
-                        style: TextStyles.rajdhaniB.title68.colour(
+                        style: TextStyles.rajdhaniB.title50.colour(
                           widget.amountController!.text == "0"
                               ? UiConstants.kTextColor2
                               : UiConstants.kTextColor,
@@ -170,18 +207,69 @@ class _AmountInputViewState extends State<AmountInputView> {
                   ],
                 ),
               ),
-              if (currentAmt > widget.maxAmount)
+              if (widget.model != null)
                 Padding(
-                  padding: EdgeInsets.symmetric(vertical: SizeConfig.padding4),
+                  padding: EdgeInsets.only(bottom: SizeConfig.padding4),
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    mainAxisSize: MainAxisSize.min,
+                    children: [
+                      Text(
+                        widget.model?.showHappyHourSubtitle() ?? "",
+                        style: TextStyles.sourceSans.body3.bold
+                            .colour(UiConstants.primaryColor),
+                      ),
+                      if (widget.model?.showInfoIcon ?? false)
+                        SizedBox(
+                          width: SizeConfig.padding4,
+                        ),
+                      if (widget.model?.showInfoIcon ?? false)
+                        GestureDetector(
+                          onTap: () {
+                            analyticsService.track(
+                                eventName:
+                                    AnalyticsEvents.tambolaTicketInfoTapped,
+                                properties: {
+                                  'Ticket count':
+                                      widget.model?.numberOfTambolaTickets,
+                                  'happy hour ticket count':
+                                      widget.model?.happyHourTickets,
+                                });
+
+                            BaseUtil.openModalBottomSheet(
+                              isBarrierDismissible: true,
+                              addToScreenStack: true,
+                              // backgroundColor: const Color(0xff1A1A1A),
+                              content: FloBreakdownView(
+                                model: widget.model!,
+                                showPsp: false,
+                              ),
+
+                              hapticVibrate: true,
+                              isScrollControlled: true,
+                            );
+                          },
+                          child: const Icon(
+                            Icons.info_outline,
+                            size: 20,
+                            color: Color(0xff62E3C4),
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              if (widget.model?.showMaxCapText)
+                Padding(
+                  padding: EdgeInsets.symmetric(vertical: SizeConfig.padding1),
                   child: Text(
                     widget.maxAmountMsg,
                     style: TextStyles.sourceSans.body4.bold
-                        .colour(Colors.red[400]),
+                        .colour(UiConstants.primaryColor),
                   ),
                 ),
               if (currentAmt < widget.minAmount)
                 Padding(
-                  padding: EdgeInsets.symmetric(vertical: SizeConfig.padding4),
+                  padding: EdgeInsets.symmetric(vertical: SizeConfig.padding1),
                   child: Text(
                     widget.minAmountMsg,
                     style: TextStyles.sourceSans.body4.bold
@@ -195,28 +283,58 @@ class _AmountInputViewState extends State<AmountInputView> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: widget.chipAmounts
-              .mapIndexed((item, i) => AmountChip(
-                  isActive: _selectedIndex == i,
+              .mapIndexed(
+                (item, i) => AmountChipV2(
+                  isActive: widget.model?.lastTappedChipIndex == i,
                   index: i,
                   amt: item.value,
                   isBest: item.best,
-                  onClick: (amt) {
-                    _analyticsService!.track(
-                        eventName: AnalyticsEvents.suggestedAmountTapped,
-                        properties: {
-                          'order': i,
-                          'Amount': amt,
-                          'Best flag': item.best
-                        });
-                    setState(() {
-                      _selectedIndex = i;
-                      widget.amountController!.text =
-                          widget.chipAmounts[i].value.toString();
-                      this.updateFieldWidth();
-                    });
-                  }))
+                  onClick: (index) {
+                    widget.model?.onChipClick(index);
+                  },
+                ),
+              )
               .toList(),
         ),
+        SizedBox(
+          height: SizeConfig.padding16,
+        ),
+        if (widget.isbuyView)
+          Container(
+            // width: SizeConfig.screenWidth! * 0.72,
+            decoration: BoxDecoration(
+              color: UiConstants.kArrowButtonBackgroundColor.withOpacity(0.4),
+              borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+            ),
+            // margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding64),
+            height: SizeConfig.padding38,
+            padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding16),
+            child: Row(
+              mainAxisSize: MainAxisSize.min,
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Padding(
+                  padding: EdgeInsets.only(right: SizeConfig.padding20),
+                  child: Text(getString(),
+                      style: TextStyles.sourceSans.body3
+                          .colour(Colors.white.withOpacity(0.8))),
+                ),
+                VerticalDivider(
+                  color: UiConstants.kModalSheetSecondaryBackgroundColor
+                      .withOpacity(0.2),
+                  width: 4,
+                ),
+                Padding(
+                  padding: EdgeInsets.only(left: SizeConfig.padding20),
+                  child: Text(
+                    getSubString(),
+                    style: TextStyles.sourceSans.body3
+                        .colour(Colors.white.withOpacity(0.8)),
+                  ),
+                ),
+              ],
+            ),
+          )
       ],
     );
   }

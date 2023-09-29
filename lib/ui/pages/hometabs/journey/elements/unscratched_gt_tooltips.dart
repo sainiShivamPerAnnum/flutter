@@ -1,4 +1,5 @@
 import 'package:felloapp/core/enums/journey_service_enum.dart';
+import 'package:felloapp/core/model/scratch_card_model.dart';
 import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
@@ -31,7 +32,10 @@ class PrizeToolTips extends StatelessWidget {
                     children:
                         List.generate(model.completedMilestoneList.length, (i) {
                       final milestone = model.completedMilestoneList[i];
-                      final scratchCard = model.completedMilestonePrizeList[i];
+                      final ScratchCard? scratchCard =
+                          model.completedMilestonePrizeList.length >= i + 1
+                              ? model.completedMilestonePrizeList[i]
+                              : null;
                       return (scratchCard != null &&
                               scratchCard.isRewarding! &&
                               scratchCard.redeemedTimestamp ==

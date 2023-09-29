@@ -1,11 +1,15 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/transaction_state_enum.dart';
+import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/back_button_actions.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_buy/augmont_buy_vm.dart';
-import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/assets.dart' as a;
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -16,7 +20,8 @@ import 'package:lottie/lottie.dart';
 
 class GoldBuyLoadingView extends StatelessWidget {
   final GoldBuyViewModel model;
-  GoldBuyLoadingView({required this.model});
+
+  GoldBuyLoadingView({super.key, required this.model});
 
   final AugmontTransactionService? _augTxnService =
       locator<AugmontTransactionService>();
@@ -28,7 +33,7 @@ class GoldBuyLoadingView extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
-        SizedBox(height: SizeConfig.padding32),
+        SizedBox(height: SizeConfig.fToolBarHeight / 2),
         Text(locale.digitalGoldText, style: TextStyles.rajdhaniSB.body2),
         SizedBox(
           height: SizeConfig.padding12,
@@ -39,7 +44,7 @@ class GoldBuyLoadingView extends StatelessWidget {
           style: TextStyles.sourceSans.body4.colour(UiConstants.kTextColor3),
         ),
         Expanded(
-          child: Lottie.asset(Assets.goldDepostLoadingLottie,
+          child: Lottie.network(a.Assets.goldDepostLoadingLottie,
               height: SizeConfig.screenHeight! * 0.7),
         ),
         Column(
@@ -82,8 +87,16 @@ class GoldBuyLoadingView extends StatelessWidget {
                 if (_augTxnService!.currentTransactionState !=
                     TransactionState.ongoing) return;
                 _augTxnService!.pollingPeriodicTimer?.cancel();
-
+                _augTxnService!.isGoldBuyInProgress = false;
                 _augTxnService!.currentTransactionState = TransactionState.idle;
+                locator<BackButtonActions>().isTransactionCancelled = false;
+                AppState.onTap = null;
+                AppState.amt = 0;
+                AppState.isRepeated = false;
+                AppState.type = null;
+                AppState.isTxnProcessing = true;
+                unawaited(locator<TxnHistoryService>()
+                    .updateTransactions(InvestmentType.AUGGOLD99));
                 log("Screen Stack:${AppState.screenStack.toString()}");
                 AppState.unblockNavigation();
                 log("Screen Stack:${AppState.screenStack.toString()}");
@@ -113,6 +126,7 @@ class GoldBuyLoadingView extends StatelessWidget {
 
   showTransactionPendingDialog() {
     S locale = locator<S>();
+
     BaseUtil.openDialog(
       addToScreenStack: true,
       hapticVibrate: true,
@@ -122,6 +136,13 @@ class GoldBuyLoadingView extends StatelessWidget {
         subtitle: locale.txnDelay,
         duration: '15 ' + locale.minutes,
       ),
-    );
+    ).then((value) {
+      locator<BackButtonActions>().isTransactionCancelled = false;
+      AppState.onTap = null;
+      AppState.amt = 0;
+      AppState.isTxnProcessing = true;
+      AppState.isRepeated = false;
+      AppState.type = null;
+    });
   }
 }

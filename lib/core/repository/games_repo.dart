@@ -16,12 +16,18 @@ class GameRepo extends BaseRepo {
 
   List<GameModel>? _allgames;
   List<GameModel>? games;
+
   List<GameModel>? get allgames => this._allgames;
+
   set allgames(List<GameModel>? value) => this._allgames = value;
 
   late GameTiers _gameTiers;
 
   GameTiers get gameTier => _gameTiers;
+
+  set gameTiers(GameTiers value) {
+    _gameTiers = value;
+  }
 
   Future<ApiResponse<List<GameModel>>> getGames() async {
     try {
@@ -74,8 +80,8 @@ class GameRepo extends BaseRepo {
         token: token,
       );
 
-      _gameTiers = GameTiers.fromJson(response);
-      return ApiResponse<GameTiers>(model: _gameTiers, code: 200);
+      gameTiers = GameTiers.fromJson(response);
+      return ApiResponse<GameTiers>(model: gameTier, code: 200);
     } catch (e) {
       logger!.e("Unable to fetch games ${e.toString()}");
 

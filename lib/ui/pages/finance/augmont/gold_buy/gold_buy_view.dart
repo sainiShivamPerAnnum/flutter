@@ -6,7 +6,6 @@ import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/navigator/back_button_actions.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
-import 'package:felloapp/ui/pages/finance/augmont/gold_buy/augmont_buy_vm.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_buy/gold_buy_input_view.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_buy/gold_buy_loading_view.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_buy/gold_buy_success_view.dart';
@@ -19,12 +18,20 @@ import 'package:flutter/services.dart';
 import 'package:flutter_windowmanager/flutter_windowmanager.dart';
 import 'package:provider/provider.dart';
 
+import 'augmont_buy_vm.dart';
+
 class GoldBuyView extends StatefulWidget {
   final int? amount;
   final bool skipMl;
+  final double? gms;
   final OnAmountChanged onChanged;
+
   const GoldBuyView(
-      {Key? key, this.amount, this.skipMl = false, required this.onChanged})
+      {Key? key,
+      this.amount,
+      this.skipMl = false,
+      required this.onChanged,
+      this.gms})
       : super(key: key);
 
   @override
@@ -37,32 +44,39 @@ class _GoldBuyViewState extends State<GoldBuyView>
       locator<AugmontTransactionService>();
   AppLifecycleState? appLifecycleState;
   final iosScreenShotChannel = const MethodChannel('secureScreenshotChannel');
+
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       _txnService.currentTxnGms = 0.0;
       _txnService.currentTxnAmount = 0.0;
       _txnService.currentTxnOrderId = '';
       _txnService.currentTxnScratchCardCount = 0;
       _txnService.currentTxnTambolaTicketsCount = 0;
+      _txnService.isIOSTxnInProgress = false;
+      _txnService.isGoldBuyInProgress = false;
+
       _txnService.currentTransactionState = TransactionState.idle;
     });
-    WidgetsBinding.instance!.addObserver(this);
+
+    WidgetsBinding.instance.addObserver(this);
   }
 
   @override
   void dispose() {
-    WidgetsBinding.instance!.removeObserver(this);
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     appLifecycleState = state;
-    if (appLifecycleState == AppLifecycleState.resumed) {
-      if (!_txnService.isIOSTxnInProgress) return;
+    if (appLifecycleState == AppLifecycleState.resumed &&
+        Platform.isIOS &&
+        _txnService.isIOSTxnInProgress) {
       _txnService.isIOSTxnInProgress = false;
+      _txnService.currentTransactionState = TransactionState.ongoing;
       _txnService.initiatePolling();
     }
     super.didChangeAppLifecycleState(state);
@@ -71,7 +85,7 @@ class _GoldBuyViewState extends State<GoldBuyView>
   @override
   Widget build(BuildContext context) {
     return Consumer<AugmontTransactionService>(
-      builder: (transactionContext, txnService, transactionProperty) {
+      builder: (transactionContext, txnService, _) {
         return AnimatedContainer(
           width: double.infinity,
           height: _getHeight(txnService),
@@ -101,11 +115,12 @@ class _GoldBuyViewState extends State<GoldBuyView>
                   );
                 },
                 child: BaseView<GoldBuyViewModel>(
-                  onModelReady: (model) =>
-                      model.init(widget.amount, widget.skipMl, this),
+                  onModelReady: (model) => model.init(
+                      widget.amount, widget.skipMl, this, widget.gms),
                   builder: (ctx, model, child) {
-                    if (model.state == ViewState.Busy)
-                      return Center(child: FullScreenLoader());
+                    if (model.state == ViewState.Busy) {
+                      return const Center(child: FullScreenLoader());
+                    }
                     _secureScreenshots(txnService);
 
                     return _getView(txnService, model);
@@ -123,7 +138,7 @@ class _GoldBuyViewState extends State<GoldBuyView>
       AugmontTransactionService txnService, GoldBuyViewModel model) {
     if (txnService.currentTransactionState == TransactionState.idle) {
       return GoldBuyInputView(
-        // amount: widget.amount,
+        amount: widget.amount,
         skipMl: widget.skipMl,
         model: model,
         augTxnService: txnService,
@@ -131,7 +146,7 @@ class _GoldBuyViewState extends State<GoldBuyView>
     } else if (txnService.currentTransactionState == TransactionState.ongoing) {
       return GoldBuyLoadingView(model: model);
     } else if (txnService.currentTransactionState == TransactionState.success) {
-      return GoldBuySuccessView();
+      return const GoldBuySuccessView();
     }
 
     return GoldBuyLoadingView(model: model);
@@ -139,9 +154,9 @@ class _GoldBuyViewState extends State<GoldBuyView>
 
   double? _getHeight(txnService) {
     if (txnService.currentTransactionState == TransactionState.idle) {
-      return SizeConfig.screenHeight! * 0.95;
+      return SizeConfig.screenHeight!;
     } else if (txnService.currentTransactionState == TransactionState.ongoing) {
-      return SizeConfig.screenHeight! * 0.95;
+      return SizeConfig.screenHeight!;
     } else if (txnService.currentTransactionState == TransactionState.success) {
       return SizeConfig.screenHeight;
     }

@@ -68,15 +68,61 @@ class WebGameView extends StatelessWidget {
   }
 }
 
-class GameView extends StatelessWidget {
+class GameView extends StatefulWidget {
   final bool inLandscapeMode;
   final String initialUrl;
-  int exitCounter = 0;
   WebGameViewModel model;
+
   GameView(
-      {required this.inLandscapeMode,
+      {super.key,
+      required this.inLandscapeMode,
       required this.initialUrl,
       required this.model});
+
+  @override
+  State<GameView> createState() => _GameViewState();
+}
+
+class _GameViewState extends State<GameView> {
+  int exitCounter = 0;
+
+  WebViewController? controller;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = WebViewController()
+      ..setBackgroundColor(Colors.black)
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..addJavaScriptChannel(
+        'Print',
+        onMessageReceived: (message) {
+          log(message.message);
+          exitCounter++;
+          if (message.message == 'insufficient tokens' && exitCounter == 1) {
+            widget.model.updateFlcBalance();
+
+            locator<UserStatsRepo>().getGameStats();
+            BaseUtil.openModalBottomSheet(
+              addToScreenStack: true,
+              backgroundColor: UiConstants.gameCardColor,
+              content: WantMoreTicketsModalSheet(
+                isInsufficientBalance: true,
+              ),
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(SizeConfig.roundness24),
+                topRight: Radius.circular(SizeConfig.roundness24),
+              ),
+              hapticVibrate: true,
+              isScrollControlled: true,
+              isBarrierDismissible: true,
+            );
+          }
+        },
+      )
+      ..loadRequest(Uri.parse(widget.initialUrl));
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -86,40 +132,8 @@ class GameView extends StatelessWidget {
             margin: EdgeInsets.symmetric(
                 horizontal:
                     Platform.isIOS ? MediaQuery.of(context).padding.right : 0),
-            child: WebView(
-              initialUrl: initialUrl,
-              javascriptMode: JavascriptMode.unrestricted,
-              javascriptChannels: Set.from(
-                [
-                  JavascriptChannel(
-                    name: 'Print',
-                    onMessageReceived: (JavascriptMessage message) {
-                      log(message.message);
-                      exitCounter++;
-                      if (message.message == 'insufficient tokens' &&
-                          exitCounter == 1) {
-                        model.updateFlcBalance();
-
-                        locator<UserStatsRepo>().getGameStats();
-                        BaseUtil.openModalBottomSheet(
-                          addToScreenStack: true,
-                          backgroundColor: UiConstants.gameCardColor,
-                          content: WantMoreTicketsModalSheet(
-                            isInsufficientBalance: true,
-                          ),
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(SizeConfig.roundness24),
-                            topRight: Radius.circular(SizeConfig.roundness24),
-                          ),
-                          hapticVibrate: true,
-                          isScrollControlled: true,
-                          isBarrierDismissible: true,
-                        );
-                      }
-                    },
-                  )
-                ],
-              ),
+            child: WebViewWidget(
+              controller: controller!,
             ),
           ),
           // inLandscapeMode
@@ -127,7 +141,7 @@ class GameView extends StatelessWidget {
           Positioned(
             top: SizeConfig.padding16,
             right: SizeConfig.padding16,
-            child: Close(inLandScape: inLandscapeMode),
+            child: Close(inLandScape: widget.inLandscapeMode),
           )
           // : Positioned(
           //     bottom: SizeConfig.padding16,
@@ -142,11 +156,13 @@ class GameView extends StatelessWidget {
 
 class Close extends StatelessWidget {
   final bool inLandScape;
-  Close({this.inLandScape = false});
+
+  const Close({super.key, this.inLandScape = false});
+
   @override
   Widget build(BuildContext context) {
     if (MediaQuery.of(context).padding.top != 0 && inLandScape) {
-      Future.delayed(Duration(seconds: 2), () {
+      Future.delayed(const Duration(seconds: 2), () {
         SystemChrome.setEnabledSystemUIMode(SystemUiMode.manual,
             overlays: [SystemUiOverlay.bottom]);
       });
@@ -154,14 +170,14 @@ class Close extends StatelessWidget {
     return SafeArea(
       child: CircleAvatar(
         radius: SizeConfig.padding16,
-        backgroundImage: CachedNetworkImageProvider(
+        backgroundImage: const CachedNetworkImageProvider(
             "https://firebasestorage.googleapis.com/v0/b/fello-dev-station.appspot.com/o/test%2Fgame-close-icon.png?alt=media&token=1d52f5d5-edca-4e0c-9b06-3e97aa8001ac"),
         backgroundColor: Colors.red.withOpacity(0.5),
         child: Opacity(
           opacity: 0,
           child: IconButton(
             onPressed: AppState.backButtonDispatcher!.didPopRoute,
-            icon: Icon(
+            icon: const Icon(
               Icons.close,
               color: Colors.white,
             ),

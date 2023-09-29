@@ -1,18 +1,23 @@
+import 'dart:async';
+import 'dart:developer';
 import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/amount_chips_model.dart';
 import 'package:felloapp/core/model/sub_combos_model.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/modalsheets/autosave_combo_input_modalsheet.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -32,6 +37,7 @@ class AutosaveProcessViewModel extends BaseViewModel {
   final AnalyticsService _analyticsService = locator<AnalyticsService>();
   final ScratchCardService _gtService = ScratchCardService();
   final SubService _subService = locator<SubService>();
+  final UserService _userService = locator<UserService>();
   final S locale = locator<S>();
 
   List<AmountChipsModel> augDailyChips = defaultAmountChipList;
@@ -46,14 +52,20 @@ class AutosaveProcessViewModel extends BaseViewModel {
   List<SubComboModel> weeklyCombos = defaultSipComboList;
   List<SubComboModel> monthlyCombos = defaultSipComboList;
 
-  MaxMin dailyMaxMinInfo =
-      MaxMin(min: MinAsset(AUGGOLD99: 50, LENDBOXP2P: 100), max: 500);
+  MaxMin dailyMaxMinInfo = MaxMin(
+    min: MaxMinAsset(AUGGOLD99: 50, LENDBOXP2P: 100),
+    max: MaxMinAsset(AUGGOLD99: 5000, LENDBOXP2P: 10000),
+  );
 
-  MaxMin weeklyMaxMinInfo =
-      MaxMin(min: MinAsset(AUGGOLD99: 50, LENDBOXP2P: 100), max: 500);
+  MaxMin weeklyMaxMinInfo = MaxMin(
+    min: MaxMinAsset(AUGGOLD99: 50, LENDBOXP2P: 100),
+    max: MaxMinAsset(AUGGOLD99: 5000, LENDBOXP2P: 10000),
+  );
 
-  MaxMin monthlyMaxMinInfo =
-      MaxMin(min: MinAsset(AUGGOLD99: 50, LENDBOXP2P: 100), max: 500);
+  MaxMin monthlyMaxMinInfo = MaxMin(
+    min: MaxMinAsset(AUGGOLD99: 50, LENDBOXP2P: 100),
+    max: MaxMinAsset(AUGGOLD99: 5000, LENDBOXP2P: 10000),
+  );
 
   late List<ApplicationMeta> appsList;
   ApplicationMeta? _selectedUpiApp;
@@ -66,17 +78,17 @@ class AutosaveProcessViewModel extends BaseViewModel {
   String? minMaxCapString;
   bool isComboSelected = false;
 
-  int get totalInvestingAmount => this._totalInvestingAmount;
+  int get totalInvestingAmount => _totalInvestingAmount;
 
   set totalInvestingAmount(int value) {
-    this._totalInvestingAmount = value;
+    _totalInvestingAmount = value;
     notifyListeners();
   }
 
-  int get selectedAssetOption => this._selectedAssetOption;
+  int get selectedAssetOption => _selectedAssetOption;
 
   set selectedAssetOption(int value) {
-    this._selectedAssetOption = value;
+    _selectedAssetOption = value;
     if (value == 0) {
       floAmountFieldController!.text = '0';
       goldAmountFieldController!.text = '0';
@@ -84,33 +96,34 @@ class AutosaveProcessViewModel extends BaseViewModel {
       onComboTapped(2);
       comboController = PageController();
     } else if (value == 1) {
-      floAmountFieldController!.text = '100';
+      floAmountFieldController!.text = '250';
       goldAmountFieldController!.text = '0';
-      _totalInvestingAmount = 100;
+      _totalInvestingAmount = 250;
     } else {
       floAmountFieldController!.text = '0';
-      goldAmountFieldController!.text = '100';
-      _totalInvestingAmount = 100;
+      goldAmountFieldController!.text = '250';
+      _totalInvestingAmount = 250;
     }
     notifyListeners();
   }
 
-  ApplicationMeta? get selectedUpiApp => this._selectedUpiApp;
+  ApplicationMeta? get selectedUpiApp => _selectedUpiApp;
 
   set selectedUpiApp(value) {
-    this._selectedUpiApp = value;
+    _selectedUpiApp = value;
     notifyListeners();
   }
 
   int _currentPage = 0, minValue = 25;
+
   // bool _isDaily = true;
 
   FREQUENCY _selectedFrequency = FREQUENCY.daily;
 
-  FREQUENCY get selectedFrequency => this._selectedFrequency;
+  FREQUENCY get selectedFrequency => _selectedFrequency;
 
   set selectedFrequency(FREQUENCY value) {
-    this._selectedFrequency = value;
+    _selectedFrequency = value;
     deselectOtherComboIfAny(notify: false);
     switch (value) {
       case FREQUENCY.daily:
@@ -166,7 +179,7 @@ class AutosaveProcessViewModel extends BaseViewModel {
         }
         break;
     }
-    print("ComboModel : $customComboModel");
+    debugPrint("ComboModel : $customComboModel");
     totalInvestingAmount =
         (int.tryParse(floAmountFieldController?.text ?? '') ?? 0) +
             (int.tryParse(goldAmountFieldController?.text ?? '') ?? 0);
@@ -182,6 +195,7 @@ class AutosaveProcessViewModel extends BaseViewModel {
   }
 
   int get currentPage => _currentPage;
+
   set currentPage(int val) {
     _currentPage = val;
     notifyListeners();
@@ -189,11 +203,10 @@ class AutosaveProcessViewModel extends BaseViewModel {
 
   bool _isSubscriptionCreationInProgress = false;
 
-  get isSubscriptionCreationInProgress =>
-      this._isSubscriptionCreationInProgress;
+  get isSubscriptionCreationInProgress => _isSubscriptionCreationInProgress;
 
   set isSubscriptionCreationInProgress(value) {
-    this._isSubscriptionCreationInProgress = value;
+    _isSubscriptionCreationInProgress = value;
     notifyListeners();
   }
 
@@ -216,26 +229,33 @@ class AutosaveProcessViewModel extends BaseViewModel {
     }
     _subService.pageController!
         .animateToPage(_subService.pageController!.page!.toInt() + 1,
-            duration: Duration(milliseconds: 500), curve: Curves.decelerate)
+            duration: const Duration(milliseconds: 500),
+            curve: Curves.decelerate)
         .then(
       (_) {
+        log("Page changed to ${_subService.pageController!.page!.toInt()}");
         if (_subService.pageController!.page!.toInt() == 1) {
           PreferenceHelper.setBool(
               PreferenceHelper.CACHE_IS_AUTOSAVE_FIRST_TIME, false);
+        }
+
+        if (_subService.pageController!.page!.toInt() == 3) {
+          AppState.showAutoSaveSurveyBt = true;
         }
       },
     );
   }
 
-  init() async {
+  Future<void> init(InvestmentType? investmentType) async {
     state = ViewState.Busy;
     AppState.showAutosaveBt = true;
+    if (investmentType != null) AppState.autosaveMiddleFlow = true;
     _subService.pageController = PageController();
     await _subService.getSubscription();
     if (_subService.autosaveState == AutosaveState.IDLE) {
       goldAmountFieldController = TextEditingController();
       await getAvailableUpiApps();
-      _subService.getAutosaveSuggestions().then((_) {
+      unawaited(_subService.getAutosaveSuggestions().then((_) {
         augDailyChips = _subService.suggestions[0][0];
         augWeeklyChips = _subService.suggestions[0][1];
         augMonthlyChips = _subService.suggestions[0][2];
@@ -251,7 +271,7 @@ class AutosaveProcessViewModel extends BaseViewModel {
         dailyMaxMinInfo = _subService.suggestions[3][0];
         weeklyMaxMinInfo = _subService.suggestions[3][1];
         monthlyMaxMinInfo = _subService.suggestions[3][2];
-      });
+      }));
       autosaveAssetOptionList = [
         AutosaveAssetModel(
           asset: "assets/vectors/flogold.svg",
@@ -262,7 +282,8 @@ class AutosaveProcessViewModel extends BaseViewModel {
         AutosaveAssetModel(
           asset: Assets.felloFlo,
           title: "Fello Flo",
-          subtitle: "The 10% fund is now available for Autosave",
+          subtitle:
+              "The ${_userService.userSegments.contains(Constants.US_FLO_OLD) ? '10%' : '8%'} fund is now available for Autosave",
         ),
         AutosaveAssetModel(
           asset: Assets.digitalGoldBar,
@@ -273,6 +294,20 @@ class AutosaveProcessViewModel extends BaseViewModel {
       floAmountFieldController = TextEditingController();
 
       selectedAssetOption = _bankingService.isKYCVerified ? 0 : 2;
+
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+        if (investmentType != null &&
+            investmentType == InvestmentType.AUGGOLD99) {
+          selectedAssetOption = 2;
+          _subService.pageController!.jumpToPage(2);
+        }
+        if (investmentType != null &&
+            investmentType == InvestmentType.LENDBOXP2P) {
+          selectedAssetOption = 1;
+          _subService.pageController!.jumpToPage(2);
+        }
+      });
+
       if (selectedAssetOption == 0) {
         dailyCombos[2].isSelected = true;
       }
@@ -288,8 +323,10 @@ class AutosaveProcessViewModel extends BaseViewModel {
     setState(ViewState.Idle);
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       if (!PreferenceHelper.getBool(
-          PreferenceHelper.CACHE_IS_AUTOSAVE_FIRST_TIME))
+              PreferenceHelper.CACHE_IS_AUTOSAVE_FIRST_TIME) &&
+          investmentType == null) {
         _subService.pageController!.jumpToPage(1);
+      }
     });
   }
 
@@ -311,7 +348,7 @@ class AutosaveProcessViewModel extends BaseViewModel {
     // if (_subService.autosaveState == AutosaveState.IDLE) {
     goldAmountFieldController = TextEditingController(
         text: _subService.subscriptionData!.augAmt ?? '0');
-    _subService.getAutosaveSuggestions().then((_) {
+    unawaited(_subService.getAutosaveSuggestions().then((_) {
       augDailyChips = _subService.suggestions[0][0];
       augWeeklyChips = _subService.suggestions[0][1];
       augMonthlyChips = _subService.suggestions[0][2];
@@ -327,7 +364,7 @@ class AutosaveProcessViewModel extends BaseViewModel {
       dailyMaxMinInfo = _subService.suggestions[3][0];
       weeklyMaxMinInfo = _subService.suggestions[3][1];
       monthlyMaxMinInfo = _subService.suggestions[3][2];
-    });
+    }));
     autosaveAssetOptionList = [
       AutosaveAssetModel(
         asset: "assets/vectors/flogold.svg",
@@ -338,7 +375,8 @@ class AutosaveProcessViewModel extends BaseViewModel {
       AutosaveAssetModel(
         asset: Assets.felloFlo,
         title: "Fello Flo",
-        subtitle: "The 10% fund is now available for Autosave",
+        subtitle:
+            "The ${_userService.userSegments.contains(Constants.US_FLO_OLD) ? '10%' : '8%'} fund is now available for Autosave",
       ),
       AutosaveAssetModel(
         asset: Assets.digitalGoldBar,
@@ -401,6 +439,89 @@ class AutosaveProcessViewModel extends BaseViewModel {
       _trackAutosaveSetup();
     }
     isSubscriptionCreationInProgress = false;
+  }
+
+  String getGoals() {
+    switch (selectedFrequency) {
+      case FREQUENCY.daily:
+        return getDailyGoals();
+      case FREQUENCY.weekly:
+        return getWeeklyGoals();
+      case FREQUENCY.monthly:
+        return getMonthlyGoals();
+    }
+  }
+
+  String getDailyGoals() {
+    if (selectedAssetOption == 1) {
+      int floAmount = int.tryParse(floAmountFieldController?.text ?? "0") ?? 0;
+      if (floAmount <= 100) {
+        return Assets.goaGoalsBg;
+      } else if (floAmount >= 101 && floAmount <= 500) {
+        return Assets.iphoneGoalsBg;
+      } else if (floAmount >= 501) {
+        return Assets.carGoalsBg;
+      }
+    } else if (selectedAssetOption == 2) {
+      int goldAmount =
+          int.tryParse(goldAmountFieldController?.text ?? "0") ?? 0;
+      if (goldAmount <= 100) {
+        return Assets.goaGoalsBg;
+      } else if (goldAmount >= 101 && goldAmount <= 500) {
+        return Assets.iphoneGoalsBg;
+      } else if (goldAmount >= 501) {
+        return Assets.carGoalsBg;
+      }
+    }
+    return Assets.goaGoalsBg;
+  }
+
+  String getWeeklyGoals() {
+    if (selectedAssetOption == 1) {
+      int floAmount = int.tryParse(floAmountFieldController?.text ?? "0") ?? 0;
+      if (floAmount <= 1000) {
+        return Assets.goaGoalsBg;
+      } else if (floAmount > 1000 && floAmount <= 5000) {
+        return Assets.carGoalsBg;
+      } else if (floAmount > 5000) {
+        return Assets.baliGoalsBg;
+      }
+    } else if (selectedAssetOption == 2) {
+      int goldAmount =
+          int.tryParse(goldAmountFieldController?.text ?? "0") ?? 0;
+      if (goldAmount <= 1000) {
+        return Assets.goaGoalsBg;
+      } else if (goldAmount > 1000 && goldAmount <= 5000) {
+        return Assets.carGoalsBg;
+      } else if (goldAmount > 5000) {
+        return Assets.baliGoalsBg;
+      }
+    }
+    return Assets.goaGoalsBg;
+  }
+
+  String getMonthlyGoals() {
+    if (selectedAssetOption == 1) {
+      int floAmount = int.tryParse(floAmountFieldController?.text ?? "0") ?? 0;
+      if (floAmount <= 5000) {
+        return Assets.goaGoalsBg;
+      } else if (floAmount > 5000 && floAmount <= 10000) {
+        return Assets.iphoneGoalsBg;
+      } else if (floAmount > 10000) {
+        return Assets.carGoalsBg;
+      }
+    } else if (selectedAssetOption == 2) {
+      int goldAmount =
+          int.tryParse(goldAmountFieldController?.text ?? "0") ?? 0;
+      if (goldAmount <= 5000) {
+        return Assets.goaGoalsBg;
+      } else if (goldAmount > 5000 && goldAmount <= 10000) {
+        return Assets.iphoneGoalsBg;
+      } else if (goldAmount > 10000) {
+        return Assets.carGoalsBg;
+      }
+    }
+    return Assets.goaGoalsBg;
   }
 
   bool checkForLowAmount() {
@@ -503,7 +624,7 @@ class AutosaveProcessViewModel extends BaseViewModel {
           case FREQUENCY.daily:
             minMaxCapString = amt < dailyMaxMinInfo.min.LENDBOXP2P
                 ? "Enter valid amount"
-                : amt > dailyMaxMinInfo.max
+                : amt > dailyMaxMinInfo.max.LENDBOXP2P
                     ? "Amount too high"
                     : null;
             return;
@@ -511,14 +632,14 @@ class AutosaveProcessViewModel extends BaseViewModel {
           case FREQUENCY.weekly:
             minMaxCapString = amt < weeklyMaxMinInfo.min.LENDBOXP2P
                 ? "Enter valid amount"
-                : amt > weeklyMaxMinInfo.max
+                : amt > weeklyMaxMinInfo.max.LENDBOXP2P
                     ? "Amount too high"
                     : null;
             return;
           case FREQUENCY.monthly:
             minMaxCapString = amt < monthlyMaxMinInfo.min.LENDBOXP2P
                 ? "Enter valid amount"
-                : amt > monthlyMaxMinInfo.max
+                : amt > monthlyMaxMinInfo.max.LENDBOXP2P
                     ? "Amount too high"
                     : null;
             return;
@@ -531,7 +652,7 @@ class AutosaveProcessViewModel extends BaseViewModel {
           case FREQUENCY.daily:
             minMaxCapString = amt < dailyMaxMinInfo.min.LENDBOXP2P
                 ? "Enter valid amount"
-                : amt > dailyMaxMinInfo.max
+                : amt > dailyMaxMinInfo.max.LENDBOXP2P
                     ? "Amount too high"
                     : null;
             return;
@@ -539,14 +660,14 @@ class AutosaveProcessViewModel extends BaseViewModel {
           case FREQUENCY.weekly:
             minMaxCapString = amt < weeklyMaxMinInfo.min.LENDBOXP2P
                 ? "Enter valid amount"
-                : amt > weeklyMaxMinInfo.max
+                : amt > weeklyMaxMinInfo.max.LENDBOXP2P
                     ? "Amount too high"
                     : null;
             return;
           case FREQUENCY.monthly:
             minMaxCapString = amt < monthlyMaxMinInfo.min.LENDBOXP2P
                 ? "Enter valid amount"
-                : amt > monthlyMaxMinInfo.max
+                : amt > monthlyMaxMinInfo.max.LENDBOXP2P
                     ? "Amount too high"
                     : null;
             return;
@@ -559,7 +680,7 @@ class AutosaveProcessViewModel extends BaseViewModel {
           case FREQUENCY.daily:
             minMaxCapString = amt < dailyMaxMinInfo.min.AUGGOLD99
                 ? "Enter valid amount"
-                : amt > dailyMaxMinInfo.max
+                : amt > dailyMaxMinInfo.max.AUGGOLD99
                     ? "Amount too high"
                     : null;
             return;
@@ -567,14 +688,14 @@ class AutosaveProcessViewModel extends BaseViewModel {
           case FREQUENCY.weekly:
             minMaxCapString = amt < weeklyMaxMinInfo.min.AUGGOLD99
                 ? "Enter valid amount"
-                : amt > weeklyMaxMinInfo.max
+                : amt > weeklyMaxMinInfo.max.AUGGOLD99
                     ? "Amount too high"
                     : null;
             return;
           case FREQUENCY.monthly:
             minMaxCapString = amt < monthlyMaxMinInfo.min.AUGGOLD99
                 ? "Enter valid amount"
-                : amt > monthlyMaxMinInfo.max
+                : amt > monthlyMaxMinInfo.max.AUGGOLD99
                     ? "Amount too high"
                     : null;
             return;
@@ -629,7 +750,9 @@ class AutosaveProcessViewModel extends BaseViewModel {
   }
 
   void _deselectOtherChipIfAny() {
-    augDailyChips.forEach((chip) => chip.isSelected = false);
+    for (final chip in augDailyChips) {
+      chip.isSelected = false;
+    }
     augWeeklyChips.forEach((chip) => chip.isSelected = false);
     augMonthlyChips.forEach((chip) => chip.isSelected = false);
     lbDailyChips.forEach((chip) => chip.isSelected = false);
@@ -637,14 +760,14 @@ class AutosaveProcessViewModel extends BaseViewModel {
     lbMonthlyChips.forEach((chip) => chip.isSelected = false);
   }
 
-  deselectOtherComboIfAny({bool notify = false}) {
+  void deselectOtherComboIfAny({bool notify = false}) {
     dailyCombos.forEach((chip) => chip.isSelected = false);
     weeklyCombos.forEach((chip) => chip.isSelected = false);
     monthlyCombos.forEach((chip) => chip.isSelected = false);
     if (notify) notifyListeners();
   }
 
-  onCompleteClose() {
+  void onCompleteClose() {
     _analyticsService!.track(eventName: AnalyticsEvents.asDoneTapped);
     AppState.backButtonDispatcher!.didPopRoute();
     _gtService.fetchAndVerifyScratchCardByID();
@@ -774,7 +897,7 @@ class AutosaveProcessViewModel extends BaseViewModel {
 
   void trackAutosaveUpiSubmit() {
     _analyticsService.track(
-      eventName: AnalyticsEvents.asChipsTapped,
+      eventName: AnalyticsEvents.upiSubmitTappped,
       properties: {
         "appName": selectedUpiApp?.upiApplication.appName,
         "gold": goldAmountFieldController?.text,

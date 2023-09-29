@@ -25,8 +25,9 @@ class SellCardView extends StatelessWidget {
       : super(key: key);
 
   Color get color => investmentType == InvestmentType.AUGGOLD99
-      ? Color(0xff303B6A)
+      ? UiConstants.goldSellCardColor
       : UiConstants.kFloContainerColor;
+
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
@@ -35,7 +36,7 @@ class SellCardView extends StatelessWidget {
       value: locator<BankAndPanService>(),
       child: PropertyChangeConsumer<BankAndPanService,
           BankAndPanServiceProperties>(
-        properties: [
+        properties: const [
           BankAndPanServiceProperties.reachedLockIn,
           BankAndPanServiceProperties.augmontSellDisabled,
           BankAndPanServiceProperties.bankDetailsVerified,
@@ -45,9 +46,9 @@ class SellCardView extends StatelessWidget {
         builder: (ctx, sellService, child) => Container(
           margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding20),
           decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(SizeConfig.cardBorderRadius),
-              color: color,
-              border: Border.all(color: Colors.white.withOpacity(0.4))),
+            borderRadius: BorderRadius.circular(SizeConfig.cardBorderRadius),
+            color: color,
+          ),
           child: Column(
             children: [
               SizedBox(
@@ -95,7 +96,7 @@ class SellCardView extends StatelessWidget {
                   alignment: Alignment.centerLeft,
                   child: sellService.isKYCVerified &&
                           sellService.isBankDetailsAdded
-                      ? SizedBox()
+                      ? const SizedBox()
                       : Text(
                           "To withdraw, complete the following steps:",
                           style: TextStyles.sourceSans.body4.colour(
@@ -139,10 +140,10 @@ class SellCardView extends StatelessWidget {
     );
   }
 
-  navigateToKycScreen() {
-    final _analyticsService = locator<AnalyticsService>();
+  void navigateToKycScreen() {
+    final analyticsService = locator<AnalyticsService>();
 
-    _analyticsService
+    analyticsService
         .track(eventName: AnalyticsEvents.completeKYCTapped, properties: {
       "location": "Felo/Gold Sell card",
       "Total invested amount": AnalyticsProperties.getGoldInvestedAmount() +
@@ -151,16 +152,16 @@ class SellCardView extends StatelessWidget {
       "Grams of gold owned": AnalyticsProperties.getGoldQuantityInGrams(),
       "Amount invested in Flo": AnalyticsProperties.getFelloFloAmount(),
     });
-    return AppState.delegate!.appState.currentAction = PageAction(
+    AppState.delegate!.appState.currentAction = PageAction(
       state: PageState.addPage,
       page: KycDetailsPageConfig,
     );
   }
 
-  navigateToBankDetailsScreen() {
-    final _analyticsService = locator<AnalyticsService>();
+  void navigateToBankDetailsScreen() {
+    final analyticsService = locator<AnalyticsService>();
 
-    _analyticsService.track(eventName: AnalyticsEvents.bankDetailsTapped);
+    analyticsService.track(eventName: AnalyticsEvents.bankDetailsTapped);
 
     AppState.delegate!.appState.currentAction = PageAction(
       state: PageState.addPage,

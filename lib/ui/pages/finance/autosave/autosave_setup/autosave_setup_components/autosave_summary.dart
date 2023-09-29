@@ -1,6 +1,9 @@
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/ui/pages/finance/autosave/autosave_setup/autosave_process_vm.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/extensions/string_extension.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
@@ -44,7 +47,7 @@ class AutosaveSummary extends StatelessWidget {
               style: TextStyles.sourceSans.body1,
             ),
             trailing: Text(
-              "₹" + model.goldAmountFieldController!.text,
+              "₹${model.goldAmountFieldController!.text}",
               style: TextStyles.sourceSansB.body1,
             ),
           ),
@@ -56,15 +59,15 @@ class AutosaveSummary extends StatelessWidget {
               width: SizeConfig.padding44,
             ),
             title: Text(
-              "Fello Flo",
+              "Fello Flo ${locator<UserService>().userSegments.contains(Constants.US_FLO_OLD) ? '10%' : '8%'}",
               style: TextStyles.sourceSans.body1,
             ),
             trailing: Text(
-              "₹" + model.floAmountFieldController!.text,
+              "₹${model.floAmountFieldController!.text}",
               style: TextStyles.sourceSansB.body1,
             ),
           ),
-        Divider(
+        const Divider(
           color: Colors.white24,
         ),
         ListTile(
@@ -77,9 +80,7 @@ class AutosaveSummary extends StatelessWidget {
             style: TextStyles.sourceSans.body1,
           ),
           trailing: Text(
-            "₹" +
-                model.totalInvestingAmount.toString() +
-                "/${model.selectedFrequency.rename()}",
+            "₹${model.totalInvestingAmount}/${model.selectedFrequency.rename()}",
             style: TextStyles.sourceSansB.body1,
           ),
         ),

@@ -29,7 +29,7 @@ class ScratchCardsInfoStrip extends StatelessWidget {
           margin: EdgeInsets.symmetric(
               vertical: SizeConfig.padding10,
               horizontal: SizeConfig.pageHorizontalMargins),
-          color: Color(0xff9EA1A1),
+          color: const Color(0xff9EA1A1),
         ),
         Showcase(
           key: ShowCaseKeys.ScratchCardKey,
@@ -45,7 +45,7 @@ class ScratchCardsInfoStrip extends StatelessWidget {
                 AppState.delegate!.appState.currentAction = PageAction(
                     state: PageState.addWidget,
                     page: MyWinningsPageConfig,
-                    widget: MyWinningsView());
+                    widget: const MyWinningsView());
               },
               child: Row(
                 children: [
@@ -57,10 +57,10 @@ class ScratchCardsInfoStrip extends StatelessWidget {
                   Text(
                     locale.scratchCardText,
                     style: TextStyles.sourceSans.body2.colour(Colors.white),
-                    key: ValueKey(Constants.GOLDENTICKET),
+                    key: const ValueKey(Constants.GOLDENTICKET),
                   ),
-                  Spacer(),
-                  UnscratchedGTCountChip(),
+                  const Spacer(),
+                  const UnscratchedGTCountChip(),
                   SizedBox(
                     width: SizeConfig.padding10,
                   ),
@@ -80,7 +80,7 @@ class ScratchCardsInfoStrip extends StatelessWidget {
           margin: EdgeInsets.symmetric(
               vertical: SizeConfig.padding10,
               horizontal: SizeConfig.pageHorizontalMargins),
-          color: Color(0xff9EA1A1),
+          color: const Color(0xff9EA1A1),
         ),
       ],
     );

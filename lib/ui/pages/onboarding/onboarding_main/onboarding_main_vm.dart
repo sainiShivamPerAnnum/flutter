@@ -81,16 +81,16 @@ class OnboardingViewModel extends BaseViewModel {
     currentPage = 0;
     onboardingData = [
       [
-        locale.onboardingTitle1,
-        locale.onboardingSubTitle1,
+        "Grow your savings by 12% p.a.",
+        "By saving in safe and secure assets like Digital Gold and Fello Flo "
       ],
       [
-        locale.onboardingTitle2,
-        locale.onboardingSubTitle2,
+        "Get rewarded for Saving",
+        "Save and get free tickets and participate in the weekly draws",
       ],
       [
-        locale.onboardingTitle3,
-        locale.onboardingSubTitle3,
+        "Become a Crorepati",
+        "Grab ₹1 crore and a Mahindra Thar by participating in weekly draws",
       ],
     ];
   }

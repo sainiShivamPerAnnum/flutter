@@ -1,10 +1,8 @@
 //Project Imports
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/locator.dart';
-
 //Flutter Imports
 import 'package:flutter/material.dart';
-
 //Pub Imports
 import 'package:provider/provider.dart';
 

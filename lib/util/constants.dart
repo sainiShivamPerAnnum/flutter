@@ -22,7 +22,20 @@ class Constants {
 
   //Assets Type
   static const String ASSET_TYPE_AUGMONT = "AUGGOLD99";
+  static const String ASSET_TYPE_AUGMONT_FD = "AUGGOLD99FD";
   static const String ASSET_TYPE_LENDBOX = "LENDBOXP2P";
+  static const String ASSET_TYPE_LENDBOX_FD1 = "LENDBOXP2P_FD1";
+  static const String ASSET_TYPE_LENDBOX_FD2 = "LENDBOXP2P_FD2";
+  static const String ASSET_TYPE_FLO_FELXI = "UNI_FLEXI";
+  static const String ASSET_TYPE_FLO_FIXED_3 = "UNI_FIXED_3";
+  static const String ASSET_TYPE_FLO_FIXED_6 = "UNI_FIXED_6";
+  static const String ASSET_GOLD_STAKE = "Gold Pro";
+
+  //Segments
+  static const String US_FLO_OLD = "OLD_LB";
+  static const String NEW_USER = "NEW_USER";
+  static const String NO_SAVE_AUG = "NO_SAVE_AUG";
+  static const String NO_SAVE_LB = "NO_SAVE_LB";
 
   //HIGHEST SAVER
   static const String HS_DAILY_SAVER = "SAVER_DAILY";
@@ -130,13 +143,20 @@ class Constants {
   static const TXN_STATUS_RESPONSE_FAILURE = "FAIL";
   static const TXN_STATUS_RESPONSE_PENDING = "PENDING";
 
+  static const GOLD_PRO_TXN_STATUS_ACTIVE = "active";
+  static const GOLD_PRO_TXN_STATUS_CLOSE = "close";
+  static const GOLD_PRO_TXN_STATUS_PENDING = "pending";
+  static const GOLD_PRO_TXN_STATUS_FAILED = "failed";
+
   //User Bootup EE Constnats
   static const LAST_OPENED = "last_opened";
   static const DATE_TODAY = "date_today";
   static const DAY_OPENED_COUNT = "day_open_count";
+
   //Notices
   static const IS_MSG_NOTICE_AVAILABLE = "isNoticeMessageAvilable";
   static const MSG_NOTICE = "url_message";
+
   //Normal app update dialog show
   static const IS_APP_UPDATE_AVAILABLE = "isAppUpdateAvilable";
 
@@ -169,4 +189,6 @@ class Constants {
   static const REWARDS = "rewards";
   static const LEADERBOARD = "leaderBoard";
   static const GET_TAMBOLA_TICKETS = "getTambolaTickets";
+
+  static const FELLO_BALANCE = "felloBalance";
 }

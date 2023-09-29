@@ -1,4 +1,6 @@
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/faqTypes.dart';
+import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
@@ -26,7 +28,9 @@ import './autosave_process_slides/autosave_asset_choice_view.dart';
 import './autosave_process_slides/autosave_steps_view.dart';
 
 class AutosaveProcessView extends StatefulWidget {
-  const AutosaveProcessView({Key? key}) : super(key: key);
+  const AutosaveProcessView({Key? key, this.investmentType}) : super(key: key);
+
+  final InvestmentType? investmentType;
 
   @override
   State<AutosaveProcessView> createState() => _AutosaveProcessViewState();
@@ -35,12 +39,12 @@ class AutosaveProcessView extends StatefulWidget {
 class _AutosaveProcessViewState extends State<AutosaveProcessView> {
   @override
   Widget build(BuildContext context) {
-    S locale = S.of(context);
+    // S locale = S.of(context);
     return Selector<SubService, AutosaveState>(
-      selector: (_, _subService) => _subService.autosaveState,
+      selector: (_, subService) => subService.autosaveState,
       builder: (context, autosaveState, child) =>
           BaseView<AutosaveProcessViewModel>(
-        onModelReady: (model) => model.init(),
+        onModelReady: (model) => model.init(widget.investmentType),
         onModelDispose: (model) => model.dump(),
         builder: (context, model, child) {
           return Scaffold(
@@ -64,24 +68,25 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
                   FocusScope.of(context).unfocus();
                   (autosaveState == AutosaveState.INIT ||
                           autosaveState == AutosaveState.ACTIVE ||
-                          model.pageController!.page == 0)
+                          model.pageController!.page == 0 ||
+                          model.pageController!.page == 3)
                       ? AppState.backButtonDispatcher!.didPopRoute()
                       : model.pageController!.animateToPage(
                           model.pageController!.page!.toInt() - 1,
-                          duration: Duration(milliseconds: 500),
+                          duration: const Duration(milliseconds: 500),
                           curve: Curves.decelerate);
                   model.trackAutosaveBackPress();
                 },
               ),
               actions: [
                 Row(
-                  children: [FaqPill(type: FaqsType.autosave)],
+                  children: const [FaqPill(type: FaqsType.autosave)],
                 )
               ],
             ),
             resizeToAvoidBottomInset: false,
             body: model.state == ViewState.Busy
-                ? Center(
+                ? const Center(
                     child: FullScreenLoader(),
                   )
                 : Stack(
@@ -89,12 +94,12 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
                       const NewSquareBackground(),
                       SafeArea(
                         child: autosaveState == AutosaveState.INIT
-                            ? AutosavePendingView()
+                            ? const AutosavePendingView()
                             : autosaveState == AutosaveState.IDLE
                                 ? AutosaveSetupView(model: model)
                                 : autosaveState == AutosaveState.ACTIVE
                                     ? AutosaveSuccessView(model: model)
-                                    : SizedBox(),
+                                    : const SizedBox(),
                       ),
                     ],
                   ),
@@ -107,6 +112,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
 
 class AutosaveSetupView extends StatelessWidget {
   final AutosaveProcessViewModel model;
+
   const AutosaveSetupView({
     required this.model,
     super.key,
@@ -116,7 +122,7 @@ class AutosaveSetupView extends StatelessWidget {
   Widget build(BuildContext context) {
     return PageView(
       controller: model.pageController,
-      physics: NeverScrollableScrollPhysics(),
+      physics: const NeverScrollableScrollPhysics(),
       children: [
         AutosaveStepsView(model: model),
         AutosaveAssetChoiceView(model: model),
@@ -129,12 +135,13 @@ class AutosaveSetupView extends StatelessWidget {
 
 class AutosaveSuccessView extends StatelessWidget {
   final AutosaveProcessViewModel model;
+
   const AutosaveSuccessView({super.key, required this.model});
 
   @override
   Widget build(BuildContext context) {
     S locale = locator<S>();
-    return Container(
+    return SizedBox(
       height: SizeConfig.screenHeight,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
@@ -174,7 +181,7 @@ class AutosaveSuccessView extends StatelessWidget {
                 vertical: SizeConfig.pageHorizontalMargins),
             width: double.infinity,
             decoration: BoxDecoration(
-              color: Color(0xFF57A6B0).withOpacity(0.22),
+              color: const Color(0xFF57A6B0).withOpacity(0.22),
               borderRadius: BorderRadius.circular(SizeConfig.roundness12),
               border: Border.all(
                 color: UiConstants.kTextColor.withOpacity(0.1),
@@ -196,7 +203,7 @@ class AutosaveSuccessView extends StatelessWidget {
               ],
             ),
           ),
-          Spacer(),
+          const Spacer(),
           Container(
             color: UiConstants.kBackgroundColor,
             padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
@@ -207,6 +214,7 @@ class AutosaveSuccessView extends StatelessWidget {
               onPressed: () {
                 locator<UserService>().getUserFundWalletData();
                 AppState.backButtonDispatcher!.didPopRoute();
+                BaseUtil.showFelloRatingSheet();
               },
             ),
           )

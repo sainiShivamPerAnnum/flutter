@@ -1,18 +1,18 @@
 import 'package:felloapp/core/model/game_tier_model.dart';
-import 'package:felloapp/core/model/user_funt_wallet_model.dart';
+import 'package:felloapp/core/model/portfolio_model.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/util/locator.dart';
 
 class GameViewModel {
   List<GameTier> gameTiers;
 
-  final UserFundWallet _wallet;
+  final Portfolio _portfolio;
 
   GameViewModel(this.gameTiers)
-      : _wallet = locator<UserService>().userFundWallet!;
+      : _portfolio = locator<UserService>().userPortfolio!;
 
   double get netWorth =>
-      _wallet.augGoldPrinciple + (_wallet.wLbPrinciple ?? 0.0);
+      _portfolio.augmont.principle + (_portfolio.flo.principle);
 
   void processData() {
     for (var i = 0; i < gameTiers.length; i++) {

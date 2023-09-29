@@ -1,13 +1,16 @@
 //Project Imports
 //Dart & Flutter Imports
 import 'dart:async';
+import 'dart:developer' as d;
 import 'dart:math';
 
-import 'package:another_flushbar/flushbar.dart';
-//Pub Imports
+import 'package:another_flushbar/flushbar.dart'; //Pub Imports
+import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/constants/cache_keys.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/aug_gold_rates_model.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
@@ -21,25 +24,29 @@ import 'package:felloapp/core/model/user_augmont_details_model.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
 import 'package:felloapp/core/model/user_icici_detail_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
-import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/analytics/base_analytics.dart';
+import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
+import 'package:felloapp/core/service/notifier_services/marketing_event_handler_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/feature/referrals/ui/referral_rating_sheet.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/back_button_actions.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
+import 'package:felloapp/ui/elements/fello_dialog/fello_in_app_review.dart';
 import 'package:felloapp/ui/modalsheets/confirm_exit_modal.dart';
-import 'package:felloapp/ui/modalsheets/deposit_options_modal_sheet.dart';
 import 'package:felloapp/ui/modalsheets/happy_hour_modal.dart';
+import 'package:felloapp/ui/pages/asset_selection.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_buy/gold_buy_view.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_sell/gold_sell_view.dart';
-import 'package:felloapp/ui/pages/finance/lendbox/deposit/lendbox_buy_view.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/withdrawal/lendbox_withdrawal_view.dart';
 import 'package:felloapp/ui/pages/games/web/web_home/web_game_modal_sheet.dart';
+import 'package:felloapp/ui/pages/support/bug_report/ui/found_bug.dart';
 import 'package:felloapp/ui/service_elements/username_input/username_input_view.dart';
 import 'package:felloapp/ui/shared/spotlight_controller.dart';
 import 'package:felloapp/util/app_toasts_utils.dart';
@@ -50,13 +57,23 @@ import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:firebase_analytics/firebase_analytics.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart';
+import 'package:lottie/lottie.dart';
 import 'package:package_info_plus/package_info_plus.dart';
 import 'package:url_launcher/url_launcher_string.dart';
+
+import 'core/model/timestamp_model.dart';
+import 'ui/pages/finance/lendbox/deposit/lendbox_buy_view.dart';
+
+enum FileType { svg, lottie, unknown, png }
 
 class BaseUtil extends ChangeNotifier {
   final CustomLogger logger = locator<CustomLogger>();
@@ -110,6 +127,7 @@ class BaseUtil extends ChangeNotifier {
   String? zeroBalanceAssetUri;
   static String? manualReferralCode;
   static String? referrerUserId;
+  static String? referredCode;
   static bool? isNewUser, isFirstFetchDone; // = 'jdF1';
 
   ///Flags in various screens defined as global variables
@@ -201,69 +219,32 @@ class BaseUtil extends ChangeNotifier {
       setPackageInfo();
 
       ///fetch on-boarding status and User details
-      firebaseUser = _userService!.firebaseUser;
-      isUserOnboarded = _userService!.isUserOnboarded;
+      firebaseUser = _userService.firebaseUser;
+      isUserOnboarded = _userService.isUserOnboarded;
 
       if (isUserOnboarded!) {
         //set current user
-        myUser = _userService!.baseUser;
+        myUser = _userService.baseUser;
 
-        ///get user creation time
         _userCreationTimestamp = firebaseUser!.metadata.creationTime;
-
-        ///pick zerobalance asset
-        Random rnd = Random();
-        zeroBalanceAssetUri = 'zerobal/zerobal_${rnd.nextInt(4) + 1}';
       }
     } catch (e) {
       logger.e(e.toString());
-      _internalOpsService!.logFailure(
-        _userService!.baseUser?.uid ?? '',
+      _internalOpsService.logFailure(
+        _userService.baseUser?.uid ?? '',
         FailType.Splash,
         {'error': "base util init : $e"},
       );
     }
   }
 
-  void setPackageInfo() async {
-    //Appversion //add it seperate method
+  Future<void> setPackageInfo() async {
     packageInfo = await PackageInfo.fromPlatform();
   }
 
-  Future<void> refreshFunds() async {
-    //TODO: ADD LOADER
-    debugPrint("-----------------> I got called");
-    return _userRepo!.getFundBalance().then((aValue) {
-      if (aValue.code == 200) {
-        userFundWallet = aValue.model;
-        if (userFundWallet!.augGoldQuantity > 0) {
-          _updateAugmontBalance(); //setstate call in method
-        }
-      }
-      notifyListeners();
-    });
-  }
-
-  openProfileDetailsScreen() {
-    // if (JourneyService.isAvatarAnimationInProgress) return;
-    // if (_userService!.userJourneyStats!.mlIndex! > 1)
-    AppState.delegate!.parseRoute(Uri.parse("profile"));
-    // else {
-    // print("Reachng");
-
-    // print(
-    //     "Testing 123  ${AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
-    //       "Test": "test"
-    //     })}");
-
-    // AppState.delegate!.appState.currentAction = PageAction(
-    //   page: UserProfileDetailsConfig,
-    //   state: PageState.addWidget,
-    //   widget: UserProfileDetails(isNewUser: true),
-    // );
-    // }
-
-    _analyticsService!.track(
+  void openProfileDetailsScreen() {
+    AppState.delegate!.parseRoute(Uri.parse("accounts"));
+    _analyticsService.track(
         eventName: AnalyticsEvents.profileClicked,
         properties: AnalyticsProperties.getDefaultPropertiesMap(
             extraValuesMap: {"location": getLocationForCurrentTab()}));
@@ -286,7 +267,7 @@ class BaseUtil extends ChangeNotifier {
     }
   }
 
-  static showUsernameInputModalSheet() {
+  static dynamic showUsernameInputModalSheet() {
     return openModalBottomSheet(
       isScrollControlled: true,
       isBarrierDismissible: false,
@@ -296,7 +277,33 @@ class BaseUtil extends ChangeNotifier {
     );
   }
 
-  static openGameModalSheet(String game) {
+  void openGoldProBuyView({required String location}) {
+    final bool? isAugDepositBanned = _userService
+        .userBootUp?.data!.banMap?.investments?.deposit?.goldPro?.isBanned;
+    final String? augDepositBanNotice = _userService
+        .userBootUp?.data!.banMap?.investments?.deposit?.goldPro?.reason;
+
+    if (isAugDepositBanned != null && isAugDepositBanned) {
+      BaseUtil.showNegativeAlert(
+          augDepositBanNotice ?? locale.assetNotAvailable, locale.tryLater);
+      return;
+    }
+    Haptic.vibrate();
+    AppState.delegate!.appState.currentAction =
+        PageAction(page: GoldProBuyViewPageConfig, state: PageState.addPage);
+
+    locator<AnalyticsService>().track(
+      eventName: AnalyticsEvents.startNewLeaseTapped,
+      properties: {
+        'location': location,
+        "existing gold balance":
+            _userService.userFundWallet?.augGoldQuantity ?? 0,
+        "existing lease grams": _userService.userFundWallet?.wAugFdQty ?? 0
+      },
+    );
+  }
+
+  static dynamic openGameModalSheet(String game) {
     AppState.screenStack.add(ScreenItem.modalsheet);
     return openModalBottomSheet(
       isScrollControlled: true,
@@ -311,68 +318,148 @@ class BaseUtil extends ChangeNotifier {
     );
   }
 
-  openRechargeModalSheet({
+  void openRechargeModalSheet({
+    required InvestmentType investmentType,
     int? amt,
     bool? isSkipMl,
-    required InvestmentType investmentType,
+    double? gms,
   }) {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      // if (_userService!.userJourneyStats?.mlIndex == 1)
-      //   return BaseUtil.openDialog(
-      //     addToScreenStack: true,
-      //     isBarrierDismissible: true,
-      //     hapticVibrate: false,
-      //     content: CompleteProfileDialog(),
-      //   );
-      final bool? isAugDepositBanned = _userService
-          ?.userBootUp?.data!.banMap?.investments?.deposit?.augmont?.isBanned;
-      final String? augDepositBanNotice = _userService
-          ?.userBootUp?.data!.banMap?.investments?.deposit?.augmont?.reason;
-      final bool? islBoxlDepositBanned = _userService
-          ?.userBootUp?.data!.banMap?.investments?.deposit?.lendBox?.isBanned;
-      final String? lBoxDepositBanNotice = _userService
-          ?.userBootUp?.data!.banMap?.investments?.deposit?.lendBox?.reason;
-      if (investmentType == InvestmentType.AUGGOLD99 &&
-          isAugDepositBanned != null &&
-          isAugDepositBanned) {
-        return BaseUtil.showNegativeAlert(
-            augDepositBanNotice ?? locale.assetNotAvailable, locale.tryLater);
-      }
+    final bool? isAugDepositBanned = _userService
+        .userBootUp?.data!.banMap?.investments?.deposit?.augmont?.isBanned;
+    final String? augDepositBanNotice = _userService
+        .userBootUp?.data!.banMap?.investments?.deposit?.augmont?.reason;
 
-      if (investmentType == InvestmentType.LENDBOXP2P &&
-          islBoxlDepositBanned != null &&
-          islBoxlDepositBanned) {
-        return BaseUtil.showNegativeAlert(
-          lBoxDepositBanNotice ?? locale.assetNotAvailable,
-          locale.tryLater,
-        );
-      }
-      double amount = 0;
+    if (investmentType == InvestmentType.AUGGOLD99 &&
+        isAugDepositBanned != null &&
+        isAugDepositBanned) {
+      BaseUtil.showNegativeAlert(
+          augDepositBanNotice ?? locale.assetNotAvailable, locale.tryLater);
+      return;
+    }
 
+    double amount = 0;
+    AppState.isRepeated = false;
+    AppState.onTap = null;
+    AppState.isTxnProcessing = false;
+    locator<BackButtonActions>().isTransactionCancelled = false;
+
+    if (investmentType == InvestmentType.LENDBOXP2P) {
+      AppState.delegate!.appState.currentAction = PageAction(
+        page: AssetSelectionViewConfig,
+        state: PageState.addWidget,
+        widget: AssetSelectionPage(
+          showOnlyFlo: true,
+          amount: amt,
+          isSkipMl: isSkipMl ?? false,
+        ),
+      );
+    }
+
+    if (investmentType == InvestmentType.AUGGOLD99) {
       BaseUtil.openModalBottomSheet(
-        addToScreenStack: true,
-        enableDrag: false,
-        hapticVibrate: true,
-        isBarrierDismissible: false,
-        backgroundColor: Colors.transparent,
-        isScrollControlled: true,
-        content: investmentType == InvestmentType.AUGGOLD99
-            ? GoldBuyView(
-                onChanged: (p0) => amount = p0,
-                amount: amt,
-                skipMl: isSkipMl ?? false,
-              )
-            : LendboxBuyView(
-                amount: amt,
-                skipMl: isSkipMl ?? false,
-                onChanged: (p0) => amount = p0,
-              ),
-      ).then((value) {
-        AppState.isRepeated = false;
-        AppState.onTap = null;
-        locator<BackButtonActions>().isTransactionCancelled = false;
-      });
-    });
+          addToScreenStack: true,
+          enableDrag: false,
+          hapticVibrate: true,
+          isBarrierDismissible: false,
+          backgroundColor: Colors.transparent,
+          isScrollControlled: true,
+          content: GoldBuyView(
+            onChanged: (p0) => amount = p0,
+            amount: amt,
+            gms: gms,
+            skipMl: isSkipMl ?? false,
+          ));
+    }
+  }
+
+  static void openFloBuySheet(
+      {required String floAssetType, int? amt, bool? isSkipMl}) {
+    final UserService userService = locator<UserService>();
+    final S locale = locator<S>();
+    bool isUserBanned = false;
+
+    AppState.isRepeated = false;
+    AppState.onTap = null;
+    AppState.isTxnProcessing = false;
+    locator<BackButtonActions>().isTransactionCancelled = false;
+    switch (floAssetType) {
+      case Constants.ASSET_TYPE_FLO_FIXED_6:
+        final bool? islBoxDepositBanned = userService.userBootUp?.data!.banMap
+            ?.investments?.deposit?.lendBoxFd2?.isBanned;
+        final String? lBoxDepositBanNotice = userService
+            .userBootUp?.data!.banMap?.investments?.deposit?.lendBoxFd2?.reason;
+        if (islBoxDepositBanned != null && islBoxDepositBanned) {
+          BaseUtil.showNegativeAlert(
+            lBoxDepositBanNotice ?? locale.assetNotAvailable,
+            locale.tryLater,
+          );
+          isUserBanned = true;
+        }
+        break;
+
+      case Constants.ASSET_TYPE_FLO_FIXED_3:
+        final bool? islBoxDepositBanned = userService.userBootUp?.data!.banMap
+            ?.investments?.deposit?.lendBoxFd1?.isBanned;
+        final String? lBoxDepositBanNotice = userService
+            .userBootUp?.data!.banMap?.investments?.deposit?.lendBoxFd1?.reason;
+        if (islBoxDepositBanned != null && islBoxDepositBanned) {
+          BaseUtil.showNegativeAlert(
+            lBoxDepositBanNotice ?? locale.assetNotAvailable,
+            locale.tryLater,
+          );
+          isUserBanned = true;
+        }
+        break;
+      case Constants.ASSET_TYPE_FLO_FELXI:
+        final bool? islBoxDepositBanned = userService
+            .userBootUp?.data!.banMap?.investments?.deposit?.lendBox?.isBanned;
+        final String? lBoxDepositBanNotice = userService
+            .userBootUp?.data!.banMap?.investments?.deposit?.lendBox?.reason;
+        if (islBoxDepositBanned != null && islBoxDepositBanned) {
+          BaseUtil.showNegativeAlert(
+            lBoxDepositBanNotice ?? locale.assetNotAvailable,
+            locale.tryLater,
+          );
+          isUserBanned = true;
+        }
+        break;
+    }
+
+    Haptic.vibrate();
+
+    if (isUserBanned) return;
+    AppState.delegate!.appState.currentAction = PageAction(
+      page: LendboxBuyViewConfig,
+      state: PageState.addWidget,
+      widget: LendboxBuyView(
+        amount: amt,
+        skipMl: isSkipMl ?? false,
+        onChanged: (p0) => p0,
+        floAssetType: floAssetType,
+      ),
+    );
+  }
+
+  Future<void> newUserCheck() async {
+    unawaited(locator<MarketingEventHandlerService>().getHappyHourCampaign());
+
+    if (_userService.userSegments.contains("NEW_USER")) {
+      await CacheService.invalidateByKey(CacheKeys.USER);
+      await _userService.setBaseUser();
+    }
+  }
+
+  static String getMaturityPref(String maturityEnum, bool isFrom10) {
+    switch (maturityEnum) {
+      case '0':
+        return "Withdrawing to your bank account after maturity";
+      case '1':
+        return "Auto-investing in ${isFrom10 ? 10 : 12}% Flo on maturity";
+      case '2':
+        return "Move to ${isFrom10 ? 8 : 10} Flo after maturity";
+      default:
+        return "What will happen to your investment after maturity?";
+    }
   }
 
   Future<void> showConfirmExit() async {
@@ -385,27 +472,29 @@ class BaseUtil extends ChangeNotifier {
 
   void openSellModalSheet({required InvestmentType investmentType}) {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      final bool? isAugSellLocked = _userService?.userBootUp?.data!.banMap
-          ?.investments?.withdrawal?.augmont?.isBanned;
+      final bool? isAugSellLocked = _userService
+          .userBootUp?.data!.banMap?.investments?.withdrawal?.augmont?.isBanned;
       final String? augSellBanNotice = _userService
-          ?.userBootUp?.data?.banMap?.investments?.withdrawal?.augmont?.reason;
-      final bool? islBoxSellBanned = _userService?.userBootUp?.data?.banMap
-          ?.investments?.withdrawal?.lendBox?.isBanned;
+          .userBootUp?.data?.banMap?.investments?.withdrawal?.augmont?.reason;
+      final bool? islBoxSellBanned = _userService
+          .userBootUp?.data?.banMap?.investments?.withdrawal?.lendBox?.isBanned;
       final String? lBoxSellBanNotice = _userService
-          ?.userBootUp?.data?.banMap?.investments?.withdrawal?.lendBox?.reason;
+          .userBootUp?.data?.banMap?.investments?.withdrawal?.lendBox?.reason;
       if (investmentType == InvestmentType.AUGGOLD99 &&
           isAugSellLocked != null &&
           isAugSellLocked) {
-        return BaseUtil.showNegativeAlert(
+        BaseUtil.showNegativeAlert(
             augSellBanNotice ?? locale.assetNotAvailable, locale.tryLater);
+        return;
       }
       if (investmentType == InvestmentType.LENDBOXP2P &&
           islBoxSellBanned != null &&
           islBoxSellBanned) {
-        return BaseUtil.showNegativeAlert(
+        BaseUtil.showNegativeAlert(
             lBoxSellBanNotice ?? locale.assetNotAvailable, locale.tryLater);
+        return;
       }
-      _analyticsService!.track(
+      _analyticsService.track(
           eventName: investmentType == InvestmentType.AUGGOLD99
               ? AnalyticsEvents.goldSellModalSheet
               : AnalyticsEvents.lBoxSellModalSheet);
@@ -418,7 +507,7 @@ class BaseUtil extends ChangeNotifier {
         backgroundColor: Colors.transparent,
         isScrollControlled: true,
         content: investmentType == InvestmentType.AUGGOLD99
-            ? GoldSellView()
+            ? const GoldSellView()
             : LendboxWithdrawalView(),
       );
     });
@@ -430,74 +519,56 @@ class BaseUtil extends ChangeNotifier {
       String? title,
       String? subtitle,
       int timer = 500}) {
-    // if (_userService!.userJourneyStats!.mlIndex == 1)
-    //   return BaseUtil.openDialog(
-    //       addToScreenStack: true,
-    //       isBarrierDismissible: true,
-    //       hapticVibrate: false,
-    //       content: CompleteProfileDialog());
     locator<AnalyticsService>()
         .track(eventName: AnalyticsEvents.assetOptionsModalTapped);
-    Future.delayed(Duration(milliseconds: timer), () {
-      return openModalBottomSheet(
-          addToScreenStack: true,
-          enableDrag: false,
-          hapticVibrate: true,
-          backgroundColor:
-              UiConstants.kRechargeModalSheetAmountSectionBackgroundColor,
-          isBarrierDismissible: true,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(
-              SizeConfig.roundness12,
-            ),
-            topRight: Radius.circular(SizeConfig.roundness24),
-          ),
-          content: DepositOptionModalSheet(
+    Haptic.vibrate();
+    Future.delayed(
+      Duration(milliseconds: timer),
+      () {
+        return AppState.delegate!.appState.currentAction = PageAction(
+          page: AssetSelectionViewConfig,
+          state: PageState.addWidget,
+          widget: AssetSelectionPage(
+            showOnlyFlo: false,
             amount: amount,
             isSkipMl: isSkipMl,
-            title: title,
-            subtitle: subtitle,
-          ));
-    });
+          ),
+        );
+      },
+    );
   }
 
-  static showPositiveAlert(String? title, String? message, {int seconds = 2}) {
+  static void showPositiveAlert(String? title, String? message,
+      {int seconds = 2}) {
     AppToasts.showPositiveToast(
         title: title, subtitle: message, seconds: seconds);
   }
 
-  static showNegativeAlert(String? title, String? message, {int? seconds}) {
+  static void showNegativeAlert(String? title, String? message,
+      {int? seconds}) {
     AppToasts.showNegativeToast(
         title: title, subtitle: message, seconds: seconds);
   }
 
-  static showNoInternetAlert() {
+  static dynamic showNoInternetAlert() {
     return AppToasts.showNoInternetToast();
   }
 
-  // Future<bool> getDrawStatus() async {
-  //   if (DateTime.now().weekday != await _lModel!.getDailyPickAnimLastDay() &&
-  //       DateTime.now().hour >= 18 &&
-  //       DateTime.now().hour < 24) return true;
-
-  //   return false;
-  // }
-
   static Future<void> openDialog({
+    required bool isBarrierDismissible,
     Widget? content,
     bool? addToScreenStack,
     bool? hapticVibrate,
-    required bool isBarrierDismissible,
     ValueChanged<dynamic>? callback,
     Color? barrierColor,
   }) async {
     if (addToScreenStack != null && addToScreenStack == true) {
       AppState.screenStack.add(ScreenItem.dialog);
     }
-    debugPrint("Current Stack: ${AppState.screenStack}");
-    if (hapticVibrate != null && hapticVibrate == true) Haptic.vibrate();
+    d.log("Current Stack: ${AppState.screenStack}");
+    Haptic.vibrate();
     await showDialog(
-      barrierColor: barrierColor,
+      barrierColor: barrierColor ?? Colors.black.withOpacity(0.7),
       context: AppState.delegate!.navigatorKey.currentContext!,
       barrierDismissible: isBarrierDismissible,
       builder: (ctx) => content!,
@@ -506,11 +577,11 @@ class BaseUtil extends ChangeNotifier {
   }
 
   static Future<void> openModalBottomSheet({
+    required bool isBarrierDismissible,
     Widget? content,
     bool? addToScreenStack,
     bool? hapticVibrate,
     Color? backgroundColor,
-    required bool isBarrierDismissible,
     BorderRadius? borderRadius,
     bool isScrollControlled = false,
     BoxConstraints? boxContraints,
@@ -519,8 +590,8 @@ class BaseUtil extends ChangeNotifier {
     if (addToScreenStack != null && addToScreenStack == true) {
       AppState.screenStack.add(ScreenItem.dialog);
     }
-    if (hapticVibrate != null && hapticVibrate == true) Haptic.vibrate();
-    debugPrint("Current Stack: ${AppState.screenStack}");
+    Haptic.vibrate();
+    d.log("Current Stack: ${AppState.screenStack}");
     await showModalBottomSheet(
       enableDrag: enableDrag,
       constraints: boxContraints,
@@ -540,6 +611,102 @@ class BaseUtil extends ChangeNotifier {
     );
   }
 
+  static void showFelloRatingSheet() {
+    d.log("qwertyuio", name: "showFelloRatingSheet");
+
+    if (PreferenceHelper.getBool(PreferenceHelper.APP_RATING_SUBMITTED) ==
+        false) {
+      Future.delayed(const Duration(milliseconds: 300), () {
+        Haptic.vibrate();
+
+        BaseUtil.openModalBottomSheet(
+          addToScreenStack: true,
+          enableDrag: false,
+          hapticVibrate: true,
+          isBarrierDismissible: true,
+          backgroundColor: Colors.transparent,
+          isScrollControlled: true,
+          content: const FelloInAppReview(),
+        );
+      });
+    } else {
+      Future.delayed(const Duration(milliseconds: 300), () {
+        Haptic.vibrate();
+
+        BaseUtil.openModalBottomSheet(
+          addToScreenStack: true,
+          enableDrag: false,
+          hapticVibrate: true,
+          isBarrierDismissible: true,
+          backgroundColor: Colors.transparent,
+          isScrollControlled: true,
+          content: const ReferralRatingSheet(),
+        );
+      });
+    }
+  }
+
+  static FileType getFileType(String fileUrl) {
+    String extension = fileUrl.toLowerCase().split('.').last;
+
+    switch (extension) {
+      case "svg":
+        return FileType.svg;
+      case "json":
+      case "lottie":
+        return FileType.lottie;
+      case "png":
+      case "jpeg":
+      case "webp":
+      case "jpg":
+        return FileType.png;
+      default:
+        return FileType.unknown;
+    }
+  }
+
+  static Widget getWidgetBasedOnUrl(String fileUrl,
+      {double? height, double? width}) {
+    FileType fileType = getFileType(fileUrl);
+
+    switch (fileType) {
+      case FileType.svg:
+        return SvgPicture.network(
+          fileUrl,
+          fit: BoxFit.contain,
+          height: height,
+          width: width,
+        );
+
+      case FileType.lottie:
+        return Lottie.network(fileUrl,
+            fit: BoxFit.contain, height: height, width: width);
+      case FileType.png:
+        return CachedNetworkImage(
+          fit: BoxFit.contain,
+          imageUrl: fileUrl,
+          height: height,
+          width: width,
+        );
+      default:
+        return const Icon(
+          Icons.add,
+          color: Colors.white,
+        );
+    }
+  }
+
+  static int extractIntFromString(String input) {
+    // Remove all non-digit characters from the string
+    final sanitizedString = input.replaceAll(RegExp(r'[^0-9]'), '');
+
+    // Parse the sanitized string as an integer
+    final parsedInt = int.tryParse(sanitizedString);
+
+    // Return the parsed integer value, or 0 if it couldn't be parsed
+    return parsedInt ?? 0;
+  }
+
   Future<bool> authenticateUser(AuthCredential credential) {
     logger.d("Verification credetials: $credential");
     // FirebaseAuth.instance.signInWithCustomToken(token)
@@ -557,14 +724,14 @@ class BaseUtil extends ChangeNotifier {
     try {
       // await _lModel!.deleteLocalAppData();
       logger.d('Cleared local cache');
-      _appState!.setCurrentTabIndex = 0;
+      _appState.setCurrentTabIndex = 0;
 
       //remove  token from remote
       //await _dbModel.updateClientToken(myUser, '');
 
       //TODO better fix required
       ///IMP: When a user signs out and attempts
-      /// to sign in again without closing the apcp,
+      /// to sign in again without closing the app,
       /// the old variables are still in effect
       /// resetting them like below for now
       _myUser = null;
@@ -598,12 +765,14 @@ class BaseUtil extends ChangeNotifier {
       hasMoreTransactionListDocuments = true;
       isOtpResendCount = 0;
       isUpiInfoMissing = true;
+      referredCode = null;
 
-      AppState.delegate!.appState.setCurrentTabIndex = 0;
+      // AppState.delegate!.appState.setCurrentTabIndex = 0;
       manualReferralCode = null;
       referrerUserId = null;
       _setRuntimeDefaults();
       SpotLightController.instance.dispose();
+      await FirebaseMessaging.instance.deleteToken();
 
       return true;
     } catch (e) {
@@ -620,19 +789,6 @@ class BaseUtil extends ChangeNotifier {
     }
     return true;
   }
-
-  // void openTambolaGame() async {
-  //   if (await getDrawStatus()) {
-  //     await _lModel!.saveDailyPicksAnimStatus(DateTime.now().weekday).then(
-  //           (value) =>
-  //               print("Daily Picks Draw Animation Save Status Code: $value"),
-  //         );
-  //     AppState.delegate!.appState.currentAction =
-  //         PageAction(state: PageState.addPage, page: TPickDrawPageConfig);
-  //   } else
-  //     AppState.delegate!.appState.currentAction =
-  //         PageAction(state: PageState.addPage, page: TGamePageConfig);
-  // }
 
   static int getRandomRewardAmount(index) {
     if (index < 5) {
@@ -659,8 +815,7 @@ class BaseUtil extends ChangeNotifier {
   static int getWeekNumber({DateTime? currentDate}) {
     DateTime tdt = (currentDate != null) ? currentDate : DateTime.now();
     int dayn = tdt.weekday;
-    //tdt = new DateTime(tdt.year, tdt.month, tdt.day-dayn+3);
-    //tdt.setDate(tdt.getDate() - dayn + 3);
+
     DateTime firstThursday = DateTime(tdt.year, tdt.month, tdt.day - dayn + 3);
     tdt = DateTime(tdt.year, 1, 1);
     if (tdt.weekday != DateTime.friday) {
@@ -691,7 +846,7 @@ class BaseUtil extends ChangeNotifier {
 
   static T? _cast<T>(x) => x is T ? x : null;
 
-  static double toDouble(dynamic x) {
+  static double toDouble(x) {
     if (x == null) return 0.0;
     try {
       int? y = _cast<int>(x);
@@ -706,7 +861,7 @@ class BaseUtil extends ChangeNotifier {
     return 0.0;
   }
 
-  static int toInt(dynamic x) {
+  static int toInt(x) {
     if (x == null) return 0;
     try {
       int? y = _cast<int>(x);
@@ -721,7 +876,7 @@ class BaseUtil extends ChangeNotifier {
     return 0;
   }
 
-  static getIntOrDouble(double x) {
+  static dynamic getIntOrDouble(double x) {
     if (x - x.round() != 0) {
       return x;
     } else {
@@ -733,6 +888,67 @@ class BaseUtil extends ChangeNotifier {
     double y = x * pow(10, offset);
     int z = round ? y.round() : y.truncate();
     return z / pow(10, offset);
+  }
+
+  static String formatIndianRupees(double value) {
+    final formatter = NumberFormat.currency(
+      locale: 'en_IN',
+      symbol: '₹',
+      decimalDigits: 0,
+    );
+    return formatter.format(value);
+  }
+
+  static Future<bool> isFirstTimeThisWeek() async {
+    /// Get the current week number
+    final currentWeekNumber =
+        (DateTime.now().difference(DateTime.utc(0, 1, 1)).inDays ~/ 7) + 1;
+
+    final TimestampModel? userCreatedOn =
+        locator<UserService>().baseUser?.createdOn;
+
+    /// if user signup date is same as current week number then return false
+    if (userCreatedOn != null) {
+      final userCreatedOnDate = DateTime.fromMillisecondsSinceEpoch(
+          userCreatedOn.millisecondsSinceEpoch);
+      final userCreatedOnWeekNumber =
+          (userCreatedOnDate.difference(DateTime.utc(0, 1, 1)).inDays ~/ 7) + 1;
+      if (userCreatedOnWeekNumber == currentWeekNumber) {
+        return false;
+      }
+    }
+
+    /// Get the last week number when the app was opened
+    final lastWeekNumber =
+        PreferenceHelper.getInt(PreferenceHelper.LAST_WEEK_NUMBER) ?? 0;
+
+    /// Update the last week number in preferences
+    await PreferenceHelper.setInt(
+        PreferenceHelper.LAST_WEEK_NUMBER, currentWeekNumber);
+
+    /// Check if the current week is the same as the last week when the app was opened
+    return currentWeekNumber != lastWeekNumber;
+  }
+
+  static int calculateRemainingDays(DateTime endDate) {
+    DateTime now = DateTime.now();
+    Duration difference = endDate.difference(now);
+    int remaining = difference.inDays;
+    return remaining;
+  }
+
+  void showFoundBugSheet() {
+    Haptic.vibrate();
+
+    BaseUtil.openModalBottomSheet(
+      addToScreenStack: true,
+      enableDrag: false,
+      hapticVibrate: true,
+      isBarrierDismissible: true,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      content: const FoundBug(),
+    );
   }
 
   int getTicketCountForTransaction(double investment) =>
@@ -766,48 +982,6 @@ class BaseUtil extends ChangeNotifier {
   void setEmail(String email) {
     myUser!.email = email;
     notifyListeners();
-  }
-
-  void refreshAugmontBalance() async {
-    _userRepo!.getFundBalance().then((aValue) {
-      if (aValue.code == 200) {
-        userFundWallet = aValue.model;
-        if (userFundWallet!.augGoldQuantity > 0) _updateAugmontBalance();
-      }
-    });
-  }
-
-  // Future<void> fetchUserAugmontDetail() async {
-  //   if (augmontDetail == null) {
-  //     ApiResponse<UserAugmontDetail> augmontDetailResponse =
-  //         await _userRepo.getUserAugmontDetails();
-  //     if (augmontDetailResponse.code == 200)
-  //       augmontDetail = augmontDetailResponse.model;
-  //   }
-  // }
-
-  Future<void> _updateAugmontBalance() async {
-    if (augmontDetail == null ||
-        (userFundWallet!.augGoldQuantity == 0 &&
-            userFundWallet!.augGoldBalance == 0)) return;
-    AugmontService().getRates().then((currRates) {
-      if (currRates == null ||
-          currRates.goldSellPrice == null ||
-          userFundWallet!.augGoldQuantity == 0) return;
-
-      augmontGoldRates = currRates;
-      double gSellRate = augmontGoldRates!.goldSellPrice!;
-      userFundWallet!.augGoldBalance =
-          BaseUtil.digitPrecision(userFundWallet!.augGoldQuantity * gSellRate);
-      notifyListeners(); //might cause ui error if screen no longer active
-    }).catchError((err) {
-      if (_myUser!.uid != null) {
-        var errorDetails = {'error_msg': err.toString()};
-        _internalOpsService!.logFailure(_myUser!.uid,
-            FailType.UserAugmontBalanceUpdateFailed, errorDetails);
-      }
-      debugPrint('$err');
-    });
   }
 
   void updateAugmontDetails(
@@ -925,7 +1099,7 @@ class BaseUtil extends ChangeNotifier {
     notifyListeners();
   }
 
-  get isGoogleSignInProgress => _isGoogleSignInProgress;
+  bool? get isGoogleSignInProgress => _isGoogleSignInProgress;
 
   set isGoogleSignInProgress(value) {
     _isGoogleSignInProgress = value;
@@ -971,7 +1145,7 @@ class CompleteProfileDialog extends StatelessWidget {
     S locale = S.of(context);
     return WillPopScope(
       onWillPop: () async {
-        AppState.backButtonDispatcher!.didPopRoute();
+        await AppState.backButtonDispatcher!.didPopRoute();
         return Future.value(true);
       },
       child: MoreInfoDialog(

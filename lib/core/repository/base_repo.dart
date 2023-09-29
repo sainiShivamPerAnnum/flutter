@@ -14,7 +14,7 @@ abstract class BaseRepo {
 
   @protected
   Future<String> getBearerToken() async {
-    String token = await userService!.firebaseUser!.getIdToken();
+    String token = await userService.firebaseUser!.getIdToken();
     return token;
   }
 

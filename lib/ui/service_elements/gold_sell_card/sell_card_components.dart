@@ -16,7 +16,8 @@ class SellText extends StatelessWidget {
     final title = investmentType == InvestmentType.AUGGOLD99
         ? "Sell Digital Gold"
         : locale.sellCardTitle2;
-    final subTitle = locale.sellCardSubTitle1;
+    const subTitle =
+        'With every withdrawal, some tokens and tickets will be deducted.';
     return Expanded(
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
@@ -43,7 +44,8 @@ class SellButton extends StatelessWidget {
   final Function onTap;
   final bool isActive;
   final String text;
-  SellButton(
+
+  const SellButton(
       {Key? key,
       required this.onTap,
       required this.isActive,
@@ -74,7 +76,7 @@ class SellButton extends StatelessWidget {
               ),
             ),
           )
-        : SizedBox();
+        : const SizedBox();
   }
 }
 
@@ -134,7 +136,7 @@ class SellActionButton extends StatelessWidget {
           decoration: BoxDecoration(
             border: Border.all(color: Colors.white.withOpacity(0.5)),
             borderRadius: BorderRadius.circular(SizeConfig.roundness5),
-            color: Color(0xffd9d9d9).withOpacity(0.1),
+            color: const Color(0xffd9d9d9).withOpacity(0.1),
           ),
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding24),
@@ -147,7 +149,7 @@ class SellActionButton extends StatelessWidget {
                   title!,
                   style: TextStyles.rajdhaniM.body1.colour(Colors.white),
                 ),
-                Icon(
+                const Icon(
                   Icons.arrow_forward_ios,
                   color: Colors.white,
                 )
@@ -195,7 +197,7 @@ class SellCardInfoStrips extends StatelessWidget {
           leadingIcon ??
               Padding(
                 padding: EdgeInsets.only(right: SizeConfig.padding16),
-                child: Icon(
+                child: const Icon(
                   Icons.warning_amber_rounded,
                   color: UiConstants.kTextColor,
                 ),

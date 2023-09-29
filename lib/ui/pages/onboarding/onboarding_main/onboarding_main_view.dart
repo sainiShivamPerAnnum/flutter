@@ -27,9 +27,9 @@ class _OnBoardingViewState extends State<OnBoardingView>
   void initState() {
     log("BUILD: Init called for onboarding view");
     controller =
-        AnimationController(vsync: this, duration: Duration(seconds: 6));
+        AnimationController(vsync: this, duration: const Duration(seconds: 6));
     Future.delayed(
-      Duration(seconds: 2),
+      const Duration(seconds: 2),
       () => controller!.animateTo(0.26),
     );
     super.initState();
@@ -52,16 +52,17 @@ class _OnBoardingViewState extends State<OnBoardingView>
       onModelReady: (model) => model.init(),
       builder: (context, model, child) {
         return Scaffold(
-          backgroundColor: Color(0xFF032A2E),
+          backgroundColor: const Color(0xFF032A2E),
           floatingActionButton: FloatingActionButton(
-            backgroundColor: Color(0xff0B867C),
+            backgroundColor: const Color(0xff0B867C),
             onPressed: () {
-              if (model.currentPage == 2)
+              if (model.currentPage == 2) {
                 model.registerWalkthroughCompletion();
-              else
+              } else {
                 model.pageController!.animateToPage(model.currentPage + 1,
-                    duration: Duration(milliseconds: 500),
+                    duration: const Duration(milliseconds: 500),
                     curve: Curves.easeIn);
+              }
             },
             child: Container(
               width: SizeConfig.padding64,
@@ -69,7 +70,7 @@ class _OnBoardingViewState extends State<OnBoardingView>
               decoration: BoxDecoration(
                 color: Colors.transparent,
                 border: Border.all(
-                  color: Color(0xFF009D91),
+                  color: const Color(0xFF009D91),
                   width: 2,
                 ),
                 shape: BoxShape.circle,
@@ -94,13 +95,13 @@ class _OnBoardingViewState extends State<OnBoardingView>
                     return;
                   } else {
                     model.pageController!.nextPage(
-                      duration: Duration(milliseconds: 500),
+                      duration: const Duration(milliseconds: 500),
                       curve: Curves.easeIn,
                     );
                   }
                 } else {
                   model.pageController!.previousPage(
-                    duration: Duration(milliseconds: 500),
+                    duration: const Duration(milliseconds: 500),
                     curve: Curves.easeIn,
                   );
                 }
@@ -120,9 +121,9 @@ class _OnBoardingViewState extends State<OnBoardingView>
                       begin: Alignment.topCenter,
                       end: Alignment.bottomCenter,
                       colors: [
-                        Color(0xFF097178).withOpacity(0.2),
-                        Color(0xFF0C867C),
-                        Color(0xff0B867C),
+                        const Color(0xFF097178).withOpacity(0.2),
+                        const Color(0xFF0C867C),
+                        const Color(0xff0B867C),
                       ],
                     ),
                   ),
@@ -150,13 +151,13 @@ class _OnBoardingViewState extends State<OnBoardingView>
                           begin: Alignment.bottomCenter,
                           end: Alignment.topCenter,
                           colors: [
-                            Color(0xff0B867C),
-                            Color(0xff0B867C),
-                            Color(0xff0B867C),
-                            Color(0xff0B867C),
-                            Color(0xff0B867C).withOpacity(0.95),
-                            Color(0xff0B867C).withOpacity(0.2),
-                            Color(0xff0B867C).withOpacity(0.05),
+                            const Color(0xff0B867C),
+                            const Color(0xff0B867C),
+                            const Color(0xff0B867C),
+                            const Color(0xff0B867C),
+                            const Color(0xff0B867C).withOpacity(0.95),
+                            const Color(0xff0B867C).withOpacity(0.2),
+                            const Color(0xff0B867C).withOpacity(0.05),
                             Colors.transparent
                           ]),
                     ),
@@ -177,18 +178,20 @@ class _OnBoardingViewState extends State<OnBoardingView>
                             // physics: NeverScrollableScrollPhysics(),
                             onPageChanged: (val) {
                               if (val > model.currentPage) {
-                                if (val == 2)
+                                if (val == 2) {
                                   controller!.animateTo(1);
-                                else
+                                } else {
                                   controller!.animateTo(0.53);
+                                }
                               } else {
                                 if (val == 0) {
                                   controller!.reset();
                                   controller!.animateTo(0.28);
-                                } else if (val == 1)
+                                } else if (val == 1) {
                                   controller!.animateBack(0.53);
-                                else
+                                } else {
                                   controller!.animateBack(0);
+                                }
                               }
                               model.currentPage = val;
                             },
@@ -196,9 +199,13 @@ class _OnBoardingViewState extends State<OnBoardingView>
                             itemBuilder: (context, index) {
                               return Column(
                                 children: [
-                                  Text(
-                                    model.onboardingData![index][0],
-                                    style: TextStyles.rajdhaniB.title2,
+                                  FittedBox(
+                                    fit: BoxFit.fitWidth,
+                                    child: Text(
+                                      model.onboardingData![index][0],
+                                      style: TextStyles.rajdhaniB.title3,
+                                      textAlign: TextAlign.center,
+                                    ),
                                   ),
                                   SizedBox(
                                     height: SizeConfig.padding16,
@@ -209,7 +216,7 @@ class _OnBoardingViewState extends State<OnBoardingView>
                                     style: TextStyles.sourceSans.body2,
                                   ),
                                   SizedBox(
-                                    height: SizeConfig.padding24,
+                                    height: SizeConfig.padding20,
                                   ),
                                   model.assetWidgets[index],
                                 ],
@@ -225,7 +232,8 @@ class _OnBoardingViewState extends State<OnBoardingView>
                               return Container(
                                 width: SizeConfig.padding8,
                                 height: SizeConfig.padding8,
-                                margin: EdgeInsets.symmetric(horizontal: 3),
+                                margin:
+                                    const EdgeInsets.symmetric(horizontal: 3),
                                 decoration: BoxDecoration(
                                   color: model.currentPage == index
                                       ? Colors.white

@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:io';
 import 'dart:typed_data';
 import 'dart:ui';
@@ -31,41 +32,43 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/rendering.dart';
-// import 'package:flutter_share_me/flutter_share_me.dart';
-import 'package:image_picker/image_picker.dart';
 import 'package:path_provider/path_provider.dart';
 import 'package:share_plus/share_plus.dart';
 
 class MyWinningsViewModel extends BaseViewModel {
   //LOCATORS
-  final CustomLogger? _logger = locator<CustomLogger>();
+  final CustomLogger _logger = locator<CustomLogger>();
   final UserService _userService = locator<UserService>();
-  final TxnHistoryService? _transactionHistoryService =
+  final TxnHistoryService _transactionHistoryService =
       locator<TxnHistoryService>();
+
   // final LocalDBModel? _localDBModel = locator<LocalDBModel>();
-  final AnalyticsService? _analyticsService = locator<AnalyticsService>();
-  final InternalOpsService? _internalOpsService = locator<InternalOpsService>();
-  final PrizingRepo? _prizingRepo = locator<PrizingRepo>();
-  final AppFlyerAnalytics? _appFlyer = locator<AppFlyerAnalytics>();
+  final AnalyticsService _analyticsService = locator<AnalyticsService>();
+  final InternalOpsService _internalOpsService = locator<InternalOpsService>();
+  final PrizingRepo _prizingRepo = locator<PrizingRepo>();
+  final AppFlyerAnalytics _appFlyer = locator<AppFlyerAnalytics>();
   final ScratchCardService _gtService = locator<ScratchCardService>();
   S locale = locator<S>();
+
   // LOCAL VARIABLES
   PrizeClaimChoice? _choice;
-  get choice => this._choice;
+
+  get choice => _choice;
   final GlobalKey imageKey = GlobalKey();
   final UserRepository? userRepo = locator<UserRepository>();
 
   //GETTERS SETTERS
 
   UserService get userService => _userService;
+
   // AugmontTransactionService get txnService => _GoldTransactionService;
 
   set choice(value) {
-    this._choice = value;
+    _choice = value;
     notifyListeners();
   }
 
-  init() {
+  void init() {
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       _gtService.isLastPageForScratchCards = false;
       _gtService.scratchCardsListLastTicketId = null;
@@ -73,11 +76,11 @@ class MyWinningsViewModel extends BaseViewModel {
     });
   }
 
-  fetchMoreCards() {
+  void fetchMoreCards() {
     _gtService.fetchScratchCards(more: true);
   }
 
-  trackScratchCardsOpen() {
+  void trackScratchCardsOpen() {
     _analyticsService!
         .track(eventName: AnalyticsEvents.scratchCardSectionOpen, properties: {
       "Unscratched tickets count": _gtService.unscratchedTicketsCount,
@@ -88,7 +91,7 @@ class MyWinningsViewModel extends BaseViewModel {
     });
   }
 
-  getWinningHistoryTitle(UserTransaction tran) {
+  String getWinningHistoryTitle(UserTransaction tran) {
     String? redeemtype = tran.redeemType;
     String? subtype = tran.subType;
     if (redeemtype != null && redeemtype != "") {
@@ -121,18 +124,18 @@ class MyWinningsViewModel extends BaseViewModel {
     return "Fello Rewards";
   }
 
-  getWinningHistoryLeadingBg(String subtype) {
+  Color getWinningHistoryLeadingBg(String subtype) {
     switch (subtype) {
       case "GOLD_CREDIT":
         return UiConstants.primaryColor;
       case "AMZ_VOUCHER":
         return UiConstants.tertiarySolid;
       default:
-        return Color(0xff11192B);
+        return const Color(0xff11192B);
     }
   }
 
-  getWinningHistoryLeadingImage(String subtype) {
+  String getWinningHistoryLeadingImage(String subtype) {
     switch (subtype) {
       case "GOLD_CREDIT":
         return Assets.augmontShare;
@@ -144,15 +147,16 @@ class MyWinningsViewModel extends BaseViewModel {
     }
   }
 
-  showConfirmDialog(PrizeClaimChoice choice) {
+  void showConfirmDialog(PrizeClaimChoice choice) {
     BaseUtil.openDialog(
       addToScreenStack: true,
       isBarrierDismissible: false,
       hapticVibrate: true,
       content: FelloConfirmationDialog(
         result: (res) async {
-          if (res)
-            await claim(choice, _userService!.userFundWallet!.unclaimedBalance);
+          if (res) {
+            claim(choice, _userService!.userFundWallet!.unclaimedBalance);
+          }
         },
         showCrossIcon: true,
         assetpng: choice == PrizeClaimChoice.AMZ_VOUCHER
@@ -171,12 +175,10 @@ class MyWinningsViewModel extends BaseViewModel {
     );
   }
 
-  showSuccessPrizeWithdrawalDialog(
-    PrizeClaimChoice choice,
-    String subtitle,
-  ) async {
+  showSuccessPrizeWithdrawalDialog(PrizeClaimChoice choice,
+      String subtitle,) async {
     AppState.screenStack.add(ScreenItem.dialog);
-    showDialog(
+    unawaited(showDialog(
         context: AppState.delegate!.navigatorKey.currentContext!,
         builder: (ctx) {
           return Stack(
@@ -189,12 +191,13 @@ class MyWinningsViewModel extends BaseViewModel {
                       final link = await _appFlyer!.inviteLink();
                       if (link['status'] == 'success') {
                         url = link['payload']['userInviteUrl'];
-                        if (url == null) url = link['payload']['userInviteURL'];
+                        url ??= link['payload']['userInviteURL'];
                       }
 
-                      if (url != null)
+                      if (url != null) {
                         capture(
                             'Hey, I won ₹${_userService!.userFundWallet!.prizeBalance.toInt()} on Fello! \nLet\'s save and play together: $url');
+                      }
                     } catch (e) {
                       _logger!.e(e.toString());
                       BaseUtil.showNegativeAlert(
@@ -205,7 +208,7 @@ class MyWinningsViewModel extends BaseViewModel {
                 content: Column(
                   children: [
                     SizedBox(height: SizeConfig.screenHeight! * 0.02),
-                    Container(
+                    SizedBox(
                       height: SizeConfig.screenHeight! * 0.38,
                       width: SizeConfig.screenWidth,
                       child: FittedBox(
@@ -243,15 +246,15 @@ class MyWinningsViewModel extends BaseViewModel {
               ),
             ],
           );
-        });
+        }));
   }
 
-  shareOnWhatsapp() {
+  void shareOnWhatsapp() {
     _logger!.i("Whatsapp share triggered");
     AppState.backButtonDispatcher!.didPopRoute();
   }
 
-  claim(PrizeClaimChoice choice, double claimPrize) {
+  void claim(PrizeClaimChoice choice, double claimPrize) {
     _registerClaimChoice(choice).then((flag) {
       AppState.backButtonDispatcher!.didPopRoute();
       if (flag) {
@@ -260,10 +263,10 @@ class MyWinningsViewModel extends BaseViewModel {
       }
     });
 
-    _analyticsService!
+    _analyticsService
         .track(eventName: AnalyticsEvents.redeemWinningsTapped, properties: {
       "total Winnings amount":
-          _userService!.userFundWallet!.unclaimedBalance ?? 0,
+          _userService.userFundWallet!.unclaimedBalance ?? 0,
       "Token Balance": AnalyticsProperties.getTokens(),
       "Total Invested Amount": AnalyticsProperties.getGoldInvestedAmount() +
           AnalyticsProperties.getFelloFloAmount(),
@@ -298,7 +301,7 @@ class MyWinningsViewModel extends BaseViewModel {
   }
 
   Widget getSubtitleWidget(String subtitle) {
-    if (subtitle == "gold" || subtitle == "amazon")
+    if (subtitle == "gold" || subtitle == "amazon") {
       return RichText(
         textAlign: TextAlign.center,
         text: TextSpan(
@@ -308,12 +311,13 @@ class MyWinningsViewModel extends BaseViewModel {
           style: TextStyles.body3.colour(Colors.grey),
           children: [
             TextSpan(
-              text: locale.businessDays,
+              text: " ${locale.businessDays}",
               style: TextStyles.body3.bold.colour(UiConstants.tertiarySolid),
             )
           ],
         ),
       );
+    }
     return Text(
       subtitle,
       textAlign: TextAlign.center,
@@ -323,12 +327,12 @@ class MyWinningsViewModel extends BaseViewModel {
 
 // Capture Share card Logic
   capture(String shareMessage) {
-    Future.delayed(Duration(seconds: 1), () {
+    Future.delayed(const Duration(seconds: 1), () {
       captureCard().then((image) {
         AppState.backButtonDispatcher!.didPopRoute();
-        if (image != null)
+        if (image != null) {
           shareCard(image, shareMessage);
-        else {
+        } else {
           try {
             if (Platform.isIOS) {
               Share.share(shareMessage).catchError((onError) {
@@ -364,7 +368,7 @@ class MyWinningsViewModel extends BaseViewModel {
   Future<Uint8List?> captureCard() async {
     try {
       RenderRepaintBoundary imageObject =
-          imageKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
+      imageKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
       final image = await imageObject.toImage(pixelRatio: 2);
       ByteData? byteData = await image.toByteData(format: ImageByteFormat.png);
       final pngBytes = byteData?.buffer.asUint8List();
@@ -391,14 +395,14 @@ class MyWinningsViewModel extends BaseViewModel {
       if (Platform.isAndroid) {
         final directory = (await getExternalStorageDirectory())!.path;
         String dt = DateTime.now().toString();
-        File imageFile = new File('$directory/fello-reward-$dt.png');
+        File imageFile = File('$directory/fello-reward-$dt.png');
         imageFile.writeAsBytesSync(image);
-        Share.shareXFiles(
+        unawaited(Share.shareXFiles(
           [XFile(imageFile.path)],
           subject: 'Fello Rewards',
           text: shareMessage ?? "",
         ).catchError((onError) {
-          if (_userService!.baseUser!.uid != null) {
+          if (_userService.baseUser!.uid != null) {
             Map<String, dynamic> errorDetails = {
               'error_msg': 'Share reward card in card.dart failed'
             };
@@ -406,7 +410,7 @@ class MyWinningsViewModel extends BaseViewModel {
                 FailType.FelloRewardCardShareFailed, errorDetails);
           }
           print(onError);
-        });
+        }));
       } else if (Platform.isIOS) {
         String dt = DateTime.now().toString();
 
@@ -414,12 +418,12 @@ class MyWinningsViewModel extends BaseViewModel {
         if (!await directory.exists()) await directory.create(recursive: true);
 
         final File imageFile =
-            await new File('${directory.path}/fello-reward-$dt.jpg').create();
+            await File('${directory.path}/fello-reward-$dt.jpg').create();
         imageFile.writeAsBytesSync(image);
 
         _logger!.d("Image file created and sharing, ${imageFile.path}");
 
-        Share.shareXFiles(
+        unawaited(Share.shareXFiles(
           [XFile(imageFile.path)],
           subject: 'Fello Rewards',
           text: shareMessage ?? "",
@@ -432,7 +436,7 @@ class MyWinningsViewModel extends BaseViewModel {
                 FailType.FelloRewardCardShareFailed, errorDetails);
           }
           print(onError);
-        });
+        }));
       }
     } catch (e) {
       // backButtonDispatcher.didPopRoute();

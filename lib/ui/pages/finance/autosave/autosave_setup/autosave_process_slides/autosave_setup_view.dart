@@ -8,12 +8,14 @@ import 'package:felloapp/util/extensions/string_extension.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class AutoPaySetupOrUpdateView extends StatelessWidget {
-  AutoPaySetupOrUpdateView({
+  const AutoPaySetupOrUpdateView({
     super.key,
     required this.model,
   });
+
   final AutosaveProcessViewModel model;
 
   @override
@@ -60,13 +62,29 @@ class AutoPaySetupOrUpdateView extends StatelessWidget {
         ),
         Align(
           alignment: Alignment.bottomCenter,
-          child: Padding(
-            padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
-            child: ReactivePositiveAppButton(
-              btnText:
-                  "SETUP FOR ₹${model.totalInvestingAmount}/${model.selectedFrequency.rename()}",
-              onPressed: model.setupCtaOnPressed,
-              width: SizeConfig.screenWidth! * 0.8,
+          child: SizedBox(
+            height: SizeConfig.padding175,
+            width: SizeConfig.screenWidth,
+            child: Stack(
+              children: [
+                if (model.selectedAssetOption != 0)
+                  SvgPicture.network(
+                    model.getGoals(),
+                    width: SizeConfig.screenWidth,
+                  ),
+                Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Padding(
+                    padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+                    child: ReactivePositiveAppButton(
+                      btnText:
+                          "SETUP FOR ₹${model.totalInvestingAmount}/${model.selectedFrequency.rename()}",
+                      onPressed: model.setupCtaOnPressed,
+                      width: SizeConfig.screenWidth! * 0.8,
+                    ),
+                  ),
+                ),
+              ],
             ),
           ),
         )

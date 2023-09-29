@@ -1,12 +1,10 @@
 class AnalyticsEvents {
-  // signup/signin events
   static const signupProfile = "Enter personal details @Signup";
   static const profileInformationAdded = "Profile information entered";
   static const signupName = "Enter gaming name @signup";
   static const signupDemo = "Save, play, win demo track";
   static const termsAndConditions = "Terms And Conditions";
 
-  // save section
   static const saveBuy = "Select Buy Digital Gold";
   static const saveBuyCoupon = "Coupon Applied";
   static const buyGoldInvestMore = "Investing more through pop up";
@@ -14,7 +12,6 @@ class AnalyticsEvents {
   static const paymentCancelled = "Payment Cancelled";
   static const sellReason = "Reason to sell";
 
-  // play section
   static const earnMoreTokens = "Select Earn more tokens";
   static const earnMoreSaveMoney = "Select Save more in earn more section";
   static const earnMoreRefer = "Select refer in earn more section";
@@ -23,7 +20,6 @@ class AnalyticsEvents {
   static const startPlayingTambola = "Enter Tambola";
   static const buyTambolaTickets = "Play Tambola";
 
-  // profile section
   static const profileClicked = "Profile Tapped";
   static const selectKYC = 'Select KYC';
   static const transactions = "Transactions";
@@ -38,7 +34,6 @@ class AnalyticsEvents {
   static const addFLCTokensTopRight = 'Add FLC tokens top-right';
   static const notifications = 'Notifications';
 
-  // win section
   static const winLeaderboard = "Select Leaderboard";
   static const winReferral = "Going to referral section through win";
   static const winWinnings = "Going to winnings section";
@@ -55,7 +50,6 @@ class AnalyticsEvents {
   static const goldSellModalSheet = "Opened gold sell modalsheet";
   static const lBoxSellModalSheet = "Opened lbox sell modalsheet";
 
-  //new analytics 4.0
   static const profileUpdated = "Updated profile";
   static const completedMilestoneTapped = "Tapped on a completed milestone";
   static const inCompleteMilestoneTapped = "Journey Milestone Tapped";
@@ -64,7 +58,6 @@ class AnalyticsEvents {
   static const buildProfileTapped = "Tapped on build profile button";
   static const tambolaGameCard = "Tambola Banner Clicked";
 
-  // old analytics naming
   static const investedInGold = "Invested in gold";
   static const emailInitiated = "Email Initiated";
   static const bankDetailsUpdated = "Bank details updated";
@@ -85,7 +78,6 @@ class AnalyticsEvents {
 
   static const flcTokensExhasuted = 'Fello Tokens Exhausted';
 
-  //autosave section
   static const asCardTapped = "Autosave Card Tapped";
   static const asBenefitsTapped = "Autosave Benefits Next Tapped";
   static const asChooseAssetNextTapped = "Autosave Choose asset next Tapped";
@@ -101,6 +93,8 @@ class AnalyticsEvents {
   static const asUpiAppTapped = "Autosave UPI App Tapped";
   static const asUpiSubmitTapped = "Autosave UPI Submit Tapped";
   static const asHardBackTapped = "Autosave Hard Back Tapped";
+  static const asSurveyContinueTapped = "Autosave Survey Continue Tapped";
+  static const asSurveyGoBackTapped = "Autosave Survey Go Back Tapped";
   static const asDoneTapped = "Autosave success done tapped";
   static const asPrevTapped = "Autosave Previous Tapped";
   static const asUpdateTapped = "Update Autosave Tapped";
@@ -111,7 +105,6 @@ class AnalyticsEvents {
   static const asPauseTwoWeeks = "Autosave paused for two weeks";
   static const asPauseOneMonth = "Autosave paused for one month";
 
-  //Powerplay
   static const iplBannerTapped = "IPL Banner tapped";
   static const iplLiveCardTapped = "IPL Live Card Tapped";
   static const iplPopularPredictionsTapped = "IPL View Popular Predictions";
@@ -128,7 +121,6 @@ class AnalyticsEvents {
       "IPL Predict Now bottomsheet button Tapped";
   static const iplCarouselTapped = "Ipl Carousel Tapped";
 
-  //Added in alnalytics-phase 1
   static const resendOtpTapped = "Resend OTP Tapped";
   static const proceedToSignUp = "Proceed to Signup";
   static const splashScrenProceed = "Splash Screen Proceed";
@@ -174,15 +166,143 @@ class AnalyticsEvents {
   static const scratchCardSectionOpen = 'Scratch Card section open';
   static const signupEnterMobile = "Entered Mobile number";
   static const mobileOtpDone = "Entered OTP";
-
-  //Marketing Events
+  static const lastWeekCrossButton = "Last Week Cross Tapped";
+  static const lastWeekSaveNow = "Last Week Save Now Tapped";
+  static const reviewPopupSuccess = "Review Popup Rating Success";
+  static const rateOnPlayStoreTapped = "Rate on Play Store Tapped";
 
   static const dailyAppBonusClaimed = "Tapped on Daily App Bonus";
   static const dailyAppBonusGotItTapped = "Daily App Open Got It Tapped";
 
-  //Transaction Events
   static const transactionCompleted = "Razorpay Transaction Completed";
   static const transactionFailed = "Razorpay Transaction Failed";
+  static const intentTransactionBackPressed = "Back Tapped from PG";
+  static const intentUpiAppSelected = "Choose UPI App on PG";
+  static const saveInitiate = "save initiate";
 
   static const installedApps = "Installed Applications";
+
+  static const globalSaveTapped = "Global Save Now Tapped";
+  static const carouselItemTapped = "Carousel Item Tapped";
+  static const balanceCardTapped = "Balance card tapped";
+  static const balanceCardHorizontalSwiped = "Balance card horizontal swipped";
+  static const balanceCardVerticalSwiped = "Balance card vertical swipped";
+  static const viewBreakdownTapped = "View breakdown tapped";
+  static const saveOnAssetBannerTapped = "Save on Asset Banner";
+  static const tambolaStripOnHomeTapped = "Tambola Strip on Home Tapped";
+  static const offerBannerTapped = "Offer Banner Tapped";
+  static const floSlabBannerTapped = "Flo Slab Banner Tapped";
+  static const withdrawFloTapped = "Withdraw on Flo Asset Tapped";
+  static const investFloBannerTapped = "Invest on Flo Slab Tapped";
+  static const depositCardInFloSlabTapped = "Deposit Card in Flo Slab Tapped";
+  static const decideOnDepositCardTapped = "Decide on Deposit Card Tapped";
+  static const decisionOnDepositCard = "Decision on Deposit Card";
+  static const helpInFloSlabTapped = "Help Banner in Flo Slab Tapped";
+  static const investNowInFloSlabTapped = "Invest Now in Flo Slab Tapped";
+  static const assetSelectionProceed = "Asset Selection Proceed";
+  static const tambolaTicketInfoTapped = "Tambola Ticket Info HH Tapped";
+
+  static const maturityChoiceTapped = "Maturity Details Choose Tapped";
+  static const maturitySelectionContinueTapped =
+      "Maturity Selection Continue Tapped";
+  static const maturityWithdrawPopupTapped = "Maturity Withdraw Popup Tapped";
+  static const quickCheckoutTapped = "Quick Checkout Tapped";
+  static const quickCheckoutTileTapped = "Quick Checkout Tile Tapped";
+  static const saveOnce = "Save Once Tapped in Asset Detail Page";
+  static const saveDaily = "Save Daily Tapped in Asset Detail Page";
+  static const tambolaCarousel = "Tambola Top Carousel Tapped";
+  static const quizCrossTapped = "Cross on Quiz Tapped";
+  static const quizBannerTapped = "Quiz Banner Tapped";
+
+  static const iconTrayTapped = "Icon tray tapped";
+  static const goldProBannerTapped = "Gold Pro Banner Tapped";
+  static const goldProEntryBelowBalanceTapped =
+      "Gold Pro Entry Below Balance Card";
+  static const autosaveCardInGoldSectionTapped =
+      "Autosave Card in Gold Section Tapped";
+  static const paymentSuccessGoldProUpsellCardTapped =
+      "Payment Success Gold Pro Upsell";
+
+  static const yearTappedOnGraph = "Year tapped on graph";
+  static const videoTappedOnGoldPro = "Video Tapped on Gold Pro";
+  static const transactionTileTapped = "Transaction tile tapped";
+  static const startNewLeaseTapped = "Start New Lease Tapped";
+
+  static const goldProGramsSelected = "Gold Pro Grams Selected";
+  static const proceedWithGoldPro = "Proceed with Gold Pro";
+  static const proceedWithKycGoldPro = "Proceed with Kyc Gold Pro";
+  static const backTappedOnKycPage = "Back Tapped on Kyc Page";
+  static const goldProFinalSaveTapped = "Gold Pro final Save Tapped";
+  static const backTappedOnGoldProOverView = "Back tapped on Gold Pro OverView";
+  static const backSurveyContinueTappedGoldPro =
+      "Back Survey Continue tapped Gold Pro";
+  static const backSurveyGoBackTappedGoldPro =
+      "Back Survey Go Back Tapped Gold Pro";
+  static const doneTappedOnGoldProSuccess = "Done tapped on Gold Pro Success";
+
+  static const unleaseOnGoldProDetailsPage = "Unlease on Gold pro details page";
+  static const unleaseOnLeaseCardGoldPro = "Unlease on Lease card gold pro";
+  static const unleaseConfirmationGoldPro = "Unlease Confirmation Gold Pro";
+
+  static const newReferClaimTapped = "New Refer Claim Tapped";
+  static const referTappedFromAccount = "Refer Tapped from Account";
+  static const inviteFriendsTapped = "Invite Friends Tapped";
+  static const yourReferralsTapped = "Your Referrals Tapped";
+  static const inviteContactsTapped = "Invite Contacts Tapped";
+  static const syncContactsTapped = "Sync Contacts Tapped";
+  static const inviteOnContactCardTapped = "Invite on Contact Card Tapped";
+  static const remindOnReferralCardTapped = "Remind on Referral Card Tapped";
+  static const whatsappButtonTapped = "Whatsapp Button Tapped";
+  static const copyReferralCodeTapped = "Copy Referral Code Tapped";
+  static const inviteFriendsReferralSectionTapped =
+      "Invite Friends Referral Section Tapped";
+  static const claimRewardNowReferralAlertTapped =
+      "Claim Reward Now Referral Alert Tapped";
+  static const referralSectionBackTapped = "Referral Section Back Tapped";
+
+  static const referralSectionHelpTapped = "Referral Section Help Tapped";
+  static const reportBugTapped = "Report Bug Tapped";
+
+  static const reportBugSubmit = "Report Bug Submit";
+  static const pendingActionsFloTapped = "Pending Actions Flo Tapped";
+  static const makeDecisionNowTapped = "Make Decision Now Tapped";
+  static const confirmDecisionTapped = "Confirm Decision Tapped";
+  static const goToTransactionsTapped = "Go to Transactions Tapped";
+  static const flexiFixedFinalDecisionTapped =
+      "Flexi Fixed Final Decision Tapped";
+
+  //Cross Tapped on Pending Actions
+  static const crossTappedOnPendingActions = "Cross Tapped on Pending Actions";
+
+  //Slide to Reinvest in Fixed
+  static const slideToReinvestInFixed = "Slide to Reinvest in Fixed";
+
+  //Slide to Reinvest in 10% in Flexi Withdrawal
+  static const slideToReinvestInFlexiWithdrawal10 =
+      "Slide to Reinvest in Flexi Withdrawal 10%";
+
+  //I am Happy with Flexi Tapped
+  static const iAmHappyWithFlexiTapped = "I am Happy with Flexi Tapped";
+
+  //View Other Options in Flexi Withdrawal
+  static const viewOtherOptionsInFlexiWithdrawal =
+      "View Other Options in Flexi Withdrawal";
+
+  //Other Options Confirmation
+  static const otherOptionsConfirmation = "Other Options Confirmation";
+
+  //Reason Selected Fixed withdrawal
+  static const reasonSelectedFixedWithdrawal =
+      "Reason Selected Fixed withdrawal";
+
+  //Balloon tapped withdrawal fixed
+  static const balloonTappedWithdrawalFixed = "Balloon tapped withdrawal fixed";
+
+  //Change Decision on balloon screen
+  static const changeDecisionOnBalloonScreen =
+      "Change Decision on balloon screen";
+
+  //Confirm Withdraw on Fixed Withdrawal
+  static const confirmWithdrawOnFixedWithdrawal =
+      "Confirm Withdraw on Fixed Withdrawal";
 }

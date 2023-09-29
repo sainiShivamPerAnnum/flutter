@@ -45,11 +45,10 @@ final _goldMarquee = [
 final _floMarquee = [
   "Higher returns than FDs",
   "Your money is safe with us",
-  "7 days lock-in period"
 ];
 
 class SaveContainer extends StatefulWidget {
-  SaveContainer({
+  const SaveContainer({
     Key? key,
     required this.investmentType,
     this.isPopular = false,
@@ -110,7 +109,7 @@ class _SaveContainerState extends State<SaveContainer> {
           decoration: BoxDecoration(
             color: getCardBgColor,
             borderRadius: BorderRadius.circular(12),
-            boxShadow: [BoxShadow(color: Color.fromRGBO(0, 0, 0, 1))],
+            boxShadow: const [BoxShadow(color: Color.fromRGBO(0, 0, 0, 1))],
             border: widget.isPopular
                 ? Border.all(color: borderColor, width: 2)
                 : null,
@@ -259,7 +258,8 @@ class _SaveContainerState extends State<SaveContainer> {
                         options: CarouselOptions(
                             autoPlay: true,
                             viewportFraction: 1,
-                            scrollPhysics: NeverScrollableScrollPhysics()),
+                            scrollPhysics:
+                                const NeverScrollableScrollPhysics()),
                       );
                     }),
                   ),
@@ -278,8 +278,8 @@ class _SaveContainerState extends State<SaveContainer> {
                     ),
                     decoration: BoxDecoration(
                         color: borderColor,
-                        borderRadius:
-                            BorderRadius.vertical(bottom: Radius.circular(5))),
+                        borderRadius: const BorderRadius.vertical(
+                            bottom: Radius.circular(5))),
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
@@ -355,14 +355,13 @@ class _SaveContainerState extends State<SaveContainer> {
   }
 
   Color get getCardBgColor {
-    if (widget.isGold) return Color(0xff293566);
+    if (widget.isGold) return const Color(0xff293566);
 
-    return Color(0xff173B3F);
+    return const Color(0xff173B3F);
   }
 
-  //TODO: Get a border color for lendbox container
   Color get borderColor =>
-      widget.isGold ? Color(0xff93B5FE) : Color(0xff3CB9A4);
+      widget.isGold ? const Color(0xff93B5FE) : const Color(0xff3CB9A4);
 }
 
 class _InvestmentDetails extends StatelessWidget {
@@ -390,7 +389,7 @@ class _InvestmentDetails extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               Text(
-                "Invest today",
+                "Save today",
                 style: TextStyles.sourceSans.body4.colour(
                   Colors.white.withOpacity(0.7),
                 ),
@@ -423,7 +422,11 @@ class _InvestmentDetails extends StatelessWidget {
                 valueListenable: _onValueChanged,
                 builder: (context, snapshot, child) {
                   return Text(
-                      "₹${3.calculateCompoundInterest(type, _onValueChanged.value * 1.0)}",
+                      "₹${3.calculateCompoundInterest(
+                        type,
+                        _onValueChanged.value * 1.0,
+                        10,
+                      )}",
                       style: TextStyles.rajdhaniSB.title4);
                 },
               )
@@ -446,7 +449,7 @@ class _Header extends StatelessWidget {
           .copyWith(bottom: SizeConfig.padding4, top: SizeConfig.padding8),
       decoration: BoxDecoration(
         color: bgColor,
-        borderRadius: BorderRadius.vertical(
+        borderRadius: const BorderRadius.vertical(
           top: Radius.circular(12),
         ),
       ),
@@ -483,8 +486,8 @@ class _Header extends StatelessWidget {
   }
 
   Color get bgColor => investmentType == InvestmentType.AUGGOLD99
-      ? Color(0xff495DB2)
-      : Color(0xff01656B);
+      ? const Color(0xff495DB2)
+      : const Color(0xff01656B);
 }
 
 class _InvestCounter extends StatefulWidget {
@@ -550,12 +553,12 @@ class _InvestCounterState extends State<_InvestCounter> {
         onChange.call();
       },
       child: Padding(
-        padding: EdgeInsets.all(4),
+        padding: const EdgeInsets.all(4),
         child: Container(
           height: SizeConfig.padding24,
           width: SizeConfig.padding24,
           decoration: BoxDecoration(
-              color: Color(0Xff0C1D20).withOpacity(0.5),
+              color: const Color(0Xff0C1D20).withOpacity(0.5),
               shape: BoxShape.circle),
           child: Icon(icons, color: Colors.white, size: SizeConfig.padding16),
         ),

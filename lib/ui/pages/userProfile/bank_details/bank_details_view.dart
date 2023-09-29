@@ -17,6 +17,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'bank_details_help.dart';
 
 class BankDetailsView extends StatelessWidget {
+  const BankDetailsView({super.key});
+
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
@@ -39,7 +41,7 @@ class BankDetailsView extends StatelessWidget {
                 showHelpButton: false,
               ),
               body: model.state == ViewState.Busy
-                  ? Center(child: FullScreenLoader())
+                  ? const Center(child: FullScreenLoader())
                   : Column(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,
                       children: [
@@ -82,7 +84,7 @@ class BankDetailsView extends StatelessWidget {
                                     textEditingController:
                                         model.bankAccNoController,
                                     keyboardType:
-                                        TextInputType.numberWithOptions(
+                                        const TextInputType.numberWithOptions(
                                             signed: true),
                                     inputFormatters: [
                                       LengthLimitingTextInputFormatter(18),
@@ -92,11 +94,12 @@ class BankDetailsView extends StatelessWidget {
                                       print(value);
 
                                       if (value == null &&
-                                          value!.trim().isEmpty)
+                                          value!.trim().isEmpty) {
                                         return locale.enterValidAcc;
-                                      else if (value.trim().length < 9 ||
-                                          value.trim().length > 18)
+                                      } else if (value.trim().length < 9 ||
+                                          value.trim().length > 18) {
                                         return locale.invalidBankAcc;
+                                      }
                                       return null;
                                     },
                                   ),
@@ -115,15 +118,16 @@ class BankDetailsView extends StatelessWidget {
                                     validator: (value) {
                                       print(value);
                                       if (value == null &&
-                                          value!.trim().isEmpty)
+                                          value!.trim().isEmpty) {
                                         return locale.enterValidAcc;
-                                      else if (value.trim() !=
+                                      } else if (value.trim() !=
                                           model.bankAccNoController!.text
-                                              .trim())
+                                              .trim()) {
                                         return locale.bankAccDidNotMatch;
-                                      else if (value.trim().length < 9 ||
-                                          value.trim().length > 18)
+                                      } else if (value.trim().length < 9 ||
+                                          value.trim().length > 18) {
                                         return locale.invalidBankAcc;
+                                      }
 
                                       return null;
                                     },
@@ -146,11 +150,12 @@ class BankDetailsView extends StatelessWidget {
                                     validator: (value) {
                                       print(value);
                                       if (value == null &&
-                                          value!.trim().isEmpty)
+                                          value!.trim().isEmpty) {
                                         return locale.validIFSC;
-                                      else if (value.trim().length < 6 ||
-                                          value.trim().length > 25)
+                                      } else if (value.trim().length < 6 ||
+                                          value.trim().length > 25) {
                                         return locale.validIFSC;
+                                      }
                                       return null;
                                     },
                                   ),
@@ -198,7 +203,7 @@ class BankDetailsView extends StatelessWidget {
                               width: SizeConfig.screenWidth,
                               padding: EdgeInsets.symmetric(
                                   horizontal: SizeConfig.pageHorizontalMargins),
-                              child: Container(
+                              child: SizedBox(
                                 width: SizeConfig.navBarWidth,
                                 child: model.inEditMode
                                     ? ReactivePositiveAppButton(
@@ -207,12 +212,14 @@ class BankDetailsView extends StatelessWidget {
                                             : locale.btnAdd,
                                         onPressed: () async {
                                           if (model.isDetailsUpdating) return;
-                                          if (BaseUtil.showNoInternetAlert())
+                                          if (BaseUtil.showNoInternetAlert()) {
                                             return;
+                                          }
                                           FocusScope.of(context).unfocus();
                                           if (model.formKey.currentState!
-                                              .validate())
+                                              .validate()) {
                                             await model.updateBankDetails();
+                                          }
                                         },
                                       )
                                     : AppPositiveBtn(
@@ -220,7 +227,8 @@ class BankDetailsView extends StatelessWidget {
                                         onPressed: () {
                                           model.inEditMode = true;
                                           Future.delayed(
-                                              Duration(milliseconds: 200), () {
+                                              const Duration(milliseconds: 200),
+                                              () {
                                             model.nameFocusNode.requestFocus();
                                           });
                                         },

@@ -8,8 +8,8 @@ import 'package:firebase_remote_config/firebase_remote_config.dart';
 
 class BaseRemoteConfig {
   static late RemoteConfig remoteConfig;
-  static UserService? _userService = locator<UserService>();
-  static final InternalOpsService? _internalOpsService =
+  static final UserService _userService = locator<UserService>();
+  static final InternalOpsService _internalOpsService =
       locator<InternalOpsService>();
 
   ///Each config is set as a map = {name, default value}
@@ -96,7 +96,7 @@ class BaseRemoteConfig {
     'augmont_deposit_permission': '1'
   };
   static const Map<String, String> _KYC_COMPLETION_PRIZE = {
-    'kyc_completion_prize': 'You have won ₹50 and 10 Tambola tickets!'
+    'kyc_completion_prize': 'You have won ₹50 and 10 tickets!'
   };
   static const Map<String, String> _UNLOCK_REFERRAL_AMT = {
     'unlock_referral_amt': '100'
@@ -180,7 +180,7 @@ class BaseRemoteConfig {
   };
   static const Map<String, String> _GAME_TAMBOLA_ANNOUNCEMENT = {
     'game_tambola_announcement':
-        'Stand to win big prizes every week by matching your tambola tickets! Winners are announced every Monday'
+        'Stand to win big prizes every week by matching your tickets! Winners are announced every Monday'
   };
   static const Map<String, String> _GAME_CRICKET_FPL_ANNOUNCEMENT = {
     'game_cricket_fpl_announcement': ''
@@ -212,7 +212,7 @@ class BaseRemoteConfig {
 
   static const Map<String, String> _PAYTM_DEV_MID = {'paytm_dev_mid': 'pdm'};
 
-  static Map<String, String> _RZP_PROD_MID = {
+  static final Map<String, String> _RZP_PROD_MID = {
     'rzpMid': FlavorConfig.isDevelopment()
         ? 'rzp_test_UqHw6vJBbC8dR8'
         : 'rzp_live_RaxovywGPsLp2I'
@@ -222,6 +222,30 @@ class BaseRemoteConfig {
 
   static const Map<String, bool> _AUTOSAVE_ACTIVE = {'autosaveActive': false};
   static const Map<String, bool> _SHOW_NEW_AUTOSAVE = {'showNewAutosave': true};
+  static const Map<String, List<String>> _YOUTUBE_VIDEOS = {
+    'youtubeVideos': [
+      "https://www.youtube.com/watchv=mzaIjBjUM1Y",
+      "https://www.youtube.com/watch?v=CDokUdux0rc",
+      "https://www.youtube.com/watch?v=zFhYJRqz_xk"
+    ]
+  };
+
+  static const Map<String, String> _APP_REFERRAL_MESSAGE = {
+    "appReferralMessage":
+        "Earn upto *₹20* and *200* tokens from every scratch card. Highest referrer wins an iPad every month"
+  };
+
+  static const Map<String, bool> _PAYMENT_BRIEF_VIEW = {
+    "paymentBriefView": true
+  };
+
+  static const Map<String, bool> _USE_NEW_URL_FOR_USEROPS = {
+    "useNewUrlUserOps": false
+  };
+
+  static const Map<String, bool> _SPECIAL_EFFECTS_ON_TXN_DETAILS_VIEW = {
+    "specialEffectsOnTxnDetailsView": true
+  };
 
   static Map<String, dynamic> DEFAULTS = {
     ..._LOGIN_ASSET_URL,
@@ -291,6 +315,11 @@ class BaseRemoteConfig {
     ..._AUTOSAVE_ACTIVE,
     "changeAppIcon": false,
     ..._SHOW_NEW_AUTOSAVE,
+    ..._YOUTUBE_VIDEOS,
+    ..._APP_REFERRAL_MESSAGE,
+    ..._PAYMENT_BRIEF_VIEW,
+    ..._USE_NEW_URL_FOR_USEROPS,
+    ..._SPECIAL_EFFECTS_ON_TXN_DETAILS_VIEW
   };
 
   static Future<bool> init() async {
@@ -472,6 +501,18 @@ class BaseRemoteConfig {
 
   static bool get AUTOSAVE_ACTIVE =>
       remoteConfig.getBool(_AUTOSAVE_ACTIVE.keys.first);
+
+  static bool get USE_NEW_URL_FOR_USEROPS =>
+      remoteConfig.getBool(_USE_NEW_URL_FOR_USEROPS.keys.first);
+
+  static String get APP_REFERRAL_MESSAGE =>
+      remoteConfig.getString(_APP_REFERRAL_MESSAGE.keys.first);
+
+  static bool get PAYMENT_BRIEF_VIEW =>
+      remoteConfig.getBool(_PAYMENT_BRIEF_VIEW.keys.first);
+
+  static bool get SPECIAL_EFFECTS_ON_TXN_DETAILS_VIEW =>
+      remoteConfig.getBool(_SPECIAL_EFFECTS_ON_TXN_DETAILS_VIEW.keys.first);
 
   static int get invalidationBefore {
     return remoteConfig.getInt(_CACHE_INVALIDATION.keys.first);

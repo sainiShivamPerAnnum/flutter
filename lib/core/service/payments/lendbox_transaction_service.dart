@@ -1,20 +1,15 @@
 import 'dart:async';
+import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/constants/cache_keys.dart';
-import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/transaction_state_enum.dart';
-import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/paytm_models/create_paytm_transaction_model.dart';
 import 'package:felloapp/core/model/paytm_models/paytm_transaction_response_model.dart';
 import 'package:felloapp/core/model/power_play_models/get_matches_model.dart';
 import 'package:felloapp/core/repository/paytm_repo.dart';
-import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
-import 'package:felloapp/core/service/notifier_services/marketing_event_handler_service.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
-import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -22,140 +17,69 @@ import 'package:felloapp/core/service/payments/base_transaction_service.dart';
 import 'package:felloapp/core/service/payments/razorpay_service.dart';
 import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/back_button_actions.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
+import 'package:felloapp/util/extensions/string_extension.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/haptic.dart';
-import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:flutter/services.dart';
+import 'package:upi_pay/upi_pay.dart';
 
 class LendboxTransactionService extends BaseTransactionService {
-  final UserService? _userService = locator<UserService>();
-  final CustomLogger? _logger = locator<CustomLogger>();
-  final UserCoinService? _userCoinService = locator<UserCoinService>();
-  final PaytmRepository? _paytmRepo = locator<PaytmRepository>();
-  final _gtService = ScratchCardService();
-  final InternalOpsService? _internalOpsService = locator<InternalOpsService>();
-  final TxnHistoryService? _txnHistoryService = locator<TxnHistoryService>();
+  final UserService _userService = locator<UserService>();
+  final CustomLogger _logger = locator<CustomLogger>();
+  final UserCoinService _userCoinService = locator<UserCoinService>();
+  final PaytmRepository _paytmRepo = locator<PaytmRepository>();
+  final InternalOpsService _internalOpsService = locator<InternalOpsService>();
+  final TxnHistoryService _txnHistoryService = locator<TxnHistoryService>();
+  final RazorpayService _razorpayService = locator<RazorpayService>();
 
-  // final PaytmService? _paytmService = locator<PaytmService>();
-  final RazorpayService? _razorpayService = locator<RazorpayService>();
-  final TambolaService? _tambolaService = locator<TambolaService>();
-  S locale = locator<S>();
-  TransactionResponseModel? _model;
-  bool skipMl = false;
+  TransactionResponseModel? transactionResponseModel;
+  FloPurchaseDetails? currentFloPurchaseDetails;
+  String? floAssetType;
 
   Future<void> initiateWithdrawal(double txnAmount, String? txnId) async {
-    this.currentTransactionState = TransactionState.success;
-    await _txnHistoryService!.updateTransactions(InvestmentType.LENDBOXP2P);
+    currentTransactionState = TransactionState.success;
+    await _txnHistoryService.updateTransactions(InvestmentType.LENDBOXP2P);
   }
 
-  set transactionReponseModel(TransactionResponseModel? model) {
-    _model = model;
-  }
-
-  TransactionResponseModel? get transactionReponseModel => _model;
-
-  Future<void> initiateTransaction(double txnAmount, bool skipMl) async {
-    this.currentTxnAmount = txnAmount;
-    this.skipMl = skipMl;
-    String paymentMode = this.getPaymentMode();
-
-    switch (paymentMode) {
-      case "PAYTM-PG":
-        await processPaytmTransaction();
-        break;
-      case "PAYTM":
-        await getUserUpiAppChoice(this);
-        break;
-      case "RZP-PG":
-        await processRazorpayTransaction();
-        break;
-      default:
-        await processRazorpayTransaction();
+  Future<void> initiateTransaction(FloPurchaseDetails details) async {
+    currentFloPurchaseDetails = details;
+    currentTxnAmount = details.txnAmount;
+    if (details.upiChoice != null) {
+      //Intent flow
+      return processUpiTransaction();
+    } else {
+      //RazorPay gateway
+      return processRazorpayTransaction();
     }
-
-    return null;
   }
 
   @override
-  Future<void> processPaytmTransaction() async {
-    // AppState.blockNavigation();
-    // final createdPaytmTransactionData = await this.createPaytmTransaction();
-
-    // if (createdPaytmTransactionData != null) {
-    //   bool _status = await _paytmService!.initiatePaytmPGTransaction(
-    //     paytmSubscriptionModel: createdPaytmTransactionData,
-    //     restrictAppInvoke: FlavorConfig.isDevelopment(),
-    //     investmentType: InvestmentType.LENDBOXP2P,
-    //   );
-
-    //   currentTransactionState = TransactionState.ongoing;
-
-    //   if (_status) {
-    //     AppState.blockNavigation();
-    //     _logger!
-    //         .d("Txn Timer Function reinitialised and set with 30 secs delay");
-    //     initiatePolling();
-    //   } else {
-    //     if (currentTransactionState == TransactionState.ongoing) {
-    //       currentTransactionState = TransactionState.idle;
-    //     }
-    //     AppState.unblockNavigation();
-    //     BaseUtil.showNegativeAlert(
-    //       locale.txnFailed,
-    //       locale.txnFailedSubtitle,
-    //     );
-    //   }
-    //   AppState.unblockNavigation();
-    //   // resetBuyOptions();
-    // } else {
-    //   return BaseUtil.showNegativeAlert(
-    //     locale.failedToCreateTxn,
-    //     locale.tryLater,
-    //   );
-    // }
-    // AppState.unblockNavigation();
-  }
-
-  Future<CreatePaytmTransactionModel?> createPaytmTransaction() async {
-    if (this.currentTxnAmount == null) return null;
-    final mid = AppConfig.getValue(AppConfigKey.paytmMid);
-    final ApiResponse<CreatePaytmTransactionModel>
-        paytmSubscriptionApiResponse = await _paytmRepo!.createTransaction(
-      this.currentTxnAmount!.toDouble(),
-      null,
-      {},
-      null,
-      this.skipMl ?? false,
-      mid,
-      InvestmentType.LENDBOXP2P,
-    );
-
-    if (!paytmSubscriptionApiResponse.isSuccess())
-      return BaseUtil.showNegativeAlert(
-          paytmSubscriptionApiResponse.errorMessage, "");
-    this.currentTxnOrderId = paytmSubscriptionApiResponse.model!.data!.orderId;
-    return paytmSubscriptionApiResponse.model;
-  }
-
   Future<void> processRazorpayTransaction() async {
     AppState.blockNavigation();
 
-    await _razorpayService!.initiateRazorpayTxn(
-      amount: this.currentTxnAmount,
+    await _razorpayService.initiateRazorpayTxn(
+      amount: currentTxnAmount,
       augMap: {},
-      lbMap: {},
-      email: _userService!.baseUser!.email,
-      mobile: _userService!.baseUser!.mobile,
-      skipMl: this.skipMl,
+      lbMap: {
+        "fundType": currentFloPurchaseDetails!.floAssetType,
+        "maturityPref": currentFloPurchaseDetails!.maturityPref,
+      },
+      couponCode: currentFloPurchaseDetails!.couponCode,
+      email: _userService.baseUser!.email,
+      mobile: _userService.baseUser!.mobile,
+      skipMl: currentFloPurchaseDetails!.skipMl,
       investmentType: InvestmentType.LENDBOXP2P,
     );
   }
 
+  @override
   Future<void> processPolling(Timer? timer) async {
-    final res = await _paytmRepo!.getTransactionStatus(currentTxnOrderId);
+    final res = await _paytmRepo.getTransactionStatus(currentTxnOrderId);
     if (res.isSuccess()) {
       TransactionResponseModel txnStatus = res.model!;
 
@@ -171,13 +95,12 @@ class LendboxTransactionService extends BaseTransactionService {
             }
             currentTxnTambolaTicketsCount = res.model!.data!.tickets!;
             currentTxnScratchCardCount = res.model?.data?.gtIds?.length ?? 0;
-            await _newUserCheck();
-            _tambolaService!.weeklyTicksFetched = false;
-            transactionReponseModel = res.model!;
+            await locator<BaseUtil>().newUserCheck();
+            transactionResponseModel = res.model!;
             timer!.cancel();
             return transactionResponseUpdate(
-              amount: this.currentTxnAmount,
-              gtIds: transactionReponseModel?.data?.gtIds ?? [],
+              amount: currentTxnAmount,
+              gtIds: transactionResponseModel?.data?.gtIds ?? [],
             );
           }
           break;
@@ -196,87 +119,125 @@ class LendboxTransactionService extends BaseTransactionService {
     }
   }
 
-  Future<void> _newUserCheck() async {
-    locator<MarketingEventHandlerService>().getHappyHourCampaign();
-
-    if (_userService!.baseUser!.segments.contains("NEW_USER")) {
-      await CacheService.invalidateByKey(CacheKeys.USER);
-      final list = _userService!.baseUser!.segments;
-      list.remove("NEW_USER");
-      _userService!.userSegments = list;
-      _userService!.baseUser!.segments = list;
-    }
-  }
-
+  @override
   Future<void> transactionResponseUpdate(
       {List<String>? gtIds, double? amount}) async {
-    _logger!.d("Polling response processing");
+    _logger.d("Polling response processing");
     try {
       //add this to augmontBuyVM
-      _userCoinService!.getUserCoinBalance();
+      unawaited(_userCoinService.getUserCoinBalance());
       double newFlcBalance = amount ?? 0;
       if (newFlcBalance > 0) {
-        _userCoinService!.setFlcBalance(
-            (_userCoinService!.flcBalance! + newFlcBalance).toInt());
+        _userCoinService.setFlcBalance(
+            (_userCoinService.flcBalance! + newFlcBalance).toInt());
       }
-      _userService!.getUserFundWalletData();
+      unawaited(_userService.getUserFundWalletData());
       if (currentTransactionState == TransactionState.ongoing) {
         ScratchCardService.scratchCardsList = gtIds;
         // await _gtService.fetchAndVerifyScratchCardByID();
-        await _userService!.getUserJourneyStats();
+        await _userService.getUserJourneyStats();
 
         AppState.unblockNavigation();
         currentTransactionState = TransactionState.success;
         Haptic.vibrate();
       }
 
-      _txnHistoryService!.updateTransactions(InvestmentType.LENDBOXP2P);
+      unawaited(
+          _txnHistoryService.updateTransactions(InvestmentType.LENDBOXP2P));
     } catch (e) {
-      _logger!.e(e);
-      _internalOpsService!.logFailure(_userService!.baseUser!.uid,
-          FailType.DepositPayloadError, e as Map<String, dynamic>);
+      _logger.e(e);
+      unawaited(_internalOpsService.logFailure(_userService.baseUser!.uid,
+          FailType.DepositPayloadError, e as Map<String, dynamic>));
     }
-  }
-
-  dynamic getAmount(double amount) {
-    if (amount > amount.toInt())
-      return amount;
-    else
-      return amount.toInt();
   }
 
   @override
   Future<void> processUpiTransaction() async {
-    // AppState.blockNavigation();
-    // CreatePaytmTransactionModel? createdPaytmTransactionData =
-    //     await this.createPaytmTransaction();
+    AppState.blockNavigation();
 
-    // if (createdPaytmTransactionData != null) {
-    //   final deepUri = await _paytmService!.generateUpiTransactionDeepUri(
-    //       selectedUpiApplicationName, createdPaytmTransactionData, "FELLOTXN");
+    final ApiResponse<CreatePaytmTransactionModel> txnResponse =
+        await _paytmRepo.createTransaction(
+      currentTxnAmount,
+      {},
+      {
+        "fundType": currentFloPurchaseDetails!.floAssetType,
+        "maturityPref": currentFloPurchaseDetails!.maturityPref,
+      },
+      currentFloPurchaseDetails!.couponCode,
+      currentFloPurchaseDetails!.skipMl,
+      '',
+      InvestmentType.LENDBOXP2P,
+      currentFloPurchaseDetails!.upiChoice!.upiApplication.appName
+          .formatUpiAppName(),
+    );
+    if (txnResponse.isSuccess()) {
+      currentTxnOrderId = txnResponse.model!.data!.txnId;
+      const platform = MethodChannel("methodChannel/upiIntent");
 
-    //   if (deepUri != null && deepUri.isNotEmpty) {
-    //     final res = await _paytmService!.initiateUpiTransaction(
-    //       amount: this.currentTxnAmount,
-    //       orderId: createdPaytmTransactionData.data!.orderId,
-    //       upiApplication: upiApplication,
-    //       url: deepUri,
-    //       investmentType: InvestmentType.AUGGOLD99,
-    //     );
+      try {
+        if (Platform.isIOS) {
+          isIOSTxnInProgress = true;
+          final res =
+              await BaseUtil.launchUrl(txnResponse.model!.data!.intent!);
+          if (!res) {
+            isIOSTxnInProgress = false;
+            currentTransactionState = TransactionState.idle;
+            AppState.unblockNavigation();
+          }
+        } else {
+          final result = await platform.invokeMethod('initiatePsp', {
+            'redirectUrl': txnResponse.model!.data!.intent,
+            'packageName': currentFloPurchaseDetails!.upiChoice!.packageName
+          });
+          _logger.d("Result from initiatePsp: $result");
+          if (result.toString().toLowerCase().contains('failure')) {
+            currentTransactionState = TransactionState.idle;
 
-    //     if (res && Platform.isAndroid) initiatePolling();
-    //     AppState.unblockNavigation();
-    //   } else {
-    //     AppState.unblockNavigation();
+            AppState.unblockNavigation();
 
-    //     BaseUtil.showNegativeAlert(locale.upiConnectFailed, locale.tryLater);
-    //   }
-    // } else {
-    //   AppState.unblockNavigation();
-    //   return BaseUtil.showNegativeAlert(
-    //     locale.failedToCreateTxn,
-    //     locale.tryLater,
-    //   );
-    // }
+            return BaseUtil.showNegativeAlert(
+                "Transaction Cancelled", locale.tryLater);
+          }
+        }
+
+        locator<BackButtonActions>().isTransactionCancelled = false;
+
+        if (Platform.isAndroid) {
+          currentTransactionState = TransactionState.ongoing;
+          unawaited(initiatePolling());
+        }
+      } catch (e) {
+        _logger.e("Intent payement exception $e");
+        locator<BackButtonActions>().isTransactionCancelled = false;
+
+        if (Platform.isAndroid) {
+          currentTransactionState = TransactionState.ongoing;
+          unawaited(initiatePolling());
+        }
+      }
+    } else {
+      currentTransactionState = TransactionState.idle;
+      AppState.unblockNavigation();
+      return BaseUtil.showNegativeAlert(
+          txnResponse.errorMessage, locale.tryLater);
+    }
   }
+}
+
+class FloPurchaseDetails {
+  double? txnAmount;
+  bool skipMl;
+  String? floAssetType;
+  String? maturityPref;
+  String couponCode;
+  ApplicationMeta? upiChoice;
+
+  FloPurchaseDetails({
+    required this.txnAmount,
+    this.skipMl = false,
+    required this.floAssetType,
+    this.maturityPref,
+    this.couponCode = '',
+    this.upiChoice,
+  });
 }

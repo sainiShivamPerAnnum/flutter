@@ -24,38 +24,44 @@ class DailyAppCheckInEventModalSheet extends StatelessWidget {
       child: PropertyChangeConsumer<MarketingEventHandlerService,
           MarketingEventsHandlerProperties>(
         properties: [MarketingEventsHandlerProperties.DailyAppCheckIn],
-        builder: ((context, model, child) {
+        builder: (context, model, child) {
           getBgColor(int i) {
-            if (i == model!.currentDay) if (model.isDailyAppBonusClaimed)
+            if (i == model!.currentDay) if (model.isDailyAppBonusClaimed) {
               return kCompletedDayBgColor;
-            else
+            } else {
               return kCurrentDayBgColor;
-            else if (i > model.currentDay)
+            }
+            else if (i > model.currentDay) {
               return kIncompleteDayBgColor;
-            else
+            } else {
               return kCompletedDayBgColor;
+            }
           }
 
           getBorder(int i) {
-            if (i == model!.currentDay) if (model.isDailyAppBonusClaimed)
+            if (i == model!.currentDay) if (model.isDailyAppBonusClaimed) {
               return kIncompleteDayBorderStyle;
-            else
+            } else {
               return kCurrentDayBorderStyle;
-            else if (i > model.currentDay)
+            }
+            else if (i > model.currentDay) {
               return kIncompleteDayBorderStyle;
-            else
+            } else {
               return kCompletedDayBorderStyle;
+            }
           }
 
           getTextColor(int i) {
-            if (i == model!.currentDay) if (model.isDailyAppBonusClaimed)
+            if (i == model!.currentDay) if (model.isDailyAppBonusClaimed) {
               return kCompletedDayTextColor;
-            else
+            } else {
               return kCurrentDayTextColor;
-            else if (i > model.currentDay)
+            }
+            else if (i > model.currentDay) {
               return kIncompleteDayTextColor;
-            else
+            } else {
               return kCompletedDayTextColor;
+            }
           }
 
           return WillPopScope(
@@ -64,7 +70,7 @@ class DailyAppCheckInEventModalSheet extends StatelessWidget {
               return Future.value(true);
             },
             child: AnimatedOpacity(
-              duration: Duration(seconds: 1),
+              duration: const Duration(seconds: 1),
               curve: Curves.easeInOutCirc,
               opacity: model!.showModalsheet ? 1 : 0,
               child: Container(
@@ -240,7 +246,7 @@ class DailyAppCheckInEventModalSheet extends StatelessWidget {
               ),
             ),
           );
-        }),
+        },
       ),
     );
   }
@@ -253,9 +259,9 @@ Border kCompletedDayBorderStyle =
 Border kIncompleteDayBorderStyle =
     Border.all(width: 0, color: Colors.transparent);
 
-Color kCurrentDayBgColor = Color(0xff2F3E81);
+Color kCurrentDayBgColor = const Color(0xff2F3E81);
 Color kCompletedDayBgColor = UiConstants.primaryColor;
-Color kIncompleteDayBgColor = Color(0xff2F3E81);
+Color kIncompleteDayBgColor = const Color(0xff2F3E81);
 
 Color kCurrentDayTextColor = UiConstants.kTextColor;
 Color kCompletedDayTextColor = UiConstants.kTextColor;

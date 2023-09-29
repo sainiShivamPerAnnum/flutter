@@ -14,7 +14,7 @@ import '../model/cache_model/cache_model.dart';
 
 class CacheService {
   static Isar? _isar;
-  final CustomLogger? _logger = locator<CustomLogger>();
+  final CustomLogger _logger = locator<CustomLogger>();
 
   static Future<void> initialize() async {
     try {
@@ -42,7 +42,7 @@ class CacheService {
   }
 
   static Future<void> invalidateAll() async {
-    final CustomLogger? _logger = locator<CustomLogger>();
+    final CustomLogger _logger = locator<CustomLogger>();
 
     try {
       _logger!.d('cache: invalidate all');
@@ -65,7 +65,7 @@ class CacheService {
     if (cachedData != null && ttl != 0) {
       try {
         _logger!.d('cache: data read successfully');
-        log("APP CONFIG: ${cachedData.data!}");
+        log("CACHED API: ${cachedData.data!}");
         return parseData(json.decode(cachedData.data!));
       } catch (e) {
         _logger!.e(
@@ -95,7 +95,9 @@ class CacheService {
       } else if (response != null &&
           response['data'] != null &&
           response['data'].isNotEmpty &&
-          ttl != 0) await writeMap(key, ttl, response);
+          ttl != 0) {
+        await writeMap(key, ttl, response);
+      }
     } catch (e) {
       _logger!
           .d("Writing to isar failed, returning data directly without caching");
@@ -111,7 +113,7 @@ class CacheService {
   Future<bool> writeString(String key, int ttl, String data) async {
     try {
       final now = DateTime.now().millisecondsSinceEpoch;
-      final cache = new CacheModel(
+      final cache = CacheModel(
         key: key,
         ttl: ttl,
         expireAfterTimestamp: now + (ttl * 60 * 1000),
@@ -131,7 +133,7 @@ class CacheService {
   }
 
   static Future<bool> invalidateByKey(String key) async {
-    final CustomLogger? _logger = locator<CustomLogger>();
+    final CustomLogger _logger = locator<CustomLogger>();
 
     try {
       _logger!.d('cache: invalidating key $key');

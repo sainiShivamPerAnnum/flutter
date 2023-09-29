@@ -10,18 +10,22 @@ import 'package:felloapp/core/model/amount_chips_model.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/asset_options_model.dart';
 import 'package:felloapp/core/model/faq_model.dart';
+import 'package:felloapp/core/model/home_screen_carousel_items.dart';
 import 'package:felloapp/core/model/page_config_model.dart';
 import 'package:felloapp/core/model/promo_cards_model.dart';
+import 'package:felloapp/core/model/quick_save_model.dart';
 import 'package:felloapp/core/model/story_model.dart';
 import 'package:felloapp/core/model/sub_combos_model.dart';
 import 'package:felloapp/core/model/winners_model.dart';
 import 'package:felloapp/core/repository/base_repo.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/cache_service.dart';
+import 'package:felloapp/ui/pages/hometabs/save/gold_components/gold_rate_graph.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/code_from_freq.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/flavor_config.dart';
+import 'package:flutter/material.dart';
 
 //[TODO]:Added Prod CDN url;
 class GetterRepository extends BaseRepo {
@@ -33,6 +37,8 @@ class GetterRepository extends BaseRepo {
   final _cdnBaseUrl = FlavorConfig.isDevelopment()
       ? 'https://d18gbwu7fwwwtf.cloudfront.net/'
       : 'https://d11q4cti75qmcp.cloudfront.net/';
+
+  Map? goldChartData;
 
   Future<ApiResponse> getStatisticsByFreqGameTypeAndCode({
     String? type,
@@ -55,7 +61,7 @@ class GetterRepository extends BaseRepo {
         token: token,
       );
 
-      print("Reaching here: ${statisticsResponse.toString()}");
+      debugPrint("Reaching here: ${statisticsResponse.toString()}");
 
       return ApiResponse(model: statisticsResponse["data"], code: 200);
     } catch (e) {
@@ -89,19 +95,38 @@ class GetterRepository extends BaseRepo {
   }
 
   Future<ApiResponse<AssetOptionsModel>> getAssetOptions(
-      String freq, String type) async {
+      String freq, String type,
+      {String? subType, bool? isOldLendboxUser}) async {
     try {
+      Map<String, dynamic>? map;
+
+      if (type == "flo") {
+        map = {
+          "type": type,
+          "freq": freq,
+          "subType": subType,
+          "isOldLbUser": isOldLendboxUser.toString(),
+        };
+      }
+      if (type == "gold") {
+        map = {
+          "type": type,
+          "freq": freq,
+        };
+      }
+
       final token = await getBearerToken();
-      return await _cacheService.cachedApi(
-        'AssetsOptions-$freq-$type',
-        TTL.ONE_HOUR,
-        () => APIService.instance.getData(ApiPath.getAssetOptions(freq, type),
-            cBaseUrl: _baseUrl, token: token),
-        (p0) => ApiResponse<AssetOptionsModel>(
-          code: 200,
-          model: AssetOptionsModel.fromJson(
-            p0,
-          ),
+
+      final response = await APIService.instance.getData(
+          ApiPath.getAssetOptions(),
+          queryParams: map,
+          cBaseUrl: _baseUrl,
+          token: token);
+
+      return ApiResponse<AssetOptionsModel>(
+        code: 200,
+        model: AssetOptionsModel.fromJson(
+          response,
         ),
       );
     } catch (e) {
@@ -136,7 +161,7 @@ class GetterRepository extends BaseRepo {
           },
         ),
         (p0) {
-          print(p0);
+          log("AppConfig: ${p0.toString()}", name: "AppConfig");
           return ApiResponse(
             code: 200,
             model: AppConfig.instance(p0),
@@ -216,7 +241,10 @@ class GetterRepository extends BaseRepo {
 
       final minMaxInfo = MaxMin.fromMap({
         "min": subComboResponse["data"]["min"],
-        "max": subComboResponse["data"]["max"]
+        "max": MaxMinAsset.fromMap({
+          'AUGGOLD99': subComboResponse["data"]["max"],
+          'LENDBOXP2P': subComboResponse["data"]["max"]
+        }).toMap()
       });
 
       return ApiResponse(
@@ -260,7 +288,7 @@ class GetterRepository extends BaseRepo {
     try {
       // final token = await getBearerToken();
 
-      return (await (_cacheService.cachedApi(
+      return await _cacheService.cachedApi(
         '${CacheKeys.FAQS}/${type.name}',
         TTL.TWO_HOURS,
         () => APIService.instance.getData(
@@ -273,7 +301,7 @@ class GetterRepository extends BaseRepo {
           final faqs = FAQDataModel.helper.fromMapArray(response["data"]);
           return ApiResponse<List<FAQDataModel>>(model: faqs, code: 200);
         },
-      )));
+      );
     } catch (e) {
       logger.e(e.toString());
       return ApiResponse.withError(
@@ -308,16 +336,16 @@ class GetterRepository extends BaseRepo {
       final token = await getBearerToken();
 
       return await _cacheService.cachedApi(
-        '${CacheKeys.PAGE_CONFIGS}',
+        CacheKeys.PAGE_CONFIGS,
         TTL.ONE_DAY,
         () => APIService.instance.getData("dynamicUi.txt",
             cBaseUrl: _cdnBaseUrl, token: token, decryptData: true),
         (response) {
           final responseData = response["dynamicUi"];
 
-          logger.d("Page Config: $responseData");
+          // logger.d("Page Config: $responseData");
           final pageConfig = DynamicUI.fromMap(responseData);
-          logger.d("Page Config: $responseData");
+          logger.d("Page Config: ${pageConfig.toString()}");
           return ApiResponse<DynamicUI>(model: pageConfig, code: 200);
         },
       );
@@ -327,34 +355,108 @@ class GetterRepository extends BaseRepo {
     }
   }
 
-  //TODO: Not working
-  //Triggered on: Share button click on win view
-  // Future<ApiResponse<List<ScratchCard>>> getScratchCards() async {
-  //   try {
-  //     // final token = await getBearerToken();
-  //     final response = await APIService.instance.getData(
-  //       ApiPath.scratchCards(userService.baseUser.uid),
-  //       cBaseUrl: "https://6w37rw51hj.execute-api.ap-south-1.amazonaws.com/dev",
-  //       queryParams: {},
-  //     );
+  Future<ApiResponse<QuickSaveModel>> getQuickSave() async {
+    try {
+      final token = await getBearerToken();
+      final response = await APIService.instance.getData(
+        ApiPath.quickSave,
+        cBaseUrl: _baseUrl,
+        token: token,
+      );
 
-  //     // final response2 = await APIService.instance.getData(
-  //     //   "/user/ojUP6fumUgOb9wDMB6Jmoy32GOE3/golden_tickets",
-  //     //   cBaseUrl: _baseUrl,
-  //     //   queryParams: {},
-  //     // );
+      final quickSave = QuickSaveModel.fromJson(response);
 
-  //     final responseData = response["data"]["gts"];
+      return ApiResponse<QuickSaveModel>(model: quickSave, code: 200);
+    } catch (e) {
+      logger.e(e.toString());
+      return ApiResponse.withError("Unable to fetch stories", 400);
+    }
+  }
 
-  //     print("Test123 ${response.toString()}");
-  //     // final scratchCards = ScratchCard.fromJson(json, docId);
+  Future<ApiResponse<List>> getIncentivesList() async {
+    try {
+      final token = await getBearerToken();
+      final response = await APIService.instance.getData(
+        ApiPath.incentives,
+        cBaseUrl: _baseUrl,
+        token: token,
+      );
 
-  //     // return ApiResponse<List<ScratchCard>>(model: events, code: 200);
-  //   } catch (e) {
-  //     logger.e(e.toString());
-  //     print("Test123 ${e.toString()}");
+      return ApiResponse<List>(
+          model: response["data"]["earnMoreRewards"], code: 200);
+    } catch (e) {
+      logger.e(e.toString());
+      return ApiResponse.withError("Unable to fetch stories", 400);
+    }
+  }
 
-  //     return ApiResponse.withError("Unable to fetch golden tickets", 400);
-  //   }
-  // }
+  Future<ApiResponse<Map>> getGoldRatesGraphItems() async {
+    try {
+      if (goldChartData != null) {
+        return ApiResponse(model: goldChartData, code: 200);
+      }
+      final token = await getBearerToken();
+
+      return await _cacheService.cachedApi(
+        CacheKeys.GOLD_RATES,
+        TTL.ONE_WEEK,
+        () => APIService.instance.getData(
+          ApiPath.goldRatesGraph,
+          cBaseUrl: _baseUrl,
+          token: token,
+        ),
+        (response) {
+          final List rates = response["data"]["rates"];
+
+          final List<ChartData> chartData = [];
+
+          for (int i = 0; i < rates.length; i++) {
+            chartData.add(ChartData(day: i, price: rates[i]["rate"]));
+          }
+
+          List<String> returnsList = [];
+          final Map returnsMap = response["data"]["returns"];
+
+          returnsMap.forEach(
+            (key, value) => returnsList.add(value),
+          );
+
+          final responseMap = {};
+          responseMap["chartDataList"] = chartData;
+          responseMap["returnsList"] = returnsList;
+          log("Gold Rate Data $responseMap");
+          goldChartData = responseMap;
+          return ApiResponse(model: goldChartData, code: 200);
+        },
+      );
+    } catch (e) {
+      logger.e(e.toString());
+      return ApiResponse.withError("Unable to fetch stories", 400);
+    }
+  }
+
+  Future<ApiResponse<List<HomeScreenCarouselItemsModel>>>
+      getHomeScreenItems() async {
+    try {
+      final token = await getBearerToken();
+
+      return await _cacheService.cachedApi(
+          CacheKeys.HOME_SCREEN_ITEMS,
+          TTL.ONE_MIN,
+          () => APIService.instance.getData(
+                ApiPath.homeScreenCarouselItems,
+                cBaseUrl: _baseUrl,
+                token: token,
+              ), (response) {
+        List<HomeScreenCarouselItemsModel> items = HomeScreenCarouselItemsModel
+            .helper
+            .fromMapArray(response['data']["items"]);
+        return ApiResponse<List<HomeScreenCarouselItemsModel>>(
+            model: items, code: 200);
+      });
+    } catch (e) {
+      logger.e(e.toString());
+      return ApiResponse.withError("Unable to fetch stories", 400);
+    }
+  }
 }

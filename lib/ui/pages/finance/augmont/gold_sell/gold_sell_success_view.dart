@@ -9,7 +9,6 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:lottie/lottie.dart';
 
@@ -37,7 +36,7 @@ class GoldSellSuccessView extends StatelessWidget {
                   onPressed: () {
                     AppState.backButtonDispatcher!.didPopRoute();
                   },
-                  icon: Icon(
+                  icon: const Icon(
                     Icons.close,
                     color: Colors.white,
                   ),
@@ -46,7 +45,7 @@ class GoldSellSuccessView extends StatelessWidget {
             ),
           ),
           Expanded(
-            child: Lottie.asset(
+            child: Lottie.network(
               Assets.goldSellCompleteLottie,
             ),
           ),
@@ -76,7 +75,7 @@ class GoldSellSuccessView extends StatelessWidget {
             ),
             child: Row(children: [
               Text(locale.tokensDeducted, style: TextStyles.rajdhani.body1),
-              Spacer(),
+              const Spacer(),
               SvgPicture.asset(
                 Assets.token,
                 width: SizeConfig.padding26,
@@ -106,8 +105,8 @@ class GoldSellSuccessView extends StatelessWidget {
                 vertical: SizeConfig.padding12,
               ),
               child: Row(children: [
-                Text(locale.tTicketsDeducted, style: TextStyles.rajdhani.body1),
-                Spacer(),
+                Text('Tickets Deducted', style: TextStyles.rajdhani.body1),
+                const Spacer(),
                 SvgPicture.asset(
                   Assets.singleTmbolaTicket,
                   width: SizeConfig.padding26,
@@ -152,7 +151,7 @@ class GoldSellSuccessView extends StatelessWidget {
                       ),
                     ),
                   ),
-                  VerticalDivider(width: 3),
+                  const VerticalDivider(width: 3),
                   Expanded(
                     child: Container(
                       margin: EdgeInsets.only(
@@ -198,7 +197,7 @@ class GoldSellSuccessView extends StatelessWidget {
               Text(locale.saveGoldBalancelabel,
                   style: TextStyles.rajdhani.body3
                       .colour(UiConstants.kBackgroundColor)),
-              Spacer(),
+              const Spacer(),
               UserFundQuantitySE(
                 style: TextStyles.sourceSans.body2,
               )

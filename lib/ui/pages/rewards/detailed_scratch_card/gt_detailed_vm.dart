@@ -1,6 +1,6 @@
+import 'dart:async';
 import 'dart:developer';
 
-import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/scratch_card_model.dart';
 import 'package:felloapp/core/model/timestamp_model.dart';
@@ -14,7 +14,6 @@ import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/pages/rewards/detailed_scratch_card/gt_detailed_view.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/rsa_encryption.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 
 class GTDetailedViewModel extends BaseViewModel {
@@ -23,27 +22,28 @@ class GTDetailedViewModel extends BaseViewModel {
   bool _viewScratchedCard = false;
   bool isCardScratched = false;
   bool _isShareLoading = false;
-  final UserService? _userService = locator<UserService>();
-  final UserCoinService? _userCoinService = locator<UserCoinService>();
+  final UserService _userService = locator<UserService>();
+  final UserCoinService _userCoinService = locator<UserCoinService>();
   final ScratchCardService _gtService = locator<ScratchCardService>();
-  final CustomLogger? _logger = locator<CustomLogger>();
-  final ApiPath? _apiPaths = locator<ApiPath>();
+  final CustomLogger _logger = locator<CustomLogger>();
+
+  // final ApiPath _apiPaths = locator<ApiPath>();
   final JourneyService _journeyService = locator<JourneyService>();
 
-  final _rsaEncryption = new RSAEncryption();
-  final ScratchCardRepository? _gtRepo = locator<ScratchCardRepository>();
+  // final _rsaEncryption = RSAEncryption();
+  final ScratchCardRepository _gtRepo = locator<ScratchCardRepository>();
 
-  get viewScratchedCard => this._viewScratchedCard;
+  get viewScratchedCard => _viewScratchedCard;
 
-  set viewScratchedCard(value) => this._viewScratchedCard = value;
+  set viewScratchedCard(value) => _viewScratchedCard = value;
 
-  get viewScratcher => this._viewScratcher;
+  get viewScratcher => _viewScratcher;
 
-  set viewScratcher(value) => this._viewScratcher = value;
+  set viewScratcher(value) => _viewScratcher = value;
 
-  get detailsModalHeight => this._detailsModalHeight;
+  get detailsModalHeight => _detailsModalHeight;
 
-  set detailsModalHeight(value) => this._detailsModalHeight = value;
+  set detailsModalHeight(value) => _detailsModalHeight = value;
 
   bool get isShareLoading => _isShareLoading;
 
@@ -73,13 +73,16 @@ class GTDetailedViewModel extends BaseViewModel {
 
   Future<bool> redeemTicket(ScratchCard ticket) async {
     try {
-      await _gtRepo!.redeemReward(ticket.gtId);
-      _gtService.updateUnscratchedGTCount();
-      _userService!.getUserFundWalletData();
-      _userCoinService!.getUserCoinBalance();
-      _journeyService.updateRewardStatus(ticket.prizeSubtype!);
-      _gtService.refreshTickets(prizeSubtype: ticket.prizeSubtype!);
-      return true;
+      final res = await _gtRepo!.redeemReward(ticket.gtId);
+      _gtService.refreshTickets(gtId: ticket.gtId!);
+      if (res.isSuccess()) {
+        unawaited(_gtService.updateUnscratchedGTCount());
+        unawaited(_userService!.getUserFundWalletData());
+        unawaited(_userCoinService!.getUserCoinBalance());
+        _journeyService.updateRewardStatus(ticket.prizeSubtype!);
+        return true;
+      }
+      return false;
     } catch (e) {
       _logger!.e(e);
       return false;
@@ -98,7 +101,7 @@ class GTDetailedViewModel extends BaseViewModel {
         //Pity ticket
       }
     }
-    Future.delayed(Duration(seconds: 0), () {
+    Future.delayed(const Duration(seconds: 0), () {
       _viewScratcher = true;
       notifyListeners();
     });

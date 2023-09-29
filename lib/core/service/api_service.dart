@@ -13,13 +13,19 @@ import 'package:package_info_plus/package_info_plus.dart';
 
 abstract class API {
   void setBaseUrl(String url);
+
   dynamic returnResponse(http.Response response);
 
   Future<dynamic> getData(String url);
+
   Future<dynamic> postData(String url, {Map<String, dynamic>? body});
+
   Future<dynamic> deleteData(String url, {Map<String, dynamic>? body});
+
   Future<dynamic> patchData(String url, {Map<String, dynamic>? body});
+
   Future<dynamic> putData(String url);
+
   Future<dynamic> paytmSubscriptionPostRequest(
       {String? orderId,
       String? vpa,
@@ -30,12 +36,13 @@ abstract class API {
 }
 
 class APIService implements API {
-  String _baseUrl = 'https://' + FlavorConfig.instance!.values.baseUriAsia;
+  String _baseUrl = 'https://${FlavorConfig.instance!.values.baseUriAsia}';
   final CustomLogger? logger = locator<CustomLogger>();
   final UserService? userService = locator<UserService>();
   String _versionString = "";
 
   APIService._();
+
   static final instance = APIService._();
 
   final _CACHE_ENCRYPTION_KEY = "264a239b0d87e175509b2aeb2a44b28c";
@@ -44,18 +51,18 @@ class APIService implements API {
   @override
   Future<dynamic> getData(
     String url, {
-    String? token,
-    Map<String, dynamic>? queryParams,
-    Map<String, dynamic>? headers,
-    String? cBaseUrl,
-    bool decryptData = false,
+    final String? token,
+    final Map<String, dynamic>? queryParams,
+    final Map<String, dynamic>? headers,
+    final String? cBaseUrl,
+    final bool decryptData = false,
   }) async {
     // final HttpMetric metric =
     //     FirebasePerformance.instance.newHttpMetric(url, HttpMethod.Get);
     // await metric.start();
-    int startTime = DateTime.now().millisecondsSinceEpoch;
+    // int startTime = DateTime.now().millisecondsSinceEpoch;
 
-    var responseJson;
+    // var responseJson;
     // token = Preference.getString('token');
     try {
       String finalPath = _baseUrl + url;
@@ -75,25 +82,30 @@ class APIService implements API {
         'uid': userService?.firebaseUser?.uid ?? '',
         if (headers != null) ...headers
       });
-      log("API:: $url: ${DateTime.now().millisecondsSinceEpoch - startTime}");
-      logger!.d("response from $token");
-      logger!.d("Get Response: ${response.statusCode}");
-      logger!.d("Get Response: ${response.body}");
+
+      log(token.toString());
+
+      logger?.i(
+          "API:: GET REQUEST \n=> PATH: $finalPath  \n=> StatusCode: ${response.statusCode} \n=> queryParam: $queryParams \n=> headers: $headers \n"
+          "=> Response Body: ${response.body}");
+
       if (decryptData) {
         final data = await _decryptData(response.body);
-        log(data!);
+        log("decryptData  ${data!}");
 
         return json.decode(data);
       }
-      responseJson = returnResponse(response);
-    } on SocketException {
-      throw FetchDataException('No Internet connection');
-    } on UnauthorizedException {
-      throw UnauthorizedException("Token Expired, Signout current user");
-    } finally {
-      // await metric.stop();
+      return returnResponse(response);
+    } catch (e) {
+      if (e is SocketException) {
+        throw FetchDataException('No Internet connection');
+      } else if (e is UnauthorizedException) {
+        throw UnauthorizedException("Verification Failed. Please try again");
+      } else {
+        rethrow;
+      }
     }
-    return responseJson;
+    // return responseJson;
   }
 
   @override
@@ -105,11 +117,12 @@ class APIService implements API {
     Map<String, String>? headers,
     Map<String, dynamic>? queryParams,
     bool isAuthTokenAvailable = true,
+    final bool decryptData = false,
   }) async {
     var responseJson;
     String queryString = '';
 
-    int startTime = DateTime.now().millisecondsSinceEpoch;
+    // int startTime = DateTime.now().millisecondsSinceEpoch;
 
     try {
       Map<String, String> _headers = {
@@ -120,16 +133,16 @@ class APIService implements API {
         'uid': userService?.baseUser?.uid ?? '',
       };
       if (headers != null) _headers.addAll(headers);
-      if (token != null)
+      if (token != null) {
         _headers[HttpHeaders.authorizationHeader] = 'Bearer $token';
-      logger!.d(_headers);
+      }
 
       if (!isAuthTokenAvailable) _headers['x-api-key'] = 'QTp93rVNrUJ9nv7rXDDh';
 
       String _url = _baseUrl + url;
 
       if (cBaseUrl != null) _url = cBaseUrl + url;
-      logger!.d("response from $_url");
+      // logger!.d("response from $_url");
       if (queryParams != null) {
         queryString = Uri(queryParameters: queryParams).query;
         _url += '?$queryString';
@@ -139,8 +152,19 @@ class APIService implements API {
         headers: _headers,
         body: jsonEncode(body ?? {}),
       );
-      log("API:: $url: ${DateTime.now().millisecondsSinceEpoch - startTime}");
+      // log("API:: $url: ${DateTime.now().millisecondsSinceEpoch - startTime}");
 
+      logger?.i(
+          "API:: POST REQUEST \n=> PATH: $_url \n=> queryParam: $queryParams \n=> headers: $headers "
+          "\n=> StatusCode: ${response.statusCode} "
+          "\nRequest Body: $body \n"
+          "=> Response Body: ${response.body}");
+      if (decryptData) {
+        final data = await _decryptData(response.body);
+        log("decryptData  ${data!}");
+
+        return json.decode(data);
+      }
       responseJson = returnResponse(response);
     } on SocketException {
       throw FetchDataException(
@@ -169,7 +193,7 @@ class APIService implements API {
       String _url = _baseUrl + url;
 
       if (cBaseUrl != null) _url = cBaseUrl + url;
-      logger!.d("response from $_url");
+      // logger!.d("response from $_url");
       final headers = {
         'Content-Type': 'application/json; charset=UTF-8',
         HttpHeaders.authorizationHeader: token != null ? 'Bearer $token' : '',
@@ -178,13 +202,16 @@ class APIService implements API {
             _versionString.isEmpty ? await _getAppVersion() : _versionString,
         'uid': userService?.baseUser?.uid as String,
       };
-      logger!.d("Body : $body");
-      logger!.d("Headers : $headers");
       final response = await http.put(
         Uri.parse(_url),
         headers: headers,
         body: jsonEncode(body ?? {}),
       );
+      logger?.i("API:: PUT REQUEST \n=> PATH: $_url  \n=> headers: $headers"
+          "\n=> StatusCode: ${response.statusCode} "
+          "\n=> Request Body: $body \n"
+          "=> Response Body: ${response.body}");
+
       responseJson = returnResponse(response);
     } on SocketException {
       throw FetchDataException('No Internet connection');
@@ -206,7 +233,7 @@ class APIService implements API {
 
     dynamic responseJson;
     try {
-      logger!.d("response from $url");
+      // logger!.d("response from $url");
       final response = await http.delete(
         Uri.parse('$_baseUrl$url'),
         headers: <String, String>{
@@ -240,15 +267,14 @@ class APIService implements API {
     String _url = _baseUrl + url;
 
     if (cBaseUrl != null) _url = cBaseUrl + url;
-    logger!.d("response from $_url");
+    // logger!.d("response from $_url");
     var responseJson;
     try {
       final response = await http.patch(
         Uri.parse(_url),
         headers: <String, String>{
           'Content-Type': 'application/json; charset=UTF-8',
-          HttpHeaders.authorizationHeader:
-              token != null ? token : 'Bearer $token',
+          HttpHeaders.authorizationHeader: token != null ? 'Bearer $token' : '',
           'platform': Platform.isAndroid ? 'android' : 'iOS',
           'version':
               _versionString.isEmpty ? await _getAppVersion() : _versionString,
@@ -256,6 +282,12 @@ class APIService implements API {
         },
         body: body == null ? null : jsonEncode(body),
       );
+
+      logger?.i("API:: PATCH REQUEST \n=> PATH: $url  "
+          "\n=> StatusCode: ${response.statusCode} "
+          "\n=> Request Body: $body \n"
+          "=> Response Body: ${response.body}");
+
       responseJson = returnResponse(response);
     } on SocketException {
       throw FetchDataException('No Internet connection');
@@ -290,12 +322,12 @@ class APIService implements API {
 
       if (response.statusCode == 200) {
         responseString = await response.stream.bytesToString();
-        logger!.d(responseString);
+        // logger!.d(responseString);
         String identifierString =
             "Check pending requests and approve payment by entering UPI PIN";
         if (responseString.contains(identifierString)) return true;
       } else {
-        logger!.d(response.reasonPhrase);
+        // logger!.d(response.reasonPhrase);
         return false;
       }
     } catch (e) {
@@ -307,17 +339,17 @@ class APIService implements API {
   @override
   dynamic returnResponse(http.Response response) {
     var responseJson = json.decode(response.body);
-    logger!.d("$responseJson with code  ${response.statusCode}");
+    // logger!.d("$responseJson with code  ${response.statusCode}");
     switch (response.statusCode) {
       case 200:
         return responseJson;
       case 400:
       case 404:
-        logger!.d(response.body);
+        // logger!.d(response.body);
         throw BadRequestException(responseJson['message']);
 
       case 401:
-
+        throw BadRequestException(responseJson['message']);
       case 403:
         throw UnauthorizedException(response.body.toString());
       case 500:
@@ -344,12 +376,12 @@ class APIService implements API {
     try {
       if (_versionString.isEmpty) {
         PackageInfo packageInfo = await PackageInfo.fromPlatform();
-        _versionString = '${packageInfo.buildNumber}';
+        _versionString = packageInfo.buildNumber;
       }
     } catch (e) {
       print(e);
     }
-    _versionString = _versionString;
+    // _versionString = _versionString;
     return _versionString;
   }
 

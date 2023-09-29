@@ -1,13 +1,14 @@
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
-import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/navigator/router/ui_pages.dart';
-import 'package:felloapp/ui/pages/games/tambola/tambola_home/tambola_home.dart';
+import 'package:felloapp/ui/elements/video_player/app_video_player.dart';
+// import '../../../../../../packages/tambola/lib/tambola/tambola_home/widgets/tambola_video_player.dart';
+// import 'package:felloapp/ui/pages/games/tambola/tambola_home/tambola_home.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
-import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -39,7 +40,7 @@ class _AutosaveOnboardingViewState extends State<AutosaveOnboardingView> {
     [
       Assets.autosaveBenefitsAssets[2],
       "Automated Investments",
-      "Never run out of tokens and enjoy unlimited gameplay"
+      "Automatically get tickets when you autosave in multiples of ₹500"
     ],
   ];
   int currentPage = 0;
@@ -63,7 +64,6 @@ class _AutosaveOnboardingViewState extends State<AutosaveOnboardingView> {
 
   @override
   Widget build(BuildContext context) {
-    S locale = S.of(context);
     return Scaffold(
       backgroundColor: UiConstants.kBackgroundColor,
       body: Stack(
@@ -73,12 +73,12 @@ class _AutosaveOnboardingViewState extends State<AutosaveOnboardingView> {
               Container(
                 width: SizeConfig.screenWidth! / 2,
                 height: SizeConfig.fToolBarHeight,
-                color: Color(0xff025155),
+                color: UiConstants.kAutoSaveOnboardingColor,
               ),
               Container(
                 width: SizeConfig.screenWidth! / 2,
                 height: SizeConfig.fToolBarHeight,
-                color: const Color(0xff01646B),
+                color: UiConstants.kAutoSaveOnboardingTextColor,
               )
             ],
           ),
@@ -91,9 +91,8 @@ class _AutosaveOnboardingViewState extends State<AutosaveOnboardingView> {
                   SizedBox(height: SizeConfig.padding12),
                   SizedBox(
                     height: SizeConfig.screenWidth! * 0.84,
-                    child: const TambolaVideoPlayer(
-                        link:
-                            "https://d37gtxigg82zaw.cloudfront.net/sip-pros.mp4"),
+                    child: const AppVideoPlayer(
+                        "https://d37gtxigg82zaw.cloudfront.net/sip-pros.mp4"),
                   ),
                   Container(
                     padding: EdgeInsets.only(
@@ -139,13 +138,15 @@ class _AutosaveOnboardingViewState extends State<AutosaveOnboardingView> {
                         left: SizeConfig.pageHorizontalMargins,
                         right: SizeConfig.pageHorizontalMargins,
                         bottom: SizeConfig.pageHorizontalMargins),
-                    child: AppPositiveBtn(
+                    child: ReactivePositiveAppButton(
                       btnText: "Setup",
-                      onPressed: () {
-                        AppState.delegate!.appState.currentAction = PageAction(
-                          state: PageState.replace,
-                          page: AutosaveProcessViewPageConfig,
-                        );
+                      onPressed: () async {
+                        final _subService = locator<SubService>();
+                        await _subService.getSubscription();
+                        await PreferenceHelper.setBool(
+                            PreferenceHelper.CACHE_IS_AUTOSAVE_FIRST_TIME,
+                            false);
+                        _subService.handleTap();
                         _analyticsService.track(
                             eventName: AnalyticsEvents.asBenefitsTapped);
                       },

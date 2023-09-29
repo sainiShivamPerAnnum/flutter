@@ -10,7 +10,7 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
 import 'package:showcaseview/showcaseview.dart';
 
-class FAppBar extends StatelessWidget with PreferredSizeWidget {
+class FAppBar extends StatelessWidget implements PreferredSizeWidget {
   final FaqsType? type;
   final String? title;
   final bool showCoinBar;
@@ -22,31 +22,37 @@ class FAppBar extends StatelessWidget with PreferredSizeWidget {
   final bool showLeading;
   final Widget? leading;
   final Widget? subtitle;
+  final Widget? titleWidget;
   final bool? centerTitle;
+  final bool leadingPadding;
 
   // final bool hasBackButton;
   final TextStyle? style;
 
-  const FAppBar({
-    Key? key,
-    this.type,
-    this.title,
-    this.showCoinBar = true,
-    this.leading,
-    this.showLeading = true,
-    this.showAvatar = true,
-    this.showHelpButton = true,
-    this.backgroundColor,
-    this.style,
-    this.action,
-    this.leftPad,
-    this.subtitle,
-    this.centerTitle,
-    // this.hasBackButton = true
-  }) : super(key: key);
+  const FAppBar(
+      {Key? key,
+      this.type,
+      this.title,
+      this.showCoinBar = true,
+      this.leading,
+      this.showLeading = true,
+      this.showAvatar = true,
+      this.showHelpButton = true,
+      this.backgroundColor,
+      this.style,
+      this.action,
+      this.leftPad,
+      this.subtitle,
+      this.centerTitle,
+      this.titleWidget,
+      this.leadingPadding = true
+      // this.hasBackButton = true
+      })
+      : super(key: key);
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
+
   @override
   Widget build(BuildContext context) {
     return AppBar(
@@ -54,19 +60,20 @@ class FAppBar extends StatelessWidget with PreferredSizeWidget {
       title: Row(
         mainAxisSize: MainAxisSize.min,
         children: [
-          SizedBox(width: SizeConfig.padding8),
-          showAvatar ? ProfileImageSE() : const SizedBox(),
-          Column(
-            mainAxisAlignment: MainAxisAlignment.start,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
+          if (leadingPadding) SizedBox(width: SizeConfig.padding8),
+          showAvatar
+              ? Transform.translate(
+                  offset: Offset(0, SizeConfig.padding2),
+                  child: ProfileImageSE(
+                    radius: SizeConfig.avatarRadius * 0.9,
+                  ),
+                )
+              : const SizedBox(),
+          titleWidget ??
               Text(
                 title ?? '',
                 style: TextStyles.rajdhaniSB.title5.merge(style),
               ),
-              subtitle ?? const SizedBox(),
-            ],
-          ),
         ],
       ),
       centerTitle: centerTitle ?? false,

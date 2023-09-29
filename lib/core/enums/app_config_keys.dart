@@ -24,6 +24,15 @@ enum AppConfigKey {
   unknown,
   powerplayConfig,
   predictScreen,
+  lendbox,
+  youtube_videos,
+  app_referral_message,
+  enable_truecaller_login,
+  payment_brief_view,
+  quiz_config,
+  revamped_referrals_config,
+  useNewUrlUserOps,
+  specialEffectsOnTxnDetailsView
 }
 
 extension AppConfigKeys on String {
@@ -77,6 +86,25 @@ extension AppConfigKeys on String {
 
       case 'predictScreen':
         return AppConfigKey.predictScreen;
+
+      case "LENDBOXP2P":
+        return AppConfigKey.lendbox;
+      case 'youtubeVideos':
+        return AppConfigKey.youtube_videos;
+      case "appReferralMessage":
+        return AppConfigKey.app_referral_message;
+      case "enableTruecallerLogin":
+        return AppConfigKey.enable_truecaller_login;
+      case "paymentBriefView":
+        return AppConfigKey.payment_brief_view;
+      case "quizConfig":
+        return AppConfigKey.quiz_config;
+      case "revampedReferralsConfig":
+        return AppConfigKey.revamped_referrals_config;
+      case 'useNewUrlUserOps':
+        return AppConfigKey.useNewUrlUserOps;
+      case 'specialEffectsOnTxnDetailsView':
+        return AppConfigKey.specialEffectsOnTxnDetailsView;
       default:
         return AppConfigKey.unknown;
     }

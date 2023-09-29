@@ -14,6 +14,16 @@ class UpiApplicationStatus {
     androidStatus: _androidStatusSecurityError,
     iosStatus: _iosStatusSecurityError,
   );
+
+  static final UpiApplicationStatus phonePeSimulator = UpiApplicationStatus(
+    androidStatus: _androidStatusSecurityError,
+    iosStatus: _iosStatusSecurityError,
+  );
+
+  static final UpiApplicationStatus phonePePreProd = UpiApplicationStatus(
+    androidStatus: _androidStatusSecurityError,
+    iosStatus: _iosStatusSecurityError,
+  );
   static final UpiApplicationStatus paytm = UpiApplicationStatus(
     androidStatus: _androidSatusDailyTxnLimitExceeded,
     iosStatus: _iosStatusWorks,

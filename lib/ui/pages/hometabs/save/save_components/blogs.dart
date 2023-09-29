@@ -12,7 +12,6 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:shimmer/shimmer.dart';
-import 'package:webview_flutter/platform_interface.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
 class Blogs extends StatelessWidget {
@@ -24,17 +23,15 @@ class Blogs extends StatelessWidget {
     S locale = S.of(context);
     return Column(
       children: [
-        SizedBox(height: SizeConfig.padding8),
+        SizedBox(height: SizeConfig.padding14),
         GestureDetector(
-          onTap: () {
-            model.navigateToViewAllBlogs();
-          },
+          onTap: model.navigateToViewAllBlogs,
           child: Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              TitleSubtitleContainer(
-                title: locale.blogsTitle,
+              const TitleSubtitleContainer(
+                title: "Fin-gyan by Fello",
               ),
               Padding(
                 padding: EdgeInsets.only(
@@ -146,10 +143,27 @@ class SaveBlogSection extends StatelessWidget {
   }
 }
 
-class BlogWebView extends StatelessWidget {
+class BlogWebView extends StatefulWidget {
   final String? initialUrl;
   final String? title;
+
   const BlogWebView({Key? key, this.initialUrl, this.title}) : super(key: key);
+
+  @override
+  State<BlogWebView> createState() => _BlogWebViewState();
+}
+
+class _BlogWebViewState extends State<BlogWebView> {
+  WebViewController? controller;
+
+  @override
+  void initState() {
+    super.initState();
+    controller = WebViewController()
+      ..setBackgroundColor(Colors.black)
+      ..setJavaScriptMode(JavaScriptMode.unrestricted)
+      ..loadRequest(Uri.parse(widget.initialUrl!));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -158,13 +172,12 @@ class BlogWebView extends StatelessWidget {
         backgroundColor: UiConstants.kBackgroundColor3,
         leading: FelloAppBarBackButton(),
         centerTitle: true,
-        title: Text(title ?? 'Title', style: TextStyles.rajdhaniSB.title5),
+        title:
+            Text(widget.title ?? 'Title', style: TextStyles.rajdhaniSB.title5),
       ),
       backgroundColor: UiConstants.kBackgroundColor,
-      body: WebView(
-        initialUrl: initialUrl,
-        backgroundColor: UiConstants.kBackgroundColor,
-        javascriptMode: JavascriptMode.unrestricted,
+      body: WebViewWidget(
+        controller: controller!,
       ),
     );
   }

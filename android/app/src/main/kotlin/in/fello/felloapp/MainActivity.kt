@@ -26,75 +26,89 @@ import io.flutter.embedding.engine.FlutterEngine
 import io.flutter.plugin.common.MethodChannel
 import io.flutter.plugins.GeneratedPluginRegistrant
 import java.io.ByteArrayOutputStream
+import `in`.fello.felloapp.R
+import android.widget.RemoteViews
+import android.appwidget.AppWidgetManager
+import android.content.ComponentName
+import android.content.ContentResolver
+import android.database.Cursor
+import android.provider.ContactsContract
 
 
-class MainActivity : FlutterFragmentActivity()  {
+class MainActivity : FlutterFragmentActivity() {
     private val CHANNEL = "fello.in/dev/notifications/channel/tambola"
     private val DEVICEDATACHANNEL = "methodChannel/deviceData"
     private val UPIINTENTCHANNEL = "methodChannel/upiIntent"
-    private val getUpiApps="getUpiApps"
-    private val intiateTransaction="initiateTransaction"
-    private  var res: MethodChannel.Result?=null
+    private val getUpiApps = "getUpiApps"
+    private val intiateTransaction = "initiateTransaction"
+    private val CONTACTCHANNEL = "methodChannel/contact"
+    private var res: MethodChannel.Result? = null
     private val successRequestCode = 101
-    private lateinit var paymentMethodChannel:MethodChannel
-    private lateinit var context:Context
+    private lateinit var paymentMethodChannel: MethodChannel
+    private lateinit var context: Context
     private lateinit var paymentResult: MethodChannel.Result
-    override fun configureFlutterEngine( flutterEngine: FlutterEngine) {
-        super.configureFlutterEngine(flutterEngine)
-        context=applicationContext
-        flutterEngine.plugins.add(MyPlugin())
+    private var contacts: List<Contact> = emptyList()
+    override fun configureFlutterEngine(flutterEngine: FlutterEngine) {
+        context = applicationContext
+//        flutterEngine.plugins.add(MyPlugin())
         GeneratedPluginRegistrant.registerWith(flutterEngine)
 
         MethodChannel(flutterEngine.dartExecutor.binaryMessenger, CHANNEL).setMethodCallHandler {
-                // Note: this method is invoked on the main thread.
+            // Note: this method is invoked on the main thread.
                 call, rawResult ->
             val result: MethodChannel.Result = MethodResultWrapper(rawResult)
-            isAlreadyReturend=false
-            res=result
+            isAlreadyReturend = false
+            res = result
 
-            when (call.method){
-                "createNotificationChannel" ->{
+            when (call.method) {
+                "createNotificationChannel" -> {
 
-                    val argData = call.arguments as HashMap<String,String>
+                    val argData = call.arguments as HashMap<String, String>
                     val completed = createNotificationChannel(argData)
 
                     returnResult(completed as Object)
                 }
 
-                getUpiApps->getupiApps()
-                intiateTransaction ->startTransation(call.argument<String>("app").toString(),call.argument<String>("deepLinkUrl").toString())
+                getUpiApps -> getupiApps()
+                intiateTransaction -> startTransation(
+                    call.argument<String>("app").toString(),
+                    call.argument<String>("deepLinkUrl").toString()
+                )
+
                 else -> result.notImplemented();
             }
         }
         //METHOD CHANNEL [2]
-        MethodChannel(flutterEngine.dartExecutor.binaryMessenger, DEVICEDATACHANNEL).setMethodCallHandler {
+        MethodChannel(
+            flutterEngine.dartExecutor.binaryMessenger,
+            DEVICEDATACHANNEL
+        ).setMethodCallHandler {
             // This method is invoked on the main thread.
-            call, rawResult ->
+                call, rawResult ->
             val result: MethodChannel.Result = MethodResultWrapper(rawResult)
             if (call.method == "getInstalledApps") {
-              val installedAppsList = getInstalledApplications()
-              if (installedAppsList.size != 0) {
-                result.success(installedAppsList)
-              } else {
-                result.error("UNAVAILABLE", "Installed Apps information not available", null)
-              }
-            }
-             else if(call.method == "getDeviceId"){
-               val id: String = getUniqueDeviceId(context)
-                 result.success(id)
-             }
-            else if(call.method == "getAndroidId"){
+                val installedAppsList = getInstalledApplications()
+                if (installedAppsList.size != 0) {
+                    result.success(installedAppsList)
+                } else {
+                    result.error("UNAVAILABLE", "Installed Apps information not available", null)
+                }
+            } else if (call.method == "getDeviceId") {
+                val id: String = getUniqueDeviceId(context)
+                result.success(id)
+            } else if (call.method == "getAndroidId") {
                 result.success(getAndroidId())
-            }
-            else if(call.method == "isDeviceRooted"){
+            } else if (call.method == "isDeviceRooted") {
                 result.success(RootCheckService().isDeviceRooted())
+            } else if (call.method == "updateHomeScreenWidget") {
+                result.success(updateHomeScreenWidget())
+            } else {
+                result.notImplemented()
             }
-            else {
-              result.notImplemented()
-            }
-          }
+        }
 
-       paymentMethodChannel =  MethodChannel(flutterEngine.dartExecutor.binaryMessenger, UPIINTENTCHANNEL)
+        paymentMethodChannel =
+            MethodChannel(flutterEngine.dartExecutor.binaryMessenger, UPIINTENTCHANNEL)
         paymentMethodChannel.setMethodCallHandler {
             // This method is invoked on the main thread.
                 call, rawResult ->
@@ -104,20 +118,42 @@ class MainActivity : FlutterFragmentActivity()  {
                 "initiatePsp" -> {
                     paymentResult = result
                     var argsData = call.arguments as HashMap<*, *>
-                    val intentUrl:String = argsData["redirectUrl"] as String
+                    val intentUrl: String = argsData["redirectUrl"] as String
                     val packageName = argsData["packageName"] as String
                     val i = Intent(Intent.ACTION_VIEW)
                     i.data = Uri.parse(intentUrl)
                     i.setPackage(packageName)
                     startActivityForResult(i, successRequestCode)
                 }
+
                 "getPhonePeVersion" -> {
                     val id: Long = getPhonePeVersionCode(context)
                     result.success(id)
                 }
+
                 else -> {
                     result.notImplemented()
                 }
+            }
+        }
+
+        MethodChannel(
+            flutterEngine.dartExecutor.binaryMessenger,
+            CONTACTCHANNEL
+        ).setMethodCallHandler {
+            // This method is invoked on the main thread.
+                call, rawResult ->
+            val result: MethodChannel.Result = MethodResultWrapper(rawResult)
+            if (call.method == "getContacts") {
+                loadContacts()
+                result.success(contacts.map { contact ->
+                    mapOf(
+                        "displayName" to contact.displayName,
+                        "phoneNumber" to contact.phoneNumber
+                    )
+                })
+            } else {
+                result.notImplemented()
             }
         }
     }
@@ -125,11 +161,24 @@ class MainActivity : FlutterFragmentActivity()  {
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
         if (requestCode == successRequestCode) {
-            print("On Activity Result"+data.toString())
-            data?.putExtra("resultCode",resultCode)
-         paymentResult.success(data?.getStringExtra("response") as Object?) ; // returnResult(data?.getStringExtra("response") as Object?)
+            data?.let { intentData ->
+                try {
+                    val response = intentData.getStringExtra("response")
+                    val resultCode = intentData.getIntExtra("resultCode", 0)
+                    paymentResult.success(response as Object?)
+                } catch (e: Exception) {
+                    // Handle any exception that may occur
+                    paymentResult.error("RESULT_ERROR", "Error processing result", null)
+                    Log.e("OnActivityResult", "Error processing result: ${e.message}")
+                }
+            } ?: run {
+                // Handle the case when data is null
+                paymentResult.error("RESULT_NULL", "Result data is null", null)
+                Log.e("OnActivityResult", "Result data is null")
+            }
         }
     }
+
 
     fun getPhonePeVersionCode(context: Context?): Long {
         // val PHONEPE_PACKAGE_NAME_UAT = "com.phonepe.app.preprod"
@@ -156,34 +205,55 @@ class MainActivity : FlutterFragmentActivity()  {
         }
         return phonePeVersionCode
     }
-    
+
     @SuppressLint("HardwareIds")
     private fun getAndroidId(): String? {
+        Log.d("MainActivity", "Calling AndroidID");
         return Settings.Secure.getString(contentResolver, Settings.Secure.ANDROID_ID);
     }
 
+    private fun updateHomeScreenWidget(): String? {
+        Log.d("MainActivity", "SHOURYA updateWidget() triggered from Flutter")
+
+        val appWidgetManager = AppWidgetManager.getInstance(this)
+        val widgetProvider = ComponentName(applicationContext, MyWidgetProvider::class.java)
+        val appWidgetIds = appWidgetManager.getAppWidgetIds(widgetProvider)
+
+        // Update the widget content and notify changes
+        for (appWidgetId in appWidgetIds) {
+            val views = RemoteViews(context.packageName, R.layout.balance_widget_layout)
+            val felloBalance = MyWidgetProvider.getFormattedFelloBalance(applicationContext)
+            views.setTextViewText(R.id.amount_text, felloBalance)
+
+            // Update the widget
+            appWidgetManager.updateAppWidget(appWidgetId, views)
+        }
+
+        return "DONE";
+    }
+
     @SuppressLint("QueryPermissionsNeeded")
-    private fun getInstalledApplications(): ArrayList<HashMap<String,Any?>> {
-     try {
-       val packageManager = context.packageManager
-       val installedApps = packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
-       val userApps = installedApps.filter {
-           (it.flags and ApplicationInfo.FLAG_SYSTEM) != ApplicationInfo.FLAG_SYSTEM
-       }
-       val apps: ArrayList<HashMap<String,Any?>>  = ArrayList()
-       for (app in userApps) {
-          val appName =  app.loadLabel(packageManager).toString()
-           val appData : HashMap<String, Any?>
-          = HashMap<String, Any?> ()
-           appData["package_name"] = app.packageName
-           appData["app_name"] = appName
-           apps.add(appData)
-       }
-       return apps;
-   } catch (e: Exception) {
-       println("Failed to query packages with error $e")
-       return ArrayList()
-   }
+    private fun getInstalledApplications(): ArrayList<HashMap<String, Any?>> {
+        try {
+            val packageManager = context.packageManager
+            val installedApps =
+                packageManager.getInstalledApplications(PackageManager.GET_META_DATA)
+            val userApps = installedApps.filter {
+                (it.flags and ApplicationInfo.FLAG_SYSTEM) != ApplicationInfo.FLAG_SYSTEM
+            }
+            val apps: ArrayList<HashMap<String, Any?>> = ArrayList()
+            for (app in userApps) {
+                val appName = app.loadLabel(packageManager).toString()
+                val appData: HashMap<String, Any?> = HashMap<String, Any?>()
+                appData["package_name"] = app.packageName
+                appData["app_name"] = appName
+                apps.add(appData)
+            }
+            return apps;
+        } catch (e: Exception) {
+            println("Failed to query packages with error $e")
+            return ArrayList()
+        }
     }
 
     @SuppressLint("HardwareIds")
@@ -191,118 +261,89 @@ class MainActivity : FlutterFragmentActivity()  {
         return Settings.Secure.getString(context.contentResolver, Settings.Secure.ANDROID_ID)
     }
 
-    private var isAlreadyReturend=false
+    private var isAlreadyReturend = false
 
-    private fun returnResult(re:Object?){
-        if(re==null){
+    private fun returnResult(re: Object?) {
+        if (re == null) {
             return;
         }
-        if(!isAlreadyReturend){
-            isAlreadyReturend=true
+        if (!isAlreadyReturend) {
+            isAlreadyReturend = true
             res?.success(re);
         }
 
     }
-    // TODO: IMAGE PICKER PICKING UP THIS CODE AND NOT WORKING PROPERLY.
-    // TO BE FIXED IN NEXT SPRINT
-    // override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
-    //     // if(data==null){
-    //     //     return;
-    //     // }
-    //     // if(res!=null) {
-
-
-    //     //     if (requestCode == successRequestCode) {
-
-    //     //         returnResult(data?.getStringExtra("response") as Object?)
-
-    //     //     }
-    //     //     else {
-    //     //         if(!isAlreadyReturend){
-    //     //             isAlreadyReturend=true
-    //     //             res?.error("400", "user_cancelled", "Something went wrong")
-    //     //         }
-
-
-    //     //     }
-    //     // }
-
-
-    //     super.onActivityResult(requestCode, resultCode, data)
-    // }
 
 
     @SuppressLint("SuspiciousIndentation")
-    private fun startTransation(app:String, deepLink:String){
+    private fun startTransation(app: String, deepLink: String) {
 
         try {
 
 
             val uri = Uri.parse(deepLink)
-            val deepLinkIntent=Intent(Intent.ACTION_VIEW,uri)
+            val deepLinkIntent = Intent(Intent.ACTION_VIEW, uri)
             deepLinkIntent.setPackage(app)
-            if(deepLinkIntent.resolveActivity(context.packageManager)==null){
-                res?.error("400","No App Found","No UPI Apps Found")
+            if (deepLinkIntent.resolveActivity(context.packageManager) == null) {
+                res?.error("400", "No App Found", "No UPI Apps Found")
                 return
-            }
-            else
-            this.startActivityForResult(deepLinkIntent,successRequestCode)
+            } else
+                this.startActivityForResult(deepLinkIntent, successRequestCode)
 
 
-
-        }catch (e: Exception){
-            Log.d("Something went Wrong:" ,"$e")
+        } catch (e: Exception) {
+            Log.d("Something went Wrong:", "$e")
             e.printStackTrace()
         }
     }
 
 
-
-
-    private fun getupiApps(){
+    private fun getupiApps() {
 
         val packageManager = context.packageManager
-        val mainIntent = Intent(Intent.ACTION_MAIN, null)
-        mainIntent.addCategory(Intent.CATEGORY_DEFAULT)
-        mainIntent.addCategory(Intent.CATEGORY_BROWSABLE)
-        mainIntent.action = Intent.ACTION_VIEW
-        val uri1 = Uri.Builder().scheme("upi").authority("pay").build()
-        mainIntent.data = uri1
-        var list= mutableListOf<Map<String,String>>()
+        val mainIntent = Intent(Intent.ACTION_VIEW)
+        // mainIntent.addCategory(Intent.CATEGORY_DEFAULT)
+        // mainIntent.addCategory(Intent.CATEGORY_BROWSABLE)
+        // mainIntent.action = Intent.ACTION_VIEW
+        // val uri1 = Uri.parse("upi://pay")
+        mainIntent.data = Uri.parse("upi://pay")
+        var list = mutableListOf<Map<String, String>>()
 
         try {
-            val activities = packageManager.queryIntentActivities(mainIntent, PackageManager.MATCH_DEFAULT_ONLY)
-            Log.d(activities.toString(),"UPI Apps Present")
+            val activities =
+                packageManager.queryIntentActivities(mainIntent, PackageManager.MATCH_DEFAULT_ONLY)
+            Log.d(activities.toString(), "UPI Apps Present")
             // Convert the activities into a response that can be transferred over the channel.
 
-        for(it in activities){
-            val packageName = it.activityInfo.packageName
-            val drawable = packageManager.getApplicationIcon(packageName)
+            for (it in activities) {
+                val packageName = it.activityInfo.packageName
+                Log.d(packageName, "package name");
+                val drawable = packageManager.getApplicationIcon(packageName)
 
-            val bitmap = getBitmapFromDrawable(drawable)
-            val icon = if (bitmap != null) {
-                encodeToBase64(bitmap)
-            } else {
-                null
-            }
-            var map=mapOf(
+                val bitmap = getBitmapFromDrawable(drawable)
+                val icon = if (bitmap != null) {
+                    encodeToBase64(bitmap)
+                } else {
+                    null
+                }
+                var map = mapOf(
                     "packageName" to packageName,
                     "icon" to icon,
                     "priority" to it.priority,
                     "preferredOrder" to it.preferredOrder
-            )
-            list.add(
+                )
+                list.add(
                     map as Map<String, String>
-            )
-        }
+                )
+            }
 
 
-            Log.d(list.size.toString(),"List")
+            Log.d(list.size.toString(), "List")
             returnResult(list as Object)
 
         } catch (ex: Exception) {
-            Log.e("UPI",ex.message!!)
-            res?.error("400", "exception",ex.message )
+            Log.e("UPI", ex.message!!)
+            res?.error("400", "exception", ex.message)
         }
     }
 
@@ -339,9 +380,6 @@ class MainActivity : FlutterFragmentActivity()  {
     }
 
 
-
-
-
     private fun encodeToBase64(image: Bitmap): String? {
         val byteArrayOS = ByteArrayOutputStream()
         image.compress(Bitmap.CompressFormat.PNG, 100, byteArrayOS)
@@ -349,13 +387,36 @@ class MainActivity : FlutterFragmentActivity()  {
     }
 
     private fun getBitmapFromDrawable(drawable: Drawable): Bitmap? {
-        val bmp: Bitmap = Bitmap.createBitmap(drawable.intrinsicWidth, drawable.intrinsicHeight, Bitmap.Config.ARGB_8888)
+        val bmp: Bitmap = Bitmap.createBitmap(
+            drawable.intrinsicWidth,
+            drawable.intrinsicHeight,
+            Bitmap.Config.ARGB_8888
+        )
         val canvas = Canvas(bmp)
         drawable.setBounds(0, 0, canvas.getWidth(), canvas.getHeight())
         drawable.draw(canvas)
         return bmp
     }
 
+    private fun loadContacts() {
+        val contentResolver: ContentResolver = applicationContext.contentResolver
+        val projection: Array<String> = arrayOf(
+            ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME,
+            ContactsContract.CommonDataKinds.Phone.NUMBER
+        )
+        val cursor: Cursor? = contentResolver.query(
+            ContactsContract.CommonDataKinds.Phone.CONTENT_URI,
+            projection,
+            null,
+            null,
+            null
+        )
+        cursor?.use {
+            contacts = generateSequence { if (cursor.moveToNext()) cursor else null }
+                .map { Contact(it.getString(0), it.getString(1)) }
+                .toList()
+        }
+    }
 }
 
 
@@ -383,3 +444,5 @@ private class MethodResultWrapper internal constructor(private val methodResult:
         handler = Handler(Looper.getMainLooper())
     }
 }
+
+data class Contact(val displayName: String, val phoneNumber: String)

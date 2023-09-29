@@ -1,4 +1,3 @@
-import 'package:felloapp/ui/pages/static/blinker.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -33,24 +32,25 @@ class _CurrentPriceWidgetState extends State<CurrentPriceWidget>
   @override
   void initState() {
     controller =
-        AnimationController(vsync: this, duration: Duration(minutes: 3));
-    animation = Tween<Duration>(begin: Duration(minutes: 3), end: Duration.zero)
-        .animate(controller)
-      ..addListener(() {
-        setState(() {});
-      })
-      ..addStatusListener(
-        (status) {
-          print(status.toString());
-          if (status == AnimationStatus.completed) {
-            widget.fetchGoldRates!();
-            controller.reset();
-            controller.forward();
-          } else if (status == AnimationStatus.dismissed) {
-            controller.forward();
-          }
-        },
-      );
+        AnimationController(vsync: this, duration: const Duration(minutes: 3));
+    animation =
+        Tween<Duration>(begin: const Duration(minutes: 3), end: Duration.zero)
+            .animate(controller)
+          ..addListener(() {
+            setState(() {});
+          })
+          ..addStatusListener(
+            (status) {
+              print(status.toString());
+              if (status == AnimationStatus.completed) {
+                widget.fetchGoldRates!();
+                controller.reset();
+                controller.forward();
+              } else if (status == AnimationStatus.dismissed) {
+                controller.forward();
+              }
+            },
+          );
 
     controller.forward();
     super.initState();
@@ -104,10 +104,10 @@ class _CurrentPriceWidgetState extends State<CurrentPriceWidget>
                 Row(
                   children: [
                     Text(
-                 locale.currentPrice,
+                      locale.currentPrice,
                       style: TextStyles.body1.colour(UiConstants.primaryColor),
                     ),
-                    Spacer(),
+                    const Spacer(),
                     widget.isFetching!
                         ? SpinKitThreeBounce(
                             size: SizeConfig.body2,
@@ -147,17 +147,19 @@ class _CurrentPriceWidgetState extends State<CurrentPriceWidget>
 }
 
 class NewCurrentGoldPriceWidget extends StatefulWidget {
-  NewCurrentGoldPriceWidget({
+  const NewCurrentGoldPriceWidget({
     this.fetchGoldRates,
     this.goldprice,
     this.isFetching,
     this.mini = false,
+    this.textColor,
     Key? key,
-  });
+  }) : super(key: key);
   final Function? fetchGoldRates;
   final double? goldprice;
   final bool? isFetching;
   final bool mini;
+  final Color? textColor;
 
   @override
   State<NewCurrentGoldPriceWidget> createState() =>
@@ -172,24 +174,25 @@ class _NewCurrentGoldPriceWidgetState extends State<NewCurrentGoldPriceWidget>
   @override
   void initState() {
     controller =
-        AnimationController(vsync: this, duration: Duration(minutes: 3));
-    animation = Tween<Duration>(begin: Duration(minutes: 3), end: Duration.zero)
-        .animate(controller)
-      ..addListener(() {
-        setState(() {});
-      })
-      ..addStatusListener(
-        (status) {
-          print(status.toString());
-          if (status == AnimationStatus.completed) {
-            widget.fetchGoldRates!();
-            controller.reset();
-            controller.forward();
-          } else if (status == AnimationStatus.dismissed) {
-            controller.forward();
-          }
-        },
-      );
+        AnimationController(vsync: this, duration: const Duration(minutes: 3));
+    animation =
+        Tween<Duration>(begin: const Duration(minutes: 3), end: Duration.zero)
+            .animate(controller)
+          ..addListener(() {
+            setState(() {});
+          })
+          ..addStatusListener(
+            (status) {
+              print(status.toString());
+              if (status == AnimationStatus.completed) {
+                widget.fetchGoldRates!();
+                controller.reset();
+                controller.forward();
+              } else if (status == AnimationStatus.dismissed) {
+                controller.forward();
+              }
+            },
+          );
 
     controller.forward();
     super.initState();
@@ -205,26 +208,10 @@ class _NewCurrentGoldPriceWidgetState extends State<NewCurrentGoldPriceWidget>
   @override
   Widget build(BuildContext context) {
     return widget.mini
-        ? Row(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisSize: MainAxisSize.min,
-            children: [
-              widget.isFetching!
-                  ? SpinKitThreeBounce(
-                      size: SizeConfig.body2,
-                      color: UiConstants.primaryColor,
-                    )
-                  : Text(
-                      "₹ ${widget.goldprice!.toStringAsFixed(2)}/gm",
-                      style: TextStyles.sourceSans.body4
-                          .colour(UiConstants.kPrimaryColor),
-                    ),
-              Text(
-                " (${animation.value.inMinutes.toString().padLeft(2, '0')}:${(animation.value.inSeconds % 60).toString().padLeft(2, '0')}s)",
-                style: TextStyles.sourceSans.body4
-                    .colour(UiConstants.kTextFieldTextColor),
-              ),
-            ],
+        ? Text(
+      " (${animation.value.inMinutes.toString().padLeft(2, '0')}:${(animation.value.inSeconds % 60).toString().padLeft(2, '0')}s)",
+            style: TextStyles.sourceSans.body4
+                .colour(widget.textColor ?? UiConstants.kTextFieldTextColor),
           )
         : Container();
   }

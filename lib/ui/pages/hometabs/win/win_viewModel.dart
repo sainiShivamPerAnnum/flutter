@@ -15,34 +15,39 @@ import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/analytics/appflyer_analytics.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/leaderboard_service.dart';
+import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
+import 'package:felloapp/ui/elements/fello_dialog/fello_in_app_review.dart';
 import 'package:felloapp/ui/pages/userProfile/my_winnings/my_winnings_view.dart';
+import 'package:felloapp/ui/service_elements/last_week/last_week_view.dart';
 import 'package:felloapp/util/custom_logger.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
-// import 'package:sliding_up_panel/sliding_up_panel.dart';
+import 'package:flutter/material.dart';
 
 class WinViewModel extends BaseViewModel {
-  final UserService? _userService = locator<UserService>();
-  final CustomLogger? _logger = locator<CustomLogger>();
+  final UserService _userService = locator<UserService>();
+  final CustomLogger _logger = locator<CustomLogger>();
   final AnalyticsService _analyticsService = locator<AnalyticsService>();
-  final JourneyRepository? _journeyRepo = locator<JourneyRepository>();
-  final BaseUtil? _baseUtil = locator<BaseUtil>();
-  final ReferralRepo? _refRepo = locator<ReferralRepo>();
-  final AppFlyerAnalytics? _appFlyer = locator<AppFlyerAnalytics>();
+  final JourneyRepository _journeyRepo = locator<JourneyRepository>();
+  final BaseUtil _baseUtil = locator<BaseUtil>();
+  final ReferralRepo _refRepo = locator<ReferralRepo>();
+  final AppFlyerAnalytics _appFlyer = locator<AppFlyerAnalytics>();
+
   // final WinnerService? _winnerService = locator<WinnerService>();
-  final LeaderboardService? _lbService = locator<LeaderboardService>();
+  final LeaderboardService _lbService = locator<LeaderboardService>();
   final UserRepository? userRepo = locator<UserRepository>();
-  final TxnHistoryService? _transactionHistoryService =
+  final TxnHistoryService _transactionHistoryService =
       locator<TxnHistoryService>();
-  final InternalOpsService? _internalOpsService = locator<InternalOpsService>();
-  final PrizingRepo? _prizingRepo = locator<PrizingRepo>();
-  final CampaignRepo? _campaignRepo = locator<CampaignRepo>();
-  final ScratchCardRepository? _gtRepo = locator<ScratchCardRepository>();
+  final InternalOpsService _internalOpsService = locator<InternalOpsService>();
+  final PrizingRepo _prizingRepo = locator<PrizingRepo>();
+  final CampaignRepo _campaignRepo = locator<CampaignRepo>();
+  final ScratchCardRepository _gtRepo = locator<ScratchCardRepository>();
   final UserRepository _userRepo = locator<UserRepository>();
   int _unscratchedGTCount = 0;
   S locale = locator<S>();
@@ -50,10 +55,11 @@ class WinViewModel extends BaseViewModel {
   Timer? _timer;
   List<FelloFactsModel>? fellofacts = [];
   bool _isFelloFactsLoading = false;
-  get isFelloFactsLoading => this._isFelloFactsLoading;
+
+  get isFelloFactsLoading => _isFelloFactsLoading;
 
   set isFelloFactsLoading(value) {
-    this._isFelloFactsLoading = value;
+    _isFelloFactsLoading = value;
     notifyListeners();
   }
 
@@ -64,16 +70,19 @@ class WinViewModel extends BaseViewModel {
   bool shareWhatsappInProgress = false;
   bool shareLinkInProgress = false;
   bool _isShareLoading = false;
+
   bool get isShareLoading => _isShareLoading;
   String _refUrl = "";
+
   get refUrl => _refUrl;
 
   double get getUnclaimedPrizeBalance =>
       _userService!.userFundWallet!.unclaimedBalance;
 
-  init() {
+  Future<void> init() async {
     getFelloFacts();
-    _lbService!.fetchReferralLeaderBoard();
+    // _lbService!.fetchReferralLeaderBoard();
+    locator<ScratchCardService>().updateUnscratchedGTCount();
   }
 
   // Future<void> shareWhatsApp() async {
@@ -157,7 +166,7 @@ class WinViewModel extends BaseViewModel {
     AppState.delegate!.appState.currentAction = PageAction(
         state: PageState.addWidget,
         page: MyWinningsPageConfig,
-        widget: MyWinningsView());
+        widget: const MyWinningsView());
   }
 
   void navigateToRefer() {
@@ -335,5 +344,29 @@ class WinViewModel extends BaseViewModel {
     }
     _logger!.d("Fello Facts Length: ${fellofacts!.length}");
     isFelloFactsLoading = false;
+  }
+
+  Future<void> showLastWeekSummary() async {
+    AppState.delegate!.appState.currentAction = PageAction(
+      state: PageState.addWidget,
+      page: LastWeekOverviewConfig,
+      widget: const LastWeekOverView(
+        callCampaign: false,
+      ),
+    );
+  }
+
+  void showRatingSheet() {
+    Haptic.vibrate();
+
+    BaseUtil.openModalBottomSheet(
+      addToScreenStack: true,
+      enableDrag: false,
+      hapticVibrate: true,
+      isBarrierDismissible: true,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      content: const FelloInAppReview(),
+    );
   }
 }

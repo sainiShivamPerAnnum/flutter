@@ -1,9 +1,16 @@
+import 'dart:async';
+
+import 'package:felloapp/core/enums/app_config_keys.dart';
+import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/modalsheets/transaction_details_model_sheet.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -12,6 +19,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
+import 'package:lottie/lottie.dart';
 import 'package:open_filex/open_filex.dart';
 
 import '../../../../base_util.dart';
@@ -24,26 +32,31 @@ class TransactionDetailsPage extends StatefulWidget {
   State<TransactionDetailsPage> createState() => _TransactionDetailsPageState();
 }
 
-class _TransactionDetailsPageState extends State<TransactionDetailsPage> {
+class _TransactionDetailsPageState extends State<TransactionDetailsPage>
+    with SingleTickerProviderStateMixin {
   bool _showInvoiceButton = false;
 
   bool _showAppliedCoupon = false;
 
   final AugmontService? augmontProvider = locator<AugmontService>();
 
-  final TxnHistoryService? _txnHistoryService = locator<TxnHistoryService>();
+  final TxnHistoryService _txnHistoryService = locator<TxnHistoryService>();
 
   S locale = locator<S>();
 
   final BaseUtil? baseProvider = locator<BaseUtil>();
 
   bool _isInvoiceLoading = false;
+
   @override
   void initState() {
+    _animationController = AnimationController(vsync: this);
+    _playLottieAnimation();
     if (widget.txn.subType == UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD &&
         widget.txn.type == UserTransaction.TRAN_TYPE_DEPOSIT &&
-        widget.txn.tranStatus == UserTransaction.TRAN_STATUS_COMPLETE)
+        widget.txn.tranStatus == UserTransaction.TRAN_STATUS_COMPLETE) {
       _showInvoiceButton = true;
+    }
 
     if (widget.txn.subType == UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD &&
         widget.txn.type == UserTransaction.TRAN_TYPE_DEPOSIT &&
@@ -53,18 +66,64 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage> {
     super.initState();
   }
 
+  String floSubtype() {
+    if (widget.txn.subType == "LENDBOXP2P") {
+      if (widget.txn.lbMap != null) {
+        switch (widget.txn.lbMap.fundType) {
+          case Constants.ASSET_TYPE_FLO_FIXED_6:
+            return "12% Flo";
+          case Constants.ASSET_TYPE_FLO_FIXED_3:
+            return "10% Flo";
+          case Constants.ASSET_TYPE_FLO_FELXI:
+            if (locator<UserService>()
+                .userSegments
+                .contains(Constants.US_FLO_OLD)) {
+              return "10% Flo";
+            } else {
+              return "8% Flo";
+            }
+          default:
+            return "10% Flo";
+        }
+      }
+    }
+    return "";
+  }
+
+  late AnimationController _animationController;
+  bool _showLottie = false;
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
+  void _playLottieAnimation() {
+    if (AppConfig.getValue(AppConfigKey.specialEffectsOnTxnDetailsView) ??
+        false) {
+      AppState.blockNavigation();
+      Future.delayed(const Duration(seconds: 1), () {
+        setState(() {
+          if (mounted)
+            // ignore: curly_braces_in_flow_control_structures
+            _showLottie = true;
+        });
+      });
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     final isGold =
         widget.txn.subType == UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD;
     return Scaffold(
-      backgroundColor: Color(0xff151D22),
+      backgroundColor: const Color(0xff151D22),
       appBar: AppBar(
-        backgroundColor: Color(0xff151D22),
+        backgroundColor: const Color(0xff151D22),
         elevation: 0,
       ),
       body: Stack(
-        alignment: Alignment.bottomCenter,
         children: [
           SingleChildScrollView(
             child: Padding(
@@ -93,7 +152,7 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage> {
                         width: SizeConfig.screenWidth! * 0.12,
                       ),
                       Text(
-                        isGold ? locale.digitalGoldText : locale.felloFloText,
+                        isGold ? locale.digitalGoldText : floSubtype(),
                         style: TextStyles.rajdhaniSB.body2,
                       )
                     ],
@@ -111,9 +170,9 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage> {
                   ),
                   Center(
                     child: Text(
-                      getFormattedDate + " at " + formattedTime,
+                      "$getFormattedDate at $formattedTime",
                       style: TextStyles.sourceSansSB.body2
-                          .colour(Color(0xffA0A0A0)),
+                          .colour(const Color(0xffA0A0A0)),
                     ),
                   ),
                   SizedBox(
@@ -125,15 +184,15 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage> {
                     SizedBox(height: SizeConfig.padding12),
                     Center(
                       child: Padding(
-                        padding: EdgeInsets.only(top: 4, bottom: 8),
+                        padding: const EdgeInsets.only(top: 4, bottom: 8),
                         child: Text(locale.txnHappyHours,
                             textAlign: TextAlign.center,
                             style: TextStyles.sourceSans.body2
-                                .colour(Color(0xffB5CDCB))),
+                                .colour(const Color(0xffB5CDCB))),
                       ),
                     ),
                   ],
-                  Divider(
+                  const Divider(
                     color: Color(0xff3E3E3E),
                   ),
 
@@ -150,7 +209,7 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage> {
                               Text(
                                 "Status",
                                 style: TextStyles.sourceSans
-                                    .colour(Color(0xffA9C6D6)),
+                                    .colour(const Color(0xffA9C6D6)),
                               ),
                               Row(
                                 mainAxisAlignment: MainAxisAlignment.center,
@@ -178,7 +237,7 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage> {
                           ),
                           TransactionSummary(
                               summary: widget.txn.transactionUpdatesMap),
-                          Divider(
+                          const Divider(
                             color: Color(0xff3E3E3E),
                           ),
                           if (isGold &&
@@ -195,19 +254,15 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage> {
                                     Text(
                                       "Purchase Rate",
                                       style: TextStyles.sourceSans.body3
-                                          .colour(Color(0xffA9C6D6)),
+                                          .colour(const Color(0xffA9C6D6)),
                                     ),
                                     Text(
-                                        "₹" +
-                                            (widget.txn.augmnt?["aLockPrice"] ??
-                                                    0)
-                                                .toString() +
-                                            " /gm",
+                                        "₹${widget.txn.augmnt?["aLockPrice"] ?? 0} /gm",
                                         style: TextStyles.sourceSans.body3)
                                   ],
                                 ),
                               ),
-                              Divider(
+                              const Divider(
                                 color: Color(0xff3E3E3E),
                               ),
                             ],
@@ -221,17 +276,15 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage> {
                                   Text(
                                     "Gold purchased ",
                                     style: TextStyles.sourceSans.body3
-                                        .colour(Color(0xffA9C6D6)),
+                                        .colour(const Color(0xffA9C6D6)),
                                   ),
                                   Text(
-                                      widget.txn.augmnt!["aGoldInTxn"]
-                                              .toString() +
-                                          " gms",
+                                      "${widget.txn.augmnt!["aGoldInTxn"]} gms",
                                       style: TextStyles.sourceSans.body3)
                                 ],
                               ),
                             ),
-                            Divider(
+                            const Divider(
                               color: Color(0xff3E3E3E),
                             ),
                             if (widget.txn.couponCode != null ||
@@ -247,18 +300,20 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage> {
                                       Row(
                                         children: [
                                           SvgPicture.asset(Assets.couponsAsset),
-                                          SizedBox(
+                                          const SizedBox(
                                             width: 4,
                                           ),
                                           Text(
                                             widget.txn.couponCode ?? "",
                                             style: TextStyles.sourceSansSB.body3
-                                                .colour(Color(0xffA5FCE7)),
+                                                .colour(
+                                                    const Color(0xffA5FCE7)),
                                           ),
                                           Text(
                                             " coupon applied",
                                             style: TextStyles.sourceSansL.body3
-                                                .colour(Color(0xffA5FCE7)),
+                                                .colour(
+                                                    const Color(0xffA5FCE7)),
                                           ),
                                         ],
                                       ),
@@ -266,24 +321,21 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage> {
                                               ?.containsKey("goldQty") ??
                                           false)
                                         Text(
-                                            "+ " +
-                                                (widget.txn
-                                                        .couponMap?["goldQty"]
-                                                        .toString() ??
-                                                    "") +
-                                                " gms",
+                                            "+ ${BaseUtil.digitPrecision(widget.txn.couponMap?["goldQty"], 4, false)} gms",
                                             style: TextStyles.sourceSans.body3
-                                                .colour(Color(0xffA5FCE7))),
+                                                .colour(
+                                                    const Color(0xffA5FCE7))),
                                       if (widget.txn.couponMap
                                               ?.containsKey("gtId") ??
                                           false)
-                                        Text("+ 1 Tambola Ticket",
+                                        Text("+ 1 Ticket",
                                             style: TextStyles.sourceSans.body3
-                                                .colour(Color(0xffA5FCE7)))
+                                                .colour(
+                                                    const Color(0xffA5FCE7)))
                                     ],
                                   ),
                                 ),
-                                Divider(
+                                const Divider(
                                   color: Color(0xff3E3E3E),
                                 ),
                               ],
@@ -298,29 +350,20 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage> {
                                       "Total Gold (in grams) ",
                                       style:
                                           TextStyles.sourceSansB.body3.colour(
-                                        Color(0xffE3CD95),
+                                        const Color(0xffE3CD95),
                                       ),
                                     ),
                                     Text(
-                                      (widget.txn.couponMap!
-                                                  .containsKey("goldQty")
-                                              ? (widget.txn.augmnt![
-                                                          "aGoldInTxn"] +
-                                                      widget.txn.couponMap![
-                                                          "goldQty"])
-                                                  .toString()
-                                              : widget.txn.augmnt!["aGoldInTxn"]
-                                                  .toString()) +
-                                          " gms",
+                                      "${widget.txn.couponMap!.containsKey("goldQty") ? (BaseUtil.digitPrecision(widget.txn.augmnt!["aGoldInTxn"] + widget.txn.couponMap!["goldQty"], 4, false)).toString() : BaseUtil.digitPrecision(widget.txn.augmnt!["aGoldInTxn"], 4, false).toString()} gms",
                                       style:
                                           TextStyles.sourceSansB.body3.colour(
-                                        Color(0xffE3CD95),
+                                        const Color(0xffE3CD95),
                                       ),
                                     )
                                   ],
                                 ),
                               ),
-                              Divider(
+                              const Divider(
                                 color: Color(0xff3E3E3E),
                               ),
                             ]
@@ -332,9 +375,15 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage> {
                                 widget.txn.type ==
                                         UserTransaction.TRAN_TYPE_WITHDRAW
                                     ? "Rewards Deducted:"
-                                    : "Rewards Credited:",
+                                    : (widget.txn.subType !=
+                                                Constants.ASSET_TYPE_LENDBOX &&
+                                            widget.txn.augmnt != null &&
+                                            widget.txn.augmnt!["aBlockId"] ==
+                                                null)
+                                        ? "You redeemed ₹${widget.txn.amount} from your total winnings."
+                                        : "Rewards Credited:",
                                 style: TextStyles.sourceSans.body3
-                                    .colour(Color(0XFF9AB5C4)),
+                                    .colour(const Color(0XFF9AB5C4)),
                               ),
                             ),
                             if (widget.txn.type ==
@@ -343,9 +392,9 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage> {
                                 alignment: Alignment.topLeft,
                                 child: SizedBox(
                                   child: Text(
-                                    "Tokens and Tambola Tickets are deducted for withdrawals",
+                                    "Tokens and Tickets are deducted for withdrawals",
                                     style: TextStyles.sourceSans.body4
-                                        .colour(Color(0xffA0A0A0)),
+                                        .colour(const Color(0xffA0A0A0)),
                                   ),
                                 ),
                               ),
@@ -354,57 +403,66 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage> {
                             ),
                             Row(
                               children: [
-                                Expanded(
-                                  child: Container(
-                                    decoration: BoxDecoration(
-                                        color: Color(0xff212B31),
-                                        borderRadius: BorderRadius.circular(8)),
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: 16, vertical: 8),
-                                    margin: EdgeInsets.only(right: 8),
-                                    child: Column(
-                                      children: [
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.center,
-                                          children: [
-                                            if (widget.txn.type ==
-                                                UserTransaction
-                                                    .TRAN_TYPE_WITHDRAW)
-                                              Text(
-                                                "-  ",
-                                                style:
-                                                    TextStyles.rajdhaniSB.body1,
+                                (widget.txn.subType !=
+                                            Constants.ASSET_TYPE_LENDBOX &&
+                                        widget.txn.subType !=
+                                            Constants.ASSET_TYPE_AUGMONT)
+                                    ? const SizedBox()
+                                    : Expanded(
+                                        child: Container(
+                                          decoration: BoxDecoration(
+                                              color: const Color(0xff212B31),
+                                              borderRadius:
+                                                  BorderRadius.circular(8)),
+                                          padding: const EdgeInsets.symmetric(
+                                              horizontal: 16, vertical: 8),
+                                          margin:
+                                              const EdgeInsets.only(right: 8),
+                                          child: Column(
+                                            children: [
+                                              Row(
+                                                mainAxisAlignment:
+                                                    MainAxisAlignment.center,
+                                                children: [
+                                                  if (widget.txn.type ==
+                                                      UserTransaction
+                                                          .TRAN_TYPE_WITHDRAW)
+                                                    Text(
+                                                      "-  ",
+                                                      style: TextStyles
+                                                          .rajdhaniSB.body1,
+                                                    ),
+                                                  SvgPicture.asset(
+                                                    Assets.token,
+                                                    height:
+                                                        SizeConfig.padding16,
+                                                  ),
+                                                  SizedBox(
+                                                    width: SizeConfig.padding4,
+                                                  ),
+                                                  Text(
+                                                    widget.txn.amount
+                                                        .toString()
+                                                        .split(".")
+                                                        .first
+                                                        .replaceAll("-", ""),
+                                                    style: TextStyles
+                                                        .rajdhaniSB.body2,
+                                                  ),
+                                                ],
                                               ),
-                                            SvgPicture.asset(
-                                              Assets.token,
-                                              height: SizeConfig.padding16,
-                                            ),
-                                            SizedBox(
-                                              width: SizeConfig.padding4,
-                                            ),
-                                            Text(
-                                              widget.txn.amount
-                                                  .toString()
-                                                  .split(".")
-                                                  .first
-                                                  .replaceAll("-", ""),
-                                              style:
-                                                  TextStyles.rajdhaniSB.body2,
-                                            ),
-                                          ],
+                                              SizedBox(
+                                                width: SizeConfig.padding4,
+                                              ),
+                                              Text(
+                                                "Game Tokens",
+                                                style:
+                                                    TextStyles.rajdhaniSB.body4,
+                                              )
+                                            ],
+                                          ),
                                         ),
-                                        SizedBox(
-                                          width: SizeConfig.padding4,
-                                        ),
-                                        Text(
-                                          "Game Tokens",
-                                          style: TextStyles.rajdhaniSB.body4,
-                                        )
-                                      ],
-                                    ),
-                                  ),
-                                ),
+                                      ),
                                 if ((widget.txn.misMap
                                             ?.containsKey("tickets") ??
                                         false) &&
@@ -413,12 +471,12 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage> {
                                     child: Container(
                                       alignment: Alignment.center,
                                       decoration: BoxDecoration(
-                                          color: Color(0xff212B31),
+                                          color: const Color(0xff212B31),
                                           borderRadius:
                                               BorderRadius.circular(8)),
-                                      padding: EdgeInsets.symmetric(
+                                      padding: const EdgeInsets.symmetric(
                                           horizontal: 16, vertical: 8),
-                                      margin: EdgeInsets.only(right: 8),
+                                      margin: const EdgeInsets.only(right: 8),
                                       child: Column(
                                         children: [
                                           Row(
@@ -452,7 +510,7 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage> {
                                             width: SizeConfig.padding4,
                                           ),
                                           Text(
-                                            "Tambola Ticket",
+                                            "Ticket(s)",
                                             textAlign: TextAlign.center,
                                             style: TextStyles.rajdhaniSB.body4,
                                           ),
@@ -476,10 +534,10 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage> {
                                   Expanded(
                                     child: Container(
                                       decoration: BoxDecoration(
-                                          color: Color(0xff212B31),
+                                          color: const Color(0xff212B31),
                                           borderRadius:
                                               BorderRadius.circular(8)),
-                                      padding: EdgeInsets.symmetric(
+                                      padding: const EdgeInsets.symmetric(
                                           horizontal: 16, vertical: 8),
                                       child: Column(
                                         children: [
@@ -528,43 +586,76 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage> {
             ),
           ),
           if (_showInvoiceButton && widget.txn.augmnt?["aLockPrice"] != null)
-            Padding(
-              padding: EdgeInsets.only(bottom: SizeConfig.padding20),
-              child: AppPositiveCustomChildBtn(
-                child: _isInvoiceLoading
-                    ? SpinKitThreeBounce(
-                        size: SizeConfig.padding20,
-                        color: Colors.white,
-                        duration: Duration(milliseconds: 500),
-                      )
-                    : Text(locale.btnDownloadInvoice.toUpperCase(),
-                        style: TextStyles.rajdhaniSB.body1),
-                onPressed: () async {
-                  if (widget.txn.augmnt![UserTransaction.subFldAugTranId] !=
-                      null) {
-                    setState(() {
-                      _isInvoiceLoading = true;
-                    });
-                    String? trnId =
-                        widget.txn.augmnt![UserTransaction.subFldAugTranId];
-                    augmontProvider!
-                        .generatePurchaseInvoicePdf(trnId, null)
-                        .then((generatedPdfFilePath) {
-                      _isInvoiceLoading = false;
-                      setState(() {});
-                      if (generatedPdfFilePath != null) {
-                        OpenFilex.open(generatedPdfFilePath);
-                      } else {
-                        BaseUtil.showNegativeAlert(locale.txnInvoiceFailed,
-                            locale.txnTryAfterSomeTime);
-                      }
-                    });
-                  } else {
-                    BaseUtil.showNegativeAlert(
-                        locale.txnInvoiceFailed, locale.txnTryAfterSomeTime);
-                  }
-                },
-                width: SizeConfig.screenWidth! * 0.8,
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Padding(
+                padding: EdgeInsets.only(bottom: SizeConfig.padding20),
+                child: AppPositiveCustomChildBtn(
+                  onPressed: () async {
+                    if (widget.txn.augmnt![UserTransaction.subFldAugTranId] !=
+                        null) {
+                      setState(() {
+                        _isInvoiceLoading = true;
+                      });
+                      String? trnId =
+                          widget.txn.augmnt![UserTransaction.subFldAugTranId];
+                      unawaited(augmontProvider!
+                          .generatePurchaseInvoicePdf(trnId, null)
+                          .then((generatedPdfFilePath) {
+                        _isInvoiceLoading = false;
+                        setState(() {});
+                        if (generatedPdfFilePath != null) {
+                          OpenFilex.open(generatedPdfFilePath);
+                        } else {
+                          BaseUtil.showNegativeAlert(locale.txnInvoiceFailed,
+                              locale.txnTryAfterSomeTime);
+                        }
+                      }));
+                    } else {
+                      BaseUtil.showNegativeAlert(
+                          locale.txnInvoiceFailed, locale.txnTryAfterSomeTime);
+                    }
+                  },
+                  width: SizeConfig.screenWidth! * 0.8,
+                  child: _isInvoiceLoading
+                      ? SpinKitThreeBounce(
+                          size: SizeConfig.padding20,
+                          color: Colors.white,
+                          duration: const Duration(milliseconds: 500),
+                        )
+                      : Text(locale.btnDownloadInvoice.toUpperCase(),
+                          style: TextStyles.rajdhaniSB.body1),
+                ),
+              ),
+            ),
+          if (_showLottie)
+            Align(
+              alignment: Alignment.center,
+              child: IgnorePointer(
+                ignoring: true,
+                child: Container(
+                  height: SizeConfig.screenHeight,
+                  color: Colors.transparent,
+                  child: Center(
+                    child: Lottie.asset(
+                      Assets.indianFlagKiteLottie,
+                      controller: _animationController,
+                      height: SizeConfig.screenHeight,
+                      onLoaded: (composition) {
+                        _animationController
+                          ..duration = composition.duration
+                          ..forward().whenComplete(() {
+                            if (mounted) {
+                              setState(() {
+                                _showLottie = false;
+                                AppState.unblockNavigation();
+                              });
+                            }
+                          });
+                      },
+                    ),
+                  ),
+                ),
               ),
             ),
         ],

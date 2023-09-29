@@ -54,12 +54,12 @@ class GOWCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final AnalyticsService? _analyticsService = locator<AnalyticsService>();
+    final AnalyticsService _analyticsService = locator<AnalyticsService>();
     S locale = S.of(context);
     return (model.isGamesListDataLoading)
-        ? GameCardShimmer()
+        ? const GameCardShimmer()
         : (model.gow == null
-            ? SizedBox()
+            ? const SizedBox()
             : Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
@@ -116,12 +116,12 @@ class GOWCard extends StatelessWidget {
                                     style: TextStyles.sourceSans.body4),
                                 SizedBox(height: SizeConfig.padding16),
                                 Container(
-                                  padding: EdgeInsets.symmetric(
+                                  padding: const EdgeInsets.symmetric(
                                       horizontal: 12, vertical: 8),
                                   decoration: BoxDecoration(
-                                    color: Color(0xff232326),
-                                    border:
-                                        Border.all(color: Color(0xff919193)),
+                                    color: const Color(0xff232326),
+                                    border: Border.all(
+                                        color: const Color(0xff919193)),
                                     borderRadius: BorderRadius.circular(5),
                                   ),
                                   child: Row(
@@ -138,7 +138,7 @@ class GOWCard extends StatelessWidget {
                                   ),
                                 ),
                               ]),
-                          Spacer(),
+                          const Spacer(),
                           SvgPicture.network(
                             model.gow!.thumbnailUri!,
                             fit: BoxFit.cover,

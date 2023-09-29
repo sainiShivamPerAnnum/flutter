@@ -39,10 +39,10 @@ class UserProfileDetails extends StatelessWidget {
           children: [
             const NewSquareBackground(),
             model.state == ViewState.Busy
-                ? Center(child: FullScreenLoader())
+                ? const Center(child: FullScreenLoader())
                 : ListView(
                     shrinkWrap: true,
-                    physics: ClampingScrollPhysics(),
+                    physics: const ClampingScrollPhysics(),
                     children: [
                       ProfileHeader(model: model),
                       UserProfileForm(locale: locale, model: model),
@@ -95,7 +95,7 @@ class UserProfileForm extends StatelessWidget {
                       color: UiConstants.primaryColor,
                       size: SizeConfig.iconSize1,
                     )
-                  : SizedBox(),
+                  : const SizedBox(),
               validator: (value) {
                 if (value != null && value.trim().isNotEmpty) {
                   if (value.trim().length < 3) return locale.obNameRules;
@@ -189,23 +189,23 @@ class UserProfileForm extends StatelessWidget {
               items: model.inEditMode
                   ? [
                       DropdownMenuItem(
+                        value: 1,
                         child: Text(
                           locale!.obGenderMale,
                         ),
-                        value: 1,
                       ),
                       DropdownMenuItem(
+                        value: 0,
                         child: Text(
                           locale!.obGenderFemale,
                         ),
-                        value: 0,
                       ),
                       DropdownMenuItem(
+                        value: -1,
                         child: Text(
                           locale!.obGenderOthers,
-                          style: TextStyle(),
+                          style: const TextStyle(),
                         ),
-                        value: -1,
                       ),
                     ]
                   : [],
@@ -313,7 +313,7 @@ class UserProfileForm extends StatelessWidget {
                         ),
                         IconButton(
                           onPressed: model.showAndroidDatePicker,
-                          icon: Icon(
+                          icon: const Icon(
                             Icons.calendar_today,
                             size: 20,
                             color: UiConstants.primaryColor,
@@ -334,7 +334,7 @@ class UserProfileForm extends StatelessWidget {
                             color: UiConstants.primaryColor,
                             size: SizeConfig.iconSize1,
                           )
-                        : SizedBox(),
+                        : const SizedBox(),
                     // child: Text(
                     //   "${model.dobController.text}",
                     //   style: TextStyles.body2.colour(
@@ -353,7 +353,7 @@ class UserProfileForm extends StatelessWidget {
                     child: Text(
                       model.dateInputError,
                       textAlign: TextAlign.start,
-                      style: TextStyle(color: Colors.red),
+                      style: const TextStyle(color: Colors.red),
                     ),
                   ),
                 ],
@@ -426,35 +426,35 @@ class UserProfileForm extends StatelessWidget {
             //     ?
             Column(
               children: [
-                Divider(
-                  color: UiConstants.kTextColor2,
-                  thickness: 0.5,
-                ),
-                ListTile(
-                  contentPadding: EdgeInsets.symmetric(horizontal: 0),
-                  onTap: model.navigateToKycScreen,
-                  title: Text(
-                    locale.obKYCDetailsLabel,
-                    style: TextStyles.sourceSans.body3
-                        .colour(UiConstants.kTextColor2),
-                  ),
-                  trailing: Icon(Icons.arrow_forward_ios_rounded,
-                      size: SizeConfig.iconSize2,
-                      color: UiConstants.kTextColor2),
-                ),
-                ListTile(
-                  contentPadding: EdgeInsets.symmetric(horizontal: 0),
-                  onTap: model.navigateToBankDetailsScreen,
-                  title: Text(
-                    locale.obBankDetails,
-                    style: TextStyles.sourceSans.body3
-                        .colour(UiConstants.kTextColor2),
-                  ),
-                  trailing: Icon(Icons.arrow_forward_ios_rounded,
-                      size: SizeConfig.iconSize2,
-                      color: UiConstants.kTextColor2),
-                ),
-                Divider(
+                // Divider(
+                //   color: UiConstants.kTextColor2,
+                //   thickness: 0.5,
+                // ),
+                // ListTile(
+                //   contentPadding: EdgeInsets.symmetric(horizontal: 0),
+                //   onTap: model.navigateToKycScreen,
+                //   title: Text(
+                //     locale.obKYCDetailsLabel,
+                //     style: TextStyles.sourceSans.body3
+                //         .colour(UiConstants.kTextColor2),
+                //   ),
+                //   trailing: Icon(Icons.arrow_forward_ios_rounded,
+                //       size: SizeConfig.iconSize2,
+                //       color: UiConstants.kTextColor2),
+                // ),
+                // ListTile(
+                //   contentPadding: EdgeInsets.symmetric(horizontal: 0),
+                //   onTap: model.navigateToBankDetailsScreen,
+                //   title: Text(
+                //     locale.obBankDetails,
+                //     style: TextStyles.sourceSans.body3
+                //         .colour(UiConstants.kTextColor2),
+                //   ),
+                //   trailing: Icon(Icons.arrow_forward_ios_rounded,
+                //       size: SizeConfig.iconSize2,
+                //       color: UiConstants.kTextColor2),
+                // ),
+                const Divider(
                   color: UiConstants.kTextColor2,
                   thickness: 0.5,
                 ),
@@ -467,7 +467,7 @@ class UserProfileForm extends StatelessWidget {
                         style: TextStyles.sourceSans.body3
                             .colour(UiConstants.kTextColor2),
                       ),
-                      Spacer(),
+                      const Spacer(),
                       AppSwitch(
                         onToggle: (val) =>
                             model.onAppLockPreferenceChanged(val),
@@ -480,7 +480,29 @@ class UserProfileForm extends StatelessWidget {
                     ],
                   ),
                 ),
-                Divider(
+                if (model.isEmailVerified)
+                  SizedBox(
+                    height: SizeConfig.padding40,
+                    child: Row(
+                      children: [
+                        Text(
+                          "Monthly Email Alerts",
+                          style: TextStyles.sourceSans.body3
+                              .colour(UiConstants.kTextColor2),
+                        ),
+                        const Spacer(),
+                        AppSwitch(
+                          onToggle: model.onFloInvoiceEmailPreferenceChanged,
+                          value: model.floInvoiceEmail,
+                          isLoading: model.isFloInvoiceMailLoading,
+                          height: SizeConfig.screenWidth! * 0.059,
+                          width: SizeConfig.screenWidth! * 0.087,
+                          toggleSize: SizeConfig.screenWidth! * 0.032,
+                        ),
+                      ],
+                    ),
+                  ),
+                const Divider(
                   color: UiConstants.kTextColor2,
                   thickness: 0.5,
                 ),
@@ -513,14 +535,14 @@ class UserProfileForm extends StatelessWidget {
             SizedBox(height: SizeConfig.padding6),
             Center(
               child: TextButton(
+                onPressed: model.signout,
                 child: Text(
                   locale.btnSignout,
                   style: TextStyles.rajdhaniB.body1,
                 ),
-                onPressed: model.signout,
               ),
             ),
-            AppFooter(),
+            const AppFooter(),
             SizedBox(height: SizeConfig.padding28),
           ],
         ),

@@ -23,7 +23,7 @@ class FelloAppBar extends StatelessWidget {
   final String? title;
   final bool showAppBar;
 
-  FelloAppBar(
+  const FelloAppBar(
       {this.leading,
       this.actions,
       this.title,
@@ -32,6 +32,7 @@ class FelloAppBar extends StatelessWidget {
       int? elevation,
       Color? backgroundColor})
       : super(key: key);
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -40,7 +41,7 @@ class FelloAppBar extends StatelessWidget {
         color: showAppBar ? UiConstants.kBackgroundColor : Colors.transparent,
         child: AppBar(
           elevation: 0,
-          leading: leading != null ? leading : Container(),
+          leading: leading ?? Container(),
           centerTitle: true,
           title: title != null
               ? FittedBox(
@@ -50,11 +51,11 @@ class FelloAppBar extends StatelessWidget {
                   overflow: TextOverflow.clip,
                   style: TextStyles.rajdhaniSB.title4,
                 ))
-              : Text(''),
+              : const Text(''),
           backgroundColor: showAppBar
               ? UiConstants.kSecondaryBackgroundColor
               : Colors.transparent,
-          actions: actions != null ? actions : [Container()],
+          actions: actions ?? [Container()],
         ));
   }
 }
@@ -62,10 +63,12 @@ class FelloAppBar extends StatelessWidget {
 class NotificationButton extends StatelessWidget {
   final AnalyticsService? _analytics = locator<AnalyticsService>();
 
+  NotificationButton({super.key});
+
   @override
   Widget build(BuildContext context) {
     return PropertyChangeConsumer<UserService, UserServiceProperties>(
-        properties: [UserServiceProperties.myNotificationStatus],
+        properties: const [UserServiceProperties.myNotificationStatus],
         builder: (context, model, property) => InkWell(
               onTap: () {
                 if (JourneyService.isAvatarAnimationInProgress) return;
@@ -84,8 +87,7 @@ class NotificationButton extends StatelessWidget {
               child: Stack(
                 children: [
                   CircleAvatar(
-                    backgroundColor:
-                        UiConstants.kTextFieldColor.withOpacity(0.4),
+                    backgroundColor: Colors.white.withOpacity(0.1),
                     radius: SizeConfig.avatarRadius * 1.1,
                     child: Padding(
                       padding: EdgeInsets.all(SizeConfig.padding12),
@@ -99,7 +101,7 @@ class NotificationButton extends StatelessWidget {
                       right: 2,
                       top: 2,
                       child: Container(
-                        decoration: BoxDecoration(
+                        decoration: const BoxDecoration(
                           shape: BoxShape.circle,
                         ),
                         child: CircleAvatar(
@@ -116,7 +118,8 @@ class NotificationButton extends StatelessWidget {
 
 class TextFieldLabel extends StatelessWidget {
   final String text;
-  TextFieldLabel(this.text);
+
+  const TextFieldLabel(this.text);
 
   @override
   Widget build(BuildContext context) {

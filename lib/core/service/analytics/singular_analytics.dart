@@ -1,12 +1,14 @@
+import 'dart:convert';
+
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/service/analytics/base_analytics_service.dart';
+import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/custom_logger.dart';
-import 'package:logger/logger.dart';
-import 'package:mixpanel_flutter/mixpanel_flutter.dart';
 import 'package:singular_flutter_sdk/singular.dart';
 import 'package:singular_flutter_sdk/singular_config.dart';
+import 'package:singular_flutter_sdk/singular_link_params.dart';
 
 class SingularAnalytics extends BaseAnalyticsService {
   final CustomLogger? _logger = locator<CustomLogger>();
@@ -21,8 +23,9 @@ class SingularAnalytics extends BaseAnalyticsService {
     try {
       if (FlavorConfig.isProduction() &&
           token.isNotEmpty &&
-          _singularConfig != null)
+          _singularConfig != null) {
         Singular.registerDeviceTokenForUninstall(token);
+      }
     } catch (e) {
       _logger!.e('Singular implementation failed to capture fcm token');
     }
@@ -30,10 +33,23 @@ class SingularAnalytics extends BaseAnalyticsService {
 
   Future<void> login({bool? isOnBoarded, BaseUser? baseUser}) async {
     if (FlavorConfig.isProduction()) {
-      _singularConfig = new SingularConfig(PROD_KEY, PROD_SECRET);
+      _singularConfig = SingularConfig(PROD_KEY, PROD_SECRET);
       _singularConfig!.customUserId = baseUser!.uid;
       Singular.start(_singularConfig!);
+      _singularConfig!.singularLinksHandler = (SingularLinkParams params) {
+        String? deeplink = params.deeplink!;
+        String? passthrough = params.passthrough!;
+        bool? isDeferred = params.isDeferred!;
+        // Add your code here to handle the deep link
 
+        if (passthrough != null && passthrough.isNotEmpty) {
+          Map<String, dynamic> responseMap = jsonDecode(passthrough);
+          if (responseMap.containsKey("uid")) {
+            BaseUtil.referrerUserId = responseMap["uid"];
+            BaseUtil.referredCode = responseMap["refCode"];
+          }
+        }
+      };
       _singularConfig!.skAdNetworkEnabled = true;
       _singularConfig!.manualSkanConversionManagement = true;
       _singularConfig!.conversionValueUpdatedCallback = (conversionValue) {

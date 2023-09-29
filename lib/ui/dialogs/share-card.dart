@@ -1,6 +1,5 @@
 import 'package:felloapp/core/enums/prize_claim_choice.dart';
 import 'package:felloapp/util/assets.dart';
-import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -11,7 +10,8 @@ class ShareCard extends StatelessWidget {
   final double? prizeAmount;
   final PrizeClaimChoice? claimChoice;
 
-  ShareCard({
+  const ShareCard({
+    super.key,
     this.claimChoice,
     this.dpUrl,
     this.prizeAmount,
@@ -45,7 +45,6 @@ class ShareCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
     return Container(
       width: double.infinity,
       margin: EdgeInsets.only(
@@ -93,7 +92,7 @@ class ShareCard extends StatelessWidget {
             height: SizeConfig.padding24,
           ),
           Text(
-            'Play fun games and get a chance to\nwin rewards as Digital Gold!',
+            'Play games on Fello and\nget a chance to become a Crorepati!',
             style: TextStyles.sourceSans.body3.colour(Colors.black),
             textAlign: TextAlign.center,
           ),

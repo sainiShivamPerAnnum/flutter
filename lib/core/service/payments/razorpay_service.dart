@@ -59,33 +59,33 @@ class RazorpayService extends ChangeNotifier {
     return true;
   }
 
-  void handlePaymentSuccess(PaymentSuccessResponse response) async {
+  void handlePaymentSuccess(PaymentSuccessResponse response) {
     locator<BackButtonActions>().isTransactionCancelled = false;
-    String paymentId = response.paymentId!;
-    String checkoutOrderId = response.orderId!;
-    String paySignature = response.signature!;
+    // String paymentId = response.paymentId!;
+    // String checkoutOrderId = response.orderId!;
+    // String paySignature = response.signature!;
     _txnService!.currentTransactionState = TransactionState.ongoing;
-    _txnService!.initiatePolling();
-    log.debug(
-        "SUCCESS: " + paymentId + " " + checkoutOrderId + " " + paySignature);
-    _currentTxn?.rzp![UserTransaction.subFldRzpPaymentId] = paymentId;
-    if (_currentTxn!.rzp![UserTransaction.subFldRzpOrderId] !=
-        checkoutOrderId) {
-      _currentTxn!.rzp![UserTransaction.subFldRzpStatus] =
-          UserTransaction.RZP_TRAN_STATUS_COMPLETE;
-      if (_txnUpdateListener != null) _txnUpdateListener!(_currentTxn);
-      cleanListeners();
-      return;
-    }
+    unawaited(_txnService!.initiatePolling());
+    // log.debug(
+    //     "SUCCESS: " + paymentId + " " + checkoutOrderId + " " + paySignature);
+    // _currentTxn?.rzp![UserTransaction.subFldRzpPaymentId] = paymentId;
+    // if (_currentTxn!.rzp![UserTransaction.subFldRzpOrderId] !=
+    //     checkoutOrderId) {
+    //   _currentTxn!.rzp![UserTransaction.subFldRzpStatus] =
+    //       UserTransaction.RZP_TRAN_STATUS_COMPLETE;
+    //   if (_txnUpdateListener != null) _txnUpdateListener!(_currentTxn);
+    cleanListeners();
+    return;
+    // }
   }
 
   void handlePaymentError(PaymentFailureResponse response) {
     _txnService!.currentTransactionState = TransactionState.idle;
     AppState.unblockNavigation();
-    if (response.code == 2)
-      locator<BackButtonActions>().isTransactionCancelled = true;
-    else
-      locator<BackButtonActions>().isTransactionCancelled = false;
+    // if (response.code == 2)
+    //   locator<BackButtonActions>().isTransactionCancelled = true;
+    // else
+    //   locator<BackButtonActions>().isTransactionCancelled = false;
     BaseUtil.showNegativeAlert(locale.txnFailed, locale.txnFailedSubtitle);
     log.debug("ERROR: " + response.code.toString() + " - " + response.message!);
     Map<String, dynamic>? currentTxnDetails =
@@ -123,19 +123,13 @@ class RazorpayService extends ChangeNotifier {
     bool? skipMl,
     String? couponCode,
     required InvestmentType investmentType,
+    Map<String, dynamic>? goldProMap,
   }) async {
     if (!init(investmentType)) return null; //initialise razorpay
     final mid = AppConfig.getValue(AppConfigKey.rzpMid);
     final ApiResponse<CreatePaytmTransactionModel> txnResponse =
-        await _paytmRepo!.createTransaction(
-      amount,
-      augMap,
-      lbMap,
-      couponCode,
-      skipMl,
-      mid,
-      investmentType,
-    );
+        await _paytmRepo!.createTransaction(amount, augMap, lbMap, couponCode,
+            skipMl, mid, investmentType, null, goldProMap);
     if (txnResponse.isSuccess()) {
       final txnModel = txnResponse.model!;
       print(txnResponse.model!.data!.orderId);
@@ -196,7 +190,7 @@ class RazorpayService extends ChangeNotifier {
         _razorpay!.open(options);
         return true;
       } else {
-        BaseUtil.showNegativeAlert(locale.failedToCreateTxn, locale.tryLater);
+        BaseUtil.showNegativeAlert(txnResponse.errorMessage, locale.tryLater);
         AppState.unblockNavigation();
 
         return false;
@@ -211,7 +205,8 @@ class RazorpayService extends ChangeNotifier {
   }
 
   void cleanListeners() {
-    if (_razorpay != null) _razorpay!.clear();
+    if (_razorpay != null) _razorpay?.clear();
+
     if (_txnUpdateListener != null) _txnUpdateListener = null;
   }
 

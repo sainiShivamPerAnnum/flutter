@@ -37,7 +37,8 @@ class AppConfig {
       return val as T;
     } else {
       return BaseRemoteConfig.DEFAULTS.entries
-          .firstWhere((element) => element.key.appConfigKeyFromName == key)
+          .firstWhere((element) => element.key.appConfigKeyFromName == key,
+              orElse: () => MapEntry(key.name, null))
           .value as T;
     }
   }

@@ -11,6 +11,7 @@ class PreferenceHelper {
   static const REFERRAL_CODE = 'referral_code';
   static const REFERRAL_PROCESSED = 'referral_processed';
   static const CACHE_RATING_IS_RATED = "isUserRated";
+
   // static const CACHE_LAST_PLAYED_GAMES = "lastTwoGamesPlayed";
   static const CACHE_RATING_EXPIRY_TIMESTAMP = 'ratingExpireTimestamp';
   static const SHOW_TAMBOLA_PROCESSING = 'tambolaProcessingScreen';
@@ -28,6 +29,13 @@ class PreferenceHelper {
   static const CACHE_LAST_APP_OPEN = "lastAppOpen";
   static SharedPreferences? _prefs;
   static const POWERPLAY_IS_PLAYED = "powerplay_is_played";
+  static const LAST_WEEK_NUMBER = 'lastWeekNumber';
+  static const APP_RATING_SUBMITTED = 'app_rating_submitted';
+  static const NEW_INSTALL_POPUP = "new_install_popup";
+  static const GOLD_PRICE_SUBSCRIBE = "gold_price_subscribe";
+  static const CACHE_REFERRAL_PERSISTENT_NOTIFACTION_ID =
+      "referralPersistentNotificationId";
+  static const CACHE_LIST_OUTDATED_FLO_ASSET = "listOutdatedFloAsset";
 
   static Future<SharedPreferences?> initiate() async {
     if (_prefs == null) {

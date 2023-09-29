@@ -9,6 +9,7 @@ import 'package:felloapp/core/model/deposit_response_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/investment_actions_repo.dart';
+import 'package:felloapp/core/repository/report_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/augmont_invoice_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
@@ -17,7 +18,6 @@ import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/ui/pages/finance/augmont/gold_buy/augmont_buy_vm.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/augmont_api_util.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -52,9 +52,9 @@ class AugmontService extends ChangeNotifier {
   String _selectedReasonForSelling = '';
 
   ValueChanged<UserTransaction>? _augmontTxnProcessListener;
-  final String defaultBaseUri =
-      'https://jg628sk4s2.execute-api.ap-south-1.amazonaws.com/prod';
-  String? _baseUri;
+  // final String defaultBaseUri =
+  //     'https://jg628sk4s2.execute-api.ap-south-1.amazonaws.com/prod';
+  // String? _baseUri;
   String? _apiKey;
   late var headers;
 
@@ -77,7 +77,7 @@ class AugmontService extends ChangeNotifier {
     ];
     if (_dbModel == null) return false;
 
-    _baseUri = defaultBaseUri;
+    // _baseUri = defaultBaseUri;
     headers = {'x-api-key': _apiKey};
     return true;
   }
@@ -86,8 +86,6 @@ class AugmontService extends ChangeNotifier {
 
   Future<AugmontRates?> getRates() async {
     if (!isInit()) await _init();
-
-    // New rates api code, requires conformation from augmont for dev enviroment.
     ApiResponse<Map<String, dynamic>> response =
         await _investmentActionsRepository!.getGoldRates();
     if (response.code == 400) {
@@ -95,72 +93,6 @@ class AugmontService extends ChangeNotifier {
       return null;
     } else {
       return AugmontRates.fromMap(response.model!);
-    }
-  }
-
-  Future<double?> getGoldBalance() async {
-    if (!isInit()) await _init();
-    Map<String, String?> _params = {
-      Passbook.fldAugmontUid: _baseProvider!.augmontDetail!.userId,
-    };
-    var _request = http.Request(
-        'GET', Uri.parse(_constructRequest(Passbook.path, _params)));
-    _request.headers.addAll(headers);
-    http.StreamedResponse _response = await _request.send();
-
-    final resMap = await _processResponse(_response);
-    if (resMap == null || !resMap[INTERNAL_FAIL_FLAG]) {
-      log.error('Query Failed');
-      return null;
-    } else {
-      log.debug(resMap[Passbook.resGoldGrams].toString());
-      resMap["flag"] = QUERY_PASSED;
-
-      String goldGrmsStr = resMap[Passbook.resGoldGrams];
-      double goldGrms = 0;
-      try {
-        goldGrms = double.parse(goldGrmsStr);
-        return goldGrms;
-      } catch (e) {
-        return 0.0;
-      }
-    }
-  }
-
-  Future<List<GoldGraphPoint>?> getGoldRateChart(
-      DateTime fromTime, DateTime toTime) async {
-    if (fromTime == null || toTime == null || fromTime.isAfter(toTime))
-      return null;
-    if (!isInit()) await _init();
-
-    var _params = {
-      GetRateChart.fldFromTime: '${fromTime.millisecondsSinceEpoch}',
-      GetRateChart.fldToTime: '${toTime.millisecondsSinceEpoch}',
-    };
-    var _request = http.Request(
-        'GET', Uri.parse(_constructRequest(GetRateChart.path, _params)));
-    _request.headers.addAll(headers);
-    http.StreamedResponse _response = await _request.send();
-
-    final resMap = await _processResponse(_response);
-    if (resMap == null ||
-        resMap['Items'] == null ||
-        !resMap[INTERNAL_FAIL_FLAG]) {
-      log.error('Query Failed');
-      return null;
-    } else {
-      List<GoldGraphPoint> pointData = [];
-      for (var rPoint in resMap['Items']) {
-        try {
-          GoldGraphPoint point = GoldGraphPoint(
-              BaseUtil.toDouble(rPoint['rRate']),
-              DateTime.fromMillisecondsSinceEpoch(rPoint['rTimestamp']));
-          pointData.add(point);
-        } catch (e) {
-          continue;
-        }
-      }
-      return pointData;
     }
   }
 
@@ -204,67 +136,40 @@ class AugmontService extends ChangeNotifier {
     }
   }
 
-  showTransactionPendingDialog() {
-    BaseUtil.openDialog(
-      addToScreenStack: true,
-      hapticVibrate: true,
-      isBarrierDismissible: false,
-      content: PendingDialog(
-        title: locale.withDrawalProcessing,
-        subtitle: locale.amountWillbeCreditedShortly,
-        duration: '',
-      ),
-    );
-  }
+  // showTransactionPendingDialog() {
+  //   BaseUtil.openDialog(
+  //     addToScreenStack: true,
+  //     hapticVibrate: true,
+  //     isBarrierDismissible: false,
+  //     content: PendingDialog(
+  //       title: locale.withDrawalProcessing,
+  //       subtitle: locale.amountWillbeCreditedShortly,
+  //       duration: '',
+  //     ),
+  //   );
+  // }
 
   ///returns path where invoice is generated and saved
   Future<String?> generatePurchaseInvoicePdf(
       String? txnId, Map<String, String?>? userDetails) async {
     AugmontInvoiceService _pdfService = AugmontInvoiceService();
+    final _reportRepo = locator<ReportRepository>();
     if (!isInit()) await _init();
-    var _params = {
-      GetInvoice.fldTranId: txnId,
-    };
-    var _request = http.Request(
-        'GET', Uri.parse(_constructRequest(GetInvoice.path, _params)));
-    _request.headers
-        .addAll({'x-api-key': "aOwnj8SQ8k1TFl1gIZCbq7nrgemhnBAb5YPwzP8z"});
-    http.StreamedResponse _response = await _request.send();
+    Map<String, dynamic>? resMap;
+    final res = await _reportRepo.getReport(txnId);
+    if (res.isSuccess()) {
+      resMap = res.model;
+    }
 
-    final resMap = await _processResponse(_response);
-    if (resMap == null || !resMap[INTERNAL_FAIL_FLAG]) {
+    if (resMap == null) {
       log.error('Query Failed');
       return null;
     } else {
       log.debug(resMap[GetInvoice.resTransactionId].toString());
       resMap["flag"] = QUERY_PASSED;
-
-      // final pdfFile =
-      //     await PdfInvoiceApi.generate(await generateInvoiceContent());
-      // return pdfFile.path;
       String? _path = await _pdfService.generateInvoice(resMap, userDetails);
       return _path;
     }
-  }
-
-  String _constructRequest(String subPath, Map<String, String?> params) {
-    String _path = '$_baseUri/$subPath';
-    if (params != null && params.length > 0) {
-      String _p = '';
-      if (params.length == 1) {
-        _p = params.keys.elementAt(0) +
-            '=' +
-            Uri.encodeComponent(params.values.elementAt(0)!);
-        _path = '$_path?$_p';
-      } else {
-        params.forEach((key, value) {
-          _p = '$_p$key=$value&';
-        });
-        _p = _p.substring(0, _p.length - 1);
-        _path = '$_path?$_p';
-      }
-    }
-    return _path;
   }
 
   Future<Map<String, dynamic>?> _processResponse(
@@ -272,7 +177,7 @@ class AugmontService extends ChangeNotifier {
     if (response == null) {
       log.error('response is null');
     }
-    if (response.statusCode != 200 && response.statusCode != 201) {     
+    if (response.statusCode != 200 && response.statusCode != 201) {
       log.error(
           'Query Failed:: Status:${response.statusCode}, Reason:${response.reasonPhrase}');
       if (response.statusCode == 502)

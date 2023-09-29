@@ -137,7 +137,7 @@ class _LendboxWithdrawalViewState extends State<LendboxWithdrawalView>
     } else if (txnService.currentTransactionState == TransactionState.ongoing) {
       return LendboxLoadingView(transactionType: type);
     } else if (txnService.currentTransactionState == TransactionState.success) {
-      return LendboxWithdrawalSuccessView();
+      return const LendboxWithdrawalSuccessView();
     }
 
     return LendboxLoadingView(transactionType: type);

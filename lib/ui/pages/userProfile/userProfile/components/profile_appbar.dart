@@ -7,7 +7,7 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
-class ProfileAppBar extends StatelessWidget with PreferredSizeWidget {
+class ProfileAppBar extends StatelessWidget implements PreferredSizeWidget {
   const ProfileAppBar({
     Key? key,
     // required this.isNewUser,
@@ -17,7 +17,7 @@ class ProfileAppBar extends StatelessWidget with PreferredSizeWidget {
   // final bool isNewUser;
 
   @override
-  Size get preferredSize => Size.fromHeight(kToolbarHeight);
+  Size get preferredSize => const Size.fromHeight(kToolbarHeight);
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +35,7 @@ class ProfileAppBar extends StatelessWidget with PreferredSizeWidget {
       ),
       centerTitle: false,
       leading: IconButton(
-        icon: Icon(
+        icon: const Icon(
           Icons.arrow_back_ios_rounded,
           color: UiConstants.kTextColor,
         ),

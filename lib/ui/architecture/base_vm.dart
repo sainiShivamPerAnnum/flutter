@@ -30,6 +30,7 @@ class BaseViewModel extends ChangeNotifier {
   @override
   void dispose() {
     _disposed = true;
+    print("Dispose called");
     super.dispose();
   }
 }

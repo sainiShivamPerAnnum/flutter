@@ -1,7 +1,7 @@
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/core/service/power_play_service.dart';
-import 'package:felloapp/ui/pages/games/tambola/tambola-global/tambola_daily_draw_timer.dart';
+import 'package:felloapp/ui/elements/timer/app_countdown_timer.dart';
 import 'package:felloapp/ui/pages/power_play/power_play_home/power_play_vm.dart';
 import 'package:felloapp/ui/pages/power_play/power_play_home/widgets/completed_match.dart';
 import 'package:felloapp/ui/pages/power_play/power_play_home/widgets/upcoming_match.dart';
@@ -169,10 +169,9 @@ class NoLiveMatch extends StatelessWidget {
               height: SizeConfig.padding20,
             ),
             if (timeStamp != null)
-              DailyPicksTimer(
-                startTime: timeStamp,
-                replacementWidget: const SizedBox(),
-                timerBgColor: const Color(0xff785353),
+              AppCountdownTimer(
+                endTime: timeStamp!,
+                backgroundColor: const Color(0xff785353),
               ),
           ]
         ],

@@ -2,8 +2,11 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:collection/collection.dart' show IterableExtension;
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
+import 'package:felloapp/core/model/gold_pro_models/gold_pro_investment_reponse_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
+import 'package:felloapp/core/repository/payment_repo.dart';
 import 'package:felloapp/core/repository/transactions_history_repo.dart';
+import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
@@ -17,12 +20,21 @@ class TxnHistoryService extends ChangeNotifier {
   final BaseUtil? _baseUtil = locator<BaseUtil>();
   final TransactionHistoryRepository? _transactionHistoryRepo =
       locator<TransactionHistoryRepository>();
+  final _paymentRepo = locator<PaymentRepository>();
   List<UserTransaction>? _txnList = [];
-  String? lastTxnDocId;
-  String? lastPrizeTxnDocId;
-  String? lastDepositTxnDocId;
-  String? lastWithdrawalTxnDocId;
-  String? lastRefundedTxnDocId;
+  List<GoldProInvestmentResponseModel> _goldProTxns = [];
+
+  List<GoldProInvestmentResponseModel> get goldProTxns => _goldProTxns;
+
+  set goldProTxns(List<GoldProInvestmentResponseModel> value) {
+    _goldProTxns = value;
+    notifyListeners();
+  } // String? lastTxnDocId;
+
+  // String? lastPrizeTxnDocId;
+  // String? lastDepositTxnDocId;
+  // String? lastWithdrawalTxnDocId;
+  // String? lastRefundedTxnDocId;
   bool hasMoreTxns = true;
   bool hasMorePrizeTxns = true;
   bool hasMoreDepositTxns = true;
@@ -57,7 +69,7 @@ class TxnHistoryService extends ChangeNotifier {
       type: type,
       subtype: subtype.name,
       status: status,
-      start: getLastTxnDocType(status: status, type: type),
+      offset: txnList?.length ?? 0,
     );
 
     if (!response.isSuccess()) {
@@ -67,55 +79,54 @@ class TxnHistoryService extends ChangeNotifier {
       );
     }
     // if transaction list is empty
-    if (_txnList == null || _txnList!.length == 0) {
+    if (_txnList == null || _txnList!.isEmpty) {
       txnList = response.model!.transactions;
     } else {
       // if transaction list already have some items
       appendTxns(response.model!.transactions!);
     }
     _logger!.d("Current Transaction List length: ${_txnList!.length}");
-    // set proper lastDocument snapshot for further fetches
-    if (response.model!.transactions!.isNotEmpty)
-      setLastTxnDocType(
-        status: status,
-        type: type,
-        lastDocId: response.model!.transactions!.last.docKey,
-      );
+
     // check and set which category has no more items to fetch
-    if (response.model!.isLastPage!)
+    if (response.model!.transactions!.length < 30) {
       setHasMoreTxnsValue(type: type, status: status);
-  }
-
-  String? getLastTxnDocType({String? status, String? type}) {
-    if (status == null && type == null) return lastTxnDocId;
-    if (status != null) return lastRefundedTxnDocId;
-    if (type != null) {
-      if (type == UserTransaction.TRAN_TYPE_DEPOSIT) return lastDepositTxnDocId;
-      if (type == UserTransaction.TRAN_TYPE_PRIZE) return lastPrizeTxnDocId;
-      if (type == UserTransaction.TRAN_TYPE_WITHDRAW)
-        return lastWithdrawalTxnDocId;
-    }
-    return lastTxnDocId;
-  }
-
-  setLastTxnDocType({String? status, String? type, String? lastDocId}) {
-    if (status == null && type == null) {
-      lastTxnDocId = lastDocId;
-      lastRefundedTxnDocId = lastDocId;
-      lastDepositTxnDocId = lastDocId;
-      lastWithdrawalTxnDocId = lastDocId;
-      lastPrizeTxnDocId = lastDocId;
-    } else if (status != null)
-      lastRefundedTxnDocId = lastDocId;
-    else if (type != null) {
-      if (type == UserTransaction.TRAN_TYPE_DEPOSIT)
-        lastDepositTxnDocId = lastDocId;
-      if (type == UserTransaction.TRAN_TYPE_PRIZE)
-        lastPrizeTxnDocId = lastDocId;
-      if (type == UserTransaction.TRAN_TYPE_WITHDRAW)
-        lastWithdrawalTxnDocId = lastDocId;
     }
   }
+
+  // String? getLastTxnDocType({String? status, String? type}) {
+  //   if (status == null && type == null) return lastTxnDocId;
+  //   if (status != null) return lastRefundedTxnDocId;
+  //   if (type != null) {
+  //     if (type == UserTransaction.TRAN_TYPE_DEPOSIT) return lastDepositTxnDocId;
+  //     if (type == UserTransaction.TRAN_TYPE_PRIZE) return lastPrizeTxnDocId;
+  //     if (type == UserTransaction.TRAN_TYPE_WITHDRAW) {
+  //       return lastWithdrawalTxnDocId;
+  //     }
+  //   }
+  //   return lastTxnDocId;
+  // }
+
+  // setLastTxnDocType({String? status, String? type, String? lastDocId}) {
+  //   if (status == null && type == null) {
+  //     lastTxnDocId = lastDocId;
+  //     lastRefundedTxnDocId = lastDocId;
+  //     lastDepositTxnDocId = lastDocId;
+  //     lastWithdrawalTxnDocId = lastDocId;
+  //     lastPrizeTxnDocId = lastDocId;
+  //   } else if (status != null) {
+  //     lastRefundedTxnDocId = lastDocId;
+  //   } else if (type != null) {
+  //     if (type == UserTransaction.TRAN_TYPE_DEPOSIT) {
+  //       lastDepositTxnDocId = lastDocId;
+  //     }
+  //     if (type == UserTransaction.TRAN_TYPE_PRIZE) {
+  //       lastPrizeTxnDocId = lastDocId;
+  //     }
+  //     if (type == UserTransaction.TRAN_TYPE_WITHDRAW) {
+  //       lastWithdrawalTxnDocId = lastDocId;
+  //     }
+  //   }
+  // }
 
   setHasMoreTxnsValue({String? status, String? type}) {
     if (status == null && type == null) {
@@ -129,12 +140,13 @@ class TxnHistoryService extends ChangeNotifier {
     } else if (status != null) {
       hasMoreRefundedTxns = false;
     } else if (type != null) {
-      if (type == UserTransaction.TRAN_TYPE_DEPOSIT)
+      if (type == UserTransaction.TRAN_TYPE_DEPOSIT) {
         hasMoreDepositTxns = false;
-      else if (type == UserTransaction.TRAN_TYPE_WITHDRAW)
+      } else if (type == UserTransaction.TRAN_TYPE_WITHDRAW) {
         hasMoreWithdrawalTxns = false;
-      else if (type == UserTransaction.TRAN_TYPE_PRIZE)
+      } else if (type == UserTransaction.TRAN_TYPE_PRIZE) {
         hasMorePrizeTxns = false;
+      }
     }
   }
 
@@ -150,8 +162,8 @@ class TxnHistoryService extends ChangeNotifier {
     }
   }
 
-  updateTransactions(InvestmentType investmentType) async {
-    lastTxnDocId = null;
+  Future<void> updateTransactions(InvestmentType investmentType) async {
+    // lastTxnDocId = null;
     hasMoreTxns = true;
     hasMorePrizeTxns = true;
     hasMoreDepositTxns = true;
@@ -163,8 +175,9 @@ class TxnHistoryService extends ChangeNotifier {
   }
 
   // Clear transactions
-  signOut() {
-    lastTxnDocId = null;
+  void signOut() {
+    // lastTxnDocId = null;
+    goldProTxns = [];
     hasMoreTxns = true;
     hasMorePrizeTxns = true;
     hasMoreDepositTxns = true;
@@ -176,10 +189,11 @@ class TxnHistoryService extends ChangeNotifier {
   //UI HELPERS
 
   String getFormattedTxnAmount(double amount) {
-    if (amount > 0)
+    if (amount > 0) {
       return "₹${amount == amount.toInt() ? amount.toInt() : amount.toStringAsFixed(2)}";
-    else
+    } else {
       return "- ₹${amount == amount.toInt() ? amount.abs().toInt() : amount.abs().toStringAsFixed(2)}";
+    }
   }
 
   String getFormattedTime(Timestamp tTime) {
@@ -197,7 +211,7 @@ class TxnHistoryService extends ChangeNotifier {
   getFormattedDateAndTime(Timestamp time) {
     DateTime now =
         DateTime.fromMillisecondsSinceEpoch(time.millisecondsSinceEpoch);
-    return DateFormat('d MMMM, yyyy at hh:mm a').format(now);
+    return DateFormat('d MMMM, yyyy | hh:mm a').format(now);
   }
 
   String getFormattedSIPDate(DateTime time) {
@@ -235,13 +249,14 @@ class TxnHistoryService extends ChangeNotifier {
     } else if (type == UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD) {
       return locale.digitalGoldText;
     } else if (type == UserTransaction.TRAN_SUBTYPE_TAMBOLA_WIN) {
-      return locale.tambolaWin;
+      return "Ticket Win";
     } else if (type == UserTransaction.TRAN_SUBTYPE_REF_BONUS) {
       return locale.refBonus;
     } else if (type == UserTransaction.TRAN_SUBTYPE_REWARD_REDEEM) {
       return locale.rewardsRedemeed;
-    } else if (type == UserTransaction.TRAN_SUBTYPE_GLDN_TCK)
+    } else if (type == UserTransaction.TRAN_SUBTYPE_GLDN_TCK) {
       return locale.scratchCard;
+    }
     return locale.felloRewards;
   }
 
@@ -282,5 +297,65 @@ class TxnHistoryService extends ChangeNotifier {
       return Colors.blue;
     }
     return Colors.black54;
+  }
+
+  //GOLD PRO
+  String getGoldProTitle(String status) {
+    switch (status) {
+      case "active":
+        return "LEASED";
+      case "failed":
+        return "FAILED";
+      case "pending":
+        return "PENDING";
+      case "close":
+        return "UN-LEASED";
+      default:
+        return "";
+    }
+  }
+
+  String getGoldProStatus(String status) {
+    switch (status) {
+      case "active":
+        return "COMPLETED";
+      case "failed":
+        return "FAILED";
+      case "pending":
+        return "PENDING";
+      case "close":
+        return "CLOSED";
+      default:
+        return "";
+    }
+  }
+
+  Color getGoldProColor(String status) {
+    switch (status) {
+      case "active":
+        return UiConstants.primaryColor;
+      case "failed":
+        return Colors.red;
+      case "pending":
+        return UiConstants.secondaryColor;
+      case "close":
+        return Colors.white;
+      default:
+        return Colors.white;
+    }
+  }
+
+  Future<void> getGoldProTransactions({forced = false}) async {
+    if (forced) {
+      goldProTxns = [];
+    }
+    if (goldProTxns.isNotEmpty) return;
+    final ApiResponse<List<GoldProInvestmentResponseModel>> res =
+        await _paymentRepo.getGoldProInvestments();
+    if (res.isSuccess()) {
+      goldProTxns = res.model!;
+    } else {
+      BaseUtil.showNegativeAlert(res.errorMessage, "Please try again later");
+    }
   }
 }

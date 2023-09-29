@@ -59,7 +59,6 @@ class _CenterTextFieldState extends State<CenterTextField> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     widget.amountFieldController.removeListener(updateFieldWidth);
     super.dispose();
   }
@@ -105,7 +104,7 @@ class _CenterTextFieldState extends State<CenterTextField> {
                     child: TextField(
                       onTap: enableField,
                       showCursor: true,
-                      maxLength: 4,
+                      maxLength: 5,
                       autofocus: true,
                       controller: widget.amountFieldController,
                       keyboardType: TextInputType.number,
@@ -163,16 +162,16 @@ class _CenterTextFieldState extends State<CenterTextField> {
     switch (widget.model.selectedFrequency) {
       case FREQUENCY.daily:
         return widget.model.selectedAssetOption == 1
-            ? "(₹${widget.model.dailyMaxMinInfo.min.LENDBOXP2P} - ₹${widget.model.dailyMaxMinInfo.max})"
-            : "(₹${widget.model.dailyMaxMinInfo.min.AUGGOLD99} - ₹${widget.model.dailyMaxMinInfo.max})";
+            ? "(₹${widget.model.dailyMaxMinInfo.min.LENDBOXP2P} - ₹${widget.model.dailyMaxMinInfo.max.LENDBOXP2P})"
+            : "(₹${widget.model.dailyMaxMinInfo.min.AUGGOLD99} - ₹${widget.model.dailyMaxMinInfo.max.AUGGOLD99})";
       case FREQUENCY.weekly:
         return widget.model.selectedAssetOption == 1
-            ? "(₹${widget.model.weeklyMaxMinInfo.min.LENDBOXP2P} - ₹${widget.model.weeklyMaxMinInfo.max})"
-            : "(₹${widget.model.weeklyMaxMinInfo.min.AUGGOLD99} - ₹${widget.model.weeklyMaxMinInfo.max})";
+            ? "(₹${widget.model.weeklyMaxMinInfo.min.LENDBOXP2P} - ₹${widget.model.weeklyMaxMinInfo.max.LENDBOXP2P})"
+            : "(₹${widget.model.weeklyMaxMinInfo.min.AUGGOLD99} - ₹${widget.model.weeklyMaxMinInfo.max.AUGGOLD99})";
       case FREQUENCY.monthly:
         return widget.model.selectedAssetOption == 1
-            ? "(₹${widget.model.monthlyMaxMinInfo.min.LENDBOXP2P} - ₹${widget.model.monthlyMaxMinInfo.max})"
-            : "(₹${widget.model.monthlyMaxMinInfo.min.AUGGOLD99} - ₹${widget.model.monthlyMaxMinInfo.max})";
+            ? "(₹${widget.model.monthlyMaxMinInfo.min.LENDBOXP2P} - ₹${widget.model.monthlyMaxMinInfo.max.LENDBOXP2P})"
+            : "(₹${widget.model.monthlyMaxMinInfo.min.AUGGOLD99} - ₹${widget.model.monthlyMaxMinInfo.max.AUGGOLD99})";
     }
   }
 }

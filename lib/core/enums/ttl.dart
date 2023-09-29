@@ -1,5 +1,6 @@
 // all of these values are in minutes
 class TTL {
+  static const ONE_WEEK = 24 * 60 * 7;
   static const ONE_DAY = 24 * 60;
   static const TWO_HOURS = 120;
   static const ONE_HOUR = 60;

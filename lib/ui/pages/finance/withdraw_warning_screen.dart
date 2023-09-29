@@ -183,8 +183,8 @@ class WithDrawWarningScreen extends StatelessWidget {
                                                 AppConfigKey.tambola_cost))
                                         .round() >
                                     1
-                                ? "Tambola Tickets"
-                                : "Tambola Ticket",
+                                ? "Tickets"
+                                : "Ticket",
                             textAlign: TextAlign.center,
                             style: TextStyles.rajdhaniSB.body4,
                           ),
@@ -339,8 +339,9 @@ class WithDrawGameViewModel {
   factory WithDrawGameViewModel.fromGames(
       GameTiers model, double withDrawingAmount) {
     final gamesWillBeLocked = <GameModel?>[];
-    final _wallet = locator<UserService>().userFundWallet!;
-    final netWorth = _wallet.augGoldPrinciple + (_wallet.wLbPrinciple ?? 0.0);
+    final _userPortfolio = locator<UserService>().userPortfolio;
+    final netWorth =
+        _userPortfolio.augmont.principle + (_userPortfolio.flo.principle);
     final finalAmount = netWorth - withDrawingAmount;
 
     for (var i in model.data) {

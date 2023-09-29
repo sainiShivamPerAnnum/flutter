@@ -16,11 +16,17 @@ class UiConstants {
   static const Color darkPrimaryColor = Color(0XFF02484D);
   static const Color primarySemiLight = Color(0xff4B9A8E);
   static const Color darkPrimaryColor2 = Color(0XFF1B262C);
+  static const Color darkPrimaryColor3 = Color(0xff0C5055);
+  static const Color darkPrimaryColor4 = Color(0xff173B3F);
   static const Color secondaryColor = Color.fromARGB(255, 241, 227, 243);
+  static const Color goldSellCardColor = Color(0xff1F2C65);
+  static const Color referralIconColor = Color(0xff6052A9);
+
   // static final Color chipColor = const Color.fromARGB(255, 241, 227, 243);
   static final Color? chipColor = Colors.grey[200];
   static final Color? positiveAlertColor = Colors.blueAccent[400];
   static const Color negativeAlertColor = Colors.blueGrey;
+
 //  static final Color secondaryColor = Colors.greenAccent;
   static final Color? spinnerColor = Colors.grey[400];
   static final Color? spinnerColor2 = Colors.grey[200];
@@ -45,7 +51,11 @@ class UiConstants {
     },
   );
   static const Color kGoldContainerColor = Color(0xff39498C);
+  static const Color kGoldDarkColor = Color(0xff293566);
   static const Color kFloContainerColor = Color(0xff023C40);
+
+  static const Color kRewardColor = Color(0xff516977);
+  static const Color kRewardDarkColor = Color(0xff354650);
 
   /// New UI Colors
   static const Color kTextColor = Color(0xFFFFFFFF);
@@ -116,6 +126,8 @@ class UiConstants {
 
   static const Color kSecondaryLeaderBoardTextColor = Color(0xffF4F1EC);
   static const Color kScratchHereStripColor = Color(0xffEFAF4E);
+  static const Color kAutoSaveOnboardingColor = Color(0xff025155);
+  static const Color kAutoSaveOnboardingTextColor = Color(0xff01646B);
 
   static LinearGradient kTextFieldGradient1 = const LinearGradient(
     colors: [Color(0xff111111), Colors.transparent],
@@ -193,6 +205,16 @@ class UiConstants {
   static Color kPowerPlaySecondary = const Color(0xff8c3f31);
   static Color kPowerPlayPrimaryOff = const Color(0xff373E5E);
   static Color kPowerPlaySecondaryOff = const Color(0xff9A5445);
+
+  static Color kReferralHeaderColor = const Color(0xff6052A9);
+
+  //GOLD X
+  static Color kGoldProPrimary = const Color(0xffFFD979);
+  static Color KGoldProSecondary = const Color(0xffFFE9B1);
+  static Color KGoldProPrimaryDark = const Color(0xffEFAF4E);
+  static Color kGoldProBorder = const Color(0xffFFD979).withOpacity(0.2);
+  static Color kGoldProBgColor = const Color(0xff323232);
+  static Color kGoldProPrimaryDark2 = const Color(0xffB17518);
 }
 
 extension ColorExtension on String {

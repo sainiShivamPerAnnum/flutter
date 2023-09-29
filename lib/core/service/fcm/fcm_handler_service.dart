@@ -7,14 +7,15 @@ import 'dart:developer';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/fcm_commands_constants.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
+import 'package:felloapp/core/enums/transaction_state_enum.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_datapayload.dart';
 import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
+import 'package:felloapp/core/service/payments/lendbox_transaction_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/elements/fello_dialog/apxor_dialog.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_sell/gold_sell_vm.dart';
-import 'package:felloapp/ui/pages/finance/autosave/autosave_setup/autosave_process_vm.dart';
 import 'package:felloapp/ui/pages/games/web/web_game/web_game_vm.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
@@ -24,34 +25,37 @@ import 'package:intl/intl.dart';
 enum MsgSource { Foreground, Background, Terminated }
 
 class FcmHandler extends ChangeNotifier {
-  final CustomLogger? _logger = locator<CustomLogger>();
-  final UserService? _userservice = locator<UserService>();
+  final CustomLogger _logger = locator<CustomLogger>();
+  final UserService _userService = locator<UserService>();
 
   // final _augmontGoldBuyViewModel = locator<AugmontGoldBuyViewModel>();
-  final FcmHandlerDataPayloads? _fcmHandlerDataPayloads =
+  final FcmHandlerDataPayloads _fcmHandlerDataPayloads =
       locator<FcmHandlerDataPayloads>();
-  final WebGameViewModel? _webGameViewModel = locator<WebGameViewModel>();
-  final AutosaveProcessViewModel? _autosaveProcessViewModel =
-      locator<AutosaveProcessViewModel>();
-  // final PaytmService? _paytmService = locator<PaytmService>();
-  final AugmontTransactionService? _augTxnService =
-      locator<AugmontTransactionService>();
+  final WebGameViewModel _webGameViewModel = locator<WebGameViewModel>();
 
-  final JourneyService? _journeyService = locator<JourneyService>();
-  final GoldSellViewModel? _augOps = locator<GoldSellViewModel>();
+  // final PaytmService? _paytmService = locator<PaytmService>();
+  final AugmontTransactionService _augTxnService =
+      locator<AugmontTransactionService>();
+  final LendboxTransactionService _floTxnService =
+      locator<LendboxTransactionService>();
+
+  final JourneyService _journeyService = locator<JourneyService>();
+  final GoldSellViewModel _augOps = locator<GoldSellViewModel>();
   ValueChanged<Map>? notifListener;
+
   // Timestamp latestFcmtimeStamp;
   String? latestFcmCommand;
 
   Map? lastFcmData;
+
   Future<bool> handleMessage(Map? data, MsgSource source) async {
-    _logger!.d(
+    _logger.d(
       "Fcm handler receives on ${DateFormat('yyyy-MM-dd - hh:mm a').format(DateTime.now())} - $data",
     );
 
     if (lastFcmData != null) {
       if (lastFcmData == data) {
-        _logger!.d(
+        _logger.d(
           "Duplicate Fcm Data, exiting method",
         );
         lastFcmData = data;
@@ -75,8 +79,9 @@ class FcmHandler extends ChangeNotifier {
       } catch (e) {
         log(e.toString());
       }
-    } else
+    } else {
       url = data['deep_uri'] ?? data['route'];
+    }
 
     // if (data["test_txn"] == "paytm") {
     // _augTxnService.isOngoingTxn = false;
@@ -85,50 +90,63 @@ class FcmHandler extends ChangeNotifier {
 
     // If notifications contains an url for navigation
     if (url != null && url.isNotEmpty) {
-      if (_augTxnService!.isIOSTxnInProgress) {
+      if (_augTxnService.isIOSTxnInProgress) {
         // TODO
         // ios transaction completed and app is in background
       } else if (source == MsgSource.Background ||
           source == MsgSource.Terminated) {
         showSnackbar = false;
+        await Future.delayed(const Duration(milliseconds: 800), () {
+          if (_augTxnService.currentTxnState == TransactionState.ongoing ||
+              _floTxnService.currentTransactionState ==
+                  TransactionState.ongoing) return true;
+          AppState.delegate!.parseRoute(Uri.parse(url!));
+        });
 
-        AppState.delegate!.parseRoute(Uri.parse(url));
         return true;
       }
     }
 
     // If message has a command payload
     if (data['command'] != null) {
+      log("Fcm command: $command");
       showSnackbar = false;
 
-      if (command!.toLowerCase().contains('end'))
-        return _webGameViewModel!
+      if (command!.toLowerCase().contains('end')) {
+        return _webGameViewModel
             .handleGameRoundEnd(data as Map<String, dynamic>);
+      }
       switch (command) {
         case FcmCommands.COMMAND_JOURNEY_UPDATE:
           log("User journey stats update fcm response");
-          _journeyService!
+          _journeyService
               .fcmHandleJourneyUpdateStats(data as Map<String, dynamic>);
           break;
-        case FcmCommands.COMMAND_GOLDEN_TICKET_WIN:
+        case FcmCommands.COMMAND_TICKET_WIN:
           log("Scratch Card win update fcm response");
-          _journeyService!
+          _journeyService
               .fcmHandleJourneyUpdateStats(data as Map<String, dynamic>);
           break;
         case FcmCommands.COMMAND_WITHDRAWAL_RESPONSE:
-          _augOps!.handleWithdrawalFcmResponse(data['payload']);
+          _augOps.handleWithdrawalFcmResponse(data['payload']);
           break;
         case FcmCommands.COMMAND_LOW_BALANCE_ALERT:
-          _webGameViewModel!.handleLowBalanceAlert();
+          _webGameViewModel.handleLowBalanceAlert();
           break;
         case FcmCommands.COMMAND_SHOW_DIALOG:
-          _fcmHandlerDataPayloads!.showDialog(title, body);
+          _fcmHandlerDataPayloads.showDialog(title, body);
           break;
         case FcmCommands.COMMAND_USER_PRIZE_WIN_2:
-          await _fcmHandlerDataPayloads!.userPrizeWinPrompt();
+          await _fcmHandlerDataPayloads.userPrizeWinPrompt();
+          break;
+        case FcmCommands.COMMAND_GOLDEN_TICKET_WIN:
+          log("Golden Ticket win update fcm response - ${data['payload']}",
+              name: "FcmHandler");
+          showSnackbar = false;
+          await _userService.checkForNewNotifications();
           break;
         case FcmCommands.COMMAND_APPXOR_DIALOG:
-          print("fcm handler: appxor");
+          debugPrint("fcm handler: appxor");
           if (AppState.isOnboardingInProgress ||
               AppState.isWebGamePInProgress ||
               AppState.isWebGameLInProgress ||
@@ -145,7 +163,7 @@ class FcmHandler extends ChangeNotifier {
                 hapticVibrate: true,
                 content: ApxorDialog(
                   dialogContent:
-                      json.decode(data["payload"]) as Map<String, dynamic>,
+                  json.decode(data["payload"]) as Map<String, dynamic>,
                 ),
               ),
             );
@@ -158,21 +176,29 @@ class FcmHandler extends ChangeNotifier {
 
     // If app is in foreground and needs to show a snackbar
     if (source == MsgSource.Foreground && showSnackbar == true) {
-      handleNotification(title, body);
+      await handleNotification(title, body, command);
     }
-    _userservice!.checkForNewNotifications();
     return true;
   }
 
-  Future<bool> handleNotification(String? title, String? body) async {
-    if (title != null && title.isNotEmpty && body != null && body.isNotEmpty) {
+  Future<bool> handleNotification(
+      String? title, String? body, String? command) async {
+    if (title == null || body == null) return false;
+
+    log("Foreground Fcm handler receives on ${DateFormat('yyyy-MM-dd - hh:mm a').format(DateTime.now())} - $title - $body - $command");
+    if (command != null && command == FcmCommands.COMMAND_GOLDEN_TICKET_WIN) {
+      await Future.delayed(const Duration(seconds: 2));
+      await _userService.checkForNewNotifications();
+      return true;
+    }
+
+    if (title.isNotEmpty && body.isNotEmpty) {
       Map<String, String> _map = {'title': title, 'body': body};
-      if (this.notifListener != null) this.notifListener!(_map);
+      if (notifListener != null) notifListener!(_map);
     }
     return true;
   }
 
-  addIncomingMessageListener(ValueChanged<Map>? listener) {
-    this.notifListener = listener;
-  }
+  void addIncomingMessageListener(ValueChanged<Map>? listener) =>
+      notifListener = listener;
 }

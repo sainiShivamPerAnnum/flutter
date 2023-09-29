@@ -12,7 +12,7 @@ class BackButtonActions {
 
   Future<void> showWantToCloseTransactionBottomSheet(
       int amt, InvestmentType type, void Function() onTap) async {
-    if (!(isTransactionCancelled)) return;
+    if (!isTransactionCancelled) return;
 
     return BaseUtil.openModalBottomSheet(
         isBarrierDismissible: true,

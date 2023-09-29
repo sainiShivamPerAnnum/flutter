@@ -1,5 +1,6 @@
 //Project imports
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
@@ -9,19 +10,15 @@ import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
-import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
 import 'package:felloapp/navigator/router/back_dispatcher.dart';
 import 'package:felloapp/navigator/router/router_delegate.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
-import 'package:felloapp/ui/pages/games/tambola/tambola_instant_view.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/ui/shared/spotlight_controller.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
-//Flutter imports
 import 'package:flutter/material.dart';
-//Pub imports
 import 'package:shared_preferences/shared_preferences.dart';
 
 class PageAction {
@@ -39,7 +36,8 @@ class AppState extends ChangeNotifier {
   final AnalyticsService _analyticsService = locator<AnalyticsService>();
   final RootController _rootController = locator<RootController>();
   int _rootIndex = 0;
-  static PageController homeTabPageController = PageController(initialPage: 0);
+  PageController homeTabPageController = PageController(initialPage: 0);
+
   // Future _txnFunction;
   Timer? _txnTimer;
   Future? _txnFunction;
@@ -48,6 +46,8 @@ class AppState extends ChangeNotifier {
   static ScrollController homeCardListController = ScrollController();
   static String? _fcmData;
   static bool showAutosaveBt = false;
+  static bool autosaveMiddleFlow = false;
+  static bool showAutoSaveSurveyBt = false;
   static bool isFirstTime = false;
   static bool isRootLoaded = false;
   static bool unsavedChanges = false;
@@ -55,15 +55,24 @@ class AppState extends ChangeNotifier {
   static bool isWebGamePInProgress = false;
   static bool isOnboardingInProgress = false;
   static bool isUpdateScreen = false;
-  static bool isDrawerOpened = false;
+  static bool isQuizInProgress = false;
+
+  // static bool isDrawerOpened = false;
   static bool isUserSignedIn = false;
-  static bool isSaveOpened = false;
-  static bool isWinOpened = false;
+
+  // static bool isSaveOpened = false;
+  // static bool isWinOpened = false;
   static bool isRootAvailableForIncomingTaskExecution = true;
   static bool isInstantGtViewInView = false;
   static int ticketCount = 0;
   static bool isFirstTimeJourneyOpened = false;
-  static bool isJourneyFirstTab = false;
+  static bool isFirstTimePlayOpened = false;
+  static bool isFirstTimeSaveOpened = false;
+  static bool isFirstTimeAccountsOpened = false;
+  static bool isFirstTimeTambolaOpened = false;
+  static bool isGoldProBuyInProgress = false;
+
+  // static bool isJourneyFirstTab = false;
   static bool isAutosaveFlow = false;
 
   static List<ScreenItem> screenStack = [];
@@ -74,7 +83,9 @@ class AppState extends ChangeNotifier {
   static InvestmentType? type;
   static double? amt;
   static bool isRepeated = false;
+  static bool isTxnProcessing = false;
   PageAction _currentAction = PageAction();
+
   // BackButtonDispatcher backButtonDispatcher;
 
   get rootIndex => _rootIndex;
@@ -113,32 +124,32 @@ class AppState extends ChangeNotifier {
     routeDeepLink();
   }
 
-  routeDeepLink() {
+  void routeDeepLink() {
     if (isRootLoaded && _fcmData != null) {
       delegate!.parseRoute(Uri.parse(_fcmData!));
     }
   }
 
-  static blockNavigation() {
+  static void blockNavigation() {
     if (screenStack.last == ScreenItem.loader) return;
     screenStack.add(ScreenItem.loader);
   }
 
-  static unblockNavigation() {
+  static void unblockNavigation() {
     if (screenStack.last == ScreenItem.loader) screenStack.removeLast();
   }
 
+  static void removeOverlay() {
+    if (screenStack.last == ScreenItem.dialog ||
+        screenStack.last == ScreenItem.modalsheet) screenStack.removeLast();
+  }
 // GETTERS AND SETTERS
 
   int get getCurrentTabIndex => _rootIndex;
 
   set setCurrentTabIndex(int index) {
     _rootIndex = index;
-    //First Call check for journey
-    executeForFirstJourneyTabClick(index);
-    executeNavBarItemFirstClick(index);
-    _rootController.onChange(_rootController.navItems.values.toList()[index]);
-    print(_rootIndex);
+    debugPrint("$_rootIndex");
     notifyListeners();
   }
 
@@ -146,7 +157,7 @@ class AppState extends ChangeNotifier {
     final JourneyService _journeyService = locator<JourneyService>();
     if (JourneyService.isAvatarAnimationInProgress) return;
     _rootController.onChange(_rootController.navItems.values.toList()[index]);
-    AppState.delegate!.appState.setCurrentTabIndex = index;
+    setCurrentTabIndex = index;
     trackEvent(index);
     Haptic.vibrate();
     if (_rootController.currentNavBarItemModel ==
@@ -158,12 +169,12 @@ class AppState extends ChangeNotifier {
 
   bool showTourStrip = false;
 
-  setTourStripValue() {
+  void setTourStripValue() {
     showTourStrip = false;
     notifyListeners();
   }
 
-  void setShowStripValue() async {
+  Future<void> setShowStripValue() async {
     final sharePreference = await SharedPreferences.getInstance();
     final value = sharePreference.getInt('showTour');
     final appSession = value ?? 0;
@@ -176,9 +187,9 @@ class AppState extends ChangeNotifier {
     }
   }
 
-  returnHome() {
+  void returnHome() {
     _rootIndex = 0;
-    print(_rootIndex);
+    log("$_rootIndex");
 
     notifyListeners();
   }
@@ -194,19 +205,19 @@ class AppState extends ChangeNotifier {
     _currentAction = PageAction();
   }
 
-  _saveLastTapIndex(int index) {
-    SharedPreferences.getInstance().then((instance) {
-      instance.setInt('lastTab', index);
-    });
-  }
-
-  dump() {
+  void dump() {
     isRootAvailableForIncomingTaskExecution = true;
     isFirstTimeJourneyOpened = false;
-    isJourneyFirstTab = false;
+    // isJourneyFirstTab = false;
     isFirstTime = false;
     _rootController.navItems.clear();
+
+    if (homeTabPageController.hasClients) {
+      homeTabPageController.dispose();
+      return;
+    }
   }
+
   // setLastTapIndex() {
   //   SharedPreferences.getInstance().then((instance) {
   //     rootIndex = instance.getInt('lastTab');
@@ -225,7 +236,7 @@ class AppState extends ChangeNotifier {
         executeForFirstPlayTabClick(index);
         break;
       case "Tambola":
-        executeForFirstTambolaClick(index);
+        // executeForFirstTambolaClick(index);
         break;
       case "Account":
       case "Win":
@@ -236,59 +247,32 @@ class AppState extends ChangeNotifier {
     }
   }
 
-  executeForFirstJourneyTabClick(int index) {
-    final JourneyService _journeyService = locator<JourneyService>();
-    int journeyIndex = _rootController.navItems.values
-        .toList()
-        .indexWhere((item) => item.title == "Journey");
-    if (journeyIndex == 0) {
-      isFirstTimeJourneyOpened = true;
-      isJourneyFirstTab = true;
-    }
-    if (!isFirstTimeJourneyOpened) {
-      if (index == journeyIndex) {
-        isFirstTimeJourneyOpened = true;
-        _journeyService.buildJourney();
-      }
-    }
+  Future<void> executeForFirstJourneyTabClick(int index) async {
+    // final JourneyService _journeyService = locator<JourneyService>();
+    // int journeyIndex = _rootController.navItems.values
+    //     .toList()
+    //     .indexWhere((item) => item.title == "Journey");
+    // if (journeyIndex == 0) {
+    //   isFirstTimeJourneyOpened = true;
+    //   // isJourneyFirstTab = true;
+    // }
+    // if (!isFirstTimeJourneyOpened) {
+    //   if (index == journeyIndex) {
+    //     isFirstTimeJourneyOpened = true;
+    //     log("isFirstTimeJourneyOpened: $isFirstTimeJourneyOpened");
+    //     // _journeyService.buildJourney();
+    //   }
+    // }
   }
 
   executeForFirstSaveTabClick(index) {}
+
   executeForFirstPlayTabClick(index) {
     SpotLightController.instance.userFlow = UserFlow.onPlayTab;
   }
 
   executeForFirstAccountsTabClick(index) {
     SpotLightController.instance.userFlow = UserFlow.onWinPage;
-  }
-
-  executeForFirstTambolaClick(index) {
-    final TambolaService _tambolaService = locator<TambolaService>();
-    _tambolaService.completer.future.then(
-      (value) {
-        if ((_tambolaService.initialTicketCount ?? -1) == 0) {
-          if (_tambolaService.userWeeklyBoards!.length > 0) {
-            _tambolaService.initialTicketCount =
-                _tambolaService.userWeeklyBoards!.length;
-            WidgetsBinding.instance.addPostFrameCallback(
-              (timeStamp) {
-                AppState.screenStack.add(ScreenItem.dialog);
-                Navigator.of(AppState.delegate!.navigatorKey.currentContext!)
-                    .push(
-                  PageRouteBuilder(
-                    opaque: false,
-                    pageBuilder: (BuildContext context, _, __) =>
-                        TambolaInstantView(
-                      ticketCount: _tambolaService.userWeeklyBoards!.length,
-                    ),
-                  ),
-                );
-              },
-            );
-          }
-        }
-      },
-    );
   }
 
   void trackEvent(int index) {
@@ -328,7 +312,7 @@ class AppState extends ChangeNotifier {
     } else if (_rootController.currentNavBarItemModel ==
         RootController.tambolaNavBar) {
       _analyticsService.track(eventName: "Tambola tab tapped", properties: {
-        "Ticket count": locator<TambolaService>().userWeeklyBoards?.length ?? 0,
+        // "Ticket count": locator<TambolaService>().userWeeklyBoards?.length ?? 0,
         "index": index
       });
     }

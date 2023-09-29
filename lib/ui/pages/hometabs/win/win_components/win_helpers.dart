@@ -2,6 +2,7 @@ import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/extensions/string_extension.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -11,33 +12,38 @@ import 'package:property_change_notifier/property_change_notifier.dart';
 class Salutation extends StatelessWidget {
   const Salutation({
     Key? key,
+    this.leftMargin,
+    this.textStyle,
   }) : super(key: key);
+
+  final double? leftMargin;
+  final TextStyle? textStyle;
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(
-        left: SizeConfig.pageHorizontalMargins,
-        right: SizeConfig.pageHorizontalMargins,
-        top: SizeConfig.padding10,
-      ),
-      child: PropertyChangeConsumer<UserService, UserServiceProperties>(
-        properties: [UserServiceProperties.myName],
-        builder: (context, model, child) {
-          return Text(
-            "Hi " +
-                ((model!.baseUser!.kycName!.isNotEmpty
-                        ? model.baseUser!.kycName!
-                        : model.baseUser!.name!.isNotEmpty
-                            ? model.baseUser!.name!
-                            : "User")
-                    .trim()
-                    .split(' ')
-                    .first
-                    .capitalize()),
-            style: TextStyles.rajdhaniSB.title3.colour(Colors.white),
-          );
-        },
+    return GestureDetector(
+      onTap: () {
+        Haptic.vibrate();
+        AppState.delegate!.parseRoute(Uri.parse('/accounts'));
+      },
+      child: Padding(
+        padding: EdgeInsets.only(
+          left: leftMargin ?? SizeConfig.pageHorizontalMargins,
+          right: SizeConfig.padding4,
+          top: SizeConfig.padding10,
+        ),
+        child: PropertyChangeConsumer<UserService, UserServiceProperties>(
+          properties: const [UserServiceProperties.myName],
+          builder: (context, model, child) {
+            return Text(
+              "Hi ${(model!.baseUser!.kycName!.isNotEmpty ? model.baseUser!.kycName! : model.baseUser!.name!.isNotEmpty ? model.baseUser!.name! : "User").trim().split(' ').first.capitalize()}",
+              style: textStyle ??
+                  TextStyles.rajdhaniSB.title3.colour(Colors.white),
+              overflow: TextOverflow.fade,
+              maxLines: 1,
+            );
+          },
+        ),
       ),
     );
   }
@@ -59,10 +65,11 @@ class AccountInfoTiles extends StatelessWidget {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        if (onTap == null)
+        if (onTap == null) {
           AppState.delegate!.parseRoute(Uri.parse(uri));
-        else
+        } else {
           onTap!.call();
+        }
       },
       child: Container(
         padding: EdgeInsets.symmetric(
@@ -88,7 +95,7 @@ class RewardsAvatar extends StatelessWidget {
   final Color? color;
   final String? asset;
 
-  RewardsAvatar({this.asset, this.color});
+  const RewardsAvatar({Key? key, this.asset, this.color}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

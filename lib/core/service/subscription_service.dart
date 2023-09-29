@@ -5,6 +5,7 @@ import 'dart:io';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
+import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/amount_chips_model.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
@@ -14,8 +15,10 @@ import 'package:felloapp/core/model/subscription_models/subscription_transaction
 import 'package:felloapp/core/repository/getters_repo.dart';
 import 'package:felloapp/core/repository/subscription_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/ui/pages/finance/autosave/autosave_setup/autosave_process_view.dart';
 import 'package:felloapp/ui/pages/finance/autosave/autosave_setup/autosave_process_vm.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
@@ -86,6 +89,7 @@ class SubService extends ChangeNotifier {
   final GetterRepository _getterRepo = locator<GetterRepository>();
   final CustomLogger _logger = locator<CustomLogger>();
   final AnalyticsService _analyticsService = locator<AnalyticsService>();
+  final UserService _userService = locator<UserService>();
 
   //DEPENDENCY - END
 
@@ -109,31 +113,39 @@ class SubService extends ChangeNotifier {
   //GETTERS & SETTERS - START
 
   bool _autosaveVisible = true;
-  bool get autosaveVisible => this._autosaveVisible;
+
+  bool get autosaveVisible => _autosaveVisible;
+
   set autosaveVisible(bool value) {
-    this._autosaveVisible = value;
+    _autosaveVisible = value;
     notifyListeners();
   }
 
   AutosaveState _autosaveState = AutosaveState.IDLE;
-  AutosaveState get autosaveState => this._autosaveState;
+
+  AutosaveState get autosaveState => _autosaveState;
+
   set autosaveState(AutosaveState value) {
-    this._autosaveState = value;
+    _autosaveState = value;
     notifyListeners();
   }
 
   SubscriptionModel? _subscriptionData;
-  SubscriptionModel? get subscriptionData => this._subscriptionData;
+
+  SubscriptionModel? get subscriptionData => _subscriptionData;
+
   set subscriptionData(value) {
     // if (value == null) return;
-    this._subscriptionData = value;
+    _subscriptionData = value;
     setSubscriptionState();
   }
 
   bool _isPauseOrResuming = false;
-  get isPauseOrResuming => this._isPauseOrResuming;
+
+  get isPauseOrResuming => _isPauseOrResuming;
+
   set isPauseOrResuming(value) {
-    this._isPauseOrResuming = value;
+    _isPauseOrResuming = value;
     notifyListeners();
   }
 
@@ -141,13 +153,13 @@ class SubService extends ChangeNotifier {
 
   // SUBSCRIPTION SERVICE CORE METHODS - START
 
-  init() {
+  Future<void> init() async {
     autosaveVisible = AppConfig.getValue(AppConfigKey.showNewAutosave) as bool;
-    print("-----------autosave visible $autosaveVisible");
-    if (autosaveVisible) getSubscription();
+    debugPrint("-----------autoSave visible $autosaveVisible");
+    if (autosaveVisible) await getSubscription();
   }
 
-  dump() {
+  void dump() {
     pollCount = 0;
     _subscriptionData = null;
     hasNoMoreSubsTxns = false;
@@ -255,7 +267,7 @@ class SubService extends ChangeNotifier {
     if (res.isSuccess()) {
       subscriptionData = res.model;
       AppState.backButtonDispatcher!.didPopRoute();
-      Future.delayed(Duration(seconds: 1), () {
+      Future.delayed(const Duration(seconds: 1), () {
         BaseUtil.showPositiveAlert("Subscription updated successfully",
             "Effective changes will take place from tomorrow");
       });
@@ -274,7 +286,7 @@ class SubService extends ChangeNotifier {
     if (res.isSuccess()) {
       subscriptionData = res.model;
       AppState.backButtonDispatcher!.didPopRoute();
-      Future.delayed(Duration(seconds: 1), () {
+      Future.delayed(const Duration(seconds: 1), () {
         BaseUtil.showPositiveAlert("Subscription paused successfully",
             "Effective changes will take place from tomorrow");
       });
@@ -292,7 +304,7 @@ class SubService extends ChangeNotifier {
     isPauseOrResuming = false;
     if (res.isSuccess()) {
       subscriptionData = res.model;
-      Future.delayed(Duration(seconds: 1), () {
+      Future.delayed(const Duration(seconds: 1), () {
         BaseUtil.showPositiveAlert("Subscription resumed successfully",
             "Effective changes will take place from tomorrow");
       });
@@ -359,6 +371,7 @@ class SubService extends ChangeNotifier {
       }
     }
   }
+
   // SUBSCRIPTION CORE METHODS - END
 
   //Helpers
@@ -385,10 +398,11 @@ class SubService extends ChangeNotifier {
 
   Future<List> getAmountChipsAndCombos({required String freq}) async {
     ApiResponse<List> data = await _getterRepo.getSubCombosAndChips(freq: freq);
-    if (data.isSuccess())
+    if (data.isSuccess()) {
       return data.model!;
-    else
+    } else {
       return defaultChipsAndComboList;
+    }
   }
 
   // Future<List<SubComboModel>> getSipCombos({required String freq}) async {
@@ -451,7 +465,6 @@ class SubService extends ChangeNotifier {
         List<ApplicationMeta> allUpiApps =
             await UpiPay.getInstalledUpiApplications(
                 statusType: UpiApplicationDiscoveryAppStatusType.all);
-        print("Apps: found ${allUpiApps.length.toString()}");
 
         allUpiApps.forEach((element) {
           if (element.upiApplication.appName == "Paytm" &&
@@ -475,6 +488,7 @@ class SubService extends ChangeNotifier {
             appMetaList.add(element);
           }
         });
+
         return appMetaList;
       } catch (e) {
         print("Apps: No Apps found");
@@ -512,7 +526,7 @@ class SubService extends ChangeNotifier {
     }
   }
 
-  handleTap() {
+  handleTap({InvestmentType? type}) {
     Haptic.vibrate();
     _analyticsService.track(
         eventName: AnalyticsEvents.asCardTapped,
@@ -522,14 +536,39 @@ class SubService extends ChangeNotifier {
         return BaseUtil.showNegativeAlert(
             "Subscription in processing", "please check back after sometime");
       case AutosaveState.IDLE:
-        return AppState.delegate!.appState.currentAction = PageAction(
-          page: (PreferenceHelper.getBool(
-                  PreferenceHelper.CACHE_IS_AUTOSAVE_FIRST_TIME,
-                  def: true))
-              ? AutosaveOnboardingViewPageConfig
-              : AutosaveProcessViewPageConfig,
-          state: PageState.addPage,
-        );
+        if (type != null && type == InvestmentType.AUGGOLD99) {
+          locator<AnalyticsService>().track(
+            eventName: AnalyticsEvents.autosaveCardInGoldSectionTapped,
+            properties: {
+              'progress_bar_completed':
+                  (_userService.userFundWallet?.augGoldQuantity ?? 0) > 0.5
+                      ? "YES"
+                      : (_userService.userFundWallet?.augGoldQuantity ?? 0) /
+                          0.5,
+              "existing lease amount":
+                  _userService.userPortfolio.augmont.fd.balance,
+              "existing lease grams":
+                  _userService.userFundWallet?.wAugFdQty ?? 0
+            },
+          );
+          return AppState.delegate!.appState.currentAction = PageAction(
+            page: AutosaveProcessViewPageConfig,
+            widget: AutosaveProcessView(
+              investmentType: type,
+            ),
+            state: PageState.addWidget,
+          );
+        } else {
+          return AppState.delegate!.appState.currentAction = PageAction(
+            page: (PreferenceHelper.getBool(
+                    PreferenceHelper.CACHE_IS_AUTOSAVE_FIRST_TIME,
+                    def: true))
+                ? AutosaveOnboardingViewPageConfig
+                : AutosaveProcessViewPageConfig,
+            state: PageState.addPage,
+          );
+        }
+
       case AutosaveState.PAUSED:
       case AutosaveState.INACTIVE:
       case AutosaveState.ACTIVE:
@@ -542,22 +581,22 @@ class SubService extends ChangeNotifier {
     }
   }
 
-  // onAmountValueChanged(String val) {
-  //   if (val == "00000") amountController.text = '0';
-  //   if (val != null && val.isNotEmpty) {
-  //     if (int.tryParse(val)! < minValue)
-  //       showMinAlert = true;
-  //     else
-  //       showMinAlert = false;
-  //     if (int.tryParse(val)! > maxValue) {
-  //       amountController.text = maxValue.toString();
-  //       val = maxValue.toString();
-  //       FocusManager.instance.primaryFocus!.unfocus();
-  //     }
-  //   } else {
-  //     val = '0';
-  //   }
-  //   // saveAmount = calculateSaveAmount(int.tryParse(val ?? '0')!);
-  //   notifyListeners();
-  // }
+// onAmountValueChanged(String val) {
+//   if (val == "00000") amountController.text = '0';
+//   if (val != null && val.isNotEmpty) {
+//     if (int.tryParse(val)! < minValue)
+//       showMinAlert = true;
+//     else
+//       showMinAlert = false;
+//     if (int.tryParse(val)! > maxValue) {
+//       amountController.text = maxValue.toString();
+//       val = maxValue.toString();
+//       FocusManager.instance.primaryFocus!.unfocus();
+//     }
+//   } else {
+//     val = '0';
+//   }
+//   // saveAmount = calculateSaveAmount(int.tryParse(val ?? '0')!);
+//   notifyListeners();
+// }
 }

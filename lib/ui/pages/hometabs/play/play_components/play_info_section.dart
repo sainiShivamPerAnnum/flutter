@@ -278,7 +278,6 @@ class _InfoComponent3State extends State<InfoComponent3> {
 
   @override
   void initState() {
-    // TODO: implement initState
     isBoxOpen = widget.isBoxOpen;
     super.initState();
   }

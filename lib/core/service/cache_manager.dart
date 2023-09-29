@@ -1,6 +1,8 @@
+//ignore_for_file:avoid_classes_with_only_static_members
 import 'package:felloapp/core/enums/cache_type_enum.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
+//[DEPRECATED]
 class CacheManager {
   // static const CACHE_RATING_HIT_COUNT = "rHitCount";
   // static const CACHE_RATING_DIALOG_OPEN_COUNT = "RDShowCount";
@@ -9,6 +11,8 @@ class CacheManager {
   static const CACHE_IS_SUBSCRIPTION_FIRST_TIME = "isSubFirstTime";
   static const CACHE_IS_FIRST_TIME_FOOTBALL = 'firstTimeFootball';
   static const CACHE_LAST_UGT_CHECK_TIME = "lastUGTCheckTime";
+  static const CACHE_REFERRAL_PERSISTENT_NOTIFACTION_ID =
+      "referralPersistentNotificationId";
 
   static Future readCache(
       {required String key, CacheType type = CacheType.string}) async {

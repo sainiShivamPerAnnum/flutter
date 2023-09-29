@@ -7,25 +7,26 @@ import 'package:lottie/lottie.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
 class LevelUpAnimation extends StatelessWidget {
-  const LevelUpAnimation();
+  const LevelUpAnimation({super.key});
+
   @override
   Widget build(BuildContext context) {
     return PropertyChangeConsumer<JourneyService, JourneyServiceProperties>(
-      properties: [JourneyServiceProperties.LevelCompletion],
+      properties: const [JourneyServiceProperties.LevelCompletion],
       builder: (context, jModel, properties) {
         return jModel!.showLevelUpAnimation
             ? Align(
                 alignment: Alignment.center,
                 child: IgnorePointer(
                   ignoring: true,
-                  child: Lottie.asset(
+                  child: Lottie.network(
                     Assets.levelUpLottie,
                     width: SizeConfig.screenWidth,
                     fit: BoxFit.fitWidth,
                     controller: jModel.levelUpLottieController,
                     onLoaded: (composition) {
-                      jModel.levelUpLottieController!
-                        ..duration = composition.duration;
+                      jModel.levelUpLottieController!.duration =
+                          composition.duration;
                     },
                   ),
                 ),

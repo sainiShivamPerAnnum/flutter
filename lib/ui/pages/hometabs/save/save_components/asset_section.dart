@@ -1,29 +1,24 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
-import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/elements/custom_card/custom_cards.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
-import 'package:felloapp/ui/service_elements/user_service/net_worth_value.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/dynamic_ui_utils.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/show_case_key.dart';
-import 'package:felloapp/util/styles/size_config.dart';
-import 'package:felloapp/util/styles/textStyles.dart';
-import 'package:felloapp/util/styles/ui_constants.dart';
+import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
-import 'package:property_change_notifier/property_change_notifier.dart';
-import 'package:showcaseview/showcaseview.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
-class SaveNetWorthSection extends StatelessWidget {
+class SaveAssetsGroupCard extends StatelessWidget {
   final SaveViewModel saveViewModel;
 
-  const SaveNetWorthSection({Key? key, required this.saveViewModel})
+  const SaveAssetsGroupCard({Key? key, required this.saveViewModel})
       : super(key: key);
 
   getAssetsOrder() {
@@ -33,84 +28,80 @@ class SaveNetWorthSection extends StatelessWidget {
       switch (key) {
         case 'LB':
           orderedAssets.add(
-            Showcase(
-              key: ShowCaseKeys.LendBoxAssetKey,
-              description:
-                  'You can also invest in P2P asset Fello Flo, which gives you 10% returns per annum',
-              child: SaveCustomCard(
-                title: locale.felloFloMainTitle,
-                subtitle: locale.currentValue,
-                chipText: const ["P2P Asset", "Safe & Secure", "10% Returns"],
-                key: const Key(Constants.ASSET_TYPE_LENDBOX),
-                cardBgColor: UiConstants.kSaveStableFelloCardBg,
-                cardAssetName: Assets.felloFlo,
-                investmentType: InvestmentType.LENDBOXP2P,
-                onCardTap: () {
-                  saveViewModel.navigateToSaveAssetView(
-                    InvestmentType.LENDBOXP2P,
-                  );
-                },
-                onTap: () {
-                  Haptic.vibrate();
+            SaveCustomCard(
+              title: locale.felloFloMainTitle,
+              subtitle:
+                  "Save in Lendbox powered P2P Assets with upto 12% Returns",
+              chipText: const ["P2P Asset", "Safe & Secure", "12% Returns"],
+              key: const Key(Constants.ASSET_TYPE_LENDBOX),
+              cardBgColor: UiConstants.kSaveStableFelloCardBg,
+              cardAssetName: Assets.felloFlo,
+              investmentType: InvestmentType.LENDBOXP2P,
+              onCardTap: () {
+                saveViewModel.navigateToSaveAssetView(
+                  InvestmentType.LENDBOXP2P,
+                );
+              },
+              onTap: () {
+                Haptic.vibrate();
 
-                  locator<AnalyticsService>()
-                      .track(eventName: "Save on Flo Banner", properties: {
-                    "asset name": "LENDBOX",
-                    "balance in gold":
-                        locator<UserService>().userFundWallet?.augGoldBalance ??
-                            0,
-                    "balance in flo":
-                        locator<UserService>().userFundWallet?.wLbBalance ?? 0,
-                  });
+                locator<AnalyticsService>()
+                    .track(eventName: "Save on Flo Banner", properties: {
+                  "asset name": "LENDBOX",
+                  "balance in gold":
+                      locator<UserService>().userFundWallet?.augGoldBalance ??
+                          0,
+                  "balance in flo":
+                      locator<UserService>().userFundWallet?.wLbBalance ?? 0,
+                });
 
-                  return BaseUtil().openRechargeModalSheet(
-                    investmentType: InvestmentType.LENDBOXP2P,
-                  );
-                },
-              ),
+                return BaseUtil().openRechargeModalSheet(
+                  investmentType: InvestmentType.LENDBOXP2P,
+                );
+              },
+              footerText:
+                  "Introducing  12% returns on your investment with *12% Flo*",
+              footerColor: UiConstants.kFloContainerColor,
             ),
           );
           break;
         case 'AG':
           orderedAssets.add(
-            Showcase(
-              key: ShowCaseKeys.GoldAssetKey,
-              description:
-                  'You can start your savings journey on Fello with Digital Gold - a secure and stable asset',
-              child: SaveCustomCard(
-                title: locale.digitalGoldMailTitle,
-                subtitle: locale.youOwn,
-                chipText: const [
-                  "Safe & Secure",
-                  "24K Gold",
-                  "99.9% Pure",
-                ],
-                key: const Key(Constants.ASSET_TYPE_AUGMONT),
-                cardBgColor: UiConstants.kSaveDigitalGoldCardBg,
-                cardAssetName: Assets.digitalGoldBar,
-                investmentType: InvestmentType.AUGGOLD99,
-                onCardTap: () {
-                  saveViewModel.navigateToSaveAssetView(
-                    InvestmentType.AUGGOLD99,
-                  );
-                },
-                onTap: () {
-                  Haptic.vibrate();
-                  locator<AnalyticsService>()
-                      .track(eventName: "Save on Gold Banner", properties: {
-                    "asset name": "AUGGOLD99",
-                    "balance in gold":
-                        locator<UserService>().userFundWallet?.augGoldBalance ??
-                            0,
-                    "balance in flo":
-                        locator<UserService>().userFundWallet?.wLbBalance ?? 0,
-                  });
+            SaveCustomCard(
+              title: locale.digitalGoldMailTitle,
+              subtitle: "Save in Augmont backed 99.9% Pure Digital Gold",
+              chipText: const [
+                "Safe & Secure",
+                "24K Gold",
+                "99.9% Pure",
+              ],
+              key: const Key(Constants.ASSET_TYPE_AUGMONT),
+              cardBgColor: UiConstants.kSaveDigitalGoldCardBg,
+              cardAssetName: Assets.digitalGoldBar,
+              investmentType: InvestmentType.AUGGOLD99,
+              onCardTap: () {
+                saveViewModel.navigateToSaveAssetView(
+                  InvestmentType.AUGGOLD99,
+                );
+              },
+              onTap: () {
+                Haptic.vibrate();
+                locator<AnalyticsService>()
+                    .track(eventName: "Save on Gold Banner", properties: {
+                  "asset name": "AUGGOLD99",
+                  "balance in gold":
+                      locator<UserService>().userFundWallet?.augGoldBalance ??
+                          0,
+                  "balance in flo":
+                      locator<UserService>().userFundWallet?.wLbBalance ?? 0,
+                });
 
-                  return BaseUtil().openRechargeModalSheet(
-                    investmentType: InvestmentType.AUGGOLD99,
-                  );
-                },
-              ),
+                return BaseUtil().openRechargeModalSheet(
+                  investmentType: InvestmentType.AUGGOLD99,
+                );
+              },
+              // footerText: "Chance to get *4.5% Extra Gold* on your savings",
+              footerColor: UiConstants.kGoldContainerColor,
             ),
           );
           break;
@@ -123,68 +114,106 @@ class SaveNetWorthSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    S locale = S.of(context);
     return Container(
-      // height: SizeConfig.screenWidth * 1.4,
-      margin: EdgeInsets.only(bottom: SizeConfig.padding16),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.only(
-          bottomLeft: Radius.circular(SizeConfig.roundness16),
-          bottomRight: Radius.circular(SizeConfig.roundness16),
-        ),
-        color: UiConstants.kSecondaryBackgroundColor,
+      margin: EdgeInsets.symmetric(vertical: SizeConfig.padding14),
+      child: getAssetsOrder(),
+    );
+  }
+}
+
+class MiniAssetsGroupSection extends StatelessWidget {
+  const MiniAssetsGroupSection({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(
+        horizontal: SizeConfig.pageHorizontalMargins,
+        vertical: SizeConfig.padding14,
       ),
-      child: Column(
+      child: Row(
         children: [
-          // SizedBox(
-          //   height: SizeConfig.padding12,
-          // ),
-          PropertyChangeConsumer<UserService, UserServiceProperties>(
-            properties: const [UserServiceProperties.myUserFund],
-            builder: (context, model, property) => Container(
-              height: SizeConfig.screenWidth! * 0.22,
-              child: model?.userFundWallet?.netWorth != null &&
-                      model?.userFundWallet?.netWorth != 0
-                  ? Padding(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: SizeConfig.padding20),
-                      child: Column(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          SizedBox(
-                            height: SizeConfig.padding12,
-                          ),
-                          Text(
-                            locale.totalSavings,
-                            style: TextStyles.rajdhani.body2
-                                .colour(UiConstants.kTextColor),
-                            key: const ValueKey(Constants.TOTAL_SAVINGS),
-                          ),
-                          NetWorthValue(
-                            style: TextStyles.sourceSans.title0.bold,
-                          ),
-                        ],
-                      ),
-                    )
-                  : Padding(
-                      padding: EdgeInsets.symmetric(
-                          vertical: SizeConfig.padding12,
-                          horizontal: SizeConfig.pageHorizontalMargins),
-                      child: Text(
-                        "Take your first step towards healthy Savings",
-                        textAlign: TextAlign.center,
-                        style:
-                            TextStyles.rajdhaniSB.title4.colour(Colors.white),
-                      ),
-                    ),
-            ),
+          const MiniAssetCard(
+            color: UiConstants.kSaveStableFelloCardBg,
+            asset: Assets.floAsset,
+            title: "Fello Flo",
+            subtitle: "upto 12% returns",
+            actionUri: "floDetails",
           ),
-          getAssetsOrder(),
-          const SizedBox(
-            height: 15,
+          SizedBox(width: SizeConfig.padding16),
+          const MiniAssetCard(
+            color: UiConstants.kSaveDigitalGoldCardBg,
+            asset: Assets.goldAsset,
+            title: "Digital Gold",
+            subtitle: "100% Safe",
+            actionUri: "goldDetails",
           ),
-          // const SaveAssetsFooter(),
         ],
+      ),
+    );
+  }
+}
+
+class MiniAssetCard extends StatelessWidget {
+  final String asset, title, subtitle, actionUri;
+  final Color color;
+
+  const MiniAssetCard(
+      {super.key,
+      required this.asset,
+      required this.title,
+      required this.subtitle,
+      required this.actionUri,
+      required this.color});
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: InkWell(
+        onTap: () {
+          Haptic.vibrate();
+          AppState.delegate!.parseRoute(Uri.parse(actionUri));
+        },
+        child: Container(
+          decoration: BoxDecoration(
+              color: color,
+              borderRadius: BorderRadius.circular(SizeConfig.roundness16)),
+          padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins / 2),
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Row(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  SvgPicture.asset(
+                    asset,
+                    width: SizeConfig.padding70,
+                  ),
+                  const Spacer(),
+                  SvgPicture.asset(
+                    Assets.chevRonRightArrow,
+                    color: Colors.white,
+                    width: SizeConfig.iconSize0,
+                  )
+                ],
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "  $title",
+                    style: TextStyles.rajdhaniSB.body0.colour(Colors.white),
+                  ),
+                  Text(
+                    "    $subtitle",
+                    style: TextStyles.sourceSans.body3.colour(Colors.white54),
+                  ),
+                ],
+              ),
+              SizedBox(height: SizeConfig.padding14)
+            ],
+          ),
+        ),
       ),
     );
   }

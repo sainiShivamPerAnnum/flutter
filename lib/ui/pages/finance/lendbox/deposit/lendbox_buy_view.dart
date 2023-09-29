@@ -3,14 +3,15 @@ import 'dart:io';
 import 'package:animations/animations.dart';
 import 'package:felloapp/core/enums/transaction_state_enum.dart';
 import 'package:felloapp/core/enums/transaction_type_enum.dart';
+import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/service/payments/lendbox_transaction_service.dart';
-import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/back_button_actions.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/deposit/lendbox_buy_input_view.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/deposit/lendbox_buy_vm.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/lendbox_loading_view.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/lendbox_success_view.dart';
+import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -22,12 +23,15 @@ import 'package:provider/provider.dart';
 class LendboxBuyView extends StatefulWidget {
   final int? amount;
   final bool skipMl;
-  final OnAmountChanged onChanged;
+  final OnAmountChanged? onChanged;
+  final String floAssetType;
+
   const LendboxBuyView(
       {Key? key,
       this.amount = 250,
       this.skipMl = false,
-      required this.onChanged})
+      required this.onChanged,
+      required this.floAssetType})
       : super(key: key);
 
   @override
@@ -35,90 +39,100 @@ class LendboxBuyView extends StatefulWidget {
 }
 
 class _LendboxBuyViewState extends State<LendboxBuyView>
-    with WidgetsBindingObserver {
-  final LendboxTransactionService? _txnService =
+    with WidgetsBindingObserver, SingleTickerProviderStateMixin {
+  final LendboxTransactionService _txnService =
       locator<LendboxTransactionService>();
   AppLifecycleState? appLifecycleState;
 
   final iosScreenShotChannel = const MethodChannel('secureScreenshotChannel');
+
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
-      _txnService!.currentTransactionState = TransactionState.idle;
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      _txnService.isIOSTxnInProgress = false;
+      _txnService.currentTransactionState = TransactionState.idle;
     });
-    WidgetsBinding.instance!.addObserver(this);
+    WidgetsBinding.instance.addObserver(this);
   }
 
   @override
   void dispose() {
-    WidgetsBinding.instance!.removeObserver(this);
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
     appLifecycleState = state;
-    if (appLifecycleState == AppLifecycleState.resumed) {
-      if (!_txnService!.isIOSTxnInProgress) return;
-      _txnService!.isIOSTxnInProgress = false;
-      _txnService!.initiatePolling();
+    if (appLifecycleState == AppLifecycleState.resumed &&
+        Platform.isIOS &&
+        _txnService.isIOSTxnInProgress) {
+      _txnService.isIOSTxnInProgress = false;
+      _txnService.currentTransactionState = TransactionState.ongoing;
+      _txnService.initiatePolling();
     }
     super.didChangeAppLifecycleState(state);
   }
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<LendboxTransactionService>(
-      builder: (transactionContext, lboxTxnService, transactionProperty) {
-        return AnimatedContainer(
-          width: double.infinity,
-          height: _getHeight(lboxTxnService),
-          decoration: BoxDecoration(
-            color: UiConstants.kSecondaryBackgroundColor,
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(SizeConfig.padding16),
-              topRight: Radius.circular(SizeConfig.padding16),
+    return Scaffold(
+      resizeToAvoidBottomInset: false,
+      body: Consumer<LendboxTransactionService>(
+        builder: (transactionContext, lboxTxnService, transactionProperty) {
+          return AnimatedContainer(
+            width: double.infinity,
+            height: _getHeight(lboxTxnService),
+            decoration: BoxDecoration(
+              color: UiConstants.kSecondaryBackgroundColor,
+              borderRadius: BorderRadius.only(
+                topLeft: Radius.circular(SizeConfig.padding16),
+                topRight: Radius.circular(SizeConfig.padding16),
+              ),
             ),
-          ),
-          duration: const Duration(milliseconds: 500),
-          child: Stack(
-            children: [
-              _getBackground(lboxTxnService!),
-              PageTransitionSwitcher(
-                duration: const Duration(milliseconds: 500),
-                transitionBuilder: (
-                  Widget child,
-                  Animation<double> animation,
-                  Animation<double> secondaryAnimation,
-                ) {
-                  return FadeThroughTransition(
-                    fillColor: Colors.transparent,
-                    child: child,
-                    animation: animation,
-                    secondaryAnimation: secondaryAnimation,
-                  );
-                },
-                child: BaseView<LendboxBuyViewModel>(
-                  onModelReady: (model) => model.init(
-                    widget.amount,
-                    widget.skipMl,
-                  ),
-                  builder: (ctx, model, child) {
-                    _secureScreenshots(lboxTxnService);
-                    widget.onChanged(
-                        double.parse(model.amountController?.text ?? "0"));
-                    return _getView(
-                      lboxTxnService,
-                      model,
+            duration: const Duration(milliseconds: 500),
+            child: Stack(
+              children: [
+                _getBackground(lboxTxnService!),
+                PageTransitionSwitcher(
+                  duration: const Duration(milliseconds: 500),
+                  transitionBuilder: (
+                    Widget child,
+                    Animation<double> animation,
+                    Animation<double> secondaryAnimation,
+                  ) {
+                    return FadeThroughTransition(
+                      fillColor: Colors.transparent,
+                      child: child,
+                      animation: animation,
+                      secondaryAnimation: secondaryAnimation,
                     );
                   },
+                  child: BaseView<LendboxBuyViewModel>(
+                    onModelReady: (model) => model.init(
+                      widget.amount,
+                      widget.skipMl,
+                      this,
+                      assetTypeFlow: widget.floAssetType,
+                    ),
+                    builder: (ctx, model, child) {
+                      _secureScreenshots(lboxTxnService);
+
+                      return model.state == ViewState.Busy
+                          ? const Center(child: FullScreenLoader())
+                          : _getView(
+                              lboxTxnService,
+                              model,
+                            );
+                    },
+                  ),
                 ),
-              ),
-            ],
-          ),
-        );
-      },
+              ],
+            ),
+          );
+        },
+      ),
     );
   }
 
@@ -143,20 +157,21 @@ class _LendboxBuyViewState extends State<LendboxBuyView>
     LendboxTransactionService lboxTxnService,
     LendboxBuyViewModel model,
   ) {
-    final type = TransactionType.DEPOSIT;
+    const type = TransactionType.DEPOSIT;
 
     if (lboxTxnService.currentTransactionState == TransactionState.idle) {
       return LendboxBuyInputView(
         amount: widget.amount,
         skipMl: widget.skipMl,
         model: model,
+        // floAssetType: widget.floAssetType,
       );
     } else if (lboxTxnService.currentTransactionState ==
         TransactionState.ongoing) {
       return LendboxLoadingView(transactionType: type);
     } else if (lboxTxnService.currentTransactionState ==
         TransactionState.success) {
-      return LendboxSuccessView(
+      return const LendboxSuccessView(
         transactionType: type,
       );
     }
@@ -166,10 +181,10 @@ class _LendboxBuyViewState extends State<LendboxBuyView>
 
   double? _getHeight(lboxTxnService) {
     if (lboxTxnService.currentTransactionState == TransactionState.idle) {
-      return SizeConfig.screenHeight! * 0.8;
+      return SizeConfig.screenHeight!;
     } else if (lboxTxnService.currentTransactionState ==
         TransactionState.ongoing) {
-      return SizeConfig.screenHeight! * 0.95;
+      return SizeConfig.screenHeight!;
     } else if (lboxTxnService.currentTransactionState ==
         TransactionState.success) {
       return SizeConfig.screenHeight;

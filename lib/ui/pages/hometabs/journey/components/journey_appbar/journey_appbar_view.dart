@@ -9,7 +9,6 @@ import 'package:felloapp/ui/pages/static/blur_filter.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/service_elements/user_service/life_time_wins.dart';
 import 'package:felloapp/ui/service_elements/user_service/net_worth_value.dart';
-import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -25,16 +24,16 @@ class JourneyAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final BaseUtil? _baseUtil = locator<BaseUtil>();
+    final BaseUtil _baseUtil = locator<BaseUtil>();
     final S locale = locator<S>();
     return PropertyChangeConsumer<JourneyService, JourneyServiceProperties>(
-      properties: [JourneyServiceProperties.AvatarRemoteMilestoneIndex],
+      properties: const [JourneyServiceProperties.AvatarRemoteMilestoneIndex],
       builder: (context, m, properties) {
         return Positioned(
           top: 0,
           left: SizeConfig.padding10,
           child: SafeArea(
-              child: Container(
+              child: SizedBox(
             width: SizeConfig.screenWidth! - SizeConfig.padding20,
             height: SizeConfig.screenWidth! * 0.30,
             child: Stack(
@@ -53,7 +52,7 @@ class JourneyAppBar extends StatelessWidget {
                 ),
                 Container(
                   child: Column(children: [
-                    Container(
+                    SizedBox(
                       height: SizeConfig.screenWidth! * 0.14,
                       child: Padding(
                         padding: EdgeInsets.symmetric(
@@ -61,20 +60,34 @@ class JourneyAppBar extends StatelessWidget {
                         child: Row(
                           children: [
                             Container(
-                              key: ValueKey(Constants.PROFILE_JAPPBAR),
-                              decoration: BoxDecoration(
+                              key: const ValueKey(Constants.PROFILE_JAPPBAR),
+                              decoration: const BoxDecoration(
                                 color: Colors.white,
                                 shape: BoxShape.circle,
                               ),
                               padding: EdgeInsets.all(SizeConfig.padding2),
-                              child: ProfileImageSE(
-                                  radius: SizeConfig.avatarRadius * 0.9),
+                              child: CircleAvatar(
+                                backgroundColor: Colors.black,
+                                radius: SizeConfig.avatarRadius * 0.9,
+                                child: GestureDetector(
+                                  child: Icon(
+                                    Icons.arrow_back_ios_new_rounded,
+                                    size: SizeConfig.padding20,
+                                    color: Colors.white,
+                                  ),
+                                  onTap: () {
+                                    Haptic.vibrate();
+                                    AppState.backButtonDispatcher!
+                                        .didPopRoute();
+                                  },
+                                ),
+                              ),
                             ),
                             SizedBox(width: SizeConfig.padding12),
                             Expanded(
                               child: PropertyChangeConsumer<UserService,
                                   UserServiceProperties>(
-                                properties: [
+                                properties: const [
                                   UserServiceProperties.myJourneyStats
                                 ],
                                 builder: (context, model, properties) {
@@ -98,7 +111,8 @@ class JourneyAppBar extends StatelessWidget {
                             //     },
                             //     icon: Icon(Icons.navigation)),
                             FelloCoinBar(
-                              key: ValueKey(Constants.FELLO_COIN_BAR_JAPPBAR),
+                              key: const ValueKey(
+                                  Constants.FELLO_COIN_BAR_JAPPBAR),
                             ),
                             NotificationButton()
                           ],
@@ -109,12 +123,13 @@ class JourneyAppBar extends StatelessWidget {
                         color: Colors.white.withOpacity(0.5),
                         thickness: 0.5,
                         height: 0.5),
-                    Container(
+                    SizedBox(
                       height: SizeConfig.screenWidth! * 0.14,
                       child: Row(
                         children: [
                           JourneyAppBarAssetDetailsTile(
-                            key: ValueKey(Constants.TOTAL_SAVINGS_JAPPBAR),
+                            key:
+                                const ValueKey(Constants.TOTAL_SAVINGS_JAPPBAR),
                             actionUri: '/save',
                             title: locale.totalSavings,
                             value: NetWorthValue(
@@ -127,7 +142,8 @@ class JourneyAppBar extends StatelessWidget {
                             thickness: 0.5,
                           ),
                           JourneyAppBarAssetDetailsTile(
-                            key: ValueKey(Constants.TOTAL_WINNINGS_JAPPBAR),
+                            key: const ValueKey(
+                                Constants.TOTAL_WINNINGS_JAPPBAR),
                             actionUri: '/myWinnings',
                             title: locale.totalWinnings,
                             value: LifeTimeWin(
@@ -154,12 +170,13 @@ class JourneyAppBarAssetDetailsTile extends StatelessWidget {
   final String? title;
   final Widget? value;
   final String? actionUri;
-  JourneyAppBarAssetDetailsTile({
-    @required this.key,
-    @required this.title,
-    @required this.value,
-    @required this.actionUri,
-  });
+
+  const JourneyAppBarAssetDetailsTile({
+    required this.key,
+    required this.title,
+    required this.value,
+    required this.actionUri,
+  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

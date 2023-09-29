@@ -7,21 +7,23 @@ import com.webengage.sdk.android.WebEngage
 import com.webengage.sdk.android.WebEngageConfig
 import com.webengage.webengage_plugin.WebengageInitializer
 import io.flutter.app.FlutterApplication
+import com.clevertap.android.sdk.ActivityLifecycleCallback;
 
 
 class Application : FlutterApplication() {
     override fun onCreate() {
+        ActivityLifecycleCallback.register(this);
         super.onCreate()
 
 
         val webEngageConfig = WebEngageConfig.Builder()
-                .setPushSmallIcon(R.drawable.ic_action_name)
-                .setPushAccentColor(Color.parseColor("#43BEA4"))
-                .setWebEngageKey(getString(R.string.webengage_code))
-                .setAutoGCMRegistrationFlag(false)
-                .setLocationTrackingStrategy(LocationTrackingStrategy.ACCURACY_BEST)
-                .setDebugMode(true) // only in development mode
-                .build()
+            .setPushSmallIcon(R.drawable.ic_action_name)
+            .setPushAccentColor(Color.parseColor("#43BEA4"))
+            .setWebEngageKey(getString(R.string.webengage_code))
+            .setAutoGCMRegistrationFlag(false)
+            .setLocationTrackingStrategy(LocationTrackingStrategy.ACCURACY_BEST)
+            .setDebugMode(true) // only in development mode
+            .build()
 
         WebengageInitializer.initialize(this, webEngageConfig)
 

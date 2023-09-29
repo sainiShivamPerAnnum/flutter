@@ -400,7 +400,6 @@ class TooltipShapeBorder extends ShapeBorder {
 
   @override
   Path getInnerPath(Rect rect, {TextDirection? textDirection}) {
-    // TODO: implement getInnerPath
     throw UnimplementedError();
   }
 }

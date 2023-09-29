@@ -8,11 +8,14 @@ class FelloDialog extends StatelessWidget {
 
   final bool isAddedToScreenStack;
   final bool defaultPadding;
-  FelloDialog(
-      {this.content,
+
+  const FelloDialog(
+      {Key? key,
+      this.content,
       this.showCrossIcon = false,
       this.isAddedToScreenStack = false,
-      this.defaultPadding = true});
+      this.defaultPadding = true})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,16 +23,16 @@ class FelloDialog extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Dialog(
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(SizeConfig.roundness40),
+          ),
           child: Container(
             padding: EdgeInsets.all(
                 defaultPadding ? SizeConfig.pageHorizontalMargins : 0),
             child: Wrap(
               children: [content!],
             ),
-          ),
-          backgroundColor: Colors.white,
-          shape: RoundedRectangleBorder(
-            borderRadius: BorderRadius.circular(SizeConfig.roundness40),
           ),
         ),
         if (showCrossIcon)
@@ -38,13 +41,15 @@ class FelloDialog extends StatelessWidget {
             child: CircleAvatar(
               backgroundColor: Colors.white,
               child: IconButton(
-                  icon: Icon(Icons.close, color: Colors.grey[700]),
-                  onPressed: () {
-                    if (isAddedToScreenStack)
-                      AppState.backButtonDispatcher!.didPopRoute();
-                    else
-                      Navigator.pop(context);
-                  }),
+                icon: Icon(Icons.close, color: Colors.grey[700]),
+                onPressed: () {
+                  if (isAddedToScreenStack) {
+                    AppState.backButtonDispatcher!.didPopRoute();
+                  } else {
+                    Navigator.pop(context);
+                  }
+                },
+              ),
             ),
           ),
       ],

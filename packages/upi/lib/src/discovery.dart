@@ -1,10 +1,10 @@
 import 'dart:convert';
-
 import 'dart:io' as io;
+
 import 'package:upi_pay/src/applications.dart';
+import 'package:upi_pay/src/meta.dart';
 import 'package:upi_pay/src/method_channel.dart';
 import 'package:upi_pay/src/status.dart';
-import 'package:upi_pay/src/meta.dart';
 
 class UpiApplicationDiscovery implements _PlatformDiscoveryBase {
   final discovery = io.Platform.isAndroid
@@ -60,11 +60,15 @@ class _AndroidDiscovery implements _PlatformDiscoveryBase {
     final List<ApplicationMeta> retList = [];
     appsList.forEach((app) {
       final packageName = _castToString(app['packageName']);
+      print("PackageName: $packageName");
       final androidStatus = _getStatus(packageName, applicationStatusMap);
       if (androidStatus == null) {
         return null;
       }
+      print("PackageName android status: ${androidStatus.toString()}");
       if (_canUseApp(statusType, androidStatus)) {
+        print("PackageName android app usable: true}");
+
         final icon = _castToString(app['icon']);
         final priority = _castToInt(app['priority']);
         final preferredOrder = _castToInt(app['preferredOrder']);

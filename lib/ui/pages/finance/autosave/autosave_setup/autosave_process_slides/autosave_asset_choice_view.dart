@@ -212,7 +212,7 @@ class AutosaveAssetChoiceView extends StatelessWidget {
                   ],
                 );
               }),
-          Spacer(),
+          const Spacer(),
           AppPositiveBtn(btnText: "NEXT", onPressed: model.proceed),
           SizedBox(height: SizeConfig.pageHorizontalMargins)
         ],
@@ -240,7 +240,7 @@ class RPSCustomPainter extends CustomPainter {
     path_0.close();
 
     Paint paint_0_fill = Paint()..style = PaintingStyle.fill;
-    paint_0_fill.color = Color(0xffF7C780);
+    paint_0_fill.color = const Color(0xffF7C780);
     canvas.drawPath(path_0, paint_0_fill);
 
     final textStyle = TextStyle(

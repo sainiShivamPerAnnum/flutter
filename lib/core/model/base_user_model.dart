@@ -1,10 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/core/model/timestamp_model.dart';
-
 import 'package:felloapp/util/logger.dart';
 
 class BaseUser {
-  static Log log = new Log("User");
+  static Log log = const Log("User");
   String? uid;
   String? mobile;
   String? name;
@@ -31,37 +29,37 @@ class BaseUser {
   String? avatarId;
   bool? isOldUser;
   List segments;
-  static final String fldId = "mID";
-  static final String fldMobile = "mMobile";
-  static final String fldEmail = "mEmail";
-  static final String fldName = "mName";
-  static final String fldDob = "mDob";
-  static final String fldGender = "mGender";
-  static final String fldClient_token = "mClientToken";
-  static final String fldICICIBalance = "mICBalance";
-  static final String fldAugmontBalance = "mAugBalance";
-  static final String fldAugmontQuantity = "mAugQuantity";
-  static final String fldUsername = "mUsername";
-  static final String fldIsEmailVerified = "mIsEmailVerified";
-  static final String fldIsInvested = "mIsInvested";
-  static final String fldIsIciciOnboarded = "mIsIciciOnboarded";
-  static final String fldIsAugmontOnboarded = "mIsAugmontOnboarded";
-  static final String fldIsSimpleKycVerified = "mIsSimpleKycVerified";
-  static final String fldIsBlocked = "mIsBlocked";
-  static final String fldIsKycVerified = "mIsKycVerified";
-  static final String fldPendingTxnId = "mPendingTxnId";
-  static final String fldIsIciciEnabled = "mIsIciciEnabled";
-  static final String fldIsAugmontEnabled = "mIsAugmontEnabled";
-  static final String fldUserPrefs = "mUserPrefs";
-  static final String fldUserPrefsAl = "mUserPrefsAl";
-  static final String fldUserPrefsTn = "mUserPrefsTn";
-  static final String fldCreatedOn = "mCreatedOn";
-  static final String fldKycName = "mKycName";
-  static final String fldStateId = "stateId";
-  static final String fldAppFlyerId = "mAppFlyerId";
-  static final String fldAvatarId = "mAvatarId";
-  static final String fldIsOldUser = "isOldUser";
-  static final String fldReferralCode = "referralCode";
+  static const String fldId = "mID";
+  static const String fldMobile = "mMobile";
+  static const String fldEmail = "mEmail";
+  static const String fldName = "mName";
+  static const String fldDob = "mDob";
+  static const String fldGender = "mGender";
+  static const String fldClient_token = "mClientToken";
+  static const String fldICICIBalance = "mICBalance";
+  static const String fldAugmontBalance = "mAugBalance";
+  static const String fldAugmontQuantity = "mAugQuantity";
+  static const String fldUsername = "mUsername";
+  static const String fldIsEmailVerified = "mIsEmailVerified";
+  static const String fldIsInvested = "mIsInvested";
+  static const String fldIsIciciOnboarded = "mIsIciciOnboarded";
+  static const String fldIsAugmontOnboarded = "mIsAugmontOnboarded";
+  static const String fldIsSimpleKycVerified = "mIsSimpleKycVerified";
+  static const String fldIsBlocked = "mIsBlocked";
+  static const String fldIsKycVerified = "mIsKycVerified";
+  static const String fldPendingTxnId = "mPendingTxnId";
+  static const String fldIsIciciEnabled = "mIsIciciEnabled";
+  static const String fldIsAugmontEnabled = "mIsAugmontEnabled";
+  static const String fldUserPrefs = "mUserPrefs";
+  static const String fldUserPrefsAl = "mUserPrefsAl";
+  static const String fldUserPrefsTn = "mUserPrefsTn";
+  static const String fldCreatedOn = "mCreatedOn";
+  static const String fldKycName = "mKycName";
+  static const String fldStateId = "stateId";
+  static const String fldAppFlyerId = "mAppFlyerId";
+  static const String fldAvatarId = "mAvatarId";
+  static const String fldIsOldUser = "isOldUser";
+  static const String fldReferralCode = "referralCode";
 
   BaseUser(
     this.uid,
@@ -119,6 +117,7 @@ class BaseUser {
           false,
           [],
         );
+
   BaseUser.base()
       : this(
           '',
@@ -147,6 +146,7 @@ class BaseUser {
           false,
           [],
         );
+
   BaseUser.fromMap(Map<String, dynamic> data, String id, [String? client_token])
       : this(
             id,
@@ -192,13 +192,16 @@ class BaseUser {
     };
     if (isKycVerified != 0) userObj[fldIsKycVerified] = isKycVerified;
     if (kycName != null) userObj[fldKycName] = kycName;
-    if (isIciciOnboarded != null)
+    if (isIciciOnboarded != null) {
       userObj[fldIsIciciOnboarded] = isIciciOnboarded;
+    }
     if (isIciciEnabled != null) userObj[fldIsIciciEnabled] = isIciciEnabled;
-    if (isAugmontEnabled != null)
+    if (isAugmontEnabled != null) {
       userObj[fldIsAugmontEnabled] = isAugmontEnabled;
-    if (userPreferences != UserPreferences({}))
+    }
+    if (userPreferences != UserPreferences({})) {
       userObj[fldUserPrefs] = userPreferences.toJson();
+    }
     if (isBlocked != null) userObj[fldIsBlocked] = isBlocked;
     if (appFlyerId != null) userObj[fldAppFlyerId] = appFlyerId;
     if (avatarId != null) userObj[fldAvatarId] = avatarId;
@@ -207,7 +210,7 @@ class BaseUser {
 
   bool hasIncompleteDetails() {
     //return ((_mobile?.isEmpty??true) || (_name?.isEmpty??true) || (_email?.isEmpty??true));
-    return ((mobile?.isEmpty ?? true) || (name?.isEmpty ?? true));
+    return (mobile?.isEmpty ?? true) || (name?.isEmpty ?? true);
   }
 
   @override
@@ -216,19 +219,21 @@ class BaseUser {
   }
 }
 
-enum Preferences { TAMBOLANOTIFICATIONS, APPLOCK }
+enum Preferences { TAMBOLANOTIFICATIONS, APPLOCK, FLOINVOICEMAIL }
 
 class UserPreferences {
   //setup index with firebase keys
   static const Map<Preferences, String> _index = {
     Preferences.TAMBOLANOTIFICATIONS: 'tn',
-    Preferences.APPLOCK: 'al'
+    Preferences.APPLOCK: 'al',
+    Preferences.FLOINVOICEMAIL: "er"
   };
 
   //setup defaults
   final Map<Preferences, int> _defValues = {
     Preferences.TAMBOLANOTIFICATIONS: 1,
-    Preferences.APPLOCK: 0
+    Preferences.APPLOCK: 0,
+    Preferences.FLOINVOICEMAIL: 0
   };
 
   //current values
@@ -236,13 +241,13 @@ class UserPreferences {
 
   UserPreferences(Map<dynamic, dynamic>? remValues) {
     for (Preferences p in Preferences.values) {
-      String? _fKey = _index[p];
-      int? _defValue = _defValues[p];
-      _activePrefs[_fKey] = (remValues != {} &&
-              remValues![_fKey] != null &&
-              remValues[_fKey] is int)
-          ? remValues[_fKey]
-          : _defValue;
+      String? fKey = _index[p];
+      int? defValue = _defValues[p];
+      _activePrefs[fKey] = (remValues != {} &&
+              remValues![fKey] != null &&
+              remValues[fKey] is int)
+          ? remValues[fKey]
+          : defValue;
     }
   }
 

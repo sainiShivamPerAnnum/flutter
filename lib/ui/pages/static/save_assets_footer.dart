@@ -8,8 +8,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 class SaveAssetsFooter extends StatelessWidget {
-  const SaveAssetsFooter({Key? key}) : super(key: key);
+  const SaveAssetsFooter({Key? key, this.isFlo = false}) : super(key: key);
 
+  final bool isFlo;
   @override
   Widget build(BuildContext context) {
     S locale = locator<S>();
@@ -24,9 +25,9 @@ class SaveAssetsFooter extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
         children: [
           SaveInfoSection(
-            title: locale.govtAcc,
-            imageAsset: Assets.augmontLogo,
-            imageHeight: SizeConfig.screenWidth! * 0.07,
+            title: isFlo ? "Secured by" : locale.govtAcc,
+            imageAsset: isFlo ? Assets.sebi : Assets.augmontLogo,
+            imageHeight: SizeConfig.screenWidth! * (isFlo ? 0.05 : 0.07),
             imageWidth: SizeConfig.screenWidth! * 0.16,
           ),
           Container(
@@ -78,6 +79,7 @@ class SaveInfoSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Container(
+      height: SizeConfig.screenWidth! * 0.12,
       width: SizeConfig.screenWidth! * 0.27,
       alignment: Alignment.center,
       child: Column(
@@ -87,9 +89,7 @@ class SaveInfoSection extends StatelessWidget {
             title ?? '',
             style: TextStyles.sourceSans.body4.colour(UiConstants.kTextColor2),
           ),
-          SizedBox(
-            height: SizeConfig.padding6,
-          ),
+          Spacer(),
           SizedBox(
             height: imageHeight ?? 0,
             width: imageWidth ?? 0,

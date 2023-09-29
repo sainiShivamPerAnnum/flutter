@@ -31,32 +31,32 @@ class ConfirmExitModal extends StatelessWidget {
             height: SizeConfig.padding16,
           ),
           Text(
-            "Don’t miss a chance to invest &\ngrow your savings by 10%",
+            "Don’t miss a chance to save &\ngrow your savings upto 12%",
             textAlign: TextAlign.center,
             style: TextStyles.sourceSans.body2.colour(
-              Color(0xffD9D9D9),
+              const Color(0xffD9D9D9),
             ),
           ),
-          LottieBuilder.asset(
+          LottieBuilder.network(
             Assets.goldDepostSuccessLottie,
             height: SizeConfig.screenHeight! * 0.25,
           ),
           SizedBox(
             height: SizeConfig.padding16,
           ),
-          Spacer(),
+          const Spacer(),
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               SvgPicture.asset(Assets.multiAvatars),
-              SizedBox(
+              const SizedBox(
                 width: 4,
               ),
               Text(
                 "5.5 Lakh+ users trust Fello",
                 style: TextStyles.sourceSansB.colour(
-                  Color(0xffd9d9d9).withOpacity(0.9),
+                  const Color(0xffd9d9d9).withOpacity(0.9),
                 ),
               )
             ],

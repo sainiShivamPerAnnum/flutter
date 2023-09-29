@@ -69,7 +69,6 @@ class FAQCardView extends StatelessWidget {
 
   _buildItems(FAQCardViewModel model, BuildContext context) {
     return ClipRRect(
-      // borderRadius: BorderRadius.circular(SizeConfig.roundness16),
       child: Container(
         width: SizeConfig.screenWidth,
         child: Column(

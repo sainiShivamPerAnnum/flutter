@@ -3,11 +3,11 @@ import 'package:felloapp/core/model/referral_details_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/repository/referral_repo.dart';
 import 'package:felloapp/core/service/journey_service.dart';
-import 'package:felloapp/core/service/notifier_services/tambola_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
+import 'package:felloapp/feature/tambola/tambola.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
 
@@ -22,21 +22,6 @@ class AnalyticsProperties {
       locator<TxnHistoryService>();
   static final BaseUtil? _baseUtil = locator<BaseUtil>();
   final ReferralRepo? _referralRepo = locator<ReferralRepo>();
-
-  init() {
-    // _paytmService!.init();
-
-    // if (!_baseUtil!.referralsFetched!) {
-    //   _referralRepo!.getReferralHistory().then((refHisModel) {
-    //     if (refHisModel.isSuccess()) {
-    //       _baseUtil!.referralsFetched = true;
-    //       _baseUtil!.userReferralsList = refHisModel.model ?? [];
-    //     } else {
-    //       BaseUtil.showNegativeAlert(refHisModel.errorMessage, '');
-    //     }
-    //   });
-    // }
-  }
 
   static getTotalReferralCount() {
     if (!_baseUtil!.referralsFetched!) {
@@ -60,8 +45,9 @@ class AnalyticsProperties {
 
   static getPendingReferalCount() {
     int? pendingCount = 0;
-    if (getTotalReferralCount() >= getSuccessReferralCount())
+    if (getTotalReferralCount() >= getSuccessReferralCount()) {
       pendingCount = getTotalReferralCount() - getSuccessReferralCount();
+    }
     return pendingCount;
   }
 
@@ -109,18 +95,19 @@ class AnalyticsProperties {
   }
 
   static int getCurrentLevel() {
-    return _userService!.userJourneyStats!.level ?? -1;
+    return _userService?.userJourneyStats?.level ?? -1;
   }
 
   static int getCurrentMilestone() {
-    return _userService!.userJourneyStats!.mlIndex ?? -1;
+    return _userService?.userJourneyStats?.mlIndex ?? -1;
   }
 
   static int getMileStonesCompleted() {
-    if (_userService!.userJourneyStats!.mlIndex! > 1)
+    if ((_userService?.userJourneyStats?.mlIndex ?? 0) > 1) {
       return _userService!.userJourneyStats!.mlIndex! - 1;
-    else
+    } else {
       return 0;
+    }
   }
 
   static int getTokens() {
@@ -144,11 +131,12 @@ class AnalyticsProperties {
   }
 
   static double getAutoSIPAmount() {
-    if (_subService.subscriptionData == null)
+    if (_subService.subscriptionData == null) {
       return 0.0;
-    else
+    } else {
       return (double.tryParse(_subService.subscriptionData!.amount ?? '0') ??
           0.0);
+    }
   }
 
   static String getJouneryCapsuleText() {

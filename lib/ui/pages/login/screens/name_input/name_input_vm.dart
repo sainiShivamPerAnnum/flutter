@@ -13,6 +13,7 @@ class LoginNameInputViewModel extends BaseViewModel {
   int genderValue = 0;
   List<String> genderOptions = ["Male", "Female", "Other"];
   bool enabled = true;
+
   // bool isLoading = false;
   // bool isUpdating = false;
   // bool isUpdated = false;
@@ -22,9 +23,11 @@ class LoginNameInputViewModel extends BaseViewModel {
   final FocusNode nameFocusNode = FocusNode();
 
   get referralCodeController => _referralCodeController;
+
   String getReferralCode() => _referralCodeController.text;
 
   GlobalKey<FormState> get formKey => _formKey;
+
   // FocusNode get focusNode => _focusNode;
 
   set hasReferralCode(bool val) {
@@ -34,13 +37,12 @@ class LoginNameInputViewModel extends BaseViewModel {
 
   bool get hasReferralCode => _hasReferralCode;
 
-  init() {
-    Future.delayed(Duration(milliseconds: 200), () {
-      nameFocusNode.requestFocus();
-    });
+  void init() {
+    Future.delayed(
+        const Duration(milliseconds: 200), nameFocusNode.requestFocus);
   }
 
-  disposeModel() {
+  void disposeModel() {
     nameFocusNode.dispose();
   }
 }

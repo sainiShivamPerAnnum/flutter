@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 import 'dart:io';
 import 'dart:typed_data';
@@ -31,45 +32,48 @@ final GlobalKey ticketImageKey = GlobalKey();
 
 class ScratchCardService
     extends PropertyChangeNotifier<ScratchCardServiceProperties> {
-  final CustomLogger? _logger = locator<CustomLogger>();
+  final CustomLogger _logger = locator<CustomLogger>();
   final ScratchCardRepository _gtRepo = locator<ScratchCardRepository>();
-  final UserService? _userService = locator<UserService>();
-  // final PaytmService? _paytmService = locator<PaytmService>();
-  final InternalOpsService? _internalOpsService = locator<InternalOpsService>();
-  final AppFlyerAnalytics? _appFlyer = locator<AppFlyerAnalytics>();
+  final UserService _userService = locator<UserService>();
+  final InternalOpsService _internalOpsService = locator<InternalOpsService>();
+  final AppFlyerAnalytics _appFlyer = locator<AppFlyerAnalytics>();
   S locale = locator<S>();
 
-  //ALL GOLDEN TICKETS VIEW FIELDS -- START
   bool isLastPageForScratchCards = false;
   bool _isFetchingScratchCards = false;
   String? scratchCardsListLastTicketId;
-  bool get isFetchingScratchCards => this._isFetchingScratchCards;
+
+  bool get isFetchingScratchCards => _isFetchingScratchCards;
+
   set isFetchingScratchCards(bool val) {
-    this._isFetchingScratchCards = val;
-    notifyListeners(ScratchCardServiceProperties.AllScratchCards);
+    _isFetchingScratchCards = val;
+    notifyListeners();
   }
 
   List<ScratchCard> _allScratchCards = [];
-  List<ScratchCard> get allScratchCards => this._allScratchCards;
+  List<ScratchCard> get allScratchCards => _allScratchCards;
   set allScratchCards(List<ScratchCard> value) {
-    this._allScratchCards = value;
-    // notifyListeners(ScratchCardServiceProperties.AllScratchCards);
+    _allScratchCards = value;
   }
 
   void addScratchCards(List<ScratchCard>? value) {
-    if (value != null) this._allScratchCards.addAll(value);
-    // notifyListeners(ScratchCardServiceProperties.AllScratchCards);
+    if (value != null) _allScratchCards.addAll(value);
   }
 
-  //ALL GOLDEN TICKETS VIEW FIELDS -- START
+  int _unscratchedMilestoneScratchCardCount = 0;
 
-  // static bool hasScratchCard = false;
+  int get unscratchedMilestoneScratchCardCount =>
+      _unscratchedMilestoneScratchCardCount;
+  set unscratchedMilestoneScratchCardCount(int value) {
+    _unscratchedMilestoneScratchCardCount = value;
+    notifyListeners();
+  }
+
   int _unscratchedTicketsCount = 0;
-  int get unscratchedTicketsCount => this._unscratchedTicketsCount;
-
+  int get unscratchedTicketsCount => _unscratchedTicketsCount;
   set unscratchedTicketsCount(int value) {
-    this._unscratchedTicketsCount = value;
-    // notifyListeners(ScratchCardServiceProperties.UnscratchedCount);
+    _unscratchedTicketsCount = value;
+    notifyListeners();
   }
 
   static String? scratchCardId;
@@ -79,31 +83,33 @@ class ScratchCardService
   static List<String>? scratchCardsList;
   static String previousPrizeSubtype = '';
 
-  static dump() {
+  dump() {
     scratchCardId = null;
     gameEndMsgText = null;
     currentGT = null;
     lastScratchCardId = null;
     previousPrizeSubtype = '';
+    _unscratchedTicketsCount = 0;
+    _unscratchedMilestoneScratchCardCount = 0;
   }
 
   List<ScratchCard>? _unscratchedScratchCards;
 
   List<ScratchCard> get unscratchedScratchCards =>
-      this._unscratchedScratchCards ?? [];
+      _unscratchedScratchCards ?? [];
 
   set unscratchedScratchCards(List<ScratchCard> value) {
-    this._unscratchedScratchCards = value;
+    _unscratchedScratchCards = value;
     notifyListeners();
     log("Unscratched ScratchCard list updated");
   }
 
   List<ScratchCard>? _activeScratchCards;
 
-  List<ScratchCard> get activeScratchCards => this._activeScratchCards ?? [];
+  List<ScratchCard> get activeScratchCards => _activeScratchCards ?? [];
 
   set activeScratchCards(List<ScratchCard>? value) {
-    this._activeScratchCards = value;
+    _activeScratchCards = value;
     notifyListeners();
     log("ScratchCard list updated");
   }
@@ -162,27 +168,30 @@ class ScratchCardService
     return false;
   }
 
-Future<void>  showInstantScratchCardView(
+  Future<void> showInstantScratchCardView(
       {required GTSOURCE source,
       String? title,
       double? amount = 0,
       bool onJourney = false,
-      bool showAutoSavePrompt = false})async {
+      bool showRatingDialog = true,
+      bool showAutoSavePrompt = false}) async {
     if (AppState.isWebGameLInProgress || AppState.isWebGamePInProgress) return;
     if (currentGT != null) {
       log("previousPrizeSubtype $previousPrizeSubtype  && current gt prizeSubtype: ${ScratchCardService.currentGT!.prizeSubtype} ");
       if (previousPrizeSubtype == ScratchCardService.currentGT!.prizeSubtype &&
           !onJourney) return;
-     await  Future.delayed(Duration(milliseconds: 200), () async{
+      await Future.delayed(const Duration(milliseconds: 200), () async {
         // if (source != GTSOURCE.deposit)
         AppState.screenStack.add(ScreenItem.dialog);
-       await  Navigator.of(AppState.delegate!.navigatorKey.currentContext!).push(
+        await Navigator.of(AppState.delegate!.navigatorKey.currentContext!)
+            .push(
           PageRouteBuilder(
             opaque: false,
             pageBuilder: (BuildContext context, _, __) => GTInstantView(
               source: source,
               title: title,
               amount: amount,
+              showRatingDialog: showRatingDialog,
               showAutosavePrompt: showAutoSavePrompt,
             ),
           ),
@@ -191,11 +200,11 @@ Future<void>  showInstantScratchCardView(
     }
   }
 
-  showMultipleScratchCardsView() {
+  void showMultipleScratchCardsView() {
     if (scratchCardsList != null && scratchCardsList!.isNotEmpty) {
       if (scratchCardsList!.length == 1) {
         scratchCardId = scratchCardsList![0];
-        return fetchAndVerifyScratchCardByID()
+        fetchAndVerifyScratchCardByID()
             .then((_) => showInstantScratchCardView(source: GTSOURCE.prize));
       } else {
         AppState.screenStack.add(ScreenItem.dialog);
@@ -203,7 +212,7 @@ Future<void>  showInstantScratchCardView(
           PageRouteBuilder(
             opaque: false,
             pageBuilder: (BuildContext context, _, __) =>
-                MultipleScratchCardsView(),
+                const MultipleScratchCardsView(),
           ),
         );
       }
@@ -212,10 +221,17 @@ Future<void>  showInstantScratchCardView(
 
   Future<void> updateUnscratchedGTCount() async {
     final res = await _gtRepo.getGTByPrizeType("UNSCRATCHED");
-    if (res.isSuccess())
+    if (res.isSuccess()) {
       unscratchedTicketsCount = res.model!.length;
-    else
+      unscratchedMilestoneScratchCardCount = 0;
+      res.model!.forEach((sc) {
+        if (sc.prizeSubtype!.toLowerCase().contains("_mlst_")) {
+          unscratchedMilestoneScratchCardCount += 1;
+        }
+      });
+    } else {
       unscratchedTicketsCount = 0;
+    }
   }
 
   //HELPERS
@@ -235,12 +251,13 @@ Future<void>  showInstantScratchCardView(
         final link = await _appFlyer!.inviteLink();
         if (link['status'] == 'success') {
           url = link['payload']['userInviteUrl'];
-          if (url == null) url = link['payload']['userInviteURL'];
+          url ??= link['payload']['userInviteURL'];
         }
 
-        if (url != null)
+        if (url != null) {
           caputure(
               'Hey, I won ${ticket.rewardArr!.length > 1 ? "these prizes" : "this prize"} on Fello! \nLet\'s save and play together: $url');
+        }
       } catch (e) {
         _logger!.e(e.toString());
         BaseUtil.showNegativeAlert(
@@ -250,11 +267,11 @@ Future<void>  showInstantScratchCardView(
   }
 
   caputure(String shareMessage) {
-    Future.delayed(Duration(seconds: 1), () {
+    Future.delayed(const Duration(seconds: 1), () {
       captureCard().then((image) {
-        if (image != null)
+        if (image != null) {
           shareCard(image, shareMessage);
-        else {
+        } else {
           try {
             if (Platform.isIOS) {
               Share.share(shareMessage).catchError((onError) {
@@ -317,9 +334,9 @@ Future<void>  showInstantScratchCardView(
       if (Platform.isAndroid) {
         final directory = (await getExternalStorageDirectory())!.path;
         String dt = DateTime.now().toString();
-        File imgg = new File('$directory/fello-reward-$dt.png');
+        File imgg = File('$directory/fello-reward-$dt.png');
         imgg.writeAsBytesSync(image);
-        Share.shareFiles(
+        unawaited(Share.shareFiles(
           [imgg.path],
           subject: 'Fello Rewards',
           text: shareMessage ?? "",
@@ -332,7 +349,7 @@ Future<void>  showInstantScratchCardView(
                 FailType.FelloRewardCardShareFailed, errorDetails);
           }
           print(onError);
-        });
+        }));
       } else if (Platform.isIOS) {
         String dt = DateTime.now().toString();
 
@@ -340,12 +357,12 @@ Future<void>  showInstantScratchCardView(
         if (!await directory.exists()) await directory.create(recursive: true);
 
         final File imgg =
-            await new File('${directory.path}/fello-reward-$dt.jpg').create();
+            await File('${directory.path}/fello-reward-$dt.jpg').create();
         imgg.writeAsBytesSync(image);
 
         _logger!.d("Image file created and sharing, ${imgg.path}");
 
-        Share.shareFiles(
+        unawaited(Share.shareFiles(
           [imgg.path],
           subject: 'Fello Rewards',
           text: shareMessage ?? "",
@@ -358,7 +375,7 @@ Future<void>  showInstantScratchCardView(
                 FailType.FelloRewardCardShareFailed, errorDetails);
           }
           print(onError);
-        });
+        }));
       }
     } catch (e) {
       // backButtonDispatcher.didPopRoute();
@@ -367,43 +384,6 @@ Future<void>  showInstantScratchCardView(
           locale.taskFailed, locale.UnableToSharePicture);
     }
   }
-
-  // showAutosavePrompt() {
-  //   if (!(AppConfig.getValue(AppConfigKey.autosaveActive) as bool)) return;
-  //   BaseUtil.openDialog(
-  //     addToScreenStack: true,
-  //     isBarrierDismissible: false,
-  //     hapticVibrate: true,
-  //     content: FelloInfoDialog(
-  //       title: locale.savingsOnAuto,
-  //       subtitle: locale.savingsOnAutoSubtitle,
-  //       png: Assets.preAutosave,
-  //       action: AppPositiveBtn(
-  //         btnText: locale.btnSetupAutoSave,
-  //         onPressed: () {
-  //           AppState.backButtonDispatcher!.didPopRoute();
-  //           openAutosave();
-  //         },
-  //       ),
-  //     ),
-  //   );
-  // }
-
-  // openAutosave() {
-  //   if (!(AppConfig.getValue(AppConfigKey.autosaveActive) as bool)) return;
-
-  //   if (_paytmService!.activeSubscription != null) {
-  //     AppState.delegate!.appState.currentAction = PageAction(
-  //         page: AutosaveProcessViewPageConfig,
-  //         widget: AutosaveProcessView(page: 2),
-  //         state: PageState.addWidget);
-  //   } else {
-  //     AppState.delegate!.appState.currentAction = PageAction(
-  //       page: AutosaveDetailsViewPageConfig,
-  //       state: PageState.addPage,
-  //     );
-  //   }
-  // }
 
   Future<void> fetchScratchCards({bool more = false}) async {
     try {
@@ -426,11 +406,11 @@ Future<void>  showInstantScratchCardView(
       scratchCardsListLastTicketId = allScratchCards.last.gtId;
       isFetchingScratchCards = false;
     } catch (e) {
-      locator<InternalOpsService>().logFailure(
+      unawaited(locator<InternalOpsService>().logFailure(
         _userService!.baseUser!.uid,
         FailType.ScratchCardListFailed,
         {'message': "Scratch Card data fetch failed"},
-      );
+      ));
       allScratchCards = [];
       isFetchingScratchCards = false;
     }
@@ -438,23 +418,23 @@ Future<void>  showInstantScratchCardView(
 
   List<ScratchCard> arrangeScratchCards() {
     List<ScratchCard> arrangedScratchCardList = [];
-    List<ScratchCard> temptickets = allScratchCards;
-    temptickets
+    List<ScratchCard> tempTickets = allScratchCards;
+    tempTickets
         .sort((a, b) => b.timestamp!.seconds.compareTo(a.timestamp!.seconds));
-    temptickets.forEach((e) {
+    for (final e in tempTickets) {
       if (e.redeemedTimestamp == null ||
           e.redeemedTimestamp == TimestampModel(nanoseconds: 0, seconds: 0)) {
         arrangedScratchCardList.add(e);
       }
-    });
-    temptickets.forEach((e) {
+    }
+    for (final e in tempTickets) {
       if ((e.redeemedTimestamp != null &&
               e.redeemedTimestamp !=
                   TimestampModel(nanoseconds: 0, seconds: 0)) &&
           e.isRewarding!) {
         arrangedScratchCardList.add(e);
       }
-    });
+    }
     return arrangedScratchCardList;
     // CODE FOR TICKET DISTINCTION - USE IF REQUIRED
     // final ids = Set();
@@ -462,11 +442,11 @@ Future<void>  showInstantScratchCardView(
     // arrangedScratchCardList = ids.toList();
   }
 
-  refreshTickets({required String prizeSubtype}) {
+  void refreshTickets({required String gtId}) {
     allScratchCards
-        .firstWhere((ticket) => ticket.prizeSubtype == prizeSubtype)
+        .firstWhere((ticket) => ticket.gtId == gtId)
         .redeemedTimestamp = TimestampModel.currentTimeStamp();
     allScratchCards = arrangeScratchCards();
-    notifyListeners(ScratchCardServiceProperties.AllScratchCards);
+    notifyListeners();
   }
 }

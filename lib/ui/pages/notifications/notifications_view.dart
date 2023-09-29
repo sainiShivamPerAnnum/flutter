@@ -6,7 +6,6 @@ import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/util/date_helper.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
-
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -15,6 +14,8 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class NotificationsPage extends StatelessWidget {
+  const NotificationsPage({super.key});
+
   @override
   Widget build(BuildContext context) {
     final locale = locator<S>();
@@ -36,7 +37,7 @@ class NotificationsPage extends StatelessWidget {
             onPressed: () {
               AppState.backButtonDispatcher!.didPopRoute();
             },
-            icon: Icon(
+            icon: const Icon(
               Icons.arrow_back_ios,
               color: Colors.white,
             ),
@@ -46,9 +47,9 @@ class NotificationsPage extends StatelessWidget {
           children: [
             Expanded(
               child: Container(
-                decoration: BoxDecoration(),
+                decoration: const BoxDecoration(),
                 child: model.state == ViewState.Busy
-                    ? Center(child: FullScreenLoader())
+                    ? const Center(child: FullScreenLoader())
                     : Container(
                         decoration: BoxDecoration(
                           borderRadius: BorderRadius.only(
@@ -58,7 +59,7 @@ class NotificationsPage extends StatelessWidget {
                           color: UiConstants.kBackgroundColor,
                         ),
                         child: ListView.builder(
-                          physics: BouncingScrollPhysics(),
+                          physics: const BouncingScrollPhysics(),
                           controller: model.scrollController,
                           padding: EdgeInsets.zero,
                           itemCount: model.notifications?.length ?? 0,
@@ -76,7 +77,9 @@ class NotificationsPage extends StatelessWidget {
                               }
                             },
                             child: Container(
-                              color: model.notifications![index].isHighlighted!
+                              color: model.notifications![index]
+                                          .isHighlighted ??
+                                      false
                                   ? UiConstants.primaryLight.withOpacity(0.3)
                                   : UiConstants.kBackgroundColor,
                               padding: EdgeInsets.fromLTRB(
@@ -132,14 +135,9 @@ class NotificationsPage extends StatelessWidget {
                                                         SizeConfig.padding16),
                                                 Text(
                                                   DateHelper.timeAgoSinceDate(
-                                                    DateTime.fromMillisecondsSinceEpoch(model
-                                                                .notifications![
-                                                                    index]
-                                                                .createdTime!
-                                                                .seconds *
-                                                            1000)
-                                                        .toString(),
-                                                  ),
+                                                      model
+                                                          .notifications![index]
+                                                          .createdTime!),
                                                   style: TextStyles.body4
                                                       .colour(UiConstants
                                                           .kFAQsAnswerColor)
@@ -173,7 +171,7 @@ class NotificationsPage extends StatelessWidget {
                                           height: 0.2,
                                           color: Colors.white.withOpacity(0.7),
                                         )
-                                      : SizedBox.shrink(),
+                                      : const SizedBox.shrink(),
                                 ],
                               ),
                             ),

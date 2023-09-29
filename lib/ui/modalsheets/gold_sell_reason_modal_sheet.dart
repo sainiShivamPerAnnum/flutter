@@ -12,7 +12,7 @@ import 'package:flutter/material.dart';
 class SellingReasonBottomSheet extends StatefulWidget {
   final InvestmentType investmentType;
 
-  SellingReasonBottomSheet({Key? key, required this.investmentType})
+  const SellingReasonBottomSheet({Key? key, required this.investmentType})
       : super(key: key);
 
   @override
@@ -23,7 +23,7 @@ class SellingReasonBottomSheet extends StatefulWidget {
 class _SellingReasonBottomSheetState extends State<SellingReasonBottomSheet> {
   S locale = locator<S>();
 
-  List<String> _sellingReasons = [];
+  final List<String> _sellingReasons = [];
 
   @override
   void initState() {
@@ -38,7 +38,7 @@ class _SellingReasonBottomSheetState extends State<SellingReasonBottomSheet> {
 
   String selectedReasonForSelling = '';
 
-  final AnalyticsService? _analyticsService = locator<AnalyticsService>();
+  final AnalyticsService _analyticsService = locator<AnalyticsService>();
 
   @override
   Widget build(BuildContext context) {

@@ -71,7 +71,7 @@ abstract class TimerUtil<T extends StatefulWidget> extends State<T> {
   void closeTimer() {
     _timer?.cancel();
     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
-      setState(() {});
+      if (mounted) setState(() {});
     });
   }
 }

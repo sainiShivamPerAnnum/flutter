@@ -1,7 +1,6 @@
 // GENERATED CODE - DO NOT MODIFY BY HAND
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
-
 import 'intl/messages_all.dart';
 
 // **************************************************************************
@@ -203,10 +202,10 @@ class S {
     );
   }
 
-  /// `You're one step away from 10% returns`
+  /// `You're one step away from 12% returns`
   String get obEnterDetailsTitle {
     return Intl.message(
-      'You\'re one step away from 10% returns',
+      'You\'re one step away from 12% returns',
       name: 'obEnterDetailsTitle',
       desc: '',
       args: [],
@@ -363,10 +362,10 @@ class S {
     );
   }
 
-  /// `By proceeding, you agree that you are 18 years and older.`
+  /// `By proceeding, you agree you are 18 years or older and do not reside in Tamil Nadu.`
   String get obIsOlder {
     return Intl.message(
-      'By proceeding, you agree that you are 18 years and older.',
+      'By proceeding, you agree you are 18 years or older and do not reside in Tamil Nadu.',
       name: 'obIsOlder',
       desc: '',
       args: [],
@@ -3609,7 +3608,7 @@ class S {
     );
   }
 
-  /// `Upload your PAN Card`
+  /// `Step 1: Upload your PAN Card`
   String get kycPanUpload {
     return Intl.message(
       'Step 1: Upload your PAN Card',
@@ -6333,10 +6332,10 @@ class S {
 
   // skipped getter for the '----------------------------------------' key
 
-  /// `Fin-gyan`
+  /// `Fin-gyan by Fello`
   String get blogsTitle {
     return Intl.message(
-      'Fin-gyan',
+      'Fin-gyan by Fello',
       name: 'blogsTitle',
       desc: '',
       args: [],

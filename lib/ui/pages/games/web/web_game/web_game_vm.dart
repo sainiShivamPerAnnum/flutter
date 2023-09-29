@@ -3,7 +3,6 @@ import 'dart:io';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/fcm_commands_constants.dart';
 import 'package:felloapp/core/enums/cache_type_enum.dart';
-import 'package:felloapp/core/model/flc_pregame_model.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/repository/user_stats_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
@@ -17,7 +16,6 @@ import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/score_reject_dialog.dart';
 import 'package:felloapp/ui/modalsheets/want_more_tickets_modal_sheet.dart';
 import 'package:felloapp/ui/pages/rewards/instant_scratch_card/gt_instant_view.dart';
-import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -33,7 +31,7 @@ class WebGameViewModel extends BaseViewModel {
   final CustomLogger? _logger = locator<CustomLogger>();
   final LeaderboardService? _lbService = locator<LeaderboardService>();
   final UserRepository? _userRepo = locator<UserRepository>();
-  final UserCoinService? _userCoinService = locator<UserCoinService>();
+  final UserCoinService _userCoinService = locator<UserCoinService>();
   final AnalyticsService? _analyticsService = locator<AnalyticsService>();
   final JourneyService? _journeyService = locator<JourneyService>();
   S locale = locator<S>();
@@ -64,7 +62,7 @@ class WebGameViewModel extends BaseViewModel {
           value: true,
           type: CacheType.bool);
 
-      Future.delayed(Duration(seconds: 1), () {
+      Future.delayed(const Duration(seconds: 1), () {
         BaseUtil.showNegativeAlert(
           locale.gameLoading,
           locale.gameLoadingSubTitle,
@@ -80,7 +78,7 @@ class WebGameViewModel extends BaseViewModel {
       AppState.isWebGameLInProgress = false;
       AppState.isWebGamePInProgress = false;
       AppState.backButtonDispatcher!.didPopRoute();
-      Future.delayed(Duration(milliseconds: 700), () async {
+      Future.delayed(const Duration(milliseconds: 700), () async {
         BaseUtil.openModalBottomSheet(
           addToScreenStack: true,
           backgroundColor: UiConstants.gameCardColor,
@@ -97,7 +95,7 @@ class WebGameViewModel extends BaseViewModel {
     }
   }
 
-  handleGameRoundEnd(Map<String, dynamic> data) {
+  bool handleGameRoundEnd(Map<String, dynamic> data) {
     _logger!.d(
         "round end at  ${DateFormat('yyyy-MM-dd - hh:mm a').format(DateTime.now())}");
 
@@ -120,6 +118,7 @@ class WebGameViewModel extends BaseViewModel {
           data[FcmCommands.GAME_END_MESSAGE_KEY].toString();
     }
     updateFlcBalance();
+    return true;
     // if (data["game_type"] != null)
     //   _lbService!.fetchWebGameLeaderBoard(game: data["game_type"]);
   }
@@ -133,7 +132,7 @@ class WebGameViewModel extends BaseViewModel {
     if (ScratchCardService.gameEndMsgText != null &&
         ScratchCardService.gameEndMsgText!.isNotEmpty) {
       _logger!.d("Showing game end message");
-      Future.delayed(duration ?? Duration(milliseconds: 500), () {
+      Future.delayed(duration ?? const Duration(milliseconds: 500), () {
         BaseUtil.openDialog(
           addToScreenStack: true,
           isBarrierDismissible: false,
@@ -154,11 +153,6 @@ class WebGameViewModel extends BaseViewModel {
 
   //helper
   updateFlcBalance() async {
-    ApiResponse<FlcModel> _flcResponse = await _userRepo!.getCoinBalance();
-    if (_flcResponse.model!.flcBalance != null) {
-      _userCoinService!.setFlcBalance(_flcResponse.model!.flcBalance);
-    } else {
-      _logger!.d("Flc balance is null");
-    }
+    await _userCoinService.getUserCoinBalance();
   }
 }

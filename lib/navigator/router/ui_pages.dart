@@ -36,7 +36,7 @@ const String KycDetailsPath = 'kycDetails';
 const String BankDetailsPath = 'bankDetails';
 const String AugmontGoldSellPath = '/augSell';
 const String AugmontGoldDetailsPath = '/augDetails';
-const String LendboxDetailsPath = '/lendboxDetails';
+const String FloPremiumDetailsPath = '/floDetailsView';
 const String ReferralDetailsPath = '/referralDetails';
 const String ReferralHistoryPath = '/referralHistory';
 const String MyWinningsPath = '/myWinnings';
@@ -79,7 +79,12 @@ const String TExistingUserViewPath = '/texistingUserPath';
 const String TNewUserViewPath = '/tnewUserViewPath';
 const String TransactionDetailsPath = '/transactionDetailsPage';
 const String AssetViewPath = '/assetViewSection';
+const String LastWeekOverviewPath = '/lastWeekOverview';
+const String AccountsPath = "/accountsViewPath";
+const String PlayViewPath = "/playViewPath";
 
+const String YoutubePlayerViewPath = "/youtubePlayerViewPath";
+const String EarnMoreReturnsViewPath = "/earnMoreReturnsViewPath";
 //POWER PLAY PATHS
 const String PowerPlayPath = '/powerPlayPath';
 const String PowerPlayLeaderBoardPath = '/powerPlayLeaderBoardPath';
@@ -87,6 +92,19 @@ const String PowerPlayHowItWorksPath = '/powerPlayHowItWorksPath';
 const String FppCompletedMatchDetailsPath = "fppCompletedMatchDetailsPath";
 const String PowerPlayFTUXPath = '/powerPlayFTUXPath';
 const String PowerPlaySeasonLeaderboardPath = "powerplaySeasonLeaderboardPath";
+const String LendboxBuyViewPath = "/LendboxBuyViewPath";
+const String AssetSelectionViewPath = "/assetSelectionViewPath";
+const String QuizWebViewPath = "/quizWebViewPath";
+const String BalloonLottieScreenPath = "/bolloonLottieScreenPath";
+const String MaturityWithdrawalSuccessViewPath =
+    "/maturityWithdrawalSuccessViewPath";
+
+//GoldPro
+const String GoldProDetailsPath = "/goldProDetailsPath";
+const String GoldProBuyViewPath = "/goldProBuyPath";
+const String GoldProSellViewPath = "/goldProSellView";
+const String GoldProTxnsViewPath = "/goldProTxnsView";
+const String GoldProTxnsDetailsViewPath = "goldProTxnsDetailsView";
 
 enum Pages {
   Splash,
@@ -126,7 +144,7 @@ enum Pages {
   BankDetails,
   AugGoldSell,
   AugGoldDetails,
-  LendboxDetails,
+  FloPremiumDetails,
   ReferralDetails,
   ReferralHistory,
   MyWinnings,
@@ -164,7 +182,11 @@ enum Pages {
   WebView,
   SettingsView,
   TransactionDetailsPage,
-
+  LastWeekOverview,
+  AccountsView,
+  PlayView,
+  YoutubePlayerView,
+  EarnMoreReturnsView,
   //POWER PLAY
   PowerPlayHome,
   PowerPlayLeaderBoard,
@@ -172,6 +194,17 @@ enum Pages {
   FppCompletedMatchDetails,
   PowerPlayFTUX,
   PowerPlaySeasonLeaderboard,
+  LendboxBuyView,
+  AssetSelectionView,
+  QuizWebView,
+  BalloonLottieScreen,
+  MaturityWithdrawalSuccessView,
+  //GOLDPRO
+  GoldProDetailsView,
+  GoldProBuyView,
+  GoldProSellView,
+  GoldProTxnsView,
+  GoldProTxnsDetailsView,
 }
 
 class PageConfiguration {
@@ -464,10 +497,10 @@ PageConfiguration AugmontGoldDetailsPageConfig = PageConfiguration(
   name: 'About Digital Gold Screen',
 );
 
-PageConfiguration LendboxDetailsPageConfig = PageConfiguration(
+PageConfiguration FloPremiumDetailsPageConfig = PageConfiguration(
   key: 'lendboxDetails',
-  path: LendboxDetailsPath,
-  uiPage: Pages.LendboxDetails,
+  path: FloPremiumDetailsPath,
+  uiPage: Pages.FloPremiumDetails,
 );
 
 PageConfiguration ReferralDetailsPageConfig = PageConfiguration(
@@ -730,3 +763,93 @@ PageConfiguration PowerPlaySeasonLeaderboardDetailsConfig = PageConfiguration(
     path: PowerPlaySeasonLeaderboardPath,
     uiPage: Pages.PowerPlaySeasonLeaderboard,
     name: "PowerPlay Season Leaderboard Screen");
+
+PageConfiguration LastWeekOverviewConfig = PageConfiguration(
+    key: 'LastWeekOverviewPath',
+    path: LastWeekOverviewPath,
+    uiPage: Pages.LastWeekOverview,
+    name: "Last Week Overview Screen");
+
+PageConfiguration AccountsViewConfig = PageConfiguration(
+    key: 'AccountsViewPath',
+    path: AccountsPath,
+    uiPage: Pages.AccountsView,
+    name: "Accounts View Screen");
+
+PageConfiguration PlayViewConfig = PageConfiguration(
+    key: 'PlayViewConfig',
+    path: PlayViewPath,
+    uiPage: Pages.PlayView,
+    name: "Play View Screen");
+
+PageConfiguration YoutubePlayerViewConfig = PageConfiguration(
+    key: 'YoutubePlayerPath',
+    path: YoutubePlayerViewPath,
+    uiPage: Pages.YoutubePlayerView,
+    name: "Youtube Player View Screen");
+
+PageConfiguration EarnMoreReturnsViewPageConfig = PageConfiguration(
+    key: 'EarnMoreReturnsViewPath',
+    path: EarnMoreReturnsViewPath,
+    uiPage: Pages.EarnMoreReturnsView,
+    name: "Earn more rewards view screen");
+
+PageConfiguration LendboxBuyViewConfig = PageConfiguration(
+    key: 'LendboxBuyViewPath',
+    path: LendboxBuyViewPath,
+    uiPage: Pages.LendboxBuyView,
+    name: "Lendbox Buy View Screen");
+
+PageConfiguration AssetSelectionViewConfig = PageConfiguration(
+    key: 'AssetSelectionViewPath',
+    path: AssetSelectionViewPath,
+    uiPage: Pages.AssetSelectionView,
+    name: "Asset Selection View Screen");
+
+PageConfiguration QuizWebViewConfig = PageConfiguration(
+    key: 'QuizWebViewPath',
+    path: QuizWebViewPath,
+    uiPage: Pages.QuizWebView,
+    name: "Quiz Web View Screen");
+
+PageConfiguration BalloonLottieScreenViewConfig = PageConfiguration(
+    key: 'BalloonLottieScreenViewPath',
+    path: BalloonLottieScreenPath,
+    uiPage: Pages.BalloonLottieScreen,
+    name: "Balloon Lottie Screen View Screen");
+
+PageConfiguration GoldProDetailsViewPageConfig = PageConfiguration(
+    key: 'GoldProDetailsViewPath',
+    path: GoldProDetailsPath,
+    uiPage: Pages.GoldProDetailsView,
+    name: "Gold X Details View Screen");
+
+PageConfiguration GoldProBuyViewPageConfig = PageConfiguration(
+    key: 'GoldProBuyViewPath',
+    path: GoldProBuyViewPath,
+    uiPage: Pages.GoldProBuyView,
+    name: "Gold X Buy View Screen");
+
+PageConfiguration GoldProSellViewPageConfig = PageConfiguration(
+    key: 'GoldProSellViewPath',
+    path: GoldProSellViewPath,
+    uiPage: Pages.GoldProSellView,
+    name: "Gold X Sell View Screen");
+
+PageConfiguration GoldProTxnsViewPageConfig = PageConfiguration(
+    key: 'GoldProTxnsViewPath',
+    path: GoldProTxnsViewPath,
+    uiPage: Pages.GoldProTxnsView,
+    name: "Gold X Txns View Screen");
+
+PageConfiguration GoldProTxnsDetailsViewPageConfig = PageConfiguration(
+    key: 'GoldProTxnsDetailsViewPath',
+    path: GoldProTxnsDetailsViewPath,
+    uiPage: Pages.GoldProTxnsDetailsView,
+    name: "Gold X Txns Details View Screen");
+
+PageConfiguration MaturityWithdrawalSuccessViewPageConfig = PageConfiguration(
+    key: 'MaturityWithdrawalSuccessViewPath',
+    path: MaturityWithdrawalSuccessViewPath,
+    uiPage: Pages.MaturityWithdrawalSuccessView,
+    name: "Maturity Withdrawal Success View Screen");
