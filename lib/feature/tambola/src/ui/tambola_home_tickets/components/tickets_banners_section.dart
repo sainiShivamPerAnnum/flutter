@@ -75,6 +75,21 @@ class _TambolaRewardLottieStripState extends State<TambolaRewardLottieStrip> {
     }
   }
 
+  String analyticsEvent(int index) {
+    switch (index) {
+      case 0:
+        return "get tickets";
+      case 1:
+        return "tutorial";
+      case 2:
+        return "leaderboard";
+      case 3:
+        return "faqs";
+      default:
+        return "qwertyuiop";
+    }
+  }
+
   late final PageController _controller = PageController(initialPage: 0);
 
   Timer? _timer;
@@ -132,6 +147,7 @@ class _TambolaRewardLottieStripState extends State<TambolaRewardLottieStrip> {
                   eventName: AnalyticsEvents.tambolaCarousel,
                   properties: {
                     'order': index + 1,
+                    'deeplink': analyticsEvent(index)
                   });
               onTap(index);
             },

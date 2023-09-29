@@ -1,4 +1,6 @@
 // ignore_for_file: public_member_api_docs, sort_constructors_first
+import 'package:felloapp/core/enums/app_config_keys.dart';
+import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/helper_model.dart';
 import 'package:felloapp/feature/tambola/src/models/tambola_ticket_model.dart';
 
@@ -93,28 +95,17 @@ class TicketStatsModel {
   }
 
   static List<TicketStatsModel> parseTicketsStats(Map<String, dynamic> stats) {
-    return [
-      TicketStatsModel(
-        category: "category_1",
-        displayName: "5-7",
-        count: stats["category_1"] ?? 0,
+    int statsLength = stats.length;
+    Map<String, dynamic> categoriesMap =
+        AppConfig.getValue(AppConfigKey.ticketsCategories);
+    return List.generate(
+      statsLength,
+      (i) => TicketStatsModel(
+        category: "category_${i + 1}",
+        displayName: categoriesMap['category_${i + 1}'] ?? "5-7",
+        count: stats["category_${i + 1}"] ?? 0,
       ),
-      TicketStatsModel(
-        category: "category_2",
-        displayName: "8-10",
-        count: stats["category_2"] ?? 0,
-      ),
-      TicketStatsModel(
-        category: "category_3",
-        displayName: "11-13",
-        count: stats["category_3"] ?? 0,
-      ),
-      TicketStatsModel(
-        category: "category_4",
-        displayName: "14-15",
-        count: stats["category_4"] ?? 0,
-      )
-    ];
+    );
   }
 
   static List<TicketStatsModel> getBaseTicketsStats() {

@@ -90,6 +90,9 @@ class AssetSelectionPage extends StatelessWidget {
                                       Haptic.vibrate();
                                       AppState.backButtonDispatcher!
                                           .didPopRoute();
+                                      locator<AnalyticsService>().track(
+                                          eventName:
+                                              AnalyticsEvents.saveLaterTapped);
                                     },
                                     child: Text(
                                       "SAVE LATER >>",

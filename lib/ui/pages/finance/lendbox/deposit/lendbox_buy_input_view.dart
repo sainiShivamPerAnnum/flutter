@@ -25,7 +25,6 @@ import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/show_case_key.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -43,10 +42,10 @@ class LendboxBuyInputView extends StatefulWidget {
   // final String floAssetType;
 
   const LendboxBuyInputView({
+    required this.model,
     Key? key,
     this.amount,
     this.skipMl,
-    required this.model,
     // required this.floAssetType,
   }) : super(key: key);
 
@@ -91,7 +90,7 @@ class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
 
           if (!widget.model.isBuyInProgress) {
             FocusScope.of(context).unfocus();
-            widget.model.initiateBuy();
+            await widget.model.initiateBuy();
           }
         }
       }
@@ -179,15 +178,14 @@ class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
                             isEnabled: !widget.model.isBuyInProgress ||
                                 !widget.model.forcedBuy,
                             maxAmount: widget.model.maxAmount,
-                            maxAmountMsg: widget.model.floAssetType ==
-                                    Constants.ASSET_TYPE_FLO_FIXED_6
-                                ? 'Upto ₹ 99,999 can be invested at one go'
-                                : locale.upto50000,
+                            maxAmountMsg: locale.maxAmountMessage(
+                              widget.model.maxAmount,
+                            ),
                             minAmount: widget.model.minAmount.toDouble(),
                             minAmountMsg:
                                 "Minimum purchase amount is ₹ ${widget.model.minAmount.toInt()}",
                             notice: widget.model.buyNotice,
-                            onAmountChange: (int amount) {},
+                            onAmountChange: (amount) {},
                             bestChipIndex: 2,
                             readOnly: widget.model.readOnly,
                             onTap: () => widget.model.showKeyBoard(),
@@ -307,9 +305,9 @@ class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
 
 class FloBuyNavBar extends StatelessWidget {
   const FloBuyNavBar({
-    super.key,
     required this.model,
     required this.onTap,
+    super.key,
   });
 
   final LendboxBuyViewModel model;
@@ -483,7 +481,7 @@ class FloBuyNavBar extends StatelessWidget {
 }
 
 class MaturityDetailsWidget extends StatelessWidget {
-  const MaturityDetailsWidget({Key? key, required this.model})
+  const MaturityDetailsWidget({required this.model, Key? key})
       : super(key: key);
 
   final LendboxBuyViewModel model;

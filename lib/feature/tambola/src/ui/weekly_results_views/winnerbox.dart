@@ -32,7 +32,7 @@ class WinnerBox extends StatelessWidget {
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
                     Text(
-                      "${winner.matchMap![index].displayName} Matches",
+                      winner.matchMap![index].displayName,
                       style: TextStyles.sourceSansSB.body2.colour(Colors.white),
                     ),
                     Text(
