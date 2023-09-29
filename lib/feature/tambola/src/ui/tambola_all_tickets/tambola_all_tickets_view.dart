@@ -1,4 +1,6 @@
+import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/faqTypes.dart';
+import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/feature/tambola/src/models/daily_pick_model.dart';
 import 'package:felloapp/feature/tambola/src/models/tambola_ticket_model.dart';
 import 'package:felloapp/feature/tambola/src/ui/widgets/ticket/tambola_ticket.dart';
@@ -161,7 +163,13 @@ class SingleTicket extends StatelessWidget {
         children: [
           CustomPaint(
             painter: TicketPainter(
-                borderColor: matchCount >= 5
+                borderColor: matchCount >=
+                        (int.tryParse(AppConfig.getValue(AppConfigKey
+                                    .ticketsCategories)['category_1']
+                                .toString()
+                                .characters
+                                .first) ??
+                            5)
                     ? UiConstants.primaryColor
                     : Colors.transparent),
             child: Container(

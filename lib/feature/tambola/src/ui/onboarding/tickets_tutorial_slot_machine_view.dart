@@ -1,6 +1,8 @@
 import 'dart:math';
 
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/enums/app_config_keys.dart';
+import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/prizes_model.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/feature/tambola/src/ui/animations/dotted_border_animation.dart';
@@ -240,7 +242,7 @@ class _TicketsTutorialsSlotMachineViewState
             duration: const Duration(seconds: 2), curve: Curves.easeOutExpo);
         _controller2.animateToPage(16,
             duration: const Duration(seconds: 3), curve: Curves.easeOutExpo);
-        _controller3.animateToPage(62,
+        _controller3.animateToPage(63,
             duration: const Duration(seconds: 4), curve: Curves.easeOutExpo);
       } else {
         _controller1.animateToPage(78,
@@ -255,8 +257,8 @@ class _TicketsTutorialsSlotMachineViewState
       Future.delayed(const Duration(milliseconds: 3200), () {
         if (spinCount == 0) {
           updateAnimationSpeed(1000);
-          calledDigits.addAll([46, 17, 63]);
-          slotMachineTitle = "3 numbers matched!!";
+          calledDigits.addAll([46, 17, 64]);
+          slotMachineTitle = "2 numbers matched!!";
           subtitle = "Spin to reveal rewards";
           locator<AnalyticsService>()
               .track(eventName: AnalyticsEvents.spin1InTutorial);
@@ -264,7 +266,7 @@ class _TicketsTutorialsSlotMachineViewState
           calledDigits.addAll([79, 4, 20]);
           _dottedLightsController.stop();
           subtitle = "";
-          slotMachineTitle = "Congratulations! 5 Numbers matched";
+          slotMachineTitle = "Congratulations! 4 Numbers matched";
           Future.delayed(const Duration(seconds: 1), () {
             _animationController2.forward();
             slotMachineHeight = SizeConfig.screenWidth! * 0.68;
@@ -517,7 +519,7 @@ class _TicketsTutorialsSlotMachineViewState
                       child: Column(
                         children: [
                           Text(
-                            "5 Numbers Matched",
+                            "4 Numbers Matched",
                             style: TextStyles.sourceSansB.body1
                                 .colour(Colors.white),
                             textAlign: TextAlign.center,
@@ -549,15 +551,35 @@ class _TicketsTutorialsSlotMachineViewState
                                 style: TextStyles.body2.colour(Colors.white54),
                               ),
                               const Spacer(),
-                              Text(
-                                "5-7",
-                                style: TextStyles.rajdhaniB.body1
-                                    .colour(Colors.white),
-                              ),
-                              SizedBox(width: SizeConfig.padding4),
-                              Text(
-                                "Matches",
-                                style: TextStyles.body2.colour(Colors.white54),
+                              RichText(
+                                text: TextSpan(
+                                  text: (AppConfig.getValue(AppConfigKey
+                                                  .ticketsCategories)[
+                                              'category_1'] ??
+                                          "5-7")
+                                      .toString()
+                                      .split(' ')
+                                      .first,
+                                  style: TextStyles.rajdhaniB.body1
+                                      .colour(Colors.white),
+                                  children: [
+                                    WidgetSpan(
+                                      child:
+                                          SizedBox(width: SizeConfig.padding4),
+                                    ),
+                                    TextSpan(
+                                      text: (AppConfig.getValue(AppConfigKey
+                                                      .ticketsCategories)[
+                                                  'category_1'] ??
+                                              "5-7")
+                                          .toString()
+                                          .split(' ')
+                                          .last,
+                                      style: TextStyles.sourceSans.body2
+                                          .colour(Colors.white54),
+                                    ),
+                                  ],
+                                ),
                               ),
                             ]),
                           )
@@ -602,7 +624,7 @@ class _TicketsTutorialsSlotMachineViewState
                           // );
                         },
                         child: Text(
-                          "HOW TO WIN REWARDS",
+                          "PROCEED",
                           style:
                               TextStyles.rajdhaniB.body0.colour(Colors.black),
                         ),
@@ -674,12 +696,12 @@ class WinningTicketWidget extends StatelessWidget {
                         duration: const Duration(seconds: 1),
                         sizeCurve: Curves.easeOutExpo,
                         firstChild: Text(
-                          "5 Matches",
+                          "4 Matches",
                           style: TextStyles.sourceSansB.body3
                               .colour(UiConstants.primaryColor),
                         ),
                         secondChild: Text(
-                          calledDigits.length == 3 ? "3 Matches" : "",
+                          calledDigits.length == 3 ? "2 Matches" : "",
                           style: TextStyles.sourceSansB.body4
                               .colour(UiConstants.primaryColor),
                         ),
@@ -966,7 +988,7 @@ class TicketsRewardCategoriesWidget extends StatelessWidget {
                                 )
                               : const SizedBox(),
                           Text(
-                            "Rewards are distributed every monday among all the Tickets winning in a category",
+                            "Rewards are distributed every Monday among all the Tickets winning in a category",
                             style: TextStyles.body3.colour(Colors.white30),
                             textAlign: TextAlign.center,
                           )
@@ -1049,7 +1071,7 @@ class TicketsRewardCategoriesWidget extends StatelessWidget {
                                     )
                                   : const SizedBox(),
                               Text(
-                                "Rewards are distributed every monday among all the Tickets winning in a category",
+                                "Rewards are distributed every Monday among all the Tickets winning in a category",
                                 style: TextStyles.body3.colour(Colors.white30),
                                 textAlign: TextAlign.center,
                               )

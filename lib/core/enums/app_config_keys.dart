@@ -33,7 +33,10 @@ enum AppConfigKey {
   quiz_config,
   revamped_referrals_config,
   useNewUrlUserOps,
-  specialEffectsOnTxnDetailsView
+  specialEffectsOnTxnDetailsView,
+  ticketsCategories,
+  goldProMinimumInvestment,
+  goldProInvestmentChips,
 }
 
 extension AppConfigKeys on String {
@@ -108,6 +111,12 @@ extension AppConfigKeys on String {
         return AppConfigKey.useNewUrlUserOps;
       case 'specialEffectsOnTxnDetailsView':
         return AppConfigKey.specialEffectsOnTxnDetailsView;
+      case 'ticketsCategories':
+        return AppConfigKey.ticketsCategories;
+      case 'minimumGoldProInvestment':
+        return AppConfigKey.goldProMinimumInvestment;
+      case 'goldProInvestmentChips':
+        return AppConfigKey.goldProInvestmentChips;
       default:
         return AppConfigKey.unknown;
     }

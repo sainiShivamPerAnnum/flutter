@@ -10,6 +10,7 @@ import 'package:felloapp/ui/pages/finance/augmont/gold_buy/widgets/view_breakdow
 import 'package:felloapp/ui/pages/finance/lendbox/deposit/lendbox_buy_vm.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/list_utils.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -24,8 +25,8 @@ class AmountInputView extends StatefulWidget {
   final int bestChipIndex;
   final String? notice;
   final bool isEnabled;
-  final double maxAmount;
-  final double minAmount;
+  final num maxAmount;
+  final num minAmount;
   final String maxAmountMsg;
   final String minAmountMsg;
   final FocusNode focusNode;
@@ -67,25 +68,6 @@ class _AmountInputViewState extends State<AmountInputView> {
 
   List lendboxDetails = AppConfig.getValue(AppConfigKey.lendbox);
 
-  String getString() {
-    switch (widget.model.floAssetType) {
-      case Constants.ASSET_TYPE_FLO_FIXED_6:
-        return lendboxDetails[0]['minAmountText'];
-
-      case Constants.ASSET_TYPE_FLO_FIXED_3:
-        return lendboxDetails[1]['minAmountText'];
-
-      case Constants.ASSET_TYPE_FLO_FELXI:
-        return locator<UserService>()
-                .userSegments
-                .contains(Constants.US_FLO_OLD)
-            ? lendboxDetails[2]['minAmountText']
-            : lendboxDetails[3]['minAmountText'];
-      default:
-        return "";
-    }
-  }
-
   String getSubString() {
     switch (widget.model.floAssetType) {
       case Constants.ASSET_TYPE_FLO_FIXED_6:
@@ -109,6 +91,7 @@ class _AmountInputViewState extends State<AmountInputView> {
   Widget build(BuildContext context) {
     final currentAmt = double.tryParse(widget.amountController!.text) ?? 0;
     final AnalyticsService analyticsService = locator<AnalyticsService>();
+    final s = locator<S>();
     return Column(
       children: [
         Container(
@@ -303,7 +286,7 @@ class _AmountInputViewState extends State<AmountInputView> {
               children: [
                 Padding(
                   padding: EdgeInsets.only(right: SizeConfig.padding20),
-                  child: Text(getString(),
+                  child: Text(s.minAmountLabel(widget.minAmount),
                       style: TextStyles.sourceSans.body3
                           .colour(Colors.white.withOpacity(0.8))),
                 ),

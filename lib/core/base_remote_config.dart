@@ -255,6 +255,14 @@ class BaseRemoteConfig {
     "specialEffectsOnTxnDetailsView": true
   };
 
+  static const Map<String, int> _MINIMUM_GOLDPRO_INVESTMENT = {
+    "minimumGoldProInvestment": 5
+  };
+
+  static const Map<String, List<int>> _GOLDPRO_INVESTMENT_CHIPS = {
+    "goldProInvestmentChips": [5, 10, 15, 20, 25]
+  };
+
   static Map<String, dynamic> DEFAULTS = {
     ..._LOGIN_ASSET_URL,
     ..._DRAW_PICK_TIME,
@@ -328,7 +336,9 @@ class BaseRemoteConfig {
     ..._PAYMENT_BRIEF_VIEW,
     ..._USE_NEW_URL_FOR_USEROPS,
     ..._SPECIAL_EFFECTS_ON_TXN_DETAILS_VIEW,
-    ..._TICKETS_YOUTUBE_VIDEOS
+    ..._TICKETS_YOUTUBE_VIDEOS,
+    ..._MINIMUM_GOLDPRO_INVESTMENT,
+    ..._GOLDPRO_INVESTMENT_CHIPS
   };
 
   static Future<bool> init() async {
@@ -522,6 +532,9 @@ class BaseRemoteConfig {
 
   static bool get SPECIAL_EFFECTS_ON_TXN_DETAILS_VIEW =>
       remoteConfig.getBool(_SPECIAL_EFFECTS_ON_TXN_DETAILS_VIEW.keys.first);
+
+  static int get MINIMUM_GOLDPRO_INVESTMENT =>
+      remoteConfig.getInt(_MINIMUM_GOLDPRO_INVESTMENT.keys.first);
 
   static int get invalidationBefore {
     return remoteConfig.getInt(_CACHE_INVALIDATION.keys.first);

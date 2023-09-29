@@ -155,9 +155,30 @@
   "wantToSell": "Are you sure you want to sell?",
   "creditedToYourLinkedBankAccount": "By continuing, ₹{amount} will be credited to your linked bank account instantly",
   "digitalGoldSubTitle": "99.9% pure | 24K Gold | 100% secure",
-  "upto50000": "Upto ₹ 50,000 can be invested at one go",
-  "minPurchaseText": "Minimum purchase amount is ₹ 10",
-  "minPurchaseText1": "Minimum purchase amount is ₹ 100",
+  "maxAmountMessage": "Upto ₹ {amount} can be invested at one go",
+  "@maxAmountMessage": {
+    "placeholders": {
+      "amount": {
+        "type": "num"
+      }
+    }
+  },
+  "minAmountMessage": "Minimum purchase amount is ₹ {amount} ",
+  "@minAmountMessage": {
+    "placeholders": {
+      "amount": {
+        "type": "num"
+      }
+    }
+  },
+  "minAmountLabel": "Min - ₹{amount}",
+  "@minAmountLabel": {
+    "placeholders": {
+      "amount": {
+        "type": "num"
+      }
+    }
+  },
   "transactionProgress": "Your transaction is in progress",
   "invested": "Invested",
   "bought": "Bought",
@@ -657,7 +678,7 @@
   "-----------------------------------------": "----------------------------",
   "challenges": "Challenges",
   "offers": "Offers",
-  "offersSubtitle":"Personalized offers, just for you",
+  "offersSubtitle": "Personalized offers, just for you",
   "contestTitle": "Take part in fun and exciting contests",
   "settings": "Settings",
   "madeWith": "Made with ",
@@ -829,8 +850,6 @@
   "newMileStoneAlert2": "Go to your journey to find out what you've won",
   "tambolaTicketWinAlert1": "Congratulations 🎉",
   "tambolaTicketWinAlert2": "Your tickets have been submitted for processing your prizes!",
-
-
   "icici": "ICICI Prudential Fund",
   "tambolaWin": "Tambola Win",
   "refBonus": "Referral Bonus",

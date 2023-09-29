@@ -156,7 +156,7 @@ class APIService implements API {
       // log("API:: $url: ${DateTime.now().millisecondsSinceEpoch - startTime}");
 
       logger?.i(
-          "API:: POST REQUEST \n=> PATH: $_url \n=> queryParam: $queryParams \n=> headers: $headers "
+          "API:: POST REQUEST \n=> PATH: $_url \n=> queryParam: $queryParams \n=> headers: $_headers "
           "\n=> StatusCode: ${response.statusCode} "
           "\nRequest Body: $body \n"
           "=> Response Body: ${response.body}");

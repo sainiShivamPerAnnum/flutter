@@ -1,7 +1,9 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/ui/elements/title_subtitle_container.dart';
 import 'package:felloapp/ui/pages/hometabs/save/gold_components/gold_pro_card.dart';
@@ -80,6 +82,12 @@ class TicketMultiplierOptionsWidget extends StatelessWidget {
                           return BaseUtil().openRechargeModalSheet(
                               investmentType: InvestmentType.AUGGOLD99);
                       }
+                      locator<AnalyticsService>().track(
+                          eventName:
+                              AnalyticsEvents.ticketsMultiplierBannerTapped,
+                          properties: {
+                            'type': multipliers[i].item1,
+                          });
                     },
                     child: Card(
                       shape: RoundedRectangleBorder(

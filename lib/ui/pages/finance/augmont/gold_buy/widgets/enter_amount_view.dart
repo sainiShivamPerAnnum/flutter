@@ -8,16 +8,18 @@ import 'package:felloapp/ui/pages/finance/augmont/gold_buy/augmont_buy_vm.dart';
 import 'package:felloapp/ui/pages/static/gold_rate_card.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/show_case_key.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class EnterAmountView extends StatelessWidget {
-  const EnterAmountView(
-      {Key? key, required this.model, required this.txnService})
-      : super(key: key);
+  const EnterAmountView({
+    required this.model,
+    required this.txnService,
+    super.key,
+  });
+
   final GoldBuyViewModel model;
   final AugmontTransactionService txnService;
 
@@ -149,7 +151,7 @@ class EnterAmountView extends StatelessWidget {
                     padding:
                         EdgeInsets.symmetric(vertical: SizeConfig.padding4),
                     child: Text(
-                      locale.upto50000,
+                      locale.maxAmountMessage(model.maxAmount),
                       style: TextStyles.sourceSans.body4.bold
                           .colour(UiConstants.primaryColor),
                     ),
@@ -159,7 +161,7 @@ class EnterAmountView extends StatelessWidget {
                     padding:
                         EdgeInsets.symmetric(vertical: SizeConfig.padding4),
                     child: Text(
-                      locale.minPurchaseText,
+                      locale.minAmountMessage(model.minAmount),
                       style: TextStyles.sourceSans.body4.bold
                           .colour(Colors.red[400]),
                     ),
