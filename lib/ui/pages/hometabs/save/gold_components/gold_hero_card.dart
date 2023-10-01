@@ -1,6 +1,8 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
+import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -142,7 +144,9 @@ class GoldInfoWidget extends StatelessWidget {
                   BaseUtil().openRechargeModalSheet(
                     investmentType: InvestmentType.AUGGOLD99,
                     gms: BaseUtil.digitPrecision(
-                        2 - (_userService.userFundWallet?.augGoldQuantity ?? 0),
+                        AppConfig.getValue(
+                                AppConfigKey.goldProMinimumInvestment) -
+                            (_userService.userFundWallet?.augGoldQuantity ?? 0),
                         4,
                         false),
                   );

@@ -24,6 +24,7 @@ import 'package:felloapp/ui/pages/finance/mini_trans_card/mini_trans_card_view.d
 import 'package:felloapp/ui/pages/hometabs/save/flo_components/flo_basic_card.dart';
 import 'package:felloapp/ui/pages/hometabs/save/flo_components/flo_premium_section.dart';
 import 'package:felloapp/ui/pages/hometabs/save/gold_components/gold_hero_card.dart';
+import 'package:felloapp/ui/pages/hometabs/save/gold_components/gold_pro_card.dart';
 import 'package:felloapp/ui/pages/hometabs/save/gold_components/gold_rate_widget.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/ui/pages/login/login_components/login_support.dart';
@@ -181,7 +182,7 @@ class _AssetSectionViewState extends State<AssetSectionView> {
                                 const GoldRateWidget(),
                                 if (widget.type == InvestmentType.AUGGOLD99)
                                   const LineGradientChart(),
-                                // const GoldProCard()
+                                const GoldProCard()
                               ],
                               if (balance == 0)
                                 SizedBox(
