@@ -1,9 +1,7 @@
 // ignore_for_file: lines_longer_than_80_chars
 
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
-import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
-import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/feature/tambola/src/models/daily_pick_model.dart';
 import 'package:felloapp/feature/tambola/src/models/tambola_best_tickets_model.dart';
@@ -313,12 +311,7 @@ class TicketMatchesBriefBoxWidget extends StatelessWidget {
                           child: Row(children: [
                             RichText(
                               text: TextSpan(
-                                text: (AppConfig.getValue(AppConfigKey
-                                            .ticketsCategories)['category_1'] ??
-                                        "5-7")
-                                    .toString()
-                                    .split(' ')
-                                    .first,
+                                text: matchList[0].title.split(' ').first,
                                 style: TextStyles.rajdhaniB.body1
                                     .colour(Colors.white),
                                 children: [
@@ -326,13 +319,7 @@ class TicketMatchesBriefBoxWidget extends StatelessWidget {
                                       child:
                                           SizedBox(width: SizeConfig.padding4)),
                                   TextSpan(
-                                    text: (AppConfig.getValue(AppConfigKey
-                                                    .ticketsCategories)[
-                                                'category_1'] ??
-                                            "5-7")
-                                        .toString()
-                                        .split(' ')
-                                        .last,
+                                    text: matchList[0].title.split(' ').last,
                                     style:
                                         TextStyles.body4.colour(Colors.white38),
                                   )
@@ -438,22 +425,12 @@ class TicketsWinBriefChip extends StatelessWidget {
         children: [
           RichText(
             text: TextSpan(
-              text: (AppConfig.getValue(AppConfigKey.ticketsCategories)[
-                          'category_${i + 1}'] ??
-                      "5-7")
-                  .toString()
-                  .split(' ')
-                  .first,
+              text: title.split(' ').first,
               style: TextStyles.rajdhaniB.body2.colour(Colors.white),
               children: [
                 WidgetSpan(child: SizedBox(width: SizeConfig.padding4)),
                 TextSpan(
-                  text: (AppConfig.getValue(AppConfigKey.ticketsCategories)[
-                              'category_${i + 1}'] ??
-                          "5-7")
-                      .toString()
-                      .split(' ')
-                      .last,
+                  text: title.split(' ').last,
                   style: TextStyles.body4.colour(Colors.white38),
                 )
               ],
