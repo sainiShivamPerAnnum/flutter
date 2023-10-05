@@ -74,7 +74,7 @@ class RootViewModel extends BaseViewModel {
   final AppState appState = locator<AppState>();
   final SubService _subscriptionService = locator<SubService>();
   final S locale;
-  int _bottomNavBarIndex = 0;
+  final int _bottomNavBarIndex = 0;
   static bool canExecuteStartupNotification = true;
   bool showHappyHourBanner = false;
   bool fetchCampaign = true;
@@ -135,7 +135,7 @@ class RootViewModel extends BaseViewModel {
         _checkForAppUpdates();
         if (!await verifyUserBootupDetails()) return;
         await showLastWeekOverview();
-        locator<LendboxMaturityService>().init();
+        await locator<LendboxMaturityService>().init();
         showMarketingCampings();
         await Future.wait([
           _referralService.verifyReferral(),
@@ -143,7 +143,7 @@ class RootViewModel extends BaseViewModel {
         ]);
         unawaited(getFirebaseAppInstanceId());
         unawaited(handleStartUpNotificationData());
-        unawaited(locator<ReferralService>().fetchReferralCode());
+        await locator<ReferralService>().fetchReferralCode();
         await Future.wait([
           // _userService.checkForNewNotifications(),
           _gtService.updateUnscratchedGTCount(),
@@ -198,16 +198,14 @@ class RootViewModel extends BaseViewModel {
   }
 
   void _initAdhocNotifications() {
-    if (_fcmListener != null && _baseUtil != null) {
-      _fcmHandler.addIncomingMessageListener((valueMap) {
-        if (valueMap['title'] != null && valueMap['body'] != null) {
-          if (AppState.screenStack.last == ScreenItem.dialog ||
-              AppState.screenStack.last == ScreenItem.modalsheet) return;
-          BaseUtil.showPositiveAlert(valueMap['title'], valueMap['body'],
-              seconds: 5);
-        }
-      });
-    }
+    _fcmHandler.addIncomingMessageListener((valueMap) {
+      if (valueMap['title'] != null && valueMap['body'] != null) {
+        if (AppState.screenStack.last == ScreenItem.dialog ||
+            AppState.screenStack.last == ScreenItem.modalsheet) return;
+        BaseUtil.showPositiveAlert(valueMap['title'], valueMap['body'],
+            seconds: 5);
+      }
+    });
   }
 
   FileType getFileType(String fileUrl) {
@@ -336,6 +334,69 @@ class RootViewModel extends BaseViewModel {
     });
   }
 
+  Future<void> checkForBootUpAlerts() async {
+    bool updateAvailable =
+        PreferenceHelper.getBool(Constants.IS_APP_UPDATE_AVAILABLE, def: false);
+    bool isMsgNoticeAvailable =
+        PreferenceHelper.getBool(Constants.IS_MSG_NOTICE_AVAILABLE, def: false);
+    if (AppState.isRootAvailableForIncomingTaskExecution == false) return;
+    if (updateAvailable) {
+      AppState.isRootAvailableForIncomingTaskExecution = false;
+      await BaseUtil.openDialog(
+        isBarrierDismissible: false,
+        hapticVibrate: true,
+        addToScreenStack: true,
+        content: ConfirmationDialog(
+          title: "App Update Available",
+          description:
+              "A new version of the app is available. Update now to enjoy the hassle free experience.",
+          buttonText: "Update Now",
+          cancelBtnText: "Not now",
+          confirmAction: () {
+            try {
+              if (Platform.isIOS) {
+                BaseUtil.launchUrl(Constants.APPLE_STORE_APP_LINK);
+              } else if (Platform.isAndroid) {
+                BaseUtil.launchUrl(Constants.PLAY_STORE_APP_LINK);
+              }
+            } catch (e) {
+              _logger.e(e.toString());
+            }
+            AppState.backButtonDispatcher!.didPopRoute();
+          },
+          cancelAction: () {
+            AppState.backButtonDispatcher!.didPopRoute();
+            return false;
+          },
+        ),
+      );
+      AppState.isRootAvailableForIncomingTaskExecution = true;
+    } else if (isMsgNoticeAvailable) {
+      AppState.isRootAvailableForIncomingTaskExecution = false;
+      String msg = PreferenceHelper.getString(Constants.MSG_NOTICE);
+      await BaseUtil.openDialog(
+        isBarrierDismissible: false,
+        hapticVibrate: true,
+        addToScreenStack: true,
+        content: ConfirmationDialog(
+          title: "Notice",
+          description: msg,
+          buttonText: "Ok",
+          cancelBtnText: "Cancel",
+          confirmAction: () {
+            AppState.backButtonDispatcher!.didPopRoute();
+            return true;
+          },
+          cancelAction: () {
+            AppState.backButtonDispatcher!.didPopRoute();
+            return false;
+          },
+        ),
+      );
+      AppState.isRootAvailableForIncomingTaskExecution = true;
+    }
+  }
+
   Future<void> handleStartUpNotificationData() async {
     if (AppState.isRootAvailableForIncomingTaskExecution == true &&
         AppState.startupNotifMessage != null) {
@@ -344,8 +405,9 @@ class RootViewModel extends BaseViewModel {
         AppState.startupNotifMessage,
         MsgSource.Terminated,
       );
+      AppState.isRootAvailableForIncomingTaskExecution = true;
     }
-    unawaited(_userService.checkForNewNotifications());
+    await _userService.checkForNewNotifications();
   }
 
   Future<void> checkIfAppLockModalSheetIsRequired() async {
@@ -447,13 +509,13 @@ class RootViewModel extends BaseViewModel {
           _userService.signOut(() async {
             _analyticsService.track(eventName: AnalyticsEvents.signOut);
             _analyticsService.signOut();
-            await _userRepo?.removeUserFCM(_userService.baseUser!.uid);
+            await _userRepo.removeUserFCM(_userService.baseUser!.uid);
           }).then((flag) async {
             if (flag) {
               await BaseUtil().signOut();
-              _tambolaService?.dispose();
+              _tambolaService.dispose();
               _analyticsService.signOut();
-              _bankAndKycService?.dump();
+              _bankAndKycService.dump();
               _subscriptionService.dispose();
               _powerPlayService.dump();
               AppState.delegate!.appState.currentAction = PageAction(
@@ -552,7 +614,7 @@ class RootViewModel extends BaseViewModel {
                 BaseUtil.launchUrl(_userService.userBootUp!.data!.notice!.url!);
               }
             } catch (e) {
-              _logger?.d(e.toString());
+              _logger.d(e.toString());
             }
           }
         }

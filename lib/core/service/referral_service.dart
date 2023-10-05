@@ -323,11 +323,23 @@ class ReferralService extends ChangeNotifier {
       _submitTrack(uri);
     } else if (uri.startsWith(Constants.APP_NAVIGATION_LINK)) {
       try {
+        final timer = Stopwatch();
+        timer.start();
+
+        while (!AppState.isRootAvailableForIncomingTaskExecution) {
+          await Future.delayed(const Duration(seconds: 1));
+          if (timer.elapsed.inSeconds >= 10) {
+            timer.stop();
+            break;
+          }
+        }
+
         final path =
             uri.substring(Constants.APP_NAVIGATION_LINK.length, uri.length);
         if (AppState.isRootAvailableForIncomingTaskExecution) {
-          AppState.delegate!.parseRoute(Uri.parse(path));
           AppState.isRootAvailableForIncomingTaskExecution = false;
+          AppState.delegate!.parseRoute(Uri.parse(path));
+          AppState.isRootAvailableForIncomingTaskExecution = true;
         }
       } catch (error) {
         _logger.e(error);
