@@ -10,7 +10,6 @@ import 'package:felloapp/ui/pages/hometabs/journey/elements/focus_ring.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/elements/help_fab.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/elements/indicators.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/elements/jAssetPath.dart';
-import 'package:felloapp/ui/pages/hometabs/journey/elements/jBackground.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/elements/jMilestones.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/elements/jTooltip.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/elements/journey_error_view.dart';
@@ -22,6 +21,7 @@ import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/dynamic_ui_utils.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -32,6 +32,7 @@ import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../navigator/app_state.dart';
+import 'elements/jBackground.dart';
 
 class JourneyView extends StatefulWidget {
   const JourneyView({super.key});
@@ -45,6 +46,7 @@ class _JourneyViewState extends State<JourneyView>
   @override
   Widget build(BuildContext context) {
     log("ROOT: Journey view build called");
+    final s = locator<S>();
     return PropertyChangeProvider<JourneyService, JourneyServiceProperties>(
       value: locator<JourneyService>(),
       child: BaseView<JourneyPageViewModel>(
@@ -68,9 +70,7 @@ class _JourneyViewState extends State<JourneyView>
               appBar: AppBar(
                 backgroundColor: UiConstants.kBackgroundColor,
                 leading: IconButton(
-                  onPressed: () {
-                    AppState.backButtonDispatcher!.didPopRoute();
-                  },
+                  onPressed: AppState.backButtonDispatcher!.didPopRoute,
                   icon: const Icon(
                     Icons.arrow_back_ios_new_rounded,
                     color: Colors.white,
@@ -78,7 +78,7 @@ class _JourneyViewState extends State<JourneyView>
                 ),
                 centerTitle: false,
                 title: Text(
-                  "Journey",
+                  s.navBarJourney,
                   style: TextStyles.rajdhaniSB.title4,
                 ),
                 actions: [
@@ -133,14 +133,12 @@ class _JourneyViewState extends State<JourneyView>
                           height: SizeConfig.screenHeight,
                           width: SizeConfig.screenWidth,
                           child: RefreshIndicator(
-                            onRefresh: () async {
-                              await service.checkForMilestoneLevelChange();
-                            },
+                            onRefresh: service.checkForMilestoneLevelChange,
                             child: SingleChildScrollView(
                               controller: model.mainController,
                               physics: const BouncingScrollPhysics(),
                               reverse: true,
-                              child: Container(
+                              child: SizedBox(
                                 height: model.currentFullViewHeight,
                                 width: SizeConfig.screenWidth,
                                 child: Stack(

@@ -7,21 +7,22 @@ import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/ui/pages/static/blur_filter.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
 class LevelBlurView extends StatelessWidget {
-  const LevelBlurView();
+  const LevelBlurView({super.key});
   @override
   Widget build(BuildContext context) {
-    S locale = S.of(context);
+    final locale = locator<S>();
     return PropertyChangeConsumer<JourneyService, JourneyServiceProperties>(
-      properties: [JourneyServiceProperties.Pages],
+      properties: const [JourneyServiceProperties.Pages],
       builder: (context, jModel, properties) {
         return PropertyChangeConsumer<UserService, UserServiceProperties>(
-          properties: [UserServiceProperties.myJourneyStats],
+          properties: const [UserServiceProperties.myJourneyStats],
           builder: (context, m, properties) {
             final JourneyLevel? levelData = jModel!.getJourneyLevelBlurData();
             log("Current Level Data ${levelData.toString()}");
@@ -49,7 +50,7 @@ class LevelBlurView extends StatelessWidget {
                             jModel.pageHeight! *
                                 (jModel.pageCount - levelData.pageEnd!) -
                             SizeConfig.avatarRadius * 1.5,
-                        child: Container(
+                        child: SizedBox(
                           width: jModel.pageWidth,
                           child: Row(
                             children: [
@@ -75,9 +76,7 @@ class LevelBlurView extends StatelessWidget {
                                             size: SizeConfig.iconSize1,
                                             color: Colors.black),
                                         Text(
-                                            " " +
-                                                locale.jLevel +
-                                                " ${levelData.level! + 1}",
+                                            " ${locale.jLevel} ${levelData.level! + 1}",
                                             style: TextStyles.rajdhaniB.body1
                                                 .colour(Colors.black)),
                                       ],
@@ -106,14 +105,14 @@ class LevelBlurView extends StatelessWidget {
                       )
                     ],
                   )
-                : SizedBox();
+                : const SizedBox();
           },
         );
       },
     );
   }
 
-  getAmount(int level) {
+  String getAmount(int level) {
     switch (level) {
       case 2:
         return "100";
@@ -130,7 +129,7 @@ class LevelBlurView extends StatelessWidget {
 class DottedLinePainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
-    Paint paint = new Paint()
+    Paint paint = Paint()
       ..color = Colors.white
       ..strokeWidth = 1
       ..isAntiAlias = false

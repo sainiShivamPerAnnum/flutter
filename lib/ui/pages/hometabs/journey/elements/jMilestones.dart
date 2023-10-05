@@ -12,44 +12,48 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
-String generateAssetUrl(String name) {
-  return "https://journey-assets-x.s3.ap-south-1.amazonaws.com/$name.svg";
-}
-
 class Milestones extends StatelessWidget {
-  final JourneyPageViewModel? model;
-  const Milestones({Key? key, this.model}) : super(key: key);
+  final JourneyPageViewModel model;
+
+  const Milestones({
+    required this.model,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
     return PropertyChangeConsumer<JourneyService, JourneyServiceProperties>(
-        properties: [
-          JourneyServiceProperties.AvatarPosition,
-          JourneyServiceProperties.BaseGlow,
-          JourneyServiceProperties.Pages,
-        ],
-        builder: (context, serviceModel, properties) {
-          return SizedBox(
-            width: model!.pageWidth,
-            height: model!.currentFullViewHeight,
-            child: Stack(
-              children: List.generate(model!.currentMilestoneList.length, (i) {
-                if (model!.currentMilestoneList[i].asset.uri == null ||
-                    model!.currentMilestoneList[i].asset.uri.isEmpty)
-                  return SizedBox();
-                else if (model!.currentMilestoneList[i].index ==
-                    model!.avatarActiveMilestoneLevel) {
-                  return ActiveFloatingMilestone(
-                      milestone: model!.currentMilestoneList[i], model: model);
-                } else
-                  return StaticMilestone(
-                    milestone: model!.currentMilestoneList[i],
-                    model: model,
-                  );
-              }),
-            ),
-          );
-        });
+      properties: const [
+        JourneyServiceProperties.AvatarPosition,
+        JourneyServiceProperties.BaseGlow,
+        JourneyServiceProperties.Pages,
+      ],
+      builder: (context, serviceModel, properties) {
+        final mileStoneList = model.currentMilestoneList;
+        return SizedBox(
+          width: model.pageWidth,
+          height: model.currentFullViewHeight,
+          child: Stack(
+            children: List.generate(mileStoneList.length, (i) {
+              final milestone = mileStoneList[i];
+              if (milestone.asset.uri.isEmpty) {
+                return const SizedBox();
+              } else if (milestone.index == model.avatarActiveMilestoneLevel) {
+                return ActiveFloatingMilestone(
+                  milestone: milestone,
+                  model: model,
+                );
+              } else {
+                return StaticMilestone(
+                  milestone: milestone,
+                  model: model,
+                );
+              }
+            }),
+          ),
+        );
+      },
+    );
   }
 }
 
@@ -59,12 +63,16 @@ class Milestones extends StatelessWidget {
 
 class ActiveFloatingMilestone extends StatefulWidget {
   final MilestoneModel milestone;
-  final JourneyPageViewModel? model;
+  final JourneyPageViewModel model;
 
-  const ActiveFloatingMilestone({Key? key, required this.milestone, this.model})
-      : super(key: key);
+  const ActiveFloatingMilestone({
+    required this.milestone,
+    required this.model,
+    super.key,
+  });
+
   @override
-  _ActiveFloatingMilestoneState createState() =>
+  State<ActiveFloatingMilestone> createState() =>
       _ActiveFloatingMilestoneState();
 }
 
@@ -106,47 +114,47 @@ class _ActiveFloatingMilestoneState extends State<ActiveFloatingMilestone>
   @override
   void dispose() {
     _floatAnimationController.dispose();
-
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
+    final model = widget.model;
+    final milestone = widget.milestone;
+    final pageHeight = model.pageHeight;
+    final pageWidth = model.pageWidth;
     return Stack(
       children: [
         if (widget.milestone.shadow != null)
           Positioned(
-            left: widget.model!.pageWidth! * widget.milestone.shadow!.x!,
-            bottom: widget.model!.pageHeight! *
-                    (widget.milestone.shadow!.page - 1) +
-                widget.model!.pageHeight! * widget.milestone.shadow!.y!,
+            left: pageWidth! * milestone.shadow!.x!,
+            bottom: pageHeight! * (milestone.shadow!.page - 1) +
+                pageHeight * milestone.shadow!.y!,
             child: ScaleTransition(
               scale: _scaleAnimation,
               alignment: Alignment.center,
               child: Transform(
                 alignment: Alignment.center,
-                transform:
-                    Matrix4.rotationY(widget.milestone.hFlip! ? math.pi : 0),
+                transform: Matrix4.rotationY(milestone.hFlip! ? math.pi : 0),
                 child: SourceAdaptiveAssetView(
-                  asset: widget.milestone.shadow!.asset,
+                  asset: milestone.shadow!.asset,
                 ),
               ),
             ),
           ),
         Positioned(
-          left: widget.model!.pageWidth! * widget.milestone.x!,
-          bottom: widget.model!.pageHeight! * (widget.milestone.page - 1) +
-              widget.model!.pageHeight! * widget.milestone.y!,
+          left: pageWidth! * milestone.x!,
+          bottom:
+              pageHeight! * (milestone.page - 1) + pageHeight * milestone.y!,
           child: SlideTransition(
             position: _floatAnimation,
             child: GestureDetector(
-              onTap: () => widget.model!
-                  .showMilestoneDetailsModalSheet(widget.milestone, context),
+              onTap: () =>
+                  model.showMilestoneDetailsModalSheet(milestone, context),
               child: Transform(
                 alignment: Alignment.center,
-                transform:
-                    Matrix4.rotationY(widget.milestone.hFlip! ? math.pi : 0),
-                child: SourceAdaptiveAssetView(asset: widget.milestone.asset),
+                transform: Matrix4.rotationY(milestone.hFlip! ? math.pi : 0),
+                child: SourceAdaptiveAssetView(asset: milestone.asset),
               ),
             ),
           ),
@@ -159,10 +167,10 @@ class _ActiveFloatingMilestoneState extends State<ActiveFloatingMilestone>
 class ActiveRotatingMilestone extends StatefulWidget {
   final MilestoneModel milestone;
   final JourneyPageViewModel? model;
-  const ActiveRotatingMilestone({Key? key, required this.milestone, this.model})
+  const ActiveRotatingMilestone({required this.milestone, Key? key, this.model})
       : super(key: key);
   @override
-  _ActiveRotatingMilestoneState createState() =>
+  State<ActiveRotatingMilestone> createState() =>
       _ActiveRotatingMilestoneState();
 }
 
@@ -195,57 +203,42 @@ class _ActiveRotatingMilestoneState extends State<ActiveRotatingMilestone>
 
   @override
   Widget build(BuildContext context) {
+    final model = widget.model!;
+    final milestone = widget.milestone;
+    final pageWidth = model.pageWidth!;
+    final pageHeight = model.pageHeight!;
+
     return Stack(
       children: [
-        if (widget.milestone.shadow != null)
+        if (milestone.shadow != null)
           Positioned(
-            left: widget.model!.pageWidth! * widget.milestone.shadow!.x!,
-            bottom: widget.model!.pageHeight! *
-                    (widget.milestone.shadow!.page - 1) +
-                widget.model!.pageHeight! * widget.milestone.shadow!.y!,
+            left: pageWidth * milestone.shadow!.x!,
+            bottom: pageHeight * (milestone.shadow!.page - 1) +
+                pageHeight * milestone.shadow!.y!,
             child: Transform(
-                alignment: Alignment.center,
-                transform:
-                    Matrix4.rotationY(widget.milestone.hFlip! ? math.pi : 0),
-                child: SourceAdaptiveAssetView(
-                  asset: widget.milestone.shadow!.asset,
-                )),
+              alignment: Alignment.center,
+              transform: Matrix4.rotationY(milestone.hFlip! ? math.pi : 0),
+              child: SourceAdaptiveAssetView(
+                asset: milestone.shadow!.asset,
+              ),
+            ),
           ),
         Positioned(
-          left: widget.model!.pageWidth! * widget.milestone.x!,
-          bottom: widget.model!.pageHeight! * (widget.milestone.page - 1) +
-              widget.model!.pageHeight! * widget.milestone.y!,
+          left: pageWidth * milestone.x!,
+          bottom: pageHeight * (milestone.page - 1) + pageHeight * milestone.y!,
           child: RotationTransition(
             turns: _floatAnimationController,
             child: GestureDetector(
-              onTap: () => widget.model!
-                  .showMilestoneDetailsModalSheet(widget.milestone, context),
-              //() {
-              //   ScaffoldMessenger.of(context).showSnackBar(
-              //     SnackBar(
-              //       duration: const Duration(seconds: 2),
-              //       content: Text(widget.milestone.steps.first.title),
-              //     ),
-              //   );
-              // },
+              onTap: () =>
+                  model.showMilestoneDetailsModalSheet(milestone, context),
               child: Transform(
                 alignment: Alignment.center,
-                transform:
-                    Matrix4.rotationY(widget.milestone.hFlip! ? math.pi : 0),
-                child: SourceAdaptiveAssetView(asset: widget.milestone.asset),
+                transform: Matrix4.rotationY(milestone.hFlip! ? math.pi : 0),
+                child: SourceAdaptiveAssetView(asset: milestone.asset),
               ),
             ),
           ),
         ),
-        // if (widget.milestone.isCompleted != null &&
-        //     widget.milestone.isCompleted)
-        //   Positioned(
-        //       left: widget.model.pageWidth * widget.milestone.x,
-        //       bottom: (widget.model.pageHeight * (widget.milestone.page - 1) +
-        //               widget.model.pageHeight * widget.milestone.y) -
-        //           widget.model.pageHeight * 0.02,
-        //       child: MileStoneCheck(
-        //           model: widget.model, milestone: widget.milestone))
       ],
     );
   }
@@ -253,50 +246,50 @@ class _ActiveRotatingMilestoneState extends State<ActiveRotatingMilestone>
 
 class StaticMilestone extends StatelessWidget {
   final MilestoneModel milestone;
-  final JourneyPageViewModel? model;
-  const StaticMilestone({Key? key, required this.milestone, this.model})
-      : super(key: key);
+  final JourneyPageViewModel model;
+
+  const StaticMilestone({
+    required this.milestone,
+    required this.model,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
+    final pageWidth = model.pageWidth!;
+    final pageHeight = model.pageHeight!;
+
     return Stack(
       children: [
         if (milestone.shadow != null)
           Positioned(
-            left: model!.pageWidth! * milestone.shadow!.x!,
-            bottom: model!.pageHeight! * (milestone.shadow!.page - 1) +
-                model!.pageHeight! * milestone.shadow!.y!,
+            left: pageWidth * milestone.shadow!.x!,
+            bottom: pageHeight * (milestone.shadow!.page - 1) +
+                pageHeight * milestone.shadow!.y!,
             child: Transform(
-                alignment: Alignment.center,
-                transform: Matrix4.rotationY(milestone.hFlip! ? math.pi : 0),
-                child: SourceAdaptiveAssetView(asset: milestone.shadow!.asset)
-                // SvgPicture.network(
-                //   generateAssetUrl(milestone.shadow.asset.name),
-                //   width: model.pageWidth * milestone.shadow.asset.width,
-                //   height: model.pageHeight * milestone.shadow.asset.height,
-                //   fit: BoxFit.cover,
-                // ),
-                ),
+              alignment: Alignment.center,
+              transform: Matrix4.rotationY(milestone.hFlip! ? math.pi : 0),
+              child: SourceAdaptiveAssetView(asset: milestone.shadow!.asset),
+            ),
           ),
         if (milestone.tooltip != null && milestone.tooltip!.isNotEmpty)
           Positioned(
-            left: model!.pageWidth! * milestone.x!,
-            bottom: model!.pageHeight! * (milestone.page - 1) +
-                model!.pageHeight! * milestone.y!,
-            child: model!.isInComplete(milestone.index)
+            left: pageWidth * milestone.x!,
+            bottom:
+                pageHeight * (milestone.page - 1) + pageHeight * milestone.y!,
+            child: model.isInComplete(milestone.index)
                 ? Tooltip(
-                    // message: "Hello World!!",
                     triggerMode: TooltipTriggerMode.tap,
-                    showDuration: Duration(seconds: 3),
-                    decoration: BoxDecoration(
+                    showDuration: const Duration(seconds: 3),
+                    decoration: const BoxDecoration(
                       color: Colors.transparent,
                     ),
-
                     richMessage: TextSpan(
                       children: [
                         WidgetSpan(
                           child: Container(
-                            decoration: ShapeDecoration(
+                            padding: EdgeInsets.all(SizeConfig.padding12),
+                            decoration: const ShapeDecoration(
                               color: Colors.black,
                               shape: TooltipShapeBorder(arrowArc: 0.5),
                               shadows: [
@@ -306,30 +299,26 @@ class StaticMilestone extends StatelessWidget {
                                     offset: Offset(2, 2))
                               ],
                             ),
-                            child: Padding(
-                              padding: EdgeInsets.all(SizeConfig.padding12),
-                              child: Row(
-                                mainAxisSize: MainAxisSize.min,
-                                children: [
-                                  Icon(Icons.lock_rounded,
-                                      color: Colors.white,
-                                      size: SizeConfig.iconSize0),
-                                  SizedBox(width: SizeConfig.padding8),
-                                  Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    children: [
-                                      Text("${milestone.tooltip}",
-                                          style: TextStyles.sourceSansSB.body3),
-                                      Text(
-                                        "Win Scratch Card",
-                                        style: TextStyles.sourceSansSB.body5
-                                            .colour(UiConstants.kTextColor3),
-                                      ),
-                                    ],
-                                  ),
-                                ],
-                              ),
+                            child: Row(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                Icon(Icons.lock_rounded,
+                                    color: Colors.white,
+                                    size: SizeConfig.iconSize0),
+                                SizedBox(width: SizeConfig.padding8),
+                                Column(
+                                  crossAxisAlignment: CrossAxisAlignment.start,
+                                  children: [
+                                    Text("${milestone.tooltip}",
+                                        style: TextStyles.sourceSansSB.body3),
+                                    Text(
+                                      "Win Scratch Card",
+                                      style: TextStyles.sourceSansSB.body5
+                                          .colour(UiConstants.kTextColor3),
+                                    ),
+                                  ],
+                                ),
+                              ],
                             ),
                           ),
                         ),
@@ -345,18 +334,18 @@ class StaticMilestone extends StatelessWidget {
                     child: SourceAdaptiveAssetView(asset: milestone.asset),
                   )
                 : GestureDetector(
-                    onTap: () => model!
-                        .showMilestoneDetailsModalSheet(milestone, context),
+                    onTap: () => model.showMilestoneDetailsModalSheet(
+                        milestone, context),
                     child: SourceAdaptiveAssetView(asset: milestone.asset),
                   ),
           ),
-        if (milestone.index! < model!.avatarActiveMilestoneLevel!)
+        if (milestone.index! < model.avatarActiveMilestoneLevel!)
           Positioned(
-              left: model!.pageWidth! * milestone.x!,
-              bottom: ((model!.pageHeight! * (milestone.page - 1)) +
-                      model!.pageHeight! * milestone.y!) -
-                  model!.pageHeight! * 0.02,
-              child: MileStoneCheck())
+              left: pageWidth * milestone.x!,
+              bottom: ((pageHeight * (milestone.page - 1)) +
+                      pageHeight * milestone.y!) -
+                  model.pageHeight! * 0.02,
+              child: const MileStoneCheck())
       ],
     );
   }
@@ -368,7 +357,7 @@ class TooltipShapeBorder extends ShapeBorder {
   final double arrowArc;
   final double radius;
 
-  TooltipShapeBorder({
+  const TooltipShapeBorder({
     this.radius = 16.0,
     this.arrowWidth = 20.0,
     this.arrowHeight = 10.0,
