@@ -5,7 +5,6 @@ import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
-import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 
 class Campaigns extends StatelessWidget {
@@ -36,7 +35,7 @@ class CampaignCardSection extends StatelessWidget {
               horizontal: SizeConfig.pageHorizontalMargins,
             ),
             decoration: BoxDecoration(
-              border: Border.all(color: UiConstants.kGoldProBorder, width: 2),
+              // border: Border.all(color: UiConstants.kGoldProBorder, width: 2),
               borderRadius: BorderRadius.circular(
                   SizeConfig.padding16 + SizeConfig.padding2),
             ),

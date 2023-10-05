@@ -5,6 +5,7 @@ import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/enums/transaction_state_enum.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_buy/augmont_buy_vm.dart';
@@ -91,6 +92,7 @@ class GoldSellLoadingView extends StatelessWidget {
                 // _augTxnService.pollingPeriodicTimer?.cancel();
                 _txnHistoryService!
                     .updateTransactions(InvestmentType.AUGGOLD99);
+                locator<UserService>().getUserFundWalletData();
                 _augTxnService!.currentTransactionState = TransactionState.idle;
                 log("Screen Stack:${AppState.screenStack.toString()}");
                 if (AppState.screenStack.last == ScreenItem.loader) {

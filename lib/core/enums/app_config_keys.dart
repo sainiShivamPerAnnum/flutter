@@ -35,7 +35,7 @@ enum AppConfigKey {
   useNewUrlUserOps,
   specialEffectsOnTxnDetailsView,
   ticketsCategories,
-  goldProMinimumInvestment,
+  goldProInterest,
   goldProInvestmentChips,
 }
 
@@ -113,8 +113,8 @@ extension AppConfigKeys on String {
         return AppConfigKey.specialEffectsOnTxnDetailsView;
       case 'ticketsCategories':
         return AppConfigKey.ticketsCategories;
-      case 'minimumGoldProInvestment':
-        return AppConfigKey.goldProMinimumInvestment;
+      case 'goldProInterest':
+        return AppConfigKey.goldProInterest;
       case 'goldProInvestmentChips':
         return AppConfigKey.goldProInvestmentChips;
       default:

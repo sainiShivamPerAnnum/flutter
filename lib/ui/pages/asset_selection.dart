@@ -391,7 +391,8 @@ class GoldPlanWidget extends StatelessWidget {
                 model: model,
                 showRates: false,
                 isRecommended: true,
-                promoText: "*4.5% Extra Gold* by saving Min *5g* in Gold",
+                promoText:
+                    "*${AppConfig.getValue(AppConfigKey.goldProInterest).toDouble()}% Extra Gold* by saving Min *${BaseUtil.getIntOrDouble(AppConfig.getValue(AppConfigKey.goldProInvestmentChips)[0].toDouble())}g* in Gold",
                 amount: amount,
                 isSkipMl: isSkipMl,
                 isPro: true,
@@ -822,9 +823,10 @@ class DigitalGoldPrograms extends StatelessWidget {
                   left: SizeConfig.screenWidth! / 8,
                 ),
                 width: SizeConfig.screenWidth! * 0.39,
-                child: const AvailabilityOfferWidget(
+                child: AvailabilityOfferWidget(
                     color: UiConstants.kBlogTitleColor,
-                    text: "*4.5% Extra Returns*"),
+                    text:
+                        "*${AppConfig.getValue(AppConfigKey.goldProInterest).toDouble()}% Extra Returns*"),
               ),
             ),
           ),

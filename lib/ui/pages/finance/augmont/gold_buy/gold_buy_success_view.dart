@@ -359,7 +359,9 @@ class _GoldBuySuccessViewState extends State<GoldBuySuccessView>
 
   void showGoldProNudgeIfEligible() {
     if ((locator<UserService>().userFundWallet?.augGoldQuantity ?? 0) >
-        AppConfig.getValue(AppConfigKey.goldProMinimumInvestment)) {
+            AppConfig.getValue(AppConfigKey.goldProInvestmentChips)[0]
+                .toDouble() &&
+        locator<UserService>().userFundWallet!.wAugFdQty == 0) {
       BaseUtil.openModalBottomSheet(
         isBarrierDismissible: true,
         addToScreenStack: true,
@@ -412,7 +414,7 @@ class GoldProEligibleModalSheet extends StatelessWidget {
                     ),
                     SizedBox(height: SizeConfig.padding8),
                     Text(
-                      "4.5% Extra Returns every year with Gold Pro",
+                      "${AppConfig.getValue(AppConfigKey.goldProInterest).toDouble()}% Extra Returns every year with Gold Pro",
                       style: TextStyles.rajdhaniM.title3
                           .colour(UiConstants.kGoldProPrimary),
                       textAlign: TextAlign.center,
@@ -515,9 +517,10 @@ class GoldProEligibleModalSheet extends StatelessWidget {
                                       left: SizeConfig.padding16,
                                     ),
                                     width: SizeConfig.screenWidth! * 0.39,
-                                    child: const AvailabilityOfferWidget(
+                                    child: AvailabilityOfferWidget(
                                         color: UiConstants.kBlogTitleColor,
-                                        text: "*4.5% Extra Returns*"),
+                                        text:
+                                            "*${AppConfig.getValue(AppConfigKey.goldProInterest).toDouble()}% Extra Returns*"),
                                   ),
                                 ),
                               )

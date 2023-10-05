@@ -1,4 +1,6 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/app_config_keys.dart';
+import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_buy/gold_pro_buy_vm.dart';
 import 'package:felloapp/ui/pages/static/gold_rate_card.dart';
 import 'package:felloapp/util/assets.dart';
@@ -123,7 +125,7 @@ class ExpectedGoldProReturnsRow extends StatelessWidget {
                 ],
               ),
               Text(
-                "with extra 4.5% returns",
+                "with extra ${AppConfig.getValue(AppConfigKey.goldProInterest).toDouble()}% returns",
                 style: TextStyles.sourceSans.body3
                     .colour(UiConstants.kGoldProPrimary),
                 textAlign: TextAlign.end,

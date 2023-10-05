@@ -3,10 +3,12 @@ import 'dart:ui' as ui;
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
+import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/portfolio_model.dart';
 import 'package:felloapp/core/model/subscription_models/subscription_model.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
@@ -94,7 +96,8 @@ class _AssetSectionViewState extends State<AssetSectionView> {
         builder: (_, model, ___) {
           bool isNewUser = model!.userSegments.contains("NEW_USER");
           final balance = widget.type == InvestmentType.AUGGOLD99
-              ? model.userFundWallet?.augGoldQuantity ?? 0
+              ? ((model.userFundWallet?.augGoldQuantity ?? 0) +
+                  (model.userFundWallet?.wAugFdQty ?? 0))
               : model.userFundWallet?.wLbBalance ?? 0;
           return BaseView<SaveViewModel>(
             builder: (context, state, _) {
@@ -519,9 +522,10 @@ class AssetBottomButtons extends StatelessWidget {
                               left: SizeConfig.padding20,
                             ),
                             width: SizeConfig.screenWidth! * 0.39,
-                            child: const AvailabilityOfferWidget(
+                            child: AvailabilityOfferWidget(
                                 color: UiConstants.kBlogTitleColor,
-                                text: "*4.5% Extra Returns*"),
+                                text:
+                                    "*${AppConfig.getValue(AppConfigKey.goldProInterest).toDouble()}% Extra Returns*"),
                           ),
                         ),
                       )

@@ -25,7 +25,8 @@ class GoldProHero extends StatelessWidget {
         } else if (goldQuantity <= 0) {
           return NewGoldProHero(model: model);
         } else if (goldQuantity <=
-            AppConfig.getValue(AppConfigKey.goldProMinimumInvestment)) {
+            AppConfig.getValue(AppConfigKey.goldProInvestmentChips)[0]
+                .toDouble()) {
           return ProgressGoldProHero(model: model);
         } else {
           return EligibleGoldProHero(model: model);
@@ -46,7 +47,7 @@ class NewGoldProHero extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Text(
-          "Get 4.5% extra returns with ${Constants.ASSET_GOLD_STAKE} ",
+          "Get ${AppConfig.getValue(AppConfigKey.goldProInterest).toDouble()}% extra returns with ${Constants.ASSET_GOLD_STAKE} ",
           style:
               TextStyles.sourceSansM.body2.colour(UiConstants.kGoldProPrimary),
         ),
@@ -73,7 +74,7 @@ class ProgressGoldProHero extends StatelessWidget {
     return Column(
       children: [
         Text(
-          "Get 4.5% extra returns with ${Constants.ASSET_GOLD_STAKE} ",
+          "Get ${AppConfig.getValue(AppConfigKey.goldProInterest).toDouble()}% extra returns with ${Constants.ASSET_GOLD_STAKE} ",
           style:
               TextStyles.sourceSansSB.body2.colour(UiConstants.kGoldProPrimary),
         ),
@@ -89,7 +90,8 @@ class ProgressGoldProHero extends StatelessWidget {
           child: FractionallySizedBox(
             widthFactor: BaseUtil.digitPrecision(
                     model.userFundWallet?.augGoldQuantity ?? 0.0, 2) /
-                AppConfig.getValue(AppConfigKey.goldProMinimumInvestment),
+                AppConfig.getValue(AppConfigKey.goldProInvestmentChips)[0]
+                    .toDouble(),
             child: Container(
               decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(100),
@@ -117,7 +119,7 @@ class ProgressGoldProHero extends StatelessWidget {
             ),
             const Spacer(),
             Text(
-              "${AppConfig.getValue(AppConfigKey.goldProMinimumInvestment)}g",
+              "${AppConfig.getValue(AppConfigKey.goldProInvestmentChips)[0].toInt()}g",
               style: TextStyles.sourceSansSB.body0.colour(Colors.white),
             ),
           ],
@@ -126,7 +128,7 @@ class ProgressGoldProHero extends StatelessWidget {
         Row(
           children: [
             Text(
-              "Save ${BaseUtil.digitPrecision(AppConfig.getValue(AppConfigKey.goldProMinimumInvestment) - (model.userFundWallet?.augGoldQuantity ?? 0.0), 4)}g more to be eligible for Gold Pro",
+              "Save ${BaseUtil.digitPrecision(AppConfig.getValue(AppConfigKey.goldProInvestmentChips)[0].toDouble() - (model.userFundWallet?.augGoldQuantity ?? 0.0), 4)}g more to be eligible for Gold Pro",
               style: TextStyles.sourceSansM.body3
                   .colour(UiConstants.kGoldProPrimary),
             ),
@@ -161,7 +163,7 @@ class EligibleGoldProHero extends StatelessWidget {
         Row(
           children: [
             Text(
-              "You are eligible for 4.5% extra returns",
+              "You are eligible for ${AppConfig.getValue(AppConfigKey.goldProInterest).toDouble()}% extra returns",
               style: TextStyles.sourceSansSB.body2
                   .colour(UiConstants.kGoldProPrimary),
             ),
@@ -191,7 +193,7 @@ class InvestedGoldProHero extends StatelessWidget {
         Row(
           children: [
             Text(
-              "Getting 4.5% extra returns with ${Constants.ASSET_GOLD_STAKE} ",
+              "Getting ${AppConfig.getValue(AppConfigKey.goldProInterest).toDouble()}% extra returns with ${Constants.ASSET_GOLD_STAKE} ",
               style: TextStyles.sourceSansM.body3
                   .colour(UiConstants.kGoldProPrimary),
             ),

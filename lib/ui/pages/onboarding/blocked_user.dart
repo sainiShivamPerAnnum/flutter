@@ -94,7 +94,7 @@ class BlockedUserView extends StatelessWidget {
                         color: UiConstants.kBackgroundColor),
                     child: TextButton(
                       child: Text(
-                        'need help?',
+                        'Need help?',
                         style: TextStyles.sourceSans.body3,
                       ),
                       onPressed: () {

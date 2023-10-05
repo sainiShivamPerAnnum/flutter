@@ -1,4 +1,5 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/gold_pro_models/gold_pro_scheme_model.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
@@ -7,8 +8,10 @@ import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_buy/gold_pro
 import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_buy/gold_pro_buy_components/gold_pro_choice_chips.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_buy/gold_pro_buy_vm.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
+import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/extensions/rich_text_extension.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
@@ -169,7 +172,7 @@ class GoldProBuyInputView extends StatelessWidget {
                             mainAxisAlignment: MainAxisAlignment.spaceBetween,
                             children: List.generate(
                               model.chipsList.length,
-                                  (index) => GoldProChoiceChip(
+                              (index) => GoldProChoiceChip(
                                 index: index,
                                 chipValue: "${model.chipsList[index].value}g",
                                 isBest: model.chipsList[index].isBest,
@@ -198,38 +201,65 @@ class GoldProBuyInputView extends StatelessWidget {
                           topRight: Radius.circular(SizeConfig.roundness16)),
                       color: Colors.black,
                     ),
-                    child: Column(children: [
-                      ExpectedGoldProReturnsRow(model: model),
-                      SizedBox(height: SizeConfig.padding18),
-                      GoldBalanceRow(
-                        lead: "Saving in ${Constants.ASSET_GOLD_STAKE}",
-                        trail: model.totalGoldBalance,
-                        isBold: true,
-                      ),
-                      SizedBox(height: SizeConfig.padding12),
-                      GoldBalanceRow(
-                        lead: "Current Gold Balance",
-                        trail: model.currentGoldBalance,
-                      ),
-                      // SizedBox(height: SizeConfig.padding10),
+                    child: model.state == ViewState.Busy
+                        ? FullScreenLoader(
+                            size: SizeConfig.screenWidth! * 0.3,
+                          )
+                        : model.unavailabilityText.isNotEmpty
+                            ? SizedBox(
+                                width: SizeConfig.screenWidth,
+                                child: Column(
+                                  crossAxisAlignment: CrossAxisAlignment.center,
+                                  children: [
+                                    Text(
+                                      "Alert!",
+                                      style: TextStyles.rajdhaniB.body0
+                                          .colour(Colors.white),
+                                    ),
+                                    SizedBox(height: SizeConfig.padding10),
+                                    model.unavailabilityText.beautify(
+                                      style: TextStyles.sourceSans.body2
+                                          .colour(Colors.white70),
+                                      boldStyle: TextStyles.sourceSansB.body2
+                                          .colour(Colors.white),
+                                      alignment: TextAlign.center,
+                                    )
+                                  ],
+                                ),
+                              )
+                            : Column(mainAxisSize: MainAxisSize.min, children: [
+                                ExpectedGoldProReturnsRow(model: model),
+                                SizedBox(height: SizeConfig.padding18),
+                                GoldBalanceRow(
+                                  lead:
+                                      "Saving in ${Constants.ASSET_GOLD_STAKE}",
+                                  trail: model.totalGoldBalance,
+                                  isBold: true,
+                                ),
+                                SizedBox(height: SizeConfig.padding12),
+                                GoldBalanceRow(
+                                  lead: "Current Gold Balance",
+                                  trail: model.currentGoldBalance,
+                                ),
+                                // SizedBox(height: SizeConfig.padding10),
 
-                      const GoldProLeaseCompanyDetailsStrip(),
+                                const GoldProLeaseCompanyDetailsStrip(),
 
-                      SizedBox(height: SizeConfig.padding10),
-                      Consumer<BankAndPanService>(
-                        builder: (context, panService, child) =>
-                            ReactivePositiveAppButton(
-                          btnText: panService.isKYCVerified
-                              ? "PROCEED"
-                              : "COMPLETE KYC TO SAVE",
-                          onPressed: () {
-                            panService.isKYCVerified
-                                ? model.onProceedTapped()
-                                : model.onCompleteKycTapped();
-                          },
-                        ),
-                      ),
-                    ]),
+                                SizedBox(height: SizeConfig.padding10),
+                                Consumer<BankAndPanService>(
+                                  builder: (context, panService, child) =>
+                                      ReactivePositiveAppButton(
+                                    btnText: panService.isKYCVerified
+                                        ? "PROCEED"
+                                        : "COMPLETE KYC TO SAVE",
+                                    onPressed: () {
+                                      panService.isKYCVerified
+                                          ? model.onProceedTapped()
+                                          : model.onCompleteKycTapped();
+                                    },
+                                  ),
+                                ),
+                              ]),
                   )
                 ],
               ),
@@ -257,69 +287,113 @@ class GoldProLeaseCompanyDetailsStrip extends StatelessWidget {
       selector: (p0, p1) => p1.goldProScheme,
       builder: (ctx, scheme, child) => GestureDetector(
         onTap: () {
-          BaseUtil.openModalBottomSheet(
-              isBarrierDismissible: true,
-              addToScreenStack: true,
-              backgroundColor: UiConstants.kBackgroundColor2,
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(SizeConfig.roundness16),
-                topRight: Radius.circular(SizeConfig.roundness16),
-              ),
-              hapticVibrate: true,
-              content: WillPopScope(
-                onWillPop: () async {
-                  AppState.removeOverlay();
-                  return Future.value(true);
-                },
-                child: Container(
-                  margin: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
-                  child: scheme != null
-                      ? Column(
-                          mainAxisSize: MainAxisSize.min,
-                          children: [
-                            ListTile(
-                              leading: Container(
-                                decoration: BoxDecoration(
-                                  border:
-                                      Border.all(width: 1, color: Colors.white),
-                                  borderRadius: BorderRadius.circular(
-                                      SizeConfig.roundness12),
-                                  image: DecorationImage(
-                                    image: NetworkImage(scheme.logo),
-                                    fit: BoxFit.cover,
-                                  ),
-                                ),
-                                height: SizeConfig.padding54,
-                                width: SizeConfig.padding54,
-                              ),
-                              title: Text(
-                                scheme.jewellerUserAccountName,
-                                style: TextStyles.sourceSansB.body1
-                                    .colour(Colors.white),
-                              ),
-                              subtitle: Text(
-                                "Estd. 2014",
-                                style: TextStyles.body3
-                                    .colour(UiConstants.kFAQsAnswerColor),
-                              ),
-                            ),
-                            ListTile(
-                              title: Text(
-                                "Business Type:",
-                                style: TextStyles.body3.colour(Colors.white60),
-                              ),
-                              trailing: Text(
-                                "Wholesaler, Manufacturer",
-                                style: TextStyles.body3
-                                    .colour(UiConstants.kFAQsAnswerColor),
-                              ),
-                            )
-                          ],
-                        )
-                      : const Center(
-                          child: CircularProgressIndicator.adaptive()),
+          if (scheme != null) {
+            BaseUtil.openModalBottomSheet(
+                isBarrierDismissible: true,
+                addToScreenStack: true,
+                backgroundColor: UiConstants.kBackgroundColor2,
+                borderRadius: BorderRadius.only(
+                  topLeft: Radius.circular(SizeConfig.roundness16),
+                  topRight: Radius.circular(SizeConfig.roundness16),
                 ),
-              ));
+                hapticVibrate: true,
+                content: WillPopScope(
+                  onWillPop: () async {
+                    AppState.removeOverlay();
+                    return Future.value(true);
+                  },
+                  child: Container(
+                    margin: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+                    child: scheme != null
+                        ? Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              ListTile(
+                                leading: Container(
+                                  decoration: BoxDecoration(
+                                    border: Border.all(
+                                        width: 1, color: Colors.white),
+                                    borderRadius: BorderRadius.circular(
+                                        SizeConfig.roundness12),
+                                    image: DecorationImage(
+                                      image: NetworkImage(scheme.logo),
+                                      fit: BoxFit.cover,
+                                    ),
+                                  ),
+                                  height: SizeConfig.padding54,
+                                  width: SizeConfig.padding54,
+                                ),
+                                title: Text(
+                                  scheme.jewellerUserAccountName,
+                                  style: TextStyles.sourceSansB.body1
+                                      .colour(Colors.white),
+                                ),
+                                subtitle: Text(
+                                  "Estd. ${scheme.yearOfOperation}",
+                                  style: TextStyles.body3
+                                      .colour(UiConstants.kFAQsAnswerColor),
+                                ),
+                              ),
+                              ListTile(
+                                title: Text(
+                                  "Business Type:",
+                                  style:
+                                      TextStyles.body3.colour(Colors.white60),
+                                ),
+                                trailing: Text(
+                                  "Wholesaler, Manufacturer",
+                                  style: TextStyles.body3
+                                      .colour(UiConstants.kFAQsAnswerColor),
+                                ),
+                              ),
+                              if (scheme.description.isNotEmpty)
+                                Padding(
+                                  padding: EdgeInsets.symmetric(
+                                      horizontal: SizeConfig.padding12),
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                        "Description:",
+                                        style: TextStyles.body3
+                                            .colour(Colors.white60),
+                                      ),
+                                      SizedBox(width: SizeConfig.padding20),
+                                      Expanded(
+                                        child: Text(
+                                          scheme.description
+                                              .checkOverFlow(maxLength: 100),
+                                          style: TextStyles.body3.colour(
+                                              UiConstants.kFAQsAnswerColor),
+                                          maxLines: 5,
+                                          textAlign: TextAlign.end,
+                                        ),
+                                      )
+                                    ],
+                                  ),
+                                )
+                              // ListTile(
+                              //   title: Text(
+                              //     "Description:",
+                              //     style:
+                              //         TextStyles.body3.colour(Colors.white60),
+                              //   ),
+                              //   trailing: SizedBox(
+                              //     width: SizeConfig.screenWidth! * 0.5,
+                              //     child: Text(
+                              //       "wetyghwjefhiuewhifjbewjkbnvjewirjbfcjwebiufbci iewbf ewubfueiwbiuf wiuewfiuew fbubewiubfuewbbf viubwefuibweufcbweicun ewicubewi ucbw ibwuebifcuewibcwioewbcuew cuweci ubcwi bwiufboiewni voewue riuewhio ",
+                              //       style: TextStyles.body3
+                              //           .colour(UiConstants.kFAQsAnswerColor),
+                              //       maxLines: 5,
+                              //     ),
+                              //   ),
+                              // )
+                            ],
+                          )
+                        : const Center(
+                            child: CircularProgressIndicator.adaptive()),
+                  ),
+                ));
+          }
         },
         child: Container(
           margin: EdgeInsets.symmetric(vertical: SizeConfig.padding8),

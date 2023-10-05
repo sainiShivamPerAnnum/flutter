@@ -159,14 +159,14 @@ class _SellConfirmationViewState extends State<SellConfirmationView> {
                           AppPositiveBtn(
                               btnText: locale.btnContinue,
                               onPressed: () {
-                                final model = WithDrawGameViewModel.fromGames(
-                                    locator<GameRepo>().gameTier,
-                                    widget.amount);
-                                if (model.gamesWillBeLocked.isNotEmpty) {
-                                  showWarningScreen.value = true;
-                                } else {
-                                  widget.onSuccess.call();
-                                }
+                                // final model = WithDrawGameViewModel.fromGames(
+                                //     locator<GameRepo>().gameTier,
+                                //     widget.amount);
+                                // if (model.gamesWillBeLocked.isNotEmpty) {
+                                //   showWarningScreen.value = true;
+                                // } else {
+                                widget.onSuccess.call();
+                                // }
                               }),
                           SizedBox(height: SizeConfig.padding16),
                           AppNegativeBtn(

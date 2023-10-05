@@ -9,6 +9,7 @@ class GoldProSchemeModel {
   final String isSoldOut;
   final String isFreezeLease;
   final String logo;
+  final String yearOfOperation;
 
   GoldProSchemeModel({
     required this.id,
@@ -19,19 +20,21 @@ class GoldProSchemeModel {
     required this.jewellerUserAccountName,
     required this.isSoldOut,
     required this.logo,
+    required this.yearOfOperation,
   });
 
   factory GoldProSchemeModel.fromMap(Map<String, dynamic> map) {
     return GoldProSchemeModel(
-      id: map['id'] ?? "",
-      interestRate: map['interestRate'] ?? "",
-      minQtyLease: map['minQtyLease'] ?? "",
-      isSoldOut: map['isSoldOut'] ?? "",
-      isFreezeLease: map['isFreezeLease'] ?? "",
-      description: map['description'] ?? "",
-      jewellerUserAccountName: map['jewellerUserAccountName'] ?? "",
-      logo: map["profile"]["logo"] ?? "",
-    );
+        id: map['id'] ?? "",
+        interestRate: map['interestRate'] ?? "",
+        minQtyLease: map['minQtyLease'] ?? "",
+        isSoldOut: map['isSoldOut'] ?? "",
+        isFreezeLease: map['isFreezeLease'] ?? "",
+        description: map["profile"]['description'] ?? "",
+        jewellerUserAccountName: map['jewellerUserAccountName'] ?? "",
+        logo: map["profile"]["logo"] ?? "",
+        yearOfOperation:
+            (map["profile"]["yearOfOperation"] ?? '2014').toString());
   }
 
   @override

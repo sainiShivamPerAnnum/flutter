@@ -145,7 +145,7 @@ class GoldInfoWidget extends StatelessWidget {
                     investmentType: InvestmentType.AUGGOLD99,
                     gms: BaseUtil.digitPrecision(
                         AppConfig.getValue(
-                                AppConfigKey.goldProMinimumInvestment) -
+                                AppConfigKey.goldProInvestmentChips)[0] -
                             (_userService.userFundWallet?.augGoldQuantity ?? 0),
                         4,
                         false),

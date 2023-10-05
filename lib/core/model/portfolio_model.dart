@@ -131,23 +131,30 @@ class Asset {
   final double percGains;
   final double principle;
   final double balance;
+  final bool isGoldProUser;
   Asset({
     required this.absGains,
     required this.percGains,
     required this.principle,
     required this.balance,
+    required this.isGoldProUser,
   });
 
   factory Asset.fromMap(Map<String, dynamic>? map) {
     if (map == null || map.isEmpty) return Asset.base();
     return Asset(
-      absGains: (map['absGain'] ?? 0.0) * 1.0,
-      percGains: (map['percGain'] ?? 0.0) * 1.0,
-      principle: (map["principle"] ?? 0.0) * 1.0,
-      balance: (map["balance"] ?? 0.0) * 1.0,
-    );
+        absGains: (map['absGain'] ?? 0.0) * 1.0,
+        percGains: (map['percGain'] ?? 0.0) * 1.0,
+        principle: (map["principle"] ?? 0.0) * 1.0,
+        balance: (map["balance"] ?? 0.0) * 1.0,
+        isGoldProUser: map['isGoldProUser'] ?? false);
   }
   factory Asset.base() {
-    return Asset(absGains: 0.0, percGains: 0.0, principle: 0.0, balance: 0.0);
+    return Asset(
+        absGains: 0.0,
+        percGains: 0.0,
+        principle: 0.0,
+        balance: 0.0,
+        isGoldProUser: false);
   }
 }

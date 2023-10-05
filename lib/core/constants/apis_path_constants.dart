@@ -254,4 +254,6 @@ class ApiPath {
   static String get homeScreenCarouselItems => "/home_screen";
 
   static String lbMaturity(String? uid) => "/lb/fd/maturities?uid=$uid";
+
+  static String get goldProConfig => "/gold_pro";
 }

@@ -24,6 +24,7 @@ import 'package:felloapp/core/service/notifier_services/internal_ops_service.dar
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/app_exceptions.dart';
+import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
@@ -35,7 +36,7 @@ import 'base_repo.dart';
 class UserRepository extends BaseRepo {
   final AppFlyerAnalytics _appsFlyerService = locator<AppFlyerAnalytics>();
   final _cacheService = CacheService();
-
+  final CustomLogger _logger = locator<CustomLogger>();
   final Api _api = locator<Api>();
   final ApiPath _apiPaths = locator<ApiPath>();
   final InternalOpsService _internalOpsService = locator<InternalOpsService>();
@@ -664,6 +665,7 @@ class UserRepository extends BaseRepo {
       final token = await getBearerToken();
       final res = await APIService.instance.getData(ApiPath.portfolio(uid!),
           cBaseUrl: AppEnvironment.instance.userOps, token: token);
+      _logger.i("Portfolio: ${res['data']}");
       final Portfolio portfolio = Portfolio.fromMap(res['data']);
       return ApiResponse(code: 200, model: portfolio);
     } catch (e) {

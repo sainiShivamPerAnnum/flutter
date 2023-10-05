@@ -1,6 +1,8 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/faqTypes.dart';
+import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -13,7 +15,6 @@ import 'package:felloapp/ui/pages/hometabs/save/gold_components/gold_pro_card.da
 import 'package:felloapp/ui/pages/hometabs/save/gold_components/gold_rate_graph.dart';
 import 'package:felloapp/ui/pages/login/login_components/login_support.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
-import 'package:felloapp/ui/pages/static/save_assets_footer.dart';
 import 'package:felloapp/ui/pages/static/youtube_player_view.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
@@ -22,7 +23,6 @@ import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
-import 'package:tuple/tuple.dart';
 
 class GoldProDetailsView extends StatelessWidget {
   const GoldProDetailsView({super.key});
@@ -130,7 +130,7 @@ class GoldProDetailsView extends StatelessWidget {
                                                     children: [
                                                       TextSpan(
                                                         text:
-                                                            " 4.5% Extra Gold ",
+                                                            " ${AppConfig.getValue(AppConfigKey.goldProInterest).toDouble()}% Extra Gold ",
                                                         style: TextStyles
                                                             .sourceSansB.body0
                                                             .colour(UiConstants
@@ -191,76 +191,20 @@ class GoldProDetailsView extends StatelessWidget {
                                   : SizeConfig.padding24);
                         }),
                     const LineGradientChart(isPro: true),
-                    const GoldProInterestBreakdownWidget(),
+                    GoldProInterestBreakdownWidget(model: model),
                     // SizedBox(height: SizeConfig.padding14),
                     const GoldProMiniTransactions(),
-                    const HowGoldProWorksSection(),
-                    const WhyGoldProSection(),
+                    HowGoldProWorksSection(model: model),
+                    WhyGoldProSection(model: model),
                     // SizedBox(height: SizeConfig.padding24),
                     const GoldProSellCard(),
                     // Testomonials(type: InvestmentType.AUGGOLD99),
 
                     SizedBox(height: SizeConfig.pageHorizontalMargins),
-                    Padding(
-                      padding:
-                          EdgeInsets.symmetric(vertical: SizeConfig.padding16),
-                      child: Text(
-                        "Frequently Asked Questions",
-                        style:
-                            TextStyles.rajdhaniSB.title4.colour(Colors.white),
-                      ),
-                    ),
-                    SizedBox(
-                      width: SizeConfig.screenWidth,
-                      child: Column(
-                        children: [
-                          Theme(
-                            data: ThemeData(brightness: Brightness.dark),
-                            child: ExpansionPanelList(
-                              animationDuration:
-                                  const Duration(milliseconds: 600),
-                              expandedHeaderPadding: const EdgeInsets.all(0),
-                              dividerColor:
-                                  UiConstants.kDividerColor.withOpacity(0.3),
-                              elevation: 0,
-                              children: List.generate(
-                                model.faqHeaders.length,
-                                (index) => ExpansionPanel(
-                                  backgroundColor: Colors.transparent,
-                                  canTapOnHeader: true,
-                                  headerBuilder: (ctx, isOpen) => Padding(
-                                    padding: EdgeInsets.only(
-                                      top: SizeConfig.padding20,
-                                      left: SizeConfig.pageHorizontalMargins,
-                                      bottom: SizeConfig.padding20,
-                                    ),
-                                    child: Text(model.faqHeaders[index] ?? "",
-                                        style: TextStyles.sourceSans.body2
-                                            .colour(Colors.white)),
-                                  ),
-                                  isExpanded: model.detStatus[index],
-                                  body: Container(
-                                    margin: EdgeInsets.symmetric(
-                                        horizontal:
-                                            SizeConfig.pageHorizontalMargins),
-                                    alignment: Alignment.centerLeft,
-                                    child: Text(model.faqResponses[index]!,
-                                        textAlign: TextAlign.start,
-                                        style: TextStyles.body3.colour(
-                                            UiConstants.kFAQsAnswerColor)),
-                                  ),
-                                ),
-                              ),
-                              expansionCallback: (i, isOpen) {
-                                model.updateDetStatus(i, !isOpen);
-                              },
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
+                    GoldProFaqs(model: model),
+
                     SizedBox(height: SizeConfig.padding20),
-                    const SaveAssetsFooter(),
+                    // const SaveAssetsFooter(),
                     SizedBox(height: SizeConfig.navBarHeight * 2),
                   ],
                 ),
@@ -326,7 +270,7 @@ class GoldProDetailsView extends StatelessWidget {
                           minWidth: SizeConfig.screenWidth,
                           color: UiConstants.kGoldProPrimary,
                           child: Text(
-                            "EARN 4.5% EXTRA RETURNS",
+                            "EARN ${AppConfig.getValue(AppConfigKey.goldProInterest).toDouble()}% EXTRA RETURNS",
                             style:
                                 TextStyles.rajdhaniB.body1.colour(Colors.black),
                           ),
@@ -342,6 +286,79 @@ class GoldProDetailsView extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class GoldProFaqs extends StatelessWidget {
+  const GoldProFaqs({
+    required this.model,
+    super.key,
+  });
+
+  final GoldProDetailsViewModel model;
+
+  @override
+  Widget build(BuildContext context) {
+    return (model.goldProConfig?.data?.faqs ?? []).isNotEmpty
+        ? Column(
+            children: [
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: SizeConfig.padding16),
+                child: Text(
+                  "Frequently Asked Questions",
+                  style: TextStyles.rajdhaniSB.title4.colour(Colors.white),
+                ),
+              ),
+              SizedBox(
+                width: SizeConfig.screenWidth,
+                child: Column(
+                  children: [
+                    Theme(
+                      data: ThemeData(brightness: Brightness.dark),
+                      child: ExpansionPanelList(
+                        animationDuration: const Duration(milliseconds: 600),
+                        expandedHeaderPadding: const EdgeInsets.all(0),
+                        dividerColor:
+                            UiConstants.kDividerColor.withOpacity(0.3),
+                        elevation: 0,
+                        children: List.generate(
+                          model.faqHeaders.length,
+                          (index) => ExpansionPanel(
+                            backgroundColor: Colors.transparent,
+                            canTapOnHeader: true,
+                            headerBuilder: (ctx, isOpen) => Padding(
+                              padding: EdgeInsets.only(
+                                top: SizeConfig.padding20,
+                                left: SizeConfig.pageHorizontalMargins,
+                                bottom: SizeConfig.padding20,
+                              ),
+                              child: Text(model.faqHeaders[index] ?? "",
+                                  style: TextStyles.sourceSans.body2
+                                      .colour(Colors.white)),
+                            ),
+                            isExpanded: model.detStatus[index],
+                            body: Container(
+                              margin: EdgeInsets.symmetric(
+                                  horizontal: SizeConfig.pageHorizontalMargins),
+                              alignment: Alignment.centerLeft,
+                              child: Text(model.faqResponses[index]!,
+                                  textAlign: TextAlign.start,
+                                  style: TextStyles.body3
+                                      .colour(UiConstants.kFAQsAnswerColor)),
+                            ),
+                          ),
+                        ),
+                        expansionCallback: (i, isOpen) {
+                          model.updateDetStatus(i, !isOpen);
+                        },
+                      ),
+                    ),
+                  ],
+                ),
+              ),
+            ],
+          )
+        : const SizedBox();
   }
 }
 
@@ -415,7 +432,10 @@ class GoldProSellCard extends StatelessWidget {
 class GoldProInterestBreakdownWidget extends StatelessWidget {
   const GoldProInterestBreakdownWidget({
     super.key,
+    required this.model,
   });
+
+  final GoldProDetailsViewModel model;
 
   @override
   Widget build(BuildContext context) {
@@ -439,7 +459,7 @@ class GoldProInterestBreakdownWidget extends StatelessWidget {
                         crossAxisAlignment: WrapCrossAlignment.end,
                         children: [
                           Text(
-                            "2.75% ",
+                            "${model.goldProConfig?.data?.interestBreakDown?.fixed?.title ?? '2.75%'} ",
                             style: TextStyles.sourceSansSB.title4
                                 .colour(UiConstants.kGoldProPrimary),
                           ),
@@ -451,7 +471,7 @@ class GoldProInterestBreakdownWidget extends StatelessWidget {
                       ),
                       SizedBox(height: SizeConfig.padding4),
                       Text(
-                        "credited daily",
+                        "${model.goldProConfig?.data?.interestBreakDown?.fixed?.subTitle ?? 'credited daily'}",
                         style: TextStyles.body3.colour(Colors.white),
                       )
                     ],
@@ -468,7 +488,7 @@ class GoldProInterestBreakdownWidget extends StatelessWidget {
                       crossAxisAlignment: WrapCrossAlignment.end,
                       children: [
                         Text(
-                          "1.75% ",
+                          "${model.goldProConfig?.data?.interestBreakDown?.extra?.title ?? '1.75%'} ",
                           style: TextStyles.sourceSansSB.title4
                               .colour(UiConstants.kGoldProPrimary),
                         ),
@@ -480,7 +500,7 @@ class GoldProInterestBreakdownWidget extends StatelessWidget {
                     ),
                     SizedBox(height: SizeConfig.padding4),
                     Text(
-                      "credited every 6 months",
+                      "${model.goldProConfig?.data?.interestBreakDown?.extra?.subTitle ?? 'credited every 6 months'}",
                       style: TextStyles.body3.colour(Colors.white),
                     )
                   ],
@@ -498,7 +518,7 @@ class GoldProInterestBreakdownWidget extends StatelessWidget {
               ),
               SizedBox(width: SizeConfig.padding4),
               Text(
-                "10K + Users are enjoying 4.5% Extra Gold",
+                "${model.goldProConfig?.data?.interestBreakDown?.subText ?? '10K + Users are enjoying ${AppConfig.getValue(AppConfigKey.goldProInterest).toDouble()}% Extra Gold'}",
                 style: TextStyles.body4.colour(UiConstants.KGoldProPrimaryDark),
               )
             ],
@@ -511,170 +531,182 @@ class GoldProInterestBreakdownWidget extends StatelessWidget {
 
 class HowGoldProWorksSection extends StatelessWidget {
   const HowGoldProWorksSection({
+    required this.model,
     super.key,
   });
 
-  static const List<String> videos = [
-    "https://youtube.com/shorts/xt2DAiv1VP8",
-    "https://youtube.com/shorts/d1UqNZr1YGw",
-    "https://youtube.com/shorts/YKcgDRJTrS4",
-  ];
+  final GoldProDetailsViewModel model;
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: SizeConfig.padding14),
-      child: Column(
-        children: [
-          Text(
-            "How ${Constants.ASSET_GOLD_STAKE} works",
-            style: TextStyles.rajdhaniSB.title3.colour(Colors.white),
-          ),
-          SizedBox(height: SizeConfig.padding16),
-          SizedBox(
-            height: SizeConfig.screenWidth! * 0.5,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              padding: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.pageHorizontalMargins),
-              itemBuilder: (context, i) => GestureDetector(
-                onTap: () {
-                  final UserService _userService = locator<UserService>();
-                  BaseUtil.openDialog(
-                      isBarrierDismissible: true,
-                      addToScreenStack: true,
-                      hapticVibrate: true,
-                      barrierColor: Colors.black54,
-                      content:
-                          Dialog(child: YoutubePlayerView(url: videos[i])));
-                  locator<AnalyticsService>().track(
-                    eventName: AnalyticsEvents.videoTappedOnGoldPro,
-                    properties: {
-                      "existing lease amount":
-                          _userService.userPortfolio.augmont.fd.balance,
-                      "existing lease grams":
-                          _userService.userFundWallet?.wAugFdQty ?? 0
-                    },
-                  );
-                },
-                child: Container(
-                  width: SizeConfig.screenWidth! * 0.36,
-                  margin: EdgeInsets.only(right: SizeConfig.padding16),
-                  decoration: BoxDecoration(
-                    // color: UiConstants.KGoldProPrimaryDark,
-                    image: DecorationImage(
-                      image: NetworkImage(
-                          'https://img.youtube.com/vi/${videos[i].substring(videos[i].length - 11)}/0.jpg'),
-                      fit: BoxFit.cover,
-                    ),
-                    borderRadius: BorderRadius.circular(SizeConfig.roundness16),
-                  ),
-                  alignment: Alignment.center,
-                  child: Image.network(
-                    Assets.youtubeLogo,
-                    width: SizeConfig.padding54,
-                  ),
+    return (model.goldProConfig?.data?.videos ?? []).isNotEmpty
+        ? Container(
+            margin: EdgeInsets.symmetric(vertical: SizeConfig.padding14),
+            child: Column(
+              children: [
+                Text(
+                  "How ${Constants.ASSET_GOLD_STAKE} works?",
+                  style: TextStyles.rajdhaniSB.title3.colour(Colors.white),
                 ),
-              ),
-              itemCount: videos.length,
+                SizedBox(height: SizeConfig.padding16),
+                SizedBox(
+                  height: SizeConfig.screenWidth! * 0.5,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    padding: EdgeInsets.symmetric(
+                        horizontal: SizeConfig.pageHorizontalMargins),
+                    itemBuilder: (context, i) => GestureDetector(
+                      onTap: () {
+                        final UserService _userService = locator<UserService>();
+                        BaseUtil.openDialog(
+                            isBarrierDismissible: true,
+                            addToScreenStack: true,
+                            hapticVibrate: true,
+                            barrierColor: Colors.black54,
+                            content: Dialog(
+                                child: YoutubePlayerView(
+                                    url: model.goldProConfig!.data!.videos![i]
+                                        .src!)));
+                        locator<AnalyticsService>().track(
+                          eventName: AnalyticsEvents.videoTappedOnGoldPro,
+                          properties: {
+                            "existing lease amount":
+                                _userService.userPortfolio.augmont.fd.balance,
+                            "existing lease grams":
+                                _userService.userFundWallet?.wAugFdQty ?? 0
+                          },
+                        );
+                      },
+                      child: Container(
+                        width: SizeConfig.screenWidth! * 0.36,
+                        margin: EdgeInsets.only(right: SizeConfig.padding16),
+                        decoration: BoxDecoration(
+                          // color: UiConstants.KGoldProPrimaryDark,
+                          image: DecorationImage(
+                            image: NetworkImage(
+                                'https://img.youtube.com/vi/${model.goldProConfig!.data!.videos![i].src!.substring(model.goldProConfig!.data!.videos![i].src!.length - 11)}/0.jpg'),
+                            fit: BoxFit.cover,
+                          ),
+                          borderRadius:
+                              BorderRadius.circular(SizeConfig.roundness16),
+                        ),
+                        alignment: Alignment.center,
+                        child: Image.network(
+                          Assets.youtubeLogo,
+                          width: SizeConfig.padding54,
+                        ),
+                      ),
+                    ),
+                    itemCount: model.goldProConfig!.data!.videos!.length,
+                  ),
+                )
+              ],
             ),
           )
-        ],
-      ),
-    );
+        : const SizedBox();
   }
 }
 
 class WhyGoldProSection extends StatelessWidget {
   const WhyGoldProSection({
     super.key,
+    required this.model,
   });
+  final GoldProDetailsViewModel model;
 
   @override
   Widget build(BuildContext context) {
-    List<Tuple2<String, String>> whyDigitalGoldList = const [
-      Tuple2("48 h", "Lock-In"),
-      Tuple2("15.5%", "Returns p.a."),
-      Tuple2("4.5%", "Extra Gold"),
-    ];
-    return Container(
-      margin: EdgeInsets.symmetric(vertical: SizeConfig.padding14),
-      child: Column(
-        children: [
-          Text(
-            "Why ${Constants.ASSET_GOLD_STAKE}?",
-            style: TextStyles.rajdhaniSB.title3.colour(Colors.white),
-          ),
-          SizedBox(height: SizeConfig.padding16),
-          SizedBox(
-            height: SizeConfig.screenWidth! * 0.39,
-            child: ListView.builder(
-              scrollDirection: Axis.horizontal,
-              padding: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.pageHorizontalMargins),
-              itemBuilder: (context, index) => Container(
-                  width: SizeConfig.screenWidth! * 0.35,
-                  margin: EdgeInsets.only(right: SizeConfig.padding16),
-                  decoration: BoxDecoration(
-                    gradient: LinearGradient(colors: [
-                      UiConstants.KGoldProPrimaryDark,
-                      Color(0xffEAAC4D),
-                    ], begin: Alignment.bottomLeft, end: Alignment.topRight),
-                    borderRadius: BorderRadius.circular(
-                      SizeConfig.roundness24,
-                    ),
-                  ),
-                  alignment: Alignment.center,
-                  child: Stack(
-                    children: [
-                      ClipRRect(
-                        borderRadius: BorderRadius.circular(
-                          SizeConfig.roundness24,
+    // List<Tuple2<String, String>> whyDigitalGoldList = [
+    //   const Tuple2("48 h", "Lock-In"),
+    //   const Tuple2("15.5%", "Returns p.a."),
+    //   Tuple2("${AppConfig.getValue(AppConfigKey.goldProInterest).toDouble()}%",
+    //       "Extra Gold"),
+    // ];
+    return (model.goldProConfig?.data?.highlights ?? []).isNotEmpty
+        ? Container(
+            margin: EdgeInsets.symmetric(vertical: SizeConfig.padding14),
+            child: Column(
+              children: [
+                Text(
+                  "Why ${Constants.ASSET_GOLD_STAKE}?",
+                  style: TextStyles.rajdhaniSB.title3.colour(Colors.white),
+                ),
+                SizedBox(height: SizeConfig.padding16),
+                SizedBox(
+                  height: SizeConfig.screenWidth! * 0.39,
+                  child: ListView.builder(
+                    scrollDirection: Axis.horizontal,
+                    padding: EdgeInsets.symmetric(
+                        horizontal: SizeConfig.pageHorizontalMargins),
+                    itemBuilder: (context, index) => Container(
+                        width: SizeConfig.screenWidth! * 0.35,
+                        margin: EdgeInsets.only(right: SizeConfig.padding16),
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                              colors: [
+                                UiConstants.KGoldProPrimaryDark,
+                                Color(0xffEAAC4D),
+                              ],
+                              begin: Alignment.bottomLeft,
+                              end: Alignment.topRight),
+                          borderRadius: BorderRadius.circular(
+                            SizeConfig.roundness24,
+                          ),
                         ),
-                        child: const GoldShimmerWidget(
-                          size: ShimmerSizeEnum.small,
-                          primary: Colors.white24,
-                          secondary: Color(0xffF7C463),
-                          tertiary: Colors.white24,
-                        ),
-                      ),
-                      Align(
                         alignment: Alignment.center,
-                        child: Column(
-                          mainAxisAlignment: MainAxisAlignment.center,
-                          crossAxisAlignment: CrossAxisAlignment.center,
+                        child: Stack(
                           children: [
-                            SizedBox(
-                              height: SizeConfig.padding24,
-                            ),
-                            Expanded(
-                              child: Center(
-                                child: Text(
-                                  whyDigitalGoldList[index].item1,
-                                  style: TextStyles.rajdhaniB.title0
-                                      .colour(Colors.black),
-                                ),
+                            ClipRRect(
+                              borderRadius: BorderRadius.circular(
+                                SizeConfig.roundness24,
+                              ),
+                              child: const GoldShimmerWidget(
+                                size: ShimmerSizeEnum.small,
+                                primary: Colors.white24,
+                                secondary: Color(0xffF7C463),
+                                tertiary: Colors.white24,
                               ),
                             ),
-                            Text(
-                              whyDigitalGoldList[index].item2,
-                              style: TextStyles.sourceSansSB.body0
-                                  .colour(Colors.black),
-                              textAlign: TextAlign.center,
-                            ),
-                            SizedBox(
-                              height: SizeConfig.padding24,
-                            ),
+                            Align(
+                              alignment: Alignment.center,
+                              child: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  SizedBox(
+                                    height: SizeConfig.padding24,
+                                  ),
+                                  Expanded(
+                                    child: Center(
+                                      child: Text(
+                                        model.goldProConfig!.data!
+                                            .highlights![index].title!,
+                                        style: TextStyles.rajdhaniB.title0
+                                            .colour(Colors.black),
+                                      ),
+                                    ),
+                                  ),
+                                  Text(
+                                    model.goldProConfig!.data!
+                                        .highlights![index].subTitle!,
+                                    style: TextStyles.sourceSansSB.body0
+                                        .colour(Colors.black),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                  SizedBox(
+                                    height: SizeConfig.padding24,
+                                  ),
+                                ],
+                              ),
+                            )
                           ],
-                        ),
-                      )
-                    ],
-                  )),
-              itemCount: whyDigitalGoldList.length,
+                        )),
+                    itemCount: model.goldProConfig!.data!.highlights!.length,
+                  ),
+                )
+              ],
             ),
           )
-        ],
-      ),
-    );
+        : const SizedBox();
   }
 }

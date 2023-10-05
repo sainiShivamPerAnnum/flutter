@@ -14,4 +14,5 @@ class CacheKeys {
   static const HOME_SCREEN_ITEMS = "goldRatesData";
   static const REFERRAL_CODE = 'referral_code';
   static const TICKETS_LB = "tickets_leaderboard";
+  static const GOLDPRO_CONFIG = "gold_pro_config";
 }
