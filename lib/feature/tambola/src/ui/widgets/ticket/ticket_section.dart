@@ -311,11 +311,7 @@ class TicketMatchesBriefBoxWidget extends StatelessWidget {
                           child: Row(children: [
                             RichText(
                               text: TextSpan(
-                                text: matchList[0]
-                                    .title
-                                    .toString()
-                                    .split(' ')
-                                    .first,
+                                text: matchList[0].title.split(' ').first,
                                 style: TextStyles.rajdhaniB.body1
                                     .colour(Colors.white),
                                 children: [
