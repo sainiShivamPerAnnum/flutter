@@ -13,6 +13,8 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
+import '../../../../keys/keys.dart';
+
 class LoginOtpView extends StatefulWidget {
   final VoidCallback? otpEntered;
   final VoidCallback? resendOtp;
@@ -22,12 +24,12 @@ class LoginOtpView extends StatefulWidget {
   final LoginControllerViewModel loginModel;
 
   const LoginOtpView({
+    required this.loginModel,
     Key? key,
     this.otpEntered,
     this.resendOtp,
     this.changeNumber,
     this.mobileNo,
-    required this.loginModel,
   }) : super(key: key);
 
   @override
@@ -72,6 +74,7 @@ class LoginOtpViewState extends State<LoginOtpView> {
                 horizontal: SizeConfig.pageHorizontalMargins * 2,
               ),
               child: PinInputTextField(
+                key: K.otpTextFieldKey,
                 enabled: model.otpFieldEnabled,
                 controller: model.pinEditingController,
                 autoFocus: true,
@@ -129,7 +132,7 @@ class LoginOtpViewState extends State<LoginOtpView> {
 
                       if (baseProvider.isOtpResendCount < 2) {
                         baseProvider.isOtpResendCount++;
-                        logger!.d(baseProvider.isOtpResendCount);
+                        logger.d(baseProvider.isOtpResendCount);
                         BaseUtil.showPositiveAlert(
                           locale.otpSentSuccess,
                           locale.waitForNewOTP,
@@ -174,9 +177,9 @@ class LoginOtpViewState extends State<LoginOtpView> {
                       model.showResendOption = true;
                     },
                     builder: (
-                      BuildContext context,
-                      Duration value,
-                      Widget? child,
+                      context,
+                      value,
+                      child,
                     ) {
                       final minutes =
                           (value.inMinutes).toString().padLeft(2, '0');

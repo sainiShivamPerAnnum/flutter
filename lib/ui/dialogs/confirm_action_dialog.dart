@@ -1,3 +1,4 @@
+import 'package:felloapp/ui/keys/keys.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -10,12 +11,13 @@ class ConfirmationDialog extends StatefulWidget {
   final Function confirmAction, cancelAction;
   final Widget? asset;
   final bool showSecondaryButton;
-  ConfirmationDialog({
+  const ConfirmationDialog({
     required this.title,
-    this.description = '',
     required this.buttonText,
     required this.confirmAction,
     required this.cancelAction,
+    super.key,
+    this.description = '',
     this.showSecondaryButton = true,
     this.asset,
     this.cancelBtnText = 'Cancel',
@@ -26,7 +28,7 @@ class ConfirmationDialog extends StatefulWidget {
 }
 
 class _FormDialogState extends State<ConfirmationDialog> {
-  Log log = new Log('ConfirmationDialog');
+  Log log = const Log('ConfirmationDialog');
   bool isLoading = false;
 
   @override
@@ -37,14 +39,14 @@ class _FormDialogState extends State<ConfirmationDialog> {
       ),
       elevation: 0.0,
       backgroundColor: Colors.transparent,
-      child: dialogContent(context),
       insetPadding: EdgeInsets.symmetric(horizontal: SizeConfig.padding20),
+      child: dialogContent(context),
     );
   }
 
-  dialogContent(BuildContext context) {
+  Container dialogContent(BuildContext context) {
     return Container(
-      decoration: new BoxDecoration(
+      decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(SizeConfig.cardBorderRadius),
         gradient: LinearGradient(
           begin: Alignment.topCenter,
@@ -64,7 +66,7 @@ class _FormDialogState extends State<ConfirmationDialog> {
           left: SizeConfig.padding12,
           top: SizeConfig.padding32,
         ),
-        margin: EdgeInsets.all(1),
+        margin: const EdgeInsets.all(1),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(SizeConfig.cardBorderRadius),
           color: UiConstants.kSecondaryBackgroundColor,
@@ -101,7 +103,7 @@ class _FormDialogState extends State<ConfirmationDialog> {
             isLoading
                 ? Column(
                     children: [
-                      CircularProgressIndicator(
+                      const CircularProgressIndicator(
                         strokeWidth: 0.5,
                       ),
                       SizedBox(height: SizeConfig.padding16)
@@ -128,6 +130,7 @@ class _FormDialogState extends State<ConfirmationDialog> {
                       Expanded(
                         child: Center(
                           child: AppPositiveBtn(
+                            key: K.confirmationDialogCTAKey,
                             btnText: widget.buttonText,
                             width: !widget.showSecondaryButton
                                 ? null
