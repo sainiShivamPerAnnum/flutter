@@ -157,7 +157,7 @@ class JourneyRepository extends BaseRepo {
       final token = await getBearerToken();
       final queryParams = {"page": page.toString(), "direction": direction};
 
-      return (await _cacheService.paginatedCachedApi(
+      return await _cacheService.paginatedCachedApi(
           CacheKeys.JOURNEY_PAGE,
           startPage,
           endPage,
@@ -183,7 +183,7 @@ class JourneyRepository extends BaseRepo {
         }
 
         return ApiResponse<List<JourneyPage>>(model: journeyPages, code: 200);
-      })) as ApiResponse<List<JourneyPage>>;
+      });
     } on FetchDataException catch (e) {
       logger.e(e.toString());
       return ApiResponse.withError(e.toString(), 500);
@@ -207,40 +207,27 @@ class JourneyRepository extends BaseRepo {
 
       final token = await getBearerToken();
       final queryParams = {"page": page.toString(), "direction": direction};
-      print(journeyPages.length);
 
       if (journeyPages.isNotEmpty) {
         if (journeyPages.length - 1 >= endPage) {
           return ApiResponse(
-              model: [journeyPages[startPage], journeyPages[endPage]],
-              code: 200);
+            model: [journeyPages[startPage], journeyPages[endPage]],
+            code: 200,
+          );
         } else {
           if (page > journeyPages.length) {
-            return ApiResponse(model: [], code: 200);
+            return ApiResponse(
+              model: [],
+              code: 200,
+            );
           } else {
             return ApiResponse(
-                model: journeyPages.sublist(startPage), code: 200);
+              model: journeyPages.sublist(startPage),
+              code: 200,
+            );
           }
         }
       }
-      // final response = await APIService.instance.getData(
-      //     "journey_${version.toLowerCase()}.txt",
-      //     token: token,
-      //     cBaseUrl: _cdnBaseUrl,
-      //     queryParams: queryParams,
-      //     decryptData: true);
-
-      // List<dynamic>? items = response;
-
-      // if (items!.isEmpty)
-      //   return ApiResponse<List<JourneyPage>>(model: [], code: 200);
-
-      // for (int i = 0; i < items.length; i++) {
-      //   journeyPages.add(JourneyPage.fromMap(items[i], i + 1));
-      // }
-
-      // return ApiResponse<List<JourneyPage>>(
-      //     model: [journeyPages[0], journeyPages[1]], code: 200);
 
       return await _cacheService.cachedApi(
           CacheKeys.JOURNEY_PAGE,

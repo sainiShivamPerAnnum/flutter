@@ -14,24 +14,23 @@ class LevelUpAnimation extends StatelessWidget {
     return PropertyChangeConsumer<JourneyService, JourneyServiceProperties>(
       properties: const [JourneyServiceProperties.LevelCompletion],
       builder: (context, jModel, properties) {
-        return jModel!.showLevelUpAnimation
-            ? Align(
-                alignment: Alignment.center,
-                child: IgnorePointer(
-                  ignoring: true,
-                  child: Lottie.network(
-                    Assets.levelUpLottie,
-                    width: SizeConfig.screenWidth,
-                    fit: BoxFit.fitWidth,
-                    controller: jModel.levelUpLottieController,
-                    onLoaded: (composition) {
-                      jModel.levelUpLottieController!.duration =
-                          composition.duration;
-                    },
-                  ),
-                ),
-              )
-            : SizedBox();
+        if (!jModel!.showLevelUpAnimation) return const SizedBox.shrink();
+
+        return Align(
+          alignment: Alignment.center,
+          child: IgnorePointer(
+            ignoring: true,
+            child: Lottie.network(
+              Assets.levelUpLottie,
+              width: SizeConfig.screenWidth,
+              fit: BoxFit.fitWidth,
+              controller: jModel.levelUpLottieController,
+              onLoaded: (composition) {
+                jModel.levelUpLottieController!.duration = composition.duration;
+              },
+            ),
+          ),
+        );
       },
     );
   }
