@@ -36,7 +36,11 @@ class GoldProSellCard extends StatelessWidget {
           mini: true,
           leadTitle: "Current Gold Value",
           leadTitleColor: Colors.grey,
-          lead: BaseUtil.digitPrecision(data.qty + data.interest_collected, 4),
+          lead: BaseUtil.digitPrecision(
+            BaseUtil.digitPrecision(data.qty, 4, false) +
+                BaseUtil.digitPrecision(data.interest_collected, 4, false),
+            4,
+          ),
           leadSubtitleColor: UiConstants.kGoldProPrimary,
           trailTitle: "Gold Leased",
           trail: data.qty,

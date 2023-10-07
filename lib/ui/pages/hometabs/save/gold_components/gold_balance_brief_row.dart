@@ -69,7 +69,7 @@ class GoldBalanceBriefRow extends StatelessWidget {
                         fit: FlexFit.loose,
                         child: Text(
                           isGainInGms
-                              ? "${BaseUtil.digitPrecision(lead ?? goldAmount, 4, false)}gms"
+                              ? "${BaseUtil.digitPrecision(lead ?? goldAmount, 4, true)}gms"
                               : "₹${BaseUtil.digitPrecision(lead ?? goldAmount, 2)}",
                           style: mini
                               ? TextStyles.sourceSansSB.title5.colour(
