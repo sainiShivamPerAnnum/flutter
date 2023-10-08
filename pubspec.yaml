@@ -141,6 +141,7 @@ flutter:
     - assets/vectors/userAvatars/
     - assets/lotties/
     - assets/lotties/nav/
+    - shorebird.yaml
 
 flutter_intl:
   main_locale: en_US
