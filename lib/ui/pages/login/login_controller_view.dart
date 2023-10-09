@@ -14,7 +14,6 @@ import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
-import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -30,16 +29,10 @@ class LoginControllerView extends StatefulWidget {
   const LoginControllerView({Key? key, this.initPage}) : super(key: key);
 
   @override
-  State<LoginControllerView> createState() =>
-      _LoginControllerViewState(initPage);
+  State<LoginControllerView> createState() => _LoginControllerViewState();
 }
 
 class _LoginControllerViewState extends State<LoginControllerView> {
-  final Log log = const Log("LoginController View");
-  final int? initPage;
-
-  _LoginControllerViewState(this.initPage);
-
   @override
   Widget build(BuildContext context) {
     S? locale = S.of(context);
@@ -47,7 +40,7 @@ class _LoginControllerViewState extends State<LoginControllerView> {
         MediaQuery.of(context).viewInsets.bottom > SizeConfig.viewInsets.bottom;
     return BaseView<LoginControllerViewModel>(
       onModelReady: (model) {
-        model.init(initPage, model);
+        model.init(widget.initPage, model);
         if (Platform.isAndroid) {
           // if (AppConfig.getValue<bool?>(AppConfigKey.enable_truecaller_login) ??
           //     false) {
