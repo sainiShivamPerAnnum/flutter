@@ -21,7 +21,7 @@ class PaymentRepository extends BaseRepo {
   final BaseUtil? _baseUtil = locator<BaseUtil>();
 
   Future<ApiResponse<WithdrawableGoldResponseModel>>
-  getWithdrawableAugGoldQuantity() async {
+      getWithdrawableAugGoldQuantity() async {
     try {
       String withdrawableQtyResponse = "";
       double balance = 0;
@@ -36,7 +36,7 @@ class PaymentRepository extends BaseRepo {
         token: token,
       );
       WithdrawableGoldResponseModel responseModel =
-      WithdrawableGoldResponseModel.fromMap(quantityResponse);
+          WithdrawableGoldResponseModel.fromMap(quantityResponse);
 
       return ApiResponse(model: responseModel, code: 200);
     } on BadRequestException catch (e) {
@@ -51,7 +51,8 @@ class PaymentRepository extends BaseRepo {
     return ApiResponse();
   }
 
-  Future<ApiResponse<bool>> addBankDetails({String? bankAccno, String? bankHolderName, String? bankIfsc}) async {
+  Future<ApiResponse<bool>> addBankDetails(
+      {String? bankAccno, String? bankHolderName, String? bankIfsc}) async {
     String message = '';
     try {
       final token = await getBearerToken();
@@ -91,7 +92,7 @@ class PaymentRepository extends BaseRepo {
   }
 
   Future<ApiResponse<BankAccountDetailsModel>>
-  getActiveBankAccountDetails() async {
+      getActiveBankAccountDetails() async {
     try {
       final token = await getBearerToken();
       final response = await APIService.instance.getData(
@@ -127,11 +128,10 @@ class PaymentRepository extends BaseRepo {
         goldProSchemeDetails =
             GoldProSchemeModel.fromMap(responseData as Map<String, dynamic>);
       }
-
       return ApiResponse(model: goldProSchemeDetails, code: 200);
     } catch (e) {
       logger.e(e.toString());
-      return ApiResponse.withError("Unable to fetch User Upi Id", 400);
+      return ApiResponse.withError(e.toString(), 400);
     }
   }
 

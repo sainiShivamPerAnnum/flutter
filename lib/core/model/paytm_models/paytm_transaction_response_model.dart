@@ -77,7 +77,7 @@ class Data {
 
   factory Data.fromMap(Map<String, dynamic> map) {
     return Data(
-      status: map['status'] as String? ?? Constants.TXN_STATUS_RESPONSE_PENDING,
+      status: map['status'] ?? Constants.TXN_STATUS_RESPONSE_PENDING,
       isUpdating: map['isUpdating'] as bool? ?? true,
       tickets: map['tickets'] as int? ?? 0,
       goldInTxnBought: (map['goldInTxnBought'] ?? 0).toDouble(),
@@ -148,9 +148,9 @@ class FloDepositDetails {
 }
 
 class ProMap {
-  final String status;
-  final double qty;
-  final String schemeId;
+  final String? status;
+  final double? qty;
+  final String? schemeId;
 
   ProMap({
     required this.status,
@@ -160,9 +160,9 @@ class ProMap {
 
   factory ProMap.fromMap(Map<String, dynamic> map) {
     return ProMap(
-      status: map['status'] as String,
+      status: map['status'] ?? "pending",
       qty: (map["qty"] ?? 0.0) * 1.0,
-      schemeId: map['schemeId'] as String,
+      schemeId: map['schemeId'] ?? "",
     );
   }
 

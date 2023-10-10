@@ -385,17 +385,18 @@ class GoldPlanWidget extends StatelessWidget {
                   ),
                 ],
               ),
-              // SizedBox(height: SizeConfig.padding34),
-              // DigitalGoldPrograms(
-              //   title: "Save in ${Constants.ASSET_GOLD_STAKE}",
-              //   model: model,
-              //   showRates: false,
-              //   isRecommended: true,
-              //   promoText: "*4.5% Extra Gold* by saving Min *0.5g* in Gold",
-              //   amount: amount,
-              //   isSkipMl: isSkipMl,
-              //   isPro: true,
-              // ),
+              SizedBox(height: SizeConfig.padding34),
+              DigitalGoldPrograms(
+                title: "Save in ${Constants.ASSET_GOLD_STAKE}",
+                model: model,
+                showRates: false,
+                isRecommended: true,
+                promoText:
+                    "*${AppConfig.getValue(AppConfigKey.goldProInterest).toDouble()}% Extra Gold* by saving Min *${BaseUtil.getIntOrDouble(AppConfig.getValue(AppConfigKey.goldProInvestmentChips)[0].toDouble())}g* in Gold",
+                amount: amount,
+                isSkipMl: isSkipMl,
+                isPro: true,
+              ),
               DigitalGoldPrograms(
                 title: "Save in Gold",
                 model: model,
@@ -822,9 +823,10 @@ class DigitalGoldPrograms extends StatelessWidget {
                   left: SizeConfig.screenWidth! / 8,
                 ),
                 width: SizeConfig.screenWidth! * 0.39,
-                child: const AvailabilityOfferWidget(
+                child: AvailabilityOfferWidget(
                     color: UiConstants.kBlogTitleColor,
-                    text: "*4.5% Extra Returns*"),
+                    text:
+                        "*${AppConfig.getValue(AppConfigKey.goldProInterest).toDouble()}% Extra Returns*"),
               ),
             ),
           ),

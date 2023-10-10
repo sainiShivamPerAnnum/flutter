@@ -255,12 +255,12 @@ class BaseRemoteConfig {
     "specialEffectsOnTxnDetailsView": true
   };
 
-  static const Map<String, int> _MINIMUM_GOLDPRO_INVESTMENT = {
-    "minimumGoldProInvestment": 5
+  static const Map<String, double> _GOLD_PRO_INTEREST = {
+    "goldProInterest": 2.75
   };
 
-  static const Map<String, List<int>> _GOLDPRO_INVESTMENT_CHIPS = {
-    "goldProInvestmentChips": [5, 10, 15, 20, 25]
+  static const Map<String, List<double>> _GOLDPRO_INVESTMENT_CHIPS = {
+    "goldProInvestmentChips": [5.0, 10.0, 15.0, 20.0, 25.0]
   };
 
   static Map<String, dynamic> DEFAULTS = {
@@ -337,7 +337,7 @@ class BaseRemoteConfig {
     ..._USE_NEW_URL_FOR_USEROPS,
     ..._SPECIAL_EFFECTS_ON_TXN_DETAILS_VIEW,
     ..._TICKETS_YOUTUBE_VIDEOS,
-    ..._MINIMUM_GOLDPRO_INVESTMENT,
+    ..._GOLD_PRO_INTEREST,
     ..._GOLDPRO_INVESTMENT_CHIPS
   };
 
@@ -533,8 +533,8 @@ class BaseRemoteConfig {
   static bool get SPECIAL_EFFECTS_ON_TXN_DETAILS_VIEW =>
       remoteConfig.getBool(_SPECIAL_EFFECTS_ON_TXN_DETAILS_VIEW.keys.first);
 
-  static int get MINIMUM_GOLDPRO_INVESTMENT =>
-      remoteConfig.getInt(_MINIMUM_GOLDPRO_INVESTMENT.keys.first);
+  static double get GOLD_PRO_INTEREST =>
+      remoteConfig.getDouble(_GOLD_PRO_INTEREST.keys.first);
 
   static int get invalidationBefore {
     return remoteConfig.getInt(_CACHE_INVALIDATION.keys.first);

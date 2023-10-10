@@ -126,34 +126,39 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage>
     return Scaffold(
       backgroundColor: const Color(0xff151D22),
       appBar: FAppBar(
-          title: null,
-          showAvatar: false,
-          showCoinBar: false,
-          showHelpButton: false,
-          action: Container(
-            height: SizeConfig.avatarRadius * 2,
-            padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding2),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-              border: Border.all(
-                color: Colors.white,
-              ),
-              color: Colors.transparent,
-            ),
-            child: TextButton(
-              child: Text(
-                'need help?',
-                style: TextStyles.sourceSans.body3,
-              ),
-              onPressed: () {
-                Haptic.vibrate();
-                AppState.delegate!.appState.currentAction = PageAction(
-                  state: PageState.addPage,
-                  page: FreshDeskHelpPageConfig,
-                );
-              },
-            ),
-          )),
+        title: null,
+        showAvatar: false,
+        showCoinBar: false,
+        showHelpButton: false,
+        action: !(widget.txn.tranStatus !=
+                    UserTransaction.TRAN_STATUS_COMPLETE &&
+                widget.txn.type == UserTransaction.TRAN_TYPE_WITHDRAW)
+            ? Container(
+                height: SizeConfig.avatarRadius * 2,
+                padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding2),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+                  border: Border.all(
+                    color: Colors.white,
+                  ),
+                  color: Colors.transparent,
+                ),
+                child: TextButton(
+                  child: Text(
+                    'Need help?',
+                    style: TextStyles.sourceSans.body3,
+                  ),
+                  onPressed: () {
+                    Haptic.vibrate();
+                    AppState.delegate!.appState.currentAction = PageAction(
+                      state: PageState.addPage,
+                      page: FreshDeskHelpPageConfig,
+                    );
+                  },
+                ),
+              )
+            : const SizedBox(),
+      ),
       body: Stack(
         children: [
           SingleChildScrollView(
@@ -671,36 +676,25 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage>
                 ),
               ),
             ),
-          // if (_showLottie)
-          //   Align(
-          //     alignment: Alignment.center,
-          //     child: IgnorePointer(
-          //       ignoring: true,
-          //       child: Container(
-          //         height: SizeConfig.screenHeight,
-          //         color: Colors.transparent,
-          //         child: Center(
-          //           child: Lottie.asset(
-          //             Assets.indianFlagKiteLottie,
-          //             controller: _animationController,
-          //             height: SizeConfig.screenHeight,
-          //             onLoaded: (composition) {
-          //               _animationController
-          //                 ..duration = composition.duration
-          //                 ..forward().whenComplete(() {
-          //                   if (mounted) {
-          //                     setState(() {
-          //                       _showLottie = false;
-          //                       AppState.unblockNavigation();
-          //                     });
-          //                   }
-          //                 });
-          //             },
-          //           ),
-          //         ),
-          //       ),
-          //     ),
-          //   ),
+          if (widget.txn.tranStatus != UserTransaction.TRAN_STATUS_COMPLETE &&
+              widget.txn.type == UserTransaction.TRAN_TYPE_WITHDRAW)
+            Align(
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                margin: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+                child: AppPositiveBtn(
+                  onPressed: () async {
+                    Haptic.vibrate();
+                    AppState.delegate!.appState.currentAction = PageAction(
+                      state: PageState.addPage,
+                      page: FreshDeskHelpPageConfig,
+                    );
+                  },
+                  width: SizeConfig.screenWidth!,
+                  btnText: "NEED HELP ?",
+                ),
+              ),
+            ),
         ],
       ),
     );

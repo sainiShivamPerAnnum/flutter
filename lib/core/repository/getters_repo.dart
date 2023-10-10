@@ -10,6 +10,7 @@ import 'package:felloapp/core/model/amount_chips_model.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/asset_options_model.dart';
 import 'package:felloapp/core/model/faq_model.dart';
+import 'package:felloapp/core/model/gold_pro_models/gold_pro_config_model.dart';
 import 'package:felloapp/core/model/home_screen_carousel_items.dart';
 import 'package:felloapp/core/model/page_config_model.dart';
 import 'package:felloapp/core/model/promo_cards_model.dart';
@@ -485,6 +486,31 @@ class GetterRepository extends BaseRepo {
             .fromMapArray(response['data']["items"]);
         return ApiResponse<List<HomeScreenCarouselItemsModel>>(
             model: items, code: 200);
+      });
+    } catch (e) {
+      logger.e(e.toString());
+      return ApiResponse.withError("Unable to fetch stories", 400);
+    }
+  }
+
+  Future<ApiResponse<GoldProConfig>> getGoldProConfig() async {
+    try {
+      final token = await getBearerToken();
+
+      return await _cacheService.cachedApi(
+          CacheKeys.GOLDPRO_CONFIG,
+          TTL.ONE_DAY,
+          () => APIService.instance.getData(
+                ApiPath.goldProConfig,
+                cBaseUrl: _baseUrl,
+                token: token,
+              ), (response) {
+        GoldProConfig config = GoldProConfig.fromJson(response);
+
+        return ApiResponse<GoldProConfig>(
+          model: config,
+          code: 200,
+        );
       });
     } catch (e) {
       logger.e(e.toString());

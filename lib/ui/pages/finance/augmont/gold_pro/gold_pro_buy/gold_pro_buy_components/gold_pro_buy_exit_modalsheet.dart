@@ -1,4 +1,6 @@
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/enums/app_config_keys.dart';
+import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/elements/title_subtitle_container.dart';
@@ -60,8 +62,9 @@ class _GoldProBuyExitModalSheetState extends State<GoldProBuyExitModalSheet> {
             SizedBox(
               height: SizeConfig.padding32,
             ),
-            const TitleSubtitleContainer(
-              title: "You'll miss out on 4.5% extra returns",
+            TitleSubtitleContainer(
+              title:
+                  "You'll miss out on ${AppConfig.getValue(AppConfigKey.goldProInterest).toDouble()}% extra returns",
               subTitle:
                   "Select any one option to help us improve your experience",
             ),

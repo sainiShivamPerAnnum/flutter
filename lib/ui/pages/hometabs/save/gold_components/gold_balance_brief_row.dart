@@ -69,10 +69,10 @@ class GoldBalanceBriefRow extends StatelessWidget {
                         fit: FlexFit.loose,
                         child: Text(
                           isGainInGms
-                              ? "${BaseUtil.digitPrecision(lead ?? goldAmount, 2)}gms"
+                              ? "${BaseUtil.digitPrecision(lead ?? goldAmount, 4, true)}gms"
                               : "₹${BaseUtil.digitPrecision(lead ?? goldAmount, 2)}",
                           style: mini
-                              ? TextStyles.sourceSansSB.title4.colour(
+                              ? TextStyles.sourceSansSB.title5.colour(
                                   leadSubtitleColor ??
                                       UiConstants.kGoldProPrimary)
                               : TextStyles.sourceSansSB.title4.colour(
@@ -140,9 +140,9 @@ class GoldBalanceBriefRow extends StatelessWidget {
                         : TextStyles.rajdhaniM.body1.colour(Colors.grey),
                   ),
                   Text(
-                    "${BaseUtil.digitPrecision(trail ?? goldGrams, 2)}gms",
+                    "${BaseUtil.digitPrecision(trail ?? goldGrams, 4, false)}gms",
                     style: mini
-                        ? TextStyles.sourceSansSB.title4.colour(
+                        ? TextStyles.sourceSansSB.title5.colour(
                             trailSubtitleColor ?? UiConstants.kGoldProPrimary)
                         : TextStyles.sourceSansSB.title4.colour(
                             trailSubtitleColor ?? UiConstants.kGoldProPrimary),

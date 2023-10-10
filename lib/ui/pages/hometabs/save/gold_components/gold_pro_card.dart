@@ -1,4 +1,6 @@
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/enums/app_config_keys.dart';
+import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -57,7 +59,7 @@ class GoldProCard extends StatelessWidget {
                       Row(
                         children: [
                           Text(
-                            "Earn 15.5% Extra Returns with ${Constants.ASSET_GOLD_STAKE}",
+                            "Earn up to 15.5% Returns with ${Constants.ASSET_GOLD_STAKE}",
                             style: TextStyles.rajdhaniSB.body1
                                 .colour(UiConstants.kGoldProPrimary),
                           ),
@@ -111,7 +113,7 @@ class GoldProCard extends StatelessWidget {
                           ),
                           SizedBox(width: SizeConfig.padding4),
                           Text(
-                            "10K + Users are enjoying 4.5% Extra Gold",
+                            "10K + Users are enjoying ${AppConfig.getValue(AppConfigKey.goldProInterest).toDouble()}% Extra Gold",
                             style: TextStyles.body4
                                 .colour(UiConstants.KGoldProPrimaryDark),
                           )

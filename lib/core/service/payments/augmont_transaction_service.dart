@@ -299,8 +299,17 @@ class AugmontTransactionService extends BaseTransactionService {
                     gtIds: transactionResponseModel?.data?.gtIds ?? []));
               } else if (txnStatus.data!.fd!.status ==
                   Constants.GOLD_PRO_TXN_STATUS_FAILED) {
-                showTransactionPendingDialog(
-                    transactionResponseModel?.data?.txnDisplayMsg);
+                AppState.unblockNavigation();
+                timer!.cancel();
+                unawaited(transactionResponseUpdate(
+                    gtIds: transactionResponseModel?.data?.gtIds ?? []));
+                AppState.isGoldProBuyInProgress = false;
+                unawaited(
+                  AppState.backButtonDispatcher!.didPopRoute().then(
+                        (value) => showTransactionPendingDialog(
+                            transactionResponseModel?.data?.txnDisplayMsg),
+                      ),
+                );
               }
             } else {
               await locator<BaseUtil>().newUserCheck();

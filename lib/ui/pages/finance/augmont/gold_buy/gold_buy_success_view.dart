@@ -1,5 +1,7 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/enums/app_config_keys.dart';
+import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/subscription_models/subscription_model.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -45,7 +47,7 @@ class _GoldBuySuccessViewState extends State<GoldBuySuccessView>
     AppState.blockNavigation();
     _playLottieAnimation();
     locator<TambolaService>().getBestTambolaTickets(forced: true);
-    // Future.delayed(const Duration(seconds: 3), showGoldProNudgeIfEligible);
+    Future.delayed(const Duration(seconds: 3), showGoldProNudgeIfEligible);
   }
 
   @override
@@ -356,7 +358,10 @@ class _GoldBuySuccessViewState extends State<GoldBuySuccessView>
   }
 
   void showGoldProNudgeIfEligible() {
-    if ((locator<UserService>().userFundWallet?.augGoldQuantity ?? 0) > 2) {
+    if ((locator<UserService>().userFundWallet?.augGoldQuantity ?? 0) >
+            AppConfig.getValue(AppConfigKey.goldProInvestmentChips)[0]
+                .toDouble() &&
+        locator<UserService>().userFundWallet!.wAugFdQty == 0) {
       BaseUtil.openModalBottomSheet(
         isBarrierDismissible: true,
         addToScreenStack: true,
@@ -409,7 +414,7 @@ class GoldProEligibleModalSheet extends StatelessWidget {
                     ),
                     SizedBox(height: SizeConfig.padding8),
                     Text(
-                      "4.5% Extra Returns every year with Gold Pro",
+                      "${AppConfig.getValue(AppConfigKey.goldProInterest).toDouble()}% Extra Returns every year with Gold Pro",
                       style: TextStyles.rajdhaniM.title3
                           .colour(UiConstants.kGoldProPrimary),
                       textAlign: TextAlign.center,
@@ -512,9 +517,10 @@ class GoldProEligibleModalSheet extends StatelessWidget {
                                       left: SizeConfig.padding16,
                                     ),
                                     width: SizeConfig.screenWidth! * 0.39,
-                                    child: const AvailabilityOfferWidget(
+                                    child: AvailabilityOfferWidget(
                                         color: UiConstants.kBlogTitleColor,
-                                        text: "*4.5% Extra Returns*"),
+                                        text:
+                                            "*${AppConfig.getValue(AppConfigKey.goldProInterest).toDouble()}% Extra Returns*"),
                                   ),
                                 ),
                               )
