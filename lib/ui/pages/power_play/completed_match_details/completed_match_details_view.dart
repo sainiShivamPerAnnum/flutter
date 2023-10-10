@@ -504,7 +504,7 @@ class MatchBriefDetailsWidget extends StatelessWidget {
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
               Text(
-                "Chasing score: ",
+                "Correct Prediction Score: ",
                 style: TextStyles.sourceSansSB.body2,
               ),
               Text(

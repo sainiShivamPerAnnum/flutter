@@ -166,12 +166,12 @@ class _MakePredictionSheetState extends State<MakePredictionSheet> {
       return 'Invalid input';
     }
 
-    if (assetType.isGold && runs < 9) {
-      return 'Minimum investment amount is 10 for gold';
+    if (assetType.isGold && runs <= 9) {
+      return 'Please enter a prediction of more than 10 runs';
     }
 
-    if (assetType.isFlo && runs < 99) {
-      return 'Minimum investment amount is 100 for flo';
+    if (assetType.isFlo && runs <= 99) {
+      return '''Change the asset to Digital Gold to record a prediction of less than 100 runs''';
     }
 
     return null;
@@ -337,30 +337,8 @@ class _MakePredictionSheetState extends State<MakePredictionSheet> {
             ),
           ),
 
-          const SizedBox(
-            height: 8,
-          ),
-
-          Row(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 14),
-                child: Text(
-                  'Prediction min 100 to save in 8% Flo',
-                  style: TextStyles.sourceSansM.body3.copyWith(
-                    color: UiConstants.kModalSheetMutedTextBackgroundColor,
-                  ),
-                ),
-              ),
-            ],
-          ),
-
           SizedBox(
             height: SizeConfig.padding40,
-          ),
-
-          SizedBox(
-            height: SizeConfig.padding10,
           ),
 
           Row(
