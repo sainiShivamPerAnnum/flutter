@@ -117,6 +117,7 @@ class _MakePredictionSheetState extends State<MakePredictionSheet> {
           floAssetType: Constants.ASSET_TYPE_FLO_FELXI,
           amt: amount,
           isSkipMl: false,
+          entryPoint: 'power-play',
         );
         break;
 
@@ -125,6 +126,7 @@ class _MakePredictionSheetState extends State<MakePredictionSheet> {
           investmentType: InvestmentType.AUGGOLD99,
           amt: amount,
           isSkipMl: false,
+          entryPoint: 'power-play',
         );
         break;
     }

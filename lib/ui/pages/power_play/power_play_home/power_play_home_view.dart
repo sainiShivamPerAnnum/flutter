@@ -183,7 +183,6 @@ class PowerPlayHome extends StatelessWidget {
                   Align(
                     alignment: Alignment.bottomCenter,
                     child: Container(
-                      color: UiConstants.kPowerPlaySecondary,
                       width: SizeConfig.screenWidth,
                       padding: EdgeInsets.all(SizeConfig.padding12),
                       child: Column(

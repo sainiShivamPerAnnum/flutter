@@ -320,6 +320,7 @@ class BaseUtil extends ChangeNotifier {
     bool? isSkipMl,
     double? gms,
     Map<String, String>? queryParams,
+    String? entryPoint,
   }) {
     final coupon = queryParams?['coupon'];
     final amount = queryParams?['amount'];
@@ -372,6 +373,7 @@ class BaseUtil extends ChangeNotifier {
           initialCoupon: coupon,
           gms: parsedGrams ?? gms,
           skipMl: isSkipMl ?? false,
+          entryPoint: entryPoint,
         ),
       );
     }
@@ -382,6 +384,7 @@ class BaseUtil extends ChangeNotifier {
     int? amt,
     Map<String, String>? queryParams,
     bool? isSkipMl,
+    String? entryPoint,
   }) {
     final coupon = queryParams?['coupon'];
     final amount = queryParams?['amount'];
@@ -451,6 +454,7 @@ class BaseUtil extends ChangeNotifier {
         skipMl: isSkipMl ?? false,
         onChanged: (p0) => p0,
         floAssetType: floAssetType,
+        entryPoint: entryPoint,
       ),
     );
   }

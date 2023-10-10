@@ -114,14 +114,26 @@ class GetterRepository extends BaseRepo {
   }
 
   Future<ApiResponse<AssetOptionsModel>> getAssetOptions(
-      String freq, String type,
-      {String? subType, bool? isOldLendboxUser, bool? isNewUser}) async {
+    String freq,
+    String type, {
+    String? subType,
+    bool? isOldLendboxUser,
+    bool? isNewUser,
+    String? entryPoint,
+  }) async {
     try {
       Map<String, dynamic>? map = {
         "type": type,
         "freq": freq,
         "isNewUser": isNewUser.toString(),
       };
+
+      if (entryPoint != null) {
+        map.putIfAbsent(
+          'source',
+          () => entryPoint,
+        );
+      }
 
       if (type == "flo") {
         map.addAll({
