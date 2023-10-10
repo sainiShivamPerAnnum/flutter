@@ -1051,6 +1051,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case 'powerPlayWelcome':
         pageConfiguration = PowerPlayFTUXPageConfig;
         break;
+      case 'powerPlayHome':
+        pageConfiguration = PowerPlayHomeConfig;
+        break;
       case 'powerPlayPrizes':
         openPowerPlayModalSheet();
         break;
