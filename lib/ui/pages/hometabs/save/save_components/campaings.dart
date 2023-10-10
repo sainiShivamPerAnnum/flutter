@@ -9,7 +9,7 @@ import 'package:flutter/material.dart';
 
 class Campaigns extends StatelessWidget {
   final SaveViewModel model;
-  const Campaigns({Key? key, required this.model}) : super(key: key);
+  const Campaigns({required this.model, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -21,7 +21,7 @@ class Campaigns extends StatelessWidget {
 class CampaignCardSection extends StatelessWidget {
   final SaveViewModel saveVm;
   final UserService _userService = locator<UserService>();
-  CampaignCardSection({Key? key, required this.saveVm}) : super(key: key);
+  CampaignCardSection({required this.saveVm, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -35,7 +35,6 @@ class CampaignCardSection extends StatelessWidget {
               horizontal: SizeConfig.pageHorizontalMargins,
             ),
             decoration: BoxDecoration(
-              // border: Border.all(color: UiConstants.kGoldProBorder, width: 2),
               borderRadius: BorderRadius.circular(
                   SizeConfig.padding16 + SizeConfig.padding2),
             ),

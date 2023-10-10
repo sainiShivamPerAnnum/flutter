@@ -5,6 +5,7 @@ import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/ui/animations/welcome_rings/welcome_rings.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
+import 'package:felloapp/ui/keys/keys.dart';
 import 'package:felloapp/ui/pages/login/login_components/login_support.dart';
 import 'package:felloapp/ui/pages/login/login_controller_vm.dart';
 import 'package:felloapp/ui/pages/login/screens/name_input/name_input_view.dart';
@@ -81,9 +82,9 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                               scrollDirection: Axis.horizontal,
                               controller: model.controller,
                               itemCount: model.pages.length,
-                              itemBuilder: (BuildContext context, int index) =>
+                              itemBuilder: (context, index) =>
                                   model.pages[index],
-                              onPageChanged: (int index) =>
+                              onPageChanged: (index) =>
                                   model.currentPage = index,
                             ),
                           ),
@@ -117,6 +118,7 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                   child: GestureDetector(
                     onTap: () => model.processScreenInput(model.currentPage),
                     child: Container(
+                      key: K.loginNextCTAKey,
                       width: SizeConfig.screenWidth,
                       height: SizeConfig.padding54,
                       color: UiConstants.kArrowButtonBackgroundColor,
