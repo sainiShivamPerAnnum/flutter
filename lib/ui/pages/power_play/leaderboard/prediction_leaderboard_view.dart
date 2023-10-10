@@ -12,12 +12,12 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/appbar/appbar.dart';
 import 'package:felloapp/ui/pages/power_play/leaderboard/view_model/leaderboard_view_model.dart';
-import 'package:felloapp/ui/pages/power_play/leaderboard/widgets/prize_distribution_sheet.dart';
 import 'package:felloapp/ui/pages/power_play/leaderboard/widgets/your_prediction_sheet.dart';
 import 'package:felloapp/ui/pages/power_play/shared_widgets/ipl_teams_score_widget.dart';
 import 'package:felloapp/ui/pages/power_play/shared_widgets/power_play_bg.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -35,9 +35,9 @@ class PredictionLeaderboard extends StatelessWidget {
 
   final MatchData matchData;
 
-  String get image => AppConfig.getValue<Map<String, dynamic>>(
-          AppConfigKey.powerplayConfig)['predictScreen']['cardCarousel'][1]
-      ['imgUrl'];
+  Map<String, dynamic> get carouselItem =>
+      AppConfig.getValue<Map<String, dynamic>>(
+          AppConfigKey.powerplayConfig)['predictScreen']['cardCarousel'][1];
 
   @override
   Widget build(BuildContext context) {
@@ -276,29 +276,22 @@ class PredictionLeaderboard extends StatelessWidget {
                               ),
                               GestureDetector(
                                 onTap: () {
-                                  BaseUtil.openModalBottomSheet(
-                                    isBarrierDismissible: true,
-                                    addToScreenStack: true,
-                                    enableDrag: Platform.isIOS,
-                                    backgroundColor:
-                                        UiConstants.kGoldProBgColor,
-                                    borderRadius: BorderRadius.vertical(
-                                      top: Radius.circular(
-                                        SizeConfig.roundness32,
+                                  Haptic.vibrate();
+                                  final url = carouselItem['onTapLink'];
+
+                                  if (url != null) {
+                                    AppState.delegate!.parseRoute(
+                                      Uri.parse(
+                                        url,
                                       ),
-                                    ),
-                                    isScrollControlled: true,
-                                    hapticVibrate: true,
-                                    content: PrizeDistributionSheet(
-                                      matchData: matchData,
-                                    ),
-                                  );
+                                    );
+                                  }
                                 },
                                 child: SizedBox(
                                   width: SizeConfig.screenWidth,
                                   height: SizeConfig.screenWidth! * 0.35,
                                   child: SvgPicture.network(
-                                    image,
+                                    carouselItem['imgUrl'],
                                     fit: BoxFit.fill,
                                   ),
                                 ),

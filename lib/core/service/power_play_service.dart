@@ -203,7 +203,7 @@ class PowerPlayService extends ChangeNotifier {
       properties: {"location": location},
     );
     String powerPlayReferralString =
-        "Hey! I am predicting in Fello's Powerplay and winning FREE Digital Gold! Sending you an exclusive invite to predict the Chasing score of every IPL match and start your savings journey with Fello. Here's the link -";
+        "Hey! I am predicting in Fello's Powerplay and winning FREE Digital Gold! Sending you an exclusive invite to predict the Chasing score of every match and start your savings journey with Fello. Here's the link -";
     isLinkSharing = true;
     await locator<ReferralService>()
         .shareLink(customMessage: powerPlayReferralString);
@@ -213,8 +213,8 @@ class PowerPlayService extends ChangeNotifier {
 
 class PowerPlayWinDialog extends StatelessWidget {
   const PowerPlayWinDialog({
-    super.key,
     required this.winString,
+    super.key,
   });
 
   final String winString;
