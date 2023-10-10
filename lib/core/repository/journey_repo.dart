@@ -82,11 +82,11 @@ class JourneyRepository extends BaseRepo {
         filePath = await saveFileToLocalDirectory(bytes, fileName);
         addToLocalAssetDatabase(filePath);
       } else {
-        filePath = 'Error code: ' + response.statusCode.toString();
+        filePath = 'Error code: ${response.statusCode}';
         return false;
       }
     } catch (ex) {
-      logger!.e(ex.toString());
+      logger.e(ex.toString());
       filePath = '';
       return false;
     }
@@ -100,31 +100,18 @@ class JourneyRepository extends BaseRepo {
   Future<String> saveFileToLocalDirectory(
       Uint8List svgBytes, String fileName) async {
     String filePath = '';
-    if (Platform.isAndroid) {
-      try {
-        filePath = '$_filePathDirectory$fileName';
-        File file = await File(filePath).create(recursive: true);
-        file.writeAsBytesSync(svgBytes);
-        logger!.d(
-            "JOURNEYREPO:: Android asset file successfully saved to local directory with path: ${file.path}");
-      } catch (e) {
-        filePath = '';
-        logger!.e(
-            "JOURNEYREPO:: Android asset file failed to save into local directory with error $e");
-      }
-    } else if (Platform.isIOS) {
-      try {
-        filePath = '$_filePathDirectory$fileName';
-        File file = await File(filePath).create(recursive: true);
-        file.writeAsBytesSync(svgBytes);
-        logger!.d(
-            "JOURNEYREPO:: IOS asset file successfully saved to local directory with path: ${file.path}");
-      } catch (e) {
-        filePath = '';
-        logger!.e(
-            "JOURNEYREPO:: IOS asset file failed to save into local directory with error $e");
-      }
+    try {
+      filePath = '$_filePathDirectory$fileName';
+      final file = await File(filePath).create(recursive: true);
+      file.writeAsBytesSync(svgBytes);
+      logger.d(
+          "JOURNEYREPO:: ${defaultTargetPlatform.name} asset file successfully saved to local directory with path: ${file.path}");
+    } catch (e) {
+      filePath = '';
+      logger.e(
+          "JOURNEYREPO:: ${defaultTargetPlatform.name} asset file failed to save into local directory with error $e");
     }
+
     return filePath;
   }
 
@@ -170,7 +157,7 @@ class JourneyRepository extends BaseRepo {
       final token = await getBearerToken();
       final queryParams = {"page": page.toString(), "direction": direction};
 
-      return (await _cacheService.paginatedCachedApi(
+      return await _cacheService.paginatedCachedApi(
           CacheKeys.JOURNEY_PAGE,
           startPage,
           endPage,
@@ -180,7 +167,7 @@ class JourneyRepository extends BaseRepo {
                 token: token,
                 cBaseUrl: _baseUrlJourney,
                 queryParams: queryParams,
-              ), (dynamic responseData) {
+              ), (responseData) {
         // parser
         final start = responseData["start"];
         final end = responseData["end"];
@@ -196,7 +183,7 @@ class JourneyRepository extends BaseRepo {
         }
 
         return ApiResponse<List<JourneyPage>>(model: journeyPages, code: 200);
-      })) as ApiResponse<List<JourneyPage>>;
+      });
     } on FetchDataException catch (e) {
       logger.e(e.toString());
       return ApiResponse.withError(e.toString(), 500);
@@ -220,40 +207,27 @@ class JourneyRepository extends BaseRepo {
 
       final token = await getBearerToken();
       final queryParams = {"page": page.toString(), "direction": direction};
-      print(journeyPages.length);
 
       if (journeyPages.isNotEmpty) {
         if (journeyPages.length - 1 >= endPage) {
           return ApiResponse(
-              model: [journeyPages[startPage], journeyPages[endPage]],
-              code: 200);
+            model: [journeyPages[startPage], journeyPages[endPage]],
+            code: 200,
+          );
         } else {
           if (page > journeyPages.length) {
-            return ApiResponse(model: [], code: 200);
+            return ApiResponse(
+              model: [],
+              code: 200,
+            );
           } else {
             return ApiResponse(
-                model: journeyPages.sublist(startPage), code: 200);
+              model: journeyPages.sublist(startPage),
+              code: 200,
+            );
           }
         }
       }
-      // final response = await APIService.instance.getData(
-      //     "journey_${version.toLowerCase()}.txt",
-      //     token: token,
-      //     cBaseUrl: _cdnBaseUrl,
-      //     queryParams: queryParams,
-      //     decryptData: true);
-
-      // List<dynamic>? items = response;
-
-      // if (items!.isEmpty)
-      //   return ApiResponse<List<JourneyPage>>(model: [], code: 200);
-
-      // for (int i = 0; i < items.length; i++) {
-      //   journeyPages.add(JourneyPage.fromMap(items[i], i + 1));
-      // }
-
-      // return ApiResponse<List<JourneyPage>>(
-      //     model: [journeyPages[0], journeyPages[1]], code: 200);
 
       return await _cacheService.cachedApi(
           CacheKeys.JOURNEY_PAGE,
@@ -292,22 +266,22 @@ class JourneyRepository extends BaseRepo {
   // refer UserJourneyStatsModel for the response
   Future<ApiResponse<UserJourneyStatsModel>> getUserJourneyStats() async {
     try {
-      final String? _uid = userService!.baseUser!.uid;
-      final _token = await getBearerToken();
+      final String? uid = userService.baseUser!.uid;
+      final token = await getBearerToken();
       final response = await APIService.instance.getData(
-        ApiPath.journeyStats(_uid),
-        token: _token,
+        ApiPath.journeyStats(uid),
+        token: token,
         cBaseUrl: _baseUrlStats,
       );
 
       final responseData = response["data"];
-      logger!.d("Response from get Journey stats: $response");
+      logger.d("Response from get Journey stats: $response");
       return ApiResponse(
           model: UserJourneyStatsModel.fromMap(responseData), code: 200);
     } catch (e) {
-      logger!.e(e.toString());
+      logger.e(e.toString());
       return ApiResponse.withError(
-          e?.toString() ?? "Unable to fetch user stats", 400);
+          e.toString() ?? "Unable to fetch user stats", 400);
     }
   }
 
@@ -315,10 +289,10 @@ class JourneyRepository extends BaseRepo {
       String version) async {
     try {
       List<JourneyLevel> journeyLevels = [];
-      final _token = await getBearerToken();
+      final token = await getBearerToken();
       final response = await APIService.instance.getData(
           "journeyLevels${version.toUpperCase()}.txt",
-          token: _token,
+          token: token,
           cBaseUrl: _cdnBaseUrl,
           decryptData: true);
 

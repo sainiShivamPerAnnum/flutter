@@ -1,9 +1,7 @@
 import 'package:felloapp/ui/pages/hometabs/journey/components/source_adaptive_asset/source_adaptive_asset_view.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/journey_vm.dart';
-import 'package:felloapp/util/journey_page_data.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class Background extends StatefulWidget {
   final JourneyPageViewModel? model;
@@ -18,7 +16,7 @@ class _BackgroundState extends State<Background> {
 
   @override
   void initState() {
-    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       setState(() {
         bgZoom = 1;
       });
@@ -30,8 +28,8 @@ class _BackgroundState extends State<Background> {
   Widget build(BuildContext context) {
     return AnimatedScale(
       alignment: Alignment.center,
-      duration: const Duration(seconds: 3),
       curve: Curves.easeOutCubic,
+      duration: const Duration(seconds: 3),
       scale: bgZoom,
       child: SizedBox(
         height: widget.model!.currentFullViewHeight,
@@ -40,7 +38,7 @@ class _BackgroundState extends State<Background> {
           itemCount: widget.model!.pages!.length, //widget.model.pages.length,
           shrinkWrap: true,
           reverse: true,
-          physics: NeverScrollableScrollPhysics(),
+          physics: const NeverScrollableScrollPhysics(),
           padding: EdgeInsets.zero,
           itemBuilder: (ctx, i) {
             return Transform.translate(

@@ -72,7 +72,7 @@ class UnRedeemedGoldenScratchCard extends StatelessWidget {
   final double width;
 
   const UnRedeemedGoldenScratchCard(
-      {super.key, required this.isLevelChange, required this.width});
+      {required this.isLevelChange, required this.width, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -100,12 +100,11 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
   final double width;
 
   const RedeemedGoldenScratchCard(
-      {super.key,
-      required this.ticket,
-      // @required this.titleStyle,
+      {required this.ticket, // @required this.titleStyle,
       // @required this.subtitleStyle,
       // @required this.titleStyle2,
-      required this.width});
+      required this.width,
+      super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -349,7 +348,7 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
         child: rewardWidget);
   }
 
-  doubleRewardWidget(
+  ListView doubleRewardWidget(
     List<Reward> rewards,
   ) {
     S locale = locator<S>();

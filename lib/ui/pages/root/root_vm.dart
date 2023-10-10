@@ -10,14 +10,11 @@ import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/bottom_nav_bar_item_model.dart';
 import 'package:felloapp/core/repository/campaigns_repo.dart';
-import 'package:felloapp/core/repository/journey_repo.dart';
-import 'package:felloapp/core/repository/referral_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
-import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/lendbox_maturity_service.dart';
 import 'package:felloapp/core/service/notifier_services/marketing_event_handler_service.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
@@ -53,19 +50,13 @@ import 'package:in_app_update/in_app_update.dart';
 enum NavBarItem { Journey, Save, Account, Play, Tambola }
 
 class RootViewModel extends BaseViewModel {
-  RootViewModel({S? l})
-      : locale = l ?? locator<S>(),
-        super();
-
-  final BaseUtil _baseUtil = locator<BaseUtil>();
+  RootViewModel({S? l}) : locale = l ?? locator<S>();
 
   final FcmListener _fcmListener = locator<FcmListener>();
   final FcmHandler _fcmHandler = locator<FcmHandler>();
   final UserService _userService = locator<UserService>();
   final UserCoinService _userCoinService = locator<UserCoinService>();
   final CustomLogger _logger = locator<CustomLogger>();
-  final JourneyRepository _journeyRepo = locator<JourneyRepository>();
-  final JourneyService _journeyService = locator<JourneyService>();
   final UserRepository _userRepo = locator<UserRepository>();
   final TambolaService _tambolaService = locator<TambolaService>();
   final ScratchCardService _gtService = locator<ScratchCardService>();
@@ -74,7 +65,6 @@ class RootViewModel extends BaseViewModel {
   final AppState appState = locator<AppState>();
   final SubService _subscriptionService = locator<SubService>();
   final S locale;
-  final int _bottomNavBarIndex = 0;
   static bool canExecuteStartupNotification = true;
   bool showHappyHourBanner = false;
   bool fetchCampaign = true;
@@ -87,8 +77,6 @@ class RootViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  // final WinnerService? winnerService = locator<WinnerService>();
-  final ReferralRepo _refRepo = locator<ReferralRepo>();
   final TxnHistoryService _txnHistoryService = locator<TxnHistoryService>();
   final AnalyticsService _analyticsService = locator<AnalyticsService>();
   final ReferralService _referralService = locator<ReferralService>();
@@ -552,7 +540,7 @@ class RootViewModel extends BaseViewModel {
                       BaseUtil.launchUrl(Constants.PLAY_STORE_APP_LINK);
                     }
                   } catch (e) {
-                    _logger?.e(e.toString());
+                    _logger.e(e.toString());
                   }
                   AppState.backButtonDispatcher!.didPopRoute();
                 },
@@ -567,11 +555,9 @@ class RootViewModel extends BaseViewModel {
         }
 
         //6. Clear all the caches
-        if (_userService.userBootUp!.data!.cache!.keys != null) {
-          for (final String id
-              in _userService.userBootUp!.data!.cache!.keys as List<String>) {
-            CacheService.invalidateByKey(id);
-          }
+        final keys = _userService.userBootUp?.data?.cache?.keys;
+        if (keys != null) {
+          keys.forEach(CacheService.invalidateByKey);
         }
 
         //7. Notice
