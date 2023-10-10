@@ -385,6 +385,16 @@ class _UsersPrediction extends StatelessWidget {
       return const Center(child: CircularProgressIndicator());
     }
 
+    if (model.userPredictedData.isEmpty) {
+      return Padding(
+        padding: const EdgeInsets.only(top: 16),
+        child: Text(
+          'No predictions done yet',
+          style: TextStyles.sourceSans.body3.colour(const Color(0xffB59D9F)),
+        ),
+      );
+    }
+
     return ListView.separated(
       physics: const NeverScrollableScrollPhysics(),
       padding: EdgeInsets.zero,

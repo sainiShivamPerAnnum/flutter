@@ -156,10 +156,13 @@ class PowerPlayService extends ChangeNotifier {
 
     final response =
         await _transactionHistoryRepository.getPowerPlayUserTransactions(
-            startTime: startTime,
-            endTime: endTime,
-            type: 'DEPOSIT',
-            status: 'COMPLETE');
+      startTime: startTime,
+      endTime: endTime,
+      type: 'DEPOSIT',
+      status: 'COMPLETE',
+      minAmount: 10,
+      maxAmount: 999,
+    );
 
     log("SERVICE response => ${response.model?.transactions?.toList()}");
 

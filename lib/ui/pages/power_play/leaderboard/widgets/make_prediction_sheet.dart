@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
@@ -429,10 +431,13 @@ class AssetSelectionButton extends StatelessWidget {
               const SizedBox(
                 width: 8,
               ),
-              SvgPicture.asset(
-                Assets.arrow,
-                height: 8,
-                color: UiConstants.kModalSheetMutedTextBackgroundColor,
+              Transform.rotate(
+                angle: math.pi,
+                child: SvgPicture.asset(
+                  Assets.arrow,
+                  height: 8,
+                  color: UiConstants.kModalSheetMutedTextBackgroundColor,
+                ),
               )
             ],
           ),

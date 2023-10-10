@@ -288,7 +288,7 @@ class CorrectPredictorsListView extends StatelessWidget {
 class UserPredictionsButton extends StatelessWidget {
   const UserPredictionsButton(
       {required this.model, super.key, this.margin = true});
-  final model;
+  final CompletedMatchDetailsVM model;
   final bool margin;
   @override
   Widget build(BuildContext context) {
