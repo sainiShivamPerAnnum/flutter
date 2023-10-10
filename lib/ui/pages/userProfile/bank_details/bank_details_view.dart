@@ -109,7 +109,10 @@ class BankDetailsView extends StatelessWidget {
                                     isEnabled: model.inEditMode,
                                     textEditingController:
                                         model.bankAccNoConfirmController,
-                                    keyboardType: TextInputType.visiblePassword,
+                                    keyboardType:
+                                        const TextInputType.numberWithOptions(
+                                      signed: true,
+                                    ),
                                     obscure: true,
                                     inputFormatters: [
                                       LengthLimitingTextInputFormatter(18),
