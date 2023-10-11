@@ -50,7 +50,7 @@ import 'package:syncfusion_flutter_gauges/gauges.dart';
 import '../gold_components/gold_rate_graph.dart';
 
 class AssetSectionView extends StatefulWidget {
-  AssetSectionView({Key? key, required this.type, UserService? userService})
+  AssetSectionView({required this.type, Key? key, UserService? userService})
       : _userService = userService ?? locator<UserService>(),
         super(key: key);
   final InvestmentType type;
@@ -83,6 +83,17 @@ class _AssetSectionViewState extends State<AssetSectionView> {
     "P2P": "Asset",
     "10%": "Returns",
   };
+
+  FaqsType _getFaqTypeFromAsset(InvestmentType type) {
+    switch (type) {
+      case InvestmentType.AUGGOLD99:
+        return FaqsType.gold;
+      case InvestmentType.GOLDPRO:
+        return FaqsType.goldPro;
+      case InvestmentType.LENDBOXP2P:
+        return FaqsType.flo;
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -367,8 +378,8 @@ class _AssetSectionViewState extends State<AssetSectionView> {
                             Padding(
                               padding:
                                   EdgeInsets.only(right: SizeConfig.padding8),
-                              child: const FaqPill(
-                                type: FaqsType.savings,
+                              child: FaqPill(
+                                type: _getFaqTypeFromAsset(widget.type),
                               ),
                             ),
                           ],
@@ -446,8 +457,8 @@ class _AssetSectionViewState extends State<AssetSectionView> {
 
 class AssetBottomButtons extends StatelessWidget {
   const AssetBottomButtons({
-    super.key,
     required this.type,
+    super.key,
   });
 
   final InvestmentType type;
@@ -643,7 +654,7 @@ class AssetBottomButtons extends StatelessWidget {
 
 class _BuildOwnAsset extends StatelessWidget {
   const _BuildOwnAsset(
-      {Key? key, required this.type, required this.userService})
+      {required this.type, required this.userService, Key? key})
       : super(key: key);
   final InvestmentType type;
   final UserService userService;
@@ -837,7 +848,7 @@ class FloBalanceBriefRow extends StatelessWidget {
 
 class ComparisonBox extends StatelessWidget {
   const ComparisonBox(
-      {Key? key, required this.backgroundColor, required this.isGold})
+      {required this.backgroundColor, required this.isGold, Key? key})
       : super(key: key);
   final Color backgroundColor;
   final bool isGold;
@@ -1153,7 +1164,7 @@ class ComparisonBox extends StatelessWidget {
 }
 
 class _WhySection extends StatelessWidget {
-  _WhySection({Key? key, required this.isDigitalGold}) : super(key: key);
+  _WhySection({required this.isDigitalGold, Key? key}) : super(key: key);
   final bool isDigitalGold;
 
   final Map<dynamic, Widget> goldPros = {
@@ -1299,7 +1310,7 @@ class _WhySection extends StatelessWidget {
 }
 
 class _Footer extends StatelessWidget {
-  const _Footer({Key? key, required this.isGold}) : super(key: key);
+  const _Footer({required this.isGold, Key? key}) : super(key: key);
   final bool isGold;
   final String goldTitle = "11% Returns gained from\nDigital Gold in 2022";
   final String felloTitle = "₹1000 invested every \nminute on Fello Flo";
@@ -1357,10 +1368,10 @@ class _Footer extends StatelessWidget {
 
 class CircularSlider extends StatefulWidget {
   const CircularSlider(
-      {Key? key,
-      required this.type,
+      {required this.type,
       required this.isNewUser,
-      required this.interest})
+      required this.interest,
+      Key? key})
       : super(key: key);
   final InvestmentType type;
   final bool isNewUser;
