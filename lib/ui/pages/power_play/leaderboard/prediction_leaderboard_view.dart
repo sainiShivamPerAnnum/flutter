@@ -213,61 +213,67 @@ class PredictionLeaderboard extends StatelessWidget {
                               const SizedBox(
                                 height: 20,
                               ),
-                              GestureDetector(
-                                onTap: () {
-                                  BaseUtil.openModalBottomSheet(
-                                      isBarrierDismissible: true,
-                                      addToScreenStack: true,
-                                      enableDrag: Platform.isIOS,
-                                      backgroundColor:
-                                          UiConstants.kGoldProBgColor,
-                                      borderRadius: BorderRadius.only(
-                                        topLeft: Radius.circular(
-                                            SizeConfig.roundness32),
-                                        topRight: Radius.circular(
-                                            SizeConfig.roundness32),
-                                      ),
-                                      isScrollControlled: true,
-                                      hapticVibrate: true,
-                                      content: (model.powerPlayService
-                                                      .transactions?.length ??
-                                                  0) >
-                                              0
-                                          ? YourPredictionSheet(
-                                              transactions: model
-                                                  .powerPlayService
-                                                  .transactions,
-                                              matchData: matchData,
-                                            )
-                                          : NoPredictionSheet(
-                                              matchData: matchData,
-                                            ));
-                                },
-                                child: Container(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: SizeConfig.padding16,
-                                      vertical: SizeConfig.padding16),
-                                  decoration: BoxDecoration(
-                                    borderRadius: BorderRadius.circular(10),
-                                    color: const Color(0xff000000)
-                                        .withOpacity(0.3),
-                                  ),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      Text(
-                                        "Your Predictions (${model.powerPlayService.transactions?.length})",
-                                        style: TextStyles.sourceSans.body3
-                                            .colour(Colors.white),
-                                      ),
-                                      // const Spacer(),
-                                      Icon(
-                                        Icons.arrow_forward_ios,
-                                        color: const Color(0xffB59D9F),
-                                        size: SizeConfig.padding16,
-                                      )
-                                    ],
+                              StatefulBuilder(
+                                builder: (context, hook) => GestureDetector(
+                                  onTap: () {
+                                    // To update the label after making
+                                    // prediction.
+                                    hook(() {});
+
+                                    BaseUtil.openModalBottomSheet(
+                                        isBarrierDismissible: true,
+                                        addToScreenStack: true,
+                                        enableDrag: Platform.isIOS,
+                                        backgroundColor:
+                                            UiConstants.kGoldProBgColor,
+                                        borderRadius: BorderRadius.only(
+                                          topLeft: Radius.circular(
+                                              SizeConfig.roundness32),
+                                          topRight: Radius.circular(
+                                              SizeConfig.roundness32),
+                                        ),
+                                        isScrollControlled: true,
+                                        hapticVibrate: true,
+                                        content: (model.powerPlayService
+                                                        .transactions?.length ??
+                                                    0) >
+                                                0
+                                            ? YourPredictionSheet(
+                                                transactions: model
+                                                    .powerPlayService
+                                                    .transactions,
+                                                matchData: matchData,
+                                              )
+                                            : NoPredictionSheet(
+                                                matchData: matchData,
+                                              ));
+                                  },
+                                  child: Container(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: SizeConfig.padding16,
+                                        vertical: SizeConfig.padding16),
+                                    decoration: BoxDecoration(
+                                      borderRadius: BorderRadius.circular(10),
+                                      color: const Color(0xff000000)
+                                          .withOpacity(0.3),
+                                    ),
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.spaceBetween,
+                                      children: [
+                                        Text(
+                                          "Your Predictions (${model.powerPlayService.transactions?.length})",
+                                          style: TextStyles.sourceSans.body3
+                                              .colour(Colors.white),
+                                        ),
+                                        // const Spacer(),
+                                        Icon(
+                                          Icons.arrow_forward_ios,
+                                          color: const Color(0xffB59D9F),
+                                          size: SizeConfig.padding16,
+                                        )
+                                      ],
+                                    ),
                                   ),
                                 ),
                               ),
