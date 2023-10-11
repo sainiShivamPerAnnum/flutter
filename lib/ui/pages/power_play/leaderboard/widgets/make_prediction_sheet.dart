@@ -5,6 +5,7 @@ import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/model/power_play_models/get_matches_model.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/pop_up_menu_route.dart';
@@ -26,6 +27,11 @@ enum AssetType {
     label: "8% FLO",
   ),
 
+  flo10(
+    assetPath: Assets.floWithoutShadow,
+    label: "10% FLO",
+  ),
+
   gold(
     assetPath: Assets.goldWithoutShadow,
     label: "Digital Gold",
@@ -39,7 +45,8 @@ enum AssetType {
   final String assetPath;
   final String label;
 
-  bool get isFlo => this == AssetType.flo8;
+  bool get isFlo8 => this == AssetType.flo8;
+  bool get isFlo10 => this == AssetType.flo10;
   bool get isGold => this == AssetType.gold;
 }
 
@@ -68,6 +75,10 @@ class _MakePredictionSheetState extends State<MakePredictionSheet> {
   );
 
   final FocusNode _predictionNode = FocusNode();
+
+  final _isOldUser = locator<UserService>().userSegments.contains(
+        Constants.US_FLO_OLD,
+      );
 
   @override
   void initState() {
@@ -115,6 +126,7 @@ class _MakePredictionSheetState extends State<MakePredictionSheet> {
   void _openAssetPage(AssetType assetType, int? amount) {
     switch (assetType) {
       case AssetType.flo8:
+      case AssetType.flo10:
         BaseUtil.openFloBuySheet(
           floAssetType: Constants.ASSET_TYPE_FLO_FELXI,
           amt: amount,
@@ -144,7 +156,11 @@ class _MakePredictionSheetState extends State<MakePredictionSheet> {
         bottom: 16,
         left: 20,
         child: InvestOptionContextMenu(
-          assetType: _assetType.value,
+          currentAsset: _assetType.value,
+          availableAssets: [
+            AssetType.gold,
+            if (_isOldUser) AssetType.flo10 else AssetType.flo8,
+          ],
         ),
       );
     });
@@ -172,7 +188,7 @@ class _MakePredictionSheetState extends State<MakePredictionSheet> {
       return 'Please enter a prediction of more than 10 runs';
     }
 
-    if (assetType.isFlo && runs <= 99) {
+    if ((assetType.isFlo8 || assetType.isFlo10) && runs <= 99) {
       return '''Change the asset to Digital Gold to record a prediction of less than 100 runs''';
     }
 
@@ -208,7 +224,7 @@ class _MakePredictionSheetState extends State<MakePredictionSheet> {
             height: SizeConfig.padding10,
           ),
           Text(
-            "Enter a Prediction for the Chasing Score of the Match",
+            "Enter a Prediction for this Match",
             style: TextStyles.sourceSans.body3.colour(Colors.white),
           ),
 
@@ -453,10 +469,13 @@ class AssetSelectionButton extends StatelessWidget {
 
 class InvestOptionContextMenu extends StatefulWidget {
   const InvestOptionContextMenu({
-    required this.assetType,
+    required this.availableAssets,
+    required this.currentAsset,
     super.key,
   });
-  final AssetType assetType;
+
+  final List<AssetType> availableAssets;
+  final AssetType currentAsset;
 
   @override
   State<InvestOptionContextMenu> createState() =>
@@ -469,7 +488,7 @@ class _InvestOptionContextMenuState extends State<InvestOptionContextMenu> {
   @override
   void initState() {
     super.initState();
-    _assetTypeNotifier = ValueNotifier(widget.assetType);
+    _assetTypeNotifier = ValueNotifier(widget.currentAsset);
   }
 
   /// Sets [assetType] as currently selected asset and pops the page with
@@ -510,6 +529,7 @@ class _InvestOptionContextMenuState extends State<InvestOptionContextMenu> {
 
   @override
   Widget build(BuildContext context) {
+    final assets = widget.availableAssets;
     return Material(
       borderRadius: BorderRadius.circular(8),
       child: Container(
@@ -527,19 +547,17 @@ class _InvestOptionContextMenuState extends State<InvestOptionContextMenu> {
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      _AssetOptionRadio(
-                        selectedAssetType: _assetTypeNotifier.value,
-                        assetType: AssetType.flo8,
-                        onSelected: _onSelected,
-                      ),
-                      const SizedBox(
-                        height: 10,
-                      ),
-                      _AssetOptionRadio(
-                        selectedAssetType: _assetTypeNotifier.value,
-                        assetType: AssetType.gold,
-                        onSelected: _onSelected,
-                      ),
+                      for (var i = 0; i < assets.length; i++)
+                        Padding(
+                          padding: EdgeInsets.only(
+                            bottom: i != assets.length - 1 ? 10 : 0,
+                          ),
+                          child: _AssetOptionRadio(
+                            selectedAssetType: _assetTypeNotifier.value,
+                            assetType: assets[i],
+                            onSelected: _onSelected,
+                          ),
+                        ),
                       const SizedBox(
                         height: 8,
                       ),

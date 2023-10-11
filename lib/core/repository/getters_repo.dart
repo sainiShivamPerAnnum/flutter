@@ -129,10 +129,7 @@ class GetterRepository extends BaseRepo {
       };
 
       if (entryPoint != null) {
-        map.putIfAbsent(
-          'source',
-          () => entryPoint,
-        );
+        map['source'] = entryPoint;
       }
 
       if (type == "flo") {

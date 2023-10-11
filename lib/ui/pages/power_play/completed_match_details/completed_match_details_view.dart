@@ -299,7 +299,7 @@ class UserPredictionsButton extends StatelessWidget {
           isBarrierDismissible: true,
           addToScreenStack: true,
           enableDrag: Platform.isIOS,
-          backgroundColor: const Color(0xff21284A),
+          backgroundColor: UiConstants.kGoldProBgColor,
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(SizeConfig.roundness32),
             topRight: Radius.circular(SizeConfig.roundness32),

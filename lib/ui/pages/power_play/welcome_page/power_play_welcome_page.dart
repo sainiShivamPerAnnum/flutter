@@ -160,7 +160,7 @@ class PowerPlayWelcomePage extends StatelessWidget {
                                   ),
                                   //CSK will chase 172 in the match against RCB
                                   Text(
-                                    "Make as many predictions as you want until the penultimate overs!",
+                                    "Make as many predictions as you want until the second last over!",
                                     style: TextStyles.sourceSans.body4
                                         .colour(Colors.white.withOpacity(0.5)),
                                   ),

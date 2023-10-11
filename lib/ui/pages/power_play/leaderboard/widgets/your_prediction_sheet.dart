@@ -29,13 +29,6 @@ class YourPredictionSheet extends StatelessWidget {
     return formatted;
   }
 
-  /// Closes the current model and opens prediction sheet.
-  Future<void> _onPredict(PowerPlayHomeViewModel model) async {
-    await AppState.backButtonDispatcher!.didPopRoute();
-
-    await model.predict();
-  }
-
   @override
   Widget build(BuildContext context) {
     return WillPopScope(
@@ -159,22 +152,7 @@ class YourPredictionSheet extends StatelessWidget {
                     ),
                   ],
                 ),
-              SizedBox(
-                height: SizeConfig.padding40,
-              ),
-              MaterialButton(
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5)),
-                padding: const EdgeInsets.symmetric(vertical: 10),
-                color: Colors.white,
-                onPressed: () => _onPredict(model),
-                child: Center(
-                  child: Text(
-                    'PREDICT NOW',
-                    style: TextStyles.rajdhaniB.body1.colour(Colors.black),
-                  ),
-                ),
-              ),
+
               SizedBox(
                 height: SizeConfig.padding20,
               ),

@@ -38,8 +38,8 @@ class IplTeamsScoreWidget extends StatelessWidget {
                   fit: BoxFit.cover,
                   placeholderBuilder: (context) => Center(
                     child: Container(
-                      height: SizeConfig.iconSize1 * 2,
-                      width: SizeConfig.iconSize1 * 2,
+                      height: SizeConfig.iconSize5,
+                      width: SizeConfig.iconSize5,
                       decoration: BoxDecoration(
                         shape: BoxShape.circle,
                         border: Border.all(color: Colors.white),
