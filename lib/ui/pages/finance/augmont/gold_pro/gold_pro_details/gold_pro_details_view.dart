@@ -224,7 +224,7 @@ class GoldProDetailsView extends StatelessWidget {
                     Padding(
                       padding: EdgeInsets.only(right: SizeConfig.padding8),
                       child: const FaqPill(
-                        type: FaqsType.savings,
+                        type: FaqsType.goldPro,
                       ),
                     ),
                   ],
@@ -399,14 +399,14 @@ class GoldProSellCard extends StatelessWidget {
                 MaterialButton(
                   onPressed: () {
                     AppState.delegate!.parseRoute(Uri.parse("goldProSell"));
-                    final _userService = locator<UserService>();
+                    final userService = locator<UserService>();
                     locator<AnalyticsService>().track(
                         eventName: AnalyticsEvents.unleaseOnGoldProDetailsPage,
                         properties: {
                           "current gold value":
-                              _userService.userPortfolio.augmont.fd.balance,
+                              userService.userPortfolio.augmont.fd.balance,
                           "current gold weight":
-                              _userService.userFundWallet?.wAugFdQty ?? 0,
+                              userService.userFundWallet?.wAugFdQty ?? 0,
                         });
                   },
                   color: Colors.white,
@@ -431,8 +431,8 @@ class GoldProSellCard extends StatelessWidget {
 
 class GoldProInterestBreakdownWidget extends StatelessWidget {
   const GoldProInterestBreakdownWidget({
-    super.key,
     required this.model,
+    super.key,
   });
 
   final GoldProDetailsViewModel model;
@@ -471,7 +471,9 @@ class GoldProInterestBreakdownWidget extends StatelessWidget {
                       ),
                       SizedBox(height: SizeConfig.padding4),
                       Text(
-                        "${model.goldProConfig?.data?.interestBreakDown?.fixed?.subTitle ?? 'credited daily'}",
+                        model.goldProConfig?.data?.interestBreakDown?.fixed
+                                ?.subTitle ??
+                            'credited daily',
                         style: TextStyles.body3.colour(Colors.white),
                       )
                     ],
@@ -500,7 +502,9 @@ class GoldProInterestBreakdownWidget extends StatelessWidget {
                     ),
                     SizedBox(height: SizeConfig.padding4),
                     Text(
-                      "${model.goldProConfig?.data?.interestBreakDown?.extra?.subTitle ?? 'credited every 6 months'}",
+                      model.goldProConfig?.data?.interestBreakDown?.extra
+                              ?.subTitle ??
+                          'credited every 6 months',
                       style: TextStyles.body3.colour(Colors.white),
                     )
                   ],
@@ -518,7 +522,8 @@ class GoldProInterestBreakdownWidget extends StatelessWidget {
               ),
               SizedBox(width: SizeConfig.padding4),
               Text(
-                "${model.goldProConfig?.data?.interestBreakDown?.subText ?? '10K + Users are enjoying ${AppConfig.getValue(AppConfigKey.goldProInterest).toDouble()}% Extra Gold'}",
+                model.goldProConfig?.data?.interestBreakDown?.subText ??
+                    '10K + Users are enjoying ${AppConfig.getValue(AppConfigKey.goldProInterest).toDouble()}% Extra Gold',
                 style: TextStyles.body4.colour(UiConstants.KGoldProPrimaryDark),
               )
             ],
@@ -557,7 +562,7 @@ class HowGoldProWorksSection extends StatelessWidget {
                         horizontal: SizeConfig.pageHorizontalMargins),
                     itemBuilder: (context, i) => GestureDetector(
                       onTap: () {
-                        final UserService _userService = locator<UserService>();
+                        final UserService userService = locator<UserService>();
                         BaseUtil.openDialog(
                             isBarrierDismissible: true,
                             addToScreenStack: true,
@@ -571,9 +576,9 @@ class HowGoldProWorksSection extends StatelessWidget {
                           eventName: AnalyticsEvents.videoTappedOnGoldPro,
                           properties: {
                             "existing lease amount":
-                                _userService.userPortfolio.augmont.fd.balance,
+                                userService.userPortfolio.augmont.fd.balance,
                             "existing lease grams":
-                                _userService.userFundWallet?.wAugFdQty ?? 0
+                                userService.userFundWallet?.wAugFdQty ?? 0
                           },
                         );
                       },
@@ -609,8 +614,8 @@ class HowGoldProWorksSection extends StatelessWidget {
 
 class WhyGoldProSection extends StatelessWidget {
   const WhyGoldProSection({
-    super.key,
     required this.model,
+    super.key,
   });
   final GoldProDetailsViewModel model;
 
@@ -645,7 +650,7 @@ class WhyGoldProSection extends StatelessWidget {
                           gradient: LinearGradient(
                               colors: [
                                 UiConstants.KGoldProPrimaryDark,
-                                Color(0xffEAAC4D),
+                                const Color(0xffEAAC4D),
                               ],
                               begin: Alignment.bottomLeft,
                               end: Alignment.topRight),

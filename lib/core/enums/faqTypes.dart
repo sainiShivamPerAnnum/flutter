@@ -8,10 +8,11 @@ enum FaqsType {
   tambola,
   winnings,
   gold,
+  goldPro,
   flo,
   journey,
   onboarding,
   powerPlay,
+  rewards,
   referrals,
-  transactions
 }
