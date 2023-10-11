@@ -8,7 +8,7 @@ import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/appbar/appbar.dart';
-import 'package:felloapp/ui/pages/power_play/leaderboard/prediction_leaderboard_view.dart';
+import 'package:felloapp/ui/pages/power_play/leaderboard/widgets/your_prediction_sheet.dart';
 import 'package:felloapp/ui/pages/power_play/power_play_home/power_play_vm.dart';
 import 'package:felloapp/ui/pages/power_play/power_play_home/widgets/power_play_matches.dart';
 import 'package:felloapp/ui/pages/power_play/shared_widgets/power_play_bg.dart';
@@ -30,14 +30,10 @@ class PowerPlayHome extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BaseView<PowerPlayHomeViewModel>(
-      onModelReady: (model) {
-        model.init();
-      },
+      onModelReady: (model) => model.init(),
       builder: (context, model, child) {
         return RefreshIndicator(
-          onRefresh: () async {
-            await model.getAllMatched();
-          },
+          onRefresh: model.getAllMatched,
           child: PowerPlayBackgroundUi(
             child: Stack(
               children: [
@@ -98,11 +94,11 @@ class PowerPlayHome extends StatelessWidget {
                             ),
                             Center(
                                 child: Text(
-                              'Invest your Predictions',
+                              'Predict  |  Save  |  Win',
                               style: TextStyles.sourceSansSB.body2,
                             )),
                             const SizedBox(
-                              height: 10,
+                              height: 12,
                             ),
                             if (model.powerPlayReward > 0) ...[
                               Center(
@@ -136,31 +132,30 @@ class PowerPlayHome extends StatelessWidget {
                                 itemCount: model.cardCarousel?.length,
                                 shrinkWrap: true,
                                 itemBuilder: (context, index) {
+                                  final link =
+                                      model.cardCarousel?[index]["onTapLink"];
                                   return GestureDetector(
                                     onTap: () {
                                       Haptic.vibrate();
 
-                                      AppState.delegate!.parseRoute(Uri.parse(
-                                          model
-                                                  .cardCarousel?[index]
-                                                      ["onTapLink"]
-                                                  .isEmpty
-                                              ? getRoute(index)
-                                              : model.cardCarousel?[index]
-                                                  ["onTapLink"]));
+                                      AppState.delegate!.parseRoute(
+                                        Uri.parse(
+                                          link.isEmpty ? getRoute(index) : link,
+                                        ),
+                                      );
+
                                       locator<AnalyticsService>().track(
                                         eventName:
                                             AnalyticsEvents.iplCarouselTapped,
                                         properties: {
-                                          "url": model.cardCarousel?[index]
-                                              ["onTapLink"],
+                                          "url": link,
                                         },
                                       );
                                     },
                                     child: Container(
                                       margin: EdgeInsets.only(
-                                          right: SizeConfig.padding12),
-                                      // height: SizeConfig.screenHeight! * 0.35,
+                                        right: SizeConfig.padding12,
+                                      ),
                                       width: SizeConfig.screenWidth! * 0.78,
                                       child: SvgPicture.network(
                                         model.cardCarousel?[index]['imgUrl'] ??
@@ -173,7 +168,7 @@ class PowerPlayHome extends StatelessWidget {
                               ),
                             ),
                             const SizedBox(
-                              height: 20,
+                              height: 22,
                             ),
                             PowerPlayMatches(
                               model: model,
@@ -188,7 +183,6 @@ class PowerPlayHome extends StatelessWidget {
                   Align(
                     alignment: Alignment.bottomCenter,
                     child: Container(
-                      color: UiConstants.kPowerPlaySecondary,
                       width: SizeConfig.screenWidth,
                       padding: EdgeInsets.all(SizeConfig.padding12),
                       child: Column(
@@ -231,9 +225,12 @@ class PowerPlayHome extends StatelessWidget {
 }
 
 class LiveUserPredictionsButton extends StatelessWidget {
-  const LiveUserPredictionsButton({super.key, this.margin = true});
-
   final bool margin;
+
+  const LiveUserPredictionsButton({
+    super.key,
+    this.margin = true,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -246,7 +243,7 @@ class LiveUserPredictionsButton extends StatelessWidget {
               isBarrierDismissible: true,
               addToScreenStack: true,
               enableDrag: Platform.isIOS,
-              backgroundColor: const Color(0xff21284A),
+              backgroundColor: UiConstants.kGoldProBgColor,
               borderRadius: BorderRadius.only(
                 topLeft: Radius.circular(SizeConfig.roundness32),
                 topRight: Radius.circular(SizeConfig.roundness32),

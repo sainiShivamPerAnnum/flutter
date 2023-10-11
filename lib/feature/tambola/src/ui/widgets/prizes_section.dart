@@ -124,26 +124,6 @@ class TambolaPrize extends StatelessWidget {
                                                     .sourceSans.body3
                                                     .colour(Colors.white),
                                               ),
-                                              // Row(
-                                              //   mainAxisAlignment:
-                                              //       MainAxisAlignment.end,
-                                              //   children: [
-                                              //     SvgPicture.asset(
-                                              //       Assets.token,
-                                              //       width: SizeConfig.padding12,
-                                              //     ),
-                                              //     SizedBox(
-                                              //       width: SizeConfig.padding10,
-                                              //     ),
-                                              //     Text(
-                                              //       "${prizes.prizesA![index].flc}",
-                                              //       style: TextStyles
-                                              //           .sourceSans.body4
-                                              //           .colour(Colors.white
-                                              //               .withOpacity(0.5)),
-                                              //     ),
-                                              //   ],
-                                              // )
                                             ],
                                           ),
                                         ),

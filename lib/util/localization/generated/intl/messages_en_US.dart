@@ -834,6 +834,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "points": MessageLookupByLibrary.simpleMessage("Points"),
         "portalUnavailable":
             MessageLookupByLibrary.simpleMessage("Portal unavailable"),
+        "powerPlaySlog":
+            MessageLookupByLibrary.simpleMessage("Predict | Save | Win"),
         "priceClaimTitle1": MessageLookupByLibrary.simpleMessage(
             "You\'ve won an Amazon Gift Voucher\n worth"),
         "priceClaimTitle2": m10,

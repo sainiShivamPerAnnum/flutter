@@ -113,7 +113,7 @@ class GoldBuyViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  Future<void> getAssetOptionsModel() async {
+  Future<void> getAssetOptionsModel({String? entryPoint}) async {
     final isNewUser = locator<UserService>().userSegments.contains(
           Constants.NEW_USER,
         );
@@ -121,6 +121,7 @@ class GoldBuyViewModel extends BaseViewModel {
       'weekly',
       'gold',
       isNewUser: isNewUser,
+      entryPoint: entryPoint,
     );
     final model = res.model;
     if (res.code == 200 && model != null) {
@@ -258,13 +259,14 @@ class GoldBuyViewModel extends BaseViewModel {
     TickerProvider vsync,
     double? gms, {
     String? initialCouponCode,
+    String? entryPoint,
   }) async {
     setState(ViewState.Busy);
     appMetaList = await UpiUtils.getUpiApps();
     showHappyHour = locator<MarketingEventHandlerService>().showHappyHourBanner;
     animationController = AnimationController(
         vsync: vsync, duration: const Duration(milliseconds: 500));
-    await getAssetOptionsModel();
+    await getAssetOptionsModel(entryPoint: entryPoint);
     isIntentFlow = assetOptionsModel!.data.intent;
     animationController?.addListener(listnear);
     skipMl = isSkipMilestone;

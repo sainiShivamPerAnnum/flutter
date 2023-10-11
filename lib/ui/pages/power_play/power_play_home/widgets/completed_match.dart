@@ -18,8 +18,8 @@ import 'package:flutter/material.dart';
 
 class CompletedMatch extends StatelessWidget {
   const CompletedMatch({
-    super.key,
     required this.model,
+    super.key,
   });
 
   final PowerPlayHomeViewModel model;
@@ -59,22 +59,26 @@ class CompletedMatch extends StatelessWidget {
                               model.completedMatchData![i].matchStats?.didWon,
                           "Chasing score": model.completedMatchData![i].target,
                           "total Won from PowerPay": model.powerPlayReward,
-                          "verdict Text": model.liveMatchData![0]!.verdictText
+                          "verdict Text": model.liveMatchData![0].verdictText
                         },
                       );
                     },
                     child: Container(
                       decoration: BoxDecoration(
-                          borderRadius: BorderRadius.circular(5),
-                          color: const Color(0xff3B4E6E).withOpacity(0.8),
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.black26,
-                              offset: Offset(2, 2),
-                              blurRadius: SizeConfig.roundness5,
-                              spreadRadius: SizeConfig.padding2,
-                            )
-                          ]),
+                        gradient: LinearGradient(colors: [
+                          UiConstants.kTambolaMidTextColor,
+                          const Color(0xff272727),
+                        ]),
+                        borderRadius: BorderRadius.circular(5),
+                        boxShadow: [
+                          BoxShadow(
+                            color: Colors.black26,
+                            offset: const Offset(2, 2),
+                            blurRadius: SizeConfig.roundness5,
+                            spreadRadius: SizeConfig.padding2,
+                          )
+                        ],
+                      ),
                       child: Column(
                         children: [
                           Container(
@@ -84,10 +88,11 @@ class CompletedMatch extends StatelessWidget {
                               right: SizeConfig.padding14,
                             ),
                             decoration: const BoxDecoration(
-                                borderRadius: BorderRadius.only(
-                                    topLeft: Radius.circular(5),
-                                    topRight: Radius.circular(5)),
-                                color: Color(0xff273C60)),
+                              borderRadius: BorderRadius.vertical(
+                                top: Radius.circular(5),
+                              ),
+                              color: UiConstants.kBackgroundColor2,
+                            ),
                             child: Row(
                               children: [
                                 Text(

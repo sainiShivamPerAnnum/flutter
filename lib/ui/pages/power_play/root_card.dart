@@ -57,12 +57,16 @@ class PowerPlayCard extends StatelessWidget {
         ),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+          border: Border.all(
+            color: Colors.white.withOpacity(.1),
+          ),
           gradient: LinearGradient(
+            begin: Alignment.topCenter,
+            end: Alignment.bottomRight,
             colors: [
-              UiConstants.kPowerPlayPrimaryOff,
-              UiConstants.kPowerPlaySecondaryOff
+              UiConstants.kPowerPlayGradientPrimary,
+              UiConstants.kPowerPlayGradientSecondary,
             ],
-            stops: const [0.5, 1],
           ),
         ),
         child: Container(
@@ -72,16 +76,6 @@ class PowerPlayCard extends StatelessWidget {
             bottom: SizeConfig.padding16,
             left: SizeConfig.pageHorizontalMargins,
             right: SizeConfig.padding16,
-          ),
-          decoration: BoxDecoration(
-            gradient: LinearGradient(
-              stops: const [0.5, 1],
-              colors: [
-                UiConstants.kPowerPlayPrimary,
-                UiConstants.kPowerPlaySecondary
-              ],
-            ),
-            borderRadius: BorderRadius.circular(10),
           ),
           child: Row(
             children: [
@@ -98,11 +92,13 @@ class PowerPlayCard extends StatelessWidget {
                 children: [
                   Text(
                     title,
-                    style: TextStyles.rajdhaniSB.body2,
+                    style: TextStyles.rajdhaniSB.body3,
+                    overflow: TextOverflow.ellipsis,
                   ),
                   Text(
                     subtitle,
-                    style: TextStyles.rajdhaniSB.body2,
+                    style: TextStyles.rajdhaniSB.body3,
+                    overflow: TextOverflow.ellipsis,
                   ),
                 ],
               ),

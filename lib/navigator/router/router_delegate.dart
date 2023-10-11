@@ -67,7 +67,7 @@ import 'package:felloapp/util/dynamic_ui_utils.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
-import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/styles.dart';
 //Flutter Imports
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
@@ -1051,6 +1051,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case 'powerPlayWelcome':
         pageConfiguration = PowerPlayFTUXPageConfig;
         break;
+      case 'powerPlayHome':
+        pageConfiguration = PowerPlayHomeConfig;
+        break;
       case 'powerPlayPrizes':
         openPowerPlayModalSheet();
         break;
@@ -1097,25 +1100,25 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         return;
       }
     }
-    var _rootController = locator<RootController>();
+    var rootController = locator<RootController>();
 
-    _rootController.onChange(_rootController.navItems.values
-        .toList()[_rootController.navItems.values.toList().indexOf(item)]);
+    rootController.onChange(rootController.navItems.values
+        .toList()[rootController.navItems.values.toList().indexOf(item)]);
 
     appState.setCurrentTabIndex =
-        _rootController.navItems.values.toList().indexOf(item);
+        rootController.navItems.values.toList().indexOf(item);
   }
 
   void onSilentTapItem(NavBarItemModel item) {
     log('onSilentTapItem ${item.title}');
 
-    var _rootController = locator<RootController>();
+    var rootController = locator<RootController>();
 
-    _rootController.onChange(_rootController.navItems.values
-        .toList()[_rootController.navItems.values.toList().indexOf(item)]);
+    rootController.onChange(rootController.navItems.values
+        .toList()[rootController.navItems.values.toList().indexOf(item)]);
 
     appState.setCurrentTabIndex =
-        _rootController.navItems.values.toList().indexOf(item);
+        rootController.navItems.values.toList().indexOf(item);
   }
 
   // openTopSaverScreen(String eventType) {
@@ -1126,7 +1129,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
   //   );
   // }
 
-  openWebGame(String game) {
+  void openWebGame(String game) {
     bool isLocked = false;
     double netWorth = locator<UserService>().userPortfolio.augmont.principle +
         (locator<UserService>().userPortfolio.flo.principle);
@@ -1149,7 +1152,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     }
   }
 
-  openAppWalkthrough() {
+  void openAppWalkthrough() {
     AppState.delegate!.appState.currentAction = PageAction(
       state: PageState.addWidget,
       widget: const OnBoardingView(),
@@ -1157,7 +1160,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     );
   }
 
-  openTransactions(InvestmentType investmentType) {
+  void openTransactions(InvestmentType investmentType) {
     AppState.delegate!.appState.currentAction = PageAction(
       state: PageState.addWidget,
       widget: TransactionsHistory(investmentType: investmentType),
@@ -1167,16 +1170,17 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
 
   void openPowerPlayModalSheet() {
     BaseUtil.openModalBottomSheet(
-        isBarrierDismissible: true,
-        addToScreenStack: true,
-        backgroundColor: const Color(0xff21284A),
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(SizeConfig.roundness32),
-          topRight: Radius.circular(SizeConfig.roundness32),
-        ),
-        isScrollControlled: true,
-        hapticVibrate: true,
-        content: const PrizeDistributionSheet());
+      isBarrierDismissible: true,
+      addToScreenStack: true,
+      backgroundColor: UiConstants.kGoldProBgColor,
+      borderRadius: BorderRadius.only(
+        topLeft: Radius.circular(SizeConfig.roundness32),
+        topRight: Radius.circular(SizeConfig.roundness32),
+      ),
+      isScrollControlled: true,
+      hapticVibrate: true,
+      content: const PrizeDistributionSheet(),
+    );
   }
 
   bool checkForRatingDialog() {

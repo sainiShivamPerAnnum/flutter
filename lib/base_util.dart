@@ -162,9 +162,6 @@ class BaseUtil extends ChangeNotifier {
   static bool? isDeviceOffline, ticketRequestSent, playScreenFirst;
   static int? ticketCountBeforeRequest, infoSliderIndex;
 
-  BuildContext get rootContext =>
-      AppState.delegate!.navigatorKey.currentContext!;
-
   _setRuntimeDefaults() {
     isNewUser = false;
     isFirstFetchDone = true;
@@ -323,6 +320,7 @@ class BaseUtil extends ChangeNotifier {
     bool? isSkipMl,
     double? gms,
     Map<String, String>? queryParams,
+    String? entryPoint,
   }) {
     final coupon = queryParams?['coupon'];
     final amount = queryParams?['amount'];
@@ -375,6 +373,7 @@ class BaseUtil extends ChangeNotifier {
           initialCoupon: coupon,
           gms: parsedGrams ?? gms,
           skipMl: isSkipMl ?? false,
+          entryPoint: entryPoint,
         ),
       );
     }
@@ -385,6 +384,7 @@ class BaseUtil extends ChangeNotifier {
     int? amt,
     Map<String, String>? queryParams,
     bool? isSkipMl,
+    String? entryPoint,
   }) {
     final coupon = queryParams?['coupon'];
     final amount = queryParams?['amount'];
@@ -454,6 +454,7 @@ class BaseUtil extends ChangeNotifier {
         skipMl: isSkipMl ?? false,
         onChanged: (p0) => p0,
         floAssetType: floAssetType,
+        entryPoint: entryPoint,
       ),
     );
   }
@@ -532,11 +533,7 @@ class BaseUtil extends ChangeNotifier {
   }
 
   static void openDepositOptionsModalSheet(
-      {int? amount,
-      bool isSkipMl = false,
-      String? title,
-      String? subtitle,
-      int timer = 500}) {
+      {int? amount, bool isSkipMl = false, int timer = 500}) {
     locator<AnalyticsService>()
         .track(eventName: AnalyticsEvents.assetOptionsModalTapped);
     Haptic.vibrate();
@@ -608,7 +605,6 @@ class BaseUtil extends ChangeNotifier {
     if (addToScreenStack != null && addToScreenStack == true) {
       AppState.screenStack.add(ScreenItem.dialog);
     }
-    Haptic.vibrate();
     d.log("Current Stack: ${AppState.screenStack}");
     await showModalBottomSheet(
       enableDrag: enableDrag,

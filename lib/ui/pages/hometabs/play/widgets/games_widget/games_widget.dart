@@ -13,7 +13,7 @@ import 'package:flutter/material.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
 class GamesWidget extends StatelessWidget {
-  const GamesWidget({super.key, required this.model});
+  const GamesWidget({required this.model, super.key});
 
   final PlayViewModel model;
 
@@ -48,19 +48,19 @@ class GamesWidget extends StatelessWidget {
         }
 
         if (model.gameTier == null) return const SizedBox();
-        final _viewModel = GameViewModel.fromGameTier(model.gameTier!)
+        final viewModel = GameViewModel.fromGameTier(model.gameTier!)
           ..processData();
         return Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             ...List.generate(
-              _viewModel.gameTiers.length,
+              viewModel.gameTiers.length,
               (index) {
                 final child = Padding(
                   padding: EdgeInsets.symmetric(vertical: SizeConfig.padding8),
                   child: _GameTierWidget(
-                    gameTier: _viewModel.gameTiers[index],
+                    gameTier: viewModel.gameTiers[index],
                     model: model,
                   ),
                 );
@@ -175,10 +175,9 @@ class _LockedState extends StatelessWidget {
                 gameTier.amountToCompleteLevel.round(),
           });
           BaseUtil.openDepositOptionsModalSheet(
-              amount: gameTier.amountToCompleteLevel.round(),
-              title: "Save in any asset to unlock ${gameTier.title}",
-              subtitle: 'Earn 1 token with every Rupee saved',
-              timer: 0);
+            amount: gameTier.amountToCompleteLevel.round(),
+            timer: 0,
+          );
         }
       },
       child: Container(
@@ -266,7 +265,7 @@ class CustomProgressBar extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final _center = Offset(size.width / 2, 0);
+    final center = Offset(size.width / 2, 0);
 
     canvas.drawRRect(
         RRect.fromRectAndRadius(

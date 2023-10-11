@@ -21,8 +21,8 @@ class HappyHourModel extends StatefulWidget {
 
   final bool isComingFromSave;
   const HappyHourModel({
-    Key? key,
     required this.model,
+    Key? key,
     this.isComingFromSave = false,
   }) : super(key: key);
   @override
@@ -74,7 +74,7 @@ class _HappyHourModalState extends TimerUtil<HappyHourModel> {
     final data = widget.model.data!;
     return WillPopScope(
       onWillPop: () async {
-        AppState.backButtonDispatcher!.didPopRoute();
+        await AppState.backButtonDispatcher!.didPopRoute();
         return Future.value(true);
       },
       child: SizedBox(
@@ -95,7 +95,7 @@ class _HappyHourModalState extends TimerUtil<HappyHourModel> {
               width: SizeConfig.screenWidth,
               decoration: BoxDecoration(
                 color: UiConstants.kSaveDigitalGoldCardBg,
-                border: Border.all(color: Color(0xff93B5FE)),
+                border: Border.all(color: const Color(0xff93B5FE)),
                 borderRadius: BorderRadius.vertical(
                   top: Radius.circular(
                     SizeConfig.roundness32,
@@ -124,7 +124,7 @@ class _HappyHourModalState extends TimerUtil<HappyHourModel> {
                       ),
                       alignment: TextAlign.center,
                       boldStyle: TextStyles.sourceSansSB.body2.colour(
-                        Color(0xffA5FCE7),
+                        const Color(0xffA5FCE7),
                       ),
                     ),
                   ),
@@ -141,11 +141,11 @@ class _HappyHourModalState extends TimerUtil<HappyHourModel> {
                             : data.preBuzz!.heading,
                         textAlign: TextAlign.center,
                         style: TextStyles.sourceSans.body3
-                            .colour(Color(0xff9AADFF)),
+                            .colour(const Color(0xff9AADFF)),
                       ),
                     ),
                   ],
-                  Spacer(),
+                  const Spacer(),
                   if (data.preBuzz!.luckyWinnersCount != 0 &&
                       _happyHourType != HappyHourType.expired) ...[
                     Stack(
@@ -155,7 +155,7 @@ class _HappyHourModalState extends TimerUtil<HappyHourModel> {
                         Text(
                           data.preBuzz!.luckyWinnersCount.toString(),
                           style: TextStyles.rajdhaniB
-                              .colour(Color(0xff232326))
+                              .colour(const Color(0xff232326))
                               .title3,
                         ),
                       ],
@@ -173,13 +173,15 @@ class _HappyHourModalState extends TimerUtil<HappyHourModel> {
                                 alignment: Alignment.center,
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
-                                  color: Color(0xff1F2C65).withOpacity(0.6),
+                                  color:
+                                      const Color(0xff1F2C65).withOpacity(0.6),
                                   boxShadow: [
                                     BoxShadow(
                                       blurStyle: BlurStyle.outer,
-                                      color: Color(0xff93B5FE).withOpacity(0.4),
+                                      color: const Color(0xff93B5FE)
+                                          .withOpacity(0.4),
                                       // spreadRadius: 2,
-                                      offset: Offset(0, -1),
+                                      offset: const Offset(0, -1),
                                     ),
                                   ],
                                 ),
@@ -187,7 +189,7 @@ class _HappyHourModalState extends TimerUtil<HappyHourModel> {
                                   getTime((index / 2).round()),
                                   style: TextStyles.rajdhaniSB.title3.colour(
                                       isHappyHourEnded
-                                          ? Color(0xffF79780)
+                                          ? const Color(0xffF79780)
                                           : Colors.white),
                                 ),
                               )
@@ -197,20 +199,18 @@ class _HappyHourModalState extends TimerUtil<HappyHourModel> {
                                 child: Text(
                                   ":",
                                   style: TextStyles.sourceSans.body1
-                                      .colour(Color(0XFFBDBDBE)),
+                                      .colour(const Color(0XFFBDBDBE)),
                                 ),
                               ),
                       ),
                     ),
-                  Spacer(),
+                  const Spacer(),
                   if (!widget.isComingFromSave)
                     type == ButtonType.save
                         ? SolidButton(
                             onPress: () {
                               AppState.backButtonDispatcher!.didPopRoute();
-                              BaseUtil.openDepositOptionsModalSheet(
-                                  title:
-                                      "You are investing during Happy Hours!");
+                              BaseUtil.openDepositOptionsModalSheet();
                               locator<MixpanelAnalytics>().track(
                                   eventName: "Happy Hour CTA Tapped ",
                                   properties: {
@@ -238,10 +238,11 @@ class _HappyHourModalState extends TimerUtil<HappyHourModel> {
                               AppState.backButtonDispatcher!
                                   .didPopRoute()
                                   .then((value) {
-                                if (value)
+                                if (value) {
                                   BaseUtil.showPositiveAlert(
                                       locale.happyHourNotificationSetPrimary,
                                       locale.happyHourNotificationSetSecondary);
+                                }
                               });
                               locator<MixpanelAnalytics>().track(
                                   eventName: "Happy Hour Notify",
@@ -315,8 +316,8 @@ class _HappyHourModalState extends TimerUtil<HappyHourModel> {
   String get getString {
     String text = "";
     if (inHours != "00") {
-      text = text + inHours + ":";
+      text = "$text$inHours:";
     }
-    return text + inMinutes + ":" + inSeconds;
+    return "$text$inMinutes:$inSeconds";
   }
 }

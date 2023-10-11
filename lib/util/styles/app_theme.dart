@@ -58,11 +58,3 @@ class FelloTheme {
     );
   }
 }
-
-// extension TextStyleHelpers on TextStyle {
-//   TextStyle get bold => copyWith(fontWeight: FontWeight.bold);
-//   TextStyle get italic => copyWith(fontStyle: FontStyle.italic);
-//   TextStyle letterSpace(double value) => copyWith(letterSpacing: value);
-//   TextStyle weight(FontWeight weight) => copyWith(fontWeight: weight);
-//   TextStyle colour(Color color) => copyWith(color: color);
-// }

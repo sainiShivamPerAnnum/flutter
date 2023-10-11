@@ -217,6 +217,7 @@ class LendboxBuyViewModel extends BaseViewModel {
     TickerProvider vsync, {
     required String assetTypeFlow,
     String? initialCouponCode,
+    String? entryPoint,
   }) async {
     setState(ViewState.Busy);
     floAssetType = assetTypeFlow;
@@ -228,7 +229,7 @@ class LendboxBuyViewModel extends BaseViewModel {
     isLendboxOldUser =
         locator<UserService>().userSegments.contains(Constants.US_FLO_OLD);
     appMetaList = await UpiUtils.getUpiApps();
-    await getAssetOptionsModel();
+    await getAssetOptionsModel(entryPoint: entryPoint);
     isIntentFlow = assetOptionsModel!.data.intent;
     log("isLendboxOldUser $isLendboxOldUser");
     skipMl = isSkipMilestone;
@@ -262,7 +263,7 @@ class LendboxBuyViewModel extends BaseViewModel {
     }
   }
 
-  Future<void> getAssetOptionsModel() async {
+  Future<void> getAssetOptionsModel({String? entryPoint}) async {
     final isNewUser = locator<UserService>().userSegments.contains(
           Constants.NEW_USER,
         );
@@ -272,6 +273,7 @@ class LendboxBuyViewModel extends BaseViewModel {
       subType: floAssetType,
       isOldLendboxUser: isLendboxOldUser,
       isNewUser: isNewUser,
+      entryPoint: entryPoint,
     );
     final model = res.model;
     if (res.code == 200 && model != null) {

@@ -88,7 +88,7 @@ class AppState extends ChangeNotifier {
 
   // BackButtonDispatcher backButtonDispatcher;
 
-  get rootIndex => _rootIndex;
+  int get rootIndex => _rootIndex;
 
   Timer? get txnTimer => _txnTimer;
 
@@ -198,7 +198,7 @@ class AppState extends ChangeNotifier {
         showTourStrip = true;
         notifyListeners();
       }
-      sharePreference.setInt('showTour', appSession + 1);
+      await sharePreference.setInt('showTour', appSession + 1);
     }
   }
 
@@ -281,7 +281,7 @@ class AppState extends ChangeNotifier {
   }
 
   void trackEvent(int index) {
-    final ScratchCardService _gtService = locator<ScratchCardService>();
+    final ScratchCardService gtService = locator<ScratchCardService>();
     if (_rootController.currentNavBarItemModel ==
         RootController.journeyNavBarItem) {
       _analyticsService.track(
@@ -310,9 +310,9 @@ class AppState extends ChangeNotifier {
           properties:
               AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
             "Winnings Amount": AnalyticsProperties.getUserCurrentWinnings(),
-            "Unscratched Ticket Count": _gtService.unscratchedTicketsCount,
-            "Scratched Ticket Count": (_gtService.activeScratchCards.length) -
-                _gtService.unscratchedTicketsCount,
+            "Unscratched Ticket Count": gtService.unscratchedTicketsCount,
+            "Scratched Ticket Count": (gtService.activeScratchCards.length) -
+                gtService.unscratchedTicketsCount,
           }));
     } else if (_rootController.currentNavBarItemModel ==
         RootController.tambolaNavBar) {
