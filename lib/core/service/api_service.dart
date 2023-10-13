@@ -2,6 +2,7 @@ import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:encrypt/encrypt.dart';
 import 'package:felloapp/core/repository/base_repo.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -9,48 +10,39 @@ import 'package:felloapp/util/app_exceptions.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:http/http.dart' as http;
+import 'package:firebase_auth/firebase_auth.dart';
+import 'package:flutter/foundation.dart' hide Key;
 import 'package:package_info_plus/package_info_plus.dart';
 
 abstract class API {
-  void setBaseUrl(String url);
+  Future<T> getData<T>(String url);
 
-  dynamic returnResponse(http.Response response);
+  Future<T> postData<T>(String url, {Map<String, dynamic>? body});
 
-  Future<dynamic> getData(String url);
+  Future<T> deleteData<T>(String url, {Map<String, dynamic>? body});
 
-  Future<dynamic> postData(String url, {Map<String, dynamic>? body});
+  Future<T> patchData<T>(String url, {Map<String, dynamic>? body});
 
-  Future<dynamic> deleteData(String url, {Map<String, dynamic>? body});
-
-  Future<dynamic> patchData(String url, {Map<String, dynamic>? body});
-
-  Future<dynamic> putData(String url);
-
-  Future<dynamic> paytmSubscriptionPostRequest(
-      {String? orderId,
-      String? vpa,
-      String? txnToken,
-      String? subId,
-      String? postPrefix,
-      String? mid});
+  Future<T> putData<T>(String url);
 }
 
 class APIService implements API {
-  String _baseUrl = 'https://${FlavorConfig.instance!.values.baseUriAsia}';
+  final Dio _dio = Dio()..interceptors.add(CoreInterceptor());
+
+  final String _baseUrl =
+      'https://${FlavorConfig.instance!.values.baseUriAsia}';
   final CustomLogger? logger = locator<CustomLogger>();
   final UserService? userService = locator<UserService>();
-  String _versionString = "";
 
   APIService._();
 
   static final instance = APIService._();
 
-  final _CACHE_ENCRYPTION_KEY = "264a239b0d87e175509b2aeb2a44b28c";
-  final _CACHE_ENCRYPTION_IV = "cffb220f03eaac73";
+  static const _cacheEncryptionKey = "264a239b0d87e175509b2aeb2a44b28c";
+  static const _cacheEncryptionIV = "cffb220f03eaac73";
 
   @override
-  Future<dynamic> getData(
+  Future<T> getData<T>(
     String url, {
     final String? token,
     final Map<String, dynamic>? queryParams,
@@ -58,44 +50,23 @@ class APIService implements API {
     final String? cBaseUrl,
     final bool decryptData = false,
   }) async {
-    // final HttpMetric metric =
-    //     FirebasePerformance.instance.newHttpMetric(url, HttpMethod.Get);
-    // await metric.start();
-    // int startTime = DateTime.now().millisecondsSinceEpoch;
-
-    // var responseJson;
-    // token = Preference.getString('token');
     try {
-      String finalPath = _baseUrl + url;
-      if (cBaseUrl != null) finalPath = cBaseUrl + url;
-      if (queryParams != null && queryParams.isNotEmpty) {
-        String queryString = Uri(queryParameters: queryParams).query;
-        finalPath += '?$queryString';
-      }
+      String finalPath = (cBaseUrl ?? _baseUrl) + url;
 
-      // if (headers != null) _headers.addAll(headers);
-
-      final response = await http.get(Uri.parse(finalPath), headers: {
-        HttpHeaders.authorizationHeader: token != null ? 'Bearer $token' : '',
-        'platform': Platform.isAndroid ? 'android' : 'iOS',
-        'version':
-            _versionString.isEmpty ? await _getAppVersion() : _versionString,
-        'uid': userService?.firebaseUser?.uid ?? '',
-        if (headers != null) ...headers
-      });
-
-      log(token.toString());
-
-      logger?.i(
-          "API:: GET REQUEST \n=> PATH: $finalPath  \n=> StatusCode: ${response.statusCode} \n=> queryParam: $queryParams \n=> headers: $headers \n"
-          "=> Response Body: ${response.body}");
+      final response = await _dio.get(
+        finalPath,
+        queryParameters: queryParams,
+        options: Options(
+          headers: headers,
+        ),
+      );
 
       if (decryptData) {
-        final data = await _decryptData(response.body);
+        final data = await _decryptData(response.data);
         log("decryptData  ${data!}");
-
         return json.decode(data);
       }
+
       return returnResponse(response);
     } catch (e) {
       if (e is SocketException) {
@@ -106,240 +77,105 @@ class APIService implements API {
         rethrow;
       }
     }
-    // return responseJson;
   }
 
   @override
-  Future<dynamic> postData(
+  Future<T> postData<T>(
     String url, {
     Map<String, dynamic>? body,
     String? cBaseUrl,
     String? token,
     Map<String, String>? headers,
     Map<String, dynamic>? queryParams,
-    bool isAuthTokenAvailable = true,
     final bool decryptData = false,
   }) async {
-    var responseJson;
-    String queryString = '';
-
-    // int startTime = DateTime.now().millisecondsSinceEpoch;
-
     try {
-      Map<String, String> _headers = {
-        'Content-Type': 'application/json; charset=UTF-8',
-        'platform': Platform.isAndroid ? 'android' : 'iOS',
-        'version':
-            _versionString.isEmpty ? await _getAppVersion() : _versionString,
-        'uid': userService?.baseUser?.uid ?? '',
-      };
-      if (headers != null) _headers.addAll(headers);
-      if (token != null) {
-        _headers[HttpHeaders.authorizationHeader] = 'Bearer $token';
-      }
+      String finalPath = (cBaseUrl ?? _baseUrl) + url;
 
-      if (!isAuthTokenAvailable) _headers['x-api-key'] = 'QTp93rVNrUJ9nv7rXDDh';
-
-      String _url = _baseUrl + url;
-
-      if (cBaseUrl != null) _url = cBaseUrl + url;
-      // logger!.d("response from $_url");
-      if (queryParams != null) {
-        queryString = Uri(queryParameters: queryParams).query;
-        _url += '?$queryString';
-      }
-      final response = await http.post(
-        Uri.parse(_url),
-        headers: _headers,
-        body: jsonEncode(body ?? {}),
+      final response = await _dio.post(
+        finalPath,
+        queryParameters: queryParams,
+        options: Options(
+          headers: headers,
+        ),
+        data: jsonEncode(body ?? {}),
       );
-      // log("API:: $url: ${DateTime.now().millisecondsSinceEpoch - startTime}");
 
-      logger?.i(
-          "API:: POST REQUEST \n=> PATH: $_url \n=> queryParam: $queryParams \n=> headers: $_headers "
-          "\n=> StatusCode: ${response.statusCode} "
-          "\nRequest Body: $body \n"
-          "=> Response Body: ${response.body}");
       if (decryptData) {
-        final data = await _decryptData(response.body);
+        final data = await _decryptData(response.data);
         log("decryptData  ${data!}");
-
         return json.decode(data);
       }
-      responseJson = returnResponse(response);
+
+      return returnResponse(response);
     } on SocketException {
       throw FetchDataException(
         'Error communication with server: Please check your internet connectivity',
       );
-    } finally {
-      // await metric.stop();
     }
-    return responseJson;
   }
 
   @override
-  Future<dynamic> putData(
+  Future<T> putData<T>(
     String url, {
     Map<String, dynamic>? body,
     String? cBaseUrl,
     String? token,
   }) async {
-    // final HttpMetric metric =
-    //     FirebasePerformance.instance.newHttpMetric(url, HttpMethod.Put);
-    // await metric.start();
-
-    var responseJson;
-    // token = Preference.getString('token');
     try {
-      String _url = _baseUrl + url;
+      String finalPath = (cBaseUrl ?? _baseUrl) + url;
 
-      if (cBaseUrl != null) _url = cBaseUrl + url;
-      // logger!.d("response from $_url");
-      final headers = {
-        'Content-Type': 'application/json; charset=UTF-8',
-        HttpHeaders.authorizationHeader: token != null ? 'Bearer $token' : '',
-        'platform': Platform.isAndroid ? 'android' : 'iOS',
-        'version':
-            _versionString.isEmpty ? await _getAppVersion() : _versionString,
-        'uid': userService?.baseUser?.uid as String,
-      };
-      final response = await http.put(
-        Uri.parse(_url),
-        headers: headers,
-        body: jsonEncode(body ?? {}),
+      final response = await _dio.put<T>(
+        finalPath,
+        data: jsonEncode(body ?? {}),
       );
-      logger?.i("API:: PUT REQUEST \n=> PATH: $_url  \n=> headers: $headers"
-          "\n=> StatusCode: ${response.statusCode} "
-          "\n=> Request Body: $body \n"
-          "=> Response Body: ${response.body}");
 
-      responseJson = returnResponse(response);
+      return returnResponse(response);
     } on SocketException {
       throw FetchDataException('No Internet connection');
-    } finally {
-      // await metric.stop();
     }
-    return responseJson;
   }
 
   @override
-  Future<dynamic> deleteData(
+  Future<T> deleteData<T>(
     String url, {
     Map<String, dynamic>? body,
     String? token,
   }) async {
-    // final HttpMetric metric =
-    //     FirebasePerformance.instance.newHttpMetric(url, HttpMethod.Get);
-    // await metric.start();
-
-    dynamic responseJson;
     try {
-      // logger!.d("response from $url");
-      final response = await http.delete(
-        Uri.parse('$_baseUrl$url'),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-          HttpHeaders.authorizationHeader: token ?? '',
-          'platform': Platform.isAndroid ? 'android' : 'iOS',
-          'version':
-              _versionString.isEmpty ? await _getAppVersion() : _versionString,
-          'uid': userService?.baseUser?.uid as String,
-        },
+      final response = await _dio.delete<T>(
+        '$_baseUrl$url',
       );
-      responseJson = returnResponse(response);
+
+      return returnResponse(response);
     } on SocketException {
       throw FetchDataException('No Internet connection');
-    } finally {
-      // await metric.stop();
     }
-    return responseJson;
   }
 
   @override
-  Future<dynamic> patchData(
+  Future<T> patchData<T>(
     String url, {
     Map<String, dynamic>? body,
     String? cBaseUrl,
     String? token,
   }) async {
-    // final HttpMetric metric =
-    //     FirebasePerformance.instance.newHttpMetric(url, HttpMethod.Get);
-    // await metric.start();
-    String _url = _baseUrl + url;
+    String finalPath = (cBaseUrl ?? _baseUrl) + url;
 
-    if (cBaseUrl != null) _url = cBaseUrl + url;
-    // logger!.d("response from $_url");
-    var responseJson;
     try {
-      final response = await http.patch(
-        Uri.parse(_url),
-        headers: <String, String>{
-          'Content-Type': 'application/json; charset=UTF-8',
-          HttpHeaders.authorizationHeader: token != null ? 'Bearer $token' : '',
-          'platform': Platform.isAndroid ? 'android' : 'iOS',
-          'version':
-              _versionString.isEmpty ? await _getAppVersion() : _versionString,
-          'uid': userService?.baseUser?.uid as String,
-        },
-        body: body == null ? null : jsonEncode(body),
+      final response = await _dio.patch<T>(
+        finalPath,
+        data: jsonEncode(body),
       );
 
-      logger?.i("API:: PATCH REQUEST \n=> PATH: $url  "
-          "\n=> StatusCode: ${response.statusCode} "
-          "\n=> Request Body: $body \n"
-          "=> Response Body: ${response.body}");
-
-      responseJson = returnResponse(response);
+      return returnResponse(response);
     } on SocketException {
       throw FetchDataException('No Internet connection');
-    } finally {
-      // await metric.stop();
     }
-    return responseJson;
   }
 
-  Future<dynamic> paytmSubscriptionPostRequest(
-      {String? orderId,
-      String? vpa,
-      String? txnToken,
-      String? subId,
-      String? postPrefix,
-      String? mid}) async {
-    try {
-      String responseString = "";
-      var headers = {'Content-Type': 'application/x-www-form-urlencoded'};
-      var request = http.Request(
-          'POST', Uri.parse('${postPrefix}mid=$mid&orderId=$orderId'));
-      request.bodyFields = {
-        'txnToken': '$txnToken',
-        'SUBSCRIPTION_ID': '$subId',
-        'paymentMode': 'UPI',
-        'AUTH_MODE': 'USRPWD',
-        'payerAccount': '$vpa'
-      };
-      request.headers.addAll(headers);
-
-      http.StreamedResponse response = await request.send();
-
-      if (response.statusCode == 200) {
-        responseString = await response.stream.bytesToString();
-        // logger!.d(responseString);
-        String identifierString =
-            "Check pending requests and approve payment by entering UPI PIN";
-        if (responseString.contains(identifierString)) return true;
-      } else {
-        // logger!.d(response.reasonPhrase);
-        return false;
-      }
-    } catch (e) {
-      return false;
-    }
-    return false;
-  }
-
-  @override
-  dynamic returnResponse(http.Response response) {
-    var responseJson = json.decode(response.body);
+  dynamic returnResponse(Response response) {
+    final responseJson = response.data;
     // logger!.d("$responseJson with code  ${response.statusCode}");
     switch (response.statusCode) {
       case 200:
@@ -353,7 +189,7 @@ class APIService implements API {
         BaseRepo.refreshToken = true;
         throw BadRequestException(responseJson['message']);
       case 403:
-        throw UnauthorizedException(response.body.toString());
+        throw UnauthorizedException(response.data.toString());
       case 500:
       default:
         throw FetchDataException(responseJson["message"]);
@@ -362,33 +198,59 @@ class APIService implements API {
 
   Future<String?> _decryptData(String data) async {
     final encrypter = Encrypter(AES(
-      Key.fromUtf8(utf8.decode(_CACHE_ENCRYPTION_KEY.codeUnits)),
+      Key.fromUtf8(utf8.decode(_cacheEncryptionKey.codeUnits)),
       mode: AESMode.cbc,
     ));
 
-    final _data = encrypter.decrypt16(
+    final data0 = encrypter.decrypt16(
       data,
-      iv: IV.fromUtf8(utf8.decode(_CACHE_ENCRYPTION_IV.codeUnits)),
+      iv: IV.fromUtf8(utf8.decode(_cacheEncryptionIV.codeUnits)),
     );
 
-    return _data;
+    return data0;
   }
+}
 
-  Future<String> _getAppVersion() async {
-    try {
-      if (_versionString.isEmpty) {
-        PackageInfo packageInfo = await PackageInfo.fromPlatform();
-        _versionString = packageInfo.buildNumber;
-      }
-    } catch (e) {
-      print(e);
+class CoreInterceptor extends Interceptor {
+  PackageInfo? _info;
+
+  @override
+  Future<void> onRequest(
+      RequestOptions options, RequestInterceptorHandler handler) async {
+    final user = FirebaseAuth.instance.currentUser;
+    final idToken = await user?.getIdToken();
+    final uid = user?.uid;
+
+    if (idToken != null) {
+      /// TODO(@DK070202): Confirm if token is uniq at all place.
+      options.headers['authorization'] = 'Bearer $idToken';
     }
-    // _versionString = _versionString;
-    return _versionString;
+
+    if (uid != null) {
+      options.headers['uid'] = uid;
+    }
+
+    try {
+      _info ??= await PackageInfo.fromPlatform();
+      options.headers['version'] = _info!.version;
+      options.headers['platform'] = defaultTargetPlatform.name;
+      // ignore: empty_catches
+    } catch (e) {}
+    handler.next(options);
   }
 
   @override
-  void setBaseUrl(String url) {
-    _baseUrl = url;
+  Future<void> onError(
+      DioException err, ErrorInterceptorHandler handler) async {
+    switch (err.response?.statusCode) {
+      case 401:
+        try {
+          await FirebaseAuth.instance.currentUser?.getIdToken(true);
+          // ignore: empty_catches
+        } catch (e) {}
+        break;
+      default:
+    }
+    handler.next(err);
   }
 }
