@@ -68,19 +68,13 @@ class SaveViewWrapper extends StatelessWidget {
                 children: [
                   SingleChildScrollView(
                     controller: RootController.controller,
-                    child: Column(
+                    child: Stack(
                       children: [
-                        Image.network(
-                            'https://media.licdn.com/dms/image/C5612AQERTlx4qa242Q/article-cover_image-shrink_423_752/0/1557153314013?e=1702512000&v=beta&t=jaFg6jx11yjYwPIR8hVH6ddhyK-zWjWLSgAHw5CMafs'),
-                        Stack(
-                          children: [
-                            Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: model.getSaveViewItems(model),
-                            ),
-                            const Cards(),
-                          ],
+                        Column(
+                          mainAxisSize: MainAxisSize.min,
+                          children: model.getSaveViewItems(model),
                         ),
+                        const Cards(),
                       ],
                     ),
                   ),
