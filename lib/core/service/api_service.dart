@@ -27,7 +27,11 @@ abstract class API {
 }
 
 class APIService implements API {
-  final Dio _dio = Dio()..interceptors.add(CoreInterceptor());
+  final Dio _dio = Dio()
+    ..interceptors.addAll([
+      CoreInterceptor(),
+      LogInterceptor(),
+    ]);
 
   final String _baseUrl =
       'https://${FlavorConfig.instance!.values.baseUriAsia}';
@@ -123,7 +127,7 @@ class APIService implements API {
     String? absoluteUrl,
     String? cBaseUrl,
     String? token,
-    Map<String, String>? headers,
+    Map<String, dynamic>? headers,
   }) async {
     try {
       String finalPath = (cBaseUrl ?? _baseUrl) + url;
@@ -223,6 +227,12 @@ class CoreInterceptor extends Interceptor {
   @override
   Future<void> onRequest(
       RequestOptions options, RequestInterceptorHandler handler) async {
+    /// TODO(@DK070202): Whitelist domain for the headers qulification.
+    if (options.path.contains('uploads/')) {
+      handler.next(options);
+      return;
+    }
+
     final user = FirebaseAuth.instance.currentUser;
     final idToken = await user?.getIdToken();
     final uid = user?.uid;
