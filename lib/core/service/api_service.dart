@@ -3,6 +3,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:dio_http2_adapter/dio_http2_adapter.dart';
 import 'package:encrypt/encrypt.dart';
 import 'package:felloapp/core/repository/base_repo.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -31,7 +32,12 @@ class APIService implements API {
     ..interceptors.addAll([
       CoreInterceptor(),
       LogInterceptor(),
-    ]);
+    ])
+    ..httpClientAdapter = Http2Adapter(
+      ConnectionManager(
+        idleTimeout: const Duration(seconds: 20),
+      ),
+    );
 
   final String _baseUrl =
       'https://${FlavorConfig.instance!.values.baseUriAsia}';
@@ -207,17 +213,19 @@ class APIService implements API {
   }
 
   Future<String?> _decryptData(String data) async {
-    final encrypter = Encrypter(AES(
+    final encAlgo = AES(
       Key.fromUtf8(utf8.decode(_cacheEncryptionKey.codeUnits)),
       mode: AESMode.cbc,
-    ));
+    );
 
-    final data0 = encrypter.decrypt16(
+    final enc = Encrypter(encAlgo);
+
+    final decryptedData = enc.decrypt16(
       data,
       iv: IV.fromUtf8(utf8.decode(_cacheEncryptionIV.codeUnits)),
     );
 
-    return data0;
+    return decryptedData;
   }
 }
 
