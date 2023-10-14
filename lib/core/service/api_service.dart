@@ -70,9 +70,10 @@ class APIService implements API {
       return returnResponse(response);
     } catch (e) {
       if (e is SocketException) {
-        throw FetchDataException('No Internet connection');
+        throw const FetchDataException('No Internet connection');
       } else if (e is UnauthorizedException) {
-        throw UnauthorizedException("Verification Failed. Please try again");
+        throw const UnauthorizedException(
+            "Verification Failed. Please try again");
       } else {
         rethrow;
       }
@@ -98,7 +99,7 @@ class APIService implements API {
         options: Options(
           headers: headers,
         ),
-        data: jsonEncode(body ?? {}),
+        data: body,
       );
 
       if (decryptData) {
@@ -109,7 +110,7 @@ class APIService implements API {
 
       return returnResponse(response);
     } on SocketException {
-      throw FetchDataException(
+      throw const FetchDataException(
         'Error communication with server: Please check your internet connectivity',
       );
     }
@@ -118,21 +119,24 @@ class APIService implements API {
   @override
   Future<T> putData<T>(
     String url, {
-    Map<String, dynamic>? body,
+    Object? body,
+    String? absoluteUrl,
     String? cBaseUrl,
     String? token,
+    Map<String, String>? headers,
   }) async {
     try {
       String finalPath = (cBaseUrl ?? _baseUrl) + url;
 
       final response = await _dio.put<T>(
-        finalPath,
-        data: jsonEncode(body ?? {}),
+        absoluteUrl ?? finalPath,
+        data: body,
+        options: Options(headers: headers),
       );
 
       return returnResponse(response);
     } on SocketException {
-      throw FetchDataException('No Internet connection');
+      throw const FetchDataException('No Internet connection');
     }
   }
 
@@ -149,7 +153,7 @@ class APIService implements API {
 
       return returnResponse(response);
     } on SocketException {
-      throw FetchDataException('No Internet connection');
+      throw const FetchDataException('No Internet connection');
     }
   }
 
@@ -165,12 +169,12 @@ class APIService implements API {
     try {
       final response = await _dio.patch<T>(
         finalPath,
-        data: jsonEncode(body),
+        data: body,
       );
 
       return returnResponse(response);
     } on SocketException {
-      throw FetchDataException('No Internet connection');
+      throw const FetchDataException('No Internet connection');
     }
   }
 
@@ -191,6 +195,8 @@ class APIService implements API {
       case 403:
         throw UnauthorizedException(response.data.toString());
       case 500:
+        throw const InternalServerException('Internal server exception');
+
       default:
         throw FetchDataException(responseJson["message"]);
     }

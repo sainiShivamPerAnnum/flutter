@@ -16,7 +16,6 @@ import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:http/http.dart' as http;
 import 'package:image_picker/image_picker.dart';
 
 class BankingRepository extends BaseRepo {
@@ -28,7 +27,8 @@ class BankingRepository extends BaseRepo {
       ? "https://cqfb61p1m2.execute-api.ap-south-1.amazonaws.com/dev"
       : "https://szqrjkwkka.execute-api.ap-south-1.amazonaws.com/prod";
 
-  Future<ApiResponse<VerifyPanResponseModel>> verifyPan({String? uid, String? panName, String? panNumber}) async {
+  Future<ApiResponse<VerifyPanResponseModel>> verifyPan(
+      {String? uid, String? panName, String? panNumber}) async {
     final Map<String, dynamic> body = {
       "uid": uid,
       "panName": panName,
@@ -46,7 +46,7 @@ class BankingRepository extends BaseRepo {
 
       _logger.d(response);
       VerifyPanResponseModel _verifyPanApiResponse =
-      VerifyPanResponseModel.fromMap(response["data"]);
+          VerifyPanResponseModel.fromMap(response["data"]);
 
       if (_verifyPanApiResponse.flag!) {
         await CacheService.invalidateByKey(CacheKeys.USER);
@@ -71,7 +71,8 @@ class BankingRepository extends BaseRepo {
     }
   }
 
-  Future<ApiResponse<SignedImageUrlModel>> getSignedImageUrl(String filename) async {
+  Future<ApiResponse<SignedImageUrlModel>> getSignedImageUrl(
+      String filename) async {
     final Map<String, String> body = {'fileName': filename};
 
     try {
@@ -83,7 +84,7 @@ class BankingRepository extends BaseRepo {
         cBaseUrl: _baseUrl,
       );
       SignedImageUrlModel responseData =
-      SignedImageUrlModel.fromMap(response["data"]);
+          SignedImageUrlModel.fromMap(response["data"]);
       return ApiResponse(model: responseData, code: 200);
     } catch (e) {
       _logger.e(e.toString());
@@ -97,24 +98,28 @@ class BankingRepository extends BaseRepo {
     }
   }
 
-  Future<ApiResponse<bool>> uploadPanImageFile(String uploadUrl, XFile imageFile) async {
+  Future<ApiResponse<bool>> uploadPanImageFile(
+      String uploadUrl, XFile imageFile) async {
     try {
-      var response = await http.put(Uri.parse(uploadUrl),
-          body: await File(imageFile.path).readAsBytes(),
-          headers: {'Content-Type': "image/${imageFile.name.split('.').last}"});
-      if (response.statusCode == 200) {
-        return ApiResponse(model: true, code: 200);
-      }
-      return ApiResponse.withError(response.body.toString(), 400);
+      await APIService.instance.putData(
+        '',
+        absoluteUrl: uploadUrl,
+        headers: {'Content-Type': "image/${imageFile.name.split('.').last}"},
+        body: await File(imageFile.path).readAsBytes(),
+      );
+
+      return ApiResponse(model: true, code: 200);
     } catch (e) {
       _logger.e(e.toString());
-      locator<InternalOpsService>().logFailure(
+      await locator<InternalOpsService>().logFailure(
         userService.baseUser!.uid,
         FailType.PanImageUploadFailed,
         {'message': "Pan image upload failed"},
       );
       return ApiResponse.withError(
-          e?.toString() ?? "Unable to verify pan", 400);
+        e.toString(),
+        400,
+      );
     }
   }
 
@@ -154,7 +159,7 @@ class BankingRepository extends BaseRepo {
         cBaseUrl: _baseUrl,
       );
       final UserKycDataModel panData =
-      UserKycDataModel.fromMap(response["data"]);
+          UserKycDataModel.fromMap(response["data"]);
       return ApiResponse(model: panData, code: 200);
     } catch (e) {
       logger.e(e.toString());
