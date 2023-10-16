@@ -24,11 +24,10 @@ class PowerPlayRepository extends BaseRepo {
   Future<ApiResponse<MatchesModel>> getMatchesByStatus(
       String status, int limit, int offset) async {
     try {
-      final token = await getBearerToken();
       final response = await APIService.instance.getData(
-          ApiPath.powerPlayMatches(status, limit, offset),
-          cBaseUrl: _baseUrl,
-          token: token);
+        ApiPath.powerPlayMatches(status, limit, offset),
+        cBaseUrl: _baseUrl,
+      );
       if (response['data'] != null) {
         log("REPO getMatchesByStatus => ${response['data']}");
 
@@ -54,12 +53,10 @@ class PowerPlayRepository extends BaseRepo {
   Future<ApiResponse<MatchPredictionBoardModel>> getUserPredictedStats(
       String matchId) async {
     try {
-      final token = await getBearerToken();
-
       final response = await APIService.instance.getData(
-          ApiPath.matchStats(matchId),
-          cBaseUrl: _baseUrl,
-          token: token);
+        ApiPath.matchStats(matchId),
+        cBaseUrl: _baseUrl,
+      );
       if (response['data'] != null) {
         return ApiResponse<MatchPredictionBoardModel>(
           model: MatchPredictionBoardModel.fromJson(response),
@@ -82,12 +79,10 @@ class PowerPlayRepository extends BaseRepo {
       getWinnersLeaderboard(String matchId) async {
     List<MatchWinnersLeaderboardItemModel> winners = [];
     try {
-      final token = await getBearerToken();
-
       final response = await APIService.instance.getData(
-          ApiPath.powerPlayWinnersLeaderboard(matchId),
-          cBaseUrl: _baseUrl,
-          token: token);
+        ApiPath.powerPlayWinnersLeaderboard(matchId),
+        cBaseUrl: _baseUrl,
+      );
       if (response['data'] != null) {
         winners = MatchWinnersLeaderboardItemModel.helper
             .fromMapArray(response['data']['users']);
@@ -109,10 +104,10 @@ class PowerPlayRepository extends BaseRepo {
       getSeasonLeaderboard() async {
     List<SeasonLeaderboardItemModel> winners = [];
     try {
-      final token = await getBearerToken();
-
-      final response = await APIService.instance
-          .getData(ApiPath.seasonLeaderboard, cBaseUrl: _baseUrl, token: token);
+      final response = await APIService.instance.getData(
+        ApiPath.seasonLeaderboard,
+        cBaseUrl: _baseUrl,
+      );
       if (response['data'] != null) {
         winners =
             SeasonLeaderboardItemModel.helper.fromMapArray(response['data']);
@@ -132,10 +127,10 @@ class PowerPlayRepository extends BaseRepo {
 
   Future<ApiResponse<PowerPlayReward>> getPowerPlayReward() async {
     try {
-      final token = await getBearerToken();
-
-      final response = await APIService.instance
-          .getData(ApiPath.powerPlayReward, cBaseUrl: _baseUrl, token: token);
+      final response = await APIService.instance.getData(
+        ApiPath.powerPlayReward,
+        cBaseUrl: _baseUrl,
+      );
       if (response['data'] != null) {
         return ApiResponse<PowerPlayReward>(
           model: PowerPlayReward.fromJson(response),

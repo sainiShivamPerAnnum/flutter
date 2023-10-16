@@ -20,10 +20,8 @@ class InvestmentActionsRepository extends BaseRepo {
     _logger!.d("GET_GOLD_RATES::API_CALLED");
 
     try {
-      final String _bearer = await getBearerToken();
       final response = await APIService.instance.getData(
         _apiPaths!.kGetGoldRates,
-        token: _bearer,
         cBaseUrl: _baseUrl,
       );
 
@@ -56,11 +54,9 @@ class InvestmentActionsRepository extends BaseRepo {
       _logger!.e("Encryption initialization failed.");
     }
     try {
-      final String _bearer = await getBearerToken();
       final response = await APIService.instance.postData(
         ApiPath.withdrawal,
         body: _body,
-        token: _bearer,
         cBaseUrl: FlavorConfig.isDevelopment()
             ? "https://wd7bvvu7le.execute-api.ap-south-1.amazonaws.com/dev"
             : "https://yg58g0feo0.execute-api.ap-south-1.amazonaws.com/prod",

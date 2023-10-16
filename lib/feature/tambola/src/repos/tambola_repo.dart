@@ -27,16 +27,12 @@ class TambolaRepo extends BaseRepo {
     TambolaBestTicketsModel? bestTickets;
     try {
       final uid = userService.baseUser!.uid;
-      final token = await getBearerToken();
-
-      // await preProcessTambolaTickets();
 
       return await _cacheService.cachedApi(
           CacheKeys.TAMBOLA_TICKETS,
           TTL.UPTO_SIX_PM,
           () => APIService.instance.getData(
                 ApiPath.tambolaBestTickets(uid!),
-                token: token,
                 queryParams: {'spinFlag': postSpinStats.toString()},
                 cBaseUrl: _baseUrl,
               ), (dynamic response) {
@@ -58,10 +54,9 @@ class TambolaRepo extends BaseRepo {
       int offset, int limit) async {
     try {
       final uid = userService.baseUser!.uid;
-      final token = await getBearerToken();
+
       final response = await APIService.instance.getData(
         ApiPath.tambolaTickets(uid),
-        token: token,
         queryParams: {'limit': limit.toString(), 'offset': offset.toString()},
         cBaseUrl: _baseUrl,
       );
@@ -81,8 +76,6 @@ class TambolaRepo extends BaseRepo {
 
   Future<ApiResponse<dynamic>> getWeeklyPicks() async {
     try {
-      final String bearer = await getBearerToken();
-
       // cache till 6 PM only
       final now = DateTime.now();
       // final ttl = ((18 - now.hour) % 24) * 60 - now.minute;
@@ -92,7 +85,6 @@ class TambolaRepo extends BaseRepo {
           0,
           () => APIService.instance.getData(
                 ApiPath.dailyPicks,
-                token: bearer,
                 cBaseUrl: _baseUrl,
               ), (dynamic response) {
         final data = response['data'];

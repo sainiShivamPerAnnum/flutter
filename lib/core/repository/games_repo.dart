@@ -31,11 +31,9 @@ class GameRepo extends BaseRepo {
 
   Future<ApiResponse<List<GameModel>>> getGames() async {
     try {
-      final token = await getBearerToken();
       final response = await APIService.instance.getData(
         ApiPath.getGames,
         cBaseUrl: _baseUrl,
-        token: token,
       );
       log("Games: ${response["data"]}");
 
@@ -56,11 +54,9 @@ class GameRepo extends BaseRepo {
   Future<ApiResponse<GameModel>> getGameByCode(
       {required String gameCode}) async {
     try {
-      final token = await getBearerToken();
       final response = await APIService.instance.getData(
         ApiPath.getGameByCode(gameCode),
         cBaseUrl: _baseUrl,
-        token: token,
       );
       final game = GameModel.fromMap(response["data"]);
       return ApiResponse<GameModel>(model: game, code: 200);
@@ -73,11 +69,9 @@ class GameRepo extends BaseRepo {
 
   Future<ApiResponse<GameTiers>> getGameTiers() async {
     try {
-      final token = await getBearerToken();
       final response = await APIService.instance.getData(
         '/games/tiers',
         cBaseUrl: _baseUrl,
-        token: token,
       );
 
       gameTiers = GameTiers.fromJson(response);

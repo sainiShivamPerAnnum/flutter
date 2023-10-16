@@ -18,11 +18,12 @@ class UserStatsRepo extends BaseRepo with ChangeNotifier {
   late Completer<GameStats?> completer;
   Future<void> getGameStats() async {
     completer = Completer();
-    final token = await getBearerToken();
     try {
       final uid = _userService.baseUser?.uid ?? "";
-      final res = await APIService.instance.getData(ApiPath.getGameStats(uid),
-          token: token, cBaseUrl: AppEnvironment.instance.stats);
+      final res = await APIService.instance.getData(
+        ApiPath.getGameStats(uid),
+        cBaseUrl: AppEnvironment.instance.stats,
+      );
       gameStats = GameStats.fromJson(res['data']);
       completer.complete(gameStats);
       notifyListeners();

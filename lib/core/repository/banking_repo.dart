@@ -36,11 +36,9 @@ class BankingRepository extends BaseRepo {
     };
 
     try {
-      final String token = await getBearerToken();
       final response = await APIService.instance.postData(
         _apiPaths!.kVerifyPan,
         body: body,
-        token: token,
         cBaseUrl: _baseUrl,
       );
 
@@ -76,11 +74,9 @@ class BankingRepository extends BaseRepo {
     final Map<String, String> body = {'fileName': filename};
 
     try {
-      final String token = await getBearerToken();
       final response = await APIService.instance.postData(
         ApiPath.kGetSignedImageUrl(userService.baseUser!.uid!),
         body: body,
-        token: token,
         cBaseUrl: _baseUrl,
       );
       SignedImageUrlModel responseData =
@@ -129,11 +125,9 @@ class BankingRepository extends BaseRepo {
     };
 
     try {
-      final String token = await getBearerToken();
       final response = await APIService.instance.postData(
         ApiPath.kForgeryUpload(userService.baseUser!.uid!),
         body: body,
-        token: token,
         cBaseUrl: _baseUrl,
       );
 
@@ -152,10 +146,8 @@ class BankingRepository extends BaseRepo {
 
   Future<ApiResponse<UserKycDataModel>> getUserKycInfo() async {
     try {
-      final String token = await getBearerToken();
       final response = await APIService.instance.getData(
         ApiPath.kGetPan(userService.baseUser!.uid!),
-        token: token,
         cBaseUrl: _baseUrl,
       );
       final UserKycDataModel panData =
@@ -175,10 +167,8 @@ class BankingRepository extends BaseRepo {
 
   Future<ApiResponse<bool>> verifyAugmontKyc() async {
     try {
-      final String token = await getBearerToken();
       await APIService.instance.putData(
         ApiPath.verifyAugmontKyc,
-        token: token,
         cBaseUrl: _baseUrl,
         body: {"uid": userService.baseUser!.uid},
       );

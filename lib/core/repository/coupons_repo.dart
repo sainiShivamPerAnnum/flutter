@@ -19,7 +19,6 @@ class CouponRepository extends BaseRepo {
       String? couponcode,
       int? amount}) async {
     try {
-      final String bearer = await getBearerToken();
       Map<String, dynamic> body = {
         "uid": uid,
         "type": assetType,
@@ -36,7 +35,6 @@ class CouponRepository extends BaseRepo {
       final res = await APIService.instance.postData(
         ApiPath.kFelloCoupons,
         body: body,
-        token: bearer,
         cBaseUrl: AppEnvironment.instance.coupons,
       );
       EligibleCouponResponseModel reponseModel =
@@ -53,11 +51,9 @@ class CouponRepository extends BaseRepo {
   Future<ApiResponse<List<CouponModel>>> getCoupons(
       {required String assetType}) async {
     try {
-      final token = await getBearerToken();
       final couponResponse = await APIService.instance.getData(
         ApiPath.getCoupons,
         cBaseUrl: AppEnvironment.instance.coupons,
-        token: token,
         queryParams: {
           "type": assetType,
         },

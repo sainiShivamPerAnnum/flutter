@@ -17,7 +17,6 @@ class PrizingRepo extends BaseRepo {
   ) async {
     try {
       final uid = userService!.baseUser!.uid;
-      final String bearer = await getBearerToken();
 
       final response = await APIService.instance.postData(
         ApiPath.claimPrize,
@@ -26,7 +25,6 @@ class PrizingRepo extends BaseRepo {
           "amount": amount,
           "redeemType": claimChoice.name,
         },
-        token: bearer,
         cBaseUrl: _baseUrl,
       );
 

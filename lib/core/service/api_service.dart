@@ -3,7 +3,6 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
-import 'package:dio_http2_adapter/dio_http2_adapter.dart';
 import 'package:encrypt/encrypt.dart';
 import 'package:felloapp/core/repository/base_repo.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -20,8 +19,6 @@ abstract class API {
 
   Future<T> postData<T>(String url, {Map<String, dynamic>? body});
 
-  Future<T> deleteData<T>(String url, {Map<String, dynamic>? body});
-
   Future<T> patchData<T>(String url, {Map<String, dynamic>? body});
 
   Future<T> putData<T>(String url);
@@ -29,15 +26,16 @@ abstract class API {
 
 class APIService implements API {
   final Dio _dio = Dio()
-    ..interceptors.addAll([
-      CoreInterceptor(),
-      LogInterceptor(),
-    ])
-    ..httpClientAdapter = Http2Adapter(
-      ConnectionManager(
-        idleTimeout: const Duration(seconds: 20),
-      ),
-    );
+        ..interceptors.addAll([
+          CoreInterceptor(),
+          LogInterceptor(),
+        ])
+      // ..httpClientAdapter = Http2Adapter(
+      //   ConnectionManager(
+      //     idleTimeout: const Duration(seconds: 20),
+      //   ),
+      // )
+      ;
 
   final String _baseUrl =
       'https://${FlavorConfig.instance!.values.baseUriAsia}';
@@ -67,7 +65,10 @@ class APIService implements API {
         finalPath,
         queryParameters: queryParams,
         options: Options(
-          headers: headers,
+          headers: {
+            if (token != null) HttpHeaders.authorizationHeader: token,
+            ...?headers,
+          },
         ),
       );
 
@@ -95,7 +96,6 @@ class APIService implements API {
     String url, {
     Map<String, dynamic>? body,
     String? cBaseUrl,
-    String? token,
     Map<String, String>? headers,
     Map<String, dynamic>? queryParams,
     final bool decryptData = false,
@@ -132,7 +132,6 @@ class APIService implements API {
     Object? body,
     String? absoluteUrl,
     String? cBaseUrl,
-    String? token,
     Map<String, dynamic>? headers,
   }) async {
     try {
@@ -141,24 +140,9 @@ class APIService implements API {
       final response = await _dio.put<T>(
         absoluteUrl ?? finalPath,
         data: body,
-        options: Options(headers: headers),
-      );
-
-      return returnResponse(response);
-    } on SocketException {
-      throw const FetchDataException('No Internet connection');
-    }
-  }
-
-  @override
-  Future<T> deleteData<T>(
-    String url, {
-    Map<String, dynamic>? body,
-    String? token,
-  }) async {
-    try {
-      final response = await _dio.delete<T>(
-        '$_baseUrl$url',
+        options: Options(
+          headers: headers,
+        ),
       );
 
       return returnResponse(response);
@@ -172,7 +156,6 @@ class APIService implements API {
     String url, {
     Map<String, dynamic>? body,
     String? cBaseUrl,
-    String? token,
   }) async {
     String finalPath = (cBaseUrl ?? _baseUrl) + url;
 
@@ -242,12 +225,11 @@ class CoreInterceptor extends Interceptor {
     }
 
     final user = FirebaseAuth.instance.currentUser;
-    final idToken = await user?.getIdToken();
+    final token = options.headers['authorization'] ?? await user?.getIdToken();
     final uid = user?.uid;
 
-    if (idToken != null) {
-      /// TODO(@DK070202): Confirm if token is uniq at all place.
-      options.headers['authorization'] = 'Bearer $idToken';
+    if (token != null) {
+      options.headers['authorization'] = 'Bearer $token';
     }
 
     if (uid != null) {
@@ -256,7 +238,7 @@ class CoreInterceptor extends Interceptor {
 
     try {
       _info ??= await PackageInfo.fromPlatform();
-      options.headers['version'] = _info!.version;
+      options.headers['version'] = _info!.buildNumber;
       options.headers['platform'] = defaultTargetPlatform.name;
       // ignore: empty_catches
     } catch (e) {}

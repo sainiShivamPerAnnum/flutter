@@ -67,10 +67,9 @@ class UserRepository extends BaseRepo {
   }
 
   Future<ApiResponse<Map<String, dynamic>>> setNewUser(
-      BaseUser baseUser, token) async {
+    BaseUser baseUser,
+  ) async {
     try {
-      final String bearer = token;
-
       final body = {
         'uid': baseUser.uid,
         'data': {
@@ -88,8 +87,11 @@ class UserRepository extends BaseRepo {
         }
       };
 
-      final res = await APIService.instance.postData(_apiPaths.kAddNewUser,
-          cBaseUrl: AppEnvironment.instance.userOps, body: body, token: bearer);
+      final res = await APIService.instance.postData(
+        _apiPaths.kAddNewUser,
+        cBaseUrl: AppEnvironment.instance.userOps,
+        body: body,
+      );
       logger.d(res);
       final responseData = res['data'];
       logger.d(responseData);
@@ -105,15 +107,12 @@ class UserRepository extends BaseRepo {
 
   Future<ApiResponse<BaseUser>> getUserById({required String? id}) async {
     try {
-      final token = await getBearerToken();
-
       return await _cacheService.cachedApi(
           CacheKeys.USER,
           TTL.ONE_DAY,
           () => APIService.instance.getData(
                 ApiPath.kGetUserById(id),
                 cBaseUrl: AppEnvironment.instance.userOps,
-                token: token,
               ), (res) {
         try {
           if (res != null && res['data'] != null && res['data'].isNotEmpty) {
@@ -137,7 +136,7 @@ class UserRepository extends BaseRepo {
     }
   }
 
-  Future<ApiResponse> updateUserAppFlyer(BaseUser user, String token) async {
+  Future<ApiResponse> updateUserAppFlyer(BaseUser user) async {
     try {
       logger.i("CALLING: updateUserAppFlyer");
       final id = await _appsFlyerService.appFlyerId;
@@ -155,7 +154,6 @@ class UserRepository extends BaseRepo {
         _apiPaths.kUpdateUserAppflyer,
         body: body,
         cBaseUrl: AppEnvironment.instance.userOps,
-        token: token,
       );
 
       // clear cache
@@ -221,11 +219,9 @@ class UserRepository extends BaseRepo {
   Future<ApiResponse<UserFundWallet>> getFundBalance() async {
     try {
       final uid = userService.baseUser!.uid;
-      final token = await getBearerToken();
 
       final res = await APIService.instance.getData(
         ApiPath.getFundBalance(uid),
-        token: token,
         cBaseUrl: AppEnvironment.instance.userOps,
       );
       logger.d('fund balance $res');
@@ -243,11 +239,9 @@ class UserRepository extends BaseRepo {
   Future<ApiResponse<FlcModel>> getCoinBalance() async {
     try {
       final uid = userService.baseUser?.uid;
-      final token = await getBearerToken();
 
       final res = await APIService.instance.getData(
         ApiPath.getCoinBalance(uid),
-        token: token,
         cBaseUrl: AppEnvironment.instance.userOps,
       );
 
@@ -285,7 +279,7 @@ class UserRepository extends BaseRepo {
       try {
         appInstanceId = await FirebaseAnalytics.instance.appInstanceId;
       } catch (e) {}
-      final token = await getBearerToken();
+
       Map<String, dynamic> body = {
         "uid": uid ?? "",
         "deviceId": deviceId ?? "",
@@ -302,7 +296,6 @@ class UserRepository extends BaseRepo {
         ApiPath.kDeviceId,
         body: body,
         cBaseUrl: AppEnvironment.instance.userOps,
-        token: token,
       );
 
       logger.d("Device added: $body");
@@ -319,13 +312,11 @@ class UserRepository extends BaseRepo {
   Future<ApiResponse<UserAugmontDetail>> getUserAugmontDetails() async {
     try {
       logger.i("CALLING: getUserAugmontDetails");
-      final token = await getBearerToken();
       final augmontRespone = await APIService.instance.getData(
         ApiPath.getAugmontDetail(
           userService.baseUser!.uid,
         ),
         cBaseUrl: AppEnvironment.instance.userOps,
-        token: token,
       );
 
       final augmont = UserAugmontDetail.fromMap(augmontRespone['data']);
@@ -339,11 +330,9 @@ class UserRepository extends BaseRepo {
   Future<ApiResponse<Map<String, dynamic>>>
       checkIfUserHasNewNotifications() async {
     try {
-      final token = await getBearerToken();
       final latestNotificationsResponse = await APIService.instance.getData(
         ApiPath.getLatestNotification(userService.baseUser!.uid),
         cBaseUrl: AppEnvironment.instance.userOps,
-        token: token,
       );
 
       final List<AlertModel> notifications = AlertModel.helper.fromMapArray(
@@ -420,14 +409,12 @@ class UserRepository extends BaseRepo {
     String? lastDocId,
   ) async {
     try {
-      final token = await getBearerToken();
       final userNotifications = await APIService.instance.getData(
         ApiPath.getNotifications(userService.baseUser!.uid),
         cBaseUrl: AppEnvironment.instance.userOps,
         queryParams: {
           "lastDocId": lastDocId,
         },
-        token: token,
       );
 
       final responseData = userNotifications["data"];
@@ -449,12 +436,10 @@ class UserRepository extends BaseRepo {
     required Map<String, dynamic> dMap,
     String? uid,
   }) async {
-    final token = await getBearerToken();
     try {
       final res = await APIService.instance.putData(
         ApiPath.kGetUserById(userService.baseUser!.uid),
         body: dMap,
-        token: token,
         cBaseUrl: AppEnvironment.instance.userOps,
       );
       logger.d("Update user data: ${res['data']}");
@@ -484,7 +469,6 @@ class UserRepository extends BaseRepo {
     required String? fcmToken,
   }) async {
     try {
-      final token = await getBearerToken();
       await APIService.instance.putData(
         ApiPath.updateFcm,
         body: {
@@ -492,7 +476,6 @@ class UserRepository extends BaseRepo {
           "token": fcmToken,
         },
         cBaseUrl: AppEnvironment.instance.userOps,
-        token: token,
       );
 
       return ApiResponse<bool>(model: true, code: 200);
@@ -513,11 +496,10 @@ class UserRepository extends BaseRepo {
   Future<ApiResponse<bool>> completeOnboarding() async {
     try {
       log("completeOnboarding");
-      final token = await getBearerToken();
+
       await APIService.instance.postData(
         ApiPath.getCompleteOnboarding(userService.baseUser!.uid),
         cBaseUrl: AppEnvironment.instance.userOps,
-        token: token,
       );
 
       return ApiResponse<bool>(model: true, code: 200);
@@ -532,7 +514,6 @@ class UserRepository extends BaseRepo {
 
   Future<bool> logOut() async {
     try {
-      final token = await getBearerToken();
       Map<String, dynamic> response =
           await _internalOpsService.initDeviceInfo();
       final String? deviceId = response["deviceId"];
@@ -546,7 +527,6 @@ class UserRepository extends BaseRepo {
       final res = await APIService.instance.putData(
           ApiPath.logOut(userService.baseUser!.uid),
           cBaseUrl: AppEnvironment.instance.userOps,
-          token: token,
           body: {
             "uid": userService.baseUser!.uid ?? "",
             "deviceId": deviceId ?? "",
@@ -596,13 +576,10 @@ class UserRepository extends BaseRepo {
       'firebaseAppInstanceId': appInstanceId,
     };
 
-    final token = await getBearerToken();
-
     final respone = await APIService.instance.getData(
       ApiPath.userBootUp(
         userService.baseUser?.uid,
       ),
-      token: token,
       queryParams: queryParameters,
       cBaseUrl: AppEnvironment.instance.userOps,
     );
@@ -627,13 +604,12 @@ class UserRepository extends BaseRepo {
       final query = {
         'email': email,
       };
-      final token = await getBearerToken();
       final uid = userService.baseUser?.uid;
       final res = await APIService.instance.getData(
-          ApiPath.isEmailRegistered(uid),
-          queryParams: query,
-          cBaseUrl: AppEnvironment.instance.userOps,
-          token: token);
+        ApiPath.isEmailRegistered(uid),
+        queryParams: query,
+        cBaseUrl: AppEnvironment.instance.userOps,
+      );
 
       return ApiResponse(code: 200, model: res['data']['isEmailRegistered']);
     } catch (e) {
@@ -647,11 +623,12 @@ class UserRepository extends BaseRepo {
       final query = {
         'username': username,
       };
-      final token = await getBearerToken();
-      final res = await APIService.instance.getData(ApiPath.isUsernameAvailable,
-          queryParams: query,
-          cBaseUrl: AppEnvironment.instance.userOps,
-          token: token);
+
+      final res = await APIService.instance.getData(
+        ApiPath.isUsernameAvailable,
+        queryParams: query,
+        cBaseUrl: AppEnvironment.instance.userOps,
+      );
       return ApiResponse(code: 200, model: res['data']['isAvailable']);
     } catch (e) {
       logger.d(e);
@@ -662,9 +639,10 @@ class UserRepository extends BaseRepo {
   Future<ApiResponse<Portfolio>> getPortfolioData() async {
     try {
       final uid = userService.baseUser!.uid;
-      final token = await getBearerToken();
-      final res = await APIService.instance.getData(ApiPath.portfolio(uid!),
-          cBaseUrl: AppEnvironment.instance.userOps, token: token);
+      final res = await APIService.instance.getData(
+        ApiPath.portfolio(uid!),
+        cBaseUrl: AppEnvironment.instance.userOps,
+      );
       _logger.i("Portfolio: ${res['data']}");
       final Portfolio portfolio = Portfolio.fromMap(res['data']);
       return ApiResponse(code: 200, model: portfolio);

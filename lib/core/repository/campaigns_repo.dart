@@ -26,7 +26,6 @@ class CampaignRepo extends BaseRepo {
     List<EventModel> events = [];
     try {
       final String? _uid = userService!.baseUser!.uid;
-      final _token = await getBearerToken();
       final _queryParams = {"uid": _uid};
 
       return await _cacheService.cachedApi(
@@ -34,7 +33,6 @@ class CampaignRepo extends BaseRepo {
         TTL.TWO_HOURS,
         () => APIService.instance.getData(
           ApiPath.kOngoingCampaigns,
-          token: _token,
           cBaseUrl: _baseUrl,
           queryParams: _queryParams,
         ),
@@ -60,10 +58,11 @@ class CampaignRepo extends BaseRepo {
   Future<ApiResponse<List<FelloFactsModel>>> getFelloFacts() async {
     List<FelloFactsModel> facts = [];
     try {
-      final _token = await getBearerToken();
-
-      final response = await APIService.instance.getData('felloFacts.txt',
-          token: _token, cBaseUrl: _cdnBaseUrl, decryptData: true);
+      final response = await APIService.instance.getData(
+        'felloFacts.txt',
+        cBaseUrl: _cdnBaseUrl,
+        decryptData: true,
+      );
 
       // final responseData = response["data"];
       logger!.d(response);
@@ -82,11 +81,8 @@ class CampaignRepo extends BaseRepo {
 
   Future<ApiResponse<HappyHourCampign>> getHappyHourCampaign() async {
     try {
-      final _token = await getBearerToken();
-
       final response = await APIService.instance.getData(
         ApiPath.happyHour,
-        token: _token,
         cBaseUrl: _baseUrl,
       );
 
@@ -100,11 +96,9 @@ class CampaignRepo extends BaseRepo {
 
   Future<ApiResponse<LastWeekModel>> getLastWeekData() async {
     try {
-      final token = await getBearerToken();
       final response = await APIService.instance.getData(
         ApiPath.lastWeekRecap,
         cBaseUrl: _baseUrl,
-        token: token,
       );
 
       final responseData = response["data"];

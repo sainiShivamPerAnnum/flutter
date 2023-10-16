@@ -19,7 +19,6 @@ class LendboxRepo extends BaseRepo {
   ) async {
     try {
       final uid = userService!.baseUser!.uid;
-      final String bearer = await getBearerToken();
 
       final response = await APIService.instance.postData(
         ApiPath.createLbWithdrawal(uid),
@@ -27,7 +26,6 @@ class LendboxRepo extends BaseRepo {
           "amount": amount,
           "payoutSourceId": payoutSourceId,
         },
-        token: bearer,
         cBaseUrl: _baseUrl,
       );
 
@@ -43,11 +41,9 @@ class LendboxRepo extends BaseRepo {
       getWithdrawableQuantity() async {
     try {
       final uid = userService!.baseUser!.uid;
-      final String bearer = await getBearerToken();
 
       final response = await APIService.instance.getData(
         ApiPath.lbWithdrawableQuantity(uid),
-        token: bearer,
         cBaseUrl: _baseUrl,
       );
 
@@ -67,15 +63,18 @@ class LendboxRepo extends BaseRepo {
       {bool hasConfirmed = false}) async {
     try {
       final uid = userService.baseUser!.uid;
-      final String bearer = await getBearerToken();
+
       final body = {
         "uid": uid,
         "txnId": txnId,
         "maturityPref": pref,
         "hasConfirmed": hasConfirmed,
       };
-      await APIService.instance.putData(ApiPath.investmentPrefs,
-          token: bearer, cBaseUrl: _baseUrl, body: body);
+      await APIService.instance.putData(
+        ApiPath.investmentPrefs,
+        cBaseUrl: _baseUrl,
+        body: body,
+      );
 
       return ApiResponse(model: true, code: 200);
     } catch (e) {
@@ -87,11 +86,9 @@ class LendboxRepo extends BaseRepo {
   Future<ApiResponse<LendboxMaturityResponse>> getLendboxMaturity() async {
     try {
       final uid = userService!.baseUser!.uid;
-      final String bearer = await getBearerToken();
 
       final response = await APIService.instance.getData(
         ApiPath.lbMaturity(uid),
-        token: bearer,
         cBaseUrl: _baseUrl,
       );
 

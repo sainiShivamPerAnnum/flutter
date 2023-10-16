@@ -24,8 +24,7 @@ class AnalyticsRepository extends BaseRepo {
       String? osVersion,
       String? advertiserId) async {
     try {
-      final String _bearer = await getBearerToken();
-
+      /// TODO: Remove uid if not required.
       final _body = {
         'uid': baseUser.uid,
         'installReferrer': installReferrerData,
@@ -37,8 +36,11 @@ class AnalyticsRepository extends BaseRepo {
 
       logger.d('CHECK BODY: $_body');
 
-      final res = await APIService.instance.postData(_apiPaths!.kSetInstallInfo,
-          cBaseUrl: _baseUrl, body: _body, token: _bearer);
+      final res = await APIService.instance.postData(
+        _apiPaths!.kSetInstallInfo,
+        cBaseUrl: _baseUrl,
+        body: _body,
+      );
       logger.d(res);
       final responseData = res['data'];
       logger.d(responseData);

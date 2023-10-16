@@ -48,7 +48,6 @@ class GetterRepository extends BaseRepo {
     bool isForPast = false,
   }) async {
     try {
-      final token = await getBearerToken();
       final String code = isForPast
           ? CodeFromFreq.getPastWeekCode()
           : CodeFromFreq.getCodeFromFreq(freq);
@@ -60,7 +59,6 @@ class GetterRepository extends BaseRepo {
           "freq": freq,
           "code": code,
         },
-        token: token,
       );
 
       debugPrint("Reaching here: ${statisticsResponse.toString()}");
@@ -78,14 +76,12 @@ class GetterRepository extends BaseRepo {
     String? freq,
   }) async {
     try {
-      final token = await getBearerToken();
       return await _cacheService.cachedApi<WinnersModel>(
         CacheKeys.TICKETS_LB,
         TTL.UPTO_SIX_PM,
         () => APIService.instance.getData(
           ApiPath.getWinners(type, freq),
           cBaseUrl: _baseUrl,
-          token: token,
         ),
         (p0) {
           logger.d("Winners for $type: ${p0.toString()}");
@@ -139,13 +135,11 @@ class GetterRepository extends BaseRepo {
         });
       }
 
-      final token = await getBearerToken();
-
       final response = await APIService.instance.getData(
-          ApiPath.getAssetOptions(),
-          queryParams: map,
-          cBaseUrl: _baseUrl,
-          token: token);
+        ApiPath.getAssetOptions(),
+        queryParams: map,
+        cBaseUrl: _baseUrl,
+      );
 
       return ApiResponse<AssetOptionsModel>(
         code: 200,
@@ -170,8 +164,6 @@ class GetterRepository extends BaseRepo {
 
   Future<ApiResponse<AppConfig>> getAppConfig() async {
     try {
-      // final token = await getBearerToken();
-
       return await _cacheService.cachedApi<AppConfig>(
         CacheKeys.APPCONFIG,
         TTL.ONE_DAY,
@@ -179,10 +171,6 @@ class GetterRepository extends BaseRepo {
           'appConfig.txt',
           cBaseUrl: _cdnBaseUrl,
           decryptData: true,
-          headers: {
-            'authKey':
-                '.c;a/>12-1-x[/2130x0821x/0-=0.-x02348x042n23x9023[4np0823wacxlonluco3q8',
-          },
         ),
         (p0) {
           log("AppConfig: ${p0.toString()}", name: "AppConfig");
@@ -203,11 +191,9 @@ class GetterRepository extends BaseRepo {
     String? freq,
   }) async {
     try {
-      final token = await getBearerToken();
       final winnersResponse = await APIService.instance.getData(
         ApiPath.pastWinners(type, freq),
         cBaseUrl: _baseUrl,
-        token: token,
       );
 
       final winnerModel =
@@ -248,11 +234,9 @@ class GetterRepository extends BaseRepo {
     required String freq,
   }) async {
     try {
-      final token = await getBearerToken();
       final subComboResponse = await APIService.instance.getData(
         ApiPath.getSubCombosChips(freq.toUpperCase()),
         cBaseUrl: _baseUrl,
-        token: token,
       );
 
       final subComboModelData =
@@ -281,14 +265,12 @@ class GetterRepository extends BaseRepo {
 
   Future<ApiResponse<List<PromoCardModel>>> getPromoCards() async {
     try {
-      final token = await getBearerToken();
       final response = await APIService.instance.getData(
         ApiPath.kPromos,
         cBaseUrl: _baseUrl,
         queryParams: {
           "uid": userService.baseUser!.uid,
         },
-        token: token,
       );
 
       final responseData = response["data"];
@@ -335,12 +317,10 @@ class GetterRepository extends BaseRepo {
 
   Future<ApiResponse<List<StoryItemModel>>> getStory({String? topic}) async {
     try {
-      final token = await getBearerToken();
       final response = await APIService.instance.getData(
         '${ApiPath.kStory}/$topic',
         cBaseUrl: _baseUrl,
         queryParams: {"topic": topic},
-        token: token,
       );
 
       final responseData = response["data"];
@@ -357,13 +337,14 @@ class GetterRepository extends BaseRepo {
 
   Future<ApiResponse<DynamicUI>> getPageConfigs() async {
     try {
-      final token = await getBearerToken();
-
       return await _cacheService.cachedApi(
         CacheKeys.PAGE_CONFIGS,
         TTL.ONE_DAY,
-        () => APIService.instance.getData("dynamicUi.txt",
-            cBaseUrl: _cdnBaseUrl, token: token, decryptData: true),
+        () => APIService.instance.getData(
+          "dynamicUi.txt",
+          cBaseUrl: _cdnBaseUrl,
+          decryptData: true,
+        ),
         (response) {
           final responseData = response["dynamicUi"];
 
@@ -381,11 +362,9 @@ class GetterRepository extends BaseRepo {
 
   Future<ApiResponse<QuickSaveModel>> getQuickSave() async {
     try {
-      final token = await getBearerToken();
       final response = await APIService.instance.getData(
         ApiPath.quickSave,
         cBaseUrl: _baseUrl,
-        token: token,
       );
 
       final quickSave = QuickSaveModel.fromJson(response);
@@ -399,11 +378,9 @@ class GetterRepository extends BaseRepo {
 
   Future<ApiResponse<List>> getIncentivesList() async {
     try {
-      final token = await getBearerToken();
       final response = await APIService.instance.getData(
         ApiPath.incentives,
         cBaseUrl: _baseUrl,
-        token: token,
       );
 
       return ApiResponse<List>(
@@ -416,11 +393,9 @@ class GetterRepository extends BaseRepo {
 
   Future<ApiResponse<List<TicketsOffers>>> getTambolaOffers() async {
     try {
-      final token = await getBearerToken();
       final response = await APIService.instance.getData(
         ApiPath.tambolaOffers,
         cBaseUrl: _baseUrl,
-        token: token,
       );
 
       return ApiResponse<List<TicketsOffers>>(
@@ -437,7 +412,6 @@ class GetterRepository extends BaseRepo {
       if (goldChartData != null) {
         return ApiResponse(model: goldChartData, code: 200);
       }
-      final token = await getBearerToken();
 
       return await _cacheService.cachedApi(
         CacheKeys.GOLD_RATES,
@@ -445,7 +419,6 @@ class GetterRepository extends BaseRepo {
         () => APIService.instance.getData(
           ApiPath.goldRatesGraph,
           cBaseUrl: _baseUrl,
-          token: token,
         ),
         (response) {
           final List rates = response["data"]["rates"];
@@ -480,15 +453,12 @@ class GetterRepository extends BaseRepo {
   Future<ApiResponse<List<HomeScreenCarouselItemsModel>>>
       getHomeScreenItems() async {
     try {
-      final token = await getBearerToken();
-
       return await _cacheService.cachedApi(
           CacheKeys.HOME_SCREEN_ITEMS,
           TTL.ONE_MIN,
           () => APIService.instance.getData(
                 ApiPath.homeScreenCarouselItems,
                 cBaseUrl: _baseUrl,
-                token: token,
               ), (response) {
         List<HomeScreenCarouselItemsModel> items = HomeScreenCarouselItemsModel
             .helper
@@ -504,15 +474,12 @@ class GetterRepository extends BaseRepo {
 
   Future<ApiResponse<GoldProConfig>> getGoldProConfig() async {
     try {
-      final token = await getBearerToken();
-
       return await _cacheService.cachedApi(
           CacheKeys.GOLDPRO_CONFIG,
           TTL.ONE_DAY,
           () => APIService.instance.getData(
                 ApiPath.goldProConfig,
                 cBaseUrl: _baseUrl,
-                token: token,
               ), (response) {
         GoldProConfig config = GoldProConfig.fromJson(response);
 

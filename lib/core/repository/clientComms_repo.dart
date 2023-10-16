@@ -11,8 +11,6 @@ class ClientCommsRepo extends BaseRepo {
 
   Future<void> subscribeGoldPriceAlert(int flag) async {
     try {
-      final token = await getBearerToken();
-
       String? fcmToken = await FirebaseMessaging.instance.getToken();
 
       var map = {
@@ -22,7 +20,6 @@ class ClientCommsRepo extends BaseRepo {
       await APIService.instance.postData(
         ApiPath.subscribeGoldPriceAlert,
         cBaseUrl: _baseUrl,
-        token: token,
         queryParams: map,
         headers: {'fcmToken': fcmToken ?? ""},
       );

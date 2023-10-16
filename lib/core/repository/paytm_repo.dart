@@ -52,7 +52,6 @@ class PaytmRepository extends BaseRepo {
       if (investmentType == InvestmentType.AUGGOLD99) _body["augMap"] = augMap;
       if (investmentType == InvestmentType.LENDBOXP2P) _body["lbMap"] = lbMap;
 
-      final _token = await getBearerToken();
       logger.d("This is body: $_body");
 
       final Map<String, String> _header = {
@@ -68,7 +67,6 @@ class PaytmRepository extends BaseRepo {
       final response = await APIService.instance.postData(
         ApiPath.kCreatePaytmTransaction,
         body: _body,
-        token: _token,
         cBaseUrl: _baseUrl,
         headers: _header,
         // decryptData: true,
@@ -100,12 +98,11 @@ class PaytmRepository extends BaseRepo {
         "orderId": orderId,
         "paymentMode": paymentMode
       };
-      final _token = await getBearerToken();
+
       logger!.d("This is body: $_body");
       final response = await APIService.instance.postData(
         ApiPath.kProcessPaytmTransaction,
         body: _body,
-        token: _token,
         cBaseUrl: _baseUrl,
       );
 
@@ -127,7 +124,6 @@ class PaytmRepository extends BaseRepo {
   ) async {
     try {
       final String? _uid = userService!.baseUser!.uid;
-      final _token = await getBearerToken();
       final _queryParams = {
         "orderId": orderId,
         "uid": _uid,
@@ -137,7 +133,6 @@ class PaytmRepository extends BaseRepo {
 
       final response = await APIService.instance.getData(
         ApiPath.kCreatePaytmTransaction,
-        token: _token,
         queryParams: _queryParams,
         cBaseUrl: _baseUrl,
       );
@@ -162,12 +157,11 @@ class PaytmRepository extends BaseRepo {
         "maxAmount": 5000,
         "amount": 0
       };
-      final _token = await getBearerToken();
+
       logger!.d("This is body: $_body");
       final response = await APIService.instance.postData(
         ApiPath().kCreateSubscription,
         body: _body,
-        token: _token,
         cBaseUrl: _baseUrl2,
       );
 
@@ -188,7 +182,6 @@ class PaytmRepository extends BaseRepo {
       String vpa) async {
     try {
       final String? _uid = userService!.baseUser!.uid;
-      final _token = await getBearerToken();
       final _queryParams = {
         "uid": _uid,
         "vpa": vpa,
@@ -196,7 +189,6 @@ class PaytmRepository extends BaseRepo {
       };
       final response = await APIService.instance.getData(
         ApiPath().kValidateVpa,
-        token: _token,
         queryParams: _queryParams,
         cBaseUrl: _baseUrl2,
       );
@@ -214,8 +206,6 @@ class PaytmRepository extends BaseRepo {
   Future<ApiResponse<bool>> updateDailyAmount(
       {required double amount, required String freq}) async {
     try {
-      final _token = await getBearerToken();
-
       final _body = {
         'uid': userService!.baseUser!.uid,
         'amount': amount,
@@ -224,7 +214,6 @@ class PaytmRepository extends BaseRepo {
       final response = await APIService.instance.putData(
         ApiPath().kCreateSubscription,
         body: _body,
-        token: _token,
         cBaseUrl: _baseUrl2,
       );
       if (response != null) {
@@ -246,8 +235,6 @@ class PaytmRepository extends BaseRepo {
 
   Future<ApiResponse<bool>> pauseSubscription(String resumeDate) async {
     try {
-      final _token = await getBearerToken();
-
       final _body = {
         'uid': userService!.baseUser!.uid,
         'resume': resumeDate,
@@ -256,7 +243,6 @@ class PaytmRepository extends BaseRepo {
       final response = await APIService.instance.postData(
         ApiPath().kPauseSubscription,
         body: _body,
-        token: _token,
         cBaseUrl: _baseUrl2,
       );
       final Map responseData = response["data"];
@@ -274,15 +260,12 @@ class PaytmRepository extends BaseRepo {
 
   Future<ApiResponse<bool>> resumeSubscription() async {
     try {
-      final _token = await getBearerToken();
-
       final _body = {
         'uid': userService!.baseUser!.uid,
       };
       final response = await APIService.instance.postData(
         ApiPath().kResumeSubscription,
         body: _body,
-        token: _token,
         cBaseUrl: _baseUrl2,
       );
 
@@ -301,8 +284,6 @@ class PaytmRepository extends BaseRepo {
 
   Future<ApiResponse<bool>> processSubscription() async {
     try {
-      final _token = await getBearerToken();
-
       final _body = {
         'uid': userService!.baseUser!.uid,
       };
@@ -310,7 +291,6 @@ class PaytmRepository extends BaseRepo {
       final response = await APIService.instance.postData(
         ApiPath().kProcessSubscription,
         body: _body,
-        token: _token,
         cBaseUrl: _baseUrl2,
       );
       final Map<String, dynamic> responseData = response['data'];
@@ -326,13 +306,11 @@ class PaytmRepository extends BaseRepo {
 
   Future<ApiResponse<ActiveSubscriptionModel>> getActiveSubscription() async {
     try {
-      final _token = await getBearerToken();
       final _queryParams = {
         "uid": userService!.baseUser!.uid,
       };
       final response = await APIService.instance.getData(
         ApiPath().kActiveSubscription,
-        token: _token,
         queryParams: _queryParams,
         cBaseUrl: _baseUrl2,
       );
@@ -351,13 +329,11 @@ class PaytmRepository extends BaseRepo {
 
   Future<ApiResponse<String>> getNextDebitDate() async {
     try {
-      final _token = await getBearerToken();
       final _queryParams = {
         "uid": userService!.baseUser!.uid,
       };
       final response = await APIService.instance.getData(
         ApiPath().kNextDebitDate,
-        token: _token,
         queryParams: _queryParams,
         cBaseUrl: _baseUrl2,
       );

@@ -16,14 +16,11 @@ class ReferralRepo extends BaseRepo {
 
   Future<ApiResponse<ReferralResponse>> getReferralCode() async {
     try {
-      final String bearer = await getBearerToken();
-
       return await _cacheService.cachedApi(
         CacheKeys.REFERRAL_CODE,
         TTL.ONE_DAY,
         () => APIService.instance.getData(
           ApiPath.getReferralCode(userService.baseUser!.uid),
-          token: bearer,
           cBaseUrl: AppEnvironment.instance.referral,
         ),
         (response) {
@@ -39,10 +36,8 @@ class ReferralRepo extends BaseRepo {
 
   Future<ApiResponse<String>> getUserIdByRefCode(String code) async {
     try {
-      final String bearer = await getBearerToken();
       final response = await APIService.instance.getData(
         ApiPath.getUserIdByRefCode(code),
-        token: bearer,
         cBaseUrl: AppEnvironment.instance.referral,
       );
 
@@ -61,13 +56,11 @@ class ReferralRepo extends BaseRepo {
       {int currentPage = 0}) async {
     // List<ReferralDetail> referralHistory = [];
     try {
-      final String bearer = await getBearerToken();
       final response = await APIService.instance.getData(
         ApiPath.getReferralHistory(userService.baseUser!.uid),
         queryParams: {
           'offset': (50 * currentPage).toString(),
         },
-        token: bearer,
         cBaseUrl: AppEnvironment.instance.referral,
       );
 
@@ -89,15 +82,12 @@ class ReferralRepo extends BaseRepo {
     String? referee,
   ) async {
     try {
-      final String bearer = await getBearerToken();
-
       final response = await APIService.instance.postData(
         ApiPath.createReferral,
         body: {
           'uid': userId,
           'rid': referee,
         },
-        token: bearer,
         cBaseUrl: AppEnvironment.instance.referral,
       );
 
@@ -113,8 +103,6 @@ class ReferralRepo extends BaseRepo {
       List<String> phoneNumbers,
       {bool forceRefresh = false}) async {
     try {
-      final String bearer = await getBearerToken();
-
       if (forceRefresh) {
         await CacheService.invalidateByKey(
           CacheKeys.REFERRAL_REGISTERED_USERS,
@@ -129,7 +117,6 @@ class ReferralRepo extends BaseRepo {
           body: {
             'phoneNumbers': phoneNumbers,
           },
-          token: bearer,
           cBaseUrl: AppEnvironment.instance.referral,
         ),
         (response) {

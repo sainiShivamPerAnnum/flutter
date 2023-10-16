@@ -22,7 +22,6 @@ class SubscriptionRepo extends BaseRepo {
       getSubscriptionTransactionHistory(
           {int? offset, int? limit, required String asset}) async {
     try {
-      final String token = await getBearerToken();
       final res = await APIService.instance.getData(
         ApiPath.txnsSubscription(userService.baseUser!.uid!),
         cBaseUrl: baseUrl,
@@ -33,7 +32,6 @@ class SubscriptionRepo extends BaseRepo {
             "offset": offset.toString(),
           }
         },
-        token: token,
       );
       final responseData = res['data']['transactions'];
       logger.d(responseData);
@@ -70,13 +68,10 @@ class SubscriptionRepo extends BaseRepo {
         if (res.isSuccess()) _body["version"] = res.model;
       }
 
-      final token = await getBearerToken();
-
       final response = await APIService.instance.postData(
         ApiPath.subscription(userService.baseUser!.uid!),
         body: _body,
         cBaseUrl: baseUrl,
-        token: token,
       );
 
       if (response['data'] != null) {
@@ -98,11 +93,9 @@ class SubscriptionRepo extends BaseRepo {
 
   Future<ApiResponse<SubscriptionModel>> getSubscription() async {
     try {
-      final token = await getBearerToken();
       final response = await APIService.instance.getData(
         ApiPath.subscription(userService.baseUser!.uid!),
         cBaseUrl: baseUrl,
-        token: token,
       );
       SubscriptionModel subscriptionModel =
           SubscriptionModel.fromMap(response['data']['subscription']);
@@ -127,13 +120,10 @@ class SubscriptionRepo extends BaseRepo {
         "frequency": freq,
       };
 
-      final token = await getBearerToken();
-
       final response = await APIService.instance.patchData(
         ApiPath.subscription(userService.baseUser!.uid!),
         body: _body,
         cBaseUrl: baseUrl,
-        token: token,
       );
 
       SubscriptionModel subscriptionModel =
@@ -168,13 +158,10 @@ class SubscriptionRepo extends BaseRepo {
         "frequency": option.name,
       };
 
-      final token = await getBearerToken();
-
       final response = await APIService.instance.postData(
         ApiPath.pauseSubscription,
         body: _body,
         cBaseUrl: baseUrl,
-        token: token,
       );
 
       SubscriptionModel subscriptionModel =
@@ -192,13 +179,10 @@ class SubscriptionRepo extends BaseRepo {
         "uid": userService.baseUser!.uid!,
       };
 
-      final token = await getBearerToken();
-
       final response = await APIService.instance.postData(
         ApiPath.resumeSubscription,
         body: _body,
         cBaseUrl: baseUrl,
-        token: token,
       );
 
       SubscriptionModel subscriptionModel =

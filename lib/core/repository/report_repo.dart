@@ -16,11 +16,10 @@ class ReportRepository extends BaseRepo {
   Future<ApiResponse<Map<String, dynamic>>> getReport(String? txnId) async {
     try {
       if (txnId == null) return ApiResponse.withError("No data found", 400);
-      final token = await getBearerToken();
       final response = await APIService.instance.getData(
-          ApiPath.augmontReport(txnId),
-          cBaseUrl: _baseUrl,
-          token: token);
+        ApiPath.augmontReport(txnId),
+        cBaseUrl: _baseUrl,
+      );
       if (response['data'] != null) {
         return ApiResponse<Map<String, dynamic>>(
           model: response['data'],

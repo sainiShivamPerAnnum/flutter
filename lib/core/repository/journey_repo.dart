@@ -154,7 +154,6 @@ class JourneyRepository extends BaseRepo {
       final startPage = max(isUp ? page : page - limit, 1);
       final endPage = isUp ? page + limit : page;
 
-      final token = await getBearerToken();
       final queryParams = {"page": page.toString(), "direction": direction};
 
       return await _cacheService.paginatedCachedApi(
@@ -164,7 +163,6 @@ class JourneyRepository extends BaseRepo {
           TTL.ONE_DAY,
           () => APIService.instance.getData(
                 ApiPath.kJourney,
-                token: token,
                 cBaseUrl: _baseUrlJourney,
                 queryParams: queryParams,
               ), (responseData) {
@@ -205,7 +203,6 @@ class JourneyRepository extends BaseRepo {
       final startPage = page - 1; // max(isUp ? page : page - limit, 1);
       final endPage = page; // isUp ? page + limit : page;
 
-      final token = await getBearerToken();
       final queryParams = {"page": page.toString(), "direction": direction};
 
       if (journeyPages.isNotEmpty) {
@@ -235,7 +232,6 @@ class JourneyRepository extends BaseRepo {
           isFromCdn: true,
           () => APIService.instance.getData(
                 "journey_${version.toLowerCase()}.txt",
-                token: token,
                 cBaseUrl: _cdnBaseUrl,
                 queryParams: queryParams,
                 decryptData: true,
@@ -267,10 +263,8 @@ class JourneyRepository extends BaseRepo {
   Future<ApiResponse<UserJourneyStatsModel>> getUserJourneyStats() async {
     try {
       final String? uid = userService.baseUser!.uid;
-      final token = await getBearerToken();
       final response = await APIService.instance.getData(
         ApiPath.journeyStats(uid),
-        token: token,
         cBaseUrl: _baseUrlStats,
       );
 
@@ -289,12 +283,12 @@ class JourneyRepository extends BaseRepo {
       String version) async {
     try {
       List<JourneyLevel> journeyLevels = [];
-      final token = await getBearerToken();
+
       final response = await APIService.instance.getData(
-          "journeyLevels${version.toUpperCase()}.txt",
-          token: token,
-          cBaseUrl: _cdnBaseUrl,
-          decryptData: true);
+        "journeyLevels${version.toUpperCase()}.txt",
+        cBaseUrl: _cdnBaseUrl,
+        decryptData: true,
+      );
 
       // final response = await APIService.instance.getData(
       //   ApiPath.kJourneyLevel,

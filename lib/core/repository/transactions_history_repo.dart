@@ -44,7 +44,6 @@ class TransactionHistoryRepository extends BaseRepo {
     List<UserTransaction> events = [];
     try {
       final String? uid = userService.baseUser!.uid;
-      final token = await getBearerToken();
       final queryParams = {
         "type": type,
         "subType": subtype,
@@ -57,7 +56,6 @@ class TransactionHistoryRepository extends BaseRepo {
       };
       final response = await APIService.instance.getData(
         ApiPath.kSingleTransactions(uid),
-        token: token,
         queryParams: queryParams,
         cBaseUrl: _baseUrl,
       );
@@ -93,7 +91,7 @@ class TransactionHistoryRepository extends BaseRepo {
       print(endTime!.toDate().toUtc().toIso8601String());
       print(startTime!.toDate().toUtc().toIso8601String());
       final String? uid = userService.baseUser!.uid;
-      final token = await getBearerToken();
+
       final queryParams = {
         "type": type,
         "status": status,
@@ -111,7 +109,6 @@ class TransactionHistoryRepository extends BaseRepo {
 
       final response = await APIService.instance.getData(
         ApiPath.kSingleTransactions(uid),
-        token: token,
         queryParams: queryParams,
         cBaseUrl: _baseUrl,
       );

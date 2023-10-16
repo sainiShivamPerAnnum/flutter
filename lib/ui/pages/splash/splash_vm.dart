@@ -114,8 +114,8 @@ class LauncherViewModel extends BaseViewModel {
           _analyticsService.login(
               isOnBoarded: true, baseUser: userService.baseUser),
         ]);
-        String token = await userService.firebaseUser!.getIdToken();
-        unawaited(_userRepo.updateUserAppFlyer(userService.baseUser!, token));
+
+        unawaited(_userRepo.updateUserAppFlyer(userService.baseUser!));
 
         unawaited(locator<GameRepo>().getGameTiers());
         _referralService.init();
