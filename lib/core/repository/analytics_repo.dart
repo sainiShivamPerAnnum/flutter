@@ -24,7 +24,6 @@ class AnalyticsRepository extends BaseRepo {
       String? osVersion,
       String? advertiserId) async {
     try {
-      /// TODO: Remove uid if not required.
       final _body = {
         'uid': baseUser.uid,
         'installReferrer': installReferrerData,
