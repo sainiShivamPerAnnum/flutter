@@ -46,3 +46,9 @@ class InternalServerException extends AppException {
     super._message,
   ]);
 }
+
+class UnknownException extends AppException {
+  const UnknownException([
+    super._message,
+  ]);
+}

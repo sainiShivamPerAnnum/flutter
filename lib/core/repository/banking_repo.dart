@@ -102,6 +102,7 @@ class BankingRepository extends BaseRepo {
         absoluteUrl: uploadUrl,
         headers: {'Content-Type': "image/${imageFile.name.split('.').last}"},
         body: await File(imageFile.path).readAsBytes(),
+        passToken: false,
       );
 
       return ApiResponse(model: true, code: 200);

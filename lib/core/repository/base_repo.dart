@@ -12,14 +12,6 @@ abstract class BaseRepo {
   @protected
   UserService get userService => locator<UserService>();
 
-  static bool refreshToken = false;
-  @protected
-  Future<String> getBearerToken() async {
-    String token = await userService.firebaseUser!.getIdToken(refreshToken);
-    refreshToken = false;
-    return token;
-  }
-
   @protected
   String getGameApiToken(String? gameName) {
     final jwt = JWT(

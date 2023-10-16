@@ -1,10 +1,11 @@
+// ignore_for_file: constant_identifier_names
+
 import 'dart:convert';
 import 'dart:developer';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:encrypt/encrypt.dart';
-import 'package:felloapp/core/repository/base_repo.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/util/app_exceptions.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -13,6 +14,13 @@ import 'package:felloapp/util/locator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/foundation.dart' hide Key;
 import 'package:package_info_plus/package_info_plus.dart';
+
+enum _RequestType {
+  GET,
+  POST,
+  PUT,
+  PATCH,
+}
 
 abstract class API {
   Future<T> getData<T>(String url);
@@ -36,6 +44,7 @@ class APIService implements API {
       //   ),
       // )
       ;
+  PackageInfo? _info;
 
   final String _baseUrl =
       'https://${FlavorConfig.instance!.values.baseUriAsia}';
@@ -52,7 +61,7 @@ class APIService implements API {
   @override
   Future<T> getData<T>(
     String url, {
-    final String? token,
+    final String? token, // Just in case of blogs.
     final Map<String, dynamic>? queryParams,
     final Map<String, dynamic>? headers,
     final String? cBaseUrl,
@@ -61,15 +70,14 @@ class APIService implements API {
     try {
       String finalPath = (cBaseUrl ?? _baseUrl) + url;
 
-      final response = await _dio.get(
+      final response = await _request<T>(
+        _RequestType.GET,
         finalPath,
         queryParameters: queryParams,
-        options: Options(
-          headers: {
-            if (token != null) HttpHeaders.authorizationHeader: token,
-            ...?headers,
-          },
-        ),
+        headers: {
+          if (token != null) HttpHeaders.authorizationHeader: "Bearer $token",
+          ...?headers,
+        },
       );
 
       if (decryptData) {
@@ -79,6 +87,8 @@ class APIService implements API {
       }
 
       return returnResponse(response);
+    } on DioException catch (e) {
+      return returnResponse(e.response);
     } catch (e) {
       if (e is SocketException) {
         throw const FetchDataException('No Internet connection');
@@ -86,7 +96,7 @@ class APIService implements API {
         throw const UnauthorizedException(
             "Verification Failed. Please try again");
       } else {
-        rethrow;
+        throw const UnknownException('Something went wrong');
       }
     }
   }
@@ -103,12 +113,11 @@ class APIService implements API {
     try {
       String finalPath = (cBaseUrl ?? _baseUrl) + url;
 
-      final response = await _dio.post(
+      final response = await _request<T>(
+        _RequestType.POST,
         finalPath,
         queryParameters: queryParams,
-        options: Options(
-          headers: headers,
-        ),
+        headers: headers,
         data: body,
       );
 
@@ -123,6 +132,8 @@ class APIService implements API {
       throw const FetchDataException(
         'Error communication with server: Please check your internet connectivity',
       );
+    } on DioException catch (e) {
+      return returnResponse(e.response);
     }
   }
 
@@ -133,19 +144,22 @@ class APIService implements API {
     String? absoluteUrl,
     String? cBaseUrl,
     Map<String, dynamic>? headers,
+    bool passToken = true,
   }) async {
     try {
       String finalPath = (cBaseUrl ?? _baseUrl) + url;
 
-      final response = await _dio.put<T>(
+      final response = await _request<T>(
+        _RequestType.PUT,
         absoluteUrl ?? finalPath,
+        headers: headers,
         data: body,
-        options: Options(
-          headers: headers,
-        ),
+        passToken: passToken,
       );
 
       return returnResponse(response);
+    } on DioException catch (e) {
+      return returnResponse(e.response);
     } on SocketException {
       throw const FetchDataException('No Internet connection');
     }
@@ -160,33 +174,33 @@ class APIService implements API {
     String finalPath = (cBaseUrl ?? _baseUrl) + url;
 
     try {
-      final response = await _dio.patch<T>(
+      final response = await _request<T>(
+        _RequestType.PATCH,
         finalPath,
         data: body,
       );
 
       return returnResponse(response);
+    } on DioException catch (e) {
+      return returnResponse(e.response);
     } on SocketException {
       throw const FetchDataException('No Internet connection');
     }
   }
 
-  dynamic returnResponse(Response response) {
-    final responseJson = response.data;
-    // logger!.d("$responseJson with code  ${response.statusCode}");
-    switch (response.statusCode) {
+  dynamic returnResponse(Response? response) {
+    final responseJson = response?.data;
+    switch (response?.statusCode) {
       case 200:
         return responseJson;
       case 400:
+        return BadRequestException(responseJson['message']);
       case 404:
-        // logger!.d(response.body);
         throw BadRequestException(responseJson['message']);
-
       case 401:
-        BaseRepo.refreshToken = true;
         throw BadRequestException(responseJson['message']);
       case 403:
-        throw UnauthorizedException(response.data.toString());
+        throw UnauthorizedException(response?.data.toString());
       case 500:
         throw const InternalServerException('Internal server exception');
 
@@ -210,41 +224,63 @@ class APIService implements API {
 
     return decryptedData;
   }
-}
 
-class CoreInterceptor extends Interceptor {
-  PackageInfo? _info;
+  Future<Response> _request<T>(
+    _RequestType method,
+    String path, {
+    Map<String, dynamic>? headers,
+    Object? data,
+    Map<String, dynamic>? queryParameters,
+    bool passToken = false,
+  }) async {
+    final modifiedHeaders = await _attachHeaders(
+      headers ?? {},
+    );
 
-  @override
-  Future<void> onRequest(
-      RequestOptions options, RequestInterceptorHandler handler) async {
-    /// TODO(@DK070202): Whitelist domain for the headers qulification.
-    if (options.path.contains('uploads/')) {
-      handler.next(options);
-      return;
-    }
+    final options = Options(
+      method: method.name,
+      headers: modifiedHeaders,
+    );
 
+    final response = await _dio.request<T>(
+      path,
+      data: data,
+      options: options,
+      queryParameters: queryParameters,
+    );
+
+    return response;
+  }
+
+  Future<Map<String, dynamic>> _attachHeaders(
+    Map<String, dynamic> headers, {
+    bool passToken = true,
+  }) async {
+    final head = <String, dynamic>{...headers};
+    final authToken = head[HttpHeaders.authorizationHeader];
     final user = FirebaseAuth.instance.currentUser;
-    final token = options.headers['authorization'] ?? await user?.getIdToken();
+
+    if (authToken == null && passToken) {
+      final token = await user?.getIdToken();
+      head[HttpHeaders.authorizationHeader] =
+          token != null ? 'Bearer $token' : '';
+    }
+
     final uid = user?.uid;
-
-    if (token != null) {
-      options.headers['authorization'] = 'Bearer $token';
-    }
-
-    if (uid != null) {
-      options.headers['uid'] = uid;
-    }
+    head['uid'] = uid ?? '';
 
     try {
       _info ??= await PackageInfo.fromPlatform();
-      options.headers['version'] = _info!.buildNumber;
-      options.headers['platform'] = defaultTargetPlatform.name;
+      head['version'] = _info!.buildNumber;
+      head['platform'] = defaultTargetPlatform.name;
       // ignore: empty_catches
     } catch (e) {}
-    handler.next(options);
-  }
 
+    return head;
+  }
+}
+
+class CoreInterceptor extends Interceptor {
   @override
   Future<void> onError(
       DioException err, ErrorInterceptorHandler handler) async {
