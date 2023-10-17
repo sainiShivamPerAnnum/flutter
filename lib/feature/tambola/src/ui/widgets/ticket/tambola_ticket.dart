@@ -82,8 +82,8 @@ class TambolaTicket extends StatelessWidget {
         Padding(
           padding: EdgeInsets.symmetric(
               horizontal: SizeConfig.pageHorizontalMargins, vertical: 2),
-          child: ClipPath(
-            clipper: const TicketPainter(),
+          child: CustomPaint(
+            painter: const TicketPainter(),
             child: Container(
               padding: EdgeInsets.symmetric(
                 horizontal: SizeConfig.padding16,
@@ -196,7 +196,8 @@ class TicketTag extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: SizeConfig.screenWidth! * 0.5,
+      height: SizeConfig.padding20,
+      width: SizeConfig.padding100,
       child: Stack(
         children: [
           Positioned.fill(

@@ -35,28 +35,22 @@ class GoldProTxnsView extends StatelessWidget {
         ),
       ),
       backgroundColor: UiConstants.kBackgroundColor,
-      body: Column(
-        children: [
-          Expanded(
-            child: ListView.separated(
-              shrinkWrap: true,
-              padding: EdgeInsets.symmetric(
-                vertical: SizeConfig.padding10,
-              ),
-              itemCount: _txnHistoryService.goldProTxns.length,
-              itemBuilder: (ctx, i) => GoldProTxnListTile(
-                txn: _txnHistoryService.goldProTxns[i],
-              ),
-              separatorBuilder: (context, index) =>
-                  index != _txnHistoryService.goldProTxns.length - 1
-                      ? const Divider(
-                          color: Colors.white24,
-                          thickness: 0.2,
-                        )
-                      : const SizedBox(),
-            ),
-          ),
-        ],
+      body: ListView.separated(
+        shrinkWrap: true,
+        padding: EdgeInsets.symmetric(
+          vertical: SizeConfig.padding10,
+        ),
+        itemCount: _txnHistoryService.goldProTxns.length,
+        itemBuilder: (ctx, i) => GoldProTxnListTile(
+          txn: _txnHistoryService.goldProTxns[i],
+        ),
+        separatorBuilder: (context, index) =>
+            index != _txnHistoryService.goldProTxns.length - 1
+                ? const Divider(
+                    color: Colors.white24,
+                    thickness: 0.2,
+                  )
+                : const SizedBox(),
       ),
     );
   }

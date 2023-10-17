@@ -3,7 +3,10 @@ import 'dart:math';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/transaction_state_enum.dart';
+import 'package:felloapp/core/enums/view_state_enum.dart';
+import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/asset_options_model.dart';
 import 'package:felloapp/core/model/aug_gold_rates_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
@@ -37,11 +40,22 @@ class GoldProBuyViewModel extends BaseViewModel {
   final PaymentRepository _paymentRepo = locator<PaymentRepository>();
   final TxnHistoryService _txnHistoryService = locator<TxnHistoryService>();
   S locale = locator<S>();
-  TextEditingController goldFieldController =
-      TextEditingController(text: "4.0");
+  TextEditingController goldFieldController = TextEditingController(
+      text: AppConfig.getValue(AppConfigKey.goldProInvestmentChips)[1]
+          .toDouble()
+          .toString());
 
-  double minimumGrams = 2;
-  double maximumGrams = 10;
+  double minimumGrams =
+      AppConfig.getValue(AppConfigKey.goldProInvestmentChips)[0].toDouble();
+  double maximumGrams =
+      AppConfig.getValue(AppConfigKey.goldProInvestmentChips)[4].toDouble();
+
+  double edgeDifference =
+      AppConfig.getValue(AppConfigKey.goldProInvestmentChips)[4].toDouble() -
+          AppConfig.getValue(AppConfigKey.goldProInvestmentChips)[0].toDouble();
+  double consecutiveDifference =
+      AppConfig.getValue(AppConfigKey.goldProInvestmentChips)[1].toDouble() -
+          AppConfig.getValue(AppConfigKey.goldProInvestmentChips)[0].toDouble();
   bool _isDescriptionView = false;
   double _totalGoldBalance = 0.0;
   double _currentGoldBalance = 0.0;
@@ -53,11 +67,36 @@ class GoldProBuyViewModel extends BaseViewModel {
   AugmontRates? goldRates;
 
   List<GoldProChoiceChipsModel> chipsList = [
-    GoldProChoiceChipsModel(isBest: false, isSelected: false, value: 2),
-    GoldProChoiceChipsModel(isBest: true, isSelected: true, value: 4),
-    GoldProChoiceChipsModel(isBest: false, isSelected: false, value: 6),
-    GoldProChoiceChipsModel(isBest: false, isSelected: false, value: 8),
-    GoldProChoiceChipsModel(isBest: false, isSelected: false, value: 10),
+    GoldProChoiceChipsModel(
+      isBest: false,
+      isSelected: false,
+      value:
+          AppConfig.getValue(AppConfigKey.goldProInvestmentChips)[0].toDouble(),
+    ),
+    GoldProChoiceChipsModel(
+      isBest: false,
+      isSelected: true,
+      value:
+          AppConfig.getValue(AppConfigKey.goldProInvestmentChips)[1].toDouble(),
+    ),
+    GoldProChoiceChipsModel(
+      isBest: true,
+      isSelected: false,
+      value:
+          AppConfig.getValue(AppConfigKey.goldProInvestmentChips)[2].toDouble(),
+    ),
+    GoldProChoiceChipsModel(
+      isBest: false,
+      isSelected: false,
+      value:
+          AppConfig.getValue(AppConfigKey.goldProInvestmentChips)[3].toDouble(),
+    ),
+    GoldProChoiceChipsModel(
+      isBest: false,
+      isSelected: false,
+      value:
+          AppConfig.getValue(AppConfigKey.goldProInvestmentChips)[4].toDouble(),
+    ),
   ];
 
   List<ApplicationMeta> appMetaList = [];
@@ -65,6 +104,14 @@ class GoldProBuyViewModel extends BaseViewModel {
   ApplicationMeta? selectedUpiApplication;
   AssetOptionsModel? assetOptionsModel;
   bool isIntentFlow = true;
+  String _unavailabilityText = "";
+
+  String get unavailabilityText => _unavailabilityText;
+
+  set unavailabilityText(String value) {
+    _unavailabilityText = value;
+    notifyListeners();
+  }
 
   double get totalGoldAmount => _totalGoldAmount;
 
@@ -110,7 +157,7 @@ class GoldProBuyViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  get isDescriptionView => _isDescriptionView;
+  bool get isDescriptionView => _isDescriptionView;
 
   set isDescriptionView(value) {
     _isDescriptionView = value;
@@ -119,7 +166,7 @@ class GoldProBuyViewModel extends BaseViewModel {
 
   double _sliderValue = 0.25;
 
-  get sliderValue => _sliderValue;
+  double get sliderValue => _sliderValue;
 
   set sliderValue(value) {
     _sliderValue = value;
@@ -128,14 +175,14 @@ class GoldProBuyViewModel extends BaseViewModel {
 
   int _selectedChipIndex = 1;
 
-  get selectedChipIndex => _selectedChipIndex;
+  int get selectedChipIndex => _selectedChipIndex;
 
   set selectedChipIndex(value) {
     _selectedChipIndex = value;
     notifyListeners();
   }
 
-  get isGoldRateFetching => _isGoldRateFetching;
+  bool get isGoldRateFetching => _isGoldRateFetching;
 
   set isGoldRateFetching(value) {
     _isGoldRateFetching = value;
@@ -150,6 +197,7 @@ class GoldProBuyViewModel extends BaseViewModel {
   }
 
   Future<void> init() async {
+    state = ViewState.Busy;
     AppState.isGoldProBuyInProgress = false;
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       _txnService.currentTransactionState = TransactionState.idle;
@@ -157,13 +205,17 @@ class GoldProBuyViewModel extends BaseViewModel {
     currentGoldBalance = BaseUtil.digitPrecision(
         userService.userFundWallet!.augGoldQuantity, 4, false);
     totalGoldBalance = chipsList[1].value;
+    _isChecked = userService.userPortfolio.augmont.fd.isGoldProUser;
     appMetaList = await UpiUtils.getUpiApps();
+    unawaited(fetchGoldRates());
+
     await verifyAugmontKyc();
     await getGoldProScheme();
     await getAssetOptionsModel().then((_) {
       isIntentFlow = assetOptionsModel!.data.intent;
     });
-    unawaited(fetchGoldRates());
+
+    setState(ViewState.Idle);
   }
 
   void dump() {
@@ -172,19 +224,25 @@ class GoldProBuyViewModel extends BaseViewModel {
 
 //VM Async Call Methods
 
-  Future<void> verifyAugmontKyc() async {
+  Future<bool> verifyAugmontKyc() async {
     if (!(_bankAndPanService.userKycData?.augmontKyc ?? false)) {
-      await _bankAndPanService.verifyAugmontKyc();
+      final res = await _bankAndPanService.verifyAugmontKyc();
+      return res;
     }
+    return true;
   }
 
-  Future<void> getGoldProScheme() async {
+  Future<bool> getGoldProScheme() async {
     final res = await _paymentRepo.getGoldProScheme();
     if (res.isSuccess()) {
       _txnService.goldProScheme = res.model;
+      return true;
     } else {
+      unavailabilityText = res.errorMessage ??
+          "${Constants.ASSET_GOLD_STAKE} not available at the moment, please try again after sometime";
       BaseUtil.showNegativeAlert(
           "Failed to fetch Gold Scheme", res.errorMessage);
+      return false;
     }
   }
 
@@ -288,8 +346,14 @@ class GoldProBuyViewModel extends BaseViewModel {
 //VM Async Helper Methods:
 
   Future<void> getAssetOptionsModel() async {
-    final res =
-        await locator<GetterRepository>().getAssetOptions('weekly', 'gold');
+    final isNewUser = locator<UserService>().userSegments.contains(
+          Constants.NEW_USER,
+        );
+    final res = await locator<GetterRepository>().getAssetOptions(
+      'weekly',
+      'gold',
+      isNewUser: isNewUser,
+    );
     if (res.code == 200) assetOptionsModel = res.model;
   }
 
@@ -326,13 +390,15 @@ class GoldProBuyViewModel extends BaseViewModel {
   }
 
   void updateSliderValueFromGoldBalance() {
-    double val = BaseUtil.digitPrecision((totalGoldBalance - 2) / 8, 4);
+    double val = BaseUtil.digitPrecision(
+        (totalGoldBalance - consecutiveDifference) / edgeDifference, 4);
     if (val >= 0 && val <= 1) sliderValue = val;
   }
 
   void updateSliderValue(double val) {
     sliderValue = val;
-    totalGoldBalance = BaseUtil.digitPrecision(8 * val + 2, 1);
+    totalGoldBalance = BaseUtil.digitPrecision(
+        edgeDifference * val + consecutiveDifference, 1);
     goldFieldController.text = totalGoldBalance.toString();
     postUpdateChips();
   }
@@ -378,19 +444,24 @@ class GoldProBuyViewModel extends BaseViewModel {
 
   void postUpdateChips() {
     selectedChipIndex = -1;
-    if (totalGoldBalance == 2.0) {
+    if (totalGoldBalance ==
+        AppConfig.getValue(AppConfigKey.goldProInvestmentChips)[0].toDouble()) {
       selectedChipIndex = 0;
       Haptic.vibrate();
-    } else if (totalGoldBalance == 4.0) {
+    } else if (totalGoldBalance ==
+        AppConfig.getValue(AppConfigKey.goldProInvestmentChips)[1].toDouble()) {
       selectedChipIndex = 1;
       Haptic.vibrate();
-    } else if (totalGoldBalance == 6.0) {
+    } else if (totalGoldBalance ==
+        AppConfig.getValue(AppConfigKey.goldProInvestmentChips)[2].toDouble()) {
       selectedChipIndex = 2;
       Haptic.vibrate();
-    } else if (totalGoldBalance == 8.0) {
+    } else if (totalGoldBalance ==
+        AppConfig.getValue(AppConfigKey.goldProInvestmentChips)[3].toDouble()) {
       selectedChipIndex = 3;
       Haptic.vibrate();
-    } else if (totalGoldBalance == 10.0) {
+    } else if (totalGoldBalance ==
+        AppConfig.getValue(AppConfigKey.goldProInvestmentChips)[4].toDouble()) {
       selectedChipIndex = 4;
       Haptic.vibrate();
     }

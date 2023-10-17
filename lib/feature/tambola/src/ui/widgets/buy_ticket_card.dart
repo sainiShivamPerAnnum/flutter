@@ -222,9 +222,7 @@ class _ButTicketsComponentState extends State<ButTicketsComponent> {
                                 inputFormatters: [
                                   FilteringTextInputFormatter.digitsOnly,
                                 ],
-                                onChanged: (text) {
-                                  updateTicketCount(text);
-                                },
+                                onChanged: updateTicketCount,
                                 decoration: const InputDecoration(
                                   border: InputBorder.none,
                                   focusedBorder: InputBorder.none,
@@ -269,10 +267,9 @@ class _ButTicketsComponentState extends State<ButTicketsComponent> {
                 // ),
                 onPressed: () {
                   BaseUtil.openDepositOptionsModalSheet(
-                      amount: ticketCost,
-                      subtitle:
-                          'Save ₹500 in any of the asset & get 1 Free Ticket',
-                      timer: 0);
+                    amount: ticketCost,
+                    timer: 0,
+                  );
                 },
                 btnText: "SAVE",
                 // child: MaterialButton(
@@ -295,7 +292,7 @@ class _ButTicketsComponentState extends State<ButTicketsComponent> {
 }
 
 class BuyTicketPriceWidget extends StatelessWidget {
-  const BuyTicketPriceWidget({Key? key, required this.amount})
+  const BuyTicketPriceWidget({required this.amount, Key? key})
       : super(key: key);
 
   final String amount;

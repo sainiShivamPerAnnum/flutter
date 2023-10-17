@@ -25,7 +25,6 @@ import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/show_case_key.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -34,7 +33,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:provider/provider.dart';
-import 'package:showcaseview/showcaseview.dart';
 
 class LendboxBuyInputView extends StatefulWidget {
   final int? amount;
@@ -44,10 +42,10 @@ class LendboxBuyInputView extends StatefulWidget {
   // final String floAssetType;
 
   const LendboxBuyInputView({
+    required this.model,
     Key? key,
     this.amount,
     this.skipMl,
-    required this.model,
     // required this.floAssetType,
   }) : super(key: key);
 
@@ -92,7 +90,7 @@ class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
 
           if (!widget.model.isBuyInProgress) {
             FocusScope.of(context).unfocus();
-            widget.model.initiateBuy();
+            await widget.model.initiateBuy();
           }
         }
       }
@@ -180,15 +178,14 @@ class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
                             isEnabled: !widget.model.isBuyInProgress ||
                                 !widget.model.forcedBuy,
                             maxAmount: widget.model.maxAmount,
-                            maxAmountMsg: widget.model.floAssetType ==
-                                    Constants.ASSET_TYPE_FLO_FIXED_6
-                                ? 'Upto ₹ 99,999 can be invested at one go'
-                                : locale.upto50000,
+                            maxAmountMsg: locale.maxAmountMessage(
+                              widget.model.maxAmount,
+                            ),
                             minAmount: widget.model.minAmount.toDouble(),
                             minAmountMsg:
                                 "Minimum purchase amount is ₹ ${widget.model.minAmount.toInt()}",
                             notice: widget.model.buyNotice,
-                            onAmountChange: (int amount) {},
+                            onAmountChange: (amount) {},
                             bestChipIndex: 2,
                             readOnly: widget.model.readOnly,
                             onTap: () => widget.model.showKeyBoard(),
@@ -292,15 +289,10 @@ class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
           SizedBox(
             height: SizeConfig.padding8,
           ),
-          Showcase(
-            key: ShowCaseKeys.floKYCKey,
-            description:
-                'Complete your KYC to start your journey towards 12% returns',
-            child: AppNegativeBtn(
-              btnText: locale.completeKYCText,
-              onPressed: model.navigateToKycScreen,
-              width: SizeConfig.screenWidth,
-            ),
+          AppNegativeBtn(
+            btnText: locale.completeKYCText,
+            onPressed: model.navigateToKycScreen,
+            width: SizeConfig.screenWidth,
           ),
           SizedBox(
             height: SizeConfig.padding16,
@@ -313,9 +305,9 @@ class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
 
 class FloBuyNavBar extends StatelessWidget {
   const FloBuyNavBar({
-    super.key,
     required this.model,
     required this.onTap,
+    super.key,
   });
 
   final LendboxBuyViewModel model;
@@ -489,7 +481,7 @@ class FloBuyNavBar extends StatelessWidget {
 }
 
 class MaturityDetailsWidget extends StatelessWidget {
-  const MaturityDetailsWidget({Key? key, required this.model})
+  const MaturityDetailsWidget({required this.model, Key? key})
       : super(key: key);
 
   final LendboxBuyViewModel model;

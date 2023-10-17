@@ -72,7 +72,7 @@ class UnRedeemedGoldenScratchCard extends StatelessWidget {
   final double width;
 
   const UnRedeemedGoldenScratchCard(
-      {super.key, required this.isLevelChange, required this.width});
+      {required this.isLevelChange, required this.width, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -99,13 +99,12 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
   // final TextStyle titleStyle, subtitleStyle, titleStyle2;
   final double width;
 
- const RedeemedGoldenScratchCard(
-      {super.key,
-      required this.ticket,
-      // @required this.titleStyle,
+  const RedeemedGoldenScratchCard(
+      {required this.ticket, // @required this.titleStyle,
       // @required this.subtitleStyle,
       // @required this.titleStyle2,
-      required this.width});
+      required this.width,
+      super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -275,6 +274,10 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
+          SvgPicture.asset(
+            Assets.goldAsset,
+            height: SizeConfig.padding64,
+          ),
           RichText(
             text: TextSpan(
               style: TextStyles.rajdhani.bold
@@ -282,13 +285,13 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
                   .copyWith(fontSize: SizeConfig.padding20),
               children: [
                 TextSpan(
-                    text: "₹ ${reward.value}",
+                    text: " ₹ ${reward.value}",
                     style: TextStyles.rajdhaniB.title2.colour(Colors.black)),
               ],
             ),
           ),
           Text(
-            locale.worthsOfGold,
+            "worth of Digital Gold",
             style: TextStyles.sourceSans.body4.colour(Colors.black),
           )
         ],
@@ -345,7 +348,7 @@ class RedeemedGoldenScratchCard extends StatelessWidget {
         child: rewardWidget);
   }
 
-  doubleRewardWidget(
+  ListView doubleRewardWidget(
     List<Reward> rewards,
   ) {
     S locale = locator<S>();

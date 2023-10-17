@@ -44,6 +44,7 @@ class UserFundWallet {
   int? wTmbLifetimeWin;
   double? wAugFdQty;
   double? wAugTotal;
+  bool? isGoldProUser;
 
   static const String fldAugmontGoldPrinciple = 'wAugPrinciple';
   static const String fldAugmontGoldBalance = 'wAugBalance';
@@ -56,35 +57,35 @@ class UserFundWallet {
   static const String fldProcessingRedemption = 'wRedemptionProcessing';
 
   UserFundWallet(
-    this._augGoldPrinciple,
-    this._augGoldBalance,
-    this._augGoldQuantity,
-    this._iciciPrinciple,
-    this._iciciBalance,
-    this._prizeBalance,
-    this._lockedPrizeBalance,
-    this._prizeLifetimeWin,
-    this._processingRedemptionBalance,
-    this.wLbBalance,
-    this.wLbPrinciple,
-    this.wLbProcessingAmt,
-    this.netWorth,
-    this.tickets,
-    this.wLbLifetimeInterest,
-    this.wLbF1Balance,
-    this.wLbF1Principle,
-    this.wLbF1LifetimeInterest,
-    this.wLbF2Balance,
-    this.wLbF2Principle,
-    this.wLbF2LifetimeInterest,
-    this.wTmbLifetimeWin,
-    this.wAugFdQty,
-    this.wAugTotal,
-  );
+      this._augGoldPrinciple,
+      this._augGoldBalance,
+      this._augGoldQuantity,
+      this._iciciPrinciple,
+      this._iciciBalance,
+      this._prizeBalance,
+      this._lockedPrizeBalance,
+      this._prizeLifetimeWin,
+      this._processingRedemptionBalance,
+      this.wLbBalance,
+      this.wLbPrinciple,
+      this.wLbProcessingAmt,
+      this.netWorth,
+      this.tickets,
+      this.wLbLifetimeInterest,
+      this.wLbF1Balance,
+      this.wLbF1Principle,
+      this.wLbF1LifetimeInterest,
+      this.wLbF2Balance,
+      this.wLbF2Principle,
+      this.wLbF2LifetimeInterest,
+      this.wTmbLifetimeWin,
+      this.wAugFdQty,
+      this.wAugTotal,
+      this.isGoldProUser);
 
   UserFundWallet.newWallet()
       : this(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, {}, 0, 0, 0, 0, 0, 0, 0, 0,
-            0, 0);
+            0, 0, false);
 
   UserFundWallet.base() {
     _augGoldPrinciple = 0.0;
@@ -116,35 +117,36 @@ class UserFundWallet {
     wLbF2LifetimeInterest = 0;
     wAugFdQty = 0;
     wAugTotal = 0;
+    isGoldProUser = false;
   }
 
   UserFundWallet.fromMap(Map<String, dynamic> data)
       : this(
-          BaseUtil.toDouble(data[fldAugmontGoldPrinciple]),
-          BaseUtil.toDouble(data[fldAugmontGoldBalance]),
-          BaseUtil.toDouble(data[fldAugmontGoldQuantity]),
-          BaseUtil.toDouble(data[fldIciciPrinciple]),
-          BaseUtil.toDouble(data[fldIciciBalance]),
-          BaseUtil.toDouble(data[fldPrizeBalance]),
-          BaseUtil.toDouble(data[fldPrizeLockedBalance]),
-          BaseUtil.toDouble(data[fldPrizeLifetimeWin]),
-          BaseUtil.toDouble(data[fldProcessingRedemption]),
-          BaseUtil.toDouble(data['wLbBalance']),
-          BaseUtil.toDouble(data['wLbPrinciple']),
-          BaseUtil.toDouble(data['wLbProcessingAmt']),
-          BaseUtil.toDouble(data['netWorth']),
-          data["tickets"],
-          BaseUtil.toDouble(data['wLbLifetimeInterest']),
-          BaseUtil.toDouble(data['wLbF1Balance']),
-          BaseUtil.toDouble(data['wLbF1Principle']),
-          BaseUtil.toDouble(data['wLbF1LifetimeInterest']),
-          BaseUtil.toDouble(data['wLbF2Balance']),
-          BaseUtil.toDouble(data['wLbF2Principle']),
-          BaseUtil.toDouble(data['wLbF2LifetimeInterest']),
-          BaseUtil.toInt(data['wTmbLifetimeWin']),
-          BaseUtil.toDouble(data["wAugFdQty"] ?? 0.0),
-          BaseUtil.toDouble(data["wAugTotal"] ?? 0.0),
-        );
+            BaseUtil.toDouble(data[fldAugmontGoldPrinciple]),
+            BaseUtil.toDouble(data[fldAugmontGoldBalance]),
+            BaseUtil.toDouble(data[fldAugmontGoldQuantity]),
+            BaseUtil.toDouble(data[fldIciciPrinciple]),
+            BaseUtil.toDouble(data[fldIciciBalance]),
+            BaseUtil.toDouble(data[fldPrizeBalance]),
+            BaseUtil.toDouble(data[fldPrizeLockedBalance]),
+            BaseUtil.toDouble(data[fldPrizeLifetimeWin]),
+            BaseUtil.toDouble(data[fldProcessingRedemption]),
+            BaseUtil.toDouble(data['wLbBalance']),
+            BaseUtil.toDouble(data['wLbPrinciple']),
+            BaseUtil.toDouble(data['wLbProcessingAmt']),
+            BaseUtil.toDouble(data['netWorth']),
+            data["tickets"],
+            BaseUtil.toDouble(data['wLbLifetimeInterest']),
+            BaseUtil.toDouble(data['wLbF1Balance']),
+            BaseUtil.toDouble(data['wLbF1Principle']),
+            BaseUtil.toDouble(data['wLbF1LifetimeInterest']),
+            BaseUtil.toDouble(data['wLbF2Balance']),
+            BaseUtil.toDouble(data['wLbF2Principle']),
+            BaseUtil.toDouble(data['wLbF2LifetimeInterest']),
+            BaseUtil.toInt(data['wTmbLifetimeWin']),
+            BaseUtil.toDouble(data["wAugFdQty"] ?? 0.0),
+            BaseUtil.toDouble(data["wAugTotal"] ?? 0.0),
+            data['isGoldProUser'] ?? false);
 
   Map<String, dynamic> cloneMap() => {
         fldAugmontGoldPrinciple: _augGoldPrinciple,
@@ -159,7 +161,7 @@ class UserFundWallet {
         'wLbBalance': wLbBalance,
         'wLbPrinciple': wLbPrinciple,
         'wLbProcessingAmt': wLbProcessingAmt,
-    'wTmbLifetimeWin': wTmbLifetimeWin
+        'wTmbLifetimeWin': wTmbLifetimeWin
       };
 
   double getEstTotalWealth() {

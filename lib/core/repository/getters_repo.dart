@@ -10,12 +10,14 @@ import 'package:felloapp/core/model/amount_chips_model.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/asset_options_model.dart';
 import 'package:felloapp/core/model/faq_model.dart';
+import 'package:felloapp/core/model/gold_pro_models/gold_pro_config_model.dart';
 import 'package:felloapp/core/model/home_screen_carousel_items.dart';
 import 'package:felloapp/core/model/page_config_model.dart';
 import 'package:felloapp/core/model/promo_cards_model.dart';
 import 'package:felloapp/core/model/quick_save_model.dart';
 import 'package:felloapp/core/model/story_model.dart';
 import 'package:felloapp/core/model/sub_combos_model.dart';
+import 'package:felloapp/core/model/tambola_offers_model.dart';
 import 'package:felloapp/core/model/winners_model.dart';
 import 'package:felloapp/core/repository/base_repo.dart';
 import 'package:felloapp/core/service/api_service.dart';
@@ -77,16 +79,33 @@ class GetterRepository extends BaseRepo {
   }) async {
     try {
       final token = await getBearerToken();
-      final winnersResponse = await APIService.instance.getData(
-        ApiPath.getWinners(type, freq),
-        cBaseUrl: _baseUrl,
-        token: token,
+      return await _cacheService.cachedApi<WinnersModel>(
+        CacheKeys.TICKETS_LB,
+        TTL.UPTO_SIX_PM,
+        () => APIService.instance.getData(
+          ApiPath.getWinners(type, freq),
+          cBaseUrl: _baseUrl,
+          token: token,
+        ),
+        (p0) {
+          logger.d("Winners for $type: ${p0.toString()}");
+          return ApiResponse(
+            model: WinnersModel.fromMap(p0["data"]),
+            code: 200,
+          );
+        },
       );
 
-      return ApiResponse(
-        model: WinnersModel.fromMap(winnersResponse["data"]),
-        code: 200,
-      );
+      // final winnersResponse = await APIService.instance.getData(
+      //   ApiPath.getWinners(type, freq),
+      //   cBaseUrl: _baseUrl,
+      //   token: token,
+      // );
+
+      // return ApiResponse(
+      //   model: WinnersModel.fromMap(winnersResponse["data"]),
+      //   code: 200,
+      // );
     } catch (e) {
       logger.e(e.toString());
       return ApiResponse.withError(
@@ -95,24 +114,29 @@ class GetterRepository extends BaseRepo {
   }
 
   Future<ApiResponse<AssetOptionsModel>> getAssetOptions(
-      String freq, String type,
-      {String? subType, bool? isOldLendboxUser}) async {
+    String freq,
+    String type, {
+    String? subType,
+    bool? isOldLendboxUser,
+    bool? isNewUser,
+    String? entryPoint,
+  }) async {
     try {
-      Map<String, dynamic>? map;
+      Map<String, dynamic>? map = {
+        "type": type,
+        "freq": freq,
+        "isNewUser": isNewUser.toString(),
+      };
+
+      if (entryPoint != null) {
+        map['source'] = entryPoint;
+      }
 
       if (type == "flo") {
-        map = {
-          "type": type,
-          "freq": freq,
+        map.addAll({
           "subType": subType,
           "isOldLbUser": isOldLendboxUser.toString(),
-        };
-      }
-      if (type == "gold") {
-        map = {
-          "type": type,
-          "freq": freq,
-        };
+        });
       }
 
       final token = await getBearerToken();
@@ -135,8 +159,8 @@ class GetterRepository extends BaseRepo {
   }
 
   Future setUpAppConfigs() async {
-    final _appConfig = await getAppConfig();
-    if (_appConfig.code != 200) {
+    final appConfig = await getAppConfig();
+    if (appConfig.code != 200) {
       AppConfig.instance({
         "message": "Default Values",
         "data": BaseRemoteConfig.DEFAULTS,
@@ -390,6 +414,24 @@ class GetterRepository extends BaseRepo {
     }
   }
 
+  Future<ApiResponse<List<TicketsOffers>>> getTambolaOffers() async {
+    try {
+      final token = await getBearerToken();
+      final response = await APIService.instance.getData(
+        ApiPath.tambolaOffers,
+        cBaseUrl: _baseUrl,
+        token: token,
+      );
+
+      return ApiResponse<List<TicketsOffers>>(
+          model: TicketsOffers.helper.fromMapArray(response["data"]["offers"]),
+          code: 200);
+    } catch (e) {
+      logger.e(e.toString());
+      return ApiResponse.withError("Unable to fetch stories", 400);
+    }
+  }
+
   Future<ApiResponse<Map>> getGoldRatesGraphItems() async {
     try {
       if (goldChartData != null) {
@@ -453,6 +495,31 @@ class GetterRepository extends BaseRepo {
             .fromMapArray(response['data']["items"]);
         return ApiResponse<List<HomeScreenCarouselItemsModel>>(
             model: items, code: 200);
+      });
+    } catch (e) {
+      logger.e(e.toString());
+      return ApiResponse.withError("Unable to fetch stories", 400);
+    }
+  }
+
+  Future<ApiResponse<GoldProConfig>> getGoldProConfig() async {
+    try {
+      final token = await getBearerToken();
+
+      return await _cacheService.cachedApi(
+          CacheKeys.GOLDPRO_CONFIG,
+          TTL.ONE_DAY,
+          () => APIService.instance.getData(
+                ApiPath.goldProConfig,
+                cBaseUrl: _baseUrl,
+                token: token,
+              ), (response) {
+        GoldProConfig config = GoldProConfig.fromJson(response);
+
+        return ApiResponse<GoldProConfig>(
+          model: config,
+          code: 200,
+        );
       });
     } catch (e) {
       logger.e(e.toString());

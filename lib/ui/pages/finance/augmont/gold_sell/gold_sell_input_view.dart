@@ -80,7 +80,7 @@ class GoldSellInputView extends StatelessWidget {
                               .colour(UiConstants.kTextColor2),
                         ),
                         Text(
-                          model.withdrawableQnt.toString(),
+                          "${model.withdrawableQnt.toString()}gms",
                           style: TextStyles.sourceSansSB.body0
                               .colour(UiConstants.kTextColor),
                         ),
@@ -234,7 +234,7 @@ class GoldSellInputView extends StatelessWidget {
                             .colour(Colors.red[400]),
                       ),
                     ),
-                  // const GoldLeaseWithdrawInfo(),
+                  const GoldLeaseWithdrawInfo(),
                   const Spacer(),
                   augTxnService.isGoldSellInProgress
                       ? Center(

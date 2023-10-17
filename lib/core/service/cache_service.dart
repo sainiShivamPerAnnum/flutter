@@ -3,7 +3,9 @@ import 'dart:developer';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
+import 'package:felloapp/core/enums/ttl.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
+import 'package:felloapp/util/date_helper.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
 
@@ -11,6 +13,10 @@ import '../../util/api_response.dart';
 import '../../util/custom_logger.dart';
 import '../../util/locator.dart';
 import '../model/cache_model/cache_model.dart';
+
+/// Signature callback for parsing and converting source [S] to [ApiResponse] of
+/// type [T].
+typedef ParseCallBack<T, S> = ApiResponse<T> Function(S);
 
 class CacheService {
   static Isar? _isar;
@@ -34,58 +40,68 @@ class CacheService {
 
   static Future<void> checkIfInvalidationRequired() async {
     final now = DateTime.now().millisecondsSinceEpoch;
-    final _invalidate =
-        AppConfig.getValue(AppConfigKey.invalidateBefore) as int;
-    if (now <= _invalidate) {
+    final invalidate = AppConfig.getValue<int>(AppConfigKey.invalidateBefore);
+    if (now <= invalidate) {
       await CacheService.invalidateAll();
     }
   }
 
   static Future<void> invalidateAll() async {
-    final CustomLogger _logger = locator<CustomLogger>();
+    final CustomLogger logger = locator<CustomLogger>();
 
     try {
-      _logger!.d('cache: invalidate all');
+      logger.d('cache: invalidate all');
       await _isar?.writeTxn(() async {
         await _isar?.clear();
       });
     } catch (e) {
-      _logger!.e('cache: invalidation failed $e');
+      logger.e('cache: invalidation failed $e');
     }
   }
 
   Future<ApiResponse<T>> cachedApi<T>(
-      String key,
-      int ttl,
-      Future<dynamic> Function() apiReq,
-      ApiResponse<T> Function(dynamic) parseData,
-      {bool isFromCdn = false}) async {
+    String key,
+    int ttl,
+    Future<dynamic> Function() apiReq,
+    ParseCallBack<T, dynamic> parseData, {
+    bool isFromCdn = false,
+  }) async {
     final cachedData = await getData(key);
 
     if (cachedData != null && ttl != 0) {
       try {
-        _logger!.d('cache: data read successfully');
+        _logger.d('cache: data read successfully');
         log("CACHED API: ${cachedData.data!}");
         return parseData(json.decode(cachedData.data!));
       } catch (e) {
-        _logger!.e(
+        _logger.e(
             'cache: parsing saved cache failed, trying to fetch from API', e);
         await invalidateByKey(key);
-        return await _processApiAndSaveToCache(key, ttl, apiReq, parseData,
-            isFromCdn: isFromCdn);
+        return await _processApiAndSaveToCache(
+          key,
+          ttl,
+          apiReq,
+          parseData,
+          isFromCdn: isFromCdn,
+        );
       }
     }
-
-    return await _processApiAndSaveToCache(key, ttl, apiReq, parseData,
-        isFromCdn: isFromCdn);
+    return await _processApiAndSaveToCache(
+      key,
+      ttl,
+      apiReq,
+      parseData,
+      isFromCdn: isFromCdn,
+    );
   }
 
-  Future<ApiResponse<T>> _processApiAndSaveToCache<T>(
-      String key,
-      int ttl,
-      Future<dynamic> Function() apiReq,
-      ApiResponse<T> Function(dynamic) parseData,
-      {bool isFromCdn = false}) async {
+  Future<ApiResponse<T>> _processApiAndSaveToCache<T, S>(
+    String key,
+    int ttl,
+    Future<dynamic> Function() apiReq,
+    ParseCallBack<T, dynamic> parseData, {
+    bool isFromCdn = false,
+  }) async {
     final response = await apiReq();
 
     final res = parseData(response);
@@ -99,14 +115,14 @@ class CacheService {
         await writeMap(key, ttl, response);
       }
     } catch (e) {
-      _logger!
+      _logger
           .d("Writing to isar failed, returning data directly without caching");
     }
 
     return res;
   }
 
-  Future<bool> writeMap(String key, int ttl, Map data) async {
+  Future<bool> writeMap(String key, int ttl, Object data) async {
     return writeString(key, ttl, json.encode(data));
   }
 
@@ -116,58 +132,64 @@ class CacheService {
       final cache = CacheModel(
         key: key,
         ttl: ttl,
-        expireAfterTimestamp: now + (ttl * 60 * 1000),
+        expireAfterTimestamp: now +
+            (ttl == TTL.UPTO_SIX_PM
+                ? DateHelper.getMillisecondsTillNextSixPm()
+                : (ttl * 60 * 1000)),
         data: data,
       );
-      _logger!.d('cache: write $cache');
+      _logger.d('cache: write $cache');
       await _isar!.writeTxn(() async {
         final id = await _isar!.cacheModels.put(cache);
-        _logger!.d('cache: write id $id');
+        _logger.d('cache: write id $id');
       });
 
       return true;
     } catch (e) {
-      _logger!.e('cache: writing to cache failed', e);
+      _logger.e('cache: writing to cache failed', e);
       return false;
     }
   }
 
   static Future<bool> invalidateByKey(String key) async {
-    final CustomLogger _logger = locator<CustomLogger>();
+    final CustomLogger logger = locator<CustomLogger>();
 
     try {
-      _logger!.d('cache: invalidating key $key');
+      logger.d('cache: invalidating key $key');
       await _isar!.writeTxn(() async {
         final List<CacheModel> data = await _isar!
             .collection<CacheModel>()
             .filter()
             .keyEqualTo(key)
             .findAll();
-        _logger!.d('cache: $data');
+
+        if (data.isEmpty) return;
+
+        logger.d('cache: $data');
 
         final c = await _isar!
             .collection<CacheModel>()
             .deleteAll(data.map((e) => e.id).toList());
-        _logger.d('cache: invalidated $c');
+        logger.d('cache: invalidated $c');
       });
 
       return true;
     } catch (e) {
-      _logger!.e('cache: invalidation for key $key failed $e');
+      logger.e('cache: invalidation for key $key failed $e');
       return false;
     }
   }
 
   Future<bool> _invalidate(int id) async {
     try {
-      _logger!.d('cache: invalidating id $id');
+      _logger.d('cache: invalidating id $id');
       await _isar!.writeTxn(() async {
         return await _isar!.cacheModels.delete(id);
       });
 
       return true;
     } catch (e) {
-      _logger!.e('cache: invalidation for id $id failed', e);
+      _logger.e('cache: invalidation for id $id failed', e);
       return false;
     }
   }
@@ -176,17 +198,18 @@ class CacheService {
     try {
       final data =
           await _isar!.cacheModels.filter().keyEqualTo(key).findFirst();
+
+      if (data == null) return null;
+
       final now = DateTime.now().millisecondsSinceEpoch;
 
-      if (data != null) {
-        _logger!.d(
-            'cache: data read from cache ${data.id} ${data.key} ${data.expireAfterTimestamp} $now');
+      _logger.d(
+          'cache: data read from cache ${data.id} ${data.key} ${data.expireAfterTimestamp} $now');
 
-        if (data.expireAfterTimestamp! > now) {
-          return data;
-        } else {
-          await invalidateByKey(key);
-        }
+      if (data.expireAfterTimestamp! > now) {
+        return data;
+      } else {
+        await invalidateByKey(key);
       }
     } catch (e) {
       return null;
@@ -195,29 +218,30 @@ class CacheService {
     return null;
   }
 
-  Future<ApiResponse> paginatedCachedApi(
+  Future<ApiResponse<T>> paginatedCachedApi<T>(
     String keyPrefix,
     int start,
     int end,
     int ttl,
     Future<dynamic> Function() apiReq,
-    ApiResponse Function(dynamic) parseData,
+    ParseCallBack<T, dynamic> parseData,
   ) async {
     // fetch data from cache
     final items = [];
     for (int i = start; i <= end; i++) {
       final key = '$keyPrefix/$i';
       final cachedData = await getData(key);
-      if (cachedData != null && ttl != 0)
+      if (cachedData != null && ttl != 0) {
         items.add(json.decode(cachedData.data!));
+      }
     }
 
     if (items.length == end - start + 1) {
       try {
-        _logger!.d('cache: paginated data read successfully $items');
+        _logger.d('cache: paginated data read successfully $items');
         return parseData({"start": start, "end": end, "items": items});
       } catch (e) {
-        _logger!.e(
+        _logger.e(
             'cache: parsing saved cache failed, trying to fetch from API', e);
 
         // invalidate all keys
@@ -243,11 +267,11 @@ class CacheService {
     );
   }
 
-  Future<ApiResponse> _processPaginatedApiAndSaveToCache(
+  Future<ApiResponse<T>> _processPaginatedApiAndSaveToCache<T>(
     String keyPrefix,
     int ttl,
     Future<dynamic> Function() apiReq,
-    ApiResponse Function(dynamic) parseData,
+    ParseCallBack<T, dynamic> parseData,
   ) async {
     final response = await apiReq();
     final responseData = response['data'];

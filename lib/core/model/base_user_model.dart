@@ -215,25 +215,32 @@ class BaseUser {
 
   @override
   String toString() {
-    return 'BaseUser(uid: $uid, mobile: $mobile, name: $name, email: $email, dob: $dob, gender: $gender, username: $username, verifiedName: $verifiedName, client_token: $client_token, isInvested: $isInvested, isIciciOnboarded: $isIciciOnboarded, isAugmontOnboarded: $isAugmontOnboarded, isSimpleKycVerified: $isSimpleKycVerified, isBlocked: $isBlocked, isKycVerified: $isKycVerified, kycName: $kycName, pendingTxnId: $pendingTxnId, isIciciEnabled: $isIciciEnabled, isAugmontEnabled: $isAugmontEnabled, isEmailVerified: $isEmailVerified, userPreferences: $userPreferences, createdOn: $createdOn, appFlyerId: $appFlyerId, avatarId: $avatarId)';
+    return 'BaseUser(uid: $uid, mobile: $mobile, name: $name, email: $email, dob: $dob, gender: $gender, username: $username, verifiedName: $verifiedName, client_token: $client_token, isInvested: $isInvested, isIciciOnboarded: $isIciciOnboarded, isAugmontOnboarded: $isAugmontOnboarded, isSimpleKycVerified: $isSimpleKycVerified, isBlocked: $isBlocked, isKycVerified: $isKycVerified, kycName: $kycName, pendingTxnId: $pendingTxnId, isIciciEnabled: $isIciciEnabled, isAugmontEnabled: $isAugmontEnabled, isEmailVerified: $isEmailVerified, userPreferences: ${userPreferences.toString()}, createdOn: $createdOn, appFlyerId: $appFlyerId, avatarId: $avatarId)';
   }
 }
 
-enum Preferences { TAMBOLANOTIFICATIONS, APPLOCK, FLOINVOICEMAIL }
+enum Preferences {
+  TAMBOLANOTIFICATIONS,
+  APPLOCK,
+  FLOINVOICEMAIL,
+  TAMBOLAONBOARDING
+}
 
 class UserPreferences {
   //setup index with firebase keys
   static const Map<Preferences, String> _index = {
     Preferences.TAMBOLANOTIFICATIONS: 'tn',
     Preferences.APPLOCK: 'al',
-    Preferences.FLOINVOICEMAIL: "er"
+    Preferences.FLOINVOICEMAIL: "er",
+    Preferences.TAMBOLAONBOARDING: "to"
   };
 
   //setup defaults
   final Map<Preferences, int> _defValues = {
     Preferences.TAMBOLANOTIFICATIONS: 1,
     Preferences.APPLOCK: 0,
-    Preferences.FLOINVOICEMAIL: 0
+    Preferences.FLOINVOICEMAIL: 0,
+    Preferences.TAMBOLAONBOARDING: 0
   };
 
   //current values
@@ -245,8 +252,10 @@ class UserPreferences {
       int? defValue = _defValues[p];
       _activePrefs[fKey] = (remValues != {} &&
               remValues![fKey] != null &&
-              remValues[fKey] is int)
-          ? remValues[fKey]
+              (remValues[fKey] is int || remValues[fKey] is bool))
+          ? ((remValues[fKey].runtimeType == bool)
+              ? (remValues[fKey] == true ? 1 : 0)
+              : remValues[fKey])
           : defValue;
     }
   }
@@ -256,4 +265,9 @@ class UserPreferences {
   setPreference(Preferences p, int val) => _activePrefs[_index[p]] = val;
 
   toJson() => _activePrefs;
+
+  @override
+  String toString() {
+    return "$_activePrefs";
+  }
 }

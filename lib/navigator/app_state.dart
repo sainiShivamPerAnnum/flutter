@@ -6,15 +6,15 @@ import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
+import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
-import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/router/back_dispatcher.dart';
 import 'package:felloapp/navigator/router/router_delegate.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
-import 'package:felloapp/ui/shared/spotlight_controller.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -88,7 +88,7 @@ class AppState extends ChangeNotifier {
 
   // BackButtonDispatcher backButtonDispatcher;
 
-  get rootIndex => _rootIndex;
+  int get rootIndex => _rootIndex;
 
   Timer? get txnTimer => _txnTimer;
 
@@ -154,16 +154,31 @@ class AppState extends ChangeNotifier {
   }
 
   void onItemTapped(int index) {
-    final JourneyService _journeyService = locator<JourneyService>();
-    if (JourneyService.isAvatarAnimationInProgress) return;
+    if (_rootController.navItems.values.toList()[index].title == "Tickets") {
+      if (locator<UserService>()
+              .baseUser!
+              .userPreferences
+              .getPreference(Preferences.TAMBOLAONBOARDING) !=
+          1) {
+        AppState.delegate!.parseRoute(Uri.parse("ticketsIntro"));
+        return;
+      }
+    }
+    if (index == _rootIndex) {
+      Haptic.vibrate();
+      RootController.controller.animateTo(
+        0,
+        duration: const Duration(seconds: 1),
+        curve: Curves.easeInCirc,
+      );
+      return;
+    }
     _rootController.onChange(_rootController.navItems.values.toList()[index]);
     setCurrentTabIndex = index;
+
     trackEvent(index);
     Haptic.vibrate();
-    if (_rootController.currentNavBarItemModel ==
-        RootController.journeyNavBarItem) {
-      _journeyService.checkForMilestoneLevelChange();
-    }
+
     executeNavBarItemFirstClick(index);
   }
 
@@ -183,7 +198,7 @@ class AppState extends ChangeNotifier {
         showTourStrip = true;
         notifyListeners();
       }
-      sharePreference.setInt('showTour', appSession + 1);
+      await sharePreference.setInt('showTour', appSession + 1);
     }
   }
 
@@ -230,17 +245,17 @@ class AppState extends ChangeNotifier {
         executeForFirstJourneyTabClick(index);
         break;
       case "Save":
-        executeForFirstSaveTabClick(index);
+        // executeForFirstSaveTabClick(index);
         break;
       case "Play":
-        executeForFirstPlayTabClick(index);
+        // executeForFirstPlayTabClick(index);
         break;
       case "Tambola":
         // executeForFirstTambolaClick(index);
         break;
       case "Account":
       case "Win":
-        executeForFirstAccountsTabClick(index);
+        // executeForFirstAccountsTabClick(index);
         break;
       default:
         break;
@@ -265,18 +280,8 @@ class AppState extends ChangeNotifier {
     // }
   }
 
-  executeForFirstSaveTabClick(index) {}
-
-  executeForFirstPlayTabClick(index) {
-    SpotLightController.instance.userFlow = UserFlow.onPlayTab;
-  }
-
-  executeForFirstAccountsTabClick(index) {
-    SpotLightController.instance.userFlow = UserFlow.onWinPage;
-  }
-
   void trackEvent(int index) {
-    final ScratchCardService _gtService = locator<ScratchCardService>();
+    final ScratchCardService gtService = locator<ScratchCardService>();
     if (_rootController.currentNavBarItemModel ==
         RootController.journeyNavBarItem) {
       _analyticsService.track(
@@ -305,9 +310,9 @@ class AppState extends ChangeNotifier {
           properties:
               AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
             "Winnings Amount": AnalyticsProperties.getUserCurrentWinnings(),
-            "Unscratched Ticket Count": _gtService.unscratchedTicketsCount,
-            "Scratched Ticket Count": (_gtService.activeScratchCards.length) -
-                _gtService.unscratchedTicketsCount,
+            "Unscratched Ticket Count": gtService.unscratchedTicketsCount,
+            "Scratched Ticket Count": (gtService.activeScratchCards.length) -
+                gtService.unscratchedTicketsCount,
           }));
     } else if (_rootController.currentNavBarItemModel ==
         RootController.tambolaNavBar) {

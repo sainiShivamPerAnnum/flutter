@@ -325,14 +325,14 @@ class GoldSellViewModel extends BaseViewModel {
     //   );
     //   return false;
     // }
-    bool _disabled = await _dbModel!.isAugmontSellDisabled();
-    if (_disabled != null && _disabled) {
-      BaseUtil.showNegativeAlert(
-        locale.sellFailed,
-        locale.sellFailedSubtitle,
-      );
-      return false;
-    }
+    // bool _disabled = await _dbModel!.isAugmontSellDisabled();
+    // if (_disabled != null && _disabled) {
+    //   BaseUtil.showNegativeAlert(
+    //     locale.sellFailed,
+    //     locale.sellFailedSubtitle,
+    //   );
+    //   return false;
+    // }
     return true;
   }
 

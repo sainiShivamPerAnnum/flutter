@@ -2,6 +2,7 @@ class CacheKeys {
   static const USER = 'user';
   static const CAMPAIGNS = 'campaigns';
   static const TAMBOLA_TICKETS = 'tambola/tickets';
+  static const TAMBOLA_OFFERS = 'tambola/offers';
   static const TAMBOLA_PICKS = 'tambola/picks';
   static const APP_FLYER_LINK = 'appflyer/link';
   static const JOURNEY_PAGE = 'journey/page';
@@ -12,4 +13,6 @@ class CacheKeys {
   static const GOLD_RATES = "goldRatesData";
   static const HOME_SCREEN_ITEMS = "goldRatesData";
   static const REFERRAL_CODE = 'referral_code';
+  static const TICKETS_LB = "tickets_leaderboard";
+  static const GOLDPRO_CONFIG = "gold_pro_config";
 }

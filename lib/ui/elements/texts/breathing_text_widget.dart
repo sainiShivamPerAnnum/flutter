@@ -6,26 +6,24 @@ class CustomAnimText extends AnimatedWidget {
   final String? animText;
   final TextStyle? textStyle;
 
-  //final opacityAnimation = Tween<double>(begin: 0.1, end: 1).animate(controller);
+  const CustomAnimText({
+    required Animation<double> animation,
+    super.key,
+    this.animText,
+    this.textStyle,
+  }) : super(listenable: animation);
 
-  CustomAnimText(
-      {Key? key, required Animation<double> animation, this.animText, this.textStyle,})
-      : super(key: key, listenable: animation);
-
+  @override
   Widget build(BuildContext context) {
-    S locale = S.of(context);
+    final locale = S.of(context);
     final animation = listenable as Animation<double>;
     return Opacity(
-      //margin: EdgeInsets.symmetric(vertical: 10),
-      //height: animation.value,
-      //width: animation.value,
       opacity: _opacityTween.evaluate(animation),
       child: Text(
         animText ?? locale.btnLoading,
-        style: textStyle ?? TextStyle(color: Colors.white, fontSize: 20),
+        style: textStyle ?? const TextStyle(color: Colors.white, fontSize: 20),
       ),
     );
-    //);
   }
 }
 
@@ -33,8 +31,9 @@ class BreathingText extends StatefulWidget {
   final String? alertText;
   final TextStyle? textStyle;
 
-  BreathingText({this.alertText, this.textStyle});
+  const BreathingText({super.key, this.alertText, this.textStyle});
 
+  @override
   _BreathingTextState createState() => _BreathingTextState();
 }
 
@@ -47,21 +46,21 @@ class _BreathingTextState extends State<BreathingText>
   @override
   void initState() {
     super.initState();
+
     controller = AnimationController(
-        duration: const Duration(milliseconds: 1400), vsync: this);
+      duration: const Duration(milliseconds: 1400),
+      vsync: this,
+    );
+
     animation = Tween<double>(begin: 0.1, end: 1).animate(controller)
-      // #enddocregion print-state
       ..addStatusListener((status) {
         if (status == AnimationStatus.completed) {
           controller.reverse();
         } else if (status == AnimationStatus.dismissed) {
           controller.forward();
         }
-      })
-      // #docregion print-state
-      ..addStatusListener((state) {}
-          //print('$state')
-          );
+      });
+
     controller.forward();
   }
 

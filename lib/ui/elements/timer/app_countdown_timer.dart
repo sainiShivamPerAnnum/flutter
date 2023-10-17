@@ -12,11 +12,13 @@ class AppCountdownTimer extends StatefulWidget {
   final TimestampModel endTime;
   final Color? backgroundColor;
   final VoidCallback? onTimerEnd;
+  final TextStyle? style;
 
   const AppCountdownTimer({
     required this.endTime,
     this.backgroundColor,
     this.onTimerEnd,
+    this.style,
     super.key,
   });
 
@@ -75,13 +77,18 @@ class _AppCountdownTimerState extends State<AppCountdownTimer> {
       final hours = twoDigits(duration?.inHours ?? 0);
       final minutes = twoDigits(duration?.inMinutes.remainder(60) ?? 0);
       final seconds = twoDigits(duration?.inSeconds.remainder(60) ?? 0);
-      return Row(mainAxisAlignment: MainAxisAlignment.center, children: [
-        buildTimeCard(time: hours),
-        const TimerDots(),
-        buildTimeCard(time: minutes),
-        const TimerDots(),
-        buildTimeCard(time: seconds),
-      ]);
+      return widget.style != null
+          ? Text(
+              "$hours:$minutes:$seconds",
+              style: widget.style,
+            )
+          : Row(mainAxisAlignment: MainAxisAlignment.center, children: [
+              buildTimeCard(time: hours),
+              const TimerDots(),
+              buildTimeCard(time: minutes),
+              const TimerDots(),
+              buildTimeCard(time: seconds),
+            ]);
     }
     return const SizedBox();
   }

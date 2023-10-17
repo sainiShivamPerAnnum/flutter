@@ -7,10 +7,10 @@ import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
+import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/bottom_nav_bar_item_model.dart';
 import 'package:felloapp/core/repository/games_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
-import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/feature/flo_withdrawals/ui/balloon_lottie_screen.dart';
 import 'package:felloapp/feature/referrals/ui/referral_home.dart';
@@ -19,7 +19,6 @@ import 'package:felloapp/navigator/router/transition_delegate.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/ui/elements/fello_dialog/fello_in_app_review.dart';
-import 'package:felloapp/ui/pages/campaigns/info_stories/info_stories_view.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_buy/gold_pro_buy_view.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_details/gold_pro_details_view.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_sell/gold_pro_sell_view.dart';
@@ -61,7 +60,6 @@ import 'package:felloapp/ui/pages/userProfile/settings/settings_view.dart';
 import 'package:felloapp/ui/pages/userProfile/userProfile/userProfile_view.dart';
 import 'package:felloapp/ui/pages/userProfile/verify_email.dart';
 import 'package:felloapp/ui/service_elements/quiz/quiz_web_view.dart';
-import 'package:felloapp/ui/shared/spotlight_controller.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -69,18 +67,19 @@ import 'package:felloapp/util/dynamic_ui_utils.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
-import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/styles.dart';
 //Flutter Imports
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 
 import '../../core/enums/app_config_keys.dart';
 import '../../core/model/app_config_model.dart';
+import '../../feature/tambola/src/ui/onboarding/tickets_intro_view.dart';
+import '../../feature/tambola/src/ui/onboarding/tickets_tutorial_assets_view.dart';
 
 class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     with ChangeNotifier, PopNavigatorRouterDelegateMixin {
   final AnalyticsService _analytics = locator<AnalyticsService>();
-  final JourneyService _journeyService = locator<JourneyService>();
 
   final List<Page> _pages = [];
 
@@ -88,8 +87,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
   final GlobalKey<NavigatorState> navigatorKey;
 
   final CustomLogger _logger = locator<CustomLogger>();
-  final BaseUtil _baseUtil =
-      locator<BaseUtil>(); //required to fetch client token
   final AppState appState;
 
   FelloRouterDelegate(this.appState) : navigatorKey = GlobalKey() {
@@ -101,16 +98,13 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
 
   List<MaterialPage> get pages => List.unmodifiable(_pages);
 
-  int numPages() => _pages.length;
-
   @override
   PageConfiguration? get currentConfiguration =>
-      _pages.last.arguments as PageConfiguration?;
+      _pages.isEmpty ? null : _pages.last.arguments as PageConfiguration?;
 
   @override
   Widget build(BuildContext context) {
     return Navigator(
-      // observers: [ApxNavigationObserver()],
       key: navigatorKey,
       onPopPage: _onPopPage,
       pages: buildPages(),
@@ -135,7 +129,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
 
   void pop() {
     if (canPop()) {
-      _removePage(_pages.last as MaterialPage<dynamic>);
+      _removePage(_pages.last);
     }
   }
 
@@ -146,7 +140,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
   @override
   Future<bool> popRoute() {
     if (canPop()) {
-      _removePage(_pages.last as MaterialPage<dynamic>);
+      _removePage(_pages.last);
       debugPrint("Current Stack: ${AppState.screenStack}");
       // if (AppState.screenStack.length == 1) {
       //   _journeyService!.checkForMilestoneLevelChange();
@@ -159,7 +153,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     return Future.value(false);
   }
 
-  void _removePage(MaterialPage page) {
+  void _removePage<T>(Page<T> page) {
     if ((_pages.last.name ?? "").contains('kyc')) {
       locator<AnalyticsService>().track(
         eventName: AnalyticsEvents.backTappedOnKycPage,
@@ -193,7 +187,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         .insert(index ?? AppState.screenStack.length, ScreenItem.page);
     debugPrint("Inserted a page ${pageConfig.key} to Index $index");
     log("Current Stack: ${AppState.screenStack}");
-    _analytics!.trackScreen(screen: pageConfig.name);
+    _analytics.trackScreen(screen: pageConfig.name);
     _pages.insert(
       index ?? _pages.length - 1,
       _insertPage(child, pageConfig),
@@ -206,7 +200,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     debugPrint("Added a page ${pageConfig.key}");
     log("Current Stack: ${AppState.screenStack}");
     if (pageConfig.name != null && pageConfig.name!.isNotEmpty) {
-      _analytics!.trackScreen(screen: pageConfig.name);
+      _analytics.trackScreen(screen: pageConfig.name);
     }
     _pages.add(
       _createPage(child, pageConfig),
@@ -354,6 +348,14 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           break;
         case Pages.QuizWebView:
           _addPageData(const QuizWebView(), QuizWebViewConfig);
+          break;
+        case Pages.TicketsIntroViewPath:
+          _addPageData(const TicketsIntroView(), TicketsIntroViewPageConfig);
+          break;
+
+        case Pages.TicketsTutorialViewPath:
+          _addPageData(
+              const TicketsTutorialsView(), TicketsTutorialViewPageConfig);
           break;
 
         case Pages.BalloonLottieScreen:
@@ -653,9 +655,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.SettingsView:
         SettingsViewPageConfig.currentPageAction = action;
         break;
-      case Pages.SellConfirmationView:
-        SellConfirmationViewConfig.currentPageAction = action;
-        break;
       case Pages.AssetViewSection:
         AssetViewPageConfig.currentPageAction = action;
         break;
@@ -694,6 +693,12 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         break;
       case Pages.GoldProTxnsDetailsView:
         GoldProTxnsDetailsViewPageConfig.currentPageAction = action;
+        break;
+      case Pages.TicketsIntroViewPath:
+        TicketsIntroViewPageConfig.currentPageAction = action;
+        break;
+      case Pages.TicketsTutorialViewPath:
+        TicketsTutorialViewPageConfig.currentPageAction = action;
         break;
       default:
         break;
@@ -749,7 +754,12 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     return List.of(_pages);
   }
 
-  void parseRoute(Uri uri, {String? title, bool isExternal = false}) {
+  void parseRoute(
+    Uri uri, {
+    String? title,
+    bool isExternal = false,
+    Map<String, String>? queryParams,
+  }) {
     _logger.d("Url: ${uri.toString()}");
     Haptic.vibrate();
     if (uri.scheme == "http" || uri.scheme == "https") {
@@ -783,9 +793,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         } else if (segment.startsWith('c-', 0)) {
           appState.scrollHome(num.tryParse(segment.split('-').last) as int);
         } else if (segment.startsWith('story-')) {
-          openStoryView(segment.split('-').last);
+          // openStoryView(segment.split('-').last);
         } else {
-          screenCheck(segment);
+          screenCheck(segment, uri.queryParameters);
         }
       }
     }
@@ -824,35 +834,35 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     }
   }
 
-  void openStoryView(String topic) {
-    AppState.screenStack.add(ScreenItem.dialog);
-    Navigator.of(AppState.delegate!.navigatorKey.currentContext!).push(
-      PageRouteBuilder(
-        pageBuilder: (context, animation, anotherAnimation) {
-          return InfoStories(
-            topic: topic,
-          );
-        },
-        transitionDuration: const Duration(milliseconds: 500),
-        transitionsBuilder: (context, animation, anotherAnimation, child) {
-          animation =
-              CurvedAnimation(curve: Curves.easeInCubic, parent: animation);
-          return Align(
-            child: SizeTransition(
-              sizeFactor: animation,
-              child: child,
-              axisAlignment: 0.0,
-            ),
-          );
-        },
-      ),
-    );
-  }
+  // void openStoryView(String topic) {
+  //   AppState.screenStack.add(ScreenItem.dialog);
+  //   Navigator.of(AppState.delegate!.navigatorKey.currentContext!).push(
+  //     PageRouteBuilder(
+  //       pageBuilder: (context, animation, anotherAnimation) {
+  //         return InfoStories(
+  //           topic: topic,
+  //         );
+  //       },
+  //       transitionDuration: const Duration(milliseconds: 500),
+  //       transitionsBuilder: (context, animation, anotherAnimation, child) {
+  //         animation =
+  //             CurvedAnimation(curve: Curves.easeInCubic, parent: animation);
+  //         return Align(
+  //           child: SizeTransition(
+  //             sizeFactor: animation,
+  //             child: child,
+  //             axisAlignment: 0.0,
+  //           ),
+  //         );
+  //       },
+  //     ),
+  //   );
+  // }
 
-  void screenCheck(String screenKey) {
+  void screenCheck(String screenKey, [Map<String, String>? queryParams]) {
     PageConfiguration? pageConfiguration;
 
-    var _rootController = locator<RootController>();
+    var rootController = locator<RootController>();
 
     switch (screenKey) {
       case 'journey':
@@ -906,8 +916,8 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         break;
 
       case 'quickTour':
-        Future.delayed(const Duration(seconds: 2),
-            SpotLightController.instance.startQuickTour);
+        // Future.delayed(const Duration(seconds: 2),
+        //     SpotLightController.instance.startQuickTour);
 
         break;
 
@@ -918,27 +928,40 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         BaseUtil.openDepositOptionsModalSheet();
         break;
       case 'augBuy':
-        BaseUtil()
-            .openRechargeModalSheet(investmentType: InvestmentType.AUGGOLD99);
+        BaseUtil().openRechargeModalSheet(
+          investmentType: InvestmentType.AUGGOLD99,
+          queryParams: queryParams,
+        );
         break;
       case 'augSell':
-        BaseUtil().openSellModalSheet(investmentType: InvestmentType.AUGGOLD99);
+        BaseUtil().openSellModalSheet(
+          investmentType: InvestmentType.AUGGOLD99,
+        );
         break;
       case 'lboxBuy':
-        BaseUtil()
-            .openRechargeModalSheet(investmentType: InvestmentType.LENDBOXP2P);
+        BaseUtil().openRechargeModalSheet(
+          investmentType: InvestmentType.LENDBOXP2P,
+          queryParams: queryParams,
+        );
         break;
       case 'lboxBuy12':
         BaseUtil.openFloBuySheet(
-            floAssetType: Constants.ASSET_TYPE_FLO_FIXED_6);
+          floAssetType: Constants.ASSET_TYPE_FLO_FIXED_6,
+          queryParams: queryParams,
+        );
         break;
       case 'lboxBuy8':
-        BaseUtil.openFloBuySheet(floAssetType: Constants.ASSET_TYPE_FLO_FELXI);
+        BaseUtil.openFloBuySheet(
+          floAssetType: Constants.ASSET_TYPE_FLO_FELXI,
+          queryParams: queryParams,
+        );
         break;
 
       case 'lboxBuy10':
         BaseUtil.openFloBuySheet(
-            floAssetType: Constants.ASSET_TYPE_FLO_FIXED_3);
+          floAssetType: Constants.ASSET_TYPE_FLO_FIXED_3,
+          queryParams: queryParams,
+        );
         break;
 
       case 'lboxSell':
@@ -955,9 +978,17 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         pageConfiguration = ReferralDetailsPageConfig;
         break;
       case 'tambolaHome':
-        if (_rootController.navItems
+        if (rootController.navItems
             .containsValue(RootController.tambolaNavBar)) {
-          onTapItem(RootController.tambolaNavBar);
+          if (locator<UserService>()
+                  .baseUser!
+                  .userPreferences
+                  .getPreference(Preferences.TAMBOLAONBOARDING) ==
+              1) {
+            onTapItem(RootController.tambolaNavBar);
+          } else {
+            pageConfiguration = TicketsIntroViewPageConfig;
+          }
           break;
         }
         pageConfiguration = THomePageConfig;
@@ -1020,6 +1051,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case 'powerPlayWelcome':
         pageConfiguration = PowerPlayFTUXPageConfig;
         break;
+      case 'powerPlayHome':
+        pageConfiguration = PowerPlayHomeConfig;
+        break;
       case 'powerPlayPrizes':
         openPowerPlayModalSheet();
         break;
@@ -1035,9 +1069,15 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case "goldProSell":
         pageConfiguration = GoldProSellViewPageConfig;
         break;
-
+      case "ticketsIntro":
+        pageConfiguration = TicketsIntroViewPageConfig;
+        break;
+      case "ticketsTutorial":
+        pageConfiguration = TicketsTutorialViewPageConfig;
+        break;
       case "quizHome":
         pageConfiguration = QuizWebViewConfig;
+        break;
     }
     if (pageConfiguration != null) {
       addPage(pageConfiguration);
@@ -1050,13 +1090,35 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     while (AppState.screenStack.length > 1) {
       AppState.backButtonDispatcher!.didPopRoute();
     }
-    var _rootController = locator<RootController>();
+    if (item.title == "Tickets") {
+      if (locator<UserService>()
+              .baseUser!
+              .userPreferences
+              .getPreference(Preferences.TAMBOLAONBOARDING) !=
+          1) {
+        AppState.delegate!.parseRoute(Uri.parse("ticketsIntro"));
+        return;
+      }
+    }
+    var rootController = locator<RootController>();
 
-    _rootController.onChange(_rootController.navItems.values
-        .toList()[_rootController.navItems.values.toList().indexOf(item)]);
+    rootController.onChange(rootController.navItems.values
+        .toList()[rootController.navItems.values.toList().indexOf(item)]);
 
     appState.setCurrentTabIndex =
-        _rootController.navItems.values.toList().indexOf(item);
+        rootController.navItems.values.toList().indexOf(item);
+  }
+
+  void onSilentTapItem(NavBarItemModel item) {
+    log('onSilentTapItem ${item.title}');
+
+    var rootController = locator<RootController>();
+
+    rootController.onChange(rootController.navItems.values
+        .toList()[rootController.navItems.values.toList().indexOf(item)]);
+
+    appState.setCurrentTabIndex =
+        rootController.navItems.values.toList().indexOf(item);
   }
 
   // openTopSaverScreen(String eventType) {
@@ -1067,12 +1129,12 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
   //   );
   // }
 
-  openWebGame(String game) {
+  void openWebGame(String game) {
     bool isLocked = false;
     double netWorth = locator<UserService>().userPortfolio.augmont.principle +
         (locator<UserService>().userPortfolio.flo.principle);
-    for (var i in locator<GameRepo>().gameTier.data) {
-      for (var j in i!.games) {
+    for (final i in locator<GameRepo>().gameTier.data) {
+      for (final j in i!.games) {
         if (j!.gameCode == game) {
           isLocked = netWorth < i.minInvestmentToUnlock;
           break;
@@ -1090,7 +1152,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     }
   }
 
-  openAppWalkthrough() {
+  void openAppWalkthrough() {
     AppState.delegate!.appState.currentAction = PageAction(
       state: PageState.addWidget,
       widget: const OnBoardingView(),
@@ -1098,7 +1160,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     );
   }
 
-  openTransactions(InvestmentType investmentType) {
+  void openTransactions(InvestmentType investmentType) {
     AppState.delegate!.appState.currentAction = PageAction(
       state: PageState.addWidget,
       widget: TransactionsHistory(investmentType: investmentType),
@@ -1108,16 +1170,17 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
 
   void openPowerPlayModalSheet() {
     BaseUtil.openModalBottomSheet(
-        isBarrierDismissible: true,
-        addToScreenStack: true,
-        backgroundColor: const Color(0xff21284A),
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(SizeConfig.roundness32),
-          topRight: Radius.circular(SizeConfig.roundness32),
-        ),
-        isScrollControlled: true,
-        hapticVibrate: true,
-        content: const PrizeDistributionSheet());
+      isBarrierDismissible: true,
+      addToScreenStack: true,
+      backgroundColor: UiConstants.kGoldProBgColor,
+      borderRadius: BorderRadius.only(
+        topLeft: Radius.circular(SizeConfig.roundness32),
+        topRight: Radius.circular(SizeConfig.roundness32),
+      ),
+      isScrollControlled: true,
+      hapticVibrate: true,
+      content: const PrizeDistributionSheet(),
+    );
   }
 
   bool checkForRatingDialog() {

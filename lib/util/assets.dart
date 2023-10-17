@@ -3,6 +3,7 @@
 const assetBaseUrl = 'https://d37gtxigg82zaw.cloudfront.net/';
 
 class Assets {
+  const Assets._();
   static const String logoMaxSize = 'images/fello_logo.png';
   static const String logoShortform = 'assets/svg/fello-short-logo.svg';
 
@@ -121,6 +122,9 @@ class Assets {
   static const String tambolaTicket = "assets/svg/tambola_ticket.svg";
   static const String scratchCard = "assets/svg/scratch_card.svg";
   static const String floAsset = "assets/svg/fello_flo.svg";
+  static const String floWithoutShadow = "assets/svg/flo_without_shadow.svg";
+  static const String goldWithoutShadow = "assets/svg/gold_without_shadow.svg";
+
   static const String goldAsset = "assets/svg/digital_gold.svg";
   static const String rbi = "assets/svg/rbi.svg";
   static const String icici = "assets/svg/icici.svg";
@@ -209,6 +213,8 @@ class Assets {
   static const String winScreenHighestScorers =
       "assets/svg/highest_scorers.svg";
 
+  static const String trophySvg = "assets/vectors/trophy.svg";
+  static const String trophyGlitterSvg = "assets/vectors/trophyGlitter.svg";
   static const String dailyAppBonusHero =
       "assets/vectors/dailyAppBonusHero.svg";
 
@@ -312,7 +318,7 @@ class Assets {
   static String btnBg = "assets/vectors/btnBg.svg";
 
   static String arrow = "assets/vectors/arrow.svg";
-  static final String infoWhyPan =
+  static const String infoWhyPan =
       'Your PAN Card is used as your unique ID to set up your investment profile in different assets';
 
   static const String logoBase64 =
@@ -376,6 +382,7 @@ class Assets {
   static const String powerPlayMain =
       'https://d37gtxigg82zaw.cloudfront.net/powerplay/logo.svg';
   static const String uhoh = 'assets/vectors/uhoh.svg';
+  static const String noPredictions = 'assets/svg/prediction_ball.svg';
 
   static const kolkataIcon =
       "https://d37gtxigg82zaw.cloudfront.net/powerplay/teams/KKR.svg";
@@ -415,4 +422,7 @@ class Assets {
 
   static const String youtubeLogo =
       "https://upload.wikimedia.org/wikipedia/commons/e/ef/Youtube_logo.png";
+
+  //Tickets
+  static const String polkaDots = "assets/images/polkadots.png";
 }

@@ -11,12 +11,9 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
-import 'package:showcaseview/showcaseview.dart';
-
-import '../../../../../../util/show_case_key.dart';
 
 class GamesWidget extends StatelessWidget {
-  const GamesWidget({super.key, required this.model});
+  const GamesWidget({required this.model, super.key});
 
   final PlayViewModel model;
 
@@ -51,29 +48,24 @@ class GamesWidget extends StatelessWidget {
         }
 
         if (model.gameTier == null) return const SizedBox();
-        final _viewModel = GameViewModel.fromGameTier(model.gameTier!)
+        final viewModel = GameViewModel.fromGameTier(model.gameTier!)
           ..processData();
         return Column(
           mainAxisAlignment: MainAxisAlignment.start,
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             ...List.generate(
-              _viewModel.gameTiers.length,
+              viewModel.gameTiers.length,
               (index) {
                 final child = Padding(
                   padding: EdgeInsets.symmetric(vertical: SizeConfig.padding8),
                   child: _GameTierWidget(
-                    gameTier: _viewModel.gameTiers[index],
+                    gameTier: viewModel.gameTiers[index],
                     model: model,
                   ),
                 );
                 if (index == 0) {
-                  return Showcase(
-                    key: ShowCaseKeys.GamesKey,
-                    description:
-                        'Use these tokens to play games. Each time you score above a minimum score, you get a scratch card!',
-                    child: child,
-                  );
+                  return child;
                 }
                 return child;
               },
@@ -183,10 +175,9 @@ class _LockedState extends StatelessWidget {
                 gameTier.amountToCompleteLevel.round(),
           });
           BaseUtil.openDepositOptionsModalSheet(
-              amount: gameTier.amountToCompleteLevel.round(),
-              title: "Save in any asset to unlock ${gameTier.title}",
-              subtitle: 'Earn 1 token with every Rupee saved',
-              timer: 0);
+            amount: gameTier.amountToCompleteLevel.round(),
+            timer: 0,
+          );
         }
       },
       child: Container(
@@ -274,7 +265,7 @@ class CustomProgressBar extends CustomPainter {
 
   @override
   void paint(Canvas canvas, Size size) {
-    final _center = Offset(size.width / 2, 0);
+    final center = Offset(size.width / 2, 0);
 
     canvas.drawRRect(
         RRect.fromRectAndRadius(

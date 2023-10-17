@@ -8,10 +8,11 @@ import 'package:felloapp/core/model/power_play_models/get_matches_model.dart';
 import 'package:felloapp/core/model/power_play_models/match_user_predicted_model.dart';
 import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
-import 'package:felloapp/ui/pages/power_play/leaderboard/prediction_leaderboard_view.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
+
+import '../widgets/make_prediction_sheet.dart';
 
 class LeaderBoardViewModel extends BaseViewModel {
   final PowerPlayService _powerPlayService = locator<PowerPlayService>();
@@ -23,7 +24,7 @@ class LeaderBoardViewModel extends BaseViewModel {
   List<MatchUserPredictedData> get userPredictedData => _userPredictedData;
   bool _isPredictionInProgress = false;
 
-  get isPredictionInProgress => _isPredictionInProgress;
+  bool get isPredictionInProgress => _isPredictionInProgress;
 
   set isPredictionInProgress(value) {
     _isPredictionInProgress = value;
@@ -91,7 +92,7 @@ class LeaderBoardViewModel extends BaseViewModel {
           isBarrierDismissible: true,
           addToScreenStack: true,
           enableDrag: Platform.isIOS,
-          backgroundColor: const Color(0xff21284A),
+          backgroundColor: UiConstants.kGoldProBgColor,
           borderRadius: BorderRadius.only(
             topLeft: Radius.circular(SizeConfig.roundness32),
             topRight: Radius.circular(SizeConfig.roundness32),

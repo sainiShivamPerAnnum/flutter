@@ -1,3 +1,5 @@
+// ignore_for_file: empty_catches, avoid_setters_without_getters
+
 import 'dart:async';
 import 'dart:developer';
 
@@ -26,6 +28,7 @@ import 'package:felloapp/ui/pages/finance/lendbox/deposit/widget/flo_coupon_moda
 import 'package:felloapp/ui/pages/finance/lendbox/deposit/widget/prompt.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/installed_upi_apps_finder.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -44,6 +47,7 @@ class LendboxBuyViewModel extends BaseViewModel {
       locator<LendboxTransactionService>();
   final AnalyticsService analyticsService = locator<AnalyticsService>();
   final CouponRepository _couponRepo = locator<CouponRepository>();
+  final CustomLogger _logger = locator<CustomLogger>();
 
   S locale = locator<S>();
 
@@ -62,8 +66,8 @@ class LendboxBuyViewModel extends BaseViewModel {
 
   // TextEditingController? vpaController;
 
-  int minAmount = 100;
-  double maxAmount = 50000;
+  num minAmount = 100;
+  num maxAmount = 50000;
   AssetOptionsModel? assetOptionsModel;
   List<CouponModel>? _couponList;
   int? numberOfTambolaTickets;
@@ -164,7 +168,7 @@ class LendboxBuyViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  get fieldWidth => _fieldWidth;
+  double get fieldWidth => _fieldWidth;
 
   set fieldWidth(value) {
     _fieldWidth = value;
@@ -179,21 +183,21 @@ class LendboxBuyViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  get showMaxCapText => _showMaxCapText;
+  bool get showMaxCapText => _showMaxCapText;
 
   set showMaxCapText(value) {
     _showMaxCapText = value;
     notifyListeners();
   }
 
-  get showMinCapText => _showMinCapText;
+  bool get showMinCapText => _showMinCapText;
 
   set showMinCapText(value) {
     _showMinCapText = value;
     notifyListeners();
   }
 
-  get addSpecialCoupon => _addSpecialCoupon;
+  bool get addSpecialCoupon => _addSpecialCoupon;
 
   set addSpecialCoupon(value) {
     _addSpecialCoupon = value;
@@ -207,8 +211,14 @@ class LendboxBuyViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  Future<void> init(int? amount, bool isSkipMilestone, TickerProvider vsync,
-      {required String assetTypeFlow}) async {
+  Future<void> init(
+    int? amount,
+    bool isSkipMilestone,
+    TickerProvider vsync, {
+    required String assetTypeFlow,
+    String? initialCouponCode,
+    String? entryPoint,
+  }) async {
     setState(ViewState.Busy);
     floAssetType = assetTypeFlow;
     _txnService.floAssetType = floAssetType;
@@ -219,13 +229,9 @@ class LendboxBuyViewModel extends BaseViewModel {
     isLendboxOldUser =
         locator<UserService>().userSegments.contains(Constants.US_FLO_OLD);
     appMetaList = await UpiUtils.getUpiApps();
-    updateMinValues();
-    await getAssetOptionsModel();
+    await getAssetOptionsModel(entryPoint: entryPoint);
     isIntentFlow = assetOptionsModel!.data.intent;
     log("isLendboxOldUser $isLendboxOldUser");
-    if (floAssetType == Constants.ASSET_TYPE_FLO_FIXED_6) {
-      maxAmount = 99999;
-    }
     skipMl = isSkipMilestone;
 
     int? data = assetOptionsModel?.data.userOptions
@@ -242,9 +248,13 @@ class LendboxBuyViewModel extends BaseViewModel {
             .indexWhere((element) => element.best) ??
         1;
 
-    getAvailableCoupons();
-
     setState(ViewState.Idle);
+
+    await getAvailableCoupons();
+
+    await _applyInitialCoupon(
+      initialCouponCode,
+    );
   }
 
   void listener() {
@@ -253,41 +263,24 @@ class LendboxBuyViewModel extends BaseViewModel {
     }
   }
 
-  void updateMinValues() {
-    List lendboxDetails = AppConfig.getValue(AppConfigKey.lendbox);
-
-    if (floAssetType == Constants.ASSET_TYPE_FLO_FELXI) {
-      final int lendboxIndex = isLendboxOldUser ? 2 : 3;
-      final lendboxData = lendboxDetails[lendboxIndex];
-
-      minAmount = BaseUtil.extractIntFromString(lendboxData['minAmountText']);
-      tambolaMultiplier = lendboxData['tambolaMultiplier'] ?? 1;
-    }
-    if (floAssetType == Constants.ASSET_TYPE_FLO_FIXED_3) {
-      minAmount =
-          BaseUtil.extractIntFromString(lendboxDetails[1]['minAmountText']);
-      tambolaMultiplier = lendboxDetails[1]['tambolaMultiplier'] ?? 1;
-    }
-    if (floAssetType == Constants.ASSET_TYPE_FLO_FIXED_6) {
-      minAmount =
-          BaseUtil.extractIntFromString(lendboxDetails[0]['minAmountText']);
-      tambolaMultiplier = lendboxDetails[0]['tambolaMultiplier'] ?? 1;
-    }
-  }
-
-  resetBuyOptions() {
-    buyAmount = assetOptionsModel?.data.userOptions[1].value.toInt();
-    forcedBuy = false;
-    amountController?.text = assetOptionsModel!.data.userOptions[2].toString();
-    lastTappedChipIndex = 2;
-    notifyListeners();
-  }
-
-  Future<void> getAssetOptionsModel() async {
+  Future<void> getAssetOptionsModel({String? entryPoint}) async {
+    final isNewUser = locator<UserService>().userSegments.contains(
+          Constants.NEW_USER,
+        );
     final res = await locator<GetterRepository>().getAssetOptions(
-        'weekly', 'flo',
-        subType: floAssetType, isOldLendboxUser: isLendboxOldUser);
-    if (res.code == 200) assetOptionsModel = res.model;
+      'weekly',
+      'flo',
+      subType: floAssetType,
+      isOldLendboxUser: isLendboxOldUser,
+      isNewUser: isNewUser,
+      entryPoint: entryPoint,
+    );
+    final model = res.model;
+    if (res.code == 200 && model != null) {
+      assetOptionsModel = model;
+      minAmount = model.data.minAmount;
+      maxAmount = model.data.maxAmount;
+    }
     log(res.model?.message ?? '');
   }
 
@@ -534,7 +527,7 @@ class LendboxBuyViewModel extends BaseViewModel {
     return '+$totalTickets Tickets';
   }
 
-  onChipClick(int index) {
+  void onChipClick(int index) {
     log("_isBuyInProgress $_isBuyInProgress");
     if (couponApplyInProgress || _isBuyInProgress || forcedBuy) return;
     Haptic.vibrate();
@@ -563,14 +556,14 @@ class LendboxBuyViewModel extends BaseViewModel {
   onValueChanged(String val) {
     if (showMaxCapText) showMaxCapText = false;
     if (showMinCapText) showMinCapText = false;
-    if (val != null && val.isNotEmpty) {
+    if (val.isNotEmpty) {
       if (int.tryParse(val.trim())! > maxAmount) {
         buyAmount = maxAmount.toInt();
         showMaxCapText = true;
         amountController!.text = buyAmount!.toInt().toString();
       } else {
         buyAmount = int.tryParse(val);
-        if ((buyAmount ?? 0.0) < 10.0) showMinCapText = true;
+        if ((buyAmount ?? 0.0) < minAmount) showMinCapText = true;
         for (int i = 0; i < assetOptionsModel!.data.userOptions.length; i++) {
           if (buyAmount == assetOptionsModel!.data.userOptions[i].value) {
             lastTappedChipIndex = i;
@@ -676,15 +669,24 @@ class LendboxBuyViewModel extends BaseViewModel {
     );
   }
 
-  Future applyCoupon(String? couponCode, bool isManuallyTyped) async {
-    if (couponApplyInProgress || isBuyInProgress) return;
+  Future<void> _applyInitialCoupon(String? coupon) async {
+    if (coupon == null) return;
+    try {
+      await applyCoupon(coupon, false);
+    } catch (e, stack) {
+      _logger.e('Failed to apply initial coupon', e, stack);
+    }
+  }
+
+  Future<void> applyCoupon(String? couponCode, bool isManuallyTyped) async {
+    if (couponCode == null || couponApplyInProgress || isBuyInProgress) return;
 
     int order = -1;
     int? minTransaction = -1;
     int counter = 0;
     isSpecialCoupon = true;
     String description = '';
-    for (final CouponModel c in couponList!) {
+    for (final c in couponList!) {
       if (c.code == couponCode) {
         order = counter;
         isSpecialCoupon = false;
@@ -721,7 +723,7 @@ class LendboxBuyViewModel extends BaseViewModel {
           // updateGoldAmount();
           showMaxCapText = false;
           showMinCapText = false;
-          animationController?.forward();
+          await animationController?.forward();
           updateFieldWidth();
         }
         checkForSpecialCoupon(response.model!);

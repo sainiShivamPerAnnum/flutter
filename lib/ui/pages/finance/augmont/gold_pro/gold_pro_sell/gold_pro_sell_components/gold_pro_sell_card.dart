@@ -1,5 +1,7 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/enums/app_config_keys.dart';
+import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/gold_pro_models/gold_pro_investment_reponse_model.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -31,9 +33,14 @@ class GoldProSellCard extends StatelessWidget {
       padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
       child: Column(children: [
         GoldBalanceBriefRow(
+          mini: true,
           leadTitle: "Current Gold Value",
           leadTitleColor: Colors.grey,
-          lead: BaseUtil.digitPrecision(data.qty + data.interest_collected, 4),
+          lead: BaseUtil.digitPrecision(
+            BaseUtil.digitPrecision(data.qty, 4, false) +
+                BaseUtil.digitPrecision(data.interest_collected, 4, false),
+            4,
+          ),
           leadSubtitleColor: UiConstants.kGoldProPrimary,
           trailTitle: "Gold Leased",
           trail: data.qty,
@@ -171,7 +178,8 @@ class _GoldProSellConfirmationModalSheetState
                             text:
                                 "${BaseUtil.digitPrecision(widget.data.qty * 0.045)}g"),
                         TextSpan(
-                          text: " (4.5%) ",
+                          text:
+                              " (${AppConfig.getValue(AppConfigKey.goldProInterest).toDouble()}%) ",
                           style:
                               TextStyles.sourceSans.body1.colour(Colors.white),
                         ),

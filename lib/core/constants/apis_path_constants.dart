@@ -250,7 +250,10 @@ class ApiPath {
 
   static String get goldRatesGraph => "/gold-rates/graph";
 
+  static String get tambolaOffers => "/tambola/offers";
   static String get homeScreenCarouselItems => "/home_screen";
 
   static String lbMaturity(String? uid) => "/lb/fd/maturities?uid=$uid";
+
+  static String get goldProConfig => "/gold_pro";
 }

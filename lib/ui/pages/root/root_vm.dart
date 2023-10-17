@@ -10,14 +10,11 @@ import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/bottom_nav_bar_item_model.dart';
 import 'package:felloapp/core/repository/campaigns_repo.dart';
-import 'package:felloapp/core/repository/journey_repo.dart';
-import 'package:felloapp/core/repository/referral_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
-import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/lendbox_maturity_service.dart';
 import 'package:felloapp/core/service/notifier_services/marketing_event_handler_service.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
@@ -46,25 +43,20 @@ import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/styles.dart';
+import 'package:firebase_instance_id/firebase_instance_id.dart';
 import 'package:flutter/material.dart';
-// import 'package:flutter_dynamic_icon/flutter_dynamic_icon.dart';
+import 'package:in_app_update/in_app_update.dart';
 
 enum NavBarItem { Journey, Save, Account, Play, Tambola }
 
 class RootViewModel extends BaseViewModel {
-  RootViewModel({S? l})
-      : locale = l ?? locator<S>(),
-        super();
-
-  final BaseUtil _baseUtil = locator<BaseUtil>();
+  RootViewModel({S? l}) : locale = l ?? locator<S>();
 
   final FcmListener _fcmListener = locator<FcmListener>();
   final FcmHandler _fcmHandler = locator<FcmHandler>();
   final UserService _userService = locator<UserService>();
   final UserCoinService _userCoinService = locator<UserCoinService>();
   final CustomLogger _logger = locator<CustomLogger>();
-  final JourneyRepository _journeyRepo = locator<JourneyRepository>();
-  final JourneyService _journeyService = locator<JourneyService>();
   final UserRepository _userRepo = locator<UserRepository>();
   final TambolaService _tambolaService = locator<TambolaService>();
   final ScratchCardService _gtService = locator<ScratchCardService>();
@@ -73,7 +65,6 @@ class RootViewModel extends BaseViewModel {
   final AppState appState = locator<AppState>();
   final SubService _subscriptionService = locator<SubService>();
   final S locale;
-  final int _bottomNavBarIndex = 0;
   static bool canExecuteStartupNotification = true;
   bool showHappyHourBanner = false;
   bool fetchCampaign = true;
@@ -86,8 +77,6 @@ class RootViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  // final WinnerService? winnerService = locator<WinnerService>();
-  final ReferralRepo _refRepo = locator<ReferralRepo>();
   final TxnHistoryService _txnHistoryService = locator<TxnHistoryService>();
   final AnalyticsService _analyticsService = locator<AnalyticsService>();
   final ReferralService _referralService = locator<ReferralService>();
@@ -98,15 +87,17 @@ class RootViewModel extends BaseViewModel {
   Future<void> pullToRefresh() async {
     if (_rootController.currentNavBarItemModel ==
         RootController.tambolaNavBar) {
+      await Future.wait([
+        // _tambolaService.getTambolaTickets(limit: 1),
+        _tambolaService.getBestTambolaTickets(forced: true)
+      ]);
       return;
     }
 
     await Future.wait([
       _userCoinService.getUserCoinBalance(),
       _userService.getUserFundWalletData(),
-      // _journeyService.checkForMilestoneLevelChange(),
       _gtService.updateUnscratchedGTCount(),
-      // _journeyService.getUnscratchedGT(),
       _subscriptionService.getSubscription(),
     ]);
 
@@ -129,9 +120,8 @@ class RootViewModel extends BaseViewModel {
     WidgetsBinding.instance.addPostFrameCallback(
       (timeStamp) async {
         await _userService.userBootUpEE();
-
+        _checkForAppUpdates();
         if (!await verifyUserBootupDetails()) return;
-        await checkForBootUpAlerts();
         await showLastWeekOverview();
         await locator<LendboxMaturityService>().init();
         showMarketingCampings();
@@ -139,7 +129,7 @@ class RootViewModel extends BaseViewModel {
           _referralService.verifyReferral(),
           _referralService.initDynamicLinks(),
         ]);
-
+        unawaited(getFirebaseAppInstanceId());
         unawaited(handleStartUpNotificationData());
         await locator<ReferralService>().fetchReferralCode();
         await Future.wait([
@@ -152,6 +142,31 @@ class RootViewModel extends BaseViewModel {
         _initAdhocNotifications();
       },
     );
+  }
+
+  Future<void> getFirebaseAppInstanceId() async {
+    var instanceId =
+        await FirebaseInstanceId.appInstanceId ?? 'Unknown installation id';
+    _logger.i("Firebase app instance id: $instanceId");
+  }
+
+  void _checkForAppUpdates() {
+    if (Platform.isAndroid) {
+      InAppUpdate.checkForUpdate().then((info) {
+        if (info.updateAvailability == UpdateAvailability.updateAvailable) {
+          InAppUpdate.startFlexibleUpdate().then((result) {
+            if (result == AppUpdateResult.success) {
+              InAppUpdate.completeFlexibleUpdate()
+                  .catchError((e) => _logger.e(e.toString()));
+            }
+          }).catchError((e) {
+            _logger.e(e.toString());
+          });
+        }
+      }).catchError((e) {
+        _logger.e(e.toString());
+      });
+    }
   }
 
   void showMarketingCampings() {
@@ -180,50 +195,6 @@ class RootViewModel extends BaseViewModel {
       }
     });
   }
-
-  // bool showNewInstallPopUp() {
-  //   if (!PreferenceHelper.getBool(PreferenceHelper.NEW_INSTALL_POPUP,
-  //           def: false) &&
-  //       AppState.isRootAvailableForIncomingTaskExecution) {
-  //     fetchCampaign = false;
-  //     AppState.isRootAvailableForIncomingTaskExecution = false;
-  //     BaseUtil.openDialog(
-  //         isBarrierDismissible: true,
-  //         addToScreenStack: true,
-  //         content: Dialog(
-  //           shape: RoundedRectangleBorder(
-  //             borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-  //           ),
-  //           child: WillPopScope(
-  //             onWillPop: () async {
-  //               if (AppState.screenStack.last == ScreenItem.dialog) {
-  //                 AppState.screenStack.removeLast();
-  //                 AppState.isRootAvailableForIncomingTaskExecution = true;
-
-  //                 showMarketingCampings();
-  //               }
-  //               return Future.value(true);
-  //             },
-  //             child: GestureDetector(
-  //               onTap: () async {
-  //                 AppState.backButtonDispatcher!.didPopRoute();
-  //                 AppState.isRootAvailableForIncomingTaskExecution = true;
-
-  //                 showMarketingCampings();
-  //               },
-  //               child: Image.asset(
-  //                   _userService.userSegments.contains(Constants.US_FLO_OLD)
-  //                       ? Assets.oldUserPopUp
-  //                       : Assets.newUserPopUp),
-  //             ),
-  //           ),
-  //         ));
-  //     PreferenceHelper.setBool(PreferenceHelper.NEW_INSTALL_POPUP, true);
-  //     return false;
-  //   } else {
-  //     return true;
-  //   }
-  // }
 
   FileType getFileType(String fileUrl) {
     String extension = fileUrl.toLowerCase().split('.').last;
@@ -481,8 +452,28 @@ class RootViewModel extends BaseViewModel {
           AppState.delegate!.appState.currentAction = PageAction(
               state: PageState.replaceWidget,
               page: BlockedUserPageConfig,
-              widget: const BlockedUserView(
+              widget: BlockedUserView(
                 isStateRestricted: true,
+                blockTitle: _userService.userBootUp!.data?.blockTitle ?? '',
+                blockSubtitle:
+                    _userService.userBootUp!.data?.blockSubtitle ?? '',
+              ));
+          return;
+        }
+
+        //2. Check if app is in maintenance mode
+        if (_userService.userBootUp != null &&
+            (_userService.userBootUp!.data?.isAppInMaintenance ?? false)) {
+          log("User is from restricted state", name: "UserBootUp");
+          AppState.isRootAvailableForIncomingTaskExecution = false;
+          AppState.delegate!.appState.currentAction = PageAction(
+              state: PageState.replaceWidget,
+              page: BlockedUserPageConfig,
+              widget: BlockedUserView(
+                isMaintenanceMode: true,
+                blockTitle: _userService.userBootUp!.data?.blockTitle ?? '',
+                blockSubtitle:
+                    _userService.userBootUp!.data?.blockSubtitle ?? '',
               ));
           return;
         }
@@ -528,30 +519,75 @@ class RootViewModel extends BaseViewModel {
         }
 
         //5. App update present (Not forced)
-        if (_userService.userBootUp!.data!.isAppUpdateRequired != null) {
-          PreferenceHelper.setBool(Constants.IS_APP_UPDATE_AVAILABLE,
-              _userService.userBootUp!.data!.isAppUpdateRequired!);
-        } else {
-          PreferenceHelper.setBool(Constants.IS_APP_UPDATE_AVAILABLE, false);
+        if (_userService.userBootUp!.data!.isAppUpdateRequired) {
+          AppState.isRootAvailableForIncomingTaskExecution = false;
+          unawaited(
+            BaseUtil.openDialog(
+              isBarrierDismissible: false,
+              hapticVibrate: true,
+              addToScreenStack: true,
+              content: ConfirmationDialog(
+                title: "App Update Available",
+                description:
+                    "A new version of the app is available. Update now to enjoy the hassle free experience.",
+                buttonText: "Update Now",
+                cancelBtnText: "Not now",
+                confirmAction: () {
+                  try {
+                    if (Platform.isIOS) {
+                      BaseUtil.launchUrl(Constants.APPLE_STORE_APP_LINK);
+                    } else if (Platform.isAndroid) {
+                      BaseUtil.launchUrl(Constants.PLAY_STORE_APP_LINK);
+                    }
+                  } catch (e) {
+                    _logger.e(e.toString());
+                  }
+                  AppState.backButtonDispatcher!.didPopRoute();
+                },
+                cancelAction: () {
+                  AppState.backButtonDispatcher!.didPopRoute();
+                  return false;
+                },
+              ),
+            ),
+          );
+          return;
         }
 
         //6. Clear all the caches
-        if (_userService.userBootUp!.data!.cache!.keys != null) {
-          for (final String id
-              in _userService.userBootUp!.data!.cache!.keys as List<String>) {
-            CacheService.invalidateByKey(id);
-          }
+        final keys = _userService.userBootUp?.data?.cache?.keys;
+        if (keys != null) {
+          keys.forEach(CacheService.invalidateByKey);
         }
 
         //7. Notice
         if (_userService.userBootUp?.data?.notice != null) {
           if (_userService.userBootUp!.data!.notice!.message != null &&
               _userService.userBootUp!.data!.notice!.message != "") {
-            PreferenceHelper.setBool(Constants.IS_MSG_NOTICE_AVAILABLE, true);
-            PreferenceHelper.setString(Constants.MSG_NOTICE,
-                _userService.userBootUp!.data!.notice!.message!);
-          } else {
-            PreferenceHelper.setBool(Constants.IS_MSG_NOTICE_AVAILABLE, false);
+            AppState.isRootAvailableForIncomingTaskExecution = false;
+            String msg = PreferenceHelper.getString(Constants.MSG_NOTICE);
+            unawaited(
+              BaseUtil.openDialog(
+                isBarrierDismissible: false,
+                hapticVibrate: true,
+                addToScreenStack: true,
+                content: ConfirmationDialog(
+                  title: "Notice",
+                  description: msg,
+                  buttonText: "Ok",
+                  cancelBtnText: "Cancel",
+                  confirmAction: () {
+                    AppState.backButtonDispatcher!.didPopRoute();
+                    return true;
+                  },
+                  cancelAction: () {
+                    AppState.backButtonDispatcher!.didPopRoute();
+                    return false;
+                  },
+                ),
+              ),
+            );
+            return;
           }
 
           if (_userService.userBootUp!.data!.notice!.url != null &&
@@ -566,7 +602,7 @@ class RootViewModel extends BaseViewModel {
             } catch (e) {
               _logger.d(e.toString());
             }
-          } else {}
+          }
         }
       }
     });

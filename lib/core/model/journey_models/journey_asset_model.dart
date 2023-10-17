@@ -1,7 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
-
 class JourneyAssetModel {
   final String uri;
   final String name;
@@ -9,7 +7,8 @@ class JourneyAssetModel {
   final double width;
   final int page;
   final String assetType;
-  JourneyAssetModel({
+
+  const JourneyAssetModel({
     required this.uri,
     required this.name,
     required this.height,
@@ -33,7 +32,7 @@ class JourneyAssetModel {
       height: height ?? this.height,
       width: width ?? this.width,
       page: page ?? this.page,
-      assetType: type ?? this.assetType,
+      assetType: type ?? assetType,
     );
   }
 
@@ -53,7 +52,7 @@ class JourneyAssetModel {
       name: map['name'] ?? '',
       height: map['height']?.toDouble() ?? 0.0,
       width: map['width']?.toDouble() ?? 0.0,
-      page: page ?? 0,
+      page: page,
       assetType: map['assetType'] ?? '',
     );
   }

@@ -25,8 +25,14 @@ class RootController {
 
   Map<Widget, NavBarItemModel> navItems = {};
 
+  static ScrollController controller = ScrollController();
+
   void onChange(NavBarItemModel model) {
     log("onChange ${model.title}");
+    if (currentNavBarItemModel.title == model.title) {
+      controller.animateTo(0,
+          duration: const Duration(seconds: 2), curve: Curves.decelerate);
+    }
     currentNavBarItemModel = model;
   }
 
@@ -36,8 +42,8 @@ class RootController {
         navItems.putIfAbsent(const Save(), () => RootController.saveNavBarItem);
         break;
       case "TM":
-        navItems.putIfAbsent(const TambolaHomeView(standAloneScreen: false),
-            () => RootController.tambolaNavBar);
+        navItems.putIfAbsent(
+            const TambolaHomeTicketsView(), () => RootController.tambolaNavBar);
         break;
 
       default:

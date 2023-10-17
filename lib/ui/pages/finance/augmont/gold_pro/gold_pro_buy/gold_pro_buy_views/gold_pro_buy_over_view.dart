@@ -2,6 +2,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/transaction_state_enum.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_buy/widgets/view_breakdown.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_buy/gold_pro_buy_components/gold_balance_rows.dart';
@@ -100,40 +101,45 @@ class GoldProBuyOverView extends StatelessWidget {
             : Column(
                 mainAxisSize: MainAxisSize.min,
                 children: [
-                  Padding(
-                    padding: EdgeInsets.fromLTRB(SizeConfig.padding10,
-                        SizeConfig.padding10, SizeConfig.padding10, 0),
-                    child: Row(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        Checkbox(
-                          value: model.isChecked,
-                          onChanged: (newValue) {
-                            model.isChecked = newValue!;
-                          },
-                        ),
-                        // SizedBox(width: SizeConfig.padding10),
-                        RichText(
-                          text: TextSpan(
-                            children: [
-                              TextSpan(
-                                text: "I have read and agreed to the ",
-                                style: TextStyles.sourceSans.body3
-                                    .colour(UiConstants.kTextColor2),
-                              ),
-                              TextSpan(
-                                text: "Terms and Conditions",
-                                style: TextStyles.sourceSans.body3.underline
-                                    .colour(UiConstants.primaryColor),
-                                recognizer: TapGestureRecognizer()
-                                  ..onTap = onTermsAndConditionsClicked,
-                              ),
-                            ],
+                  if (!locator<UserService>()
+                      .userPortfolio
+                      .augmont
+                      .fd
+                      .isGoldProUser)
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(SizeConfig.padding10,
+                          SizeConfig.padding10, SizeConfig.padding10, 0),
+                      child: Row(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          Checkbox(
+                            value: model.isChecked,
+                            onChanged: (newValue) {
+                              model.isChecked = newValue!;
+                            },
                           ),
-                        ),
-                      ],
+                          // SizedBox(width: SizeConfig.padding10),
+                          RichText(
+                            text: TextSpan(
+                              children: [
+                                TextSpan(
+                                  text: "I have read and agreed to the ",
+                                  style: TextStyles.sourceSans.body3
+                                      .colour(UiConstants.kTextColor2),
+                                ),
+                                TextSpan(
+                                  text: "Terms and Conditions",
+                                  style: TextStyles.sourceSans.body3.underline
+                                      .colour(UiConstants.primaryColor),
+                                  recognizer: TapGestureRecognizer()
+                                    ..onTap = onTermsAndConditionsClicked,
+                                ),
+                              ],
+                            ),
+                          ),
+                        ],
+                      ),
                     ),
-                  ),
                   Container(
                     color: Colors.black,
                     padding: EdgeInsets.symmetric(

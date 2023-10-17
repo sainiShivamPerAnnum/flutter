@@ -230,6 +230,14 @@ class BaseRemoteConfig {
     ]
   };
 
+  static const Map<String, List<String>> _TICKETS_YOUTUBE_VIDEOS = {
+    'ticketsYoutubeVideos': [
+      "https://www.youtube.com/watchv=mzaIjBjUM1Y",
+      "https://www.youtube.com/watch?v=CDokUdux0rc",
+      "https://www.youtube.com/watch?v=zFhYJRqz_xk"
+    ]
+  };
+
   static const Map<String, String> _APP_REFERRAL_MESSAGE = {
     "appReferralMessage":
         "Earn upto *₹20* and *200* tokens from every scratch card. Highest referrer wins an iPad every month"
@@ -245,6 +253,14 @@ class BaseRemoteConfig {
 
   static const Map<String, bool> _SPECIAL_EFFECTS_ON_TXN_DETAILS_VIEW = {
     "specialEffectsOnTxnDetailsView": true
+  };
+
+  static const Map<String, double> _GOLD_PRO_INTEREST = {
+    "goldProInterest": 2.75
+  };
+
+  static const Map<String, List<double>> _GOLDPRO_INVESTMENT_CHIPS = {
+    "goldProInvestmentChips": [5.0, 10.0, 15.0, 20.0, 25.0]
   };
 
   static Map<String, dynamic> DEFAULTS = {
@@ -319,7 +335,10 @@ class BaseRemoteConfig {
     ..._APP_REFERRAL_MESSAGE,
     ..._PAYMENT_BRIEF_VIEW,
     ..._USE_NEW_URL_FOR_USEROPS,
-    ..._SPECIAL_EFFECTS_ON_TXN_DETAILS_VIEW
+    ..._SPECIAL_EFFECTS_ON_TXN_DETAILS_VIEW,
+    ..._TICKETS_YOUTUBE_VIDEOS,
+    ..._GOLD_PRO_INTEREST,
+    ..._GOLDPRO_INVESTMENT_CHIPS
   };
 
   static Future<bool> init() async {
@@ -513,6 +532,9 @@ class BaseRemoteConfig {
 
   static bool get SPECIAL_EFFECTS_ON_TXN_DETAILS_VIEW =>
       remoteConfig.getBool(_SPECIAL_EFFECTS_ON_TXN_DETAILS_VIEW.keys.first);
+
+  static double get GOLD_PRO_INTEREST =>
+      remoteConfig.getDouble(_GOLD_PRO_INTEREST.keys.first);
 
   static int get invalidationBefore {
     return remoteConfig.getInt(_CACHE_INVALIDATION.keys.first);

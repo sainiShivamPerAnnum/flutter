@@ -48,7 +48,7 @@ class GoldProSellViewModel extends BaseViewModel {
         properties: {
           "current gold value": data.amount,
           "current gold weight": data.qty,
-          "leased on": data.createdOn,
+          "leased on": data.createdOn.toString(),
           "date of extra returns": data.message
         });
     final bool? isGoldProSellLocked = _userService

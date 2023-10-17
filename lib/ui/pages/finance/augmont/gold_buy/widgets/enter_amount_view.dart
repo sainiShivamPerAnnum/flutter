@@ -8,17 +8,18 @@ import 'package:felloapp/ui/pages/finance/augmont/gold_buy/augmont_buy_vm.dart';
 import 'package:felloapp/ui/pages/static/gold_rate_card.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/show_case_key.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
-import 'package:showcaseview/showcaseview.dart';
 
 class EnterAmountView extends StatelessWidget {
-  const EnterAmountView(
-      {Key? key, required this.model, required this.txnService})
-      : super(key: key);
+  const EnterAmountView({
+    required this.model,
+    required this.txnService,
+    super.key,
+  });
+
   final GoldBuyViewModel model;
   final AugmontTransactionService txnService;
 
@@ -150,7 +151,7 @@ class EnterAmountView extends StatelessWidget {
                     padding:
                         EdgeInsets.symmetric(vertical: SizeConfig.padding4),
                     child: Text(
-                      locale.upto50000,
+                      locale.maxAmountMessage(model.maxAmount),
                       style: TextStyles.sourceSans.body4.bold
                           .colour(UiConstants.primaryColor),
                     ),
@@ -160,7 +161,7 @@ class EnterAmountView extends StatelessWidget {
                     padding:
                         EdgeInsets.symmetric(vertical: SizeConfig.padding4),
                     child: Text(
-                      locale.minPurchaseText,
+                      locale.minAmountMessage(model.minAmount),
                       style: TextStyles.sourceSans.body4.bold
                           .colour(Colors.red[400]),
                     ),
@@ -186,68 +187,63 @@ class EnterAmountView extends StatelessWidget {
           SizedBox(
             height: SizeConfig.padding16,
           ),
-          Showcase(
-            key: ShowCaseKeys.currentGoldRates,
-            description: 'These are the current gold rates',
-            child: Container(
-              // width: SizeConfig.screenWidth! * 0.72,
-              decoration: BoxDecoration(
-                color: UiConstants.kArrowButtonBackgroundColor.withOpacity(0.4),
-                borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-              ),
-              // margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding64),
-              height: SizeConfig.padding38,
-              padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding16),
-              child: IntrinsicHeight(
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    model.isGoldRateFetching
-                        ? SpinKitThreeBounce(
-                            size: SizeConfig.body2,
-                            color: UiConstants.primaryColor,
-                          )
-                        : Text(
-                            "₹ ${(model.goldRates != null ? model.goldRates!.goldBuyPrice : 0.0)?.toStringAsFixed(2)}/gm",
-                            style: TextStyles.sourceSans.body4.colour(
-                                UiConstants.kModalSheetMutedTextBackgroundColor
-                                    .withOpacity(0.8)),
-                          ),
-                    SizedBox(
-                      width: SizeConfig.padding10,
+          Container(
+            decoration: BoxDecoration(
+              color: UiConstants.kArrowButtonBackgroundColor.withOpacity(0.4),
+              borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+            ),
+            // margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding64),
+            height: SizeConfig.padding38,
+            padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding16),
+            child: IntrinsicHeight(
+              child: Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  model.isGoldRateFetching
+                      ? SpinKitThreeBounce(
+                          size: SizeConfig.body2,
+                          color: UiConstants.primaryColor,
+                        )
+                      : Text(
+                          "₹ ${(model.goldRates != null ? model.goldRates!.goldBuyPrice : 0.0)?.toStringAsFixed(2)}/gm",
+                          style: TextStyles.sourceSans.body4.colour(UiConstants
+                              .kModalSheetMutedTextBackgroundColor
+                              .withOpacity(0.8)),
+                        ),
+                  SizedBox(
+                    width: SizeConfig.padding10,
+                  ),
+                  Padding(
+                    padding:
+                        EdgeInsets.symmetric(horizontal: SizeConfig.padding12),
+                    child: Text(
+                      "${model.goldAmountInGrams}${locale.gms}",
+                      style: TextStyles.sourceSans.body3,
                     ),
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: SizeConfig.padding12),
-                      child: Text(
-                        "${model.goldAmountInGrams}${locale.gms}",
-                        style: TextStyles.sourceSans.body3,
-                      ),
-                    ),
-                    SizedBox(
-                      width: SizeConfig.padding20,
-                    ),
-                    VerticalDivider(
-                      color: UiConstants.kModalSheetSecondaryBackgroundColor
-                          .withOpacity(0.2),
-                      width: 4,
-                    ),
-                    SizedBox(
-                      width: SizeConfig.padding20,
-                    ),
-                    NewCurrentGoldPriceWidget(
-                      fetchGoldRates: model.fetchGoldRates,
-                      goldprice: model.goldRates != null
-                          ? model.goldRates!.goldBuyPrice
-                          : 0.0,
-                      isFetching: model.isGoldRateFetching,
-                      mini: true,
-                    ),
-                  ],
-                ),
+                  ),
+                  SizedBox(
+                    width: SizeConfig.padding20,
+                  ),
+                  VerticalDivider(
+                    color: UiConstants.kModalSheetSecondaryBackgroundColor
+                        .withOpacity(0.2),
+                    width: 4,
+                  ),
+                  SizedBox(
+                    width: SizeConfig.padding20,
+                  ),
+                  NewCurrentGoldPriceWidget(
+                    fetchGoldRates: model.fetchGoldRates,
+                    goldprice: model.goldRates != null
+                        ? model.goldRates!.goldBuyPrice
+                        : 0.0,
+                    isFetching: model.isGoldRateFetching,
+                    mini: true,
+                  ),
+                ],
               ),
             ),
-          )
+          ),
         ],
       ),
     );

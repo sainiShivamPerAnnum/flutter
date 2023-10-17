@@ -100,7 +100,7 @@ class SaveAssetsGroupCard extends StatelessWidget {
                   investmentType: InvestmentType.AUGGOLD99,
                 );
               },
-              // footerText: "Chance to get *4.5% Extra Gold* on your savings",
+              // footerText: "Chance to get *${AppConfig.getValue(AppConfigKey.goldProInterest).toDouble()}% Extra Gold* on your savings",
               footerColor: UiConstants.kGoldContainerColor,
             ),
           );

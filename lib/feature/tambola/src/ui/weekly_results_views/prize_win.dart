@@ -131,7 +131,7 @@ class _PrizeWinState extends State<PrizeWin> {
                   padding: EdgeInsets.symmetric(
                     vertical: SizeConfig.padding20,
                   ),
-                  child: Text("Your prizes will be credited in a scratch card",
+                  child: Text("Your prizes will be credited on Monday",
                       textAlign: TextAlign.center,
                       style: TextStyles.sourceSans.body4
                           .colour(UiConstants.kFAQsAnswerColor)),

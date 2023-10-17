@@ -43,9 +43,9 @@ class TransactionHistoryRepository extends BaseRepo {
   }) async {
     List<UserTransaction> events = [];
     try {
-      final String? _uid = userService!.baseUser!.uid;
-      final _token = await getBearerToken();
-      final _queryParams = {
+      final String? uid = userService.baseUser!.uid;
+      final token = await getBearerToken();
+      final queryParams = {
         "type": type,
         "subType": subtype,
         "limit": limit.toString(),
@@ -56,9 +56,9 @@ class TransactionHistoryRepository extends BaseRepo {
         if (lbFundType != null) "lbFundType": lbFundType
       };
       final response = await APIService.instance.getData(
-        ApiPath.kSingleTransactions(_uid),
-        token: _token,
-        queryParams: _queryParams,
+        ApiPath.kSingleTransactions(uid),
+        token: token,
+        queryParams: queryParams,
         cBaseUrl: _baseUrl,
       );
 
@@ -74,9 +74,9 @@ class TransactionHistoryRepository extends BaseRepo {
 
       return ApiResponse<TransactionResponse>(model: txnResponse, code: 200);
     } catch (e) {
-      logger!.e(e.toString());
+      logger.e(e.toString());
       return ApiResponse.withError(
-          e?.toString() ?? "Unable to fetch transactions", 400);
+          e.toString() ?? "Unable to fetch transactions", 400);
     }
   }
 
@@ -85,23 +85,34 @@ class TransactionHistoryRepository extends BaseRepo {
     String? type,
     TimestampModel? endTime,
     String? status,
+    num? minAmount,
+    num? maxAmount,
   }) async {
     List<UserTransaction> events = [];
     try {
       print(endTime!.toDate().toUtc().toIso8601String());
       print(startTime!.toDate().toUtc().toIso8601String());
-      final String? _uid = userService!.baseUser!.uid;
-      final _token = await getBearerToken();
-      final _queryParams = {
+      final String? uid = userService.baseUser!.uid;
+      final token = await getBearerToken();
+      final queryParams = {
         "type": type,
         "status": status,
         "endTime": endTime.toDate().toUtc().toIso8601String(),
         "startTime": startTime.toDate().toUtc().toIso8601String(),
       };
+
+      if (minAmount != null) {
+        queryParams.putIfAbsent('minAmount', () => minAmount.toString());
+      }
+
+      if (maxAmount != null) {
+        queryParams.putIfAbsent('maxAmount', () => maxAmount.toString());
+      }
+
       final response = await APIService.instance.getData(
-        ApiPath.kSingleTransactions(_uid),
-        token: _token,
-        queryParams: _queryParams,
+        ApiPath.kSingleTransactions(uid),
+        token: token,
+        queryParams: queryParams,
         cBaseUrl: _baseUrl,
       );
 
@@ -119,7 +130,7 @@ class TransactionHistoryRepository extends BaseRepo {
     } catch (e) {
       logger.e(e.toString());
       return ApiResponse.withError(
-          e?.toString() ?? "Unable to fetch transactions", 400);
+          e.toString() ?? "Unable to fetch transactions", 400);
     }
   }
 }

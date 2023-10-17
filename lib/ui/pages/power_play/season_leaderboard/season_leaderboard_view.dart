@@ -115,14 +115,14 @@ class SeasonLeaderboard extends StatelessWidget {
 
 class NewWebGameLeaderBoardView extends StatelessWidget {
   final SeasonLeaderboardViewModel model;
-  const NewWebGameLeaderBoardView({Key? key, required this.model})
+  const NewWebGameLeaderBoardView({required this.model, Key? key})
       : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
     return model.isLeaderboardLoading
-        ? LeaderboardShimmer()
+        ? const LeaderboardShimmer()
         : ((model.leaderboard ?? []).isNotEmpty)
             ? NewLeaderBoardView(
                 scoreBoard: model.leaderboard,
@@ -154,10 +154,10 @@ class NewWebGameLeaderBoardView extends StatelessWidget {
 
 class NewLeaderBoardView extends StatelessWidget {
   NewLeaderBoardView({
-    required this.scoreBoard,
-    // required this.userProfilePicUrl,
+    required this.scoreBoard, // required this.userProfilePicUrl,
     required this.isUserInTopThree,
     required this.currentUserRank,
+    super.key,
   });
   S locale = locator<S>();
   final List<SeasonLeaderboardItemModel>? scoreBoard;
@@ -228,10 +228,10 @@ class NewLeaderBoardView extends StatelessWidget {
 //
 class RemainingRank extends StatelessWidget {
   RemainingRank({
-    Key? key,
     required this.scoreboard,
+    Key? key,
   }) : super(key: key);
-  final UserService? _userService = locator<UserService>();
+  final UserService _userService = locator<UserService>();
   final List<SeasonLeaderboardItemModel>? scoreboard;
   @override
   Widget build(BuildContext context) {
@@ -273,7 +273,8 @@ class RemainingRank extends StatelessWidget {
                     ),
                     Expanded(
                       child: Text(
-                        '${_userService!.diplayUsername(scoreboard![countedIndex].uName)}',
+                        _userService
+                            .diplayUsername(scoreboard![countedIndex].uName),
                         style: TextStyles.sourceSans.body3.setOpacity(0.8),
                         overflow: TextOverflow.ellipsis,
                         maxLines: 1,
@@ -299,7 +300,7 @@ class RemainingRank extends StatelessWidget {
     );
   }
 
-  getDefaultProfilePicture(int rank) {
+  String getDefaultProfilePicture(int rank) {
     int rand = Random().nextInt(5) + 1;
     switch (rand) {
       case 1:

@@ -12,11 +12,11 @@ import 'package:flutter/material.dart';
 
 class FaqButtonRounded extends StatelessWidget {
   final FaqsType? type;
-  const FaqButtonRounded({Key? key, required this.type}) : super(key: key);
+  const FaqButtonRounded({required this.type, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    final AnalyticsService? _analyticsService = locator<AnalyticsService>();
+    final AnalyticsService analyticsService = locator<AnalyticsService>();
 
     return CircleAvatar(
       backgroundColor: Colors.black,
@@ -29,7 +29,7 @@ class FaqButtonRounded extends StatelessWidget {
         ),
         onPressed: () {
           Haptic.vibrate();
-          _analyticsService!.track(
+          analyticsService.track(
               eventName: AnalyticsEvents.questionMarkTaoped,
               properties: {"Location": getQuestionMarkTapLocation(type)});
           AppState.delegate!.appState.currentAction = PageAction(
@@ -44,28 +44,42 @@ class FaqButtonRounded extends StatelessWidget {
     );
   }
 
-  getQuestionMarkTapLocation(FaqsType? type) {
-    if (type == FaqsType.gettingStarted)
-      return "Getting Started Screen";
-    else if (type == FaqsType.yourAccount)
-      return "Your Account Screen";
-    else if (type == FaqsType.savings)
-      return "Save screen";
-    else if (type == FaqsType.autosave)
-      return "SIP Autosave SCreen";
-    else if (type == FaqsType.withdrawals)
-      return "Withdrawl";
-    else if (type == FaqsType.play)
-      return "Play Section";
-    else if (type == FaqsType.winnings)
-      return "Win Section";
-    else if (type == FaqsType.gold)
-      return "Digital Gold Asset Screen";
-    else if (type == FaqsType.flo)
-      return "Fello Flo Asset Screen";
-    else if (type == FaqsType.journey)
-      return "Journey View";
-    else
-      return "";
+  String getQuestionMarkTapLocation(FaqsType? type) {
+    switch (type) {
+      case FaqsType.gettingStarted:
+        return "Getting Started Screen";
+      case FaqsType.yourAccount:
+        return "Your Account Screen";
+      case FaqsType.savings:
+        return "Save screen";
+      case FaqsType.autosave:
+        return "SIP Autosave Screen";
+      case FaqsType.withdrawals:
+        return "Withdrawal";
+      case FaqsType.play:
+        return "Play Section";
+      case FaqsType.winnings:
+        return "Win Section";
+      case FaqsType.gold:
+        return "Digital Gold Asset Screen";
+      case FaqsType.flo:
+        return "Fello Flo Asset Screen";
+      case FaqsType.journey:
+        return "Journey View";
+      case FaqsType.tambola:
+        return "Tambola View";
+      case FaqsType.goldPro:
+        return 'GoldPro View';
+      case FaqsType.onboarding:
+        return 'Onboarding View';
+      case FaqsType.powerPlay:
+        return 'PowerPlay View';
+      case FaqsType.rewards:
+        return 'ScratchCard view';
+      case FaqsType.referrals:
+        return 'Referrals View';
+      case null:
+        return '';
+    }
   }
 }

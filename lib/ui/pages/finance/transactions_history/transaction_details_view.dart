@@ -1,16 +1,23 @@
 import 'dart:async';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
+import 'package:felloapp/core/enums/investment_type.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
+import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/ui/elements/appbar/appbar.dart';
 import 'package:felloapp/ui/modalsheets/transaction_details_model_sheet.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -19,7 +26,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
 import 'package:intl/intl.dart';
-import 'package:lottie/lottie.dart';
 import 'package:open_filex/open_filex.dart';
 
 import '../../../../base_util.dart';
@@ -51,7 +57,7 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage>
   @override
   void initState() {
     _animationController = AnimationController(vsync: this);
-    _playLottieAnimation();
+    // _playLottieAnimation();
     if (widget.txn.subType == UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD &&
         widget.txn.type == UserTransaction.TRAN_TYPE_DEPOSIT &&
         widget.txn.tranStatus == UserTransaction.TRAN_STATUS_COMPLETE) {
@@ -119,9 +125,39 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage>
         widget.txn.subType == UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD;
     return Scaffold(
       backgroundColor: const Color(0xff151D22),
-      appBar: AppBar(
-        backgroundColor: const Color(0xff151D22),
-        elevation: 0,
+      appBar: FAppBar(
+        title: null,
+        showAvatar: false,
+        showCoinBar: false,
+        showHelpButton: false,
+        action: !(widget.txn.tranStatus !=
+                    UserTransaction.TRAN_STATUS_COMPLETE &&
+                widget.txn.type == UserTransaction.TRAN_TYPE_WITHDRAW)
+            ? Container(
+                height: SizeConfig.avatarRadius * 2,
+                padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding2),
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+                  border: Border.all(
+                    color: Colors.white,
+                  ),
+                  color: Colors.transparent,
+                ),
+                child: TextButton(
+                  child: Text(
+                    'Need help?',
+                    style: TextStyles.sourceSans.body3,
+                  ),
+                  onPressed: () {
+                    Haptic.vibrate();
+                    AppState.delegate!.appState.currentAction = PageAction(
+                      state: PageState.addPage,
+                      page: FreshDeskHelpPageConfig,
+                    );
+                  },
+                ),
+              )
+            : const SizedBox(),
       ),
       body: Stack(
         children: [
@@ -235,7 +271,19 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage>
                               ),
                             ],
                           ),
+                          // ignore: lines_longer_than_80_chars
                           TransactionSummary(
+                              assetType: isGold
+                                  ? InvestmentType.AUGGOLD99
+                                  : InvestmentType.LENDBOXP2P,
+                              txnType: widget.txn.type,
+                              lbMap: !isGold ? widget.txn.lbMap : null,
+                              createdOn: TimestampModel.fromTimestamp(
+                                widget.txn.timestamp ??
+                                    Timestamp.fromDate(
+                                      DateTime.now(),
+                                    ),
+                              ),
                               summary: widget.txn.transactionUpdatesMap),
                           const Divider(
                             color: Color(0xff3E3E3E),
@@ -628,33 +676,22 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage>
                 ),
               ),
             ),
-          if (_showLottie)
+          if (widget.txn.tranStatus != UserTransaction.TRAN_STATUS_COMPLETE &&
+              widget.txn.type == UserTransaction.TRAN_TYPE_WITHDRAW)
             Align(
-              alignment: Alignment.center,
-              child: IgnorePointer(
-                ignoring: true,
-                child: Container(
-                  height: SizeConfig.screenHeight,
-                  color: Colors.transparent,
-                  child: Center(
-                    child: Lottie.asset(
-                      Assets.indianFlagKiteLottie,
-                      controller: _animationController,
-                      height: SizeConfig.screenHeight,
-                      onLoaded: (composition) {
-                        _animationController
-                          ..duration = composition.duration
-                          ..forward().whenComplete(() {
-                            if (mounted) {
-                              setState(() {
-                                _showLottie = false;
-                                AppState.unblockNavigation();
-                              });
-                            }
-                          });
-                      },
-                    ),
-                  ),
+              alignment: Alignment.bottomCenter,
+              child: Container(
+                margin: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+                child: AppPositiveBtn(
+                  onPressed: () async {
+                    Haptic.vibrate();
+                    AppState.delegate!.appState.currentAction = PageAction(
+                      state: PageState.addPage,
+                      page: FreshDeskHelpPageConfig,
+                    );
+                  },
+                  width: SizeConfig.screenWidth!,
+                  btnText: "NEED HELP ?",
                 ),
               ),
             ),

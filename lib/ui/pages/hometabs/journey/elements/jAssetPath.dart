@@ -1,7 +1,7 @@
 import 'dart:math' as math;
 
+import 'package:collection/collection.dart';
 import 'package:felloapp/core/enums/journey_service_enum.dart';
-import 'package:felloapp/core/model/journey_models/journey_path_model.dart';
 import 'package:felloapp/core/model/journey_models/milestone_model.dart';
 import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/components/source_adaptive_asset/source_adaptive_asset_view.dart';
@@ -21,76 +21,36 @@ class JourneyAssetPath extends StatefulWidget {
 class _JourneyAssetPathState extends State<JourneyAssetPath> {
   @override
   Widget build(BuildContext context) {
+    final model = widget.model!;
+    final journeyPathItemsList = model.journeyPathItemsList;
+    final pageWidth = model.pageWidth!;
+    final pageHeight = model.pageHeight!;
     return SizedBox(
       height: widget.model!.currentFullViewHeight,
-      width: widget.model!.pageWidth,
+      width: pageWidth,
       child: Stack(
-        children: List.generate(widget.model!.journeyPathItemsList.length, (i) {
-          return Positioned(
-            left: widget.model!.pageWidth! *
-                widget.model!.journeyPathItemsList[i].x,
-            bottom: widget.model!.pageHeight! *
-                    (widget.model!.journeyPathItemsList[i].page - 1) +
-                widget.model!.pageHeight! *
-                    widget.model!.journeyPathItemsList[i].y,
+        children: List.generate(
+          journeyPathItemsList.length,
+          (i) => Positioned(
+            left: pageWidth * journeyPathItemsList[i].x,
+            bottom: pageHeight * (journeyPathItemsList[i].page - 1) +
+                pageHeight * journeyPathItemsList[i].y,
             child: SourceAdaptiveAssetView(
-              asset: widget.model!.journeyPathItemsList[i].asset,
+              asset: journeyPathItemsList[i].asset,
             ),
-          );
-        }),
+          ),
+        ),
       ),
     );
   }
 }
 
-// class JourneyAssetPath extends StatelessWidget {
-//   final JourneyPageViewModel model;
-//   const JourneyAssetPath({Key key, this.model}) : super(key: key);
-
-//   @override
-//   Widget build(BuildContext context) {
-//     // log("Journey path item list length ${model.journeyPathItemsList.length}");
-//     // model.journeyPathItemsList.sort((a, b) => a.z.compareTo(b.z));
-//     // log("Full Screen height of Journey View ${model.currentFullViewHeight}");
-//     // final bg1 = model.journeyPathItemsList
-//     //     .firstWhere((item) => item.asset.name == "b1");
-//     // if (bg1 != null) {
-//     //   print("Bg1 dx: ${model.pageWidth * bg1.x}");
-//     //   print(
-//     //       "Bg1 dy: ${model.pageHeight * (bg1.page - 1) + model.pageHeight * bg1.y}");
-//     //   print("Bg1 width: ${model.pageWidth * bg1.asset.width}");
-//     //   print("Bg1 height: ${model.pageHeight * bg1.asset.height}");
-//     // }
-//     return Container(
-//       color: Colors.black,
-//       height: model.currentFullViewHeight,
-//       width: model.pageWidth,
-//       child: Stack(
-//         children: List.generate(model.journeyPathItemsList.length, (i) {
-//           log("Path Assets ${model.journeyPathItemsList[i].asset.name} : page: ${model.journeyPathItemsList[i].page}  z: ${model.journeyPathItemsList[i].z} x: ${model.journeyPathItemsList[i].x} x: ${model.journeyPathItemsList[i].y} ");
-//           return Positioned(
-//             left: model.pageWidth * model.journeyPathItemsList[i].x,
-//             bottom:
-//                 model.pageHeight * (model.journeyPathItemsList[i].page - 1) +
-//                     model.pageHeight * model.journeyPathItemsList[i].y,
-
-//             child: SourceAdaptiveAssetView(
-//               asset: model.journeyPathItemsList[i].asset,
-
-//             ),
-//           );
-//         }),
-//       ),
-//     );
-//   }
-// }
-
 class ActiveMilestoneBackgroundGlow extends StatelessWidget {
-  const ActiveMilestoneBackgroundGlow();
+  const ActiveMilestoneBackgroundGlow({super.key});
   @override
   Widget build(BuildContext context) {
     return PropertyChangeConsumer<JourneyService, JourneyServiceProperties>(
-        properties: [JourneyServiceProperties.BaseGlow],
+        properties: const [JourneyServiceProperties.BaseGlow],
         builder: (context, model, properties) {
           final asset = model!.journeyPathItemsList.firstWhere((element) =>
               element.mlIndex == model.avatarRemoteMlIndex && element.isBase);
@@ -100,7 +60,7 @@ class ActiveMilestoneBackgroundGlow extends StatelessWidget {
                 model.pageHeight! * asset.y,
             child: AnimatedOpacity(
               opacity: model.baseGlow,
-              duration: Duration(milliseconds: 700),
+              duration: const Duration(milliseconds: 700),
               curve: Curves.easeInCubic,
               child: Container(
                 height: SizeConfig.screenWidth! * asset.asset.width,
@@ -124,119 +84,63 @@ class ActiveMilestoneBackgroundGlow extends StatelessWidget {
 }
 
 class ActiveMilestoneBaseGlow extends StatelessWidget {
-  const ActiveMilestoneBaseGlow();
+  const ActiveMilestoneBaseGlow({super.key});
   @override
   Widget build(BuildContext context) {
     return PropertyChangeConsumer<JourneyService, JourneyServiceProperties>(
-      properties: [
+      properties: const [
         JourneyServiceProperties.BaseGlow,
         JourneyServiceProperties.Pages,
       ],
       builder: (context, model, properties) {
-        final JourneyPathModel base = model!.journeyPathItemsList.firstWhere(
-            (element) =>
-                element.mlIndex == model.avatarRemoteMlIndex && element.isBase,
-            orElse: null);
-        print("Base id: $base");
-        return base != null
-            ? Positioned(
-                left: model.pageWidth! * base.x,
-                bottom: model.pageHeight! * (base.page - 1) +
-                    model.pageHeight! * base.y,
-                child: AnimatedOpacity(
-                  opacity: model.baseGlow,
-                  curve: Curves.easeInCubic,
-                  duration: Duration(milliseconds: 700),
-                  child: Container(
-                    width: model.pageWidth! * base.asset.width,
-                    height: model.pageHeight! * base.asset.height * 2,
-                    // color: Colors.black,
-                    child: Stack(
-                      children: [
-                        Align(
-                          alignment: Alignment.center,
-                          child: ClipPath(
-                            clipper: const BackBeamClipper(),
-                            child: Container(
-                              width: model.pageWidth! * base.asset.width * 4,
-                              height:
-                                  model.pageHeight! * base.asset.height * 1.5,
-                              decoration: BoxDecoration(
-                                gradient: LinearGradient(
-                                    colors: [
-                                      UiConstants.primaryColor
-                                          .withOpacity(0.01),
-                                      UiConstants.primaryColor.withOpacity(0.5),
-                                      UiConstants.primaryColor.withOpacity(0.3),
-                                      UiConstants.primaryColor.withOpacity(0.1),
-                                      UiConstants.primaryColor.withOpacity(0.01)
-                                    ],
-                                    begin: Alignment.bottomCenter,
-                                    end: Alignment.topCenter),
-                              ),
-                            ),
-                          ),
+        final base = model!.journeyPathItemsList.firstWhereOrNull(
+          (e) => e.mlIndex == model.avatarRemoteMlIndex && e.isBase,
+        );
+        if (base == null) return const SizedBox.shrink();
+        return Positioned(
+          left: model.pageWidth! * base.x,
+          bottom:
+              model.pageHeight! * (base.page - 1) + model.pageHeight! * base.y,
+          child: AnimatedOpacity(
+            opacity: model.baseGlow,
+            curve: Curves.easeInCubic,
+            duration: const Duration(milliseconds: 700),
+            child: SizedBox(
+              width: model.pageWidth! * base.asset.width,
+              height: model.pageHeight! * base.asset.height * 2,
+              child: Stack(
+                children: [
+                  Align(
+                    alignment: Alignment.center,
+                    child: ClipPath(
+                      clipper: const BackBeamClipper(),
+                      child: Container(
+                        width: model.pageWidth! * base.asset.width * 4,
+                        height: model.pageHeight! * base.asset.height * 1.5,
+                        decoration: BoxDecoration(
+                          gradient: LinearGradient(
+                              colors: [
+                                UiConstants.primaryColor.withOpacity(0.01),
+                                UiConstants.primaryColor.withOpacity(0.5),
+                                UiConstants.primaryColor.withOpacity(0.3),
+                                UiConstants.primaryColor.withOpacity(0.1),
+                                UiConstants.primaryColor.withOpacity(0.01)
+                              ],
+                              begin: Alignment.bottomCenter,
+                              end: Alignment.topCenter),
                         ),
-                        // Align(
-                        //   alignment: Alignment.bottomCenter,
-                        //   child: BaseRings(
-                        //     size: model.pageWidth * base.asset.width * 0.6,
-                        //   ),
-                        // ),
-                      ],
+                      ),
                     ),
                   ),
-                ),
-              )
-            : SizedBox();
+                ],
+              ),
+            ),
+          ),
+        );
       },
     );
   }
 }
-
-// class ActiveMilestoneFrontGlow extends StatelessWidget {
-//   @override
-//   Widget build(BuildContext context) {
-//     return PropertyChangeConsumer<JourneyService, JourneyServiceProperties>(
-//         properties: [
-//           JourneyServiceProperties.BaseGlow,
-//           JourneyServiceProperties.AvatarPosition,
-//           JourneyServiceProperties.Pages,
-//         ],
-//         builder: (context, model, properties) {
-//           final MilestoneModel milestone = model.currentMilestoneList
-//               .firstWhere(
-//                   (element) => element.index == model.avatarRemoteMlIndex,
-//                   orElse: null);
-//           return milestone != null
-//               ? Positioned(
-//                   left: (model.pageWidth * milestone.x) -
-//                       (milestone.asset.width * model.pageWidth) * 0.6,
-//                   bottom: model.pageHeight * (milestone.page - 1) +
-//                       model.pageHeight * milestone.y,
-//                   child: ClipPath(
-//                     clipper: const FrontBeamClipper(),
-//                     child: Container(
-//                       width: model.pageWidth * milestone.asset.width * 2,
-//                       height: model.pageWidth * milestone.asset.height,
-//                       decoration: BoxDecoration(
-//                         // color: Colors.black,
-//                         gradient: LinearGradient(
-//                             colors: [
-//                               UiConstants.primaryColor.withOpacity(0.01),
-//                               UiConstants.primaryColor.withOpacity(0.3),
-//                               UiConstants.primaryColor.withOpacity(0.1),
-//                               UiConstants.primaryColor.withOpacity(0.01)
-//                             ],
-//                             begin: Alignment.bottomCenter,
-//                             end: Alignment.topCenter),
-//                       ),
-//                     ),
-//                   ))
-//               : SizedBox();
-//         });
-//   }
-// }
 
 class BaseRings extends StatelessWidget {
   final double? size;
@@ -318,7 +222,7 @@ class BackBeamClipper extends CustomClipper<Path> {
   const BackBeamClipper();
 
   @override
-  getClip(Size size) {
+  Path getClip(Size size) {
     return Path()
       ..lineTo(0, 0)
       ..lineTo(size.width * 0.2, size.height)
@@ -336,7 +240,7 @@ class FrontBeamClipper extends CustomClipper<Path> {
   const FrontBeamClipper();
 
   @override
-  getClip(Size size) {
+  Path getClip(Size size) {
     return Path()
       ..lineTo(0, 0)
       ..lineTo(size.width * 0.1, size.height)

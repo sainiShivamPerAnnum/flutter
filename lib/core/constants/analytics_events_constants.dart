@@ -184,6 +184,7 @@ class AnalyticsEvents {
 
   static const globalSaveTapped = "Global Save Now Tapped";
   static const carouselItemTapped = "Carousel Item Tapped";
+  static const ticketsVideoItemTapped = "Tickets video Item Tapped";
   static const balanceCardTapped = "Balance card tapped";
   static const balanceCardHorizontalSwiped = "Balance card horizontal swipped";
   static const balanceCardVerticalSwiped = "Balance card vertical swipped";
@@ -210,7 +211,7 @@ class AnalyticsEvents {
   static const quickCheckoutTileTapped = "Quick Checkout Tile Tapped";
   static const saveOnce = "Save Once Tapped in Asset Detail Page";
   static const saveDaily = "Save Daily Tapped in Asset Detail Page";
-  static const tambolaCarousel = "Tambola Top Carousel Tapped";
+  static const tambolaCarousel = "Tickets top banner tapped";
   static const quizCrossTapped = "Cross on Quiz Tapped";
   static const quizBannerTapped = "Quiz Banner Tapped";
 
@@ -305,4 +306,22 @@ class AnalyticsEvents {
   //Confirm Withdraw on Fixed Withdrawal
   static const confirmWithdrawOnFixedWithdrawal =
       "Confirm Withdraw on Fixed Withdrawal";
+
+  //Tickets tutorial
+  static const ticketTutorialsSwipeStart = "Tickets tutorial swipe start";
+  static const spin1InTutorial = "Spin 1 in tutorial";
+  static const spin2InTutorial = "Spin 2 in tutorial";
+  static const howTicketsWorkTapped = "how tickets work tapped";
+  static const completeTutorialTapped = "Complete tutorials tapped";
+  static const saveLaterTapped = "save later tapped";
+
+  //Tickets
+  static const ticketSpinTapped = "Tickets Spin tapped";
+  static const getTicketsTapped = "Get tickets tapped";
+  static const ticketsTopBannerTapped = "Tickets top banner tapped";
+  static const ticketsPlayTutorialTapped = "Tickets play tutorial tapped";
+  static const ticketsOfferTapped = "Tickets Offer tapped";
+  static const ticketsVideoTapped = "Tickets video tapped";
+  static const ticketsMultiplierBannerTapped =
+      "Tickets multiplier banner tapped";
 }

@@ -2,6 +2,7 @@ import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/appbar/appbar.dart';
+import 'package:felloapp/ui/keys/keys.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_components/current_winnings_info.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_components/news_component.dart';
 import 'package:felloapp/ui/pages/hometabs/win/win_components/refer_and_earn_card.dart';
@@ -13,10 +14,8 @@ import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/show_case_key.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
-import 'package:showcaseview/showcaseview.dart';
 
 class Win extends StatelessWidget {
   const Win({Key? key}) : super(key: key);
@@ -59,8 +58,16 @@ class Win extends StatelessWidget {
                 //     SpotLightController.instance.startQuickTour();
                 //   },
                 // ),
-                AccountInfoTiles(title: locale.abMyProfile, uri: "/profile"),
-                const AccountInfoTiles(title: "KYC Details", uri: "/kycVerify"),
+                AccountInfoTiles(
+                  key: K.userProfileEntryCTAKey,
+                  title: locale.abMyProfile,
+                  uri: "/profile",
+                ),
+
+                const AccountInfoTiles(
+                  title: "KYC Details",
+                  uri: "/kycVerify",
+                ),
 
                 AccountInfoTiles(
                     title: locale.bankAccDetails, uri: "/bankDetails"),
@@ -77,12 +84,7 @@ class Win extends StatelessWidget {
                 //Scratch Cards count and navigation
                 const ScratchCardsInfoStrip(),
                 //Current Winnings Information
-                Showcase(
-                  key: ShowCaseKeys.CurrentWinnings,
-                  description:
-                      'Your winnings from scratch cards and coupons show here. Redeem your winnings as Digital Gold when you reach ₹200',
-                  child: const CurrentWinningsInfo(),
-                ),
+                const CurrentWinningsInfo(),
                 //Refer and Earn
                 const ReferEarnCard(),
                 // Referral Leaderboard
