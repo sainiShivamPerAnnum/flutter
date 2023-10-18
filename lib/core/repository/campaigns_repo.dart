@@ -65,7 +65,7 @@ class CampaignRepo extends BaseRepo {
         'felloFacts.txt',
         cBaseUrl: _cdnBaseUrl,
         decryptData: true,
-        apiName: "$_campaigns/felloFacts",
+        apiName: "felloFacts",
       );
 
       // final responseData = response["data"];

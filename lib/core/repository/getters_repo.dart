@@ -166,7 +166,7 @@ class GetterRepository extends BaseRepo {
           'appConfig.txt',
           cBaseUrl: _cdnBaseUrl,
           decryptData: true,
-          apiName: '$_getters/getAppConfig',
+          apiName: 'getAppConfig',
         ),
         (p0) {
           log("AppConfig: ${p0.toString()}", name: "AppConfig");
@@ -321,7 +321,7 @@ class GetterRepository extends BaseRepo {
           "dynamicUi.txt",
           cBaseUrl: _cdnBaseUrl,
           decryptData: true,
-          apiName: '$_getters/getDynamicUI',
+          apiName: 'getDynamicUI',
         ),
         (response) {
           final responseData = response["dynamicUi"];

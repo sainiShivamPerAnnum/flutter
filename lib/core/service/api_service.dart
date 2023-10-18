@@ -219,10 +219,6 @@ class APIService implements API {
       case 200:
         return responseJson;
       case 400:
-        return BadRequestException(responseJson['message']);
-      case 404:
-        throw BadRequestException(responseJson['message']);
-      case 401:
         throw BadRequestException(responseJson['message']);
       case 403:
         throw UnauthorizedException(response?.data.toString());
@@ -307,24 +303,32 @@ class APIService implements API {
     bool passToken = true,
   }) async {
     final head = <String, dynamic>{...headers};
-    final authToken = head[HttpHeaders.authorizationHeader];
-    final user = FirebaseAuth.instance.currentUser;
+    final trace = _performance.newTrace('auth-token');
+    try {
+      final authToken = head[HttpHeaders.authorizationHeader];
+      final user = FirebaseAuth.instance.currentUser;
 
-    if (authToken == null && passToken) {
-      final token = await user?.getIdToken();
-      head[HttpHeaders.authorizationHeader] =
-          token != null ? 'Bearer $token' : '';
+      if (authToken == null && passToken) {
+        await trace.start();
+        final token = await user?.getIdToken();
+        head[HttpHeaders.authorizationHeader] =
+            token != null ? 'Bearer $token' : '';
+        await trace.stop();
+      }
+
+      final uid = user?.uid;
+      head['uid'] = uid ?? '';
+    } catch (e) {
+      await trace.stop();
     }
-
-    final uid = user?.uid;
-    head['uid'] = uid ?? '';
 
     try {
       _info ??= await PackageInfo.fromPlatform();
       head['version'] = _info!.buildNumber;
       head['platform'] = defaultTargetPlatform.name;
-      // ignore: empty_catches
-    } catch (e) {}
+    } catch (e) {
+      debugPrint(e.toString());
+    }
 
     return head;
   }
@@ -338,8 +342,9 @@ class CoreInterceptor extends Interceptor {
       case 401:
         try {
           await FirebaseAuth.instance.currentUser?.getIdToken(true);
-          // ignore: empty_catches
-        } catch (e) {}
+        } catch (e) {
+          debugPrint(e.toString());
+        }
         break;
       default:
     }
