@@ -291,7 +291,7 @@ class APIService implements API {
         metric.httpResponseCode = code;
       }
 
-      final contentHeaders = response.headers['Content-Length'];
+      final contentHeaders = response.headers[HttpHeaders.contentLengthHeader];
       if (contentHeaders != null && contentHeaders.isNotEmpty) {
         metric.requestPayloadSize = int.tryParse(contentHeaders.first);
       }
@@ -306,7 +306,7 @@ class APIService implements API {
         metric.httpResponseCode = code;
       }
 
-      final contentHeaders = response?.headers['Content-Length'];
+      final contentHeaders = response?.headers[HttpHeaders.contentLengthHeader];
       if (contentHeaders != null && contentHeaders.isNotEmpty) {
         metric.requestPayloadSize = int.tryParse(contentHeaders.first);
       }
