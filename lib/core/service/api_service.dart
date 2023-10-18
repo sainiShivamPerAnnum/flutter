@@ -246,6 +246,13 @@ class APIService implements API {
     return decryptedData;
   }
 
+  static const _enumMapping = {
+    _RequestType.GET: HttpMethod.Get,
+    _RequestType.PUT: HttpMethod.Put,
+    _RequestType.POST: HttpMethod.Post,
+    _RequestType.PATCH: HttpMethod.Patch,
+  };
+
   Future<Response> _request<T>(
     _RequestType method,
     String path, {
@@ -264,10 +271,13 @@ class APIService implements API {
       headers: modifiedHeaders,
     );
 
-    final trace = _performance.newTrace(apiName);
+    final metric = _performance.newHttpMetric(
+      apiName,
+      _enumMapping[method]!,
+    );
+
     try {
-      await trace.start();
-      trace.putAttribute('http.method', method.name);
+      await metric.start();
 
       final response = await _dio.request<T>(
         path,
@@ -275,25 +285,36 @@ class APIService implements API {
         options: options,
         queryParameters: queryParameters,
       );
-      await trace.stop();
 
       final code = response.statusCode;
       if (code != null) {
-        trace.putAttribute('http.status_code', code.toString());
+        metric.httpResponseCode = code;
       }
 
+      final contentHeaders = response.headers['Content-Length'];
+      if (contentHeaders != null && contentHeaders.isNotEmpty) {
+        metric.requestPayloadSize = int.tryParse(contentHeaders.first);
+      }
+
+      await metric.stop();
       return response;
     } on DioException catch (e) {
       final response = e.response;
 
       final code = response?.statusCode;
       if (code != null) {
-        trace.putAttribute('http.status_code', code.toString());
+        metric.httpResponseCode = code;
       }
-      await trace.stop();
+
+      final contentHeaders = response?.headers['Content-Length'];
+      if (contentHeaders != null && contentHeaders.isNotEmpty) {
+        metric.requestPayloadSize = int.tryParse(contentHeaders.first);
+      }
+
+      await metric.stop();
       rethrow;
     } catch (e) {
-      await trace.stop();
+      await metric.stop();
       rethrow;
     }
   }
