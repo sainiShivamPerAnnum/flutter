@@ -21,6 +21,8 @@ import 'package:path_provider/path_provider.dart';
 class JourneyRepository extends BaseRepo {
   final _cacheService = CacheService();
 
+  static const _journey = 'journey';
+
   //Local Variables
   static const String PAGE_DIRECTION_UP = "up";
   static const String PAGE_DIRECTION_DOWN = "down";
@@ -165,6 +167,7 @@ class JourneyRepository extends BaseRepo {
                 ApiPath.kJourney,
                 cBaseUrl: _baseUrlJourney,
                 queryParams: queryParams,
+                apiName: _journey,
               ), (responseData) {
         // parser
         final start = responseData["start"];
@@ -226,15 +229,18 @@ class JourneyRepository extends BaseRepo {
         }
       }
 
+      final v = version.toLowerCase();
+
       return await _cacheService.cachedApi(
           CacheKeys.JOURNEY_PAGE,
           TTL.ONE_DAY,
           isFromCdn: true,
           () => APIService.instance.getData(
-                "journey_${version.toLowerCase()}.txt",
+                "journey_$v.txt",
                 cBaseUrl: _cdnBaseUrl,
                 queryParams: queryParams,
                 decryptData: true,
+                apiName: '$_journey/$v',
               ), (responseData) {
         List<dynamic>? items = responseData;
 
@@ -266,6 +272,7 @@ class JourneyRepository extends BaseRepo {
       final response = await APIService.instance.getData(
         ApiPath.journeyStats(uid),
         cBaseUrl: _baseUrlStats,
+        apiName: '$_journey/statsByID',
       );
 
       final responseData = response["data"];
@@ -284,10 +291,12 @@ class JourneyRepository extends BaseRepo {
     try {
       List<JourneyLevel> journeyLevels = [];
 
+      final v = version.toUpperCase();
       final response = await APIService.instance.getData(
-        "journeyLevels${version.toUpperCase()}.txt",
+        "journeyLevels$v.txt",
         cBaseUrl: _cdnBaseUrl,
         decryptData: true,
+        apiName: '$_journey/levels$v',
       );
 
       // final response = await APIService.instance.getData(

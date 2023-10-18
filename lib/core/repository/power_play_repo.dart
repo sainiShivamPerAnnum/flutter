@@ -21,12 +21,15 @@ class PowerPlayRepository extends BaseRepo {
       ? "https://8bopjrisyb.execute-api.ap-south-1.amazonaws.com/dev"
       : "https://l4aighxmj3.execute-api.ap-south-1.amazonaws.com/prod";
 
+  static const _powerPlay = 'power-play';
+
   Future<ApiResponse<MatchesModel>> getMatchesByStatus(
       String status, int limit, int offset) async {
     try {
       final response = await APIService.instance.getData(
         ApiPath.powerPlayMatches(status, limit, offset),
         cBaseUrl: _baseUrl,
+        apiName: '$_powerPlay/getMatchesByStatus',
       );
       if (response['data'] != null) {
         log("REPO getMatchesByStatus => ${response['data']}");
@@ -56,6 +59,7 @@ class PowerPlayRepository extends BaseRepo {
       final response = await APIService.instance.getData(
         ApiPath.matchStats(matchId),
         cBaseUrl: _baseUrl,
+        apiName: '$_powerPlay/getMatchStatusByID',
       );
       if (response['data'] != null) {
         return ApiResponse<MatchPredictionBoardModel>(
@@ -82,6 +86,7 @@ class PowerPlayRepository extends BaseRepo {
       final response = await APIService.instance.getData(
         ApiPath.powerPlayWinnersLeaderboard(matchId),
         cBaseUrl: _baseUrl,
+        apiName: '$_powerPlay/getMatchLeaderBoardByID',
       );
       if (response['data'] != null) {
         winners = MatchWinnersLeaderboardItemModel.helper
@@ -107,6 +112,7 @@ class PowerPlayRepository extends BaseRepo {
       final response = await APIService.instance.getData(
         ApiPath.seasonLeaderboard,
         cBaseUrl: _baseUrl,
+        apiName: '$_powerPlay/seasonLeaderBoard',
       );
       if (response['data'] != null) {
         winners =
@@ -130,6 +136,7 @@ class PowerPlayRepository extends BaseRepo {
       final response = await APIService.instance.getData(
         ApiPath.powerPlayReward,
         cBaseUrl: _baseUrl,
+        apiName: '$_powerPlay/rewards',
       );
       if (response['data'] != null) {
         return ApiResponse<PowerPlayReward>(

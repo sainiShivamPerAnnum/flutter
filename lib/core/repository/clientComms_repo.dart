@@ -9,6 +9,8 @@ class ClientCommsRepo extends BaseRepo {
       ? 'https://2i7p0mi89b.execute-api.ap-south-1.amazonaws.com/dev'
       : 'https://7ljkkapvw7.execute-api.ap-south-1.amazonaws.com/prod';
 
+  static const _clientComm = 'clientCommunication';
+
   Future<void> subscribeGoldPriceAlert(int flag) async {
     try {
       String? fcmToken = await FirebaseMessaging.instance.getToken();
@@ -22,6 +24,7 @@ class ClientCommsRepo extends BaseRepo {
         cBaseUrl: _baseUrl,
         queryParams: map,
         headers: {'fcmToken': fcmToken ?? ""},
+        apiName: '$_clientComm/subscribeGoldAlerts',
       );
 
       // logger.d(response);

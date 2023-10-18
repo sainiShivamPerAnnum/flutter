@@ -11,6 +11,7 @@ class InvestmentActionsRepository extends BaseRepo {
   final ApiPath? _apiPaths = locator<ApiPath>();
   final CustomLogger? _logger = locator<CustomLogger>();
   final _rsaEncryption = new RSAEncryption();
+  static const _banking = 'bankingOps';
 
   final _baseUrl = FlavorConfig.isDevelopment()
       ? "https://cqfb61p1m2.execute-api.ap-south-1.amazonaws.com/dev"
@@ -23,6 +24,7 @@ class InvestmentActionsRepository extends BaseRepo {
       final response = await APIService.instance.getData(
         _apiPaths!.kGetGoldRates,
         cBaseUrl: _baseUrl,
+        apiName: "$_banking/goldRates",
       );
 
       return ApiResponse(model: response['data'], code: 200);
@@ -60,6 +62,7 @@ class InvestmentActionsRepository extends BaseRepo {
         cBaseUrl: FlavorConfig.isDevelopment()
             ? "https://wd7bvvu7le.execute-api.ap-south-1.amazonaws.com/dev"
             : "https://yg58g0feo0.execute-api.ap-south-1.amazonaws.com/prod",
+        apiName: 'monoPayment/withdrawal',
       );
       _logger!.d("Response from withdrawal: $response");
       message = response["message"];

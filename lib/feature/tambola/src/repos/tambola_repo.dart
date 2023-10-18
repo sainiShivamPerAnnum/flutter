@@ -18,6 +18,9 @@ class TambolaRepo extends BaseRepo {
   TimestampModel? lastTimeStamp;
   List<TambolaTicketModel> activeTambolaTickets = [];
   static int expiringTicketCount = 0;
+
+  static const _tambola = 'tambola';
+
   final _baseUrl = FlavorConfig.isDevelopment()
       ? 'https://qv53yko0b0.execute-api.ap-south-1.amazonaws.com/dev'
       : 'https://7icbm6j9e7.execute-api.ap-south-1.amazonaws.com/prod';
@@ -35,6 +38,7 @@ class TambolaRepo extends BaseRepo {
                 ApiPath.tambolaBestTickets(uid!),
                 queryParams: {'spinFlag': postSpinStats.toString()},
                 cBaseUrl: _baseUrl,
+                apiName: '$_tambola/winningTickets',
               ), (dynamic response) {
         bestTickets = TambolaBestTicketsModel.fromJson(response);
         expiringTicketCount = response["data"]["expiringTicketsCount"] ?? 0;
@@ -59,6 +63,7 @@ class TambolaRepo extends BaseRepo {
         ApiPath.tambolaTickets(uid),
         queryParams: {'limit': limit.toString(), 'offset': offset.toString()},
         cBaseUrl: _baseUrl,
+        apiName: '$_tambola/tickets',
       );
       List<TambolaTicketModel>? tickets =
           TambolaTicketModel.helper.fromMapArray(response['data']['tickets']);
@@ -86,6 +91,7 @@ class TambolaRepo extends BaseRepo {
           () => APIService.instance.getData(
                 ApiPath.dailyPicks,
                 cBaseUrl: _baseUrl,
+                apiName: '$_tambola/dailyPicks',
               ), (dynamic response) {
         final data = response['data'];
         if (data != null && data.isNotEmpty) {

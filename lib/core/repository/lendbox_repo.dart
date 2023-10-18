@@ -13,6 +13,8 @@ class LendboxRepo extends BaseRepo {
       ? 'https://lczsbr3cjl.execute-api.ap-south-1.amazonaws.com/dev'
       : 'https://sdypt3fcnh.execute-api.ap-south-1.amazonaws.com/prod';
 
+  static const _lendBox = 'lendbox';
+
   Future<ApiResponse<String>> createWithdrawal(
     int amount,
     String? payoutSourceId,
@@ -27,6 +29,7 @@ class LendboxRepo extends BaseRepo {
           "payoutSourceId": payoutSourceId,
         },
         cBaseUrl: _baseUrl,
+        apiName: '$_lendBox/withdraw',
       );
 
       final data = response['data'];
@@ -45,6 +48,7 @@ class LendboxRepo extends BaseRepo {
       final response = await APIService.instance.getData(
         ApiPath.lbWithdrawableQuantity(uid),
         cBaseUrl: _baseUrl,
+        apiName: '$_lendBox/withdrawableByID',
       );
 
       final data = response['data'];
@@ -74,6 +78,7 @@ class LendboxRepo extends BaseRepo {
         ApiPath.investmentPrefs,
         cBaseUrl: _baseUrl,
         body: body,
+        apiName: '$_lendBox/updateUserInvestmentPref',
       );
 
       return ApiResponse(model: true, code: 200);
@@ -90,6 +95,7 @@ class LendboxRepo extends BaseRepo {
       final response = await APIService.instance.getData(
         ApiPath.lbMaturity(uid),
         cBaseUrl: _baseUrl,
+        apiName: '$_lendBox/maturityByID',
       );
 
       return ApiResponse(

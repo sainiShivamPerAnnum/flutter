@@ -14,6 +14,8 @@ import 'base_repo.dart';
 class ReferralRepo extends BaseRepo {
   final _cacheService = CacheService();
 
+  static const _referral = 'referral';
+
   Future<ApiResponse<ReferralResponse>> getReferralCode() async {
     try {
       return await _cacheService.cachedApi(
@@ -22,6 +24,7 @@ class ReferralRepo extends BaseRepo {
         () => APIService.instance.getData(
           ApiPath.getReferralCode(userService.baseUser!.uid),
           cBaseUrl: AppEnvironment.instance.referral,
+          apiName: '$_referral/getRefCode',
         ),
         (response) {
           return ApiResponse(
@@ -39,6 +42,7 @@ class ReferralRepo extends BaseRepo {
       final response = await APIService.instance.getData(
         ApiPath.getUserIdByRefCode(code),
         cBaseUrl: AppEnvironment.instance.referral,
+        apiName: '$_referral/getUserIDByRefCode',
       );
 
       final data = response['data'];
@@ -62,6 +66,7 @@ class ReferralRepo extends BaseRepo {
           'offset': (50 * currentPage).toString(),
         },
         cBaseUrl: AppEnvironment.instance.referral,
+        apiName: '$_referral/getAllReferrals',
       );
 
       final data = response['data'];
@@ -89,6 +94,7 @@ class ReferralRepo extends BaseRepo {
           'rid': referee,
         },
         cBaseUrl: AppEnvironment.instance.referral,
+        apiName: '$_referral/createReferral',
       );
 
       logger.d(response);
@@ -118,6 +124,7 @@ class ReferralRepo extends BaseRepo {
             'phoneNumbers': phoneNumbers,
           },
           cBaseUrl: AppEnvironment.instance.referral,
+          apiName: '$_referral/getRegisteredUsers',
         ),
         (response) {
           return ApiResponse(

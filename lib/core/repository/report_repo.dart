@@ -13,12 +13,15 @@ class ReportRepository extends BaseRepo {
       ? "https://w16a2854kb.execute-api.ap-south-1.amazonaws.com/dev"
       : "https://5l0eh4q438.execute-api.ap-south-1.amazonaws.com/prod";
 
+  static const _report = 'reports';
+
   Future<ApiResponse<Map<String, dynamic>>> getReport(String? txnId) async {
     try {
       if (txnId == null) return ApiResponse.withError("No data found", 400);
       final response = await APIService.instance.getData(
         ApiPath.augmontReport(txnId),
         cBaseUrl: _baseUrl,
+        apiName: '$_report/augmontTransactionByID',
       );
       if (response['data'] != null) {
         return ApiResponse<Map<String, dynamic>>(

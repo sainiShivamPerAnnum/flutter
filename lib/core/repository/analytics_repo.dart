@@ -16,6 +16,8 @@ class AnalyticsRepository extends BaseRepo {
       ? "https://8ug3cm8yhb.execute-api.ap-south-1.amazonaws.com/dev"
       : "https://d8ssa0evtd.execute-api.ap-south-1.amazonaws.com/prod";
 
+  static const _analytics = 'analytics';
+
   Future<ApiResponse<Map<String, dynamic>>> setInstallInfo(
       BaseUser baseUser,
       String? installReferrerData,
@@ -39,6 +41,7 @@ class AnalyticsRepository extends BaseRepo {
         _apiPaths!.kSetInstallInfo,
         cBaseUrl: _baseUrl,
         body: _body,
+        apiName: '$_analytics/setInstallInfo',
       );
       logger.d(res);
       final responseData = res['data'];

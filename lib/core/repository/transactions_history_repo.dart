@@ -10,28 +10,11 @@ import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/flavor_config.dart';
 
 class TransactionHistoryRepository extends BaseRepo {
+  static const _transactions = 'transactions';
+
   final _baseUrl = FlavorConfig.isDevelopment()
       ? 'https://wd7bvvu7le.execute-api.ap-south-1.amazonaws.com/dev'
       : 'https://yg58g0feo0.execute-api.ap-south-1.amazonaws.com/prod';
-
-  // Future<ApiResponse<double>> getWithdrawableAugGoldQuantity() async {
-  //   try {
-  //     final token = await getBearerToken();
-  //     final quntityResponse = await APIService.instance.getData(
-  //       ApiPath.getWithdrawableGoldQuantity(
-  //         this.userService.baseUser.uid,
-  //       ),
-  //       cBaseUrl: _baseUrl,
-  //       token: token,
-  //     );
-
-  //     final quantity = quntityResponse["data"]["quantity"].toDouble();
-  //     return ApiResponse(model: quantity, code: 200);
-  //   } catch (e) {
-  //     logger.e(e.toString());
-  //     return ApiResponse.withError("Unable to fetch QUNTITY", 400);
-  //   }
-  // }
 
   Future<ApiResponse<TransactionResponse>> getUserTransactions({
     int limit = 30,
@@ -58,6 +41,7 @@ class TransactionHistoryRepository extends BaseRepo {
         ApiPath.kSingleTransactions(uid),
         queryParams: queryParams,
         cBaseUrl: _baseUrl,
+        apiName: '$_transactions/getTransactionByID',
       );
 
       final responseData = response["data"];
@@ -111,6 +95,7 @@ class TransactionHistoryRepository extends BaseRepo {
         ApiPath.kSingleTransactions(uid),
         queryParams: queryParams,
         cBaseUrl: _baseUrl,
+        apiName: '$_transactions/getPaymentByID',
       );
 
       final responseData = response["data"];

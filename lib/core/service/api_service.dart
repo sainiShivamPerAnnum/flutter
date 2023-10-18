@@ -5,6 +5,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:dio_http2_adapter/dio_http2_adapter.dart';
 import 'package:encrypt/encrypt.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/util/app_exceptions.dart';
@@ -12,6 +13,7 @@ import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_performance/firebase_performance.dart';
 import 'package:flutter/foundation.dart' hide Key;
 import 'package:package_info_plus/package_info_plus.dart';
 
@@ -23,28 +25,43 @@ enum _RequestType {
 }
 
 abstract class API {
-  Future<T> getData<T>(String url);
+  Future<T> getData<T>(
+    String url, {
+    required String apiName,
+  });
 
-  Future<T> postData<T>(String url, {Map<String, dynamic>? body});
+  Future<T> postData<T>(
+    String url, {
+    required String apiName,
+    Map<String, dynamic>? body,
+  });
 
-  Future<T> patchData<T>(String url, {Map<String, dynamic>? body});
+  Future<T> patchData<T>(
+    String url, {
+    required String apiName,
+    Map<String, dynamic>? body,
+  });
 
-  Future<T> putData<T>(String url);
+  Future<T> putData<T>(
+    String url, {
+    required String apiName,
+  });
 }
 
 class APIService implements API {
   final Dio _dio = Dio()
-        ..interceptors.addAll([
-          CoreInterceptor(),
-          LogInterceptor(),
-        ])
-      // ..httpClientAdapter = Http2Adapter(
-      //   ConnectionManager(
-      //     idleTimeout: const Duration(seconds: 20),
-      //   ),
-      // )
-      ;
+    ..interceptors.addAll([
+      CoreInterceptor(),
+      LogInterceptor(),
+    ])
+    ..httpClientAdapter = Http2Adapter(
+      ConnectionManager(
+        idleTimeout: const Duration(seconds: 20),
+      ),
+    );
+
   PackageInfo? _info;
+  final FirebasePerformance _performance = FirebasePerformance.instance;
 
   final String _baseUrl =
       'https://${FlavorConfig.instance!.values.baseUriAsia}';
@@ -61,6 +78,7 @@ class APIService implements API {
   @override
   Future<T> getData<T>(
     String url, {
+    required String apiName,
     final String? token, // Just in case of blogs.
     final Map<String, dynamic>? queryParams,
     final Map<String, dynamic>? headers,
@@ -78,6 +96,7 @@ class APIService implements API {
           if (token != null) HttpHeaders.authorizationHeader: "Bearer $token",
           ...?headers,
         },
+        apiName: apiName,
       );
 
       if (decryptData) {
@@ -104,6 +123,7 @@ class APIService implements API {
   @override
   Future<T> postData<T>(
     String url, {
+    required String apiName,
     Map<String, dynamic>? body,
     String? cBaseUrl,
     Map<String, String>? headers,
@@ -119,6 +139,7 @@ class APIService implements API {
         queryParameters: queryParams,
         headers: headers,
         data: body,
+        apiName: apiName,
       );
 
       if (decryptData) {
@@ -140,6 +161,7 @@ class APIService implements API {
   @override
   Future<T> putData<T>(
     String url, {
+    required String apiName,
     Object? body,
     String? absoluteUrl,
     String? cBaseUrl,
@@ -155,6 +177,7 @@ class APIService implements API {
         headers: headers,
         data: body,
         passToken: passToken,
+        apiName: apiName,
       );
 
       return returnResponse(response);
@@ -168,6 +191,7 @@ class APIService implements API {
   @override
   Future<T> patchData<T>(
     String url, {
+    required String apiName,
     Map<String, dynamic>? body,
     String? cBaseUrl,
   }) async {
@@ -178,6 +202,7 @@ class APIService implements API {
         _RequestType.PATCH,
         finalPath,
         data: body,
+        apiName: apiName,
       );
 
       return returnResponse(response);
@@ -228,6 +253,7 @@ class APIService implements API {
   Future<Response> _request<T>(
     _RequestType method,
     String path, {
+    required String apiName,
     Map<String, dynamic>? headers,
     Object? data,
     Map<String, dynamic>? queryParameters,
@@ -242,14 +268,38 @@ class APIService implements API {
       headers: modifiedHeaders,
     );
 
-    final response = await _dio.request<T>(
-      path,
-      data: data,
-      options: options,
-      queryParameters: queryParameters,
-    );
+    final trace = _performance.newTrace(apiName);
+    try {
+      await trace.start();
+      trace.putAttribute('http.method', method.name);
 
-    return response;
+      final response = await _dio.request<T>(
+        path,
+        data: data,
+        options: options,
+        queryParameters: queryParameters,
+      );
+      await trace.stop();
+
+      final code = response.statusCode;
+      if (code != null) {
+        trace.putAttribute('http.status_code', code.toString());
+      }
+
+      return response;
+    } on DioException catch (e) {
+      final response = e.response;
+
+      final code = response?.statusCode;
+      if (code != null) {
+        trace.putAttribute('http.status_code', code.toString());
+      }
+      await trace.stop();
+      rethrow;
+    } catch (e) {
+      await trace.stop();
+      rethrow;
+    }
   }
 
   Future<Map<String, dynamic>> _attachHeaders(

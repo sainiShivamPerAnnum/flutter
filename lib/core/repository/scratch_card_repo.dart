@@ -13,6 +13,8 @@ import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/preference_helper.dart';
 
 class ScratchCardRepository extends BaseRepo {
+  static const _rewards = 'rewards';
+
   Future<ApiResponse<ScratchCard>> getScratchCardById({
     String? scratchCardId,
   }) async {
@@ -23,6 +25,7 @@ class ScratchCardRepository extends BaseRepo {
           scratchCardId,
         ),
         cBaseUrl: AppEnvironment.instance.rewards,
+        apiName: '$_rewards/getScratchCardByID',
       );
 
       final ticket =
@@ -44,6 +47,7 @@ class ScratchCardRepository extends BaseRepo {
           'game': gameCode,
           'freq': freq,
         },
+        apiName: '$_rewards/getPrizeByGameCode',
       );
 
       final prizesModel = PrizesModel.fromMap(milestoneRespone["data"]);
@@ -66,6 +70,7 @@ class ScratchCardRepository extends BaseRepo {
         cBaseUrl: AppEnvironment.instance.rewards,
         body: body,
         queryParams: queryParams,
+        apiName: '$_rewards/skipMilestone',
       );
       if (response != null) {
         final responseData = response["data"];
@@ -90,6 +95,7 @@ class ScratchCardRepository extends BaseRepo {
         queryParams: {
           'subType': prizeSubtype,
         },
+        apiName: '$_rewards/getAllPrizeBySubtype',
       );
 
       final scratchCard = ScratchCard.fromJson(prizeResponse["data"], "");
@@ -110,6 +116,7 @@ class ScratchCardRepository extends BaseRepo {
         queryParams: {
           'type': 'UNSCRATCHED',
         },
+        apiName: '$_rewards/getScratchCardByID',
       );
       final Map<String, dynamic>? responseData = prizeResponse["data"];
       if (responseData != null && responseData.isNotEmpty) {
@@ -134,7 +141,10 @@ class ScratchCardRepository extends BaseRepo {
       final prizeResponse = await APIService.instance.getData(
         ApiPath.getScratchCard(userService.baseUser!.uid),
         cBaseUrl: AppEnvironment.instance.rewards,
-        queryParams: {if (start != null) 'start': start},
+        queryParams: {
+          if (start != null) 'start': start,
+        },
+        apiName: '$_rewards/getScratchCardByID',
       );
       final Map<String, dynamic>? responseData = prizeResponse["data"];
       if (responseData != null && responseData.isNotEmpty) {
@@ -162,6 +172,7 @@ class ScratchCardRepository extends BaseRepo {
         queryParams: {
           'type': type,
         },
+        apiName: '$_rewards/getAllScratchCard',
       );
       List ticketsData = prizeResponse["data"]['gts'];
       for (final ticket in ticketsData) {
@@ -188,6 +199,7 @@ class ScratchCardRepository extends BaseRepo {
         ApiPath.kRedeemGtReward,
         body: body,
         cBaseUrl: AppEnvironment.instance.rewards,
+        apiName: '$_rewards/redeem',
       );
 
       final data = response['data'];
@@ -225,6 +237,7 @@ class ScratchCardRepository extends BaseRepo {
           userService.baseUser!.uid!,
         ),
         cBaseUrl: AppEnvironment.instance.rewards,
+        apiName: '$_rewards/getDailyBonus',
       );
       log("DAILY APP : $response");
       final responseData = DailyAppCheckInEventModel.fromMap(response["data"]);

@@ -22,6 +22,7 @@ class BankingRepository extends BaseRepo {
   final CustomLogger _logger = locator<CustomLogger>();
   final ApiPath? _apiPaths = locator<ApiPath>();
   final _cacheService = new CacheService();
+  static const _banking = 'bankingOps';
 
   final _baseUrl = FlavorConfig.isDevelopment()
       ? "https://cqfb61p1m2.execute-api.ap-south-1.amazonaws.com/dev"
@@ -40,6 +41,7 @@ class BankingRepository extends BaseRepo {
         _apiPaths!.kVerifyPan,
         body: body,
         cBaseUrl: _baseUrl,
+        apiName: '$_banking/verifyPan',
       );
 
       _logger.d(response);
@@ -78,6 +80,7 @@ class BankingRepository extends BaseRepo {
         ApiPath.kGetSignedImageUrl(userService.baseUser!.uid!),
         body: body,
         cBaseUrl: _baseUrl,
+        apiName: '$_banking/uploadImage',
       );
       SignedImageUrlModel responseData =
           SignedImageUrlModel.fromMap(response["data"]);
@@ -103,6 +106,7 @@ class BankingRepository extends BaseRepo {
         headers: {'Content-Type': "image/${imageFile.name.split('.').last}"},
         body: await File(imageFile.path).readAsBytes(),
         passToken: false,
+        apiName: 'upload/image',
       );
 
       return ApiResponse(model: true, code: 200);
@@ -130,6 +134,7 @@ class BankingRepository extends BaseRepo {
         ApiPath.kForgeryUpload(userService.baseUser!.uid!),
         body: body,
         cBaseUrl: _baseUrl,
+        apiName: '$_banking/forgeryImage',
       );
 
       _logger.d(response);
@@ -150,6 +155,7 @@ class BankingRepository extends BaseRepo {
       final response = await APIService.instance.getData(
         ApiPath.kGetPan(userService.baseUser!.uid!),
         cBaseUrl: _baseUrl,
+        apiName: '$_banking/pan',
       );
       final UserKycDataModel panData =
           UserKycDataModel.fromMap(response["data"]);
@@ -172,6 +178,7 @@ class BankingRepository extends BaseRepo {
         ApiPath.verifyAugmontKyc,
         cBaseUrl: _baseUrl,
         body: {"uid": userService.baseUser!.uid},
+        apiName: '$_banking/reVerifyPan',
       );
 
       return ApiResponse(model: true, code: 200);

@@ -18,6 +18,8 @@ class SubscriptionRepo extends BaseRepo {
       ? "https://2z48o79cm5.execute-api.ap-south-1.amazonaws.com/prod"
       : "https://2je5zoqtuc.execute-api.ap-south-1.amazonaws.com/dev";
 
+  static const _subscription = 'subscription';
+
   Future<ApiResponse<List<SubscriptionTransactionModel>>>
       getSubscriptionTransactionHistory(
           {int? offset, int? limit, required String asset}) async {
@@ -32,6 +34,7 @@ class SubscriptionRepo extends BaseRepo {
             "offset": offset.toString(),
           }
         },
+        apiName: '$_subscription/transactions',
       );
       final responseData = res['data']['transactions'];
       logger.d(responseData);
@@ -72,6 +75,7 @@ class SubscriptionRepo extends BaseRepo {
         ApiPath.subscription(userService.baseUser!.uid!),
         body: _body,
         cBaseUrl: baseUrl,
+        apiName: '$_subscription/createSubscription',
       );
 
       if (response['data'] != null) {
@@ -96,6 +100,7 @@ class SubscriptionRepo extends BaseRepo {
       final response = await APIService.instance.getData(
         ApiPath.subscription(userService.baseUser!.uid!),
         cBaseUrl: baseUrl,
+        apiName: _subscription,
       );
       SubscriptionModel subscriptionModel =
           SubscriptionModel.fromMap(response['data']['subscription']);
@@ -124,6 +129,7 @@ class SubscriptionRepo extends BaseRepo {
         ApiPath.subscription(userService.baseUser!.uid!),
         body: _body,
         cBaseUrl: baseUrl,
+        apiName: '$_subscription/updateSubscription',
       );
 
       SubscriptionModel subscriptionModel =
@@ -162,6 +168,7 @@ class SubscriptionRepo extends BaseRepo {
         ApiPath.pauseSubscription,
         body: _body,
         cBaseUrl: baseUrl,
+        apiName: '$_subscription/pauseSubscription',
       );
 
       SubscriptionModel subscriptionModel =
@@ -183,6 +190,7 @@ class SubscriptionRepo extends BaseRepo {
         ApiPath.resumeSubscription,
         body: _body,
         cBaseUrl: baseUrl,
+        apiName: '$_subscription/resumeSubscription',
       );
 
       SubscriptionModel subscriptionModel =

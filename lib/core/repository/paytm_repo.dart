@@ -20,10 +20,16 @@ enum AppUse { PHONE_PE, GOOGLE_PAY, PAYTM }
 
 class PaytmRepository extends BaseRepo {
   String processText = "processing";
+
+  static const _payments = 'payments/';
+  static const _subscription = 'subscription';
+
+  /// Payments microservice.
   final String _baseUrl = FlavorConfig.isProduction()
       ? "https://yg58g0feo0.execute-api.ap-south-1.amazonaws.com/prod"
       : "https://wd7bvvu7le.execute-api.ap-south-1.amazonaws.com/dev";
 
+  /// Subscription microservice.
   final String _baseUrl2 = FlavorConfig.isProduction()
       ? "https://2z48o79cm5.execute-api.ap-south-1.amazonaws.com/prod"
       : "https://2je5zoqtuc.execute-api.ap-south-1.amazonaws.com/dev";
@@ -70,6 +76,7 @@ class PaytmRepository extends BaseRepo {
         cBaseUrl: _baseUrl,
         headers: _header,
         // decryptData: true,
+        apiName: '$_payments/createTransaction',
       );
 
       CreatePaytmTransactionModel _responseModel =
@@ -104,6 +111,7 @@ class PaytmRepository extends BaseRepo {
         ApiPath.kProcessPaytmTransaction,
         body: _body,
         cBaseUrl: _baseUrl,
+        apiName: '$_payments/processTransaction',
       );
 
       ProcessTransactionModel _responseModel =
@@ -135,6 +143,7 @@ class PaytmRepository extends BaseRepo {
         ApiPath.kCreatePaytmTransaction,
         queryParams: _queryParams,
         cBaseUrl: _baseUrl,
+        apiName: '$_payments/createTransaction',
       );
       final _responseModel = TransactionResponseModel.fromMap(response);
 
@@ -163,6 +172,7 @@ class PaytmRepository extends BaseRepo {
         ApiPath().kCreateSubscription,
         body: _body,
         cBaseUrl: _baseUrl2,
+        apiName: '$_payments/createSubscription',
       );
 
       CreateSubscriptionResponseModel _responseModel =
@@ -191,6 +201,7 @@ class PaytmRepository extends BaseRepo {
         ApiPath().kValidateVpa,
         queryParams: _queryParams,
         cBaseUrl: _baseUrl2,
+        apiName: '$_subscription/validateVPAByID',
       );
 
       final _responseModel = ValidateVpaResponseModel.fromJson(response);
@@ -215,6 +226,7 @@ class PaytmRepository extends BaseRepo {
         ApiPath().kCreateSubscription,
         body: _body,
         cBaseUrl: _baseUrl2,
+        apiName: '$_payments/createSubscription',
       );
       if (response != null) {
         final Map responseData = response["data"];
@@ -244,6 +256,7 @@ class PaytmRepository extends BaseRepo {
         ApiPath().kPauseSubscription,
         body: _body,
         cBaseUrl: _baseUrl2,
+        apiName: '$_payments/pauseSubscription',
       );
       final Map responseData = response["data"];
 
@@ -267,6 +280,7 @@ class PaytmRepository extends BaseRepo {
         ApiPath().kResumeSubscription,
         body: _body,
         cBaseUrl: _baseUrl2,
+        apiName: '$_payments/resumeSubscription',
       );
 
       final Map responseData = response["data"];
@@ -292,6 +306,7 @@ class PaytmRepository extends BaseRepo {
         ApiPath().kProcessSubscription,
         body: _body,
         cBaseUrl: _baseUrl2,
+        apiName: '$_payments/processSubscription',
       );
       final Map<String, dynamic> responseData = response['data'];
       if (responseData['status'])
@@ -313,6 +328,7 @@ class PaytmRepository extends BaseRepo {
         ApiPath().kActiveSubscription,
         queryParams: _queryParams,
         cBaseUrl: _baseUrl2,
+        apiName: '$_subscription/byID',
       );
       logger!.d(response);
       final _responseData = response["data"];
@@ -336,6 +352,7 @@ class PaytmRepository extends BaseRepo {
         ApiPath().kNextDebitDate,
         queryParams: _queryParams,
         cBaseUrl: _baseUrl2,
+        apiName: '$_subscription/debitDateById',
       );
 
       final _responseStatus = response["data"];

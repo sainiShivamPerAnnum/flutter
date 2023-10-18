@@ -26,6 +26,7 @@ class PrizingRepo extends BaseRepo {
           "redeemType": claimChoice.name,
         },
         cBaseUrl: _baseUrl,
+        apiName: 'prizeRedemption/claimPrize',
       );
 
       final data = response['data'];

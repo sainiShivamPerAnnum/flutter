@@ -14,6 +14,8 @@ class GameRepo extends BaseRepo {
       ? "https://4mm5ihvkz0.execute-api.ap-south-1.amazonaws.com/dev"
       : "https://u9c7w6pnw7.execute-api.ap-south-1.amazonaws.com/prod";
 
+  static const _games = 'games';
+
   List<GameModel>? _allgames;
   List<GameModel>? games;
 
@@ -34,6 +36,7 @@ class GameRepo extends BaseRepo {
       final response = await APIService.instance.getData(
         ApiPath.getGames,
         cBaseUrl: _baseUrl,
+        apiName: _games,
       );
       log("Games: ${response["data"]}");
 
@@ -57,6 +60,7 @@ class GameRepo extends BaseRepo {
       final response = await APIService.instance.getData(
         ApiPath.getGameByCode(gameCode),
         cBaseUrl: _baseUrl,
+        apiName: "$_games/byCode",
       );
       final game = GameModel.fromMap(response["data"]);
       return ApiResponse<GameModel>(model: game, code: 200);
@@ -72,6 +76,7 @@ class GameRepo extends BaseRepo {
       final response = await APIService.instance.getData(
         '/games/tiers',
         cBaseUrl: _baseUrl,
+        apiName: "$_games/tiers",
       );
 
       gameTiers = GameTiers.fromJson(response);

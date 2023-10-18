@@ -13,6 +13,8 @@ class CouponRepository extends BaseRepo {
   final CustomLogger _logger = locator<CustomLogger>();
   final _rsaEncryption = RSAEncryption();
 
+  static const _coupons = 'coupons';
+
   Future<ApiResponse<EligibleCouponResponseModel>> getEligibleCoupon(
       {required String assetType,
       String? uid,
@@ -36,6 +38,7 @@ class CouponRepository extends BaseRepo {
         ApiPath.kFelloCoupons,
         body: body,
         cBaseUrl: AppEnvironment.instance.coupons,
+        apiName: '$_coupons/eligible',
       );
       EligibleCouponResponseModel reponseModel =
           EligibleCouponResponseModel.fromMap(res["data"]);
@@ -57,6 +60,7 @@ class CouponRepository extends BaseRepo {
         queryParams: {
           "type": assetType,
         },
+        apiName: _coupons,
       );
 
       final List<CouponModel> coupons =

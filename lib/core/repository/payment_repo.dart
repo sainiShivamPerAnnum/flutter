@@ -13,6 +13,8 @@ import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
 
 class PaymentRepository extends BaseRepo {
+  static const _payments = 'payments';
+
   final _baseUrl = FlavorConfig.isDevelopment()
       ? 'https://wd7bvvu7le.execute-api.ap-south-1.amazonaws.com/dev'
       : 'https://yg58g0feo0.execute-api.ap-south-1.amazonaws.com/prod';
@@ -33,6 +35,7 @@ class PaymentRepository extends BaseRepo {
           this.userService!.baseUser!.uid,
         ),
         cBaseUrl: _baseUrl,
+        apiName: '$_payments/withdrawableByID',
       );
       WithdrawableGoldResponseModel responseModel =
           WithdrawableGoldResponseModel.fromMap(quantityResponse);
@@ -65,6 +68,7 @@ class PaymentRepository extends BaseRepo {
         ApiPath().kAddBankAccount,
         body: _body,
         cBaseUrl: _baseUrl,
+        apiName: '$_payments/addBankDetails',
       );
       logger!.d(response);
 
@@ -94,6 +98,7 @@ class PaymentRepository extends BaseRepo {
       final response = await APIService.instance.getData(
         ApiPath.kGetBankAccountDetails(userService!.baseUser!.uid),
         cBaseUrl: _baseUrl,
+        apiName: '$_payments/bankDetails',
       );
       final Map? responseData = response["data"];
       BankAccountDetailsModel? bankAccountDetails;
@@ -114,6 +119,7 @@ class PaymentRepository extends BaseRepo {
       final response = await APIService.instance.getData(
         ApiPath.goldProScheme,
         cBaseUrl: _baseUrl,
+        apiName: '$_payments/scheme',
       );
       final responseData = response["data"]["scheme"];
       GoldProSchemeModel? goldProSchemeDetails;
@@ -133,13 +139,16 @@ class PaymentRepository extends BaseRepo {
     String schemeId,
   ) async {
     try {
-      final response = await APIService.instance.postData(ApiPath.Fd,
-          cBaseUrl: _baseUrl,
-          body: {
-            "quantity": leaseQty,
-            "schemeId": schemeId,
-            "uid": userService.baseUser!.uid
-          });
+      final response = await APIService.instance.postData(
+        ApiPath.Fd,
+        cBaseUrl: _baseUrl,
+        body: {
+          "quantity": leaseQty,
+          "schemeId": schemeId,
+          "uid": userService.baseUser!.uid,
+        },
+        apiName: '$_payments/fd',
+      );
       final responseData = response["data"]["fd"];
       GoldProInvestmentResponseModel? goldProInvestmentDetails;
       if (responseData != null) {
@@ -160,6 +169,7 @@ class PaymentRepository extends BaseRepo {
       final response = await APIService.instance.getData(
         ApiPath.getFds(userService.baseUser!.uid!),
         cBaseUrl: _baseUrl,
+        apiName: '$_payments/getFDsByID',
       );
       final responseData = response["data"]["fds"];
       List<GoldProInvestmentResponseModel>? goldProInvestments;
@@ -181,6 +191,7 @@ class PaymentRepository extends BaseRepo {
         ApiPath.Fd,
         cBaseUrl: _baseUrl,
         body: {"fdId": fdId, "uid": userService.baseUser!.uid},
+        apiName: '$_payments/fd',
       );
 
       return ApiResponse(model: true, code: 200);

@@ -22,6 +22,8 @@ class CampaignRepo extends BaseRepo {
       ? 'https://d18gbwu7fwwwtf.cloudfront.net/'
       : 'https://d11q4cti75qmcp.cloudfront.net/';
 
+  static const _campaigns = 'campaigns';
+
   Future<ApiResponse<dynamic>> getOngoingEvents() async {
     List<EventModel> events = [];
     try {
@@ -35,6 +37,7 @@ class CampaignRepo extends BaseRepo {
           ApiPath.kOngoingCampaigns,
           cBaseUrl: _baseUrl,
           queryParams: _queryParams,
+          apiName: _campaigns,
         ),
         (response) {
           final responseData = response["data"];
@@ -62,6 +65,7 @@ class CampaignRepo extends BaseRepo {
         'felloFacts.txt',
         cBaseUrl: _cdnBaseUrl,
         decryptData: true,
+        apiName: "$_campaigns/felloFacts",
       );
 
       // final responseData = response["data"];
@@ -84,6 +88,7 @@ class CampaignRepo extends BaseRepo {
       final response = await APIService.instance.getData(
         ApiPath.happyHour,
         cBaseUrl: _baseUrl,
+        apiName: "$_campaigns/happyHour",
       );
 
       return ApiResponse<HappyHourCampign>(
@@ -99,6 +104,7 @@ class CampaignRepo extends BaseRepo {
       final response = await APIService.instance.getData(
         ApiPath.lastWeekRecap,
         cBaseUrl: _baseUrl,
+        apiName: "$_campaigns/lastWeekRecap",
       );
 
       final responseData = response["data"];

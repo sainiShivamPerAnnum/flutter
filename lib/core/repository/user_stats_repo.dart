@@ -14,6 +14,9 @@ class UserStatsRepo extends BaseRepo with ChangeNotifier {
   final Api _api = locator<Api>();
   final ApiPath _apiPaths = locator<ApiPath>();
   final _userService = locator<UserService>();
+
+  static const _stats = 'stats';
+
   GameStats? gameStats;
   late Completer<GameStats?> completer;
   Future<void> getGameStats() async {
@@ -23,6 +26,7 @@ class UserStatsRepo extends BaseRepo with ChangeNotifier {
       final res = await APIService.instance.getData(
         ApiPath.getGameStats(uid),
         cBaseUrl: AppEnvironment.instance.stats,
+        apiName: '$_stats/getGameStats',
       );
       gameStats = GameStats.fromJson(res['data']);
       completer.complete(gameStats);

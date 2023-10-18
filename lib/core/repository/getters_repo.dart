@@ -32,6 +32,9 @@ import 'package:flutter/material.dart';
 //[TODO]:Added Prod CDN url;
 class GetterRepository extends BaseRepo {
   final _cacheService = CacheService();
+
+  static const _getters = 'getters';
+
   final _baseUrl = FlavorConfig.isDevelopment()
       ? 'https://qdp0idzhjc.execute-api.ap-south-1.amazonaws.com/dev'
       : 'https://vbbe56oey5.execute-api.ap-south-1.amazonaws.com/prod';
@@ -59,6 +62,7 @@ class GetterRepository extends BaseRepo {
           "freq": freq,
           "code": code,
         },
+        apiName: '$_getters/${ApiPath.statistics}',
       );
 
       debugPrint("Reaching here: ${statisticsResponse.toString()}");
@@ -82,6 +86,7 @@ class GetterRepository extends BaseRepo {
         () => APIService.instance.getData(
           ApiPath.getWinners(type, freq),
           cBaseUrl: _baseUrl,
+          apiName: '$_getters/getWinnersByGameType',
         ),
         (p0) {
           logger.d("Winners for $type: ${p0.toString()}");
@@ -91,17 +96,6 @@ class GetterRepository extends BaseRepo {
           );
         },
       );
-
-      // final winnersResponse = await APIService.instance.getData(
-      //   ApiPath.getWinners(type, freq),
-      //   cBaseUrl: _baseUrl,
-      //   token: token,
-      // );
-
-      // return ApiResponse(
-      //   model: WinnersModel.fromMap(winnersResponse["data"]),
-      //   code: 200,
-      // );
     } catch (e) {
       logger.e(e.toString());
       return ApiResponse.withError(
@@ -139,6 +133,7 @@ class GetterRepository extends BaseRepo {
         ApiPath.getAssetOptions(),
         queryParams: map,
         cBaseUrl: _baseUrl,
+        apiName: '$_getters/getAssetOptionsByType',
       );
 
       return ApiResponse<AssetOptionsModel>(
@@ -171,6 +166,7 @@ class GetterRepository extends BaseRepo {
           'appConfig.txt',
           cBaseUrl: _cdnBaseUrl,
           decryptData: true,
+          apiName: '$_getters/getAppConfig',
         ),
         (p0) {
           log("AppConfig: ${p0.toString()}", name: "AppConfig");
@@ -194,6 +190,7 @@ class GetterRepository extends BaseRepo {
       final winnersResponse = await APIService.instance.getData(
         ApiPath.pastWinners(type, freq),
         cBaseUrl: _baseUrl,
+        apiName: '$_getters/getPastWinnersByGameType',
       );
 
       final winnerModel =
@@ -206,30 +203,6 @@ class GetterRepository extends BaseRepo {
     }
   }
 
-  // Future<ApiResponse<List<AmountChipsModel>>> getAmountChips({
-  //   required String freq,
-  // }) async {
-  //   try {
-  //     final token = await getBearerToken();
-  //     final amountChipsResponse = await APIService.instance.getData(
-  //       ApiPath.amountChips,
-  //       cBaseUrl: _baseUrl,
-  //       queryParams: {
-  //         "freq": freq,
-  //       },
-  //       token: token,
-  //     );
-
-  //     final amountChipsModel =
-  //         AmountChipsModel.helper.fromMapArray(amountChipsResponse["data"]);
-
-  //     return ApiResponse(model: amountChipsModel, code: 200);
-  //   } catch (e) {
-  //     logger!.e(e.toString());
-  //     return ApiResponse.withError("Unable to fetch statistics", 400);
-  //   }
-  // }
-
   Future<ApiResponse<List>> getSubCombosAndChips({
     required String freq,
   }) async {
@@ -237,6 +210,7 @@ class GetterRepository extends BaseRepo {
       final subComboResponse = await APIService.instance.getData(
         ApiPath.getSubCombosChips(freq.toUpperCase()),
         cBaseUrl: _baseUrl,
+        apiName: '$_getters/getSubsConfigByFreq',
       );
 
       final subComboModelData =
@@ -271,6 +245,7 @@ class GetterRepository extends BaseRepo {
         queryParams: {
           "uid": userService.baseUser!.uid,
         },
+        apiName: '$_getters/${ApiPath.kPromos}',
       );
 
       final responseData = response["data"];
@@ -302,6 +277,7 @@ class GetterRepository extends BaseRepo {
           // token: token,
           cBaseUrl: _baseUrl,
           queryParams: {"type": type.name},
+          apiName: '$_getters/getFAQByType',
         ),
         (response) {
           final faqs = FAQDataModel.helper.fromMapArray(response["data"]);
@@ -321,6 +297,7 @@ class GetterRepository extends BaseRepo {
         '${ApiPath.kStory}/$topic',
         cBaseUrl: _baseUrl,
         queryParams: {"topic": topic},
+        apiName: '$_getters/getStoryByTopic',
       );
 
       final responseData = response["data"];
@@ -344,6 +321,7 @@ class GetterRepository extends BaseRepo {
           "dynamicUi.txt",
           cBaseUrl: _cdnBaseUrl,
           decryptData: true,
+          apiName: '$_getters/getDynamicUI',
         ),
         (response) {
           final responseData = response["dynamicUi"];
@@ -365,6 +343,7 @@ class GetterRepository extends BaseRepo {
       final response = await APIService.instance.getData(
         ApiPath.quickSave,
         cBaseUrl: _baseUrl,
+        apiName: '$_getters/quickSave',
       );
 
       final quickSave = QuickSaveModel.fromJson(response);
@@ -381,6 +360,7 @@ class GetterRepository extends BaseRepo {
       final response = await APIService.instance.getData(
         ApiPath.incentives,
         cBaseUrl: _baseUrl,
+        apiName: '$_getters/incentives',
       );
 
       return ApiResponse<List>(
@@ -396,6 +376,7 @@ class GetterRepository extends BaseRepo {
       final response = await APIService.instance.getData(
         ApiPath.tambolaOffers,
         cBaseUrl: _baseUrl,
+        apiName: '$_getters/tambolaOffers',
       );
 
       return ApiResponse<List<TicketsOffers>>(
@@ -419,6 +400,7 @@ class GetterRepository extends BaseRepo {
         () => APIService.instance.getData(
           ApiPath.goldRatesGraph,
           cBaseUrl: _baseUrl,
+          apiName: '$_getters/goldRateGraph',
         ),
         (response) {
           final List rates = response["data"]["rates"];
@@ -459,6 +441,7 @@ class GetterRepository extends BaseRepo {
           () => APIService.instance.getData(
                 ApiPath.homeScreenCarouselItems,
                 cBaseUrl: _baseUrl,
+                apiName: '$_getters/homeCarousel',
               ), (response) {
         List<HomeScreenCarouselItemsModel> items = HomeScreenCarouselItemsModel
             .helper
@@ -480,6 +463,7 @@ class GetterRepository extends BaseRepo {
           () => APIService.instance.getData(
                 ApiPath.goldProConfig,
                 cBaseUrl: _baseUrl,
+                apiName: '$_getters/goldProConfig',
               ), (response) {
         GoldProConfig config = GoldProConfig.fromJson(response);
 
