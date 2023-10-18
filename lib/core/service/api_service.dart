@@ -50,10 +50,12 @@ abstract class API {
 
 class APIService implements API {
   final Dio _dio = Dio()
-    ..interceptors.addAll([
-      CoreInterceptor(),
-      LogInterceptor(),
-    ])
+    ..interceptors.addAll(
+      [
+        CoreInterceptor(),
+        LogInterceptor(),
+      ],
+    )
     ..httpClientAdapter = Http2Adapter(
       ConnectionManager(
         idleTimeout: const Duration(seconds: 20),

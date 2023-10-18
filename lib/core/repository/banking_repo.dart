@@ -25,7 +25,7 @@ class BankingRepository extends BaseRepo {
   static const _banking = 'bankingOps';
 
   final _baseUrl = FlavorConfig.isDevelopment()
-      ? "https://cqfb61p1m2.execute-api.ap-south-1.amazonaws.com/dev"
+      ? "https://6iq5sy5tp8.execute-api.ap-south-1.amazonaws.com/dev"
       : "https://szqrjkwkka.execute-api.ap-south-1.amazonaws.com/prod";
 
   Future<ApiResponse<VerifyPanResponseModel>> verifyPan(
