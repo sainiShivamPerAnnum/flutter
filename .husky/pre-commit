@@ -5,7 +5,7 @@ changed_files=$(git diff --cached --name-only | grep 'lib/.*' | tr '\n' ' ')
 
 if [ -n "$changed_files" ]
 then
-      flutter format $changed_files
+      dart format $changed_files
       git add $changed_files
 else
       printf "\e[33;1m%s\e[0m\n" "No flutter file changed"

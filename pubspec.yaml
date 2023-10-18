@@ -121,6 +121,7 @@ dev_dependencies:
   flutter_lints: ^2.0.1
   integration_test:
     sdk: flutter
+  husky: ^0.1.6
 
 # dependency_overrides:
 #    firebase_core_platform_interface: 4.5.1
