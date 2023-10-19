@@ -1,6 +1,7 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:dio/dio.dart';
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/constants/cache_keys.dart';
 import 'package:felloapp/core/model/signed_Image_url_model.dart';
@@ -99,14 +100,15 @@ class BankingRepository extends BaseRepo {
 
   Future<ApiResponse<bool>> uploadPanImageFile(
       String uploadUrl, XFile imageFile) async {
+    final dio = Dio();
+
     try {
-      await APIService.instance.putData(
-        '',
-        absoluteUrl: uploadUrl,
-        headers: {'Content-Type': "image/${imageFile.name.split('.').last}"},
-        body: await File(imageFile.path).readAsBytes(),
-        passToken: false,
-        apiName: 'upload/image',
+      await dio.put(
+        uploadUrl,
+        options: Options(
+          headers: {'Content-Type': "image/${imageFile.name.split('.').last}"},
+        ),
+        data: await File(imageFile.path).readAsBytes(),
       );
 
       return ApiResponse(model: true, code: 200);

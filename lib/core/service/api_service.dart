@@ -165,7 +165,6 @@ class APIService implements API {
     String url, {
     required String apiName,
     Object? body,
-    String? absoluteUrl,
     String? cBaseUrl,
     Map<String, dynamic>? headers,
     bool passToken = true,
@@ -175,7 +174,7 @@ class APIService implements API {
 
       final response = await _request<T>(
         _RequestType.PUT,
-        absoluteUrl ?? finalPath,
+        finalPath,
         headers: headers,
         data: body,
         passToken: passToken,
