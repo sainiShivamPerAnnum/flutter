@@ -273,13 +273,13 @@ class APIService implements API {
       headers: modifiedHeaders,
     );
 
-    final metric = _performance.newHttpMetric(
+    final trace = _performance.newTrace(
       apiName,
-      _enumMapping[method]!,
     );
 
     try {
-      await metric.start();
+      await trace.start();
+      trace.putAttribute('http.method', method.name);
 
       final response = await _dio.request<T>(
         path,
@@ -290,33 +290,39 @@ class APIService implements API {
 
       final code = response.statusCode;
       if (code != null) {
-        metric.httpResponseCode = code;
+        trace.putAttribute('status_code', code.toString());
       }
 
       final contentHeaders = response.headers[HttpHeaders.contentLengthHeader];
       if (contentHeaders != null && contentHeaders.isNotEmpty) {
-        metric.requestPayloadSize = int.tryParse(contentHeaders.first);
+        trace.putAttribute(
+          HttpHeaders.contentLengthHeader,
+          contentHeaders.first,
+        );
       }
 
-      await metric.stop();
+      await trace.stop();
       return response;
     } on DioException catch (e) {
       final response = e.response;
 
       final code = response?.statusCode;
       if (code != null) {
-        metric.httpResponseCode = code;
+        trace.putAttribute('status_code', code.toString());
       }
 
       final contentHeaders = response?.headers[HttpHeaders.contentLengthHeader];
       if (contentHeaders != null && contentHeaders.isNotEmpty) {
-        metric.requestPayloadSize = int.tryParse(contentHeaders.first);
+        trace.putAttribute(
+          HttpHeaders.contentLengthHeader,
+          contentHeaders.first,
+        );
       }
 
-      await metric.stop();
+      await trace.stop();
       rethrow;
     } catch (e) {
-      await metric.stop();
+      await trace.stop();
       rethrow;
     }
   }
