@@ -125,7 +125,6 @@ class SaveViewWrapper extends StatelessWidget {
               )
             : ListView(
                 controller: RootController.controller,
-                shrinkWrap: true,
                 physics: const ClampingScrollPhysics(),
                 cacheExtent: 1000,
                 padding: EdgeInsets.zero,
