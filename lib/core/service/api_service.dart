@@ -279,7 +279,7 @@ class APIService implements API {
 
     try {
       await trace.start();
-      trace.putAttribute('http.method', method.name);
+      trace.putAttribute('method', method.name);
 
       final response = await _dio.request<T>(
         path,
