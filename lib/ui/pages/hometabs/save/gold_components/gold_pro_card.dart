@@ -38,7 +38,10 @@ class GoldProCard extends StatelessWidget {
       child: Container(
           width: SizeConfig.screenWidth,
           height: SizeConfig.screenWidth! * 0.47,
-          margin: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+          margin: EdgeInsets.symmetric(
+            vertical: SizeConfig.padding16,
+            horizontal: SizeConfig.pageHorizontalMargins,
+          ),
           decoration: BoxDecoration(
             color: UiConstants.kGoldProBgColor,
             border: Border.all(color: UiConstants.kGoldProBorder, width: 2),

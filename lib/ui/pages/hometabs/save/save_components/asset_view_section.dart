@@ -123,7 +123,7 @@ class _AssetSectionViewState extends State<AssetSectionView> {
                   body: Stack(
                     children: [
                       Container(
-                        height: SizeConfig.screenHeight! * 0.5,
+                        height: SizeConfig.screenHeight! * 0.35,
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
                               colors: [
@@ -194,8 +194,16 @@ class _AssetSectionViewState extends State<AssetSectionView> {
                                     ? _buildInfoSection()
                                     : const GoldInfoWidget(),
                                 const GoldRateWidget(),
-                                if (widget.type == InvestmentType.AUGGOLD99)
-                                  const LineGradientChart(),
+                                () {
+                                  final isNewUser = locator<UserService>()
+                                      .userSegments
+                                      .contains(Constants.NEW_USER);
+                                  if (widget.type == InvestmentType.AUGGOLD99 &&
+                                      isNewUser) {
+                                    const LineGradientChart();
+                                  }
+                                  return const SizedBox.shrink();
+                                }(),
                                 const GoldProCard()
                               ],
                               if (balance == 0)
@@ -229,10 +237,6 @@ class _AssetSectionViewState extends State<AssetSectionView> {
                               if (!_isGold) FloPremiumSection(model: model),
                               if (!_isGold) FloBasicCard(model: model),
                               if (!isNewUser) ...[
-                                MiniTransactionCard(
-                                    investmentType: widget.type),
-                                const AutosaveCard(
-                                    investmentType: InvestmentType.AUGGOLD99),
                                 if (balance != 0 && _isGold) ...[
                                   Align(
                                     alignment: Alignment.centerLeft,
@@ -251,7 +255,11 @@ class _AssetSectionViewState extends State<AssetSectionView> {
                                   SizedBox(
                                     height: SizeConfig.padding28,
                                   ),
-                                ]
+                                ],
+                                MiniTransactionCard(
+                                    investmentType: widget.type),
+                                const AutosaveCard(
+                                    investmentType: InvestmentType.AUGGOLD99),
                               ],
                               if (!isNewUser) ...[
                                 CircularSlider(

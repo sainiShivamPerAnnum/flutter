@@ -24,8 +24,10 @@ class GoldInfoWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     return Consumer<UserService>(builder: (context, model, child) {
       return Container(
-        margin:
-            EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
+        margin: EdgeInsets.symmetric(
+          horizontal: SizeConfig.pageHorizontalMargins,
+          vertical: SizeConfig.padding16,
+        ),
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(SizeConfig.roundness16),
           border: Border.all(width: 1, color: Colors.white),
@@ -53,8 +55,9 @@ class GoldInfoWidget extends StatelessWidget {
                     children: [
                       Text(
                         "Gold Amount",
-                        style: TextStyles.rajdhaniSB.body2
-                            .colour(Colors.white.withOpacity(0.7)),
+                        style: TextStyles.rajdhaniSB.body2.copyWith(
+                          color: UiConstants.kTextFieldTextColor,
+                        ),
                       ),
                       SizedBox(
                         height: SizeConfig.padding4,
@@ -65,8 +68,9 @@ class GoldInfoWidget extends StatelessWidget {
                           Text(
                             "₹${BaseUtil.digitPrecision(model.userPortfolio.augmont.gold.balance ?? 0, 2)}",
                             textAlign: TextAlign.center,
-                            style: TextStyles.sourceSansSB.title5.colour(
-                              Colors.white.withOpacity(0.8),
+                            style: TextStyles.sourceSansSB.title5.copyWith(
+                              color: Colors.white,
+                              height: 1.27,
                             ),
                           ),
                           SizedBox(width: SizeConfig.padding6),
@@ -122,12 +126,27 @@ class GoldInfoWidget extends StatelessWidget {
                       SizedBox(
                         height: SizeConfig.padding4,
                       ),
-                      Text(
-                        "${(model.userFundWallet?.augGoldQuantity ?? 0).toString()} gms",
-                        style: TextStyles.sourceSansSB.title5.colour(
-                          Colors.white.withOpacity(0.8),
+                      Text.rich(
+                        TextSpan(
+                          children: [
+                            TextSpan(
+                              text:
+                                  "${(model.userFundWallet?.augGoldQuantity ?? 0).toString()}",
+                              style: TextStyles.sourceSansSB.title5.copyWith(
+                                color: Colors.white,
+                                height: 1.27,
+                              ),
+                            ),
+                            TextSpan(
+                              text: " gms",
+                              style: TextStyles.sourceSansSB.body1.copyWith(
+                                color: Colors.white,
+                                height: 1.27,
+                              ),
+                            )
+                          ],
                         ),
-                      )
+                      ),
                     ],
                   )
                 ],
@@ -169,12 +188,7 @@ class GoldInfoWidget extends StatelessWidget {
                   },
                 );
               },
-              child: Container(
-                padding: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.padding20,
-                  vertical: SizeConfig.padding12,
-                ),
-                width: SizeConfig.screenWidth,
+              child: DecoratedBox(
                 decoration: BoxDecoration(
                   color: UiConstants.kGoldProBgColor,
                   borderRadius: BorderRadius.only(

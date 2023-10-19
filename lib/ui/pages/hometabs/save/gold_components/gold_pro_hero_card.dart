@@ -43,23 +43,29 @@ class NewGoldProHero extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Row(
-      mainAxisAlignment: MainAxisAlignment.center,
-      children: [
-        Text(
-          "Get ${AppConfig.getValue(AppConfigKey.goldProInterest).toDouble()}% extra returns with ${Constants.ASSET_GOLD_STAKE} ",
-          style:
-              TextStyles.sourceSansM.body2.colour(UiConstants.kGoldProPrimary),
-        ),
-        Transform.translate(
-          offset: Offset(0, SizeConfig.padding1),
-          child: Icon(
-            Icons.arrow_forward_ios,
-            size: SizeConfig.iconSize2,
-            color: UiConstants.kGoldProPrimary,
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 17,
+        vertical: 12,
+      ),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.center,
+        children: [
+          Text(
+            "Get ${AppConfig.getValue(AppConfigKey.goldProInterest).toDouble()}% extra returns with ${Constants.ASSET_GOLD_STAKE} ",
+            style: TextStyles.sourceSansM.body2
+                .colour(UiConstants.kGoldProPrimary),
           ),
-        )
-      ],
+          Transform.translate(
+            offset: Offset(0, SizeConfig.padding1),
+            child: Icon(
+              Icons.arrow_forward_ios,
+              size: SizeConfig.iconSize2,
+              color: UiConstants.kGoldProPrimary,
+            ),
+          )
+        ],
+      ),
     );
   }
 }
@@ -71,78 +77,166 @@ class ProgressGoldProHero extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Text(
-          "Get ${AppConfig.getValue(AppConfigKey.goldProInterest).toDouble()}% extra returns with ${Constants.ASSET_GOLD_STAKE} ",
-          style:
-              TextStyles.sourceSansSB.body2.colour(UiConstants.kGoldProPrimary),
-        ),
-        SizedBox(height: SizeConfig.padding18),
-        Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(100),
-            color: Colors.white,
-          ),
-          alignment: Alignment.centerLeft,
-          height: SizeConfig.padding16,
-          width: SizeConfig.screenWidth,
-          child: FractionallySizedBox(
-            widthFactor: BaseUtil.digitPrecision(
-                    model.userFundWallet?.augGoldQuantity ?? 0.0, 2) /
-                AppConfig.getValue(AppConfigKey.goldProInvestmentChips)[0]
-                    .toDouble(),
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 17),
+      child: Column(
+        children: [
+          ClipPath(
+            clipper: InverseBorderClipper(
+              bottomCornerRadius: 12,
+              upperCornerRadius: 16,
+            ),
             child: Container(
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(100),
-                gradient: LinearGradient(
-                  colors: [
-                    UiConstants.kGoldProPrimary,
-                    UiConstants.KGoldProPrimaryDark
-                  ],
-                  begin: Alignment.topLeft,
-                  end: Alignment.bottomRight,
+              padding: const EdgeInsets.symmetric(horizontal: 45, vertical: 4),
+              color: UiConstants.kBackgroundColor,
+              child: Text(
+                'Gold Pro exclusively for first 100 users',
+                style: TextStyles.sourceSansSB.body4.copyWith(
+                  color: UiConstants.kGoldProPrimary,
+                ),
+                textAlign: TextAlign.center,
+              ),
+            ),
+          ),
+          SizedBox(
+            height: SizeConfig.padding12,
+          ),
+          Text(
+            "Get ${AppConfig.getValue(AppConfigKey.goldProInterest).toDouble()}% extra returns with ${Constants.ASSET_GOLD_STAKE}",
+            style: TextStyles.sourceSansSB.body3.colour(
+              UiConstants.kGoldProPrimary,
+            ),
+          ),
+          SizedBox(height: SizeConfig.padding18),
+          Container(
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(100),
+              color: Colors.white,
+            ),
+            alignment: Alignment.centerLeft,
+            height: SizeConfig.padding16,
+            width: SizeConfig.screenWidth,
+            child: FractionallySizedBox(
+              widthFactor: BaseUtil.digitPrecision(
+                      model.userFundWallet?.augGoldQuantity ?? 0.0, 2) /
+                  AppConfig.getValue(AppConfigKey.goldProInvestmentChips)[0]
+                      .toDouble(),
+              child: Container(
+                decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(100),
+                  gradient: LinearGradient(
+                    colors: [
+                      UiConstants.kGoldProPrimary,
+                      UiConstants.KGoldProPrimaryDark
+                    ],
+                    begin: Alignment.topLeft,
+                    end: Alignment.bottomRight,
+                  ),
+                ),
+                child: const GoldShimmerWidget(
+                  size: ShimmerSizeEnum.small,
                 ),
               ),
-              child: const GoldShimmerWidget(
-                size: ShimmerSizeEnum.small,
-              ),
             ),
           ),
-        ),
-        SizedBox(height: SizeConfig.padding8),
-        Row(
-          children: [
-            Text(
-              "0.0g",
-              style: TextStyles.sourceSansSB.body0.colour(Colors.white),
-            ),
-            const Spacer(),
-            Text(
-              "${AppConfig.getValue(AppConfigKey.goldProInvestmentChips)[0].toInt()}g",
-              style: TextStyles.sourceSansSB.body0.colour(Colors.white),
-            ),
-          ],
-        ),
-        SizedBox(height: SizeConfig.padding16),
-        Row(
-          children: [
-            Text(
-              "Save ${BaseUtil.digitPrecision(AppConfig.getValue(AppConfigKey.goldProInvestmentChips)[0].toDouble() - (model.userFundWallet?.augGoldQuantity ?? 0.0), 4)}g more to be eligible for Gold Pro",
-              style: TextStyles.sourceSansM.body3
-                  .colour(UiConstants.kGoldProPrimary),
-            ),
-            const Spacer(),
-            Icon(
-              Icons.arrow_forward_ios,
-              color: UiConstants.kGoldProPrimary,
-              size: SizeConfig.iconSize2,
-            )
-          ],
-        )
-      ],
+          SizedBox(height: SizeConfig.padding8),
+          Row(
+            children: [
+              Text(
+                "0 gms",
+                style: TextStyles.sourceSansSB.body2.colour(Colors.white),
+              ),
+              const Spacer(),
+              Text(
+                "${AppConfig.getValue(AppConfigKey.goldProInvestmentChips)[0].toInt()} gms",
+                style: TextStyles.sourceSansSB.body2.colour(Colors.white),
+              ),
+            ],
+          ),
+          SizedBox(height: SizeConfig.padding12),
+          Row(
+            children: [
+              Text(
+                "Save ${BaseUtil.digitPrecision(AppConfig.getValue(AppConfigKey.goldProInvestmentChips)[0].toDouble() - (model.userFundWallet?.augGoldQuantity ?? 0.0), 4)} gms more to be eligible for Gold Pro",
+                style: TextStyles.sourceSansM.body4.colour(
+                  UiConstants.kGoldProPrimary,
+                ),
+              ),
+              const Spacer(),
+              Icon(
+                Icons.arrow_forward_ios,
+                color: UiConstants.kGoldProPrimary,
+                size: SizeConfig.iconSize3,
+              )
+            ],
+          ),
+          SizedBox(height: SizeConfig.padding12),
+        ],
+      ),
     );
   }
+}
+
+class InverseBorderClipper extends CustomClipper<Path> {
+  final double upperCornerRadius;
+  final double bottomCornerRadius;
+
+  InverseBorderClipper({
+    this.upperCornerRadius = 14.0,
+    this.bottomCornerRadius = 10.0,
+  });
+
+  @override
+  Path getClip(Size size) {
+    final path = Path();
+    path.moveTo(upperCornerRadius, 0);
+
+    path.quadraticBezierTo(
+      upperCornerRadius * 2,
+      0,
+      upperCornerRadius * 2,
+      size.height - bottomCornerRadius,
+    );
+
+    path.quadraticBezierTo(
+      upperCornerRadius * 2,
+      size.height,
+      (upperCornerRadius * 2) + bottomCornerRadius,
+      size.height,
+    );
+
+    path.lineTo(
+      size.width - ((upperCornerRadius * 2) + bottomCornerRadius),
+      size.height,
+    );
+
+    path.quadraticBezierTo(
+      size.width - (upperCornerRadius * 2),
+      size.height,
+      size.width - (upperCornerRadius * 2),
+      size.height - bottomCornerRadius,
+    );
+
+    path.lineTo(
+      size.width - (upperCornerRadius * 2),
+      upperCornerRadius,
+    );
+
+    path.quadraticBezierTo(
+      size.width - (upperCornerRadius * 2),
+      0,
+      size.width - upperCornerRadius,
+      0,
+    );
+
+    path.close();
+    return path;
+  }
+
+  @override
+  bool shouldReclip(covariant InverseBorderClipper oldClipper) =>
+      oldClipper.bottomCornerRadius != bottomCornerRadius ||
+      oldClipper.upperCornerRadius != upperCornerRadius;
 }
 
 class EligibleGoldProHero extends StatelessWidget {
@@ -152,31 +246,37 @@ class EligibleGoldProHero extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Text(
-          "Congratulations!",
-          style:
-              TextStyles.sourceSansB.body1.colour(UiConstants.kGoldProPrimary),
-        ),
-        SizedBox(height: SizeConfig.padding14),
-        Row(
-          children: [
-            Text(
-              "You are eligible for ${AppConfig.getValue(AppConfigKey.goldProInterest).toDouble()}% extra returns",
-              style: TextStyles.sourceSansSB.body2
-                  .colour(UiConstants.kGoldProPrimary),
-            ),
-            const Spacer(),
-            Icon(
-              Icons.arrow_forward_ios,
-              color: UiConstants.kGoldProPrimary,
-              size: SizeConfig.iconSize2,
-            )
-          ],
-        ),
-        SizedBox(height: SizeConfig.padding6),
-      ],
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 17,
+        vertical: 12,
+      ),
+      child: Column(
+        children: [
+          Text(
+            "Congratulations!",
+            style: TextStyles.sourceSansB.body1
+                .colour(UiConstants.kGoldProPrimary),
+          ),
+          SizedBox(height: SizeConfig.padding14),
+          Row(
+            children: [
+              Text(
+                "You are eligible for ${AppConfig.getValue(AppConfigKey.goldProInterest).toDouble()}% extra returns",
+                style: TextStyles.sourceSansSB.body2
+                    .colour(UiConstants.kGoldProPrimary),
+              ),
+              const Spacer(),
+              Icon(
+                Icons.arrow_forward_ios,
+                color: UiConstants.kGoldProPrimary,
+                size: SizeConfig.iconSize2,
+              )
+            ],
+          ),
+          SizedBox(height: SizeConfig.padding6),
+        ],
+      ),
     );
   }
 }
@@ -188,126 +288,132 @@ class InvestedGoldProHero extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Column(
-      children: [
-        Row(
-          children: [
-            Text(
-              "Getting ${AppConfig.getValue(AppConfigKey.goldProInterest).toDouble()}% extra returns with ${Constants.ASSET_GOLD_STAKE} ",
-              style: TextStyles.sourceSansM.body3
-                  .colour(UiConstants.kGoldProPrimary),
-            ),
-            const Spacer(),
-            Icon(
-              Icons.arrow_forward_ios,
-              color: UiConstants.kGoldProPrimary,
-              size: SizeConfig.iconSize2,
-            )
-          ],
-        ),
-        SizedBox(height: SizeConfig.padding16),
-        Row(
-          children: [
-            Expanded(
-              flex: 6,
-              child: Column(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Leased Amount",
-                    style: TextStyles.rajdhaniM.colour(Colors.white60),
-                  ),
-                  Row(
-                    crossAxisAlignment: CrossAxisAlignment.end,
-                    mainAxisAlignment: MainAxisAlignment.start,
-                    children: [
-                      Flexible(
-                        fit: FlexFit.loose,
-                        child: Text(
-                          "₹${BaseUtil.digitPrecision(model.userPortfolio.augmont.fd.balance)}",
-                          style: TextStyles.sourceSansSB.title4
-                              .colour(UiConstants.kGoldProPrimary),
+    return Padding(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 17,
+        vertical: 12,
+      ),
+      child: Column(
+        children: [
+          Row(
+            children: [
+              Text(
+                "Getting ${AppConfig.getValue(AppConfigKey.goldProInterest).toDouble()}% extra returns with ${Constants.ASSET_GOLD_STAKE} ",
+                style: TextStyles.sourceSansM.body3
+                    .colour(UiConstants.kGoldProPrimary),
+              ),
+              const Spacer(),
+              Icon(
+                Icons.arrow_forward_ios,
+                color: UiConstants.kGoldProPrimary,
+                size: SizeConfig.iconSize2,
+              )
+            ],
+          ),
+          SizedBox(height: SizeConfig.padding16),
+          Row(
+            children: [
+              Expanded(
+                flex: 6,
+                child: Column(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Leased Amount",
+                      style: TextStyles.rajdhaniM.colour(Colors.white60),
+                    ),
+                    Row(
+                      crossAxisAlignment: CrossAxisAlignment.end,
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        Flexible(
+                          fit: FlexFit.loose,
+                          child: Text(
+                            "₹${BaseUtil.digitPrecision(model.userPortfolio.augmont.fd.balance)}",
+                            style: TextStyles.sourceSansSB.title4
+                                .colour(UiConstants.kGoldProPrimary),
+                          ),
                         ),
-                      ),
-                      Column(
-                        children: [
-                          Row(
-                            crossAxisAlignment: CrossAxisAlignment.end,
-                            children: [
-                              SizedBox(width: SizeConfig.padding6),
-                              Transform.translate(
-                                offset: Offset(0, -SizeConfig.padding4),
-                                child: RotatedBox(
-                                  quarterTurns: BaseUtil.digitPrecision(
-                                              model.userPortfolio.augmont.fd
-                                                  .absGains,
-                                              2) >=
-                                          0
-                                      ? 0
-                                      : 2,
-                                  child: SvgPicture.asset(
-                                    Assets.arrow,
-                                    width: SizeConfig.iconSize2,
-                                    color: BaseUtil.digitPrecision(
+                        Column(
+                          children: [
+                            Row(
+                              crossAxisAlignment: CrossAxisAlignment.end,
+                              children: [
+                                SizedBox(width: SizeConfig.padding6),
+                                Transform.translate(
+                                  offset: Offset(0, -SizeConfig.padding4),
+                                  child: RotatedBox(
+                                    quarterTurns: BaseUtil.digitPrecision(
                                                 model.userPortfolio.augmont.fd
                                                     .absGains,
                                                 2) >=
                                             0
-                                        ? UiConstants.primaryColor
-                                        : Colors.red,
-                                  ),
-                                ),
-                              ),
-                              Text(
-                                  " ${BaseUtil.digitPrecision(
-                                    BaseUtil.digitPrecision(
-                                        model
-                                            .userPortfolio.augmont.fd.percGains,
-                                        2),
-                                    2,
-                                    false,
-                                  )}%",
-                                  style: TextStyles.sourceSans.body3.colour(
-                                      BaseUtil.digitPrecision(
+                                        ? 0
+                                        : 2,
+                                    child: SvgPicture.asset(
+                                      Assets.arrow,
+                                      width: SizeConfig.iconSize2,
+                                      color: BaseUtil.digitPrecision(
                                                   model.userPortfolio.augmont.fd
                                                       .absGains,
                                                   2) >=
                                               0
                                           ? UiConstants.primaryColor
-                                          : Colors.red)),
-                            ],
-                          ),
-                          SizedBox(
-                            height: SizeConfig.padding4,
-                          )
-                        ],
-                      ),
-                    ],
-                  )
-                ],
+                                          : Colors.red,
+                                    ),
+                                  ),
+                                ),
+                                Text(
+                                    " ${BaseUtil.digitPrecision(
+                                      BaseUtil.digitPrecision(
+                                          model.userPortfolio.augmont.fd
+                                              .percGains,
+                                          2),
+                                      2,
+                                      false,
+                                    )}%",
+                                    style: TextStyles.sourceSans.body3.colour(
+                                        BaseUtil.digitPrecision(
+                                                    model.userPortfolio.augmont
+                                                        .fd.absGains,
+                                                    2) >=
+                                                0
+                                            ? UiConstants.primaryColor
+                                            : Colors.red)),
+                              ],
+                            ),
+                            SizedBox(
+                              height: SizeConfig.padding4,
+                            )
+                          ],
+                        ),
+                      ],
+                    )
+                  ],
+                ),
               ),
-            ),
-            Expanded(
-              flex: 3,
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "Leased Value",
-                    style: TextStyles.rajdhaniM.colour(Colors.white60),
-                  ),
-                  Text(
-                    "${BaseUtil.digitPrecision(model.userFundWallet?.wAugFdQty ?? 0.0, 2)}gms",
-                    style: TextStyles.sourceSansSB.title4
-                        .colour(UiConstants.kGoldProPrimary),
-                  )
-                ],
-              ),
-            )
-          ],
-        ),
-      ],
+              Expanded(
+                flex: 3,
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      "Leased Value",
+                      style: TextStyles.rajdhaniM.colour(Colors.white60),
+                    ),
+                    Text(
+                      "${BaseUtil.digitPrecision(model.userFundWallet?.wAugFdQty ?? 0.0, 2)}gms",
+                      style: TextStyles.sourceSansSB.title4
+                          .colour(UiConstants.kGoldProPrimary),
+                    )
+                  ],
+                ),
+              )
+            ],
+          ),
+        ],
+      ),
     );
   }
 }
