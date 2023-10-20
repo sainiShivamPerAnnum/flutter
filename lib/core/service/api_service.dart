@@ -272,13 +272,19 @@ class APIService implements API {
       headers: modifiedHeaders,
     );
 
-    final trace = _performance.newTrace(
-      apiName,
-    );
+    Trace? trace;
 
     try {
+      trace = _performance.newTrace(
+        apiName,
+      );
       await trace.start();
-      trace.putAttribute('method', method.name);
+    } catch (e) {
+      log(e.toString());
+    }
+
+    try {
+      trace?.putAttribute('method', method.name);
 
       final response = await _dio.request<T>(
         path,
@@ -289,39 +295,51 @@ class APIService implements API {
 
       final code = response.statusCode;
       if (code != null) {
-        trace.putAttribute('status_code', code.toString());
+        trace?.putAttribute('status_code', code.toString());
       }
 
       final contentHeaders = response.headers[HttpHeaders.contentLengthHeader];
       if (contentHeaders != null && contentHeaders.isNotEmpty) {
-        trace.putAttribute(
+        trace?.putAttribute(
           HttpHeaders.contentLengthHeader,
           contentHeaders.first,
         );
       }
 
-      await trace.stop();
+      try {
+        await trace?.stop();
+      } catch (e) {
+        log(e.toString());
+      }
       return response;
     } on DioException catch (e) {
       final response = e.response;
 
       final code = response?.statusCode;
       if (code != null) {
-        trace.putAttribute('status_code', code.toString());
+        trace?.putAttribute('status_code', code.toString());
       }
 
       final contentHeaders = response?.headers[HttpHeaders.contentLengthHeader];
       if (contentHeaders != null && contentHeaders.isNotEmpty) {
-        trace.putAttribute(
+        trace?.putAttribute(
           HttpHeaders.contentLengthHeader,
           contentHeaders.first,
         );
       }
 
-      await trace.stop();
+      try {
+        await trace?.stop();
+      } catch (e) {
+        log(e.toString());
+      }
       rethrow;
     } catch (e) {
-      await trace.stop();
+      try {
+        await trace?.stop();
+      } catch (e) {
+        log(e.toString());
+      }
       rethrow;
     }
   }
