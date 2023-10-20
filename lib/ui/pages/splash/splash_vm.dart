@@ -115,8 +115,6 @@ class LauncherViewModel extends BaseViewModel {
               isOnBoarded: true, baseUser: userService.baseUser),
         ]);
 
-        unawaited(_userRepo.updateUserAppFlyer(userService.baseUser!));
-
         unawaited(locator<GameRepo>().getGameTiers());
         _referralService.init();
         _baseUtil.init();

@@ -141,37 +141,6 @@ class UserRepository extends BaseRepo {
     }
   }
 
-  Future<ApiResponse> updateUserAppFlyer(BaseUser user) async {
-    try {
-      logger.i("CALLING: updateUserAppFlyer");
-      final id = await _appsFlyerService.appFlyerId;
-
-      if (user.appFlyerId == id) {
-        return ApiResponse(code: 200);
-      }
-
-      final body = {
-        'uid': user.uid,
-        'appFlyerId': id,
-      };
-
-      await APIService.instance.putData(
-        _apiPaths.kUpdateUserAppflyer,
-        body: body,
-        cBaseUrl: AppEnvironment.instance.userOps,
-        apiName: '$_userOps/updateUserAppFlyer',
-      );
-
-      // clear cache
-      await CacheService.invalidateByKey(CacheKeys.USER);
-
-      return ApiResponse(code: 200);
-    } catch (e) {
-      logger.d(e);
-      return ApiResponse.withError("User not added to firestore", 400);
-    }
-  }
-
   Future<ApiResponse> sendOtp(String? mobile, String hash) async {
     try {
       final body = {
