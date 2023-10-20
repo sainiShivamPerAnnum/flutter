@@ -1,3 +1,5 @@
+import 'dart:math' as math;
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
@@ -81,22 +83,8 @@ class ProgressGoldProHero extends StatelessWidget {
       padding: const EdgeInsets.symmetric(horizontal: 17),
       child: Column(
         children: [
-          ClipPath(
-            clipper: InverseBorderClipper(
-              bottomCornerRadius: 12,
-              upperCornerRadius: 16,
-            ),
-            child: Container(
-              padding: const EdgeInsets.symmetric(horizontal: 45, vertical: 4),
-              color: UiConstants.kBackgroundColor,
-              child: Text(
-                'Gold Pro exclusively for first 100 users',
-                style: TextStyles.sourceSansSB.body4.copyWith(
-                  color: UiConstants.kGoldProPrimary,
-                ),
-                textAlign: TextAlign.center,
-              ),
-            ),
+          const GoldProExclusiveLabel(
+            userCount: 100,
           ),
           SizedBox(
             height: SizeConfig.padding12,
@@ -177,6 +165,70 @@ class ProgressGoldProHero extends StatelessWidget {
   }
 }
 
+enum CurvedRadius {
+  top,
+  bottom;
+}
+
+class GoldProExclusiveLabel extends StatelessWidget {
+  final int userCount;
+  final CurvedRadius curvedRadius;
+
+  const GoldProExclusiveLabel({
+    required this.userCount,
+    this.curvedRadius = CurvedRadius.top,
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    double containerTransformation = 0.0;
+    double contentTransformation = 0.0;
+
+    if (curvedRadius == CurvedRadius.bottom) {
+      containerTransformation = math.pi;
+      contentTransformation = -math.pi;
+    }
+
+    return Transform.rotate(
+      angle: containerTransformation,
+      child: ClipPath(
+        clipper: InverseBorderClipper(
+          bottomCornerRadius: 12,
+          upperCornerRadius: 16,
+        ),
+        child: Container(
+          padding: const EdgeInsets.symmetric(horizontal: 45, vertical: 4),
+          color: UiConstants.kBackgroundColor,
+          child: Transform.rotate(
+            angle: contentTransformation,
+            child: Text.rich(
+              TextSpan(
+                children: [
+                  const TextSpan(text: 'Gold Pro exclusively for first '),
+                  TextSpan(
+                    text: '$userCount ',
+                    style: TextStyles.sourceSansB.copyWith(
+                      color: UiConstants.kGoldProPrimary,
+                    ),
+                  ),
+                  const TextSpan(
+                    text: 'users',
+                  ),
+                ],
+              ),
+              style: TextStyles.sourceSansSB.body4.copyWith(
+                color: UiConstants.kGoldProPrimary,
+              ),
+              textAlign: TextAlign.center,
+            ),
+          ),
+        ),
+      ),
+    );
+  }
+}
+
 class InverseBorderClipper extends CustomClipper<Path> {
   final double upperCornerRadius;
   final double bottomCornerRadius;
@@ -249,22 +301,29 @@ class EligibleGoldProHero extends StatelessWidget {
     return Padding(
       padding: const EdgeInsets.symmetric(
         horizontal: 17,
-        vertical: 12,
       ),
       child: Column(
         children: [
-          Text(
-            "Congratulations!",
-            style: TextStyles.sourceSansB.body1
-                .colour(UiConstants.kGoldProPrimary),
+          const GoldProExclusiveLabel(
+            userCount: 100,
           ),
-          SizedBox(height: SizeConfig.padding14),
+          SizedBox(
+            height: SizeConfig.padding16,
+          ),
+          Text(
+            "You have unlocked Gold Pro!",
+            style: TextStyles.sourceSansSB.body2.copyWith(
+              color: UiConstants.kGoldProPrimary,
+            ),
+          ),
+          SizedBox(height: SizeConfig.padding12),
           Row(
             children: [
               Text(
                 "You are eligible for ${AppConfig.getValue(AppConfigKey.goldProInterest).toDouble()}% extra returns",
-                style: TextStyles.sourceSansSB.body2
-                    .colour(UiConstants.kGoldProPrimary),
+                style: TextStyles.sourceSansSB.body2.copyWith(
+                  color: UiConstants.kGoldProPrimary,
+                ),
               ),
               const Spacer(),
               Icon(
@@ -274,7 +333,9 @@ class EligibleGoldProHero extends StatelessWidget {
               )
             ],
           ),
-          SizedBox(height: SizeConfig.padding6),
+          SizedBox(
+            height: SizeConfig.padding16,
+          ),
         ],
       ),
     );

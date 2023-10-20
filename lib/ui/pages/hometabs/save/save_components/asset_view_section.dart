@@ -237,6 +237,9 @@ class _AssetSectionViewState extends State<AssetSectionView> {
                               if (!_isGold) FloPremiumSection(model: model),
                               if (!_isGold) FloBasicCard(model: model),
                               if (!isNewUser) ...[
+                                MiniTransactionCard(
+                                  investmentType: widget.type,
+                                ),
                                 if (balance != 0 && _isGold) ...[
                                   Align(
                                     alignment: Alignment.centerLeft,
@@ -256,10 +259,9 @@ class _AssetSectionViewState extends State<AssetSectionView> {
                                     height: SizeConfig.padding28,
                                   ),
                                 ],
-                                MiniTransactionCard(
-                                    investmentType: widget.type),
                                 const AutosaveCard(
-                                    investmentType: InvestmentType.AUGGOLD99),
+                                  investmentType: InvestmentType.AUGGOLD99,
+                                ),
                               ],
                               if (!isNewUser) ...[
                                 CircularSlider(

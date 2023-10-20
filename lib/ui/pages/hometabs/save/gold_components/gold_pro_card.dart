@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
@@ -291,7 +293,7 @@ class GoldShimmerWidget extends StatelessWidget {
             child: Transform.scale(
               scale: size == ShimmerSizeEnum.small ? 2.5 : 2,
               child: Transform.rotate(
-                angle: 13.5,
+                angle: pi / 3,
                 child: Container(
                   height: getPrimaryHeight(),
                   width: getPrimaryWidth(),
@@ -305,7 +307,7 @@ class GoldShimmerWidget extends StatelessWidget {
             child: Transform.scale(
               scale: 2,
               child: Transform.rotate(
-                angle: 13.5,
+                angle: pi / 3,
                 child: Container(
                   height: getTertiaryHeight(),
                   width: getTertiaryWidth(),
@@ -319,7 +321,7 @@ class GoldShimmerWidget extends StatelessWidget {
             child: Transform.scale(
               scale: 2,
               child: Transform.rotate(
-                angle: 13.5,
+                angle: pi / 3,
                 child: Container(
                   height: getSecondaryHeight(),
                   width: getSecondaryWidth(),

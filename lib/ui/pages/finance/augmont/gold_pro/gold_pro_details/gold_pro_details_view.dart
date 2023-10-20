@@ -12,6 +12,7 @@ import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_details/gold
 import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_transactions/gold_pro_mini_txn.dart';
 import 'package:felloapp/ui/pages/hometabs/save/gold_components/gold_balance_brief_row.dart';
 import 'package:felloapp/ui/pages/hometabs/save/gold_components/gold_pro_card.dart';
+import 'package:felloapp/ui/pages/hometabs/save/gold_components/gold_pro_hero_card.dart';
 import 'package:felloapp/ui/pages/hometabs/save/gold_components/gold_rate_graph.dart';
 import 'package:felloapp/ui/pages/login/login_components/login_support.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
@@ -63,7 +64,15 @@ class GoldProDetailsView extends StatelessWidget {
                             child: Stack(
                               children: [
                                 const GoldShimmerWidget(
-                                    size: ShimmerSizeEnum.large),
+                                  size: ShimmerSizeEnum.large,
+                                ),
+                                const Align(
+                                  alignment: Alignment.bottomCenter,
+                                  child: GoldProExclusiveLabel(
+                                    userCount: 100,
+                                    curvedRadius: CurvedRadius.bottom,
+                                  ),
+                                ),
                                 SizedBox(
                                   width: SizeConfig.screenWidth,
                                   child: Stack(
