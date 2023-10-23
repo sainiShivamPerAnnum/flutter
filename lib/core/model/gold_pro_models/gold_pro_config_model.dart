@@ -30,7 +30,7 @@ class Data {
   });
 
   Data.fromJson(Map<String, dynamic> json) {
-    subText = json['subText'] ?? 'Gold Pro exclusively for first 100 users';
+    subText = json['subText'];
     sId = json['_id'] ?? "";
     interestBreakDown = json['interestBreakDown'] != null
         ? InterestBreakDown.fromJson(json['interestBreakDown'])

@@ -70,7 +70,7 @@ class GoldProDetailsView extends StatelessWidget {
                                   final subText =
                                       model.goldProConfig?.data?.subText;
 
-                                  if (subText == null) {
+                                  if (subText == null || subText.isEmpty) {
                                     return const SizedBox.shrink();
                                   }
 
