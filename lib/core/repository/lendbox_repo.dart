@@ -13,13 +13,14 @@ class LendboxRepo extends BaseRepo {
       ? 'https://lczsbr3cjl.execute-api.ap-south-1.amazonaws.com/dev'
       : 'https://sdypt3fcnh.execute-api.ap-south-1.amazonaws.com/prod';
 
+  static const _lendBox = 'lendbox';
+
   Future<ApiResponse<String>> createWithdrawal(
     int amount,
     String? payoutSourceId,
   ) async {
     try {
       final uid = userService!.baseUser!.uid;
-      final String bearer = await getBearerToken();
 
       final response = await APIService.instance.postData(
         ApiPath.createLbWithdrawal(uid),
@@ -27,8 +28,8 @@ class LendboxRepo extends BaseRepo {
           "amount": amount,
           "payoutSourceId": payoutSourceId,
         },
-        token: bearer,
         cBaseUrl: _baseUrl,
+        apiName: '$_lendBox/withdraw',
       );
 
       final data = response['data'];
@@ -43,12 +44,11 @@ class LendboxRepo extends BaseRepo {
       getWithdrawableQuantity() async {
     try {
       final uid = userService!.baseUser!.uid;
-      final String bearer = await getBearerToken();
 
       final response = await APIService.instance.getData(
         ApiPath.lbWithdrawableQuantity(uid),
-        token: bearer,
         cBaseUrl: _baseUrl,
+        apiName: '$_lendBox/withdrawableByID',
       );
 
       final data = response['data'];
@@ -67,15 +67,19 @@ class LendboxRepo extends BaseRepo {
       {bool hasConfirmed = false}) async {
     try {
       final uid = userService.baseUser!.uid;
-      final String bearer = await getBearerToken();
+
       final body = {
         "uid": uid,
         "txnId": txnId,
         "maturityPref": pref,
         "hasConfirmed": hasConfirmed,
       };
-      await APIService.instance.putData(ApiPath.investmentPrefs,
-          token: bearer, cBaseUrl: _baseUrl, body: body);
+      await APIService.instance.putData(
+        ApiPath.investmentPrefs,
+        cBaseUrl: _baseUrl,
+        body: body,
+        apiName: '$_lendBox/updateUserInvestmentPref',
+      );
 
       return ApiResponse(model: true, code: 200);
     } catch (e) {
@@ -87,12 +91,11 @@ class LendboxRepo extends BaseRepo {
   Future<ApiResponse<LendboxMaturityResponse>> getLendboxMaturity() async {
     try {
       final uid = userService!.baseUser!.uid;
-      final String bearer = await getBearerToken();
 
       final response = await APIService.instance.getData(
         ApiPath.lbMaturity(uid),
-        token: bearer,
         cBaseUrl: _baseUrl,
+        apiName: '$_lendBox/maturityByID',
       );
 
       return ApiResponse(

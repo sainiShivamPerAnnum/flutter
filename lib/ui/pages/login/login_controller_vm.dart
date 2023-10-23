@@ -254,10 +254,9 @@ class LoginControllerViewModel extends BaseViewModel {
             String message = "Please try again in sometime";
             log(userService.baseUser!.toJson().toString());
             try {
-              final token = await _getBearerToken();
               userService.baseUser!.mobile = userMobile;
               final ApiResponse response =
-                  await _userRepo!.setNewUser(userService.baseUser!, token);
+                  await _userRepo!.setNewUser(userService.baseUser!);
               logger!.i(response.toString());
               if (response.code == 400) {
                 _analyticsService.track(
@@ -719,7 +718,7 @@ class LoginControllerViewModel extends BaseViewModel {
 
     streamSubscription =
         TruecallerSdk.streamCallbackData.listen((truecallerSdkCallback) {
-          logger.i("Access Token : ${truecallerSdkCallback.accessToken}");
+      logger.i("Access Token : ${truecallerSdkCallback.accessToken}");
       switch (truecallerSdkCallback.result) {
         case TruecallerSdkCallbackResult.success:
           String? phNo = truecallerSdkCallback.profile?.phoneNumber;

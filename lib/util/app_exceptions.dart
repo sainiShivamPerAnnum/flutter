@@ -1,26 +1,54 @@
 class AppException implements Exception {
-  final _message;
-  final _prefix;
+  final String? _message;
+  final String? _prefix;
 
-  AppException([this._message, this._prefix]);
+  const AppException([
+    this._message,
+    this._prefix = '',
+  ]);
 
+  @override
   String toString() {
     return "$_prefix$_message";
   }
 }
 
 class FetchDataException extends AppException {
-  FetchDataException([String? message]) : super(message, "");
+  const FetchDataException([
+    super.message,
+  ]);
 }
 
 class BadRequestException extends AppException {
-  BadRequestException([message]) : super(message, "");
+  const BadRequestException([
+    super.message,
+  ]);
 }
 
 class UnauthorizedException extends AppException {
-  UnauthorizedException([message]) : super(message, "Unauthorized: ");
+  const UnauthorizedException([message])
+      : super(
+          message,
+          "Unauthorized: ",
+        );
 }
 
 class InvalidInputException extends AppException {
-  InvalidInputException([String? message]) : super(message, "Invalid Input: ");
+  const InvalidInputException([String? message])
+      : super(
+          message,
+          "Invalid Input: ",
+        );
+}
+
+class InternalServerException extends AppException {
+  const InternalServerException([
+    super._message,
+  ]);
+}
+
+class UnknownException extends AppException {
+  const UnknownException([
+    super._message,
+  ]);
 }

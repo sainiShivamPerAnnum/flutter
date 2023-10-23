@@ -22,11 +22,12 @@ class CampaignRepo extends BaseRepo {
       ? 'https://d18gbwu7fwwwtf.cloudfront.net/'
       : 'https://d11q4cti75qmcp.cloudfront.net/';
 
+  static const _campaigns = 'campaigns';
+
   Future<ApiResponse<dynamic>> getOngoingEvents() async {
     List<EventModel> events = [];
     try {
       final String? _uid = userService!.baseUser!.uid;
-      final _token = await getBearerToken();
       final _queryParams = {"uid": _uid};
 
       return await _cacheService.cachedApi(
@@ -34,9 +35,9 @@ class CampaignRepo extends BaseRepo {
         TTL.TWO_HOURS,
         () => APIService.instance.getData(
           ApiPath.kOngoingCampaigns,
-          token: _token,
           cBaseUrl: _baseUrl,
           queryParams: _queryParams,
+          apiName: _campaigns,
         ),
         (response) {
           final responseData = response["data"];
@@ -60,10 +61,12 @@ class CampaignRepo extends BaseRepo {
   Future<ApiResponse<List<FelloFactsModel>>> getFelloFacts() async {
     List<FelloFactsModel> facts = [];
     try {
-      final _token = await getBearerToken();
-
-      final response = await APIService.instance.getData('felloFacts.txt',
-          token: _token, cBaseUrl: _cdnBaseUrl, decryptData: true);
+      final response = await APIService.instance.getData(
+        'felloFacts.txt',
+        cBaseUrl: _cdnBaseUrl,
+        decryptData: true,
+        apiName: "felloFacts",
+      );
 
       // final responseData = response["data"];
       logger!.d(response);
@@ -82,12 +85,10 @@ class CampaignRepo extends BaseRepo {
 
   Future<ApiResponse<HappyHourCampign>> getHappyHourCampaign() async {
     try {
-      final _token = await getBearerToken();
-
       final response = await APIService.instance.getData(
         ApiPath.happyHour,
-        token: _token,
         cBaseUrl: _baseUrl,
+        apiName: "$_campaigns/happyHour",
       );
 
       return ApiResponse<HappyHourCampign>(
@@ -100,11 +101,10 @@ class CampaignRepo extends BaseRepo {
 
   Future<ApiResponse<LastWeekModel>> getLastWeekData() async {
     try {
-      final token = await getBearerToken();
       final response = await APIService.instance.getData(
         ApiPath.lastWeekRecap,
         cBaseUrl: _baseUrl,
-        token: token,
+        apiName: "$_campaigns/lastWeekRecap",
       );
 
       final responseData = response["data"];

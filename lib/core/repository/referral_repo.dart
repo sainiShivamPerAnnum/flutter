@@ -14,17 +14,17 @@ import 'base_repo.dart';
 class ReferralRepo extends BaseRepo {
   final _cacheService = CacheService();
 
+  static const _referral = 'referral';
+
   Future<ApiResponse<ReferralResponse>> getReferralCode() async {
     try {
-      final String bearer = await getBearerToken();
-
       return await _cacheService.cachedApi(
         CacheKeys.REFERRAL_CODE,
         TTL.ONE_DAY,
         () => APIService.instance.getData(
           ApiPath.getReferralCode(userService.baseUser!.uid),
-          token: bearer,
           cBaseUrl: AppEnvironment.instance.referral,
+          apiName: '$_referral/getRefCode',
         ),
         (response) {
           return ApiResponse(
@@ -39,11 +39,10 @@ class ReferralRepo extends BaseRepo {
 
   Future<ApiResponse<String>> getUserIdByRefCode(String code) async {
     try {
-      final String bearer = await getBearerToken();
       final response = await APIService.instance.getData(
         ApiPath.getUserIdByRefCode(code),
-        token: bearer,
         cBaseUrl: AppEnvironment.instance.referral,
+        apiName: '$_referral/getUserIDByRefCode',
       );
 
       final data = response['data'];
@@ -61,14 +60,13 @@ class ReferralRepo extends BaseRepo {
       {int currentPage = 0}) async {
     // List<ReferralDetail> referralHistory = [];
     try {
-      final String bearer = await getBearerToken();
       final response = await APIService.instance.getData(
         ApiPath.getReferralHistory(userService.baseUser!.uid),
         queryParams: {
           'offset': (50 * currentPage).toString(),
         },
-        token: bearer,
         cBaseUrl: AppEnvironment.instance.referral,
+        apiName: '$_referral/getAllReferrals',
       );
 
       final data = response['data'];
@@ -89,16 +87,14 @@ class ReferralRepo extends BaseRepo {
     String? referee,
   ) async {
     try {
-      final String bearer = await getBearerToken();
-
       final response = await APIService.instance.postData(
         ApiPath.createReferral,
         body: {
           'uid': userId,
           'rid': referee,
         },
-        token: bearer,
         cBaseUrl: AppEnvironment.instance.referral,
+        apiName: '$_referral/createReferral',
       );
 
       logger.d(response);
@@ -113,8 +109,6 @@ class ReferralRepo extends BaseRepo {
       List<String> phoneNumbers,
       {bool forceRefresh = false}) async {
     try {
-      final String bearer = await getBearerToken();
-
       if (forceRefresh) {
         await CacheService.invalidateByKey(
           CacheKeys.REFERRAL_REGISTERED_USERS,
@@ -129,8 +123,8 @@ class ReferralRepo extends BaseRepo {
           body: {
             'phoneNumbers': phoneNumbers,
           },
-          token: bearer,
           cBaseUrl: AppEnvironment.instance.referral,
+          apiName: '$_referral/getRegisteredUsers',
         ),
         (response) {
           return ApiResponse(
