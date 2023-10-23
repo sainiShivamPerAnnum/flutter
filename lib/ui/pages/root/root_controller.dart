@@ -21,7 +21,11 @@ class RootController {
   static final saveNavBarItem =
       NavBarItemModel("Save", Assets.navSaveLottie, ShowCaseKeys.SaveKey);
 
-  late NavBarItemModel currentNavBarItemModel;
+  NavBarItemModel currentNavBarItemModel = NavBarItemModel(
+    "Save",
+    Assets.navSaveLottie,
+    ShowCaseKeys.SaveKey,
+  );
 
   Map<Widget, NavBarItemModel> navItems = {};
 

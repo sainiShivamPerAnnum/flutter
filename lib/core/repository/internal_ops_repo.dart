@@ -12,6 +12,7 @@ class InternalOpsRepository extends BaseRepo {
       : 'https://4ch7btxcuj.execute-api.ap-south-1.amazonaws.com/prod';
 
   final Log log = new Log("DBModel");
+  static const _internalOps = 'internalOPS';
 
   Future<ApiResponse<bool>> logFailure(
     String? userId,
@@ -30,6 +31,7 @@ class InternalOpsRepository extends BaseRepo {
           'authKey':
               '.c;a/>12-1-x[/2130x0821x/0-=0.-x02348x042n23x9023[4np0823wacxlonluco3q8',
         },
+        apiName: '$_internalOps/logFailure',
       );
       return ApiResponse<bool>(model: true, code: 200);
     } catch (e) {

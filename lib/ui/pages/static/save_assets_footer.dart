@@ -22,7 +22,7 @@ class SaveAssetsFooter extends StatelessWidget {
           bottom: SizeConfig.padding10),
       child: Row(
         crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        mainAxisAlignment: MainAxisAlignment.spaceEvenly,
         children: [
           SaveInfoSection(
             title: isFlo ? "Secured by" : locale.govtAcc,
@@ -40,19 +40,6 @@ class SaveAssetsFooter extends StatelessWidget {
           SaveInfoSection(
             title: locale.rbiCertified,
             imageAsset: Assets.lendboxLogo,
-            imageHeight: SizeConfig.screenWidth! * 0.07,
-            imageWidth: SizeConfig.screenWidth! * 0.16,
-          ),
-          Container(
-            color: Colors.white,
-            width: 0.2,
-            height: SizeConfig.padding40,
-            margin: EdgeInsets.symmetric(
-                horizontal: SizeConfig.padding4, vertical: SizeConfig.padding2),
-          ),
-          SaveInfoSection(
-            title: locale.trustedBy,
-            imageAsset: Assets.rbiLogo,
             imageHeight: SizeConfig.screenWidth! * 0.07,
             imageWidth: SizeConfig.screenWidth! * 0.16,
           ),

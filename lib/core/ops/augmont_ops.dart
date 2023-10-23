@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:convert';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/apis_path_constants.dart';
@@ -28,7 +27,6 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:http/http.dart' as http;
 
 class AugmontService extends ChangeNotifier {
   final Log log = new Log('AugmontService');
@@ -169,44 +167,6 @@ class AugmontService extends ChangeNotifier {
       resMap["flag"] = QUERY_PASSED;
       String? _path = await _pdfService.generateInvoice(resMap, userDetails);
       return _path;
-    }
-  }
-
-  Future<Map<String, dynamic>?> _processResponse(
-      http.StreamedResponse response) async {
-    if (response == null) {
-      log.error('response is null');
-    }
-    if (response.statusCode != 200 && response.statusCode != 201) {
-      log.error(
-          'Query Failed:: Status:${response.statusCode}, Reason:${response.reasonPhrase}');
-      if (response.statusCode == 502)
-        return {
-          INTERNAL_FAIL_FLAG: false,
-          "userMessage": "Augmont did not respond correctly"
-        };
-      else
-        return {
-          INTERNAL_FAIL_FLAG: false,
-          "userMessage": "Unknown error occurred while sending request"
-        };
-    }
-    try {
-      String res = await response.stream.bytesToString();
-      log.debug(res);
-      if (res == null || res.isEmpty || res == "\"\"") {
-        log.error('Returned empty response');
-        return {
-          INTERNAL_FAIL_FLAG: false,
-          "userMessage": "The entered data was not accepted"
-        };
-      }
-      var rMap = json.decode(res);
-      rMap[INTERNAL_FAIL_FLAG] = true;
-      return rMap;
-    } catch (e) {
-      log.error('Failed to decode json');
-      return null;
     }
   }
 

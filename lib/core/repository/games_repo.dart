@@ -14,6 +14,8 @@ class GameRepo extends BaseRepo {
       ? "https://4mm5ihvkz0.execute-api.ap-south-1.amazonaws.com/dev"
       : "https://u9c7w6pnw7.execute-api.ap-south-1.amazonaws.com/prod";
 
+  static const _games = 'games';
+
   List<GameModel>? _allgames;
   List<GameModel>? games;
 
@@ -31,11 +33,10 @@ class GameRepo extends BaseRepo {
 
   Future<ApiResponse<List<GameModel>>> getGames() async {
     try {
-      final token = await getBearerToken();
       final response = await APIService.instance.getData(
         ApiPath.getGames,
         cBaseUrl: _baseUrl,
-        token: token,
+        apiName: _games,
       );
       log("Games: ${response["data"]}");
 
@@ -56,11 +57,10 @@ class GameRepo extends BaseRepo {
   Future<ApiResponse<GameModel>> getGameByCode(
       {required String gameCode}) async {
     try {
-      final token = await getBearerToken();
       final response = await APIService.instance.getData(
         ApiPath.getGameByCode(gameCode),
         cBaseUrl: _baseUrl,
-        token: token,
+        apiName: "$_games/byCode",
       );
       final game = GameModel.fromMap(response["data"]);
       return ApiResponse<GameModel>(model: game, code: 200);
@@ -73,11 +73,10 @@ class GameRepo extends BaseRepo {
 
   Future<ApiResponse<GameTiers>> getGameTiers() async {
     try {
-      final token = await getBearerToken();
       final response = await APIService.instance.getData(
         '/games/tiers',
         cBaseUrl: _baseUrl,
-        token: token,
+        apiName: "$_games/tiers",
       );
 
       gameTiers = GameTiers.fromJson(response);

@@ -13,18 +13,19 @@ import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/preference_helper.dart';
 
 class ScratchCardRepository extends BaseRepo {
+  static const _rewards = 'rewards';
+
   Future<ApiResponse<ScratchCard>> getScratchCardById({
     String? scratchCardId,
   }) async {
     try {
-      final token = await getBearerToken();
       final scratchCardRespone = await APIService.instance.getData(
         ApiPath.getScratchCardById(
           userService.baseUser!.uid,
           scratchCardId,
         ),
         cBaseUrl: AppEnvironment.instance.rewards,
-        token: token,
+        apiName: '$_rewards/getScratchCardByID',
       );
 
       final ticket =
@@ -39,7 +40,6 @@ class ScratchCardRepository extends BaseRepo {
   Future<ApiResponse<PrizesModel>> getPrizesPerGamePerFreq(
       String gameCode, String freq) async {
     try {
-      final token = await getBearerToken();
       final milestoneRespone = await APIService.instance.getData(
         ApiPath.prizes,
         cBaseUrl: AppEnvironment.instance.rewards,
@@ -47,7 +47,7 @@ class ScratchCardRepository extends BaseRepo {
           'game': gameCode,
           'freq': freq,
         },
-        token: token,
+        apiName: '$_rewards/getPrizeByGameCode',
       );
 
       final prizesModel = PrizesModel.fromMap(milestoneRespone["data"]);
@@ -65,13 +65,12 @@ class ScratchCardRepository extends BaseRepo {
         "mlIndex": userService.userJourneyStats!.mlIndex
       };
       final queryParams = {"uid": userService.baseUser!.uid};
-      final token = await getBearerToken();
       final response = await APIService.instance.postData(
         ApiPath.kSkipMilestone(userService.baseUser!.uid),
-        token: token,
         cBaseUrl: AppEnvironment.instance.rewards,
         body: body,
         queryParams: queryParams,
+        apiName: '$_rewards/skipMilestone',
       );
       if (response != null) {
         final responseData = response["data"];
@@ -90,14 +89,13 @@ class ScratchCardRepository extends BaseRepo {
   Future<ApiResponse<ScratchCard>> getGTByPrizeSubtype(
       String? prizeSubtype) async {
     try {
-      final token = await getBearerToken();
       final prizeResponse = await APIService.instance.getData(
         ApiPath.prizeBySubtype(userService.baseUser!.uid),
         cBaseUrl: AppEnvironment.instance.rewards,
         queryParams: {
           'subType': prizeSubtype,
         },
-        token: token,
+        apiName: '$_rewards/getAllPrizeBySubtype',
       );
 
       final scratchCard = ScratchCard.fromJson(prizeResponse["data"], "");
@@ -112,14 +110,13 @@ class ScratchCardRepository extends BaseRepo {
   Future<ApiResponse<List<ScratchCard>>> getUnscratchedScratchCards() async {
     final List<ScratchCard> unscratchedScratchCards = [];
     try {
-      final token = await getBearerToken();
       final prizeResponse = await APIService.instance.getData(
         ApiPath.getScratchCard(userService.baseUser!.uid),
         cBaseUrl: AppEnvironment.instance.rewards,
         queryParams: {
           'type': 'UNSCRATCHED',
         },
-        token: token,
+        apiName: '$_rewards/getScratchCardByID',
       );
       final Map<String, dynamic>? responseData = prizeResponse["data"];
       if (responseData != null && responseData.isNotEmpty) {
@@ -141,12 +138,13 @@ class ScratchCardRepository extends BaseRepo {
       {String? start}) async {
     final List<ScratchCard> scratchCardsList = [];
     try {
-      final token = await getBearerToken();
       final prizeResponse = await APIService.instance.getData(
         ApiPath.getScratchCard(userService.baseUser!.uid),
         cBaseUrl: AppEnvironment.instance.rewards,
-        queryParams: {if (start != null) 'start': start},
-        token: token,
+        queryParams: {
+          if (start != null) 'start': start,
+        },
+        apiName: '$_rewards/getScratchCardByID',
       );
       final Map<String, dynamic>? responseData = prizeResponse["data"];
       if (responseData != null && responseData.isNotEmpty) {
@@ -168,14 +166,13 @@ class ScratchCardRepository extends BaseRepo {
   Future<ApiResponse<List<ScratchCard>>> getGTByPrizeType(String type) async {
     List<ScratchCard> tickets = [];
     try {
-      final token = await getBearerToken();
       final prizeResponse = await APIService.instance.getData(
         ApiPath.scratchCards(userService.baseUser!.uid),
         cBaseUrl: AppEnvironment.instance.rewards,
         queryParams: {
           'type': type,
         },
-        token: token,
+        apiName: '$_rewards/getAllScratchCard',
       );
       List ticketsData = prizeResponse["data"]['gts'];
       for (final ticket in ticketsData) {
@@ -195,15 +192,14 @@ class ScratchCardRepository extends BaseRepo {
   ) async {
     try {
       final uid = userService.baseUser!.uid;
-      final String bearer = await getBearerToken();
 
       Map<String, dynamic> body = {"uid": uid, "gtId": gtId};
       log("GT Redeem id: $body");
       final response = await APIService.instance.postData(
         ApiPath.kRedeemGtReward,
         body: body,
-        token: bearer,
         cBaseUrl: AppEnvironment.instance.rewards,
+        apiName: '$_rewards/redeem',
       );
 
       final data = response['data'];
@@ -235,11 +231,14 @@ class ScratchCardRepository extends BaseRepo {
 
       //No local restrictions found here. claiming today's bonus
       //FETCH EVENT DETAILS
-      final String bearer = await getBearerToken();
+
       final response = await APIService.instance.getData(
-          ApiPath.kDailyAppBonusEvent(userService.baseUser!.uid!),
-          token: bearer,
-          cBaseUrl: AppEnvironment.instance.rewards);
+        ApiPath.kDailyAppBonusEvent(
+          userService.baseUser!.uid!,
+        ),
+        cBaseUrl: AppEnvironment.instance.rewards,
+        apiName: '$_rewards/getDailyBonus',
+      );
       log("DAILY APP : $response");
       final responseData = DailyAppCheckInEventModel.fromMap(response["data"]);
 

@@ -41,6 +41,8 @@ class UserRepository extends BaseRepo {
   final ApiPath _apiPaths = locator<ApiPath>();
   final InternalOpsService _internalOpsService = locator<InternalOpsService>();
 
+  static const _userOps = 'userOps';
+
   Future<ApiResponse<String>> getCustomUserToken(String? mobileNo) async {
     try {
       final body = {
@@ -50,6 +52,7 @@ class UserRepository extends BaseRepo {
         _apiPaths.kCustomAuthToken,
         body: body,
         cBaseUrl: AppEnvironment.instance.userOps,
+        apiName: '$_userOps/trucallerAuthToken',
         headers: {
           'authKey':
               '.c;a/>12-1-x[/2130x0821x/0-=0.-x02348x042n23x9023[4np0823wacxlonluco3q8',
@@ -67,10 +70,9 @@ class UserRepository extends BaseRepo {
   }
 
   Future<ApiResponse<Map<String, dynamic>>> setNewUser(
-      BaseUser baseUser, token) async {
+    BaseUser baseUser,
+  ) async {
     try {
-      final String bearer = token;
-
       final body = {
         'uid': baseUser.uid,
         'data': {
@@ -88,8 +90,12 @@ class UserRepository extends BaseRepo {
         }
       };
 
-      final res = await APIService.instance.postData(_apiPaths.kAddNewUser,
-          cBaseUrl: AppEnvironment.instance.userOps, body: body, token: bearer);
+      final res = await APIService.instance.postData(
+        _apiPaths.kAddNewUser,
+        cBaseUrl: AppEnvironment.instance.userOps,
+        body: body,
+        apiName: '$_userOps/setNewUser',
+      );
       logger.d(res);
       final responseData = res['data'];
       logger.d(responseData);
@@ -105,15 +111,13 @@ class UserRepository extends BaseRepo {
 
   Future<ApiResponse<BaseUser>> getUserById({required String? id}) async {
     try {
-      final token = await getBearerToken();
-
       return await _cacheService.cachedApi(
           CacheKeys.USER,
           TTL.ONE_DAY,
           () => APIService.instance.getData(
                 ApiPath.kGetUserById(id),
                 cBaseUrl: AppEnvironment.instance.userOps,
-                token: token,
+                apiName: '$_userOps/getUser',
               ), (res) {
         try {
           if (res != null && res['data'] != null && res['data'].isNotEmpty) {
@@ -137,37 +141,6 @@ class UserRepository extends BaseRepo {
     }
   }
 
-  Future<ApiResponse> updateUserAppFlyer(BaseUser user, String token) async {
-    try {
-      logger.i("CALLING: updateUserAppFlyer");
-      final id = await _appsFlyerService.appFlyerId;
-
-      if (user.appFlyerId == id) {
-        return ApiResponse(code: 200);
-      }
-
-      final body = {
-        'uid': user.uid,
-        'appFlyerId': id,
-      };
-
-      await APIService.instance.putData(
-        _apiPaths.kUpdateUserAppflyer,
-        body: body,
-        cBaseUrl: AppEnvironment.instance.userOps,
-        token: token,
-      );
-
-      // clear cache
-      await CacheService.invalidateByKey(CacheKeys.USER);
-
-      return ApiResponse(code: 200);
-    } catch (e) {
-      logger.d(e);
-      return ApiResponse.withError("User not added to firestore", 400);
-    }
-  }
-
   Future<ApiResponse> sendOtp(String? mobile, String hash) async {
     try {
       final body = {
@@ -175,8 +148,12 @@ class UserRepository extends BaseRepo {
         'hash': hash,
       };
 
-      await APIService.instance.postData(ApiPath.sendOtp,
-          body: body, cBaseUrl: AppEnvironment.instance.userOps);
+      await APIService.instance.postData(
+        ApiPath.sendOtp,
+        body: body,
+        cBaseUrl: AppEnvironment.instance.userOps,
+        apiName: '$_userOps/sendOTP',
+      );
 
       logger.d("reached");
       return ApiResponse(code: 200);
@@ -202,6 +179,7 @@ class UserRepository extends BaseRepo {
         ApiPath.verifyOtp,
         queryParams: query,
         cBaseUrl: AppEnvironment.instance.userOps,
+        apiName: '$_userOps/verifyOTP',
       );
 
       return ApiResponse(code: 200, model: res['data']['token']);
@@ -221,12 +199,11 @@ class UserRepository extends BaseRepo {
   Future<ApiResponse<UserFundWallet>> getFundBalance() async {
     try {
       final uid = userService.baseUser!.uid;
-      final token = await getBearerToken();
 
       final res = await APIService.instance.getData(
         ApiPath.getFundBalance(uid),
-        token: token,
         cBaseUrl: AppEnvironment.instance.userOps,
+        apiName: '$_userOps/getWalletFund',
       );
       logger.d('fund balance $res');
 
@@ -243,12 +220,11 @@ class UserRepository extends BaseRepo {
   Future<ApiResponse<FlcModel>> getCoinBalance() async {
     try {
       final uid = userService.baseUser?.uid;
-      final token = await getBearerToken();
 
       final res = await APIService.instance.getData(
         ApiPath.getCoinBalance(uid),
-        token: token,
         cBaseUrl: AppEnvironment.instance.userOps,
+        apiName: '$_userOps/getWalletCoin',
       );
 
       return ApiResponse(
@@ -285,7 +261,7 @@ class UserRepository extends BaseRepo {
       try {
         appInstanceId = await FirebaseAnalytics.instance.appInstanceId;
       } catch (e) {}
-      final token = await getBearerToken();
+
       Map<String, dynamic> body = {
         "uid": uid ?? "",
         "deviceId": deviceId ?? "",
@@ -302,7 +278,7 @@ class UserRepository extends BaseRepo {
         ApiPath.kDeviceId,
         body: body,
         cBaseUrl: AppEnvironment.instance.userOps,
-        token: token,
+        apiName: '$_userOps/setDeviceID',
       );
 
       logger.d("Device added: $body");
@@ -319,13 +295,12 @@ class UserRepository extends BaseRepo {
   Future<ApiResponse<UserAugmontDetail>> getUserAugmontDetails() async {
     try {
       logger.i("CALLING: getUserAugmontDetails");
-      final token = await getBearerToken();
       final augmontRespone = await APIService.instance.getData(
         ApiPath.getAugmontDetail(
           userService.baseUser!.uid,
         ),
         cBaseUrl: AppEnvironment.instance.userOps,
-        token: token,
+        apiName: '$_userOps/getAugmontDetails',
       );
 
       final augmont = UserAugmontDetail.fromMap(augmontRespone['data']);
@@ -339,11 +314,10 @@ class UserRepository extends BaseRepo {
   Future<ApiResponse<Map<String, dynamic>>>
       checkIfUserHasNewNotifications() async {
     try {
-      final token = await getBearerToken();
       final latestNotificationsResponse = await APIService.instance.getData(
         ApiPath.getLatestNotification(userService.baseUser!.uid),
         cBaseUrl: AppEnvironment.instance.userOps,
-        token: token,
+        apiName: '$_userOps/getNotifications',
       );
 
       final List<AlertModel> notifications = AlertModel.helper.fromMapArray(
@@ -420,14 +394,13 @@ class UserRepository extends BaseRepo {
     String? lastDocId,
   ) async {
     try {
-      final token = await getBearerToken();
       final userNotifications = await APIService.instance.getData(
         ApiPath.getNotifications(userService.baseUser!.uid),
         cBaseUrl: AppEnvironment.instance.userOps,
         queryParams: {
           "lastDocId": lastDocId,
         },
-        token: token,
+        apiName: '$_userOps/getNotifications',
       );
 
       final responseData = userNotifications["data"];
@@ -449,13 +422,12 @@ class UserRepository extends BaseRepo {
     required Map<String, dynamic> dMap,
     String? uid,
   }) async {
-    final token = await getBearerToken();
     try {
       final res = await APIService.instance.putData(
         ApiPath.kGetUserById(userService.baseUser!.uid),
         body: dMap,
-        token: token,
         cBaseUrl: AppEnvironment.instance.userOps,
+        apiName: '$_userOps/updateUser',
       );
       logger.d("Update user data: ${res['data']}");
       final resData = res['data'];
@@ -484,7 +456,6 @@ class UserRepository extends BaseRepo {
     required String? fcmToken,
   }) async {
     try {
-      final token = await getBearerToken();
       await APIService.instance.putData(
         ApiPath.updateFcm,
         body: {
@@ -492,7 +463,7 @@ class UserRepository extends BaseRepo {
           "token": fcmToken,
         },
         cBaseUrl: AppEnvironment.instance.userOps,
-        token: token,
+        apiName: '$_userOps/updateFCMToken',
       );
 
       return ApiResponse<bool>(model: true, code: 200);
@@ -513,11 +484,11 @@ class UserRepository extends BaseRepo {
   Future<ApiResponse<bool>> completeOnboarding() async {
     try {
       log("completeOnboarding");
-      final token = await getBearerToken();
+
       await APIService.instance.postData(
         ApiPath.getCompleteOnboarding(userService.baseUser!.uid),
         cBaseUrl: AppEnvironment.instance.userOps,
-        token: token,
+        apiName: '$_userOps/walkThrough',
       );
 
       return ApiResponse<bool>(model: true, code: 200);
@@ -532,7 +503,6 @@ class UserRepository extends BaseRepo {
 
   Future<bool> logOut() async {
     try {
-      final token = await getBearerToken();
       Map<String, dynamic> response =
           await _internalOpsService.initDeviceInfo();
       final String? deviceId = response["deviceId"];
@@ -544,19 +514,20 @@ class UserRepository extends BaseRepo {
       final String? integrity = response["integrity"];
       logger.d("Device Details: $response");
       final res = await APIService.instance.putData(
-          ApiPath.logOut(userService.baseUser!.uid),
-          cBaseUrl: AppEnvironment.instance.userOps,
-          token: token,
-          body: {
-            "uid": userService.baseUser!.uid ?? "",
-            "deviceId": deviceId ?? "",
-            "platform": platform ?? "",
-            "model": model ?? "",
-            "brand": brand ?? "",
-            "version": version ?? "",
-            "isPhysicalDevice": isPhysicalDevice ?? true,
-            "integrity": integrity ?? "",
-          });
+        ApiPath.logOut(userService.baseUser!.uid),
+        cBaseUrl: AppEnvironment.instance.userOps,
+        body: {
+          "uid": userService.baseUser!.uid ?? "",
+          "deviceId": deviceId ?? "",
+          "platform": platform ?? "",
+          "model": model ?? "",
+          "brand": brand ?? "",
+          "version": version ?? "",
+          "isPhysicalDevice": isPhysicalDevice ?? true,
+          "integrity": integrity ?? "",
+        },
+        apiName: '$_userOps/logout',
+      );
       logger.d("LogOut response: ${res.toString()}");
       return true;
     } catch (e) {
@@ -596,15 +567,13 @@ class UserRepository extends BaseRepo {
       'firebaseAppInstanceId': appInstanceId,
     };
 
-    final token = await getBearerToken();
-
     final respone = await APIService.instance.getData(
       ApiPath.userBootUp(
         userService.baseUser?.uid,
       ),
-      token: token,
       queryParams: queryParameters,
       cBaseUrl: AppEnvironment.instance.userOps,
+      apiName: '$_userOps/bootupAlerts',
     );
     debugPrint("Bootup Response: $respone");
     userBootUp = UserBootUpDetailsModel.fromMap(respone);
@@ -627,13 +596,13 @@ class UserRepository extends BaseRepo {
       final query = {
         'email': email,
       };
-      final token = await getBearerToken();
       final uid = userService.baseUser?.uid;
       final res = await APIService.instance.getData(
-          ApiPath.isEmailRegistered(uid),
-          queryParams: query,
-          cBaseUrl: AppEnvironment.instance.userOps,
-          token: token);
+        ApiPath.isEmailRegistered(uid),
+        queryParams: query,
+        cBaseUrl: AppEnvironment.instance.userOps,
+        apiName: '$_userOps/emailRegistered',
+      );
 
       return ApiResponse(code: 200, model: res['data']['isEmailRegistered']);
     } catch (e) {
@@ -647,11 +616,13 @@ class UserRepository extends BaseRepo {
       final query = {
         'username': username,
       };
-      final token = await getBearerToken();
-      final res = await APIService.instance.getData(ApiPath.isUsernameAvailable,
-          queryParams: query,
-          cBaseUrl: AppEnvironment.instance.userOps,
-          token: token);
+
+      final res = await APIService.instance.getData(
+        ApiPath.isUsernameAvailable,
+        queryParams: query,
+        cBaseUrl: AppEnvironment.instance.userOps,
+        apiName: '$_userOps/userNameAvailable',
+      );
       return ApiResponse(code: 200, model: res['data']['isAvailable']);
     } catch (e) {
       logger.d(e);
@@ -662,9 +633,11 @@ class UserRepository extends BaseRepo {
   Future<ApiResponse<Portfolio>> getPortfolioData() async {
     try {
       final uid = userService.baseUser!.uid;
-      final token = await getBearerToken();
-      final res = await APIService.instance.getData(ApiPath.portfolio(uid!),
-          cBaseUrl: AppEnvironment.instance.userOps, token: token);
+      final res = await APIService.instance.getData(
+        ApiPath.portfolio(uid!),
+        cBaseUrl: AppEnvironment.instance.userOps,
+        apiName: '$_userOps/portfolio',
+      );
       _logger.i("Portfolio: ${res['data']}");
       final Portfolio portfolio = Portfolio.fromMap(res['data']);
       return ApiResponse(code: 200, model: portfolio);

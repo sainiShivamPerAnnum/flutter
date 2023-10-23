@@ -21,6 +21,8 @@ import 'package:path_provider/path_provider.dart';
 class JourneyRepository extends BaseRepo {
   final _cacheService = CacheService();
 
+  static const _journey = 'journey';
+
   //Local Variables
   static const String PAGE_DIRECTION_UP = "up";
   static const String PAGE_DIRECTION_DOWN = "down";
@@ -154,7 +156,6 @@ class JourneyRepository extends BaseRepo {
       final startPage = max(isUp ? page : page - limit, 1);
       final endPage = isUp ? page + limit : page;
 
-      final token = await getBearerToken();
       final queryParams = {"page": page.toString(), "direction": direction};
 
       return await _cacheService.paginatedCachedApi(
@@ -164,9 +165,9 @@ class JourneyRepository extends BaseRepo {
           TTL.ONE_DAY,
           () => APIService.instance.getData(
                 ApiPath.kJourney,
-                token: token,
                 cBaseUrl: _baseUrlJourney,
                 queryParams: queryParams,
+                apiName: _journey,
               ), (responseData) {
         // parser
         final start = responseData["start"];
@@ -205,7 +206,6 @@ class JourneyRepository extends BaseRepo {
       final startPage = page - 1; // max(isUp ? page : page - limit, 1);
       final endPage = page; // isUp ? page + limit : page;
 
-      final token = await getBearerToken();
       final queryParams = {"page": page.toString(), "direction": direction};
 
       if (journeyPages.isNotEmpty) {
@@ -229,16 +229,18 @@ class JourneyRepository extends BaseRepo {
         }
       }
 
+      final v = version.toLowerCase();
+
       return await _cacheService.cachedApi(
           CacheKeys.JOURNEY_PAGE,
           TTL.ONE_DAY,
           isFromCdn: true,
           () => APIService.instance.getData(
-                "journey_${version.toLowerCase()}.txt",
-                token: token,
+                "journey_$v.txt",
                 cBaseUrl: _cdnBaseUrl,
                 queryParams: queryParams,
                 decryptData: true,
+                apiName: '$_journey/$v',
               ), (responseData) {
         List<dynamic>? items = responseData;
 
@@ -267,11 +269,10 @@ class JourneyRepository extends BaseRepo {
   Future<ApiResponse<UserJourneyStatsModel>> getUserJourneyStats() async {
     try {
       final String? uid = userService.baseUser!.uid;
-      final token = await getBearerToken();
       final response = await APIService.instance.getData(
         ApiPath.journeyStats(uid),
-        token: token,
         cBaseUrl: _baseUrlStats,
+        apiName: '$_journey/statsByID',
       );
 
       final responseData = response["data"];
@@ -289,12 +290,14 @@ class JourneyRepository extends BaseRepo {
       String version) async {
     try {
       List<JourneyLevel> journeyLevels = [];
-      final token = await getBearerToken();
+
+      final v = version.toUpperCase();
       final response = await APIService.instance.getData(
-          "journeyLevels${version.toUpperCase()}.txt",
-          token: token,
-          cBaseUrl: _cdnBaseUrl,
-          decryptData: true);
+        "journeyLevels$v.txt",
+        cBaseUrl: _cdnBaseUrl,
+        decryptData: true,
+        apiName: '$_journey/levels$v',
+      );
 
       // final response = await APIService.instance.getData(
       //   ApiPath.kJourneyLevel,

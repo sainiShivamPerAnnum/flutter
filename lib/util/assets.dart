@@ -116,7 +116,6 @@ class Assets {
   static const String augmontLogo = 'assets/svg/augmont-white.svg';
   static const String lendboxLogo = 'assets/svg/lendbox-white.svg';
   static const String idbiTrustee = 'assets/svg/idbi-trustee.svg';
-  static const String rbiLogo = "assets/vectors/icons/rbilogo.svg";
   static const String digitalGold = "assets/svg/digitalgold.svg";
   static const String flyingGhost = "assets/svg/flying_ghost.svg";
   static const String tambolaTicket = "assets/svg/tambola_ticket.svg";
@@ -126,7 +125,6 @@ class Assets {
   static const String goldWithoutShadow = "assets/svg/gold_without_shadow.svg";
 
   static const String goldAsset = "assets/svg/digital_gold.svg";
-  static const String rbi = "assets/svg/rbi.svg";
   static const String icici = "assets/svg/icici.svg";
   static const String sebi = "assets/vectors/icons/sebi_new.svg";
   static const String graphArrows = "assets/vectors/icons/graph_arrows.svg";
