@@ -287,6 +287,9 @@ class GoldShimmerWidget extends StatelessWidget {
     return Align(
       alignment: Alignment.center,
       child: ClipRRect(
+        borderRadius: const BorderRadius.vertical(
+          bottom: Radius.circular(24),
+        ),
         child: Stack(children: [
           Align(
             alignment: Alignment.center,

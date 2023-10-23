@@ -8,7 +8,7 @@ class GoldProConfig {
 
   GoldProConfig.fromJson(Map<String, dynamic> json) {
     message = json['message'];
-    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
+    data = json['data'] != null ? Data.fromJson(json['data']) : null;
   }
 }
 
@@ -18,15 +18,19 @@ class Data {
   List<Videos>? videos;
   List<Highlights>? highlights;
   List<Faqs>? faqs;
+  String? subText;
 
-  Data(
-      {this.sId,
-      this.interestBreakDown,
-      this.videos,
-      this.highlights,
-      this.faqs});
+  Data({
+    this.sId,
+    this.interestBreakDown,
+    this.videos,
+    this.highlights,
+    this.faqs,
+    this.subText,
+  });
 
   Data.fromJson(Map<String, dynamic> json) {
+    subText = json['subText'] ?? 'Gold Pro exclusively for first 100 users';
     sId = json['_id'] ?? "";
     interestBreakDown = json['interestBreakDown'] != null
         ? InterestBreakDown.fromJson(json['interestBreakDown'])

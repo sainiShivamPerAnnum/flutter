@@ -4,6 +4,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/ui/elements/fello_rich_text.dart';
 import 'package:felloapp/ui/pages/hometabs/save/gold_components/gold_pro_card.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
@@ -80,15 +81,12 @@ class ProgressGoldProHero extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(horizontal: 17),
+      padding: EdgeInsets.symmetric(
+        horizontal: 17,
+        vertical: SizeConfig.padding12,
+      ),
       child: Column(
         children: [
-          const GoldProExclusiveLabel(
-            userCount: 100,
-          ),
-          SizedBox(
-            height: SizeConfig.padding12,
-          ),
           Text(
             "Get ${AppConfig.getValue(AppConfigKey.goldProInterest).toDouble()}% extra returns with ${Constants.ASSET_GOLD_STAKE}",
             style: TextStyles.sourceSansSB.body3.colour(
@@ -158,7 +156,6 @@ class ProgressGoldProHero extends StatelessWidget {
               )
             ],
           ),
-          SizedBox(height: SizeConfig.padding12),
         ],
       ),
     );
@@ -171,11 +168,11 @@ enum CurvedRadius {
 }
 
 class GoldProExclusiveLabel extends StatelessWidget {
-  final int userCount;
+  final String label;
   final CurvedRadius curvedRadius;
 
   const GoldProExclusiveLabel({
-    required this.userCount,
+    required this.label,
     this.curvedRadius = CurvedRadius.top,
     super.key,
   });
@@ -202,25 +199,11 @@ class GoldProExclusiveLabel extends StatelessWidget {
           color: UiConstants.kBackgroundColor,
           child: Transform.rotate(
             angle: contentTransformation,
-            child: Text.rich(
-              TextSpan(
-                children: [
-                  const TextSpan(text: 'Gold Pro exclusively for first '),
-                  TextSpan(
-                    text: '$userCount ',
-                    style: TextStyles.sourceSansB.copyWith(
-                      color: UiConstants.kGoldProPrimary,
-                    ),
-                  ),
-                  const TextSpan(
-                    text: 'users',
-                  ),
-                ],
-              ),
+            child: FelloRichText(
+              paragraph: label,
               style: TextStyles.sourceSansSB.body4.copyWith(
                 color: UiConstants.kGoldProPrimary,
               ),
-              textAlign: TextAlign.center,
             ),
           ),
         ),
@@ -299,17 +282,12 @@ class EligibleGoldProHero extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Padding(
-      padding: const EdgeInsets.symmetric(
+      padding: EdgeInsets.symmetric(
         horizontal: 17,
+        vertical: SizeConfig.padding16,
       ),
       child: Column(
         children: [
-          const GoldProExclusiveLabel(
-            userCount: 100,
-          ),
-          SizedBox(
-            height: SizeConfig.padding16,
-          ),
           Text(
             "You have unlocked Gold Pro!",
             style: TextStyles.sourceSansSB.body2.copyWith(
@@ -332,9 +310,6 @@ class EligibleGoldProHero extends StatelessWidget {
                 size: SizeConfig.iconSize2,
               )
             ],
-          ),
-          SizedBox(
-            height: SizeConfig.padding16,
           ),
         ],
       ),

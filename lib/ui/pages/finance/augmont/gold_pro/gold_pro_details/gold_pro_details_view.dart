@@ -66,13 +66,22 @@ class GoldProDetailsView extends StatelessWidget {
                                 const GoldShimmerWidget(
                                   size: ShimmerSizeEnum.large,
                                 ),
-                                const Align(
-                                  alignment: Alignment.bottomCenter,
-                                  child: GoldProExclusiveLabel(
-                                    userCount: 100,
-                                    curvedRadius: CurvedRadius.bottom,
-                                  ),
-                                ),
+                                Builder(builder: (context) {
+                                  final subText =
+                                      model.goldProConfig?.data?.subText;
+
+                                  if (subText == null) {
+                                    return const SizedBox.shrink();
+                                  }
+
+                                  return Align(
+                                    alignment: Alignment.bottomCenter,
+                                    child: GoldProExclusiveLabel(
+                                      label: subText,
+                                      curvedRadius: CurvedRadius.bottom,
+                                    ),
+                                  );
+                                }),
                                 SizedBox(
                                   width: SizeConfig.screenWidth,
                                   child: Stack(

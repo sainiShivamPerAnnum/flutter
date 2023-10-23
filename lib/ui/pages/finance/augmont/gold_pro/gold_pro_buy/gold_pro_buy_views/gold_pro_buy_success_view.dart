@@ -4,6 +4,7 @@ import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/feature/tambola/tambola.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/ui/elements/fello_rich_text.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_buy/gold_buy_success_view.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_buy/gold_pro_buy_vm.dart';
 import 'package:felloapp/util/assets.dart';
@@ -51,6 +52,8 @@ class _GoldProBuySuccessViewState extends State<GoldProBuySuccessView>
   @override
   Widget build(BuildContext context) {
     S locale = locator<S>();
+    final displayMessage =
+        widget.txnService.transactionResponseModel?.data?.displayMessage;
     return Container(
       color: Colors.black,
       child: Stack(
@@ -159,28 +162,17 @@ class _GoldProBuySuccessViewState extends State<GoldProBuySuccessView>
                   ),
                   child: Column(
                     children: [
-                      Padding(
-                        padding: const EdgeInsets.symmetric(vertical: 8),
-                        child: Text.rich(
-                          TextSpan(
-                            children: [
-                              const TextSpan(text: 'You are'),
-                              TextSpan(
-                                text: ' 95th ',
-                                style: TextStyles.sourceSansB.body4.copyWith(
-                                  color: Colors.black,
-                                  height: 1.5,
-                                ),
-                              ),
-                              const TextSpan(text: 'user to save in Gold Pro'),
-                            ],
-                          ),
-                          style: TextStyles.sourceSansSB.body4.copyWith(
-                            color: Colors.black,
-                            height: 1.5,
+                      if (displayMessage != null && displayMessage.isNotEmpty)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8),
+                          child: FelloRichText(
+                            paragraph: displayMessage,
+                            style: TextStyles.sourceSansSB.body4.copyWith(
+                              color: Colors.black,
+                              height: 1.5,
+                            ),
                           ),
                         ),
-                      ),
                       Container(
                         decoration: BoxDecoration(
                           border: Border.all(
