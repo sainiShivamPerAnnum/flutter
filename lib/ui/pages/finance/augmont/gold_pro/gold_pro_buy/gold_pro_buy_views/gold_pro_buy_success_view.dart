@@ -58,9 +58,10 @@ class _GoldProBuySuccessViewState extends State<GoldProBuySuccessView>
       color: Colors.black,
       child: Stack(
         children: [
-          Padding(
+          SingleChildScrollView(
             padding: EdgeInsets.symmetric(
-                vertical: SizeConfig.pageHorizontalMargins),
+              vertical: SizeConfig.pageHorizontalMargins,
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
@@ -355,7 +356,6 @@ class _GoldProBuySuccessViewState extends State<GoldProBuySuccessView>
                   ),
                 ),
                 const AutopaySetupWidget(),
-                const Spacer(),
                 TextButton(
                   onPressed: () {
                     AppState.isRepeated = true;
