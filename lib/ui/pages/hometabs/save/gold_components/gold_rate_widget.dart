@@ -48,8 +48,9 @@ class GoldRateWidgetState extends State<GoldRateWidget> {
       return Container(
           width: SizeConfig.screenWidth,
           margin: EdgeInsets.symmetric(
-              vertical: SizeConfig.padding28,
-              horizontal: SizeConfig.pageHorizontalMargins),
+            vertical: SizeConfig.padding16,
+            horizontal: SizeConfig.pageHorizontalMargins,
+          ),
           padding: EdgeInsets.symmetric(
             horizontal: SizeConfig.padding20,
             vertical: SizeConfig.padding20,

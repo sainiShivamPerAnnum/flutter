@@ -101,7 +101,6 @@ class BankingRepository extends BaseRepo {
   Future<ApiResponse<bool>> uploadPanImageFile(
       String uploadUrl, XFile imageFile) async {
     final dio = Dio();
-
     try {
       await dio.put(
         uploadUrl,
