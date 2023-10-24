@@ -126,26 +126,11 @@ class _GoldProBuySuccessViewState extends State<GoldProBuySuccessView>
                   style: TextStyles.rajdhaniB.title2,
                 ),
                 SizedBox(height: SizeConfig.padding12),
-                if (widget.txnService.transactionResponseModel?.data
-                        ?.txnDisplayMsg?.isNotEmpty ??
-                    false)
-                  SizedBox(
-                    width: SizeConfig.screenWidth! * 0.8,
-                    child: Text(
-                      widget.txnService.transactionResponseModel?.data
-                              ?.txnDisplayMsg ??
-                          "",
-                      textAlign: TextAlign.center,
-                      style: TextStyles.sourceSans.body2.setOpacity(0.7),
-                    ),
-                  )
-                else ...[
-                  Text(
-                    locale.txnInvestmentSuccess,
-                    textAlign: TextAlign.center,
-                    style: TextStyles.sourceSans.body2.setOpacity(0.7),
-                  ),
-                ],
+                Text(
+                  locale.txnInvestmentSuccess,
+                  textAlign: TextAlign.center,
+                  style: TextStyles.sourceSans.body2.setOpacity(0.7),
+                ),
                 Container(
                   margin: EdgeInsets.only(
                     left: SizeConfig.pageHorizontalMargins,
