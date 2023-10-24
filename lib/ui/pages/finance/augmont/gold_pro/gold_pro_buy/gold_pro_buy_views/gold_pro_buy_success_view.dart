@@ -55,6 +55,7 @@ class _GoldProBuySuccessViewState extends State<GoldProBuySuccessView>
     final displayMessage =
         widget.txnService.transactionResponseModel?.data?.displayMessage;
     return Container(
+      height: double.infinity,
       color: Colors.black,
       child: Stack(
         children: [
@@ -356,6 +357,9 @@ class _GoldProBuySuccessViewState extends State<GoldProBuySuccessView>
                   ),
                 ),
                 const AutopaySetupWidget(),
+                SizedBox(
+                  height: SizeConfig.padding16,
+                ),
                 TextButton(
                   onPressed: () {
                     AppState.isRepeated = true;
