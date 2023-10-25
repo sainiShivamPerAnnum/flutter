@@ -196,9 +196,14 @@ class GoldProBuyViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  bool _isGoldProUser = false;
+  bool get isGoldProUser => _isGoldProUser;
+
   Future<void> init() async {
     state = ViewState.Busy;
     AppState.isGoldProBuyInProgress = false;
+    _isGoldProUser =
+        locator<UserService>().userPortfolio.augmont.fd.isGoldProUser;
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       _txnService.currentTransactionState = TransactionState.idle;
     });

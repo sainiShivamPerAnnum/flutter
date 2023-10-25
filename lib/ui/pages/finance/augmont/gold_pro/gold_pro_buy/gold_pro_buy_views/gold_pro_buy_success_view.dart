@@ -52,9 +52,10 @@ class _GoldProBuySuccessViewState extends State<GoldProBuySuccessView>
   @override
   Widget build(BuildContext context) {
     S locale = locator<S>();
-    final displayMessage =
-        widget.txnService.transactionResponseModel?.data?.displayMessage;
+    final subText = widget.txnService.transactionResponseModel?.data?.subText;
+
     return Container(
+      height: double.infinity,
       color: Colors.black,
       child: Stack(
         children: [
@@ -163,11 +164,13 @@ class _GoldProBuySuccessViewState extends State<GoldProBuySuccessView>
                   ),
                   child: Column(
                     children: [
-                      if (displayMessage != null && displayMessage.isNotEmpty)
+                      if (subText != null &&
+                          subText.isNotEmpty &&
+                          !widget.model.isGoldProUser)
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 8),
                           child: FelloRichText(
-                            paragraph: displayMessage,
+                            paragraph: subText,
                             style: TextStyles.sourceSansSB.body4.copyWith(
                               color: Colors.black,
                               height: 1.5,
@@ -355,7 +358,11 @@ class _GoldProBuySuccessViewState extends State<GoldProBuySuccessView>
                     ],
                   ),
                 ),
-                const AutopaySetupWidget(),
+                if (!(subText != null && subText.isNotEmpty))
+                  const AutopaySetupWidget(),
+                SizedBox(
+                  height: SizeConfig.padding16,
+                ),
                 TextButton(
                   onPressed: () {
                     AppState.isRepeated = true;
