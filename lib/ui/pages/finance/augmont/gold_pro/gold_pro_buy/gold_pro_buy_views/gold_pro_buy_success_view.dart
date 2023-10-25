@@ -52,7 +52,10 @@ class _GoldProBuySuccessViewState extends State<GoldProBuySuccessView>
   @override
   Widget build(BuildContext context) {
     S locale = locator<S>();
-    final subText = widget.txnService.transactionResponseModel?.data?.subText;
+    final leaseText = widget.model.leaseModel?.subText;
+    final responseText =
+        widget.txnService.transactionResponseModel?.data?.subText;
+    final subText = leaseText ?? responseText;
 
     return Container(
       height: double.infinity,

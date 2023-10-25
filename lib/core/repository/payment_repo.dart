@@ -150,10 +150,13 @@ class PaymentRepository extends BaseRepo {
         apiName: '$_payments/fd',
       );
       final responseData = response["data"]["fd"];
+      final subText = response['data']['subText'];
       GoldProInvestmentResponseModel? goldProInvestmentDetails;
       if (responseData != null) {
-        goldProInvestmentDetails =
-            GoldProInvestmentResponseModel.fromMap(responseData);
+        goldProInvestmentDetails = GoldProInvestmentResponseModel.fromMap(
+          responseData,
+          subText: subText,
+        );
       }
 
       return ApiResponse(model: goldProInvestmentDetails, code: 200);
