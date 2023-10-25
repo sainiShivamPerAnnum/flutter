@@ -28,7 +28,7 @@ class AutosaveFrequencyBar extends StatelessWidget {
       child: Stack(
         children: [
           AnimatedPositioned(
-            duration: Duration(milliseconds: 500),
+            duration: const Duration(milliseconds: 500),
             curve: Curves.decelerate,
             left: model.selectedFrequency == FREQUENCY.daily
                 ? 0
@@ -52,7 +52,7 @@ class AutosaveFrequencyBar extends StatelessWidget {
                             bottomRight: Radius.circular(SizeConfig.roundness5),
                           ),
               ),
-              duration: Duration(milliseconds: 500),
+              duration: const Duration(milliseconds: 500),
             ),
           ),
           Row(

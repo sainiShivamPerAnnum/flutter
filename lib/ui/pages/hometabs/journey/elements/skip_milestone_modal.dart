@@ -20,7 +20,7 @@ import 'package:flutter_svg/svg.dart';
 
 class SkipMilestoneModalSheet extends StatefulWidget {
   final MilestoneModel? milestone;
-  SkipMilestoneModalSheet({this.milestone});
+  const SkipMilestoneModalSheet({this.milestone});
   @override
   State<SkipMilestoneModalSheet> createState() =>
       _SkipMilestoneModalSheetState();

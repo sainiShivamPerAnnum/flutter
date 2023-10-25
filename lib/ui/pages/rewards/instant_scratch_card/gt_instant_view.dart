@@ -42,7 +42,7 @@ class GTInstantView extends StatefulWidget {
 
   final bool showAutosavePrompt;
 
- const GTInstantView(
+  const GTInstantView(
       {super.key,
       this.title,
       required this.source,
@@ -128,7 +128,7 @@ class _GTInstantViewState extends State<GTInstantView>
                         SizedBox(
                           width: SizeConfig.pageHorizontalMargins,
                         ),
-                        FelloAppBarBackButton(),
+                        const FelloAppBarBackButton(),
                         const Spacer(),
                         FelloCoinBar(),
                         SizedBox(width: SizeConfig.padding20)

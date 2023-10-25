@@ -15,7 +15,7 @@ import 'package:intl/intl.dart';
 class AutosaveTransactionDetailsDialog extends StatefulWidget {
   final SubscriptionTransactionModel _transaction;
 
-  AutosaveTransactionDetailsDialog(this._transaction);
+  const AutosaveTransactionDetailsDialog(this._transaction);
 
   @override
   State createState() => AutosaveTransactionDetailsDialogState();
@@ -23,7 +23,7 @@ class AutosaveTransactionDetailsDialog extends StatefulWidget {
 
 class AutosaveTransactionDetailsDialogState
     extends State<AutosaveTransactionDetailsDialog> {
-  final Log log = new Log('AutosaveAutosaveTransactionDetailsDialog');
+  final Log log = const Log('AutosaveAutosaveTransactionDetailsDialog');
 
   final TxnHistoryService? _txnHistoryService = locator<TxnHistoryService>();
 
@@ -31,7 +31,8 @@ class AutosaveTransactionDetailsDialogState
   Widget build(BuildContext context) {
     S locale = S.of(context);
     return Dialog(
-      insetPadding: EdgeInsets.only(left: 20, top: 50, bottom: 80, right: 20),
+      insetPadding:
+          const EdgeInsets.only(left: 20, top: 50, bottom: 80, right: 20),
       shape: RoundedRectangleBorder(
         borderRadius: BorderRadius.circular(12.0),
       ),
@@ -78,7 +79,7 @@ class AutosaveTransactionDetailsDialogState
             children: [
               Column(
                 children: [
-                  SizedBox(height: 10),
+                  const SizedBox(height: 10),
                   Text(
                     locale.txnAmountTitle,
                     style: TextStyle(
@@ -87,7 +88,7 @@ class AutosaveTransactionDetailsDialogState
                     ),
                   ),
                   Padding(
-                    padding: EdgeInsets.only(bottom: 8),
+                    padding: const EdgeInsets.only(bottom: 8),
                     child: Text(
                       widget._transaction.amount,
                       // '₹ ${widget._transaction.amount.toStringAsFixed(2)}',
@@ -106,20 +107,21 @@ class AutosaveTransactionDetailsDialogState
                     indent: SizeConfig.screenWidth! * 0.1,
                   ),
                   Container(
-                    padding: EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                    margin: EdgeInsets.only(bottom: 24),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 16, vertical: 8),
+                    margin: const EdgeInsets.only(bottom: 24),
                     decoration: BoxDecoration(
                       color: _txnHistoryService!
                           .getTileColor(widget._transaction.status)
                           .withOpacity(0.7),
-                      borderRadius: BorderRadius.only(
+                      borderRadius: const BorderRadius.only(
                         bottomLeft: Radius.circular(8),
                         bottomRight: Radius.circular(8),
                       ),
                     ),
                     child: Text(
                       UserTransaction.TRAN_TYPE_DEPOSIT.toUpperCase(),
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.white,
                         letterSpacing: 3,
                         fontWeight: FontWeight.w400,
@@ -131,7 +133,7 @@ class AutosaveTransactionDetailsDialogState
               Container(
                 padding:
                     EdgeInsets.only(left: SizeConfig.blockSizeHorizontal * 5),
-                margin: EdgeInsets.only(bottom: 20),
+                margin: const EdgeInsets.only(bottom: 20),
                 child: Column(
                   children: [
                     if (widget._transaction.status ==
@@ -166,7 +168,7 @@ class AutosaveTransactionDetailsDialogState
                   ],
                 ),
               ),
-              SizedBox(
+              const SizedBox(
                 height: 10,
               ),
               SizedBox(height: SizeConfig.padding12)
@@ -200,7 +202,7 @@ class AutosaveTransactionDetailsDialogState
             size: 12,
             color: color,
           ),
-          SizedBox(width: 10),
+          const SizedBox(width: 10),
           Expanded(
             child: Text(
               title,
@@ -227,7 +229,7 @@ class AutosaveTransactionDetailsDialogState
               size: 12,
               color: color,
             ),
-            SizedBox(width: 10),
+            const SizedBox(width: 10),
             Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
@@ -235,7 +237,7 @@ class AutosaveTransactionDetailsDialogState
                   title,
                   style: TextStyles.body3.colour(Colors.black45),
                 ),
-                SizedBox(height: 4),
+                const SizedBox(height: 4),
                 Text(value, style: TextStyles.body3.bold),
               ],
             ),

@@ -31,7 +31,7 @@ import 'package:open_filex/open_filex.dart';
 import '../../../../base_util.dart';
 
 class TransactionDetailsPage extends StatefulWidget {
-  TransactionDetailsPage({Key? key, required this.txn}) : super(key: key);
+  const TransactionDetailsPage({Key? key, required this.txn}) : super(key: key);
   final UserTransaction txn;
 
   @override

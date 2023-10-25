@@ -87,7 +87,7 @@ class _GenerateInvoiceModalSheetState extends State<GenerateInvoiceModalSheet> {
           TextFormField(
             autofocus: true,
             keyboardType: TextInputType.emailAddress,
-            decoration: InputDecoration(hintText: "Transaction Id"),
+            decoration: const InputDecoration(hintText: "Transaction Id"),
             textCapitalization: TextCapitalization.none,
             controller: _trandIdController,
             validator: (value) {
@@ -103,7 +103,7 @@ class _GenerateInvoiceModalSheetState extends State<GenerateInvoiceModalSheet> {
           TextFormField(
             autofocus: true,
             keyboardType: TextInputType.phone,
-            decoration: InputDecoration(hintText: "user id"),
+            decoration: const InputDecoration(hintText: "user id"),
             textCapitalization: TextCapitalization.none,
             controller: _uidController,
             validator: (value) {

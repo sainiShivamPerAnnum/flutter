@@ -943,7 +943,7 @@ class _InfoComponentState extends State<HowToEarnComponment> {
                     //       "Once your friend completes their KYC verification, you receive a new Scratch Card.",
                     //   leadingAsset: Assets.wmtsaveMoney,
                     // ),
-                    InfoTile(
+                    const InfoTile(
                       title:
                           "Once your friend makes their first investment of minimum ₹100, you both get rewards",
                       leadingAsset: Assets.tickets,
@@ -980,7 +980,7 @@ class InfoTile extends StatelessWidget {
   final String? title;
   final double? leadSize;
 
-  InfoTile(
+  const InfoTile(
       {super.key,
       this.leadingIcon,
       this.leadingAsset,

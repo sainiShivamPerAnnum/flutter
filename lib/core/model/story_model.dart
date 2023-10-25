@@ -1,9 +1,8 @@
 import 'package:felloapp/core/model/helper_model.dart';
 import 'package:felloapp/util/logger.dart';
-import 'package:flutter/material.dart';
 
 class StoryItemModel {
-  static Log log = new Log('StoryItemModel');
+  static Log log = const Log('StoryItemModel');
 
   final String? _richText;
   final String? _assetUri;

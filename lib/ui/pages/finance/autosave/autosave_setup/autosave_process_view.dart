@@ -78,9 +78,9 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
                   model.trackAutosaveBackPress();
                 },
               ),
-              actions: [
+              actions: const [
                 Row(
-                  children: const [FaqPill(type: FaqsType.autosave)],
+                  children: [FaqPill(type: FaqsType.autosave)],
                 )
               ],
             ),

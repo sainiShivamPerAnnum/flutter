@@ -22,7 +22,7 @@ class AutosaveComboGrid extends StatelessWidget {
     return GridView.builder(
       shrinkWrap: true,
       itemCount: combo.length + 1,
-      physics: NeverScrollableScrollPhysics(),
+      physics: const NeverScrollableScrollPhysics(),
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
         crossAxisSpacing: SizeConfig.padding24,
@@ -75,7 +75,7 @@ class ComboCard extends StatelessWidget {
                         SizeConfig.roundness5,
                       ),
                       topRight: Radius.circular(SizeConfig.roundness5)),
-                  color: Color(0xffF7C780),
+                  color: const Color(0xffF7C780),
                 ),
                 height: SizeConfig.padding16,
                 padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding10),
@@ -93,7 +93,7 @@ class ComboCard extends StatelessWidget {
                 gradient: LinearGradient(
                   colors: [
                     UiConstants.darkPrimaryColor.withOpacity(0.3),
-                    Color(0xffF7C780).withOpacity(0.3),
+                    const Color(0xffF7C780).withOpacity(0.3),
                   ],
                 ),
                 border: Border.all(
@@ -216,7 +216,7 @@ class CustomComboCard extends StatelessWidget {
                 gradient: LinearGradient(
                   colors: [
                     UiConstants.darkPrimaryColor.withOpacity(0.3),
-                    Color(0xffF7C780).withOpacity(0.3),
+                    const Color(0xffF7C780).withOpacity(0.3),
                   ],
                 ),
                 border: Border.all(width: 1, color: Colors.grey),

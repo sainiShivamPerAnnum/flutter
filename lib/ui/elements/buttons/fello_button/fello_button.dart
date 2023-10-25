@@ -34,7 +34,7 @@ class FelloButton extends StatefulWidget {
   final TextStyle? textStyle;
   final Function? onPressedAsync;
 
-  FelloButton(
+  const FelloButton(
       {this.action,
       this.onPressed,
       this.activeButtonUI,

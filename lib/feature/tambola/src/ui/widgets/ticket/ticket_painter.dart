@@ -72,7 +72,7 @@ class TicketPainter extends CustomPainter {
     path_0.close();
 
     Paint paint_0_fill = Paint()..style = PaintingStyle.fill;
-    paint_0_fill.color = Color(0xff30363C).withOpacity(1.0);
+    paint_0_fill.color = const Color(0xff30363C).withOpacity(1.0);
 
     final borderPaint = Paint()
       ..color = borderColor

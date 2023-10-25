@@ -1,4 +1,3 @@
-import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -9,7 +8,7 @@ import 'package:property_change_notifier/property_change_notifier.dart';
 class NetWorthValue extends StatelessWidget {
   final TextStyle? style;
 
-  NetWorthValue({
+  const NetWorthValue({
     this.style,
   });
 
@@ -30,7 +29,7 @@ class NetWorthValue extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PropertyChangeConsumer<UserService, UserServiceProperties>(
-      properties: [
+      properties: const [
         UserServiceProperties.myUserFund,
         UserServiceProperties.myUserWallet
       ],

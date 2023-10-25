@@ -56,7 +56,7 @@ class JourneyBannersView extends StatelessWidget {
                                             fit: BoxFit.cover),
                                       ),
                                     )
-                                  : SizedBox(),
+                                  : const SizedBox(),
                               SizedBox(width: SizeConfig.padding10),
                               Expanded(
                                 child: Column(
@@ -83,7 +83,7 @@ class JourneyBannersView extends StatelessWidget {
                                   AppState.delegate!.parseRoute(Uri.parse(
                                       model.offerList![i].actionUri!));
                                 },
-                                icon: Icon(Icons.arrow_right_rounded,
+                                icon: const Icon(Icons.arrow_right_rounded,
                                     color: Colors.white),
                               )
                             ],
@@ -92,7 +92,7 @@ class JourneyBannersView extends StatelessWidget {
                       );
                     },
                   )
-                : SizedBox(),
+                : const SizedBox(),
           ),
         );
       },

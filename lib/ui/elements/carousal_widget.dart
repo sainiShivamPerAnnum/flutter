@@ -21,13 +21,13 @@ class _CarousalWidgetState extends State<CarousalWidget> {
   PageController controller = PageController();
 
   void nextPage() {
-    Timer(Duration(seconds: 10), () {
+    Timer(const Duration(seconds: 10), () {
       if (_currentPos == widget.widgets!.length - 1) {
         controller.animateToPage(0,
-            duration: Duration(milliseconds: 500), curve: Curves.easeIn);
+            duration: const Duration(milliseconds: 500), curve: Curves.easeIn);
       } else {
         controller.nextPage(
-            duration: Duration(milliseconds: 500), curve: Curves.easeIn);
+            duration: const Duration(milliseconds: 500), curve: Curves.easeIn);
       }
       nextPage();
     });
@@ -77,7 +77,7 @@ class _CarousalWidgetState extends State<CarousalWidget> {
             (index) => Container(
               width: SizeConfig.padding8,
               height: SizeConfig.padding8,
-              margin: EdgeInsets.symmetric(horizontal: 3),
+              margin: const EdgeInsets.symmetric(horizontal: 3),
               decoration: BoxDecoration(
                 color: _currentPos == index ? Colors.white : Colors.transparent,
                 border: Border.all(color: Colors.white),

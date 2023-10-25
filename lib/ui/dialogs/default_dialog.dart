@@ -4,7 +4,7 @@ import 'package:flutter/material.dart';
 
 class BaseDialog extends StatelessWidget {
   final Widget? content;
-  BaseDialog({required this.content});
+  const BaseDialog({required this.content});
   @override
   Widget build(BuildContext context) {
     return Dialog(
@@ -39,7 +39,7 @@ class BaseDialog extends StatelessWidget {
             left: SizeConfig.padding12,
             top: SizeConfig.padding24,
           ),
-          margin: EdgeInsets.all(1),
+          margin: const EdgeInsets.all(1),
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(SizeConfig.cardBorderRadius),
             color: UiConstants.kTambolaMidTextColor,

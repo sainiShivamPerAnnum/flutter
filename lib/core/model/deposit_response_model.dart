@@ -10,18 +10,17 @@ class DepositResponseModel {
   DepositResponseModel({this.response, this.augResponse, this.note, this.gtId});
 
   DepositResponseModel.fromJson(Map<String, dynamic> json) {
-    response = json['response'] != null
-        ? new Response.fromJson(json['response'])
-        : null;
+    response =
+        json['response'] != null ? Response.fromJson(json['response']) : null;
     augResponse = json['augResponse'] != null
-        ? new AugResponse.fromJson(json['augResponse'])
+        ? AugResponse.fromJson(json['augResponse'])
         : null;
-    note = json['note'] != null ? new Note.fromJson(json['note']) : Note.base();
+    note = json['note'] != null ? Note.fromJson(json['note']) : Note.base();
     gtId = json['gtId'] != null ? json['gtId'] : '';
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     if (this.response != null) {
       data['response'] = this.response!.toJson();
     }
@@ -82,7 +81,7 @@ class Response {
     status = json['status'] ?? false;
     didWalletUpdate = json['didWalletUpdate'] ?? false;
     transactionDoc = json['transactionDoc'] != null
-        ? new TransactionDoc.fromJson(json['transactionDoc'])
+        ? TransactionDoc.fromJson(json['transactionDoc'])
         : null;
     didFLCUpdate = json['didFLCUpdate'];
     augmontPrinciple = json['augmontPrinciple'];
@@ -91,7 +90,7 @@ class Response {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['status'] = this.status;
     data['didWalletUpdate'] = this.didWalletUpdate;
     if (this.transactionDoc != null) {
@@ -163,7 +162,7 @@ class TransactionDoc {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['status'] = this.status;
     data['transactionId'] = this.transactionId;
     data['transactionDetails'] = this.transactionDetail;
@@ -214,7 +213,7 @@ class EnqueuedTaskDetails {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['name'] = this.name;
     data['queuePath'] = this.queuePath;
     return data;
@@ -255,7 +254,7 @@ class Note {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['title'] = this.title;
     data['body'] = this.body;
     return data;
@@ -282,11 +281,11 @@ class AugResponse {
   AugResponse({this.data});
 
   AugResponse.fromJson(Map<String, dynamic> json) {
-    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
+    data = json['data'] != null ? Data.fromJson(json['data']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     if (this.data != null) {
       data['data'] = this.data!.toJson();
     }
@@ -320,7 +319,7 @@ class Data {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['transactionId'] = this.transactionId;
     data['merchantTransactionId'] = this.merchantTransactionId;
     data['goldBalance'] = this.goldBalance;

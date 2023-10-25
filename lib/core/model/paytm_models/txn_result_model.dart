@@ -88,10 +88,10 @@ class Gt {
   Gt.fromJson(Map<String, dynamic> json) {
     canTransfer = json['canTransfer'];
     timestamp = json['timestamp'] != null
-        ? new Timestamp.fromJson(json['timestamp'])
+        ? Timestamp.fromJson(json['timestamp'])
         : Timestamp.base();
     redeemedTimestamp = json['redeemedTimestamp'] != null
-        ? new Timestamp.fromJson(json['redeemedTimestamp'])
+        ? Timestamp.fromJson(json['redeemedTimestamp'])
         : Timestamp.base();
     eventType = json['eventType'];
     gtType = json['gtType'];
@@ -103,7 +103,7 @@ class Gt {
     if (json['rewardArr'] != null) {
       rewardArr = <RewardArr>[];
       json['rewardArr'].forEach((v) {
-        rewardArr!.add(new RewardArr.fromJson(v));
+        rewardArr!.add(RewardArr.fromJson(v));
       });
     }
   }
@@ -178,4 +178,3 @@ class RewardArr {
     return data;
   }
 }
-

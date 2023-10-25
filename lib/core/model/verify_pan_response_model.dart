@@ -1,8 +1,8 @@
 class VerifyPanResponseModel {
   bool? flag;
-  String ? upstreamName;
-  String ? message;
-  String ? gtId;
+  String? upstreamName;
+  String? message;
+  String? gtId;
 
   VerifyPanResponseModel(
       {this.flag, this.upstreamName, this.message, this.gtId});
@@ -15,7 +15,7 @@ class VerifyPanResponseModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['flag'] = this.flag;
     data['upstreamName'] = this.upstreamName;
     data['message'] = this.message;

@@ -32,7 +32,7 @@ class AppNegativeDialog extends StatelessWidget {
 
   dialogContent(BuildContext context) {
     return Container(
-      decoration: new BoxDecoration(
+      decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(SizeConfig.cardBorderRadius),
         gradient: LinearGradient(
           begin: Alignment.topCenter,

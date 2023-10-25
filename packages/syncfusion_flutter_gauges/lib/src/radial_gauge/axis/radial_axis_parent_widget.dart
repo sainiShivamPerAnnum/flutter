@@ -31,7 +31,7 @@ const double kDefaultRadialGaugeSize = 350.0;
 /// Represents the renderer of radial gauge axis.
 class RadialAxisParentWidget extends MultiChildRenderObjectWidget {
   /// Creates instance for [RadialGaugeRenderWidget].
-  RadialAxisParentWidget({Key? key, required List<Widget> children})
+  const RadialAxisParentWidget({Key? key, required List<Widget> children})
       : super(key: key, children: children);
 
   @override

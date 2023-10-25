@@ -57,12 +57,13 @@ class AppBarButton extends StatelessWidget {
 class FelloAppBarBackButton extends StatelessWidget {
   final Function? onBackPress;
   final Color color;
-  FelloAppBarBackButton({this.onBackPress, this.color = Colors.white});
+  const FelloAppBarBackButton({this.onBackPress, this.color = Colors.white});
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: onBackPress as void Function()? ?? (() => AppState.backButtonDispatcher!.didPopRoute()),
+      onTap: onBackPress as void Function()? ??
+          (() => AppState.backButtonDispatcher!.didPopRoute()),
       child: Padding(
         padding: EdgeInsets.all(SizeConfig.padding4),
         child: Icon(

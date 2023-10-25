@@ -56,7 +56,7 @@ class LoginUserNameViewState extends State<LoginNameInputView> {
           controller: widget.loginModel.nameViewScrollController,
           shrinkWrap: true,
           children: [
-            LoginImage(),
+            const LoginImage(),
             SizedBox(height: SizeConfig.padding8),
             Align(
               alignment: Alignment.center,

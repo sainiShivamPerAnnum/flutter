@@ -12,7 +12,7 @@ class JourneyBannersViewModel extends BaseViewModel {
   final GetterRepository? _getterRepo = locator<GetterRepository>();
   final AnalyticsService? _analyticService = locator<AnalyticsService>();
 
-  final PageController promoPageController = new PageController(initialPage: 0);
+  final PageController promoPageController = PageController(initialPage: 0);
   int _currentPage = 0;
   Timer? _timer;
 
@@ -42,7 +42,7 @@ class JourneyBannersViewModel extends BaseViewModel {
   }
 
   initiateAutoScroll() {
-    _timer = Timer.periodic(Duration(seconds: 6), (Timer timer) {
+    _timer = Timer.periodic(const Duration(seconds: 6), (Timer timer) {
       if (_currentPage < offerList!.length - 1) {
         _currentPage++;
       } else {
@@ -51,7 +51,7 @@ class JourneyBannersViewModel extends BaseViewModel {
 
       promoPageController.animateToPage(
         _currentPage,
-        duration: Duration(milliseconds: 600),
+        duration: const Duration(milliseconds: 600),
         curve: Curves.easeIn,
       );
     });

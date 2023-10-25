@@ -78,7 +78,7 @@ class GoldProSellView extends StatelessWidget {
                         child: model.state == ViewState.Busy
                             ? const Center(child: FullScreenLoader())
                             : model.leasedGoldList.isEmpty
-                                ? NoRecordDisplayWidget(
+                                ? const NoRecordDisplayWidget(
                                     text: "No Investments made yet",
                                   )
                                 : ListView.builder(

@@ -28,7 +28,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 class RazorpayService extends ChangeNotifier {
-  final Log log = Log('RazorpayService');
+  final Log log = const Log('RazorpayService');
   CustomLogger? _logger;
   UserTransaction? _currentTxn;
   ValueChanged<UserTransaction?>? _txnUpdateListener;

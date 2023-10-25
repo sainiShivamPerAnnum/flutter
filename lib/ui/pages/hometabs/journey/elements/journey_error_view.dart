@@ -23,9 +23,9 @@ class JourneyErrorScreen extends StatelessWidget {
       decoration: BoxDecoration(
         gradient: LinearGradient(
           colors: [
-            Color(0xFF097178).withOpacity(0.2),
-            Color(0xFF0C867C),
-            Color(0xff0B867C),
+            const Color(0xFF097178).withOpacity(0.2),
+            const Color(0xFF0C867C),
+            const Color(0xff0B867C),
           ],
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,

@@ -115,7 +115,7 @@ class SaveBlogSection extends StatelessWidget {
                 },
               )
             : model.blogPosts == null || model.blogPosts!.isEmpty
-                ? SizedBox()
+                ? const SizedBox()
                 : ListView.builder(
                     scrollDirection: Axis.horizontal,
                     itemCount: model.blogPosts!.length,
@@ -170,7 +170,7 @@ class _BlogWebViewState extends State<BlogWebView> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: UiConstants.kBackgroundColor3,
-        leading: FelloAppBarBackButton(),
+        leading: const FelloAppBarBackButton(),
         centerTitle: true,
         title:
             Text(widget.title ?? 'Title', style: TextStyles.rajdhaniSB.title5),

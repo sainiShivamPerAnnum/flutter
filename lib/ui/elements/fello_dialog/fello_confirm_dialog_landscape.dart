@@ -21,7 +21,7 @@ class FelloConfirmationLandScapeDialog extends StatefulWidget {
   final String? reject;
   final bool inLandScape;
 
-  FelloConfirmationLandScapeDialog(
+  const FelloConfirmationLandScapeDialog(
       {this.result,
       this.content,
       this.onAccept,
@@ -88,7 +88,7 @@ class _FelloConfirmationDialogState
                             alignment: Alignment.center,
                             height: SizeConfig.padding64,
                             child: Container(
-                              child: CircularProgressIndicator(
+                              child: const CircularProgressIndicator(
                                 strokeWidth: 2,
                                 color: UiConstants.primaryColor,
                                 backgroundColor: UiConstants.tertiarySolid,

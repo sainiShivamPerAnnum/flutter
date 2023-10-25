@@ -12,7 +12,7 @@ class UserFundQuantitySE extends StatelessWidget {
   final TextStyle? style;
   final InvestmentType investmentType;
 
-  UserFundQuantitySE({
+  const UserFundQuantitySE({
     this.style,
     this.investmentType = InvestmentType.AUGGOLD99,
   });
@@ -41,7 +41,7 @@ class UserFundQuantitySE extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PropertyChangeConsumer<UserService, UserServiceProperties>(
-      properties: [
+      properties: const [
         UserServiceProperties.myUserFund,
         UserServiceProperties.myUserWallet
       ],
@@ -59,7 +59,7 @@ class LboxGrowthArrow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PropertyChangeConsumer<UserService, UserServiceProperties>(
-        properties: [
+        properties: const [
           UserServiceProperties.myUserFund,
           UserServiceProperties.myUserWallet
         ],
@@ -70,6 +70,6 @@ class LboxGrowthArrow extends StatelessWidget {
                     size: SizeConfig.padding16,
                     color: UiConstants.primaryColor,
                   )
-                : SizedBox());
+                : const SizedBox());
   }
 }

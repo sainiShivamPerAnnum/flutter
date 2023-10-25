@@ -58,7 +58,7 @@ class UserProfileVM extends BaseViewModel {
   UsernameResponse? response;
   Debouncer? _debouncer;
 
-  Log log = Log('User Profile');
+  Log log = const Log('User Profile');
   bool _inEditMode = false;
   bool _isgmailFieldEnabled = true;
 

@@ -8,7 +8,7 @@ class TopWinnersModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['currentTopWinners'] = this.currentTopWinners ?? [];
     return data;
   }
@@ -21,10 +21,9 @@ class TopWinnersModel {
 
   factory TopWinnersModel.fromMap(Map<String, dynamic> map) {
     return TopWinnersModel(
-      currentTopWinners: List<String>.from(map['currentTopWinners'])  ,
+      currentTopWinners: List<String>.from(map['currentTopWinners']),
     );
   }
-
 
   @override
   String toString() => 'TopWinnersModel(currentTopWinners: $currentTopWinners)';

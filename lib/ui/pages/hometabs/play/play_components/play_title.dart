@@ -47,12 +47,12 @@ class GameTitleWithSubTitle extends StatelessWidget {
             style: TextStyles.rajdhaniSB.body0,
           ),
           subtitle == null
-              ? SizedBox.shrink()
+              ? const SizedBox.shrink()
               : SizedBox(
                   height: SizeConfig.padding2,
                 ),
           subtitle == null
-              ? SizedBox.shrink()
+              ? const SizedBox.shrink()
               : Text(
                   subtitle!,
                   style: TextStyles.sourceSans.body4

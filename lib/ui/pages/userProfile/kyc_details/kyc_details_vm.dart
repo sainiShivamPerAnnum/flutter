@@ -117,7 +117,7 @@ class KYCDetailsViewModel extends BaseViewModel {
   final UserService _userService = locator<UserService>();
   final BankingRepository _bankingRepo = locator<BankingRepository>();
 
-  final _cacheService = new CacheService();
+  final _cacheService = CacheService();
   bool get isConfirmDialogInView => _userService.isConfirmationDialogOpen;
 
   FocusNode kycNameFocusNode = FocusNode();
@@ -135,8 +135,8 @@ class KYCDetailsViewModel extends BaseViewModel {
   }
 
   init() {
-    nameController = new TextEditingController();
-    panController = new TextEditingController();
+    nameController = TextEditingController();
+    panController = TextEditingController();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       checkForKycExistence();
     });

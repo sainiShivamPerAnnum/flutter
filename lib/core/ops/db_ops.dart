@@ -15,7 +15,7 @@ import 'package:flutter/material.dart';
 class DBModel extends ChangeNotifier {
   Api? _api = locator<Api>();
   // Lock _lock = new Lock();
-  final Log log = new Log("DBModel");
+  final Log log = const Log("DBModel");
   final FirebaseCrashlytics firebaseCrashlytics = FirebaseCrashlytics.instance;
   final CustomLogger? logger = locator<CustomLogger>();
 

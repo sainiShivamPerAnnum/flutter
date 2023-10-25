@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:felloapp/core/model/journey_models/journey_asset_model.dart';
-import 'package:flutter/material.dart';
 
 class MilestoneShadowModel {
   final String id;

@@ -122,9 +122,10 @@ class SaveCustomCard extends StatelessWidget {
                     width: SizeConfig.screenWidth! * 0.32,
                     height: SizeConfig.padding32,
                     decoration: BoxDecoration(
-                        color: (key == ValueKey(Constants.ASSET_TYPE_AUGMONT))
-                            ? Color(0xff5567B7)
-                            : Color(0xff326D71),
+                        color: (key ==
+                                const ValueKey(Constants.ASSET_TYPE_AUGMONT))
+                            ? const Color(0xff5567B7)
+                            : const Color(0xff326D71),
                         borderRadius:
                             BorderRadius.circular(SizeConfig.roundness8)),
                     child: AnimatedTextKit(

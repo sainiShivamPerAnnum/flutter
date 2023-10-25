@@ -47,12 +47,12 @@ class UPIAppsBottomSheet extends StatelessWidget {
                       onTap: () {
                         AppState.backButtonDispatcher!.didPopRoute();
                       },
-                      child: Icon(Icons.close),
+                      child: const Icon(Icons.close),
                     )
                   ],
                 ),
               ),
-              SizedBox(height: 20),
+              const SizedBox(height: 20),
               txnServiceInstance!.appMetaList.length <= 0
                   ? Container(
                       width: SizeConfig.screenWidth,
@@ -96,7 +96,7 @@ class UPIAppsBottomSheet extends StatelessWidget {
                                           child: txnServiceInstance!
                                               .appMetaList[index]
                                               .iconImage(40)),
-                                      SizedBox(
+                                      const SizedBox(
                                         height: 10,
                                       ),
                                       Text(
@@ -111,7 +111,8 @@ class UPIAppsBottomSheet extends StatelessWidget {
                             ),
                           );
                         },
-                        gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+                        gridDelegate:
+                            const SliverGridDelegateWithFixedCrossAxisCount(
                           crossAxisCount: 3,
                         ),
                       ),

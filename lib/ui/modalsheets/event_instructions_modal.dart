@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 
 class EventInstructionsModal extends StatelessWidget {
   final List instructions;
-  EventInstructionsModal({required this.instructions});
+  const EventInstructionsModal({required this.instructions});
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
@@ -26,13 +26,13 @@ class EventInstructionsModal extends StatelessWidget {
                   children: [
                     Text(
                       locale.howToParticipate,
-                      style: TextStyle(
+                      style: const TextStyle(
                         color: Colors.black54,
                         fontWeight: FontWeight.w700,
                         fontSize: 24,
                       ),
                     ),
-                    Spacer(),
+                    const Spacer(),
                     CircleAvatar(
                       backgroundColor: Colors.black,
                       child: IconButton(
@@ -49,7 +49,7 @@ class EventInstructionsModal extends StatelessWidget {
                   ],
                 ),
               ),
-              Divider(
+              const Divider(
                 height: 32,
                 thickness: 2,
               ),

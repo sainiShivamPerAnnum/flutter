@@ -128,7 +128,7 @@ class GoldSellLoadingView extends StatelessWidget {
       addToScreenStack: true,
       hapticVibrate: true,
       isBarrierDismissible: false,
-      content: PendingDialog(
+      content: const PendingDialog(
         title: "We're still processing!",
         subtitle:
             "Your withdrawal is taking longer than usual. We'll get back to you in ",

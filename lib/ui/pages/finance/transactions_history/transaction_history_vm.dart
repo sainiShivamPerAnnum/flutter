@@ -124,7 +124,7 @@ class TransactionsHistoryViewModel extends BaseViewModel {
       tabIndex = 1;
       WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
         pageController!.animateToPage(1,
-            duration: Duration(milliseconds: 200), curve: Curves.linear);
+            duration: const Duration(milliseconds: 200), curve: Curves.linear);
       });
     }
 

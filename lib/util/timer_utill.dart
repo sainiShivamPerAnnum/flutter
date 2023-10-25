@@ -22,7 +22,7 @@ abstract class TimerUtil<T extends StatefulWidget> extends State<T> {
 
   void init() {
     WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
-      _timer = Timer.periodic(Duration(seconds: 1), (_) {
+      _timer = Timer.periodic(const Duration(seconds: 1), (_) {
         if (_timeRemainingFor().isNegative ||
             _timeRemainingFor().inSeconds == 0) {
           closeTimer();

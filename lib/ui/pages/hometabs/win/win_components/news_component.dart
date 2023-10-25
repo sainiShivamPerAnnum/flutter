@@ -10,9 +10,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 List<Color> randomColors = [
-  Color(0xffF79780),
-  Color(0xffEFAF4E),
-  Color(0xff93B5FE),
+  const Color(0xffF79780),
+  const Color(0xffEFAF4E),
+  const Color(0xff93B5FE),
 ];
 
 class FelloNewsComponent extends StatelessWidget {
@@ -48,7 +48,7 @@ class FelloNewsComponent extends StatelessWidget {
                   )
                 : ListView.builder(
                     shrinkWrap: true,
-                    physics: BouncingScrollPhysics(),
+                    physics: const BouncingScrollPhysics(),
                     scrollDirection: Axis.horizontal,
                     itemCount: model.fellofacts!.length,
                     itemBuilder: (context, index) {

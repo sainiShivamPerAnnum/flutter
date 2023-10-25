@@ -29,7 +29,7 @@ class AutosaveStatusText extends StatelessWidget {
                 style:
                     TextStyles.rajdhaniB.body4.colour(UiConstants.primaryColor),
               )
-            : SizedBox(),
+            : const SizedBox(),
       ),
     );
   }

@@ -1,9 +1,8 @@
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/util/logger.dart';
 
 class UserAugmontDetail {
-  Log log = new Log('UserAugmontDetail');
+  Log log = const Log('UserAugmontDetail');
   String? _hasIssue;
   String? _userId;
   String? _userName;
@@ -70,20 +69,20 @@ class UserAugmontDetail {
           '',
         );
 
-        UserAugmontDetail.base(){
- _hasIssue = '' ;
- _userId = '';
- _userName = '';
- _bankAccNo  = '';
- _bankHolderName  = '';
- _userStateId  = '';
- _ifsc  = '';
-  _firstInvMade = false;
-  _isDepLocked = false;
-  _isSellLocked = false;
-_sellNotice  = '';
-_depNotice  = '';
-        }
+  UserAugmontDetail.base() {
+    _hasIssue = '';
+    _userId = '';
+    _userName = '';
+    _bankAccNo = '';
+    _bankHolderName = '';
+    _userStateId = '';
+    _ifsc = '';
+    _firstInvMade = false;
+    _isDepLocked = false;
+    _isSellLocked = false;
+    _sellNotice = '';
+    _depNotice = '';
+  }
 
   UserAugmontDetail.fromMap(Map<String, dynamic> data)
       : this(

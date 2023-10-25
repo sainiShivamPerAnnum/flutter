@@ -21,9 +21,9 @@ class FundBreakdownDialog extends StatelessWidget {
             children: [
               InkWell(
                 onTap: () => AppState.backButtonDispatcher!.didPopRoute(),
-                child: Row(
+                child: const Row(
                   mainAxisAlignment: MainAxisAlignment.end,
-                  children: const [
+                  children: [
                     Icon(
                       Icons.close,
                       color: Colors.white,

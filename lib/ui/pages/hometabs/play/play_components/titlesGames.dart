@@ -7,7 +7,7 @@ class TitlesGames extends StatelessWidget {
   final bool isLast;
   final bool startPaddingAvilable;
   final bool endPaddingAvailble;
-  TitlesGames({
+  const TitlesGames({
     this.icon,
     this.richText,
     this.isLast = false,
@@ -23,12 +23,14 @@ class TitlesGames extends StatelessWidget {
       children: [
         startPaddingAvilable
             ? SizedBox(width: SizeConfig.screenWidth! * 0.1)
-            : SizedBox.shrink(),
+            : const SizedBox.shrink(),
         Column(
           children: [
             SizedBox(width: SizeConfig.screenWidth! * 0),
             icon!,
-            isLast ? SizedBox(height: SizeConfig.padding12) : GameStepper(),
+            isLast
+                ? SizedBox(height: SizeConfig.padding12)
+                : const GameStepper(),
           ],
         ),
         SizedBox(
@@ -38,7 +40,7 @@ class TitlesGames extends StatelessWidget {
         // if (endPaddingAvailble)
         startPaddingAvilable
             ? SizedBox(width: SizeConfig.screenWidth! * 0.1)
-            : SizedBox.shrink(),
+            : const SizedBox.shrink(),
       ],
     );
   }

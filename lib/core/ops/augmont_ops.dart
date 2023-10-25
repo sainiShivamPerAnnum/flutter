@@ -29,7 +29,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class AugmontService extends ChangeNotifier {
-  final Log log = new Log('AugmontService');
+  final Log log = const Log('AugmontService');
   final CustomLogger? _logger = locator<CustomLogger>();
   final ApiPath? _apiPaths = locator<ApiPath>();
   final InternalOpsService? _internalOpsService = locator<InternalOpsService>();

@@ -3,7 +3,7 @@ import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/util/logger.dart';
 
 class UserMiniTransaction {
-  static Log log = new Log('UserMiniTransaction');
+  static Log log = const Log('UserMiniTransaction');
   double? _amount;
   int? _closingBalance;
   String? _type;

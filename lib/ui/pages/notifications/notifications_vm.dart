@@ -20,7 +20,7 @@ class NotificationsViewModel extends BaseViewModel {
 
   //local variables
   List<AlertModel>? notifications;
-  ScrollController _scrollController = new ScrollController();
+  ScrollController _scrollController = ScrollController();
   bool hasMoreAlerts = true;
   String? lastAlertDocumentId;
   bool _isMoreNotificationsLoading = false;

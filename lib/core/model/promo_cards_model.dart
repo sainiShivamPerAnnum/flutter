@@ -1,11 +1,10 @@
 import 'package:felloapp/core/model/helper_model.dart';
 import 'package:felloapp/util/logger.dart';
-import 'package:flutter/material.dart';
 
 class PromoCardModel {
-  static Log log = new Log('PromoCard');
+  static Log log = const Log('PromoCard');
 
-int? _position;
+  int? _position;
   final String? _title;
   final String? _subtitle;
   final String? _buttonText;
@@ -43,7 +42,7 @@ int? _position;
 
   set position(value) => this.position = value;
 
-   String? get title => this._title;
+  String? get title => this._title;
 
   String? get subtitle => this._subtitle;
 
@@ -56,4 +55,3 @@ int? _position;
   String? get bgImage => _bgImage;
   int get gridX => _gridX;
 }
-

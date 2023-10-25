@@ -56,7 +56,7 @@ class OnboardingViewModel extends BaseViewModel {
         );
       }),
     ),
-    SizedBox.shrink(),
+    const SizedBox.shrink(),
   ];
 
   List<List<String>>? get onboardingData => _onboardingData;

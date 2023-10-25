@@ -498,7 +498,7 @@ class LineIndicator extends StatelessWidget {
 }
 
 class _BackGround extends StatelessWidget {
-  const _BackGround({super.key});
+  const _BackGround();
 
   @override
   Widget build(BuildContext context) {

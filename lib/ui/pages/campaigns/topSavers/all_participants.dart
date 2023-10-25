@@ -13,7 +13,7 @@ class AllParticipantsView extends StatelessWidget {
   final TopSaverViewModel? model;
   final bool forPastWinners;
 
-  AllParticipantsView({
+  const AllParticipantsView({
     required this.model,
     required this.forPastWinners,
   });
@@ -76,7 +76,7 @@ class AllParticipantsView extends StatelessWidget {
               onPressed: () {
                 AppState.backButtonDispatcher!.didPopRoute();
               },
-              icon: Icon(Icons.arrow_back_ios)),
+              icon: const Icon(Icons.arrow_back_ios)),
         ),
         backgroundColor: UiConstants.kBackgroundColor,
         body: Stack(

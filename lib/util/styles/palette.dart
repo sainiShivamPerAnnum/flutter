@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 
 class FelloColorPalette {
   static FundPalette augmontFundPalette() {
-    return FundPalette(
+    return const FundPalette(
       primaryColor: Color(0xffFFB700),
       primaryColor2: Color(0xffFFC300),
       secondaryColor: Color(0xff203130),

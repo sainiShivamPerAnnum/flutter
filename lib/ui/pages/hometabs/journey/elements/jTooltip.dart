@@ -17,7 +17,7 @@ class MilestoneTooltip extends StatelessWidget {
   @override
   build(BuildContext context) {
     return PropertyChangeConsumer<JourneyService, JourneyServiceProperties>(
-        properties: [
+        properties: const [
           JourneyServiceProperties.AvatarPosition,
           JourneyServiceProperties.BaseGlow,
           JourneyServiceProperties.Pages,
@@ -116,7 +116,7 @@ class MilestoneTooltip extends StatelessWidget {
                                     .showMilestoneDetailsModalSheet(
                                         milestone, context),
                                 child: Container(
-                                  decoration: ShapeDecoration(
+                                  decoration: const ShapeDecoration(
                                     color: Colors.black,
                                     shape: TooltipShapeBorder(arrowArc: 0.5),
                                     shadows: [
@@ -163,7 +163,7 @@ class MilestoneTooltip extends StatelessWidget {
                           ),
                         );
                 } else
-                  return SizedBox();
+                  return const SizedBox();
               }),
             ),
           );

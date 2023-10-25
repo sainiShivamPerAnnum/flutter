@@ -40,13 +40,13 @@ class TransactionsHistory extends StatelessWidget {
       onModelReady: (model) {
         model.init(investmentType, showAutosave);
       },
-      child: NoTransactionsContent(),
+      child: const NoTransactionsContent(),
       builder: (ctx, model, child) {
         return Scaffold(
             appBar: AppBar(
               backgroundColor: UiConstants.kBackgroundColor,
               elevation: 0,
-              leading: FelloAppBarBackButton(),
+              leading: const FelloAppBarBackButton(),
               title: Text(
                 (investmentType == InvestmentType.AUGGOLD99
                         ? "Gold "
@@ -173,7 +173,7 @@ class SingleTransactionView extends StatelessWidget {
                               ],
                             )
                           : ListView(
-                  physics: const BouncingScrollPhysics(),
+                              physics: const BouncingScrollPhysics(),
                               controller: model!.tranListController,
                               children: List.generate(
                                 model!.filteredList!.length,
@@ -240,7 +240,7 @@ class SIPTransactionHistoryView extends StatelessWidget {
                           ],
                         )
                       : ListView(
-              physics: const BouncingScrollPhysics(),
+                          physics: const BouncingScrollPhysics(),
                           controller: model!.sipScrollController,
                           children: List.generate(
                             model!.filteredSIPList!.length,
@@ -277,7 +277,7 @@ class SIPTransactionHistoryView extends StatelessWidget {
 class NoTransactionsContent extends StatelessWidget {
   final double? width;
 
-  NoTransactionsContent({super.key, this.width});
+  const NoTransactionsContent({super.key, this.width});
 
   @override
   Widget build(BuildContext context) {
@@ -412,7 +412,7 @@ class TransactionStatusChip extends StatelessWidget {
   final Color color;
   final String? status;
 
-  TransactionStatusChip(
+  const TransactionStatusChip(
       {super.key, this.color = Colors.white, this.status = "NA"});
 
   @override

@@ -69,7 +69,7 @@ class AutosaveStepsView extends StatelessWidget {
             ),
           ),
         ),
-        Spacer(),
+        const Spacer(),
         Padding(
           padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
           child: Row(

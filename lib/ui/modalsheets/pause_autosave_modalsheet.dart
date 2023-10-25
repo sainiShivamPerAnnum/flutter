@@ -43,7 +43,7 @@ class _PauseAutosaveModalState extends State<PauseAutosaveModal> {
           Row(
             children: [
               Text(locale.pauseAutoSave, style: TextStyles.rajdhaniB.title3),
-              Spacer(),
+              const Spacer(),
               CircleAvatar(
                 backgroundColor: Colors.transparent,
                 child: IconButton(

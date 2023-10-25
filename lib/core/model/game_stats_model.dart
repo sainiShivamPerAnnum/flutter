@@ -2,7 +2,6 @@
 //
 //     final gameStats = gameStatsFromJson(jsonString);
 
-import 'package:meta/meta.dart';
 import 'dart:convert';
 
 GameStats? gameStatsFromJson(String str) =>

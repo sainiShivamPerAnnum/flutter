@@ -271,7 +271,7 @@ class _RewardCriteriaState extends State<RewardCriteria> {
 }
 
 class StreamView extends StatelessWidget {
-  StreamView({Key? key, required this.model, required this.game})
+  const StreamView({Key? key, required this.model, required this.game})
       : super(key: key);
 
   final WebHomeViewModel model;

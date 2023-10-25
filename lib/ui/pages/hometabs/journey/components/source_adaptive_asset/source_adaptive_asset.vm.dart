@@ -1,5 +1,3 @@
-import 'dart:io';
-
 import 'package:felloapp/core/repository/journey_repo.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/locator.dart';

@@ -315,8 +315,8 @@ class GTDetailedView extends StatelessWidget {
         if (!ticket.isRewarding! ||
             ticket.rewardArr == null ||
             ticket.rewardArr!.isEmpty) {
-          return Column(
-            children: const [],
+          return const Column(
+            children: [],
           );
         } else {
           if (model.state == ViewState.Busy) {

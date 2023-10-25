@@ -10,7 +10,7 @@ import 'package:flutter_svg/svg.dart';
 
 class CampaignOverviewWidget extends StatelessWidget {
   final TopSaverViewModel model;
-  CampaignOverviewWidget({required this.model});
+  const CampaignOverviewWidget({required this.model});
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);

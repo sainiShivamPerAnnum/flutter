@@ -6,11 +6,11 @@ class RazorpayOrderIdModel {
 
   RazorpayOrderIdModel.fromJson(Map<String, dynamic> json) {
     message = json['message'];
-    data = json['data'] != null ? new Data.fromJson(json['data']) : Data.base();
+    data = json['data'] != null ? Data.fromJson(json['data']) : Data.base();
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['message'] = this.message;
     if (this.data != null) {
       data['data'] = this.data!.toJson();
@@ -35,7 +35,7 @@ class Data {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['status'] = this.status;
     data['orderId'] = this.orderId;
     return data;

@@ -20,7 +20,7 @@ class ViewAllBlogsView extends StatelessWidget {
       builder: ((context, model, child) => Scaffold(
             backgroundColor: UiConstants.kBackgroundColor,
             appBar: AppBar(
-              leading: FelloAppBarBackButton(),
+              leading: const FelloAppBarBackButton(),
               elevation: 0,
               backgroundColor: UiConstants.kBackgroundColor,
               title: Text(locale.blogs, style: TextStyles.rajdhaniSB.title5),

@@ -54,7 +54,7 @@ class BlackWhiteButton extends StatelessWidget {
         shape: RoundedRectangleBorder(
             borderRadius: borderRadius ?? BorderRadius.circular(5),
             side: _showBorder
-                ? BorderSide(color: Colors.white)
+                ? const BorderSide(color: Colors.white)
                 : BorderSide.none),
         color: _color,
         child: child ??

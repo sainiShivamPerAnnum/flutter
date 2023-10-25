@@ -114,7 +114,7 @@ class _CenterTextFieldState extends State<CenterTextField> {
                       ],
                       style: TextStyles.rajdhaniB
                           .size(SizeConfig.screenWidth! * 0.1067),
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         counterText: "",
                         focusedBorder: InputBorder.none,
                         border: InputBorder.none,

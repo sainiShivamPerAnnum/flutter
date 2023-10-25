@@ -19,7 +19,7 @@ class WinningsContainer extends StatelessWidget {
   final Color? color;
   final LinearGradient? gradient;
   final bool hapticRequired;
-  WinningsContainer(
+  const WinningsContainer(
       {this.child,
       required this.shadow,
       this.height,
@@ -44,7 +44,7 @@ class WinningsContainer extends StatelessWidget {
         decoration: gradient != null
             ? BoxDecoration(
                 gradient: gradient ??
-                    new LinearGradient(
+                    const LinearGradient(
                       colors: [
                         UiConstants.primaryColor,
                         UiConstants.primaryColor

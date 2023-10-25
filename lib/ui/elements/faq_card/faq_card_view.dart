@@ -15,7 +15,7 @@ class FAQCardView extends StatelessWidget {
   final bool? catTitle;
   final Color? bgColor;
 
-  FAQCardView({required this.category, this.catTitle, this.bgColor});
+  const FAQCardView({required this.category, this.catTitle, this.bgColor});
 
   @override
   Widget build(BuildContext context) {
@@ -39,11 +39,11 @@ class FAQCardView extends StatelessWidget {
                       : locale.faqs,
                   style: TextStyles.title3.semiBold.colour(Colors.white),
                 ),
-                SizedBox(height: 10),
+                const SizedBox(height: 10),
                 model.state == ViewState.Busy
                     ? Container(
                         height: SizeConfig.screenHeight! * 0.2,
-                        child: Center(child: FullScreenLoader()),
+                        child: const Center(child: FullScreenLoader()),
                       )
                     : (model.faqHeaders != null && model.faqHeaders.length > 0
                         ? _buildItems(model, context)
@@ -76,8 +76,8 @@ class FAQCardView extends StatelessWidget {
             Theme(
               data: ThemeData(brightness: Brightness.dark),
               child: ExpansionPanelList(
-                animationDuration: Duration(milliseconds: 600),
-                expandedHeaderPadding: EdgeInsets.all(0),
+                animationDuration: const Duration(milliseconds: 600),
+                expandedHeaderPadding: const EdgeInsets.all(0),
                 dividerColor: UiConstants.kDividerColor.withOpacity(0.3),
                 elevation: 0,
                 children: List.generate(

@@ -104,7 +104,7 @@ class _HelpFabState extends State<HelpFab> {
               .parseRoute(Uri.parse(DynamicUiUtils.helpFab.actionUri));
         },
         child: AnimatedContainer(
-            duration: Duration(seconds: 1),
+            duration: const Duration(seconds: 1),
             curve: Curves.easeIn,
             padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding12),
             height: SizeConfig.avatarRadius * 2.4,

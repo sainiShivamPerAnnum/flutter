@@ -5,16 +5,16 @@ import 'package:flutter/material.dart';
 class InputField extends StatelessWidget {
   final Widget? child;
 
-  InputField({this.child});
+  const InputField({this.child});
 
   @override
   Widget build(BuildContext context) {
     return Container(
-      margin: EdgeInsets.only(
+      margin: const EdgeInsets.only(
         bottom: 20,
         top: 5,
       ),
-      padding: EdgeInsets.only(left: 15, bottom: 5, top: 5, right: 15),
+      padding: const EdgeInsets.only(left: 15, bottom: 5, top: 5, right: 15),
       width: double.infinity,
       decoration: BoxDecoration(
         border: Border.all(color: UiConstants.primaryColor),
@@ -60,12 +60,12 @@ InputDecoration augmontFieldInputDecoration(String hintText, IconData icon) {
           color: FelloColorPalette.augmontFundPalette().primaryColor!,
         ),
       ),
-      errorBorder: OutlineInputBorder(
+      errorBorder: const OutlineInputBorder(
         borderSide: BorderSide(
           color: Colors.red,
         ),
       ),
-      focusedErrorBorder: OutlineInputBorder(
+      focusedErrorBorder: const OutlineInputBorder(
         borderSide: BorderSide(
           color: Colors.red,
         ),
@@ -94,12 +94,12 @@ InputDecoration augmontFieldInputDecoration(String hintText, IconData icon) {
         color: FelloColorPalette.augmontFundPalette().primaryColor!,
       ),
     ),
-    errorBorder: OutlineInputBorder(
+    errorBorder: const OutlineInputBorder(
       borderSide: BorderSide(
         color: Colors.red,
       ),
     ),
-    focusedErrorBorder: OutlineInputBorder(
+    focusedErrorBorder: const OutlineInputBorder(
       borderSide: BorderSide(
         color: Colors.red,
       ),

@@ -22,7 +22,7 @@ import 'package:image_picker/image_picker.dart';
 class BankingRepository extends BaseRepo {
   final CustomLogger _logger = locator<CustomLogger>();
   final ApiPath? _apiPaths = locator<ApiPath>();
-  final _cacheService = new CacheService();
+  final _cacheService = CacheService();
   static const _banking = 'bankingOps';
 
   final _baseUrl = FlavorConfig.isDevelopment()

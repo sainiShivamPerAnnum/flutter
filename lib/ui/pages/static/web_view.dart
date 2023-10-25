@@ -7,7 +7,7 @@ class WebViewScreen extends StatefulWidget {
   final String url;
   final String? title;
 
-  WebViewScreen({required this.url, this.title});
+  const WebViewScreen({required this.url, this.title});
 
   @override
   State<WebViewScreen> createState() => _WebViewScreenState();

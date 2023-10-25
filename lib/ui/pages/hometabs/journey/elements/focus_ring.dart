@@ -60,7 +60,7 @@ class _FocusRingState extends State<FocusRing>
     if (isAnimationComplete) return;
 
     WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
-      Future.delayed(Duration(seconds: 2), () {
+      Future.delayed(const Duration(seconds: 2), () {
         _animationController!.forward().then((value) {
           showButton = true;
         });
@@ -81,7 +81,7 @@ class _FocusRingState extends State<FocusRing>
   Widget build(BuildContext context) {
     S locale = S.of(context);
     return PropertyChangeConsumer<JourneyService, JourneyServiceProperties>(
-        properties: [
+        properties: const [
           JourneyServiceProperties.Onboarding,
           JourneyServiceProperties.AvatarRemoteMilestoneIndex
         ],
@@ -105,7 +105,7 @@ class _FocusRingState extends State<FocusRing>
                               foregroundPainter: _DataBackupCompletedPainter(
                                   animation: endingAnimation),
                               child: AnimatedContainer(
-                                duration: Duration(seconds: 1),
+                                duration: const Duration(seconds: 1),
                                 curve: Curves.easeInCubic,
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
@@ -139,7 +139,7 @@ class _FocusRingState extends State<FocusRing>
                           alignment: Alignment.bottomCenter,
                           child: AnimatedScale(
                             scale: showButton ? 1 : 0,
-                            duration: Duration(milliseconds: 500),
+                            duration: const Duration(milliseconds: 500),
                             curve: Curves.bounceOut,
                             child: GestureDetector(
                               onTap: () {
@@ -191,7 +191,7 @@ class _FocusRingState extends State<FocusRing>
                     ),
                   ),
                 )
-              : SizedBox();
+              : const SizedBox();
         });
   }
 }

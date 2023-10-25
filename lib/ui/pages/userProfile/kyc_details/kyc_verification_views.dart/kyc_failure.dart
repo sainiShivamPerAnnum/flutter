@@ -13,6 +13,6 @@ class KycFailedView extends StatelessWidget {
         label: "",
         title: "PAN Verification Failed",
         model: model,
-        trailing: SizedBox());
+        trailing: const SizedBox());
   }
 }

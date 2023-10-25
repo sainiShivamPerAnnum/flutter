@@ -4,7 +4,7 @@ import 'package:upi_pay/src/transaction_details.dart';
 
 class UpiMethodChannel {
   MethodChannel _channel =
-      MethodChannel('fello.in/dev/notifications/channel/tambola');
+      const MethodChannel('fello.in/dev/notifications/channel/tambola');
   static final _singleton = UpiMethodChannel._inner();
   factory UpiMethodChannel() {
     return _singleton;

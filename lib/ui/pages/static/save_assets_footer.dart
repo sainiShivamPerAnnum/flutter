@@ -76,7 +76,7 @@ class SaveInfoSection extends StatelessWidget {
             title ?? '',
             style: TextStyles.sourceSans.body4.colour(UiConstants.kTextColor2),
           ),
-          Spacer(),
+          const Spacer(),
           SizedBox(
             height: imageHeight ?? 0,
             width: imageWidth ?? 0,

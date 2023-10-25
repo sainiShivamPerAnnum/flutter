@@ -25,7 +25,7 @@ class InternalOpsService extends ChangeNotifier {
   final FirebaseCrashlytics firebaseCrashlytics = FirebaseCrashlytics.instance;
   final logger = locator<CustomLogger>();
   final _internalOps = locator<InternalOpsRepository>();
-  final Log log = new Log("DBModel");
+  final Log log = const Log("DBModel");
 
   Future<bool> checkIfDeviceIsReal() async {
     if (Platform.isIOS) {
@@ -44,7 +44,7 @@ class InternalOpsService extends ChangeNotifier {
     String? brand;
     bool? isPhysicalDevice;
     const BASE_CHANNEL = 'methodChannel/deviceData';
-    final platform = MethodChannel(BASE_CHANNEL);
+    final platform = const MethodChannel(BASE_CHANNEL);
 
     if (!isDeviceInfoInitiated) {
       try {

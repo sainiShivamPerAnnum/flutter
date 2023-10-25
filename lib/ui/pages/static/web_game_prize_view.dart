@@ -6,7 +6,6 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:lottie/lottie.dart';
 
 class PrizesView extends StatelessWidget {
   final PrizesModel? model;
@@ -15,7 +14,7 @@ class PrizesView extends StatelessWidget {
   final String? subtitle;
   final String? promo;
 
-  PrizesView({
+  const PrizesView({
     this.model,
     this.leading,
     this.controller,
@@ -27,7 +26,8 @@ class PrizesView extends StatelessWidget {
     S locale = S.of(context);
     return NotificationListener<OverscrollNotification>(
       onNotification: (OverscrollNotification value) {
-        if (value.overscroll < 0 && controller!.offset + value.overscroll <= 0) {
+        if (value.overscroll < 0 &&
+            controller!.offset + value.overscroll <= 0) {
           if (controller!.offset != 0) controller!.jumpTo(0);
           return true;
         }
@@ -103,7 +103,7 @@ class PrizesView extends StatelessWidget {
 }
 
 class WebhomeListBanners extends StatelessWidget {
-  WebhomeListBanners({this.subtitle});
+  const WebhomeListBanners({this.subtitle});
   final String? subtitle;
   @override
   Widget build(BuildContext context) {
@@ -131,7 +131,7 @@ class PrizeChip extends StatelessWidget {
   final double opacity;
   final bool svgPaint;
 
-  PrizeChip(
+  const PrizeChip(
       {this.color,
       this.png,
       this.svg,

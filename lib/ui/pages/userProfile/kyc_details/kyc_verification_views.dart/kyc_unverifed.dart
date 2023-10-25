@@ -191,7 +191,7 @@ class KycUnVerifiedView extends StatelessWidget {
               padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins / 2),
               child: Row(
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.error_outline,
                     color: Colors.red,
                   ),

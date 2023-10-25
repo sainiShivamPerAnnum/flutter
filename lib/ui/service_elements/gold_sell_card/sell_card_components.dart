@@ -32,7 +32,7 @@ class SellText extends StatelessWidget {
           Text(
             subTitle,
             // maxLines: 2,
-            style: TextStyles.sourceSans.body4.colour(Color(0xffc5cacd)),
+            style: TextStyles.sourceSans.body4.colour(const Color(0xffc5cacd)),
           ),
         ],
       ),

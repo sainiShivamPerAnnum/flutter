@@ -74,7 +74,7 @@ class DateHelper {
           nextSixPM.millisecondsSinceEpoch - currentTime.millisecondsSinceEpoch;
     } else {
       // Calculate the duration until the next day's 6 PM
-      final tomorrowSixPM = nextSixPM.add(Duration(days: 1));
+      final tomorrowSixPM = nextSixPM.add(const Duration(days: 1));
       durationMillis = tomorrowSixPM.millisecondsSinceEpoch -
           currentTime.millisecondsSinceEpoch;
     }

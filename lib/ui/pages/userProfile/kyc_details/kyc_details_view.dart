@@ -74,8 +74,8 @@ class KYCDetailsView extends StatelessWidget {
                 ),
                 actions: [
                   if (!model.isUpdatingKycDetails)
-                    Row(
-                      children: const [
+                    const Row(
+                      children: [
                         FaqPill(type: FaqsType.yourAccount),
                       ],
                     ),
@@ -225,7 +225,7 @@ class EmailVerificationTile extends StatelessWidget {
                       ? Padding(
                           padding: EdgeInsets.only(
                               right: SizeConfig.pageHorizontalMargins),
-                          child: Icon(
+                          child: const Icon(
                             Icons.verified,
                             color: UiConstants.primaryColor,
                           ),

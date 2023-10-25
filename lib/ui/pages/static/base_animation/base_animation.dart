@@ -75,7 +75,7 @@ class _BaseAnimationState extends State<BaseAnimation>
                   ),
                 ),
               )
-            : SizedBox();
+            : const SizedBox();
       },
     );
   }

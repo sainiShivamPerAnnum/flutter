@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/util/logger.dart';
 
 class UserIciciDetail {
-  static Log log = new Log('UserIciciDetail');
+  static Log log = const Log('UserIciciDetail');
   String? _appId;
   String? _panNumber;
   String? _kycStatus;

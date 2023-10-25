@@ -9,7 +9,7 @@ class AutosavePerks extends StatelessWidget {
   final String? svg;
   final String text;
 
-  AutosavePerks({this.image, required this.text, this.svg});
+  const AutosavePerks({this.image, required this.text, this.svg});
 
   @override
   Widget build(BuildContext context) {
@@ -18,13 +18,13 @@ class AutosavePerks extends StatelessWidget {
       child: Column(
         children: [
           Container(
-            decoration: BoxDecoration(
+            decoration: const BoxDecoration(
                 // border: Border.all(color: UiConstants.tertiarySolid, width: 1),
                 shape: BoxShape.circle,
                 color: Colors.white),
             padding: EdgeInsets.all(SizeConfig.padding4),
             child: Container(
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 shape: BoxShape.circle,
               ),
               child: CircleAvatar(

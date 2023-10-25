@@ -20,7 +20,7 @@ class NoKycView extends StatelessWidget {
           onPressed: () {
             model.init();
           },
-          icon: Icon(
+          icon: const Icon(
             Icons.rotate_left,
             color: Colors.amber,
           ),

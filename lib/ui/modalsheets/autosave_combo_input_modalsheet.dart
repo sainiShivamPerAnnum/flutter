@@ -193,7 +193,7 @@ class _AutosaveComboInputFieldsModalSheetState
           Row(
             children: [
               Text("Total SIP Amount", style: TextStyles.rajdhaniSB.body0),
-              Spacer(),
+              const Spacer(),
               Text(
                 "₹$totalSipAmount",
                 style: TextStyles.sourceSans.body1,
@@ -294,7 +294,7 @@ class AutosaveAmountInputTile extends StatelessWidget {
                 style: TextStyles.sourceSans.body3.colour(Colors.grey)),
           ],
         ),
-        Spacer(),
+        const Spacer(),
         Container(
           width: SizeConfig.screenWidth! * 0.4,
           child: AppTextField(

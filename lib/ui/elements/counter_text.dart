@@ -2,7 +2,7 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
 
 class AnimatedCount extends ImplicitlyAnimatedWidget {
-  AnimatedCount({
+  const AnimatedCount({
     Key? key,
     required this.count,
     required Duration duration,

@@ -32,7 +32,7 @@ class UpdateRequiredScreen extends StatelessWidget {
             child: Container(
               height: SizeConfig.screenHeight! * 0.5,
               width: SizeConfig.screenWidth,
-              decoration: BoxDecoration(
+              decoration: const BoxDecoration(
                 gradient: LinearGradient(
                   begin: Alignment.topCenter,
                   end: Alignment.bottomCenter,

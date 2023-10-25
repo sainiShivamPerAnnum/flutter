@@ -313,7 +313,7 @@ class _ContactListWidgetState extends State<ContactListWidget> {
 }
 
 class _SearchBar extends StatelessWidget {
-  const _SearchBar({super.key, required this.controller, this.onChanged});
+  const _SearchBar({required this.controller, this.onChanged});
 
   final TextEditingController controller;
   final Function(String)? onChanged;

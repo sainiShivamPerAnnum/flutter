@@ -274,7 +274,7 @@ class _TicketsTutorialsSlotMachineViewState
                 .animateTo(_scrollController.position.maxScrollExtent,
                     duration: const Duration(seconds: 2),
                     curve: Curves.easeInExpo)
-                .then((value) => Future.delayed(Duration(seconds: 1), () {
+                .then((value) => Future.delayed(const Duration(seconds: 1), () {
                       highlightRow = true;
                     }));
           });

@@ -15,7 +15,7 @@ class UserEmailVerificationButton extends StatelessWidget {
   Widget build(BuildContext context) {
     S locale = S.of(context);
     return PropertyChangeConsumer<UserService, UserServiceProperties>(
-      properties: [
+      properties: const [
         UserServiceProperties.myEmailVerification,
         UserServiceProperties.myEmail
       ],
@@ -26,7 +26,7 @@ class UserEmailVerificationButton extends StatelessWidget {
               size: SizeConfig.iconSize1,
             )
           : model.email == null || model.email!.isEmpty
-              ? SizedBox()
+              ? const SizedBox()
               : InkWell(
                   child: // SizedBox(),
                       FittedBox(
@@ -51,13 +51,13 @@ class UserEmailVerificationMark extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PropertyChangeConsumer<UserService, UserServiceProperties>(
-      properties: [UserServiceProperties.myEmailVerification],
+      properties: const [UserServiceProperties.myEmailVerification],
       builder: (context, model, property) => model!.isEmailVerified ?? false
-          ? Icon(
+          ? const Icon(
               Icons.verified,
               color: UiConstants.primaryColor,
             )
-          : SizedBox(),
+          : const SizedBox(),
     );
   }
 }

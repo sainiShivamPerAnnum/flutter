@@ -10,7 +10,7 @@ import 'package:felloapp/util/rsa_encryption.dart';
 class InvestmentActionsRepository extends BaseRepo {
   final ApiPath? _apiPaths = locator<ApiPath>();
   final CustomLogger? _logger = locator<CustomLogger>();
-  final _rsaEncryption = new RSAEncryption();
+  final _rsaEncryption = RSAEncryption();
   static const _banking = 'bankingOps';
 
   final _baseUrl = FlavorConfig.isDevelopment()

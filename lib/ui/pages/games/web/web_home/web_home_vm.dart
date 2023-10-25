@@ -67,20 +67,20 @@ class WebHomeViewModel extends BaseViewModel {
   GameModel? _currentGameModel;
   List<RechargeOption> rechargeOptions = [
     RechargeOption(
-      color: Color(0xff5948B2),
+      color: const Color(0xff5948B2),
       amount: 100,
     ),
     RechargeOption(
-      color: Color(0xff9A3538),
+      color: const Color(0xff9A3538),
       amount: 200,
     ),
     RechargeOption(
-      color: Color(0xff9A3538),
+      color: const Color(0xff9A3538),
       amount: 500,
     ),
     RechargeOption(
       isCustom: true,
-      color: Color(0xff39393C),
+      color: const Color(0xff39393C),
       amount: 0,
     )
   ];

@@ -8,7 +8,7 @@ class WebEngageAnalytics extends BaseAnalyticsService {
   final CustomLogger? _logger = locator<CustomLogger>();
 
   WebEngageAnalytics() {
-    new WebEngagePlugin();
+    WebEngagePlugin();
   }
 
   Future<void> login({bool? isOnBoarded, BaseUser? baseUser}) async {

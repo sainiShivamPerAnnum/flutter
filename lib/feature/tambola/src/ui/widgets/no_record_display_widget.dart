@@ -10,7 +10,7 @@ class NoRecordDisplayWidget extends StatelessWidget {
   final bool topPadding;
   final bool bottomPadding;
 
-  NoRecordDisplayWidget({
+  const NoRecordDisplayWidget({
     this.asset,
     this.text,
     this.assetSvg,

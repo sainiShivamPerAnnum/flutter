@@ -365,7 +365,7 @@ class _SaveContainerState extends State<SaveContainer> {
 }
 
 class _InvestmentDetails extends StatelessWidget {
-  _InvestmentDetails(
+  const _InvestmentDetails(
       {Key? key,
       required this.type,
       required this.initialValue,
@@ -491,7 +491,7 @@ class _Header extends StatelessWidget {
 }
 
 class _InvestCounter extends StatefulWidget {
-  _InvestCounter({Key? key, this.initialCount, this.onChange})
+  const _InvestCounter({Key? key, this.initialCount, this.onChange})
       : super(key: key);
   final int? initialCount;
   final onInvestmentChange? onChange;

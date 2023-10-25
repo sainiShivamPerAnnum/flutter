@@ -38,12 +38,12 @@ class DepositFcmResponseModel {
     flcBalance = json['flcBalance'] ?? '0';
     gtId = json['gtId'] ?? '';
     error = json['error'] ?? '';
-    status = json['status'] ??  false;
+    status = json['status'] ?? false;
     autosavePrompt = json['autosavePrompt'] ?? false;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['goldBalance'] = this.goldBalance;
     data['didWalletUpdate'] = this.didWalletUpdate;
     data['isWalletCreated'] = this.isWalletCreated;
@@ -59,4 +59,3 @@ class DepositFcmResponseModel {
     return data;
   }
 }
-

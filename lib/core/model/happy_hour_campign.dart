@@ -6,11 +6,11 @@ class HappyHourCampign {
 
   HappyHourCampign.fromJson(Map<String, dynamic> json) {
     message = json['message'];
-    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
+    data = json['data'] != null ? Data.fromJson(json['data']) : null;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['message'] = this.message;
     if (this.data != null) {
       data['data'] = this.data!.toJson();
@@ -62,7 +62,7 @@ class Data {
     if (json['rewards'] != null) {
       rewards = <Rewards>[];
       json['rewards'].forEach((v) {
-        rewards!.add(new Rewards.fromJson(v));
+        rewards!.add(Rewards.fromJson(v));
       });
     }
     preBuzz = PreBuzz.fromJson(json['prebuzz']);
@@ -75,7 +75,7 @@ class Data {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['id'] = this.id;
     data['title'] = this.title;
     data['bottomSheetHeading'] = this.bottomSheetHeading;
@@ -120,7 +120,7 @@ class Rewards {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['value'] = this.value;
     data['type'] = this.type;
     return data;

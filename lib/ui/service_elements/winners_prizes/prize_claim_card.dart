@@ -109,7 +109,7 @@ class RewardRedeemWidget extends StatelessWidget {
       decoration: isWinView
           ? null
           : BoxDecoration(
-        borderRadius: BorderRadius.only(
+              borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular(SizeConfig.roundness40),
                   bottomRight: Radius.circular(SizeConfig.roundness40)),
               color: UiConstants.kTambolaMidTextColor,
@@ -228,19 +228,19 @@ class RewardRedeemWidget extends StatelessWidget {
               ),
             )
           else if ((m?.userFundWallet?.unclaimedBalance ?? 0) >=
-                minWithdrawPrizeAmt)
-              Container(
-                width: SizeConfig.screenWidth,
-                padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding32),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "Redeem your rewards to ",
-                      style: TextStyles.rajdhaniSB.body3
-                          .colour(Colors.white.withOpacity(0.8)),
-                    ),
-                    SvgPicture.asset('assets/svg/digital_gold.svg',
+              minWithdrawPrizeAmt)
+            Container(
+              width: SizeConfig.screenWidth,
+              padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding32),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "Redeem your rewards to ",
+                    style: TextStyles.rajdhaniSB.body3
+                        .colour(Colors.white.withOpacity(0.8)),
+                  ),
+                  SvgPicture.asset('assets/svg/digital_gold.svg',
                       height: SizeConfig.padding40,
                       width: SizeConfig.padding40),
                   Text(
@@ -264,7 +264,7 @@ class ClaimButton extends StatelessWidget {
   final String text;
   final Function onTap;
 
-  ClaimButton({
+  const ClaimButton({
     required this.color,
     required this.image,
     required this.onTap,

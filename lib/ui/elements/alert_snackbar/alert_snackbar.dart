@@ -15,14 +15,14 @@ SnackBar alertSnackBar(
       onVisible: onTap,
       backgroundColor: Colors.transparent,
       elevation: 0,
-      margin: EdgeInsets.all(5),
+      margin: const EdgeInsets.all(5),
       behavior: SnackBarBehavior.floating,
       duration: Duration(seconds: seconds ?? 3),
       dismissDirection: DismissDirection.down,
       content: Container(
         height: SizeConfig.screenHeight! * 0.08,
         width: SizeConfig.screenWidth,
-        decoration: BoxDecoration(
+        decoration: const BoxDecoration(
           borderRadius: BorderRadius.all(Radius.circular(5)),
           color: UiConstants.kSnackBarBgColor,
         ),

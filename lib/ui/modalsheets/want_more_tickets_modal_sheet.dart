@@ -57,7 +57,7 @@ class WantMoreTicketsModalSheet extends StatelessWidget {
                 ),
                 child: Row(children: [
                   Text(locale.currentTokens, style: TextStyles.rajdhani.body1),
-                  Spacer(),
+                  const Spacer(),
                   SvgPicture.asset(
                     Assets.token,
                     width: SizeConfig.padding26,

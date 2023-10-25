@@ -6,11 +6,11 @@ class SubscriptionResponseModel {
 
   SubscriptionResponseModel.fromJson(Map<String, dynamic> json) {
     success = json['success'];
-    data = json['data'] != null ? new Data.fromJson(json['data']) : Data.base();
+    data = json['data'] != null ? Data.fromJson(json['data']) : Data.base();
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['success'] = this.success;
     if (this.data != null) {
       data['data'] = this.data!.toJson();
@@ -93,7 +93,7 @@ class Data {
 
   Data.fromJson(Map<String, dynamic> json) {
     resultInfo = json['resultInfo'] != null
-        ? new ResultInfo.fromJson(json['resultInfo'])
+        ? ResultInfo.fromJson(json['resultInfo'])
         : ResultInfo.base();
     subsId = json['subsId'] ?? '';
     status = json['status'] ?? '';
@@ -121,7 +121,7 @@ class Data {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     if (this.resultInfo != null) {
       data['resultInfo'] = this.resultInfo!.toJson();
     }
@@ -170,7 +170,7 @@ class ResultInfo {
     status = '';
   }
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['code'] = this.code;
     data['message'] = this.message;
     data['status'] = this.status;
@@ -192,7 +192,7 @@ class SubsPaymentInstDetails {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
+    final Map<String, dynamic> data = Map<String, dynamic>();
     data['paymentMode'] = this.paymentMode;
     return data;
   }

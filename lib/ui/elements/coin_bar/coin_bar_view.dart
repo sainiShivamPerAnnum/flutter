@@ -82,7 +82,7 @@ class FelloCoinBar extends StatelessWidget {
                         size: SizeConfig.padding16,
                         color: Colors.white,
                       )
-                    : CoinBalanceTextSE(),
+                    : const CoinBalanceTextSE(),
               ],
             ),
           ),

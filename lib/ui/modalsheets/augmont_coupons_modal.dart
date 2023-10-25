@@ -6,21 +6,19 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class AugmontCouponsModalSheet extends StatelessWidget {
   final GoldBuyViewModel? model;
   final _formKey = GlobalKey<FormState>();
   AugmontCouponsModalSheet({this.model});
-  final TextEditingController couponCodeController =
-      new TextEditingController();
+  final TextEditingController couponCodeController = TextEditingController();
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
     return Container(
       height: SizeConfig.screenHeight! * 0.54,
-      decoration: BoxDecoration(),
+      decoration: const BoxDecoration(),
       padding: EdgeInsets.all(
         SizeConfig.blockSizeHorizontal * 5,
       ),
@@ -33,13 +31,13 @@ class AugmontCouponsModalSheet extends StatelessWidget {
             children: [
               Text(
                 locale.txnApplyCoupon,
-                style: TextStyle(
+                style: const TextStyle(
                   color: Colors.black54,
                   fontWeight: FontWeight.w700,
                   fontSize: 24,
                 ),
               ),
-              Spacer(),
+              const Spacer(),
               CircleAvatar(
                 backgroundColor: Colors.black,
                 child: IconButton(
@@ -111,7 +109,7 @@ class AugmontCouponsModalSheet extends StatelessWidget {
               child: ListView(
                 shrinkWrap: true,
                 padding: EdgeInsets.symmetric(vertical: SizeConfig.padding8),
-                physics: BouncingScrollPhysics(),
+                physics: const BouncingScrollPhysics(),
                 children: List.generate(
                   model!.couponList!.length,
                   (i) => Container(

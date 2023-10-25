@@ -69,8 +69,8 @@ class _HappyHourBannerState extends TimerUtil<HappyHourBanner> {
         child: Container(
           height: double.infinity,
           alignment: Alignment.centerLeft,
-          color: Color(0xff495DB2),
-          padding: EdgeInsets.symmetric(horizontal: 14),
+          color: const Color(0xff495DB2),
+          padding: const EdgeInsets.symmetric(horizontal: 14),
           child: Row(
             children: [
               SvgPicture.asset(
@@ -78,7 +78,7 @@ class _HappyHourBannerState extends TimerUtil<HappyHourBanner> {
                 height: 42,
                 width: 42,
               ),
-              SizedBox(
+              const SizedBox(
                 width: 12,
               ),
               RichText(
@@ -93,11 +93,11 @@ class _HappyHourBannerState extends TimerUtil<HappyHourBanner> {
                   ],
                 ),
               ),
-              Spacer(),
+              const Spacer(),
               GestureDetector(
                 onTap: () =>
                     locator<BaseUtil>().showHappyHourDialog(widget.model),
-                child: Icon(
+                child: const Icon(
                   Icons.keyboard_arrow_right_outlined,
                   color: Colors.white,
                 ),

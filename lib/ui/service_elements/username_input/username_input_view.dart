@@ -101,7 +101,7 @@ class UsernameInputView extends StatelessWidget {
                   vertical: SizeConfig.pageHorizontalMargins,
                 ),
                 child: model.isUpdaingUserDetails
-                    ? LinearProgressIndicator(
+                    ? const LinearProgressIndicator(
                         backgroundColor: Colors.black,
                       )
                     : AppPositiveBtn(
@@ -135,7 +135,7 @@ class ModalSheetAppBar extends StatelessWidget {
       ),
       trailing: trailing ??
           IconButton(
-            icon: Icon(Icons.close, color: Colors.white),
+            icon: const Icon(Icons.close, color: Colors.white),
             onPressed: () {
               AppState.backButtonDispatcher!.didPopRoute();
             },

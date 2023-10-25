@@ -368,7 +368,7 @@ class AugmontTransactionService extends BaseTransactionService {
     AppState.isRepeated = false;
     AppState.type = null;
     AppState.isTxnProcessing = true;
-    Future.delayed(Duration(seconds: 1), () {
+    Future.delayed(const Duration(seconds: 1), () {
       BaseUtil.openDialog(
         addToScreenStack: true,
         hapticVibrate: true,

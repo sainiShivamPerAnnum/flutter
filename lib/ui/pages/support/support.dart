@@ -76,13 +76,13 @@ class _SupportPageState extends State<SupportPage> {
           Column(
             children: [
               FelloAppBar(
-                leading: FelloAppBarBackButton(),
+                leading: const FelloAppBarBackButton(),
                 title: locale.helpAndSupport,
               ),
               Expanded(
                 child: Container(
                   padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(40),
                       topRight: Radius.circular(40),
@@ -192,7 +192,8 @@ class TermsRow extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Padding(
-          padding: EdgeInsets.only(bottom: 10, left: 10, right: 10, top: 5),
+          padding:
+              const EdgeInsets.only(bottom: 10, left: 10, right: 10, top: 5),
           child: InkWell(
             child: Text(
               locale.termsOfService,
@@ -210,12 +211,13 @@ class TermsRow extends StatelessWidget {
             },
           ),
         ),
-        Text(
+        const Text(
           '•',
           style: TextStyle(color: Colors.grey),
         ),
         Padding(
-          padding: EdgeInsets.only(bottom: 10, left: 10, right: 10, top: 5),
+          padding:
+              const EdgeInsets.only(bottom: 10, left: 10, right: 10, top: 5),
           child: InkWell(
             child: Text(
               locale.privacyPolicy,
@@ -232,12 +234,13 @@ class TermsRow extends StatelessWidget {
             },
           ),
         ),
-        Text(
+        const Text(
           '•',
           style: TextStyle(color: Colors.grey),
         ),
         Padding(
-          padding: EdgeInsets.only(bottom: 10, left: 10, right: 10, top: 5),
+          padding:
+              const EdgeInsets.only(bottom: 10, left: 10, right: 10, top: 5),
           child: InkWell(
             child: Text(
               locale.refPolicy,

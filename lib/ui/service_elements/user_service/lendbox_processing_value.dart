@@ -9,7 +9,7 @@ class LendboxProcessingValue extends StatelessWidget {
   final String? prefix;
   final TextStyle? style;
 
-  LendboxProcessingValue({
+  const LendboxProcessingValue({
     this.prefix,
     this.style,
   });
@@ -31,7 +31,7 @@ class LendboxProcessingValue extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PropertyChangeConsumer<UserService, UserServiceProperties>(
-      properties: [
+      properties: const [
         UserServiceProperties.myUserFund,
         UserServiceProperties.myUserWallet
       ],

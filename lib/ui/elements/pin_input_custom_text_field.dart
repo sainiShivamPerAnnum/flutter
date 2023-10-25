@@ -400,7 +400,8 @@ class _PinInputTextFieldState extends State<PinInputTextField> {
 
     if (widget.controller == null && oldWidget.controller != null) {
       oldWidget.controller!.removeListener(_pinChanged);
-      _controller = TextEditingController.fromValue(oldWidget.controller!.value);
+      _controller =
+          TextEditingController.fromValue(oldWidget.controller!.value);
       _controller!.addListener(_pinChanged);
     } else if (widget.controller != null && oldWidget.controller == null) {
       _controller!.removeListener(_pinChanged);
@@ -443,7 +444,7 @@ class _PinInputTextFieldState extends State<PinInputTextField> {
         controller: _effectiveController,
 
         /// Fake the text style.
-        style: TextStyle(
+        style: const TextStyle(
           /// Hide the editing text.
           color: Colors.transparent,
           fontSize: 1,
@@ -500,12 +501,12 @@ class _PinInputTextFieldState extends State<PinInputTextField> {
           counterText: '',
 
           /// Hide the outline border.
-          enabledBorder: OutlineInputBorder(borderSide: BorderSide.none),
-          focusedBorder: OutlineInputBorder(borderSide: BorderSide.none),
-          disabledBorder: OutlineInputBorder(borderSide: BorderSide.none),
+          enabledBorder: const OutlineInputBorder(borderSide: BorderSide.none),
+          focusedBorder: const OutlineInputBorder(borderSide: BorderSide.none),
+          disabledBorder: const OutlineInputBorder(borderSide: BorderSide.none),
 
           /// Hide the outline border.
-          border: OutlineInputBorder(borderSide: BorderSide.none),
+          border: const OutlineInputBorder(borderSide: BorderSide.none),
 
           /// Bind the error text from pin decoration to this input decoration.
           errorText: widget.decoration.errorText,
@@ -523,7 +524,6 @@ class _PinInputTextFieldState extends State<PinInputTextField> {
 class _PinPaint extends CustomPainter {
   final String text;
   final int pinLength;
-  final PinEntryType type;
   final PinDecoration decoration;
   final ThemeData? themeData;
 
@@ -531,12 +531,12 @@ class _PinPaint extends CustomPainter {
     required this.text,
     required this.pinLength,
     required PinDecoration decoration,
-    this.type: PinEntryType.boxTight,
     this.themeData,
   }) : this.decoration = decoration.copyWith(
           textStyle: decoration.textStyle ?? themeData!.textTheme.headline5,
           errorTextStyle: decoration.errorTextStyle ??
-              themeData!.textTheme.caption!.copyWith(color: themeData.errorColor),
+              themeData!.textTheme.caption!
+                  .copyWith(color: themeData.errorColor),
           hintTextStyle: decoration.hintTextStyle ??
               themeData!.textTheme.headline5!
                   .copyWith(color: themeData.hintColor),
@@ -1010,10 +1010,13 @@ class PinInputTextFormField extends FormField<String> {
               }
               return result;
             },
-            autovalidateMode: autovalidate ? AutovalidateMode.always : AutovalidateMode.disabled,
+            autovalidateMode: autovalidate
+                ? AutovalidateMode.always
+                : AutovalidateMode.disabled,
             enabled: enabled,
             builder: (FormFieldState<String> field) {
-              final _PinInputTextFormFieldState state = field as _PinInputTextFormFieldState;
+              final _PinInputTextFormFieldState state =
+                  field as _PinInputTextFormFieldState;
               return PinInputTextField(
                 pinLength: pinLength,
                 onSubmit: onSubmit,
@@ -1057,7 +1060,8 @@ class _PinInputTextFormFieldState extends FormFieldState<String> {
 
     if (widget.controller == null && oldWidget.controller != null) {
       oldWidget.controller!.removeListener(_handleControllerChanged);
-      _controller = TextEditingController.fromValue(oldWidget.controller!.value);
+      _controller =
+          TextEditingController.fromValue(oldWidget.controller!.value);
       _controller!.addListener(_handleControllerChanged);
     } else if (widget.controller != null && oldWidget.controller == null) {
       _controller!.removeListener(_handleControllerChanged);

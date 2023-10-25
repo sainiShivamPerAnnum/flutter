@@ -16,7 +16,7 @@ import 'package:webengage_flutter/webengage_flutter.dart';
 
 class AppFlyerAnalytics extends BaseAnalyticsService {
   final CustomLogger? _logger = locator<CustomLogger>();
-  final _cacheService = new CacheService();
+  final _cacheService = CacheService();
   final _brandedDomain = 'app.fello.in';
 
   late AppsflyerSdk _appsflyerSdk;
@@ -108,7 +108,7 @@ class AppFlyerAnalytics extends BaseAnalyticsService {
       return json.decode(cache.data!);
     }
 
-    final inviteLinkParams = new AppsFlyerInviteLinkParams(
+    final inviteLinkParams = AppsFlyerInviteLinkParams(
       channel: 'User_invite',
       campaign: 'Referral',
       referrerName: _baseUser!.name,

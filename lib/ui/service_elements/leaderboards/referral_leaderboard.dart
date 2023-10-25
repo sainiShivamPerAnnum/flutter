@@ -120,7 +120,7 @@ class ReferralLeaderboard extends StatelessWidget {
               child: Column(
                 children: [
                   Container(
-                    decoration: BoxDecoration(
+                    decoration: const BoxDecoration(
                       color: Colors.transparent,
                     ),
                     padding: EdgeInsets.only(top: SizeConfig.padding8),
@@ -194,7 +194,7 @@ class ReferralLeaderboard extends StatelessWidget {
                                       (i) {
                                         return Container(
                                           width: SizeConfig.screenWidth,
-                                          decoration: BoxDecoration(
+                                          decoration: const BoxDecoration(
                                             color: Colors.transparent,
                                           ),
                                           child: Column(
@@ -245,7 +245,7 @@ class ReferralLeaderboard extends StatelessWidget {
                                                             height: SizeConfig
                                                                 .iconSize5,
                                                             decoration:
-                                                                BoxDecoration(
+                                                                const BoxDecoration(
                                                               color:
                                                                   Colors.grey,
                                                               shape: BoxShape
@@ -307,7 +307,7 @@ class ReferralLeaderboard extends StatelessWidget {
                                                   getLength(model
                                                       .referralLeaderBoard!
                                                       .length))
-                                                Divider(
+                                                const Divider(
                                                   color: Colors.white,
                                                   thickness: 0.2,
                                                 ),

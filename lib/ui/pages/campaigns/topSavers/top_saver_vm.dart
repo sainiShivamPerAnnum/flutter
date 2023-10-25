@@ -84,7 +84,7 @@ class TopSaverViewModel extends BaseViewModel {
 
     _pageController!.animateToPage(
       tab,
-      duration: Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 300),
       curve: Curves.linear,
     );
     tabNo = tab;
