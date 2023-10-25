@@ -1,7 +1,6 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
-import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/feature/tambola/tambola.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -54,8 +53,7 @@ class _GoldProBuySuccessViewState extends State<GoldProBuySuccessView>
   Widget build(BuildContext context) {
     S locale = locator<S>();
     final subText = widget.txnService.transactionResponseModel?.data?.subText;
-    final isGoldProUser =
-        locator<UserService>().userPortfolio.augmont.fd.isGoldProUser;
+
     return Container(
       height: double.infinity,
       color: Colors.black,
@@ -168,7 +166,7 @@ class _GoldProBuySuccessViewState extends State<GoldProBuySuccessView>
                     children: [
                       if (subText != null &&
                           subText.isNotEmpty &&
-                          !isGoldProUser)
+                          !widget.model.isGoldProUser)
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 8),
                           child: FelloRichText(
