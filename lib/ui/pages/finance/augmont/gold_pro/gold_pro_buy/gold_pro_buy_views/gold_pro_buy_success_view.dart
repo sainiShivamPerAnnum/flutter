@@ -1,6 +1,7 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/feature/tambola/tambola.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -52,8 +53,9 @@ class _GoldProBuySuccessViewState extends State<GoldProBuySuccessView>
   @override
   Widget build(BuildContext context) {
     S locale = locator<S>();
-    final displayMessage =
-        widget.txnService.transactionResponseModel?.data?.displayMessage;
+    final subText = widget.txnService.transactionResponseModel?.data?.subText;
+    final isGoldProUser =
+        locator<UserService>().userPortfolio.augmont.fd.isGoldProUser;
     return Container(
       height: double.infinity,
       color: Colors.black,
@@ -164,11 +166,13 @@ class _GoldProBuySuccessViewState extends State<GoldProBuySuccessView>
                   ),
                   child: Column(
                     children: [
-                      if (displayMessage != null && displayMessage.isNotEmpty)
+                      if (subText != null &&
+                          subText.isNotEmpty &&
+                          !isGoldProUser)
                         Padding(
                           padding: const EdgeInsets.symmetric(vertical: 8),
                           child: FelloRichText(
-                            paragraph: displayMessage,
+                            paragraph: subText,
                             style: TextStyles.sourceSansSB.body4.copyWith(
                               color: Colors.black,
                               height: 1.5,
@@ -356,7 +360,8 @@ class _GoldProBuySuccessViewState extends State<GoldProBuySuccessView>
                     ],
                   ),
                 ),
-                const AutopaySetupWidget(),
+                if (!(subText != null && subText.isNotEmpty))
+                  const AutopaySetupWidget(),
                 SizedBox(
                   height: SizeConfig.padding16,
                 ),

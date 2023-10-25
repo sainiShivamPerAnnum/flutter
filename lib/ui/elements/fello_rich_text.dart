@@ -1,3 +1,4 @@
+import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 
 class FelloRichText extends RichText {
@@ -40,8 +41,8 @@ class FelloRichText extends RichText {
             groups.add(
               TextSpan(
                 text: snip,
-                style: style?.copyWith(
-                  fontWeight: FontWeight.bold,
+                style: style?.merge(
+                  TextStyles.sourceSansB.colour(style.color),
                 ),
               ),
             );
@@ -50,9 +51,7 @@ class FelloRichText extends RichText {
             groups.add(
               TextSpan(
                 text: snip,
-                style: style?.copyWith(
-                  fontStyle: FontStyle.italic,
-                ),
+                style: style?.italic,
               ),
             );
           } else {
