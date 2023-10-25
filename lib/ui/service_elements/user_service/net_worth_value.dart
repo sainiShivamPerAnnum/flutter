@@ -14,7 +14,7 @@ class NetWorthValue extends StatelessWidget {
 
   String getQuantity(UserFundWallet? fund) {
     final quantity = fund?.netWorth;
-    final prefix = "₹";
+    const prefix = "₹";
 
     if (quantity != null) {
       if (quantity == 0.0) {
@@ -35,7 +35,7 @@ class NetWorthValue extends StatelessWidget {
         UserServiceProperties.myUserWallet
       ],
       builder: (context, model, property) => Text(
-        "${getQuantity(model!.userFundWallet)}",
+        getQuantity(model!.userFundWallet),
         style: style ?? TextStyles.sourceSansSB.title4,
       ),
     );

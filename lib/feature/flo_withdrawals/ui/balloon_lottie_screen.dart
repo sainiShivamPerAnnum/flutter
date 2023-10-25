@@ -73,9 +73,9 @@ class _BalloonLottieScreenState extends State<BalloonLottieScreen>
         eventName: AnalyticsEvents.confirmWithdrawOnFixedWithdrawal,
         properties: {
           "Maturity Date": formatDate(depositData!.maturityOn!),
-          "Maturity Amount": depositData?.maturityAmt,
-          "principal amount": depositData?.investedAmt,
-          'asset': depositData?.fundType
+          "Maturity Amount": depositData.maturityAmt,
+          "principal amount": depositData.investedAmt,
+          'asset': depositData.fundType
         },
       );
     } else {

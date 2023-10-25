@@ -64,8 +64,9 @@ class WithDrawWarningScreen extends StatelessWidget {
                     text: 'If you withdraw ',
                     children: [
                       TextSpan(
-                        text:
-                            '${type == InvestmentType.AUGGOLD99 ? "$withdrawableQuantity" : "₹$totalAmount"}',
+                        text: type == InvestmentType.AUGGOLD99
+                            ? "$withdrawableQuantity"
+                            : "₹$totalAmount",
                         style: TextStyles.sourceSansSB.colour(Colors.white),
                       ),
                       TextSpan(

@@ -32,13 +32,14 @@ class SupportPage extends StatefulWidget {
 
 class _SupportPageState extends State<SupportPage> {
   final CustomLogger? logger = locator<CustomLogger>();
-  final UserService? _userService = locator<UserService>();
+  final UserService _userService = locator<UserService>();
   BaseUtil? baseProvider;
   late AppState appState;
   DBModel? dbProvider;
-  TextEditingController _requestCallPhoneController = TextEditingController();
+  final TextEditingController _requestCallPhoneController =
+      TextEditingController();
   bool isInit = false;
-  final AnalyticsService? _analyticsService = locator<AnalyticsService>();
+  final AnalyticsService _analyticsService = locator<AnalyticsService>();
 
   void init() {
     _requestCallPhoneController.text = _userService!.baseUser!.mobile!;

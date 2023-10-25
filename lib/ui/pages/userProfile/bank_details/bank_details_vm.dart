@@ -72,9 +72,9 @@ class BankDetailsViewModel extends BaseViewModel {
 
   checkForBankDetailsExistence() async {
     setState(ViewState.Busy);
-    await _sellService!.checkForUserBankAccountDetails();
+    await _sellService.checkForUserBankAccountDetails();
     // augmontDetails = _userService.userAugmontDetails;
-    activeBankDetails = _sellService!.activeBankAccountDetails;
+    activeBankDetails = _sellService.activeBankAccountDetails;
     if (activeBankDetails != null) {
       bankHolderNameController!.text = activeBankDetails!.name!;
       bankAccNoController!.text = activeBankDetails!.account!;
@@ -102,15 +102,15 @@ class BankDetailsViewModel extends BaseViewModel {
     }
     isDetailsUpdating = true;
 
-    final ApiResponse<bool> response = await _paymentRepo!.addBankDetails(
+    final ApiResponse<bool> response = await _paymentRepo.addBankDetails(
         bankAccno: bankAccNo,
         bankHolderName: bankHoldername,
         bankIfsc: ifscCode);
 
     if (response.isSuccess()) {
-      await _sellService!.checkForUserBankAccountDetails();
-      _sellService!.isBankDetailsAdded = true;
-      _analyticsService!.track(eventName: AnalyticsEvents.bankDetailsUpdated);
+      await _sellService.checkForUserBankAccountDetails();
+      _sellService.isBankDetailsAdded = true;
+      _analyticsService.track(eventName: AnalyticsEvents.bankDetailsUpdated);
 
       BaseUtil.showPositiveAlert(
           locale.bankDetailsUpdatedTitle, locale.bankDetailsUpdatedSubTitle);

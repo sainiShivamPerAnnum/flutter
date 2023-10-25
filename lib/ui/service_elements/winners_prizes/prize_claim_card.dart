@@ -221,7 +221,7 @@ class RewardRedeemWidget extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding32),
               child: FittedBox(
                 child: Text(
-                  "Reward Balance can be redeemed on reaching ₹${minWithdrawPrize}",
+                  "Reward Balance can be redeemed on reaching ₹$minWithdrawPrize",
                   style: TextStyles.rajdhaniSB.body3
                       .colour(Colors.white.withOpacity(0.6)),
                 ),

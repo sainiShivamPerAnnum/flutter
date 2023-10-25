@@ -316,7 +316,7 @@ class UserProfileVM extends BaseViewModel {
   }
 
   setDate() {
-    if (myDob != null && myDob.isNotEmpty) {
+    if (myDob.isNotEmpty) {
       String dob = myDob.replaceAll('/', '-');
       dateFieldController = TextEditingController(text: dob.split("-")[2]);
       monthFieldController = TextEditingController(text: dob.split("-")[1]);
@@ -583,16 +583,16 @@ class UserProfileVM extends BaseViewModel {
               if (flag) {
                 await _baseUtil.signOut();
                 _marketingService.dump();
-                _txnHistoryService!.signOut();
-                _analyticsService!.signOut();
-                _bankAndKycService!.dump();
+                _txnHistoryService.signOut();
+                _analyticsService.signOut();
+                _bankAndKycService.dump();
                 _powerPlayService.dump();
                 _gtService.dump();
                 _tambolaRepo.dump();
                 locator<JourneyRepository>().dump();
                 _appstate.dump();
                 locator<SubService>().dump();
-                _tambolaService!.dump();
+                _tambolaService.dump();
                 locator<LendboxMaturityService>().dump();
                 AppState.backButtonDispatcher!.didPopRoute();
 
@@ -627,7 +627,7 @@ class UserProfileVM extends BaseViewModel {
         monthFieldController!.text +
         dateFieldController!.text;
     print("Input date : " + inputDate);
-    if (inputDate == null || inputDate.isEmpty) {
+    if (inputDate.isEmpty) {
       dateInputError = "Invalid date";
       return false;
     }
@@ -1070,7 +1070,7 @@ class UserProfileVM extends BaseViewModel {
     // if (isUsernameLoading) return false;
     isUsernameLoading = true;
     notifyListeners();
-    if (usernameController!.text == null || usernameController!.text.isEmpty) {
+    if (usernameController!.text.isEmpty) {
       errorPadding = 0;
       isValid = null;
       response = UsernameResponse.EMPTY;

@@ -15,12 +15,12 @@ import 'package:flutter/material.dart';
 enum TranFilterType { Type, Subtype }
 
 class TransactionsHistoryViewModel extends BaseViewModel {
-  final CustomLogger? _logger = locator<CustomLogger>();
-  final UserService? _userService = locator<UserService>();
+  final CustomLogger _logger = locator<CustomLogger>();
+  final UserService _userService = locator<UserService>();
   // final PaytmService? _paytmService = locator<PaytmService>();
   final SubService _subscriptionService = locator<SubService>();
 
-  final TxnHistoryService? _txnHistoryService = locator<TxnHistoryService>();
+  final TxnHistoryService _txnHistoryService = locator<TxnHistoryService>();
 
   //local variables
   int _filter = 1;
@@ -28,7 +28,7 @@ class TransactionsHistoryViewModel extends BaseViewModel {
   List<UserTransaction> apiTxns = [];
   String? _filterValue = "All";
   String? lastSipTxnDocId;
-  List<String?> _tranTypeFilterItems = [
+  final List<String?> _tranTypeFilterItems = [
     "All",
     "Deposits",
     "Withdrawals",
@@ -122,7 +122,7 @@ class TransactionsHistoryViewModel extends BaseViewModel {
     _pageController = PageController(initialPage: 0);
     if (showAutosave) {
       tabIndex = 1;
-      WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
         pageController!.animateToPage(1,
             duration: const Duration(milliseconds: 200), curve: Curves.linear);
       });

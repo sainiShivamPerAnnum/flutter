@@ -22,9 +22,9 @@ import 'package:lottie/lottie.dart';
 class GoldSellLoadingView extends StatelessWidget {
   final GoldSellViewModel model;
 
-  final AugmontTransactionService? _augTxnService =
+  final AugmontTransactionService _augTxnService =
       locator<AugmontTransactionService>();
-  final TxnHistoryService? _txnHistoryService = locator<TxnHistoryService>();
+  final TxnHistoryService _txnHistoryService = locator<TxnHistoryService>();
   S locale = locator<S>();
   final int waitTimeInSec = 45;
 

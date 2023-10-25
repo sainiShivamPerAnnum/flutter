@@ -37,7 +37,6 @@ class _ContactListWidgetState extends State<ContactListWidget> {
 
   final int _displayLimit = 30; // Number of contacts to display at a time
   int _displayedContactsCount = 30; // Number of contacts currently displayed
-  bool _isLoading = false; // Whether more contacts are being loaded
 
   void searchContacts(String query) {
     log('searchContacts: $query', name: 'ReferralDetailsScreen');

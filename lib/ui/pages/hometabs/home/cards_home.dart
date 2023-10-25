@@ -1432,7 +1432,7 @@ class GradientBorder extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final rect = Offset.zero & size;
-    final strokeWidth = 1.0;
+    const strokeWidth = 1.0;
     final gradientColors = [
       Colors.black26,
       isVerticalView ? Colors.black26 : Colors.grey,

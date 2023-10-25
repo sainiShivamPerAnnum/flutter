@@ -66,21 +66,21 @@ class SaveViewModel extends BaseViewModel {
   }
 
   final CampaignRepo _campaignRepo = locator<CampaignRepo>();
-  final SaveRepo? _saveRepo = locator<SaveRepo>();
-  final UserService? _userService = locator<UserService>();
+  final SaveRepo _saveRepo = locator<SaveRepo>();
+  final UserService _userService = locator<UserService>();
 
   // BaseUtil? baseProvider;
 
-  final BankAndPanService? _sellService = locator<BankAndPanService>();
-  final TransactionHistoryRepository? _transactionHistoryRepo =
+  final BankAndPanService _sellService = locator<BankAndPanService>();
+  final TransactionHistoryRepository _transactionHistoryRepo =
       locator<TransactionHistoryRepository>();
-  final PaymentRepository? _paymentRepo = locator<PaymentRepository>();
-  final TxnHistoryService? _txnHistoryService = locator<TxnHistoryService>();
-  final UserCoinService? _userCoinService = locator<UserCoinService>();
-  final BaseUtil? _baseUtil = locator<BaseUtil>();
+  final PaymentRepository _paymentRepo = locator<PaymentRepository>();
+  final TxnHistoryService _txnHistoryService = locator<TxnHistoryService>();
+  final UserCoinService _userCoinService = locator<UserCoinService>();
+  final BaseUtil _baseUtil = locator<BaseUtil>();
   final GetterRepository _getterRepo = locator<GetterRepository>();
 
-  final AnalyticsService? _analyticsService = locator<AnalyticsService>();
+  final AnalyticsService _analyticsService = locator<AnalyticsService>();
   final List<Color> randomBlogCardCornerColors = [
     UiConstants.kBlogCardRandomColor1,
     UiConstants.kBlogCardRandomColor2,
@@ -98,14 +98,14 @@ class SaveViewModel extends BaseViewModel {
   List<BlogPostModelByCategory>? _blogPostsByCategory;
   bool _isLoading = true;
   bool _isChallenegsLoading = true;
-  List<String> _sellingReasons = [];
+  final List<String> _sellingReasons = [];
   String _selectedReasonForSelling = '';
-  Map<String, dynamic> _filteredList = {};
+  final Map<String, dynamic> _filteredList = {};
 
-  bool _isGoldSaleActive = false;
-  bool _isongoing = false;
-  bool _isLockInReached = false;
-  bool _isSellButtonVisible = false;
+  final bool _isGoldSaleActive = false;
+  final bool _isongoing = false;
+  final bool _isLockInReached = false;
+  final bool _isSellButtonVisible = false;
   int _currentPage = 0;
 
   get currentPage => _currentPage;

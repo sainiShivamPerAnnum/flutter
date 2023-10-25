@@ -14,13 +14,13 @@ import 'package:flutter/cupertino.dart';
 
 class NotificationsViewModel extends BaseViewModel {
   //dependencies
-  final UserService? _userService = locator<UserService>();
-  final UserRepository? _userRepo = locator<UserRepository>();
-  final CustomLogger? _logger = locator<CustomLogger>();
+  final UserService _userService = locator<UserService>();
+  final UserRepository _userRepo = locator<UserRepository>();
+  final CustomLogger _logger = locator<CustomLogger>();
 
   //local variables
   List<AlertModel>? notifications;
-  ScrollController _scrollController = ScrollController();
+  final ScrollController _scrollController = ScrollController();
   bool hasMoreAlerts = true;
   String? lastAlertDocumentId;
   bool _isMoreNotificationsLoading = false;

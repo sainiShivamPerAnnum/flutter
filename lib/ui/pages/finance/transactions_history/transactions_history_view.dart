@@ -385,23 +385,21 @@ class TransactionTile extends StatelessWidget {
 
   String floSubtype() {
     if (txn.subType == "LENDBOXP2P") {
-      if (txn.lbMap != null) {
-        switch (txn.lbMap.fundType) {
-          case Constants.ASSET_TYPE_FLO_FIXED_6:
-            return "12% Flo on ";
-          case Constants.ASSET_TYPE_FLO_FIXED_3:
+      switch (txn.lbMap.fundType) {
+        case Constants.ASSET_TYPE_FLO_FIXED_6:
+          return "12% Flo on ";
+        case Constants.ASSET_TYPE_FLO_FIXED_3:
+          return "10% Flo on ";
+        case Constants.ASSET_TYPE_FLO_FELXI:
+          if (locator<UserService>()
+              .userSegments
+              .contains(Constants.US_FLO_OLD)) {
             return "10% Flo on ";
-          case Constants.ASSET_TYPE_FLO_FELXI:
-            if (locator<UserService>()
-                .userSegments
-                .contains(Constants.US_FLO_OLD)) {
-              return "10% Flo on ";
-            } else {
-              return "8% Flo on ";
-            }
-          default:
-            return "10% Flo on ";
-        }
+          } else {
+            return "8% Flo on ";
+          }
+        default:
+          return "10% Flo on ";
       }
     }
     return "";
@@ -439,7 +437,7 @@ class TransactionStatusChip extends StatelessWidget {
 class TransactionSIPTile extends StatelessWidget {
   final TransactionsHistoryViewModel? model;
   final SubscriptionTransactionModel? txn;
-  final TxnHistoryService? _txnHistoryService = locator<TxnHistoryService>();
+  final TxnHistoryService _txnHistoryService = locator<TxnHistoryService>();
 
   TransactionSIPTile({
     required this.model,
@@ -461,7 +459,7 @@ class TransactionSIPTile extends StatelessWidget {
           style: TextStyles.sourceSans.body3),
       subtitle: Text(
         _txnHistoryService!.getFormattedSIPDate(
-            DateTime.parse(txn!.createdOn!.toDate().toString())),
+            DateTime.parse(txn!.createdOn.toDate().toString())),
         style: TextStyles.sourceSans.body4.colour(UiConstants.kTextColor2),
       ),
       trailing: Wrap(

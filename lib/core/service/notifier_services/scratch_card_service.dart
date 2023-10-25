@@ -117,7 +117,7 @@ class ScratchCardService
   Future<bool> fetchAndVerifyScratchCardByID() async {
     if (scratchCardId != null && scratchCardId!.isNotEmpty) {
       ApiResponse<ScratchCard> ticketResponse =
-          await _gtRepo!.getScratchCardById(
+          await _gtRepo.getScratchCardById(
         scratchCardId: scratchCardId,
       );
 
@@ -151,9 +151,9 @@ class ScratchCardService
   }
 
   Future<bool> fetchAndVerifyScratchCardByPrizeSubtype() async {
-    if (previousPrizeSubtype != null && previousPrizeSubtype.isNotEmpty) {
+    if (previousPrizeSubtype.isNotEmpty) {
       ApiResponse<ScratchCard> ticketResponse =
-          await _gtRepo!.getGTByPrizeSubtype(
+          await _gtRepo.getGTByPrizeSubtype(
         previousPrizeSubtype,
       );
 
@@ -248,7 +248,7 @@ class ScratchCardService
     {
       try {
         String? url;
-        final link = await _appFlyer!.inviteLink();
+        final link = await _appFlyer.inviteLink();
         if (link['status'] == 'success') {
           url = link['payload']['userInviteUrl'];
           url ??= link['payload']['userInviteURL'];
@@ -259,7 +259,7 @@ class ScratchCardService
               'Hey, I won ${ticket.rewardArr!.length > 1 ? "these prizes" : "this prize"} on Fello! \nLet\'s save and play together: $url');
         }
       } catch (e) {
-        _logger!.e(e.toString());
+        _logger.e(e.toString());
         BaseUtil.showNegativeAlert(
             locale.errorOccured, locale.obPleaseTryAgain);
       }
@@ -275,29 +275,29 @@ class ScratchCardService
           try {
             if (Platform.isIOS) {
               Share.share(shareMessage).catchError((onError) {
-                if (_userService!.baseUser!.uid != null) {
+                if (_userService.baseUser!.uid != null) {
                   Map<String, dynamic> errorDetails = {
                     'error_msg': 'Share reward text in My winnings failed'
                   };
-                  _internalOpsService!.logFailure(_userService!.baseUser!.uid,
+                  _internalOpsService.logFailure(_userService.baseUser!.uid,
                       FailType.FelloRewardTextShareFailed, errorDetails);
                 }
-                _logger!.e(onError);
+                _logger.e(onError);
               });
             } else {
               Share.share(shareMessage).catchError((onError) {
-                if (_userService!.baseUser!.uid != null) {
+                if (_userService.baseUser!.uid != null) {
                   Map<String, dynamic> errorDetails = {
                     'error_msg': 'Share reward text in My winnings failed'
                   };
-                  _internalOpsService!.logFailure(_userService!.baseUser!.uid,
+                  _internalOpsService.logFailure(_userService.baseUser!.uid,
                       FailType.FelloRewardTextShareFailed, errorDetails);
                 }
-                _logger!.e(onError);
+                _logger.e(onError);
               });
             }
           } catch (e) {
-            _logger!.e(e.toString());
+            _logger.e(e.toString());
           }
         }
       });
@@ -314,11 +314,11 @@ class ScratchCardService
 
       return pngBytes;
     } catch (e) {
-      if (_userService!.baseUser!.uid != null) {
+      if (_userService.baseUser!.uid != null) {
         Map<String, dynamic> errorDetails = {
           'error_msg': 'Share reward card creation failed'
         };
-        _internalOpsService!.logFailure(_userService!.baseUser!.uid,
+        _internalOpsService.logFailure(_userService.baseUser!.uid,
             FailType.FelloRewardCardShareFailed, errorDetails);
       }
 
@@ -341,11 +341,11 @@ class ScratchCardService
           subject: 'Fello Rewards',
           text: shareMessage ?? "",
         ).catchError((onError) {
-          if (_userService!.baseUser!.uid != null) {
+          if (_userService.baseUser!.uid != null) {
             Map<String, dynamic> errorDetails = {
               'error_msg': 'Share reward card in card.dart failed'
             };
-            _internalOpsService!.logFailure(_userService!.baseUser!.uid,
+            _internalOpsService.logFailure(_userService.baseUser!.uid,
                 FailType.FelloRewardCardShareFailed, errorDetails);
           }
           print(onError);
@@ -360,18 +360,18 @@ class ScratchCardService
             await File('${directory.path}/fello-reward-$dt.jpg').create();
         imgg.writeAsBytesSync(image);
 
-        _logger!.d("Image file created and sharing, ${imgg.path}");
+        _logger.d("Image file created and sharing, ${imgg.path}");
 
         unawaited(Share.shareFiles(
           [imgg.path],
           subject: 'Fello Rewards',
           text: shareMessage ?? "",
         ).catchError((onError) {
-          if (_userService!.baseUser!.uid != null) {
+          if (_userService.baseUser!.uid != null) {
             Map<String, dynamic> errorDetails = {
               'error_msg': 'Share reward card in card.dart failed'
             };
-            _internalOpsService!.logFailure(_userService!.baseUser!.uid,
+            _internalOpsService.logFailure(_userService.baseUser!.uid,
                 FailType.FelloRewardCardShareFailed, errorDetails);
           }
           print(onError);
@@ -407,7 +407,7 @@ class ScratchCardService
       isFetchingScratchCards = false;
     } catch (e) {
       unawaited(locator<InternalOpsService>().logFailure(
-        _userService!.baseUser!.uid,
+        _userService.baseUser!.uid,
         FailType.ScratchCardListFailed,
         {'message': "Scratch Card data fetch failed"},
       ));

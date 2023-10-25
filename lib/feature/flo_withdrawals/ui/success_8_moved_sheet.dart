@@ -252,7 +252,7 @@ class Successful8MovedSheet extends StatelessWidget {
                     ],
                   ),
                 ),
-                if (topChipText != null && !defaultMovedTo8)
+                if (!defaultMovedTo8)
                   Align(
                     alignment: Alignment.topCenter,
                     child: Transform.translate(

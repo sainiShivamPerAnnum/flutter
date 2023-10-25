@@ -67,7 +67,7 @@ extension RichTextExtension on String {
         }
       }
 
-      if (snip != null && snip.isNotEmpty) {
+      if (snip.isNotEmpty) {
         groups.add(
           TextSpan(
             text: snip,

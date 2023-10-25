@@ -2,9 +2,9 @@ import 'package:felloapp/util/logger.dart';
 
 class PrizeLeader {
   static Log log = const Log('PrizeLeader');
-  String _id;
-  String _name;
-  double _totalWin;
+  final String _id;
+  final String _name;
+  final double _totalWin;
 
   PrizeLeader(this._id, this._name, this._totalWin);
 

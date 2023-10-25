@@ -100,7 +100,7 @@ class KycUnVerifiedView extends StatelessWidget {
 
                             model.permissionFailureCount += 1;
                             print(e.runtimeType);
-                            final Permission cameraPermission =
+                            const Permission cameraPermission =
                                 Permission.camera;
                             final PermissionStatus cameraPermissionStatus =
                                 await cameraPermission.status;

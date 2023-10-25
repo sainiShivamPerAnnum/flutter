@@ -6,7 +6,7 @@ import 'package:felloapp/util/locator.dart';
 import 'package:mixpanel_flutter/mixpanel_flutter.dart';
 
 class MixpanelAnalytics extends BaseAnalyticsService {
-  final CustomLogger? _logger = locator<CustomLogger>();
+  final CustomLogger _logger = locator<CustomLogger>();
 
   static const String DEV_TOKEN = "6bc0994f4244fc5b193213df643f14dc";
   static const String PROD_TOKEN = "03de57e684d04e87999e089fd605fcdd";

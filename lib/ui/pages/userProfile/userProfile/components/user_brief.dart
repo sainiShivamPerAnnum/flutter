@@ -18,7 +18,7 @@ class UserBrief extends StatelessWidget {
           model.nameController!.text,
           style: TextStyles.rajdhaniSB.title4,
         ),
-        if (model.myUsername != null && model.myUsername.isNotEmpty)
+        if (model.myUsername.isNotEmpty)
           Text(
             '@${userService!.diplayUsername(model.myUsername)}',
             style: TextStyles.sourceSans.body3.colour(UiConstants.kTextColor2),

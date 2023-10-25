@@ -65,7 +65,7 @@ class _FelloButtonState extends State<FelloButton> {
     ConnectivityStatus connectivityStatus =
         Provider.of<ConnectivityService>(context, listen: true)
             .connectivityStatus;
-    final JourneyService? _journeyService = locator<JourneyService>();
+    final JourneyService _journeyService = locator<JourneyService>();
     if (connectivityStatus == ConnectivityStatus.Offline) {
       return widget.offlineButtonUI != null
           ? InkWell(

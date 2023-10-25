@@ -97,7 +97,7 @@ class RazorpayService extends ChangeNotifier {
         properties: _txnService!.currentTransactionAnalyticsDetails ?? {});
 
     locator<InternalOpsService>().logFailure(
-      _userService!.baseUser!.uid,
+      _userService.baseUser!.uid,
       FailType.RazorpayTransactionFailed,
       {'message': "Razorpay payment cancelled or failed"},
     );

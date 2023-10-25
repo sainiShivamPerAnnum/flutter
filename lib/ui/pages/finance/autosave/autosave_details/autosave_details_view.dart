@@ -571,16 +571,16 @@ class SubTxnTile extends StatelessWidget {
   }) : super(key: key);
   final bool isLast;
   final SubscriptionTransactionModel txn;
-  final TxnHistoryService? _txnHistoryService = locator<TxnHistoryService>();
+  final TxnHistoryService _txnHistoryService = locator<TxnHistoryService>();
   final String type;
 
   String get getFormattedDate =>
       DateFormat('dd MMM, yyyy').format(DateTime.fromMillisecondsSinceEpoch(
-          txn.createdOn!.millisecondsSinceEpoch));
+          txn.createdOn.millisecondsSinceEpoch));
 
   String get formattedTime =>
       DateFormat('hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(
-          txn.createdOn!.millisecondsSinceEpoch));
+          txn.createdOn.millisecondsSinceEpoch));
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -622,7 +622,7 @@ class SubTxnTile extends StatelessWidget {
                     height: SizeConfig.padding10,
                   ),
                   Text(
-                    txn.status!,
+                    txn.status,
                     style: TextStyles.sourceSansM.body3.colour(
                       _txnHistoryService!.getTileColor(txn.status),
                     ),

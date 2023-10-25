@@ -16,10 +16,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class OnboardingViewModel extends BaseViewModel {
-  final AnalyticsService? _analyticsService = locator<AnalyticsService>();
-  final UserService? _userService = locator<UserService>();
-  final UserRepository? _userRepository = locator<UserRepository>();
-  final JourneyService? _journeyService = locator<JourneyService>();
+  final AnalyticsService _analyticsService = locator<AnalyticsService>();
+  final UserService _userService = locator<UserService>();
+  final UserRepository _userRepository = locator<UserRepository>();
+  final JourneyService _journeyService = locator<JourneyService>();
   PageController? _pageController;
   int _currentPage = 0;
   double dragStartPosition = 0, dragUpdatePosition = 0;

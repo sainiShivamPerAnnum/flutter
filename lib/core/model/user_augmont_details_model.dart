@@ -18,20 +18,20 @@ class UserAugmontDetail {
   TimestampModel? _createdTime;
   TimestampModel? _updatedTime;
 
-  static final String fldUserId = 'aUid';
-  static final String fldUserName = 'aUsrName';
-  static final String fldBankAccNo = 'aAccNo';
-  static final String fldBankHolderName = 'aBankHolderName';
-  static final String fldStateId = 'aStateId';
-  static final String fldIfsc = 'aIfsc';
-  static final String fldFirstInvMade = 'aIsInvested';
-  static final String fldHasIssue = 'aHasIssue';
-  static final String fldCreatedTime = 'aCreatedTime';
-  static final String fldUpdatedTime = 'aUpdatedTime';
-  static final String fldIsSellLocked = 'aIsSellLocked';
-  static final String fldIsDepLocked = 'aIsDepLocked';
-  static final String fldSellNotice = 'aSellNotice';
-  static final String fldDepNotice = 'aDepNotice';
+  static const String fldUserId = 'aUid';
+  static const String fldUserName = 'aUsrName';
+  static const String fldBankAccNo = 'aAccNo';
+  static const String fldBankHolderName = 'aBankHolderName';
+  static const String fldStateId = 'aStateId';
+  static const String fldIfsc = 'aIfsc';
+  static const String fldFirstInvMade = 'aIsInvested';
+  static const String fldHasIssue = 'aHasIssue';
+  static const String fldCreatedTime = 'aCreatedTime';
+  static const String fldUpdatedTime = 'aUpdatedTime';
+  static const String fldIsSellLocked = 'aIsSellLocked';
+  static const String fldIsDepLocked = 'aIsDepLocked';
+  static const String fldSellNotice = 'aSellNotice';
+  static const String fldDepNotice = 'aDepNotice';
 
   UserAugmontDetail(
     this._userId,

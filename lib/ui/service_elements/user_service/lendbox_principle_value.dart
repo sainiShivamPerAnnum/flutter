@@ -24,7 +24,7 @@ class LendboxPrincipleValue extends StatelessWidget {
       } else if (prefix != null) {
         return "$prefix ${quantity.toStringAsFixed(2)}";
       }
-      return "${quantity.toStringAsFixed(2)}";
+      return quantity.toStringAsFixed(2);
     } else {
       return "--";
     }
@@ -38,7 +38,7 @@ class LendboxPrincipleValue extends StatelessWidget {
         UserServiceProperties.myUserWallet
       ],
       builder: (context, model, property) => Text(
-        "${getQuantity(model!.userFundWallet)}",
+        getQuantity(model!.userFundWallet),
         style: style ?? TextStyles.sourceSansSB.title4,
       ),
     );

@@ -12,7 +12,7 @@ import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 
 class MiniTransactionCardViewModel extends BaseViewModel {
-  final CustomLogger? _logger = locator<CustomLogger>();
+  final CustomLogger _logger = locator<CustomLogger>();
 
   final TxnHistoryService _txnHistoryService = locator<TxnHistoryService>();
   AppState? appState;
@@ -25,7 +25,7 @@ class MiniTransactionCardViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  List<UserTransaction>? get txnList => _txnHistoryService!.txnList;
+  List<UserTransaction>? get txnList => _txnHistoryService.txnList;
 
   TxnHistoryService? get txnHistoryService => _txnHistoryService;
 

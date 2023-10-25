@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/invoice_model.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/pdf_invoice_api.dart';
@@ -13,14 +12,13 @@ import 'package:path_provider/path_provider.dart';
 
 class AugmontInvoiceService {
   Log log = const Log('AugmontInvoiceService');
-  BaseUtil? _baseUtil = locator<BaseUtil>();
-  final UserService? _userService = locator<UserService>();
+  final UserService _userService = locator<UserService>();
 
   AugmontInvoiceService();
 
   Future<String?> generateInvoice(Map<String, dynamic> invoiceMap,
       Map<String, String?>? userDetails) async {
-    if (invoiceMap == null || invoiceMap[GetInvoice.resTransactionId] == null) {
+    if (invoiceMap[GetInvoice.resTransactionId] == null) {
       return null;
     }
     try {

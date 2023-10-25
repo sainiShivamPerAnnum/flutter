@@ -111,14 +111,14 @@ class _SizeReportingWidgetState extends State<SizeReportingWidget> {
 
   @override
   Widget build(BuildContext context) {
-    WidgetsBinding.instance?.addPostFrameCallback((_) {
+    WidgetsBinding.instance.addPostFrameCallback((_) {
       if (mounted) _notifySize();
     });
     return widget.child;
   }
 
   void _notifySize() {
-    final size = context?.size;
+    final size = context.size;
     if (_oldSize != size) {
       _oldSize = size;
       widget.onSizeChange(size);

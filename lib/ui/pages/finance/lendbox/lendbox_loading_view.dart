@@ -83,19 +83,19 @@ class LendboxLoadingView extends StatelessWidget {
                 end: Duration.zero,
               ),
               onEnd: () async {
-                await _txnService!
-                    .processPolling(_txnService!.pollingPeriodicTimer);
-                if (_txnService!.currentTransactionState !=
+                await _txnService
+                    .processPolling(_txnService.pollingPeriodicTimer);
+                if (_txnService.currentTransactionState !=
                     TransactionState.ongoing) return;
 
-                _txnService!.pollingPeriodicTimer?.cancel();
+                _txnService.pollingPeriodicTimer?.cancel();
                 locator<BackButtonActions>().isTransactionCancelled = false;
                 AppState.onTap = null;
                 AppState.amt = 0;
                 AppState.isRepeated = false;
                 AppState.isTxnProcessing = true;
                 AppState.type = null;
-                _txnService!.currentTransactionState = TransactionState.idle;
+                _txnService.currentTransactionState = TransactionState.idle;
                 unawaited(locator<TxnHistoryService>()
                     .updateTransactions(InvestmentType.LENDBOXP2P));
                 log("Screen Stack:${AppState.screenStack.toString()}");

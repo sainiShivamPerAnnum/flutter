@@ -10,9 +10,9 @@ import 'package:google_sign_in/google_sign_in.dart';
 
 class GoogleSignInService extends ChangeNotifier {
   final _googleSignIn = GoogleSignIn();
-  final UserService? _userService = locator<UserService>();
-  final UserRepository? _userRepo = locator<UserRepository>();
-  final CustomLogger? _logger = locator<CustomLogger>();
+  final UserService _userService = locator<UserService>();
+  final UserRepository _userRepo = locator<UserRepository>();
+  final CustomLogger _logger = locator<CustomLogger>();
   S locale = locator<S>();
 
   Future<String?> signInWithGoogle() async {

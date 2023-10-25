@@ -44,9 +44,9 @@ class _JourneyMilestoneDetailsModalSheetState
     extends State<JourneyMilestoneDetailsModalSheet> {
   final double scaleFactor = 2.5;
   final double pageHeight = SizeConfig.screenWidth! * 2.165;
-  final ScratchCardRepository? _gtService = locator<ScratchCardRepository>();
-  final JourneyService? _journeyService = locator<JourneyService>();
-  final AnalyticsService? _analyticsService = locator<AnalyticsService>();
+  final ScratchCardRepository _gtService = locator<ScratchCardRepository>();
+  final JourneyService _journeyService = locator<JourneyService>();
+  final AnalyticsService _analyticsService = locator<AnalyticsService>();
   S locale = locator<S>();
   bool _isLoading = false;
   ScratchCard? ticket;

@@ -20,12 +20,12 @@ import 'package:flutter/material.dart';
 
 //TODO Pause autosave analytics not showing up
 class AutosaveDetailsViewModel extends BaseViewModel {
-  final UserService? _userService = locator<UserService>();
+  final UserService _userService = locator<UserService>();
   // final PaytmService? _paytmService = locator<PaytmService>();
   final SubService _subService = locator<SubService>();
-  final CustomLogger? _logger = locator<CustomLogger>();
+  final CustomLogger _logger = locator<CustomLogger>();
   final AnalyticsService _analyticsService = locator<AnalyticsService>();
-  final SubscriptionRepo? _subcriptionRepo = locator<SubscriptionRepo>();
+  final SubscriptionRepo _subcriptionRepo = locator<SubscriptionRepo>();
   PageController? txnPageController = PageController(initialPage: 0);
   S locale = locator<S>();
 

@@ -183,9 +183,9 @@ class PdfInvoiceApi {
 
       return [
         item.description,
-        '${item.grams}',
-        '${item.rate}',
-        '${item.amount}',
+        (item.grams),
+        (item.rate),
+        (item.amount),
       ];
     }).toList();
 

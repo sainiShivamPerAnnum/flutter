@@ -26,7 +26,7 @@ class UserFundQuantitySE extends StatelessWidget {
 
     if (quantity != null) {
       if (quantity == 0.0) {
-        if (prefix != null) return "${prefix}0$suffix";
+        return "${prefix}0$suffix";
         return "0 $suffix";
       } else {
         if (investmentType == InvestmentType.AUGGOLD99) {
@@ -48,7 +48,7 @@ class UserFundQuantitySE extends StatelessWidget {
         UserServiceProperties.myUserWallet
       ],
       builder: (context, model, property) => Text(
-        "${getQuantity(model!.userFundWallet)}",
+        getQuantity(model!.userFundWallet),
         style: style ?? TextStyles.sourceSansSB.title4,
       ),
     );

@@ -9,7 +9,7 @@ class GameViewModel {
   final Portfolio _portfolio;
 
   GameViewModel(this.gameTiers)
-      : _portfolio = locator<UserService>().userPortfolio!;
+      : _portfolio = locator<UserService>().userPortfolio;
 
   double get netWorth =>
       _portfolio.augmont.principle + (_portfolio.flo.principle);

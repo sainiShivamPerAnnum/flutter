@@ -27,13 +27,13 @@ import 'package:flutter_svg/svg.dart';
 import 'package:upi_pay/upi_pay.dart';
 
 class LendboxWithdrawalViewModel extends BaseViewModel {
-  final CustomLogger? _logger = locator<CustomLogger>();
-  final LendboxTransactionService? _txnService =
+  final CustomLogger _logger = locator<CustomLogger>();
+  final LendboxTransactionService _txnService =
       locator<LendboxTransactionService>();
-  final AnalyticsService? _analyticsService = locator<AnalyticsService>();
-  final LendboxRepo? _lendboxRepo = locator<LendboxRepo>();
-  final PaymentRepository? _paymentRepo = locator<PaymentRepository>();
-  final UserService? _userService = locator<UserService>();
+  final AnalyticsService _analyticsService = locator<AnalyticsService>();
+  final LendboxRepo _lendboxRepo = locator<LendboxRepo>();
+  final PaymentRepository _paymentRepo = locator<PaymentRepository>();
+  final UserService _userService = locator<UserService>();
   S locale = locator<S>();
   String withdrawableResponseMessage = "";
 
@@ -210,8 +210,8 @@ class LendboxWithdrawalViewModel extends BaseViewModel {
 
     if (amount < minAmount) {
       BaseUtil.showNegativeAlert(
-        locale.minAmountIs + '${minAmount}',
-        locale.enterAmountGreaterThan + '${minAmount}',
+        locale.minAmountIs + '$minAmount',
+        locale.enterAmountGreaterThan + '$minAmount',
       );
       return 0;
     }

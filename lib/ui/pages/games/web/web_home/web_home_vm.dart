@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:collection/collection.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
@@ -47,15 +48,15 @@ class RechargeOption {
 class WebHomeViewModel extends BaseViewModel {
   //Dependency Injection
   final UserService _userService = locator<UserService>();
-  final LeaderboardService? _lbService = locator<LeaderboardService>();
+  final LeaderboardService _lbService = locator<LeaderboardService>();
   final AnalyticsService _analyticsService = locator<AnalyticsService>();
-  final UserRepository? _userRepo = locator<UserRepository>();
-  final CustomLogger? _logger = locator<CustomLogger>();
-  final UserCoinService? _coinService = locator<UserCoinService>();
-  final GameRepo? _gamesRepo = locator<GameRepo>();
-  final GetterRepository? _getterRepo = locator<GetterRepository>();
-  final DBModel? _dbModel = locator<DBModel>();
-  final InternalOpsService? _internalOps = locator<InternalOpsService>();
+  final UserRepository _userRepo = locator<UserRepository>();
+  final CustomLogger _logger = locator<CustomLogger>();
+  final UserCoinService _coinService = locator<UserCoinService>();
+  final GameRepo _gamesRepo = locator<GameRepo>();
+  final GetterRepository _getterRepo = locator<GetterRepository>();
+  final DBModel _dbModel = locator<DBModel>();
+  final InternalOpsService _internalOps = locator<InternalOpsService>();
   S locale = locator<S>();
   //Local Variables
   bool _isGameLoading = false;
@@ -287,7 +288,7 @@ class WebHomeViewModel extends BaseViewModel {
             _userService.userBootUp?.data?.banMap?.games?.twoDots?.reason ?? '';
         break;
     }
-    if (isUserBannedForThisGame != null && isUserBannedForThisGame) {
+    if (isUserBannedForThisGame) {
       BaseUtil.showNegativeAlert(
           userBannedNotice ?? locale.gameLocked, locale.contactUs);
       return false;
@@ -360,8 +361,9 @@ class WebHomeViewModel extends BaseViewModel {
 
   setGameDetails(String game) async {
     isGameLoading = true;
-    final GameModel? gameData = _gamesRepo!.allgames!
-        .firstWhere((g) => g.gameCode == game, orElse: null);
+    GameModel? gameData = _gamesRepo!.allgames!.firstWhereOrNull(
+      (g) => g.gameCode == game,
+    );
     if (gameData != null) {
       currentGameModel = gameData;
       return;

@@ -31,7 +31,7 @@ class _FocusRingState extends State<FocusRing>
   AnimationController? _animationController;
 
   Animation<double>? endingAnimation;
-  final AnalyticsService? _analyticsService = locator<AnalyticsService>();
+  final AnalyticsService _analyticsService = locator<AnalyticsService>();
   final _gtService = locator<ScratchCardService>();
 
   bool _showButton = false;
@@ -59,7 +59,7 @@ class _FocusRingState extends State<FocusRing>
   animateRing() {
     if (isAnimationComplete) return;
 
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       Future.delayed(const Duration(seconds: 2), () {
         _animationController!.forward().then((value) {
           showButton = true;

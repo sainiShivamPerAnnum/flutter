@@ -171,7 +171,7 @@ class LastWeekUi extends StatelessWidget {
                 physics: const BouncingScrollPhysics(),
                 child: Column(
                   children: [
-                    TotalInvestmentWidget(data: model!),
+                    TotalInvestmentWidget(data: model),
                     SizedBox(
                       height: SizeConfig.padding40,
                     ),

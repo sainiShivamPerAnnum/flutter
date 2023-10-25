@@ -22,8 +22,8 @@ class AutosaveComboInputFieldsModalSheet extends StatefulWidget {
 
 class _AutosaveComboInputFieldsModalSheetState
     extends State<AutosaveComboInputFieldsModalSheet> {
-  TextEditingController _goldController = TextEditingController();
-  TextEditingController _floController = TextEditingController();
+  final TextEditingController _goldController = TextEditingController();
+  final TextEditingController _floController = TextEditingController();
   int totalSipAmount = 0;
   List getRangeSubtitle(FREQUENCY freq) {
     switch (freq) {

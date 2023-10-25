@@ -9,8 +9,8 @@ import 'package:felloapp/util/locator.dart';
 import 'base_repo.dart';
 
 class AnalyticsRepository extends BaseRepo {
-  final Api? _api = locator<Api>();
-  final ApiPath? _apiPaths = locator<ApiPath>();
+  final Api _api = locator<Api>();
+  final ApiPath _apiPaths = locator<ApiPath>();
   // final InternalOpsService? _internalOpsService = locator<InternalOpsService>();
   final _baseUrl = FlavorConfig.isDevelopment()
       ? "https://8ug3cm8yhb.execute-api.ap-south-1.amazonaws.com/dev"

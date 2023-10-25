@@ -9,8 +9,8 @@ import 'package:felloapp/core/repository/getters_repo.dart';
 import 'package:flutter/material.dart';
 
 class JourneyBannersViewModel extends BaseViewModel {
-  final GetterRepository? _getterRepo = locator<GetterRepository>();
-  final AnalyticsService? _analyticService = locator<AnalyticsService>();
+  final GetterRepository _getterRepo = locator<GetterRepository>();
+  final AnalyticsService _analyticService = locator<AnalyticsService>();
 
   final PageController promoPageController = PageController(initialPage: 0);
   int _currentPage = 0;

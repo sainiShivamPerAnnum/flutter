@@ -10,7 +10,7 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
 
 class FcmHandlerDataPayloads extends ChangeNotifier {
-  final CustomLogger? _logger = locator<CustomLogger>();
+  final CustomLogger _logger = locator<CustomLogger>();
 
   ValueChanged<Map>? notifListener;
   String? url;

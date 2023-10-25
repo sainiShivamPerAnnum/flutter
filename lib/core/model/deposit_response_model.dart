@@ -20,7 +20,7 @@ class DepositResponseModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     if (response != null) {
       data['response'] = response!.toJson();
     }
@@ -90,7 +90,7 @@ class Response {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['status'] = status;
     data['didWalletUpdate'] = didWalletUpdate;
     if (transactionDoc != null) {
@@ -162,7 +162,7 @@ class TransactionDoc {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['status'] = status;
     data['transactionId'] = transactionId;
     data['transactionDetails'] = transactionDetail;
@@ -213,7 +213,7 @@ class EnqueuedTaskDetails {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['name'] = name;
     data['queuePath'] = queuePath;
     return data;
@@ -254,7 +254,7 @@ class Note {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['title'] = title;
     data['body'] = body;
     return data;
@@ -285,7 +285,7 @@ class AugResponse {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     if (this.data != null) {
       data['data'] = this.data!.toJson();
     }
@@ -319,7 +319,7 @@ class Data {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['transactionId'] = transactionId;
     data['merchantTransactionId'] = merchantTransactionId;
     data['goldBalance'] = goldBalance;

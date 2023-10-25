@@ -76,7 +76,7 @@ class _LendboxAmountInputViewState extends State<LendboxAmountInputView> {
   Widget build(BuildContext context) {
     final currentAmt = double.tryParse(widget.amountController!.text) ?? 0;
     if (currentAmt == null) widget.amountController!.text = "0.0";
-    final AnalyticsService? _analyticsService = locator<AnalyticsService>();
+    final AnalyticsService _analyticsService = locator<AnalyticsService>();
     return Column(
       children: [
         Container(

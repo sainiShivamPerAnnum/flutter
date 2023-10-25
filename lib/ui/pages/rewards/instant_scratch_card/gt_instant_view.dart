@@ -346,7 +346,7 @@ class _GTInstantViewState extends State<GTInstantView>
   getButtonText(GTInstantViewModel model, GTSOURCE source) {
     String title;
     if (source == GTSOURCE.deposit || source == GTSOURCE.autosave) {
-      if (widget.showAutosavePrompt != null && !model.isAutosaveAlreadySetup) {
+      if (!model.isAutosaveAlreadySetup) {
         title = locale.btnContinue;
       } else {
         title = locale.btnStartPlaying;

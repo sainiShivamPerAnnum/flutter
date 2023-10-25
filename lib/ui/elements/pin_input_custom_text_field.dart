@@ -46,7 +46,7 @@ abstract class PinDecoration {
 /// The object determine the obscure display
 class ObscureStyle {
   /// The wrap line string.
-  static final _wrapLine = '\n';
+  static const _wrapLine = '\n';
 
   /// Determine whether replace [obscureText] with number.
   final bool isTextObscure;
@@ -319,8 +319,7 @@ class PinInputTextField extends StatefulWidget {
 
         /// pinLength must larger than 0.
         /// If pinEditingController isn't null, guarantee the [pinLength] equals to the pinEditingController's _pinMaxLength
-        assert(pinLength != null && pinLength > 0),
-        assert(decoration != null),
+        assert(pinLength > 0),
 
         /// Hint length must equal to the [pinLength].
         assert(decoration.hintText == null ||
@@ -987,8 +986,7 @@ class PinInputTextFormField extends FormField<String> {
     bool autovalidate = false,
     ValueChanged<String>? onChanged,
   })  : assert(initialValue == null || controller == null),
-        assert(autovalidate != null),
-        assert(pinLength != null && pinLength > 0),
+        assert(pinLength > 0),
         super(
             key: key,
             initialValue:

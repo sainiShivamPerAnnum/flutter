@@ -13,8 +13,8 @@ import 'package:intl/intl.dart';
 class SubscriptionCardViewModel extends BaseViewModel {
   // final PaytmService? _paytmService = locator<PaytmService>();
   final SubService _subService = locator<SubService>();
-  final UserService? _userService = locator<UserService>();
-  bool _isResumingInProgress = false;
+  final UserService _userService = locator<UserService>();
+  final bool _isResumingInProgress = false;
   bool _isLoading = false;
   S locale = locator<S>();
 
@@ -35,9 +35,8 @@ class SubscriptionCardViewModel extends BaseViewModel {
   }
 
   String getactiveSubtitle(ActiveSubscriptionModel subscription) {
-    if (subscription == null ||
-        (subscription.status == Constants.SUBSCRIPTION_INIT ||
-            subscription.status == Constants.SUBSCRIPTION_CANCELLED)) {
+    if ((subscription.status == Constants.SUBSCRIPTION_INIT ||
+        subscription.status == Constants.SUBSCRIPTION_CANCELLED)) {
       return locale.felloAutoSave;
     }
     if (subscription.status == Constants.SUBSCRIPTION_PROCESSING) {
@@ -53,7 +52,7 @@ class SubscriptionCardViewModel extends BaseViewModel {
           if (subscription.resumeDate!.isEmpty) {
             return locale.felloAutoSave;
           } else {
-            return locale.till + "${getResumeDate()}";
+            return locale.till + getResumeDate();
           }
         }
       }
@@ -62,9 +61,8 @@ class SubscriptionCardViewModel extends BaseViewModel {
   }
 
   String getActiveButtonText(ActiveSubscriptionModel subscription) {
-    if (subscription == null ||
-        (subscription.status == Constants.SUBSCRIPTION_INIT ||
-            subscription.status == Constants.SUBSCRIPTION_CANCELLED)) {
+    if ((subscription.status == Constants.SUBSCRIPTION_INIT ||
+        subscription.status == Constants.SUBSCRIPTION_CANCELLED)) {
       return locale.startAnSIP;
     }
     if (subscription.status == Constants.SUBSCRIPTION_PROCESSING) {
@@ -197,9 +195,8 @@ class SubscriptionCardViewModel extends BaseViewModel {
   }
 
   String getActivityStatus(ActiveSubscriptionModel subscription) {
-    if (subscription == null ||
-        (subscription.status == Constants.SUBSCRIPTION_INIT ||
-            subscription.status == Constants.SUBSCRIPTION_CANCELLED)) {
+    if ((subscription.status == Constants.SUBSCRIPTION_INIT ||
+        subscription.status == Constants.SUBSCRIPTION_CANCELLED)) {
       return "Cancelled";
     }
     if (subscription.status == Constants.SUBSCRIPTION_PROCESSING) {

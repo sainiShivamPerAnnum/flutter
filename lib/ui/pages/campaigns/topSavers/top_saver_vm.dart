@@ -24,12 +24,12 @@ import '../../../../core/service/api.dart';
 import '../../../../util/assets.dart';
 
 class TopSaverViewModel extends BaseViewModel {
-  final CustomLogger? _logger = locator<CustomLogger>();
-  final DBModel? _dbModel = locator<DBModel>();
-  final UserService? _userService = locator<UserService>();
-  final GetterRepository? _getterRepo = locator<GetterRepository>();
+  final CustomLogger _logger = locator<CustomLogger>();
+  final DBModel _dbModel = locator<DBModel>();
+  final UserService _userService = locator<UserService>();
+  final GetterRepository _getterRepo = locator<GetterRepository>();
   // final WinnerService? _winnerService = locator<WinnerService>();
-  final CampaignRepo? _campaignRepo = locator<CampaignRepo>();
+  final CampaignRepo _campaignRepo = locator<CampaignRepo>();
   S locale = locator<S>();
 
   // final eventService = EventService();
@@ -402,7 +402,7 @@ class TopSaverViewModel extends BaseViewModel {
   }
 
   fetchHighestSavings() {
-    highestSavings = currentParticipants![0]?.displayScore ?? '';
+    highestSavings = currentParticipants![0].displayScore ?? '';
   }
 
   Future<List<WinnersModel>?> getPastWinners(

@@ -15,7 +15,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 class WantMoreTicketsModalSheet extends StatelessWidget {
   WantMoreTicketsModalSheet({this.isInsufficientBalance = false});
   final isInsufficientBalance;
-  final AnalyticsService? _analyticsService = locator<AnalyticsService>();
+  final AnalyticsService _analyticsService = locator<AnalyticsService>();
 
   // final referralBonus =
   //     BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.REFERRAL_BONUS);

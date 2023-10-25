@@ -15,9 +15,8 @@ import 'package:felloapp/util/locator.dart';
 import 'package:webengage_flutter/webengage_flutter.dart';
 
 class AppFlyerAnalytics extends BaseAnalyticsService {
-  final CustomLogger? _logger = locator<CustomLogger>();
+  final CustomLogger _logger = locator<CustomLogger>();
   final _cacheService = CacheService();
-  final _brandedDomain = 'app.fello.in';
 
   late AppsflyerSdk _appsflyerSdk;
   Future<String?>? _appFlyerId;

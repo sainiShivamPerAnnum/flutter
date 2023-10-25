@@ -2,9 +2,9 @@ import 'package:felloapp/util/logger.dart';
 
 class ReferralLeader {
   static Log log = const Log('ReferralLeader');
-  String _id;
-  String _name;
-  int _refCount;
+  final String _id;
+  final String _name;
+  final int _refCount;
 
   ReferralLeader(this._id, this._name, this._refCount);
 

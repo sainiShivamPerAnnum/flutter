@@ -10,7 +10,7 @@ class HappyHourCampign {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['message'] = message;
     if (this.data != null) {
       data['data'] = this.data!.toJson();
@@ -75,7 +75,7 @@ class Data {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['id'] = id;
     data['title'] = title;
     data['bottomSheetHeading'] = bottomSheetHeading;
@@ -121,7 +121,7 @@ class Rewards {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['value'] = value;
     data['type'] = type;
     return data;

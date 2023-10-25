@@ -15,7 +15,7 @@ class VerifyPanResponseModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['flag'] = flag;
     data['upstreamName'] = upstreamName;
     data['message'] = message;

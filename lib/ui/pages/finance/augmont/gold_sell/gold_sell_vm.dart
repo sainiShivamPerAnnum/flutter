@@ -29,21 +29,21 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
 
 class GoldSellViewModel extends BaseViewModel {
-  final CustomLogger? _logger = locator<CustomLogger>();
-  BaseUtil? _baseUtil = locator<BaseUtil>();
-  DBModel? _dbModel = locator<DBModel>();
+  final CustomLogger _logger = locator<CustomLogger>();
+  final BaseUtil _baseUtil = locator<BaseUtil>();
+  final DBModel _dbModel = locator<DBModel>();
   S locale = locator<S>();
-  AugmontService? _augmontModel = locator<AugmontService>();
-  UserService? _userService = locator<UserService>();
-  UserCoinService? _userCoinService = locator<UserCoinService>();
-  AugmontTransactionService? _augTxnService =
+  final AugmontService _augmontModel = locator<AugmontService>();
+  final UserService _userService = locator<UserService>();
+  final UserCoinService _userCoinService = locator<UserCoinService>();
+  final AugmontTransactionService _augTxnService =
       locator<AugmontTransactionService>();
-  BankAndPanService? _sellService = locator<BankAndPanService>();
-  final AnalyticsService? _analyticsService = locator<AnalyticsService>();
-  final TxnHistoryService? _transactionHistoryService =
+  final BankAndPanService _sellService = locator<BankAndPanService>();
+  final AnalyticsService _analyticsService = locator<AnalyticsService>();
+  final TxnHistoryService _transactionHistoryService =
       locator<TxnHistoryService>();
-  final PaymentRepository? _paymentRepo = locator<PaymentRepository>();
-  final TambolaService? _tambolaService = locator<TambolaService>();
+  final PaymentRepository _paymentRepo = locator<PaymentRepository>();
+  final TambolaService _tambolaService = locator<TambolaService>();
   bool isGoldRateFetching = false;
   bool _isQntFetching = false;
   double _fieldWidth = 2;
@@ -173,7 +173,7 @@ class GoldSellViewModel extends BaseViewModel {
   updateGoldAmount(String val) {
     showMaxCap = false;
     showMinCap = false;
-    if (val == null || val.isEmpty) {
+    if (val.isEmpty) {
       val = '0';
     }
     // print(val);
@@ -310,10 +310,7 @@ class GoldSellViewModel extends BaseViewModel {
     //   return false;
     // }
     List<String> fractionalPart = sellGramAmount.toString().split('.');
-    if (fractionalPart != null &&
-        fractionalPart.length > 1 &&
-        fractionalPart[1] != null &&
-        fractionalPart[1].length > 4) {
+    if (fractionalPart.length > 1 && fractionalPart[1].length > 4) {
       BaseUtil.showNegativeAlert(
         locale.obPleaseTryAgain,
         locale.upto4DecimalsAllowed,

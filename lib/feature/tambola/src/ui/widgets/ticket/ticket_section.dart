@@ -544,7 +544,7 @@ class TicketHeader extends StatelessWidget {
                           height: SizeConfig.padding4,
                         ),
                         Text(
-                          "${expiringTicketCount} ticket${expiringTicketCount > 1 ? 's' : ''} expiring this Sunday",
+                          "$expiringTicketCount ticket${expiringTicketCount > 1 ? 's' : ''} expiring this Sunday",
                           style: TextStyles.sourceSansSB.body4
                               .colour(UiConstants.kBlogTitleColor),
                           maxLines: 2,

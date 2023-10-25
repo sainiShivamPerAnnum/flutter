@@ -31,14 +31,14 @@ import 'package:pointycastle/asymmetric/api.dart';
 ///
 
 class RSAEncryption {
-  final UserService? _userService = locator<UserService>();
-  final InternalOpsService? _internalOpsService = locator<InternalOpsService>();
-  final CustomLogger? _logger = locator<CustomLogger>();
+  final UserService _userService = locator<UserService>();
+  final InternalOpsService _internalOpsService = locator<InternalOpsService>();
+  final CustomLogger _logger = locator<CustomLogger>();
   Encrypter? rsaEncrypter, aesEncrypter;
   static const String _chars = 'abcdef1234567890';
   static const String ENCRYPT_VERSION = 'v1';
   static const String PUBLIC_KEY_FILE_PATH = 'resources/public.key';
-  Random _rnd = Random();
+  final Random _rnd = Random();
   String? randomIv, randomAesKey;
   IV? iv;
   late Key aesKey;

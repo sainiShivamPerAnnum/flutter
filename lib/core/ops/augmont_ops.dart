@@ -30,22 +30,22 @@ import 'package:flutter/material.dart';
 
 class AugmontService extends ChangeNotifier {
   final Log log = const Log('AugmontService');
-  final CustomLogger? _logger = locator<CustomLogger>();
-  final ApiPath? _apiPaths = locator<ApiPath>();
-  final InternalOpsService? _internalOpsService = locator<InternalOpsService>();
+  final CustomLogger _logger = locator<CustomLogger>();
+  final ApiPath _apiPaths = locator<ApiPath>();
+  final InternalOpsService _internalOpsService = locator<InternalOpsService>();
 
-  final InvestmentActionsRepository? _investmentActionsRepository =
+  final InvestmentActionsRepository _investmentActionsRepository =
       locator<InvestmentActionsRepository>();
 
-  final DBModel? _dbModel = locator<DBModel>();
-  final BaseUtil? _baseProvider = locator<BaseUtil>();
-  final UserService? _userService = locator<UserService>();
-  final UserCoinService? _userCoinService = locator<UserCoinService>();
-  final AugmontTransactionService? _augTxnService =
+  final DBModel _dbModel = locator<DBModel>();
+  final BaseUtil _baseProvider = locator<BaseUtil>();
+  final UserService _userService = locator<UserService>();
+  final UserCoinService _userCoinService = locator<UserCoinService>();
+  final AugmontTransactionService _augTxnService =
       locator<AugmontTransactionService>();
-  final TxnHistoryService? _txnHistoryService = locator<TxnHistoryService>();
+  final TxnHistoryService _txnHistoryService = locator<TxnHistoryService>();
   S locale = locator<S>();
-  final AnalyticsService? _analyticsService = locator<AnalyticsService>();
+  final AnalyticsService _analyticsService = locator<AnalyticsService>();
   List<String> _sellingReasons = [];
   String _selectedReasonForSelling = '';
 
@@ -203,7 +203,7 @@ class GoldGraphPoint {
 
   @override
   String toString() {
-    return ("Rate ${rate} Time ${timestamp}");
+    return ("Rate $rate Time $timestamp");
     // return super.toString();
   }
 }

@@ -12,7 +12,7 @@ class ProcessTransactionModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['message'] = message;
     if (this.data != null) {
       data['data'] = this.data!.toJson();
@@ -38,7 +38,7 @@ class Data {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     if (head != null) {
       data['head'] = head!.toJson();
     }
@@ -66,7 +66,7 @@ class Head {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['responseTimestamp'] = responseTimestamp;
     data['version'] = version;
     return data;
@@ -99,7 +99,7 @@ class Body {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     if (resultInfo != null) {
       data['resultInfo'] = resultInfo!.toJson();
     }
@@ -132,7 +132,7 @@ class ResultInfo {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['resultStatus'] = resultStatus;
     data['resultCode'] = resultCode;
     data['resultMsg'] = resultMsg;
@@ -163,7 +163,7 @@ class DeepLinkInfo {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['deepLink'] = deepLink;
     data['orderId'] = orderId;
     data['cashierRequestId'] = cashierRequestId;
@@ -185,7 +185,7 @@ class RiskContent {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
+    final Map<String, dynamic> data = <String, dynamic>{};
     data['eventLinkId'] = eventLinkId;
     return data;
   }

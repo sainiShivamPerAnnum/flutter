@@ -3,7 +3,7 @@ import 'package:path/path.dart' as p;
 enum UrlType { IMAGE, VIDEO, UNKNOWN }
 
 class UrlTypeHelper {
-  static List<String> _imagetypes = [
+  static final List<String> _imagetypes = [
     'jpg',
     'jpeg',
     'jfif',
@@ -17,7 +17,7 @@ class UrlTypeHelper {
     'avif'
   ];
 
-  static List<String> _videotypes = [
+  static final List<String> _videotypes = [
     "3g2",
     "3gp",
     "aaf",

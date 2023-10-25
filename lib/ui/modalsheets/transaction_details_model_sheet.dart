@@ -170,7 +170,7 @@ class TransactionSummary extends StatelessWidget {
                   Text(
                     subtitle ??
                         (summary[index].timestamp != null
-                            ? "${_txnHistoryService!.getFormattedDateAndTime(summary[index].timestamp!)}"
+                            ? "${_txnHistoryService.getFormattedDateAndTime(summary[index].timestamp!)}"
                             : summary[index].value!),
                     style: TextStyles.sourceSans.body4
                         .colour(const Color(0xffA0A0A0)),

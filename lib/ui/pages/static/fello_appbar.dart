@@ -61,7 +61,7 @@ class FelloAppBar extends StatelessWidget {
 }
 
 class NotificationButton extends StatelessWidget {
-  final AnalyticsService? _analytics = locator<AnalyticsService>();
+  final AnalyticsService _analytics = locator<AnalyticsService>();
 
   NotificationButton({super.key});
 
@@ -77,7 +77,7 @@ class NotificationButton extends StatelessWidget {
                 _analytics!.track(
                     eventName: AnalyticsEvents.notificationsClicked,
                     properties: AnalyticsProperties.getDefaultPropertiesMap());
-                model!.hasNewNotifications = false;
+                model.hasNewNotifications = false;
 
                 AppState.delegate!.appState.currentAction = PageAction(
                   state: PageState.addPage,

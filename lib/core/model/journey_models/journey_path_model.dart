@@ -74,7 +74,7 @@ class JourneyPathModel {
             'ay': ay,
             'z': z,
             'isBase': isBase ?? false,
-            'assetRef': asset?.name,
+            'assetRef': asset.name,
             'animAssetRef': animAsset?.name,
             'mlIndex': mlIndex,
             'hFlip': hFlip ?? false,
@@ -84,7 +84,7 @@ class JourneyPathModel {
             'y': y,
             'z': z,
             'isBase': isBase ?? false,
-            'assetRef': asset?.name ?? '',
+            'assetRef': asset.name ?? '',
             'mlIndex': mlIndex,
             'hFlip': hFlip ?? false,
           };

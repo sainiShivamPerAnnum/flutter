@@ -23,7 +23,7 @@ class GoldBuyLoadingView extends StatelessWidget {
 
   GoldBuyLoadingView({required this.model, super.key});
 
-  final AugmontTransactionService? _augTxnService =
+  final AugmontTransactionService _augTxnService =
       locator<AugmontTransactionService>();
   final int waitTimeInSec = 45;
 

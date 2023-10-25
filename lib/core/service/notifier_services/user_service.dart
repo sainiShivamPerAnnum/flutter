@@ -54,11 +54,11 @@ import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 class UserService extends PropertyChangeNotifier<UserServiceProperties> {
-  final DBModel? _dbModel = locator<DBModel>();
+  final DBModel _dbModel = locator<DBModel>();
   final CustomLogger _logger = locator<CustomLogger>();
-  final UserRepository? _userRepo = locator<UserRepository>();
-  final InternalOpsService? _internalOpsService = locator<InternalOpsService>();
-  final JourneyRepository? _journeyRepo = locator<JourneyRepository>();
+  final UserRepository _userRepo = locator<UserRepository>();
+  final InternalOpsService _internalOpsService = locator<InternalOpsService>();
+  final JourneyRepository _journeyRepo = locator<JourneyRepository>();
   final GetterRepository _gettersRepo = locator<GetterRepository>();
   final AppState _appState = locator<AppState>();
   final RootController _rootController = locator<RootController>();
@@ -98,7 +98,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
 
   bool? _isEmailVerified;
   bool? _isSimpleKycVerified;
-  bool _isConfirmationDialogOpen = false;
+  final bool _isConfirmationDialogOpen = false;
   bool _hasNewNotifications = false;
 
   // bool showOnboardingTutorial = true;
@@ -580,7 +580,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
       );
 
       log('Calling method channel for updateHomeScreenWidget');
-      final platform = const MethodChannel('methodChannel/deviceData');
+      const platform = MethodChannel('methodChannel/deviceData');
       try {
         await platform.invokeMethod('updateHomeScreenWidget');
       } catch (e) {

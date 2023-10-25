@@ -4,7 +4,7 @@ import 'package:felloapp/util/locator.dart';
 import 'dart:developer';
 
 class SourceAdaptiveAssetViewModel extends BaseViewModel {
-  final JourneyRepository? _journeyRepo = locator<JourneyRepository>();
+  final JourneyRepository _journeyRepo = locator<JourneyRepository>();
   String assetType = "NTWRK";
   String? _assetName;
   String? _assetUrl;

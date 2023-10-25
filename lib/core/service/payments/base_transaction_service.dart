@@ -47,7 +47,7 @@ abstract class BaseTransactionService extends ChangeNotifier {
 
   void showGtIfAvailable() {
     Future.delayed(const Duration(milliseconds: 500), () {
-      _gtService!.showMultipleScratchCardsView();
+      _gtService.showMultipleScratchCardsView();
     });
   }
 }

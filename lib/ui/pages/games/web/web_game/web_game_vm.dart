@@ -27,13 +27,13 @@ import 'package:flutter/services.dart';
 import 'package:intl/intl.dart';
 
 class WebGameViewModel extends BaseViewModel {
-  final ScratchCardService? _gtService = locator<ScratchCardService>();
-  final CustomLogger? _logger = locator<CustomLogger>();
-  final LeaderboardService? _lbService = locator<LeaderboardService>();
-  final UserRepository? _userRepo = locator<UserRepository>();
+  final ScratchCardService _gtService = locator<ScratchCardService>();
+  final CustomLogger _logger = locator<CustomLogger>();
+  final LeaderboardService _lbService = locator<LeaderboardService>();
+  final UserRepository _userRepo = locator<UserRepository>();
   final UserCoinService _userCoinService = locator<UserCoinService>();
-  final AnalyticsService? _analyticsService = locator<AnalyticsService>();
-  final JourneyService? _journeyService = locator<JourneyService>();
+  final AnalyticsService _analyticsService = locator<AnalyticsService>();
+  final JourneyService _journeyService = locator<JourneyService>();
   S locale = locator<S>();
   String? _currentGame;
 

@@ -27,10 +27,10 @@ class SkipMilestoneModalSheet extends StatefulWidget {
 }
 
 class _SkipMilestoneModalSheetState extends State<SkipMilestoneModalSheet> {
-  final ScratchCardRepository? _scratchCardRepo =
+  final ScratchCardRepository _scratchCardRepo =
       locator<ScratchCardRepository>();
-  final JourneyService? _journeyService = locator<JourneyService>();
-  final UserCoinService? _userCoinService = locator<UserCoinService>();
+  final JourneyService _journeyService = locator<JourneyService>();
+  final UserCoinService _userCoinService = locator<UserCoinService>();
   bool _skippingInProgress = false;
   S locale = locator<S>();
   get skippingInProgress => _skippingInProgress;

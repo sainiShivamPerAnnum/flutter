@@ -20,7 +20,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
 
   set viewLoader(value) {
     if (mounted) {
-      WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
         _viewLoader = value;
         setState(() {});
       });

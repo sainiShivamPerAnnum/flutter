@@ -12,14 +12,14 @@ import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 
 class LeaderboardService extends ChangeNotifier {
-  final CustomLogger? _logger = locator<CustomLogger>();
-  final GetterRepository? _getterRepo = locator<GetterRepository>();
-  final UserService? _userService = locator<UserService>();
-  final DBModel? _dbModel = locator<DBModel>();
+  final CustomLogger _logger = locator<CustomLogger>();
+  final GetterRepository _getterRepo = locator<GetterRepository>();
+  final UserService _userService = locator<UserService>();
+  final DBModel _dbModel = locator<DBModel>();
   final ScrollController ownController = ScrollController();
   final ScrollController parentController = ScrollController();
-  int _referralLBLength = 0;
-  List<String?> _userProfilePicUrl = [];
+  final int _referralLBLength = 0;
+  final List<String?> _userProfilePicUrl = [];
   bool isUserInTopThree = false;
   bool _isLeaderboardLoading = false;
 

@@ -177,7 +177,7 @@ class Api {
         .where('category', isEqualTo: category);
     try {
       QuerySnapshot? _querySnapshot = await _query.get();
-      return _querySnapshot.docs?.first;
+      return _querySnapshot.docs.first;
     } catch (e) {
       throw e;
     }

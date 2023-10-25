@@ -149,7 +149,7 @@ class AugmontTransactionService extends BaseTransactionService {
             'redirectUrl': txnResponse.model!.data!.intent,
             'packageName': currentGoldPurchaseDetails.upiChoice!.packageName
           });
-          _logger.d("Result from initiatePsp: ${result}");
+          _logger.d("Result from initiatePsp: $result");
 
           if (result.toString().toLowerCase().contains('failure')) {
             isGoldBuyInProgress = false;
