@@ -8,9 +8,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 class AutosaveComboGrid extends StatelessWidget {
   const AutosaveComboGrid({
-    super.key,
     required this.frequency,
     required this.model,
+    super.key,
   });
 
   final AutosaveProcessViewModel model;
@@ -55,9 +55,9 @@ class AutosaveComboGrid extends StatelessWidget {
 
 class ComboCard extends StatelessWidget {
   const ComboCard({
+    required this.combo,
     super.key,
     this.isCustomCreated = false,
-    required this.combo,
   });
 
   final SubComboModel combo;
@@ -199,7 +199,7 @@ class ComboCard extends StatelessWidget {
 }
 
 class CustomComboCard extends StatelessWidget {
-  const CustomComboCard({super.key, required this.model});
+  const CustomComboCard({required this.model, super.key});
 
   final AutosaveProcessViewModel model;
 

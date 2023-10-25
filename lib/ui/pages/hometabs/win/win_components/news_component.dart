@@ -17,7 +17,7 @@ List<Color> randomColors = [
 
 class FelloNewsComponent extends StatelessWidget {
   final WinViewModel model;
-  const FelloNewsComponent({Key? key, required this.model}) : super(key: key);
+  const FelloNewsComponent({required this.model, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

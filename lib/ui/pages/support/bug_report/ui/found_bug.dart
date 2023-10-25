@@ -441,8 +441,9 @@ class _FoundBugState extends State<FoundBug> {
             hapticVibrate: true,
             content: MoreInfoDialog(
                 title: locale.invalidFile, text: locale.invalidFileSubtitle));
-      } else
+      } else {
         log("imageFile => $imageFile || fileSize => $fileSize");
+      }
 
       setState(() {});
       return;

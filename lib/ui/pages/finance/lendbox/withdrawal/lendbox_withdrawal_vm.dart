@@ -47,7 +47,7 @@ class LendboxWithdrawalViewModel extends BaseViewModel {
   String? buyNotice;
 
   bool _inProgress = false;
-  get inProgress => this._inProgress;
+  get inProgress => _inProgress;
 
   TextEditingController? amountController;
   TextEditingController? vpaController;
@@ -56,10 +56,10 @@ class LendboxWithdrawalViewModel extends BaseViewModel {
 
   bool _readOnly = true;
 
-  bool get readOnly => this._readOnly;
+  bool get readOnly => _readOnly;
 
   set readOnly(value) {
-    this._readOnly = value;
+    _readOnly = value;
     notifyListeners();
   }
 
@@ -122,7 +122,7 @@ class LendboxWithdrawalViewModel extends BaseViewModel {
         grams: 0.0,
         onSuccess: () async {
           await AppState.backButtonDispatcher!.didPopRoute();
-          this.processWithdraw(amount);
+          processWithdraw(amount);
         },
         investmentType: InvestmentType.LENDBOXP2P,
       ),
@@ -194,7 +194,7 @@ class LendboxWithdrawalViewModel extends BaseViewModel {
   }
 
   Future<int> initChecks() async {
-    final amount = int.tryParse(this.amountController!.text) ?? 0;
+    final amount = int.tryParse(amountController!.text) ?? 0;
 
     if (amount == 0) {
       BaseUtil.showNegativeAlert(locale.noAmountEntered, locale.enterAmount);
@@ -210,16 +210,16 @@ class LendboxWithdrawalViewModel extends BaseViewModel {
 
     if (amount < minAmount) {
       BaseUtil.showNegativeAlert(
-        locale.minAmountIs + '${this.minAmount}',
-        locale.enterAmountGreaterThan + '${this.minAmount}',
+        locale.minAmountIs + '${minAmount}',
+        locale.enterAmountGreaterThan + '${minAmount}',
       );
       return 0;
     }
 
     if (amount > withdrawableQuantity!.amount) {
       BaseUtil.showNegativeAlert(
-        locale.maxAmountIs + '${this.withdrawableQuantity!.amount}',
-        locale.enterAmountLowerThan + '${this.withdrawableQuantity!.amount}',
+        locale.maxAmountIs + '${withdrawableQuantity!.amount}',
+        locale.enterAmountLowerThan + '${withdrawableQuantity!.amount}',
       );
       return 0;
     }
@@ -236,9 +236,10 @@ class LendboxWithdrawalViewModel extends BaseViewModel {
   }
 
   int getAmount(int amount) {
-    if (amount > amount.toInt())
+    if (amount > amount.toInt()) {
       return amount;
-    else
+    } else {
       return amount.toInt();
+    }
   }
 }

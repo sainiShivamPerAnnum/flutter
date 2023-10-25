@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 abstract class TimerUtil<T extends StatefulWidget> extends State<T> {
-  TimerUtil({Key? key, required this.endTime, required this.startTime})
+  TimerUtil({required this.endTime, required this.startTime, Key? key})
       : super() {
     _timeRemaining = _timeRemainingFor();
   }
@@ -26,8 +26,9 @@ abstract class TimerUtil<T extends StatefulWidget> extends State<T> {
         if (_timeRemainingFor().isNegative ||
             _timeRemainingFor().inSeconds == 0) {
           closeTimer();
-        } else
+        } else {
           _timeRemaining = _timeRemainingFor();
+        }
         setState(() {});
       });
     });

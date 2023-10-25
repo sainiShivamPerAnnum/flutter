@@ -9,8 +9,8 @@ class MarqueeText extends StatelessWidget {
 
   const MarqueeText({
     required this.infoList,
-    this.bulletColor,
     required this.showBullet,
+    this.bulletColor,
     this.textColor,
   });
   @override
@@ -100,15 +100,17 @@ class _MarqueeWidgetState extends State<MarqueeWidget> {
   void scroll(_) async {
     while (scrollController!.hasClients) {
       await Future.delayed(widget.pauseDuration);
-      if (scrollController!.hasClients)
+      if (scrollController!.hasClients) {
         await scrollController!.animateTo(
             scrollController!.position.maxScrollExtent,
             duration: widget.animationDuration,
             curve: Curves.ease);
+      }
       await Future.delayed(widget.pauseDuration);
-      if (scrollController!.hasClients)
+      if (scrollController!.hasClients) {
         await scrollController!.animateTo(0.0,
             duration: widget.backDuration, curve: Curves.easeOut);
+      }
     }
   }
 }

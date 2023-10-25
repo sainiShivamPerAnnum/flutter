@@ -6,7 +6,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 class HowItWorksWidget extends StatefulWidget {
   const HowItWorksWidget(
-      {super.key, required this.onStateChanged, this.isBoxOpen = true});
+      {required this.onStateChanged, super.key, this.isBoxOpen = true});
 
   final Function onStateChanged;
   final bool isBoxOpen;

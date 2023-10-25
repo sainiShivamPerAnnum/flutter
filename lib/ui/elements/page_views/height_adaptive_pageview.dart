@@ -7,8 +7,8 @@ class HeightAdaptivePageView extends StatefulWidget {
   final ScrollPhysics? physics;
 
   const HeightAdaptivePageView({
-    Key? key,
     required this.children,
+    Key? key,
     this.physics,
     this.controller,
     this.onPageChanged,
@@ -97,9 +97,9 @@ class SizeReportingWidget extends StatefulWidget {
   final ValueChanged<Size?> onSizeChange;
 
   const SizeReportingWidget({
-    Key? key,
     required this.child,
     required this.onSizeChange,
+    Key? key,
   }) : super(key: key);
 
   @override

@@ -127,9 +127,9 @@ class Highlights {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
-    data['title'] = this.title;
-    data['subTitle'] = this.subTitle;
-    data['order'] = this.order;
+    data['title'] = title;
+    data['subTitle'] = subTitle;
+    data['order'] = order;
     return data;
   }
 }

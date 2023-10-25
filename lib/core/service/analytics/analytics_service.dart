@@ -25,6 +25,7 @@ class AnalyticsService extends BaseAnalyticsService {
   final CleverTapAnalytics _cleverTap = locator<CleverTapAnalytics>();
   final CustomLogger _logger = locator<CustomLogger>();
 
+  @override
   Future<void> login({bool? isOnBoarded, BaseUser? baseUser}) async {
     await _mixpanel.login(isOnBoarded: isOnBoarded, baseUser: baseUser);
     _webengage.login(isOnBoarded: isOnBoarded, baseUser: baseUser);
@@ -42,6 +43,7 @@ class AnalyticsService extends BaseAnalyticsService {
     }
   }
 
+  @override
   void signOut() {
     _mixpanel.signOut();
     _webengage.signOut();
@@ -50,6 +52,7 @@ class AnalyticsService extends BaseAnalyticsService {
     _cleverTap.signOut();
   }
 
+  @override
   void track({
     String? eventName,
     Map<String, dynamic>? properties,
@@ -91,6 +94,7 @@ class AnalyticsService extends BaseAnalyticsService {
     }
   }
 
+  @override
   void trackScreen({String? screen, Map<String, dynamic>? properties}) {
     _mixpanel!.track(eventName: screen, properties: properties);
     _webengage!.track(eventName: screen, properties: properties);

@@ -5,7 +5,7 @@ import 'package:page_view_indicators/circle_page_indicator.dart';
 
 class PageViewWithIndicator extends StatefulWidget {
   const PageViewWithIndicator(
-      {Key? key, required this.children, required this.showIndicator})
+      {required this.children, required this.showIndicator, Key? key})
       : super(key: key);
 
   final List<Widget>? children;

@@ -29,13 +29,15 @@ class UserFundQuantitySE extends StatelessWidget {
         if (prefix != null) return "${prefix}0$suffix";
         return "0 $suffix";
       } else {
-        if (investmentType == InvestmentType.AUGGOLD99)
+        if (investmentType == InvestmentType.AUGGOLD99) {
           return "$prefix${quantity.toStringAsFixed(4)}$suffix";
-        else
+        } else {
           return "$prefix${quantity.toStringAsFixed(2)}$suffix";
+        }
       }
-    } else
+    } else {
       return "--";
+    }
   }
 
   @override

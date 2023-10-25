@@ -71,20 +71,20 @@ class ActiveSubscriptionModel {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
-    data['amountType'] = this.amountType;
-    data['expiryDate'] = this.expiryDate;
-    data['frequencyUnit'] = this.frequencyUnit;
-    data['autoAmount'] = this.autoAmount;
-    data['vpa'] = this.vpa;
-    data['resumeDate'] = this.resumeDate;
-    data['resumeEnum'] = this.resumeEnum;
-    data['updatedOn'] = this.updatedOn;
-    data['maxAmount'] = this.maxAmount;
-    data['createdOn'] = this.createdOn;
-    data['startDate'] = this.startDate;
-    data['frequency'] = this.frequency;
-    data['status'] = this.status;
-    data['autoFrequency'] = this.autoFrequency;
+    data['amountType'] = amountType;
+    data['expiryDate'] = expiryDate;
+    data['frequencyUnit'] = frequencyUnit;
+    data['autoAmount'] = autoAmount;
+    data['vpa'] = vpa;
+    data['resumeDate'] = resumeDate;
+    data['resumeEnum'] = resumeEnum;
+    data['updatedOn'] = updatedOn;
+    data['maxAmount'] = maxAmount;
+    data['createdOn'] = createdOn;
+    data['startDate'] = startDate;
+    data['frequency'] = frequency;
+    data['status'] = status;
+    data['autoFrequency'] = autoFrequency;
     return data;
   }
 }

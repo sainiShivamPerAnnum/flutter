@@ -9,7 +9,7 @@ class TopWinnersModel {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
-    data['currentTopWinners'] = this.currentTopWinners ?? [];
+    data['currentTopWinners'] = currentTopWinners ?? [];
     return data;
   }
 

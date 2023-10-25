@@ -27,10 +27,10 @@ class OnboardingViewModel extends BaseViewModel {
   bool _isWalkthroughRegistrationInProgress = false;
 
   get isWalkthroughRegistrationInProgress =>
-      this._isWalkthroughRegistrationInProgress;
+      _isWalkthroughRegistrationInProgress;
 
   set isWalkthroughRegistrationInProgress(value) {
-    this._isWalkthroughRegistrationInProgress = value;
+    _isWalkthroughRegistrationInProgress = value;
     notifyListeners();
   }
 
@@ -102,7 +102,8 @@ class OnboardingViewModel extends BaseViewModel {
       state: PageState.replaceAll,
       page: LoginPageConfig,
     );
-    if (_analyticsService != null)
+    if (_analyticsService != null) {
       _analyticsService!.track(eventName: AnalyticsEvents.splashScrenProceed);
+    }
   }
 }

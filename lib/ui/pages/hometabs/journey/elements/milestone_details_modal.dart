@@ -51,13 +51,14 @@ class _JourneyMilestoneDetailsModalSheetState
   bool _isLoading = false;
   ScratchCard? ticket;
 
-  get isLoading => this._isLoading;
+  get isLoading => _isLoading;
 
   set isLoading(value) {
-    if (mounted)
+    if (mounted) {
       setState(() {
-        this._isLoading = value;
+        _isLoading = value;
       });
+    }
   }
 
   Future<void> fetchMilestoneRewards() async {

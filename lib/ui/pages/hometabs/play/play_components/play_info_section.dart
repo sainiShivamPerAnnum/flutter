@@ -253,13 +253,13 @@ class _InfoComponent2State extends State<InfoComponent2> {
 
 class InfoComponent3 extends StatefulWidget {
   const InfoComponent3(
-      {Key? key,
-      required this.mainTitle,
+      {required this.mainTitle,
       required this.subTitle,
       required this.secondaryTitle,
       required this.boxAssets,
       required this.boxTitlles,
-      required this.isBoxOpen})
+      required this.isBoxOpen,
+      Key? key})
       : super(key: key);
 
   final String mainTitle;

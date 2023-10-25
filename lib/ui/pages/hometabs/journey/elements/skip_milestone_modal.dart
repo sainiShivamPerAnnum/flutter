@@ -33,11 +33,11 @@ class _SkipMilestoneModalSheetState extends State<SkipMilestoneModalSheet> {
   final UserCoinService? _userCoinService = locator<UserCoinService>();
   bool _skippingInProgress = false;
   S locale = locator<S>();
-  get skippingInProgress => this._skippingInProgress;
+  get skippingInProgress => _skippingInProgress;
 
   set skippingInProgress(value) {
     setState(() {
-      this._skippingInProgress = value;
+      _skippingInProgress = value;
     });
   }
 
@@ -49,8 +49,9 @@ class _SkipMilestoneModalSheetState extends State<SkipMilestoneModalSheet> {
       _userCoinService!.getUserCoinBalance();
       skippingInProgress = false;
       AppState.screenStack.removeLast();
-      while (AppState.screenStack.length > 1)
+      while (AppState.screenStack.length > 1) {
         AppState.backButtonDispatcher!.didPopRoute();
+      }
 
       BaseUtil.showPositiveAlert(
           locale.skipMileStoneSuccessTitle, locale.skipMileStoneSuccessSubtile);

@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 
 class StickyNote extends StatelessWidget {
   const StickyNote(
-      {Key? key, required this.trailingWidget, required this.amount})
+      {required this.trailingWidget, required this.amount, Key? key})
       : super(key: key);
   final Widget trailingWidget;
   final String amount;

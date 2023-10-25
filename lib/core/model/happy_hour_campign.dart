@@ -11,7 +11,7 @@ class HappyHourCampign {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
-    data['message'] = this.message;
+    data['message'] = message;
     if (this.data != null) {
       data['data'] = this.data!.toJson();
     }
@@ -35,7 +35,8 @@ class Data {
   HappyHourType happyHourType = HappyHourType.expired;
   PreBuzz? preBuzz;
   Data(
-      {this.id,
+      {required this.happyHourType,
+      this.id,
       this.title,
       this.bottomSheetHeading,
       this.bottomSheetSubHeading,
@@ -45,7 +46,6 @@ class Data {
       this.docketHeading,
       this.minAmount,
       this.rewards,
-      required this.happyHourType,
       this.preBuzz,
       this.maxApplicable});
 
@@ -76,19 +76,19 @@ class Data {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
-    data['id'] = this.id;
-    data['title'] = this.title;
-    data['bottomSheetHeading'] = this.bottomSheetHeading;
-    data['bottomSheetSubHeading'] = this.bottomSheetSubHeading;
-    data['startTime'] = this.startTime;
-    data['endTime'] = this.endTime;
-    data['ctaText'] = this.ctaText;
-    data['docketHeading'] = this.docketHeading;
-    data['minAmount'] = this.minAmount;
-    if (this.rewards != null) {
-      data['rewards'] = this.rewards!.map((v) => v.toJson()).toList();
+    data['id'] = id;
+    data['title'] = title;
+    data['bottomSheetHeading'] = bottomSheetHeading;
+    data['bottomSheetSubHeading'] = bottomSheetSubHeading;
+    data['startTime'] = startTime;
+    data['endTime'] = endTime;
+    data['ctaText'] = ctaText;
+    data['docketHeading'] = docketHeading;
+    data['minAmount'] = minAmount;
+    if (rewards != null) {
+      data['rewards'] = rewards!.map((v) => v.toJson()).toList();
     }
-    data['maxApplicable'] = this.maxApplicable;
+    data['maxApplicable'] = maxApplicable;
     return data;
   }
 
@@ -103,8 +103,9 @@ class Data {
       } else {
         happyHourType = HappyHourType.notStarted;
       }
-    } else
+    } else {
       happyHourType = HappyHourType.expired;
+    }
   }
 }
 
@@ -121,8 +122,8 @@ class Rewards {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
-    data['value'] = this.value;
-    data['type'] = this.type;
+    data['value'] = value;
+    data['type'] = type;
     return data;
   }
 }

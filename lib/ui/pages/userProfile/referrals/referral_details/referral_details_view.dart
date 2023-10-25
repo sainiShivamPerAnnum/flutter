@@ -451,8 +451,8 @@ class ReferralDetailsView extends StatelessWidget {
 
 class BonusLockedReferals extends StatelessWidget {
   const BonusLockedReferals({
-    Key? key,
     required this.model,
+    Key? key,
   }) : super(key: key);
 
   final ReferralDetailsViewModel model;
@@ -657,8 +657,8 @@ class BonusLockedReferals extends StatelessWidget {
 
 class BonusUnlockedReferals extends StatelessWidget {
   const BonusUnlockedReferals({
-    Key? key,
     required this.model,
+    Key? key,
   }) : super(key: key);
 
   final ReferralDetailsViewModel model;

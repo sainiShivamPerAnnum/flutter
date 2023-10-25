@@ -37,9 +37,9 @@ class WebGameViewModel extends BaseViewModel {
   S locale = locator<S>();
   String? _currentGame;
 
-  get currentGame => this._currentGame;
+  get currentGame => _currentGame;
 
-  set currentGame(value) => this._currentGame = value;
+  set currentGame(value) => _currentGame = value;
   init(String? game, bool inLandscapeMode) async {
     currentGame = game;
     if (inLandscapeMode) {
@@ -108,8 +108,9 @@ class WebGameViewModel extends BaseViewModel {
 
       ScratchCardService.scratchCardId = data['gt_id'];
     }
-    if (data['mlIndex'] != null)
+    if (data['mlIndex'] != null) {
       _journeyService!.avatarRemoteMlIndex = data["mlIndex"];
+    }
     _logger!.d("MLIndex found: ${data['mlIndex']}");
     if (data[FcmCommands.GAME_END_MESSAGE_KEY] != null &&
         data[FcmCommands.GAME_END_MESSAGE_KEY].toString().isNotEmpty) {

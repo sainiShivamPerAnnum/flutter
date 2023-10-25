@@ -3,7 +3,7 @@ import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 
 class RewardTrack extends StatelessWidget {
-  const RewardTrack({super.key, required this.revampedInfo});
+  const RewardTrack({required this.revampedInfo, super.key});
 
   final RevampedInfo revampedInfo;
 
@@ -222,15 +222,15 @@ class ToolTipCustomPainter extends CustomPainter {
     path_0.lineTo(size.width * 0.004032258, size.height * 0.09106542);
     path_0.close();
 
-    Paint paint_0_stroke = Paint()
+    Paint paint0Stroke = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = size.width * 0.013096774;
-    paint_0_stroke.color = color;
-    canvas.drawPath(path_0, paint_0_stroke);
+    paint0Stroke.color = color;
+    canvas.drawPath(path_0, paint0Stroke);
 
-    Paint paint_0_fill = Paint()..style = PaintingStyle.fill;
-    paint_0_fill.color = const Color(0xff000000).withOpacity(1.0);
-    canvas.drawPath(path_0, paint_0_fill);
+    Paint paint0Fill = Paint()..style = PaintingStyle.fill;
+    paint0Fill.color = const Color(0xff000000).withOpacity(1.0);
+    canvas.drawPath(path_0, paint0Fill);
   }
 
   @override

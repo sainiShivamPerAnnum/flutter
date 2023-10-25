@@ -139,16 +139,18 @@ class FcmListener {
     }
 
     if (_userService!.baseUser != null &&
-        !_userService!.baseUser!.isAugmontOnboarded!)
+        !_userService!.baseUser!.isAugmontOnboarded!) {
       addSubscription(FcmTopic.MISSEDCONNECTION);
+    }
 
     if (_userService!.baseUser != null &&
         _userService!.baseUser!.isAugmontOnboarded! &&
         _baseUtil!.userFundWallet != null &&
         _baseUtil!.userFundWallet!.augGoldBalance != null &&
-        _baseUtil!.userFundWallet!.augGoldBalance > 300)
+        _baseUtil!.userFundWallet!.augGoldBalance > 300) {
       addSubscription(FcmTopic.FREQUENTFLYER)
           .then((value) => logger!.d("Added frequent flyer subscription"));
+    }
 
     if (_baseUtil!.ticketCount != null &&
         _baseUtil!.ticketCount! > 0 &&

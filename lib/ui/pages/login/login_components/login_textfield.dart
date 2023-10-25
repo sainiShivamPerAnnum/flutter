@@ -5,8 +5,8 @@ import 'package:flutter/services.dart';
 
 class LogInTextField extends StatelessWidget {
   const LogInTextField({
-    Key? key,
     required this.controller,
+    Key? key,
     this.hintText = '',
     this.textInputType = TextInputType.name,
     this.textAlign = TextAlign.start,

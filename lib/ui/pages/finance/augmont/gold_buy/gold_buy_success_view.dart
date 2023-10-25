@@ -554,11 +554,11 @@ class WinningChips extends StatelessWidget {
   final Widget? widget;
 
   const WinningChips(
-      {Key? key,
-      required this.title,
+      {required this.title,
       required this.asset,
       required this.qty,
       required this.tooltip,
+      Key? key,
       this.widget,
       this.color,
       this.margin})

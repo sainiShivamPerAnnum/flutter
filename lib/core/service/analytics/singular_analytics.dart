@@ -31,6 +31,7 @@ class SingularAnalytics extends BaseAnalyticsService {
     }
   }
 
+  @override
   Future<void> login({bool? isOnBoarded, BaseUser? baseUser}) async {
     if (FlavorConfig.isProduction()) {
       _singularConfig = SingularConfig(PROD_KEY, PROD_SECRET);
@@ -58,6 +59,7 @@ class SingularAnalytics extends BaseAnalyticsService {
     }
   }
 
+  @override
   void signOut() {
     if (FlavorConfig.isProduction()) {
       try {
@@ -70,19 +72,22 @@ class SingularAnalytics extends BaseAnalyticsService {
     }
   }
 
+  @override
   void track({String? eventName, Map<String, dynamic>? properties}) {
     if (FlavorConfig.isProduction()) {
       try {
-        if (properties == null || properties.isEmpty)
+        if (properties == null || properties.isEmpty) {
           Singular.event(eventName!);
-        else
+        } else {
           Singular.eventWithArgs(eventName!, properties);
+        }
       } catch (e) {
         _logger!.e('Singular tracking failed: ', e.toString());
       }
     }
   }
 
+  @override
   void trackScreen({String? screen, Map<String, dynamic>? properties}) {
     //not required for Singular
   }

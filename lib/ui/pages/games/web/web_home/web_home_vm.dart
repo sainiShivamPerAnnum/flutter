@@ -90,31 +90,31 @@ class WebHomeViewModel extends BaseViewModel {
 
   //Getters
   List<ScoreBoard>? get pastWeekParticipants => _pastWeekParticipants;
-  String? get currentGame => this._currentGame;
+  String? get currentGame => _currentGame;
 
   String? get sessionID => _sessionId;
-  get isLoading => this._isLoading;
+  get isLoading => _isLoading;
   GameModel? get currentGameModel => _currentGameModel;
   int? get currentCoinValue => _currentCoinValue;
 
   //Setters
   set currentGame(value) {
-    this._currentGame = value;
+    _currentGame = value;
     notifyListeners();
   }
 
   set currentGameModel(GameModel? value) {
-    this._currentGameModel = value;
+    _currentGameModel = value;
     notifyListeners();
   }
 
   set isGameLoading(value) {
-    this._isGameLoading = value;
+    _isGameLoading = value;
     notifyListeners();
   }
 
   set isLoading(value) {
-    this._isLoading = value;
+    _isLoading = value;
     notifyListeners();
   }
 
@@ -150,8 +150,9 @@ class WebHomeViewModel extends BaseViewModel {
   }
 
   clear() {
-    if (AppState.screenStack.last == ScreenItem.modalsheet)
+    if (AppState.screenStack.last == ScreenItem.modalsheet) {
       AppState.screenStack.removeLast();
+    }
   }
 
   Future<bool> setupGame() async {
@@ -195,8 +196,9 @@ class WebHomeViewModel extends BaseViewModel {
     if (response.code == 200) {
       _pastWeekParticipants =
           LeaderboardModel.fromMap(response.model).scoreboard;
-    } else
+    } else {
       _pastWeekParticipants = [];
+    }
     notifyListeners();
   }
 
@@ -319,9 +321,9 @@ class WebHomeViewModel extends BaseViewModel {
     if (response.isSuccess()) gameToken = response.model;
     setState(ViewState.Idle);
     if (_flcResponse.model!.flcBalance != null &&
-        _flcResponse.model!.flcBalance! >= _playCost!)
+        _flcResponse.model!.flcBalance! >= _playCost!) {
       return true;
-    else {
+    } else {
       earnMoreTokens();
       return false;
     }

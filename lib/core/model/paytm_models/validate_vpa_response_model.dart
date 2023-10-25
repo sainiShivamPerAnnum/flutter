@@ -11,7 +11,7 @@ class ValidateVpaResponseModel {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
-    data['message'] = this.message;
+    data['message'] = message;
     if (this.data != null) {
       data['data'] = this.data!.toJson();
     }
@@ -41,10 +41,10 @@ class Data {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
-    data['valid'] = this.valid;
-    data['status'] = this.status;
-    data['pspSupportedRecurring'] = this.pspSupportedRecurring;
-    data['bankSupportedRecurring'] = this.bankSupportedRecurring;
+    data['valid'] = valid;
+    data['status'] = status;
+    data['pspSupportedRecurring'] = pspSupportedRecurring;
+    data['bankSupportedRecurring'] = bankSupportedRecurring;
     return data;
   }
 }

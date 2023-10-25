@@ -22,7 +22,7 @@ import 'package:provider/provider.dart';
 class MiniTransactionCard extends StatelessWidget {
   final InvestmentType investmentType;
 
-  const MiniTransactionCard({Key? key, required this.investmentType})
+  const MiniTransactionCard({required this.investmentType, Key? key})
       : super(key: key);
 
   @override

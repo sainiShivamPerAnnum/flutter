@@ -98,8 +98,9 @@ class NotificationsViewModel extends BaseViewModel {
     if (lastReadLatestNotificationTime == null) return;
     for (int i = indexPostHighlight; i < notifications!.length; i++) {
       if (notifications![i].createdTime!.seconds >
-          int.tryParse(lastReadLatestNotificationTime!)!)
+          int.tryParse(lastReadLatestNotificationTime!)!) {
         notifications![i].isHighlighted = true;
+      }
       newNotificationsCount++;
     }
   }

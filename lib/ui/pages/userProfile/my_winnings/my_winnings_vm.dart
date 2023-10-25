@@ -175,8 +175,10 @@ class MyWinningsViewModel extends BaseViewModel {
     );
   }
 
-  showSuccessPrizeWithdrawalDialog(PrizeClaimChoice choice,
-      String subtitle,) async {
+  showSuccessPrizeWithdrawalDialog(
+    PrizeClaimChoice choice,
+    String subtitle,
+  ) async {
     AppState.screenStack.add(ScreenItem.dialog);
     unawaited(showDialog(
         context: AppState.delegate!.navigatorKey.currentContext!,
@@ -368,7 +370,7 @@ class MyWinningsViewModel extends BaseViewModel {
   Future<Uint8List?> captureCard() async {
     try {
       RenderRepaintBoundary imageObject =
-      imageKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
+          imageKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
       final image = await imageObject.toImage(pixelRatio: 2);
       ByteData? byteData = await image.toByteData(format: ImageByteFormat.png);
       final pngBytes = byteData?.buffer.asUint8List();

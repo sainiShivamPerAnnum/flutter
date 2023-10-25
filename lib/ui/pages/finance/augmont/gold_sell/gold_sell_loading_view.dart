@@ -28,7 +28,7 @@ class GoldSellLoadingView extends StatelessWidget {
   S locale = locator<S>();
   final int waitTimeInSec = 45;
 
-  GoldSellLoadingView({Key? key, required this.model}) : super(key: key);
+  GoldSellLoadingView({required this.model, Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);

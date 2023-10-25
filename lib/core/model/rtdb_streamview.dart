@@ -1,5 +1,3 @@
-
-
 // import 'dart:convert';
 
 // BrandsModel brandsFromJson(String str) =>

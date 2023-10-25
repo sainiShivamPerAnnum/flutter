@@ -60,9 +60,9 @@ class TxnHistoryService extends ChangeNotifier {
   }
 
   fetchTransactions({
+    required InvestmentType subtype,
     String? status,
     String? type,
-    required InvestmentType subtype,
   }) async {
     //fetch filtered transactions
     final response = await _transactionHistoryRepo!.getUserTransactions(

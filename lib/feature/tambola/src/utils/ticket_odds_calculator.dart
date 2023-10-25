@@ -4,8 +4,9 @@ import 'package:felloapp/feature/tambola/src/models/tambola_ticket_model.dart';
 
 int getRowOdds(
     TambolaTicketModel ticket, int rowIndex, List<int> calledDigits) {
-  if (ticket == TambolaTicketModel.none() || ticket.tambolaBoard == null)
+  if (ticket == TambolaTicketModel.none() || ticket.tambolaBoard == null) {
     return 5;
+  }
 
   int rowCalledCount = 0;
   for (int i = 0; i < boardLength; i++) {

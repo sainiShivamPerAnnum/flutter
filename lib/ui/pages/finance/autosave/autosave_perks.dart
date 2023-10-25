@@ -9,7 +9,7 @@ class AutosavePerks extends StatelessWidget {
   final String? svg;
   final String text;
 
-  const AutosavePerks({this.image, required this.text, this.svg});
+  const AutosavePerks({required this.text, this.image, this.svg});
 
   @override
   Widget build(BuildContext context) {

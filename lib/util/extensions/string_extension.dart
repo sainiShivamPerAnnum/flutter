@@ -3,7 +3,7 @@ import 'package:felloapp/ui/pages/finance/autosave/autosave_setup/autosave_proce
 
 extension StringExtension on String {
   String capitalize() {
-    return "${this[0].toUpperCase()}${this.substring(1).toLowerCase()}";
+    return "${this[0].toUpperCase()}${substring(1).toLowerCase()}";
   }
 
   String frequencyRename() {
@@ -50,7 +50,7 @@ extension UpiRenameExtension on String {
 extension IndianNumberSystem on String {
   String formatToIndianNumberSystem() {
     String num = this;
-    if (this.length == 1) return this;
+    if (length == 1) return this;
     while (this[0] == '0') {
       num = num.substring(1);
     }

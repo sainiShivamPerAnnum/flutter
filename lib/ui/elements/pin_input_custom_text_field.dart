@@ -122,11 +122,11 @@ class UnderlineDecoration extends PinDecoration {
       errorTextStyle: errorTextStyle ?? this.errorTextStyle,
       hintText: hintText ?? this.hintText,
       hintTextStyle: hintTextStyle ?? this.hintTextStyle,
-      enteredColor: this.enteredColor,
-      color: this.color,
-      gapSpace: this.gapSpace,
-      lineHeight: this.lineHeight,
-      gapSpaces: this.gapSpaces,
+      enteredColor: enteredColor,
+      color: color,
+      gapSpace: gapSpace,
+      lineHeight: lineHeight,
+      gapSpaces: gapSpaces,
     );
   }
 }
@@ -184,10 +184,10 @@ class BoxTightDecoration extends PinDecoration {
       errorTextStyle: errorTextStyle ?? this.errorTextStyle,
       hintText: hintText ?? this.hintText,
       hintTextStyle: hintTextStyle ?? this.hintTextStyle,
-      solidColor: this.solidColor,
-      strokeColor: this.strokeColor,
-      strokeWidth: this.strokeWidth,
-      radius: this.radius,
+      solidColor: solidColor,
+      strokeColor: strokeColor,
+      strokeWidth: strokeWidth,
+      radius: radius,
     );
   }
 }
@@ -257,13 +257,13 @@ class BoxLooseDecoration extends PinDecoration {
       errorTextStyle: errorTextStyle ?? this.errorTextStyle,
       hintText: hintText ?? this.hintText,
       hintTextStyle: hintTextStyle ?? this.hintTextStyle,
-      solidColor: this.solidColor,
-      strokeColor: this.strokeColor,
-      strokeWidth: this.strokeWidth,
-      radius: this.radius,
-      enteredColor: this.enteredColor,
-      gapSpace: this.gapSpace,
-      gapSpaces: this.gapSpaces,
+      solidColor: solidColor,
+      strokeColor: strokeColor,
+      strokeWidth: strokeWidth,
+      radius: radius,
+      enteredColor: enteredColor,
+      gapSpace: gapSpace,
+      gapSpaces: gapSpaces,
     );
   }
 }
@@ -532,7 +532,7 @@ class _PinPaint extends CustomPainter {
     required this.pinLength,
     required PinDecoration decoration,
     this.themeData,
-  }) : this.decoration = decoration.copyWith(
+  }) : decoration = decoration.copyWith(
           textStyle: decoration.textStyle ?? themeData!.textTheme.headline5,
           errorTextStyle: decoration.errorTextStyle ??
               themeData!.textTheme.caption!
@@ -544,7 +544,7 @@ class _PinPaint extends CustomPainter {
 
   @override
   bool shouldRepaint(CustomPainter oldDelegate) =>
-      !(oldDelegate is _PinPaint && oldDelegate.text == this.text);
+      !(oldDelegate is _PinPaint && oldDelegate.text == text);
 
   _drawBoxTight(Canvas canvas, Size size) {
     /// Calculate the height of paint area for drawing the pin field.
@@ -1124,7 +1124,8 @@ class _PinInputTextFormFieldState extends FormFieldState<String> {
     // notifications for changes originating from within this class -- for
     // example, the reset() method. In such cases, the FormField value will
     // already have been set.
-    if (_effectiveController!.text != value)
+    if (_effectiveController!.text != value) {
       didChange(_effectiveController!.text);
+    }
   }
 }

@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 
 class TicketsView extends StatefulWidget {
   const TicketsView({
+    required this.weeklyPicks,
     Key? key,
     this.bestTickets,
-    required this.weeklyPicks,
   }) : super(key: key);
 
   final TambolaBestTicketsModel? bestTickets;

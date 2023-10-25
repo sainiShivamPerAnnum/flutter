@@ -4,10 +4,10 @@ import 'package:page_view_indicators/page_view_indicators.dart';
 
 class PageViewWithIndicator extends StatefulWidget {
   const PageViewWithIndicator(
-      {Key? key,
-      required this.children,
+      {required this.children,
       required this.controller,
-      required this.showIndicator})
+      required this.showIndicator,
+      Key? key})
       : super(key: key);
 
   final List<Widget>? children;

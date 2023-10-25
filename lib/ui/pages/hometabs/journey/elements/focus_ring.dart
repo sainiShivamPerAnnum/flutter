@@ -36,11 +36,11 @@ class _FocusRingState extends State<FocusRing>
 
   bool _showButton = false;
 
-  get showButton => this._showButton;
+  get showButton => _showButton;
 
   set showButton(value) {
     setState(() {
-      this._showButton = value;
+      _showButton = value;
     });
   }
 

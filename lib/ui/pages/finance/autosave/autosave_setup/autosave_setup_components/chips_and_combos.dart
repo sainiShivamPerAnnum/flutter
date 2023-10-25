@@ -7,8 +7,8 @@ import 'package:flutter/material.dart';
 
 class ChipsAndCombos extends StatelessWidget {
   const ChipsAndCombos({
-    super.key,
     required this.model,
+    super.key,
   });
 
   final AutosaveProcessViewModel model;

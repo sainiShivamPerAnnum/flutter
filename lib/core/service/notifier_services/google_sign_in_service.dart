@@ -52,10 +52,11 @@ class GoogleSignInService extends ChangeNotifier {
       if (res.isSuccess() && res.model!) {
         _userService!.isEmailVerified = true;
         return userEmail;
-      } else
+      } else {
         BaseUtil.showNegativeAlert(
             res.errorMessage ?? locale.obSomeThingWentWrong,
             locale.obPleaseTryAgain);
+      }
       return null;
     } catch (e) {
       _logger!.d(e.toString());

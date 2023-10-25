@@ -152,10 +152,11 @@ class WinViewModel extends BaseViewModel {
   }
 
   String getWinningsButtonText() {
-    if (_userService!.userFundWallet!.isPrizeBalanceUnclaimed())
+    if (_userService!.userFundWallet!.isPrizeBalanceUnclaimed()) {
       return locale.redeem;
-    else
+    } else {
       return locale.share;
+    }
   }
 
   // Future<PrizeClaimChoice> getClaimChoice() async {

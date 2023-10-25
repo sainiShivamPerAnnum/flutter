@@ -75,7 +75,7 @@ class LoginMobileViewModel extends BaseViewModel {
     Pattern pattern = "^[0-9]*\$";
     RegExp regex = RegExp(pattern as String);
     if (!regex.hasMatch(_mobileController.text) ||
-        _mobileController.text.length != 10){
+        _mobileController.text.length != 10) {
       return locale.validMobileNumber;
     }
 

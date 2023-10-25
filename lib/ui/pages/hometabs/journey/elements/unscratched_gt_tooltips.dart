@@ -14,7 +14,7 @@ import 'package:property_change_notifier/property_change_notifier.dart';
 
 class PrizeToolTips extends StatelessWidget {
   final JourneyPageViewModel model;
-  PrizeToolTips({Key? key, required this.model}) : super(key: key);
+  PrizeToolTips({required this.model, Key? key}) : super(key: key);
   final _gtService = locator<ScratchCardService>();
   @override
   Widget build(BuildContext context) {

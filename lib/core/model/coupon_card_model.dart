@@ -42,7 +42,7 @@ class CouponModel {
       id: id ?? this.id,
       code: code ?? this.code,
       description: description ?? this.description,
-      expiresOn: expireOn ?? this.expiresOn,
+      expiresOn: expireOn ?? expiresOn,
       createdOn: createdOn ?? this.createdOn,
       maxUse: maxUse ?? this.maxUse,
       priority: priority ?? this.priority,

@@ -18,10 +18,10 @@ import 'package:intl/intl.dart';
 
 class ReConfirmationSheet extends HookWidget {
   const ReConfirmationSheet(
-      {super.key,
-      required this.depositData,
+      {required this.depositData,
       required this.decision,
-      required this.isLendboxOldUser});
+      required this.isLendboxOldUser,
+      super.key});
 
   final Deposit depositData;
   final UserDecision decision;
@@ -134,7 +134,7 @@ class ReConfirmationSheet extends HookWidget {
                     color: Colors.white,
                   )
                 : MaterialButton(
-                minWidth: SizeConfig.screenWidth,
+                    minWidth: SizeConfig.screenWidth,
                     color: Colors.white.withOpacity(isEnable.value ? 1 : 0.5),
                     shape: RoundedRectangleBorder(
                       borderRadius:

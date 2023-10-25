@@ -13,7 +13,7 @@ import 'package:flutter_svg/svg.dart';
 
 class HappyHourBanner extends StatefulWidget {
   const HappyHourBanner(
-      {Key? key, required this.model, this.isComingFromSave = false})
+      {required this.model, Key? key, this.isComingFromSave = false})
       : super(key: key);
   final HappyHourCampign model;
   final bool isComingFromSave;

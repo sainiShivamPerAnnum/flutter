@@ -47,13 +47,14 @@ class SubscriptionCardViewModel extends BaseViewModel {
         return "₹${subscription.autoAmount!.toInt()}${getFreq(subscription.autoFrequency)}";
       }
       if (subscription.status == Constants.SUBSCRIPTION_INACTIVE) {
-        if (subscription.autoAmount == 0.0)
+        if (subscription.autoAmount == 0.0) {
           return locale.startSavingNow;
-        else {
-          if (subscription.resumeDate!.isEmpty)
+        } else {
+          if (subscription.resumeDate!.isEmpty) {
             return locale.felloAutoSave;
-          else
+          } else {
             return locale.till + "${getResumeDate()}";
+          }
         }
       }
       return locale.zeroperDay;
@@ -73,13 +74,14 @@ class SubscriptionCardViewModel extends BaseViewModel {
         return locale.view;
       }
       if (subscription.status == Constants.SUBSCRIPTION_INACTIVE) {
-        if (subscription.autoAmount == 0.0)
+        if (subscription.autoAmount == 0.0) {
           return locale.setAmount;
-        else {
-          if (subscription.resumeDate!.isEmpty)
+        } else {
+          if (subscription.resumeDate!.isEmpty) {
             return locale.restart;
-          else
+          } else {
             return locale.resume;
+          }
         }
       }
       return locale.details;
@@ -180,13 +182,14 @@ class SubscriptionCardViewModel extends BaseViewModel {
         return locale.active;
       }
       if (subscription.status == Constants.SUBSCRIPTION_INACTIVE) {
-        if (subscription.autoAmount == 0.0)
+        if (subscription.autoAmount == 0.0) {
           return locale.autoSaveSetupComplete;
-        else {
-          if (subscription.resumeDate!.isEmpty)
+        } else {
+          if (subscription.resumeDate!.isEmpty) {
             return locale.savingsOnAutoPilot;
-          else
+          } else {
             return locale.paused;
+          }
         }
       }
       return locale.autoSave;
@@ -206,13 +209,14 @@ class SubscriptionCardViewModel extends BaseViewModel {
         return "Active";
       }
       if (subscription.status == Constants.SUBSCRIPTION_INACTIVE) {
-        if (subscription.autoAmount == 0.0)
+        if (subscription.autoAmount == 0.0) {
           return "Paused";
-        else {
-          if (subscription.resumeDate!.isEmpty)
+        } else {
+          if (subscription.resumeDate!.isEmpty) {
             return "";
-          else
+          } else {
             return "";
+          }
         }
       }
       return "Autosave";
@@ -223,15 +227,16 @@ class SubscriptionCardViewModel extends BaseViewModel {
     if (_subService.subscriptionData != null &&
         _subService.subscriptionData!.status != Constants.SUBSCRIPTION_INIT &&
         _subService.subscriptionData!.status !=
-            Constants.SUBSCRIPTION_CANCELLED)
+            Constants.SUBSCRIPTION_CANCELLED) {
       AppState.delegate!.appState.currentAction = PageAction(
         state: PageState.addPage,
         page: AutosaveDetailsViewPageConfig,
       );
-    else
+    } else {
       AppState.delegate!.appState.currentAction = PageAction(
         state: PageState.addPage,
         page: AutosaveDetailsViewPageConfig,
       );
+    }
   }
 }

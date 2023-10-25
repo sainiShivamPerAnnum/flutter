@@ -21,10 +21,10 @@ class WithDrawWarningScreen extends StatelessWidget {
   const WithDrawWarningScreen({
     required this.type,
     required this.totalAmount,
-    this.withdrawableQuantity = 0.0,
     required this.onWithDrawAnyWay,
     required this.viewModel,
     required this.onClose,
+    this.withdrawableQuantity = 0.0,
     super.key,
   });
   final double withdrawableQuantity;

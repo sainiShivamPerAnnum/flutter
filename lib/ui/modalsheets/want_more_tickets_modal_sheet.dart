@@ -27,8 +27,9 @@ class WantMoreTicketsModalSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
-    if (isInsufficientBalance)
+    if (isInsufficientBalance) {
       _analyticsService!.track(eventName: AnalyticsEvents.flcTokensExhasuted);
+    }
 
     return WillPopScope(
       onWillPop: () {
@@ -112,8 +113,9 @@ class WantMoreTicketsModalSheet extends StatelessWidget {
                       .track(eventName: AnalyticsEvents.earnMoreSaveMoney);
                   AppState.isWebGameLInProgress = false;
                   AppState.isWebGamePInProgress = false;
-                  while (AppState.screenStack.length > 1)
+                  while (AppState.screenStack.length > 1) {
                     AppState.backButtonDispatcher!.didPopRoute();
+                  }
                   AppState.delegate!.parseRoute(Uri.parse('assetBuy'));
                 },
               ),

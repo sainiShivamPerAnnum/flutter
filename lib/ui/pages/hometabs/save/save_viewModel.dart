@@ -403,8 +403,9 @@ class SaveViewModel extends BaseViewModel {
 
     if (quantity != null) {
       return quantity;
-    } else
+    } else {
       return 0;
+    }
   }
 
   List<BlogPostModelByCategory> getAllBlogsByCategory() {

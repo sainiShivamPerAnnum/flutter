@@ -11,6 +11,7 @@ class WebEngageAnalytics extends BaseAnalyticsService {
     WebEngagePlugin();
   }
 
+  @override
   Future<void> login({bool? isOnBoarded, BaseUser? baseUser}) async {
     if (isOnBoarded != null && isOnBoarded && baseUser != null) {
       _logger!.d(baseUser);
@@ -43,6 +44,7 @@ class WebEngageAnalytics extends BaseAnalyticsService {
     return 'other';
   }
 
+  @override
   void signOut() {
     try {
       WebEngagePlugin.userLogout();
@@ -51,6 +53,7 @@ class WebEngageAnalytics extends BaseAnalyticsService {
     }
   }
 
+  @override
   void track({String? eventName, Map<String, dynamic>? properties}) {
     try {
       if (properties != null && properties.isNotEmpty) {
@@ -66,6 +69,7 @@ class WebEngageAnalytics extends BaseAnalyticsService {
     }
   }
 
+  @override
   void trackScreen({String? screen, Map<String, dynamic>? properties}) {
     try {
       _logger!.d('analytics : $screen');

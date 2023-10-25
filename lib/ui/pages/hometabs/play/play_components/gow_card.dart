@@ -87,7 +87,6 @@ class GOWCard extends StatelessWidget {
                       // );
                       BaseUtil.openGameModalSheet(
                         model.gow!.gameCode!,
-                        
                       );
                     },
                     child: Container(

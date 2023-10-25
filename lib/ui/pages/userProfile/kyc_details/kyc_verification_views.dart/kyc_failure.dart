@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 class KycFailedView extends StatelessWidget {
   final KYCDetailsViewModel model;
 
-  const KycFailedView({Key? key, required this.model}) : super(key: key);
+  const KycFailedView({required this.model, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

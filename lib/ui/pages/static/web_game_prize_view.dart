@@ -33,8 +33,9 @@ class PrizesView extends StatelessWidget {
         }
         if (controller!.offset + value.overscroll >=
             controller!.position.maxScrollExtent) {
-          if (controller!.offset != controller!.position.maxScrollExtent)
+          if (controller!.offset != controller!.position.maxScrollExtent) {
             controller!.jumpTo(controller!.position.maxScrollExtent);
+          }
           return true;
         }
         controller!.jumpTo(controller!.offset + value.overscroll);
@@ -45,7 +46,7 @@ class PrizesView extends StatelessWidget {
         itemCount: model!.prizesA!.length + 1,
         padding: EdgeInsets.only(bottom: SizeConfig.navBarHeight),
         itemBuilder: (ctx, i) {
-          if (i == 0)
+          if (i == 0) {
             return Column(
               children: [
                 if (subtitle != null && subtitle!.isNotEmpty)
@@ -54,6 +55,7 @@ class PrizesView extends StatelessWidget {
                   ),
               ],
             );
+          }
 
           i--;
           return Container(

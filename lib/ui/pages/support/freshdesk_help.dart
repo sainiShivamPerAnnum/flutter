@@ -134,8 +134,9 @@ class _FreshDeskHelpState extends State<FreshDeskHelp> {
                       icon: const Icon(Icons.arrow_back),
                       color: Colors.white,
                       onPressed: () async {
-                        if (await _webViewController!.canGoBack())
+                        if (await _webViewController!.canGoBack()) {
                           _webViewController!.goBack();
+                        }
                       },
                     ),
                   ),

@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class RewardView extends StatelessWidget {
-  const RewardView({Key? key, required this.model}) : super(key: key);
+  const RewardView({required this.model, Key? key}) : super(key: key);
 
   final PrizesModel? model;
 
@@ -57,7 +57,8 @@ class RewardView extends StatelessWidget {
                       child: Center(
                         child: ListTile(
                           title: Text(
-                            model!.prizesA![index + 3].displayName!.replaceFirst(
+                            model!.prizesA![index + 3].displayName!
+                                .replaceFirst(
                               ' Prize',
                               '',
                             ),

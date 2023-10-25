@@ -55,7 +55,7 @@ class LocalApi {
 
   Future<void> deleteTmbResultFile() async {
     final file = await tambolaResultFile;
-   file.delete();
+    file.delete();
   }
 
   Future<File> writeFreshTambolaTutorialFile(String content) async {
@@ -65,7 +65,7 @@ class LocalApi {
 
   Future<void> deleteFreshTambolaTutorialFile() async {
     final file = await tambolaTutorialFile;
-     file.delete();
+    file.delete();
   }
 
   Future<File> writeFreshHomeTutorialFile(String content) async {

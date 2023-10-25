@@ -7,7 +7,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 class AutosaveStatusText extends StatelessWidget {
-  const AutosaveStatusText({Key? key, required this.asset}) : super(key: key);
+  const AutosaveStatusText({required this.asset, Key? key}) : super(key: key);
   final String asset;
   @override
   Widget build(BuildContext context) {

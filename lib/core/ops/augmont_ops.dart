@@ -60,7 +60,7 @@ class AugmontService extends ChangeNotifier {
   String get selectedReasonForSelling => _selectedReasonForSelling;
 
   set selectedReasonForSelling(String val) {
-    this._selectedReasonForSelling = val;
+    _selectedReasonForSelling = val;
     notifyListeners();
   }
 
@@ -118,11 +118,12 @@ class AugmontService extends ChangeNotifier {
       _augTxnService!.currentTransactionState = TransactionState.idle;
       AppState.unblockNavigation();
       if (_onSellCompleteResponse.errorMessage != null &&
-          _onSellCompleteResponse.errorMessage!.isNotEmpty)
+          _onSellCompleteResponse.errorMessage!.isNotEmpty) {
         BaseUtil.showNegativeAlert(
             _onSellCompleteResponse.errorMessage, locale.obPleaseTryAgain);
-      else
+      } else {
         BaseUtil.showNegativeAlert(locale.txnVerify, locale.txnVerifySubTitle);
+      }
 
       _internalOpsService!.logFailure(
           _userService!.baseUser!.uid, FailType.WithdrawlCompleteApiFailed, {
@@ -202,7 +203,7 @@ class GoldGraphPoint {
 
   @override
   String toString() {
-    return ("Rate ${this.rate} Time ${this.timestamp}");
+    return ("Rate ${rate} Time ${timestamp}");
     // return super.toString();
   }
 }

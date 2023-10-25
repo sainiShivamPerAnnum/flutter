@@ -89,10 +89,12 @@ class AugmontCouponsModalSheet extends StatelessWidget {
                       ),
                       // textCapitalization: TextCapitalization.characters,
                       validator: (val) {
-                        if (val!.trim().length == 0 || val == null)
+                        if (val!.trim().length == 0 || val == null) {
                           return locale.txnEnterCode;
-                        if (val.trim().length < 3 || val.trim().length > 10)
+                        }
+                        if (val.trim().length < 3 || val.trim().length > 10) {
                           return locale.txnInvalidCouponCode;
+                        }
                         return null;
                       }),
                 ),
@@ -136,8 +138,8 @@ class AugmontCouponsModalSheet extends StatelessWidget {
 
 class CouponItem extends StatelessWidget {
   const CouponItem({
-    Key? key,
     required this.model,
+    Key? key,
     this.trailingWidget,
     this.onTap,
     this.couponCode,

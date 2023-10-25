@@ -400,10 +400,10 @@ class TicketMatchesBriefBoxWidget extends StatelessWidget {
 
 class TicketsWinBriefChip extends StatelessWidget {
   const TicketsWinBriefChip({
-    super.key,
     required this.title,
     required this.value,
     required this.i,
+    super.key,
   });
 
   final String title;
@@ -459,7 +459,7 @@ class TicketsWinBriefChip extends StatelessWidget {
 
 class ViewallBestTicketsBar extends StatelessWidget {
   const ViewallBestTicketsBar(
-      {super.key, required this.title, required this.onPressed});
+      {required this.title, required this.onPressed, super.key});
 
   final String title;
   final VoidCallback onPressed;

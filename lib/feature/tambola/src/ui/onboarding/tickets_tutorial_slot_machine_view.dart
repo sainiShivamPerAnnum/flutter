@@ -644,10 +644,10 @@ class _TicketsTutorialsSlotMachineViewState
 
 class WinningTicketWidget extends StatelessWidget {
   const WinningTicketWidget({
-    super.key,
     required this.spinCount,
     required this.calledDigits,
     required this.ticketNumbers,
+    super.key,
   });
 
   final int spinCount;
@@ -788,7 +788,7 @@ class WinningTicketWidget extends StatelessWidget {
 class TopInfoWidget extends StatelessWidget {
   final String subtitle;
 
-  const TopInfoWidget({super.key, required this.subtitle});
+  const TopInfoWidget({required this.subtitle, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -855,9 +855,9 @@ class Head extends StatelessWidget {
 
 class TicketsRewardCategoriesWidget extends StatelessWidget {
   const TicketsRewardCategoriesWidget(
-      {super.key,
+      {required this.highlightRow,
+      super.key,
       this.color,
-      required this.highlightRow,
       this.isOpen = false,
       this.hasMargin = true});
 

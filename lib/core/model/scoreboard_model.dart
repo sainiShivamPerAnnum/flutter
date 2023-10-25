@@ -9,7 +9,7 @@ class ScoreBoard {
   String? userid;
   String? username;
   double? score;
-  int ?gameDuration, refCount;
+  int? gameDuration, refCount;
   String? displayScore;
 
   ScoreBoard(
@@ -23,14 +23,14 @@ class ScoreBoard {
       this.refCount});
 
   ScoreBoard copyWith({
-    bool ?isUserEligible,
-    TimestampModel ?timestamp,
-    String ?userid,
-    String ?username,
+    bool? isUserEligible,
+    TimestampModel? timestamp,
+    String? userid,
+    String? username,
     double? score,
     int? gameDuration,
     int? refCount,
-    String ?displayScore,
+    String? displayScore,
   }) {
     return ScoreBoard(
       isUserEligible: isUserEligible ?? this.isUserEligible,
@@ -106,4 +106,3 @@ class ScoreBoard {
         refCount.hashCode;
   }
 }
-

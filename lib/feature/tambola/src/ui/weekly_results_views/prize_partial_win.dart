@@ -9,7 +9,7 @@ import 'winnerbox.dart';
 class PrizePWin extends StatefulWidget {
   final Winners winner;
   final bool isEligible;
-  const PrizePWin({Key? key, required this.winner, required this.isEligible})
+  const PrizePWin({required this.winner, required this.isEligible, Key? key})
       : super(key: key);
 
   @override

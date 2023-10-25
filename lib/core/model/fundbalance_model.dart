@@ -22,11 +22,11 @@ class FundBalanceModel {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
-    data['wAugBalance'] = this.wAugBalance;
-    data['wAugPrinciple'] = this.wAugPrinciple;
-    data['wAugQuantity'] = this.wAugQuantity;
-    data['wLifeTimeWin'] = this.wLifeTimeWin;
-    data['wPriBalance'] = this.wPriBalance;
+    data['wAugBalance'] = wAugBalance;
+    data['wAugPrinciple'] = wAugPrinciple;
+    data['wAugQuantity'] = wAugQuantity;
+    data['wLifeTimeWin'] = wLifeTimeWin;
+    data['wPriBalance'] = wPriBalance;
     return data;
   }
 

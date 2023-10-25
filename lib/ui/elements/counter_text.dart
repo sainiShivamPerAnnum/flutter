@@ -3,9 +3,9 @@ import 'package:flutter/material.dart';
 
 class AnimatedCount extends ImplicitlyAnimatedWidget {
   const AnimatedCount({
-    Key? key,
     required this.count,
     required Duration duration,
+    Key? key,
     Curve curve = Curves.linear,
   }) : super(duration: duration, curve: curve, key: key);
 
@@ -36,6 +36,7 @@ class _AnimatedCountState extends AnimatedWidgetBaseState<AnimatedCount> {
           );
   }
 
+  @override
   @protected
   void forEachTween(TweenVisitor<dynamic> visitor) {
     if (widget.count is int) {

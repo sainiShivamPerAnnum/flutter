@@ -32,7 +32,7 @@ class UserJourneyStatsModel {
         level: level ?? this.level,
         mlIndex: mlIndex ?? this.mlIndex,
         mlId: mlId ?? this.mlId,
-        prizeSubtype: nextPrizeSubtype ?? this.prizeSubtype,
+        prizeSubtype: nextPrizeSubtype ?? prizeSubtype,
         skipCount: skipCount ?? this.skipCount);
   }
 

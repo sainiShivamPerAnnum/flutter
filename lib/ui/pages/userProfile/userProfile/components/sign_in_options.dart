@@ -18,13 +18,14 @@ class SignInOptions extends StatefulWidget {
 class _SignInOptionsState extends State<SignInOptions> {
   bool _isGoogleSigningInProgress = false;
 
-  get isGoogleSigningInProgress => this._isGoogleSigningInProgress;
+  get isGoogleSigningInProgress => _isGoogleSigningInProgress;
 
   set isGoogleSigningInProgress(value) {
-    if (mounted)
+    if (mounted) {
       setState(() {
-        this._isGoogleSigningInProgress = value;
+        _isGoogleSigningInProgress = value;
       });
+    }
   }
 
   @override

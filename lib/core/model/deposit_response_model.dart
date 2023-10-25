@@ -21,17 +21,17 @@ class DepositResponseModel {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
-    if (this.response != null) {
-      data['response'] = this.response!.toJson();
+    if (response != null) {
+      data['response'] = response!.toJson();
     }
-    if (this.augResponse != null) {
-      data['augResponse'] = this.augResponse!.toJson();
+    if (augResponse != null) {
+      data['augResponse'] = augResponse!.toJson();
     }
-    if (this.note != null) {
-      data['note'] = this.note!.toJson();
+    if (note != null) {
+      data['note'] = note!.toJson();
     }
-    if (this.gtId != null) {
-      data['gtId'] = this.gtId;
+    if (gtId != null) {
+      data['gtId'] = gtId;
     }
     return data;
   }
@@ -91,16 +91,16 @@ class Response {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
-    data['status'] = this.status;
-    data['didWalletUpdate'] = this.didWalletUpdate;
-    if (this.transactionDoc != null) {
-      data['transactionDoc'] = this.transactionDoc!.toJson();
+    data['status'] = status;
+    data['didWalletUpdate'] = didWalletUpdate;
+    if (transactionDoc != null) {
+      data['transactionDoc'] = transactionDoc!.toJson();
     }
-    data['didFLCUpdate'] = this.didFLCUpdate;
-    data['didFLCUpdate'] = this.didFLCUpdate;
-    data['augmontPrinciple'] = this.augmontPrinciple;
-    data['augmontGoldQty'] = this.augmontGoldQty;
-    data['flcBalance'] = this.flcBalance;
+    data['didFLCUpdate'] = didFLCUpdate;
+    data['didFLCUpdate'] = didFLCUpdate;
+    data['augmontPrinciple'] = augmontPrinciple;
+    data['augmontGoldQty'] = augmontGoldQty;
+    data['flcBalance'] = flcBalance;
     return data;
   }
 
@@ -163,10 +163,10 @@ class TransactionDoc {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
-    data['status'] = this.status;
-    data['transactionId'] = this.transactionId;
-    data['transactionDetails'] = this.transactionDetail;
-    data['enqueuedTaskDetails'] = this.enqueuedTaskDetails;
+    data['status'] = status;
+    data['transactionId'] = transactionId;
+    data['transactionDetails'] = transactionDetail;
+    data['enqueuedTaskDetails'] = enqueuedTaskDetails;
     return data;
   }
 
@@ -214,8 +214,8 @@ class EnqueuedTaskDetails {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
-    data['name'] = this.name;
-    data['queuePath'] = this.queuePath;
+    data['name'] = name;
+    data['queuePath'] = queuePath;
     return data;
   }
 
@@ -255,8 +255,8 @@ class Note {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
-    data['title'] = this.title;
-    data['body'] = this.body;
+    data['title'] = title;
+    data['body'] = body;
     return data;
   }
 
@@ -320,9 +320,9 @@ class Data {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
-    data['transactionId'] = this.transactionId;
-    data['merchantTransactionId'] = this.merchantTransactionId;
-    data['goldBalance'] = this.goldBalance;
+    data['transactionId'] = transactionId;
+    data['merchantTransactionId'] = merchantTransactionId;
+    data['goldBalance'] = goldBalance;
     return data;
   }
 

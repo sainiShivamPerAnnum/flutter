@@ -43,9 +43,9 @@ class GTInstantView extends StatefulWidget {
   final bool showAutosavePrompt;
 
   const GTInstantView(
-      {super.key,
+      {required this.source,
+      super.key,
       this.title,
-      required this.source,
       this.amount,
       this.showRatingDialog = true,
       this.showAutosavePrompt = false});

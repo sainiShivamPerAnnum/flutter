@@ -79,10 +79,11 @@ class UsernameInputView extends StatelessWidget {
                   )
                 ],
                 validator: (val) {
-                  if (val == null || val.isEmpty)
+                  if (val == null || val.isEmpty) {
                     return "";
-                  else
+                  } else {
                     return null;
+                  }
                 },
                 onChanged: (String value) {
                   model.checkIfUsernameIsAvailable();

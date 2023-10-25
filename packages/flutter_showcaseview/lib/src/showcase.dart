@@ -465,7 +465,6 @@ class _ShowcaseState extends State<Showcase> {
     if (!_showShowCase) return const SizedBox.shrink();
 
     return Stack(
-      
       children: [
         AbsorbPointer(
           absorbing: true,

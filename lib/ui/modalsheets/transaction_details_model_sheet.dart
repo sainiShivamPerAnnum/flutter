@@ -21,11 +21,11 @@ class TransactionSummary extends StatelessWidget {
   final TxnHistoryService _txnHistoryService = locator<TxnHistoryService>();
 
   TransactionSummary(
-      {super.key,
-      this.summary,
-      required this.assetType,
+      {required this.assetType,
       required this.txnType,
       required this.createdOn,
+      super.key,
+      this.summary,
       this.lbMap});
 
   bool isTBD = false;

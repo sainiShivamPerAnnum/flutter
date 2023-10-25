@@ -11,10 +11,10 @@ class WinnerBox extends StatelessWidget {
   final bool isEligible;
 
   const WinnerBox(
-      {Key? key,
-      required this.winner,
+      {required this.winner,
       required this.tPrize,
-      required this.isEligible})
+      required this.isEligible,
+      Key? key})
       : super(key: key);
 
   getWinningTicketTiles() {

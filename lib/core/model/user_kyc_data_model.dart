@@ -19,7 +19,7 @@ class UserKycDataModel {
 
   UserKycDataModel.fromMap(Map<String, dynamic> map)
       : this(
-    name: map["name"] ?? '',
+          name: map["name"] ?? '',
           ocrVerified: map["ocrVerified"] ?? false,
           pan: map["pan"] ?? '',
           status: map['status'],

@@ -13,8 +13,8 @@ import 'package:flutter_svg/svg.dart';
 
 class WinnerWidgets extends StatelessWidget {
   WinnerWidgets({
-    Key? key,
     required this.scoreboard,
+    Key? key,
     // required this.userProfilePicUrl,
     this.isSpotLightVisible = true,
   }) : super(key: key);

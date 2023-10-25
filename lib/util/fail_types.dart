@@ -78,6 +78,6 @@ enum FailType {
 
 extension ParseToString on FailType {
   String value() {
-    return this.toString().split('.').last;
+    return toString().split('.').last;
   }
 }

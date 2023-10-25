@@ -1,5 +1,3 @@
-
-
 class AugmontResources {
   static const List<Map<String, String>> augmontStateList = [
     {"id": "joXp8X42", "name": "Andaman and Nicobar"},

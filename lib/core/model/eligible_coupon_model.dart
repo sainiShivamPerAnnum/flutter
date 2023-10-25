@@ -26,10 +26,10 @@ class EligibleCouponResponseModel {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
-    data['flag'] = this.flag;
-    data['message'] = this.message;
-    data['code'] = this.code;
-    data['desc'] = this.desc;
+    data['flag'] = flag;
+    data['message'] = message;
+    data['code'] = code;
+    data['desc'] = desc;
     return data;
   }
 

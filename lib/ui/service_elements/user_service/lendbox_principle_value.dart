@@ -21,11 +21,13 @@ class LendboxPrincipleValue extends StatelessWidget {
       if (quantity == 0.0) {
         if (prefix != null) return "$prefix 0";
         return "0";
-      } else if (prefix != null)
+      } else if (prefix != null) {
         return "$prefix ${quantity.toStringAsFixed(2)}";
+      }
       return "${quantity.toStringAsFixed(2)}";
-    } else
+    } else {
       return "--";
+    }
   }
 
   @override

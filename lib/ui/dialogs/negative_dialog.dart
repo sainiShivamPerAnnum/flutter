@@ -8,11 +8,11 @@ import 'package:flutter/material.dart';
 
 class AppNegativeDialog extends StatelessWidget {
   const AppNegativeDialog({
-    Key? key,
     required this.btnText,
     required this.title,
-    this.subtitle,
     required this.btnAction,
+    Key? key,
+    this.subtitle,
   }) : super(key: key);
   final String? title, btnText, subtitle;
   final VoidCallback btnAction;

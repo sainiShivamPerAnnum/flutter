@@ -30,7 +30,7 @@ class PrizeClaimCard extends StatelessWidget {
 }
 
 class RewardBalanceWidget extends StatelessWidget {
-  const RewardBalanceWidget({super.key, required this.userService});
+  const RewardBalanceWidget({required this.userService, super.key});
 
   final UserService? userService;
 
@@ -85,9 +85,9 @@ class RewardBalanceWidget extends StatelessWidget {
 
 class RewardRedeemWidget extends StatelessWidget {
   const RewardRedeemWidget({
-    super.key,
     required this.m,
     required this.minWithdrawPrize,
+    super.key,
     this.isWinView = false,
   });
 

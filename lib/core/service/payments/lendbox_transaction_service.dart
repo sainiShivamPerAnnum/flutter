@@ -234,8 +234,8 @@ class FloPurchaseDetails {
 
   FloPurchaseDetails({
     required this.txnAmount,
-    this.skipMl = false,
     required this.floAssetType,
+    this.skipMl = false,
     this.maturityPref,
     this.couponCode = '',
     this.upiChoice,

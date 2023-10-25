@@ -19,6 +19,7 @@ import '../../../util/locator.dart';
 
 class FelloCoinBar extends StatelessWidget {
   final AnalyticsService? _analytics = locator<AnalyticsService>();
+  @override
   final Key? key;
   final String? svgAsset;
   final Color? borderColor;

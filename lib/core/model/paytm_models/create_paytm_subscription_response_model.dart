@@ -11,7 +11,7 @@ class CreateSubscriptionResponseModel {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
-    data['success'] = this.success;
+    data['success'] = success;
     if (this.data != null) {
       data['data'] = this.data!.toJson();
     }
@@ -69,11 +69,11 @@ class Data {
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
 
-    data['temptoken'] = this.temptoken;
-    data['subscriptionId'] = this.subscriptionId;
-    data['orderId'] = this.orderId;
-    data['callbackUrl'] = this.callbackUrl;
-    data['authenticationUrl'] = this.authenticationUrl;
+    data['temptoken'] = temptoken;
+    data['subscriptionId'] = subscriptionId;
+    data['orderId'] = orderId;
+    data['callbackUrl'] = callbackUrl;
+    data['authenticationUrl'] = authenticationUrl;
 
     return data;
   }

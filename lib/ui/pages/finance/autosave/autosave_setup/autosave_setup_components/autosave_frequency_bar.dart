@@ -6,8 +6,8 @@ import 'package:flutter/material.dart';
 
 class AutosaveFrequencyBar extends StatelessWidget {
   const AutosaveFrequencyBar({
-    super.key,
     required this.model,
+    super.key,
   });
 
   final AutosaveProcessViewModel model;

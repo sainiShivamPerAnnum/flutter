@@ -78,12 +78,13 @@ class RSAEncryption {
       return true;
     } catch (e) {
       _logger!.e(e.toString());
-      if (_userService!.isUserOnboarded)
+      if (_userService!.isUserOnboarded) {
         _internalOpsService!.logFailure(
             _userService!.baseUser!.uid, FailType.RSAEncryterInitFailed, {
           "err_message":
               "RSA Encrypter generation Failed while parsing local file",
         });
+      }
       return false;
     }
   }
@@ -101,11 +102,12 @@ class RSAEncryption {
       return true;
     } catch (e) {
       _logger!.e(e.toString());
-      if (_userService!.isUserOnboarded)
+      if (_userService!.isUserOnboarded) {
         _internalOpsService!.logFailure(
             _userService!.baseUser!.uid, FailType.AESEncryptionInitFailed, {
           "message": "AES Encrypter generation Failed",
         });
+      }
       return false;
     }
   }

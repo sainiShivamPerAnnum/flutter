@@ -15,7 +15,7 @@ class StoryItemModel {
   StoryItemModel.fromMap(Map<String, dynamic> cMap)
       : this(cMap['richText'], cMap['asset']);
 
-  String? get richText => this._richText;
+  String? get richText => _richText;
 
-  String? get assetUri => this._assetUri;
+  String? get assetUri => _assetUri;
 }

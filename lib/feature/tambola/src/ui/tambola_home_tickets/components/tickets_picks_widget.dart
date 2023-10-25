@@ -365,7 +365,7 @@ class TicketsSundayWinCard extends StatelessWidget {
 }
 
 class SlotMachineWidget extends StatefulWidget {
-  const SlotMachineWidget({super.key, required this.onTimerEnd});
+  const SlotMachineWidget({required this.onTimerEnd, super.key});
 
   final VoidCallback onTimerEnd;
 
@@ -703,8 +703,8 @@ class _SlotMachineWidgetState extends State<SlotMachineWidget>
 
 class KeepAlivePage extends StatefulWidget {
   const KeepAlivePage({
-    Key? key,
     required this.child,
+    Key? key,
   }) : super(key: key);
 
   final Widget child;

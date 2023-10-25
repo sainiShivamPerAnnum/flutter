@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 class TambolaInstantView extends StatelessWidget {
-  const TambolaInstantView({Key? key, required this.ticketCount})
+  const TambolaInstantView({required this.ticketCount, Key? key})
       : super(key: key);
   final int ticketCount;
   @override

@@ -18,8 +18,8 @@ class LendboxWithdrawalInputView extends StatelessWidget {
   final LendboxWithdrawalViewModel model;
 
   const LendboxWithdrawalInputView({
-    Key? key,
     required this.model,
+    Key? key,
   }) : super(key: key);
 
   @override

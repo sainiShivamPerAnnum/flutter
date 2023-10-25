@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 
 class ApxorDialog extends StatelessWidget {
   Map<String, dynamic> dialogContent;
-  ApxorDialog({super.key, required this.dialogContent});
+  ApxorDialog({required this.dialogContent, super.key});
 
   @override
   Widget build(BuildContext context) {

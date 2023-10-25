@@ -1066,11 +1066,11 @@ class CardContent extends StatelessWidget {
     required this.subtitle,
     required this.infoTitle1,
     required this.infoTitle2,
-    this.message,
     required this.asset,
     required this.secondaryColor,
     required this.onCardPressed,
     required this.onButtonPressed,
+    this.message,
     super.key,
   });
 

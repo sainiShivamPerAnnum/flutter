@@ -27,7 +27,7 @@ final scratchKey = GlobalKey<ScratcherState>();
 class GTDetailedView extends StatelessWidget {
   final ScratchCard ticket;
 
-  const GTDetailedView({super.key, required this.ticket});
+  const GTDetailedView({required this.ticket, super.key});
 
   @override
   Widget build(BuildContext context) {

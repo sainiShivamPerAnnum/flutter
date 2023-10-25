@@ -10,9 +10,9 @@ import 'package:flutter_svg/svg.dart';
 
 class UserAvatarSelectionDialog extends StatefulWidget {
   const UserAvatarSelectionDialog(
-      {Key? key,
-      required this.onCustomAvatarSelection,
+      {required this.onCustomAvatarSelection,
       required this.onPresetAvatarSelection,
+      Key? key,
       this.itemCount = 6})
       : super(key: key);
   final Function onCustomAvatarSelection;
@@ -27,13 +27,14 @@ class UserAvatarSelectionDialog extends StatefulWidget {
 class _UserAvatarSelectionDialogState extends State<UserAvatarSelectionDialog> {
   int _currentSelectedAvatar = 0;
 
-  get currentSelectedAvatar => this._currentSelectedAvatar;
+  get currentSelectedAvatar => _currentSelectedAvatar;
 
   set currentSelectedAvatar(value) {
-    if (mounted)
+    if (mounted) {
       setState(() {
-        this._currentSelectedAvatar = value;
+        _currentSelectedAvatar = value;
       });
+    }
   }
 
   @override

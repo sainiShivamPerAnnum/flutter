@@ -44,18 +44,18 @@ class DepositFcmResponseModel {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
-    data['goldBalance'] = this.goldBalance;
-    data['didWalletUpdate'] = this.didWalletUpdate;
-    data['isWalletCreated'] = this.isWalletCreated;
-    data['didFLCUpdate'] = this.didFLCUpdate;
-    data['augmontPrinciple'] = this.augmontPrinciple;
-    data['augmontGoldQty'] = this.augmontGoldQty;
-    data['amount'] = this.amount;
-    data['flcBalance'] = this.flcBalance;
-    data['gtId'] = this.gtId;
-    data['error'] = this.error;
-    data['status'] = this.status;
-    data['autosavePrompt'] = this.autosavePrompt;
+    data['goldBalance'] = goldBalance;
+    data['didWalletUpdate'] = didWalletUpdate;
+    data['isWalletCreated'] = isWalletCreated;
+    data['didFLCUpdate'] = didFLCUpdate;
+    data['augmontPrinciple'] = augmontPrinciple;
+    data['augmontGoldQty'] = augmontGoldQty;
+    data['amount'] = amount;
+    data['flcBalance'] = flcBalance;
+    data['gtId'] = gtId;
+    data['error'] = error;
+    data['status'] = status;
+    data['autosavePrompt'] = autosavePrompt;
     return data;
   }
 }

@@ -163,7 +163,7 @@ class FcmHandler extends ChangeNotifier {
                 hapticVibrate: true,
                 content: ApxorDialog(
                   dialogContent:
-                  json.decode(data["payload"]) as Map<String, dynamic>,
+                      json.decode(data["payload"]) as Map<String, dynamic>,
                 ),
               ),
             );

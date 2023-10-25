@@ -17,10 +17,10 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 class ContactListWidget extends StatefulWidget {
   const ContactListWidget(
-      {super.key,
-      required this.contacts,
+      {required this.contacts,
       required this.scrollController,
-      required this.onStateChanged});
+      required this.onStateChanged,
+      super.key});
 
   final List<Contact> contacts;
   final ScrollController scrollController;

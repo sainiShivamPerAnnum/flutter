@@ -25,7 +25,7 @@ class LendboxLoadingView extends StatelessWidget {
       locator<LendboxTransactionService>();
   final int waitTimeInSec = 45;
 
-  LendboxLoadingView({Key? key, required this.transactionType})
+  LendboxLoadingView({required this.transactionType, Key? key})
       : super(key: key);
 
   @override

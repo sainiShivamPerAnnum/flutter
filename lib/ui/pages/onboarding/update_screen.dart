@@ -73,10 +73,11 @@ class UpdateRequiredScreen extends StatelessWidget {
                   btnText: locale.updateNow.toUpperCase(),
                   onPressed: () {
                     try {
-                      if (Platform.isIOS)
+                      if (Platform.isIOS) {
                         BaseUtil.launchUrl(Constants.APPLE_STORE_APP_LINK);
-                      else if (Platform.isAndroid)
+                      } else if (Platform.isAndroid) {
                         BaseUtil.launchUrl(Constants.PLAY_STORE_APP_LINK);
+                      }
                     } catch (e) {
                       Log(e.toString());
                       BaseUtil.showNegativeAlert(

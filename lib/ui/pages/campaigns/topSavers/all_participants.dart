@@ -21,42 +21,50 @@ class AllParticipantsView extends StatelessWidget {
 
   getItemCountCurrentWinners() {
     if (model!.campaignType == Constants.HS_DAILY_SAVER) {
-      if (model!.currentParticipants!.length < 30)
+      if (model!.currentParticipants!.length < 30) {
         return model!.currentParticipants!.length;
-      else
+      } else {
         return 30;
+      }
     } else if (model!.campaignType == Constants.HS_WEEKLY_SAVER) {
-      if (model!.currentParticipants!.length < 50)
+      if (model!.currentParticipants!.length < 50) {
         return model!.currentParticipants!.length;
-      else
+      } else {
         return 50;
+      }
     } else if (model!.campaignType == Constants.HS_MONTHLY_SAVER) {
-      if (model!.currentParticipants!.length < 80)
+      if (model!.currentParticipants!.length < 80) {
         return model!.currentParticipants!.length;
-      else
+      } else {
         return 80;
-    } else
+      }
+    } else {
       return model!.currentParticipants!.length;
+    }
   }
 
   getItemCountPastWinners() {
     if (model!.campaignType == Constants.HS_DAILY_SAVER) {
-      if (model!.pastWinners!.length < 30)
+      if (model!.pastWinners!.length < 30) {
         return model!.pastWinners!.length;
-      else
+      } else {
         return 30;
+      }
     } else if (model!.campaignType == Constants.HS_WEEKLY_SAVER) {
-      if (model!.pastWinners!.length < 50)
+      if (model!.pastWinners!.length < 50) {
         return model!.pastWinners!.length;
-      else
+      } else {
         return 50;
+      }
     } else if (model!.campaignType == Constants.HS_MONTHLY_SAVER) {
-      if (model!.pastWinners!.length < 80)
+      if (model!.pastWinners!.length < 80) {
         return model!.pastWinners!.length;
-      else
+      } else {
         return 80;
-    } else
+      }
+    } else {
       return model!.pastWinners!.length;
+    }
   }
 
   @override

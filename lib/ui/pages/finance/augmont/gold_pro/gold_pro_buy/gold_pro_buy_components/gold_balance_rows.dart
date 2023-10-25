@@ -47,8 +47,8 @@ class GoldBalanceRow extends StatelessWidget {
 
 class ExpectedGoldProReturnsRow extends StatelessWidget {
   const ExpectedGoldProReturnsRow({
-    super.key,
     required this.model,
+    super.key,
   });
 
   final GoldProBuyViewModel model;
@@ -139,7 +139,7 @@ class ExpectedGoldProReturnsRow extends StatelessWidget {
 }
 
 class PriceAdaptiveGoldProOverViewCard extends StatelessWidget {
-  const PriceAdaptiveGoldProOverViewCard({super.key, required this.model});
+  const PriceAdaptiveGoldProOverViewCard({required this.model, super.key});
 
   final GoldProBuyViewModel model;
 

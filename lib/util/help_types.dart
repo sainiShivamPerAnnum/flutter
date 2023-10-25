@@ -9,6 +9,6 @@ enum HelpType {
 
 extension ParseToString on HelpType {
   String value() {
-    return this.toString().split('.').last;
+    return toString().split('.').last;
   }
 }

@@ -37,7 +37,7 @@ InputDecoration inputFieldDecoration(String hintText) {
 }
 
 InputDecoration augmontFieldInputDecoration(String hintText, IconData icon) {
-  if (icon != null)
+  if (icon != null) {
     return InputDecoration(
       prefixIcon: Icon(icon),
       focusColor: FelloColorPalette.augmontFundPalette().primaryColor,
@@ -72,6 +72,7 @@ InputDecoration augmontFieldInputDecoration(String hintText, IconData icon) {
       ),
       labelText: hintText,
     );
+  }
 
   return InputDecoration(
     focusColor: FelloColorPalette.augmontFundPalette().primaryColor,

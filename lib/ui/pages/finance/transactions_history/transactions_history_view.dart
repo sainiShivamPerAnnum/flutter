@@ -312,8 +312,8 @@ class TransactionTile extends StatelessWidget {
   final TxnHistoryService txnHistoryService = locator<TxnHistoryService>();
 
   TransactionTile({
-    super.key,
     required this.txn,
+    super.key,
   });
 
   String get getFormattedDate =>
@@ -442,8 +442,8 @@ class TransactionSIPTile extends StatelessWidget {
   final TxnHistoryService? _txnHistoryService = locator<TxnHistoryService>();
 
   TransactionSIPTile({
-    super.key,
     required this.model,
+    super.key,
     this.txn,
   });
 

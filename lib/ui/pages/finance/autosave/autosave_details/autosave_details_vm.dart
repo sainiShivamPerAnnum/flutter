@@ -35,25 +35,25 @@ class AutosaveDetailsViewModel extends BaseViewModel {
   bool hasMoreTxns = false;
 
   int _currentPage = 0;
-  int get currentPage => this._currentPage;
+  int get currentPage => _currentPage;
 
   set currentPage(int value) {
-    this._currentPage = value;
+    _currentPage = value;
     notifyListeners();
   }
 
   bool _isFetchingTransactions = false;
-  bool get isFetchingTransactions => this._isFetchingTransactions;
+  bool get isFetchingTransactions => _isFetchingTransactions;
 
   set isFetchingTransactions(bool fetchingTransactions) {
-    this._isFetchingTransactions = fetchingTransactions;
+    _isFetchingTransactions = fetchingTransactions;
     notifyListeners();
   }
 
-  SubscriptionModel? get activeSubscription => this._activeSubscription;
+  SubscriptionModel? get activeSubscription => _activeSubscription;
 
   set activeSubscription(value) {
-    this._activeSubscription = value;
+    _activeSubscription = value;
     notifyListeners();
   }
 

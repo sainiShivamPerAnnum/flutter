@@ -20,8 +20,8 @@ class WinningsContainer extends StatelessWidget {
   final LinearGradient? gradient;
   final bool hapticRequired;
   const WinningsContainer(
-      {this.child,
-      required this.shadow,
+      {required this.shadow,
+      this.child,
       this.height,
       this.onTap,
       this.borderRadius,

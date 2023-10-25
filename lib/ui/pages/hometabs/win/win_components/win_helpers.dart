@@ -51,10 +51,10 @@ class Salutation extends StatelessWidget {
 
 class AccountInfoTiles extends StatelessWidget {
   const AccountInfoTiles({
-    Key? key,
     required this.title,
-    this.onTap,
     required this.uri,
+    Key? key,
+    this.onTap,
   }) : super(key: key);
 
   final String title;

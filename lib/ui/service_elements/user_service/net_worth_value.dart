@@ -22,8 +22,9 @@ class NetWorthValue extends StatelessWidget {
       } else {
         return "$prefix ${quantity.toStringAsFixed(2)}";
       }
-    } else
+    } else {
       return "--";
+    }
   }
 
   @override

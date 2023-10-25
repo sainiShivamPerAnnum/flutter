@@ -564,10 +564,10 @@ class AutosaveAssetDetailTile extends StatelessWidget {
 
 class SubTxnTile extends StatelessWidget {
   SubTxnTile({
-    Key? key,
     required this.txn,
     required this.isLast,
     required this.type,
+    Key? key,
   }) : super(key: key);
   final bool isLast;
   final SubscriptionTransactionModel txn;
@@ -645,7 +645,7 @@ class SubTxnTile extends StatelessWidget {
 class AutoSaveDetailsCard extends StatelessWidget {
   final AutosaveDetailsViewModel model;
 
-  const AutoSaveDetailsCard({super.key, required this.model});
+  const AutoSaveDetailsCard({required this.model, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -743,25 +743,27 @@ class AutoSaveDetailsCard extends StatelessWidget {
   }
 
   getRichTextColor(AutosaveState autosaveState, SubscriptionModel subdata) {
-    if (autosaveState == AutosaveState.ACTIVE)
+    if (autosaveState == AutosaveState.ACTIVE) {
       return UiConstants.primaryColor;
-    else if (autosaveState == AutosaveState.PAUSED) {
-      if (subdata.resumeDate != TimestampModel.none())
+    } else if (autosaveState == AutosaveState.PAUSED) {
+      if (subdata.resumeDate != TimestampModel.none()) {
         return UiConstants.tertiarySolid;
-      else
+      } else {
         return Colors.red;
+      }
     }
   }
 
   getRichText(AutosaveState autosaveState, SubscriptionModel subdata) {
-    if (autosaveState == AutosaveState.ACTIVE)
+    if (autosaveState == AutosaveState.ACTIVE) {
       return "verified and active";
-    else if (autosaveState == AutosaveState.PAUSED) {
-      if (subdata.resumeDate != TimestampModel.none())
+    } else if (autosaveState == AutosaveState.PAUSED) {
+      if (subdata.resumeDate != TimestampModel.none()) {
         return "verified and paused till " +
             "${DateFormat.MMMEd().format(subdata.resumeDate!.toDate())} ";
-      else
+      } else {
         return "currently inactive";
+      }
     }
   }
 }

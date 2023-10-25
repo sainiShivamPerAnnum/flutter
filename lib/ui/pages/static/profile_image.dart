@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 
 class NewProfileImage extends StatelessWidget {
   const NewProfileImage({
-    Key? key,
     required this.image,
+    Key? key,
     this.showAction = true,
     this.updateProfilePicture,
     // this.model,

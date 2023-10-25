@@ -34,7 +34,7 @@ class InfoStoryItem {
 
   factory InfoStoryItem.fromMap(Map<String, dynamic> map) {
     return InfoStoryItem(
-      type: map['type'] as String? ,
+      type: map['type'] as String?,
       data: map['data'] as String?,
       caption: map['caption'] as String?,
     );
@@ -59,4 +59,3 @@ class InfoStoryItem {
   @override
   int get hashCode => type.hashCode ^ data.hashCode ^ caption.hashCode;
 }
-

@@ -29,7 +29,7 @@ class JRefreshIndicator extends StatelessWidget {
 
 class JPageLoader extends StatelessWidget {
   final JourneyPageViewModel model;
-  const JPageLoader({Key? key, required this.model}) : super(key: key);
+  const JPageLoader({required this.model, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

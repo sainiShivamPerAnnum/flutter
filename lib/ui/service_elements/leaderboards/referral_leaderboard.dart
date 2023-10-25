@@ -25,12 +25,14 @@ class ReferralLeaderboard extends StatelessWidget {
   const ReferralLeaderboard({this.count = 2});
   getLength(int listLength) {
     if (count != null) {
-      if (listLength < count!)
+      if (listLength < count!) {
         return listLength;
-      else
+      } else {
         return count;
-    } else
+      }
+    } else {
       return listLength;
+    }
   }
 
   @override

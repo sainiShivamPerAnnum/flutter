@@ -15,9 +15,9 @@ class FloAssetInfoWidget extends StatelessWidget {
     required this.fdDuration,
     required this.roiPerc,
     required this.fundType,
+    required this.isLendboxOldUser,
     super.key,
     this.maturesInDays = 7,
-    required this.isLendboxOldUser,
   });
 
   final String investedAmount;

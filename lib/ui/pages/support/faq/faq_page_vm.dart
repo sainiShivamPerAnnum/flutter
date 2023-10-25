@@ -13,7 +13,7 @@ class FaqPageViewModel extends BaseViewModel {
   List<FAQDataModel>? get list => _list;
 
   void init(FaqsType type) {
-    this.fetchFaqs(type);
+    fetchFaqs(type);
   }
 
   Future<void> fetchFaqs(FaqsType type) async {

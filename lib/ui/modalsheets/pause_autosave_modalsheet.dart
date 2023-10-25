@@ -94,9 +94,10 @@ class _PauseAutosaveModalState extends State<PauseAutosaveModal> {
             //         style: TextStyles.rajdhaniB.body1.bold.colour(Colors.white),
             //       ),
             onPressed: () async {
-              if (pauseValue == null)
+              if (pauseValue == null) {
                 return BaseUtil.showNegativeAlert("No duration selected",
                     "Please select a duration to pause");
+              }
               if (pauseValue == 3) {
                 BaseUtil.openDialog(
                   addToScreenStack: true,

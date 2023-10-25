@@ -17,11 +17,11 @@ class MiniTransactionCardViewModel extends BaseViewModel {
   final TxnHistoryService _txnHistoryService = locator<TxnHistoryService>();
   AppState? appState;
   bool _isRefreshing = false;
-  bool get isRefreshing => this._isRefreshing;
+  bool get isRefreshing => _isRefreshing;
   List<UserTransaction>? transactions = [];
 
   set isRefreshing(bool value) {
-    this._isRefreshing = value;
+    _isRefreshing = value;
     notifyListeners();
   }
 

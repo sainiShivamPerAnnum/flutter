@@ -12,7 +12,7 @@ import 'package:flutter/material.dart';
 class SellingReasonBottomSheet extends StatefulWidget {
   final InvestmentType investmentType;
 
-  const SellingReasonBottomSheet({Key? key, required this.investmentType})
+  const SellingReasonBottomSheet({required this.investmentType, Key? key})
       : super(key: key);
 
   @override

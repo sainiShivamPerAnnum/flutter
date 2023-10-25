@@ -49,10 +49,10 @@ final _floMarquee = [
 
 class SaveContainer extends StatefulWidget {
   const SaveContainer({
-    Key? key,
     required this.investmentType,
-    this.isPopular = false,
     required this.bottomStrip,
+    Key? key,
+    this.isPopular = false,
   })  : isGold = investmentType == InvestmentType.AUGGOLD99,
         super(key: key);
   final InvestmentType investmentType;
@@ -366,10 +366,10 @@ class _SaveContainerState extends State<SaveContainer> {
 
 class _InvestmentDetails extends StatelessWidget {
   const _InvestmentDetails(
-      {Key? key,
-      required this.type,
+      {required this.type,
       required this.initialValue,
-      required this.onChange})
+      required this.onChange,
+      Key? key})
       : super(key: key);
 
   final int initialValue;
@@ -439,7 +439,7 @@ class _InvestmentDetails extends StatelessWidget {
 }
 
 class _Header extends StatelessWidget {
-  const _Header({Key? key, required this.investmentType}) : super(key: key);
+  const _Header({required this.investmentType, Key? key}) : super(key: key);
   final InvestmentType investmentType;
 
   @override

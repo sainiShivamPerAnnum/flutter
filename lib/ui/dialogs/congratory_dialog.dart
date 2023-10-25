@@ -9,11 +9,11 @@ import 'package:flutter/material.dart';
 
 class AppCongratulatoryDialog extends StatelessWidget {
   const AppCongratulatoryDialog({
-    Key? key,
     required this.title,
-    this.description = '',
     required this.buttonText,
     required this.confirmAction,
+    Key? key,
+    this.description = '',
   }) : super(key: key);
 
   final String title, description, buttonText;

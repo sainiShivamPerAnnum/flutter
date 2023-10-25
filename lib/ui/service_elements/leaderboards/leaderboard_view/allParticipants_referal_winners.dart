@@ -32,10 +32,11 @@ class AllParticipantsWinnersTopReferrers extends StatelessWidget {
   }
 
   dynamic getPoints(double points) {
-    if (points > points.toInt())
+    if (points > points.toInt()) {
       return points;
-    else
+    } else {
       return points.toInt();
+    }
   }
 
   @override

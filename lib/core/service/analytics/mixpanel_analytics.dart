@@ -13,6 +13,7 @@ class MixpanelAnalytics extends BaseAnalyticsService {
 
   Mixpanel? _mixpanel;
 
+  @override
   Future<void> login({bool? isOnBoarded, BaseUser? baseUser}) async {
     try {
       _mixpanel = await Mixpanel.init(
@@ -41,10 +42,12 @@ class MixpanelAnalytics extends BaseAnalyticsService {
     }
   }
 
+  @override
   void signOut() {
     _mixpanel!.reset();
   }
 
+  @override
   void track({String? eventName, Map<String, dynamic>? properties}) {
     try {
       if (_mixpanel == null) {
@@ -64,5 +67,6 @@ class MixpanelAnalytics extends BaseAnalyticsService {
     }
   }
 
+  @override
   void trackScreen({String? screen, Map<String, dynamic>? properties}) {}
 }

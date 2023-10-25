@@ -32,7 +32,7 @@ class PaymentRepository extends BaseRepo {
 
       final quantityResponse = await APIService.instance.getData(
         ApiPath.getWithdrawableGoldQuantity(
-          this.userService!.baseUser!.uid,
+          userService!.baseUser!.uid,
         ),
         cBaseUrl: _baseUrl,
         apiName: '$_payments/withdrawableByID',

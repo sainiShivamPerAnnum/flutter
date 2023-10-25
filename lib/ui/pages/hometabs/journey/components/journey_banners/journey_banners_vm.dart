@@ -19,10 +19,10 @@ class JourneyBannersViewModel extends BaseViewModel {
   List<PromoCardModel>? _offerList;
 
   bool _isOfferListLoading = true;
-  get isOfferListLoading => this._isOfferListLoading;
+  get isOfferListLoading => _isOfferListLoading;
 
   set isOfferListLoading(value) {
-    this._isOfferListLoading = value;
+    _isOfferListLoading = value;
     notifyListeners();
   }
 

@@ -6,7 +6,7 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/widgets.dart';
 
 class UserBrief extends StatelessWidget {
-  UserBrief({Key? key, required this.model}) : super(key: key);
+  UserBrief({required this.model, Key? key}) : super(key: key);
   final UserProfileVM model;
   final UserService? userService = locator<UserService>();
 

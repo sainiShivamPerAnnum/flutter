@@ -84,6 +84,7 @@ class BottomNavBar extends StatelessWidget {
 
 class NavBarIcon extends StatelessWidget {
   final bool animate;
+  @override
   final Key? key;
   final NavBarItemModel item;
   final TextStyle style;

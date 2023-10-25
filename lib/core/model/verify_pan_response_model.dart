@@ -16,10 +16,10 @@ class VerifyPanResponseModel {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
-    data['flag'] = this.flag;
-    data['upstreamName'] = this.upstreamName;
-    data['message'] = this.message;
-    data['gtId'] = this.gtId;
+    data['flag'] = flag;
+    data['upstreamName'] = upstreamName;
+    data['message'] = message;
+    data['gtId'] = gtId;
     return data;
   }
 

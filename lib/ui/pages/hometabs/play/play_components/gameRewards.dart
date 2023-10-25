@@ -7,8 +7,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 class GameRewards extends StatelessWidget {
   const GameRewards({
-    Key? key,
     required this.prizeAmount,
+    Key? key,
   }) : super(key: key);
 
   final int prizeAmount;

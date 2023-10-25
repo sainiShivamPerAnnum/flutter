@@ -61,14 +61,15 @@ class SettingsView extends StatelessWidget {
                   physics: const NeverScrollableScrollPhysics(),
                   itemCount: model.items!.length,
                   separatorBuilder: (ctx, i) {
-                    if (i != model.items!.length - 1)
+                    if (i != model.items!.length - 1) {
                       return Divider(
                         color: UiConstants.kTextColor3.withOpacity(0.2),
                         endIndent: SizeConfig.pageHorizontalMargins,
                         indent: SizeConfig.pageHorizontalMargins,
                       );
-                    else
+                    } else {
                       return const SizedBox();
+                    }
                   },
                   itemBuilder: (context, i) => ListTile(
                     onTap: () {

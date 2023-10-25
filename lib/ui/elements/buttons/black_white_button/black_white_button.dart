@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 
 class BlackWhiteButton extends StatelessWidget {
   const BlackWhiteButton({
-    Key? key,
     required this.onPress,
-    this.child,
     required this.title,
+    Key? key,
+    this.child,
     this.padding,
     this.borderRadius,
     this.height,
@@ -27,8 +27,8 @@ class BlackWhiteButton extends StatelessWidget {
 
   const BlackWhiteButton.inverse({
     required this.onPress,
-    this.child,
     required this.title,
+    this.child,
     this.height,
     this.width,
     this.borderRadius,

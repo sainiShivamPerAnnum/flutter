@@ -10,10 +10,10 @@ import 'package:flutter/material.dart';
 
 class AutosaveSummary extends StatelessWidget {
   const AutosaveSummary({
+    required this.model,
     super.key,
     this.showTopDivider = true,
     this.showTitle = true,
-    required this.model,
   });
 
   final AutosaveProcessViewModel model;

@@ -19,9 +19,9 @@ class GameRepo extends BaseRepo {
   List<GameModel>? _allgames;
   List<GameModel>? games;
 
-  List<GameModel>? get allgames => this._allgames;
+  List<GameModel>? get allgames => _allgames;
 
-  set allgames(List<GameModel>? value) => this._allgames = value;
+  set allgames(List<GameModel>? value) => _allgames = value;
 
   late GameTiers _gameTiers;
 

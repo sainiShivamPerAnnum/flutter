@@ -232,12 +232,14 @@ class PaytmRepository extends BaseRepo {
         final Map responseData = response["data"];
 
         if (responseData["status"] != null &&
-            responseData["status"] == Constants.SUBSCRIPTION_ACTIVE)
+            responseData["status"] == Constants.SUBSCRIPTION_ACTIVE) {
           return ApiResponse(model: true, code: 200);
-        else
+        } else {
           return ApiResponse(model: false, code: 400);
-      } else
+        }
+      } else {
         return ApiResponse(model: false, code: 400);
+      }
     } catch (e) {
       logger!.e(e.toString());
       return ApiResponse.withError(
@@ -260,10 +262,11 @@ class PaytmRepository extends BaseRepo {
       );
       final Map responseData = response["data"];
 
-      if (responseData["status"] != null && responseData["status"])
+      if (responseData["status"] != null && responseData["status"]) {
         return ApiResponse(model: true, code: 200);
-      else
+      } else {
         return ApiResponse(model: false, code: 400);
+      }
     } catch (e) {
       logger!.e(e.toString());
       return ApiResponse.withError(
@@ -285,10 +288,11 @@ class PaytmRepository extends BaseRepo {
 
       final Map responseData = response["data"];
 
-      if (responseData["status"] != null && responseData["status"])
+      if (responseData["status"] != null && responseData["status"]) {
         return ApiResponse(model: true, code: 200);
-      else
+      } else {
         return ApiResponse(model: false, code: 400);
+      }
     } catch (e) {
       logger!.e(e.toString());
       return ApiResponse.withError(
@@ -309,10 +313,11 @@ class PaytmRepository extends BaseRepo {
         apiName: '$_payments/processSubscription',
       );
       final Map<String, dynamic> responseData = response['data'];
-      if (responseData['status'])
+      if (responseData['status']) {
         return ApiResponse(model: true, code: 200);
-      else
+      } else {
         return ApiResponse(model: false, code: 400);
+      }
     } catch (e) {
       logger!.e(e.toString());
       return ApiResponse.withError("Unable to resume subscription", 400);
@@ -358,10 +363,11 @@ class PaytmRepository extends BaseRepo {
       final _responseStatus = response["data"];
       logger!.d(response);
       if (_responseStatus["status"] != null &&
-          _responseStatus["status"] == true)
+          _responseStatus["status"] == true) {
         return ApiResponse<String>(model: response["message"], code: 200);
-      else
+      } else {
         return ApiResponse.withError("Unable to find active subscription", 400);
+      }
     } catch (e) {
       logger!.e(e.toString());
       return ApiResponse.withError(

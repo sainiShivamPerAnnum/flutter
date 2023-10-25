@@ -22,11 +22,11 @@ class TransferAmountApiResponseModel {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
-    data['flag'] = this.flag;
-    data['signzyReferenceId'] = this.signzyReferenceId;
-    data['message'] = this.message;
-    data['nameMatch'] = this.nameMatch;
-    data['active'] = this.active;
+    data['flag'] = flag;
+    data['signzyReferenceId'] = signzyReferenceId;
+    data['message'] = message;
+    data['nameMatch'] = nameMatch;
+    data['active'] = active;
     return data;
   }
 

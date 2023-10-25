@@ -11,7 +11,7 @@ class SubscriptionResponseModel {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
-    data['success'] = this.success;
+    data['success'] = success;
     if (this.data != null) {
       data['data'] = this.data!.toJson();
     }
@@ -122,32 +122,32 @@ class Data {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
-    if (this.resultInfo != null) {
-      data['resultInfo'] = this.resultInfo!.toJson();
+    if (resultInfo != null) {
+      data['resultInfo'] = resultInfo!.toJson();
     }
-    data['subsId'] = this.subsId;
-    data['status'] = this.status;
-    data['subStatus'] = this.subStatus;
-    data['orderId'] = this.orderId;
-    data['upfrontTxnId'] = this.upfrontTxnId;
-    if (this.subsPaymentInstDetails != null) {
-      data['subsPaymentInstDetails'] = this.subsPaymentInstDetails!.toJson();
+    data['subsId'] = subsId;
+    data['status'] = status;
+    data['subStatus'] = subStatus;
+    data['orderId'] = orderId;
+    data['upfrontTxnId'] = upfrontTxnId;
+    if (subsPaymentInstDetails != null) {
+      data['subsPaymentInstDetails'] = subsPaymentInstDetails!.toJson();
     }
-    data['lastOrderId'] = this.lastOrderId;
-    data['lastOrderStatus'] = this.lastOrderStatus;
-    data['lastOrderCreationDate'] = this.lastOrderCreationDate;
-    data['lastOrderAmount'] = this.lastOrderAmount;
-    data['amountType'] = this.amountType;
-    data['maxAmount'] = this.maxAmount;
-    data['mid'] = this.mid;
-    data['frequencyUnit'] = this.frequencyUnit;
-    data['frequency'] = this.frequency;
-    data['merchantName'] = this.merchantName;
-    data['expiryDate'] = this.expiryDate;
-    data['createdDate'] = this.createdDate;
-    data['updatedDate'] = this.updatedDate;
-    data['custId'] = this.custId;
-    data['upfrontTxnAmount'] = this.upfrontTxnAmount;
+    data['lastOrderId'] = lastOrderId;
+    data['lastOrderStatus'] = lastOrderStatus;
+    data['lastOrderCreationDate'] = lastOrderCreationDate;
+    data['lastOrderAmount'] = lastOrderAmount;
+    data['amountType'] = amountType;
+    data['maxAmount'] = maxAmount;
+    data['mid'] = mid;
+    data['frequencyUnit'] = frequencyUnit;
+    data['frequency'] = frequency;
+    data['merchantName'] = merchantName;
+    data['expiryDate'] = expiryDate;
+    data['createdDate'] = createdDate;
+    data['updatedDate'] = updatedDate;
+    data['custId'] = custId;
+    data['upfrontTxnAmount'] = upfrontTxnAmount;
     return data;
   }
 }
@@ -171,9 +171,9 @@ class ResultInfo {
   }
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
-    data['code'] = this.code;
-    data['message'] = this.message;
-    data['status'] = this.status;
+    data['code'] = code;
+    data['message'] = message;
+    data['status'] = status;
     return data;
   }
 }
@@ -193,7 +193,7 @@ class SubsPaymentInstDetails {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
-    data['paymentMode'] = this.paymentMode;
+    data['paymentMode'] = paymentMode;
     return data;
   }
 }

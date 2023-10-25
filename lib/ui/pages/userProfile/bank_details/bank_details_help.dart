@@ -8,7 +8,7 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 
 class BankDetailsHelpView extends StatelessWidget {
-  const BankDetailsHelpView({super.key, required this.changeView});
+  const BankDetailsHelpView({required this.changeView, super.key});
   final VoidCallback changeView;
   @override
   Widget build(BuildContext context) {

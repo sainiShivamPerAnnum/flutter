@@ -12,8 +12,8 @@ class TitleSubtitleContainer extends StatelessWidget {
   final bool zeroPadding;
   final EdgeInsets? padding;
   const TitleSubtitleContainer(
-      {Key? key,
-      required this.title,
+      {required this.title,
+      Key? key,
       this.subTitle,
       this.titleStyle,
       this.subtitleStyle,

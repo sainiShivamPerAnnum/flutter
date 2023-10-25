@@ -24,7 +24,7 @@ import 'package:lottie/lottie.dart';
 class LendboxSuccessView extends StatefulWidget {
   final TransactionType transactionType;
 
-  const LendboxSuccessView({Key? key, required this.transactionType})
+  const LendboxSuccessView({required this.transactionType, Key? key})
       : super(key: key);
 
   @override

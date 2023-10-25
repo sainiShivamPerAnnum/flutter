@@ -8,7 +8,7 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 
 class KycHelpView extends StatelessWidget {
-  const KycHelpView({super.key, required this.callBack});
+  const KycHelpView({required this.callBack, super.key});
   final VoidCallback callBack;
   @override
   Widget build(BuildContext context) {

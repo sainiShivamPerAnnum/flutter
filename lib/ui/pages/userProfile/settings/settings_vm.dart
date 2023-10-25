@@ -43,8 +43,9 @@ class SettingsViewModel extends BaseViewModel {
             asset: Assets.securityCheck,
             actionUri: 'https://flutter.dev'),
       ];
-    } else
+    } else {
       items = _baseUtil.settingsItemList;
+    }
   }
 
   dump() {}

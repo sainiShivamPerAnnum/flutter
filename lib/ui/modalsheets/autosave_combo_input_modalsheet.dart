@@ -13,7 +13,7 @@ final formKey = GlobalKey<FormState>();
 
 class AutosaveComboInputFieldsModalSheet extends StatefulWidget {
   final AutosaveProcessViewModel model;
-  const AutosaveComboInputFieldsModalSheet({super.key, required this.model});
+  const AutosaveComboInputFieldsModalSheet({required this.model, super.key});
 
   @override
   State<AutosaveComboInputFieldsModalSheet> createState() =>
@@ -49,10 +49,12 @@ class _AutosaveComboInputFieldsModalSheetState
     int floAmt = 0;
     int goldAmt = 0;
 
-    if (_floController.text.isNotEmpty)
+    if (_floController.text.isNotEmpty) {
       floAmt = int.tryParse(_floController.text) ?? 0;
-    if (_goldController.text.isNotEmpty)
+    }
+    if (_goldController.text.isNotEmpty) {
       goldAmt = int.tryParse(_goldController.text) ?? 0;
+    }
     setState(() {
       totalSipAmount = floAmt + goldAmt;
     });
@@ -237,8 +239,9 @@ class _AutosaveComboInputFieldsModalSheetState
   }
 
   createCombo() {
-    if (_goldController.text.isNotEmpty && _floController.text.isNotEmpty)
+    if (_goldController.text.isNotEmpty && _floController.text.isNotEmpty) {
       widget.model.goldAmountFieldController?.text = _goldController.text;
+    }
     widget.model.floAmountFieldController?.text = _floController.text;
 
     widget.model.customComboModel = SubComboModel(
@@ -255,14 +258,14 @@ class _AutosaveComboInputFieldsModalSheetState
 
 class AutosaveAmountInputTile extends StatelessWidget {
   const AutosaveAmountInputTile({
-    super.key,
     required this.title,
     required this.subtitle,
-    this.autoFocus = false,
     required this.asset,
     required this.controller,
     required this.onValueChanged,
     required this.validator,
+    super.key,
+    this.autoFocus = false,
   });
   final String title, subtitle, asset;
   final TextEditingController controller;

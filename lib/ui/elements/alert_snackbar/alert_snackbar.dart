@@ -7,10 +7,10 @@ import 'package:flutter_svg/flutter_svg.dart';
 SnackBar alertSnackBar(
     {required String title,
     required String message,
+    required String alertAsset,
     Function()? onTap,
     final int? seconds,
-    Color? alertColor,
-    required String alertAsset}) {
+    Color? alertColor}) {
   return SnackBar(
       onVisible: onTap,
       backgroundColor: Colors.transparent,

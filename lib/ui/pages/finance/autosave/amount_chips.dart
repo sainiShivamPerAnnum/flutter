@@ -10,8 +10,8 @@ class AmountChips extends StatelessWidget {
   final Function onTap;
   final bool? isBestSeller;
   const AmountChips(
-      {this.amount,
-      required this.onTap,
+      {required this.onTap,
+      this.amount,
       this.isBestSeller = false,
       this.isSelected = false});
 

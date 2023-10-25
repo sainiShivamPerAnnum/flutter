@@ -30,11 +30,11 @@ class _GenerateInvoiceModalSheetState extends State<GenerateInvoiceModalSheet> {
   final UserRepository? _userRepo = locator<UserRepository>();
   bool _isLoading = false;
 
-  get isLoading => this._isLoading;
+  get isLoading => _isLoading;
 
   set isLoading(value) {
     setState(() {
-      this._isLoading = value;
+      _isLoading = value;
     });
   }
 
@@ -50,7 +50,7 @@ class _GenerateInvoiceModalSheetState extends State<GenerateInvoiceModalSheet> {
             : baseuser.name,
         "email": baseuser.email
       };
-      if (res.isSuccess())
+      if (res.isSuccess()) {
         await _augmontModel!
             .generatePurchaseInvoicePdf(tranId, userDetails)
             .then((generatedPdfFilePath) {
@@ -63,6 +63,7 @@ class _GenerateInvoiceModalSheetState extends State<GenerateInvoiceModalSheet> {
                 locale.invoiceLoadFailed, locale.tryLater);
           }
         });
+      }
     } catch (e) {
       isLoading = false;
       BaseUtil.showNegativeAlert(locale.obSomeThingWentWrong, locale.tryLater);

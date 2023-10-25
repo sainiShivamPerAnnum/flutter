@@ -23,6 +23,8 @@ class SaveCustomCard extends StatelessWidget {
   final Color? footerColor;
 
   const SaveCustomCard({
+    required this.chipText,
+    required this.investmentType,
     Key? key,
     this.title,
     this.onCardTap,
@@ -30,8 +32,6 @@ class SaveCustomCard extends StatelessWidget {
     this.subtitle,
     this.cardAssetName,
     this.onTap,
-    required this.chipText,
-    required this.investmentType,
     this.footerColor,
     this.footerText,
   }) : super(key: key);

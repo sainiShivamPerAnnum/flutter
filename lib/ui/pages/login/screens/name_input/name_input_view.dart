@@ -31,7 +31,7 @@ class LoginNameInputView extends StatefulWidget {
   static const int index = 2;
   final LoginControllerViewModel loginModel;
 
-  const LoginNameInputView({Key? key, required this.loginModel})
+  const LoginNameInputView({required this.loginModel, Key? key})
       : super(key: key);
 
   @override

@@ -11,7 +11,7 @@ class TxnResultModel {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
-    data['message'] = this.message;
+    data['message'] = message;
     if (this.data != null) {
       data['data'] = this.data!.toJson();
     }
@@ -37,9 +37,9 @@ class Data {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
-    data['isUpdating'] = this.isUpdating;
-    if (this.gt != null) {
-      data['gt'] = this.gt!.toJson();
+    data['isUpdating'] = isUpdating;
+    if (gt != null) {
+      data['gt'] = gt!.toJson();
     }
     return data;
   }
@@ -110,22 +110,22 @@ class Gt {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
-    data['canTransfer'] = this.canTransfer;
-    if (this.timestamp != null) {
-      data['timestamp'] = this.timestamp!.toJson();
+    data['canTransfer'] = canTransfer;
+    if (timestamp != null) {
+      data['timestamp'] = timestamp!.toJson();
     }
-    if (this.redeemedTimestamp != null) {
-      data['redeemedTimestamp'] = this.redeemedTimestamp!.toJson();
+    if (redeemedTimestamp != null) {
+      data['redeemedTimestamp'] = redeemedTimestamp!.toJson();
     }
-    data['eventType'] = this.eventType;
-    data['gtType'] = this.gtType;
-    data['isRewarding'] = this.isRewarding;
-    data['version'] = this.version;
-    data['note'] = this.note;
-    data['prizeSubtype'] = this.prizeSubtype;
-    data['userId'] = this.userId;
-    if (this.rewardArr != null) {
-      data['rewardArr'] = this.rewardArr!.map((v) => v.toJson()).toList();
+    data['eventType'] = eventType;
+    data['gtType'] = gtType;
+    data['isRewarding'] = isRewarding;
+    data['version'] = version;
+    data['note'] = note;
+    data['prizeSubtype'] = prizeSubtype;
+    data['userId'] = userId;
+    if (rewardArr != null) {
+      data['rewardArr'] = rewardArr!.map((v) => v.toJson()).toList();
     }
     return data;
   }
@@ -149,8 +149,8 @@ class Timestamp {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
-    data['_seconds'] = this.iSeconds;
-    data['_nanoseconds'] = this.iNanoseconds;
+    data['_seconds'] = iSeconds;
+    data['_nanoseconds'] = iNanoseconds;
     return data;
   }
 }
@@ -173,8 +173,8 @@ class RewardArr {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
-    data['value'] = this.value;
-    data['type'] = this.type;
+    data['value'] = value;
+    data['type'] = type;
     return data;
   }
 }

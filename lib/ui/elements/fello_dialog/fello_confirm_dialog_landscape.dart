@@ -112,10 +112,12 @@ class _FelloConfirmationDialogState
                                       setState(() {
                                         showButtons = false;
                                       });
-                                      if (widget.result != null)
+                                      if (widget.result != null) {
                                         widget.result!(true);
-                                      if (widget.onAccept != null)
+                                      }
+                                      if (widget.onAccept != null) {
                                         widget.onAccept!();
+                                      }
                                     },
                                   ),
                                 ),
@@ -129,8 +131,9 @@ class _FelloConfirmationDialogState
                                     color: widget.rejectColor,
                                     height: SizeConfig.padding54,
                                     onPressed: () {
-                                      if (widget.reject != null)
+                                      if (widget.reject != null) {
                                         widget.onReject!();
+                                      }
                                     },
                                   ),
                                 ),

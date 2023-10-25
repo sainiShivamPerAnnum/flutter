@@ -166,6 +166,7 @@ class JourneyAppBar extends StatelessWidget {
 }
 
 class JourneyAppBarAssetDetailsTile extends StatelessWidget {
+  @override
   final Key? key;
   final String? title;
   final Widget? value;

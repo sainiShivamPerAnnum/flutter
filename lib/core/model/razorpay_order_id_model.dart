@@ -11,7 +11,7 @@ class RazorpayOrderIdModel {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
-    data['message'] = this.message;
+    data['message'] = message;
     if (this.data != null) {
       data['data'] = this.data!.toJson();
     }
@@ -36,8 +36,8 @@ class Data {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
-    data['status'] = this.status;
-    data['orderId'] = this.orderId;
+    data['status'] = status;
+    data['orderId'] = orderId;
     return data;
   }
 }

@@ -9,9 +9,9 @@ import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class ProfileAppBar extends StatelessWidget implements PreferredSizeWidget {
   const ProfileAppBar({
-    Key? key,
     // required this.isNewUser,
     required this.model,
+    Key? key,
   }) : super(key: key);
   final UserProfileVM model;
   // final bool isNewUser;

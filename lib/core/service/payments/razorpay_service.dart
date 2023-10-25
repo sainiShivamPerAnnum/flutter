@@ -115,6 +115,7 @@ class RazorpayService extends ChangeNotifier {
 
   //generate order id // update transaction //creatre<UserTransaction> submitAu
   Future<bool?> initiateRazorpayTxn({
+    required InvestmentType investmentType,
     String? mobile,
     String? email,
     double? amount,
@@ -122,7 +123,6 @@ class RazorpayService extends ChangeNotifier {
     Map<String, dynamic>? lbMap,
     bool? skipMl,
     String? couponCode,
-    required InvestmentType investmentType,
     Map<String, dynamic>? goldProMap,
   }) async {
     if (!init(investmentType)) return null; //initialise razorpay

@@ -21,15 +21,15 @@ class JourneyPathModel {
     required this.asset,
     required this.x,
     required this.y,
+    required this.z,
+    required this.page,
+    required this.mlIndex,
     this.animAsset,
     this.ax,
     this.ay,
     this.isBase = false,
     this.hFlip = false,
     this.vFlip = false,
-    required this.z,
-    required this.page,
-    required this.mlIndex,
   });
 
   JourneyPathModel copyWith({
@@ -59,9 +59,9 @@ class JourneyPathModel {
       isBase: isBase ?? this.isBase,
       hFlip: hFlip ?? this.hFlip,
       vFlip: vFlip ?? this.vFlip,
-      z: dz ?? this.z,
+      z: dz ?? z,
       page: page ?? this.page,
-      mlIndex: level ?? this.mlIndex,
+      mlIndex: level ?? mlIndex,
     );
   }
 

@@ -11,8 +11,8 @@ class VerifyAmountApiResponseModel {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
-    data['flag'] = this.flag;
-    data['message'] = this.message;
+    data['flag'] = flag;
+    data['message'] = message;
     return data;
   }
 

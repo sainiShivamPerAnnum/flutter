@@ -8,14 +8,14 @@ class SourceAdaptiveAssetViewModel extends BaseViewModel {
   String assetType = "NTWRK";
   String? _assetName;
   String? _assetUrl;
-  String? get assetName => this._assetName;
+  String? get assetName => _assetName;
 
-  set assetName(String? value) => this._assetName = value;
+  set assetName(String? value) => _assetName = value;
 
-  String? get assetUrl => this._assetUrl;
+  String? get assetUrl => _assetUrl;
 
   set assetUrl(value) {
-    this._assetUrl = value;
+    _assetUrl = value;
   }
 
   init(String value) {

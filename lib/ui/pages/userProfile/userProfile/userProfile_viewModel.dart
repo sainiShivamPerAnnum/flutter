@@ -156,13 +156,13 @@ class UserProfileVM extends BaseViewModel {
 
   bool get hasInputError => _hasInputError;
 
-  get isEmailEnabled => this._isEmailEnabled;
+  get isEmailEnabled => _isEmailEnabled;
 
-  get isContinuedWithGoogle => this._isContinuedWithGoogle;
+  get isContinuedWithGoogle => _isContinuedWithGoogle;
 
   bool get isSigningInWithGoogle => _isSigningInWithGoogle;
 
-  bool get inEditMode => this._inEditMode;
+  bool get inEditMode => _inEditMode;
 
   bool get applock =>
       _userService.baseUser!.userPreferences
@@ -183,16 +183,16 @@ class UserProfileVM extends BaseViewModel {
 
   String get dateInputError => _dateInputError;
 
-  bool get isUpdaingUserDetails => this._isUpdaingUserDetails;
+  bool get isUpdaingUserDetails => _isUpdaingUserDetails;
 
   // get isNewUser => this._isNewUser;
-  get isgmailFieldEnabled => this._isgmailFieldEnabled;
+  get isgmailFieldEnabled => _isgmailFieldEnabled;
 
-  get errorPadding => this._errorPadding;
+  get errorPadding => _errorPadding;
 
-  get isNameEnabled => this._isNameEnabled;
+  get isNameEnabled => _isNameEnabled;
 
-  get isDateEnabled => this._isDateEnabled;
+  get isDateEnabled => _isDateEnabled;
 
   // Setters
   set isTambolaNotificationLoading(bool val) {
@@ -221,7 +221,7 @@ class UserProfileVM extends BaseViewModel {
   }
 
   set isUpdaingUserDetails(value) {
-    this._isUpdaingUserDetails = value;
+    _isUpdaingUserDetails = value;
     notifyListeners();
   }
 
@@ -231,12 +231,12 @@ class UserProfileVM extends BaseViewModel {
   }
 
   set isEmailEnabled(value) {
-    this._isEmailEnabled = value;
+    _isEmailEnabled = value;
     notifyListeners();
   }
 
   set isContinuedWithGoogle(value) {
-    this._isContinuedWithGoogle = value;
+    _isContinuedWithGoogle = value;
     notifyListeners();
   }
 
@@ -246,23 +246,23 @@ class UserProfileVM extends BaseViewModel {
   }
 
   set inEditMode(value) {
-    this._inEditMode = value;
+    _inEditMode = value;
     notifyListeners();
   }
 
   set isgmailFieldEnabled(value) {
-    this._isgmailFieldEnabled = value;
+    _isgmailFieldEnabled = value;
     notifyListeners();
   }
 
   set errorPadding(value) {
-    this._errorPadding = value.toDouble();
+    _errorPadding = value.toDouble();
     notifyListeners();
   }
 
-  set isNameEnabled(value) => this._isNameEnabled = value;
+  set isNameEnabled(value) => _isNameEnabled = value;
 
-  set isDateEnabled(value) => this._isDateEnabled = value;
+  set isDateEnabled(value) => _isDateEnabled = value;
 
   init() {
     // isNewUser = inu;
@@ -279,6 +279,7 @@ class UserProfileVM extends BaseViewModel {
     checkIfUserIsKYCVerified();
   }
 
+  @override
   dispose() {
     nameController?.dispose();
     dobController?.dispose();

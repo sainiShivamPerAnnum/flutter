@@ -47,7 +47,7 @@ class AutosaveCard extends StatelessWidget {
 class InitAutosaveCard extends HookWidget {
   final SubService service;
 
-  InitAutosaveCard({Key? key, required this.service}) : super(key: key);
+  InitAutosaveCard({required this.service, Key? key}) : super(key: key);
 
   final List<String> images = [
     'assets/svg/iphone.svg',
@@ -224,8 +224,8 @@ class ActiveOrPausedAutosaveCard extends StatelessWidget {
   final bool assetSpecificCard;
 
   const ActiveOrPausedAutosaveCard(
-      {Key? key,
-      required this.service,
+      {required this.service,
+      Key? key,
       this.asset,
       this.assetSpecificCard = true})
       : super(key: key);

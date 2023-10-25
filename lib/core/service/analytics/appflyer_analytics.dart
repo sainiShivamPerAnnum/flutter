@@ -25,6 +25,7 @@ class AppFlyerAnalytics extends BaseAnalyticsService {
 
   Future<String?>? get appFlyerId => _appFlyerId;
 
+  @override
   Future<void> login({bool? isOnBoarded, BaseUser? baseUser}) async {
     _baseUser = baseUser;
     _appsflyerSdk.setCustomerUserId(baseUser!.uid!);
@@ -34,8 +35,10 @@ class AppFlyerAnalytics extends BaseAnalyticsService {
     _appFlyerId = init();
   }
 
+  @override
   void signOut() {}
 
+  @override
   void track({String? eventName, Map<String, dynamic>? properties}) {
     try {
       _appsflyerSdk.logEvent(eventName!, properties ?? {});
@@ -45,6 +48,7 @@ class AppFlyerAnalytics extends BaseAnalyticsService {
     }
   }
 
+  @override
   void trackScreen({String? screen, Map<String, dynamic>? properties}) {
     try {
       _logger!.d('analytics : $screen');

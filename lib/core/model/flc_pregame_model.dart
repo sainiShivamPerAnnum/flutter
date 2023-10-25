@@ -40,17 +40,17 @@ class FlcModel {
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = Map<String, dynamic>();
-    data['message'] = this.message;
-    data['flcBalance'] = this.flcBalance;
-    data['sessionId'] = this.sessionId;
-    data['isValidUser'] = this.isValidUser;
-    data['canUserPlay'] = this.canUserPlay;
-    data['isWalletInitalized'] = this.isWalletInitalized;
-    data['status'] = this.status;
-    data['ticketFieldName'] = this.ticketFieldName;
-    data['gameEndpoint'] = this.gameEndpoint;
-    data['ticketCount'] = this.ticketCount;
-    data['isGtRewarded'] = this.isGtRewarded;
+    data['message'] = message;
+    data['flcBalance'] = flcBalance;
+    data['sessionId'] = sessionId;
+    data['isValidUser'] = isValidUser;
+    data['canUserPlay'] = canUserPlay;
+    data['isWalletInitalized'] = isWalletInitalized;
+    data['status'] = status;
+    data['ticketFieldName'] = ticketFieldName;
+    data['gameEndpoint'] = gameEndpoint;
+    data['ticketCount'] = ticketCount;
+    data['isGtRewarded'] = isGtRewarded;
     return data;
   }
 
