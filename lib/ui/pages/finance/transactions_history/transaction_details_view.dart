@@ -168,16 +168,6 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage>
                 mainAxisAlignment: MainAxisAlignment.start,
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  // IconButton(
-                  //   onPressed: () async {
-                  //     await AppState.backButtonDispatcher!.didPopRoute();
-                  //   },
-                  //   icon: Icon(
-                  //     Icons.arrow_back_ios,
-                  //     size: 15,
-                  //     color: Colors.white,
-                  //   ),
-                  // ),
                   Row(
                     mainAxisAlignment: MainAxisAlignment.center,
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -195,7 +185,7 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage>
                   ),
                   Center(
                     child: Text(
-                      _txnHistoryService!
+                      _txnHistoryService
                           .getFormattedTxnAmount(widget.txn.amount),
                       style: TextStyles.rajdhaniSB.title50,
                     ),
@@ -451,66 +441,6 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage>
                             ),
                             Row(
                               children: [
-                                (widget.txn.subType !=
-                                            Constants.ASSET_TYPE_LENDBOX &&
-                                        widget.txn.subType !=
-                                            Constants.ASSET_TYPE_AUGMONT)
-                                    ? const SizedBox()
-                                    : Expanded(
-                                        child: Container(
-                                          decoration: BoxDecoration(
-                                              color: const Color(0xff212B31),
-                                              borderRadius:
-                                                  BorderRadius.circular(8)),
-                                          padding: const EdgeInsets.symmetric(
-                                              horizontal: 16, vertical: 8),
-                                          margin:
-                                              const EdgeInsets.only(right: 8),
-                                          child: Column(
-                                            children: [
-                                              Row(
-                                                mainAxisAlignment:
-                                                    MainAxisAlignment.center,
-                                                children: [
-                                                  if (widget.txn.type ==
-                                                      UserTransaction
-                                                          .TRAN_TYPE_WITHDRAW)
-                                                    Text(
-                                                      "-  ",
-                                                      style: TextStyles
-                                                          .rajdhaniSB.body1,
-                                                    ),
-                                                  SvgPicture.asset(
-                                                    Assets.token,
-                                                    height:
-                                                        SizeConfig.padding16,
-                                                  ),
-                                                  SizedBox(
-                                                    width: SizeConfig.padding4,
-                                                  ),
-                                                  Text(
-                                                    widget.txn.amount
-                                                        .toString()
-                                                        .split(".")
-                                                        .first
-                                                        .replaceAll("-", ""),
-                                                    style: TextStyles
-                                                        .rajdhaniSB.body2,
-                                                  ),
-                                                ],
-                                              ),
-                                              SizedBox(
-                                                width: SizeConfig.padding4,
-                                              ),
-                                              Text(
-                                                "Game Tokens",
-                                                style:
-                                                    TextStyles.rajdhaniSB.body4,
-                                              )
-                                            ],
-                                          ),
-                                        ),
-                                      ),
                                 if ((widget.txn.misMap
                                             ?.containsKey("tickets") ??
                                         false) &&

@@ -364,11 +364,6 @@ class _LendboxSuccessViewState extends State<LendboxSuccessView>
                   ),
                   child: Row(
                     children: [
-                      WinningChips(
-                          title: locale.felloTokens,
-                          tooltip: locale.winChipsTitle1,
-                          asset: Assets.token,
-                          qty: _txnService.currentTxnAmount!.toInt()),
                       if (_txnService.currentTxnScratchCardCount > 0)
                         SizedBox(width: SizeConfig.padding12),
                       if (_txnService.currentTxnScratchCardCount > 0)

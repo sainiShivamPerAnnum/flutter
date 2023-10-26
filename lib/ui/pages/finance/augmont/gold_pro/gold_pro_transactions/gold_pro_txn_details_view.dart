@@ -111,13 +111,6 @@ class GoldProTransactionsDetailsView extends StatelessWidget {
                 SizedBox(
                   height: SizeConfig.padding8,
                 ),
-                // Center(
-                //   child: Text(
-                //     "$getFormattedDate at $formattedTime",
-                //     style: TextStyles.sourceSansSB.body2
-                //         .colour(const Color(0xffA0A0A0)),
-                //   ),
-                // ),
                 Row(
                   children: [
                     SubInfoTile(
