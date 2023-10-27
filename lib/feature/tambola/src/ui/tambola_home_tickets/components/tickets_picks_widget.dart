@@ -106,7 +106,7 @@ class _TicketsPicksWidgetState extends State<TicketsPicksWidget> {
                         setState(() {});
                       },
                     )),
-                    KeepAlivePage(child: const WeeklyPicks()),
+                    const KeepAlivePage(child: WeeklyPicks()),
                   ],
                 ),
                 // SizedBox(height: SizeConfig.padding14),
@@ -365,7 +365,7 @@ class TicketsSundayWinCard extends StatelessWidget {
 }
 
 class SlotMachineWidget extends StatefulWidget {
-  const SlotMachineWidget({super.key, required this.onTimerEnd});
+  const SlotMachineWidget({required this.onTimerEnd, super.key});
 
   final VoidCallback onTimerEnd;
 
@@ -702,9 +702,9 @@ class _SlotMachineWidgetState extends State<SlotMachineWidget>
 }
 
 class KeepAlivePage extends StatefulWidget {
-  KeepAlivePage({
-    Key? key,
+  const KeepAlivePage({
     required this.child,
+    Key? key,
   }) : super(key: key);
 
   final Widget child;

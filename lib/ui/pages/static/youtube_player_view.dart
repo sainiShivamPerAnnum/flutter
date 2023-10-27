@@ -5,7 +5,7 @@ import 'package:flutter/material.dart';
 import 'package:youtube_player_iframe/youtube_player_iframe.dart';
 
 class YoutubePlayerView extends StatefulWidget {
-  const YoutubePlayerView({super.key, required this.url});
+  const YoutubePlayerView({required this.url, super.key});
 
   final String url;
 

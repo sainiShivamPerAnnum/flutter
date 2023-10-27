@@ -31,7 +31,7 @@ class LoginNameInputView extends StatefulWidget {
   static const int index = 2;
   final LoginControllerViewModel loginModel;
 
-  const LoginNameInputView({Key? key, required this.loginModel})
+  const LoginNameInputView({required this.loginModel, Key? key})
       : super(key: key);
 
   @override
@@ -56,7 +56,7 @@ class LoginUserNameViewState extends State<LoginNameInputView> {
           controller: widget.loginModel.nameViewScrollController,
           shrinkWrap: true,
           children: [
-            LoginImage(),
+            const LoginImage(),
             SizedBox(height: SizeConfig.padding8),
             Align(
               alignment: Alignment.center,

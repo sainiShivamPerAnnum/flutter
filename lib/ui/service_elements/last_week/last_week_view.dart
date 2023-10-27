@@ -87,10 +87,10 @@ class LastWeekOverView extends StatelessWidget {
 
 class LastWeekUi extends StatelessWidget {
   const LastWeekUi({
-    super.key,
     required this.callCampaign,
     required this.fromRoot,
     required this.model,
+    super.key,
   });
 
   final LastWeekData model;
@@ -171,7 +171,7 @@ class LastWeekUi extends StatelessWidget {
                 physics: const BouncingScrollPhysics(),
                 child: Column(
                   children: [
-                    TotalInvestmentWidget(data: model!),
+                    TotalInvestmentWidget(data: model),
                     SizedBox(
                       height: SizeConfig.padding40,
                     ),
@@ -232,8 +232,8 @@ class LastWeekUi extends StatelessWidget {
 
 class UserInvestmentWidget extends StatelessWidget {
   const UserInvestmentWidget({
-    super.key,
     required this.data,
+    super.key,
   });
 
   final UserLastWeekData data;
@@ -350,8 +350,8 @@ class UserInvestmentWidget extends StatelessWidget {
 
 class TotalInvestmentWidget extends StatelessWidget {
   const TotalInvestmentWidget({
-    super.key,
     required this.data,
+    super.key,
   });
 
   final LastWeekData data;
@@ -454,12 +454,12 @@ class TotalInvestmentWidget extends StatelessWidget {
 
 class WeekReportRowView extends StatelessWidget {
   const WeekReportRowView(
-      {Key? key,
-      required this.title,
+      {required this.title,
       required this.value,
       required this.icon,
       required this.subTitle,
-      required this.backgroundColor})
+      required this.backgroundColor,
+      Key? key})
       : super(key: key);
 
   final String title;
@@ -513,7 +513,7 @@ class WeekReportRowView extends StatelessWidget {
 
 class AssetContainer extends StatelessWidget {
   const AssetContainer(
-      {Key? key, required this.icon, required this.title, required this.value})
+      {required this.icon, required this.title, required this.value, Key? key})
       : super(key: key);
 
   final String icon;

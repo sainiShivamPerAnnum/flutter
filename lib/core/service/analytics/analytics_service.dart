@@ -25,6 +25,7 @@ class AnalyticsService extends BaseAnalyticsService {
   final CleverTapAnalytics _cleverTap = locator<CleverTapAnalytics>();
   final CustomLogger _logger = locator<CustomLogger>();
 
+  @override
   Future<void> login({bool? isOnBoarded, BaseUser? baseUser}) async {
     await _mixpanel.login(isOnBoarded: isOnBoarded, baseUser: baseUser);
     _webengage.login(isOnBoarded: isOnBoarded, baseUser: baseUser);
@@ -36,12 +37,13 @@ class AnalyticsService extends BaseAnalyticsService {
     final lastDateOpened =
         PreferenceHelper.getInt(PreferenceHelper.DATE_APP_OPENED);
 
-    if (lastDateOpened == null || now.day != lastDateOpened) {
+    if (now.day != lastDateOpened) {
       track(eventName: AnalyticsEvents.openAppFirstTimeInADay);
       PreferenceHelper.setInt(PreferenceHelper.DATE_APP_OPENED, now.day);
     }
   }
 
+  @override
   void signOut() {
     _mixpanel.signOut();
     _webengage.signOut();
@@ -50,6 +52,7 @@ class AnalyticsService extends BaseAnalyticsService {
     _cleverTap.signOut();
   }
 
+  @override
   void track({
     String? eventName,
     Map<String, dynamic>? properties,
@@ -69,32 +72,33 @@ class AnalyticsService extends BaseAnalyticsService {
       }
     } catch (e) {}
     try {
-      _logger!.d(eventName);
+      _logger.d(eventName);
       if (mixpanel) {
-        _mixpanel!.track(eventName: eventName, properties: properties);
+        _mixpanel.track(eventName: eventName, properties: properties);
       }
       if (webEngage) {
-        _webengage!.track(eventName: eventName, properties: properties);
+        _webengage.track(eventName: eventName, properties: properties);
       }
       if (appFlyer) {
-        _appFlyer!.track(eventName: eventName, properties: properties);
+        _appFlyer.track(eventName: eventName, properties: properties);
       }
       if (singular) {
-        _singular!.track(eventName: eventName, properties: properties);
+        _singular.track(eventName: eventName, properties: properties);
       }
       if (cleverTap) {
-        _cleverTap!.track(eventName: eventName, properties: properties);
+        _cleverTap.track(eventName: eventName, properties: properties);
       }
     } catch (e) {
       String error = e as String ?? "Unable to track event: $eventName";
-      _logger!.e(error);
+      _logger.e(error);
     }
   }
 
+  @override
   void trackScreen({String? screen, Map<String, dynamic>? properties}) {
-    _mixpanel!.track(eventName: screen, properties: properties);
-    _webengage!.track(eventName: screen, properties: properties);
-    _cleverTap!.track(eventName: screen, properties: properties);
+    _mixpanel.track(eventName: screen, properties: properties);
+    _webengage.track(eventName: screen, properties: properties);
+    _cleverTap.track(eventName: screen, properties: properties);
   }
 
   Future<void> trackSignup(String? userId) async {
@@ -116,7 +120,7 @@ class AnalyticsService extends BaseAnalyticsService {
         body: body,
       );
     } catch (e) {
-      _logger!.e(e.toString());
+      _logger.e(e.toString());
     }
   }
 
@@ -146,12 +150,12 @@ class AnalyticsService extends BaseAnalyticsService {
         );
       }
     } catch (e) {
-      _logger!.e(e.toString());
+      _logger.e(e.toString());
     }
   }
 
   void trackUninstall(String token) {
     //only singular does this
-    _singular!.connectFcm(token);
+    _singular.connectFcm(token);
   }
 }

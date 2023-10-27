@@ -22,13 +22,13 @@ import 'package:lottie/lottie.dart';
 class GoldSellLoadingView extends StatelessWidget {
   final GoldSellViewModel model;
 
-  final AugmontTransactionService? _augTxnService =
+  final AugmontTransactionService _augTxnService =
       locator<AugmontTransactionService>();
-  final TxnHistoryService? _txnHistoryService = locator<TxnHistoryService>();
+  final TxnHistoryService _txnHistoryService = locator<TxnHistoryService>();
   S locale = locator<S>();
   final int waitTimeInSec = 45;
 
-  GoldSellLoadingView({Key? key, required this.model}) : super(key: key);
+  GoldSellLoadingView({required this.model, Key? key}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
@@ -128,7 +128,7 @@ class GoldSellLoadingView extends StatelessWidget {
       addToScreenStack: true,
       hapticVibrate: true,
       isBarrierDismissible: false,
-      content: PendingDialog(
+      content: const PendingDialog(
         title: "We're still processing!",
         subtitle:
             "Your withdrawal is taking longer than usual. We'll get back to you in ",

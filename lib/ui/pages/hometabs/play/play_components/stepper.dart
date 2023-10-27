@@ -14,7 +14,7 @@ class GameStepper extends StatelessWidget {
         children: [
           for (var val = 0; val < 5; val++)
             Container(
-              margin: EdgeInsets.all(2.0),
+              margin: const EdgeInsets.all(2.0),
               height: (val == 0 || val == 4) ? 3 : 5,
               width: 1.5,
               color: Colors.white,

@@ -1,7 +1,5 @@
 import 'dart:convert';
 
-import 'package:flutter/material.dart';
-
 class SettingsListItemModel {
   final String title;
   final String asset;

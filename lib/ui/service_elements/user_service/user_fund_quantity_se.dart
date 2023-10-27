@@ -12,7 +12,7 @@ class UserFundQuantitySE extends StatelessWidget {
   final TextStyle? style;
   final InvestmentType investmentType;
 
-  UserFundQuantitySE({
+  const UserFundQuantitySE({
     this.style,
     this.investmentType = InvestmentType.AUGGOLD99,
   });
@@ -26,27 +26,29 @@ class UserFundQuantitySE extends StatelessWidget {
 
     if (quantity != null) {
       if (quantity == 0.0) {
-        if (prefix != null) return "${prefix}0$suffix";
+        return "${prefix}0$suffix";
         return "0 $suffix";
       } else {
-        if (investmentType == InvestmentType.AUGGOLD99)
+        if (investmentType == InvestmentType.AUGGOLD99) {
           return "$prefix${quantity.toStringAsFixed(4)}$suffix";
-        else
+        } else {
           return "$prefix${quantity.toStringAsFixed(2)}$suffix";
+        }
       }
-    } else
+    } else {
       return "--";
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return PropertyChangeConsumer<UserService, UserServiceProperties>(
-      properties: [
+      properties: const [
         UserServiceProperties.myUserFund,
         UserServiceProperties.myUserWallet
       ],
       builder: (context, model, property) => Text(
-        "${getQuantity(model!.userFundWallet)}",
+        getQuantity(model!.userFundWallet),
         style: style ?? TextStyles.sourceSansSB.title4,
       ),
     );
@@ -59,7 +61,7 @@ class LboxGrowthArrow extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return PropertyChangeConsumer<UserService, UserServiceProperties>(
-        properties: [
+        properties: const [
           UserServiceProperties.myUserFund,
           UserServiceProperties.myUserWallet
         ],
@@ -70,6 +72,6 @@ class LboxGrowthArrow extends StatelessWidget {
                     size: SizeConfig.padding16,
                     color: UiConstants.primaryColor,
                   )
-                : SizedBox());
+                : const SizedBox());
   }
 }

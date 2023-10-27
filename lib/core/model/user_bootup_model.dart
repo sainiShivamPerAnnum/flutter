@@ -65,7 +65,6 @@ class Data {
   final String blockSubtitle;
 
   Data({
-    this.marqueeMessages,
     required this.cache,
     required this.isBlocked,
     required this.isAppUpdateRequired,
@@ -77,6 +76,7 @@ class Data {
     required this.isAppInMaintenance,
     required this.blockTitle,
     required this.blockSubtitle,
+    this.marqueeMessages,
   });
 
   factory Data.fromMap(Map<String, dynamic> map) {
@@ -548,8 +548,8 @@ class GamesBanMap {
         bottleFlipMap: bottleFlipMap ?? this.bottleFlipMap,
         rollyVortex: rollyVortex ?? this.rollyVortex,
         knifeHit: knifeHit ?? this.knifeHit,
-        fruitMania: fruitMania ?? this.fruitMania,
-        twoDots: twoDots ?? this.twoDots);
+        fruitMania: fruitMania ?? fruitMania,
+        twoDots: twoDots ?? twoDots);
   }
 
   Map<String, dynamic> toMap() {

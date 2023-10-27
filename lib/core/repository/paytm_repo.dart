@@ -46,7 +46,7 @@ class PaytmRepository extends BaseRepo {
     Map<String, dynamic>? goldProMap,
   ]) async {
     try {
-      final String? _uid = userService!.baseUser!.uid;
+      final String? _uid = userService.baseUser!.uid;
       final Map<String, dynamic> _body = {
         "uid": _uid,
         "txnAmount": amount,
@@ -106,7 +106,7 @@ class PaytmRepository extends BaseRepo {
         "paymentMode": paymentMode
       };
 
-      logger!.d("This is body: $_body");
+      logger.d("This is body: $_body");
       final response = await APIService.instance.postData(
         ApiPath.kProcessPaytmTransaction,
         body: _body,
@@ -121,9 +121,9 @@ class PaytmRepository extends BaseRepo {
       return ApiResponse<ProcessTransactionModel>(
           model: _responseModel, code: 200);
     } catch (e) {
-      logger!.e(e.toString());
+      logger.e(e.toString());
       return ApiResponse.withError(
-          e?.toString() ?? "Unable create transaction", 400);
+          e.toString() ?? "Unable create transaction", 400);
     }
   }
 
@@ -131,7 +131,7 @@ class PaytmRepository extends BaseRepo {
     String? orderId,
   ) async {
     try {
-      final String? _uid = userService!.baseUser!.uid;
+      final String? _uid = userService.baseUser!.uid;
       final _queryParams = {
         "orderId": orderId,
         "uid": _uid,
@@ -150,9 +150,9 @@ class PaytmRepository extends BaseRepo {
       return ApiResponse<TransactionResponseModel>(
           model: _responseModel, code: 200);
     } catch (e) {
-      logger!.e(e.toString());
+      logger.e(e.toString());
       return ApiResponse.withError(
-          e?.toString() ?? "Unable to validate transaction", 400);
+          e.toString() ?? "Unable to validate transaction", 400);
     }
   }
 
@@ -160,14 +160,14 @@ class PaytmRepository extends BaseRepo {
       createPaytmSubscription() async {
     print(DateFormat('dd-MM-YYY').format(DateTime.now()));
     try {
-      final String? _uid = userService!.baseUser!.uid;
+      final String? _uid = userService.baseUser!.uid;
       final Map<String, dynamic> _body = {
         "uid": _uid,
         "maxAmount": 5000,
         "amount": 0
       };
 
-      logger!.d("This is body: $_body");
+      logger.d("This is body: $_body");
       final response = await APIService.instance.postData(
         ApiPath().kCreateSubscription,
         body: _body,
@@ -181,7 +181,7 @@ class PaytmRepository extends BaseRepo {
       return ApiResponse<CreateSubscriptionResponseModel>(
           model: _responseModel, code: 200);
     } catch (e) {
-      logger!.e(e.toString());
+      logger.e(e.toString());
       return ApiResponse.withError(
           e.toString() ?? "Unable create subscription", 400);
     }
@@ -191,7 +191,7 @@ class PaytmRepository extends BaseRepo {
       CreateSubscriptionResponseModel subscriptionResponseModel,
       String vpa) async {
     try {
-      final String? _uid = userService!.baseUser!.uid;
+      final String? _uid = userService.baseUser!.uid;
       final _queryParams = {
         "uid": _uid,
         "vpa": vpa,
@@ -208,9 +208,9 @@ class PaytmRepository extends BaseRepo {
       return ApiResponse<ValidateVpaResponseModel>(
           model: _responseModel, code: 200);
     } catch (e) {
-      logger!.e(e.toString());
+      logger.e(e.toString());
       return ApiResponse.withError(
-          e?.toString() ?? "Unable to validate VPA", 400);
+          e.toString() ?? "Unable to validate VPA", 400);
     }
   }
 
@@ -218,7 +218,7 @@ class PaytmRepository extends BaseRepo {
       {required double amount, required String freq}) async {
     try {
       final _body = {
-        'uid': userService!.baseUser!.uid,
+        'uid': userService.baseUser!.uid,
         'amount': amount,
         'freq': freq
       };
@@ -232,26 +232,28 @@ class PaytmRepository extends BaseRepo {
         final Map responseData = response["data"];
 
         if (responseData["status"] != null &&
-            responseData["status"] == Constants.SUBSCRIPTION_ACTIVE)
+            responseData["status"] == Constants.SUBSCRIPTION_ACTIVE) {
           return ApiResponse(model: true, code: 200);
-        else
+        } else {
           return ApiResponse(model: false, code: 400);
-      } else
+        }
+      } else {
         return ApiResponse(model: false, code: 400);
+      }
     } catch (e) {
-      logger!.e(e.toString());
+      logger.e(e.toString());
       return ApiResponse.withError(
-          e?.toString() ?? "Unable to update daily amount", 400);
+          e.toString() ?? "Unable to update daily amount", 400);
     }
   }
 
   Future<ApiResponse<bool>> pauseSubscription(String resumeDate) async {
     try {
       final _body = {
-        'uid': userService!.baseUser!.uid,
+        'uid': userService.baseUser!.uid,
         'resume': resumeDate,
       };
-      logger!.d(_body);
+      logger.d(_body);
       final response = await APIService.instance.postData(
         ApiPath().kPauseSubscription,
         body: _body,
@@ -260,21 +262,22 @@ class PaytmRepository extends BaseRepo {
       );
       final Map responseData = response["data"];
 
-      if (responseData["status"] != null && responseData["status"])
+      if (responseData["status"] != null && responseData["status"]) {
         return ApiResponse(model: true, code: 200);
-      else
+      } else {
         return ApiResponse(model: false, code: 400);
+      }
     } catch (e) {
-      logger!.e(e.toString());
+      logger.e(e.toString());
       return ApiResponse.withError(
-          e?.toString() ?? "Unable to pause subscription", 400);
+          e.toString() ?? "Unable to pause subscription", 400);
     }
   }
 
   Future<ApiResponse<bool>> resumeSubscription() async {
     try {
       final _body = {
-        'uid': userService!.baseUser!.uid,
+        'uid': userService.baseUser!.uid,
       };
       final response = await APIService.instance.postData(
         ApiPath().kResumeSubscription,
@@ -285,21 +288,22 @@ class PaytmRepository extends BaseRepo {
 
       final Map responseData = response["data"];
 
-      if (responseData["status"] != null && responseData["status"])
+      if (responseData["status"] != null && responseData["status"]) {
         return ApiResponse(model: true, code: 200);
-      else
+      } else {
         return ApiResponse(model: false, code: 400);
+      }
     } catch (e) {
-      logger!.e(e.toString());
+      logger.e(e.toString());
       return ApiResponse.withError(
-          e?.toString() ?? "Unable to resume subscription", 400);
+          e.toString() ?? "Unable to resume subscription", 400);
     }
   }
 
   Future<ApiResponse<bool>> processSubscription() async {
     try {
       final _body = {
-        'uid': userService!.baseUser!.uid,
+        'uid': userService.baseUser!.uid,
       };
 
       final response = await APIService.instance.postData(
@@ -309,12 +313,13 @@ class PaytmRepository extends BaseRepo {
         apiName: '$_payments/processSubscription',
       );
       final Map<String, dynamic> responseData = response['data'];
-      if (responseData['status'])
+      if (responseData['status']) {
         return ApiResponse(model: true, code: 200);
-      else
+      } else {
         return ApiResponse(model: false, code: 400);
+      }
     } catch (e) {
-      logger!.e(e.toString());
+      logger.e(e.toString());
       return ApiResponse.withError("Unable to resume subscription", 400);
     }
   }
@@ -322,7 +327,7 @@ class PaytmRepository extends BaseRepo {
   Future<ApiResponse<ActiveSubscriptionModel>> getActiveSubscription() async {
     try {
       final _queryParams = {
-        "uid": userService!.baseUser!.uid,
+        "uid": userService.baseUser!.uid,
       };
       final response = await APIService.instance.getData(
         ApiPath().kActiveSubscription,
@@ -330,23 +335,23 @@ class PaytmRepository extends BaseRepo {
         cBaseUrl: _baseUrl2,
         apiName: '$_subscription/byID',
       );
-      logger!.d(response);
+      logger.d(response);
       final _responseData = response["data"];
       final _responseModel = ActiveSubscriptionModel.fromJson(_responseData);
 
       return ApiResponse<ActiveSubscriptionModel>(
           model: _responseModel, code: 200);
     } catch (e) {
-      logger!.e(e.toString());
+      logger.e(e.toString());
       return ApiResponse.withError(
-          e?.toString() ?? "Unable to find active subscription", 400);
+          e.toString() ?? "Unable to find active subscription", 400);
     }
   }
 
   Future<ApiResponse<String>> getNextDebitDate() async {
     try {
       final _queryParams = {
-        "uid": userService!.baseUser!.uid,
+        "uid": userService.baseUser!.uid,
       };
       final response = await APIService.instance.getData(
         ApiPath().kNextDebitDate,
@@ -356,16 +361,17 @@ class PaytmRepository extends BaseRepo {
       );
 
       final _responseStatus = response["data"];
-      logger!.d(response);
+      logger.d(response);
       if (_responseStatus["status"] != null &&
-          _responseStatus["status"] == true)
+          _responseStatus["status"] == true) {
         return ApiResponse<String>(model: response["message"], code: 200);
-      else
+      } else {
         return ApiResponse.withError("Unable to find active subscription", 400);
+      }
     } catch (e) {
-      logger!.e(e.toString());
+      logger.e(e.toString());
       return ApiResponse.withError(
-          e?.toString() ?? "Unable to find active subscription", 400);
+          e.toString() ?? "Unable to find active subscription", 400);
     }
   }
 }

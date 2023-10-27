@@ -21,9 +21,9 @@ class FundBreakdownDialog extends StatelessWidget {
             children: [
               InkWell(
                 onTap: () => AppState.backButtonDispatcher!.didPopRoute(),
-                child: Row(
+                child: const Row(
                   mainAxisAlignment: MainAxisAlignment.end,
-                  children: const [
+                  children: [
                     Icon(
                       Icons.close,
                       color: Colors.white,
@@ -125,7 +125,7 @@ class BreakdownInfoTile extends StatelessWidget {
   final String title, value;
 
   const BreakdownInfoTile(
-      {super.key, required this.title, required this.value});
+      {required this.title, required this.value, super.key});
 
   @override
   Widget build(BuildContext context) {

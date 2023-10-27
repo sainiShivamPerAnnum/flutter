@@ -8,23 +8,24 @@ import 'package:property_change_notifier/property_change_notifier.dart';
 class LifeTimeWin extends StatelessWidget {
   final TextStyle? style;
 
-  LifeTimeWin({this.style});
+  const LifeTimeWin({this.style});
 
   getWinString(double? amt) {
-    if (amt == null)
+    if (amt == null) {
       return 0;
-    else if (amt == amt.toInt())
+    } else if (amt == amt.toInt()) {
       return amt.toInt();
-    else if (amt > amt.toInt())
+    } else if (amt > amt.toInt()) {
       return BaseUtil.digitPrecision(amt, 2, false);
-    else
+    } else {
       return '-';
+    }
   }
 
   @override
   Widget build(BuildContext context) {
     return PropertyChangeConsumer<UserService, UserServiceProperties>(
-      properties: [
+      properties: const [
         UserServiceProperties.myUserFund,
         UserServiceProperties.myUserWallet
       ],

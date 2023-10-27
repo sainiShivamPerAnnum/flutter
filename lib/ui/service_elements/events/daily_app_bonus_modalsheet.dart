@@ -23,7 +23,7 @@ class DailyAppCheckInEventModalSheet extends StatelessWidget {
       value: locator<MarketingEventHandlerService>(),
       child: PropertyChangeConsumer<MarketingEventHandlerService,
           MarketingEventsHandlerProperties>(
-        properties: [MarketingEventsHandlerProperties.DailyAppCheckIn],
+        properties: const [MarketingEventsHandlerProperties.DailyAppCheckIn],
         builder: (context, model, child) {
           getBgColor(int i) {
             if (i == model!.currentDay) if (model.isDailyAppBonusClaimed) {

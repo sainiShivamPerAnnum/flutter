@@ -14,12 +14,12 @@ import 'package:property_change_notifier/property_change_notifier.dart';
 
 class PrizeToolTips extends StatelessWidget {
   final JourneyPageViewModel model;
-  PrizeToolTips({Key? key, required this.model}) : super(key: key);
+  PrizeToolTips({required this.model, Key? key}) : super(key: key);
   final _gtService = locator<ScratchCardService>();
   @override
   Widget build(BuildContext context) {
     return PropertyChangeConsumer<JourneyService, JourneyServiceProperties>(
-        properties: [
+        properties: const [
           JourneyServiceProperties.Prizes,
         ],
         builder: (context, serviceModel, properties) {
@@ -27,7 +27,7 @@ class PrizeToolTips extends StatelessWidget {
             width: model.pageWidth,
             height: model.currentFullViewHeight,
             child: model.completedMilestonePrizeList.isEmpty
-                ? SizedBox()
+                ? const SizedBox()
                 : Stack(
                     children:
                         List.generate(model.completedMilestoneList.length, (i) {
@@ -58,7 +58,7 @@ class PrizeToolTips extends StatelessWidget {
                                           onJourney: true);
                                     },
                                     child: Container(
-                                      decoration: ShapeDecoration(
+                                      decoration: const ShapeDecoration(
                                         color: Colors.black,
                                         shape:
                                             TooltipShapeBorder(arrowArc: 0.5),
@@ -70,7 +70,7 @@ class PrizeToolTips extends StatelessWidget {
                                         ],
                                       ),
                                       child: Padding(
-                                          padding: EdgeInsets.all(16.0),
+                                          padding: const EdgeInsets.all(16.0),
                                           child: Image.asset(
                                             scratchCard.isLevelChange!
                                                 ? Assets
@@ -82,7 +82,7 @@ class PrizeToolTips extends StatelessWidget {
                                     )),
                               ),
                             )
-                          : SizedBox();
+                          : const SizedBox();
                     }),
                   ),
           );

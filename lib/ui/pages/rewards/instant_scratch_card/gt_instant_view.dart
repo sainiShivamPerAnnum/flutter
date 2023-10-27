@@ -42,10 +42,10 @@ class GTInstantView extends StatefulWidget {
 
   final bool showAutosavePrompt;
 
- const GTInstantView(
-      {super.key,
+  const GTInstantView(
+      {required this.source,
+      super.key,
       this.title,
-      required this.source,
       this.amount,
       this.showRatingDialog = true,
       this.showAutosavePrompt = false});
@@ -128,7 +128,7 @@ class _GTInstantViewState extends State<GTInstantView>
                         SizedBox(
                           width: SizeConfig.pageHorizontalMargins,
                         ),
-                        FelloAppBarBackButton(),
+                        const FelloAppBarBackButton(),
                         const Spacer(),
                         FelloCoinBar(),
                         SizedBox(width: SizeConfig.padding20)
@@ -346,7 +346,7 @@ class _GTInstantViewState extends State<GTInstantView>
   getButtonText(GTInstantViewModel model, GTSOURCE source) {
     String title;
     if (source == GTSOURCE.deposit || source == GTSOURCE.autosave) {
-      if (widget.showAutosavePrompt != null && !model.isAutosaveAlreadySetup) {
+      if (!model.isAutosaveAlreadySetup) {
         title = locale.btnContinue;
       } else {
         title = locale.btnStartPlaying;

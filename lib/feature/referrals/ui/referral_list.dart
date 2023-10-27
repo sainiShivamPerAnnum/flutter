@@ -20,8 +20,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 class ReferralList extends StatefulWidget {
   const ReferralList({
     required this.model,
-    Key? key,
     required this.scrollController,
+    Key? key,
   }) : super(key: key);
 
   final ReferralDetailsViewModel model;
@@ -175,10 +175,10 @@ class _ReferralListState extends State<ReferralList> {
 class ReferralListView extends StatefulWidget {
   const ReferralListView(
       {required this.referalList,
-      super.key,
       required this.onStateChanged,
       required this.model,
-      required this.scrollController});
+      required this.scrollController,
+      super.key});
 
   final List<ReferralDetail> referalList;
   final Function onStateChanged;
@@ -588,9 +588,9 @@ class ReferralStarCustomPainter extends CustomPainter {
     path_0.lineTo(size.width * 0.4614612, size.height * 0.09050922);
     path_0.close();
 
-    Paint paint_0_fill = Paint()..style = PaintingStyle.fill;
-    paint_0_fill.color = color ?? const Color(0xffFFD979).withOpacity(1.0);
-    canvas.drawPath(path_0, paint_0_fill);
+    Paint paint0Fill = Paint()..style = PaintingStyle.fill;
+    paint0Fill.color = color ?? const Color(0xffFFD979).withOpacity(1.0);
+    canvas.drawPath(path_0, paint0Fill);
   }
 
   @override

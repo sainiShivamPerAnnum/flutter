@@ -54,7 +54,7 @@ class PlayViewModel extends BaseViewModel {
   // final TambolaWidgetController _tambolaController = TambolaWidgetController();
   String? _message;
   String? _sessionId;
-  bool _isOfferListLoading = true;
+  final bool _isOfferListLoading = true;
   bool _isGamesListDataLoading = true;
   late GameStats? gameStats;
 
@@ -112,7 +112,7 @@ class PlayViewModel extends BaseViewModel {
   }
 
   openProfile() {
-    _baseUtil!.openProfileDetailsScreen();
+    _baseUtil.openProfileDetailsScreen();
   }
 
   Future<void> setGameStatus() async {
@@ -137,7 +137,7 @@ class PlayViewModel extends BaseViewModel {
     });
 
     showSecurityMessageAtTop =
-        (_userService?.userJourneyStats?.mlIndex ?? 0) > 6 ? false : true;
+        (_userService.userJourneyStats?.mlIndex ?? 0) > 6 ? false : true;
 
     if (res.isSuccess()) {
       gameTier = res.model;
@@ -204,7 +204,7 @@ class PlayViewModel extends BaseViewModel {
   }
 
   void openGame(GameModel game) {
-    _analyticsService!.track(eventName: game.analyticEvent);
+    _analyticsService.track(eventName: game.analyticEvent);
     AppState.delegate!.appState.currentAction =
         PageAction(state: PageState.addPage, page: THomePageConfig);
   }

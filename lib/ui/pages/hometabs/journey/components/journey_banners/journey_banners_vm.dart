@@ -9,20 +9,20 @@ import 'package:felloapp/core/repository/getters_repo.dart';
 import 'package:flutter/material.dart';
 
 class JourneyBannersViewModel extends BaseViewModel {
-  final GetterRepository? _getterRepo = locator<GetterRepository>();
-  final AnalyticsService? _analyticService = locator<AnalyticsService>();
+  final GetterRepository _getterRepo = locator<GetterRepository>();
+  final AnalyticsService _analyticService = locator<AnalyticsService>();
 
-  final PageController promoPageController = new PageController(initialPage: 0);
+  final PageController promoPageController = PageController(initialPage: 0);
   int _currentPage = 0;
   Timer? _timer;
 
   List<PromoCardModel>? _offerList;
 
   bool _isOfferListLoading = true;
-  get isOfferListLoading => this._isOfferListLoading;
+  get isOfferListLoading => _isOfferListLoading;
 
   set isOfferListLoading(value) {
-    this._isOfferListLoading = value;
+    _isOfferListLoading = value;
     notifyListeners();
   }
 
@@ -42,7 +42,7 @@ class JourneyBannersViewModel extends BaseViewModel {
   }
 
   initiateAutoScroll() {
-    _timer = Timer.periodic(Duration(seconds: 6), (Timer timer) {
+    _timer = Timer.periodic(const Duration(seconds: 6), (Timer timer) {
       if (_currentPage < offerList!.length - 1) {
         _currentPage++;
       } else {
@@ -51,7 +51,7 @@ class JourneyBannersViewModel extends BaseViewModel {
 
       promoPageController.animateToPage(
         _currentPage,
-        duration: Duration(milliseconds: 600),
+        duration: const Duration(milliseconds: 600),
         curve: Curves.easeIn,
       );
     });

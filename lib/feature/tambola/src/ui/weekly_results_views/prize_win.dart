@@ -13,10 +13,10 @@ class PrizeWin extends StatefulWidget {
   final bool isEligible;
 
   const PrizeWin(
-      {Key? key,
-      required this.winner,
+      {required this.winner,
       required this.tPrizes,
-      required this.isEligible})
+      required this.isEligible,
+      Key? key})
       : super(key: key);
 
   @override

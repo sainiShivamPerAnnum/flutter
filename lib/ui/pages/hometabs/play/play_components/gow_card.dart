@@ -69,7 +69,7 @@ class GOWCard extends StatelessWidget {
                   GestureDetector(
                     onTap: () {
                       Haptic.vibrate();
-                      _analyticsService!.track(
+                      _analyticsService.track(
                           eventName: AnalyticsEvents.gameTapped,
                           properties: AnalyticsProperties
                               .getDefaultPropertiesMap(extraValuesMap: {
@@ -87,7 +87,6 @@ class GOWCard extends StatelessWidget {
                       // );
                       BaseUtil.openGameModalSheet(
                         model.gow!.gameCode!,
-                        
                       );
                     },
                     child: Container(
@@ -112,7 +111,8 @@ class GOWCard extends StatelessWidget {
                                     style: TextStyles.rajdhaniB.title3),
                                 Text(
                                     locale.gameWinUptoTitle +
-                                        '${NumberFormat.compact().format(model.gow!.prizeAmount)}',
+                                        NumberFormat.compact()
+                                            .format(model.gow!.prizeAmount),
                                     style: TextStyles.sourceSans.body4),
                                 SizedBox(height: SizeConfig.padding16),
                                 Container(

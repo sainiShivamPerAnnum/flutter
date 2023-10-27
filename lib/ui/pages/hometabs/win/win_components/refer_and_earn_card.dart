@@ -54,7 +54,7 @@ class ReferEarnCard extends StatelessWidget {
               vertical: SizeConfig.padding24,
             ),
             decoration: ShapeDecoration(
-              color: Color(0xFF6052A9),
+              color: const Color(0xFF6052A9),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
               ),
@@ -162,7 +162,7 @@ class ReferEarnCard extends StatelessWidget {
                                 Icon(
                                   Icons.copy,
                                   color:
-                                  UiConstants.kTextColor3.withOpacity(0.7),
+                                      UiConstants.kTextColor3.withOpacity(0.7),
                                   size: SizeConfig.padding24,
                                 ),
                               ],

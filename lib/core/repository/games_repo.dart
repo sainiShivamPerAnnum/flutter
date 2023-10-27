@@ -19,9 +19,9 @@ class GameRepo extends BaseRepo {
   List<GameModel>? _allgames;
   List<GameModel>? games;
 
-  List<GameModel>? get allgames => this._allgames;
+  List<GameModel>? get allgames => _allgames;
 
-  set allgames(List<GameModel>? value) => this._allgames = value;
+  set allgames(List<GameModel>? value) => _allgames = value;
 
   late GameTiers _gameTiers;
 
@@ -46,11 +46,11 @@ class GameRepo extends BaseRepo {
 
       return ApiResponse<List<GameModel>>(model: allgames, code: 200);
     } catch (e) {
-      logger!.e("Unable to fetch games ${e.toString()}");
+      logger.e("Unable to fetch games ${e.toString()}");
 
       allgames = [];
       return ApiResponse.withError(
-          e?.toString() ?? "Unable to fetch games", 400);
+          e.toString() ?? "Unable to fetch games", 400);
     }
   }
 
@@ -65,9 +65,9 @@ class GameRepo extends BaseRepo {
       final game = GameModel.fromMap(response["data"]);
       return ApiResponse<GameModel>(model: game, code: 200);
     } catch (e) {
-      logger!.e(e.toString());
+      logger.e(e.toString());
       return ApiResponse.withError(
-          e?.toString() ?? "Unable to fetch game by id", 400);
+          e.toString() ?? "Unable to fetch game by id", 400);
     }
   }
 
@@ -82,11 +82,11 @@ class GameRepo extends BaseRepo {
       gameTiers = GameTiers.fromJson(response);
       return ApiResponse<GameTiers>(model: gameTier, code: 200);
     } catch (e) {
-      logger!.e("Unable to fetch games ${e.toString()}");
+      logger.e("Unable to fetch games ${e.toString()}");
 
       allgames = [];
       return ApiResponse.withError(
-          e?.toString() ?? "Unable to fetch games", 400);
+          e.toString() ?? "Unable to fetch games", 400);
     }
   }
 

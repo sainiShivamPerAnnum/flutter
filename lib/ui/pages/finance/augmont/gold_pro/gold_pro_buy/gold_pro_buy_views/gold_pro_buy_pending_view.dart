@@ -118,7 +118,7 @@ class GoldProBuyPendingView extends StatelessWidget {
 
   void showTransactionPendingDialog() {
     S locale = locator<S>();
-    Future.delayed(Duration(seconds: 1), () {
+    Future.delayed(const Duration(seconds: 1), () {
       BaseUtil.openDialog(
         addToScreenStack: true,
         hapticVibrate: true,

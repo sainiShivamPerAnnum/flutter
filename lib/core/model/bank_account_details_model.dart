@@ -3,10 +3,10 @@ import 'dart:convert';
 import 'package:flutter/material.dart';
 
 class BankAccountDetailsModel {
-  final String?  id;
-  final String?  account;
-  final String?  ifsc;
-  final String?  name;
+  final String? id;
+  final String? account;
+  final String? ifsc;
+  final String? name;
   BankAccountDetailsModel({
     @required this.id,
     @required this.account,
@@ -15,10 +15,10 @@ class BankAccountDetailsModel {
   });
 
   BankAccountDetailsModel copyWith({
-    String ? id,
-    String ? account,
-    String ? ifsc,
-    String ? name,
+    String? id,
+    String? account,
+    String? ifsc,
+    String? name,
   }) {
     return BankAccountDetailsModel(
       id: id ?? this.id,

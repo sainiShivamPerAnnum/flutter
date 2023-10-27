@@ -19,7 +19,7 @@ class LoginMobileViewModel extends BaseViewModel {
   final AnalyticsService _analyticsService = locator<AnalyticsService>();
   final CustomLogger? logger = locator<CustomLogger>();
   final FocusNode mobileFocusNode = FocusNode();
-  bool _validate = true;
+  final bool _validate = true;
   bool _showTickCheck = false;
   bool showAvailableMobileNos = true;
   Log log = const Log("MobileInputScreen");
@@ -75,7 +75,7 @@ class LoginMobileViewModel extends BaseViewModel {
     Pattern pattern = "^[0-9]*\$";
     RegExp regex = RegExp(pattern as String);
     if (!regex.hasMatch(_mobileController.text) ||
-        _mobileController.text.length != 10){
+        _mobileController.text.length != 10) {
       return locale.validMobileNumber;
     }
 
@@ -102,7 +102,7 @@ class LoginMobileViewModel extends BaseViewModel {
   void onTermsAndConditionsClicked() {
     Haptic.vibrate();
     BaseUtil.launchUrl('https://fello.in/policy/terms-of-use');
-    _analyticsService!.track(eventName: AnalyticsEvents.termsAndConditions);
+    _analyticsService.track(eventName: AnalyticsEvents.termsAndConditions);
   }
 
   String getMobile() => _mobileController.text;

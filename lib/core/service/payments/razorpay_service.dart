@@ -28,7 +28,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 class RazorpayService extends ChangeNotifier {
-  final Log log = Log('RazorpayService');
+  final Log log = const Log('RazorpayService');
   CustomLogger? _logger;
   UserTransaction? _currentTxn;
   ValueChanged<UserTransaction?>? _txnUpdateListener;
@@ -97,7 +97,7 @@ class RazorpayService extends ChangeNotifier {
         properties: _txnService!.currentTransactionAnalyticsDetails ?? {});
 
     locator<InternalOpsService>().logFailure(
-      _userService!.baseUser!.uid,
+      _userService.baseUser!.uid,
       FailType.RazorpayTransactionFailed,
       {'message': "Razorpay payment cancelled or failed"},
     );
@@ -115,6 +115,7 @@ class RazorpayService extends ChangeNotifier {
 
   //generate order id // update transaction //creatre<UserTransaction> submitAu
   Future<bool?> initiateRazorpayTxn({
+    required InvestmentType investmentType,
     String? mobile,
     String? email,
     double? amount,
@@ -122,7 +123,6 @@ class RazorpayService extends ChangeNotifier {
     Map<String, dynamic>? lbMap,
     bool? skipMl,
     String? couponCode,
-    required InvestmentType investmentType,
     Map<String, dynamic>? goldProMap,
   }) async {
     if (!init(investmentType)) return null; //initialise razorpay

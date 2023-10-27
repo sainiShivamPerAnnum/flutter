@@ -5,9 +5,9 @@ import 'package:flutter/material.dart';
 
 class AutosaveSuggestionChipsRow extends StatelessWidget {
   const AutosaveSuggestionChipsRow({
-    super.key,
     required this.model,
     required this.frequency,
+    super.key,
   });
 
   final AutosaveProcessViewModel model;

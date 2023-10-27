@@ -14,7 +14,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class UpiAppSelectView extends StatelessWidget {
-  UpiAppSelectView({super.key, required this.model
+  UpiAppSelectView({required this.model, super.key
       // required this.appList,
       // this.selectedApp,
       // required this.onAppSelect,

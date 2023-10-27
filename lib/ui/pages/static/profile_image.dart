@@ -4,8 +4,8 @@ import 'package:flutter/material.dart';
 
 class NewProfileImage extends StatelessWidget {
   const NewProfileImage({
-    Key? key,
     required this.image,
+    Key? key,
     this.showAction = true,
     this.updateProfilePicture,
     // this.model,
@@ -121,7 +121,7 @@ class NewProfileImage extends StatelessWidget {
                 child: Container(
                   height: SizeConfig.padding40, // 20
                   width: SizeConfig.padding40, // 20
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     shape: BoxShape.circle,
                     color: UiConstants.kTextColor,
                   ),

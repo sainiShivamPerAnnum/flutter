@@ -74,7 +74,7 @@ class RedeemSucessfulScreen extends HookWidget {
                 ),
                 Padding(
                   padding:
-                  EdgeInsets.symmetric(horizontal: SizeConfig.padding26),
+                      EdgeInsets.symmetric(horizontal: SizeConfig.padding26),
                   child: subTitleWidget,
                 ),
                 SizedBox(
@@ -160,11 +160,11 @@ class RedeemSucessfulScreen extends HookWidget {
                             vertical: SizeConfig.padding12),
                         decoration: BoxDecoration(
                           color:
-                          UiConstants.kModalSheetSecondaryBackgroundColor,
+                              UiConstants.kModalSheetSecondaryBackgroundColor,
                           borderRadius: BorderRadius.only(
                             bottomLeft: Radius.circular(SizeConfig.roundness16),
                             bottomRight:
-                            Radius.circular(SizeConfig.roundness16),
+                                Radius.circular(SizeConfig.roundness16),
                           ),
                         ),
                         child: Row(
@@ -220,7 +220,7 @@ class RedeemSucessfulScreen extends HookWidget {
                     onPressed: () {
                       AppState.backButtonDispatcher!.didPopRoute();
                     },
-                    icon: Icon(
+                    icon: const Icon(
                       Icons.close,
                       color: Colors.white,
                     )),

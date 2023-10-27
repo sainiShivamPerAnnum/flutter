@@ -3,10 +3,10 @@ import 'package:flutter/material.dart';
 
 class BlackWhiteButton extends StatelessWidget {
   const BlackWhiteButton({
-    Key? key,
     required this.onPress,
-    this.child,
     required this.title,
+    Key? key,
+    this.child,
     this.padding,
     this.borderRadius,
     this.height,
@@ -27,8 +27,8 @@ class BlackWhiteButton extends StatelessWidget {
 
   const BlackWhiteButton.inverse({
     required this.onPress,
-    this.child,
     required this.title,
+    this.child,
     this.height,
     this.width,
     this.borderRadius,
@@ -54,7 +54,7 @@ class BlackWhiteButton extends StatelessWidget {
         shape: RoundedRectangleBorder(
             borderRadius: borderRadius ?? BorderRadius.circular(5),
             side: _showBorder
-                ? BorderSide(color: Colors.white)
+                ? const BorderSide(color: Colors.white)
                 : BorderSide.none),
         color: _color,
         child: child ??

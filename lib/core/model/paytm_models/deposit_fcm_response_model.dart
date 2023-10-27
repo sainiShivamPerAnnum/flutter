@@ -38,25 +38,24 @@ class DepositFcmResponseModel {
     flcBalance = json['flcBalance'] ?? '0';
     gtId = json['gtId'] ?? '';
     error = json['error'] ?? '';
-    status = json['status'] ??  false;
+    status = json['status'] ?? false;
     autosavePrompt = json['autosavePrompt'] ?? false;
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['goldBalance'] = this.goldBalance;
-    data['didWalletUpdate'] = this.didWalletUpdate;
-    data['isWalletCreated'] = this.isWalletCreated;
-    data['didFLCUpdate'] = this.didFLCUpdate;
-    data['augmontPrinciple'] = this.augmontPrinciple;
-    data['augmontGoldQty'] = this.augmontGoldQty;
-    data['amount'] = this.amount;
-    data['flcBalance'] = this.flcBalance;
-    data['gtId'] = this.gtId;
-    data['error'] = this.error;
-    data['status'] = this.status;
-    data['autosavePrompt'] = this.autosavePrompt;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['goldBalance'] = goldBalance;
+    data['didWalletUpdate'] = didWalletUpdate;
+    data['isWalletCreated'] = isWalletCreated;
+    data['didFLCUpdate'] = didFLCUpdate;
+    data['augmontPrinciple'] = augmontPrinciple;
+    data['augmontGoldQty'] = augmontGoldQty;
+    data['amount'] = amount;
+    data['flcBalance'] = flcBalance;
+    data['gtId'] = gtId;
+    data['error'] = error;
+    data['status'] = status;
+    data['autosavePrompt'] = autosavePrompt;
     return data;
   }
 }
-

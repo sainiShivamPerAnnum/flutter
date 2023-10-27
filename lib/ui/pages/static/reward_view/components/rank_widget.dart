@@ -64,9 +64,9 @@ class RankWidget extends StatelessWidget {
   _buildRankPiller({
     required int rank,
     required String image,
+    required Color color,
     int? priceMoney,
     int? pricePoint,
-    required Color color,
     BuildContext? context,
   }) {
     double pillerBoxHeight = SizeConfig.screenWidth! * 0.5556 -
@@ -77,7 +77,7 @@ class RankWidget extends StatelessWidget {
         ((rank - 1.0) *
             SizeConfig.screenWidth! *
             0.055); // 180 - (rank - 1) * 20
-            S locale = S.of(context!);
+    S locale = S.of(context!);
     return SizedBox(
       height: pillerBoxHeight,
       child: Stack(
@@ -113,7 +113,7 @@ class RankWidget extends StatelessWidget {
                     height: SizeConfig.padding24,
                   ),
                   Text(
-                    locale.rs+' $priceMoney',
+                    locale.rs + ' $priceMoney',
                     style: TextStyles.sourceSans.body3,
                   ),
                   SizedBox(

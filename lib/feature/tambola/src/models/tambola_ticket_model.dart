@@ -133,12 +133,12 @@ class TambolaValueObject {
   static const int INVALID = -1;
 
   TambolaValueObject(String val) {
-    String int_part = val.replaceAll(RegExp('[^0-9]'), '');
-    String char_part = val.replaceAll(int_part, '');
+    String intPart = val.replaceAll(RegExp('[^0-9]'), '');
+    String charPart = val.replaceAll(intPart, '');
     //log.debug('Result: $char_part and $int_part');
 
     try {
-      int bval = int.parse(int_part);
+      int bval = int.parse(intPart);
       if (bval < 1 || bval > 90) {
         _valueInvalid = true;
       } else {
@@ -148,10 +148,10 @@ class TambolaValueObject {
       _valueInvalid = true;
     }
 
-    if (char_part.length != 1) {
+    if (charPart.length != 1) {
       _indexInvalid = true;
     } else {
-      int bindex = char_part.codeUnitAt(0);
+      int bindex = charPart.codeUnitAt(0);
       if (bindex > 96 && bindex < 123) {
         _index = bindex - 97;
       } else if (bindex == 65) {

@@ -21,9 +21,9 @@ import 'package:lottie/lottie.dart';
 class GoldBuyLoadingView extends StatelessWidget {
   final GoldBuyViewModel model;
 
-  GoldBuyLoadingView({super.key, required this.model});
+  GoldBuyLoadingView({required this.model, super.key});
 
-  final AugmontTransactionService? _augTxnService =
+  final AugmontTransactionService _augTxnService =
       locator<AugmontTransactionService>();
   final int waitTimeInSec = 45;
 

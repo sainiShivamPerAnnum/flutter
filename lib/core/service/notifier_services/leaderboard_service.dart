@@ -12,21 +12,21 @@ import 'package:flutter/cupertino.dart';
 import 'package:intl/intl.dart';
 
 class LeaderboardService extends ChangeNotifier {
-  final CustomLogger? _logger = locator<CustomLogger>();
-  final GetterRepository? _getterRepo = locator<GetterRepository>();
-  final UserService? _userService = locator<UserService>();
-  final DBModel? _dbModel = locator<DBModel>();
+  final CustomLogger _logger = locator<CustomLogger>();
+  final GetterRepository _getterRepo = locator<GetterRepository>();
+  final UserService _userService = locator<UserService>();
+  final DBModel _dbModel = locator<DBModel>();
   final ScrollController ownController = ScrollController();
   final ScrollController parentController = ScrollController();
-  int _referralLBLength = 0;
-  List<String?> _userProfilePicUrl = [];
+  final int _referralLBLength = 0;
+  final List<String?> _userProfilePicUrl = [];
   bool isUserInTopThree = false;
   bool _isLeaderboardLoading = false;
 
-  get isLeaderboardLoading => this._isLeaderboardLoading;
+  get isLeaderboardLoading => _isLeaderboardLoading;
 
   set isLeaderboardLoading(value) {
-    this._isLeaderboardLoading = value;
+    _isLeaderboardLoading = value;
     notifyListeners();
     _logger!.d("Leaderboard state notifier updated");
   }
@@ -36,13 +36,13 @@ class LeaderboardService extends ChangeNotifier {
   List<ScoreBoard>? _referralLeaderBoard = [];
 
   LeaderboardModel? _WebGameLeaderBoard;
-  LeaderboardModel? get WebGameLeaderBoard => this._WebGameLeaderBoard;
+  LeaderboardModel? get WebGameLeaderBoard => _WebGameLeaderBoard;
 
-  List<ScoreBoard>? get referralLeaderBoard => this._referralLeaderBoard;
+  List<ScoreBoard>? get referralLeaderBoard => _referralLeaderBoard;
 
-  List<String?> get userProfilePicUrl => this._userProfilePicUrl;
+  List<String?> get userProfilePicUrl => _userProfilePicUrl;
 
-  get referralLBLength => this._referralLBLength;
+  get referralLBLength => _referralLBLength;
 
   setReferralLeaderBoard() {
     notifyListeners();

@@ -174,11 +174,11 @@ class OutlinedTooltipBorder extends CustomPainter {
         size.height * 0.01948878);
     path_0.close();
 
-    Paint paint_0_stroke = Paint()
+    Paint paint0Stroke = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = width;
-    paint_0_stroke.color = color;
-    canvas.drawPath(path_0, paint_0_stroke);
+    paint0Stroke.color = color;
+    canvas.drawPath(path_0, paint0Stroke);
 
     // Paint paint_0_fill = Paint()..style = PaintingStyle.fill;
     // paint_0_fill.color = Color(0xff000000).withOpacity(1.0);

@@ -15,10 +15,10 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class TxnHistoryService extends ChangeNotifier {
-  final CustomLogger? _logger = locator<CustomLogger>();
+  final CustomLogger _logger = locator<CustomLogger>();
   final S locale = locator<S>();
-  final BaseUtil? _baseUtil = locator<BaseUtil>();
-  final TransactionHistoryRepository? _transactionHistoryRepo =
+  final BaseUtil _baseUtil = locator<BaseUtil>();
+  final TransactionHistoryRepository _transactionHistoryRepo =
       locator<TransactionHistoryRepository>();
   final _paymentRepo = locator<PaymentRepository>();
   List<UserTransaction>? _txnList = [];
@@ -60,9 +60,9 @@ class TxnHistoryService extends ChangeNotifier {
   }
 
   fetchTransactions({
+    required InvestmentType subtype,
     String? status,
     String? type,
-    required InvestmentType subtype,
   }) async {
     //fetch filtered transactions
     final response = await _transactionHistoryRepo!.getUserTransactions(

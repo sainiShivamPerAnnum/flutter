@@ -21,11 +21,11 @@ class TransactionSummary extends StatelessWidget {
   final TxnHistoryService _txnHistoryService = locator<TxnHistoryService>();
 
   TransactionSummary(
-      {super.key,
-      this.summary,
-      required this.assetType,
+      {required this.assetType,
       required this.txnType,
       required this.createdOn,
+      super.key,
+      this.summary,
       this.lbMap});
 
   bool isTBD = false;
@@ -170,7 +170,7 @@ class TransactionSummary extends StatelessWidget {
                   Text(
                     subtitle ??
                         (summary[index].timestamp != null
-                            ? "${_txnHistoryService!.getFormattedDateAndTime(summary[index].timestamp!)}"
+                            ? "${_txnHistoryService.getFormattedDateAndTime(summary[index].timestamp!)}"
                             : summary[index].value!),
                     style: TextStyles.sourceSans.body4
                         .colour(const Color(0xffA0A0A0)),

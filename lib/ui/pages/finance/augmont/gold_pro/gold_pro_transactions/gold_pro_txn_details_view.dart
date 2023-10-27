@@ -208,9 +208,9 @@ class GoldProTransactionsDetailsView extends StatelessWidget {
 
 class SubInfoTile extends StatelessWidget {
   const SubInfoTile({
-    super.key,
     required this.title,
     required this.subtitle,
+    super.key,
   });
 
   final String title, subtitle;

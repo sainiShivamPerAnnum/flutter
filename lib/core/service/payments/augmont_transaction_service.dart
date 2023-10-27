@@ -149,7 +149,7 @@ class AugmontTransactionService extends BaseTransactionService {
             'redirectUrl': txnResponse.model!.data!.intent,
             'packageName': currentGoldPurchaseDetails.upiChoice!.packageName
           });
-          _logger.d("Result from initiatePsp: ${result}");
+          _logger.d("Result from initiatePsp: $result");
 
           if (result.toString().toLowerCase().contains('failure')) {
             isGoldBuyInProgress = false;
@@ -368,7 +368,7 @@ class AugmontTransactionService extends BaseTransactionService {
     AppState.isRepeated = false;
     AppState.type = null;
     AppState.isTxnProcessing = true;
-    Future.delayed(Duration(seconds: 1), () {
+    Future.delayed(const Duration(seconds: 1), () {
       BaseUtil.openDialog(
         addToScreenStack: true,
         hapticVibrate: true,

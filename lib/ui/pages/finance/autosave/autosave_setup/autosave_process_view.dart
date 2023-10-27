@@ -78,9 +78,9 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
                   model.trackAutosaveBackPress();
                 },
               ),
-              actions: [
+              actions: const [
                 Row(
-                  children: const [FaqPill(type: FaqsType.autosave)],
+                  children: [FaqPill(type: FaqsType.autosave)],
                 )
               ],
             ),
@@ -136,7 +136,7 @@ class AutosaveSetupView extends StatelessWidget {
 class AutosaveSuccessView extends StatelessWidget {
   final AutosaveProcessViewModel model;
 
-  const AutosaveSuccessView({super.key, required this.model});
+  const AutosaveSuccessView({required this.model, super.key});
 
   @override
   Widget build(BuildContext context) {

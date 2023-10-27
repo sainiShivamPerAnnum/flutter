@@ -33,7 +33,7 @@ class LendboxWithdrawalSuccessView extends StatelessWidget {
           Padding(
             padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding28),
             child: Text(
-              "Your withdrawal request has been placed and the money will be credited to your account by ${DateHelper.getDateInHumanReadableFormat(DateTime.now().add(Duration(days: 5)))}",
+              "Your withdrawal request has been placed and the money will be credited to your account by ${DateHelper.getDateInHumanReadableFormat(DateTime.now().add(const Duration(days: 5)))}",
               style: TextStyles.sourceSans.body2.setOpacity(0.7),
               textAlign: TextAlign.center,
             ),

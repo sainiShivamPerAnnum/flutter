@@ -6,12 +6,11 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 
 class SignInOptions extends StatefulWidget {
   final Function? onGoogleSignIn, onEmailSignIn;
-  SignInOptions({this.onEmailSignIn, this.onGoogleSignIn});
+  const SignInOptions({this.onEmailSignIn, this.onGoogleSignIn});
   @override
   _SignInOptionsState createState() => _SignInOptionsState();
 }
@@ -19,13 +18,14 @@ class SignInOptions extends StatefulWidget {
 class _SignInOptionsState extends State<SignInOptions> {
   bool _isGoogleSigningInProgress = false;
 
-  get isGoogleSigningInProgress => this._isGoogleSigningInProgress;
+  get isGoogleSigningInProgress => _isGoogleSigningInProgress;
 
   set isGoogleSigningInProgress(value) {
-    if (mounted)
+    if (mounted) {
       setState(() {
-        this._isGoogleSigningInProgress = value;
+        _isGoogleSigningInProgress = value;
       });
+    }
   }
 
   @override
@@ -39,16 +39,15 @@ class _SignInOptionsState extends State<SignInOptions> {
       child: Wrap(
         children: [
           Container(
-            decoration: BoxDecoration(),
+            decoration: const BoxDecoration(),
             padding: EdgeInsets.all(
               SizeConfig.blockSizeHorizontal * 5,
             ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                Text(locale.obChooseEmail,
-                    style: TextStyles.rajdhaniB.title5),
-                Divider(
+                Text(locale.obChooseEmail, style: TextStyles.rajdhaniB.title5),
+                const Divider(
                     height: 32, thickness: 1, color: UiConstants.kTextColor2),
                 ListTile(
                   leading: SvgPicture.asset(
@@ -58,11 +57,11 @@ class _SignInOptionsState extends State<SignInOptions> {
                   ),
                   trailing: isGoogleSigningInProgress
                       ? Container(
-                          child: CircularProgressIndicator(
+                          child: const CircularProgressIndicator(
                             strokeWidth: 0.5,
                           ),
                         )
-                      : SizedBox(),
+                      : const SizedBox(),
                   title: Text(
                     locale.obChooseGoogle,
                     style: TextStyles.sourceSans.body2,
@@ -75,9 +74,9 @@ class _SignInOptionsState extends State<SignInOptions> {
                     isGoogleSigningInProgress = false;
                   },
                 ),
-                Divider(),
+                const Divider(),
                 ListTile(
-                    leading: Icon(
+                    leading: const Icon(
                       Icons.alternate_email,
                       color: UiConstants.primaryColor,
                     ),
@@ -88,7 +87,7 @@ class _SignInOptionsState extends State<SignInOptions> {
                         widget.onEmailSignIn!();
                       }
                     }),
-                SizedBox(
+                const SizedBox(
                   height: 24,
                 )
               ],

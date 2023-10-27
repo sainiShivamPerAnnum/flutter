@@ -15,7 +15,8 @@ import 'package:intl/intl.dart';
 enum UserDecision { REINVEST, WITHDRAW, MOVETOFLEXI, NOTDECIDED }
 
 class ReInvestmentSheet extends StatelessWidget {
-  ReInvestmentSheet({required this.decision, required this.depositData, super.key}) {
+  ReInvestmentSheet(
+      {required this.decision, required this.depositData, super.key}) {
     isLendboxOldUser =
         locator<UserService>().userSegments.contains(Constants.US_FLO_OLD);
   }
@@ -102,7 +103,7 @@ class ReInvestmentSheet extends StatelessWidget {
                       SizedBox(width: SizeConfig.padding8),
                       Text(getTitle(),
                           style:
-                          TextStyles.rajdhaniSB.body0.colour(Colors.white))
+                              TextStyles.rajdhaniSB.body0.colour(Colors.white))
                     ],
                   ),
                   SizedBox(height: SizeConfig.padding26),
@@ -120,7 +121,7 @@ class ReInvestmentSheet extends StatelessWidget {
                   ),
                   SizedBox(
                       height: (decision == UserDecision.MOVETOFLEXI ||
-                          decision == UserDecision.WITHDRAW)
+                              decision == UserDecision.WITHDRAW)
                           ? SizeConfig.padding20
                           : SizeConfig.padding10),
                 ],

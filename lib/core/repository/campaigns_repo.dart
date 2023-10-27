@@ -27,7 +27,7 @@ class CampaignRepo extends BaseRepo {
   Future<ApiResponse<dynamic>> getOngoingEvents() async {
     List<EventModel> events = [];
     try {
-      final String? _uid = userService!.baseUser!.uid;
+      final String? _uid = userService.baseUser!.uid;
       final _queryParams = {"uid": _uid};
 
       return await _cacheService.cachedApi(
@@ -69,7 +69,7 @@ class CampaignRepo extends BaseRepo {
       );
 
       // final responseData = response["data"];
-      logger!.d(response);
+      logger.d(response);
       if (response != null) {
         response.forEach((e) {
           facts.add(FelloFactsModel.fromMap(e));
@@ -77,9 +77,9 @@ class CampaignRepo extends BaseRepo {
       }
       return ApiResponse<List<FelloFactsModel>>(model: facts, code: 200);
     } catch (e) {
-      logger!.e(e.toString());
+      logger.e(e.toString());
       return ApiResponse.withError(
-          e?.toString() ?? "Unable to fetch campaigns", 400);
+          e.toString() ?? "Unable to fetch campaigns", 400);
     }
   }
 

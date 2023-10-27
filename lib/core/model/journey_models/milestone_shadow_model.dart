@@ -1,6 +1,5 @@
 import 'dart:convert';
 import 'package:felloapp/core/model/journey_models/journey_asset_model.dart';
-import 'package:flutter/material.dart';
 
 class MilestoneShadowModel {
   final String id;
@@ -18,10 +17,10 @@ class MilestoneShadowModel {
     required this.asset,
     required this.y,
     required this.x,
-    this.animType = "none",
-    this.isCompleted = false,
     required this.page,
     required this.index,
+    this.animType = "none",
+    this.isCompleted = false,
     this.vFlip = false,
     this.hFlip = false,
   });
@@ -46,12 +45,12 @@ class MilestoneShadowModel {
       id: id ?? this.id,
       name: name ?? this.name,
       asset: asset ?? this.asset,
-      y: dy ?? this.y,
-      x: dx ?? this.x,
+      y: dy ?? y,
+      x: dx ?? x,
       animType: animType ?? this.animType,
       isCompleted: isCompleted ?? this.isCompleted,
       page: page ?? this.page,
-      index: level ?? this.index,
+      index: level ?? index,
       vFlip: vFlip ?? this.vFlip,
       hFlip: hFlip ?? this.hFlip,
     );

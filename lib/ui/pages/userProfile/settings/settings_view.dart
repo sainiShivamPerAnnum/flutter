@@ -58,17 +58,18 @@ class SettingsView extends StatelessWidget {
                 ),
                 ListView.separated(
                   shrinkWrap: true,
-                  physics: NeverScrollableScrollPhysics(),
+                  physics: const NeverScrollableScrollPhysics(),
                   itemCount: model.items!.length,
                   separatorBuilder: (ctx, i) {
-                    if (i != model.items!.length - 1)
+                    if (i != model.items!.length - 1) {
                       return Divider(
                         color: UiConstants.kTextColor3.withOpacity(0.2),
                         endIndent: SizeConfig.pageHorizontalMargins,
                         indent: SizeConfig.pageHorizontalMargins,
                       );
-                    else
-                      return SizedBox();
+                    } else {
+                      return const SizedBox();
+                    }
                   },
                   itemBuilder: (context, i) => ListTile(
                     onTap: () {
@@ -85,7 +86,7 @@ class SettingsView extends StatelessWidget {
                         fit: BoxFit.contain),
                     title: Text(model.items![i].title,
                         style: TextStyles.body1.colour(Colors.white)),
-                    trailing: Icon(
+                    trailing: const Icon(
                       Icons.arrow_forward_ios_rounded,
                       color: Colors.white,
                     ),

@@ -98,7 +98,7 @@ class LoginMobileViewState extends State<LoginMobileView> {
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             // SizedBox(height: SizeConfig.screenHeight! * 0.10),
-            LoginImage(),
+            const LoginImage(),
             SizedBox(height: SizeConfig.padding8),
             Text(
               locale.obLoginHeading,

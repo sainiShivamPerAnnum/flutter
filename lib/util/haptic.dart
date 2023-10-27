@@ -5,17 +5,19 @@ import 'package:vibration/vibration.dart';
 
 class Haptic {
   static void vibrate() {
-    if (Platform.isAndroid)
+    if (Platform.isAndroid) {
       HapticFeedback.vibrate();
-    else
+    } else {
       HapticFeedback.lightImpact();
+    }
   }
 
   static void strongVibrate() {
-    if (Platform.isAndroid)
+    if (Platform.isAndroid) {
       HapticFeedback.mediumImpact();
-    else
+    } else {
       HapticFeedback.lightImpact();
+    }
   }
 
   static void slotVibrate() {

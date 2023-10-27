@@ -69,7 +69,7 @@ class GameModel {
       String? icon,
       String? description}) {
     return GameModel(
-        id: id ?? this.id,
+        id: id ?? id,
         gameUri: gameUri ?? this.gameUri,
         gameName: gameName ?? this.gameName,
         thumbnailUri: thumbnailUri ?? this.thumbnailUri,
@@ -80,12 +80,12 @@ class GameModel {
         route: route ?? this.route,
         gameCode: gameCode ?? this.gameCode,
         code: code ?? this.code,
-        isGOW: isGOW ?? this.isGOW,
-        order: order ?? this.order,
-        isTrending: isTrending ?? this.isTrending,
-        event: event ?? this.event,
+        isGOW: isGOW ?? isGOW,
+        order: order ?? order,
+        isTrending: isTrending ?? isTrending,
+        event: event ?? event,
         icon: icon ?? this.icon,
-        rewardCriteria: rewardCriteria ?? this.rewardCriteria,
+        rewardCriteria: rewardCriteria ?? rewardCriteria,
         description: description ?? this.description);
   }
 

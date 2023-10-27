@@ -17,9 +17,9 @@ import 'package:webview_flutter/webview_flutter.dart';
 
 class WebGameView extends StatelessWidget {
   const WebGameView(
-      {Key? key,
-      required this.initialUrl,
+      {required this.initialUrl,
       required this.game,
+      Key? key,
       this.inLandscapeMode = false})
       : super(key: key);
   final String initialUrl;
@@ -74,10 +74,10 @@ class GameView extends StatefulWidget {
   WebGameViewModel model;
 
   GameView(
-      {super.key,
-      required this.inLandscapeMode,
+      {required this.inLandscapeMode,
       required this.initialUrl,
-      required this.model});
+      required this.model,
+      super.key});
 
   @override
   State<GameView> createState() => _GameViewState();

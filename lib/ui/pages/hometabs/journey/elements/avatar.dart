@@ -11,12 +11,12 @@ final avatarKey = GlobalKey();
 
 class Avatar extends StatelessWidget {
   final JourneyPageViewModel? model;
-  Avatar({Key? key, this.model}) : super(key: key);
+  const Avatar({Key? key, this.model}) : super(key: key);
   @override
   Widget build(BuildContext context) {
     print(model!.avatarPosition);
     return PropertyChangeConsumer<JourneyService, JourneyServiceProperties>(
-      properties: [
+      properties: const [
         JourneyServiceProperties.AvatarPosition,
         JourneyServiceProperties.Pages
       ],
@@ -77,7 +77,7 @@ class AvatarPainter extends CustomPainter {
 class AvatarPathPainter extends StatelessWidget {
   final JourneyPageViewModel model;
 
-  const AvatarPathPainter({Key? key, required this.model}) : super(key: key);
+  const AvatarPathPainter({required this.model, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {

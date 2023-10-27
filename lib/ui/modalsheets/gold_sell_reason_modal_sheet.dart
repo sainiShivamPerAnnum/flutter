@@ -12,7 +12,7 @@ import 'package:flutter/material.dart';
 class SellingReasonBottomSheet extends StatefulWidget {
   final InvestmentType investmentType;
 
-  const SellingReasonBottomSheet({Key? key, required this.investmentType})
+  const SellingReasonBottomSheet({required this.investmentType, Key? key})
       : super(key: key);
 
   @override
@@ -74,7 +74,7 @@ class _SellingReasonBottomSheetState extends State<SellingReasonBottomSheet> {
                       groupValue: selectedReasonForSelling,
                       onChanged: (dynamic value) {
                         selectedReasonForSelling = x;
-                        _analyticsService?.track(
+                        _analyticsService.track(
                             eventName: AnalyticsEvents.sellReason,
                             properties: {"Reason": selectedReasonForSelling});
                         AppState.backButtonDispatcher!.didPopRoute();

@@ -20,7 +20,7 @@ class ReferralPolicy extends StatefulWidget {
 }
 
 class _ReferralPolicyState extends State<ReferralPolicy> {
-  Log log = new Log('ReferralPolicy');
+  Log log = const Log('ReferralPolicy');
   String? htmlString;
   bool _downloadFailed = false;
   bool _isLoadComplete = false;
@@ -74,14 +74,14 @@ class _ReferralPolicyState extends State<ReferralPolicy> {
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
-    return new Scaffold(
+    return Scaffold(
       body: Container(
         width: SizeConfig.screenWidth,
         height: SizeConfig.screenHeight,
         child: Column(
           children: [
             FelloAppBar(
-              leading: FelloAppBarBackButton(),
+              leading: const FelloAppBarBackButton(),
               title: locale.refPolicy,
             ),
             Expanded(
@@ -96,7 +96,7 @@ class _ReferralPolicyState extends State<ReferralPolicy> {
                     color: Colors.white,
                   ),
                   child: SingleChildScrollView(
-                    physics: BouncingScrollPhysics(),
+                    physics: const BouncingScrollPhysics(),
                     child: Column(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
@@ -111,7 +111,7 @@ class _ReferralPolicyState extends State<ReferralPolicy> {
                                   padding: const EdgeInsets.all(20),
                                   child: Text(
                                     locale.refPolicyFailed,
-                                    style: TextStyle(
+                                    style: const TextStyle(
                                         fontSize: 16,
                                         fontWeight: FontWeight.w300,
                                         color: UiConstants.accentColor),
@@ -120,9 +120,9 @@ class _ReferralPolicyState extends State<ReferralPolicy> {
                               )
                             : Container(),
                         (!_isLoadComplete)
-                            ? Center(
+                            ? const Center(
                                 child: Padding(
-                                  padding: const EdgeInsets.all(30),
+                                  padding: EdgeInsets.all(30),
                                   child: SpinKitWave(
                                     color: UiConstants.primaryColor,
                                   ),

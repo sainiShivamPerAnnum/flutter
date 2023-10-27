@@ -27,7 +27,7 @@ class FAQModel {
 class FAQ {
   final String? header;
   final String? response;
-  final int ?order;
+  final int? order;
 
   FAQ({this.header, this.order, this.response});
 }

@@ -1,7 +1,6 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/referral_details_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
-import 'package:felloapp/core/repository/referral_repo.dart';
 import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
@@ -13,15 +12,14 @@ import 'package:felloapp/util/locator.dart';
 
 class AnalyticsProperties {
   //Required depedencies
-  static final UserService? _userService = locator<UserService>();
-  static final UserCoinService? _userCoinService = locator<UserCoinService>();
+  static final UserService _userService = locator<UserService>();
+  static final UserCoinService _userCoinService = locator<UserCoinService>();
   // static final PaytmService? _paytmService = locator<PaytmService>();
   static final SubService _subService = locator<SubService>();
-  static final JourneyService? _journeyService = locator<JourneyService>();
-  static final TxnHistoryService? _txnHistoryService =
+  static final JourneyService _journeyService = locator<JourneyService>();
+  static final TxnHistoryService _txnHistoryService =
       locator<TxnHistoryService>();
-  static final BaseUtil? _baseUtil = locator<BaseUtil>();
-  final ReferralRepo? _referralRepo = locator<ReferralRepo>();
+  static final BaseUtil _baseUtil = locator<BaseUtil>();
 
   static getTotalReferralCount() {
     if (!_baseUtil!.referralsFetched!) {

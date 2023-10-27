@@ -12,20 +12,20 @@ import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
 
 class MiniTransactionCardViewModel extends BaseViewModel {
-  final CustomLogger? _logger = locator<CustomLogger>();
+  final CustomLogger _logger = locator<CustomLogger>();
 
   final TxnHistoryService _txnHistoryService = locator<TxnHistoryService>();
   AppState? appState;
   bool _isRefreshing = false;
-  bool get isRefreshing => this._isRefreshing;
+  bool get isRefreshing => _isRefreshing;
   List<UserTransaction>? transactions = [];
 
   set isRefreshing(bool value) {
-    this._isRefreshing = value;
+    _isRefreshing = value;
     notifyListeners();
   }
 
-  List<UserTransaction>? get txnList => _txnHistoryService!.txnList;
+  List<UserTransaction>? get txnList => _txnHistoryService.txnList;
 
   TxnHistoryService? get txnHistoryService => _txnHistoryService;
 

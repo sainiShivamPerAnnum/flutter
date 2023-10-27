@@ -10,7 +10,7 @@ class FelloButtonLg extends StatelessWidget {
   final Function? onPressed;
   final Color? color;
   final double? height;
-  FelloButtonLg({this.child, this.onPressed, this.color, this.height});
+  const FelloButtonLg({this.child, this.onPressed, this.color, this.height});
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);

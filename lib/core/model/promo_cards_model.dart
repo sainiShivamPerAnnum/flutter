@@ -1,11 +1,10 @@
 import 'package:felloapp/core/model/helper_model.dart';
 import 'package:felloapp/util/logger.dart';
-import 'package:flutter/material.dart';
 
 class PromoCardModel {
-  static Log log = new Log('PromoCard');
+  static Log log = const Log('PromoCard');
 
-int? _position;
+  int? _position;
   final String? _title;
   final String? _subtitle;
   final String? _buttonText;
@@ -14,7 +13,7 @@ int? _position;
   final String? _bgImage;
   final int _gridX;
   final int minVersion;
-  get position => this._position;
+  get position => _position;
   static final helper =
       HelperModel<PromoCardModel>((map) => PromoCardModel.fromMap(map));
 
@@ -41,19 +40,18 @@ int? _position;
             cMap['gridX'] ?? 2,
             cMap['minVersion'] ?? 0);
 
-  set position(value) => this.position = value;
+  set position(value) => position = value;
 
-   String? get title => this._title;
+  String? get title => _title;
 
-  String? get subtitle => this._subtitle;
+  String? get subtitle => _subtitle;
 
-  String? get buttonText => this._buttonText;
+  String? get buttonText => _buttonText;
 
-  String? get actionUri => this._actionUri;
+  String? get actionUri => _actionUri;
 
-  int? get bgColor => this._bgColor;
+  int? get bgColor => _bgColor;
 
   String? get bgImage => _bgImage;
   int get gridX => _gridX;
 }
-

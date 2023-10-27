@@ -37,7 +37,7 @@ class GoldSellView extends StatelessWidget {
           duration: const Duration(milliseconds: 500),
           child: Stack(
             children: [
-              _getBackground(txnService!),
+              _getBackground(txnService),
               PageTransitionSwitcher(
                 duration: const Duration(milliseconds: 500),
                 transitionBuilder: (
@@ -54,8 +54,7 @@ class GoldSellView extends StatelessWidget {
                 },
                 child: BaseView<GoldSellViewModel>(
                     onModelReady: (model) {
-                      WidgetsBinding.instance!
-                          .addPostFrameCallback((timeStamp) {
+                      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
                         txnService.currentTransactionState =
                             TransactionState.idle;
                       });

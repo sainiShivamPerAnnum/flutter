@@ -12,8 +12,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 class AutoPaySetupOrUpdateView extends StatelessWidget {
   const AutoPaySetupOrUpdateView({
-    super.key,
     required this.model,
+    super.key,
   });
 
   final AutosaveProcessViewModel model;
@@ -114,8 +114,8 @@ class AutosaveSetupSubtitle extends StatelessWidget {
 
 class AutosaveSetupTitle extends StatelessWidget {
   const AutosaveSetupTitle({
-    super.key,
     required this.model,
+    super.key,
   });
 
   final AutosaveProcessViewModel model;

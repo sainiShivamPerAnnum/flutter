@@ -16,7 +16,7 @@ import 'package:webview_flutter/webview_flutter.dart';
 
 class Blogs extends StatelessWidget {
   final SaveViewModel model;
-  const Blogs({Key? key, required this.model}) : super(key: key);
+  const Blogs({required this.model, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -67,7 +67,7 @@ class Blogs extends StatelessWidget {
 
 class SaveBlogSection extends StatelessWidget {
   final SaveViewModel model;
-  const SaveBlogSection({Key? key, required this.model}) : super(key: key);
+  const SaveBlogSection({required this.model, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -115,7 +115,7 @@ class SaveBlogSection extends StatelessWidget {
                 },
               )
             : model.blogPosts == null || model.blogPosts!.isEmpty
-                ? SizedBox()
+                ? const SizedBox()
                 : ListView.builder(
                     scrollDirection: Axis.horizontal,
                     itemCount: model.blogPosts!.length,
@@ -170,7 +170,7 @@ class _BlogWebViewState extends State<BlogWebView> {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: UiConstants.kBackgroundColor3,
-        leading: FelloAppBarBackButton(),
+        leading: const FelloAppBarBackButton(),
         centerTitle: true,
         title:
             Text(widget.title ?? 'Title', style: TextStyles.rajdhaniSB.title5),

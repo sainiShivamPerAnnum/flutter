@@ -81,7 +81,7 @@ class MyWinningsViewModel extends BaseViewModel {
   }
 
   void trackScratchCardsOpen() {
-    _analyticsService!
+    _analyticsService
         .track(eventName: AnalyticsEvents.scratchCardSectionOpen, properties: {
       "Unscratched tickets count": _gtService.unscratchedTicketsCount,
       "Scratched tickets count": _gtService.activeScratchCards.length,
@@ -155,7 +155,7 @@ class MyWinningsViewModel extends BaseViewModel {
       content: FelloConfirmationDialog(
         result: (res) async {
           if (res) {
-            claim(choice, _userService!.userFundWallet!.unclaimedBalance);
+            claim(choice, _userService.userFundWallet!.unclaimedBalance);
           }
         },
         showCrossIcon: true,
@@ -164,8 +164,8 @@ class MyWinningsViewModel extends BaseViewModel {
             : Assets.augmontShare,
         title: "Confirmation",
         subtitle: choice == PrizeClaimChoice.AMZ_VOUCHER
-            ? "Are you sure you want to redeem ₹ ${BaseUtil.digitPrecision(_userService!.userFundWallet!.unclaimedBalance, 2, false)} as an Amazon gift voucher?"
-            : "Are you sure you want to redeem ₹ ${BaseUtil.digitPrecision(_userService!.userFundWallet!.unclaimedBalance, 2, false)} as Digital Gold?",
+            ? "Are you sure you want to redeem ₹ ${BaseUtil.digitPrecision(_userService.userFundWallet!.unclaimedBalance, 2, false)} as an Amazon gift voucher?"
+            : "Are you sure you want to redeem ₹ ${BaseUtil.digitPrecision(_userService.userFundWallet!.unclaimedBalance, 2, false)} as Digital Gold?",
         accept: "Yes",
         reject: "No",
         acceptColor: UiConstants.primaryColor,
@@ -175,8 +175,10 @@ class MyWinningsViewModel extends BaseViewModel {
     );
   }
 
-  showSuccessPrizeWithdrawalDialog(PrizeClaimChoice choice,
-      String subtitle,) async {
+  showSuccessPrizeWithdrawalDialog(
+    PrizeClaimChoice choice,
+    String subtitle,
+  ) async {
     AppState.screenStack.add(ScreenItem.dialog);
     unawaited(showDialog(
         context: AppState.delegate!.navigatorKey.currentContext!,
@@ -188,7 +190,7 @@ class MyWinningsViewModel extends BaseViewModel {
                   if (res) {
                     try {
                       String? url;
-                      final link = await _appFlyer!.inviteLink();
+                      final link = await _appFlyer.inviteLink();
                       if (link['status'] == 'success') {
                         url = link['payload']['userInviteUrl'];
                         url ??= link['payload']['userInviteURL'];
@@ -196,10 +198,10 @@ class MyWinningsViewModel extends BaseViewModel {
 
                       if (url != null) {
                         capture(
-                            'Hey, I won ₹${_userService!.userFundWallet!.prizeBalance.toInt()} on Fello! \nLet\'s save and play together: $url');
+                            'Hey, I won ₹${_userService.userFundWallet!.prizeBalance.toInt()} on Fello! \nLet\'s save and play together: $url');
                       }
                     } catch (e) {
-                      _logger!.e(e.toString());
+                      _logger.e(e.toString());
                       BaseUtil.showNegativeAlert(
                           locale.errorOccured, locale.tryLater);
                     }
@@ -216,10 +218,10 @@ class MyWinningsViewModel extends BaseViewModel {
                         child: RepaintBoundary(
                           key: imageKey,
                           child: ShareCard(
-                            dpUrl: _userService!.myUserDpUrl,
+                            dpUrl: _userService.myUserDpUrl,
                             claimChoice: choice,
                             prizeAmount:
-                                _userService!.userFundWallet!.prizeBalance,
+                                _userService.userFundWallet!.prizeBalance,
                           ),
                         ),
                       ),
@@ -250,7 +252,7 @@ class MyWinningsViewModel extends BaseViewModel {
   }
 
   void shareOnWhatsapp() {
-    _logger!.i("Whatsapp share triggered");
+    _logger.i("Whatsapp share triggered");
     AppState.backButtonDispatcher!.didPopRoute();
   }
 
@@ -279,14 +281,14 @@ class MyWinningsViewModel extends BaseViewModel {
 // SET AND GET CLAIM CHOICE
   Future<bool> _registerClaimChoice(PrizeClaimChoice choice) async {
     if (choice == PrizeClaimChoice.NA) return false;
-    final response = await _prizingRepo!.claimPrize(
-      _userService!.userFundWallet!.unclaimedBalance,
+    final response = await _prizingRepo.claimPrize(
+      _userService.userFundWallet!.unclaimedBalance,
       choice,
     );
 
     if (response.isSuccess()) {
-      _userService!.getUserFundWalletData();
-      _transactionHistoryService!.updateTransactions(InvestmentType.AUGGOLD99);
+      _userService.getUserFundWalletData();
+      _transactionHistoryService.updateTransactions(InvestmentType.AUGGOLD99);
       notifyListeners();
       // await _localDBModel!.savePrizeClaimChoice(choice);
 
@@ -336,29 +338,29 @@ class MyWinningsViewModel extends BaseViewModel {
           try {
             if (Platform.isIOS) {
               Share.share(shareMessage).catchError((onError) {
-                if (_userService!.baseUser!.uid != null) {
+                if (_userService.baseUser!.uid != null) {
                   Map<String, dynamic> errorDetails = {
                     'error_msg': 'Share reward text in My winnings failed'
                   };
-                  _internalOpsService!.logFailure(_userService!.baseUser!.uid,
+                  _internalOpsService.logFailure(_userService.baseUser!.uid,
                       FailType.FelloRewardTextShareFailed, errorDetails);
                 }
-                _logger!.e(onError);
+                _logger.e(onError);
               });
             } else {
               Share.share(shareMessage).catchError((onError) {
-                if (_userService!.baseUser!.uid != null) {
+                if (_userService.baseUser!.uid != null) {
                   Map<String, dynamic> errorDetails = {
                     'error_msg': 'Share reward text in My winnings failed'
                   };
-                  _internalOpsService!.logFailure(_userService!.baseUser!.uid,
+                  _internalOpsService.logFailure(_userService.baseUser!.uid,
                       FailType.FelloRewardTextShareFailed, errorDetails);
                 }
-                _logger!.e(onError);
+                _logger.e(onError);
               });
             }
           } catch (e) {
-            _logger!.e(e.toString());
+            _logger.e(e.toString());
           }
         }
       });
@@ -368,18 +370,18 @@ class MyWinningsViewModel extends BaseViewModel {
   Future<Uint8List?> captureCard() async {
     try {
       RenderRepaintBoundary imageObject =
-      imageKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
+          imageKey.currentContext!.findRenderObject() as RenderRepaintBoundary;
       final image = await imageObject.toImage(pixelRatio: 2);
       ByteData? byteData = await image.toByteData(format: ImageByteFormat.png);
       final pngBytes = byteData?.buffer.asUint8List();
 
       return pngBytes;
     } catch (e) {
-      if (_userService!.baseUser!.uid != null) {
+      if (_userService.baseUser!.uid != null) {
         Map<String, dynamic> errorDetails = {
           'error_msg': 'Share reward card creation failed'
         };
-        _internalOpsService!.logFailure(_userService!.baseUser!.uid,
+        _internalOpsService.logFailure(_userService.baseUser!.uid,
             FailType.FelloRewardCardShareFailed, errorDetails);
       }
 
@@ -406,7 +408,7 @@ class MyWinningsViewModel extends BaseViewModel {
             Map<String, dynamic> errorDetails = {
               'error_msg': 'Share reward card in card.dart failed'
             };
-            _internalOpsService!.logFailure(_userService!.baseUser!.uid,
+            _internalOpsService.logFailure(_userService.baseUser!.uid,
                 FailType.FelloRewardCardShareFailed, errorDetails);
           }
           print(onError);
@@ -421,18 +423,18 @@ class MyWinningsViewModel extends BaseViewModel {
             await File('${directory.path}/fello-reward-$dt.jpg').create();
         imageFile.writeAsBytesSync(image);
 
-        _logger!.d("Image file created and sharing, ${imageFile.path}");
+        _logger.d("Image file created and sharing, ${imageFile.path}");
 
         unawaited(Share.shareXFiles(
           [XFile(imageFile.path)],
           subject: 'Fello Rewards',
           text: shareMessage ?? "",
         ).catchError((onError) {
-          if (_userService!.baseUser!.uid != null) {
+          if (_userService.baseUser!.uid != null) {
             Map<String, dynamic> errorDetails = {
               'error_msg': 'Share reward card in card.dart failed'
             };
-            _internalOpsService!.logFailure(_userService!.baseUser!.uid,
+            _internalOpsService.logFailure(_userService.baseUser!.uid,
                 FailType.FelloRewardCardShareFailed, errorDetails);
           }
           print(onError);

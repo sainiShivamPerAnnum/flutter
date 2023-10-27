@@ -154,7 +154,7 @@ class BaseUser {
             data[fldEmail]?.toString() ?? '',
             data[fldName]?.toString() ?? '',
             data[fldDob]?.toString() ?? '',
-            data[fldGender]?.toString()?.toUpperCase() ?? '',
+            data[fldGender]?.toString().toUpperCase() ?? '',
             client_token?.toString() ?? '',
             data[fldIsInvested] ?? false,
             data[fldIsIciciOnboarded],
@@ -244,7 +244,7 @@ class UserPreferences {
   };
 
   //current values
-  Map<String?, int?> _activePrefs = {};
+  final Map<String?, int?> _activePrefs = {};
 
   UserPreferences(Map<dynamic, dynamic>? remValues) {
     for (Preferences p in Preferences.values) {

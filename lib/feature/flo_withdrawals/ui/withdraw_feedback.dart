@@ -177,10 +177,10 @@ class WithdrawalFeedback extends HookWidget {
 
 class WithdrawalOptionContainer extends StatelessWidget {
   const WithdrawalOptionContainer(
-      {super.key,
-      required this.isSelected,
+      {required this.isSelected,
       required this.onTap,
-      required this.title});
+      required this.title,
+      super.key});
 
   final bool isSelected;
   final VoidCallback onTap;

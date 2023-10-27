@@ -13,10 +13,10 @@ import 'package:provider/provider.dart';
 
 class SharePriceScreen extends StatelessWidget {
   SharePriceScreen({
-    Key? key,
     required this.dpUrl,
     required this.choice,
     required this.prizeAmount,
+    Key? key,
   }) : super(key: key);
 
   String? dpUrl;

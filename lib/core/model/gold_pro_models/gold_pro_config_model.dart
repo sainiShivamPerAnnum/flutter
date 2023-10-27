@@ -126,10 +126,10 @@ class Highlights {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['title'] = this.title;
-    data['subTitle'] = this.subTitle;
-    data['order'] = this.order;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['title'] = title;
+    data['subTitle'] = subTitle;
+    data['order'] = order;
     return data;
   }
 }

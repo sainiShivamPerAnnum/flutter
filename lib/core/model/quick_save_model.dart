@@ -52,7 +52,7 @@ class QuickSaveData {
   });
 
   factory QuickSaveData.fromJson(Map<String, dynamic> json) => QuickSaveData(
-    order: json["order"],
+        order: json["order"],
         title: json["title"],
         subTitle: json["subTitle"],
         icon: json["icon"],

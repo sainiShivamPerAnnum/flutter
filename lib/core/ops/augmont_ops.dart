@@ -29,23 +29,23 @@ import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
 class AugmontService extends ChangeNotifier {
-  final Log log = new Log('AugmontService');
-  final CustomLogger? _logger = locator<CustomLogger>();
-  final ApiPath? _apiPaths = locator<ApiPath>();
-  final InternalOpsService? _internalOpsService = locator<InternalOpsService>();
+  final Log log = const Log('AugmontService');
+  final CustomLogger _logger = locator<CustomLogger>();
+  final ApiPath _apiPaths = locator<ApiPath>();
+  final InternalOpsService _internalOpsService = locator<InternalOpsService>();
 
-  final InvestmentActionsRepository? _investmentActionsRepository =
+  final InvestmentActionsRepository _investmentActionsRepository =
       locator<InvestmentActionsRepository>();
 
-  final DBModel? _dbModel = locator<DBModel>();
-  final BaseUtil? _baseProvider = locator<BaseUtil>();
-  final UserService? _userService = locator<UserService>();
-  final UserCoinService? _userCoinService = locator<UserCoinService>();
-  final AugmontTransactionService? _augTxnService =
+  final DBModel _dbModel = locator<DBModel>();
+  final BaseUtil _baseProvider = locator<BaseUtil>();
+  final UserService _userService = locator<UserService>();
+  final UserCoinService _userCoinService = locator<UserCoinService>();
+  final AugmontTransactionService _augTxnService =
       locator<AugmontTransactionService>();
-  final TxnHistoryService? _txnHistoryService = locator<TxnHistoryService>();
+  final TxnHistoryService _txnHistoryService = locator<TxnHistoryService>();
   S locale = locator<S>();
-  final AnalyticsService? _analyticsService = locator<AnalyticsService>();
+  final AnalyticsService _analyticsService = locator<AnalyticsService>();
   List<String> _sellingReasons = [];
   String _selectedReasonForSelling = '';
 
@@ -60,7 +60,7 @@ class AugmontService extends ChangeNotifier {
   String get selectedReasonForSelling => _selectedReasonForSelling;
 
   set selectedReasonForSelling(String val) {
-    this._selectedReasonForSelling = val;
+    _selectedReasonForSelling = val;
     notifyListeners();
   }
 
@@ -118,11 +118,12 @@ class AugmontService extends ChangeNotifier {
       _augTxnService!.currentTransactionState = TransactionState.idle;
       AppState.unblockNavigation();
       if (_onSellCompleteResponse.errorMessage != null &&
-          _onSellCompleteResponse.errorMessage!.isNotEmpty)
+          _onSellCompleteResponse.errorMessage!.isNotEmpty) {
         BaseUtil.showNegativeAlert(
             _onSellCompleteResponse.errorMessage, locale.obPleaseTryAgain);
-      else
+      } else {
         BaseUtil.showNegativeAlert(locale.txnVerify, locale.txnVerifySubTitle);
+      }
 
       _internalOpsService!.logFailure(
           _userService!.baseUser!.uid, FailType.WithdrawlCompleteApiFailed, {
@@ -202,7 +203,7 @@ class GoldGraphPoint {
 
   @override
   String toString() {
-    return ("Rate ${this.rate} Time ${this.timestamp}");
+    return ("Rate $rate Time $timestamp");
     // return super.toString();
   }
 }

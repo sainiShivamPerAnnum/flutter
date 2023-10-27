@@ -2,7 +2,6 @@
 //
 //     final gameStats = gameStatsFromJson(jsonString);
 
-import 'package:meta/meta.dart';
 import 'dart:convert';
 
 GameStats? gameStatsFromJson(String str) =>
@@ -145,8 +144,7 @@ class Gm {
 class Rewards {
   final int? amt;
   Rewards(this.amt);
-  factory Rewards.fomJson(Map<String, dynamic> json) =>
-      Rewards(json["amt"] ?? null);
+  factory Rewards.fomJson(Map<String, dynamic> json) => Rewards(json["amt"]);
 }
 
 class UpdatedOn {

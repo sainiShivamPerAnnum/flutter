@@ -79,10 +79,11 @@ class UsernameInputView extends StatelessWidget {
                   )
                 ],
                 validator: (val) {
-                  if (val == null || val.isEmpty)
+                  if (val == null || val.isEmpty) {
                     return "";
-                  else
+                  } else {
                     return null;
+                  }
                 },
                 onChanged: (String value) {
                   model.checkIfUsernameIsAvailable();
@@ -101,7 +102,7 @@ class UsernameInputView extends StatelessWidget {
                   vertical: SizeConfig.pageHorizontalMargins,
                 ),
                 child: model.isUpdaingUserDetails
-                    ? LinearProgressIndicator(
+                    ? const LinearProgressIndicator(
                         backgroundColor: Colors.black,
                       )
                     : AppPositiveBtn(
@@ -135,7 +136,7 @@ class ModalSheetAppBar extends StatelessWidget {
       ),
       trailing: trailing ??
           IconButton(
-            icon: Icon(Icons.close, color: Colors.white),
+            icon: const Icon(Icons.close, color: Colors.white),
             onPressed: () {
               AppState.backButtonDispatcher!.didPopRoute();
             },

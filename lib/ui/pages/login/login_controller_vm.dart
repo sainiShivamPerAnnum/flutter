@@ -151,7 +151,7 @@ class LoginControllerViewModel extends BaseViewModel {
           //in mobile input screen. Get and set mobile/ set error interface if not correct
           if (_mobileScreenKey.currentState!.model.formKey.currentState
               .validate()) {
-            logger!.d(
+            logger.d(
                 'Mobile number validated: ${_mobileScreenKey.currentState!.model.getMobile()}');
             userMobile = _mobileScreenKey.currentState!.model.getMobile();
 
@@ -164,7 +164,7 @@ class LoginControllerViewModel extends BaseViewModel {
                   locale.mbNoNotAllowed, locale.dummyNoAlert);
               break;
             }
-            _analyticsService!.track(
+            _analyticsService.track(
                 eventName: AnalyticsEvents.signupEnterMobile,
                 properties: {'mobile': userMobile});
             _verificationId = '+91${userMobile!}';
@@ -184,9 +184,9 @@ class LoginControllerViewModel extends BaseViewModel {
           if (otp.isNotEmpty && otp.length == 6) {
             logger.d("OTP is $otp");
             setState(ViewState.Busy);
-            final verifyOtp = await _userRepo!.verifyOtp(_verificationId, otp);
+            final verifyOtp = await _userRepo.verifyOtp(_verificationId, otp);
             if (verifyOtp.isSuccess()) {
-              _analyticsService!.track(
+              _analyticsService.track(
                   eventName: AnalyticsEvents.mobileOtpDone,
                   properties: {'mobile': userMobile});
 
@@ -256,8 +256,8 @@ class LoginControllerViewModel extends BaseViewModel {
             try {
               userService.baseUser!.mobile = userMobile;
               final ApiResponse response =
-                  await _userRepo!.setNewUser(userService.baseUser!);
-              logger!.i(response.toString());
+                  await _userRepo.setNewUser(userService.baseUser!);
+              logger.i(response.toString());
               if (response.code == 400) {
                 _analyticsService.track(
                     eventName: "Signup: setNewUser responded with 400");
@@ -273,7 +273,7 @@ class LoginControllerViewModel extends BaseViewModel {
                 final gtId = response.model['gtId'];
                 response.model['flag'] ? flag = true : flag = false;
 
-                logger!.d("Is Scratch Card Rewarded: $gtId");
+                logger.d("Is Scratch Card Rewarded: $gtId");
                 if (gtId != null && gtId.toString().isNotEmpty) {
                   ScratchCardService.scratchCardId = gtId;
                 }
@@ -281,21 +281,21 @@ class LoginControllerViewModel extends BaseViewModel {
             } catch (e) {
               _analyticsService.track(
                   eventName: "Signup: setNewUser failed with exception");
-              logger!.d(e);
+              logger.d(e);
               _nameKey.currentState!.model.enabled = true;
               flag = false;
               setState(ViewState.Idle);
             }
 
             if (flag) {
-              _analyticsService!.track(
+              _analyticsService.track(
                 eventName: AnalyticsEvents.proceedToSignUp,
                 properties: {
                   'username': name ?? "",
                   'referralCode': refCode ?? ""
                 },
               );
-              logger!.d("User object saved successfully");
+              logger.d("User object saved successfully");
               // userService.showOnboardingTutorial = true;
               await _onSignUpComplete();
             } else {
@@ -402,9 +402,9 @@ class LoginControllerViewModel extends BaseViewModel {
   }
 
   void _onSignInSuccess(LoginSource source) async {
-    logger!.d("User authenticated. Now check if details previously available.");
+    logger.d("User authenticated. Now check if details previously available.");
     userService.firebaseUser = FirebaseAuth.instance.currentUser;
-    logger!.d("User is set: ${userService.firebaseUser!.uid}");
+    logger.d("User is set: ${userService.firebaseUser!.uid}");
     _otpScreenKey.currentState?.model?.otpFocusNode.requestFocus();
     await CacheService.invalidateByKey(CacheKeys.USER);
     ApiResponse<BaseUser> user =
@@ -471,9 +471,9 @@ class LoginControllerViewModel extends BaseViewModel {
       ///Existing user
 
       await BaseAnalytics.analytics?.logLogin(loginMethod: 'phonenumber');
-      logger!.d("User details available: Name: ${user.model!.name!}");
+      logger.d("User details available: Name: ${user.model!.name!}");
       if (source == LoginSource.TRUECALLER) {
-        _analyticsService!.track(eventName: AnalyticsEvents.truecallerLogin);
+        _analyticsService.track(eventName: AnalyticsEvents.truecallerLogin);
       }
       userService.baseUser = user.model;
 
@@ -490,7 +490,7 @@ class LoginControllerViewModel extends BaseViewModel {
     _referralService.init();
 
     if (_isSignup) {
-      await _analyticsService!.login(
+      await _analyticsService.login(
           isOnBoarded: userService.isUserOnboarded,
           baseUser: userService.baseUser);
 
@@ -507,7 +507,7 @@ class LoginControllerViewModel extends BaseViewModel {
       unawaited(userService.logUserInstalledApps().then(
         (value) {
           logger.i(value);
-          _analyticsService!.track(
+          _analyticsService.track(
             eventName: AnalyticsEvents.installedApps,
             appFlyer: false,
             apxor: false,
@@ -527,7 +527,7 @@ class LoginControllerViewModel extends BaseViewModel {
     unawaited(fcmListener!.setupFcm());
     unawaited(locator<GameRepo>().getGameTiers());
     logger.i("Calling analytics init for new onboarded user");
-    unawaited(_analyticsService!.login(
+    unawaited(_analyticsService.login(
       isOnBoarded: userService.isUserOnboarded,
       baseUser: userService.baseUser,
     ));
@@ -535,10 +535,10 @@ class LoginControllerViewModel extends BaseViewModel {
     AppState.isOnboardingInProgress = false;
     appStateProvider.rootIndex = 0;
     _analyticsService.track(eventName: "SignUp: initDeviceInfo called called");
-    unawaited(_internalOpsService!
+    unawaited(_internalOpsService
         .initDeviceInfo()
         .then((Map<String, dynamic> response) {
-      logger!.d("Device Details: $response");
+      logger.d("Device Details: $response");
       if (response != {}) {
         final String? deviceId = response["deviceId"];
         final String? platform = response["platform"];
@@ -547,7 +547,7 @@ class LoginControllerViewModel extends BaseViewModel {
         final bool? isPhysicalDevice = response["isPhysicalDevice"];
         final String? version = response["version"];
         final String? integrity = response["integrity"];
-        _userRepo!.setNewDeviceId(
+        _userRepo.setNewDeviceId(
             uid: userService.baseUser!.uid,
             deviceId: deviceId,
             platform: platform,
@@ -584,7 +584,7 @@ class LoginControllerViewModel extends BaseViewModel {
 
   Future<void> _verifyPhone() async {
     final hash = await SmsAutoFill().getAppSignature;
-    final res = await _userRepo!.sendOtp(_verificationId, hash);
+    final res = await _userRepo.sendOtp(_verificationId, hash);
 
     if (res.isSuccess()) {
       if (baseProvider!.isOtpResendCount == 0) {
@@ -620,8 +620,8 @@ class LoginControllerViewModel extends BaseViewModel {
   }
 
   Future<String> _getBearerToken() async {
-    String token = await userService!.firebaseUser!.getIdToken();
-    logger!.d("BearerToken: $token");
+    String token = await userService.firebaseUser!.getIdToken();
+    logger.d("BearerToken: $token");
     return token;
   }
 
@@ -685,7 +685,7 @@ class LoginControllerViewModel extends BaseViewModel {
   _onOtpResendRequested() {
     if (baseProvider!.isOtpResendCount < 2) {
       _verifyPhone();
-      _analyticsService!.track(
+      _analyticsService.track(
           eventName: AnalyticsEvents.resendOtpTapped,
           properties: {'mobile': userMobile});
     } else {

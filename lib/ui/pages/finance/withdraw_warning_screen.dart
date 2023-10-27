@@ -21,10 +21,10 @@ class WithDrawWarningScreen extends StatelessWidget {
   const WithDrawWarningScreen({
     required this.type,
     required this.totalAmount,
-    this.withdrawableQuantity = 0.0,
     required this.onWithDrawAnyWay,
     required this.viewModel,
     required this.onClose,
+    this.withdrawableQuantity = 0.0,
     super.key,
   });
   final double withdrawableQuantity;
@@ -57,22 +57,23 @@ class WithDrawWarningScreen extends StatelessWidget {
             ),
             Center(
               child: Container(
-                margin: EdgeInsets.all(6),
+                margin: const EdgeInsets.all(6),
                 alignment: Alignment.center,
                 child: Text.rich(
                   TextSpan(
                     text: 'If you withdraw ',
                     children: [
                       TextSpan(
-                        text:
-                            '${type == InvestmentType.AUGGOLD99 ? "$withdrawableQuantity" : "₹$totalAmount"}',
+                        text: type == InvestmentType.AUGGOLD99
+                            ? "$withdrawableQuantity"
+                            : "₹$totalAmount",
                         style: TextStyles.sourceSansSB.colour(Colors.white),
                       ),
                       TextSpan(
                           text: type == InvestmentType.AUGGOLD99
                               ? " gms of Digital Gold"
                               : " from Fello Flo"),
-                      TextSpan(
+                      const TextSpan(
                         text: ',\nthe following will be deducted:',
                       ),
                     ],
@@ -87,7 +88,7 @@ class WithDrawWarningScreen extends StatelessWidget {
             SizedBox(
               height: SizeConfig.padding12,
             ),
-            Spacer(),
+            const Spacer(),
             Padding(
               padding: EdgeInsets.symmetric(
                   horizontal: SizeConfig.pageHorizontalMargins),
@@ -96,11 +97,11 @@ class WithDrawWarningScreen extends StatelessWidget {
                   Expanded(
                     child: Container(
                       decoration: BoxDecoration(
-                          color: Color(0xff1a1a1a),
+                          color: const Color(0xff1a1a1a),
                           borderRadius: BorderRadius.circular(8)),
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                      margin: EdgeInsets.only(right: 8),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 8),
+                      margin: const EdgeInsets.only(right: 8),
                       child: Column(
                         children: [
                           Row(
@@ -143,11 +144,11 @@ class WithDrawWarningScreen extends StatelessWidget {
                     child: Container(
                       alignment: Alignment.center,
                       decoration: BoxDecoration(
-                          color: Color(0xff1a1a1a),
+                          color: const Color(0xff1a1a1a),
                           borderRadius: BorderRadius.circular(8)),
-                      padding:
-                          EdgeInsets.symmetric(horizontal: 16, vertical: 8),
-                      margin: EdgeInsets.only(right: 8),
+                      padding: const EdgeInsets.symmetric(
+                          horizontal: 16, vertical: 8),
+                      margin: const EdgeInsets.only(right: 8),
                       child: Column(
                         children: [
                           Row(
@@ -195,12 +196,12 @@ class WithDrawWarningScreen extends StatelessWidget {
                 ],
               ),
             ),
-            Spacer(),
+            const Spacer(),
             Row(
               mainAxisAlignment: MainAxisAlignment.center,
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
-                Icon(
+                const Icon(
                   Icons.lock,
                   color: Colors.white,
                 ),
@@ -219,21 +220,21 @@ class WithDrawWarningScreen extends StatelessWidget {
             Container(
               margin: EdgeInsets.symmetric(
                   horizontal: SizeConfig.pageHorizontalMargins),
-              padding: EdgeInsets.symmetric(vertical: 18, horizontal: 16),
+              padding: const EdgeInsets.symmetric(vertical: 18, horizontal: 16),
               decoration: BoxDecoration(
-                  color: Color(0xff1a1a1a),
+                  color: const Color(0xff1a1a1a),
                   borderRadius: BorderRadius.circular(8)),
               child: Column(
                 children: [
                   GridView.builder(
                     shrinkWrap: true,
                     itemCount: viewModel.gamesWillBeLocked.length,
-                    physics: NeverScrollableScrollPhysics(),
+                    physics: const NeverScrollableScrollPhysics(),
                     itemBuilder: (c, i) {
                       final game = viewModel.gamesWillBeLocked[i];
                       return Container(
-                        padding: EdgeInsets.all(8),
-                        decoration: BoxDecoration(
+                        padding: const EdgeInsets.all(8),
+                        decoration: const BoxDecoration(
                           color: Color(0xff39393C),
                           borderRadius: BorderRadius.all(
                             Radius.circular(16),
@@ -257,11 +258,12 @@ class WithDrawWarningScreen extends StatelessWidget {
                         ),
                       );
                     },
-                    gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                        crossAxisCount: 2,
-                        childAspectRatio: 3,
-                        mainAxisSpacing: 12,
-                        crossAxisSpacing: 12),
+                    gridDelegate:
+                        const SliverGridDelegateWithFixedCrossAxisCount(
+                            crossAxisCount: 2,
+                            childAspectRatio: 3,
+                            mainAxisSpacing: 12,
+                            crossAxisSpacing: 12),
                   ),
                   SizedBox(
                     height: SizeConfig.padding24,
@@ -286,7 +288,7 @@ class WithDrawWarningScreen extends StatelessWidget {
                 ],
               ),
             ),
-            Spacer(),
+            const Spacer(),
             Padding(
               padding: EdgeInsets.symmetric(
                   horizontal: SizeConfig.pageHorizontalMargins),

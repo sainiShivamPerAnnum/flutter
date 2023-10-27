@@ -155,10 +155,10 @@ class FelloInAppReview extends HookWidget {
 
 class Emoji extends StatelessWidget {
   const Emoji({
-    super.key,
     required this.emoji,
     required this.onTap,
     required this.selected,
+    super.key,
   });
 
   final String emoji;
@@ -188,7 +188,7 @@ class Emoji extends StatelessWidget {
 }
 
 class ReasonWidget extends StatelessWidget {
-  const ReasonWidget({Key? key, required this.textController})
+  const ReasonWidget({required this.textController, Key? key})
       : super(key: key);
 
   final TextEditingController textController;
@@ -205,7 +205,7 @@ class ReasonWidget extends StatelessWidget {
           "Let us know what went wrong",
           textAlign: TextAlign.center,
           style:
-          TextStyles.sourceSans.body2.colour(Colors.white.withOpacity(0.6)),
+              TextStyles.sourceSans.body2.colour(Colors.white.withOpacity(0.6)),
         ),
         SizedBox(
           height: SizeConfig.padding16,
@@ -243,7 +243,8 @@ class ReasonWidget extends StatelessWidget {
 }
 
 class FelloInAppReviewSuccess extends StatelessWidget {
-  const FelloInAppReviewSuccess({Key? key, required this.emoji, required this.showButton})
+  const FelloInAppReviewSuccess(
+      {required this.emoji, required this.showButton, Key? key})
       : super(key: key);
 
   final String emoji;

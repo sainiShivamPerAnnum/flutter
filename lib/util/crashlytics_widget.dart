@@ -7,7 +7,7 @@ const _isCrashlyticsEnabled = true;
 class CrashlyticsApp extends StatefulWidget {
   final Widget child;
 
-  const CrashlyticsApp({Key? key, required this.child}) : super(key: key);
+  const CrashlyticsApp({required this.child, Key? key}) : super(key: key);
 
   @override
   _CrashlyticsAppState createState() => _CrashlyticsAppState();

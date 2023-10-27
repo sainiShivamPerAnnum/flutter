@@ -106,7 +106,7 @@ class _InfoComponentState extends State<InfoComponent> {
                     isLast: index == widget.titleList.length - 1,
                   ),
                 ))
-              : SizedBox.shrink(),
+              : const SizedBox.shrink(),
         ],
       ),
     );
@@ -168,7 +168,7 @@ class _InfoComponent2State extends State<InfoComponent2> {
           ),
         ),
         AnimatedSwitcher(
-          duration: Duration(milliseconds: 500),
+          duration: const Duration(milliseconds: 500),
           switchInCurve: Curves.easeIn,
           switchOutCurve: Curves.easeOut,
           child: isOpen
@@ -179,7 +179,7 @@ class _InfoComponent2State extends State<InfoComponent2> {
                   child: ListView.builder(
                     shrinkWrap: true,
                     scrollDirection: Axis.horizontal,
-                    physics: BouncingScrollPhysics(),
+                    physics: const BouncingScrollPhysics(),
                     itemCount: widget.assetList.length,
                     itemBuilder: (context, index) {
                       return Column(
@@ -244,7 +244,7 @@ class _InfoComponent2State extends State<InfoComponent2> {
                     },
                   ),
                 )
-              : SizedBox.shrink(),
+              : const SizedBox.shrink(),
         ),
       ],
     );
@@ -253,13 +253,13 @@ class _InfoComponent2State extends State<InfoComponent2> {
 
 class InfoComponent3 extends StatefulWidget {
   const InfoComponent3(
-      {Key? key,
-      required this.mainTitle,
+      {required this.mainTitle,
       required this.subTitle,
       required this.secondaryTitle,
       required this.boxAssets,
       required this.boxTitlles,
-      required this.isBoxOpen})
+      required this.isBoxOpen,
+      Key? key})
       : super(key: key);
 
   final String mainTitle;
@@ -396,7 +396,7 @@ class _InfoComponent3State extends State<InfoComponent3> {
                     ),
                   ],
                 )
-              : SizedBox.shrink(),
+              : const SizedBox.shrink(),
         ],
       ),
     );

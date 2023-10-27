@@ -71,15 +71,15 @@ class TicketPainter extends CustomPainter {
     path_0.lineTo(0, size.height * 0.01980198);
     path_0.close();
 
-    Paint paint_0_fill = Paint()..style = PaintingStyle.fill;
-    paint_0_fill.color = Color(0xff30363C).withOpacity(1.0);
+    Paint paint0Fill = Paint()..style = PaintingStyle.fill;
+    paint0Fill.color = const Color(0xff30363C).withOpacity(1.0);
 
     final borderPaint = Paint()
       ..color = borderColor
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2.0;
 
-    canvas.drawPath(path_0, paint_0_fill);
+    canvas.drawPath(path_0, paint0Fill);
     canvas.drawPath(path_0, borderPaint);
   }
 
@@ -133,9 +133,9 @@ class RPSCustomPainter extends CustomPainter {
     path_0.lineTo(size.width * 0.9921622, size.height * 0.1363627);
     path_0.close();
 
-    Paint paint_0_fill = Paint()..style = PaintingStyle.fill;
-    paint_0_fill.color = const Color(0xff3D4A77).withOpacity(1.0);
-    canvas.drawPath(path_0, paint_0_fill);
+    Paint paint0Fill = Paint()..style = PaintingStyle.fill;
+    paint0Fill.color = const Color(0xff3D4A77).withOpacity(1.0);
+    canvas.drawPath(path_0, paint0Fill);
 
     Path path_1 = Path();
     path_1.moveTo(size.width * 0.8987824, size.height * 0.9709091);
@@ -159,9 +159,9 @@ class RPSCustomPainter extends CustomPainter {
         size.height * 0.9709091);
     path_1.close();
 
-    Paint paint_1_fill = Paint()..style = PaintingStyle.fill;
-    paint_1_fill.color = Colors.black.withOpacity(1.0);
-    canvas.drawPath(path_1, paint_1_fill);
+    Paint paint1Fill = Paint()..style = PaintingStyle.fill;
+    paint1Fill.color = Colors.black.withOpacity(1.0);
+    canvas.drawPath(path_1, paint1Fill);
 
     Path path_2 = Path();
     path_2.moveTo(size.width * 0.03635054, size.height * 0.009543682);
@@ -186,9 +186,9 @@ class RPSCustomPainter extends CustomPainter {
     path_2.lineTo(size.width * 0.03635054, size.height * 0.009543682);
     path_2.close();
 
-    Paint paint_2_fill = Paint()..style = PaintingStyle.fill;
-    paint_2_fill.color = const Color(0xff3D4A77).withOpacity(1.0);
-    canvas.drawPath(path_2, paint_2_fill);
+    Paint paint2Fill = Paint()..style = PaintingStyle.fill;
+    paint2Fill.color = const Color(0xff3D4A77).withOpacity(1.0);
+    canvas.drawPath(path_2, paint2Fill);
   }
 
   @override

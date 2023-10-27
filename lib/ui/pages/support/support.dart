@@ -32,13 +32,14 @@ class SupportPage extends StatefulWidget {
 
 class _SupportPageState extends State<SupportPage> {
   final CustomLogger? logger = locator<CustomLogger>();
-  final UserService? _userService = locator<UserService>();
+  final UserService _userService = locator<UserService>();
   BaseUtil? baseProvider;
   late AppState appState;
   DBModel? dbProvider;
-  TextEditingController _requestCallPhoneController = TextEditingController();
+  final TextEditingController _requestCallPhoneController =
+      TextEditingController();
   bool isInit = false;
-  final AnalyticsService? _analyticsService = locator<AnalyticsService>();
+  final AnalyticsService _analyticsService = locator<AnalyticsService>();
 
   void init() {
     _requestCallPhoneController.text = _userService!.baseUser!.mobile!;
@@ -76,13 +77,13 @@ class _SupportPageState extends State<SupportPage> {
           Column(
             children: [
               FelloAppBar(
-                leading: FelloAppBarBackButton(),
+                leading: const FelloAppBarBackButton(),
                 title: locale.helpAndSupport,
               ),
               Expanded(
                 child: Container(
                   padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
-                  decoration: BoxDecoration(
+                  decoration: const BoxDecoration(
                     borderRadius: BorderRadius.only(
                       topLeft: Radius.circular(40),
                       topRight: Radius.circular(40),
@@ -192,7 +193,8 @@ class TermsRow extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       children: [
         Padding(
-          padding: EdgeInsets.only(bottom: 10, left: 10, right: 10, top: 5),
+          padding:
+              const EdgeInsets.only(bottom: 10, left: 10, right: 10, top: 5),
           child: InkWell(
             child: Text(
               locale.termsOfService,
@@ -210,12 +212,13 @@ class TermsRow extends StatelessWidget {
             },
           ),
         ),
-        Text(
+        const Text(
           '•',
           style: TextStyle(color: Colors.grey),
         ),
         Padding(
-          padding: EdgeInsets.only(bottom: 10, left: 10, right: 10, top: 5),
+          padding:
+              const EdgeInsets.only(bottom: 10, left: 10, right: 10, top: 5),
           child: InkWell(
             child: Text(
               locale.privacyPolicy,
@@ -232,12 +235,13 @@ class TermsRow extends StatelessWidget {
             },
           ),
         ),
-        Text(
+        const Text(
           '•',
           style: TextStyle(color: Colors.grey),
         ),
         Padding(
-          padding: EdgeInsets.only(bottom: 10, left: 10, right: 10, top: 5),
+          padding:
+              const EdgeInsets.only(bottom: 10, left: 10, right: 10, top: 5),
           child: InkWell(
             child: Text(
               locale.refPolicy,

@@ -8,9 +8,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 class AutosaveComboGrid extends StatelessWidget {
   const AutosaveComboGrid({
-    super.key,
     required this.frequency,
     required this.model,
+    super.key,
   });
 
   final AutosaveProcessViewModel model;
@@ -22,7 +22,7 @@ class AutosaveComboGrid extends StatelessWidget {
     return GridView.builder(
       shrinkWrap: true,
       itemCount: combo.length + 1,
-      physics: NeverScrollableScrollPhysics(),
+      physics: const NeverScrollableScrollPhysics(),
       gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
         crossAxisCount: 2,
         crossAxisSpacing: SizeConfig.padding24,
@@ -55,9 +55,9 @@ class AutosaveComboGrid extends StatelessWidget {
 
 class ComboCard extends StatelessWidget {
   const ComboCard({
+    required this.combo,
     super.key,
     this.isCustomCreated = false,
-    required this.combo,
   });
 
   final SubComboModel combo;
@@ -75,7 +75,7 @@ class ComboCard extends StatelessWidget {
                         SizeConfig.roundness5,
                       ),
                       topRight: Radius.circular(SizeConfig.roundness5)),
-                  color: Color(0xffF7C780),
+                  color: const Color(0xffF7C780),
                 ),
                 height: SizeConfig.padding16,
                 padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding10),
@@ -93,7 +93,7 @@ class ComboCard extends StatelessWidget {
                 gradient: LinearGradient(
                   colors: [
                     UiConstants.darkPrimaryColor.withOpacity(0.3),
-                    Color(0xffF7C780).withOpacity(0.3),
+                    const Color(0xffF7C780).withOpacity(0.3),
                   ],
                 ),
                 border: Border.all(
@@ -199,7 +199,7 @@ class ComboCard extends StatelessWidget {
 }
 
 class CustomComboCard extends StatelessWidget {
-  const CustomComboCard({super.key, required this.model});
+  const CustomComboCard({required this.model, super.key});
 
   final AutosaveProcessViewModel model;
 
@@ -216,7 +216,7 @@ class CustomComboCard extends StatelessWidget {
                 gradient: LinearGradient(
                   colors: [
                     UiConstants.darkPrimaryColor.withOpacity(0.3),
-                    Color(0xffF7C780).withOpacity(0.3),
+                    const Color(0xffF7C780).withOpacity(0.3),
                   ],
                 ),
                 border: Border.all(width: 1, color: Colors.grey),

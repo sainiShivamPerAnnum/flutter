@@ -39,7 +39,7 @@ class MoreGamesSection extends StatelessWidget {
               model.isGamesListDataLoading ? 3 : model.moreGamesListData.length,
               (index) {
                 return (model.isGamesListDataLoading)
-                    ? MoreGamesShimmer()
+                    ? const MoreGamesShimmer()
                     : MoreGames(
                         game: model.moreGamesListData[index],
                         showDivider: index != model.moreGamesListData.length - 1
@@ -194,8 +194,8 @@ class MoreGames extends StatelessWidget {
                 margin: EdgeInsets.symmetric(
                     vertical: SizeConfig.padding16,
                     horizontal: SizeConfig.padding34),
-                decoration:
-                    BoxDecoration(color: UiConstants.kLastUpdatedTextColor),
+                decoration: const BoxDecoration(
+                    color: UiConstants.kLastUpdatedTextColor),
               )
           ],
         ),
@@ -290,7 +290,6 @@ class MoreGamesShimmer extends StatelessWidget {
     );
   }
 }
-
 
 // class MoreGamesShimmer extends StatelessWidget {
 //   const MoreGamesShimmer({

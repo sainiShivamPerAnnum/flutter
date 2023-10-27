@@ -1,13 +1,11 @@
-import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 
 class StickyNote extends StatelessWidget {
   const StickyNote(
-      {Key? key, required this.trailingWidget, required this.amount})
+      {required this.trailingWidget, required this.amount, Key? key})
       : super(key: key);
   final Widget trailingWidget;
   final String amount;

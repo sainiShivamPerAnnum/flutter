@@ -16,9 +16,9 @@ import '../../../core/service/analytics/mixpanel_analytics.dart';
 
 class BannerWidget extends StatefulWidget {
   BannerWidget({
-    Key? key,
     required this.model,
     required this.happyHourCampign,
+    Key? key,
   })  : showHappyHour = happyHourCampign?.data?.showHappyHour ?? false,
         super(key: key);
   final I.Banner model;

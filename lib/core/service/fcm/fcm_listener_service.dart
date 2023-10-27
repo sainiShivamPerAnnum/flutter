@@ -72,8 +72,8 @@ class FcmListener {
 
       FirebaseMessaging.onMessage.listen((message) async {
         RemoteNotification? notification = message.notification;
-        if (message.data != null && message.data.isNotEmpty) {
-          _handler!.handleMessage(message.data, MsgSource.Foreground);
+        if (message.data.isNotEmpty) {
+          _handler.handleMessage(message.data, MsgSource.Foreground);
         } else if (notification != null) {
           logger!.d(
               "Handle Notification: ${notification.title} ${notification.body}, ${message.data['command']}");
@@ -106,8 +106,8 @@ class FcmListener {
       }
     } catch (e) {
       logger!.e(e.toString());
-      _internalOpsService!.logFailure(
-          _userService!.baseUser?.uid ?? '', FailType.FcmListenerSetupFailed, {
+      _internalOpsService.logFailure(
+          _userService.baseUser?.uid ?? '', FailType.FcmListenerSetupFailed, {
         "title": "FcmListener setup Failed",
         "error": e.toString(),
       });
@@ -128,31 +128,32 @@ class FcmListener {
 
   _manageInitSubscriptions() async {
     if (_baseUtil == null) return;
-    if (_baseUtil!.isOldCustomer()) {
+    if (_baseUtil.isOldCustomer()) {
       addSubscription(FcmTopic.OLDCUSTOMER);
     }
 
-    if (_userService!.baseUser != null &&
-        _userService!.baseUser!.isInvested != null &&
-        !_userService!.baseUser!.isInvested!) {
+    if (_userService.baseUser != null &&
+        _userService.baseUser!.isInvested != null &&
+        !_userService.baseUser!.isInvested!) {
       addSubscription(FcmTopic.NEVERINVESTEDBEFORE);
     }
 
-    if (_userService!.baseUser != null &&
-        !_userService!.baseUser!.isAugmontOnboarded!)
+    if (_userService.baseUser != null &&
+        !_userService.baseUser!.isAugmontOnboarded!) {
       addSubscription(FcmTopic.MISSEDCONNECTION);
+    }
 
-    if (_userService!.baseUser != null &&
-        _userService!.baseUser!.isAugmontOnboarded! &&
-        _baseUtil!.userFundWallet != null &&
-        _baseUtil!.userFundWallet!.augGoldBalance != null &&
-        _baseUtil!.userFundWallet!.augGoldBalance > 300)
+    if (_userService.baseUser != null &&
+        _userService.baseUser!.isAugmontOnboarded! &&
+        _baseUtil.userFundWallet != null &&
+        _baseUtil.userFundWallet!.augGoldBalance > 300) {
       addSubscription(FcmTopic.FREQUENTFLYER)
           .then((value) => logger!.d("Added frequent flyer subscription"));
+    }
 
-    if (_baseUtil!.ticketCount != null &&
-        _baseUtil!.ticketCount! > 0 &&
-        _userService!.baseUser!.userPreferences
+    if (_baseUtil.ticketCount != null &&
+        _baseUtil.ticketCount! > 0 &&
+        _userService.baseUser!.userPreferences
                 .getPreference(Preferences.TAMBOLANOTIFICATIONS) ==
             1) {
       addSubscription(FcmTopic.TAMBOLAPLAYER);
@@ -186,7 +187,7 @@ class FcmListener {
   }
 
   Future<void> _saveDeviceToken(String? fcmToken) async {
-    if (_userService!.baseUser != null) {
+    if (_userService.baseUser != null) {
       String savedToken =
           PreferenceHelper.getString(PreferenceHelper.FCM_TOKEN);
 
@@ -196,10 +197,10 @@ class FcmListener {
         logger!.d(
             "FCM changed or app is opened for first time, so updating pref and server token");
         PreferenceHelper.setString(PreferenceHelper.FCM_TOKEN, fcmToken!);
-        await _userService!.updateClientToken(fcmToken);
+        await _userService.updateClientToken(fcmToken);
 
         try {
-          _analyticsService!.trackUninstall(fcmToken);
+          _analyticsService.trackUninstall(fcmToken);
         } catch (e) {
           logger!.e('Track uninstall failed: ', e.toString());
         }
@@ -207,7 +208,7 @@ class FcmListener {
         logger!.d("FCM is already updated");
       }
 
-      _userService!.baseUser!.client_token = fcmToken;
+      _userService.baseUser!.client_token = fcmToken;
     }
   }
 
@@ -225,11 +226,11 @@ class FcmListener {
       return true;
     } catch (e) {
       logger!.e(e.toString());
-      if (_userService!.baseUser!.uid != null) {
+      if (_userService.baseUser!.uid != null) {
         Map<String, dynamic> errorDetails = {
           'error_msg': 'Changing Tambola Notification Status failed'
         };
-        unawaited(_internalOpsService!.logFailure(_userService!.baseUser!.uid,
+        unawaited(_internalOpsService.logFailure(_userService.baseUser!.uid,
             FailType.TambolaDrawNotificationSettingFailed, errorDetails));
       }
       BaseUtil.showNegativeAlert(
@@ -263,7 +264,7 @@ class FcmListener {
         PreferenceHelper.getStringList(PreferenceHelper.CACHE_SEGMENTS);
     //Get updated segments from baseuser
     final List<String> updatedSegments =
-        _userService!.baseUser!.segments.cast<String>();
+        _userService.baseUser!.segments.cast<String>();
     if (cachedSegments.isEmpty) {
       //first time, add all segments
       for (final segment in updatedSegments) {
@@ -274,7 +275,7 @@ class FcmListener {
       //update segments
       //Next add new segments if there are any
       final List<String> updatedSegments =
-          _userService!.baseUser!.segments.cast<String>();
+          _userService.baseUser!.segments.cast<String>();
       for (final segment in updatedSegments) {
         if (!cachedSegments.contains(segment)) {
           log("Subscribed to $segment");

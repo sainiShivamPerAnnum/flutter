@@ -30,24 +30,24 @@ class KYCDetailsViewModel extends BaseViewModel {
   String? get email => _userService.email;
   bool _isUpdatingKycDetails = false;
   bool _isEmailUpdating = false;
-  get isEmailUpdating => this._isEmailUpdating;
+  get isEmailUpdating => _isEmailUpdating;
   bool isPanTileOpen = false;
   bool isEmailTileOpen = false;
 
   set isEmailUpdating(value) {
-    this._isEmailUpdating = value;
+    _isEmailUpdating = value;
     notifyListeners();
   }
 
   int permissionFailureCount = 0;
-  get isUpdatingKycDetails => this._isUpdatingKycDetails;
+  get isUpdatingKycDetails => _isUpdatingKycDetails;
 
   bool _isPanVerified = false;
   // bool _isEmailVerified = false;
-  bool get isPanVerified => this._isPanVerified;
+  bool get isPanVerified => _isPanVerified;
 
   set isPanVerified(bool value) {
-    this._isPanVerified = value;
+    _isPanVerified = value;
     notifyListeners();
   }
 
@@ -59,7 +59,7 @@ class KYCDetailsViewModel extends BaseViewModel {
   // }
 
   set isUpdatingKycDetails(value) {
-    this._isUpdatingKycDetails = value;
+    _isUpdatingKycDetails = value;
     notifyListeners();
   }
 
@@ -70,10 +70,10 @@ class KYCDetailsViewModel extends BaseViewModel {
   UserKycDataModel? _userKycData;
   String? _kycErrorMessage;
 
-  get kycErrorMessage => this._kycErrorMessage;
+  get kycErrorMessage => _kycErrorMessage;
 
   set kycErrorMessage(value) {
-    this._kycErrorMessage = value;
+    _kycErrorMessage = value;
     notifyListeners();
   }
 
@@ -82,34 +82,33 @@ class KYCDetailsViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  UserKycDataModel? get userKycData => this._userKycData;
+  UserKycDataModel? get userKycData => _userKycData;
 
   set userKycData(value) {
-    this._userKycData = value;
+    _userKycData = value;
     notifyListeners();
   }
 
-  get fileSize => this._fileSize;
+  get fileSize => _fileSize;
 
   set fileSize(value) {
-    this._fileSize = value;
+    _fileSize = value;
     notifyListeners();
   }
 
   KycVerificationStatus _kycVerificationStatus = KycVerificationStatus.NONE;
 
-  KycVerificationStatus get kycVerificationStatus =>
-      this._kycVerificationStatus;
+  KycVerificationStatus get kycVerificationStatus => _kycVerificationStatus;
 
   set kycVerificationStatus(value) {
-    this._kycVerificationStatus = value;
+    _kycVerificationStatus = value;
     notifyListeners();
   }
 
-  XFile? get capturedImage => this._capturedImage;
+  XFile? get capturedImage => _capturedImage;
 
   set capturedImage(value) {
-    this._capturedImage = value;
+    _capturedImage = value;
     notifyListeners();
   }
 
@@ -117,7 +116,7 @@ class KYCDetailsViewModel extends BaseViewModel {
   final UserService _userService = locator<UserService>();
   final BankingRepository _bankingRepo = locator<BankingRepository>();
 
-  final _cacheService = new CacheService();
+  final _cacheService = CacheService();
   bool get isConfirmDialogInView => _userService.isConfirmationDialogOpen;
 
   FocusNode kycNameFocusNode = FocusNode();
@@ -127,16 +126,16 @@ class KYCDetailsViewModel extends BaseViewModel {
 
   final depositformKey3 = GlobalKey<FormState>();
 
-  get hasDetails => this._hasDetails;
+  get hasDetails => _hasDetails;
 
   set hasDetails(value) {
-    this._hasDetails = value;
+    _hasDetails = value;
     notifyListeners();
   }
 
   init() {
-    nameController = new TextEditingController();
-    panController = new TextEditingController();
+    nameController = TextEditingController();
+    panController = TextEditingController();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       checkForKycExistence();
     });
@@ -159,8 +158,9 @@ class KYCDetailsViewModel extends BaseViewModel {
             hapticVibrate: true,
             content: MoreInfoDialog(
                 title: locale.invalidFile, text: locale.invalidFileSubtitle));
-      } else
+      } else {
         return;
+      }
     } else {
       capturedImage = null;
       BaseUtil.openDialog(
@@ -176,9 +176,9 @@ class KYCDetailsViewModel extends BaseViewModel {
     _logger.d("${_bankAndPanService.userKycData?.toString()}");
     setState(ViewState.Busy);
     if (_bankAndPanService.isKYCVerified &&
-        _bankAndPanService.userKycData != null)
+        _bankAndPanService.userKycData != null) {
       userKycData = _bankAndPanService.userKycData;
-    else {
+    } else {
       await _bankAndPanService.checkForUserPanDetails();
       userKycData = _bankAndPanService.userKycData;
     }
@@ -200,8 +200,9 @@ class KYCDetailsViewModel extends BaseViewModel {
       isPanTileOpen = true;
       kycVerificationStatus = KycVerificationStatus.UNVERIFIED;
     }
-    if (kycVerificationStatus == KycVerificationStatus.UNVERIFIED)
+    if (kycVerificationStatus == KycVerificationStatus.UNVERIFIED) {
       showKycHelpView = true;
+    }
     setState(ViewState.Idle);
   }
 

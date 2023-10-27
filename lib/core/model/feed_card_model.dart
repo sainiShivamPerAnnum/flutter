@@ -1,8 +1,8 @@
 import 'package:felloapp/util/logger.dart';
 
 class FeedCard {
-  static Log log = new Log('HomeCard');
-    int? _id;
+  static Log log = const Log('HomeCard');
+  int? _id;
   final String? _title;
   final String? _subtitle;
   final String? _btnText;
@@ -38,13 +38,13 @@ class FeedCard {
             cMap['assetLocalLink'] ?? '',
             cMap['assetRemoteLink'] ?? '',
             cMap['actionUri'] ?? '',
-            cMap['clrCodeA']?? 0,
+            cMap['clrCodeA'] ?? 0,
             cMap['clrCodeB'] ?? 0,
             cMap['isHidden'] ?? false,
             cMap['type'] ?? '',
             cMap['dataMap']);
 
-    String? get subtitle => _subtitle;
+  String? get subtitle => _subtitle;
 
   String? get title => _title;
 

@@ -8,7 +8,7 @@ import 'package:flutter/material.dart';
 class SellText extends StatelessWidget {
   final InvestmentType investmentType;
 
-  const SellText({Key? key, required this.investmentType}) : super(key: key);
+  const SellText({required this.investmentType, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -32,7 +32,7 @@ class SellText extends StatelessWidget {
           Text(
             subTitle,
             // maxLines: 2,
-            style: TextStyles.sourceSans.body4.colour(Color(0xffc5cacd)),
+            style: TextStyles.sourceSans.body4.colour(const Color(0xffc5cacd)),
           ),
         ],
       ),
@@ -46,10 +46,10 @@ class SellButton extends StatelessWidget {
   final String text;
 
   const SellButton(
-      {Key? key,
-      required this.onTap,
+      {required this.onTap,
       required this.isActive,
-      required this.text})
+      required this.text,
+      Key? key})
       : super(key: key);
 
   @override
@@ -141,7 +141,7 @@ class SellActionButton extends StatelessWidget {
           child: Padding(
             padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding24),
             child: Row(
-              mainAxisAlignment: this.isCenter
+              mainAxisAlignment: isCenter
                   ? MainAxisAlignment.center
                   : MainAxisAlignment.spaceBetween,
               children: [
@@ -169,9 +169,9 @@ class SellCardInfoStrips extends StatelessWidget {
   final Color? textColor;
 
   const SellCardInfoStrips({
+    required this.content,
     Key? key,
     this.leadingIcon,
-    required this.content,
     this.textColor,
     this.backgroundColor,
   }) : super(key: key);

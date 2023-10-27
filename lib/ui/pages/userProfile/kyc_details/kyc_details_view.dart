@@ -74,8 +74,8 @@ class KYCDetailsView extends StatelessWidget {
                 ),
                 actions: [
                   if (!model.isUpdatingKycDetails)
-                    Row(
-                      children: const [
+                    const Row(
+                      children: [
                         FaqPill(type: FaqsType.yourAccount),
                       ],
                     ),
@@ -199,7 +199,7 @@ class KYCDetailsView extends StatelessWidget {
 
 class EmailVerificationTile extends StatelessWidget {
   final KYCDetailsViewModel model;
-  const EmailVerificationTile({super.key, required this.model});
+  const EmailVerificationTile({required this.model, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -225,7 +225,7 @@ class EmailVerificationTile extends StatelessWidget {
                       ? Padding(
                           padding: EdgeInsets.only(
                               right: SizeConfig.pageHorizontalMargins),
-                          child: Icon(
+                          child: const Icon(
                             Icons.verified,
                             color: UiConstants.primaryColor,
                           ),
@@ -261,13 +261,13 @@ class EmailVerificationTile extends StatelessWidget {
 
 class KycBriefTile extends StatelessWidget {
   const KycBriefTile(
-      {Key? key,
-      required this.model,
+      {required this.model,
       required this.trailing,
+      required this.title,
+      Key? key,
       this.label,
       this.subtitle,
-      this.leading,
-      required this.title})
+      this.leading})
       : super(key: key);
 
   final KYCDetailsViewModel model;
@@ -342,11 +342,11 @@ class FileCaptureOption extends StatelessWidget {
   final Function func;
   final EdgeInsets? padding;
   const FileCaptureOption({
-    Key? key,
     required this.icon,
+    required this.func,
+    Key? key,
     this.desc,
     this.padding,
-    required this.func,
   }) : super(key: key);
 
   @override

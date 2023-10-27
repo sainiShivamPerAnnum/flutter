@@ -2,7 +2,7 @@ import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/util/logger.dart';
 
 class UserIciciDetail {
-  static Log log = new Log('UserIciciDetail');
+  static Log log = const Log('UserIciciDetail');
   String? _appId;
   String? _panNumber;
   String? _kycStatus;
@@ -27,27 +27,27 @@ class UserIciciDetail {
   String? _fatcaFlag;
   bool? _firstInvMade;
 
-  static final String fldAppId = 'iAppId';
-  static final String fldPanNumber = 'iPanNumber';
-  static final String fldKycStatus = 'iKycStatus';
-  static final String fldAppMode = 'iAppMode';
-  static final String fldHasIssue = 'iHasIssue';
-  static final String fldPanName = 'iPanName';
-  static final String fldVerifiedOtpId = 'iVeriOtpId';
-  static final String fldCreatedTime = 'iCreatedTime';
-  static final String fldUpdatedTime = 'iUpdatedTime';
-  static final String fldFolioNo = 'iFolioNo';
-  static final String fldExpDate = 'iExpDate';
-  static final String fldAMCRefNo = 'iAMCRefNo';
-  static final String fldPayoutId = 'iPayoutId';
-  static final String fldChkDigit = 'iChkDigit';
-  static final String fldBankAccNo = 'iBankAccNo';
-  static final String fldBankCode = 'iBankCode';
-  static final String fldBankName = 'iBankName';
-  static final String fldBankCity = 'iBankCity';
-  static final String fldVpa = 'iVpa';
-  static final String fldFatcaFlag = 'iFatcaFlag';
-  static final String fldFirstInvMade = 'iIsInvested';
+  static const String fldAppId = 'iAppId';
+  static const String fldPanNumber = 'iPanNumber';
+  static const String fldKycStatus = 'iKycStatus';
+  static const String fldAppMode = 'iAppMode';
+  static const String fldHasIssue = 'iHasIssue';
+  static const String fldPanName = 'iPanName';
+  static const String fldVerifiedOtpId = 'iVeriOtpId';
+  static const String fldCreatedTime = 'iCreatedTime';
+  static const String fldUpdatedTime = 'iUpdatedTime';
+  static const String fldFolioNo = 'iFolioNo';
+  static const String fldExpDate = 'iExpDate';
+  static const String fldAMCRefNo = 'iAMCRefNo';
+  static const String fldPayoutId = 'iPayoutId';
+  static const String fldChkDigit = 'iChkDigit';
+  static const String fldBankAccNo = 'iBankAccNo';
+  static const String fldBankCode = 'iBankCode';
+  static const String fldBankName = 'iBankName';
+  static const String fldBankCity = 'iBankCity';
+  static const String fldVpa = 'iVpa';
+  static const String fldFatcaFlag = 'iFatcaFlag';
+  static const String fldFirstInvMade = 'iIsInvested';
 
   static const String NO_ISSUES = "NA";
 

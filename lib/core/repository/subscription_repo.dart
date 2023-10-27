@@ -22,7 +22,7 @@ class SubscriptionRepo extends BaseRepo {
 
   Future<ApiResponse<List<SubscriptionTransactionModel>>>
       getSubscriptionTransactionHistory(
-          {int? offset, int? limit, required String asset}) async {
+          {required String asset, int? offset, int? limit}) async {
     try {
       final res = await APIService.instance.getData(
         ApiPath.txnsSubscription(userService.baseUser!.uid!),

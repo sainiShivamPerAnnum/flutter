@@ -9,7 +9,7 @@ class GameViewModel {
   final Portfolio _portfolio;
 
   GameViewModel(this.gameTiers)
-      : _portfolio = locator<UserService>().userPortfolio!;
+      : _portfolio = locator<UserService>().userPortfolio;
 
   double get netWorth =>
       _portfolio.augmont.principle + (_portfolio.flo.principle);
@@ -85,13 +85,13 @@ class GameTier {
 
   GameTier(
       {required this.level,
+      required this.games,
       this.amountToCompleteLevel = 0,
       this.title = '',
       this.subTitle = '',
       this.showProgressIndicator = false,
       this.isLocked = false,
       this.netWorth = 0.0,
-      required this.games,
       this.showBuyButton = false,
       this.shadow = 0.0,
       this.winningText = '',

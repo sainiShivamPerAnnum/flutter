@@ -13,8 +13,8 @@ import 'package:intl/intl.dart';
 class SubscriptionCardViewModel extends BaseViewModel {
   // final PaytmService? _paytmService = locator<PaytmService>();
   final SubService _subService = locator<SubService>();
-  final UserService? _userService = locator<UserService>();
-  bool _isResumingInProgress = false;
+  final UserService _userService = locator<UserService>();
+  final bool _isResumingInProgress = false;
   bool _isLoading = false;
   S locale = locator<S>();
 
@@ -35,9 +35,8 @@ class SubscriptionCardViewModel extends BaseViewModel {
   }
 
   String getactiveSubtitle(ActiveSubscriptionModel subscription) {
-    if (subscription == null ||
-        (subscription.status == Constants.SUBSCRIPTION_INIT ||
-            subscription.status == Constants.SUBSCRIPTION_CANCELLED)) {
+    if ((subscription.status == Constants.SUBSCRIPTION_INIT ||
+        subscription.status == Constants.SUBSCRIPTION_CANCELLED)) {
       return locale.felloAutoSave;
     }
     if (subscription.status == Constants.SUBSCRIPTION_PROCESSING) {
@@ -47,13 +46,14 @@ class SubscriptionCardViewModel extends BaseViewModel {
         return "₹${subscription.autoAmount!.toInt()}${getFreq(subscription.autoFrequency)}";
       }
       if (subscription.status == Constants.SUBSCRIPTION_INACTIVE) {
-        if (subscription.autoAmount == 0.0)
+        if (subscription.autoAmount == 0.0) {
           return locale.startSavingNow;
-        else {
-          if (subscription.resumeDate!.isEmpty)
+        } else {
+          if (subscription.resumeDate!.isEmpty) {
             return locale.felloAutoSave;
-          else
-            return locale.till + "${getResumeDate()}";
+          } else {
+            return locale.till + getResumeDate();
+          }
         }
       }
       return locale.zeroperDay;
@@ -61,9 +61,8 @@ class SubscriptionCardViewModel extends BaseViewModel {
   }
 
   String getActiveButtonText(ActiveSubscriptionModel subscription) {
-    if (subscription == null ||
-        (subscription.status == Constants.SUBSCRIPTION_INIT ||
-            subscription.status == Constants.SUBSCRIPTION_CANCELLED)) {
+    if ((subscription.status == Constants.SUBSCRIPTION_INIT ||
+        subscription.status == Constants.SUBSCRIPTION_CANCELLED)) {
       return locale.startAnSIP;
     }
     if (subscription.status == Constants.SUBSCRIPTION_PROCESSING) {
@@ -73,13 +72,14 @@ class SubscriptionCardViewModel extends BaseViewModel {
         return locale.view;
       }
       if (subscription.status == Constants.SUBSCRIPTION_INACTIVE) {
-        if (subscription.autoAmount == 0.0)
+        if (subscription.autoAmount == 0.0) {
           return locale.setAmount;
-        else {
-          if (subscription.resumeDate!.isEmpty)
+        } else {
+          if (subscription.resumeDate!.isEmpty) {
             return locale.restart;
-          else
+          } else {
             return locale.resume;
+          }
         }
       }
       return locale.details;
@@ -180,13 +180,14 @@ class SubscriptionCardViewModel extends BaseViewModel {
         return locale.active;
       }
       if (subscription.status == Constants.SUBSCRIPTION_INACTIVE) {
-        if (subscription.autoAmount == 0.0)
+        if (subscription.autoAmount == 0.0) {
           return locale.autoSaveSetupComplete;
-        else {
-          if (subscription.resumeDate!.isEmpty)
+        } else {
+          if (subscription.resumeDate!.isEmpty) {
             return locale.savingsOnAutoPilot;
-          else
+          } else {
             return locale.paused;
+          }
         }
       }
       return locale.autoSave;
@@ -194,9 +195,8 @@ class SubscriptionCardViewModel extends BaseViewModel {
   }
 
   String getActivityStatus(ActiveSubscriptionModel subscription) {
-    if (subscription == null ||
-        (subscription.status == Constants.SUBSCRIPTION_INIT ||
-            subscription.status == Constants.SUBSCRIPTION_CANCELLED)) {
+    if ((subscription.status == Constants.SUBSCRIPTION_INIT ||
+        subscription.status == Constants.SUBSCRIPTION_CANCELLED)) {
       return "Cancelled";
     }
     if (subscription.status == Constants.SUBSCRIPTION_PROCESSING) {
@@ -206,13 +206,14 @@ class SubscriptionCardViewModel extends BaseViewModel {
         return "Active";
       }
       if (subscription.status == Constants.SUBSCRIPTION_INACTIVE) {
-        if (subscription.autoAmount == 0.0)
+        if (subscription.autoAmount == 0.0) {
           return "Paused";
-        else {
-          if (subscription.resumeDate!.isEmpty)
+        } else {
+          if (subscription.resumeDate!.isEmpty) {
             return "";
-          else
+          } else {
             return "";
+          }
         }
       }
       return "Autosave";
@@ -223,15 +224,16 @@ class SubscriptionCardViewModel extends BaseViewModel {
     if (_subService.subscriptionData != null &&
         _subService.subscriptionData!.status != Constants.SUBSCRIPTION_INIT &&
         _subService.subscriptionData!.status !=
-            Constants.SUBSCRIPTION_CANCELLED)
+            Constants.SUBSCRIPTION_CANCELLED) {
       AppState.delegate!.appState.currentAction = PageAction(
         state: PageState.addPage,
         page: AutosaveDetailsViewPageConfig,
       );
-    else
+    } else {
       AppState.delegate!.appState.currentAction = PageAction(
         state: PageState.addPage,
         page: AutosaveDetailsViewPageConfig,
       );
+    }
   }
 }

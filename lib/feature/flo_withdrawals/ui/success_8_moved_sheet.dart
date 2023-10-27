@@ -13,19 +13,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class Successful8MovedSheet extends StatelessWidget {
-  const Successful8MovedSheet({required this.investAmount,
-    required this.maturityAmount,
-    required this.maturityDate,
-    required this.reInvestmentDate,
-    required this.fdDuration,
-    required this.roiPerc,
-    required this.title,
-    required this.topChipText,
-    required this.footer,
-    required this.isLendboxOldUser,
-    this.defaultMovedTo8 = false,
-    this.startsAt = 0,
-    super.key});
+  const Successful8MovedSheet(
+      {required this.investAmount,
+      required this.maturityAmount,
+      required this.maturityDate,
+      required this.reInvestmentDate,
+      required this.fdDuration,
+      required this.roiPerc,
+      required this.title,
+      required this.topChipText,
+      required this.footer,
+      required this.isLendboxOldUser,
+      this.defaultMovedTo8 = false,
+      this.startsAt = 0,
+      super.key});
 
   final String investAmount;
   final String maturityAmount;
@@ -149,7 +150,7 @@ class Successful8MovedSheet extends StatelessWidget {
                                     vertical: SizeConfig.padding4),
                                 decoration: ShapeDecoration(
                                   color:
-                                  const Color(0xFFD9D9D9).withOpacity(0.20),
+                                      const Color(0xFFD9D9D9).withOpacity(0.20),
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(
                                           SizeConfig.roundness12)),
@@ -177,7 +178,7 @@ class Successful8MovedSheet extends StatelessWidget {
                                     vertical: SizeConfig.padding4),
                                 decoration: ShapeDecoration(
                                   color:
-                                  const Color(0xFFD9D9D9).withOpacity(0.20),
+                                      const Color(0xFFD9D9D9).withOpacity(0.20),
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(
                                           SizeConfig.roundness12)),
@@ -251,7 +252,7 @@ class Successful8MovedSheet extends StatelessWidget {
                     ],
                   ),
                 ),
-                if (topChipText != null && !defaultMovedTo8)
+                if (!defaultMovedTo8)
                   Align(
                     alignment: Alignment.topCenter,
                     child: Transform.translate(
@@ -263,7 +264,7 @@ class Successful8MovedSheet extends StatelessWidget {
                         decoration: BoxDecoration(
                           color: const Color(0xFF62E3C4),
                           borderRadius:
-                          BorderRadius.circular(SizeConfig.roundness16),
+                              BorderRadius.circular(SizeConfig.roundness16),
                         ),
                         child: topChipText.beautify(
                           boldStyle: TextStyles.sourceSansB.body4.colour(
@@ -285,7 +286,7 @@ class Successful8MovedSheet extends StatelessWidget {
                 footer,
                 textAlign: TextAlign.center,
                 style:
-                TextStyles.sourceSans.body3.colour(const Color(0xFFBDBDBE)),
+                    TextStyles.sourceSans.body3.colour(const Color(0xFFBDBDBE)),
               ),
               SizedBox(height: SizeConfig.padding12),
             ],

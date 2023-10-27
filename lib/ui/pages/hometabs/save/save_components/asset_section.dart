@@ -18,7 +18,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 class SaveAssetsGroupCard extends StatelessWidget {
   final SaveViewModel saveViewModel;
 
-  const SaveAssetsGroupCard({Key? key, required this.saveViewModel})
+  const SaveAssetsGroupCard({required this.saveViewModel, Key? key})
       : super(key: key);
 
   getAssetsOrder() {
@@ -159,12 +159,12 @@ class MiniAssetCard extends StatelessWidget {
   final Color color;
 
   const MiniAssetCard(
-      {super.key,
-      required this.asset,
+      {required this.asset,
       required this.title,
       required this.subtitle,
       required this.actionUri,
-      required this.color});
+      required this.color,
+      super.key});
 
   @override
   Widget build(BuildContext context) {

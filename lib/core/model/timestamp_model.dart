@@ -54,7 +54,7 @@ class TimestampModel extends Timestamp {
   }
 
   int operator -(TimestampModel other) {
-    return this.toDate().difference(other.toDate()).inDays;
+    return toDate().difference(other.toDate()).inDays;
   }
 
   static int daysBetween(DateTime from, DateTime to) {

@@ -119,9 +119,9 @@ class AnimatedDot extends StatelessWidget {
   final double opacityValue;
   final int index;
   const AnimatedDot({
-    Key? key,
     required this.opacityValue,
     required this.index,
+    Key? key,
   });
 
   @override
@@ -153,8 +153,7 @@ class AnimatedDot extends StatelessWidget {
   }
 }
 
-
-//VERSION 1 
+//VERSION 1
 // class AnimatedDottedRectangle extends StatefulWidget {
 //   final Widget child;
 //   final AnimationController controller;

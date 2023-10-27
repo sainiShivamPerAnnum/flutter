@@ -24,12 +24,12 @@ import '../../../../core/service/api.dart';
 import '../../../../util/assets.dart';
 
 class TopSaverViewModel extends BaseViewModel {
-  final CustomLogger? _logger = locator<CustomLogger>();
-  final DBModel? _dbModel = locator<DBModel>();
-  final UserService? _userService = locator<UserService>();
-  final GetterRepository? _getterRepo = locator<GetterRepository>();
+  final CustomLogger _logger = locator<CustomLogger>();
+  final DBModel _dbModel = locator<DBModel>();
+  final UserService _userService = locator<UserService>();
+  final GetterRepository _getterRepo = locator<GetterRepository>();
   // final WinnerService? _winnerService = locator<WinnerService>();
-  final CampaignRepo? _campaignRepo = locator<CampaignRepo>();
+  final CampaignRepo _campaignRepo = locator<CampaignRepo>();
   S locale = locator<S>();
 
   // final eventService = EventService();
@@ -65,13 +65,13 @@ class TopSaverViewModel extends BaseViewModel {
 
   int get tabNo => _tabNo;
   set tabNo(value) {
-    this._tabNo = value;
+    _tabNo = value;
     notifyListeners();
   }
 
   double get tabPosWidthFactor => _tabPosWidthFactor;
   set tabPosWidthFactor(value) {
-    this._tabPosWidthFactor = value;
+    _tabPosWidthFactor = value;
     notifyListeners();
   }
 
@@ -84,7 +84,7 @@ class TopSaverViewModel extends BaseViewModel {
 
     _pageController!.animateToPage(
       tab,
-      duration: Duration(milliseconds: 300),
+      duration: const Duration(milliseconds: 300),
       curve: Curves.linear,
     );
     tabNo = tab;
@@ -116,31 +116,31 @@ class TopSaverViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  get userRank => this._userRank;
+  get userRank => _userRank;
 
   set userRank(value) {
-    this._userRank = value;
+    _userRank = value;
     notifyListeners();
   }
 
-  String get highestSavings => this._highestSavingsDisplayAmount;
+  String get highestSavings => _highestSavingsDisplayAmount;
 
   set highestSavings(value) {
-    this._highestSavingsDisplayAmount = value;
+    _highestSavingsDisplayAmount = value;
     notifyListeners();
   }
 
-  String? get userDisplayAmount => this._userDisplayAmount;
+  String? get userDisplayAmount => _userDisplayAmount;
 
   set userDisplayAmount(value) {
-    this._userDisplayAmount = value;
+    _userDisplayAmount = value;
     notifyListeners();
   }
 
   init(String? eventType, bool isGameRedirected) async {
     setState(ViewState.Busy);
 
-    this.event = await getSingleEventDetails(eventType);
+    event = await getSingleEventDetails(eventType);
     _pageController = PageController(initialPage: 0);
     infoBoxOpen = false;
     getRealTimeFinanceStream();
@@ -264,8 +264,9 @@ class TopSaverViewModel extends BaseViewModel {
       ongoingEvents.forEach((element) {
         if (element.type == eventType) event = element;
       });
-    } else
+    } else {
       BaseUtil.showNegativeAlert(response.errorMessage, locale.tryLater);
+    }
     _logger!.d(event.toString());
     return event;
   }
@@ -279,8 +280,9 @@ class TopSaverViewModel extends BaseViewModel {
     if (response.code == 200) {
       currentParticipants = LeaderboardModel.fromMap(response.model).scoreboard;
       getUserRankIfAny();
-    } else
+    } else {
       currentParticipants = [];
+    }
     notifyListeners();
   }
 
@@ -304,15 +306,17 @@ class TopSaverViewModel extends BaseViewModel {
       }
 
       notifyListeners();
-    } else
+    } else {
       pastWinners = [];
+    }
 
     updateWinnersTitle();
   }
 
   updateWinnersTitle() {
-    if (pastWinners!.length == 1)
+    if (pastWinners!.length == 1) {
       winnerTitle = winnerTitle.substring(0, winnerTitle.length - 1);
+    }
     notifyListeners();
   }
 
@@ -398,7 +402,7 @@ class TopSaverViewModel extends BaseViewModel {
   }
 
   fetchHighestSavings() {
-    highestSavings = currentParticipants![0]?.displayScore ?? '';
+    highestSavings = currentParticipants![0].displayScore ?? '';
   }
 
   Future<List<WinnersModel>?> getPastWinners(
