@@ -112,6 +112,7 @@ class AnalyticsService extends BaseAnalyticsService {
 
       await APIService.instance.postData(
         ApiPath.acquisitionTracking,
+        apiName: 'optAnalytics',
         body: body,
       );
     } catch (e) {
@@ -140,6 +141,7 @@ class AnalyticsService extends BaseAnalyticsService {
 
         await APIService.instance.postData(
           ApiPath.acquisitionTracking,
+          apiName: 'optAnalytics',
           body: body,
         );
       }

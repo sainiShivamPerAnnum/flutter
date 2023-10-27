@@ -18,6 +18,9 @@ class TambolaRepo extends BaseRepo {
   TimestampModel? lastTimeStamp;
   List<TambolaTicketModel> activeTambolaTickets = [];
   static int expiringTicketCount = 0;
+
+  static const _tambola = 'tambola';
+
   final _baseUrl = FlavorConfig.isDevelopment()
       ? 'https://qv53yko0b0.execute-api.ap-south-1.amazonaws.com/dev'
       : 'https://7icbm6j9e7.execute-api.ap-south-1.amazonaws.com/prod';
@@ -27,18 +30,15 @@ class TambolaRepo extends BaseRepo {
     TambolaBestTicketsModel? bestTickets;
     try {
       final uid = userService.baseUser!.uid;
-      final token = await getBearerToken();
-
-      // await preProcessTambolaTickets();
 
       return await _cacheService.cachedApi(
           CacheKeys.TAMBOLA_TICKETS,
           TTL.UPTO_SIX_PM,
           () => APIService.instance.getData(
                 ApiPath.tambolaBestTickets(uid!),
-                token: token,
                 queryParams: {'spinFlag': postSpinStats.toString()},
                 cBaseUrl: _baseUrl,
+                apiName: '$_tambola/winningTickets',
               ), (dynamic response) {
         bestTickets = TambolaBestTicketsModel.fromJson(response);
         expiringTicketCount = response["data"]["expiringTicketsCount"] ?? 0;
@@ -58,12 +58,12 @@ class TambolaRepo extends BaseRepo {
       int offset, int limit) async {
     try {
       final uid = userService.baseUser!.uid;
-      final token = await getBearerToken();
+
       final response = await APIService.instance.getData(
         ApiPath.tambolaTickets(uid),
-        token: token,
         queryParams: {'limit': limit.toString(), 'offset': offset.toString()},
         cBaseUrl: _baseUrl,
+        apiName: '$_tambola/tickets',
       );
       List<TambolaTicketModel>? tickets =
           TambolaTicketModel.helper.fromMapArray(response['data']['tickets']);
@@ -81,8 +81,6 @@ class TambolaRepo extends BaseRepo {
 
   Future<ApiResponse<dynamic>> getWeeklyPicks() async {
     try {
-      final String bearer = await getBearerToken();
-
       // cache till 6 PM only
       final now = DateTime.now();
       // final ttl = ((18 - now.hour) % 24) * 60 - now.minute;
@@ -92,8 +90,8 @@ class TambolaRepo extends BaseRepo {
           0,
           () => APIService.instance.getData(
                 ApiPath.dailyPicks,
-                token: bearer,
                 cBaseUrl: _baseUrl,
+                apiName: '$_tambola/dailyPicks',
               ), (dynamic response) {
         final data = response['data'];
         if (data != null && data.isNotEmpty) {

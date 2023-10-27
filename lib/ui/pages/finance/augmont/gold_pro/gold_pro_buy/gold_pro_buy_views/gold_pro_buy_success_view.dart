@@ -4,6 +4,7 @@ import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/feature/tambola/tambola.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/ui/elements/fello_rich_text.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_buy/gold_buy_success_view.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_buy/gold_pro_buy_vm.dart';
 import 'package:felloapp/util/assets.dart';
@@ -51,13 +52,20 @@ class _GoldProBuySuccessViewState extends State<GoldProBuySuccessView>
   @override
   Widget build(BuildContext context) {
     S locale = locator<S>();
+    final leaseText = widget.model.leaseModel?.subText;
+    final responseText =
+        widget.txnService.transactionResponseModel?.data?.subText;
+    final subText = leaseText ?? responseText;
+
     return Container(
+      height: double.infinity,
       color: Colors.black,
       child: Stack(
         children: [
-          Padding(
+          SingleChildScrollView(
             padding: EdgeInsets.symmetric(
-                vertical: SizeConfig.pageHorizontalMargins),
+              vertical: SizeConfig.pageHorizontalMargins,
+            ),
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.center,
@@ -143,132 +151,179 @@ class _GoldProBuySuccessViewState extends State<GoldProBuySuccessView>
                 ],
                 Container(
                   margin: EdgeInsets.only(
-                      left: SizeConfig.pageHorizontalMargins,
-                      right: SizeConfig.pageHorizontalMargins,
-                      top: SizeConfig.pageHorizontalMargins),
+                    left: SizeConfig.pageHorizontalMargins,
+                    right: SizeConfig.pageHorizontalMargins,
+                    top: SizeConfig.pageHorizontalMargins,
+                  ),
                   decoration: BoxDecoration(
-                    border:
-                        Border.all(width: 1, color: UiConstants.kGoldProBorder),
+                    border: Border.all(
+                      width: 1,
+                      color: UiConstants.kGoldProBorder,
+                    ),
                     borderRadius: BorderRadius.all(
                       Radius.circular(SizeConfig.roundness12),
                     ),
+                    color: UiConstants.kGoldProPrimary,
                   ),
-                  child: widget.txnService.currentTxnAmount == 0
-                      ? Padding(
-                          padding:
-                              EdgeInsets.all(SizeConfig.pageHorizontalMargins),
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text("Gold Leased",
-                                  style: TextStyles.sourceSans.body2
-                                      .colour(UiConstants.kGoldProPrimary)),
-                              Text(
-                                  "${BaseUtil.digitPrecision(
-                                    widget.txnService.currentGoldPurchaseDetails
-                                        .goldInGrams,
-                                    2,
-                                    false,
-                                  )} gms",
-                                  style: TextStyles.rajdhaniSB.title3
-                                      .colour(UiConstants.kGoldProPrimary)),
-                            ],
+                  child: Column(
+                    children: [
+                      if (subText != null &&
+                          subText.isNotEmpty &&
+                          !widget.model.isGoldProUser)
+                        Padding(
+                          padding: const EdgeInsets.symmetric(vertical: 8),
+                          child: FelloRichText(
+                            paragraph: subText,
+                            style: TextStyles.sourceSansSB.body4.copyWith(
+                              color: Colors.black,
+                              height: 1.5,
+                            ),
                           ),
-                        )
-                      : Column(
-                          children: [
-                            IntrinsicHeight(
-                              child: Row(
+                        ),
+                      Container(
+                        decoration: BoxDecoration(
+                          border: Border.all(
+                              width: 1, color: UiConstants.kGoldProBorder),
+                          borderRadius: BorderRadius.all(
+                            Radius.circular(SizeConfig.roundness12),
+                          ),
+                          color: Colors.black,
+                        ),
+                        child: widget.txnService.currentTxnAmount == 0
+                            ? Padding(
+                                padding: EdgeInsets.all(
+                                    SizeConfig.pageHorizontalMargins),
+                                child: Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text("Gold Leased",
+                                        style: TextStyles.sourceSans.body2
+                                            .colour(
+                                                UiConstants.kGoldProPrimary)),
+                                    Text(
+                                        "${BaseUtil.digitPrecision(
+                                          widget
+                                              .txnService
+                                              .currentGoldPurchaseDetails
+                                              .goldInGrams,
+                                          2,
+                                          false,
+                                        )} gms",
+                                        style: TextStyles.rajdhaniSB.title3
+                                            .colour(
+                                                UiConstants.kGoldProPrimary)),
+                                  ],
+                                ),
+                              )
+                            : Column(
                                 children: [
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
+                                  IntrinsicHeight(
+                                    child: Row(
                                       children: [
-                                        SizedBox(height: SizeConfig.padding14),
-                                        Text("Leased grams",
-                                            style: TextStyles.sourceSans.body2
-                                                .colour(
-                                                    UiConstants.kTextColor2)),
-                                        SizedBox(height: SizeConfig.padding12),
-                                        Text(
-                                            "${BaseUtil.digitPrecision(
-                                              widget
-                                                      .txnService
-                                                      .currentGoldPurchaseDetails
-                                                      .leaseQty ??
-                                                  0,
-                                              2,
-                                              false,
-                                            )} gms",
-                                            style: TextStyles.rajdhaniSB.title3
-                                                .colour(UiConstants
-                                                    .kGoldProPrimary)),
-                                        SizedBox(height: SizeConfig.padding14),
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              SizedBox(
+                                                  height: SizeConfig.padding14),
+                                              Text("Leased grams",
+                                                  style: TextStyles
+                                                      .sourceSans.body2
+                                                      .colour(UiConstants
+                                                          .kTextColor2)),
+                                              SizedBox(
+                                                  height: SizeConfig.padding12),
+                                              Text(
+                                                  "${BaseUtil.digitPrecision(
+                                                    widget
+                                                            .txnService
+                                                            .currentGoldPurchaseDetails
+                                                            .leaseQty ??
+                                                        0,
+                                                    2,
+                                                    false,
+                                                  )} gms",
+                                                  style: TextStyles
+                                                      .rajdhaniSB.title3
+                                                      .colour(UiConstants
+                                                          .kGoldProPrimary)),
+                                              SizedBox(
+                                                  height: SizeConfig.padding14),
+                                            ],
+                                          ),
+                                        ),
+                                        VerticalDivider(
+                                          indent: 10,
+                                          endIndent: 10,
+                                          width: 3,
+                                          thickness: 1,
+                                          color: UiConstants.kGoldProPrimary
+                                              .withOpacity(.4),
+                                        ),
+                                        Expanded(
+                                          child: Column(
+                                            crossAxisAlignment:
+                                                CrossAxisAlignment.center,
+                                            mainAxisAlignment:
+                                                MainAxisAlignment.center,
+                                            children: [
+                                              Text("Gold Bought",
+                                                  style: TextStyles
+                                                      .sourceSans.body2
+                                                      .colour(UiConstants
+                                                          .kTextColor2)),
+                                              SizedBox(
+                                                  height: SizeConfig.padding12),
+                                              Text(
+                                                  "${BaseUtil.digitPrecision(
+                                                    widget
+                                                        .txnService
+                                                        .currentGoldPurchaseDetails
+                                                        .goldInGrams,
+                                                    4,
+                                                    false,
+                                                  )} gms",
+                                                  style: TextStyles
+                                                      .rajdhaniSB.title3),
+                                            ],
+                                          ),
+                                        )
                                       ],
                                     ),
                                   ),
-                                  VerticalDivider(
-                                    width: 3,
-                                    thickness: 1,
+                                  Divider(
                                     color: UiConstants.kGoldProBorder,
+                                    height: 1,
                                   ),
-                                  Expanded(
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.center,
-                                      mainAxisAlignment:
-                                          MainAxisAlignment.center,
-                                      children: [
-                                        Text("Gold Bought",
-                                            style: TextStyles.sourceSans.body2
-                                                .colour(
-                                                    UiConstants.kTextColor2)),
-                                        SizedBox(height: SizeConfig.padding12),
-                                        Text(
-                                            "${BaseUtil.digitPrecision(
-                                              widget
-                                                  .txnService
-                                                  .currentGoldPurchaseDetails
-                                                  .goldInGrams,
-                                              4,
-                                              false,
-                                            )} gms",
-                                            style:
-                                                TextStyles.rajdhaniSB.title3),
-                                      ],
+                                  Container(
+                                    padding: EdgeInsets.symmetric(
+                                      horizontal:
+                                          SizeConfig.pageHorizontalMargins,
+                                      vertical: SizeConfig.padding12,
                                     ),
-                                  )
+                                    child: Row(children: [
+                                      Text(
+                                        "Extra Gold Bought Amount:",
+                                        style: TextStyles.rajdhani.body3
+                                            .colour(UiConstants.kTextColor3),
+                                      ),
+                                      const Spacer(),
+                                      Text(
+                                        "₹ ${BaseUtil.getIntOrDouble(widget.txnService.currentGoldPurchaseDetails.goldBuyAmount!)}",
+                                        style: TextStyles.sourceSans.body2
+                                            .colour(UiConstants.kTextColor),
+                                      )
+                                    ]),
+                                  ),
                                 ],
                               ),
-                            ),
-                            Divider(
-                              color: UiConstants.kGoldProBorder,
-                              height: 1,
-                            ),
-                            Container(
-                              padding: EdgeInsets.symmetric(
-                                horizontal: SizeConfig.pageHorizontalMargins,
-                                vertical: SizeConfig.padding12,
-                              ),
-                              child: Row(children: [
-                                Text(
-                                  "Extra Gold Bought Amount:",
-                                  style: TextStyles.rajdhani.body3
-                                      .colour(UiConstants.kTextColor3),
-                                ),
-                                const Spacer(),
-                                Text(
-                                  "₹ ${BaseUtil.getIntOrDouble(widget.txnService.currentGoldPurchaseDetails.goldBuyAmount!)}",
-                                  style: TextStyles.sourceSans.body2
-                                      .colour(UiConstants.kTextColor),
-                                )
-                              ]),
-                            ),
-                          ],
-                        ),
+                      ),
+                    ],
+                  ),
                 ),
                 Container(
                   padding: EdgeInsets.only(
@@ -306,8 +361,11 @@ class _GoldProBuySuccessViewState extends State<GoldProBuySuccessView>
                     ],
                   ),
                 ),
-                const AutopaySetupWidget(),
-                const Spacer(),
+                if (!(subText != null && subText.isNotEmpty))
+                  const AutopaySetupWidget(),
+                SizedBox(
+                  height: SizeConfig.padding16,
+                ),
                 TextButton(
                   onPressed: () {
                     AppState.isRepeated = true;

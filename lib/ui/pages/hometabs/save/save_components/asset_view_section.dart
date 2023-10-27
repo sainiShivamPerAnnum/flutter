@@ -26,7 +26,6 @@ import 'package:felloapp/ui/pages/finance/mini_trans_card/mini_trans_card_view.d
 import 'package:felloapp/ui/pages/hometabs/save/flo_components/flo_basic_card.dart';
 import 'package:felloapp/ui/pages/hometabs/save/flo_components/flo_premium_section.dart';
 import 'package:felloapp/ui/pages/hometabs/save/gold_components/gold_hero_card.dart';
-import 'package:felloapp/ui/pages/hometabs/save/gold_components/gold_pro_card.dart';
 import 'package:felloapp/ui/pages/hometabs/save/gold_components/gold_rate_widget.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/ui/pages/login/login_components/login_support.dart';
@@ -47,6 +46,7 @@ import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 
+import '../gold_components/gold_pro_card.dart';
 import '../gold_components/gold_rate_graph.dart';
 
 class AssetSectionView extends StatefulWidget {
@@ -106,6 +106,14 @@ class _AssetSectionViewState extends State<AssetSectionView> {
         ],
         builder: (_, model, ___) {
           bool isNewUser = model!.userSegments.contains("NEW_USER");
+          bool hasSavedInAug = false;
+
+          for (final segment in model.userSegments) {
+            if (segment.toString().contains('SAVE_AUG_AMT')) {
+              hasSavedInAug = true;
+            }
+          }
+
           final balance = widget.type == InvestmentType.AUGGOLD99
               ? ((model.userFundWallet?.augGoldQuantity ?? 0) +
                   (model.userFundWallet?.wAugFdQty ?? 0))
@@ -123,7 +131,7 @@ class _AssetSectionViewState extends State<AssetSectionView> {
                   body: Stack(
                     children: [
                       Container(
-                        height: SizeConfig.screenHeight! * 0.5,
+                        height: SizeConfig.screenHeight! * 0.35,
                         decoration: BoxDecoration(
                           gradient: LinearGradient(
                               colors: [
@@ -194,9 +202,9 @@ class _AssetSectionViewState extends State<AssetSectionView> {
                                     ? _buildInfoSection()
                                     : const GoldInfoWidget(),
                                 const GoldRateWidget(),
-                                if (widget.type == InvestmentType.AUGGOLD99)
+                                if (widget.type == InvestmentType.AUGGOLD99 &&
+                                    !hasSavedInAug)
                                   const LineGradientChart(),
-                                const GoldProCard()
                               ],
                               if (balance == 0)
                                 SizedBox(
@@ -230,9 +238,8 @@ class _AssetSectionViewState extends State<AssetSectionView> {
                               if (!_isGold) FloBasicCard(model: model),
                               if (!isNewUser) ...[
                                 MiniTransactionCard(
-                                    investmentType: widget.type),
-                                const AutosaveCard(
-                                    investmentType: InvestmentType.AUGGOLD99),
+                                  investmentType: widget.type,
+                                ),
                                 if (balance != 0 && _isGold) ...[
                                   Align(
                                     alignment: Alignment.centerLeft,
@@ -251,8 +258,14 @@ class _AssetSectionViewState extends State<AssetSectionView> {
                                   SizedBox(
                                     height: SizeConfig.padding28,
                                   ),
-                                ]
+                                ],
                               ],
+                              if (widget.type == InvestmentType.AUGGOLD99)
+                                const GoldProCard(),
+                              if (!isNewUser)
+                                const AutosaveCard(
+                                  investmentType: InvestmentType.AUGGOLD99,
+                                ),
                               if (!isNewUser) ...[
                                 CircularSlider(
                                   isNewUser: isNewUser,

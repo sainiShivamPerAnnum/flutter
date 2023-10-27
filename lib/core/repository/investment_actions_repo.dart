@@ -11,20 +11,20 @@ class InvestmentActionsRepository extends BaseRepo {
   final ApiPath? _apiPaths = locator<ApiPath>();
   final CustomLogger? _logger = locator<CustomLogger>();
   final _rsaEncryption = new RSAEncryption();
+  static const _banking = 'bankingOps';
 
   final _baseUrl = FlavorConfig.isDevelopment()
-      ? "https://cqfb61p1m2.execute-api.ap-south-1.amazonaws.com/dev"
+      ? "https://6iq5sy5tp8.execute-api.ap-south-1.amazonaws.com/dev"
       : "https://szqrjkwkka.execute-api.ap-south-1.amazonaws.com/prod";
 
   Future<ApiResponse<Map<String, dynamic>>> getGoldRates() async {
     _logger!.d("GET_GOLD_RATES::API_CALLED");
 
     try {
-      final String _bearer = await getBearerToken();
       final response = await APIService.instance.getData(
         _apiPaths!.kGetGoldRates,
-        token: _bearer,
         cBaseUrl: _baseUrl,
+        apiName: "$_banking/goldRates",
       );
 
       return ApiResponse(model: response['data'], code: 200);
@@ -56,14 +56,13 @@ class InvestmentActionsRepository extends BaseRepo {
       _logger!.e("Encryption initialization failed.");
     }
     try {
-      final String _bearer = await getBearerToken();
       final response = await APIService.instance.postData(
         ApiPath.withdrawal,
         body: _body,
-        token: _bearer,
         cBaseUrl: FlavorConfig.isDevelopment()
             ? "https://wd7bvvu7le.execute-api.ap-south-1.amazonaws.com/dev"
             : "https://yg58g0feo0.execute-api.ap-south-1.amazonaws.com/prod",
+        apiName: 'monoPayment/withdrawal',
       );
       _logger!.d("Response from withdrawal: $response");
       message = response["message"];

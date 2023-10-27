@@ -13,6 +13,8 @@ import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
 
 class PaymentRepository extends BaseRepo {
+  static const _payments = 'payments';
+
   final _baseUrl = FlavorConfig.isDevelopment()
       ? 'https://wd7bvvu7le.execute-api.ap-south-1.amazonaws.com/dev'
       : 'https://yg58g0feo0.execute-api.ap-south-1.amazonaws.com/prod';
@@ -27,13 +29,13 @@ class PaymentRepository extends BaseRepo {
       double balance = 0;
       double lockedQuantity = 0;
       double quantity = 0;
-      final token = await getBearerToken();
+
       final quantityResponse = await APIService.instance.getData(
         ApiPath.getWithdrawableGoldQuantity(
           this.userService!.baseUser!.uid,
         ),
         cBaseUrl: _baseUrl,
-        token: token,
+        apiName: '$_payments/withdrawableByID',
       );
       WithdrawableGoldResponseModel responseModel =
           WithdrawableGoldResponseModel.fromMap(quantityResponse);
@@ -55,7 +57,6 @@ class PaymentRepository extends BaseRepo {
       {String? bankAccno, String? bankHolderName, String? bankIfsc}) async {
     String message = '';
     try {
-      final token = await getBearerToken();
       final Map<String, String?> _body = {
         "uid": userService!.baseUser!.uid,
         "name": bankHolderName,
@@ -67,7 +68,7 @@ class PaymentRepository extends BaseRepo {
         ApiPath().kAddBankAccount,
         body: _body,
         cBaseUrl: _baseUrl,
-        token: token,
+        apiName: '$_payments/addBankDetails',
       );
       logger!.d(response);
 
@@ -94,11 +95,10 @@ class PaymentRepository extends BaseRepo {
   Future<ApiResponse<BankAccountDetailsModel>>
       getActiveBankAccountDetails() async {
     try {
-      final token = await getBearerToken();
       final response = await APIService.instance.getData(
         ApiPath.kGetBankAccountDetails(userService!.baseUser!.uid),
         cBaseUrl: _baseUrl,
-        token: token,
+        apiName: '$_payments/bankDetails',
       );
       final Map? responseData = response["data"];
       BankAccountDetailsModel? bankAccountDetails;
@@ -116,11 +116,10 @@ class PaymentRepository extends BaseRepo {
 
   Future<ApiResponse<GoldProSchemeModel>> getGoldProScheme() async {
     try {
-      final token = await getBearerToken();
       final response = await APIService.instance.getData(
         ApiPath.goldProScheme,
         cBaseUrl: _baseUrl,
-        token: token,
+        apiName: '$_payments/scheme',
       );
       final responseData = response["data"]["scheme"];
       GoldProSchemeModel? goldProSchemeDetails;
@@ -140,20 +139,24 @@ class PaymentRepository extends BaseRepo {
     String schemeId,
   ) async {
     try {
-      final token = await getBearerToken();
-      final response = await APIService.instance.postData(ApiPath.Fd,
-          cBaseUrl: _baseUrl,
-          token: token,
-          body: {
-            "quantity": leaseQty,
-            "schemeId": schemeId,
-            "uid": userService.baseUser!.uid
-          });
+      final response = await APIService.instance.postData(
+        ApiPath.Fd,
+        cBaseUrl: _baseUrl,
+        body: {
+          "quantity": leaseQty,
+          "schemeId": schemeId,
+          "uid": userService.baseUser!.uid,
+        },
+        apiName: '$_payments/fd',
+      );
       final responseData = response["data"]["fd"];
+      final subText = response['data']['subText'];
       GoldProInvestmentResponseModel? goldProInvestmentDetails;
       if (responseData != null) {
-        goldProInvestmentDetails =
-            GoldProInvestmentResponseModel.fromMap(responseData);
+        goldProInvestmentDetails = GoldProInvestmentResponseModel.fromMap(
+          responseData,
+          subText: subText,
+        );
       }
 
       return ApiResponse(model: goldProInvestmentDetails, code: 200);
@@ -166,11 +169,10 @@ class PaymentRepository extends BaseRepo {
   Future<ApiResponse<List<GoldProInvestmentResponseModel>>>
       getGoldProInvestments() async {
     try {
-      final token = await getBearerToken();
       final response = await APIService.instance.getData(
         ApiPath.getFds(userService.baseUser!.uid!),
         cBaseUrl: _baseUrl,
-        token: token,
+        apiName: '$_payments/getFDsByID',
       );
       final responseData = response["data"]["fds"];
       List<GoldProInvestmentResponseModel>? goldProInvestments;
@@ -188,11 +190,12 @@ class PaymentRepository extends BaseRepo {
 
   Future<ApiResponse<bool>> preCloseGoldProInvestment(String fdId) async {
     try {
-      final token = await getBearerToken();
-      final response = await APIService.instance.putData(ApiPath.Fd,
-          cBaseUrl: _baseUrl,
-          token: token,
-          body: {"fdId": fdId, "uid": userService.baseUser!.uid});
+      final response = await APIService.instance.putData(
+        ApiPath.Fd,
+        cBaseUrl: _baseUrl,
+        body: {"fdId": fdId, "uid": userService.baseUser!.uid},
+        apiName: '$_payments/fd',
+      );
 
       return ApiResponse(model: true, code: 200);
     } catch (e) {

@@ -58,15 +58,17 @@ class Data {
   int? tickets;
   double? goldInTxnBought;
   String? txnDisplayMsg;
+  String? subText;
   String? gtId;
   List<String>? gtIds;
   FloDepositDetails? floDepositDetails;
   ProMap? fd;
 
   Data({
-    @required this.status,
-    @required this.isUpdating,
-    @required this.tickets,
+    required this.subText,
+    this.status,
+    this.isUpdating,
+    this.tickets,
     this.txnDisplayMsg,
     this.goldInTxnBought,
     this.gtId,
@@ -90,6 +92,7 @@ class Data {
           ? FloDepositDetails.fromMap(map["lbDepositDetails"])
           : null,
       fd: map["fd"] != null ? ProMap.fromMap(map["fd"]) : null,
+      subText: map['subText'],
     );
   }
 

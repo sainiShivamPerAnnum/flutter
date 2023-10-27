@@ -9,6 +9,7 @@ import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/asset_options_model.dart';
 import 'package:felloapp/core/model/aug_gold_rates_model.dart';
+import 'package:felloapp/core/model/gold_pro_models/gold_pro_investment_reponse_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/repository/getters_repo.dart';
 import 'package:felloapp/core/repository/payment_repo.dart';
@@ -196,9 +197,14 @@ class GoldProBuyViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  bool _isGoldProUser = false;
+  bool get isGoldProUser => _isGoldProUser;
+
   Future<void> init() async {
     state = ViewState.Busy;
     AppState.isGoldProBuyInProgress = false;
+    _isGoldProUser =
+        locator<UserService>().userPortfolio.augmont.fd.isGoldProUser;
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       _txnService.currentTransactionState = TransactionState.idle;
     });
@@ -315,6 +321,9 @@ class GoldProBuyViewModel extends BaseViewModel {
     }
   }
 
+  GoldProInvestmentResponseModel? _leaseModel;
+  GoldProInvestmentResponseModel? get leaseModel => _leaseModel;
+
   Future<void> _initiateLease() async {
     _txnService.isGoldBuyInProgress = true;
     AppState.blockNavigation();
@@ -331,6 +340,7 @@ class GoldProBuyViewModel extends BaseViewModel {
     final res = await _paymentRepo.investInGoldPro(
         totalGoldBalance, _txnService.goldProScheme!.id);
     if (res.isSuccess()) {
+      _leaseModel = res.model;
       _txnService.currentTransactionState = TransactionState.success;
       unawaited(locator<UserService>().getUserFundWalletData());
       unawaited(locator<UserService>().updatePortFolio());

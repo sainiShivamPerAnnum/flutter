@@ -15,7 +15,10 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 class LoginMobileView extends StatefulWidget {
   static const int index = 0; //pager index
-  const LoginMobileView({Key? key, required this.loginModel}) : super(key: key);
+  const LoginMobileView({
+    required this.loginModel,
+    super.key,
+  });
   final LoginControllerViewModel loginModel;
 
   @override
@@ -37,7 +40,7 @@ class LoginMobileViewState extends State<LoginMobileView> {
     List<TextSpan> groups = [];
     bool isBoldOn = false;
     bool isItalicsOn = false;
-    paragraph.runes.forEach((element) {
+    for (final element in paragraph.runes) {
       var character = String.fromCharCode(element);
       print('We\'re at: $character');
       if (character == '*' || character == '_') {
@@ -77,7 +80,7 @@ class LoginMobileViewState extends State<LoginMobileView> {
       } else {
         snip = snip + character;
       }
-    });
+    }
 
     print('Children created: $groups');
     return TextSpan(children: groups);
@@ -85,8 +88,6 @@ class LoginMobileViewState extends State<LoginMobileView> {
 
   @override
   Widget build(BuildContext context) {
-    final isKeyboardOpen = MediaQuery.of(context).viewInsets.bottom !=
-        SizeConfig.viewInsets.bottom;
     return BaseView<LoginMobileViewModel>(
       onModelReady: (model) {
         this.model = model;
@@ -114,8 +115,8 @@ class LoginMobileViewState extends State<LoginMobileView> {
               key: model.formKey,
               child: AppTextField(
                 hintText: locale.obEnterMobile,
-                isEnabled: widget?.loginModel?.state == ViewState.Idle &&
-                    widget?.loginModel?.loginUsingTrueCaller == false,
+                isEnabled: widget.loginModel.state == ViewState.Idle &&
+                    widget.loginModel.loginUsingTrueCaller == false,
                 focusNode: model.mobileFocusNode,
                 key: model.phoneFieldKey,
                 keyboardType: TextInputType.phone,
@@ -158,7 +159,10 @@ class LoginMobileViewState extends State<LoginMobileView> {
 class SignupHeroAsset extends StatelessWidget {
   final String asset;
 
-  const SignupHeroAsset({Key? key, required this.asset}) : super(key: key);
+  const SignupHeroAsset({
+    required this.asset,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -192,7 +196,10 @@ class SignupHeroAsset extends StatelessWidget {
 class BankingLogo extends StatelessWidget {
   final String? asset;
 
-  const BankingLogo({Key? key, this.asset}) : super(key: key);
+  const BankingLogo({
+    super.key,
+    this.asset,
+  });
 
   @override
   Widget build(BuildContext context) {
