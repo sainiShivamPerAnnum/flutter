@@ -18,6 +18,7 @@ import 'package:felloapp/core/model/quick_save_model.dart';
 import 'package:felloapp/core/model/story_model.dart';
 import 'package:felloapp/core/model/sub_combos_model.dart';
 import 'package:felloapp/core/model/tambola_offers_model.dart';
+import 'package:felloapp/core/model/ui_config_models/ui_config_models.dart';
 import 'package:felloapp/core/model/winners_model.dart';
 import 'package:felloapp/core/repository/base_repo.dart';
 import 'package:felloapp/core/service/api_service.dart';
@@ -475,6 +476,34 @@ class GetterRepository extends BaseRepo {
     } catch (e) {
       logger.e(e.toString());
       return ApiResponse.withError("Unable to fetch stories", 400);
+    }
+  }
+
+  Future<ApiResponse<InstantSaveCardResponse>>
+      getInstantSaveCardConfig() async {
+    try {
+      final response = await APIService.instance.getData<Map<String, dynamic>>(
+        ApiPath.getComponent,
+        apiName: '$_getters/component',
+        queryParams: {
+          'type': ComponentType.instantSave.value,
+        },
+      );
+
+      final cardResponse = InstantSaveCardResponse.fromJson(
+        response,
+      );
+
+      return ApiResponse<InstantSaveCardResponse>(
+        model: cardResponse,
+      );
+    } catch (e) {
+      logger.e(e.toString());
+
+      return ApiResponse.withError(
+        "Failed to fetch instant save card config",
+        400,
+      );
     }
   }
 }

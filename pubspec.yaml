@@ -111,6 +111,7 @@ dependencies:
   firebase_instance_id: ^1.0.0
   dio: ^5.3.3
   dio_http2_adapter: ^2.3.1+1
+  json_annotation: ^4.8.1
 
 
 
@@ -124,6 +125,8 @@ dev_dependencies:
     sdk: flutter
   husky: ^0.1.6
   dart_code_metrics: 5.7.5
+  json_serializable: ^6.7.1
+
 
 # dependency_overrides:
 #    firebase_core_platform_interface: 4.5.1

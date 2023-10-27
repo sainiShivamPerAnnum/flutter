@@ -358,7 +358,6 @@ class SaveViewModel extends BaseViewModel {
     final response = await _saveRepo!.getBlogs(5);
     if (response.isSuccess()) {
       blogPosts = response.model;
-      print(blogPosts!.length);
     } else {
       print(response.errorMessage);
     }
