@@ -1,5 +1,7 @@
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/model/ui_config_models/instant_save_card.dart';
 import 'package:felloapp/core/repository/getters_repo.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/elements/title_subtitle_container.dart';
 import 'package:felloapp/util/locator.dart';
@@ -124,9 +126,16 @@ class ActionableImage extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () => AppState.delegate!.parseRoute(
-        Uri.parse(config.actionUri),
-      ),
+      onTap: () {
+        final uri = Uri.parse(config.actionUri);
+
+        AppState.delegate!.parseRoute(uri);
+
+        locator<AnalyticsService>().track(
+          eventName: AnalyticsEvents.quickSaveTapped,
+          properties: uri.queryParameters,
+        );
+      },
       child: Image.network(
         config.imgUrl,
         fit: BoxFit.cover,
