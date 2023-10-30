@@ -24,10 +24,12 @@ class InstantSaveCardResponse {
 class InstantSaveCardConfig {
   final ImageConfig? leftImg;
   final ImageConfig? rightImg;
+  final num aspectRatio;
 
   const InstantSaveCardConfig({
     this.leftImg,
     this.rightImg,
+    this.aspectRatio = 2.7,
   });
 
   factory InstantSaveCardConfig.fromJson(Map<String, dynamic> json) =>
@@ -38,12 +40,10 @@ class InstantSaveCardConfig {
 class ImageConfig {
   final String imgUrl;
   final String actionUri;
-  final String bgColor;
 
   const ImageConfig({
     this.imgUrl = '',
     this.actionUri = '',
-    this.bgColor = '#01656B',
   });
 
   factory ImageConfig.fromJson(Map<String, dynamic> json) =>

@@ -6,9 +6,9 @@ part of 'instant_save_card.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-InstantSaveResponse _$InstantSaveCardResponseFromJson(
+InstantSaveCardResponse _$InstantSaveCardResponseFromJson(
         Map<String, dynamic> json) =>
-    InstantSaveResponse(
+    InstantSaveCardResponse(
       data:
           InstantSaveCardConfig.fromJson(json['data'] as Map<String, dynamic>),
       message: json['message'] as String? ?? '',
@@ -23,10 +23,10 @@ InstantSaveCardConfig _$InstantSaveCardConfigFromJson(
       rightImg: json['rightImg'] == null
           ? null
           : ImageConfig.fromJson(json['rightImg'] as Map<String, dynamic>),
+      aspectRatio: json['aspectRatio'] as num? ?? 2.7,
     );
 
 ImageConfig _$ImageConfigFromJson(Map<String, dynamic> json) => ImageConfig(
       imgUrl: json['imgUrl'] as String? ?? '',
       actionUri: json['actionUri'] as String? ?? '',
-      bgColor: json['bgColor'] as String? ?? '#01656B',
     );

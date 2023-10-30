@@ -496,6 +496,7 @@ class GetterRepository extends BaseRepo {
 
       return ApiResponse<InstantSaveCardResponse>(
         model: cardResponse,
+        code: 200,
       );
     } catch (e) {
       logger.e(e.toString());

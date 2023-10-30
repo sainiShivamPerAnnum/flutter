@@ -25,6 +25,7 @@ class GoldBuyView extends StatefulWidget {
   final double? gms;
   final String? initialCoupon;
   final String? entryPoint;
+  final bool quickCheckout;
 
   const GoldBuyView({
     super.key,
@@ -33,6 +34,7 @@ class GoldBuyView extends StatefulWidget {
     this.gms,
     this.initialCoupon,
     this.entryPoint,
+    this.quickCheckout = false,
   });
 
   @override
@@ -123,6 +125,7 @@ class _GoldBuyViewState extends State<GoldBuyView>
                     widget.gms,
                     initialCouponCode: widget.initialCoupon,
                     entryPoint: widget.entryPoint,
+                    quickCheckout: widget.quickCheckout,
                   ),
                   builder: (ctx, model, child) {
                     if (model.state == ViewState.Busy) {

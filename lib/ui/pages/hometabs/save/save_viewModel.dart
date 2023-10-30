@@ -50,6 +50,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../core/model/quick_links_model.dart';
+import 'save_components/instant_save_card.dart';
 
 class SaveViewModel extends BaseViewModel {
   S? locale;
@@ -271,6 +272,9 @@ class SaveViewModel extends BaseViewModel {
           break;
         case "QZ":
           saveViewItems.add(const QuizSection());
+          break;
+        case "INST_SAVE":
+          saveViewItems.add(const InstantSaveCard());
           break;
         case 'NAS':
           saveViewItems.add(const AutosaveCard());

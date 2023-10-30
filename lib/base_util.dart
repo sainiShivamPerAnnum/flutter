@@ -319,7 +319,7 @@ class BaseUtil extends ChangeNotifier {
     int? amt,
     bool? isSkipMl,
     double? gms,
-    Map<String, String>? queryParams,
+    Map<String, dynamic>? queryParams,
     String? entryPoint,
   }) {
     final coupon = queryParams?['coupon'];
@@ -329,6 +329,8 @@ class BaseUtil extends ChangeNotifier {
     final grams = queryParams?['grams'];
     final parsedGrams =
         double.tryParse(grams ?? ''); // For parsing default value to null.
+    // ignore: sdk_version_since
+    final quickCheckout = bool.parse(queryParams?['quickCheckout'] ?? 'false');
 
     final bool? isAugDepositBanned = _userService
         .userBootUp?.data!.banMap?.investments?.deposit?.augmont?.isBanned;
@@ -374,6 +376,7 @@ class BaseUtil extends ChangeNotifier {
           gms: parsedGrams ?? gms,
           skipMl: isSkipMl ?? false,
           entryPoint: entryPoint,
+          quickCheckout: quickCheckout,
         ),
       );
     }
@@ -382,7 +385,7 @@ class BaseUtil extends ChangeNotifier {
   static void openFloBuySheet({
     required String floAssetType,
     int? amt,
-    Map<String, String>? queryParams,
+    Map<String, dynamic>? queryParams,
     bool? isSkipMl,
     String? entryPoint,
   }) {
@@ -390,6 +393,8 @@ class BaseUtil extends ChangeNotifier {
     final amount = queryParams?['amount'];
     final parsedAmount =
         int.tryParse(amount ?? ''); // For parsing default value to null.
+    // ignore: sdk_version_since
+    final quickCheckout = bool.parse(queryParams?['quickCheckout'] ?? 'false');
 
     final userService = locator<UserService>();
     final locale = locator<S>();
@@ -455,6 +460,7 @@ class BaseUtil extends ChangeNotifier {
         onChanged: (p0) => p0,
         floAssetType: floAssetType,
         entryPoint: entryPoint,
+        quickCheckout: quickCheckout,
       ),
     );
   }
