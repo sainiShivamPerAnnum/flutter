@@ -5,6 +5,7 @@ import 'package:felloapp/ui/elements/title_subtitle_container.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
+import 'package:shimmer/shimmer.dart';
 
 class InstantSaveCard extends StatefulWidget {
   const InstantSaveCard({
@@ -47,7 +48,21 @@ class _InstantSaveCardState extends State<InstantSaveCard> {
     final foregroundImage = config?.rightImg;
 
     if (isLoading) {
-      return const CircularProgressIndicator();
+      return Shimmer.fromColors(
+        baseColor: UiConstants.kTambolaMidTextColor,
+        highlightColor: Colors.grey.shade800,
+        direction: ShimmerDirection.ttb,
+        child: AspectRatio(
+          aspectRatio: 2.27,
+          child: Container(
+            width: double.infinity,
+            decoration: BoxDecoration(
+              color: Colors.grey,
+              borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+            ),
+          ),
+        ),
+      );
     }
 
     if (backgroundImage == null && foregroundImage == null) {
