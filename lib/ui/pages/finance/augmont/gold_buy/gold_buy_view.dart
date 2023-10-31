@@ -174,6 +174,7 @@ class _GoldBuyViewState extends State<GoldBuyView>
   }
 
   Future<void> _secureScreenshots(AugmontTransactionService txnService) async {
+    if (txnService.isNetBankingInProgress) return;
     if (Platform.isAndroid) {
       if (txnService.currentTransactionState == TransactionState.ongoing) {
         await FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);

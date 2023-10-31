@@ -69,7 +69,7 @@ class EnterAmountView extends StatelessWidget {
                           children: [
                             Text(
                               "₹",
-                              style: TextStyles.rajdhaniB.title50.colour(
+                              style: TextStyles.rajdhaniB.title0.colour(
                                   model.goldAmountController!.text == "0"
                                       ? UiConstants.kTextColor2
                                       : UiConstants.kTextColor),
@@ -107,7 +107,7 @@ class EnterAmountView extends StatelessWidget {
                                   isDense: true,
                                 ),
                                 textAlign: TextAlign.center,
-                                style: TextStyles.rajdhaniB.title50.colour(
+                                style: TextStyles.rajdhaniB.title0.colour(
                                   model.goldAmountController!.text == "0"
                                       ? UiConstants.kTextColor2
                                       : UiConstants.kTextColor,
@@ -118,33 +118,32 @@ class EnterAmountView extends StatelessWidget {
                         ),
                       );
                     }),
-                Padding(
-                  padding: EdgeInsets.symmetric(vertical: SizeConfig.padding4),
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Text(
-                        model.showHappyHourSubtitle(),
-                        style: TextStyles.sourceSans.body4.bold
-                            .colour(UiConstants.primaryColor),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  mainAxisSize: MainAxisSize.min,
+                  children: [
+                    Text(
+                      model.showHappyHourSubtitle(),
+                      style: TextStyles.sourceSans.body3.copyWith(
+                        color: UiConstants.grey1,
+                        height: 1,
                       ),
-                      SizedBox(
-                        width: SizeConfig.padding4,
-                      ),
-                      if (model.showInfoIcon)
-                        GestureDetector(
-                          onTap: () => locator<BaseUtil>().showHappyHourDialog(
-                              locator<HappyHourCampign>(),
-                              isComingFromSave: true),
-                          child: const Icon(
-                            Icons.info_outline,
-                            size: 20,
-                            color: Color(0xff62E3C4),
-                          ),
+                    ),
+                    SizedBox(
+                      width: SizeConfig.padding6,
+                    ),
+                    if (model.showInfoIcon)
+                      GestureDetector(
+                        onTap: () => locator<BaseUtil>().showHappyHourDialog(
+                            locator<HappyHourCampign>(),
+                            isComingFromSave: true),
+                        child: const Icon(
+                          Icons.info_outline,
+                          size: 14,
+                          color: UiConstants.grey1,
                         ),
-                    ],
-                  ),
+                      ),
+                  ],
                 ),
                 if (model.showMaxCapText)
                   Padding(
@@ -153,7 +152,7 @@ class EnterAmountView extends StatelessWidget {
                     child: Text(
                       locale.maxAmountMessage(model.maxAmount),
                       style: TextStyles.sourceSans.body4.bold
-                          .colour(UiConstants.primaryColor),
+                          .colour(UiConstants.grey1),
                     ),
                   ),
                 if (model.showMinCapText)
@@ -206,9 +205,8 @@ class EnterAmountView extends StatelessWidget {
                         )
                       : Text(
                           "₹ ${(model.goldRates != null ? model.goldRates!.goldBuyPrice : 0.0)?.toStringAsFixed(2)}/gm",
-                          style: TextStyles.sourceSans.body4.colour(UiConstants
-                              .kModalSheetMutedTextBackgroundColor
-                              .withOpacity(0.8)),
+                          style: TextStyles.sourceSans.body4
+                              .colour(UiConstants.grey1),
                         ),
                   SizedBox(
                     width: SizeConfig.padding10,
@@ -217,20 +215,14 @@ class EnterAmountView extends StatelessWidget {
                     padding:
                         EdgeInsets.symmetric(horizontal: SizeConfig.padding12),
                     child: Text(
-                      "${model.goldAmountInGrams}${locale.gms}",
+                      "${model.goldAmountInGrams} ${locale.gms}",
                       style: TextStyles.sourceSans.body3,
                     ),
-                  ),
-                  SizedBox(
-                    width: SizeConfig.padding20,
                   ),
                   VerticalDivider(
                     color: UiConstants.kModalSheetSecondaryBackgroundColor
                         .withOpacity(0.2),
-                    width: 4,
-                  ),
-                  SizedBox(
-                    width: SizeConfig.padding20,
+                    width: 36,
                   ),
                   NewCurrentGoldPriceWidget(
                     fetchGoldRates: model.fetchGoldRates,

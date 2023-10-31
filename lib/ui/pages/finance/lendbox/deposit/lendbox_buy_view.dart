@@ -88,13 +88,7 @@ class _LendboxBuyViewState extends State<LendboxBuyView>
           return AnimatedContainer(
             width: double.infinity,
             height: _getHeight(lboxTxnService),
-            decoration: BoxDecoration(
-              color: UiConstants.kSecondaryBackgroundColor,
-              borderRadius: BorderRadius.only(
-                topLeft: Radius.circular(SizeConfig.padding16),
-                topRight: Radius.circular(SizeConfig.padding16),
-              ),
-            ),
+            color: UiConstants.kSecondaryBackgroundColor,
             duration: const Duration(milliseconds: 500),
             child: Stack(
               children: [
@@ -124,14 +118,12 @@ class _LendboxBuyViewState extends State<LendboxBuyView>
                       quickCheckout: widget.quickCheckout,
                     ),
                     builder: (ctx, model, child) {
+                      if (model.state.isBusy) {
+                        return const Center(child: FullScreenLoader());
+                      }
                       _secureScreenshots(lboxTxnService);
 
-                      return model.state == ViewState.Busy
-                          ? const Center(child: FullScreenLoader())
-                          : _getView(
-                              lboxTxnService,
-                              model,
-                            );
+                      return _getView(lboxTxnService, model);
                     },
                   ),
                 ),
@@ -143,7 +135,8 @@ class _LendboxBuyViewState extends State<LendboxBuyView>
     );
   }
 
-  _secureScreenshots(LendboxTransactionService txnService) async {
+  Future<void> _secureScreenshots(LendboxTransactionService txnService) async {
+    if (txnService.isNetBankingInProgress) return;
     if (Platform.isAndroid) {
       if (txnService.currentTransactionState == TransactionState.ongoing) {
         await FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
@@ -176,7 +169,7 @@ class _LendboxBuyViewState extends State<LendboxBuyView>
 
       case TransactionState.ongoing:
       case TransactionState.overView:
-        return LendboxLoadingView(
+        return const LendboxLoadingView(
           transactionType: type,
         );
 
@@ -203,13 +196,7 @@ class _LendboxBuyViewState extends State<LendboxBuyView>
   Widget _getBackground(LendboxTransactionService lboxTxnService) {
     if (lboxTxnService.currentTransactionState == TransactionState.idle) {
       return Container(
-        decoration: BoxDecoration(
-          color: UiConstants.kRechargeModalSheetAmountSectionBackgroundColor,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(SizeConfig.padding16),
-            topRight: Radius.circular(SizeConfig.padding16),
-          ),
-        ),
+        color: UiConstants.kRechargeModalSheetAmountSectionBackgroundColor,
         width: double.infinity,
         height: double.infinity,
       );

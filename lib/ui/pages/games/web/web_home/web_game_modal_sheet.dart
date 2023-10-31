@@ -212,7 +212,7 @@ class WebGameModalSheet extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 14),
             child: AppPositiveBtn(
                 btnText: "Play",
-                widget: Row(
+                child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(

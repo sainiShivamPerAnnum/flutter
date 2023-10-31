@@ -10,8 +10,7 @@ import 'base_transaction_service.dart';
 ///
 /// This mixin provides a common implementation for predicting transaction
 /// outcomes based on the response from the Paytm repository.
-mixin TransactionPredictionDefaultMixing
-    on BaseTransactionService<ApiResponse<TransactionResponseModel>> {
+mixin TransactionPredictionDefaultMixing on BaseTransactionService {
   /// The Paytm repository used to fetch transaction status.
   PaytmRepository get paytmRepo;
 
@@ -34,7 +33,7 @@ mixin TransactionPredictionDefaultMixing
   ///
   /// Signals [run] to continue or to rescheduling or to process further based
   /// on predicate condition. [run] continues prediction if it returns `false`
-  /// or else will be processing response via [onSuccess].
+  /// or else will be processing response via [onComplete].
   ///
   /// Determine whether the transaction is successful or failed
   /// based on the response from [paytmRepo].

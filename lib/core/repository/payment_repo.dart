@@ -43,59 +43,74 @@ class PaymentRepository extends BaseRepo {
     return ApiResponse();
   }
 
-  Future<ApiResponse<bool>> addBankDetails(
-      {String? bankAccno, String? bankHolderName, String? bankIfsc}) async {
+  Future<ApiResponse<BankAccountDetailsModel>> addBankDetails({
+    String? bankAccNo,
+    String? bankHolderName,
+    String? bankIfsc,
+    bool withNetBankingValidation = false,
+  }) async {
     String message = '';
+
+    final queryParameters = {
+      'withNetBankingValidation': withNetBankingValidation,
+    };
+
     try {
-      final Map<String, String?> _body = {
+      final Map<String, String?> body = {
         "uid": userService.baseUser!.uid,
         "name": bankHolderName,
         "ifsc": bankIfsc,
-        "account": bankAccno
+        "account": bankAccNo
       };
 
       final response = await APIService.instance.postData(
-        ApiPath().kAddBankAccount,
-        body: _body,
+        ApiPath.kAddBankAccount,
+        body: body,
         cBaseUrl: _baseUrl,
         apiName: '$_payments/addBankDetails',
+        queryParams: queryParameters,
       );
-      logger.d(response);
 
-      return ApiResponse(
-        model: true,
+      final data = BankAccountDetailsModel.fromMap(response['data']);
+
+      return ApiResponse<BankAccountDetailsModel>(
+        model: data,
         code: 200,
         errorMessage: message,
       );
     } on BadRequestException catch (e) {
-      return ApiResponse(
-        model: false,
-        code: 400,
-        errorMessage: e.toString(),
+      return ApiResponse.withError(
+        e.toString(),
+        000, // doesn't make sense to define error code on client side.
       );
     } catch (e) {
       logger.e(e.toString());
       return ApiResponse.withError(
-        e.toString() ?? message,
+        e.toString(),
         400,
       );
     }
   }
 
-  Future<ApiResponse<BankAccountDetailsModel>>
-      getActiveBankAccountDetails() async {
+  Future<ApiResponse<BankAccountDetailsModel>> getActiveBankAccountDetails({
+    bool withNetBankingValidation = false,
+  }) async {
+    final queryParameters = {
+      'withNetBankingValidation': withNetBankingValidation,
+    };
+
     try {
       final response = await APIService.instance.getData(
         ApiPath.kGetBankAccountDetails(userService.baseUser!.uid),
         cBaseUrl: _baseUrl,
         apiName: '$_payments/bankDetails',
+        queryParams: queryParameters,
       );
       final Map? responseData = response["data"];
-      BankAccountDetailsModel? bankAccountDetails;
-      if (responseData != null) {
-        bankAccountDetails = BankAccountDetailsModel.fromMap(
-            responseData as Map<String, dynamic>);
-      }
+
+      final bankAccountDetails = BankAccountDetailsModel.fromMap(
+        responseData as Map<String, dynamic>? ?? const {},
+      );
 
       return ApiResponse(model: bankAccountDetails, code: 200);
     } catch (e) {

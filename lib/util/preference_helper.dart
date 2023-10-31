@@ -38,6 +38,7 @@ class PreferenceHelper {
   static const CACHE_TICKETS_LAST_SPIN_TIMESTAMP =
       "tickets_last_spin_timestamp";
   static const CACHE_LIST_OUTDATED_FLO_ASSET = "listOutdatedFloAsset";
+  static const _preferredPaymentIntents = 'preferred_payment_intents';
 
   static Future<SharedPreferences?> initiate() async {
     if (_prefs == null) {
@@ -90,6 +91,31 @@ class PreferenceHelper {
   static List<String> getStringList(String key, {List<String> def = const []}) {
     List<String>? val = _prefs!.getStringList(key);
     return val ?? def;
+  }
+
+  /// Stores the last three used payment option into local cache.
+  ///
+  /// If existing options are more than `3` then removes the last element out of
+  /// the array and re-saves the options.
+  static Future<void> insertUsedPaymentIntent(String option) async {
+    final intents = getPaymentIntentsHistory();
+
+    if (intents.length >= 3) {
+      intents.removeLast();
+    }
+
+    intents.add(option);
+
+    await _prefs!.setStringList(_preferredPaymentIntents, intents);
+  }
+
+  /// Payment options used by user in previous transactions.
+  static List<String> getPaymentIntentsHistory() {
+    try {
+      return _prefs!.getStringList(_preferredPaymentIntents) ?? [];
+    } catch (e) {
+      return const [];
+    }
   }
 
   static Future<bool> remove(String key) async {

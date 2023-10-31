@@ -118,35 +118,6 @@ class BaseUser {
           [],
         );
 
-  BaseUser.base()
-      : this(
-          '',
-          '',
-          '',
-          '',
-          '',
-          '',
-          '',
-          false,
-          false,
-          false,
-          false,
-          0,
-          '',
-          '',
-          false,
-          false,
-          '',
-          false,
-          false,
-          UserPreferences({}),
-          TimestampModel(seconds: 0, nanoseconds: 0),
-          '',
-          '',
-          false,
-          [],
-        );
-
   BaseUser.fromMap(Map<String, dynamic> data, String id, [String? client_token])
       : this(
             id,

@@ -1,11 +1,8 @@
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/enums/app_config_keys.dart';
-import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_buy/gold_pro_buy_vm.dart';
 import 'package:felloapp/ui/pages/static/gold_rate_card.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
-import 'package:felloapp/util/extensions/string_extension.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
@@ -15,13 +12,11 @@ class GoldBalanceRow extends StatelessWidget {
   const GoldBalanceRow({
     required this.lead,
     required this.trail,
-    this.isBold = false,
     super.key,
   });
 
   final String lead;
   final double trail;
-  final bool isBold;
 
   @override
   Widget build(BuildContext context) {
@@ -30,23 +25,21 @@ class GoldBalanceRow extends StatelessWidget {
       children: [
         Text(
           lead,
-          style: isBold
-              ? TextStyles.rajdhaniM.body1
-              : TextStyles.rajdhaniM.body2.colour(Colors.grey),
+          style: TextStyles.sourceSans.body3.colour(
+            UiConstants.grey1,
+          ),
         ),
         Text(
           "${BaseUtil.digitPrecision(trail, 4, true)}gms",
-          style: isBold
-              ? TextStyles.sourceSansSB.title5.colour(Colors.white)
-              : TextStyles.sourceSansSB.body2.colour(Colors.white70),
+          style: TextStyles.sourceSansSB.body2,
         )
       ],
     );
   }
 }
 
-class ExpectedGoldProReturnsRow extends StatelessWidget {
-  const ExpectedGoldProReturnsRow({
+class LeaseAmount extends StatelessWidget {
+  const LeaseAmount({
     required this.model,
     super.key,
   });
@@ -62,13 +55,8 @@ class ExpectedGoldProReturnsRow extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              "Expected Returns in 5Y",
+              "Leasing in ${Constants.ASSET_GOLD_STAKE}",
               style: TextStyles.rajdhaniB.body1.colour(Colors.white),
-            ),
-            SizedBox(height: SizeConfig.padding4),
-            Text(
-              "with ${Constants.ASSET_GOLD_STAKE}",
-              style: TextStyles.rajdhaniM.body2.colour(Colors.grey),
             ),
           ],
         ),
@@ -78,57 +66,31 @@ class ExpectedGoldProReturnsRow extends StatelessWidget {
             crossAxisAlignment: CrossAxisAlignment.end,
             children: [
               Row(
-                crossAxisAlignment: CrossAxisAlignment.end,
+                crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
                   Expanded(
                     child: Align(
                       alignment: Alignment.centerRight,
                       child: FittedBox(
-                          fit: BoxFit.scaleDown,
-                          child: model.isGoldRateFetching
-                              ? SizedBox(
-                                  height: SizeConfig.padding48 -
-                                      SizeConfig.padding2,
-                                  child: SpinKitThreeBounce(
-                                    color: UiConstants.kGoldProPrimary,
-                                    size: SizeConfig.padding32,
-                                  ),
-                                )
-                              : RichText(
-                                  textAlign: TextAlign.end,
-                                  text: TextSpan(
-                                    children: [
-                                      TextSpan(
-                                        text: "₹" +
-                                            "${model.expectedGoldReturns.toInt()}"
-                                                .formatToIndianNumberSystem(),
-                                        style: TextStyles.rajdhaniSB.title3
-                                            .colour(
-                                                UiConstants.kGoldProPrimary),
-                                      ),
-                                      WidgetSpan(
-                                          child: Padding(
-                                        padding: EdgeInsets.only(
-                                            bottom: SizeConfig.padding12),
-                                        child: Text(
-                                          "*",
-                                          style: TextStyles.rajdhaniB.body3
-                                              .colour(
-                                                  UiConstants.kGoldProPrimary),
-                                        ),
-                                      ))
-                                    ],
-                                  ),
-                                )),
+                        fit: BoxFit.scaleDown,
+                        child: model.isGoldRateFetching
+                            ? SizedBox(
+                                height:
+                                    SizeConfig.padding48 - SizeConfig.padding2,
+                                child: SpinKitThreeBounce(
+                                  color: UiConstants.kGoldProPrimary,
+                                  size: SizeConfig.padding32,
+                                ),
+                              )
+                            : Text(
+                                "${BaseUtil.digitPrecision(model.totalGoldBalance, 4, true)} gms",
+                                style: TextStyles.rajdhaniSB.title4,
+                                textAlign: TextAlign.end,
+                              ),
+                      ),
                     ),
                   ),
                 ],
-              ),
-              Text(
-                "with extra ${AppConfig.getValue(AppConfigKey.goldProInterest).toDouble()}% returns",
-                style: TextStyles.sourceSans.body3
-                    .colour(UiConstants.kGoldProPrimary),
-                textAlign: TextAlign.end,
               ),
             ],
           ),

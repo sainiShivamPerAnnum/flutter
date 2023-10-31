@@ -10,7 +10,6 @@ import 'package:felloapp/core/model/lendbox_withdrawable_quantity.dart';
 import 'package:felloapp/core/repository/lendbox_repo.dart';
 import 'package:felloapp/core/repository/payment_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
-import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/lendbox_transaction_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -24,7 +23,6 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
-import 'package:upi_pay/upi_pay.dart';
 
 class LendboxWithdrawalViewModel extends BaseViewModel {
   final CustomLogger _logger = locator<CustomLogger>();
@@ -33,13 +31,9 @@ class LendboxWithdrawalViewModel extends BaseViewModel {
   final AnalyticsService _analyticsService = locator<AnalyticsService>();
   final LendboxRepo _lendboxRepo = locator<LendboxRepo>();
   final PaymentRepository _paymentRepo = locator<PaymentRepository>();
-  final UserService _userService = locator<UserService>();
   S locale = locator<S>();
   String withdrawableResponseMessage = "";
 
-  List<ApplicationMeta> appMetaList = [];
-  UpiApplication? upiApplication;
-  String? selectedUpiApplicationName;
   int lastTappedChipIndex = 1;
   final double minAmount = 1;
 
@@ -129,24 +123,6 @@ class LendboxWithdrawalViewModel extends BaseViewModel {
       page: SellConfirmationViewConfig,
       state: PageState.addWidget,
     );
-    // BaseUtil.openDialog(
-    //   addToScreenStack: true,
-    //   hapticVibrate: true,
-    //   isBarrierDismissible: false,
-    //   content: ConfirmationDialog(
-    //     title: 'Are you sure you want\nto sell?',
-    //     asset: BankDetailsCard(),
-    //     description: '₹$amount will be credited to your linked bank account',
-    //     buttonText: 'SELL',
-    //     confirmAction: () async {
-    //       AppState.backButtonDispatcher!.didPopRoute();
-    //       await this.processWithdraw(amount);
-    //     },
-    //     cancelAction: () {
-    //       AppState.backButtonDispatcher!.didPopRoute();
-    //     },
-    //   ),
-    // );
   }
 
   Future<void> processWithdraw(int amount) async {
@@ -224,22 +200,6 @@ class LendboxWithdrawalViewModel extends BaseViewModel {
       return 0;
     }
 
-    // if (_baseUtil.augmontDetail.isDepLocked) {
-    //   BaseUtil.showNegativeAlert(
-    //     'Purchase Failed',
-    //     "${buyNotice ?? 'Gold buying is currently on hold. Please try again after sometime.'}",
-    //   );
-    //   return false;
-    // }
-
     return amount;
-  }
-
-  int getAmount(int amount) {
-    if (amount > amount.toInt()) {
-      return amount;
-    } else {
-      return amount.toInt();
-    }
   }
 }

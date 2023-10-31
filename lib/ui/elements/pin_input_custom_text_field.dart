@@ -56,8 +56,8 @@ class ObscureStyle {
   final String obscureText;
 
   ObscureStyle({
-    this.isTextObscure: false,
-    this.obscureText: '*',
+    this.isTextObscure = false,
+    this.obscureText = '*',
   })  :
 
         /// Not allowed empty string and multiline string.
@@ -90,10 +90,10 @@ class UnderlineDecoration extends PinDecoration {
     String? hintText,
     TextStyle? hintTextStyle,
     this.enteredColor,
-    this.gapSpace: 16.0,
+    this.gapSpace = 16.0,
     this.gapSpaces,
-    this.color: Colors.cyan,
-    this.lineHeight: 2.0,
+    this.color = Colors.cyan,
+    this.lineHeight = 2.0,
   }) : super(
           textStyle: textStyle,
           obscureStyle: obscureStyle,
@@ -153,9 +153,9 @@ class BoxTightDecoration extends PinDecoration {
     String? hintText,
     TextStyle? hintTextStyle,
     this.solidColor,
-    this.strokeWidth: 1.0,
-    this.radius: const Radius.circular(8.0),
-    this.strokeColor: Colors.cyan,
+    this.strokeWidth = 1.0,
+    this.radius = const Radius.circular(8.0),
+    this.strokeColor = Colors.cyan,
   }) : super(
           textStyle: textStyle,
           obscureStyle: obscureStyle,
@@ -224,11 +224,11 @@ class BoxLooseDecoration extends PinDecoration {
     TextStyle? hintTextStyle,
     this.enteredColor,
     this.solidColor,
-    this.radius: const Radius.circular(8.0),
-    this.strokeWidth: 1.0,
-    this.gapSpace: 16.0,
+    this.radius = const Radius.circular(8.0),
+    this.strokeWidth = 1.0,
+    this.gapSpace = 16.0,
     this.gapSpaces,
-    this.strokeColor: Colors.cyan,
+    this.strokeColor = Colors.cyan,
   }) : super(
           textStyle: textStyle,
           obscureStyle: obscureStyle,
@@ -304,11 +304,11 @@ class PinInputTextField extends StatefulWidget {
 
   PinInputTextField({
     Key? key,
-    this.pinLength: 6,
+    this.pinLength = 6,
     this.onSubmit,
-    this.decoration: const BoxLooseDecoration(),
+    this.decoration = const BoxLooseDecoration(),
     List<TextInputFormatter>? inputFormatter,
-    this.keyboardType: TextInputType.phone,
+    this.keyboardType = TextInputType.phone,
     this.controller,
     this.focusNode,
     this.autoFocus = false,

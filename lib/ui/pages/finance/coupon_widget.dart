@@ -37,20 +37,22 @@ class CouponWidget extends StatelessWidget {
         children: [
           Padding(
             padding: EdgeInsets.symmetric(
-                horizontal: SizeConfig.pageHorizontalMargins),
+              horizontal: SizeConfig.padding16,
+            ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
                   locale.btnApplyCoupon,
-                  style: TextStyles.sourceSansSB.body1,
+                  style: TextStyles.sourceSansSB.body2,
                 ),
                 GestureDetector(
                   onTap: _onTapApply,
                   child: Text(
                     'Add Manually',
-                    style: TextStyles.sourceSans.body3
-                        .colour(UiConstants.kTabBorderColor),
+                    style: TextStyles.sourceSans.body3.colour(
+                      UiConstants.teal3,
+                    ),
                   ),
                 ),
               ],
@@ -66,11 +68,12 @@ class CouponWidget extends StatelessWidget {
               itemBuilder: (context, index) {
                 return Padding(
                   padding: index == 0
-                      ? EdgeInsets.only(left: SizeConfig.pageHorizontalMargins)
+                      ? EdgeInsets.only(left: SizeConfig.padding16)
                       : index == _coupons.length - 1
                           ? EdgeInsets.only(
-                              right: SizeConfig.pageHorizontalMargins,
-                              left: SizeConfig.padding14)
+                              right: SizeConfig.padding16,
+                              left: SizeConfig.padding14,
+                            )
                           : EdgeInsets.only(left: SizeConfig.padding14),
                   child: _CouponView(
                     model: _coupons[index],
@@ -107,20 +110,22 @@ class _CouponView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final locale = S.of(context);
+    final code = goldBuyViewModel.appliedCoupon?.code;
+    final applied = code != null && code == model.code;
     return GestureDetector(
       onTap: _onTapCoupon,
       child: Container(
-        width: SizeConfig.screenWidth! * .7,
-        height: SizeConfig.padding80,
-        padding: const EdgeInsets.only(left: 16, right: 18, top: 8),
+        width: SizeConfig.screenWidth! * .6,
+        padding: const EdgeInsets.symmetric(vertical: 12, horizontal: 16),
         decoration: BoxDecoration(
-          border: goldBuyViewModel.appliedCoupon != null
-              ? goldBuyViewModel.appliedCoupon?.code == model.code
-                  ? Border.all(color: const Color(0xFF08D2AD))
-                  : null
-              : null,
-          color:
-              UiConstants.kModalSheetSecondaryBackgroundColor.withOpacity(0.1),
+          border: Border.all(
+            color: applied
+                ? UiConstants.teal3
+                : UiConstants.grey2.withOpacity(
+                    .2,
+                  ),
+          ),
+          color: UiConstants.grey2.withOpacity(.2),
           borderRadius: BorderRadius.circular(10),
         ),
         child: Column(
@@ -165,7 +170,7 @@ class _CouponView extends StatelessWidget {
                       : const Icon(
                           Icons.close,
                           size: 20,
-                          color: Color(0xff1ADAB7),
+                          color: UiConstants.teal3,
                         ),
                 )
               ],
@@ -179,7 +184,9 @@ class _CouponView extends StatelessWidget {
                 model.description!,
                 maxLines: 2,
                 overflow: TextOverflow.ellipsis,
-                style: TextStyles.sourceSans.body4,
+                style: TextStyles.sourceSans.body4.colour(
+                  UiConstants.grey1,
+                ),
               ),
             )
           ],

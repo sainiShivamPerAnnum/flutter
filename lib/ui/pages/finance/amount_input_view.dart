@@ -181,61 +181,60 @@ class _AmountInputViewState extends State<AmountInputView> {
                   ),
                 ],
               ),
-              Padding(
-                padding: EdgeInsets.only(bottom: SizeConfig.padding4),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  mainAxisSize: MainAxisSize.min,
-                  children: [
-                    Text(
-                      widget.model.showHappyHourSubtitle(),
-                      style: TextStyles.sourceSans.body3.bold
-                          .colour(UiConstants.primaryColor),
+              Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  Text(
+                    widget.model.showHappyHourSubtitle(),
+                    style: TextStyles.sourceSans.body3.bold.copyWith(
+                      color: UiConstants.grey1,
+                      height: 1,
                     ),
-                    if (widget.model.showInfoIcon)
-                      SizedBox(
-                        width: SizeConfig.padding4,
-                      ),
-                    if (widget.model.showInfoIcon)
-                      GestureDetector(
-                        onTap: () {
-                          analyticsService.track(
-                              eventName:
-                                  AnalyticsEvents.tambolaTicketInfoTapped,
-                              properties: {
-                                'Ticket count':
-                                    widget.model.numberOfTambolaTickets,
-                                'happy hour ticket count':
-                                    widget.model.happyHourTickets,
-                              });
+                  ),
+                  if (widget.model.showInfoIcon) ...[
+                    SizedBox(
+                      width: SizeConfig.padding8,
+                    ),
+                    GestureDetector(
+                      onTap: () {
+                        analyticsService.track(
+                            eventName: AnalyticsEvents.tambolaTicketInfoTapped,
+                            properties: {
+                              'Ticket count':
+                                  widget.model.numberOfTambolaTickets,
+                              'happy hour ticket count':
+                                  widget.model.happyHourTickets,
+                            });
 
-                          BaseUtil.openModalBottomSheet(
-                            isBarrierDismissible: true,
-                            addToScreenStack: true,
-                            content: FloBreakdownView(
-                              model: widget.model,
-                              showPsp: false,
-                            ),
-                            hapticVibrate: true,
-                            isScrollControlled: true,
-                          );
-                        },
-                        child: const Icon(
-                          Icons.info_outline,
-                          size: 20,
-                          color: Color(0xff62E3C4),
-                        ),
+                        BaseUtil.openModalBottomSheet(
+                          isBarrierDismissible: true,
+                          addToScreenStack: true,
+                          content: FloBreakdownView(
+                            model: widget.model,
+                            showPaymentOption: false,
+                          ),
+                          hapticVibrate: true,
+                          isScrollControlled: true,
+                        );
+                      },
+                      child: const Icon(
+                        Icons.info_outline,
+                        size: 14,
+                        color: UiConstants.grey1,
                       ),
-                  ],
-                ),
+                    ),
+                  ]
+                ],
               ),
               if (widget.model.showMaxCapText)
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: SizeConfig.padding1),
                   child: Text(
                     widget.maxAmountMsg,
-                    style: TextStyles.sourceSans.body4.bold
-                        .colour(UiConstants.primaryColor),
+                    style: TextStyles.sourceSans.body4.bold.colour(
+                      UiConstants.grey1,
+                    ),
                   ),
                 ),
               if (currentAmt < widget.minAmount)
@@ -270,42 +269,6 @@ class _AmountInputViewState extends State<AmountInputView> {
         SizedBox(
           height: SizeConfig.padding16,
         ),
-        if (widget.isBuyView)
-          Container(
-            // width: SizeConfig.screenWidth! * 0.72,
-            decoration: BoxDecoration(
-              color: UiConstants.kArrowButtonBackgroundColor.withOpacity(0.4),
-              borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-            ),
-            // margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding64),
-            height: SizeConfig.padding38,
-            padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding16),
-            child: Row(
-              mainAxisSize: MainAxisSize.min,
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Padding(
-                  padding: EdgeInsets.only(right: SizeConfig.padding20),
-                  child: Text(s.minAmountLabel(widget.minAmount),
-                      style: TextStyles.sourceSans.body3
-                          .colour(Colors.white.withOpacity(0.8))),
-                ),
-                VerticalDivider(
-                  color: UiConstants.kModalSheetSecondaryBackgroundColor
-                      .withOpacity(0.2),
-                  width: 4,
-                ),
-                Padding(
-                  padding: EdgeInsets.only(left: SizeConfig.padding20),
-                  child: Text(
-                    getSubString(),
-                    style: TextStyles.sourceSans.body3
-                        .colour(Colors.white.withOpacity(0.8)),
-                  ),
-                ),
-              ],
-            ),
-          )
       ],
     );
   }

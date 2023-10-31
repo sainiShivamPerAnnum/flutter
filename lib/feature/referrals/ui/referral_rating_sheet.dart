@@ -125,7 +125,7 @@ class ReferralRatingSheet extends StatelessWidget {
                   },
                 );
               },
-              widget: Text(
+              child: Text(
                 'INVITE & EARN ₹500 PER REFERRAL',
                 textAlign: TextAlign.center,
                 style: TextStyles.rajdhaniB.body0.colour(Colors.white),

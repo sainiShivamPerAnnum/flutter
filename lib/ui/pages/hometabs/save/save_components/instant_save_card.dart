@@ -50,17 +50,23 @@ class _InstantSaveCardState extends State<InstantSaveCard> {
     final foregroundImage = config?.foreground;
 
     if (isLoading) {
-      return Shimmer.fromColors(
-        baseColor: UiConstants.kTambolaMidTextColor,
-        highlightColor: Colors.grey.shade800,
-        direction: ShimmerDirection.ttb,
-        child: AspectRatio(
-          aspectRatio: 2.27,
-          child: Container(
-            width: double.infinity,
-            decoration: BoxDecoration(
-              color: Colors.grey,
-              borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+      return Padding(
+        padding: EdgeInsets.symmetric(
+          horizontal: SizeConfig.padding20,
+          vertical: SizeConfig.padding20,
+        ),
+        child: Shimmer.fromColors(
+          baseColor: UiConstants.kTambolaMidTextColor,
+          highlightColor: Colors.grey.shade800,
+          direction: ShimmerDirection.ttb,
+          child: AspectRatio(
+            aspectRatio: 2.27,
+            child: Container(
+              width: double.infinity,
+              decoration: BoxDecoration(
+                color: Colors.grey,
+                borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+              ),
             ),
           ),
         ),

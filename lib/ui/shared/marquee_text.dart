@@ -5,14 +5,16 @@ import 'package:flutter/material.dart';
 class MarqueeText extends StatelessWidget {
   final List<String> infoList;
   final Color? bulletColor, textColor;
-  final showBullet;
+  final bool showBullet;
 
   const MarqueeText({
     required this.infoList,
     required this.showBullet,
+    super.key,
     this.bulletColor,
     this.textColor,
   });
+
   @override
   Widget build(BuildContext context) {
     return MarqueeWidget(
@@ -62,14 +64,15 @@ class MarqueeWidget extends StatefulWidget {
 
   const MarqueeWidget({
     required this.child,
-    this.direction: Axis.horizontal,
-    this.animationDuration: const Duration(milliseconds: 3000),
-    this.backDuration: const Duration(milliseconds: 800),
-    this.pauseDuration: const Duration(milliseconds: 800),
+    super.key,
+    this.direction = Axis.horizontal,
+    this.animationDuration = const Duration(milliseconds: 3000),
+    this.backDuration = const Duration(milliseconds: 800),
+    this.pauseDuration = const Duration(milliseconds: 800),
   });
 
   @override
-  _MarqueeWidgetState createState() => _MarqueeWidgetState();
+  State<MarqueeWidget> createState() => _MarqueeWidgetState();
 }
 
 class _MarqueeWidgetState extends State<MarqueeWidget> {
@@ -91,13 +94,13 @@ class _MarqueeWidgetState extends State<MarqueeWidget> {
   @override
   Widget build(BuildContext context) {
     return SingleChildScrollView(
-      child: widget.child,
       scrollDirection: widget.direction,
       controller: scrollController,
+      child: widget.child,
     );
   }
 
-  void scroll(_) async {
+  Future<void> scroll(_) async {
     while (scrollController!.hasClients) {
       await Future.delayed(widget.pauseDuration);
       if (scrollController!.hasClients) {

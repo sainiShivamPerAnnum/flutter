@@ -2,7 +2,6 @@ import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
-import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 
 class LendBoxAppBar extends StatelessWidget {
@@ -55,28 +54,12 @@ class LendBoxAppBar extends StatelessWidget {
             ),
       // leadingWidth: SizeConfig.screenWidth! * 0.1,
       title: Row(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          SizedBox(width: SizeConfig.screenWidth! * 0.1),
-          Container(
-            width: SizeConfig.screenWidth! * 0.158,
-            height: SizeConfig.screenWidth! * 0.158,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              gradient: RadialGradient(
-                colors: [
-                  UiConstants.primaryColor.withOpacity(0.4),
-                  UiConstants.primaryColor.withOpacity(0.2),
-                  UiConstants.primaryColor.withOpacity(0.04),
-                  Colors.transparent,
-                ],
-              ),
-            ),
-            alignment: Alignment.center,
-            child: Image.asset(
-              Assets.felloFlo,
-              width: SizeConfig.screenWidth! * 0.27,
-              height: SizeConfig.screenWidth! * 0.27,
-            ),
+          Image.asset(
+            Assets.felloFlo,
+            width: SizeConfig.screenWidth! * 0.148,
+            height: SizeConfig.screenWidth! * 0.148,
           ),
           // SizedBox(width: SizeConfig.padding8),
           Text(

@@ -217,6 +217,26 @@ class UiConstants {
   static Color kGoldProBorder = const Color(0xffFFD979).withOpacity(0.2);
   static Color kGoldProBgColor = const Color(0xff323232);
   static Color kGoldProPrimaryDark2 = const Color(0xffB17518);
+
+  static const grey1 = Color(0xFFA9C6D6);
+  static const grey2 = Color(0xFF627F8E);
+  static const grey3 = Color(0xFF151D22);
+  static const grey4 = Color(0xFF323232);
+  static const grey5 = Color(0xFF1A1A1A);
+
+  static const yellow3 = Color(0xFFFFD979);
+
+  static const teal1 = Color(0xFFCEF8F5);
+  static const teal2 = Color(0xFFA5FCE7);
+  static const teal3 = Color(0xFF62E3C4);
+  static const teal4 = Color(0xFF01656B);
+  static const teal5 = Color(0xFF023C40);
+
+  static const bg = Color(0xFF232326);
+
+  static const textGray50 = Color(0xFF919193);
+  static const textGray60 = Color(0xFFA7A7A8);
+  static const textGray70 = Color(0xFFBDBDBE);
 }
 
 extension ColorExtension on String {

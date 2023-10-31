@@ -15,4 +15,6 @@ enum FaqsType {
   powerPlay,
   rewards,
   referrals,
+  digitalGold,
+  felloFlo;
 }

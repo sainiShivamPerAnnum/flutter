@@ -3,10 +3,10 @@ description: Game-based Investments
 
 publish_to: "none"
 
-version: 4.6.2+239
+version: 4.6.2+240
 
 environment:
-  sdk: ">=2.18.6 <3.0.0"
+  sdk: ">=3.0.0 <4.0.0"
 
 dependencies:
   animated_text_kit: ^4.2.2
@@ -143,6 +143,7 @@ flutter:
     - assets/images/icons/
     - assets/svg/
     - assets/vectors/
+    - assets/vectors/psp/
     - assets/vectors/icons/
     - assets/vectors/userAvatars/
     - assets/lotties/

@@ -264,7 +264,7 @@ class GetterRepository extends BaseRepo {
     }
   }
 
-  Future<ApiResponse<dynamic>> getFaqs({
+  Future<ApiResponse<List<FAQDataModel>>> getFaqs({
     required FaqsType type,
   }) async {
     try {

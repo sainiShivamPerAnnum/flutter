@@ -210,8 +210,9 @@ class _NewCurrentGoldPriceWidgetState extends State<NewCurrentGoldPriceWidget>
     return widget.mini
         ? Text(
             " (${animation.value.inMinutes.toString().padLeft(2, '0')}:${(animation.value.inSeconds % 60).toString().padLeft(2, '0')}s)",
-            style: TextStyles.sourceSans.body4
-                .colour(widget.textColor ?? UiConstants.kTextFieldTextColor),
+            style: TextStyles.sourceSans.body4.colour(
+              widget.textColor ?? UiConstants.grey1,
+            ),
           )
         : Container();
   }
