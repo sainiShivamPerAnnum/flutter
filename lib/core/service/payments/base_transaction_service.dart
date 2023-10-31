@@ -37,7 +37,7 @@ abstract class BaseTransactionService<T> with ChangeNotifier {
   int _retryCount = 0;
 
   /// The maximum number of times the task can be retried.
-  final int _rescheduleLimit = 3;
+  final int _rescheduleLimit = 2;
 
   /// The asynchronous task that will be executed and potentially rescheduled.
   Future<T> task();
@@ -48,7 +48,7 @@ abstract class BaseTransactionService<T> with ChangeNotifier {
 
   /// Validates the response returned from [task], when [predicate] confirms
   /// successful execution of [task].
-  Future<void> validateResponse(T value);
+  void validateResponse(T value);
 
   /// Runs the [task] and potentially reschedule it until it reaches the
   /// reschedule limit or meets the completion condition.

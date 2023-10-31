@@ -46,7 +46,6 @@ class _LendboxBuyViewState extends State<LendboxBuyView>
     with WidgetsBindingObserver, SingleTickerProviderStateMixin {
   final LendboxTransactionService _txnService =
       locator<LendboxTransactionService>();
-  AppLifecycleState? appLifecycleState;
 
   final iosScreenShotChannel = const MethodChannel('secureScreenshotChannel');
 
@@ -68,15 +67,14 @@ class _LendboxBuyViewState extends State<LendboxBuyView>
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    appLifecycleState = state;
-    if (appLifecycleState == AppLifecycleState.resumed &&
+    super.didChangeAppLifecycleState(state);
+    if (state == AppLifecycleState.resumed &&
         Platform.isIOS &&
         _txnService.isIOSTxnInProgress) {
       _txnService.isIOSTxnInProgress = false;
       _txnService.currentTransactionState = TransactionState.ongoing;
       _txnService.run();
     }
-    super.didChangeAppLifecycleState(state);
   }
 
   @override

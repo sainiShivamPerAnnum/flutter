@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:felloapp/base_util.dart';
@@ -21,17 +22,19 @@ import 'package:lottie/lottie.dart';
 
 class GoldSellLoadingView extends StatelessWidget {
   final GoldSellViewModel model;
-
   final AugmontTransactionService _augTxnService =
       locator<AugmontTransactionService>();
   final TxnHistoryService _txnHistoryService = locator<TxnHistoryService>();
-  S locale = locator<S>();
   final int waitTimeInSec = 45;
 
-  GoldSellLoadingView({required this.model, Key? key}) : super(key: key);
+  GoldSellLoadingView({
+    required this.model,
+    super.key,
+  });
+
   @override
   Widget build(BuildContext context) {
-    S locale = S.of(context);
+    final locale = S.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
@@ -84,16 +87,10 @@ class GoldSellLoadingView extends StatelessWidget {
                 end: Duration.zero,
               ),
               onEnd: () async {
-                // await _augTxnService
-                //     .processPolling(_augTxnService.pollingPeriodicTimer);
-                // if (_augTxnService.currentTransactionState !=
-                //     TransactionState.ongoing) return;
-
-                // _augTxnService.pollingPeriodicTimer?.cancel();
-                _txnHistoryService!
-                    .updateTransactions(InvestmentType.AUGGOLD99);
-                locator<UserService>().getUserFundWalletData();
-                _augTxnService!.currentTransactionState = TransactionState.idle;
+                unawaited(_txnHistoryService
+                    .updateTransactions(InvestmentType.AUGGOLD99));
+                unawaited(locator<UserService>().getUserFundWalletData());
+                _augTxnService.currentTransactionState = TransactionState.idle;
                 log("Screen Stack:${AppState.screenStack.toString()}");
                 if (AppState.screenStack.last == ScreenItem.loader) {
                   AppState.screenStack.removeLast();

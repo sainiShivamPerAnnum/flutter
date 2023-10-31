@@ -55,6 +55,12 @@ class AugmontTransactionService
   bool _isGoldSellInProgress = false;
   GoldProSchemeModel? _goldProScheme;
 
+  /// Holds the future object of [run] method which can be awaited later on when
+  /// it crosses maximum waiting duration.
+  Future<void>? _transactionFuture;
+
+  Future<void>? get transactionProcessFuture => _transactionFuture;
+
   GoldProSchemeModel? get goldProScheme => _goldProScheme;
 
   set goldProScheme(GoldProSchemeModel? value) {
@@ -169,7 +175,7 @@ class AugmontTransactionService
         if (Platform.isAndroid) {
           isGoldBuyInProgress = false;
           currentTransactionState = TransactionState.ongoing;
-          unawaited(run());
+          _transactionFuture = run();
         }
       } catch (e) {
         _logger.e("Intent payement exception $e");
@@ -178,7 +184,7 @@ class AugmontTransactionService
         if (Platform.isAndroid) {
           isGoldBuyInProgress = false;
           currentTransactionState = TransactionState.ongoing;
-          unawaited(run());
+          _transactionFuture = run();
         }
       }
     } else {

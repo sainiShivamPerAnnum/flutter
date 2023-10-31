@@ -23,7 +23,7 @@ class LendboxLoadingView extends StatelessWidget {
   final TransactionType transactionType;
   final LendboxTransactionService _txnService =
       locator<LendboxTransactionService>();
-  final int waitTimeInSec = 45;
+  final int waitTimeInSec = 60;
 
   LendboxLoadingView({required this.transactionType, Key? key})
       : super(key: key);
@@ -83,8 +83,7 @@ class LendboxLoadingView extends StatelessWidget {
                 end: Duration.zero,
               ),
               onEnd: () async {
-                // TODO: Check whethere it is required or not.
-                // await _txnService.validateResponse();
+                await _txnService.transactionProcessFuture;
                 if (_txnService.currentTransactionState !=
                     TransactionState.ongoing) return;
 
