@@ -74,7 +74,7 @@ class _LendboxBuyViewState extends State<LendboxBuyView>
         _txnService.isIOSTxnInProgress) {
       _txnService.isIOSTxnInProgress = false;
       _txnService.currentTransactionState = TransactionState.ongoing;
-      _txnService.initiatePolling();
+      _txnService.run();
     }
     super.didChangeAppLifecycleState(state);
   }

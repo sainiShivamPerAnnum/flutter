@@ -34,7 +34,14 @@ import 'package:felloapp/util/locator.dart';
 import 'package:flutter/services.dart';
 import 'package:upi_pay/upi_pay.dart';
 
-class AugmontTransactionService extends BaseTransactionService {
+import 'transaction_service_mixin.dart';
+
+class AugmontTransactionService
+    extends BaseTransactionService<ApiResponse<TransactionResponseModel>>
+    with TransactionPredictionDefaultMixing {
+  @override
+  PaytmRepository get paytmRepo => _paytmRepo;
+
   final UserService _userService = locator<UserService>();
   final CustomLogger _logger = locator<CustomLogger>();
   final UserCoinService _userCoinService = locator<UserCoinService>();
@@ -79,13 +86,9 @@ class AugmontTransactionService extends BaseTransactionService {
       {required GoldPurchaseDetails details}) {
     currentGoldPurchaseDetails = details;
     currentTxnAmount = details.goldBuyAmount;
-    if (details.upiChoice != null) {
-      //Intent flow
-      return processUpiTransaction();
-    } else {
-      //RazorPay gateway
-      return processRazorpayTransaction();
-    }
+    return details.upiChoice != null
+        ? processUpiTransaction()
+        : processRazorpayTransaction();
   }
 
   //6 -- UPI
@@ -166,7 +169,7 @@ class AugmontTransactionService extends BaseTransactionService {
         if (Platform.isAndroid) {
           isGoldBuyInProgress = false;
           currentTransactionState = TransactionState.ongoing;
-          unawaited(initiatePolling());
+          unawaited(run());
         }
       } catch (e) {
         _logger.e("Intent payement exception $e");
@@ -175,7 +178,7 @@ class AugmontTransactionService extends BaseTransactionService {
         if (Platform.isAndroid) {
           isGoldBuyInProgress = false;
           currentTransactionState = TransactionState.ongoing;
-          unawaited(initiatePolling());
+          unawaited(run());
         }
       }
     } else {
@@ -263,10 +266,10 @@ class AugmontTransactionService extends BaseTransactionService {
   }
 
   @override
-  Future<void> processPolling(Timer? timer) async {
-    final res = await _paytmRepo.getTransactionStatus(currentTxnOrderId);
-    if (res.isSuccess()) {
-      TransactionResponseModel txnStatus = res.model!;
+  Future<void> validateResponse(
+      ApiResponse<TransactionResponseModel> value) async {
+    if (value.isSuccess()) {
+      TransactionResponseModel txnStatus = value.model!;
       switch (txnStatus.data!.status) {
         case Constants.TXN_STATUS_RESPONSE_SUCCESS:
           if (!txnStatus.data!.isUpdating!) {
@@ -285,22 +288,20 @@ class AugmontTransactionService extends BaseTransactionService {
                   unawaited(locator<PowerPlayService>()
                       .getUserTransactionHistory(matchData: liveMatchData));
                 }
-                transactionResponseModel = res.model;
-                currentTxnTambolaTicketsCount = res.model!.data!.tickets!;
+                transactionResponseModel = value.model;
+                currentTxnTambolaTicketsCount = value.model!.data!.tickets!;
                 currentTxnScratchCardCount =
-                    res.model?.data?.gtIds?.length ?? 0;
-                if (res.model!.data != null &&
-                    res.model!.data!.goldInTxnBought != null &&
-                    res.model!.data!.goldInTxnBought! > 0) {
-                  currentTxnGms = res.model!.data!.goldInTxnBought;
+                    value.model?.data?.gtIds?.length ?? 0;
+                if (value.model!.data != null &&
+                    value.model!.data!.goldInTxnBought != null &&
+                    value.model!.data!.goldInTxnBought! > 0) {
+                  currentTxnGms = value.model!.data!.goldInTxnBought;
                 }
-                timer!.cancel();
                 unawaited(transactionResponseUpdate(
                     gtIds: transactionResponseModel?.data?.gtIds ?? []));
               } else if (txnStatus.data!.fd!.status ==
                   Constants.GOLD_PRO_TXN_STATUS_FAILED) {
                 AppState.unblockNavigation();
-                timer!.cancel();
                 unawaited(transactionResponseUpdate(
                     gtIds: transactionResponseModel?.data?.gtIds ?? []));
                 AppState.isGoldProBuyInProgress = false;
@@ -322,15 +323,15 @@ class AugmontTransactionService extends BaseTransactionService {
                 unawaited(locator<PowerPlayService>()
                     .getUserTransactionHistory(matchData: liveMatchData));
               }
-              transactionResponseModel = res.model;
-              currentTxnTambolaTicketsCount = res.model!.data!.tickets!;
-              currentTxnScratchCardCount = res.model?.data?.gtIds?.length ?? 0;
-              if (res.model!.data != null &&
-                  res.model!.data!.goldInTxnBought != null &&
-                  res.model!.data!.goldInTxnBought! > 0) {
-                currentTxnGms = res.model!.data!.goldInTxnBought;
+              transactionResponseModel = value.model;
+              currentTxnTambolaTicketsCount = value.model!.data!.tickets!;
+              currentTxnScratchCardCount =
+                  value.model?.data?.gtIds?.length ?? 0;
+              if (value.model!.data != null &&
+                  value.model!.data!.goldInTxnBought != null &&
+                  value.model!.data!.goldInTxnBought! > 0) {
+                currentTxnGms = value.model!.data!.goldInTxnBought;
               }
-              timer!.cancel();
               unawaited(transactionResponseUpdate(
                   gtIds: transactionResponseModel?.data?.gtIds ?? []));
             }
@@ -339,7 +340,6 @@ class AugmontTransactionService extends BaseTransactionService {
         case Constants.TXN_STATUS_RESPONSE_PENDING:
           break;
         case Constants.TXN_STATUS_RESPONSE_FAILURE:
-          timer!.cancel();
           AppState.unblockNavigation();
           isGoldBuyInProgress = false;
           currentTransactionState = TransactionState.idle;

@@ -8,7 +8,8 @@ import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
 import 'package:upi_pay/upi_pay.dart';
 
-abstract class BaseTransactionService extends ChangeNotifier {
+/// An abstract class for rescheduling a task with retries.
+abstract class BaseTransactionService<T> with ChangeNotifier {
   final ScratchCardService _gtService = locator<ScratchCardService>();
   S locale = locator<S>();
 
@@ -24,30 +25,61 @@ abstract class BaseTransactionService extends ChangeNotifier {
   UpiApplication? upiApplication;
   String? selectedUpiApplicationName;
 
-  Timer? pollingPeriodicTimer;
   double? currentTxnAmount = 0;
+
   String? currentTxnOrderId;
   int currentTxnTambolaTicketsCount = 0;
   bool isIOSTxnInProgress = false;
   int currentTxnScratchCardCount = 0;
   Map<String, dynamic>? currentTransactionAnalyticsDetails;
 
-  Future<void> initiatePolling() async {
-    pollingPeriodicTimer = Timer.periodic(
-      const Duration(seconds: 5),
-      processPolling,
-    );
+  /// The current retry count.
+  int _retryCount = 0;
+
+  /// The maximum number of times the task can be retried.
+  final int _rescheduleLimit = 3;
+
+  /// The asynchronous task that will be executed and potentially rescheduled.
+  Future<T> task();
+
+  /// A predicate function that determines whether the task is complete based on
+  /// its result.
+  bool predicate(T value);
+
+  /// Validates the response returned from [task], when [predicate] confirms
+  /// successful execution of [task].
+  Future<void> validateResponse(T value);
+
+  /// Runs the [task] and potentially reschedule it until it reaches the
+  /// reschedule limit or meets the completion condition.
+  Future<void> run() async {
+    while (_retryCount < _rescheduleLimit) {
+      try {
+        final result = await task();
+        if (predicate(result)) {
+          return validateResponse(result);
+        } else {
+          _retryCount++;
+        }
+      } catch (e) {
+        _retryCount++;
+      }
+    }
   }
 
-  Future<void> processPolling(Timer timer);
-
   Future<void> processUpiTransaction();
-  Future<void> processRazorpayTransaction();
-  Future<void> transactionResponseUpdate({List<String>? gtIds, double? amount});
 
-  void showGtIfAvailable() {
-    Future.delayed(const Duration(milliseconds: 500), () {
-      _gtService.showMultipleScratchCardsView();
-    });
+  Future<void> processRazorpayTransaction();
+
+  Future<void> transactionResponseUpdate({
+    List<String>? gtIds,
+    double? amount,
+  });
+
+  Future<void> showGtIfAvailable() async {
+    await Future.delayed(
+      const Duration(milliseconds: 500),
+      _gtService.showMultipleScratchCardsView,
+    );
   }
 }

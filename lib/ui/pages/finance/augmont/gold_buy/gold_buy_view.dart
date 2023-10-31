@@ -78,7 +78,7 @@ class _GoldBuyViewState extends State<GoldBuyView>
         _txnService.isIOSTxnInProgress) {
       _txnService.isIOSTxnInProgress = false;
       _txnService.currentTransactionState = TransactionState.ongoing;
-      _txnService.initiatePolling();
+      _txnService.run();
     }
     super.didChangeAppLifecycleState(state);
   }

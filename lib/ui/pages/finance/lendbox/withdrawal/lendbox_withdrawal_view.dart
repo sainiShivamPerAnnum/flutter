@@ -49,7 +49,7 @@ class _LendboxWithdrawalViewState extends State<LendboxWithdrawalView>
     if (appLifecycleState == AppLifecycleState.resumed) {
       if (!_txnService.isIOSTxnInProgress) return;
       _txnService.isIOSTxnInProgress = false;
-      _txnService.initiatePolling();
+      _txnService.run();
     }
     super.didChangeAppLifecycleState(state);
   }

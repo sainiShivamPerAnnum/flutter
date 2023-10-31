@@ -83,12 +83,11 @@ class LendboxLoadingView extends StatelessWidget {
                 end: Duration.zero,
               ),
               onEnd: () async {
-                await _txnService
-                    .processPolling(_txnService.pollingPeriodicTimer);
+                // TODO: Check whethere it is required or not.
+                // await _txnService.validateResponse();
                 if (_txnService.currentTransactionState !=
                     TransactionState.ongoing) return;
 
-                _txnService.pollingPeriodicTimer?.cancel();
                 locator<BackButtonActions>().isTransactionCancelled = false;
                 AppState.onTap = null;
                 AppState.amt = 0;

@@ -15,6 +15,7 @@ import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/base_transaction_service.dart';
 import 'package:felloapp/core/service/payments/razorpay_service.dart';
+import 'package:felloapp/core/service/payments/transaction_service_mixin.dart';
 import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/back_button_actions.dart';
@@ -28,7 +29,12 @@ import 'package:felloapp/util/locator.dart';
 import 'package:flutter/services.dart';
 import 'package:upi_pay/upi_pay.dart';
 
-class LendboxTransactionService extends BaseTransactionService {
+class LendboxTransactionService
+    extends BaseTransactionService<ApiResponse<TransactionResponseModel>>
+    with TransactionPredictionDefaultMixing {
+  @override
+  PaytmRepository get paytmRepo => _paytmRepo;
+
   final UserService _userService = locator<UserService>();
   final CustomLogger _logger = locator<CustomLogger>();
   final UserCoinService _userCoinService = locator<UserCoinService>();
@@ -49,13 +55,9 @@ class LendboxTransactionService extends BaseTransactionService {
   Future<void> initiateTransaction(FloPurchaseDetails details) async {
     currentFloPurchaseDetails = details;
     currentTxnAmount = details.txnAmount;
-    if (details.upiChoice != null) {
-      //Intent flow
-      return processUpiTransaction();
-    } else {
-      //RazorPay gateway
-      return processRazorpayTransaction();
-    }
+    return details.upiChoice != null
+        ? processUpiTransaction()
+        : processRazorpayTransaction();
   }
 
   @override
@@ -78,10 +80,10 @@ class LendboxTransactionService extends BaseTransactionService {
   }
 
   @override
-  Future<void> processPolling(Timer? timer) async {
-    final res = await _paytmRepo.getTransactionStatus(currentTxnOrderId);
-    if (res.isSuccess()) {
-      TransactionResponseModel txnStatus = res.model!;
+  Future<void> validateResponse(
+      ApiResponse<TransactionResponseModel> value) async {
+    if (value.isSuccess()) {
+      TransactionResponseModel txnStatus = value.model!;
 
       switch (txnStatus.data!.status) {
         case Constants.TXN_STATUS_RESPONSE_SUCCESS:
@@ -93,11 +95,10 @@ class LendboxTransactionService extends BaseTransactionService {
               unawaited(locator<PowerPlayService>()
                   .getUserTransactionHistory(matchData: liveMatchData));
             }
-            currentTxnTambolaTicketsCount = res.model!.data!.tickets!;
-            currentTxnScratchCardCount = res.model?.data?.gtIds?.length ?? 0;
+            currentTxnTambolaTicketsCount = value.model!.data!.tickets!;
+            currentTxnScratchCardCount = value.model?.data?.gtIds?.length ?? 0;
             await locator<BaseUtil>().newUserCheck();
-            transactionResponseModel = res.model!;
-            timer!.cancel();
+            transactionResponseModel = value.model!;
             return transactionResponseUpdate(
               amount: currentTxnAmount,
               gtIds: transactionResponseModel?.data?.gtIds ?? [],
@@ -107,7 +108,6 @@ class LendboxTransactionService extends BaseTransactionService {
         case Constants.TXN_STATUS_RESPONSE_PENDING:
           break;
         case Constants.TXN_STATUS_RESPONSE_FAILURE:
-          timer!.cancel();
           currentTransactionState = TransactionState.idle;
           AppState.unblockNavigation();
           BaseUtil.showNegativeAlert(
@@ -204,7 +204,7 @@ class LendboxTransactionService extends BaseTransactionService {
 
         if (Platform.isAndroid) {
           currentTransactionState = TransactionState.ongoing;
-          unawaited(initiatePolling());
+          unawaited(run());
         }
       } catch (e) {
         _logger.e("Intent payement exception $e");
@@ -212,7 +212,7 @@ class LendboxTransactionService extends BaseTransactionService {
 
         if (Platform.isAndroid) {
           currentTransactionState = TransactionState.ongoing;
-          unawaited(initiatePolling());
+          unawaited(run());
         }
       }
     } else {

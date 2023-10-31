@@ -1,0 +1,35 @@
+import 'package:felloapp/core/model/paytm_models/paytm_transaction_response_model.dart';
+import 'package:felloapp/core/repository/paytm_repo.dart';
+import 'package:felloapp/util/api_response.dart';
+import 'package:felloapp/util/constants.dart';
+
+import 'base_transaction_service.dart';
+
+/// A mixin for performing transaction prediction with default behavior
+/// on [BaseTransactionService].
+///
+/// This mixin provides a common implementation for predicting transaction
+/// outcomes based on the response from the Paytm repository.
+mixin TransactionPredictionDefaultMixing
+    on BaseTransactionService<ApiResponse<TransactionResponseModel>> {
+  /// The Paytm repository used to fetch transaction status.
+  PaytmRepository get paytmRepo;
+
+  /// Fetches the transaction information from [paytmRepo].
+  @override
+  Future<ApiResponse<TransactionResponseModel>> task() async {
+    final res = await paytmRepo.getTransactionStatus(currentTxnOrderId);
+    return res;
+  }
+
+  /// Determine whether the transaction is successful or failed
+  /// based on the response from [paytmRepo].
+  @override
+  bool predicate(ApiResponse<TransactionResponseModel> value) {
+    final status = value.model?.data?.status;
+    return value.isSuccess() &&
+        status != null &&
+        (status == Constants.TXN_STATUS_RESPONSE_SUCCESS ||
+            status == Constants.TXN_STATUS_RESPONSE_FAILURE);
+  }
+}

@@ -82,11 +82,10 @@ class GoldBuyLoadingView extends StatelessWidget {
                 end: Duration.zero,
               ),
               onEnd: () async {
-                await _augTxnService!
-                    .processPolling(_augTxnService!.pollingPeriodicTimer);
+                // TODO: Check whethere it is required or not.
+                // await _augTxnService!.validateResponse();
                 if (_augTxnService!.currentTransactionState !=
                     TransactionState.ongoing) return;
-                _augTxnService!.pollingPeriodicTimer?.cancel();
                 _augTxnService!.isGoldBuyInProgress = false;
                 _augTxnService!.currentTransactionState = TransactionState.idle;
                 locator<BackButtonActions>().isTransactionCancelled = false;
