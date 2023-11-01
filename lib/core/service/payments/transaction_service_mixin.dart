@@ -22,6 +22,12 @@ mixin TransactionPredictionDefaultMixing
     return res;
   }
 
+  /// A predicate for rescheduling.
+  ///
+  /// Signals [run] to continue or to rescheduling or to process further based
+  /// on predicate condition. [run] continues prediction if it returns `false`
+  /// or else will be processing response via [onSuccess].
+  ///
   /// Determine whether the transaction is successful or failed
   /// based on the response from [paytmRepo].
   @override

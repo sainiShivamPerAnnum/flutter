@@ -86,8 +86,7 @@ class LendboxTransactionService
   }
 
   @override
-  Future<void> validateResponse(
-      ApiResponse<TransactionResponseModel> value) async {
+  Future<void> onSuccess(ApiResponse<TransactionResponseModel> value) async {
     if (value.isSuccess()) {
       TransactionResponseModel txnStatus = value.model!;
 

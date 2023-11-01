@@ -9,7 +9,8 @@ import 'package:flutter/material.dart';
 import 'package:upi_pay/upi_pay.dart';
 
 /// An abstract class for rescheduling a task with retries.
-abstract class BaseTransactionService<T> with ChangeNotifier {
+abstract class BaseTransactionService<T> extends Rescheduler<T>
+    with ChangeNotifier {
   final ScratchCardService _gtService = locator<ScratchCardService>();
   S locale = locator<S>();
 
@@ -33,6 +34,26 @@ abstract class BaseTransactionService<T> with ChangeNotifier {
   int currentTxnScratchCardCount = 0;
   Map<String, dynamic>? currentTransactionAnalyticsDetails;
 
+  Future<void> processUpiTransaction();
+
+  Future<void> processRazorpayTransaction();
+
+  Future<void> transactionResponseUpdate({
+    List<String>? gtIds,
+    double? amount,
+  });
+
+  Future<void> showGtIfAvailable() async {
+    await Future.delayed(
+      const Duration(milliseconds: 500),
+      _gtService.showMultipleScratchCardsView,
+    );
+  }
+}
+
+/// An abstract class for scheduling and rescheduling asynchronous tasks with
+/// retry logic based on the result and a completion condition.
+abstract class Rescheduler<T> {
   /// The current retry count.
   int _retryCount = 0;
 
@@ -48,16 +69,21 @@ abstract class BaseTransactionService<T> with ChangeNotifier {
 
   /// Validates the response returned from [task], when [predicate] confirms
   /// successful execution of [task].
-  void validateResponse(T value);
+  void onSuccess(T value);
 
-  /// Runs the [task] and potentially reschedule it until it reaches the
-  /// reschedule limit or meets the completion condition.
+  /// Runs the [task] and reschedules it until it reaches the reschedule limit
+  /// or meets the completion condition.
+  ///
+  /// If the task succeeds according to the [predicate], the [onSuccess]
+  /// callback is invoked with the result, and the retry loop exits. If the task
+  /// continues to fail or if exceptions are thrown during execution, the
+  /// retry count is incremented until it reaches the maximum retry limit.
   Future<void> run() async {
     while (_retryCount < _rescheduleLimit) {
       try {
         final result = await task();
         if (predicate(result)) {
-          return validateResponse(result);
+          return onSuccess(result);
         } else {
           _retryCount++;
         }
@@ -65,21 +91,5 @@ abstract class BaseTransactionService<T> with ChangeNotifier {
         _retryCount++;
       }
     }
-  }
-
-  Future<void> processUpiTransaction();
-
-  Future<void> processRazorpayTransaction();
-
-  Future<void> transactionResponseUpdate({
-    List<String>? gtIds,
-    double? amount,
-  });
-
-  Future<void> showGtIfAvailable() async {
-    await Future.delayed(
-      const Duration(milliseconds: 500),
-      _gtService.showMultipleScratchCardsView,
-    );
   }
 }
