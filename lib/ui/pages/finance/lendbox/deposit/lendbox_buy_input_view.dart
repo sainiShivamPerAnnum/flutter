@@ -179,6 +179,7 @@ class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
                         return Transform.translate(
                           offset: Offset(sineValue * 10, 0),
                           child: AmountInputView(
+                            key: const ValueKey('amountInput'),
                             amountController: widget.model.amountController,
                             focusNode: widget.model.buyFieldNode,
                             chipAmounts: widget
@@ -252,6 +253,7 @@ class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
                               ),
                             )
                           : FloBuyNavBar(
+                            key: const ValueKey('save'),
                               model: widget.model,
                               onTap: () {
                                 locator<AnalyticsService>().track(

@@ -235,6 +235,7 @@ class DailyAppCheckInEventModalSheet extends StatelessWidget {
                                 title: model.isDailyAppBonusClaimed
                                     ? locale.gotIt
                                     : locale.dayRerward(model.currentDay + 1),
+                                key: const ValueKey('AppBonus'),
                                 onTap: model.isDailyAppBonusClaimed
                                     ? () => model.gotItTapped()
                                     : () => model.sudoClaimDailyReward(),

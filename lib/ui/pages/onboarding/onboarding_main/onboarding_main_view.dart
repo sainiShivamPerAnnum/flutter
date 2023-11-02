@@ -189,7 +189,8 @@ class _OnBoardingViewState extends State<OnBoardingView>
                       onTap: () {
                         if (model.currentPage == 2) {
                           controller?.forward().then(
-                              (_) => model.registerWalkthroughCompletion());
+                                (_) => model.registerWalkthroughCompletion(),
+                              );
                         } else {
                           model.pageController!.animateToPage(
                             model.currentPage + 1,

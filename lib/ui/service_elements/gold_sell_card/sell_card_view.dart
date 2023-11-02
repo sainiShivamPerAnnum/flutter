@@ -64,6 +64,7 @@ class SellCardView extends StatelessWidget {
                       investmentType: investmentType,
                     ),
                     SellButton(
+                      key: const ValueKey('sellButton'),
                       text: investmentType == InvestmentType.AUGGOLD99
                           ? "SELL"
                           : "WITHDRAW",

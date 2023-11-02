@@ -251,6 +251,7 @@ class FloBasicCard extends StatelessWidget {
                                 width: 1.0,
                                 style: BorderStyle.solid))),
                         child: Text(
+                          key: const ValueKey('floWithdraw'),
                           "WITHDRAW",
                           style:
                               TextStyles.rajdhaniSB.body2.colour(Colors.white),

@@ -34,6 +34,7 @@ class LoginMobileViewState extends State<LoginMobileView> {
       onModelReady: (model) => this.model = model,
       builder: (ctx, model, child) {
         return Column(
+          key: const ValueKey('mobileInputScreenText'),
           mainAxisAlignment: MainAxisAlignment.start,
           children: [
             const LoginImage(),
@@ -57,10 +58,11 @@ class LoginMobileViewState extends State<LoginMobileView> {
                 prefixText: "+91 ",
                 prefixTextStyle: TextStyles.sourceSans.body3,
                 scrollPadding: EdgeInsets.only(
-                    bottom: MediaQuery.of(context).viewInsets.bottom >
-                            SizeConfig.screenHeight! / 3
-                        ? SizeConfig.screenHeight! * 0.1
-                        : 0),
+                  bottom: MediaQuery.of(context).viewInsets.bottom >
+                          SizeConfig.screenHeight! / 3
+                      ? SizeConfig.screenHeight! * 0.1
+                      : 0,
+                ),
                 textStyle: TextStyles.sourceSans.body3,
                 suffixIcon: model.showTickCheck
                     ? Icon(
@@ -77,7 +79,8 @@ class LoginMobileViewState extends State<LoginMobileView> {
                 },
                 validator: (value) => model.validateMobile(),
                 margin: EdgeInsets.symmetric(
-                    horizontal: SizeConfig.pageHorizontalMargins * 2),
+                  horizontal: SizeConfig.pageHorizontalMargins * 2,
+                ),
               ),
             ),
           ],
