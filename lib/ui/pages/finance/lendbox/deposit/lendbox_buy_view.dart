@@ -27,6 +27,7 @@ class LendboxBuyView extends StatefulWidget {
   final String floAssetType;
   final String? initialCouponCode;
   final String? entryPoint;
+  final bool quickCheckout;
 
   const LendboxBuyView({
     required this.onChanged,
@@ -36,6 +37,7 @@ class LendboxBuyView extends StatefulWidget {
     this.skipMl = false,
     this.initialCouponCode,
     this.entryPoint,
+    this.quickCheckout = false,
   });
 
   @override
@@ -121,6 +123,7 @@ class _LendboxBuyViewState extends State<LendboxBuyView>
                       assetTypeFlow: widget.floAssetType,
                       initialCouponCode: widget.initialCouponCode,
                       entryPoint: widget.entryPoint,
+                      quickCheckout: widget.quickCheckout,
                     ),
                     builder: (ctx, model, child) {
                       _secureScreenshots(lboxTxnService);

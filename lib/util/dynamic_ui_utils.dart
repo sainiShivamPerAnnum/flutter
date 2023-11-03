@@ -1,7 +1,7 @@
 import 'package:felloapp/core/model/page_config_model.dart';
 
 class DynamicUiUtils {
-  static List<dynamic> saveViewOrder = [
+  static List<List<String>> saveViewOrder = [
     ['AG', 'LB'],
     ['AS', 'CH', 'BL'],
     ['QL', 'CH', 'AST', 'QZ', 'NAS', 'BL']

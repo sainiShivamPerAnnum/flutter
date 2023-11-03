@@ -256,4 +256,6 @@ class ApiPath {
   static String lbMaturity(String? uid) => "/lb/fd/maturities?uid=$uid";
 
   static String get goldProConfig => "/gold_pro";
+
+  static String get getComponent => '/components';
 }
