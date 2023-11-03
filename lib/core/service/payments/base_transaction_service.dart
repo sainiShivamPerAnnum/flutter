@@ -8,7 +8,6 @@ import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
 import 'package:upi_pay/upi_pay.dart';
 
-/// An abstract class for rescheduling a task with retries.
 abstract class BaseTransactionService<T> extends Rescheduler<T>
     with ChangeNotifier {
   final ScratchCardService _gtService = locator<ScratchCardService>();
