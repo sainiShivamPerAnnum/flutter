@@ -116,22 +116,27 @@ class HeadAlerts extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Selector<UserService, UserBootUpDetailsModel?>(
-        builder: (ctx, bootUp, child) {
-          return ((bootUp?.data?.marqueeMessages ?? []).isNotEmpty)
-              ? Container(
-                  width: SizeConfig.screenWidth,
-                  height: SizeConfig.padding40,
-                  color: UiConstants.kGoldContainerColor,
-                  child: MarqueeText(
-                    infoList: bootUp?.data?.marqueeMessages ?? [],
-                    showBullet: true,
-                    bulletColor: Colors.white,
-                    textColor: Colors.white,
-                  ),
-                )
-              : const SizedBox();
-        },
-        selector: (ctx, userService) => userService.userBootUp);
+      selector: (ctx, userService) => userService.userBootUp,
+      builder: (ctx, bootUp, child) {
+        final data = bootUp?.data;
+
+        if (data == null || data.marqueeMessages.isEmpty) {
+          return const SizedBox.shrink();
+        }
+
+        return Container(
+          width: SizeConfig.screenWidth,
+          height: SizeConfig.padding40,
+          color: data.marqueeColor.toColor(),
+          child: MarqueeText(
+            infoList: data.marqueeMessages,
+            showBullet: true,
+            bulletColor: Colors.white,
+            textColor: Colors.white,
+          ),
+        );
+      },
+    );
   }
 }
 

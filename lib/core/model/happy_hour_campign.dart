@@ -8,15 +8,6 @@ class HappyHourCampign {
     message = json['message'];
     data = json['data'] != null ? new Data.fromJson(json['data']) : null;
   }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['message'] = this.message;
-    if (this.data != null) {
-      data['data'] = this.data!.toJson();
-    }
-    return data;
-  }
 }
 
 class Data {
@@ -28,6 +19,7 @@ class Data {
   String? endTime;
   String? ctaText;
   String? docketHeading;
+  String? bgColor;
   int? minAmount;
   List<Rewards>? rewards;
   int? maxApplicable;
@@ -46,6 +38,7 @@ class Data {
       this.minAmount,
       this.rewards,
       required this.happyHourType,
+      this.bgColor = '#495DB2',
       this.preBuzz,
       this.maxApplicable});
 
@@ -67,29 +60,12 @@ class Data {
     }
     preBuzz = PreBuzz.fromJson(json['prebuzz']);
     maxApplicable = json['maxApplicable'];
+    bgColor = json['bgColor'] ?? '#495DB2';
     final date = DateTime.now();
     final _startDate = DateTime.parse(startTime!);
     final _endTime = DateTime.parse(endTime!);
     showHappyHour = date.isAfter(_startDate) && date.isBefore(_endTime);
     getType(_startDate, _endTime);
-  }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['id'] = this.id;
-    data['title'] = this.title;
-    data['bottomSheetHeading'] = this.bottomSheetHeading;
-    data['bottomSheetSubHeading'] = this.bottomSheetSubHeading;
-    data['startTime'] = this.startTime;
-    data['endTime'] = this.endTime;
-    data['ctaText'] = this.ctaText;
-    data['docketHeading'] = this.docketHeading;
-    data['minAmount'] = this.minAmount;
-    if (this.rewards != null) {
-      data['rewards'] = this.rewards!.map((v) => v.toJson()).toList();
-    }
-    data['maxApplicable'] = this.maxApplicable;
-    return data;
   }
 
   void getType(DateTime startDate, DateTime endDate) {
@@ -103,8 +79,9 @@ class Data {
       } else {
         happyHourType = HappyHourType.notStarted;
       }
-    } else
+    } else {
       happyHourType = HappyHourType.expired;
+    }
   }
 }
 

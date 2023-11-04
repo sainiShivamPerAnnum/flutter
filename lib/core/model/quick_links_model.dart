@@ -3,17 +3,24 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 
+enum ImageType {
+  svg,
+  lottie,
+}
+
 class QuickLinksModel {
   String name;
   String asset;
   String deeplink;
   Color color;
+  ImageType imageType;
 
   QuickLinksModel({
     required this.name,
     required this.asset,
     required this.deeplink,
     required this.color,
+    this.imageType = ImageType.svg,
   });
 
   QuickLinksModel copyWith({

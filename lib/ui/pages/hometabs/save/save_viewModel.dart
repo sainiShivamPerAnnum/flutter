@@ -531,25 +531,29 @@ class QuickLinks extends StatelessWidget {
   Widget build(BuildContext context) {
     final List<QuickLinksModel> quickLinks = [
       QuickLinksModel(
-          name: "Fello Flo",
-          asset: Assets.floAsset,
-          deeplink: "floDetails",
-          color: UiConstants.kFloContainerColor),
+        name: "Fello Flo",
+        asset: Assets.floAsset,
+        deeplink: "floDetails",
+        color: UiConstants.kFloContainerColor,
+      ),
       QuickLinksModel(
-          name: "Digital Gold",
-          asset: Assets.goldAsset,
-          deeplink: "goldDetails",
-          color: UiConstants.goldSellCardColor),
+        name: "Digital Gold",
+        asset: Assets.goldAsset,
+        deeplink: "goldDetails",
+        color: UiConstants.goldSellCardColor,
+      ),
       QuickLinksModel(
-          name: "Refer",
-          asset: Assets.referralIcon,
-          deeplink: "referrals",
-          color: UiConstants.referralIconColor),
+        name: "Refer",
+        asset: Assets.referralIcon,
+        deeplink: "referrals",
+        color: UiConstants.referralIconColor,
+      ),
       QuickLinksModel(
-          name: "Tickets",
-          asset: Assets.singleTambolaTicket,
-          deeplink: "tambolaHome",
-          color: UiConstants.kGoldProBorder),
+        name: "Tickets",
+        asset: Assets.singleTambolaTicket,
+        deeplink: "tambolaHome",
+        color: UiConstants.kGoldProBorder,
+      ),
     ];
 
     return Column(
@@ -576,21 +580,7 @@ class QuickLinks extends StatelessWidget {
                   },
                   child: Column(
                     children: [
-                      CircleAvatar(
-                        backgroundColor: quickLinks[index].color,
-                        radius: SizeConfig.roundness32,
-                        child: SvgPicture.asset(
-                          quickLinks[index].asset,
-                          width: quickLinks[index].asset == Assets.goldAsset ||
-                                  quickLinks[index].asset == Assets.floAsset
-                              ? SizeConfig.padding56
-                              : SizeConfig.padding36,
-                          height: quickLinks[index].asset == Assets.goldAsset ||
-                                  quickLinks[index].asset == Assets.floAsset
-                              ? SizeConfig.padding56
-                              : SizeConfig.padding36,
-                        ),
-                      ),
+                      _QuickLinkAvatar(quickLinksModel: quickLinks[index]),
                       SizedBox(height: SizeConfig.padding8),
                       Text(
                         quickLinks[index].name,
@@ -606,6 +596,47 @@ class QuickLinks extends StatelessWidget {
         ),
         const FloPendingAction()
       ],
+    );
+  }
+}
+
+class _QuickLinkAvatar extends StatelessWidget {
+  const _QuickLinkAvatar({
+    required this.quickLinksModel,
+  });
+
+  final QuickLinksModel quickLinksModel;
+
+  @override
+  Widget build(BuildContext context) {
+    return CircleAvatar(
+      backgroundColor: quickLinksModel.color,
+      radius: SizeConfig.roundness32,
+      child: SizedBox(
+        width: quickLinksModel.asset == Assets.goldAsset ||
+                quickLinksModel.asset == Assets.floAsset
+            ? SizeConfig.padding56
+            : SizeConfig.padding36,
+        height: quickLinksModel.asset == Assets.goldAsset ||
+                quickLinksModel.asset == Assets.floAsset
+            ? SizeConfig.padding56
+            : SizeConfig.padding36,
+        child: Builder(
+          builder: (ctx) {
+            switch (quickLinksModel.imageType) {
+              case ImageType.svg:
+                return SvgPicture.asset(
+                  quickLinksModel.asset,
+                );
+
+              case ImageType.lottie:
+                return SvgPicture.asset(
+                  quickLinksModel.asset,
+                );
+            }
+          },
+        ),
+      ),
     );
   }
 }
