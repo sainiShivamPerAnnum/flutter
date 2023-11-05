@@ -15,6 +15,14 @@ mixin TransactionPredictionDefaultMixing
   /// The Paytm repository used to fetch transaction status.
   PaytmRepository get paytmRepo;
 
+  /// Default rescheduling limit.
+  ///
+  /// On an average a call of [PaytmRepository.getTransactionStatus] may take
+  /// around 25-30 secs so in general it will provide [run] to max run span of
+  /// 60 secs.
+  @override
+  int get rescheduleLimit => 2;
+
   /// Fetches the transaction information from [paytmRepo].
   @override
   Future<ApiResponse<TransactionResponseModel>> task() async {

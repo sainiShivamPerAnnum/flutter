@@ -57,7 +57,7 @@ abstract class Rescheduler<T> {
   int _retryCount = 0;
 
   /// The maximum number of times the task can be retried.
-  final int _rescheduleLimit = 2;
+  int get rescheduleLimit;
 
   /// The asynchronous task that will be executed and potentially rescheduled.
   Future<T> task();
@@ -78,7 +78,7 @@ abstract class Rescheduler<T> {
   /// continues to fail or if exceptions are thrown during execution, the
   /// retry count is incremented until it reaches the maximum retry limit.
   Future<void> run() async {
-    while (_retryCount < _rescheduleLimit) {
+    while (_retryCount < rescheduleLimit) {
       try {
         final result = await task();
         if (predicate(result)) {
