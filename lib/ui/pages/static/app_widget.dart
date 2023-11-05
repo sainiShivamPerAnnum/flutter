@@ -771,10 +771,6 @@ class AppImage extends StatelessWidget {
     this.color,
   });
 
-  /// Type of image from extension of the image.
-  ///
-  /// If image path contains .svg then it will resolve [_ImageType] to
-  ///  [_ImageType.svg] else to the [_ImageType.normal].
   _ImageType get _getImageType {
     _ImageType appImageType = _ImageType.normal;
     if (image.endsWith('.svg')) appImageType = _ImageType.svg;
