@@ -58,7 +58,7 @@ class APIService implements API {
     )
     ..httpClientAdapter = Http2Adapter(
       ConnectionManager(
-        idleTimeout: const Duration(seconds: 30),
+        idleTimeout: const Duration(seconds: 35),
       ),
     );
 

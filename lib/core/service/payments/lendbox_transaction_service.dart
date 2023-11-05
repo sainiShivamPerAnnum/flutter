@@ -47,12 +47,6 @@ class LendboxTransactionService
   FloPurchaseDetails? currentFloPurchaseDetails;
   String? floAssetType;
 
-  /// Holds the future object of [run] method which can be awaited later on when
-  /// it crosses maximum waiting duration.
-  Future<void>? _transactionFuture;
-
-  Future<void>? get transactionProcessFuture => _transactionFuture;
-
   Future<void> initiateWithdrawal(double txnAmount, String? txnId) async {
     currentTransactionState = TransactionState.success;
     await _txnHistoryService.updateTransactions(InvestmentType.LENDBOXP2P);
@@ -209,7 +203,7 @@ class LendboxTransactionService
 
         if (Platform.isAndroid) {
           currentTransactionState = TransactionState.ongoing;
-          _transactionFuture = run();
+          checkTransactionStatus();
         }
       } catch (e) {
         _logger.e("Intent payement exception $e");
@@ -217,7 +211,7 @@ class LendboxTransactionService
 
         if (Platform.isAndroid) {
           currentTransactionState = TransactionState.ongoing;
-          _transactionFuture = run();
+          checkTransactionStatus();
         }
       }
     } else {

@@ -62,7 +62,7 @@ class RazorpayService extends ChangeNotifier {
   void handlePaymentSuccess(PaymentSuccessResponse response) {
     locator<BackButtonActions>().isTransactionCancelled = false;
     _txnService!.currentTransactionState = TransactionState.ongoing;
-    unawaited(_txnService!.run());
+    _txnService!.checkTransactionStatus();
     cleanListeners();
     return;
   }

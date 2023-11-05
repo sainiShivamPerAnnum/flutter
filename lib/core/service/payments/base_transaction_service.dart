@@ -21,6 +21,10 @@ abstract class BaseTransactionService<T> extends Rescheduler<T>
     notifyListeners();
   }
 
+  /// Holds the future object of [run] method which can be awaited later on when
+  /// it crosses maximum waiting duration.
+  Future<void>? transactionFuture;
+
   List<ApplicationMeta> appMetaList = [];
   UpiApplication? upiApplication;
   String? selectedUpiApplicationName;
@@ -47,6 +51,10 @@ abstract class BaseTransactionService<T> extends Rescheduler<T>
       const Duration(milliseconds: 500),
       _gtService.showMultipleScratchCardsView,
     );
+  }
+
+  void checkTransactionStatus() {
+    transactionFuture = run();
   }
 }
 
@@ -82,7 +90,8 @@ abstract class Rescheduler<T> {
       try {
         final result = await task();
         if (predicate(result)) {
-          return onSuccess(result);
+          onSuccess(result);
+          return;
         } else {
           _retryCount++;
         }

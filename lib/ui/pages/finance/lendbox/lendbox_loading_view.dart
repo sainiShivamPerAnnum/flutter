@@ -83,7 +83,7 @@ class LendboxLoadingView extends StatelessWidget {
                 end: Duration.zero,
               ),
               onEnd: () async {
-                await _txnService.transactionProcessFuture;
+                await _txnService.transactionFuture;
                 if (_txnService.currentTransactionState !=
                     TransactionState.ongoing) return;
 

@@ -82,7 +82,7 @@ class GoldBuyLoadingView extends StatelessWidget {
                 end: Duration.zero,
               ),
               onEnd: () async {
-                await _augTxnService.transactionProcessFuture;
+                await _augTxnService.transactionFuture;
                 if (_augTxnService.currentTransactionState !=
                     TransactionState.ongoing) return;
                 _augTxnService.isGoldBuyInProgress = false;

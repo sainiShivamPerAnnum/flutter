@@ -49,7 +49,7 @@ class _LendboxWithdrawalViewState extends State<LendboxWithdrawalView>
     if (state == AppLifecycleState.resumed) {
       if (!_txnService.isIOSTxnInProgress) return;
       _txnService.isIOSTxnInProgress = false;
-      _txnService.run();
+      _txnService.checkTransactionStatus();
     }
   }
 
