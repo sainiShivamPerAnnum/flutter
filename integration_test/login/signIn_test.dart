@@ -10,6 +10,7 @@ import 'package:integration_test/integration_test.dart';
 import '../utils/test_constants.dart';
 import '../utils/test_integration_util.dart' as util;
 import '../utils/test_keys.dart';
+import '../utils/test_login_user.dart' as user;
 
 void main() {
   CustomLogger logger = CustomLogger();
@@ -28,24 +29,7 @@ void main() {
       S locale = S();
 
       try {
-        //Check for onboarding screens
-        // expect(find.text(locale.onboardingTitle1), findsOneWidget);
-        // expect(find.text(locale.onboardingSubTitle1), findsOneWidget);
-        // expect(TestKeys.onBoardingScreen, findsOneWidget);
-        await tester.tap(TestKeys.onBoardingScreen);
-        await tester.pumpAndSettle();
-
-        // expect(find.text(locale.onboardingTitle2), findsOneWidget);
-        // expect(find.text(locale.onboardingSubTitle2), findsOneWidget);
-        // expect(TestKeys.onBoardingScreen, findsOneWidget);
-        await tester.tap(TestKeys.onBoardingScreen);
-        await tester.pumpAndSettle();
-
-        // expect(TestKeys.onBoardingScreen, findsOneWidget);
-        // expect(find.text(locale.onboardingTitle3), findsOneWidget);
-        // expect(find.text(locale.onboardingSubTitle3), findsOneWidget);
-        await tester.tap(TestKeys.onBoardingScreen);
-        await tester.pumpAndSettle();
+        await user.onboardingScreen(tester);
         logger.d('Test case:- Onboarding screen validations - Passed');
         passCount++;
       } catch (e) {

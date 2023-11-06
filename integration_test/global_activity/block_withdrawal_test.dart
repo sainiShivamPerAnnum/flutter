@@ -2,8 +2,6 @@
 
 import 'package:felloapp/main_dev.dart' as app;
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
-import 'package:felloapp/ui/pages/root/root_view.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +10,7 @@ import 'package:integration_test/integration_test.dart';
 import '../utils/test_constants.dart';
 import '../utils/test_keys.dart';
 import '../utils/test_integration_util.dart' as util;
+import '../utils/test_login_user.dart' as user;
 
 void main() {
   CustomLogger logger = CustomLogger();
@@ -32,13 +31,7 @@ void main() {
           timeout: const Duration(seconds: 20));
 
       try {
-        await util.pumpUntilFound(tester, TestKeys.onBoardingScreen);
-        await tester.tap(TestKeys.onBoardingScreen);
-        await tester.pumpAndSettle();
-        await tester.tap(TestKeys.onBoardingScreen);
-        await tester.pumpAndSettle();
-        await tester.tap(TestKeys.onBoardingScreen);
-        await tester.pumpAndSettle();
+        await user.onboardingScreen(tester);
         logger.d('Test case:- Onboarding screen validations - Passed');
         passCount++;
       } catch (e) {
@@ -47,23 +40,8 @@ void main() {
       }
 
       try {
-        await util.pumpUntilFound(tester, TestKeys.mobileNoTextField);
-        await tester.tap(TestKeys.mobileNoTextField, warnIfMissed: false);
-        await util.pumpUntilFound(tester, TestKeys.mobileNoTextField);
-        await tester.enterText(
-            TestKeys.mobileNoTextField, TestConstants.bannedWithdrawalOnly);
-        await util.pumpUntilFound(tester, TestKeys.mobileNext);
-        await tester.tap(TestKeys.mobileNext);
-        await util.pumpUntilFound(tester, TestKeys.otpTextField);
-        await tester.tap(TestKeys.otpTextField, warnIfMissed: false);
-        await util.pumpUntilFound(tester, TestKeys.otpTextField);
-        await tester.enterText(
-            TestKeys.otpTextField, TestConstants.otpVerifyNumber);
-        await tester.pump(const Duration(seconds: 3));
-        await util.pumpUntilFound(tester, TestKeys.mobileNext);
-        await tester.tap(TestKeys.mobileNext);
-        await util.pumpUntilFound(tester, find.byType(Save));
-        await util.pumpUntilFound(tester, find.byType(Root));
+        await user.loginUser(tester, TestConstants.bannedWithdrawalOnly,
+            TestConstants.otpVerifyNumber);
         logger.d('Test case:- Mobile and OTP screen validations - Passed');
         passCount++;
       } catch (e) {
@@ -113,7 +91,6 @@ void main() {
 
         await tester.dragUntilVisible(TestKeys.floWithdraw,
             find.byType(SingleChildScrollView), const Offset(0, 400));
-
         await util.pumpUntilFound(tester, TestKeys.floWithdraw);
         await tester.tap(TestKeys.floWithdraw);
         await tester.pump(const Duration(seconds: 2));
@@ -121,6 +98,8 @@ void main() {
         await tester.tap(find.text(locale.sellingReasons1));
         await tester.pump(const Duration(seconds: 3));
         expect(tester.hasRunningAnimations, isTrue);
+        expect(TestKeys.floSaveButton,
+            findsNothing); //check for withdrawal screen accessibility
         await util.pumpUntilFound(tester, TestKeys.saveinFloButton);
 
         //back to portfolio screen
@@ -132,8 +111,6 @@ void main() {
         await AppState.backButtonDispatcher!.didPopRoute();
         await tester.pump(const Duration(seconds: 2));
         await util.pumpUntilFound(tester, TestKeys.profileAvatar);
-
-        logger.d('Milestone 7');
         logger.d('Test case:-Flo Withdrawal blocked for user - Passed');
         passCount++;
       } catch (e) {
@@ -159,8 +136,9 @@ void main() {
         await util.pumpUntilFound(tester, find.text(locale.sellingReasons1));
 
         await tester.tap(find.text(locale.sellingReasons1));
-        //await tester.tap(find.byKey(Key(locale.sellingReasons1)));
         expect(tester.hasRunningAnimations, isTrue);
+        expect(TestKeys.sellGoldButton,
+            findsNothing); //check for withdrawal screen accessibility
         await util.pumpUntilFound(tester, TestKeys.saveinGoldButton);
 
         //back to portfolio screen
@@ -172,41 +150,15 @@ void main() {
         await AppState.backButtonDispatcher!.didPopRoute();
         await tester.pump(const Duration(seconds: 2));
         await util.pumpUntilFound(tester, TestKeys.profileAvatar);
-        logger.d('Test case:-Gold Withdrawal blocked for user - Passed');
+        logger.d('Test case:- Gold Withdrawal blocked for user - Passed');
         passCount++;
       } catch (e) {
-        logger.e('Test case:-Gold Withdrawal blocked for user - Failed');
+        logger.e('Test case:- Gold Withdrawal blocked for user - Failed');
         failCount++;
       }
 
       try {
-        //Click on Profile Avatar on save section
-        await tester.pump(const Duration(seconds: 3));
-        await Future.delayed(const Duration(seconds: 5));
-        await tester.tap(TestKeys.profileAvatar);
-        await util.pumpUntilFound(tester, TestKeys.profile);
-
-        //Click on profile section
-        await tester.tap(TestKeys.profile);
-        await tester.pumpAndSettle();
-        await tester.dragUntilVisible(TestKeys.signOut,
-            find.byType(SingleChildScrollView), const Offset(0, 400));
-        logger.d(
-            'Test case:- User landed on profile section successfully - Passed');
-        passCount++;
-      } catch (e) {
-        logger.e(
-            'Test case:- User landed on profile section successfully - Failed');
-        failCount++;
-      }
-
-      try {
-        //User Signout confirmation screen - Signout
-        await tester.pumpAndSettle();
-        await tester.tap(TestKeys.signOut);
-        await tester.pumpAndSettle();
-        await tester.tap(TestKeys.confirm);
-        await tester.pumpAndSettle();
+        await user.signout(tester);
         logger.d('Test case:- Signout successful check - Passed');
         passCount++;
       } catch (e) {

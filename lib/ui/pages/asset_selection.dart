@@ -313,7 +313,8 @@ class FloPlanWidget extends StatelessWidget {
           // SizedBox(height: SizeConfig.padding12),
           if (!isLendboxOldUser)
             FelloFloPrograms(
-                key: const ValueKey(Constants.ASSET_TYPE_FLO_FELXI),
+                key: const ValueKey('8%'),
+                //key: const ValueKey(Constants.ASSET_TYPE_FLO_FELXI),
                 percentage: '8%',
                 isRecommended: false,
                 chipString1:

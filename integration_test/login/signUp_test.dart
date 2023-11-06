@@ -10,6 +10,7 @@ import 'package:integration_test/integration_test.dart';
 import '../utils/test_constants.dart';
 import '../utils/test_integration_util.dart' as util;
 import '../utils/test_keys.dart';
+import '../utils/test_login_user.dart' as user;
 
 void main() {
   CustomLogger logger = CustomLogger();
@@ -30,12 +31,7 @@ void main() {
           timeout: const Duration(seconds: 20));
 
       try {
-        await tester.tap(TestKeys.onBoardingScreen);
-        await tester.pumpAndSettle();
-        await tester.tap(TestKeys.onBoardingScreen);
-        await tester.pumpAndSettle();
-        await tester.tap(TestKeys.onBoardingScreen);
-        await tester.pumpAndSettle();
+        await user.onboardingScreen(tester);
         logger.d('Test case:- Onboarding screen validations - Passed');
         passCount++;
       } catch (e) {
@@ -82,7 +78,8 @@ void main() {
         await tester.tap(TestKeys.otpTextField);
         await util.pumpUntilFound(tester, TestKeys.otpTextField);
         //await tester.pumpFrames(mainApp.MyApp(), Duration(seconds: 3));
-        await tester.enterText(TestKeys.otpTextField, TestConstants.otpVerifyNumber);
+        await tester.enterText(
+            TestKeys.otpTextField, TestConstants.otpVerifyNumber);
         await tester.pump(const Duration(seconds: 3));
         await util.pumpUntilFound(tester, TestKeys.mobileNext);
         await tester.tap(TestKeys.mobileNext);
@@ -175,7 +172,8 @@ void main() {
         await tester.enterText(
             TestKeys.refferalCode, TestConstants.newUserSignUpNumber);
         await tester.pumpAndSettle();
-        expect(find.text(TestConstants.newUserSignUpNumber.trim().substring(0, 6)),
+        expect(
+            find.text(TestConstants.newUserSignUpNumber.trim().substring(0, 6)),
             findsOneWidget);
         logger.d('Test case:- Lengthy refferal code check - Passed');
         passCount++;
@@ -186,7 +184,8 @@ void main() {
 
       try {
         //Check for user sign with refferal code and empty username
-        if (TestConstants.newUserSignUpNumber.trim().substring(0, 6).length >= 6) {
+        if (TestConstants.newUserSignUpNumber.trim().substring(0, 6).length >=
+            6) {
           await tester.tap(TestKeys.userNameTab);
           await tester.pumpAndSettle();
           await tester.enterText(TestKeys.userNameTab, "");
@@ -259,8 +258,8 @@ void main() {
         await util.pumpUntilFound(tester, TestKeys.dailyAppBonus);
         await tester.pump(const Duration(seconds: 3));
         await tester.tap(TestKeys.dailyAppBonus);
-        await util.pumpUntilFound(tester, TestKeys.GTBackButton);
-        await tester.tap(TestKeys.GTBackButton);
+        await util.pumpUntilFound(tester, TestKeys.gtBackButton);
+        await tester.tap(TestKeys.gtBackButton);
         await tester.pumpAndSettle();
         await tester.tap(TestKeys.dailyAppBonus);
         logger.d('Test case:- Daily app bonus received for new user - Passed');
@@ -271,33 +270,7 @@ void main() {
       }
 
       try {
-        //Click on Profile Avatar on save section
-        await tester.pump(const Duration(seconds: 3));
-        await Future.delayed(const Duration(seconds: 5));
-        await tester.tap(TestKeys.profileAvatar);
-        await util.pumpUntilFound(tester, TestKeys.profile);
-
-        //Click on profile section
-        await tester.tap(TestKeys.profile);
-        await tester.pumpAndSettle();
-        await tester.dragUntilVisible(TestKeys.signOut,
-            find.byType(SingleChildScrollView), const Offset(0, 400));
-        logger.d(
-            'Test case:- User landed on profile section successfully - Passed');
-        passCount++;
-      } catch (e) {
-        logger.e(
-            'Test case:- User landed on profile section successfully - Failed');
-        failCount++;
-      }
-
-      try {
-        //User Signout confirmation screen - Signout
-        await tester.pumpAndSettle();
-        await tester.tap(TestKeys.signOut);
-        await tester.pumpAndSettle();
-        await tester.tap(TestKeys.confirm);
-        await tester.pumpAndSettle();
+        await user.signout(tester);
         logger.d('Test case:- Signout successful check - Passed');
         passCount++;
       } catch (e) {

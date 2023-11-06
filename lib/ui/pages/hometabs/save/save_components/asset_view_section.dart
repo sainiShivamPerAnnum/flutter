@@ -620,6 +620,7 @@ class AssetBottomButtons extends StatelessWidget {
                   child: Stack(
                     children: [
                       MaterialButton(
+                        key: const ValueKey('saveinGoldProButton'),
                         minWidth: SizeConfig.padding156,
                         color: Colors.white,
                         height: SizeConfig.padding44,

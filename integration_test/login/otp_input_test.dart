@@ -8,6 +8,7 @@ import 'package:integration_test/integration_test.dart';
 import '../utils/test_constants.dart';
 import '../utils/test_integration_util.dart' as util;
 import '../utils/test_keys.dart';
+import '../utils/test_login_user.dart' as user;
 
 void main() {
   CustomLogger logger = CustomLogger();
@@ -24,12 +25,7 @@ void main() {
       await tester.pumpAndSettle(const Duration(seconds: 5));
       S locale = S();
 
-      await tester.tap(TestKeys.onBoardingScreen);
-      await tester.pumpAndSettle();
-      await tester.tap(TestKeys.onBoardingScreen);
-      await tester.pumpAndSettle();
-      await tester.tap(TestKeys.onBoardingScreen);
-      await tester.pumpAndSettle();
+      await user.onboardingScreen(tester);
 
       //Check valid mobile number
       await tester.tap(TestKeys.mobileNoTextField);
@@ -83,8 +79,8 @@ void main() {
       try {
         //Checks error response for invalid length otp
         await tester.tap(TestKeys.otpTextField);
-        await tester.enterText(
-            TestKeys.otpTextField, TestConstants.otpVerifyNumber.substring(0, 5));
+        await tester.enterText(TestKeys.otpTextField,
+            TestConstants.otpVerifyNumber.substring(0, 5));
         await tester.tap(TestKeys.mobileNext);
         expect(tester.hasRunningAnimations, isTrue);
         await tester.pumpAndSettle();

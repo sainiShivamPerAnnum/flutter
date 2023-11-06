@@ -138,6 +138,7 @@ class _AmountInputViewState extends State<AmountInputView> {
                     curve: Curves.easeIn,
                     width: widget.model.fieldWidth,
                     child: TextFormField(
+                      key: const ValueKey('floAmountInput'),
                       autofocus: true,
                       showCursor: true,
                       readOnly: widget.readOnly,

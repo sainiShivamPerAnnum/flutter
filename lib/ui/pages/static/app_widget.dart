@@ -394,6 +394,7 @@ class AppPositiveBtn extends StatelessWidget {
             ),
           ),
           child: MaterialButton(
+            key: const ValueKey('floSaveButton'),
             // padding: EdgeInsets.zero,
             onPressed: onPressed,
             child: child ??
@@ -1154,7 +1155,6 @@ class GradientBoxBorder extends BoxBorder {
   }
 }
 
-
 class CustomSwitch extends StatefulWidget {
   final bool initialValue;
   final ValueChanged<bool> onChanged;
@@ -1354,9 +1354,7 @@ class _ThumbPainter extends CustomPainter {
   bool shouldRepaint(covariant _ThumbPainter oldDelegate) =>
       oldDelegate.thumbColor != thumbColor ||
       oldDelegate.circleSize != circleSize;
-
 }
-
 
 class BaseScaffold extends StatelessWidget {
   const BaseScaffold({

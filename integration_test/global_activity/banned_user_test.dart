@@ -1,9 +1,6 @@
 // ignore_for_file: directives_ordering
 
 import 'package:felloapp/main_dev.dart' as app;
-import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
-import 'package:felloapp/ui/pages/root/root_view.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:flutter/material.dart';
@@ -12,6 +9,7 @@ import 'package:integration_test/integration_test.dart';
 import '../utils/test_constants.dart';
 import '../utils/test_keys.dart';
 import '../utils/test_integration_util.dart' as util;
+import '../utils/test_login_user.dart' as user;
 
 void main() {
   CustomLogger logger = CustomLogger();
@@ -32,12 +30,7 @@ void main() {
           timeout: const Duration(seconds: 20));
 
       try {
-        await tester.tap(TestKeys.onBoardingScreen);
-        await tester.pumpAndSettle();
-        await tester.tap(TestKeys.onBoardingScreen);
-        await tester.pumpAndSettle();
-        await tester.tap(TestKeys.onBoardingScreen);
-        await tester.pumpAndSettle();
+        await user.onboardingScreen(tester);
         logger.d('Test case:- Onboarding screen validations - Passed');
         passCount++;
       } catch (e) {
@@ -46,23 +39,9 @@ void main() {
       }
 
       try {
-        await util.pumpUntilFound(tester, TestKeys.mobileNoTextField);
-        await tester.tap(TestKeys.mobileNoTextField, warnIfMissed: false);
-        await util.pumpUntilFound(tester, TestKeys.mobileNoTextField);
-        await tester.enterText(
-            TestKeys.mobileNoTextField, TestConstants.bannedDepositWithdrawal);
-        await util.pumpUntilFound(tester, TestKeys.mobileNext);
-        await tester.tap(TestKeys.mobileNext);
-        await util.pumpUntilFound(tester, TestKeys.otpTextField);
-        await tester.tap(TestKeys.otpTextField, warnIfMissed: false);
-        await util.pumpUntilFound(tester, TestKeys.otpTextField);
-        await tester.enterText(
-            TestKeys.otpTextField, TestConstants.otpVerifyNumber);
-        await tester.pump(const Duration(seconds: 3));
-        await util.pumpUntilFound(tester, TestKeys.mobileNext);
-        await tester.tap(TestKeys.mobileNext);
-        await util.pumpUntilFound(tester, find.byType(Save));
-        await util.pumpUntilFound(tester, find.byType(Root));
+        await user.loginUser(
+            tester, TestConstants.blockedUser, TestConstants.otpVerifyNumber);
+
         logger.d('Test case:- Mobile and OTP screen validations - Passed');
         passCount++;
       } catch (e) {
@@ -77,6 +56,8 @@ void main() {
         expect(find.text(locale.obBlockedTitle), findsOneWidget);
         await tester.pump(const Duration(seconds: 2));
         expect(TestKeys.blockedScreenTermsAndConditions, findsOneWidget);
+        await tester.pump(const Duration(seconds: 2));
+        expect(TestKeys.portfolioCard, findsNothing);
         await tester.pump(const Duration(seconds: 2));
 
         //Need to check this
