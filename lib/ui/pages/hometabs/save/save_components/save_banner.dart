@@ -5,8 +5,7 @@ import 'package:felloapp/core/service/notifier_services/marketing_event_handler_
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/styles/size_config.dart';
-import 'package:felloapp/util/styles/textStyles.dart';
+import 'package:felloapp/util/styles/styles.dart';
 import 'package:felloapp/util/timer_utill.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -69,7 +68,7 @@ class _HappyHourBannerState extends TimerUtil<HappyHourBanner> {
         child: Container(
           height: double.infinity,
           alignment: Alignment.centerLeft,
-          color: Color(0xff495DB2),
+          color: widget.model.data!.bgColor!.toColor(),
           padding: EdgeInsets.symmetric(horizontal: 14),
           child: Row(
             children: [
