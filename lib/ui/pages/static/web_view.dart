@@ -6,8 +6,13 @@ import 'package:webview_flutter/webview_flutter.dart';
 class WebViewScreen extends StatefulWidget {
   final String url;
   final String? title;
+  final ValueChanged<UrlChange>? onUrlChange;
 
-  WebViewScreen({required this.url, this.title});
+  WebViewScreen({
+    required this.url,
+    this.onUrlChange,
+    this.title,
+  });
 
   @override
   State<WebViewScreen> createState() => _WebViewScreenState();
@@ -43,6 +48,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
           onPageStarted: (_) => viewLoader = true,
           onPageFinished: (_) => viewLoader = false,
           onWebResourceError: (WebResourceError error) {},
+          onUrlChange: widget.onUrlChange,
         ),
       )
       ..loadRequest(Uri.parse(widget.url));
