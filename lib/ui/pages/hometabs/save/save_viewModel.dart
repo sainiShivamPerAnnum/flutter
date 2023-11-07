@@ -3,8 +3,10 @@ import 'dart:math' as math;
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/blog_model.dart';
 import 'package:felloapp/core/model/event_model.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
@@ -37,6 +39,7 @@ import 'package:felloapp/ui/pages/hometabs/save/save_components/campaings.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/save_welcome_card.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
 import 'package:felloapp/ui/pages/power_play/root_card.dart';
+import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/save_assets_footer.dart';
 import 'package:felloapp/ui/service_elements/auto_save_card/subscription_card.dart';
 import 'package:felloapp/util/assets.dart';
@@ -46,7 +49,6 @@ import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../core/model/quick_links_model.dart';
@@ -529,28 +531,9 @@ class QuickLinks extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final List<QuickLinksModel> quickLinks = [
-      QuickLinksModel(
-          name: "Fello Flo",
-          asset: Assets.floAsset,
-          deeplink: "floDetails",
-          color: UiConstants.kFloContainerColor),
-      QuickLinksModel(
-          name: "Digital Gold",
-          asset: Assets.goldAsset,
-          deeplink: "goldDetails",
-          color: UiConstants.goldSellCardColor),
-      QuickLinksModel(
-          name: "Refer",
-          asset: Assets.referralIcon,
-          deeplink: "referrals",
-          color: UiConstants.referralIconColor),
-      QuickLinksModel(
-          name: "Tickets",
-          asset: Assets.singleTambolaTicket,
-          deeplink: "tambolaHome",
-          color: UiConstants.kGoldProBorder),
-    ];
+    final List<QuickLinksModel> quickLinks = QuickLinksModel.fromJsonList(
+      AppConfig.getValue(AppConfigKey.quickActions),
+    );
 
     return Column(
       mainAxisSize: MainAxisSize.min,
@@ -576,21 +559,7 @@ class QuickLinks extends StatelessWidget {
                   },
                   child: Column(
                     children: [
-                      CircleAvatar(
-                        backgroundColor: quickLinks[index].color,
-                        radius: SizeConfig.roundness32,
-                        child: SvgPicture.asset(
-                          quickLinks[index].asset,
-                          width: quickLinks[index].asset == Assets.goldAsset ||
-                                  quickLinks[index].asset == Assets.floAsset
-                              ? SizeConfig.padding56
-                              : SizeConfig.padding36,
-                          height: quickLinks[index].asset == Assets.goldAsset ||
-                                  quickLinks[index].asset == Assets.floAsset
-                              ? SizeConfig.padding56
-                              : SizeConfig.padding36,
-                        ),
-                      ),
+                      _QuickLinkAvatar(quickLinksModel: quickLinks[index]),
                       SizedBox(height: SizeConfig.padding8),
                       Text(
                         quickLinks[index].name,
@@ -606,6 +575,35 @@ class QuickLinks extends StatelessWidget {
         ),
         const FloPendingAction()
       ],
+    );
+  }
+}
+
+class _QuickLinkAvatar extends StatelessWidget {
+  const _QuickLinkAvatar({
+    required this.quickLinksModel,
+  });
+
+  final QuickLinksModel quickLinksModel;
+
+  @override
+  Widget build(BuildContext context) {
+    return CircleAvatar(
+      backgroundColor: quickLinksModel.color,
+      radius: SizeConfig.roundness32,
+      child: SizedBox(
+        width: quickLinksModel.asset == Assets.goldAsset ||
+                quickLinksModel.asset == Assets.floAsset
+            ? SizeConfig.padding56
+            : SizeConfig.padding36,
+        height: quickLinksModel.asset == Assets.goldAsset ||
+                quickLinksModel.asset == Assets.floAsset
+            ? SizeConfig.padding56
+            : SizeConfig.padding36,
+        child: AppImage(
+          quickLinksModel.asset,
+        ),
+      ),
     );
   }
 }

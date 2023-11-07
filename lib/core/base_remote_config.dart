@@ -1,5 +1,6 @@
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/flavor_config.dart';
@@ -263,6 +264,35 @@ class BaseRemoteConfig {
     "goldProInvestmentChips": [5.0, 10.0, 15.0, 20.0, 25.0]
   };
 
+  static const Map<String, List<Map<String, Object?>>> _QUICK_ACTIONS = {
+    'quickActions': [
+      {
+        'name': 'Fello Flo',
+        'img': Assets.floAsset,
+        'deeplink': 'floDetails',
+        'color': '#023C40',
+      },
+      {
+        'name': 'Digital Gold',
+        'img': Assets.goldAsset,
+        'deeplink': 'goldDetails',
+        'color': '#1F2C65',
+      },
+      {
+        'name': 'Refer',
+        'img': Assets.referralIcon,
+        'deeplink': 'referrals',
+        'color': '#6052A9',
+      },
+      {
+        'name': 'Tickets',
+        'img': Assets.singleTambolaTicket,
+        'deeplink': 'tambolaHome',
+        'color': '#80FFD979',
+      },
+    ],
+  };
+
   static Map<String, dynamic> DEFAULTS = {
     ..._LOGIN_ASSET_URL,
     ..._DRAW_PICK_TIME,
@@ -338,7 +368,8 @@ class BaseRemoteConfig {
     ..._SPECIAL_EFFECTS_ON_TXN_DETAILS_VIEW,
     ..._TICKETS_YOUTUBE_VIDEOS,
     ..._GOLD_PRO_INTEREST,
-    ..._GOLDPRO_INVESTMENT_CHIPS
+    ..._GOLDPRO_INVESTMENT_CHIPS,
+    ..._QUICK_ACTIONS,
   };
 
   static Future<bool> init() async {

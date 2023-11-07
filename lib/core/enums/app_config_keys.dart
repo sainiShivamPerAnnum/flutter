@@ -37,11 +37,14 @@ enum AppConfigKey {
   ticketsCategories,
   goldProInterest,
   goldProInvestmentChips,
+  quickActions,
 }
 
 extension AppConfigKeys on String {
   AppConfigKey get appConfigKeyFromName {
     switch (this) {
+      case 'quickActions':
+        return AppConfigKey.quickActions;
       case 'loginAssetUrl':
         return AppConfigKey.loginAssetUrl;
       case 'invalidateBefore':
