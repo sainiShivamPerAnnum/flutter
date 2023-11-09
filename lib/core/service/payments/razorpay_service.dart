@@ -61,22 +61,10 @@ class RazorpayService extends ChangeNotifier {
 
   void handlePaymentSuccess(PaymentSuccessResponse response) {
     locator<BackButtonActions>().isTransactionCancelled = false;
-    // String paymentId = response.paymentId!;
-    // String checkoutOrderId = response.orderId!;
-    // String paySignature = response.signature!;
     _txnService!.currentTransactionState = TransactionState.ongoing;
-    unawaited(_txnService!.initiatePolling());
-    // log.debug(
-    //     "SUCCESS: " + paymentId + " " + checkoutOrderId + " " + paySignature);
-    // _currentTxn?.rzp![UserTransaction.subFldRzpPaymentId] = paymentId;
-    // if (_currentTxn!.rzp![UserTransaction.subFldRzpOrderId] !=
-    //     checkoutOrderId) {
-    //   _currentTxn!.rzp![UserTransaction.subFldRzpStatus] =
-    //       UserTransaction.RZP_TRAN_STATUS_COMPLETE;
-    //   if (_txnUpdateListener != null) _txnUpdateListener!(_currentTxn);
+    _txnService!.checkTransactionStatus();
     cleanListeners();
     return;
-    // }
   }
 
   void handlePaymentError(PaymentFailureResponse response) {
@@ -125,7 +113,7 @@ class RazorpayService extends ChangeNotifier {
     String? couponCode,
     Map<String, dynamic>? goldProMap,
   }) async {
-    if (!init(investmentType)) return null; //initialise razorpay
+    init(investmentType);
     final mid = AppConfig.getValue(AppConfigKey.rzpMid);
     final ApiResponse<CreatePaytmTransactionModel> txnResponse =
         await _paytmRepo!.createTransaction(amount, augMap, lbMap, couponCode,

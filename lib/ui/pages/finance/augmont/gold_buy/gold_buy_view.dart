@@ -45,7 +45,7 @@ class _GoldBuyViewState extends State<GoldBuyView>
     with WidgetsBindingObserver, SingleTickerProviderStateMixin {
   final AugmontTransactionService _txnService =
       locator<AugmontTransactionService>();
-  AppLifecycleState? appLifecycleState;
+
   final iosScreenShotChannel = const MethodChannel('secureScreenshotChannel');
 
   @override
@@ -74,15 +74,14 @@ class _GoldBuyViewState extends State<GoldBuyView>
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    appLifecycleState = state;
-    if (appLifecycleState == AppLifecycleState.resumed &&
+    super.didChangeAppLifecycleState(state);
+    if (state == AppLifecycleState.resumed &&
         Platform.isIOS &&
         _txnService.isIOSTxnInProgress) {
       _txnService.isIOSTxnInProgress = false;
       _txnService.currentTransactionState = TransactionState.ongoing;
-      _txnService.initiatePolling();
+      _txnService.checkTransactionStatus();
     }
-    super.didChangeAppLifecycleState(state);
   }
 
   @override

@@ -80,11 +80,9 @@ class GoldProBuyPendingView extends StatelessWidget {
                 end: Duration.zero,
               ),
               onEnd: () async {
-                // await txnService
-                //     .processPolling(txnService.pollingPeriodicTimer);
+                await txnService.transactionFuture;
                 if (txnService.currentTransactionState !=
                     TransactionState.ongoing) return;
-                txnService.pollingPeriodicTimer?.cancel();
                 txnService.isGoldBuyInProgress = false;
                 txnService.currentTransactionState = TransactionState.idle;
                 unawaited(

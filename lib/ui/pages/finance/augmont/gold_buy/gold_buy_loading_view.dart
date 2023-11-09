@@ -25,11 +25,11 @@ class GoldBuyLoadingView extends StatelessWidget {
 
   final AugmontTransactionService _augTxnService =
       locator<AugmontTransactionService>();
-  final int waitTimeInSec = 45;
+  final int waitTimeInSec = 60;
 
   @override
   Widget build(BuildContext context) {
-    S locale = locator<S>();
+    final locale = locator<S>();
     return Column(
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
@@ -82,13 +82,11 @@ class GoldBuyLoadingView extends StatelessWidget {
                 end: Duration.zero,
               ),
               onEnd: () async {
-                await _augTxnService!
-                    .processPolling(_augTxnService!.pollingPeriodicTimer);
-                if (_augTxnService!.currentTransactionState !=
+                await _augTxnService.transactionFuture;
+                if (_augTxnService.currentTransactionState !=
                     TransactionState.ongoing) return;
-                _augTxnService!.pollingPeriodicTimer?.cancel();
-                _augTxnService!.isGoldBuyInProgress = false;
-                _augTxnService!.currentTransactionState = TransactionState.idle;
+                _augTxnService.isGoldBuyInProgress = false;
+                _augTxnService.currentTransactionState = TransactionState.idle;
                 locator<BackButtonActions>().isTransactionCancelled = false;
                 AppState.onTap = null;
                 AppState.amt = 0;
