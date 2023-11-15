@@ -22,13 +22,13 @@ class InstantSaveCardResponse {
 
 @_deserializable
 class InstantSaveCardConfig {
-  final ImageConfig? leftImg;
-  final ImageConfig? rightImg;
+  final ImageConfig? background;
+  final ImageConfig? foreground;
   final num aspectRatio;
 
   const InstantSaveCardConfig({
-    this.leftImg,
-    this.rightImg,
+    this.background,
+    this.foreground,
     this.aspectRatio = 2.7,
   });
 

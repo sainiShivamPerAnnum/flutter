@@ -3,7 +3,7 @@ library ui_config_models;
 export 'instant_save_card.dart';
 
 enum ComponentType {
-  instantSave('instant_save');
+  instantSave('INST_SAVE');
 
   const ComponentType(this.value);
   final String value;

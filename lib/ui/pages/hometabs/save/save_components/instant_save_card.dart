@@ -46,8 +46,8 @@ class _InstantSaveCardState extends State<InstantSaveCard> {
 
   @override
   Widget build(BuildContext context) {
-    final backgroundImage = config?.leftImg;
-    final foregroundImage = config?.rightImg;
+    final backgroundImage = config?.background;
+    final foregroundImage = config?.foreground;
 
     if (isLoading) {
       return Shimmer.fromColors(
