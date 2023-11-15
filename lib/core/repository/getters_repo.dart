@@ -483,11 +483,9 @@ class GetterRepository extends BaseRepo {
       getInstantSaveCardConfig() async {
     try {
       final response = await APIService.instance.getData<Map<String, dynamic>>(
-        ApiPath.getComponent,
+        ApiPath.getComponent(ComponentType.instantSave),
         apiName: '$_getters/component',
-        queryParams: {
-          'type': ComponentType.instantSave.value,
-        },
+        cBaseUrl: _baseUrl,
       );
 
       final cardResponse = InstantSaveCardResponse.fromJson(

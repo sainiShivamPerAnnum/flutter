@@ -17,12 +17,12 @@ InstantSaveCardResponse _$InstantSaveCardResponseFromJson(
 InstantSaveCardConfig _$InstantSaveCardConfigFromJson(
         Map<String, dynamic> json) =>
     InstantSaveCardConfig(
-      leftImg: json['leftImg'] == null
+      background: json['background'] == null
           ? null
-          : ImageConfig.fromJson(json['leftImg'] as Map<String, dynamic>),
-      rightImg: json['rightImg'] == null
+          : ImageConfig.fromJson(json['background'] as Map<String, dynamic>),
+      foreground: json['foreground'] == null
           ? null
-          : ImageConfig.fromJson(json['rightImg'] as Map<String, dynamic>),
+          : ImageConfig.fromJson(json['foreground'] as Map<String, dynamic>),
       aspectRatio: json['aspectRatio'] as num? ?? 2.7,
     );
 

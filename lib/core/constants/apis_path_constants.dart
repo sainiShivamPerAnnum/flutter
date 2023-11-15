@@ -1,3 +1,4 @@
+import 'package:felloapp/core/model/ui_config_models/ui_config_models.dart';
 import 'package:felloapp/util/flavor_config.dart';
 
 class ApiPath {
@@ -257,5 +258,6 @@ class ApiPath {
 
   static String get goldProConfig => "/gold_pro";
 
-  static String get getComponent => '/components';
+  static String getComponent(ComponentType componentType) =>
+      '/component/${componentType.value}';
 }
