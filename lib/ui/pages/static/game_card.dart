@@ -8,12 +8,11 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lottie/lottie.dart';
-import 'dart:math' as math;
 
 class GameCard extends StatelessWidget {
   final GameModel? gameData;
   final int? index;
-  GameCard({this.gameData, this.index});
+  const GameCard({this.gameData, this.index});
 
   @override
   Widget build(BuildContext context) {
@@ -36,7 +35,7 @@ class GameCard extends StatelessWidget {
               boxShadow: [
                 BoxShadow(
                     color: Colors.black.withOpacity(0.06),
-                    offset: Offset(0, 0),
+                    offset: const Offset(0, 0),
                     spreadRadius: SizeConfig.padding2,
                     blurRadius: SizeConfig.padding2)
               ],
@@ -50,7 +49,8 @@ class GameCard extends StatelessWidget {
                 image: DecorationImage(
                     image: (gameData!.thumbnailUri!.split('.').last == "jpg"
                         ? AssetImage(gameData!.thumbnailUri!)
-                        : CachedNetworkImageProvider(gameData!.thumbnailUri!)) as ImageProvider<Object>,
+                        : CachedNetworkImageProvider(
+                            gameData!.thumbnailUri!)) as ImageProvider<Object>,
                     fit: BoxFit.cover),
               ),
             ),
@@ -68,7 +68,10 @@ class GameCard extends StatelessWidget {
                 children: [
                   Row(
                     children: [
-                      Text(locale.win+": ₹ "+"${gameData!.prizeAmount ?? 0}  ",
+                      Text(
+                          locale.win +
+                              ": ₹ " +
+                              "${gameData!.prizeAmount ?? 0}  ",
                           style: TextStyles.body1.bold),
                       CircleAvatar(
                         radius: SizeConfig.screenWidth! * 0.029,
@@ -84,7 +87,7 @@ class GameCard extends StatelessWidget {
                   Row(
                     children: [
                       Text(
-                        locale.entry+":"+"${gameData!.playCost ?? 0} ",
+                        locale.entry + ":" + "${gameData!.playCost ?? 0} ",
                         style: TextStyles.body3.colour(Colors.black),
                       ),
                       CircleAvatar(
@@ -116,7 +119,7 @@ class NoRecordDisplayWidget extends StatelessWidget {
   final bool topPadding;
   final bool bottomPadding;
 
-  NoRecordDisplayWidget({
+  const NoRecordDisplayWidget({
     this.asset,
     this.text,
     this.assetSvg,

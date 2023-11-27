@@ -17,10 +17,10 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 class ContactListWidget extends StatefulWidget {
   const ContactListWidget(
-      {super.key,
-      required this.contacts,
+      {required this.contacts,
       required this.scrollController,
-      required this.onStateChanged});
+      required this.onStateChanged,
+      super.key});
 
   final List<Contact> contacts;
   final ScrollController scrollController;
@@ -37,7 +37,6 @@ class _ContactListWidgetState extends State<ContactListWidget> {
 
   final int _displayLimit = 30; // Number of contacts to display at a time
   int _displayedContactsCount = 30; // Number of contacts currently displayed
-  bool _isLoading = false; // Whether more contacts are being loaded
 
   void searchContacts(String query) {
     log('searchContacts: $query', name: 'ReferralDetailsScreen');
@@ -313,7 +312,7 @@ class _ContactListWidgetState extends State<ContactListWidget> {
 }
 
 class _SearchBar extends StatelessWidget {
-  const _SearchBar({super.key, required this.controller, this.onChanged});
+  const _SearchBar({required this.controller, this.onChanged});
 
   final TextEditingController controller;
   final Function(String)? onChanged;

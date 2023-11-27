@@ -137,28 +137,28 @@ class _MyAppState extends State<MyApp> {
               Text('Running on: $_deepLinkUrl\n'),
               TextButton(
                   onPressed: () async => await logViewContent(),
-                  child: Text("Trigger View Content")),
+                  child: const Text("Trigger View Content")),
               TextButton(
                   onPressed: () async => await logActivateApp(),
-                  child: Text("Trigger Activate App")),
+                  child: const Text("Trigger Activate App")),
               TextButton(
                   onPressed: () async => await logAddToCart(),
-                  child: Text("Trigger Add to cart")),
+                  child: const Text("Trigger Add to cart")),
               TextButton(
                   onPressed: () async => await logAddToWishlist(),
-                  child: Text("Trigger Add to Wishlist")),
+                  child: const Text("Trigger Add to Wishlist")),
               TextButton(
                   onPressed: () async => await logCompleteRegistration(),
-                  child: Text("Trigger Complete Registration")),
+                  child: const Text("Trigger Complete Registration")),
               TextButton(
                   onPressed: () async => await logPurchase(),
-                  child: Text("Trigger Purchase")),
+                  child: const Text("Trigger Purchase")),
               TextButton(
                   onPressed: () async => await logSearch(),
-                  child: Text("Trigger Search")),
+                  child: const Text("Trigger Search")),
               TextButton(
                   onPressed: () async => await logInitiateCheckout(),
-                  child: Text("Trigger Initiate Checkout")),
+                  child: const Text("Trigger Initiate Checkout")),
               TextButton(
                   onPressed: () async => await logEvent(
                         eventName: "button_clicked",
@@ -166,7 +166,7 @@ class _MyAppState extends State<MyApp> {
                           'button_id': 'the_clickme_button',
                         },
                       ),
-                  child: Text("Trigger Button Clicked")),
+                  child: const Text("Trigger Button Clicked")),
               TextButton(
                   onPressed: () async => await logEvent(
                         eventName: "fb_mobile_add_payment_info",
@@ -175,13 +175,13 @@ class _MyAppState extends State<MyApp> {
                           'SUCCESS': "true",
                         },
                       ),
-                  child: Text("Trigger Payment Info Click")),
+                  child: const Text("Trigger Payment Info Click")),
               Platform.isIOS
                   ? TextButton(
                       onPressed: () async => await setAdvertiserTracking(),
                       child: isAdvertisingTrackingEnabled
-                          ? Text("Disable Advertiser Tracking")
-                          : Text("Enable Advertiser Tracking"))
+                          ? const Text("Disable Advertiser Tracking")
+                          : const Text("Enable Advertiser Tracking"))
                   : Container(),
             ],
           ),

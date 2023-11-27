@@ -15,7 +15,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class FloCouponModalSheet extends StatelessWidget {
-  FloCouponModalSheet({Key? key, required this.model}) : super(key: key);
+  FloCouponModalSheet({required this.model, Key? key}) : super(key: key);
   final LendboxBuyViewModel? model;
   final TextEditingController couponCodeController = TextEditingController();
   final _formKey = GlobalKey<FormState>();

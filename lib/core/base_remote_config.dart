@@ -360,13 +360,13 @@ class BaseRemoteConfig {
     } catch (exception) {
       print(
           'Unable to fetch remote config. Cached or default values will be used');
-      if (_userService?.baseUser?.uid != null) {
+      if (_userService.baseUser?.uid != null) {
         Map<String, dynamic> errorDetails = {
           'error_type': 'Remote config details fetch failed',
           'error_msg': 'Remote config fetch failed, using default values.'
         };
-        _internalOpsService!.logFailure(
-          _userService!.baseUser!.uid,
+        _internalOpsService.logFailure(
+          _userService.baseUser!.uid,
           FailType.RemoteConfigFailed,
           errorDetails,
         );

@@ -7,7 +7,7 @@ class WebViewScreen extends StatefulWidget {
   final String url;
   final String? title;
 
-  WebViewScreen({required this.url, this.title});
+  const WebViewScreen({required this.url, this.title});
 
   @override
   State<WebViewScreen> createState() => _WebViewScreenState();
@@ -20,7 +20,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
 
   set viewLoader(value) {
     if (mounted) {
-      WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
         _viewLoader = value;
         setState(() {});
       });

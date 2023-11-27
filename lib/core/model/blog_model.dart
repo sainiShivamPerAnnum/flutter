@@ -39,7 +39,7 @@ class BlogPostModel {
         slug: json["slug"] ?? '',
         title: Title.fromMap(json["title"]),
         acf: Acf.fromMap(json["acf"]),
-        yoastHeadJson: getImageFromMap(json["yoast_head_json"]) ,
+        yoastHeadJson: getImageFromMap(json["yoast_head_json"]),
       );
 
   static String getImageFromMap(Map<String, dynamic> yoastHeadJson) {

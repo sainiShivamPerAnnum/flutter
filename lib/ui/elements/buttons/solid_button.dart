@@ -4,10 +4,10 @@ import 'package:flutter/material.dart';
 
 class SolidButton extends StatelessWidget {
   const SolidButton(
-      {super.key,
-      required this.onPress,
-      this.child,
+      {required this.onPress,
       required this.title,
+      super.key,
+      this.child,
       this.height,
       this.width,
       this.borderRadius,

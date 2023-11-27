@@ -167,10 +167,7 @@ class AutoSaveSurvey extends HookWidget {
 
 class _OptionContainer extends StatelessWidget {
   const _OptionContainer(
-      {super.key,
-      required this.title,
-      required this.isSelected,
-      required this.onTap});
+      {required this.title, required this.isSelected, required this.onTap});
 
   final String title;
   final bool isSelected;

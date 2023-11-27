@@ -20,9 +20,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 class InviteContactWidget extends StatefulWidget {
   const InviteContactWidget({
-    Key? key,
     required this.model,
     required this.scrollController,
+    Key? key,
   }) : super(key: key);
 
   final ReferralDetailsViewModel model;
@@ -188,9 +188,9 @@ class _InviteContactWidgetState extends State<InviteContactWidget>
 
 class PermissionModalSheet extends StatelessWidget {
   const PermissionModalSheet({
-    super.key,
     required this.widget,
     required this.context,
+    super.key,
   });
 
   final InviteContactWidget widget;

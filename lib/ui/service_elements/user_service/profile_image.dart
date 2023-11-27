@@ -18,9 +18,9 @@ class ProfileImageSE extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final CustomLogger? _logger = locator<CustomLogger>();
-    final UserService? _userService = locator<UserService>();
-    final BaseUtil? _baseUtil = locator<BaseUtil>();
+    final CustomLogger _logger = locator<CustomLogger>();
+    final UserService _userService = locator<UserService>();
+    final BaseUtil _baseUtil = locator<BaseUtil>();
 
     // Listener
 

@@ -519,9 +519,9 @@ class _ReferralHomeState extends State<ReferralHome> {
 
 class ReferralTabView extends StatelessWidget {
   const ReferralTabView({
-    super.key,
     required ScrollController controller,
     required this.model,
+    super.key,
   }) : _controller = controller;
 
   final ScrollController _controller;

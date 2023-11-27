@@ -758,7 +758,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     Uri uri, {
     String? title,
     bool isExternal = false,
-    Map<String, String>? queryParams,
   }) {
     _logger.d("Url: ${uri.toString()}");
     Haptic.vibrate();

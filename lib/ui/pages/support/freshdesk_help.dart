@@ -24,7 +24,7 @@ class _FreshDeskHelpState extends State<FreshDeskHelp> {
   int counter = 0;
   int exitCounter = 0;
   bool isLoading = true;
-  final UserService? _userService = locator<UserService>();
+  final UserService _userService = locator<UserService>();
 
   @override
   void initState() {
@@ -134,8 +134,9 @@ class _FreshDeskHelpState extends State<FreshDeskHelp> {
                       icon: const Icon(Icons.arrow_back),
                       color: Colors.white,
                       onPressed: () async {
-                        if (await _webViewController!.canGoBack())
+                        if (await _webViewController!.canGoBack()) {
                           _webViewController!.goBack();
+                        }
                       },
                     ),
                   ),

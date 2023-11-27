@@ -11,7 +11,7 @@ import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 
 class QuickSaveModalSheet extends StatelessWidget {
-  const QuickSaveModalSheet({Key? key, required this.quickSaveData})
+  const QuickSaveModalSheet({required this.quickSaveData, Key? key})
       : super(key: key);
 
   final List<QuickSaveData> quickSaveData;
@@ -20,7 +20,7 @@ class QuickSaveModalSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     return Padding(
       padding:
-      EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
+          EdgeInsets.only(bottom: MediaQuery.of(context).viewInsets.bottom),
       child: Container(
         padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding32),
         decoration: BoxDecoration(

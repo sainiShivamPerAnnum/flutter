@@ -31,16 +31,16 @@ class _FocusRingState extends State<FocusRing>
   AnimationController? _animationController;
 
   Animation<double>? endingAnimation;
-  final AnalyticsService? _analyticsService = locator<AnalyticsService>();
+  final AnalyticsService _analyticsService = locator<AnalyticsService>();
   final _gtService = locator<ScratchCardService>();
 
   bool _showButton = false;
 
-  get showButton => this._showButton;
+  get showButton => _showButton;
 
   set showButton(value) {
     setState(() {
-      this._showButton = value;
+      _showButton = value;
     });
   }
 
@@ -59,8 +59,8 @@ class _FocusRingState extends State<FocusRing>
   animateRing() {
     if (isAnimationComplete) return;
 
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
-      Future.delayed(Duration(seconds: 2), () {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      Future.delayed(const Duration(seconds: 2), () {
         _animationController!.forward().then((value) {
           showButton = true;
         });
@@ -81,7 +81,7 @@ class _FocusRingState extends State<FocusRing>
   Widget build(BuildContext context) {
     S locale = S.of(context);
     return PropertyChangeConsumer<JourneyService, JourneyServiceProperties>(
-        properties: [
+        properties: const [
           JourneyServiceProperties.Onboarding,
           JourneyServiceProperties.AvatarRemoteMilestoneIndex
         ],
@@ -105,7 +105,7 @@ class _FocusRingState extends State<FocusRing>
                               foregroundPainter: _DataBackupCompletedPainter(
                                   animation: endingAnimation),
                               child: AnimatedContainer(
-                                duration: Duration(seconds: 1),
+                                duration: const Duration(seconds: 1),
                                 curve: Curves.easeInCubic,
                                 decoration: BoxDecoration(
                                   shape: BoxShape.circle,
@@ -139,7 +139,7 @@ class _FocusRingState extends State<FocusRing>
                           alignment: Alignment.bottomCenter,
                           child: AnimatedScale(
                             scale: showButton ? 1 : 0,
-                            duration: Duration(milliseconds: 500),
+                            duration: const Duration(milliseconds: 500),
                             curve: Curves.bounceOut,
                             child: GestureDetector(
                               onTap: () {
@@ -191,7 +191,7 @@ class _FocusRingState extends State<FocusRing>
                     ),
                   ),
                 )
-              : SizedBox();
+              : const SizedBox();
         });
   }
 }

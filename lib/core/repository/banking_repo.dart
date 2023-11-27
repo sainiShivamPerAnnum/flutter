@@ -21,8 +21,8 @@ import 'package:image_picker/image_picker.dart';
 
 class BankingRepository extends BaseRepo {
   final CustomLogger _logger = locator<CustomLogger>();
-  final ApiPath? _apiPaths = locator<ApiPath>();
-  final _cacheService = new CacheService();
+  final ApiPath _apiPaths = locator<ApiPath>();
+  final _cacheService = CacheService();
   static const _banking = 'bankingOps';
 
   final _baseUrl = FlavorConfig.isDevelopment()
@@ -67,8 +67,7 @@ class BankingRepository extends BaseRepo {
         FailType.UserDataCorrupted,
         {'message': "User data corrupted"},
       );
-      return ApiResponse.withError(
-          e?.toString() ?? "Unable to verify pan", 400);
+      return ApiResponse.withError(e.toString() ?? "Unable to verify pan", 400);
     }
   }
 
@@ -93,8 +92,7 @@ class BankingRepository extends BaseRepo {
         FailType.SignedImageUploadFailed,
         {'message': "Signed Image url upload failed"},
       );
-      return ApiResponse.withError(
-          e?.toString() ?? "Unable to verify pan", 400);
+      return ApiResponse.withError(e.toString() ?? "Unable to verify pan", 400);
     }
   }
 
@@ -142,12 +140,10 @@ class BankingRepository extends BaseRepo {
       return ApiResponse(model: true, code: 200);
     } on BadRequestException catch (e) {
       _logger.e(e.toString());
-      return ApiResponse.withError(
-          e?.toString() ?? "Unable to verify pan", 400);
+      return ApiResponse.withError(e.toString() ?? "Unable to verify pan", 400);
     } catch (e) {
       _logger.e(e.toString());
-      return ApiResponse.withError(
-          e?.toString() ?? "Unable to verify pan", 400);
+      return ApiResponse.withError(e.toString() ?? "Unable to verify pan", 400);
     }
   }
 

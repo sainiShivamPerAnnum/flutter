@@ -10,7 +10,7 @@ import 'package:lottie/lottie.dart';
 
 class MaturityWithdrawalSuccessView extends StatelessWidget {
   const MaturityWithdrawalSuccessView(
-      {super.key, required this.amount, required this.date});
+      {required this.amount, required this.date, super.key});
 
   final String amount;
   final DateTime date;

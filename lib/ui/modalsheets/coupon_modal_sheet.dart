@@ -15,7 +15,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class CouponModalSheet extends StatelessWidget {
-  CouponModalSheet({Key? key, required this.model}) : super(key: key);
+  CouponModalSheet({required this.model, Key? key}) : super(key: key);
   final GoldBuyViewModel? model;
   final TextEditingController couponCodeController = TextEditingController();
   final _formKey = GlobalKey<FormState>();

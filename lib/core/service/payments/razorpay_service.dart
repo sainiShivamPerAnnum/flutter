@@ -28,7 +28,7 @@ import 'package:flutter/cupertino.dart';
 import 'package:razorpay_flutter/razorpay_flutter.dart';
 
 class RazorpayService extends ChangeNotifier {
-  final Log log = Log('RazorpayService');
+  final Log log = const Log('RazorpayService');
   CustomLogger? _logger;
   UserTransaction? _currentTxn;
   ValueChanged<UserTransaction?>? _txnUpdateListener;
@@ -61,22 +61,10 @@ class RazorpayService extends ChangeNotifier {
 
   void handlePaymentSuccess(PaymentSuccessResponse response) {
     locator<BackButtonActions>().isTransactionCancelled = false;
-    // String paymentId = response.paymentId!;
-    // String checkoutOrderId = response.orderId!;
-    // String paySignature = response.signature!;
     _txnService!.currentTransactionState = TransactionState.ongoing;
-    unawaited(_txnService!.initiatePolling());
-    // log.debug(
-    //     "SUCCESS: " + paymentId + " " + checkoutOrderId + " " + paySignature);
-    // _currentTxn?.rzp![UserTransaction.subFldRzpPaymentId] = paymentId;
-    // if (_currentTxn!.rzp![UserTransaction.subFldRzpOrderId] !=
-    //     checkoutOrderId) {
-    //   _currentTxn!.rzp![UserTransaction.subFldRzpStatus] =
-    //       UserTransaction.RZP_TRAN_STATUS_COMPLETE;
-    //   if (_txnUpdateListener != null) _txnUpdateListener!(_currentTxn);
+    _txnService!.checkTransactionStatus();
     cleanListeners();
     return;
-    // }
   }
 
   void handlePaymentError(PaymentFailureResponse response) {
@@ -97,7 +85,7 @@ class RazorpayService extends ChangeNotifier {
         properties: _txnService!.currentTransactionAnalyticsDetails ?? {});
 
     locator<InternalOpsService>().logFailure(
-      _userService!.baseUser!.uid,
+      _userService.baseUser!.uid,
       FailType.RazorpayTransactionFailed,
       {'message': "Razorpay payment cancelled or failed"},
     );
@@ -115,6 +103,7 @@ class RazorpayService extends ChangeNotifier {
 
   //generate order id // update transaction //creatre<UserTransaction> submitAu
   Future<bool?> initiateRazorpayTxn({
+    required InvestmentType investmentType,
     String? mobile,
     String? email,
     double? amount,
@@ -122,10 +111,9 @@ class RazorpayService extends ChangeNotifier {
     Map<String, dynamic>? lbMap,
     bool? skipMl,
     String? couponCode,
-    required InvestmentType investmentType,
     Map<String, dynamic>? goldProMap,
   }) async {
-    if (!init(investmentType)) return null; //initialise razorpay
+    init(investmentType);
     final mid = AppConfig.getValue(AppConfigKey.rzpMid);
     final ApiResponse<CreatePaytmTransactionModel> txnResponse =
         await _paytmRepo!.createTransaction(amount, augMap, lbMap, couponCode,

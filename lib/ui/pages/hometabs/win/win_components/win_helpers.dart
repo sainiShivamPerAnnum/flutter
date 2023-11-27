@@ -51,10 +51,10 @@ class Salutation extends StatelessWidget {
 
 class AccountInfoTiles extends StatelessWidget {
   const AccountInfoTiles({
-    Key? key,
     required this.title,
-    this.onTap,
     required this.uri,
+    Key? key,
+    this.onTap,
   }) : super(key: key);
 
   final String title;
@@ -113,15 +113,15 @@ class RewardsAvatar extends StatelessWidget {
 
 Widget referralTile(String title) {
   return Padding(
-    padding: EdgeInsets.only(bottom: 20.0),
+    padding: const EdgeInsets.only(bottom: 20.0),
     child: Row(
       children: [
-        Icon(
+        const Icon(
           Icons.brightness_1,
           size: 12,
           color: UiConstants.primaryColor,
         ),
-        SizedBox(width: 10),
+        const SizedBox(width: 10),
         Expanded(
           child: Text(
             title,

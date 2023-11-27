@@ -3,7 +3,6 @@ import 'package:felloapp/core/model/bank_account_details_model.dart';
 import 'package:felloapp/core/model/user_kyc_data_model.dart';
 import 'package:felloapp/core/repository/banking_repo.dart';
 import 'package:felloapp/core/repository/payment_repo.dart';
-import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
@@ -11,10 +10,9 @@ import 'package:property_change_notifier/property_change_notifier.dart';
 
 class BankAndPanService
     extends PropertyChangeNotifier<BankAndPanServiceProperties> {
-  final CustomLogger? _logger = locator<CustomLogger>();
+  final CustomLogger _logger = locator<CustomLogger>();
   final UserService _userService = locator<UserService>();
-  final PaymentRepository? _paymentRepo = locator<PaymentRepository>();
-  final UserRepository _userRep = locator<UserRepository>();
+  final PaymentRepository _paymentRepo = locator<PaymentRepository>();
   final BankingRepository _bankingRepo = locator<BankingRepository>();
   String? _userPan;
   UserKycDataModel? _userKycData;

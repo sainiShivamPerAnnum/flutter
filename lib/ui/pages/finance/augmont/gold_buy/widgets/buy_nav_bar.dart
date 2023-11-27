@@ -15,9 +15,9 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 class BuyNavBar extends StatelessWidget {
   const BuyNavBar({
-    super.key,
     required this.model,
     required this.onTap,
+    super.key,
   });
 
   final GoldBuyViewModel model;

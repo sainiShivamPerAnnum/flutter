@@ -16,7 +16,7 @@ import 'package:provider/provider.dart';
 
 class AutosaveAssetChoiceView extends StatelessWidget {
   final AutosaveProcessViewModel model;
-  const AutosaveAssetChoiceView({super.key, required this.model});
+  const AutosaveAssetChoiceView({required this.model, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -239,9 +239,9 @@ class RPSCustomPainter extends CustomPainter {
     path_0.lineTo(size.width * 0.4134615, 0);
     path_0.close();
 
-    Paint paint_0_fill = Paint()..style = PaintingStyle.fill;
-    paint_0_fill.color = const Color(0xffF7C780);
-    canvas.drawPath(path_0, paint_0_fill);
+    Paint paint0Fill = Paint()..style = PaintingStyle.fill;
+    paint0Fill.color = const Color(0xffF7C780);
+    canvas.drawPath(path_0, paint0Fill);
 
     final textStyle = TextStyle(
       color: Colors.black,

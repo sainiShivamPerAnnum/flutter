@@ -14,7 +14,7 @@ class FelloTile extends StatelessWidget {
   final Function? onTap;
   final bool showTrailingIcon;
 
-  FelloTile(
+  const FelloTile(
       {this.leadingIcon,
       this.leadingAsset,
       this.subtitle,
@@ -30,14 +30,14 @@ class FelloTile extends StatelessWidget {
       child: Container(
         height: SizeConfig.screenWidth! * 0.25,
         decoration: BoxDecoration(
-          color: Color(0xff464649),
+          color: const Color(0xff464649),
           borderRadius: BorderRadius.circular(SizeConfig.roundness16),
         ),
         padding: EdgeInsets.all(SizeConfig.padding24),
         child: Row(
           children: [
             CircleAvatar(
-              backgroundColor: Color(0xff464649),
+              backgroundColor: const Color(0xff464649),
               radius: SizeConfig.screenWidth! * 0.067,
               child: leadingIcon != null
                   ? Icon(
@@ -92,7 +92,7 @@ class FelloBriefTile extends StatelessWidget {
   final Function? onTap;
   final bool coloredIcon;
 
-  FelloBriefTile(
+  const FelloBriefTile(
       {this.leadingIcon,
       this.leadingAsset,
       this.title,
@@ -106,17 +106,17 @@ class FelloBriefTile extends StatelessWidget {
     return InkWell(
       onTap: onTap as void Function()?,
       child: Container(
-        margin: EdgeInsets.symmetric(vertical: 8),
+        margin: const EdgeInsets.symmetric(vertical: 8),
         height: SizeConfig.screenWidth! * 0.193,
         decoration: BoxDecoration(
-          color: Color(0xffF6F9FF),
+          color: const Color(0xffF6F9FF),
           borderRadius: BorderRadius.circular(SizeConfig.roundness16),
         ),
         padding: EdgeInsets.all(SizeConfig.padding16),
         child: Row(
           children: [
             CircleAvatar(
-              backgroundColor: Color(0xffE3F4F7),
+              backgroundColor: const Color(0xffE3F4F7),
               radius: SizeConfig.padding24,
               child: leadingIcon != null
                   ? Icon(
@@ -160,7 +160,7 @@ class FelloBriefTile extends StatelessWidget {
                           style: TextStyles.body4.bold.italic
                               .colour(UiConstants.primaryColor),
                         ),
-                        SizedBox(height: 2),
+                        const SizedBox(height: 2),
                       ],
                     ),
                   ])

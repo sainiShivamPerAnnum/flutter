@@ -25,10 +25,10 @@ import 'package:intl/intl.dart';
 
 class NotDecidedModalSheet extends HookWidget {
   const NotDecidedModalSheet(
-      {super.key,
-      required this.depositData,
+      {required this.depositData,
       required this.isLendboxOldUser,
-      required this.decision});
+      required this.decision,
+      super.key});
 
   final Deposit depositData;
   final UserDecision decision;
@@ -251,7 +251,7 @@ class NotDecidedModalSheet extends HookWidget {
                             color: Colors.white,
                           )
                         : MaterialButton(
-                        minWidth: SizeConfig.screenWidth,
+                            minWidth: SizeConfig.screenWidth,
                             color: Colors.white
                                 .withOpacity(isEnable.value ? 1 : 0.5),
                             shape: RoundedRectangleBorder(

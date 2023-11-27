@@ -23,9 +23,9 @@ class ReInvestmentBottomWidget extends StatelessWidget {
   const ReInvestmentBottomWidget(
       {required this.decision,
       required this.remainingDay,
-      super.key,
       required this.depositData,
-      required this.isLendboxOldUser});
+      required this.isLendboxOldUser,
+      super.key});
 
   final UserDecision decision;
   final Deposit depositData;

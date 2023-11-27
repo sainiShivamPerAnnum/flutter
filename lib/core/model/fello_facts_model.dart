@@ -2,7 +2,6 @@
 import 'dart:convert';
 
 import 'package:felloapp/core/model/timestamp_model.dart';
-import 'package:flutter/material.dart';
 
 class FelloFactsModel {
   final String? id;

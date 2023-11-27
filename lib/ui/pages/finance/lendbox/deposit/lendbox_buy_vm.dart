@@ -218,6 +218,7 @@ class LendboxBuyViewModel extends BaseViewModel {
     required String assetTypeFlow,
     String? initialCouponCode,
     String? entryPoint,
+    bool quickCheckout = false,
   }) async {
     setState(ViewState.Busy);
     floAssetType = assetTypeFlow;
@@ -255,6 +256,10 @@ class LendboxBuyViewModel extends BaseViewModel {
     await _applyInitialCoupon(
       initialCouponCode,
     );
+
+    if (quickCheckout) {
+      await initiateBuy();
+    }
   }
 
   void listener() {

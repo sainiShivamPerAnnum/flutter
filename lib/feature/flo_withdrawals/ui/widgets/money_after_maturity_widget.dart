@@ -18,10 +18,10 @@ import 'package:intl/intl.dart';
 
 class MoneyAfterMaturityWidget extends HookWidget {
   const MoneyAfterMaturityWidget(
-      {super.key,
-      required this.depositData,
+      {required this.depositData,
       required this.decision,
-      required this.isLendboxOldUser});
+      required this.isLendboxOldUser,
+      super.key});
 
   final Deposit depositData;
   final UserDecision decision;

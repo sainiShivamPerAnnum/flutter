@@ -11,7 +11,7 @@ class InternalOpsRepository extends BaseRepo {
       ? 'https://zul9m5q4t9.execute-api.ap-south-1.amazonaws.com/dev'
       : 'https://4ch7btxcuj.execute-api.ap-south-1.amazonaws.com/prod';
 
-  final Log log = new Log("DBModel");
+  final Log log = const Log("DBModel");
   static const _internalOps = 'internalOPS';
 
   Future<ApiResponse<bool>> logFailure(

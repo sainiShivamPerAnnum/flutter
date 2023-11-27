@@ -8,9 +8,9 @@ class RechargeModalSheetAppBar extends StatelessWidget {
   final VoidCallback trackCloseTapped;
 
   const RechargeModalSheetAppBar({
-    super.key,
     required this.txnService,
     required this.trackCloseTapped,
+    super.key,
   });
 
   @override
@@ -21,7 +21,7 @@ class RechargeModalSheetAppBar extends StatelessWidget {
       leading: txnService.isGoldBuyInProgress
           ? const SizedBox()
           : IconButton(
-        icon: Icon(Icons.arrow_back_ios,
+              icon: Icon(Icons.arrow_back_ios,
                   color: Colors.white.withOpacity(0.4)),
               onPressed: trackCloseTapped,
             ),

@@ -18,7 +18,7 @@ class GoldProTxnsView extends StatelessWidget {
       appBar: AppBar(
         backgroundColor: UiConstants.kBackgroundColor,
         elevation: 0,
-        leading: FelloAppBarBackButton(),
+        leading: const FelloAppBarBackButton(),
         centerTitle: true,
         title: Wrap(
           children: [

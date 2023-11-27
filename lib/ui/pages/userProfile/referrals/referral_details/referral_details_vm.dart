@@ -45,7 +45,7 @@ class ReferralDetailsViewModel extends BaseViewModel {
   PageController? _pageController;
   int _tabNo = 0;
 
-  bool _isShareAlreadyClicked = false;
+  final bool _isShareAlreadyClicked = false;
 
   bool get isShareAlreadyClicked => _isShareAlreadyClicked;
 
@@ -94,7 +94,7 @@ class ReferralDetailsViewModel extends BaseViewModel {
   String unlockReferralBonus =
       AppConfig.getValue(AppConfigKey.unlock_referral_amt).toString();
 
-  String? _refUrl = "";
+  final String _refUrl = "";
   String? _refCode = "";
   int? _totalReferralWon = -1;
   List<Contact>? contactsList = [];
@@ -108,7 +108,7 @@ class ReferralDetailsViewModel extends BaseViewModel {
   bool loadingRefCode = true;
   bool hasPermission = false;
 
-  bool _isReferalsFetched = false;
+  final bool _isReferalsFetched = false;
 
   get refUrl => _refUrl;
 
@@ -157,7 +157,7 @@ class ReferralDetailsViewModel extends BaseViewModel {
 
   void copyReferCode() {
     Haptic.vibrate();
-    _analyticsService!
+    _analyticsService
         .track(eventName: AnalyticsEvents.copyReferalCode, properties: {
       "Referrred Count Success": AnalyticsProperties.getSuccessReferralCount(),
       "Referred count (total)": AnalyticsProperties.getTotalReferralCount(),
@@ -221,7 +221,7 @@ class ReferralDetailsViewModel extends BaseViewModel {
     }
 
     // if (!(baseProvider.referralsFetched ?? false) || refresh) {
-    unawaited(referralRepo!
+    unawaited(referralRepo
         .getReferralHistory(currentPage: currentPage)
         .then((refHisModel) {
       if (refHisModel.isSuccess()) {
@@ -261,20 +261,20 @@ class ReferralDetailsViewModel extends BaseViewModel {
 
     String? url;
     try {
-      final link = await _appFlyer!.inviteLink();
+      final link = await _appFlyer.inviteLink();
       if (link['status'] == 'success') {
         url = link['payload']['userInviteUrl'];
         url ??= link['payload']['userInviteURL'];
       }
-      _logger!.d('appflyer invite link as $url');
+      _logger.d('appflyer invite link as $url');
     } catch (e) {
-      _logger!.e(e);
+      _logger.e(e);
     }
     return url;
   }
 
   Future getProfileDpWithUid(String uid) async {
-    return _dbModel!.getUserDP(uid);
+    return _dbModel.getUserDP(uid);
   }
 
   String getUserMembershipDate(Timestamp? tmp) {

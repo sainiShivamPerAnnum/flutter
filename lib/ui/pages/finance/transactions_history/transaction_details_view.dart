@@ -31,7 +31,7 @@ import 'package:open_filex/open_filex.dart';
 import '../../../../base_util.dart';
 
 class TransactionDetailsPage extends StatefulWidget {
-  TransactionDetailsPage({Key? key, required this.txn}) : super(key: key);
+  const TransactionDetailsPage({required this.txn, Key? key}) : super(key: key);
   final UserTransaction txn;
 
   @override
@@ -74,23 +74,21 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage>
 
   String floSubtype() {
     if (widget.txn.subType == "LENDBOXP2P") {
-      if (widget.txn.lbMap != null) {
-        switch (widget.txn.lbMap.fundType) {
-          case Constants.ASSET_TYPE_FLO_FIXED_6:
-            return "12% Flo";
-          case Constants.ASSET_TYPE_FLO_FIXED_3:
+      switch (widget.txn.lbMap.fundType) {
+        case Constants.ASSET_TYPE_FLO_FIXED_6:
+          return "12% Flo";
+        case Constants.ASSET_TYPE_FLO_FIXED_3:
+          return "10% Flo";
+        case Constants.ASSET_TYPE_FLO_FELXI:
+          if (locator<UserService>()
+              .userSegments
+              .contains(Constants.US_FLO_OLD)) {
             return "10% Flo";
-          case Constants.ASSET_TYPE_FLO_FELXI:
-            if (locator<UserService>()
-                .userSegments
-                .contains(Constants.US_FLO_OLD)) {
-              return "10% Flo";
-            } else {
-              return "8% Flo";
-            }
-          default:
-            return "10% Flo";
-        }
+          } else {
+            return "8% Flo";
+          }
+        default:
+          return "10% Flo";
       }
     }
     return "";
@@ -242,7 +240,7 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage>
                                 children: [
                                   Icon(Icons.brightness_1_rounded,
                                       size: SizeConfig.padding8,
-                                      color: _txnHistoryService!
+                                      color: _txnHistoryService
                                           .getTileColor(widget.txn.tranStatus)),
                                   SizedBox(
                                     width: SizeConfig.padding2,
@@ -254,7 +252,7 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage>
                                                 widget.txn.tranStatus!.length)
                                             .toLowerCase(),
                                     style: TextStyles.sourceSans.colour(
-                                        _txnHistoryService!.getTileColor(
+                                        _txnHistoryService.getTileColor(
                                             widget.txn.tranStatus)),
                                   ),
                                 ],

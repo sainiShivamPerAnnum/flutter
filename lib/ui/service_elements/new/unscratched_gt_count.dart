@@ -29,11 +29,11 @@ class UnscratchedGTCountChip extends StatelessWidget {
                   "$count ${locale.btnNew}",
                   style: TextStyles.body4.colour(UiConstants.primaryColor),
                 ),
-        )
+              )
             : Text(
-          locale.btnSeeAll,
-          style: TextStyles.sourceSans.body3.colour(Colors.white),
-        );
+                locale.btnSeeAll,
+                style: TextStyles.sourceSans.body3.colour(Colors.white),
+              );
       },
     );
   }

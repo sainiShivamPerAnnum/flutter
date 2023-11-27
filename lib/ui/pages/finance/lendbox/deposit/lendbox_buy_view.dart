@@ -27,6 +27,7 @@ class LendboxBuyView extends StatefulWidget {
   final String floAssetType;
   final String? initialCouponCode;
   final String? entryPoint;
+  final bool quickCheckout;
 
   const LendboxBuyView({
     required this.onChanged,
@@ -36,6 +37,7 @@ class LendboxBuyView extends StatefulWidget {
     this.skipMl = false,
     this.initialCouponCode,
     this.entryPoint,
+    this.quickCheckout = false,
   });
 
   @override
@@ -46,7 +48,6 @@ class _LendboxBuyViewState extends State<LendboxBuyView>
     with WidgetsBindingObserver, SingleTickerProviderStateMixin {
   final LendboxTransactionService _txnService =
       locator<LendboxTransactionService>();
-  AppLifecycleState? appLifecycleState;
 
   final iosScreenShotChannel = const MethodChannel('secureScreenshotChannel');
 
@@ -68,15 +69,14 @@ class _LendboxBuyViewState extends State<LendboxBuyView>
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    appLifecycleState = state;
-    if (appLifecycleState == AppLifecycleState.resumed &&
+    super.didChangeAppLifecycleState(state);
+    if (state == AppLifecycleState.resumed &&
         Platform.isIOS &&
         _txnService.isIOSTxnInProgress) {
       _txnService.isIOSTxnInProgress = false;
       _txnService.currentTransactionState = TransactionState.ongoing;
-      _txnService.initiatePolling();
+      _txnService.checkTransactionStatus();
     }
-    super.didChangeAppLifecycleState(state);
   }
 
   @override
@@ -121,6 +121,7 @@ class _LendboxBuyViewState extends State<LendboxBuyView>
                       assetTypeFlow: widget.floAssetType,
                       initialCouponCode: widget.initialCouponCode,
                       entryPoint: widget.entryPoint,
+                      quickCheckout: widget.quickCheckout,
                     ),
                     builder: (ctx, model, child) {
                       _secureScreenshots(lboxTxnService);

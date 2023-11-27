@@ -31,14 +31,14 @@ import 'package:pointycastle/asymmetric/api.dart';
 ///
 
 class RSAEncryption {
-  final UserService? _userService = locator<UserService>();
-  final InternalOpsService? _internalOpsService = locator<InternalOpsService>();
-  final CustomLogger? _logger = locator<CustomLogger>();
+  final UserService _userService = locator<UserService>();
+  final InternalOpsService _internalOpsService = locator<InternalOpsService>();
+  final CustomLogger _logger = locator<CustomLogger>();
   Encrypter? rsaEncrypter, aesEncrypter;
   static const String _chars = 'abcdef1234567890';
   static const String ENCRYPT_VERSION = 'v1';
   static const String PUBLIC_KEY_FILE_PATH = 'resources/public.key';
-  Random _rnd = Random();
+  final Random _rnd = Random();
   String? randomIv, randomAesKey;
   IV? iv;
   late Key aesKey;
@@ -78,12 +78,13 @@ class RSAEncryption {
       return true;
     } catch (e) {
       _logger!.e(e.toString());
-      if (_userService!.isUserOnboarded)
+      if (_userService!.isUserOnboarded) {
         _internalOpsService!.logFailure(
             _userService!.baseUser!.uid, FailType.RSAEncryterInitFailed, {
           "err_message":
               "RSA Encrypter generation Failed while parsing local file",
         });
+      }
       return false;
     }
   }
@@ -101,11 +102,12 @@ class RSAEncryption {
       return true;
     } catch (e) {
       _logger!.e(e.toString());
-      if (_userService!.isUserOnboarded)
+      if (_userService!.isUserOnboarded) {
         _internalOpsService!.logFailure(
             _userService!.baseUser!.uid, FailType.AESEncryptionInitFailed, {
           "message": "AES Encrypter generation Failed",
         });
+      }
       return false;
     }
   }

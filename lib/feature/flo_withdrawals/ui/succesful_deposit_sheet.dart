@@ -14,7 +14,6 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 class SuccessfulDepositSheet extends StatelessWidget {
   const SuccessfulDepositSheet({
-    super.key,
     required this.investAmount,
     required this.maturityAmount,
     required this.maturityDate,
@@ -25,6 +24,7 @@ class SuccessfulDepositSheet extends StatelessWidget {
     required this.topChipText,
     required this.footer,
     required this.fundType,
+    super.key,
   });
 
   final String investAmount;
@@ -127,7 +127,7 @@ class SuccessfulDepositSheet extends StatelessWidget {
                                     vertical: SizeConfig.padding4),
                                 decoration: ShapeDecoration(
                                   color:
-                                  const Color(0xFFD9D9D9).withOpacity(0.20),
+                                      const Color(0xFFD9D9D9).withOpacity(0.20),
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(
                                           SizeConfig.roundness12)),
@@ -155,7 +155,7 @@ class SuccessfulDepositSheet extends StatelessWidget {
                                     vertical: SizeConfig.padding4),
                                 decoration: ShapeDecoration(
                                   color:
-                                  const Color(0xFFD9D9D9).withOpacity(0.20),
+                                      const Color(0xFFD9D9D9).withOpacity(0.20),
                                   shape: RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(
                                           SizeConfig.roundness12)),
@@ -248,7 +248,7 @@ class SuccessfulDepositSheet extends StatelessWidget {
                       decoration: BoxDecoration(
                         color: const Color(0xFF62E3C4),
                         borderRadius:
-                        BorderRadius.circular(SizeConfig.roundness16),
+                            BorderRadius.circular(SizeConfig.roundness16),
                       ),
                       child: topChipText.beautify(
                         boldStyle: TextStyles.sourceSansB.body4.colour(
@@ -269,7 +269,7 @@ class SuccessfulDepositSheet extends StatelessWidget {
               footer,
               textAlign: TextAlign.center,
               style:
-              TextStyles.sourceSans.body3.colour(const Color(0xFFBDBDBE)),
+                  TextStyles.sourceSans.body3.colour(const Color(0xFFBDBDBE)),
             ),
             SizedBox(height: SizeConfig.padding12),
             MaterialButton(

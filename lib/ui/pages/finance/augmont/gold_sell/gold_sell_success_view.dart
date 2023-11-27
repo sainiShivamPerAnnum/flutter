@@ -17,7 +17,7 @@ class GoldSellSuccessView extends StatelessWidget {
   final AugmontTransactionService augTxnservice;
 
   const GoldSellSuccessView(
-      {Key? key, required this.model, required this.augTxnservice})
+      {required this.model, required this.augTxnservice, Key? key})
       : super(key: key);
   @override
   Widget build(BuildContext context) {

@@ -16,10 +16,10 @@ import 'package:flutter_svg/svg.dart';
 
 class TransactionCancelBottomSheet extends StatelessWidget {
   const TransactionCancelBottomSheet(
-      {Key? key,
-      required this.amt,
+      {required this.amt,
       required this.investMentType,
-      required this.onContinue})
+      required this.onContinue,
+      Key? key})
       : super(key: key);
   final int amt;
   final InvestmentType investMentType;

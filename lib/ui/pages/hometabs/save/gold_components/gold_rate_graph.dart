@@ -30,7 +30,7 @@ class _LineGradientChartState extends State<LineGradientChart> {
 
   List<ChartData>? _chartData;
 
-  get chartData => this._chartData;
+  get chartData => _chartData;
 
   set chartData(value) {
     if (value != null) {

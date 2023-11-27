@@ -9,9 +9,9 @@ class AmountChips extends StatelessWidget {
   final bool isSelected;
   final Function onTap;
   final bool? isBestSeller;
-  AmountChips(
-      {this.amount,
-      required this.onTap,
+  const AmountChips(
+      {required this.onTap,
+      this.amount,
       this.isBestSeller = false,
       this.isSelected = false});
 
@@ -33,7 +33,7 @@ class AmountChips extends StatelessWidget {
                 border: Border.all(
                   color: isSelected
                       ? UiConstants.primaryColor
-                      : Color(0xFFFEF5DC).withOpacity(0.2),
+                      : const Color(0xFFFEF5DC).withOpacity(0.2),
                   width: SizeConfig.border0,
                 ),
                 borderRadius: BorderRadius.circular(SizeConfig.roundness5),

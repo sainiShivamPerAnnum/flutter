@@ -14,7 +14,7 @@ import 'processing.dart';
 class WeeklyResult extends StatefulWidget {
   final Winners winner;
   final bool isEligible;
-  const WeeklyResult({Key? key, required this.winner, required this.isEligible})
+  const WeeklyResult({required this.winner, required this.isEligible, Key? key})
       : super(key: key);
 
   @override

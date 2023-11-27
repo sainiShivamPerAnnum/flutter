@@ -21,8 +21,8 @@ class FAQPage extends StatelessWidget {
   final FaqsType? type;
 
   const FAQPage({
-    super.key,
     required this.type,
+    super.key,
   });
 
   @override

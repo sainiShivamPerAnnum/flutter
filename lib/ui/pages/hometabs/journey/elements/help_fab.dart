@@ -24,7 +24,7 @@ class HelpFab extends StatefulWidget {
 
 class _HelpFabState extends State<HelpFab> {
   final UserService _userService = locator<UserService>();
-  final AnalyticsService? _analyticsService = locator<AnalyticsService>();
+  final AnalyticsService _analyticsService = locator<AnalyticsService>();
   bool isOpen = true;
   expandFab() {
     setState(() {
@@ -46,7 +46,7 @@ class _HelpFabState extends State<HelpFab> {
 
   @override
   void initState() {
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       if (DynamicUiUtils.helpFab.isCollapse) collapseFab();
     });
     super.initState();
@@ -104,7 +104,7 @@ class _HelpFabState extends State<HelpFab> {
               .parseRoute(Uri.parse(DynamicUiUtils.helpFab.actionUri));
         },
         child: AnimatedContainer(
-            duration: Duration(seconds: 1),
+            duration: const Duration(seconds: 1),
             curve: Curves.easeIn,
             padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding12),
             height: SizeConfig.avatarRadius * 2.4,

@@ -13,7 +13,7 @@ class PdfInvoiceApi {
     pdf.addPage(MultiPage(
       pageTheme: PageTheme(
           theme: ThemeData(softWrap: true),
-          margin: EdgeInsets.all(0),
+          margin: const EdgeInsets.all(0),
           buildBackground: (ctx) {
             final image = MemoryImage(
               invoice.bgImage.readAsBytesSync(),
@@ -43,7 +43,7 @@ class PdfInvoiceApi {
   }
 
   static Widget buildHeader(Invoice invoice) => Container(
-      margin: EdgeInsets.symmetric(
+      margin: const EdgeInsets.symmetric(
           horizontal: 2 * PdfPageFormat.cm, vertical: PdfPageFormat.cm),
       child: Row(
         mainAxisAlignment: MainAxisAlignment.spaceBetween,
@@ -127,7 +127,7 @@ class PdfInvoiceApi {
     });
 
     return Container(
-      margin: EdgeInsets.symmetric(
+      margin: const EdgeInsets.symmetric(
           horizontal: 2 * PdfPageFormat.cm, vertical: PdfPageFormat.cm * 0.5),
       child: Row(
         children: [
@@ -158,7 +158,7 @@ class PdfInvoiceApi {
       );
 
   static Widget buildTitle(Invoice invoice) => Container(
-        margin: EdgeInsets.symmetric(horizontal: 2 * PdfPageFormat.cm),
+        margin: const EdgeInsets.symmetric(horizontal: 2 * PdfPageFormat.cm),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           crossAxisAlignment: CrossAxisAlignment.end,
@@ -183,20 +183,20 @@ class PdfInvoiceApi {
 
       return [
         item.description,
-        '${item.grams}',
-        '${item.rate}',
-        '${item.amount}',
+        (item.grams),
+        (item.rate),
+        (item.amount),
       ];
     }).toList();
 
     return Container(
-        margin: EdgeInsets.symmetric(horizontal: 2 * PdfPageFormat.cm),
+        margin: const EdgeInsets.symmetric(horizontal: 2 * PdfPageFormat.cm),
         child: Table.fromTextArray(
           headers: headers,
           data: data,
           border: null,
           headerStyle: TextStyle(fontWeight: FontWeight.bold),
-          headerDecoration: BoxDecoration(color: PdfColors.grey300),
+          headerDecoration: const BoxDecoration(color: PdfColors.grey300),
           cellHeight: 30,
           cellAlignments: {
             0: Alignment.centerLeft,
@@ -217,7 +217,7 @@ class PdfInvoiceApi {
 
     return Container(
       alignment: Alignment.centerRight,
-      margin: EdgeInsets.symmetric(horizontal: 2 * PdfPageFormat.cm),
+      margin: const EdgeInsets.symmetric(horizontal: 2 * PdfPageFormat.cm),
       child: Row(
         children: [
           Spacer(flex: 6),
@@ -248,7 +248,7 @@ class PdfInvoiceApi {
   }
 
   static Widget buildFooter(Invoice invoice) => Container(
-      margin: EdgeInsets.symmetric(horizontal: 2 * PdfPageFormat.cm),
+      margin: const EdgeInsets.symmetric(horizontal: 2 * PdfPageFormat.cm),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,
         children: [
@@ -298,7 +298,7 @@ class PdfInvoiceApi {
 
     return Container(
       width: width,
-      margin: EdgeInsets.symmetric(vertical: 2),
+      margin: const EdgeInsets.symmetric(vertical: 2),
       child: Row(
         children: [
           Expanded(child: Text(title, style: style)),

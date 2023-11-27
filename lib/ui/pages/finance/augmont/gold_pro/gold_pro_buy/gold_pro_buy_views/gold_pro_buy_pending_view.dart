@@ -80,11 +80,9 @@ class GoldProBuyPendingView extends StatelessWidget {
                 end: Duration.zero,
               ),
               onEnd: () async {
-                // await txnService
-                //     .processPolling(txnService.pollingPeriodicTimer);
+                await txnService.transactionFuture;
                 if (txnService.currentTransactionState !=
                     TransactionState.ongoing) return;
-                txnService.pollingPeriodicTimer?.cancel();
                 txnService.isGoldBuyInProgress = false;
                 txnService.currentTransactionState = TransactionState.idle;
                 unawaited(
@@ -118,7 +116,7 @@ class GoldProBuyPendingView extends StatelessWidget {
 
   void showTransactionPendingDialog() {
     S locale = locator<S>();
-    Future.delayed(Duration(seconds: 1), () {
+    Future.delayed(const Duration(seconds: 1), () {
       BaseUtil.openDialog(
         addToScreenStack: true,
         hapticVibrate: true,

@@ -6,8 +6,8 @@ import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
 
 class UserCoinService extends ChangeNotifier {
-  final CustomLogger? _logger = locator<CustomLogger>();
-  final UserRepository? _userRepo = locator<UserRepository>();
+  final CustomLogger _logger = locator<CustomLogger>();
+  final UserRepository _userRepo = locator<UserRepository>();
 
   int? _flcBalance = 0;
 
@@ -33,7 +33,7 @@ class UserCoinService extends ChangeNotifier {
   Future<void> getUserCoinBalance() async {
     _logger!.d("FLC Balance called");
     final ApiResponse<FlcModel> response = await _userRepo!.getCoinBalance();
-    _logger!.d(response.model?.toJson()?.toString());
+    _logger!.d(response.model?.toJson().toString());
     setFlcBalance(response.model?.flcBalance);
   }
 }

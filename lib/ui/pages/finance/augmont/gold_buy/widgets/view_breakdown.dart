@@ -26,8 +26,8 @@ import '../../../../../../util/locator.dart';
 
 class GoldBreakdownView extends StatelessWidget {
   const GoldBreakdownView({
-    Key? key,
     required this.model,
+    Key? key,
     this.showPsp = true,
     this.showBreakDown = true,
   }) : super(key: key);
@@ -678,8 +678,8 @@ class FloBreakdownView extends StatelessWidget {
 
 class GoldProBreakdownView extends StatelessWidget {
   const GoldProBreakdownView({
-    Key? key,
     required this.model,
+    Key? key,
     this.showPsp = true,
     this.showBreakDown = true,
   }) : super(key: key);

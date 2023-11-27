@@ -1,6 +1,5 @@
 import 'dart:io';
 
-import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/invoice_model.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/pdf_invoice_api.dart';
@@ -12,15 +11,14 @@ import 'package:intl/intl.dart';
 import 'package:path_provider/path_provider.dart';
 
 class AugmontInvoiceService {
-  Log log = new Log('AugmontInvoiceService');
-  BaseUtil? _baseUtil = locator<BaseUtil>();
-  final UserService? _userService = locator<UserService>();
+  Log log = const Log('AugmontInvoiceService');
+  final UserService _userService = locator<UserService>();
 
   AugmontInvoiceService();
 
-  Future<String?> generateInvoice(
-      Map<String, dynamic> invoiceMap, Map<String, String?>? userDetails) async {
-    if (invoiceMap == null || invoiceMap[GetInvoice.resTransactionId] == null) {
+  Future<String?> generateInvoice(Map<String, dynamic> invoiceMap,
+      Map<String, String?>? userDetails) async {
+    if (invoiceMap[GetInvoice.resTransactionId] == null) {
       return null;
     }
     try {
@@ -42,7 +40,7 @@ class AugmontInvoiceService {
         bgImage: bgImage,
         brokerLogo: brokerLogo,
         sellerLogo: sellerLogo,
-        supplier: Supplier(
+        supplier: const Supplier(
           name: 'Augmont GoldTech Pvt Ltd.',
           GSTIN: "GSTIN: 27AATCA3030A1Z3",
         ),

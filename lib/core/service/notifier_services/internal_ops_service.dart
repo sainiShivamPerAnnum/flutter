@@ -25,17 +25,17 @@ class InternalOpsService extends ChangeNotifier {
   final FirebaseCrashlytics firebaseCrashlytics = FirebaseCrashlytics.instance;
   final logger = locator<CustomLogger>();
   final _internalOps = locator<InternalOpsRepository>();
-  final Log log = new Log("DBModel");
+  final Log log = const Log("DBModel");
 
   Future<bool> checkIfDeviceIsReal() async {
     if (Platform.isIOS) {
       IosDeviceInfo iosDeviceInfo = await deviceInfo.iosInfo;
-      logger!.d("Device info: ${iosDeviceInfo?.isPhysicalDevice}");
-      return iosDeviceInfo?.isPhysicalDevice ?? true;
+      logger.d("Device info: ${iosDeviceInfo.isPhysicalDevice}");
+      return iosDeviceInfo.isPhysicalDevice ?? true;
     } else {
       AndroidDeviceInfo androidDeviceInfo = await deviceInfo.androidInfo;
-      logger!.d("Device info: ${androidDeviceInfo?.isPhysicalDevice}");
-      return androidDeviceInfo?.isPhysicalDevice ?? true;
+      logger.d("Device info: ${androidDeviceInfo.isPhysicalDevice}");
+      return androidDeviceInfo.isPhysicalDevice ?? true;
     }
   }
 
@@ -44,7 +44,7 @@ class InternalOpsService extends ChangeNotifier {
     String? brand;
     bool? isPhysicalDevice;
     const BASE_CHANNEL = 'methodChannel/deviceData';
-    final platform = MethodChannel(BASE_CHANNEL);
+    const platform = MethodChannel(BASE_CHANNEL);
 
     if (!isDeviceInfoInitiated) {
       try {
@@ -58,7 +58,7 @@ class InternalOpsService extends ChangeNotifier {
           brand = "apple";
           _platform = "ios";
           integrity = 'UNAVAILABLE';
-          logger!.d(
+          logger.d(
               "Device Information - $phoneModel \n $softwareVersion \n $_deviceId");
         } else if (Platform.isAndroid) {
           AndroidDeviceInfo androidDeviceInfo = await deviceInfo.androidInfo;
@@ -74,7 +74,7 @@ class InternalOpsService extends ChangeNotifier {
           final bool isDeviceRooted =
               await platform.invokeMethod('isDeviceRooted');
           integrity = (isDeviceRooted) ? 'ROOTED' : 'NOT_ROOTED';
-          logger!.d(
+          logger.d(
               "Device Information - phoneModel: $phoneModel \nSoftware version: $softwareVersion \nDeviceId $_deviceId");
         }
         if ((_deviceId ?? '').isEmpty) {
@@ -117,7 +117,7 @@ class InternalOpsService extends ChangeNotifier {
     dMap['fail_type'] = failType.value();
     dMap['manually_resolved'] = false;
     dMap['app_version'] =
-        '${BaseUtil?.packageInfo?.version ?? ''}+${BaseUtil?.packageInfo?.buildNumber ?? ''}';
+        '${BaseUtil.packageInfo?.version ?? ''}+${BaseUtil.packageInfo?.buildNumber ?? ''}';
     if (phoneModel != null) {
       dMap['phone_model'] = phoneModel;
     }

@@ -83,7 +83,7 @@ class _TambolaLeaderboardViewState extends State<TambolaLeaderboardView> {
                             color: Colors.transparent,
                             alignment: Alignment.center,
                             width: SizeConfig.screenWidth,
-                            child: NoRecordDisplayWidget(
+                            child: const NoRecordDisplayWidget(
                               topPadding: false,
                               assetSvg: Assets.noWinnersAsset,
                               text: "Leaderboard will be updated soon",

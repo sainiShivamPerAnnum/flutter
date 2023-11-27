@@ -22,7 +22,7 @@ class BankDetailsCard extends StatelessWidget {
       value: locator<BankAndPanService>(),
       child: PropertyChangeConsumer<BankAndPanService,
               BankAndPanServiceProperties>(
-          properties: [BankAndPanServiceProperties.bankDetailsVerified],
+          properties: const [BankAndPanServiceProperties.bankDetailsVerified],
           builder: (context, model, property) => model!.isBankDetailsAdded &&
                   model.activeBankAccountDetails != null
               ? Container(
@@ -56,7 +56,7 @@ class BankDetailsCard extends StatelessWidget {
                           .colour(UiConstants.kTextColor2),
                     ),
                     trailing: IconButton(
-                      icon: Icon(
+                      icon: const Icon(
                         Icons.edit,
                         color: UiConstants.kTextColor,
                       ),
@@ -68,7 +68,7 @@ class BankDetailsCard extends StatelessWidget {
                     ),
                   ),
                 )
-              : SizedBox()),
+              : const SizedBox()),
     );
   }
 }

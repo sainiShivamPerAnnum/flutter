@@ -6,17 +6,13 @@ import 'package:isar/isar.dart';
 
 part 'cache_model.g.dart';
 
-
-
 @Collection()
 class CacheModel {
-  
   Id id = Isar.autoIncrement;
 
-
   final String? key;
-  final int ?ttl;
-  final int ?expireAfterTimestamp;
+  final int? ttl;
+  final int? expireAfterTimestamp;
   final String? data;
 
   CacheModel({
@@ -28,9 +24,9 @@ class CacheModel {
 
   CacheModel copyWith({
     String? key,
-    int ?ttl,
-    int ?expireAfterTimestamp,
-    String ? data,
+    int? ttl,
+    int? expireAfterTimestamp,
+    String? data,
   }) {
     return CacheModel(
       key: key ?? this.key,

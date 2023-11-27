@@ -34,7 +34,7 @@ class ScratchCardsView extends StatelessWidget {
                 ? ListView(
                     physics: const NeverScrollableScrollPhysics(),
                     shrinkWrap: true,
-                    children: [
+                    children: const [
                       NoRecordDisplayWidget(
                         assetSvg: Assets.noTickets,
                         text: "No Scratch Card won",
@@ -42,7 +42,7 @@ class ScratchCardsView extends StatelessWidget {
                     ],
                   )
                 : GridView.builder(
-          physics: const ClampingScrollPhysics(),
+                    physics: const ClampingScrollPhysics(),
                     itemCount: model.allScratchCards.length,
                     shrinkWrap: true,
                     gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(

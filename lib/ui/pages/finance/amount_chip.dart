@@ -6,12 +6,12 @@ import 'package:flutter/material.dart';
 
 class AmountChip extends StatelessWidget {
   const AmountChip(
-      {Key? key,
-      this.isBest = false,
-      required this.isActive,
+      {required this.isActive,
       required this.amt,
       required this.onClick,
-      required this.index})
+      required this.index,
+      Key? key,
+      this.isBest = false})
       : super(key: key);
 
   final bool isActive;
@@ -82,12 +82,12 @@ class AmountChip extends StatelessWidget {
 
 class AmountChipV2 extends StatelessWidget {
   const AmountChipV2(
-      {Key? key,
-      this.isBest = false,
-      required this.isActive,
+      {required this.isActive,
       required this.amt,
       required this.onClick,
-      required this.index})
+      required this.index,
+      Key? key,
+      this.isBest = false})
       : super(key: key);
 
   final bool isActive;

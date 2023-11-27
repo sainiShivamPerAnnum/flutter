@@ -6,11 +6,9 @@ import 'package:felloapp/core/model/gold_pro_models/gold_pro_scheme_model.dart';
 import 'package:felloapp/core/model/withdrawable_gold_details_model.dart';
 import 'package:felloapp/core/repository/base_repo.dart';
 import 'package:felloapp/core/service/api_service.dart';
-import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/app_exceptions.dart';
 import 'package:felloapp/util/flavor_config.dart';
-import 'package:felloapp/util/locator.dart';
 
 class PaymentRepository extends BaseRepo {
   static const _payments = 'payments';
@@ -19,20 +17,12 @@ class PaymentRepository extends BaseRepo {
       ? 'https://wd7bvvu7le.execute-api.ap-south-1.amazonaws.com/dev'
       : 'https://yg58g0feo0.execute-api.ap-south-1.amazonaws.com/prod';
 
-  final UserService? _userService = locator<UserService>();
-  final BaseUtil? _baseUtil = locator<BaseUtil>();
-
   Future<ApiResponse<WithdrawableGoldResponseModel>>
       getWithdrawableAugGoldQuantity() async {
     try {
-      String withdrawableQtyResponse = "";
-      double balance = 0;
-      double lockedQuantity = 0;
-      double quantity = 0;
-
       final quantityResponse = await APIService.instance.getData(
         ApiPath.getWithdrawableGoldQuantity(
-          this.userService!.baseUser!.uid,
+          userService.baseUser!.uid,
         ),
         cBaseUrl: _baseUrl,
         apiName: '$_payments/withdrawableByID',
@@ -42,13 +32,13 @@ class PaymentRepository extends BaseRepo {
 
       return ApiResponse(model: responseModel, code: 200);
     } on BadRequestException catch (e) {
-      logger!.e(e.toString());
+      logger.e(e.toString());
       BaseUtil.showNegativeAlert(
           e.toString() ?? "Unable to fetch gold details", "Please try again");
     } catch (e) {
-      logger!.e(e.toString());
+      logger.e(e.toString());
       return ApiResponse.withError(
-          e?.toString() ?? "Unable to fetch quantity", 400);
+          e.toString() ?? "Unable to fetch quantity", 400);
     }
     return ApiResponse();
   }
@@ -58,7 +48,7 @@ class PaymentRepository extends BaseRepo {
     String message = '';
     try {
       final Map<String, String?> _body = {
-        "uid": userService!.baseUser!.uid,
+        "uid": userService.baseUser!.uid,
         "name": bankHolderName,
         "ifsc": bankIfsc,
         "account": bankAccno
@@ -70,7 +60,7 @@ class PaymentRepository extends BaseRepo {
         cBaseUrl: _baseUrl,
         apiName: '$_payments/addBankDetails',
       );
-      logger!.d(response);
+      logger.d(response);
 
       return ApiResponse(
         model: true,
@@ -84,7 +74,7 @@ class PaymentRepository extends BaseRepo {
         errorMessage: e.toString(),
       );
     } catch (e) {
-      logger!.e(e.toString());
+      logger.e(e.toString());
       return ApiResponse.withError(
         e.toString() ?? message,
         400,
@@ -96,7 +86,7 @@ class PaymentRepository extends BaseRepo {
       getActiveBankAccountDetails() async {
     try {
       final response = await APIService.instance.getData(
-        ApiPath.kGetBankAccountDetails(userService!.baseUser!.uid),
+        ApiPath.kGetBankAccountDetails(userService.baseUser!.uid),
         cBaseUrl: _baseUrl,
         apiName: '$_payments/bankDetails',
       );
@@ -109,7 +99,7 @@ class PaymentRepository extends BaseRepo {
 
       return ApiResponse(model: bankAccountDetails, code: 200);
     } catch (e) {
-      logger!.e(e.toString());
+      logger.e(e.toString());
       return ApiResponse.withError("Unable to fetch User Upi Id", 400);
     }
   }

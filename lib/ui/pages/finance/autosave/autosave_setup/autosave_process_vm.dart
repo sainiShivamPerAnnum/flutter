@@ -128,14 +128,14 @@ class AutosaveProcessViewModel extends BaseViewModel {
     switch (value) {
       case FREQUENCY.daily:
         if (selectedAssetOption != 0) {
-          chipsController!.jumpToPage(0);
+          chipsController.jumpToPage(0);
           selectedAssetOption == 1
               ? floAmountFieldController?.text =
                   lbDailyChips[0].value.toString()
               : goldAmountFieldController?.text =
                   augDailyChips[0].value.toString();
         } else {
-          comboController!.jumpToPage(0);
+          comboController.jumpToPage(0);
           customComboModel = null;
           dailyCombos[2].isSelected = true;
           goldAmountFieldController?.text = dailyCombos[2].AUGGOLD99.toString();
@@ -144,14 +144,14 @@ class AutosaveProcessViewModel extends BaseViewModel {
         break;
       case FREQUENCY.weekly:
         if (selectedAssetOption != 0) {
-          chipsController!.jumpToPage(1);
+          chipsController.jumpToPage(1);
           selectedAssetOption == 1
               ? floAmountFieldController?.text =
                   lbWeeklyChips[0].value.toString()
               : goldAmountFieldController?.text =
                   augWeeklyChips[0].value.toString();
         } else {
-          comboController!.jumpToPage(1);
+          comboController.jumpToPage(1);
           customComboModel = null;
           weeklyCombos[2].isSelected = true;
           goldAmountFieldController?.text =
@@ -162,14 +162,14 @@ class AutosaveProcessViewModel extends BaseViewModel {
         break;
       case FREQUENCY.monthly:
         if (selectedAssetOption != 0) {
-          chipsController!.jumpToPage(2);
+          chipsController.jumpToPage(2);
           selectedAssetOption == 1
               ? floAmountFieldController?.text =
                   lbMonthlyChips[0].value.toString()
               : goldAmountFieldController?.text =
                   augMonthlyChips[0].value.toString();
         } else {
-          comboController!.jumpToPage(2);
+          comboController.jumpToPage(2);
           customComboModel = null;
           monthlyCombos[2].isSelected = true;
           goldAmountFieldController?.text =
@@ -768,7 +768,7 @@ class AutosaveProcessViewModel extends BaseViewModel {
   }
 
   void onCompleteClose() {
-    _analyticsService!.track(eventName: AnalyticsEvents.asDoneTapped);
+    _analyticsService.track(eventName: AnalyticsEvents.asDoneTapped);
     AppState.backButtonDispatcher!.didPopRoute();
     _gtService.fetchAndVerifyScratchCardByID();
   }

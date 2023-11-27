@@ -18,8 +18,8 @@ class LendboxWithdrawalInputView extends StatelessWidget {
   final LendboxWithdrawalViewModel model;
 
   const LendboxWithdrawalInputView({
-    Key? key,
     required this.model,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -48,22 +48,22 @@ class LendboxWithdrawalInputView extends StatelessWidget {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding12),
                 child: SellCardInfoStrips(
-                  content: model!.withdrawableQuantity!.lockedMessage,
+                  content: model.withdrawableQuantity!.lockedMessage,
                 ),
               ),
             SizedBox(height: SizeConfig.padding32),
             LendboxAmountInputView(
-              amountController: model!.amountController,
-              focusNode: model!.fieldNode,
+              amountController: model.amountController,
+              focusNode: model.fieldNode,
               chipAmounts: const [],
-              isEnabled: !model!.inProgress,
+              isEnabled: !model.inProgress,
               readOnly: model.readOnly,
               onTap: () => model.readOnly = false,
-              maxAmount: model!.withdrawableQuantity?.amount ?? 2,
+              maxAmount: model.withdrawableQuantity?.amount ?? 2,
               maxAmountMsg: locale.txnWithDrawLimit,
-              minAmount: model!.minAmount,
+              minAmount: model.minAmount,
               minAmountMsg: locale.txnWithDrawMin,
-              notice: model!.buyNotice,
+              notice: model.buyNotice,
               bestChipIndex: 1,
               onAmountChange: (int amount) {},
               // isbuyView: false,
@@ -103,7 +103,7 @@ class LendboxWithdrawalInputView extends StatelessWidget {
                                   .colour(UiConstants.kTextColor2),
                             ),
                             Text(
-                              '₹ ${model!.withdrawableQuantity?.amount?.toStringAsFixed(2) ?? 0}',
+                              '₹ ${model.withdrawableQuantity?.amount.toStringAsFixed(2) ?? 0}',
                               style: TextStyles.sourceSansSB.body0.colour(
                                 UiConstants.kTextColor,
                               ),
@@ -114,7 +114,7 @@ class LendboxWithdrawalInputView extends StatelessWidget {
                       SizedBox(
                         height: SizeConfig.padding32,
                       ),
-                      model!.state == ViewState.Busy || model!.inProgress
+                      model.state == ViewState.Busy || model.inProgress
                           ? Container(
                               height: SizeConfig.screenWidth! * 0.1556,
                               alignment: Alignment.center,
@@ -128,9 +128,9 @@ class LendboxWithdrawalInputView extends StatelessWidget {
                           : AppPositiveBtn(
                               btnText: locale.btnWithDraw.toUpperCase(),
                               onPressed: () async {
-                                if (!model!.inProgress) {
+                                if (!model.inProgress) {
                                   FocusScope.of(context).unfocus();
-                                  model!.initiateWithdraw();
+                                  model.initiateWithdraw();
                                 }
                               },
                               width: SizeConfig.screenWidth! * 0.813,
@@ -143,7 +143,7 @@ class LendboxWithdrawalInputView extends StatelessWidget {
           ],
         ),
         CustomKeyboardSubmitButton(
-          onSubmit: () => model!.fieldNode.unfocus(),
+          onSubmit: () => model.fieldNode.unfocus(),
         )
       ],
     );

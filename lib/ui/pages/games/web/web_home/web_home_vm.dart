@@ -1,5 +1,6 @@
 import 'dart:developer';
 
+import 'package:collection/collection.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
@@ -47,15 +48,15 @@ class RechargeOption {
 class WebHomeViewModel extends BaseViewModel {
   //Dependency Injection
   final UserService _userService = locator<UserService>();
-  final LeaderboardService? _lbService = locator<LeaderboardService>();
+  final LeaderboardService _lbService = locator<LeaderboardService>();
   final AnalyticsService _analyticsService = locator<AnalyticsService>();
-  final UserRepository? _userRepo = locator<UserRepository>();
-  final CustomLogger? _logger = locator<CustomLogger>();
-  final UserCoinService? _coinService = locator<UserCoinService>();
-  final GameRepo? _gamesRepo = locator<GameRepo>();
-  final GetterRepository? _getterRepo = locator<GetterRepository>();
-  final DBModel? _dbModel = locator<DBModel>();
-  final InternalOpsService? _internalOps = locator<InternalOpsService>();
+  final UserRepository _userRepo = locator<UserRepository>();
+  final CustomLogger _logger = locator<CustomLogger>();
+  final UserCoinService _coinService = locator<UserCoinService>();
+  final GameRepo _gamesRepo = locator<GameRepo>();
+  final GetterRepository _getterRepo = locator<GetterRepository>();
+  final DBModel _dbModel = locator<DBModel>();
+  final InternalOpsService _internalOps = locator<InternalOpsService>();
   S locale = locator<S>();
   //Local Variables
   bool _isGameLoading = false;
@@ -67,20 +68,20 @@ class WebHomeViewModel extends BaseViewModel {
   GameModel? _currentGameModel;
   List<RechargeOption> rechargeOptions = [
     RechargeOption(
-      color: Color(0xff5948B2),
+      color: const Color(0xff5948B2),
       amount: 100,
     ),
     RechargeOption(
-      color: Color(0xff9A3538),
+      color: const Color(0xff9A3538),
       amount: 200,
     ),
     RechargeOption(
-      color: Color(0xff9A3538),
+      color: const Color(0xff9A3538),
       amount: 500,
     ),
     RechargeOption(
       isCustom: true,
-      color: Color(0xff39393C),
+      color: const Color(0xff39393C),
       amount: 0,
     )
   ];
@@ -90,31 +91,31 @@ class WebHomeViewModel extends BaseViewModel {
 
   //Getters
   List<ScoreBoard>? get pastWeekParticipants => _pastWeekParticipants;
-  String? get currentGame => this._currentGame;
+  String? get currentGame => _currentGame;
 
   String? get sessionID => _sessionId;
-  get isLoading => this._isLoading;
+  get isLoading => _isLoading;
   GameModel? get currentGameModel => _currentGameModel;
   int? get currentCoinValue => _currentCoinValue;
 
   //Setters
   set currentGame(value) {
-    this._currentGame = value;
+    _currentGame = value;
     notifyListeners();
   }
 
   set currentGameModel(GameModel? value) {
-    this._currentGameModel = value;
+    _currentGameModel = value;
     notifyListeners();
   }
 
   set isGameLoading(value) {
-    this._isGameLoading = value;
+    _isGameLoading = value;
     notifyListeners();
   }
 
   set isLoading(value) {
-    this._isLoading = value;
+    _isLoading = value;
     notifyListeners();
   }
 
@@ -150,8 +151,9 @@ class WebHomeViewModel extends BaseViewModel {
   }
 
   clear() {
-    if (AppState.screenStack.last == ScreenItem.modalsheet)
+    if (AppState.screenStack.last == ScreenItem.modalsheet) {
       AppState.screenStack.removeLast();
+    }
   }
 
   Future<bool> setupGame() async {
@@ -195,8 +197,9 @@ class WebHomeViewModel extends BaseViewModel {
     if (response.code == 200) {
       _pastWeekParticipants =
           LeaderboardModel.fromMap(response.model).scoreboard;
-    } else
+    } else {
       _pastWeekParticipants = [];
+    }
     notifyListeners();
   }
 
@@ -285,7 +288,7 @@ class WebHomeViewModel extends BaseViewModel {
             _userService.userBootUp?.data?.banMap?.games?.twoDots?.reason ?? '';
         break;
     }
-    if (isUserBannedForThisGame != null && isUserBannedForThisGame) {
+    if (isUserBannedForThisGame) {
       BaseUtil.showNegativeAlert(
           userBannedNotice ?? locale.gameLocked, locale.contactUs);
       return false;
@@ -319,9 +322,9 @@ class WebHomeViewModel extends BaseViewModel {
     if (response.isSuccess()) gameToken = response.model;
     setState(ViewState.Idle);
     if (_flcResponse.model!.flcBalance != null &&
-        _flcResponse.model!.flcBalance! >= _playCost!)
+        _flcResponse.model!.flcBalance! >= _playCost!) {
       return true;
-    else {
+    } else {
       earnMoreTokens();
       return false;
     }
@@ -358,8 +361,9 @@ class WebHomeViewModel extends BaseViewModel {
 
   setGameDetails(String game) async {
     isGameLoading = true;
-    final GameModel? gameData = _gamesRepo!.allgames!
-        .firstWhere((g) => g.gameCode == game, orElse: null);
+    GameModel? gameData = _gamesRepo!.allgames!.firstWhereOrNull(
+      (g) => g.gameCode == game,
+    );
     if (gameData != null) {
       currentGameModel = gameData;
       return;

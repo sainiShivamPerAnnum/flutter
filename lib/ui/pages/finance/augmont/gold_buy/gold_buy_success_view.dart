@@ -99,7 +99,7 @@ class _GoldBuySuccessViewState extends State<GoldBuySuccessView>
                         fit: BoxFit.cover,
                       ),
                     ),
-                    if (_augTxnService!.currentTxnAmount! > 0)
+                    if (_augTxnService.currentTxnAmount! > 0)
                       Align(
                         alignment: Alignment.centerLeft,
                         child: Container(
@@ -113,7 +113,7 @@ class _GoldBuySuccessViewState extends State<GoldBuySuccessView>
                           ),
                         ),
                       ),
-                    if (_augTxnService!.currentTxnScratchCardCount > 0)
+                    if (_augTxnService.currentTxnScratchCardCount > 0)
                       Align(
                         alignment: Alignment.centerRight,
                         child: Container(
@@ -128,7 +128,7 @@ class _GoldBuySuccessViewState extends State<GoldBuySuccessView>
                           ),
                         ),
                       ),
-                    if (_augTxnService!.currentTxnTambolaTicketsCount > 0)
+                    if (_augTxnService.currentTxnTambolaTicketsCount > 0)
                       Align(
                         alignment: Alignment.bottomCenter,
                         child: Container(
@@ -147,14 +147,14 @@ class _GoldBuySuccessViewState extends State<GoldBuySuccessView>
                 style: TextStyles.rajdhaniB.title2,
               ),
               SizedBox(height: SizeConfig.padding12),
-              if (_augTxnService?.transactionResponseModel?.data?.txnDisplayMsg
+              if (_augTxnService.transactionResponseModel?.data?.txnDisplayMsg
                       ?.isNotEmpty ??
                   false)
                 SizedBox(
                   width: SizeConfig.screenWidth! * 0.8,
                   child: Text(
                     _augTxnService
-                            ?.transactionResponseModel?.data?.txnDisplayMsg ??
+                            .transactionResponseModel?.data?.txnDisplayMsg ??
                         "",
                     textAlign: TextAlign.center,
                     style: TextStyles.sourceSans.body2.setOpacity(0.7),
@@ -198,7 +198,7 @@ class _GoldBuySuccessViewState extends State<GoldBuySuccessView>
                                       .colour(UiConstants.kTextColor2)),
                               SizedBox(height: SizeConfig.padding16),
                               Text(
-                                  "₹ ${BaseUtil.getIntOrDouble(_augTxnService!.currentTxnAmount!)}",
+                                  "₹ ${BaseUtil.getIntOrDouble(_augTxnService.currentTxnAmount!)}",
                                   style: TextStyles.rajdhaniB.title3),
                               SizedBox(height: SizeConfig.padding12),
                             ],
@@ -225,7 +225,7 @@ class _GoldBuySuccessViewState extends State<GoldBuySuccessView>
                                       .colour(UiConstants.kTextColor2)),
                               SizedBox(height: SizeConfig.padding16),
                               Text(
-                                  "${_augTxnService!.currentTxnGms}${locale.gm}",
+                                  "${_augTxnService.currentTxnGms}${locale.gm}",
                                   style: TextStyles.rajdhaniB.title4),
                               SizedBox(height: SizeConfig.padding12),
                             ],
@@ -273,25 +273,22 @@ class _GoldBuySuccessViewState extends State<GoldBuySuccessView>
                     right: SizeConfig.pageHorizontalMargins,
                     left: SizeConfig.pageHorizontalMargins),
                 child: Row(
-                  children: [
-                    if (_augTxnService!.currentTxnScratchCardCount > 0)
-                      SizedBox(width: SizeConfig.padding12),
-                    if (_augTxnService!.currentTxnScratchCardCount > 0)
+                    if (_augTxnService.currentTxnScratchCardCount > 0)
                       WinningChips(
-                          title: _augTxnService!.currentTxnScratchCardCount > 1
+                          title: _augTxnService.currentTxnScratchCardCount > 1
                               ? locale.scratchCards
                               : locale.scratchCard,
                           tooltip: locale.winChipsTitle2,
                           asset: Assets.unredemmedScratchCardBG,
-                          qty: _augTxnService!.currentTxnScratchCardCount),
-                    if (_augTxnService!.currentTxnTambolaTicketsCount > 0)
+                          qty: _augTxnService.currentTxnScratchCardCount),
+                    if (_augTxnService.currentTxnTambolaTicketsCount > 0)
                       SizedBox(width: SizeConfig.padding12),
-                    if (_augTxnService!.currentTxnTambolaTicketsCount > 0)
+                    if (_augTxnService.currentTxnTambolaTicketsCount > 0)
                       WinningChips(
                           title: 'Tickets',
                           tooltip: '',
                           asset: Assets.singleTmbolaTicket,
-                          qty: _augTxnService!.currentTxnTambolaTicketsCount)
+                          qty: _augTxnService.currentTxnTambolaTicketsCount)
                   ],
                 ),
               ),
@@ -549,11 +546,11 @@ class WinningChips extends StatelessWidget {
   final Widget? widget;
 
   const WinningChips(
-      {Key? key,
-      required this.title,
+      {required this.title,
       required this.asset,
       required this.qty,
       required this.tooltip,
+      Key? key,
       this.widget,
       this.color,
       this.margin})

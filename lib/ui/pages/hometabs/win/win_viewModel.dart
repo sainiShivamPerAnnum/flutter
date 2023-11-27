@@ -49,7 +49,7 @@ class WinViewModel extends BaseViewModel {
   final CampaignRepo _campaignRepo = locator<CampaignRepo>();
   final ScratchCardRepository _gtRepo = locator<ScratchCardRepository>();
   final UserRepository _userRepo = locator<UserRepository>();
-  int _unscratchedGTCount = 0;
+  final int _unscratchedGTCount = 0;
   S locale = locator<S>();
 
   Timer? _timer;
@@ -63,21 +63,21 @@ class WinViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  bool _isShareAlreadyClicked = false;
+  final bool _isShareAlreadyClicked = false;
 
   bool get isShareAlreadyClicked => _isShareAlreadyClicked;
 
   bool shareWhatsappInProgress = false;
   bool shareLinkInProgress = false;
-  bool _isShareLoading = false;
+  final bool _isShareLoading = false;
 
   bool get isShareLoading => _isShareLoading;
-  String _refUrl = "";
+  final String _refUrl = "";
 
   get refUrl => _refUrl;
 
   double get getUnclaimedPrizeBalance =>
-      _userService!.userFundWallet!.unclaimedBalance;
+      _userService.userFundWallet!.unclaimedBalance;
 
   Future<void> init() async {
     getFelloFacts();
@@ -152,10 +152,11 @@ class WinViewModel extends BaseViewModel {
   }
 
   String getWinningsButtonText() {
-    if (_userService!.userFundWallet!.isPrizeBalanceUnclaimed())
+    if (_userService.userFundWallet!.isPrizeBalanceUnclaimed()) {
       return locale.redeem;
-    else
+    } else {
       return locale.share;
+    }
   }
 
   // Future<PrizeClaimChoice> getClaimChoice() async {
@@ -170,7 +171,7 @@ class WinViewModel extends BaseViewModel {
   }
 
   void navigateToRefer() {
-    _analyticsService!.track(eventName: AnalyticsEvents.winReferral);
+    _analyticsService.track(eventName: AnalyticsEvents.winReferral);
     AppState.delegate!.appState.currentAction = PageAction(
       state: PageState.addPage,
       page: ReferralDetailsPageConfig,
@@ -314,7 +315,7 @@ class WinViewModel extends BaseViewModel {
 // Capture Share card Logic
 
   void navigateToWinnings() {
-    _analyticsService!.track(eventName: AnalyticsEvents.winReferral);
+    _analyticsService.track(eventName: AnalyticsEvents.winReferral);
     AppState.delegate!.appState.currentAction = PageAction(
       state: PageState.addPage,
       page: MyWinningsPageConfig,
@@ -322,7 +323,7 @@ class WinViewModel extends BaseViewModel {
   }
 
   openProfile() {
-    _baseUtil!.openProfileDetailsScreen();
+    _baseUtil.openProfileDetailsScreen();
   }
 
   double calculateFillHeight(
@@ -335,14 +336,14 @@ class WinViewModel extends BaseViewModel {
 
   getFelloFacts() async {
     isFelloFactsLoading = true;
-    final res = await _campaignRepo!.getFelloFacts();
+    final res = await _campaignRepo.getFelloFacts();
     if (res.isSuccess()) {
       fellofacts = res.model;
-      _logger!.d("Fello Facts Fetched Length: ${fellofacts!.length}");
+      _logger.d("Fello Facts Fetched Length: ${fellofacts!.length}");
     } else {
       fellofacts = [];
     }
-    _logger!.d("Fello Facts Length: ${fellofacts!.length}");
+    _logger.d("Fello Facts Length: ${fellofacts!.length}");
     isFelloFactsLoading = false;
   }
 

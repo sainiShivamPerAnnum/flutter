@@ -32,10 +32,11 @@ class AllParticipantsWinnersTopReferrers extends StatelessWidget {
   }
 
   dynamic getPoints(double points) {
-    if (points > points.toInt())
+    if (points > points.toInt()) {
       return points;
-    else
+    } else {
       return points.toInt();
+    }
   }
 
   @override
@@ -68,7 +69,7 @@ class AllParticipantsWinnersTopReferrers extends StatelessWidget {
                             (i) {
                               return Container(
                                 width: SizeConfig.screenWidth,
-                                decoration: BoxDecoration(
+                                decoration: const BoxDecoration(
                                   color: Colors.transparent,
                                 ),
                                 child: Column(
@@ -121,7 +122,7 @@ class AllParticipantsWinnersTopReferrers extends StatelessWidget {
                                       height: SizeConfig.padding14,
                                     ),
                                     if (i + 1 < referralLeaderBoard!.length)
-                                      Divider(
+                                      const Divider(
                                         color: Colors.white,
                                         thickness: 0.2,
                                       ),
@@ -197,7 +198,7 @@ class AllParticipantsWinnersTopReferrers extends StatelessWidget {
                                     ),
                                   ),
                                   if (i + 1 < winners!.length)
-                                    Divider(
+                                    const Divider(
                                       color: Colors.white,
                                       thickness: 0.2,
                                     )

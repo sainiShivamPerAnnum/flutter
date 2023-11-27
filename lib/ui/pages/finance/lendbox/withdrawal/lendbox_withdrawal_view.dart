@@ -26,32 +26,31 @@ class _LendboxWithdrawalViewState extends State<LendboxWithdrawalView>
     with WidgetsBindingObserver {
   final LendboxTransactionService _txnService =
       locator<LendboxTransactionService>();
-  AppLifecycleState? appLifecycleState;
+
   final iosScreenShotChannel = const MethodChannel('secureScreenshotChannel');
   @override
   void initState() {
     super.initState();
-    WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       _txnService.currentTransactionState = TransactionState.idle;
     });
-    WidgetsBinding.instance!.addObserver(this);
+    WidgetsBinding.instance.addObserver(this);
   }
 
   @override
   void dispose() {
-    WidgetsBinding.instance!.removeObserver(this);
+    WidgetsBinding.instance.removeObserver(this);
     super.dispose();
   }
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    appLifecycleState = state;
-    if (appLifecycleState == AppLifecycleState.resumed) {
+    super.didChangeAppLifecycleState(state);
+    if (state == AppLifecycleState.resumed) {
       if (!_txnService.isIOSTxnInProgress) return;
       _txnService.isIOSTxnInProgress = false;
-      _txnService.initiatePolling();
+      _txnService.checkTransactionStatus();
     }
-    super.didChangeAppLifecycleState(state);
   }
 
   @override
@@ -71,7 +70,7 @@ class _LendboxWithdrawalViewState extends State<LendboxWithdrawalView>
           duration: const Duration(milliseconds: 500),
           child: Stack(
             children: [
-              _getBackground(txnService!),
+              _getBackground(txnService),
               PageTransitionSwitcher(
                 duration: const Duration(milliseconds: 500),
                 transitionBuilder: (
@@ -128,7 +127,7 @@ class _LendboxWithdrawalViewState extends State<LendboxWithdrawalView>
     LendboxTransactionService txnService,
     LendboxWithdrawalViewModel model,
   ) {
-    final type = TransactionType.WITHDRAWAL;
+    const type = TransactionType.WITHDRAWAL;
 
     if (txnService.currentTransactionState == TransactionState.idle) {
       return LendboxWithdrawalInputView(

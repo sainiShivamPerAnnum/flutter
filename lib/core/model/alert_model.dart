@@ -94,8 +94,7 @@ class Misc {
         userType: json["userType"],
       );
 
-  Map<String, dynamic> toJson() =>
-      {
+  Map<String, dynamic> toJson() => {
         "command": command,
         "gtId": gtId,
         "amount": amount,

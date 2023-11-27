@@ -43,7 +43,7 @@ class _PauseAutosaveModalState extends State<PauseAutosaveModal> {
           Row(
             children: [
               Text(locale.pauseAutoSave, style: TextStyles.rajdhaniB.title3),
-              Spacer(),
+              const Spacer(),
               CircleAvatar(
                 backgroundColor: Colors.transparent,
                 child: IconButton(
@@ -94,9 +94,10 @@ class _PauseAutosaveModalState extends State<PauseAutosaveModal> {
             //         style: TextStyles.rajdhaniB.body1.bold.colour(Colors.white),
             //       ),
             onPressed: () async {
-              if (pauseValue == null)
+              if (pauseValue == null) {
                 return BaseUtil.showNegativeAlert("No duration selected",
                     "Please select a duration to pause");
+              }
               if (pauseValue == 3) {
                 BaseUtil.openDialog(
                   addToScreenStack: true,

@@ -20,7 +20,7 @@ import 'package:permission_handler/permission_handler.dart';
 
 class KycUnVerifiedView extends StatelessWidget {
   final KYCDetailsViewModel model;
-  const KycUnVerifiedView({Key? key, required this.model}) : super(key: key);
+  const KycUnVerifiedView({required this.model, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -100,11 +100,11 @@ class KycUnVerifiedView extends StatelessWidget {
 
                             model.permissionFailureCount += 1;
                             print(e.runtimeType);
-                            final Permission camera_permission =
+                            const Permission cameraPermission =
                                 Permission.camera;
-                            final PermissionStatus camera_permission_status =
-                                await camera_permission.status;
-                            if (model.permissionFailureCount > 2)
+                            final PermissionStatus cameraPermissionStatus =
+                                await cameraPermission.status;
+                            if (model.permissionFailureCount > 2) {
                               return BaseUtil.openDialog(
                                 isBarrierDismissible: true,
                                 addToScreenStack: true,
@@ -120,7 +120,7 @@ class KycUnVerifiedView extends StatelessWidget {
                                   },
                                 ),
                               );
-                            else if (camera_permission_status ==
+                            } else if (cameraPermissionStatus ==
                                 PermissionStatus.denied) {
                               return BaseUtil.openDialog(
                                 isBarrierDismissible: true,
@@ -191,7 +191,7 @@ class KycUnVerifiedView extends StatelessWidget {
               padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins / 2),
               child: Row(
                 children: [
-                  Icon(
+                  const Icon(
                     Icons.error_outline,
                     color: Colors.red,
                   ),

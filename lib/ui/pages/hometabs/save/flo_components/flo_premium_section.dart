@@ -12,8 +12,8 @@ class FloPremiumSection extends StatelessWidget {
   final UserService model;
 
   const FloPremiumSection({
-    super.key,
     required this.model,
+    super.key,
   });
 
   @override
@@ -65,10 +65,10 @@ class FloPremiumSection extends StatelessWidget {
             Align(
               alignment: Alignment.topCenter,
               child: Container(
-                margin: EdgeInsets.only(
-                  left: SizeConfig.screenWidth! / 8,
-                ),
-                width: SizeConfig.screenWidth! * 0.5,
+                  margin: EdgeInsets.only(
+                    left: SizeConfig.screenWidth! / 8,
+                  ),
+                  width: SizeConfig.screenWidth! * 0.5,
                   child: const AvailabilityOfferWidget()),
             ),
           ],

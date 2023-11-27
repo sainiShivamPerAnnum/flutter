@@ -73,18 +73,18 @@ class GTDetailedViewModel extends BaseViewModel {
 
   Future<bool> redeemTicket(ScratchCard ticket) async {
     try {
-      final res = await _gtRepo!.redeemReward(ticket.gtId);
+      final res = await _gtRepo.redeemReward(ticket.gtId);
       _gtService.refreshTickets(gtId: ticket.gtId!);
       if (res.isSuccess()) {
         unawaited(_gtService.updateUnscratchedGTCount());
-        unawaited(_userService!.getUserFundWalletData());
-        unawaited(_userCoinService!.getUserCoinBalance());
+        unawaited(_userService.getUserFundWalletData());
+        unawaited(_userCoinService.getUserCoinBalance());
         _journeyService.updateRewardStatus(ticket.prizeSubtype!);
         return true;
       }
       return false;
     } catch (e) {
-      _logger!.e(e);
+      _logger.e(e);
       return false;
     }
   }
@@ -108,8 +108,8 @@ class GTDetailedViewModel extends BaseViewModel {
   }
 
   Future<String> _getBearerToken() async {
-    String token = await _userService!.firebaseUser!.getIdToken();
-    _logger!.d(token);
+    String token = await _userService.firebaseUser!.getIdToken();
+    _logger.d(token);
 
     return token;
   }

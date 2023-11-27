@@ -12,11 +12,11 @@ class LendBoxAppBar extends StatelessWidget {
   final String assetType;
 
   const LendBoxAppBar(
-      {super.key,
-      required this.isEnabled,
-      this.trackClosingEvent,
+      {required this.isEnabled,
       required this.isOldUser,
-      required this.assetType});
+      required this.assetType,
+      super.key,
+      this.trackClosingEvent});
 
   String getTitle() {
     if (assetType == Constants.ASSET_TYPE_FLO_FELXI && isOldUser) {

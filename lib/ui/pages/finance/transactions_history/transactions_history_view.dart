@@ -40,13 +40,13 @@ class TransactionsHistory extends StatelessWidget {
       onModelReady: (model) {
         model.init(investmentType, showAutosave);
       },
-      child: NoTransactionsContent(),
+      child: const NoTransactionsContent(),
       builder: (ctx, model, child) {
         return Scaffold(
             appBar: AppBar(
               backgroundColor: UiConstants.kBackgroundColor,
               elevation: 0,
-              leading: FelloAppBarBackButton(),
+              leading: const FelloAppBarBackButton(),
               title: Text(
                 (investmentType == InvestmentType.AUGGOLD99
                         ? "Gold "
@@ -173,7 +173,7 @@ class SingleTransactionView extends StatelessWidget {
                               ],
                             )
                           : ListView(
-                  physics: const BouncingScrollPhysics(),
+                              physics: const BouncingScrollPhysics(),
                               controller: model!.tranListController,
                               children: List.generate(
                                 model!.filteredList!.length,
@@ -240,7 +240,7 @@ class SIPTransactionHistoryView extends StatelessWidget {
                           ],
                         )
                       : ListView(
-              physics: const BouncingScrollPhysics(),
+                          physics: const BouncingScrollPhysics(),
                           controller: model!.sipScrollController,
                           children: List.generate(
                             model!.filteredSIPList!.length,
@@ -277,7 +277,7 @@ class SIPTransactionHistoryView extends StatelessWidget {
 class NoTransactionsContent extends StatelessWidget {
   final double? width;
 
-  NoTransactionsContent({super.key, this.width});
+  const NoTransactionsContent({super.key, this.width});
 
   @override
   Widget build(BuildContext context) {
@@ -312,8 +312,8 @@ class TransactionTile extends StatelessWidget {
   final TxnHistoryService txnHistoryService = locator<TxnHistoryService>();
 
   TransactionTile({
-    super.key,
     required this.txn,
+    super.key,
   });
 
   String get getFormattedDate =>
@@ -385,23 +385,21 @@ class TransactionTile extends StatelessWidget {
 
   String floSubtype() {
     if (txn.subType == "LENDBOXP2P") {
-      if (txn.lbMap != null) {
-        switch (txn.lbMap.fundType) {
-          case Constants.ASSET_TYPE_FLO_FIXED_6:
-            return "12% Flo on ";
-          case Constants.ASSET_TYPE_FLO_FIXED_3:
+      switch (txn.lbMap.fundType) {
+        case Constants.ASSET_TYPE_FLO_FIXED_6:
+          return "12% Flo on ";
+        case Constants.ASSET_TYPE_FLO_FIXED_3:
+          return "10% Flo on ";
+        case Constants.ASSET_TYPE_FLO_FELXI:
+          if (locator<UserService>()
+              .userSegments
+              .contains(Constants.US_FLO_OLD)) {
             return "10% Flo on ";
-          case Constants.ASSET_TYPE_FLO_FELXI:
-            if (locator<UserService>()
-                .userSegments
-                .contains(Constants.US_FLO_OLD)) {
-              return "10% Flo on ";
-            } else {
-              return "8% Flo on ";
-            }
-          default:
-            return "10% Flo on ";
-        }
+          } else {
+            return "8% Flo on ";
+          }
+        default:
+          return "10% Flo on ";
       }
     }
     return "";
@@ -412,7 +410,7 @@ class TransactionStatusChip extends StatelessWidget {
   final Color color;
   final String? status;
 
-  TransactionStatusChip(
+  const TransactionStatusChip(
       {super.key, this.color = Colors.white, this.status = "NA"});
 
   @override
@@ -439,11 +437,11 @@ class TransactionStatusChip extends StatelessWidget {
 class TransactionSIPTile extends StatelessWidget {
   final TransactionsHistoryViewModel? model;
   final SubscriptionTransactionModel? txn;
-  final TxnHistoryService? _txnHistoryService = locator<TxnHistoryService>();
+  final TxnHistoryService _txnHistoryService = locator<TxnHistoryService>();
 
   TransactionSIPTile({
-    super.key,
     required this.model,
+    super.key,
     this.txn,
   });
 
@@ -461,7 +459,7 @@ class TransactionSIPTile extends StatelessWidget {
           style: TextStyles.sourceSans.body3),
       subtitle: Text(
         _txnHistoryService!.getFormattedSIPDate(
-            DateTime.parse(txn!.createdOn!.toDate().toString())),
+            DateTime.parse(txn!.createdOn.toDate().toString())),
         style: TextStyles.sourceSans.body4.colour(UiConstants.kTextColor2),
       ),
       trailing: Wrap(

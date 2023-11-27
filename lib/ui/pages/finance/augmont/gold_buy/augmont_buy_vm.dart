@@ -260,6 +260,7 @@ class GoldBuyViewModel extends BaseViewModel {
     double? gms, {
     String? initialCouponCode,
     String? entryPoint,
+    bool quickCheckout = false,
   }) async {
     setState(ViewState.Busy);
     appMetaList = await UpiUtils.getUpiApps();
@@ -281,7 +282,7 @@ class GoldBuyViewModel extends BaseViewModel {
     if (goldBuyAmount != assetOptionsModel?.data.userOptions[1].value) {
       lastTappedChipIndex = -1;
     }
-    unawaited(fetchGoldRates().then((value) {
+    final goldRateFuture = fetchGoldRates().then((value) {
       if (gms != null) {
         double netTax =
             (goldRates?.cgstPercent ?? 0) + (goldRates?.sgstPercent ?? 0);
@@ -298,7 +299,7 @@ class GoldBuyViewModel extends BaseViewModel {
         FocusScope.of(AppState.delegate!.navigatorKey.currentContext!)
             .unfocus();
       }
-    }));
+    });
 
     // await fetchNotices();
     status = checkAugmontStatus();
@@ -313,6 +314,11 @@ class GoldBuyViewModel extends BaseViewModel {
 
     userAugmontState = await CacheManager.readCache(key: "UserAugmontState");
     // setBackButtonActions();
+
+    if (quickCheckout) {
+      await goldRateFuture;
+      await initiateBuy();
+    }
   }
 
   bool hideKeyboard = false;

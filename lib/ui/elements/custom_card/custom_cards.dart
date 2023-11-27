@@ -23,6 +23,8 @@ class SaveCustomCard extends StatelessWidget {
   final Color? footerColor;
 
   const SaveCustomCard({
+    required this.chipText,
+    required this.investmentType,
     Key? key,
     this.title,
     this.onCardTap,
@@ -30,8 +32,6 @@ class SaveCustomCard extends StatelessWidget {
     this.subtitle,
     this.cardAssetName,
     this.onTap,
-    required this.chipText,
-    required this.investmentType,
     this.footerColor,
     this.footerText,
   }) : super(key: key);
@@ -122,9 +122,10 @@ class SaveCustomCard extends StatelessWidget {
                     width: SizeConfig.screenWidth! * 0.32,
                     height: SizeConfig.padding32,
                     decoration: BoxDecoration(
-                        color: (key == ValueKey(Constants.ASSET_TYPE_AUGMONT))
-                            ? Color(0xff5567B7)
-                            : Color(0xff326D71),
+                        color: (key ==
+                                const ValueKey(Constants.ASSET_TYPE_AUGMONT))
+                            ? const Color(0xff5567B7)
+                            : const Color(0xff326D71),
                         borderRadius:
                             BorderRadius.circular(SizeConfig.roundness8)),
                     child: AnimatedTextKit(

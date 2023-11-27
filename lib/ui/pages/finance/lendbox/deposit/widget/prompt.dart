@@ -19,10 +19,10 @@ import '../../../../../../util/constants.dart';
 
 class ReInvestPrompt extends HookWidget {
   const ReInvestPrompt({
-    Key? key,
     required this.amount,
     required this.assetType,
     required this.model,
+    Key? key,
   }) : super(key: key);
 
   final String amount;
@@ -274,12 +274,12 @@ class OptionContainer extends StatelessWidget {
   final VoidCallback onTap;
 
   const OptionContainer({
-    Key? key,
     required this.optionIndex,
     required this.title,
     required this.description,
     required this.isSelected,
     required this.onTap,
+    Key? key,
   }) : super(key: key);
 
   @override
@@ -352,7 +352,7 @@ class OptionContainer extends StatelessWidget {
 }
 
 class WarningBottomSheet extends StatelessWidget {
-  const WarningBottomSheet({Key? key, required this.model}) : super(key: key);
+  const WarningBottomSheet({required this.model, Key? key}) : super(key: key);
 
   final LendboxBuyViewModel model;
 
@@ -459,11 +459,11 @@ class WarningBottomSheet extends StatelessWidget {
 
 class InvestmentForeseenWidget extends StatelessWidget {
   const InvestmentForeseenWidget(
-      {Key? key,
-      required this.amount,
+      {required this.amount,
       required this.assetType,
       required this.isLendboxOldUser,
-      required this.onChanged})
+      required this.onChanged,
+      Key? key})
       : super(key: key);
 
   final String amount;
@@ -574,10 +574,10 @@ class InvestmentForeseenWidget extends StatelessWidget {
 
 class MaturityPrefModalSheet extends StatefulWidget {
   const MaturityPrefModalSheet({
-    super.key,
     required this.amount,
     required this.assetType,
     required this.txnId,
+    super.key,
     this.hasConfirmed = false,
   });
 

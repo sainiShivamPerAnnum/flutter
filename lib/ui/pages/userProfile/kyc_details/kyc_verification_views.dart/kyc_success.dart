@@ -12,7 +12,7 @@ import 'package:flutter_svg/svg.dart';
 class KycSuccessView extends StatelessWidget {
   final KYCDetailsViewModel model;
 
-  const KycSuccessView({Key? key, required this.model}) : super(key: key);
+  const KycSuccessView({required this.model, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
