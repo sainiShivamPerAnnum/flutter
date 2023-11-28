@@ -29,7 +29,6 @@ class Assets {
 
   static const String alerts = "assets/vectors/icons/alerts.svg";
   static const String token = "assets/vectors/icons/token.svg";
-  static const String tokenOutlined = "assets/vectors/icons/outline_token.svg";
   static const String tickets = "assets/vectors/icons/tickets.svg";
   static const String ticketOutlined =
       "assets/vectors/icons/horizontal_outlined_ticket.svg";

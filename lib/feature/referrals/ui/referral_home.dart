@@ -456,14 +456,17 @@ class _ReferralHomeState extends State<ReferralHome> {
                           (referralService.referralShortLink ?? "");
 
                   if (!await canLaunchUrl(
-                      Uri.parse('whatsapp://send?text=$message'))) {
+                    Uri.parse('https://wa.me/?text=$message'),
+                  )) {
                     BaseUtil.showNegativeAlert('Whatsapp not installed',
                         'Please install whatsapp to share referral link');
                     return;
                   }
 
-                  launchUrl(Uri.parse('whatsapp://send?text=$message'),
-                      mode: LaunchMode.externalApplication);
+                  await launchUrl(
+                    Uri.parse('https://wa.me/?text=$message'),
+                    mode: LaunchMode.externalApplication,
+                  );
 
                   locator<AnalyticsService>().track(
                     eventName: AnalyticsEvents.whatsappButtonTapped,
