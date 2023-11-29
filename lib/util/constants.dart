@@ -196,5 +196,5 @@ class Constants {
 
   /// The amount limit of investment after which the mandatory payment gateway
   /// switches to net-banking.
-  static const int mandatoryNetBankingThreshold = 125;
+  static const int mandatoryNetBankingThreshold = 100000;
 }

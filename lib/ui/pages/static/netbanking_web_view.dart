@@ -51,6 +51,12 @@ class _NetBankingWebViewState extends State<NetBankingWebView>
     super.dispose();
   }
 
+  Future<void> _onTimerCompleted() async {
+    AppState.unblockNavigation();
+    AppState.unblockNavigation();
+    await AppState.backButtonDispatcher?.didPopRoute();
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
@@ -58,7 +64,7 @@ class _NetBankingWebViewState extends State<NetBankingWebView>
         backgroundColor: UiConstants.kBackgroundColor,
         actions: [
           TimerWidget(
-            onTimerFinish: () => AppState.backButtonDispatcher?.didPopRoute(),
+            onTimerFinish: _onTimerCompleted,
           ),
         ],
       ),

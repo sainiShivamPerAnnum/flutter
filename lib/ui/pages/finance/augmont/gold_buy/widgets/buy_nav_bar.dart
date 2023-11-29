@@ -88,11 +88,26 @@ class BuyNavBar extends StatelessWidget {
     }
   }
 
-  void _onResetPaymentIntent() {
+  void _onResetPaymentIntent(String? intent) {
     _openPaymentSheet(
       showBreakDown: AppConfig.getValue(
         AppConfigKey.payment_brief_view,
       ),
+    );
+
+    _trackChange(intent);
+  }
+
+  void _trackChange(String? intent) {
+    if (intent == null) {
+      return;
+    }
+
+    locator<AnalyticsService>().track(
+      eventName: AnalyticsEvents.editPreferredUpiOption,
+      properties: {
+        'current_upi': intent,
+      },
     );
   }
 
@@ -230,7 +245,9 @@ class BuyNavBar extends StatelessWidget {
                     ),
                     child: PreferredPaymentOption(
                       appUse: preferredOption.getAppUseByName(),
-                      onPressed: _onResetPaymentIntent,
+                      onPressed: () => _onResetPaymentIntent(
+                        preferredOption,
+                      ),
                     ),
                   ),
                 Expanded(
