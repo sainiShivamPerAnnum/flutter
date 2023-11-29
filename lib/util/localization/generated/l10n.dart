@@ -1458,10 +1458,10 @@ class S {
     );
   }
 
-  /// `BEST`
+  /// `Best`
   String get best {
     return Intl.message(
-      'BEST',
+      'Best',
       name: 'best',
       desc: '',
       args: [],
@@ -4242,10 +4242,10 @@ class S {
     );
   }
 
-  /// `This account will be used for crediting your \n withdrawals`
+  /// `This account will be used for netbanking\npayments and crediting withdrawals`
   String get txnWithdrawAccountText {
     return Intl.message(
-      'This account will be used for crediting your \n withdrawals',
+      'This account will be used for netbanking\npayments and crediting withdrawals',
       name: 'txnWithdrawAccountText',
       desc: '',
       args: [],
@@ -7457,10 +7457,10 @@ class S {
   }
 
   /// `Fields mismatch`
-  String get feildsMismatch {
+  String get fieldsMismatch {
     return Intl.message(
       'Fields mismatch',
-      name: 'feildsMismatch',
+      name: 'fieldsMismatch',
       desc: '',
       args: [],
     );

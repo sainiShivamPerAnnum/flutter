@@ -56,6 +56,7 @@ class AppState extends ChangeNotifier {
   static bool isOnboardingInProgress = false;
   static bool isUpdateScreen = false;
   static bool isQuizInProgress = false;
+  static bool isNetbankingInProgress = false;
 
   // static bool isDrawerOpened = false;
   static bool isUserSignedIn = false;
@@ -178,8 +179,6 @@ class AppState extends ChangeNotifier {
 
     trackEvent(index);
     Haptic.vibrate();
-
-    executeNavBarItemFirstClick(index);
   }
 
   bool showTourStrip = false;
@@ -231,53 +230,6 @@ class AppState extends ChangeNotifier {
       homeTabPageController.dispose();
       return;
     }
-  }
-
-  // setLastTapIndex() {
-  //   SharedPreferences.getInstance().then((instance) {
-  //     rootIndex = instance.getInt('lastTab');
-  //   });
-  // }
-
-  executeNavBarItemFirstClick(index) {
-    switch (_rootController.currentNavBarItemModel.title) {
-      case "Journey":
-        executeForFirstJourneyTabClick(index);
-        break;
-      case "Save":
-        // executeForFirstSaveTabClick(index);
-        break;
-      case "Play":
-        // executeForFirstPlayTabClick(index);
-        break;
-      case "Tambola":
-        // executeForFirstTambolaClick(index);
-        break;
-      case "Account":
-      case "Win":
-        // executeForFirstAccountsTabClick(index);
-        break;
-      default:
-        break;
-    }
-  }
-
-  Future<void> executeForFirstJourneyTabClick(int index) async {
-    // final JourneyService _journeyService = locator<JourneyService>();
-    // int journeyIndex = _rootController.navItems.values
-    //     .toList()
-    //     .indexWhere((item) => item.title == "Journey");
-    // if (journeyIndex == 0) {
-    //   isFirstTimeJourneyOpened = true;
-    //   // isJourneyFirstTab = true;
-    // }
-    // if (!isFirstTimeJourneyOpened) {
-    //   if (index == journeyIndex) {
-    //     isFirstTimeJourneyOpened = true;
-    //     log("isFirstTimeJourneyOpened: $isFirstTimeJourneyOpened");
-    //     // _journeyService.buildJourney();
-    //   }
-    // }
   }
 
   void trackEvent(int index) {

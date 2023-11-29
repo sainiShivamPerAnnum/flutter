@@ -76,17 +76,3 @@ abstract class TimerUtil<T extends StatefulWidget> extends State<T> {
     });
   }
 }
-
-class Sanket extends StatefulWidget {
-  const Sanket({Key? key}) : super(key: key);
-
-  @override
-  State<Sanket> createState() => _SanketState();
-}
-
-class _SanketState extends State<Sanket> {
-  @override
-  Widget build(BuildContext context) {
-    return const Placeholder();
-  }
-}

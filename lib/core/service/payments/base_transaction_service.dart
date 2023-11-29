@@ -2,13 +2,15 @@ import 'dart:async';
 import 'dart:developer';
 
 import 'package:felloapp/core/enums/transaction_state_enum.dart';
+import 'package:felloapp/core/model/paytm_models/paytm_transaction_response_model.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
+import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
-import 'package:upi_pay/upi_pay.dart';
 
-abstract class BaseTransactionService<T> extends Rescheduler<T>
+abstract class BaseTransactionService
+    extends Rescheduler<ApiResponse<TransactionResponseModel>>
     with ChangeNotifier {
   final ScratchCardService _gtService = locator<ScratchCardService>();
   S locale = locator<S>();
@@ -21,13 +23,11 @@ abstract class BaseTransactionService<T> extends Rescheduler<T>
     notifyListeners();
   }
 
+  bool isNetBankingInProgress = false;
+
   /// Holds the future object of [run] method which can be awaited later on when
   /// it crosses maximum waiting duration.
   Future<void>? transactionFuture;
-
-  List<ApplicationMeta> appMetaList = [];
-  UpiApplication? upiApplication;
-  String? selectedUpiApplicationName;
 
   double? currentTxnAmount = 0;
 
@@ -40,6 +40,8 @@ abstract class BaseTransactionService<T> extends Rescheduler<T>
   Future<void> processUpiTransaction();
 
   Future<void> processRazorpayTransaction();
+
+  Future<void> processNBTransaction();
 
   Future<void> transactionResponseUpdate({
     List<String>? gtIds,
@@ -75,13 +77,13 @@ abstract class Rescheduler<T> {
   bool predicate(T value);
 
   /// Validates the response returned from [task], when [predicate] confirms
-  /// successful execution of [task].
-  void onSuccess(T value);
+  /// completion of execution [task].
+  void onComplete(T value);
 
   /// Runs the [task] and reschedules it until it reaches the reschedule limit
   /// or meets the completion condition.
   ///
-  /// If the task succeeds according to the [predicate], the [onSuccess]
+  /// If the task succeeds according to the [predicate], the [onComplete]
   /// callback is invoked with the result, and the retry loop exits. If the task
   /// continues to fail or if exceptions are thrown during execution, the
   /// retry count is incremented until it reaches the maximum retry limit.
@@ -90,7 +92,7 @@ abstract class Rescheduler<T> {
       try {
         final result = await task();
         if (predicate(result)) {
-          onSuccess(result);
+          onComplete(result);
           return;
         } else {
           _retryCount++;
@@ -99,5 +101,10 @@ abstract class Rescheduler<T> {
         _retryCount++;
       }
     }
+    _reset();
+  }
+
+  void _reset() {
+    _retryCount = 0;
   }
 }

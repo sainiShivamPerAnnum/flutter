@@ -2,7 +2,7 @@ import 'package:felloapp/core/model/ui_config_models/ui_config_models.dart';
 import 'package:felloapp/util/flavor_config.dart';
 
 class ApiPath {
-  ApiPath();
+  const ApiPath();
 
   //Analytics
   get kSetInstallInfo => "/set-install-info";
@@ -17,7 +17,7 @@ class ApiPath {
 
   get kUpdateUserAppflyer => "/appflyer";
 
-  get kAddBankAccount => "/bank";
+  static const String kAddBankAccount = "/bank";
 
   static String kGetBankAccountDetails(String? uid) => '/$uid/bank';
 
@@ -30,8 +30,6 @@ class ApiPath {
   static String kForgeryUpload(String uid) => "/forgery/$uid/image";
 
   static String kGetPan(String uid) => "/$uid/pan";
-
-  static String kUpdateBankDetails(String uid) => '/user/$uid/bank';
 
   get kCustomAuthToken => "/api/v3/trucallerAuthToken";
   static const acquisitionTracking = "/userOps/api/v3/opt-analytics";
@@ -181,9 +179,6 @@ class ApiPath {
 
   //Journey
   static const kJourney = "/journey";
-  static String kJourneyLevel = '/levels';
-
-  static String getJourney(int page) => "/journey/$page";
 
   static String journeyStats(String? uid) => "/user/$uid/journey/stats";
 
@@ -197,9 +192,6 @@ class ApiPath {
 
   // prizes
   static const String claimPrize = '/prize/claim';
-
-  static const kOnboardingStory = '/story/onboarding';
-  static const kTambolaStory = '/story/tambola';
 
   // static String get getAppConfig => '/app/config';
 

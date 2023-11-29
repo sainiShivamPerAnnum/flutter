@@ -10,6 +10,7 @@ import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/happy_hour_campign.dart';
+import 'package:felloapp/core/repository/paytm_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -20,6 +21,7 @@ import 'package:felloapp/ui/pages/finance/banner_widget.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/deposit/lendbox_buy_vm.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/deposit/widget/flo_coupon.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/lendbox_app_bar.dart';
+import 'package:felloapp/ui/pages/finance/preferred_payment_option.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
@@ -30,7 +32,6 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:intl/intl.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:provider/provider.dart';
 
@@ -100,6 +101,7 @@ class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
 
   @override
   Widget build(BuildContext context) {
+    final banner = widget.model.assetOptionsModel!.data.banner;
     log("floAssetType ${widget.model.floAssetType}");
 
     S locale = S.of(context);
@@ -153,13 +155,16 @@ class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
                     }
                   },
                 ),
-                SizedBox(height: SizeConfig.padding32),
-                BannerWidget(
-                  model: widget.model.assetOptionsModel!.data.banner,
-                  happyHourCampign: locator.isRegistered<HappyHourCampign>()
-                      ? locator()
-                      : null,
-                ),
+                if (banner != null) ...[
+                  SizedBox(height: SizeConfig.padding32),
+                  BannerWidget(
+                    model: banner,
+                    happyHourCampign: locator.isRegistered<HappyHourCampign>()
+                        ? locator()
+                        : null,
+                  ),
+                ],
+
                 if (widget.model.animationController != null)
                   AnimatedBuilder(
                       animation: widget.model.animationController!,
@@ -194,18 +199,19 @@ class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
                         );
                       }),
                 SizedBox(
-                  height: SizeConfig.padding24,
+                  height: SizeConfig.padding10,
                 ),
                 if (widget.model.showCoupons) ...[
                   Container(
                     height: 1,
                     margin: EdgeInsets.symmetric(
-                        horizontal: SizeConfig.pageHorizontalMargins),
+                      horizontal: SizeConfig.pageHorizontalMargins,
+                    ),
                     color: UiConstants.kModalSheetSecondaryBackgroundColor
                         .withOpacity(0.2),
                   ),
                   SizedBox(
-                    height: SizeConfig.padding24,
+                    height: SizeConfig.padding16,
                   ),
                   FloCouponWidget(
                     widget.model.couponList,
@@ -333,147 +339,256 @@ class FloBuyNavBar extends StatelessWidget {
   }
 
   String getSubString() {
-    if (model.floAssetType == Constants.ASSET_TYPE_FLO_FELXI) {
-      return 'Lock-in till ${DateFormat('d MMM yyyy').format(model.assetOptionsModel!.data.maturityAt!)}';
+    final date = model.getMaturityTime(model.selectedOption);
+
+    return switch (model.floAssetType) {
+      Constants.ASSET_TYPE_FLO_FELXI => 'Lock-in till $date',
+      Constants.ASSET_TYPE_FLO_FIXED_6 ||
+      Constants.ASSET_TYPE_FLO_FIXED_3 =>
+        'Maturity on $date',
+      _ => ''
+    };
+  }
+
+  void _openPaymentSheet({
+    bool showBreakDown = true,
+    bool showPsp = true,
+    bool isBreakDown = false,
+  }) {
+    final amt = model.amountController?.text;
+    final amtInNum = num.tryParse(amt ?? '');
+    BaseUtil.openModalBottomSheet(
+      isBarrierDismissible: true,
+      addToScreenStack: true,
+      backgroundColor: UiConstants.grey5,
+      content: FloBreakdownView(
+        model: model,
+        showBreakDown: showBreakDown,
+        showPaymentOption: showPsp,
+        isBreakDown: isBreakDown,
+        onSave: () => _onPressed(amtInNum),
+      ),
+      hapticVibrate: true,
+      isScrollControlled: true,
+    );
+  }
+
+  void _onPressed(num? amount) {
+    if (amount == null) return;
+
+    if (amount >= Constants.mandatoryNetBankingThreshold) {
+      _openPaymentSheet(
+        showBreakDown: AppConfig.getValue(
+          AppConfigKey.payment_brief_view,
+        ),
+      );
+      return;
     }
 
-    if (model.floAssetType == Constants.ASSET_TYPE_FLO_FIXED_6 ||
-        model.floAssetType == Constants.ASSET_TYPE_FLO_FIXED_3) {
-      return "Maturity on ${DateFormat('d MMM yyyy').format(model.assetOptionsModel!.data.maturityAt!)}";
+    if (model.isIntentFlow && model.selectedUpiApplication != null) {
+      onTap();
+    } else {
+      _openPaymentSheet(
+        showBreakDown: AppConfig.getValue(
+          AppConfigKey.payment_brief_view,
+        ),
+      );
     }
-    return "";
+  }
+
+  void _showBreakDown() {
+    _openPaymentSheet(
+      showPsp: false,
+      isBreakDown: true,
+    );
+    locator<AnalyticsService>()
+        .track(eventName: AnalyticsEvents.viewBreakdownTapped, properties: {
+      'Amount Filled': model.amountController?.text ?? '0',
+      'Asset': model.floAssetType,
+      'coupon': model.appliedCoupon
+    });
+  }
+
+  void _onResetPaymentIntent() {
+    _openPaymentSheet(
+      showBreakDown: AppConfig.getValue(
+        AppConfigKey.payment_brief_view,
+      ),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
+    final couponCode = model.appliedCoupon?.code;
+    final amt = model.amountController?.text;
+    final amtInNum = num.tryParse(amt ?? '');
+    final amount = amt != null && amt.isNotEmpty ? amt : '_ _';
+    final isAmountIsValid = amt != null && amt.isNotEmpty;
+    final preferredOption = model.getPreferredUpiOption;
+
     return Container(
+      width: SizeConfig.screenWidth,
       padding: EdgeInsets.symmetric(
-        horizontal: SizeConfig.padding32,
+        horizontal: SizeConfig.padding16,
         vertical: SizeConfig.padding16,
       ),
-      color: UiConstants.kArrowButtonBackgroundColor,
-      child: Row(
+      decoration: const BoxDecoration(
+        color: UiConstants.grey5,
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(24),
+        ),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          GestureDetector(
-            onTap: () {
-              BaseUtil.openModalBottomSheet(
-                isBarrierDismissible: true,
-                addToScreenStack: true,
-                content: FloBreakdownView(
-                  model: model,
-                  showPsp: false,
-                ),
-                hapticVibrate: true,
-                isScrollControlled: true,
-              );
-              locator<AnalyticsService>().track(
-                  eventName: AnalyticsEvents.viewBreakdownTapped,
-                  properties: {
-                    'Amount Filled': model.amountController?.text ?? '0',
-                    'Asset': model.floAssetType,
-                    'coupon': model.appliedCoupon
-                  });
-            },
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.end,
-                  children: [
-                    Text(
-                      "₹${model.amountController?.text ?? '0'}",
-                      style: TextStyles.sourceSansSB.title5
-                          .copyWith(color: Colors.white),
-                    ),
-                    SizedBox(
-                      width: SizeConfig.padding8,
-                    ),
-                    Text(
-                      getTitle(),
-                      style: TextStyles.rajdhaniB.body2
-                          .copyWith(color: UiConstants.kTabBorderColor),
-                    ),
-                  ],
-                ),
-                Text(getSubString(),
-                    style: TextStyles.rajdhaniSB.body3
-                        .colour(UiConstants.kTextFieldTextColor)),
-                SizedBox(
-                  height: SizeConfig.padding10,
-                ),
-                Text(
-                  'View Breakdown',
-                  style: TextStyles.sourceSans.body3.copyWith(
-                      color: UiConstants.kTextFieldTextColor,
-                      decorationStyle: TextDecorationStyle.solid,
-                      decoration: TextDecoration.underline),
-                ),
-              ],
-            ),
-          ),
-          const Spacer(),
-          Column(
-            mainAxisSize: MainAxisSize.min,
-            crossAxisAlignment: CrossAxisAlignment.end,
+          Row(
             children: [
-              if (model.appliedCoupon != null) ...[
-                SizedBox(
-                  width: SizeConfig.screenWidth! * 0.35,
-                  child: Row(
-                    mainAxisSize: MainAxisSize.min,
-                    mainAxisAlignment: MainAxisAlignment.end,
+              Column(
+                children: [
+                  Row(
                     children: [
                       SvgPicture.asset(
-                        Assets.ticketTilted,
-                        width: SizeConfig.padding16,
+                        Assets.floWithoutShadow,
+                        height: 16,
                       ),
                       SizedBox(
-                        width: SizeConfig.padding6,
+                        width: SizeConfig.padding8,
                       ),
-                      Flexible(
-                        child: FittedBox(
-                          fit: BoxFit.scaleDown,
-                          child: Text(
-                            '${model.appliedCoupon?.code} coupon applied',
-                            style: TextStyles.sourceSans.body3
-                                .colour(UiConstants.kTealTextColor),
-                            maxLines: 2,
-                          ),
+                      Text(
+                        getTitle(),
+                        style: TextStyles.rajdhaniB.body2.copyWith(
+                          color: UiConstants.kFAQsAnswerColor,
                         ),
                       ),
                     ],
                   ),
-                ),
-                SizedBox(
-                  height: SizeConfig.padding4,
-                )
-              ],
-              AppPositiveBtn(
-                width: SizeConfig.screenWidth! * 0.32,
-                height: SizeConfig.screenWidth! * 0.12,
-                onPressed: () {
-                  if (model.isIntentFlow) {
-                    BaseUtil.openModalBottomSheet(
-                      isBarrierDismissible: true,
-                      addToScreenStack: true,
-                      content: FloBreakdownView(
-                        model: model,
-                        showBreakDown:
-                            AppConfig.getValue(AppConfigKey.payment_brief_view),
+                  SizedBox(
+                    height: SizeConfig.padding4,
+                  ),
+                  Text(
+                    getSubString(),
+                    style: TextStyles.sourceSans.body3.copyWith(
+                      color: UiConstants.kTextFieldTextColor,
+                    ),
+                  ),
+                ],
+              ),
+              const Spacer(),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  InkWell(
+                    onTap: () {
+                      if (!isAmountIsValid) return;
+                      _showBreakDown();
+                    },
+                    child: Row(
+                      children: [
+                        Text(
+                          'Payment summary',
+                          style: TextStyles.sourceSansSB.body4.copyWith(
+                            height: 1,
+                            color: UiConstants.kFAQsAnswerColor.withOpacity(
+                              !isAmountIsValid ? .5 : 1,
+                            ),
+                          ),
+                        ),
+                        SizedBox(
+                          width: SizeConfig.padding8,
+                        ),
+                        SvgPicture.asset(
+                          Assets.arrow,
+                          color: UiConstants.kFAQsAnswerColor,
+                          height: 5,
+                        ),
+                      ],
+                    ),
+                  ),
+                  if (couponCode != null)
+                    Padding(
+                      padding: EdgeInsets.only(top: SizeConfig.padding4),
+                      child: Row(
+                        children: [
+                          SvgPicture.asset(
+                            Assets.couponsAsset,
+                            color: UiConstants.kTabBorderColor,
+                            height: 12,
+                          ),
+                          SizedBox(
+                            width: SizeConfig.padding6,
+                          ),
+                          Text(
+                            couponCode,
+                            style: TextStyles.rajdhani.body4.copyWith(
+                              color: UiConstants.kTabBorderColor,
+                            ),
+                          ),
+                        ],
                       ),
-                      hapticVibrate: true,
-                      isScrollControlled: true,
-                    );
-                  } else {
-                    onTap();
-                  }
-                },
-                btnText: 'SAVE',
-                style: TextStyles.rajdhaniB.body1,
+                    )
+                ],
               ),
             ],
           ),
+          Divider(
+            color: UiConstants.kFAQDividerColor.withOpacity(.2),
+            thickness: .8,
+            height: 24,
+          ),
+          Row(
+            children: [
+              if (preferredOption != null &&
+                  amtInNum != null &&
+                  amtInNum <= Constants.mandatoryNetBankingThreshold &&
+                  model.isIntentFlow)
+                Padding(
+                  padding: EdgeInsets.only(
+                    right: SizeConfig.padding12,
+                  ),
+                  child: PreferredPaymentOption(
+                    appUse: preferredOption.getAppUseByName(),
+                    onPressed: _onResetPaymentIntent,
+                  ),
+                ),
+              Expanded(
+                child: AppPositiveBtn(
+                  height: SizeConfig.padding56,
+                  onPressed: () => _onPressed(amtInNum),
+                  child: Padding(
+                    padding: const EdgeInsets.symmetric(horizontal: 10),
+                    child: Row(
+                      children: [
+                        Text(
+                          '₹ $amount',
+                          style: TextStyles.sourceSansSB.title4.colour(
+                            Colors.white,
+                          ),
+                        ),
+                        const Spacer(),
+                        Text(
+                          'SAVE',
+                          style: TextStyles.rajdhaniB.body1.colour(
+                            Colors.white,
+                          ),
+                        ),
+                        SizedBox(
+                          width: SizeConfig.padding16,
+                        ),
+                        Transform.rotate(
+                          angle: math.pi / 2,
+                          child: SvgPicture.asset(
+                            Assets.arrow,
+                            color: Colors.white,
+                            height: 8,
+                          ),
+                        ),
+                      ],
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          )
         ],
       ),
     );
@@ -481,8 +596,10 @@ class FloBuyNavBar extends StatelessWidget {
 }
 
 class MaturityDetailsWidget extends StatelessWidget {
-  const MaturityDetailsWidget({required this.model, Key? key})
-      : super(key: key);
+  const MaturityDetailsWidget({
+    required this.model,
+    super.key,
+  });
 
   final LendboxBuyViewModel model;
 
@@ -517,8 +634,6 @@ class MaturityDetailsWidget extends StatelessWidget {
                         children: [
                           Container(
                             height: 1,
-                            // margin: EdgeInsets.symmetric(
-                            //     horizontal: SizeConfig.pageHorizontalMargins),
                             color: UiConstants
                                 .kModalSheetSecondaryBackgroundColor
                                 .withOpacity(0.2),
@@ -527,26 +642,33 @@ class MaturityDetailsWidget extends StatelessWidget {
                             height: SizeConfig.padding16,
                           ),
                           Text(
-                            'Maturity Details',
-                            style: TextStyles.sourceSansSB.body1,
+                            'Choose your maturity period',
+                            style: TextStyles.sourceSansSB.body2,
                             textAlign: TextAlign.left,
                           ),
                           SizedBox(
                             height: SizeConfig.padding16,
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              model.showReinvestSubTitle(),
-                              Text(
-                                model.selectedOption == -1
-                                    ? 'Choose Now'
-                                    : "Change",
-                                style: TextStyles.sourceSans.body3
-                                    .colour(UiConstants.kTabBorderColor)
-                                    .underline,
-                              ),
-                            ],
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 7,
+                              horizontal: 12,
+                            ),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: UiConstants.grey2.withOpacity(.2),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                model.showReinvestSubTitle(),
+                                Text(
+                                  "Change",
+                                  style: TextStyles.sourceSans.body3
+                                      .colour(UiConstants.kTabBorderColor),
+                                ),
+                              ],
+                            ),
                           ),
                         ],
                       ),

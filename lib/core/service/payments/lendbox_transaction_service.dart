@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/transaction_state_enum.dart';
 import 'package:felloapp/core/model/paytm_models/create_paytm_transaction_model.dart';
 import 'package:felloapp/core/model/paytm_models/paytm_transaction_response_model.dart';
@@ -19,18 +20,19 @@ import 'package:felloapp/core/service/payments/transaction_service_mixin.dart';
 import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/back_button_actions.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/ui/pages/static/netbanking_web_view.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
-import 'package:felloapp/util/extensions/string_extension.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/preference_helper.dart';
 import 'package:flutter/services.dart';
 import 'package:upi_pay/upi_pay.dart';
 
-class LendboxTransactionService
-    extends BaseTransactionService<ApiResponse<TransactionResponseModel>>
+class LendboxTransactionService extends BaseTransactionService
     with TransactionPredictionDefaultMixing {
   @override
   PaytmRepository get paytmRepo => _paytmRepo;
@@ -55,9 +57,18 @@ class LendboxTransactionService
   Future<void> initiateTransaction(FloPurchaseDetails details) async {
     currentFloPurchaseDetails = details;
     currentTxnAmount = details.txnAmount;
-    return details.upiChoice != null
-        ? processUpiTransaction()
-        : processRazorpayTransaction();
+
+    if ((currentTxnAmount ?? 0) >= Constants.mandatoryNetBankingThreshold) {
+      return await processNBTransaction();
+    }
+
+    if (details.isIntentFlow && details.upiChoice != null) {
+      return await processUpiTransaction();
+    }
+
+    if (!details.isIntentFlow) {
+      return await processRazorpayTransaction();
+    }
   }
 
   @override
@@ -80,7 +91,7 @@ class LendboxTransactionService
   }
 
   @override
-  Future<void> onSuccess(ApiResponse<TransactionResponseModel> value) async {
+  Future<void> onComplete(ApiResponse<TransactionResponseModel> value) async {
     if (value.isSuccess()) {
       TransactionResponseModel txnStatus = value.model!;
 
@@ -101,6 +112,12 @@ class LendboxTransactionService
             return transactionResponseUpdate(
               amount: currentTxnAmount,
               gtIds: transactionResponseModel?.data?.gtIds ?? [],
+            );
+          }
+          final upiChoice = currentFloPurchaseDetails?.upiChoice;
+          if (upiChoice != null) {
+            await PreferenceHelper.insertUsedPaymentIntent(
+              upiChoice.upiApplication.appName,
             );
           }
           break;
@@ -151,6 +168,72 @@ class LendboxTransactionService
   }
 
   @override
+  Future<void> processNBTransaction() async {
+    AppState.blockNavigation();
+
+    final lbMap = {
+      "fundType": currentFloPurchaseDetails!.floAssetType,
+      "maturityPref": currentFloPurchaseDetails!.maturityPref,
+    };
+
+    final txnResponse = await _paytmRepo.createTransaction(
+      currentTxnAmount,
+      null, //aug map.
+      lbMap,
+      currentFloPurchaseDetails!.couponCode,
+      currentFloPurchaseDetails!.skipMl,
+      '',
+      InvestmentType.LENDBOXP2P,
+      null,
+      null,
+      'NET_BANKING', // pay-mode
+    );
+
+    if (txnResponse.isSuccess()) {
+      currentTxnOrderId = txnResponse.model!.data!.txnId;
+      isNetBankingInProgress = true;
+      AppState.delegate!.appState.currentAction = PageAction(
+        page: WebViewPageConfig,
+        state: PageState.addWidget,
+        widget: NetBankingWebView(
+          url: txnResponse.model!.data!.nbIntent!,
+          onPageClosed: () => _validateTransaction(shouldPop: false),
+          onUrlChanged: (value) {
+            if (value == Constants.postNBRedirectionURL) {
+              // when transaction gets completed with success then it would be
+              // redirecting to the the defined url and on that we will be
+              // validating transaction status.
+              _validateTransaction();
+            }
+          },
+        ),
+      );
+
+      locator<BackButtonActions>().isTransactionCancelled = false;
+    } else {
+      currentTransactionState = TransactionState.idle;
+
+      AppState.unblockNavigation();
+
+      return BaseUtil.showNegativeAlert(
+        txnResponse.errorMessage,
+        locale.tryLater,
+      );
+    }
+  }
+
+  Future<void> _validateTransaction({bool shouldPop = true}) async {
+    isNetBankingInProgress = false;
+    AppState.unblockNavigation();
+    if (shouldPop) await AppState.backButtonDispatcher?.didPopRoute();
+    currentTransactionState = TransactionState.ongoing;
+    checkTransactionStatus();
+    await Future.delayed(
+        const Duration(milliseconds: 200)); // to avoid frequent set state.
+    notifyListeners();
+  }
+
+  @override
   Future<void> processUpiTransaction() async {
     AppState.blockNavigation();
 
@@ -169,9 +252,9 @@ class LendboxTransactionService
       currentFloPurchaseDetails!.upiChoice!.upiApplication.appName
           .formatUpiAppName(),
     );
+
     if (txnResponse.isSuccess()) {
       currentTxnOrderId = txnResponse.model!.data!.txnId;
-      const platform = MethodChannel("methodChannel/upiIntent");
 
       try {
         if (Platform.isIOS) {
@@ -184,6 +267,7 @@ class LendboxTransactionService
             AppState.unblockNavigation();
           }
         } else {
+          const platform = MethodChannel("methodChannel/upiIntent");
           final result = await platform.invokeMethod('initiatePsp', {
             'redirectUrl': txnResponse.model!.data!.intent,
             'packageName': currentFloPurchaseDetails!.upiChoice!.packageName
@@ -230,6 +314,7 @@ class FloPurchaseDetails {
   String? maturityPref;
   String couponCode;
   ApplicationMeta? upiChoice;
+  bool isIntentFlow;
 
   FloPurchaseDetails({
     required this.txnAmount,
@@ -238,5 +323,6 @@ class FloPurchaseDetails {
     this.maturityPref,
     this.couponCode = '',
     this.upiChoice,
+    this.isIntentFlow = false,
   });
 }

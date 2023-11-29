@@ -447,17 +447,18 @@ class RootViewModel extends BaseViewModel {
         //2. Check if the user is from restricted state
         if (_userService.userBootUp != null &&
             (_userService.userBootUp!.data?.stateRestricted ?? false)) {
-          log("User is from restricted state", name: "UserBootUp");
-          AppState.isRootAvailableForIncomingTaskExecution = false;
-          AppState.delegate!.appState.currentAction = PageAction(
-              state: PageState.replaceWidget,
-              page: BlockedUserPageConfig,
-              widget: BlockedUserView(
-                isStateRestricted: true,
-                blockTitle: _userService.userBootUp!.data?.blockTitle ?? '',
-                blockSubtitle:
-                    _userService.userBootUp!.data?.blockSubtitle ?? '',
-              ));
+          // TODO(@DK070202): Remove after testing.
+          // log("User is from restricted state", name: "UserBootUp");
+          // AppState.isRootAvailableForIncomingTaskExecution = false;
+          // AppState.delegate!.appState.currentAction = PageAction(
+          //     state: PageState.replaceWidget,
+          //     page: BlockedUserPageConfig,
+          //     widget: BlockedUserView(
+          //       isStateRestricted: true,
+          //       blockTitle: _userService.userBootUp!.data?.blockTitle ?? '',
+          //       blockSubtitle:
+          //           _userService.userBootUp!.data?.blockSubtitle ?? '',
+          //     ));
           return;
         }
 

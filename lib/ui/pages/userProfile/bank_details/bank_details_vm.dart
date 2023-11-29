@@ -1,3 +1,4 @@
+import 'dart:async';
 import 'dart:developer';
 
 import 'package:felloapp/base_util.dart';
@@ -12,7 +13,6 @@ import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
-import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
@@ -25,6 +25,7 @@ class BankDetailsViewModel extends BaseViewModel {
   final formKey = GlobalKey<FormState>();
   bool _isDetailsUpdating = false;
   bool _inEditMode = false;
+  bool _withNetBankingValidation = false;
 
   FocusNode nameFocusNode = FocusNode();
 
@@ -36,16 +37,16 @@ class BankDetailsViewModel extends BaseViewModel {
   TextEditingController? bankIfscController;
   TextEditingController? bankAccNoConfirmController;
 
-  String? bankHoldername;
+  String? bankHolderName;
   String? bankAccNo;
   String? cnfBankAccNo;
   String? ifscCode;
 
-  get isDetailsUpdating => _isDetailsUpdating;
+  bool get isDetailsUpdating => _isDetailsUpdating;
 
-  get inEditMode => _inEditMode;
+  bool get inEditMode => _inEditMode;
 
-  set inEditMode(value) {
+  set inEditMode(bool value) {
     _inEditMode = value;
     notifyListeners();
   }
@@ -57,12 +58,13 @@ class BankDetailsViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  set isDetailsUpdating(value) {
+  set isDetailsUpdating(bool value) {
     _isDetailsUpdating = value;
     notifyListeners();
   }
 
-  init() {
+  void init({bool withNetbankingValidation = false}) {
+    _withNetBankingValidation = withNetbankingValidation;
     bankHolderNameController = TextEditingController();
     bankAccNoController = TextEditingController();
     bankIfscController = TextEditingController();
@@ -70,16 +72,17 @@ class BankDetailsViewModel extends BaseViewModel {
     checkForBankDetailsExistence();
   }
 
-  checkForBankDetailsExistence() async {
+  Future<void> checkForBankDetailsExistence() async {
     setState(ViewState.Busy);
     await _sellService.checkForUserBankAccountDetails();
     // augmontDetails = _userService.userAugmontDetails;
     activeBankDetails = _sellService.activeBankAccountDetails;
-    if (activeBankDetails != null) {
-      bankHolderNameController!.text = activeBankDetails!.name!;
-      bankAccNoController!.text = activeBankDetails!.account!;
-      bankAccNoConfirmController!.text = activeBankDetails!.account!;
-      bankIfscController!.text = activeBankDetails!.ifsc!;
+    if (activeBankDetails != null && activeBankDetails!.isDetailsAreValid) {
+      bankHolderNameController!.text = activeBankDetails!.name;
+      bankAccNoController!.text = activeBankDetails!.account;
+      bankAccNoConfirmController!.text = activeBankDetails!.account;
+      bankIfscController!.text = activeBankDetails!.ifsc;
+      showBankDetailsHelpView = false;
     } else {
       inEditMode = true;
     }
@@ -90,25 +93,34 @@ class BankDetailsViewModel extends BaseViewModel {
     });
   }
 
-  updateBankDetails() async {
+  Future<void> updateBankDetails() async {
     if (checkIfDetailsAreSame()) {
       return BaseUtil.showNegativeAlert(
-          locale.noChangesDetected, locale.makeSomeChanges);
+        locale.noChangesDetected,
+        locale.makeSomeChanges,
+      );
     }
+
     setUpDataValues();
+
     if (!confirmBankAccountNumber()) {
       return BaseUtil.showNegativeAlert(
-          locale.feildsMismatch, locale.bankAccDidNotMatch);
+        locale.fieldsMismatch,
+        locale.bankAccDidNotMatch,
+      );
     }
+
     isDetailsUpdating = true;
 
-    final ApiResponse<bool> response = await _paymentRepo.addBankDetails(
-        bankAccno: bankAccNo,
-        bankHolderName: bankHoldername,
-        bankIfsc: ifscCode);
+    final response = await _paymentRepo.addBankDetails(
+      bankAccNo: bankAccNo,
+      bankHolderName: bankHolderName,
+      bankIfsc: ifscCode,
+      withNetBankingValidation: _withNetBankingValidation,
+    );
 
     if (response.isSuccess()) {
-      await _sellService.checkForUserBankAccountDetails();
+      _sellService.activeBankAccountDetails = response.model;
       _sellService.isBankDetailsAdded = true;
       _analyticsService.track(eventName: AnalyticsEvents.bankDetailsUpdated);
 
@@ -123,7 +135,7 @@ class BankDetailsViewModel extends BaseViewModel {
           page: BalloonLottieScreenViewConfig,
         );
       } else {
-        AppState.backButtonDispatcher!.didPopRoute();
+        unawaited(AppState.backButtonDispatcher!.didPopRoute());
       }
     } else {
       BaseUtil.showNegativeAlert(response.errorMessage ?? locale.updateFailed,
@@ -132,21 +144,21 @@ class BankDetailsViewModel extends BaseViewModel {
     }
   }
 
-  checkIfDetailsAreSame() =>
+  bool checkIfDetailsAreSame() =>
       activeBankDetails != null &&
       bankAccNoController!.text == activeBankDetails!.account &&
       bankHolderNameController!.text == activeBankDetails!.name &&
       bankAccNoConfirmController!.text == activeBankDetails!.account &&
       bankIfscController!.text == activeBankDetails!.ifsc;
 
-  setUpDataValues() {
-    bankHoldername = bankHolderNameController!.text.trim().toUpperCase();
+  void setUpDataValues() {
+    bankHolderName = bankHolderNameController!.text.trim().toUpperCase();
     bankAccNo = bankAccNoController!.text.trim();
     cnfBankAccNo = bankAccNoConfirmController!.text.trim();
     ifscCode = bankIfscController!.text.trim();
   }
 
-  confirmBankAccountNumber() {
+  bool confirmBankAccountNumber() {
     log("Bank acc no: $bankAccNo || Bank confirm acc no: $cnfBankAccNo");
     return bankAccNo == cnfBankAccNo;
   }

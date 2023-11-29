@@ -23,30 +23,43 @@ import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/notifier_services/marketing_event_handler_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
+import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/negative_dialog.dart';
 import 'package:felloapp/ui/modalsheets/coupon_modal_sheet.dart';
+import 'package:felloapp/ui/pages/finance/preffered_upi_option_mixin.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/haptic.dart';
-import 'package:felloapp/util/installed_upi_apps_finder.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:upi_pay/upi_pay.dart';
 
 import '../../../../../util/styles/ui_constants.dart';
 
-//TODO : add location for save checkout [ journey, save, asset details, challenges,promos]
-class GoldBuyViewModel extends BaseViewModel {
+mixin NetbankingValidationMixin on BaseViewModel {
+  BankAndPanService get bankingService;
+
+  Future<void> getAccDetailsWithNetbankingInfo() async {
+    await bankingService.checkForUserBankAccountDetails(
+      forceRefetch: true,
+      withNetBankingValidation: true,
+    );
+  }
+}
+
+class GoldBuyViewModel extends BaseViewModel
+    with PaymentIntentMixin, NetbankingValidationMixin {
   static const int STATUS_UNAVAILABLE = 0;
   static const int STATUS_OPEN = 2;
 
+  @override
+  final bankingService = locator<BankAndPanService>();
   final CustomLogger _logger = locator<CustomLogger>();
   final DBModel _dbModel = locator<DBModel>();
   final AugmontService _augmontModel = locator<AugmontService>();
@@ -62,9 +75,6 @@ class GoldBuyViewModel extends BaseViewModel {
   AssetOptionsModel? assetOptionsModel;
   double? incomingAmount;
 
-  List<ApplicationMeta> appMetaList = [];
-  UpiApplication? upiApplication;
-  ApplicationMeta? selectedUpiApplication;
   int _status = 0;
   int lastTappedChipIndex = 1;
   CouponModel? _focusCoupon;
@@ -263,7 +273,8 @@ class GoldBuyViewModel extends BaseViewModel {
     bool quickCheckout = false,
   }) async {
     setState(ViewState.Busy);
-    appMetaList = await UpiUtils.getUpiApps();
+    await initAndSetPreferredPaymentOption();
+
     showHappyHour = locator<MarketingEventHandlerService>().showHappyHourBanner;
     animationController = AnimationController(
         vsync: vsync, duration: const Duration(milliseconds: 500));
@@ -370,6 +381,7 @@ class GoldBuyViewModel extends BaseViewModel {
         skipMl: skipMl,
         goldInGrams: goldAmountInGrams.toDouble(),
         upiChoice: selectedUpiApplication,
+        isIntentFlow: assetOptionsModel!.data.intent,
       ),
     );
     if (selectedUpiApplication != null) {
@@ -414,42 +426,12 @@ class GoldBuyViewModel extends BaseViewModel {
       return false;
     }
 
-    // if (_userService.userAugmontDetails.isDepLocked) {
-    //   BaseUtil.showNegativeAlert(
-    //     'Purchase Failed',
-    //     "${buyNotice ?? 'Gold buying is currently on hold. Please try again after sometime.'}",
-    //   );
-    //   trackCheckOOutEvent(
-    //       "Purchase Failed,'Gold buying is currently on hold. Please try again after sometime.");
-
-    //   return false;
-    // }
-
-    // bool _disabled = await _dbModel!.isAugmontBuyDisabled();
-    // if (_disabled != null && _disabled) {
-    //   isGoldBuyInProgress = false;
-    //   BaseUtil.showNegativeAlert(
-    //     locale.purchaseFailed,
-    //     locale.goldBuyHold,
-    //   );
-    //   trackCheckOOutEvent(
-    //       "Purchase Failed,'Gold buying is currently on hold. Please try again after sometime.");
-    //   return false;
-    // }
-
     trackCheckOutEvent();
     return true;
   }
 
   void trackCheckOutEvent([String errorMessage = '']) {
     _augTxnService.currentTransactionAnalyticsDetails = {
-      //   "Asset": "Flo",
-      // "Amount Entered": lboxAmount!.text,
-      // "Best flag": goldAmountController!.text ==
-      //         assetOptionsModel?.data.userOptions[2].value.toString()
-      //     ? true
-      //     : false,
-      // "Error message": errorMessage,
       "iplPrediction": PowerPlayService.powerPlayDepositFlow,
       "Asset": "Gold",
       "Coupon Code":
@@ -477,7 +459,7 @@ class GoldBuyViewModel extends BaseViewModel {
               .firstWhere(
                 (element) =>
                     element.value.toString() == goldAmountController!.text,
-                orElse: () => UserOption(order: 0, value: 0, best: false),
+                orElse: () => const UserOption(order: 0, value: 0, best: false),
               )
               .best,
           "Error message": errorMessage,
@@ -508,7 +490,7 @@ class GoldBuyViewModel extends BaseViewModel {
       'Amount': assetOptionsModel?.data.userOptions[index].value,
       'Best flag': assetOptionsModel?.data.userOptions
           .firstWhere((element) => element.best,
-              orElse: () => UserOption(order: 0, value: 0, best: false))
+              orElse: () => const UserOption(order: 0, value: 0, best: false))
           .value
     });
     notifyListeners();

@@ -5,11 +5,13 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/transaction_state_enum.dart';
 import 'package:felloapp/core/enums/transaction_type_enum.dart';
+import 'package:felloapp/core/model/quote_model.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/payments/lendbox_transaction_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/back_button_actions.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_buy/augmont_buy_vm.dart';
+import 'package:felloapp/ui/pages/finance/quotes.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
@@ -19,14 +21,27 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
-class LendboxLoadingView extends StatelessWidget {
+class LendboxLoadingView extends StatefulWidget {
   final TransactionType transactionType;
+
+  const LendboxLoadingView({required this.transactionType, Key? key})
+      : super(key: key);
+
+  @override
+  State<LendboxLoadingView> createState() => _LendboxLoadingViewState();
+}
+
+class _LendboxLoadingViewState extends State<LendboxLoadingView> {
   final LendboxTransactionService _txnService =
       locator<LendboxTransactionService>();
-  final int waitTimeInSec = 60;
 
-  LendboxLoadingView({required this.transactionType, Key? key})
-      : super(key: key);
+  @override
+  void initState() {
+    super.initState();
+    AppState.blockNavigation();
+  }
+
+  final int waitTimeInSec = 60;
 
   @override
   Widget build(BuildContext context) {
@@ -50,6 +65,9 @@ class LendboxLoadingView extends StatelessWidget {
         ),
         Column(
           children: [
+            const QuotesComponent(
+              quotesType: QuotesType.flo,
+            ),
             Text(
               locale.transactionProgress,
               style:
@@ -100,12 +118,10 @@ class LendboxLoadingView extends StatelessWidget {
                 AppState.unblockNavigation();
                 log("Screen Stack:${AppState.screenStack.toString()}");
 
-                // while (AppState.screenStack.length > 1) {
                 await AppState.backButtonDispatcher!.didPopRoute();
-                // }
                 log("Screen Stack:${AppState.screenStack.toString()}");
 
-                showTransactionPendingDialog();
+                await showTransactionPendingDialog();
                 log("Screen Stack:${AppState.screenStack.toString()}");
               },
               builder: (BuildContext context, Duration value, Widget? child) {
@@ -125,8 +141,8 @@ class LendboxLoadingView extends StatelessWidget {
     );
   }
 
-  void showTransactionPendingDialog() {
-    BaseUtil.openDialog(
+  Future<void> showTransactionPendingDialog() async {
+    await BaseUtil.openDialog(
       addToScreenStack: true,
       hapticVibrate: true,
       isBarrierDismissible: false,

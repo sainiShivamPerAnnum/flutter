@@ -16,6 +16,7 @@ class RechargeModalSheetAppBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return AppBar(
+      centerTitle: true,
       elevation: 0,
       backgroundColor: Colors.transparent,
       leading: txnService.isGoldBuyInProgress
@@ -26,31 +27,16 @@ class RechargeModalSheetAppBar extends StatelessWidget {
               onPressed: trackCloseTapped,
             ),
       title: Row(
+        mainAxisSize: MainAxisSize.min,
         children: [
-          Container(
-            width: SizeConfig.screenWidth! * 0.158,
-            height: SizeConfig.screenWidth! * 0.158,
-            decoration: BoxDecoration(
-              shape: BoxShape.circle,
-              gradient: RadialGradient(
-                colors: [
-                  UiConstants.primaryColor.withOpacity(0.4),
-                  UiConstants.primaryColor.withOpacity(0.2),
-                  UiConstants.primaryColor.withOpacity(0.04),
-                  Colors.transparent,
-                ],
-              ),
-            ),
-            alignment: Alignment.center,
-            child: Image.asset(
-              Assets.digitalGoldBar,
-              width: SizeConfig.screenWidth! * 0.27,
-              height: SizeConfig.screenWidth! * 0.27,
-            ),
+          Image.asset(
+            Assets.digitalGoldBar,
+            width: 45,
+            height: 45,
           ),
           SizedBox(width: SizeConfig.padding8),
           Text(
-            'Save in Digital Gold',
+            'Digital Gold',
             style: TextStyles.rajdhaniSB.title5,
           ),
         ],

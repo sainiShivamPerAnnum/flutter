@@ -1,6 +1,7 @@
 // ignore_for_file: non_constant_identifier_names
 
 class Constants {
+  const Constants._();
   static const String APP_NAME = "Fello";
   static const String PAN_AES_KEY = 'felloisquitefun!';
 
@@ -103,6 +104,7 @@ class Constants {
 
   static const String APP_DOWNLOAD_LINK = "https://fello.in/download";
   static const String APP_NAVIGATION_LINK = "https://fello.in/app/goto/";
+  static const String postNBRedirectionURL = 'https://fello.in/';
 
   static const int REFERRAL_TICKET_BONUS = 10;
   static const int REFERRAL_AMT_BONUS = 25;
@@ -191,4 +193,8 @@ class Constants {
   static const GET_TAMBOLA_TICKETS = "getTambolaTickets";
 
   static const FELLO_BALANCE = "felloBalance";
+
+  /// The amount limit of investment after which the mandatory payment gateway
+  /// switches to net-banking.
+  static const int mandatoryNetBankingThreshold = 125;
 }

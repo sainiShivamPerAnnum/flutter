@@ -3,11 +3,21 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
+typedef UrlChange = void Function(String?);
+
 class WebViewScreen extends StatefulWidget {
   final String url;
   final String? title;
+  final UrlChange? onUrlChanged;
+  final VoidCallback? onPageClosed;
 
-  const WebViewScreen({required this.url, this.title});
+  const WebViewScreen({
+    required this.url,
+    this.onUrlChanged,
+    this.title,
+    this.onPageClosed,
+    super.key,
+  });
 
   @override
   State<WebViewScreen> createState() => _WebViewScreenState();
@@ -37,12 +47,9 @@ class _WebViewScreenState extends State<WebViewScreen> {
       ..setBackgroundColor(const Color(0x00000000))
       ..setNavigationDelegate(
         NavigationDelegate(
-          onProgress: (int progress) {
-            // Update loading bar.
-          },
           onPageStarted: (_) => viewLoader = true,
           onPageFinished: (_) => viewLoader = false,
-          onWebResourceError: (WebResourceError error) {},
+          onUrlChange: (change) => widget.onUrlChanged?.call(change.url),
         ),
       )
       ..loadRequest(Uri.parse(widget.url));
@@ -51,6 +58,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
   @override
   void dispose() {
     controller = null;
+    widget.onPageClosed?.call();
     super.dispose();
   }
 

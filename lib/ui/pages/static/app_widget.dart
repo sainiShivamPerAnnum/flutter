@@ -1,6 +1,7 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/connectivity_status_enum.dart';
 import 'package:felloapp/core/service/notifier_services/connectivity_service.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -9,6 +10,7 @@ import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_inset_box_shadow/flutter_inset_box_shadow.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
 class AppTextFieldLabel extends StatelessWidget {
@@ -348,18 +350,18 @@ class AppDatePickerField extends StatelessWidget {
 
 class AppPositiveBtn extends StatelessWidget {
   const AppPositiveBtn(
-      {required this.btnText,
-      required this.onPressed,
+      {required this.onPressed,
+      this.btnText,
       Key? key,
       this.style,
       this.width,
       this.height,
-      this.widget})
+      this.child})
       : super(key: key);
   final String? btnText;
   final VoidCallback onPressed;
   final double? width, height;
-  final Widget? widget;
+  final Widget? child;
   final TextStyle? style;
 
   @override
@@ -385,7 +387,7 @@ class AppPositiveBtn extends StatelessWidget {
           child: MaterialButton(
             // padding: EdgeInsets.zero,
             onPressed: onPressed,
-            child: widget ??
+            child: child ??
                 Text(
                   btnText!.toUpperCase(),
                   style: TextStyles.rajdhaniB.title5.merge(style),
@@ -458,20 +460,28 @@ class AppPositiveCustomChildBtn extends StatelessWidget {
 
 class ReactivePositiveAppButton extends HookWidget {
   const ReactivePositiveAppButton({
-    required this.btnText,
+    this.btnText = '',
     required this.onPressed,
-    Key? key,
+    super.key,
     this.isDisabled = false,
     this.width,
-  }) : super(key: key);
+    this.child,
+  });
   final String btnText;
   final Function onPressed;
   final double? width;
   final bool isDisabled;
+  final Widget? child;
 
   @override
   Widget build(BuildContext context) {
     final isLoading = useState(false);
+    final content = child ??
+        Text(
+          btnText.toUpperCase(),
+          style: TextStyles.rajdhaniB.title5
+              .colour(Colors.white.withOpacity(isDisabled ? 0.8 : 1)),
+        );
 
     return Consumer<ConnectivityService>(
         builder: (ctx, model, child) => Container(
@@ -519,14 +529,7 @@ class ReactivePositiveAppButton extends HookWidget {
                         size: SizeConfig.title5,
                         color: Colors.white,
                       )
-                    : FittedBox(
-                        fit: BoxFit.scaleDown,
-                        child: Text(
-                          btnText.toUpperCase(),
-                          style: TextStyles.rajdhaniB.title5.colour(
-                              Colors.white.withOpacity(isDisabled ? 0.8 : 1)),
-                        ),
-                      ),
+                    : content,
               ),
             ));
   }
@@ -535,12 +538,12 @@ class ReactivePositiveAppButton extends HookWidget {
 class AppNegativeBtn extends StatelessWidget {
   const AppNegativeBtn({
     required this.btnText,
-    required this.onPressed,
+    this.onPressed,
     Key? key,
     this.width,
   }) : super(key: key);
   final String btnText;
-  final VoidCallback onPressed;
+  final VoidCallback? onPressed;
   final double? width;
 
   @override
@@ -736,6 +739,98 @@ class CustomKeyboardSubmitButton extends StatelessWidget {
               ),
             )
           : const SizedBox(),
+    );
+  }
+}
+
+enum InitialExpandableState {
+  collapsed,
+  expanded;
+}
+
+class Expandable extends StatefulWidget {
+  final Widget header;
+  final Widget? body;
+  final InitialExpandableState initialState;
+
+  const Expandable({
+    required this.header,
+    this.body,
+    this.initialState = InitialExpandableState.collapsed,
+    super.key,
+  });
+
+  @override
+  State<Expandable> createState() => _ExpandableState();
+}
+
+class _ExpandableState extends State<Expandable> {
+  final _key = Object();
+  final _duration = const Duration(
+    milliseconds: 300,
+  );
+
+  bool _collapsed = true;
+
+  @override
+  void initState() {
+    super.initState();
+    if (widget.initialState == InitialExpandableState.expanded) {
+      _collapsed = false;
+    }
+  }
+
+  void _onToggle() {
+    setState(() {
+      _collapsed = !_collapsed;
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Row(
+          key: ObjectKey(_key),
+          children: [
+            Expanded(
+              child: widget.header,
+            ),
+            if (widget.body != null)
+              Padding(
+                padding: EdgeInsets.only(
+                  left: SizeConfig.padding8,
+                ),
+                child: InkWell(
+                  onTap: _onToggle,
+                  child: AnimatedRotation(
+                    turns: _collapsed ? 0 : .5,
+                    duration: _duration,
+                    child: SvgPicture.asset(
+                      Assets.arrow,
+                      color: Colors.white,
+                      height: SizeConfig.padding12,
+                      width: SizeConfig.padding12,
+                    ),
+                  ),
+                ),
+              )
+          ],
+        ),
+        if (widget.body != null)
+          Padding(
+            padding: EdgeInsets.only(top: SizeConfig.padding18),
+            child: ClipRRect(
+              child: AnimatedAlign(
+                alignment: Alignment.topCenter,
+                heightFactor: _collapsed ? 0 : 1,
+                duration: _duration,
+                child: widget.body,
+              ),
+            ),
+          )
+      ],
     );
   }
 }

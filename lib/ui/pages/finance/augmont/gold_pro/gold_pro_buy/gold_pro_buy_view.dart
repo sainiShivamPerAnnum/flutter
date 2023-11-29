@@ -49,5 +49,3 @@ class _GoldProBuyViewState extends State<GoldProBuyView> {
     }
   }
 }
-
-//Copy this CustomPainter code to the Bottom of the File

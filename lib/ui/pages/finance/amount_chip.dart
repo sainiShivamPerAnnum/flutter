@@ -112,11 +112,13 @@ class AmountChipV2 extends StatelessWidget {
                 vertical: SizeConfig.padding2,
               ),
               decoration: const BoxDecoration(
-                color: UiConstants.kSnackBarPositiveContentColor,
+                color: UiConstants.teal4,
               ),
               child: Text(
                 locale.best,
-                style: TextStyles.sourceSans.body5,
+                style: TextStyles.sourceSans.body4.copyWith(
+                  fontSize: 10,
+                ),
               ),
             ),
           if (!isBest) const Spacer(),
@@ -135,7 +137,7 @@ class AmountChipV2 extends StatelessWidget {
                 borderRadius: BorderRadius.circular(SizeConfig.roundness5),
                 border: Border.all(
                   color: isActive
-                      ? const Color(0xFFFEF5DC)
+                      ? UiConstants.teal3
                       : const Color(0xFFFEF5DC).withOpacity(0.2),
                   width: SizeConfig.border0,
                 ),
@@ -143,7 +145,9 @@ class AmountChipV2 extends StatelessWidget {
               alignment: Alignment.center,
               child: Text(
                 "₹ ${amt.toInt()}",
-                style: TextStyles.sourceSans.body2.colour(Colors.white),
+                style: TextStyles.sourceSans.body2.colour(
+                  isActive ? UiConstants.teal3 : Colors.white,
+                ),
               ),
             ),
           ),

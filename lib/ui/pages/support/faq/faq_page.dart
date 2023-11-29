@@ -18,7 +18,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_html/flutter_html.dart' as html;
 
 class FAQPage extends StatelessWidget {
-  final FaqsType? type;
+  final FaqsType type;
 
   const FAQPage({
     required this.type,

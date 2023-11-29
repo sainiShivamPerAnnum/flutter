@@ -43,6 +43,7 @@ class Data {
   String? callbackUrl;
   String? txnId;
   String? intent;
+  String? nbIntent;
   String? pg;
   String? mid;
   Data({
@@ -51,20 +52,13 @@ class Data {
     this.callbackUrl,
     this.txnId,
     this.intent,
+    this.nbIntent,
     this.pg,
     this.mid,
   });
 
   factory Data.base() {
-    return Data(
-      temptoken: null,
-      orderId: null,
-      callbackUrl: null,
-      txnId: null,
-      intent: null,
-      pg: null,
-      mid: null,
-    );
+    return Data();
   }
 
   factory Data.fromMap(Map<String, dynamic> map) {
@@ -75,6 +69,7 @@ class Data {
           map['callbackUrl'] != null ? map['callbackUrl'] as String : null,
       txnId: map['txnId'] != null ? map['txnId'] as String : null,
       intent: map['intent'] != null ? map['intent'] as String : null,
+      nbIntent: map['nbIntent'] != null ? map['nbIntent'] as String : null,
       pg: map['pg'] != null ? map['pg'] as String : null,
       mid: map['mid'] != null ? map['mid'] as String : null,
     );

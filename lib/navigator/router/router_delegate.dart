@@ -208,7 +208,8 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     //notifyListeners();
   }
 
-  void addPage(PageConfiguration? pageConfig) {
+  void addPage(PageConfiguration? pageConfig,
+      {Map<String, dynamic>? queryParams}) {
     final shouldAddPage = _pages.isEmpty ||
         (_pages.last.arguments as PageConfiguration).uiPage !=
             pageConfig!.uiPage;
@@ -238,7 +239,13 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           _addPageData(const KYCDetailsView(), KycDetailsPageConfig);
           break;
         case Pages.BankDetails:
-          _addPageData(const BankDetailsView(), BankDetailsPageConfig);
+          _addPageData(
+            BankDetailsView(
+                validation: bool.tryParse(
+              queryParams?['withNetBankingValidation'] ?? 'false',
+            )),
+            BankDetailsPageConfig,
+          );
           break;
         case Pages.UpdateRequired:
           _addPageData(const UpdateRequiredScreen(), UpdateRequiredConfig);
@@ -288,11 +295,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           _addPageData(
               const AutosaveUpdateView(), AutosaveUpdateViewPageConfig);
           break;
-
-        // case Pages.TopPlayerLeaderboard:
-        //   _addPageData(
-        //       const TopPlayerLeaderboardView(), TopPlayerLeaderboardPageConfig);
-        //   break;
         case Pages.JourneyView:
           _addPageData(const JourneyView(), JourneyViewPageConfig);
           break;
@@ -302,12 +304,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.BlogPostWebView:
           _addPageData(const BlogWebView(), BlogPostWebViewConfig);
           break;
-        // case Pages.CampaignView:
-        //   _addPageData(CampaignView(), CampaignViewPageConfig);
-        //   break;
-        // case Pages.SaveAssetView:
-        //   _addPageData(const SaveAssetView(), SaveAssetsViewConfig);
-        //   break;
         case Pages.SettingsView:
           _addPageData(const SettingsView(), SettingsViewPageConfig);
           break;
@@ -1079,7 +1075,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         break;
     }
     if (pageConfiguration != null) {
-      addPage(pageConfiguration);
+      addPage(pageConfiguration, queryParams: queryParams);
       notifyListeners();
     }
   }
