@@ -744,6 +744,19 @@ class CustomKeyboardSubmitButton extends StatelessWidget {
   }
 }
 
+/// Type of app image.
+enum _ImageType {
+  normal,
+  svg,
+  lottie;
+}
+
+/// A possible source of image.
+enum _ImageSourceType {
+  network,
+  local;
+}
+
 class AppImage extends StatelessWidget {
   final String image;
   final BoxFit? fit;
@@ -844,7 +857,6 @@ class AppImage extends StatelessWidget {
     }
   }
 }
-
 
 enum InitialExpandableState {
   collapsed,
