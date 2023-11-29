@@ -9,9 +9,7 @@ import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/extensions/rich_text_extension.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/styles/size_config.dart';
-import 'package:felloapp/util/styles/textStyles.dart';
-import 'package:felloapp/util/styles/ui_constants.dart';
+import 'package:felloapp/util/styles/styles.dart';
 import 'package:felloapp/util/timer_utill.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -22,9 +20,10 @@ class HappyHourModel extends StatefulWidget {
   final bool isComingFromSave;
   const HappyHourModel({
     required this.model,
-    Key? key,
+    super.key,
     this.isComingFromSave = false,
-  }) : super(key: key);
+  });
+
   @override
   State<HappyHourModel> createState() => _HappyHourModalState(
       DateTime.parse(model.data!.endTime!),
@@ -40,7 +39,7 @@ class _HappyHourModalState extends TimerUtil<HappyHourModel> {
   late HappyHourType _happyHourType;
   @override
   void initState() {
-    _happyHourType = locator<HappyHourCampign>().data!.happyHourType;
+    _happyHourType = widget.model.data!.happyHourType;
     isHappyHourEnded = timeRemaining.isNegative || timeRemaining.inSeconds == 0
         ? true
         : _happyHourType == HappyHourType.expired;
@@ -69,7 +68,7 @@ class _HappyHourModalState extends TimerUtil<HappyHourModel> {
 
   @override
   Widget buildBody(BuildContext context) {
-    S locale = S.of(context);
+    final locale = S.of(context);
 
     final data = widget.model.data!;
     return WillPopScope(
@@ -94,8 +93,7 @@ class _HappyHourModalState extends TimerUtil<HappyHourModel> {
                       : SizeConfig.screenHeight! * 0.39,
               width: SizeConfig.screenWidth,
               decoration: BoxDecoration(
-                color: UiConstants.kSaveDigitalGoldCardBg,
-                border: Border.all(color: const Color(0xff93B5FE)),
+                color: data.bgColor!.toColor(),
                 borderRadius: BorderRadius.vertical(
                   top: Radius.circular(
                     SizeConfig.roundness32,
@@ -140,8 +138,9 @@ class _HappyHourModalState extends TimerUtil<HappyHourModel> {
                             ? data.bottomSheetSubHeading!
                             : data.preBuzz!.heading,
                         textAlign: TextAlign.center,
-                        style: TextStyles.sourceSans.body3
-                            .colour(const Color(0xff9AADFF)),
+                        style: TextStyles.sourceSans.body3.colour(
+                          Colors.white.withOpacity(.70),
+                        ),
                       ),
                     ),
                   ],
@@ -215,17 +214,11 @@ class _HappyHourModalState extends TimerUtil<HappyHourModel> {
                                   eventName: "Happy Hour CTA Tapped ",
                                   properties: {
                                     "Reward": {
-                                      "asset": locator<HappyHourCampign>()
-                                              .data
-                                              ?.rewards
-                                              ?.first
+                                      "asset": widget.model.data?.rewards?.first
                                               .type ??
                                           "",
-                                      "amount": locator<HappyHourCampign>()
-                                              .data
-                                              ?.rewards
-                                              ?.first
-                                              .value ??
+                                      "amount": widget.model.data?.rewards
+                                              ?.first.value ??
                                           "",
                                       "timer": "$inHours:$inMinutes:$inSeconds"
                                     }
@@ -284,7 +277,7 @@ class _HappyHourModalState extends TimerUtil<HappyHourModel> {
       : ButtonType.notify;
 
   String get title {
-    final data = locator<HappyHourCampign>().data!;
+    final data = widget.model.data!;
     switch (_happyHourType) {
       case HappyHourType.preBuzz:
         return data.preBuzz!.title;
@@ -297,7 +290,7 @@ class _HappyHourModalState extends TimerUtil<HappyHourModel> {
   }
 
   String get subtitle {
-    final data = locator<HappyHourCampign>().data!;
+    final data = widget.model.data!;
     switch (_happyHourType) {
       case HappyHourType.preBuzz:
         return data.preBuzz!.subtitle;

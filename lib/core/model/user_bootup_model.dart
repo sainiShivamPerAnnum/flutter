@@ -51,7 +51,8 @@ class UserBootUpDetailsModel {
 }
 
 class Data {
-  final List<String>? marqueeMessages;
+  final List<String> marqueeMessages;
+  final String marqueeColor;
   final Cache? cache;
   final bool? isBlocked;
   final bool isAppUpdateRequired;
@@ -65,6 +66,8 @@ class Data {
   final String blockSubtitle;
 
   Data({
+    required this.marqueeMessages,
+    required this.marqueeColor,
     required this.cache,
     required this.isBlocked,
     required this.isAppUpdateRequired,
@@ -76,7 +79,6 @@ class Data {
     required this.isAppInMaintenance,
     required this.blockTitle,
     required this.blockSubtitle,
-    this.marqueeMessages,
   });
 
   factory Data.fromMap(Map<String, dynamic> map) {
@@ -102,6 +104,7 @@ class Data {
       isAppInMaintenance: map['isAppInMaintenance'] ?? false,
       blockTitle: map['blockTitle'] ?? '',
       blockSubtitle: map["blockSubtitle"] ?? "",
+      marqueeColor: map['marqueeColor'] ?? '#39498C',
     );
   }
 

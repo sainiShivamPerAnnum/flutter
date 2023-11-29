@@ -8,15 +8,6 @@ class HappyHourCampign {
     message = json['message'];
     data = json['data'] != null ? Data.fromJson(json['data']) : null;
   }
-
-  Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = <String, dynamic>{};
-    data['message'] = message;
-    if (this.data != null) {
-      data['data'] = this.data!.toJson();
-    }
-    return data;
-  }
 }
 
 class Data {
@@ -28,6 +19,7 @@ class Data {
   String? endTime;
   String? ctaText;
   String? docketHeading;
+  String? bgColor;
   int? minAmount;
   List<Rewards>? rewards;
   int? maxApplicable;
@@ -46,6 +38,7 @@ class Data {
       this.docketHeading,
       this.minAmount,
       this.rewards,
+      this.bgColor = '#495DB2',
       this.preBuzz,
       this.maxApplicable});
 
@@ -67,12 +60,14 @@ class Data {
     }
     preBuzz = PreBuzz.fromJson(json['prebuzz']);
     maxApplicable = json['maxApplicable'];
+    bgColor = json['bgColor'] ?? '#495DB2';
     final date = DateTime.now();
     final _startDate = DateTime.parse(startTime!);
     final _endTime = DateTime.parse(endTime!);
     showHappyHour = date.isAfter(_startDate) && date.isBefore(_endTime);
     getType(_startDate, _endTime);
   }
+
 
   Map<String, dynamic> toJson() {
     final Map<String, dynamic> data = <String, dynamic>{};
