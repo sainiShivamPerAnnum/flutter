@@ -276,13 +276,6 @@ class _GoldBuySuccessViewState extends State<GoldBuySuccessView>
                   ),
                   child: Row(
                     children: [
-                      WinningChips(
-                          title: locale.felloTokens,
-                          tooltip: locale.winChipsTitle1,
-                          asset: Assets.token,
-                          qty: _augTxnService.currentTxnAmount!.toInt()),
-                      if (_augTxnService.currentTxnScratchCardCount > 0)
-                        SizedBox(width: SizeConfig.padding12),
                       if (_augTxnService.currentTxnScratchCardCount > 0)
                         WinningChips(
                             title: _augTxnService.currentTxnScratchCardCount > 1

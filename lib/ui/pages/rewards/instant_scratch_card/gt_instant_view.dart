@@ -3,7 +3,6 @@ import 'package:felloapp/core/service/notifier_services/marketing_event_handler_
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/buttons/nav_buttons/nav_buttons.dart';
-import 'package:felloapp/ui/elements/coin_bar/coin_bar_view.dart';
 import 'package:felloapp/ui/elements/texts/breathing_text_widget.dart';
 import 'package:felloapp/ui/pages/rewards/detailed_scratch_card/gt_detailed_view.dart';
 import 'package:felloapp/ui/pages/rewards/instant_scratch_card/gt_instant_vm.dart';
@@ -130,8 +129,6 @@ class _GTInstantViewState extends State<GTInstantView>
                         ),
                         const FelloAppBarBackButton(),
                         const Spacer(),
-                        FelloCoinBar(),
-                        SizedBox(width: SizeConfig.padding20)
                       ],
                     ),
                   )),

@@ -333,13 +333,6 @@ class _GoldProBuySuccessViewState extends State<GoldProBuySuccessView>
                       left: SizeConfig.pageHorizontalMargins),
                   child: Row(
                     children: [
-                      // WinningChips(
-                      //     title: locale.felloTokens,
-                      //     tooltip: locale.winChipsTitle1,
-                      //     asset: Assets.token,
-                      //     qty: widget.txnService.currentTxnAmount!.toInt()),
-                      // if (widget.txnService.currentTxnScratchCardCount > 0)
-                      //   SizedBox(width: SizeConfig.padding12),
                       if (widget.txnService.currentTxnScratchCardCount > 0)
                         WinningChips(
                             title:

@@ -53,24 +53,6 @@ class _TicketsIntroViewState extends State<TicketsIntroView> {
               right: -SizeConfig.screenWidth! / 3,
               child: const RotatingPolkaDotsWidget(),
             ),
-            // Positioned(
-            //   top: SizeConfig.screenHeight! * 0.38,
-            //   right: SizeConfig.screenWidth! * 0.03,
-            //   child: Opacity(
-            //     opacity: 0.7,
-            //     child: SvgPicture.asset(Assets.goldAsset,
-            //         width: SizeConfig.padding54),
-            //   ),
-            // ),
-            // Positioned(
-            //   top: SizeConfig.screenHeight! * 0.3,
-            //   left: SizeConfig.screenWidth! * 0.05,
-            //   child: Opacity(
-            //     opacity: 0.6,
-            //     child: SvgPicture.asset(Assets.floAsset,
-            //         width: SizeConfig.padding54),
-            //   ),
-            // ),
             Column(
               children: [
                 Expanded(

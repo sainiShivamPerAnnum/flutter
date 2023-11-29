@@ -325,4 +325,7 @@ class AnalyticsEvents {
   static const ticketsVideoTapped = "Tickets video tapped";
   static const ticketsMultiplierBannerTapped =
       "Tickets multiplier banner tapped";
+
+  static const payWithNetBanking = 'pay_with_nb';
+  static const editPreferredUpiOption = 'edit_preferred_upi';
 }

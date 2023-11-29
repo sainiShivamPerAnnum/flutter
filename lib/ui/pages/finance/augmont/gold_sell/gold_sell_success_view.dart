@@ -58,36 +58,6 @@ class GoldSellSuccessView extends StatelessWidget {
             locale.txnWithDrawalSuccess,
             style: TextStyles.sourceSans.body2.setOpacity(0.7),
           ),
-          Container(
-            margin: EdgeInsets.only(
-              top: SizeConfig.padding24,
-              bottom: SizeConfig.padding12,
-              left: SizeConfig.pageHorizontalMargins * 2,
-              right: SizeConfig.pageHorizontalMargins * 2,
-            ),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-              color: UiConstants.darkPrimaryColor2,
-            ),
-            padding: EdgeInsets.symmetric(
-              horizontal: SizeConfig.pageHorizontalMargins,
-              vertical: SizeConfig.padding12,
-            ),
-            child: Row(children: [
-              Text(locale.tokensDeducted, style: TextStyles.rajdhani.body1),
-              const Spacer(),
-              SvgPicture.asset(
-                Assets.token,
-                width: SizeConfig.padding26,
-                height: SizeConfig.padding26,
-              ),
-              SizedBox(
-                width: SizeConfig.padding6,
-              ),
-              Text((augTxnservice.currentTxnAmount!.toInt()).toString(),
-                  style: TextStyles.rajdhaniB.title3),
-            ]),
-          ),
           if (model.deductedTokensCount != null &&
               model.deductedTokensCount! > 0)
             Container(

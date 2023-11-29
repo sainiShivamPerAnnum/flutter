@@ -347,6 +347,19 @@ class _NetBankingWidgetState extends State<NetBankingWidget> {
         );
         break;
     }
+
+    _sendEvent(
+      bankAccountSupported: status.isSupported,
+    );
+  }
+
+  void _sendEvent({bool bankAccountSupported = false}) {
+    locator<AnalyticsService>().track(
+      eventName: AnalyticsEvents.payWithNetBanking,
+      properties: {
+        'bank_account_support': bankAccountSupported,
+      },
+    );
   }
 
   String _getLabel(
