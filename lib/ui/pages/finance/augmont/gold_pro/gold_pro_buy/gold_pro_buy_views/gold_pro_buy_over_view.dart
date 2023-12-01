@@ -408,7 +408,8 @@ class GoldProBuyOverView extends StatelessWidget {
                           children: [
                             if (preferredOption != null &&
                                 amt <= Constants.mandatoryNetBankingThreshold &&
-                                model.isIntentFlow)
+                                model.isIntentFlow &&
+                                !model.hasEnoughGoldBalanceForLease)
                               Padding(
                                 padding: EdgeInsets.only(
                                   right: SizeConfig.padding12,
