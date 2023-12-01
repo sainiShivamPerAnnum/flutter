@@ -116,9 +116,6 @@ class _GoldBreakdownViewState extends State<GoldBreakdownView> {
                   Divider(
                     color: UiConstants.kLastUpdatedTextColor.withOpacity(0.5),
                   ),
-                  SizedBox(
-                    height: SizeConfig.padding24,
-                  ),
                   Expandable(
                     header: Row(
                       children: [
@@ -884,9 +881,6 @@ class _FloBreakdownViewState extends State<FloBreakdownView> {
                     Divider(
                         color:
                             UiConstants.kLastUpdatedTextColor.withOpacity(0.5)),
-                    SizedBox(
-                      height: SizeConfig.padding12,
-                    ),
                     Expandable(
                       header: Row(
                         children: [
