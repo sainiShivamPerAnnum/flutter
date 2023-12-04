@@ -12,7 +12,7 @@ import 'package:flutter_svg/svg.dart';
 
 class HappyHourBanner extends StatefulWidget {
   const HappyHourBanner(
-      {Key? key, required this.model, this.isComingFromSave = false})
+      {required this.model, Key? key, this.isComingFromSave = false})
       : super(key: key);
   final HappyHourCampign model;
   final bool isComingFromSave;
@@ -77,7 +77,7 @@ class _HappyHourBannerState extends TimerUtil<HappyHourBanner> {
                 height: 42,
                 width: 42,
               ),
-              SizedBox(
+              const SizedBox(
                 width: 12,
               ),
               RichText(
@@ -92,11 +92,11 @@ class _HappyHourBannerState extends TimerUtil<HappyHourBanner> {
                   ],
                 ),
               ),
-              Spacer(),
+              const Spacer(),
               GestureDetector(
                 onTap: () =>
                     locator<BaseUtil>().showHappyHourDialog(widget.model),
-                child: Icon(
+                child: const Icon(
                   Icons.keyboard_arrow_right_outlined,
                   color: Colors.white,
                 ),

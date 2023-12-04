@@ -21,7 +21,7 @@ import 'package:property_change_notifier/property_change_notifier.dart';
 class SellCardView extends StatelessWidget {
   final InvestmentType investmentType;
 
-  const SellCardView({Key? key, required this.investmentType})
+  const SellCardView({required this.investmentType, Key? key})
       : super(key: key);
 
   Color get color => investmentType == InvestmentType.AUGGOLD99

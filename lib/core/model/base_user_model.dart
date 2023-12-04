@@ -118,35 +118,6 @@ class BaseUser {
           [],
         );
 
-  BaseUser.base()
-      : this(
-          '',
-          '',
-          '',
-          '',
-          '',
-          '',
-          '',
-          false,
-          false,
-          false,
-          false,
-          0,
-          '',
-          '',
-          false,
-          false,
-          '',
-          false,
-          false,
-          UserPreferences({}),
-          TimestampModel(seconds: 0, nanoseconds: 0),
-          '',
-          '',
-          false,
-          [],
-        );
-
   BaseUser.fromMap(Map<String, dynamic> data, String id, [String? client_token])
       : this(
             id,
@@ -154,7 +125,7 @@ class BaseUser {
             data[fldEmail]?.toString() ?? '',
             data[fldName]?.toString() ?? '',
             data[fldDob]?.toString() ?? '',
-            data[fldGender]?.toString()?.toUpperCase() ?? '',
+            data[fldGender]?.toString().toUpperCase() ?? '',
             client_token?.toString() ?? '',
             data[fldIsInvested] ?? false,
             data[fldIsIciciOnboarded],
@@ -244,7 +215,7 @@ class UserPreferences {
   };
 
   //current values
-  Map<String?, int?> _activePrefs = {};
+  final Map<String?, int?> _activePrefs = {};
 
   UserPreferences(Map<dynamic, dynamic>? remValues) {
     for (Preferences p in Preferences.values) {

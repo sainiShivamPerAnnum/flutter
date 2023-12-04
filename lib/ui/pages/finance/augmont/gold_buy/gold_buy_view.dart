@@ -25,6 +25,7 @@ class GoldBuyView extends StatefulWidget {
   final double? gms;
   final String? initialCoupon;
   final String? entryPoint;
+  final bool quickCheckout;
 
   const GoldBuyView({
     super.key,
@@ -33,6 +34,7 @@ class GoldBuyView extends StatefulWidget {
     this.gms,
     this.initialCoupon,
     this.entryPoint,
+    this.quickCheckout = false,
   });
 
   @override
@@ -43,7 +45,7 @@ class _GoldBuyViewState extends State<GoldBuyView>
     with WidgetsBindingObserver, SingleTickerProviderStateMixin {
   final AugmontTransactionService _txnService =
       locator<AugmontTransactionService>();
-  AppLifecycleState? appLifecycleState;
+
   final iosScreenShotChannel = const MethodChannel('secureScreenshotChannel');
 
   @override
@@ -72,15 +74,14 @@ class _GoldBuyViewState extends State<GoldBuyView>
 
   @override
   void didChangeAppLifecycleState(AppLifecycleState state) {
-    appLifecycleState = state;
-    if (appLifecycleState == AppLifecycleState.resumed &&
+    super.didChangeAppLifecycleState(state);
+    if (state == AppLifecycleState.resumed &&
         Platform.isIOS &&
         _txnService.isIOSTxnInProgress) {
       _txnService.isIOSTxnInProgress = false;
       _txnService.currentTransactionState = TransactionState.ongoing;
-      _txnService.initiatePolling();
+      _txnService.checkTransactionStatus();
     }
-    super.didChangeAppLifecycleState(state);
   }
 
   @override
@@ -123,6 +124,7 @@ class _GoldBuyViewState extends State<GoldBuyView>
                     widget.gms,
                     initialCouponCode: widget.initialCoupon,
                     entryPoint: widget.entryPoint,
+                    quickCheckout: widget.quickCheckout,
                   ),
                   builder: (ctx, model, child) {
                     if (model.state == ViewState.Busy) {
@@ -172,6 +174,7 @@ class _GoldBuyViewState extends State<GoldBuyView>
   }
 
   Future<void> _secureScreenshots(AugmontTransactionService txnService) async {
+    if (txnService.isNetBankingInProgress) return;
     if (Platform.isAndroid) {
       if (txnService.currentTransactionState == TransactionState.ongoing) {
         await FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);

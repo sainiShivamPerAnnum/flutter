@@ -1,6 +1,7 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
+import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/subscription_models/subscription_model.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
@@ -11,6 +12,7 @@ import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/feature/tambola/tambola.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/asset_selection.dart';
+import 'package:felloapp/ui/pages/finance/transaction_faqs.dart';
 import 'package:felloapp/ui/pages/hometabs/save/gold_components/gold_pro_card.dart';
 import 'package:felloapp/ui/service_elements/user_service/user_fund_quantity_se.dart';
 import 'package:felloapp/util/assets.dart';
@@ -67,261 +69,241 @@ class _GoldBuySuccessViewState extends State<GoldBuySuccessView>
       children: [
         Padding(
           padding: EdgeInsets.symmetric(vertical: SizeConfig.padding32),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.center,
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SafeArea(
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.end,
-                  children: [
-                    IconButton(
-                      onPressed: () {
-                        AppState.isRepeated = true;
-                        AppState.unblockNavigation();
-                        AppState.backButtonDispatcher!.didPopRoute();
-                      },
-                      icon: const Icon(
-                        Icons.close,
-                        color: Colors.white,
+          child: SingleChildScrollView(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.center,
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SafeArea(
+                  child: Row(
+                    mainAxisAlignment: MainAxisAlignment.end,
+                    children: [
+                      IconButton(
+                        onPressed: () {
+                          AppState.isRepeated = true;
+                          AppState.unblockNavigation();
+                          AppState.backButtonDispatcher!.didPopRoute();
+                        },
+                        icon: const Icon(
+                          Icons.close,
+                          color: Colors.white,
+                        ),
                       ),
-                    ),
-                  ],
+                    ],
+                  ),
                 ),
-              ),
-              Expanded(
-                child: Stack(
+                Stack(
                   children: [
                     Align(
                       alignment: Alignment.center,
                       child: Lottie.network(
                         Assets.goldDepostSuccessLottie,
                         fit: BoxFit.cover,
+                        height: SizeConfig.screenHeight! * .3,
                       ),
                     ),
-                    if (_augTxnService!.currentTxnAmount! > 0)
+                    if (_augTxnService.currentTxnAmount! > 0)
                       Align(
                         alignment: Alignment.centerLeft,
-                        child: Container(
-                          margin: EdgeInsets.only(
-                              left: SizeConfig.padding12,
-                              bottom: SizeConfig.padding24),
+                        child: Padding(
+                          padding: EdgeInsets.only(
+                            top: SizeConfig.screenHeight! * .1,
+                            left: SizeConfig.padding60,
+                            bottom: SizeConfig.padding24,
+                          ),
                           child: Lottie.network(
                             Assets.floatingTokenIslandLottie,
-                            width: SizeConfig.screenWidth! * 0.3,
+                            width: SizeConfig.screenWidth! * 0.24,
                             fit: BoxFit.cover,
                           ),
                         ),
                       ),
-                    if (_augTxnService!.currentTxnScratchCardCount > 0)
+                    if (_augTxnService.currentTxnScratchCardCount > 0)
                       Align(
                         alignment: Alignment.centerRight,
-                        child: Container(
-                          margin: EdgeInsets.only(
-                            right: SizeConfig.padding12,
-                            top: SizeConfig.padding24,
+                        child: Padding(
+                          padding: EdgeInsets.only(
+                            top: SizeConfig.screenHeight! * .1,
+                            right: SizeConfig.padding60,
                           ),
                           child: Lottie.network(
                             Assets.floatingScratchCardIslandLottie,
-                            width: SizeConfig.screenWidth! * 0.3,
+                            width: SizeConfig.screenWidth! * 0.2,
                             fit: BoxFit.cover,
                           ),
                         ),
                       ),
-                    if (_augTxnService!.currentTxnTambolaTicketsCount > 0)
+                    if (_augTxnService.currentTxnTambolaTicketsCount > 0)
                       Align(
                         alignment: Alignment.bottomCenter,
-                        child: Container(
-                          child: Lottie.network(
-                            Assets.floatingTambolaTicketIslandLottie,
-                            width: SizeConfig.screenWidth! * 0.3,
-                            fit: BoxFit.cover,
-                          ),
+                        child: Lottie.network(
+                          Assets.floatingTambolaTicketIslandLottie,
+                          width: SizeConfig.screenWidth! * 0.2,
+                          fit: BoxFit.cover,
                         ),
                       ),
                   ],
                 ),
-              ),
-              Text(
-                locale.btnCongratulations,
-                style: TextStyles.rajdhaniB.title2,
-              ),
-              SizedBox(height: SizeConfig.padding12),
-              if (_augTxnService?.transactionResponseModel?.data?.txnDisplayMsg
-                      ?.isNotEmpty ??
-                  false)
-                SizedBox(
-                  width: SizeConfig.screenWidth! * 0.8,
-                  child: Text(
-                    _augTxnService
-                            ?.transactionResponseModel?.data?.txnDisplayMsg ??
-                        "",
+                Text(
+                  locale.btnCongratulations,
+                  style: TextStyles.rajdhaniB.title2,
+                ),
+                SizedBox(height: SizeConfig.padding12),
+                if (_augTxnService.transactionResponseModel?.data?.txnDisplayMsg
+                        ?.isNotEmpty ??
+                    false)
+                  SizedBox(
+                    width: SizeConfig.screenWidth! * 0.8,
+                    child: Text(
+                      _augTxnService
+                              .transactionResponseModel?.data?.txnDisplayMsg ??
+                          "",
+                      textAlign: TextAlign.center,
+                      style: TextStyles.sourceSans.body2.setOpacity(0.7),
+                    ),
+                  )
+                else ...[
+                  Text(
+                    locale.txnInvestmentSuccess,
                     textAlign: TextAlign.center,
                     style: TextStyles.sourceSans.body2.setOpacity(0.7),
                   ),
-                )
-              else ...[
-                Text(
-                  locale.txnInvestmentSuccess,
-                  textAlign: TextAlign.center,
-                  style: TextStyles.sourceSans.body2.setOpacity(0.7),
-                ),
-              ],
-              Container(
-                margin: EdgeInsets.only(
-                    left: SizeConfig.pageHorizontalMargins,
-                    right: SizeConfig.pageHorizontalMargins,
-                    top: SizeConfig.pageHorizontalMargins),
-                decoration: BoxDecoration(
-                  border:
-                      Border.all(width: 0.5, color: UiConstants.kTextColor2),
-                  borderRadius: BorderRadius.only(
-                    topRight: Radius.circular(SizeConfig.roundness12),
-                    topLeft: Radius.circular(SizeConfig.roundness12),
+                ],
+                Container(
+                  margin: EdgeInsets.only(
+                      left: SizeConfig.pageHorizontalMargins,
+                      right: SizeConfig.pageHorizontalMargins,
+                      top: SizeConfig.pageHorizontalMargins),
+                  decoration: BoxDecoration(
+                    border:
+                        Border.all(width: 0.5, color: UiConstants.kTextColor2),
+                    borderRadius: BorderRadius.only(
+                      topRight: Radius.circular(SizeConfig.roundness12),
+                      topLeft: Radius.circular(SizeConfig.roundness12),
+                    ),
+                  ),
+                  child: IntrinsicHeight(
+                    child: Row(
+                      children: [
+                        Expanded(
+                          child: Container(
+                            margin: EdgeInsets.only(
+                                left: SizeConfig.pageHorizontalMargins,
+                                top: SizeConfig.padding16,
+                                bottom: SizeConfig.padding16,
+                                right: SizeConfig.padding8),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(locale.invested,
+                                    style: TextStyles.sourceSans.body2
+                                        .colour(UiConstants.kTextColor2)),
+                                SizedBox(height: SizeConfig.padding16),
+                                Text(
+                                    "₹ ${BaseUtil.getIntOrDouble(_augTxnService.currentTxnAmount!)}",
+                                    style: TextStyles.rajdhaniB.title3),
+                                SizedBox(height: SizeConfig.padding12),
+                              ],
+                            ),
+                          ),
+                        ),
+                        const VerticalDivider(
+                          width: 3,
+                          thickness: 0.5,
+                          color: UiConstants.kTextColor2,
+                        ),
+                        Expanded(
+                          child: Container(
+                            margin: EdgeInsets.only(
+                                left: SizeConfig.pageHorizontalMargins,
+                                top: SizeConfig.padding16,
+                                bottom: SizeConfig.padding16,
+                                right: SizeConfig.padding16),
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(locale.bought,
+                                    style: TextStyles.sourceSans.body2
+                                        .colour(UiConstants.kTextColor2)),
+                                SizedBox(height: SizeConfig.padding16),
+                                Text(
+                                    "${_augTxnService.currentTxnGms}${locale.gm}",
+                                    style: TextStyles.rajdhaniB.title4),
+                                SizedBox(height: SizeConfig.padding12),
+                              ],
+                            ),
+                          ),
+                        )
+                      ],
+                    ),
                   ),
                 ),
-                child: IntrinsicHeight(
+                Container(
+                  margin: EdgeInsets.symmetric(
+                    horizontal: SizeConfig.pageHorizontalMargins,
+                  ),
+                  decoration: BoxDecoration(
+                    borderRadius: BorderRadius.only(
+                      bottomLeft: Radius.circular(SizeConfig.roundness12),
+                      bottomRight: Radius.circular(SizeConfig.roundness12),
+                    ),
+                    // color: UiConstants.kModalSheetSecondaryBackgroundColor,
+                    border:
+                        Border.all(width: 0.5, color: UiConstants.kTextColor2),
+                  ),
+                  padding: EdgeInsets.symmetric(
+                    horizontal: SizeConfig.pageHorizontalMargins,
+                    vertical: SizeConfig.padding12,
+                  ),
+                  child: Row(children: [
+                    Text(
+                      locale.balanceText,
+                      style: TextStyles.rajdhani.body3
+                          .colour(UiConstants.kTextColor3),
+                    ),
+                    const Spacer(),
+                    UserFundQuantitySE(
+                      style: TextStyles.sourceSans.body2
+                          .colour(UiConstants.kTextColor),
+                    )
+                  ]),
+                ),
+                Container(
+                  padding: EdgeInsets.only(
+                    top: SizeConfig.padding20,
+                    right: SizeConfig.pageHorizontalMargins,
+                    left: SizeConfig.pageHorizontalMargins,
+                  ),
                   child: Row(
                     children: [
-                      Expanded(
-                        child: Container(
-                          margin: EdgeInsets.only(
-                              left: SizeConfig.pageHorizontalMargins,
-                              top: SizeConfig.padding16,
-                              bottom: SizeConfig.padding16,
-                              right: SizeConfig.padding8),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(locale.invested,
-                                  style: TextStyles.sourceSans.body2
-                                      .colour(UiConstants.kTextColor2)),
-                              SizedBox(height: SizeConfig.padding16),
-                              Text(
-                                  "₹ ${BaseUtil.getIntOrDouble(_augTxnService!.currentTxnAmount!)}",
-                                  style: TextStyles.rajdhaniB.title3),
-                              SizedBox(height: SizeConfig.padding12),
-                            ],
-                          ),
-                        ),
-                      ),
-                      const VerticalDivider(
-                        width: 3,
-                        thickness: 0.5,
-                        color: UiConstants.kTextColor2,
-                      ),
-                      Expanded(
-                        child: Container(
-                          margin: EdgeInsets.only(
-                              left: SizeConfig.pageHorizontalMargins,
-                              top: SizeConfig.padding16,
-                              bottom: SizeConfig.padding16,
-                              right: SizeConfig.padding16),
-                          child: Column(
-                            crossAxisAlignment: CrossAxisAlignment.start,
-                            children: [
-                              Text(locale.bought,
-                                  style: TextStyles.sourceSans.body2
-                                      .colour(UiConstants.kTextColor2)),
-                              SizedBox(height: SizeConfig.padding16),
-                              Text(
-                                  "${_augTxnService!.currentTxnGms}${locale.gm}",
-                                  style: TextStyles.rajdhaniB.title4),
-                              SizedBox(height: SizeConfig.padding12),
-                            ],
-                          ),
-                        ),
-                      )
+                      if (_augTxnService.currentTxnScratchCardCount > 0)
+                        WinningChips(
+                            title: _augTxnService.currentTxnScratchCardCount > 1
+                                ? locale.scratchCards
+                                : locale.scratchCard,
+                            tooltip: locale.winChipsTitle2,
+                            asset: Assets.unredemmedScratchCardBG,
+                            qty: _augTxnService.currentTxnScratchCardCount),
+                      if (_augTxnService.currentTxnTambolaTicketsCount > 0)
+                        SizedBox(width: SizeConfig.padding12),
+                      if (_augTxnService.currentTxnTambolaTicketsCount > 0)
+                        WinningChips(
+                            title: 'Tickets',
+                            tooltip: '',
+                            asset: Assets.singleTmbolaTicket,
+                            qty: _augTxnService.currentTxnTambolaTicketsCount)
                     ],
                   ),
                 ),
-              ),
-              Container(
-                margin: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.pageHorizontalMargins,
+                const TransactionFAQSection(
+                  faqsType: FaqsType.digitalGold,
                 ),
-                decoration: BoxDecoration(
-                  borderRadius: BorderRadius.only(
-                    bottomLeft: Radius.circular(SizeConfig.roundness12),
-                    bottomRight: Radius.circular(SizeConfig.roundness12),
-                  ),
-                  // color: UiConstants.kModalSheetSecondaryBackgroundColor,
-                  border:
-                      Border.all(width: 0.5, color: UiConstants.kTextColor2),
+                const AutopaySetupWidget(),
+                SizedBox(
+                  height: SizeConfig.padding100,
                 ),
-                padding: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.pageHorizontalMargins,
-                  vertical: SizeConfig.padding12,
-                ),
-                child: Row(children: [
-                  Text(
-                    locale.balanceText,
-                    style: TextStyles.rajdhani.body3
-                        .colour(UiConstants.kTextColor3),
-                  ),
-                  const Spacer(),
-                  UserFundQuantitySE(
-                    style: TextStyles.sourceSans.body2
-                        .colour(UiConstants.kTextColor),
-                  )
-                ]),
-              ),
-              Container(
-                padding: EdgeInsets.only(
-                    top: SizeConfig.padding20,
-                    bottom: SizeConfig.padding20,
-                    right: SizeConfig.pageHorizontalMargins,
-                    left: SizeConfig.pageHorizontalMargins),
-                child: Row(
-                  children: [
-                    WinningChips(
-                        title: locale.felloTokens,
-                        tooltip: locale.winChipsTitle1,
-                        asset: Assets.token,
-                        qty: _augTxnService!.currentTxnAmount!.toInt()),
-                    if (_augTxnService!.currentTxnScratchCardCount > 0)
-                      SizedBox(width: SizeConfig.padding12),
-                    if (_augTxnService!.currentTxnScratchCardCount > 0)
-                      WinningChips(
-                          title: _augTxnService!.currentTxnScratchCardCount > 1
-                              ? locale.scratchCards
-                              : locale.scratchCard,
-                          tooltip: locale.winChipsTitle2,
-                          asset: Assets.unredemmedScratchCardBG,
-                          qty: _augTxnService!.currentTxnScratchCardCount),
-                    if (_augTxnService!.currentTxnTambolaTicketsCount > 0)
-                      SizedBox(width: SizeConfig.padding12),
-                    if (_augTxnService!.currentTxnTambolaTicketsCount > 0)
-                      WinningChips(
-                          title: 'Tickets',
-                          tooltip: '',
-                          asset: Assets.singleTmbolaTicket,
-                          qty: _augTxnService!.currentTxnTambolaTicketsCount)
-                  ],
-                ),
-              ),
-              const AutopaySetupWidget(),
-              SizedBox(height: SizeConfig.padding20),
-              TextButton(
-                onPressed: () {
-                  AppState.isRepeated = true;
-                  AppState.unblockNavigation();
-                  AppState.backButtonDispatcher!.didPopRoute();
-                  AppState.delegate!.appState.setCurrentTabIndex =
-                      DynamicUiUtils.navBar
-                          .indexWhere((element) => element == 'SV');
-
-                  _augTxnService.showGtIfAvailable();
-                },
-                child: Text(
-                  PowerPlayService.powerPlayDepositFlow
-                      ? "Make another prediction"
-                      : locale.obDone,
-                  style: TextStyles.rajdhaniSB.body0
-                      .colour(UiConstants.primaryColor),
-                ),
-              )
-            ],
+              ],
+            ),
           ),
         ),
         if (_showLottie)
@@ -346,13 +328,36 @@ class _GoldBuySuccessViewState extends State<GoldBuySuccessView>
               ),
             ),
           ),
-        // Modal barrier to block interaction
-        // IgnorePointer(
-        //   ignoring: _showLottie,
-        //   child: Container(
-        //     color: Colors.transparent,
-        //   ),
-        // ),
+        Align(
+          alignment: Alignment.bottomCenter,
+          child: Container(
+            alignment: Alignment.center,
+            height: SizeConfig.padding64,
+            width: double.infinity,
+            color: UiConstants.kBackgroundColor2,
+            child: TextButton(
+              onPressed: () {
+                AppState.isRepeated = true;
+                AppState.unblockNavigation();
+                AppState.backButtonDispatcher!.didPopRoute();
+                AppState.delegate!.appState.setCurrentTabIndex = DynamicUiUtils
+                    .navBar
+                    .indexWhere((element) => element == 'SV');
+
+                _augTxnService.showGtIfAvailable();
+              },
+              child: Text(
+                PowerPlayService.powerPlayDepositFlow
+                    ? "Make another prediction"
+                    : locale.obDone,
+                style: TextStyles.rajdhaniSB.body0.copyWith(
+                  color: UiConstants.primaryColor,
+                  height: 1,
+                ),
+              ),
+            ),
+          ),
+        ),
       ],
     );
   }
@@ -554,11 +559,11 @@ class WinningChips extends StatelessWidget {
   final Widget? widget;
 
   const WinningChips(
-      {Key? key,
-      required this.title,
+      {required this.title,
       required this.asset,
       required this.qty,
       required this.tooltip,
+      Key? key,
       this.widget,
       this.color,
       this.margin})

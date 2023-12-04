@@ -6,9 +6,9 @@ import 'package:flutter/material.dart';
 class UserDecisionWidget extends StatelessWidget {
   const UserDecisionWidget({
     required this.decision,
-    super.key,
     required this.fundType,
     required this.isLendboxOldUser,
+    super.key,
   });
 
   final UserDecision decision;

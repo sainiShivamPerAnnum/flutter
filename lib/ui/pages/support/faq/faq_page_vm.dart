@@ -7,13 +7,13 @@ import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/locator.dart';
 
 class FaqPageViewModel extends BaseViewModel {
-  final GetterRepository? _gettersRepo = locator<GetterRepository>();
+  final GetterRepository _gettersRepo = locator<GetterRepository>();
 
   List<FAQDataModel>? _list = [];
   List<FAQDataModel>? get list => _list;
 
   void init(FaqsType type) {
-    this.fetchFaqs(type);
+    fetchFaqs(type);
   }
 
   Future<void> fetchFaqs(FaqsType type) async {

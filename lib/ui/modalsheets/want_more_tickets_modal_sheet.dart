@@ -15,7 +15,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 class WantMoreTicketsModalSheet extends StatelessWidget {
   WantMoreTicketsModalSheet({this.isInsufficientBalance = false});
   final isInsufficientBalance;
-  final AnalyticsService? _analyticsService = locator<AnalyticsService>();
+  final AnalyticsService _analyticsService = locator<AnalyticsService>();
 
   // final referralBonus =
   //     BaseRemoteConfig.remoteConfig.getString(BaseRemoteConfig.REFERRAL_BONUS);
@@ -27,8 +27,9 @@ class WantMoreTicketsModalSheet extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
-    if (isInsufficientBalance)
+    if (isInsufficientBalance) {
       _analyticsService!.track(eventName: AnalyticsEvents.flcTokensExhasuted);
+    }
 
     return WillPopScope(
       onWillPop: () {
@@ -57,7 +58,7 @@ class WantMoreTicketsModalSheet extends StatelessWidget {
                 ),
                 child: Row(children: [
                   Text(locale.currentTokens, style: TextStyles.rajdhani.body1),
-                  Spacer(),
+                  const Spacer(),
                   SvgPicture.asset(
                     Assets.token,
                     width: SizeConfig.padding26,
@@ -112,8 +113,9 @@ class WantMoreTicketsModalSheet extends StatelessWidget {
                       .track(eventName: AnalyticsEvents.earnMoreSaveMoney);
                   AppState.isWebGameLInProgress = false;
                   AppState.isWebGamePInProgress = false;
-                  while (AppState.screenStack.length > 1)
+                  while (AppState.screenStack.length > 1) {
                     AppState.backButtonDispatcher!.didPopRoute();
+                  }
                   AppState.delegate!.parseRoute(Uri.parse('assetBuy'));
                 },
               ),

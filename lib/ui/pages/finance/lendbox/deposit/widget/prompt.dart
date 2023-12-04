@@ -4,453 +4,314 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/repository/lendbox_repo.dart';
 import 'package:felloapp/core/service/lendbox_maturity_service.dart';
-import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/navigator/back_button_actions.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/deposit/lendbox_buy_vm.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
+import 'package:flutter_svg/flutter_svg.dart';
+import 'package:intl/intl.dart';
 
 import '../../../../../../util/constants.dart';
 
+/// Available options after maturity period.
+enum UserDecision {
+  notDecided(lbMapping: 'NA', maturityTerm: 1),
+  withdraw(lbMapping: '0', maturityTerm: 1),
+  reInvest(lbMapping: '1', maturityTerm: 2),
+  moveToFlexi(lbMapping: '2', maturityTerm: 1);
+
+  /// The terms of maturity based on the the user decision.
+  ///
+  /// If user decides to reinvest amount in the same asset then it's equal to
+  /// reinvest the amount with interest in same asset.
+  final int maturityTerm;
+
+  /// Mapping of the enum with lendbox provided options and decision.
+  final String lbMapping;
+
+  const UserDecision({
+    required this.lbMapping,
+    required this.maturityTerm,
+  });
+}
+
 class ReInvestPrompt extends HookWidget {
   const ReInvestPrompt({
-    Key? key,
     required this.amount,
     required this.assetType,
     required this.model,
-  }) : super(key: key);
+    super.key,
+  });
 
   final String amount;
   final String assetType;
   final LendboxBuyViewModel model;
 
-  @override
-  Widget build(BuildContext context) {
-    final subtitle = useMemoized(
-      () =>
-          "At the end of ${assetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? 6 : 3} months (Maturity)",
-      [assetType],
-    );
+  void _onTap(UserDecision decision, LendboxBuyViewModel m,
+      ValueNotifier<UserDecision> selectedOption) {
+    m.selectedOption = selectedOption.value = decision;
+  }
 
-    final maturityAmount = useMemoized(
-      () => model.calculateAmountAfterMaturity(amount),
-      [model, amount],
-    );
+  bool _isSelected(UserDecision optionIndex, UserDecision selectedIndex) {
+    return optionIndex == selectedIndex;
+  }
 
-    final selectedOption = useState(model.selectedOption);
+  int _getMaturityDuration({int cycle = 1}) {
+    int duration = assetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? 6 : 3;
+    return duration * cycle;
+  }
 
-    return Container(
-      padding: EdgeInsets.all(SizeConfig.padding16),
-      child: SingleChildScrollView(
-        child: Column(
-          children: [
-            InvestmentForeseenWidget(
-              amount: amount,
-              assetType: assetType,
-              isLendboxOldUser: model.isLendboxOldUser,
-              onChanged: (value) {},
-            ),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding8),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                // mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Flexible(
-                    child: Text.rich(
-                      TextSpan(
-                        text: "Select what happens to your investment ",
-                        style: TextStyles.sourceSans.body2,
-                        children: [
-                          TextSpan(
-                            text:
-                                "after ${assetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? 6 : 3} months?",
-                            style: TextStyles.sourceSansB.body2,
-                          ),
-                        ],
-                      ),
-                    ),
-                  ),
-                  SizedBox(
-                    width: SizeConfig.padding34,
-                  ),
-                  Tooltip(
-                    margin: EdgeInsets.symmetric(
-                        horizontal: SizeConfig.pageHorizontalMargins),
-                    triggerMode: TooltipTriggerMode.tap,
-                    preferBelow: false,
-                    decoration: BoxDecoration(
-                      color: Colors.black.withOpacity(0.9),
-                      borderRadius:
-                          BorderRadius.circular(SizeConfig.roundness8),
-                    ),
-                    padding: EdgeInsets.symmetric(
-                        horizontal: SizeConfig.pageHorizontalMargins,
-                        vertical: SizeConfig.pageHorizontalMargins),
-                    showDuration: const Duration(seconds: 10),
-                    message:
-                        "Fello Flo Premium plans allow you to decide what happens to your money after maturity. You can choose what you want to do with your money while you invest. If you do not select a preference, we will contact you and confirm what you want to do with the corpus post maturity.",
-                    child: const Icon(
-                      Icons.info_outline,
-                      color: Colors.white,
-                      size: 15,
-                    ),
-                  ),
-                ],
-              ),
-            ),
-            SizedBox(height: SizeConfig.padding20),
-            Container(
-              padding: EdgeInsets.symmetric(
-                horizontal: SizeConfig.padding8,
-                vertical: SizeConfig.padding2,
-              ),
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(SizeConfig.roundness5),
-                  topRight: Radius.circular(SizeConfig.roundness5),
-                ),
-                color: UiConstants.kSnackBarPositiveContentColor,
-              ),
-              child: Text(
-                'Recommended',
-                style: TextStyles.sourceSansSB.body4,
-              ),
-            ),
-            OptionContainer(
-              optionIndex: 1,
-              title:
-                  'Re-invest ₹$maturityAmount in ${assetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? "12" : "10"}% Flo',
-              description: subtitle,
-              isSelected: selectedOption.value == 1,
-              onTap: () {
-                model.maturityPref = "1";
-                model.selectedOption = selectedOption.value = 1;
-              },
-            ),
-            OptionContainer(
-              optionIndex: 2,
-              title:
-                  "Move ₹$maturityAmount to ${assetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? "10" : "8"}% Flo",
-              description: subtitle,
-              isSelected: selectedOption.value == 2,
-              onTap: () {
-                model.maturityPref = "2";
-                model.selectedOption = selectedOption.value = 2;
-              },
-            ),
-            OptionContainer(
-              optionIndex: 3,
-              title: "Withdraw to Bank",
-              description: subtitle,
-              isSelected: selectedOption.value == 3,
-              onTap: () {
-                model.maturityPref = "0";
-                model.selectedOption = selectedOption.value = 3;
-              },
-            ),
-            SizedBox(height: SizeConfig.padding8),
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding6),
-              child: Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  MaterialButton(
-                    minWidth: SizeConfig.screenWidth! * 0.4,
-                    height: SizeConfig.padding40,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5),
-                      side: const BorderSide(color: Colors.white),
-                    ),
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                    onPressed: () {
-                      AppState.backButtonDispatcher?.didPopRoute();
-                      SystemChannels.textInput.invokeMethod('TextInput.hide');
-                      model.maturityPref = "NA";
-                      model.selectedOption = selectedOption.value = -2;
+  String _getTitle({int cycle = 1}) {
+    return '${_getMaturityDuration(cycle: cycle)} Months';
+  }
 
-                      BaseUtil.showPositiveAlert(
-                        'Choose your action later',
-                        'We will Confirm your preference once again before maturity!',
-                      );
+  String _getSubTitle(UserDecision decision) {
+    final maturity = model.assetOptionsModel!.data.maturityAt;
+    if (maturity == null) return '';
 
-                      model.analyticsService.track(
-                        eventName:
-                            AnalyticsEvents.maturitySelectionContinueTapped,
-                        properties: {
-                          'Choice Tapped': 'decide later',
-                          "asset": model.floAssetType,
-                          "amount": model.buyAmount,
-                        },
-                      );
-                    },
-                    child: Center(
-                      child: Text(
-                        'Decide later'.toUpperCase(),
-                        style: TextStyles.rajdhaniB.body1.colour(Colors.white),
-                      ),
-                    ),
-                  ),
-                  MaterialButton(
-                    height: SizeConfig.padding40,
-                    minWidth: SizeConfig.screenWidth! * 0.4,
-                    shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5)),
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                    color: selectedOption.value == -1
-                        ? Colors.white.withOpacity(0.25)
-                        : Colors.white,
-                    onPressed: () {
-                      if (selectedOption.value == -1) {
-                        BaseUtil.showNegativeAlert(
-                          "Please select an option",
-                          "proceed by choosing an option",
-                        );
-                        return;
-                      }
+    final date = switch (decision) {
+      UserDecision.notDecided => maturity.notDecided,
+      UserDecision.reInvest => maturity.reInvest,
+      _ => maturity.notDecided,
+    };
 
-                      if (selectedOption.value == 3) {
-                        BaseUtil.openModalBottomSheet(
-                          isBarrierDismissible: true,
-                          addToScreenStack: true,
-                          backgroundColor: const Color(0xff1B262C),
-                          content: WarningBottomSheet(model: model),
-                          borderRadius: BorderRadius.only(
-                            topLeft: Radius.circular(SizeConfig.roundness24),
-                            topRight: Radius.circular(SizeConfig.roundness24),
-                          ),
-                          hapticVibrate: true,
-                          isScrollControlled: true,
-                        );
-                        return;
-                      }
+    return 'Maturity on $date';
+  }
 
-                      AppState.backButtonDispatcher?.didPopRoute();
+  void _onProceed() {
+    AppState.backButtonDispatcher?.didPopRoute();
 
-                      SystemChannels.textInput.invokeMethod('TextInput.hide');
+    SystemChannels.textInput.invokeMethod('TextInput.hide');
 
-                      model.analyticsService.track(
-                        eventName:
-                            AnalyticsEvents.maturitySelectionContinueTapped,
-                        properties: {
-                          'Choice Tapped': model.getMaturityTitle(),
-                          "asset": model.floAssetType,
-                          "amount": model.buyAmount,
-                        },
-                      );
-
-                      // if (!model.isBuyInProgress) {
-                      //   FocusScope.of(context).unfocus();
-                      //   model.initiateBuy();
-                      // }
-                    },
-                    child: Center(
-                      child: Text(
-                        'Continue'.toUpperCase(),
-                        style: TextStyles.rajdhaniB.body1.colour(Colors.black),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ],
+    model.analyticsService.track(
+      eventName: AnalyticsEvents.maturitySelectionContinueTapped,
+      properties: {
+        'Choice Tapped': _getSubTitle(
+          model.selectedOption,
         ),
-      ),
+        "asset": model.floAssetType,
+        "amount": model.buyAmount,
+      },
     );
   }
-}
-
-class OptionContainer extends StatelessWidget {
-  final int optionIndex;
-  final String title;
-  final String description;
-  final bool isSelected;
-  final VoidCallback onTap;
-
-  const OptionContainer({
-    Key? key,
-    required this.optionIndex,
-    required this.title,
-    required this.description,
-    required this.isSelected,
-    required this.onTap,
-  }) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
-      onTap: onTap,
-      child: Container(
-        margin: EdgeInsets.only(
-          bottom: SizeConfig.padding16,
-          left: SizeConfig.padding16,
-          right: SizeConfig.padding16,
-        ),
-        padding: EdgeInsets.all(SizeConfig.padding16),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(SizeConfig.roundness8),
-          border: Border.all(
-            color: isSelected
-                ? UiConstants.kTabBorderColor // Change color when selected
-                : const Color(0xFFD3D3D3).withOpacity(0.2),
-            width: SizeConfig.border1,
+    final selectedOption = useState<UserDecision>(model.selectedOption);
+
+    return SingleChildScrollView(
+      padding: const EdgeInsets.symmetric(
+        horizontal: 20,
+        vertical: 25,
+      ),
+      child: Column(
+        children: [
+          LendboxPaymentSummaryHeader(
+            amount: amount,
+            assetType: assetType,
+            maturityTerm: selectedOption.value.maturityTerm,
+            showMaturity: true,
+            model: model,
           ),
-        ),
-        child: Row(
-          children: [
-            Container(
-                width: SizeConfig.padding24,
-                height: SizeConfig.padding24,
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  border: Border.all(
-                    color: isSelected
-                        ? UiConstants.kTabBorderColor
-                        : const Color(0xFFD3D3D3).withOpacity(0.2),
-                    width: SizeConfig.border1,
-                  ),
-                  // color: isSelected ? Colors.white : null,
-                ),
-                child: Container(
-                  margin: EdgeInsets.all(SizeConfig.padding4),
-                  decoration: BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: isSelected ? UiConstants.kTabBorderColor : null,
-                  ),
-                )),
-            SizedBox(
-              width: SizeConfig.padding16,
-            ),
-            Column(
-              crossAxisAlignment: CrossAxisAlignment.start,
+          Padding(
+            padding: const EdgeInsets.symmetric(horizontal: 10),
+            child: Column(
               children: [
-                Text(
-                  title,
-                  style: TextStyles.rajdhaniB.body1,
+                Row(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Expanded(
+                      child: Text(
+                        "Choose your Maturity Period",
+                        style:
+                            TextStyles.sourceSans.body2.copyWith(height: 1.2),
+                      ),
+                    ),
+                    Tooltip(
+                      margin: EdgeInsets.symmetric(
+                          horizontal: SizeConfig.pageHorizontalMargins),
+                      triggerMode: TooltipTriggerMode.tap,
+                      preferBelow: false,
+                      decoration: BoxDecoration(
+                        color: Colors.black.withOpacity(0.9),
+                        borderRadius:
+                            BorderRadius.circular(SizeConfig.roundness8),
+                      ),
+                      padding: EdgeInsets.symmetric(
+                          horizontal: SizeConfig.pageHorizontalMargins,
+                          vertical: SizeConfig.pageHorizontalMargins),
+                      showDuration: const Duration(seconds: 10),
+                      message:
+                          "Fello Flo Premium plans allow you to decide what happens to your money after maturity. You can choose what you want to do with your money while you invest. If you do not select a preference, we will contact you and confirm what you want to do with the corpus post maturity.",
+                      child: const Icon(
+                        Icons.info_outline,
+                        color: Colors.white,
+                        size: 15,
+                      ),
+                    ),
+                  ],
                 ),
-                SizedBox(
-                  height: SizeConfig.padding2,
-                ),
+                SizedBox(height: SizeConfig.padding4),
                 Text(
-                  description,
-                  style: TextStyles.sourceSans.body3
-                      .colour(const Color(0xffA9C6D6)),
+                  'After Maturity your investment is withdraw-able from 8% P2P Asset',
+                  style: TextStyles.sourceSans.body3.colour(
+                    UiConstants.grey1,
+                  ),
+                ),
+                SizedBox(height: SizeConfig.padding20),
+                OptionContainer<UserDecision>(
+                  isRecommended: true,
+                  value: UserDecision.reInvest,
+                  title: _getTitle(cycle: UserDecision.reInvest.maturityTerm),
+                  description: _getSubTitle(UserDecision.reInvest),
+                  isSelected: (i) => _isSelected(i, selectedOption.value),
+                  onTap: (i) => _onTap(i, model, selectedOption),
+                ),
+                SizedBox(height: SizeConfig.padding16),
+                OptionContainer<UserDecision>(
+                  value: UserDecision.notDecided,
+                  title: _getTitle(cycle: UserDecision.notDecided.maturityTerm),
+                  description: _getSubTitle(UserDecision.notDecided),
+                  isSelected: (i) => _isSelected(i, selectedOption.value),
+                  onTap: (i) => _onTap(i, model, selectedOption),
                 ),
               ],
             ),
-          ],
-        ),
-      ),
-    );
-  }
-}
-
-class WarningBottomSheet extends StatelessWidget {
-  const WarningBottomSheet({Key? key, required this.model}) : super(key: key);
-
-  final LendboxBuyViewModel model;
-
-  @override
-  Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.all(SizeConfig.padding24),
-      child: Column(
-        mainAxisSize: MainAxisSize.min,
-        children: [
-          Text(
-            'Are you sure you want to withdraw your investment after ${model.floAssetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? 6 : 3} months (Maturity)?',
-            style: TextStyles.sourceSans.body2,
-            maxLines: 2,
-            textAlign: TextAlign.center,
           ),
-          SizedBox(
-            height: SizeConfig.padding20,
-          ),
-          Text(
-            'You will miss out on extra returns for the next tenure!',
-            style: TextStyles.sourceSans.body3
-                .colour(Colors.white.withOpacity(0.8)),
-            maxLines: 2,
-          ),
-          SizedBox(
-            height: SizeConfig.padding20,
-          ),
+          SizedBox(height: SizeConfig.padding24),
           Padding(
             padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding6),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                MaterialButton(
-                  minWidth: SizeConfig.screenWidth! * 0.4,
-                  height: SizeConfig.padding40,
-                  shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5),
-                    side: const BorderSide(color: Colors.white),
-                  ),
-                  padding: const EdgeInsets.symmetric(
-                    vertical: 10,
-                  ),
-                  // color: Colors.white,
-                  onPressed: () {
-                    debugPrint("scrrenStack => ${AppState.screenStack}");
-
-                    AppState.backButtonDispatcher!.didPopRoute();
-                    AppState.backButtonDispatcher!.didPopRoute();
-
-                    model.analyticsService.track(
-                        eventName: AnalyticsEvents.maturityWithdrawPopupTapped,
-                        properties: {'Option Selected': "Yes"});
-
-                    // debugPrint("scrrenStack => ${AppState.screenStack}");
-                    // model.forcedBuy = true;
-                    //
-                    // Future.delayed(const Duration(milliseconds: 100), () async {
-                    //   if (!model.isBuyInProgress) {
-                    //     debugPrint(
-                    //         "Buy in progress => ${model.isBuyInProgress}");
-                    //     FocusScope.of(context).unfocus();
-                    //     await model.initiateBuy();
-                    //   }
-                    // });
-                  },
-                  child: Center(
+                Expanded(
+                  child: MaterialButton(
+                    height: SizeConfig.padding40,
+                    shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(5)),
+                    padding: const EdgeInsets.symmetric(vertical: 10),
+                    color: Colors.white,
+                    onPressed: _onProceed,
                     child: Text(
-                      'YES',
-                      style: TextStyles.rajdhaniB.body1.colour(Colors.white),
-                    ),
-                  ),
-                ),
-                MaterialButton(
-                  height: SizeConfig.padding40,
-                  minWidth: SizeConfig.screenWidth! * 0.4,
-                  shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5)),
-                  padding: const EdgeInsets.symmetric(vertical: 10),
-                  color: Colors.white,
-                  onPressed: () {
-                    AppState.backButtonDispatcher!.didPopRoute();
-                    AppState.backButtonDispatcher!.didPopRoute();
-
-                    model.analyticsService.track(
-                        eventName: AnalyticsEvents.maturityWithdrawPopupTapped,
-                        properties: {'Option Selected': "No"});
-                  },
-                  child: Center(
-                    child: Text(
-                      'NO',
+                      'PROCEED',
                       style: TextStyles.rajdhaniB.body1.colour(Colors.black),
                     ),
                   ),
                 ),
               ],
             ),
-          )
+          ),
+        ],
+      ),
+    );
+  }
+}
+
+class OptionContainer<T> extends StatelessWidget {
+  final T value;
+  final String title;
+  final String description;
+  final bool Function(T) isSelected;
+  final ValueChanged<T> onTap;
+  final bool isRecommended;
+
+  const OptionContainer({
+    required this.value,
+    required this.title,
+    required this.description,
+    required this.isSelected,
+    required this.onTap,
+    this.isRecommended = false,
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    final selected = isSelected(value);
+    return GestureDetector(
+      onTap: () => onTap(value),
+      child: Column(
+        children: [
+          if (isRecommended)
+            Container(
+              padding: EdgeInsets.symmetric(
+                horizontal: SizeConfig.padding8,
+                vertical: SizeConfig.padding2,
+              ),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.vertical(
+                  top: Radius.circular(SizeConfig.roundness5),
+                ),
+                color: UiConstants.teal3,
+              ),
+              child: Text(
+                'Recommended',
+                style: TextStyles.sourceSansSB.body4.copyWith(
+                  color: UiConstants.teal5,
+                  fontSize: 10,
+                ),
+              ),
+            ),
+          Container(
+            padding: EdgeInsets.all(SizeConfig.padding16),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(SizeConfig.roundness8),
+              border: Border.all(
+                color: selected
+                    ? UiConstants.kTabBorderColor // Change color when selected
+                    : const Color(0xFFD3D3D3).withOpacity(0.2),
+                width: SizeConfig.border1,
+              ),
+            ),
+            child: Row(
+              children: [
+                Container(
+                    width: SizeConfig.padding24,
+                    height: SizeConfig.padding24,
+                    decoration: BoxDecoration(
+                      shape: BoxShape.circle,
+                      border: Border.all(
+                        color: selected
+                            ? UiConstants.kTabBorderColor
+                            : const Color(0xFFD3D3D3).withOpacity(0.2),
+                        width: SizeConfig.border1,
+                      ),
+                    ),
+                    child: Container(
+                      margin: EdgeInsets.all(SizeConfig.padding4),
+                      decoration: BoxDecoration(
+                        shape: BoxShape.circle,
+                        color: selected ? UiConstants.kTabBorderColor : null,
+                      ),
+                    )),
+                SizedBox(
+                  width: SizeConfig.padding16,
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      title,
+                      style: TextStyles.rajdhaniB.body1,
+                    ),
+                    SizedBox(
+                      height: SizeConfig.padding2,
+                    ),
+                    Text(
+                      description,
+                      style: TextStyles.sourceSans.body3
+                          .colour(const Color(0xffA9C6D6)),
+                    ),
+                  ],
+                ),
+              ],
+            ),
+          ),
         ],
       ),
     );
@@ -458,18 +319,14 @@ class WarningBottomSheet extends StatelessWidget {
 }
 
 class InvestmentForeseenWidget extends StatelessWidget {
-  const InvestmentForeseenWidget(
-      {Key? key,
-      required this.amount,
-      required this.assetType,
-      required this.isLendboxOldUser,
-      required this.onChanged})
-      : super(key: key);
+  const InvestmentForeseenWidget({
+    required this.amount,
+    required this.assetType,
+    super.key,
+  });
 
   final String amount;
   final String assetType;
-  final bool isLendboxOldUser;
-  final OnAmountChanged onChanged;
 
   String getTitle() {
     if (assetType == Constants.ASSET_TYPE_FLO_FIXED_6) {
@@ -500,22 +357,17 @@ class InvestmentForeseenWidget extends StatelessWidget {
     double rateOfInterest = interest / 100.0;
     int timeInMonths = assetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? 2 : 4;
 
-    // 0.12 / 365 * amt * (365 / 2)
-    //0.10 / 365 * amt * (365 / 4)
-
     double amountAfterMonths =
         rateOfInterest / 365 * principal * (365 / timeInMonths);
-
-    onChanged(amountAfterMonths);
 
     return (principal + amountAfterMonths).toStringAsFixed(2);
   }
 
   @override
   Widget build(BuildContext context) {
-    if (assetType == Constants.ASSET_TYPE_FLO_FELXI) {
-      return const SizedBox();
-    }
+    // if (assetType == Constants.ASSET_TYPE_FLO_FELXI) {
+    //   return const SizedBox.shrink();
+    // }
 
     return Container(
       padding: EdgeInsets.all(SizeConfig.padding16),
@@ -572,12 +424,174 @@ class InvestmentForeseenWidget extends StatelessWidget {
   }
 }
 
+class LendboxPaymentSummaryHeader extends StatelessWidget {
+  const LendboxPaymentSummaryHeader({
+    required this.amount,
+    required this.assetType,
+    required this.model,
+    this.showMaturity = false,
+    this.maturityTerm = 1,
+    super.key,
+  })  : _maturityDuration =
+            assetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? 6 : 3,
+        _interest = assetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? 12 : 10;
+
+  final String amount;
+  final String assetType;
+  final bool showMaturity;
+  final int maturityTerm;
+  final LendboxBuyViewModel model;
+
+  final int _maturityDuration;
+  final int _interest;
+
+  String _getTitle() {
+    if (assetType == Constants.ASSET_TYPE_FLO_FIXED_6) {
+      return "12% Flo";
+    }
+
+    if (assetType == Constants.ASSET_TYPE_FLO_FIXED_3) {
+      return "10% Flo";
+    }
+
+    return "";
+  }
+
+  String _getSubTitle({int terms = 1}) {
+    return "Maturity in ${terms * _maturityDuration} Months";
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final formatter = NumberFormat("#,##0", "en_US");
+    final amt = num.parse(amount);
+
+    final interest = model
+        .calculateInterest(
+          amount: amt,
+          interestRate: _interest,
+          maturityDuration: _maturityDuration,
+          terms: maturityTerm,
+        )
+        .toInt();
+
+    return Container(
+      decoration: BoxDecoration(
+        color: Colors.white.withOpacity(.10),
+        borderRadius: BorderRadius.circular(10),
+      ),
+      padding: EdgeInsets.all(SizeConfig.padding16),
+      margin: EdgeInsets.only(bottom: SizeConfig.padding24),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SvgPicture.asset(
+                Assets.floWithoutShadow,
+                height: 25,
+              ),
+              SizedBox(
+                width: SizeConfig.padding12,
+              ),
+              Text(
+                _getTitle(),
+                style: TextStyles.rajdhaniSB.title5.copyWith(
+                  color: Colors.white,
+                ),
+              ),
+            ],
+          ),
+          SizedBox(
+            height: SizeConfig.padding12,
+          ),
+          Row(
+            children: [
+              _AmountSectionView(
+                header: 'Savings Amount',
+                sub: '₹${formatter.format(amt)}',
+              ),
+              const Spacer(),
+              _AmountSectionView(
+                header: 'Maturity Amount',
+                sub: '₹${formatter.format(amt)}+',
+                subTail: "₹${formatter.format(interest)}",
+              ),
+            ],
+          ),
+          if (showMaturity) ...[
+            SizedBox(
+              height: SizeConfig.padding16,
+            ),
+            Text(
+              _getSubTitle(terms: maturityTerm),
+              style: TextStyles.rajdhaniSB.body3.copyWith(
+                color: UiConstants.grey1,
+              ),
+            ),
+          ]
+        ],
+      ),
+    );
+  }
+}
+
+class _AmountSectionView extends StatelessWidget {
+  const _AmountSectionView({
+    required this.header,
+    required this.sub,
+    this.subTail,
+  });
+
+  final String header;
+  final String sub;
+  final String? subTail;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          header,
+          style: TextStyles.rajdhaniSB.body2.copyWith(
+            color: UiConstants.kTextFieldTextColor,
+            height: 20 / 16,
+          ),
+        ),
+        Row(
+          children: [
+            Text(
+              sub,
+              style: TextStyles.sourceSansSB.title5.copyWith(
+                height: 28 / 20,
+              ),
+            ),
+            if (subTail != null)
+              Padding(
+                padding: const EdgeInsets.only(left: 4),
+                child: Text(
+                  subTail!,
+                  style: TextStyles.sourceSansSB.title5.copyWith(
+                    height: 28 / 20,
+                    color: UiConstants.teal3,
+                  ),
+                ),
+              )
+          ],
+        ),
+      ],
+    );
+  }
+}
+
 class MaturityPrefModalSheet extends StatefulWidget {
   const MaturityPrefModalSheet({
-    super.key,
     required this.amount,
     required this.assetType,
     required this.txnId,
+    super.key,
     this.hasConfirmed = false,
   });
 
@@ -643,6 +657,15 @@ class _MaturityPrefModalSheetState extends State<MaturityPrefModalSheet> {
   String get subtitle =>
       "At the end of ${widget.assetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? 6 : 3} months (Maturity)";
 
+  void _onTap(int index) {
+    maturityPref = "$index";
+    selectedOption = index;
+  }
+
+  bool _isSelected(int optionIndex) {
+    return optionIndex == selectedOption;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -653,16 +676,9 @@ class _MaturityPrefModalSheetState extends State<MaturityPrefModalSheet> {
           // mainAxisSize: MainAxisSize.min,
           children: [
             InvestmentForeseenWidget(
-                amount: widget.amount,
-                assetType: widget.assetType,
-                isLendboxOldUser: locator<UserService>()
-                    .userSegments
-                    .contains(Constants.US_FLO_OLD),
-                onChanged: (value) {
-                  // setState(() {
-                  //   maturityAmount = value.toStringAsFixed(2);
-                  // });
-                }),
+              amount: widget.amount,
+              assetType: widget.assetType,
+            ),
             Padding(
               padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding8),
               child: Row(
@@ -710,33 +726,27 @@ class _MaturityPrefModalSheetState extends State<MaturityPrefModalSheet> {
               ),
             ),
             OptionContainer(
-              optionIndex: 1,
+              value: 1,
               title:
                   'Re-invest ₹$maturityAmount in ${widget.assetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? "12" : "10"}% Flo',
               description: subtitle,
-              isSelected: selectedOption == 1,
-              onTap: () {
-                maturityPref = "1";
-                selectedOption = 1;
-              },
+              isSelected: _isSelected,
+              onTap: _onTap,
             ),
             OptionContainer(
-              optionIndex: 2,
+              value: 2,
               title:
                   "Move ₹$maturityAmount to ${widget.assetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? "10" : "8"}% Flo",
               description: subtitle,
-              isSelected: selectedOption == 2,
-              onTap: () {
-                maturityPref = "2";
-                selectedOption = 2;
-              },
+              isSelected: _isSelected,
+              onTap: _onTap,
             ),
             OptionContainer(
-              optionIndex: 3,
+              value: 3,
               title: "Withdraw to Bank",
               description: subtitle,
-              isSelected: selectedOption == 3,
-              onTap: () {
+              isSelected: _isSelected,
+              onTap: (_) {
                 maturityPref = "0";
                 selectedOption = 3;
               },

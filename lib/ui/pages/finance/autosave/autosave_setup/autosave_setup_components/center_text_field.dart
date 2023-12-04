@@ -7,10 +7,10 @@ import 'package:flutter/services.dart';
 
 class CenterTextField extends StatefulWidget {
   const CenterTextField({
-    super.key,
     required this.amountFieldController,
     required this.onChanged,
     required this.model,
+    super.key,
   });
 
   final TextEditingController amountFieldController;
@@ -25,19 +25,20 @@ class _CenterTextFieldState extends State<CenterTextField> {
   double? _fieldWidth;
   bool readOnly = true;
 
-  double? get fieldWidth => this._fieldWidth;
+  double? get fieldWidth => _fieldWidth;
 
   set fieldWidth(double? value) {
     setState(() {
-      this._fieldWidth = value;
+      _fieldWidth = value;
     });
   }
 
   enableField() {
-    if (readOnly)
+    if (readOnly) {
       setState(() {
         readOnly = false;
       });
+    }
   }
 
   @override
@@ -50,11 +51,12 @@ class _CenterTextFieldState extends State<CenterTextField> {
   }
 
   updateFieldWidth() {
-    if (widget.amountFieldController.text.isEmpty)
+    if (widget.amountFieldController.text.isEmpty) {
       fieldWidth = SizeConfig.padding20;
-    else
+    } else {
       fieldWidth = ((SizeConfig.screenWidth! * 0.07) *
           widget.amountFieldController.text.length.toDouble());
+    }
   }
 
   @override
@@ -114,7 +116,7 @@ class _CenterTextFieldState extends State<CenterTextField> {
                       ],
                       style: TextStyles.rajdhaniB
                           .size(SizeConfig.screenWidth! * 0.1067),
-                      decoration: InputDecoration(
+                      decoration: const InputDecoration(
                         counterText: "",
                         focusedBorder: InputBorder.none,
                         border: InputBorder.none,

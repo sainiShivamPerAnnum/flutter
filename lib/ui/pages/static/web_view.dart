@@ -3,15 +3,20 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:webview_flutter/webview_flutter.dart';
 
+typedef UrlChange = void Function(String?);
+
 class WebViewScreen extends StatefulWidget {
   final String url;
   final String? title;
-  final ValueChanged<UrlChange>? onUrlChange;
+  final UrlChange? onUrlChanged;
+  final VoidCallback? onPageClosed;
 
-  WebViewScreen({
+  const WebViewScreen({
     required this.url,
-    this.onUrlChange,
+    this.onUrlChanged,
     this.title,
+    this.onPageClosed,
+    super.key,
   });
 
   @override
@@ -25,7 +30,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
 
   set viewLoader(value) {
     if (mounted) {
-      WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
         _viewLoader = value;
         setState(() {});
       });
@@ -42,13 +47,9 @@ class _WebViewScreenState extends State<WebViewScreen> {
       ..setBackgroundColor(const Color(0x00000000))
       ..setNavigationDelegate(
         NavigationDelegate(
-          onProgress: (int progress) {
-            // Update loading bar.
-          },
           onPageStarted: (_) => viewLoader = true,
           onPageFinished: (_) => viewLoader = false,
-          onWebResourceError: (WebResourceError error) {},
-          onUrlChange: widget.onUrlChange,
+          onUrlChange: (change) => widget.onUrlChanged?.call(change.url),
         ),
       )
       ..loadRequest(Uri.parse(widget.url));
@@ -57,6 +58,7 @@ class _WebViewScreenState extends State<WebViewScreen> {
   @override
   void dispose() {
     controller = null;
+    widget.onPageClosed?.call();
     super.dispose();
   }
 

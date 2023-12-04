@@ -3,7 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 abstract class TimerUtil<T extends StatefulWidget> extends State<T> {
-  TimerUtil({Key? key, required this.endTime, required this.startTime})
+  TimerUtil({required this.endTime, required this.startTime, Key? key})
       : super() {
     _timeRemaining = _timeRemainingFor();
   }
@@ -21,13 +21,14 @@ abstract class TimerUtil<T extends StatefulWidget> extends State<T> {
   Timer? _timer;
 
   void init() {
-    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
-      _timer = Timer.periodic(Duration(seconds: 1), (_) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      _timer = Timer.periodic(const Duration(seconds: 1), (_) {
         if (_timeRemainingFor().isNegative ||
             _timeRemainingFor().inSeconds == 0) {
           closeTimer();
-        } else
+        } else {
           _timeRemaining = _timeRemainingFor();
+        }
         setState(() {});
       });
     });
@@ -70,22 +71,8 @@ abstract class TimerUtil<T extends StatefulWidget> extends State<T> {
   @mustCallSuper
   void closeTimer() {
     _timer?.cancel();
-    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       if (mounted) setState(() {});
     });
-  }
-}
-
-class Sanket extends StatefulWidget {
-  const Sanket({Key? key}) : super(key: key);
-
-  @override
-  State<Sanket> createState() => _SanketState();
-}
-
-class _SanketState extends State<Sanket> {
-  @override
-  Widget build(BuildContext context) {
-    return const Placeholder();
   }
 }

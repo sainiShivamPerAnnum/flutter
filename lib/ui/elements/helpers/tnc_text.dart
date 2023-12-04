@@ -4,7 +4,7 @@ import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
 
 class TermsAndConditions extends StatelessWidget {
-  const TermsAndConditions({Key? key, required this.url}) : super(key: key);
+  const TermsAndConditions({required this.url, Key? key}) : super(key: key);
   final String url;
   @override
   Widget build(BuildContext context) {

@@ -63,7 +63,7 @@ class _AndroidDiscovery implements _PlatformDiscoveryBase {
       print("PackageName: $packageName");
       final androidStatus = _getStatus(packageName, applicationStatusMap);
       if (androidStatus == null) {
-        return null;
+        return;
       }
       print("PackageName android status: ${androidStatus.toString()}");
       if (_canUseApp(statusType, androidStatus)) {

@@ -15,7 +15,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 class WebGameModalSheet extends StatelessWidget {
-  const WebGameModalSheet({Key? key, required this.game}) : super(key: key);
+  const WebGameModalSheet({required this.game, Key? key}) : super(key: key);
   final String game;
 
   @override
@@ -212,7 +212,7 @@ class WebGameModalSheet extends StatelessWidget {
             padding: const EdgeInsets.symmetric(horizontal: 14),
             child: AppPositiveBtn(
                 btnText: "Play",
-                widget: Row(
+                child: Row(
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
@@ -234,9 +234,10 @@ class WebGameModalSheet extends StatelessWidget {
                   ],
                 ),
                 onPressed: () async {
-                  if (await model.setupGame())
+                  if (await model.setupGame()) {
                     model.launchGame(
                         gameInfo?.lastScore ?? 0, gameInfo?.topScore ?? 0);
+                  }
                 }),
           ),
           const SizedBox(
@@ -249,7 +250,7 @@ class WebGameModalSheet extends StatelessWidget {
 }
 
 class RewardCriteria extends StatefulWidget {
-  const RewardCriteria({Key? key, required this.data}) : super(key: key);
+  const RewardCriteria({required this.data, Key? key}) : super(key: key);
   final String data;
 
   @override
@@ -271,7 +272,7 @@ class _RewardCriteriaState extends State<RewardCriteria> {
 }
 
 class StreamView extends StatelessWidget {
-  StreamView({Key? key, required this.model, required this.game})
+  const StreamView({required this.model, required this.game, Key? key})
       : super(key: key);
 
   final WebHomeViewModel model;

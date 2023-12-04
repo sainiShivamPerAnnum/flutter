@@ -6,11 +6,9 @@ import 'package:felloapp/core/model/gold_pro_models/gold_pro_scheme_model.dart';
 import 'package:felloapp/core/model/withdrawable_gold_details_model.dart';
 import 'package:felloapp/core/repository/base_repo.dart';
 import 'package:felloapp/core/service/api_service.dart';
-import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/app_exceptions.dart';
 import 'package:felloapp/util/flavor_config.dart';
-import 'package:felloapp/util/locator.dart';
 
 class PaymentRepository extends BaseRepo {
   static const _payments = 'payments';
@@ -19,20 +17,12 @@ class PaymentRepository extends BaseRepo {
       ? 'https://wd7bvvu7le.execute-api.ap-south-1.amazonaws.com/dev'
       : 'https://yg58g0feo0.execute-api.ap-south-1.amazonaws.com/prod';
 
-  final UserService? _userService = locator<UserService>();
-  final BaseUtil? _baseUtil = locator<BaseUtil>();
-
   Future<ApiResponse<WithdrawableGoldResponseModel>>
       getWithdrawableAugGoldQuantity() async {
     try {
-      String withdrawableQtyResponse = "";
-      double balance = 0;
-      double lockedQuantity = 0;
-      double quantity = 0;
-
       final quantityResponse = await APIService.instance.getData(
         ApiPath.getWithdrawableGoldQuantity(
-          this.userService!.baseUser!.uid,
+          userService.baseUser!.uid,
         ),
         cBaseUrl: _baseUrl,
         apiName: '$_payments/withdrawableByID',
@@ -42,74 +32,89 @@ class PaymentRepository extends BaseRepo {
 
       return ApiResponse(model: responseModel, code: 200);
     } on BadRequestException catch (e) {
-      logger!.e(e.toString());
+      logger.e(e.toString());
       BaseUtil.showNegativeAlert(
           e.toString() ?? "Unable to fetch gold details", "Please try again");
     } catch (e) {
-      logger!.e(e.toString());
+      logger.e(e.toString());
       return ApiResponse.withError(
-          e?.toString() ?? "Unable to fetch quantity", 400);
+          e.toString() ?? "Unable to fetch quantity", 400);
     }
     return ApiResponse();
   }
 
-  Future<ApiResponse<bool>> addBankDetails(
-      {String? bankAccno, String? bankHolderName, String? bankIfsc}) async {
+  Future<ApiResponse<BankAccountDetailsModel>> addBankDetails({
+    String? bankAccNo,
+    String? bankHolderName,
+    String? bankIfsc,
+    bool withNetBankingValidation = false,
+  }) async {
     String message = '';
+
+    final queryParameters = {
+      'withNetBankingValidation': withNetBankingValidation,
+    };
+
     try {
-      final Map<String, String?> _body = {
-        "uid": userService!.baseUser!.uid,
+      final Map<String, String?> body = {
+        "uid": userService.baseUser!.uid,
         "name": bankHolderName,
         "ifsc": bankIfsc,
-        "account": bankAccno
+        "account": bankAccNo
       };
 
       final response = await APIService.instance.postData(
-        ApiPath().kAddBankAccount,
-        body: _body,
+        ApiPath.kAddBankAccount,
+        body: body,
         cBaseUrl: _baseUrl,
         apiName: '$_payments/addBankDetails',
+        queryParams: queryParameters,
       );
-      logger!.d(response);
 
-      return ApiResponse(
-        model: true,
+      final data = BankAccountDetailsModel.fromMap(response['data']);
+
+      return ApiResponse<BankAccountDetailsModel>(
+        model: data,
         code: 200,
         errorMessage: message,
       );
     } on BadRequestException catch (e) {
-      return ApiResponse(
-        model: false,
-        code: 400,
-        errorMessage: e.toString(),
+      return ApiResponse.withError(
+        e.toString(),
+        000, // doesn't make sense to define error code on client side.
       );
     } catch (e) {
-      logger!.e(e.toString());
+      logger.e(e.toString());
       return ApiResponse.withError(
-        e.toString() ?? message,
+        e.toString(),
         400,
       );
     }
   }
 
-  Future<ApiResponse<BankAccountDetailsModel>>
-      getActiveBankAccountDetails() async {
+  Future<ApiResponse<BankAccountDetailsModel>> getActiveBankAccountDetails({
+    bool withNetBankingValidation = false,
+  }) async {
+    final queryParameters = {
+      'withNetBankingValidation': withNetBankingValidation,
+    };
+
     try {
       final response = await APIService.instance.getData(
-        ApiPath.kGetBankAccountDetails(userService!.baseUser!.uid),
+        ApiPath.kGetBankAccountDetails(userService.baseUser!.uid),
         cBaseUrl: _baseUrl,
         apiName: '$_payments/bankDetails',
+        queryParams: queryParameters,
       );
       final Map? responseData = response["data"];
-      BankAccountDetailsModel? bankAccountDetails;
-      if (responseData != null) {
-        bankAccountDetails = BankAccountDetailsModel.fromMap(
-            responseData as Map<String, dynamic>);
-      }
+
+      final bankAccountDetails = BankAccountDetailsModel.fromMap(
+        responseData as Map<String, dynamic>? ?? const {},
+      );
 
       return ApiResponse(model: bankAccountDetails, code: 200);
     } catch (e) {
-      logger!.e(e.toString());
+      logger.e(e.toString());
       return ApiResponse.withError("Unable to fetch User Upi Id", 400);
     }
   }

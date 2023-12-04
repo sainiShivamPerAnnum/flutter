@@ -1,8 +1,4 @@
-import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
-import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/custom_logger.dart';
 
 class FelloCoinBarViewModel extends BaseViewModel {
   // final _userCoinService = locator<UserCoinService>();

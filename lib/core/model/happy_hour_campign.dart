@@ -6,7 +6,7 @@ class HappyHourCampign {
 
   HappyHourCampign.fromJson(Map<String, dynamic> json) {
     message = json['message'];
-    data = json['data'] != null ? new Data.fromJson(json['data']) : null;
+    data = json['data'] != null ? Data.fromJson(json['data']) : null;
   }
 }
 
@@ -27,7 +27,8 @@ class Data {
   HappyHourType happyHourType = HappyHourType.expired;
   PreBuzz? preBuzz;
   Data(
-      {this.id,
+      {required this.happyHourType,
+      this.id,
       this.title,
       this.bottomSheetHeading,
       this.bottomSheetSubHeading,
@@ -37,7 +38,6 @@ class Data {
       this.docketHeading,
       this.minAmount,
       this.rewards,
-      required this.happyHourType,
       this.bgColor = '#495DB2',
       this.preBuzz,
       this.maxApplicable});
@@ -55,7 +55,7 @@ class Data {
     if (json['rewards'] != null) {
       rewards = <Rewards>[];
       json['rewards'].forEach((v) {
-        rewards!.add(new Rewards.fromJson(v));
+        rewards!.add(Rewards.fromJson(v));
       });
     }
     preBuzz = PreBuzz.fromJson(json['prebuzz']);
@@ -66,6 +66,25 @@ class Data {
     final _endTime = DateTime.parse(endTime!);
     showHappyHour = date.isAfter(_startDate) && date.isBefore(_endTime);
     getType(_startDate, _endTime);
+  }
+
+
+  Map<String, dynamic> toJson() {
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['id'] = id;
+    data['title'] = title;
+    data['bottomSheetHeading'] = bottomSheetHeading;
+    data['bottomSheetSubHeading'] = bottomSheetSubHeading;
+    data['startTime'] = startTime;
+    data['endTime'] = endTime;
+    data['ctaText'] = ctaText;
+    data['docketHeading'] = docketHeading;
+    data['minAmount'] = minAmount;
+    if (rewards != null) {
+      data['rewards'] = rewards!.map((v) => v.toJson()).toList();
+    }
+    data['maxApplicable'] = maxApplicable;
+    return data;
   }
 
   void getType(DateTime startDate, DateTime endDate) {
@@ -97,9 +116,9 @@ class Rewards {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['value'] = this.value;
-    data['type'] = this.type;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['value'] = value;
+    data['type'] = type;
     return data;
   }
 }

@@ -13,8 +13,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 class LastWeekBg extends StatelessWidget {
   const LastWeekBg({
-    Key? key,
     required this.child,
+    Key? key,
     this.callCampaign = true,
     this.iconUrl,
     this.title,
@@ -254,9 +254,9 @@ class CloudCustomPainter extends CustomPainter {
         size.height);
     path_0.close();
 
-    Paint paint_0_fill = Paint()..style = PaintingStyle.fill;
-    paint_0_fill.color = Colors.white.withOpacity(0.3);
-    canvas.drawPath(path_0, paint_0_fill);
+    Paint paint0Fill = Paint()..style = PaintingStyle.fill;
+    paint0Fill.color = Colors.white.withOpacity(0.3);
+    canvas.drawPath(path_0, paint0Fill);
 
     Path path_1 = Path();
     path_1.moveTo(0, size.height);
@@ -272,9 +272,9 @@ class CloudCustomPainter extends CustomPainter {
         size.width * 0.008461564, size.height * 0.8603840, 0, size.height);
     path_1.close();
 
-    Paint paint_1_fill = Paint()..style = PaintingStyle.fill;
-    paint_1_fill.color = Colors.white.withOpacity(0.3);
-    canvas.drawPath(path_1, paint_1_fill);
+    Paint paint1Fill = Paint()..style = PaintingStyle.fill;
+    paint1Fill.color = Colors.white.withOpacity(0.3);
+    canvas.drawPath(path_1, paint1Fill);
   }
 
   @override

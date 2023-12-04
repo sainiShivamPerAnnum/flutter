@@ -551,8 +551,8 @@ class GamesBanMap {
         bottleFlipMap: bottleFlipMap ?? this.bottleFlipMap,
         rollyVortex: rollyVortex ?? this.rollyVortex,
         knifeHit: knifeHit ?? this.knifeHit,
-        fruitMania: fruitMania ?? this.fruitMania,
-        twoDots: twoDots ?? this.twoDots);
+        fruitMania: fruitMania ?? fruitMania,
+        twoDots: twoDots ?? twoDots);
   }
 
   Map<String, dynamic> toMap() {

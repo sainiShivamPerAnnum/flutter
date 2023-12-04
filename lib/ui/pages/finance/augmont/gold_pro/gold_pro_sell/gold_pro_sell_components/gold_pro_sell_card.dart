@@ -72,7 +72,7 @@ class GoldProSellCard extends StatelessWidget {
           children: [
             Expanded(
               child: Text(
-                "${data.message}",
+                data.message,
                 style: TextStyles.body3
                     .colour(UiConstants.KGoldProPrimaryDark)
                     .setHeight(1.3),

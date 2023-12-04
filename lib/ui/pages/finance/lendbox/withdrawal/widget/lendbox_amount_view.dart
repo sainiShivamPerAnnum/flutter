@@ -27,8 +27,7 @@ class LendboxAmountInputView extends StatefulWidget {
   final void Function() onTap;
 
   const LendboxAmountInputView(
-      {Key? key,
-      required this.chipAmounts,
+      {required this.chipAmounts,
       required this.onAmountChange,
       required this.amountController,
       required this.isEnabled,
@@ -37,10 +36,11 @@ class LendboxAmountInputView extends StatefulWidget {
       required this.maxAmountMsg,
       required this.minAmountMsg,
       required this.focusNode,
-      this.bestChipIndex = 1,
-      this.notice,
       required this.readOnly,
-      required this.onTap})
+      required this.onTap,
+      Key? key,
+      this.bestChipIndex = 1,
+      this.notice})
       : super(key: key);
 
   @override
@@ -76,7 +76,7 @@ class _LendboxAmountInputViewState extends State<LendboxAmountInputView> {
   Widget build(BuildContext context) {
     final currentAmt = double.tryParse(widget.amountController!.text) ?? 0;
     if (currentAmt == null) widget.amountController!.text = "0.0";
-    final AnalyticsService? _analyticsService = locator<AnalyticsService>();
+    final AnalyticsService _analyticsService = locator<AnalyticsService>();
     return Column(
       children: [
         Container(
@@ -142,7 +142,7 @@ class _LendboxAmountInputViewState extends State<LendboxAmountInputView> {
                       ],
                       onChanged: (String val) {
                         setState(() {
-                          this.updateFieldWidth();
+                          updateFieldWidth();
                         });
                       },
                       decoration: const InputDecoration(
@@ -206,7 +206,7 @@ class _LendboxAmountInputViewState extends State<LendboxAmountInputView> {
                       _selectedIndex = i;
                       widget.amountController!.text =
                           widget.chipAmounts[i].value.toString();
-                      this.updateFieldWidth();
+                      updateFieldWidth();
                     });
                   }))
               .toList(),

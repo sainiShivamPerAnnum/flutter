@@ -17,7 +17,7 @@ class MilestoneTooltip extends StatelessWidget {
   @override
   build(BuildContext context) {
     return PropertyChangeConsumer<JourneyService, JourneyServiceProperties>(
-        properties: [
+        properties: const [
           JourneyServiceProperties.AvatarPosition,
           JourneyServiceProperties.BaseGlow,
           JourneyServiceProperties.Pages,
@@ -116,7 +116,7 @@ class MilestoneTooltip extends StatelessWidget {
                                     .showMilestoneDetailsModalSheet(
                                         milestone, context),
                                 child: Container(
-                                  decoration: ShapeDecoration(
+                                  decoration: const ShapeDecoration(
                                     color: Colors.black,
                                     shape: TooltipShapeBorder(arrowArc: 0.5),
                                     shadows: [
@@ -162,8 +162,9 @@ class MilestoneTooltip extends StatelessWidget {
                                 )),
                           ),
                         );
-                } else
-                  return SizedBox();
+                } else {
+                  return const SizedBox();
+                }
               }),
             ),
           );
@@ -203,9 +204,9 @@ class RPSCustomPainter extends CustomPainter {
     path_0.lineTo(size.width * 0.09749333, size.height * 0.06036688);
     path_0.close();
 
-    Paint paint_0_fill = Paint()..style = PaintingStyle.fill;
-    paint_0_fill.color = Colors.black.withOpacity(1.0);
-    canvas.drawPath(path_0, paint_0_fill);
+    Paint paint0Fill = Paint()..style = PaintingStyle.fill;
+    paint0Fill.color = Colors.black.withOpacity(1.0);
+    canvas.drawPath(path_0, paint0Fill);
   }
 
   @override

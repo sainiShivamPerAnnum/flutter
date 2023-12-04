@@ -1,6 +1,7 @@
 // ignore_for_file: non_constant_identifier_names
 
 class Constants {
+  const Constants._();
   static const String APP_NAME = "Fello";
   static const String PAN_AES_KEY = 'felloisquitefun!';
 
@@ -52,42 +53,42 @@ class Constants {
   static const String GT_REWARD_AMT = "amt";
 
   //Collections
-  static final String COLN_USERS = "users";
-  static final String COLN_ANNOUNCEMENTS = "announcements";
-  static final String COLN_FEEDBACK = "feedback";
-  static final String COLN_CREDENTIALS = "credentials";
-  static final String COLN_EMAILOTPREQUESTS = "emailotprequests";
-  static final String WINNERS = "winners";
-  static final String COLN_FAQS = "faqs";
-  static final String COLN_GAMES = "games";
+  static const String COLN_USERS = "users";
+  static const String COLN_ANNOUNCEMENTS = "announcements";
+  static const String COLN_FEEDBACK = "feedback";
+  static const String COLN_CREDENTIALS = "credentials";
+  static const String COLN_EMAILOTPREQUESTS = "emailotprequests";
+  static const String WINNERS = "winners";
+  static const String COLN_FAQS = "faqs";
+  static const String COLN_GAMES = "games";
 
   //Sub-collections
-  static final String SUBCOLN_USER_FCM = "fcm";
-  static final String SUBCOLN_USER_AUGMONT_DETAILS = "augmont";
-  static final String SUBCOLN_USER_PRTD = "prtd";
-  static final String SUBCOLN_USER_TXNS = "txns";
-  static final String SUBCOLN_USER_WALLET = "wallet";
-  static final String SUBCOLN_USER_REWARDS = "rewards";
+  static const String SUBCOLN_USER_FCM = "fcm";
+  static const String SUBCOLN_USER_AUGMONT_DETAILS = "augmont";
+  static const String SUBCOLN_USER_PRTD = "prtd";
+  static const String SUBCOLN_USER_TXNS = "txns";
+  static const String SUBCOLN_USER_WALLET = "wallet";
+  static const String SUBCOLN_USER_REWARDS = "rewards";
 
   //Sub-collection docs
-  static final String DOC_USER_FCM_TOKEN = "client_token";
-  static final String DOC_USER_ICICI_DETAIL = "detail";
-  static final String DOC_USER_KYC_DETAIL = "detail";
-  static final String DOC_USER_AUGMONT_DETAIL = "detail";
-  static final String DOC_USER_WALLET_FUND_BALANCE = "fndbalance";
-  static final String DOC_USER_WALLET_TICKET_BALANCE = "tckbalance";
-  static final String DOC_USER_WALLET_COIN_BALANCE = "coinbalance";
-  static final String DOC_IAR_DAILY_CHIPS = "daily";
-  static final String DOC_IAR_WEEKLY_CHIPS = "weekly";
+  static const String DOC_USER_FCM_TOKEN = "client_token";
+  static const String DOC_USER_ICICI_DETAIL = "detail";
+  static const String DOC_USER_KYC_DETAIL = "detail";
+  static const String DOC_USER_AUGMONT_DETAIL = "detail";
+  static const String DOC_USER_WALLET_FUND_BALANCE = "fndbalance";
+  static const String DOC_USER_WALLET_TICKET_BALANCE = "tckbalance";
+  static const String DOC_USER_WALLET_COIN_BALANCE = "coinbalance";
+  static const String DOC_IAR_DAILY_CHIPS = "daily";
+  static const String DOC_IAR_WEEKLY_CHIPS = "weekly";
 
   //Fetch real time finance stats from rtdb
-  static final String DAILY = "daily";
-  static final String WEEKLY = "weekly";
+  static const String DAILY = "daily";
+  static const String WEEKLY = "weekly";
 
-  static final String MONTHLY = "monthly";
+  static const String MONTHLY = "monthly";
 
   //Sub-Collection docs Collection docs
-  static final String DOC_USER_SUBSCRIPTIONS_ORDERS = 'orders';
+  static const String DOC_USER_SUBSCRIPTIONS_ORDERS = 'orders';
 
   static const int CORNERS_COMPLETED = 0;
   // static const int ROW_ONE_COMPLETED = 1;
@@ -103,6 +104,7 @@ class Constants {
 
   static const String APP_DOWNLOAD_LINK = "https://fello.in/download";
   static const String APP_NAVIGATION_LINK = "https://fello.in/app/goto/";
+  static const String postNBRedirectionURL = 'https://fello.in/';
 
   static const int REFERRAL_TICKET_BONUS = 10;
   static const int REFERRAL_AMT_BONUS = 25;
@@ -117,7 +119,7 @@ class Constants {
   static const int AUG_GOLD_WITHDRAW_OFFSET =
       2; //no of days to wait before withdrawal
   static final DateTime VERSION_2_RELEASE_DATE = DateTime(2021, 4, 1);
-  static final String GAME_CRICKET_URI =
+  static const String GAME_CRICKET_URI =
       'https://prod.freakx.in/fello/cricket-2021-V2/';
 
   static const gamingtnc = "https://fello.in/policy/gaming";
@@ -191,4 +193,8 @@ class Constants {
   static const GET_TAMBOLA_TICKETS = "getTambolaTickets";
 
   static const FELLO_BALANCE = "felloBalance";
+
+  /// The amount limit of investment after which the mandatory payment gateway
+  /// switches to net-banking.
+  static const int mandatoryNetBankingThreshold = 100000;
 }

@@ -8,7 +8,7 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 
 class KycHelpView extends StatelessWidget {
-  const KycHelpView({super.key, required this.callBack});
+  const KycHelpView({required this.callBack, super.key});
   final VoidCallback callBack;
   @override
   Widget build(BuildContext context) {
@@ -60,10 +60,11 @@ class KycHelpView extends StatelessWidget {
                       TextSpan(
                         style: TextStyles.rajdhani.body2,
                         children: [
-                          TextSpan(text: 'Name on your'),
+                          const TextSpan(text: 'Name on your'),
                           TextSpan(
                               text: ' PAN card', style: TextStyles.body2.bold),
-                          TextSpan(text: ' should be the same as the name on'),
+                          const TextSpan(
+                              text: ' should be the same as the name on'),
                           TextSpan(
                               text: ' Bank Account',
                               style: TextStyles.body2.bold),
@@ -87,7 +88,7 @@ class KycHelpView extends StatelessWidget {
                     ),
                     Center(
                       child: Container(
-                        padding: EdgeInsets.all(8),
+                        padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
                             border: Border.all(
                               color: Colors.white,
@@ -115,7 +116,7 @@ class KycHelpView extends StatelessWidget {
                     ),
                     Center(
                       child: Container(
-                        padding: EdgeInsets.all(8),
+                        padding: const EdgeInsets.all(8),
                         decoration: BoxDecoration(
                             border: Border.all(
                               color: Colors.white,

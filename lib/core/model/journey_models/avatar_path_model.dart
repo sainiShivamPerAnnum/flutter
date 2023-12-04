@@ -27,7 +27,7 @@ class AvatarPathModel {
       moveType: moveType ?? this.moveType,
       coords: coords ?? this.coords,
       page: page ?? this.page,
-      mlIndex: level ?? this.mlIndex,
+      mlIndex: level ?? mlIndex,
     );
   }
 

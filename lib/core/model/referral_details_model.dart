@@ -118,8 +118,7 @@ class RevampedInfo {
         isFullyComplete: json["isFullyComplete"],
       );
 
-  Map<String, dynamic> toJson() =>
-      {
+  Map<String, dynamic> toJson() => {
         "subtitle": subtitle,
         "stages": stages == null
             ? []

@@ -5,12 +5,13 @@ import 'package:felloapp/util/locator.dart';
 import 'package:webengage_flutter/webengage_flutter.dart';
 
 class WebEngageAnalytics extends BaseAnalyticsService {
-  final CustomLogger? _logger = locator<CustomLogger>();
+  final CustomLogger _logger = locator<CustomLogger>();
 
   WebEngageAnalytics() {
-    new WebEngagePlugin();
+    WebEngagePlugin();
   }
 
+  @override
   Future<void> login({bool? isOnBoarded, BaseUser? baseUser}) async {
     if (isOnBoarded != null && isOnBoarded && baseUser != null) {
       _logger!.d(baseUser);
@@ -43,6 +44,7 @@ class WebEngageAnalytics extends BaseAnalyticsService {
     return 'other';
   }
 
+  @override
   void signOut() {
     try {
       WebEngagePlugin.userLogout();
@@ -51,6 +53,7 @@ class WebEngageAnalytics extends BaseAnalyticsService {
     }
   }
 
+  @override
   void track({String? eventName, Map<String, dynamic>? properties}) {
     try {
       if (properties != null && properties.isNotEmpty) {
@@ -66,6 +69,7 @@ class WebEngageAnalytics extends BaseAnalyticsService {
     }
   }
 
+  @override
   void trackScreen({String? screen, Map<String, dynamic>? properties}) {
     try {
       _logger!.d('analytics : $screen');

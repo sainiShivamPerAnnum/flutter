@@ -7,8 +7,8 @@ class CustomLogger {
   ///Encryption Utils
 
   static bool isEnc =
-  //FlavorConfig.isProduction() ??
-  false;
+      //FlavorConfig.isProduction() ??
+      false;
 
   final LogFilter _filter;
   final LogPrinter _printer;
@@ -76,9 +76,9 @@ class CustomLogger {
   }
 
   String? _castString<T>(x) {
-    if (x is String)
+    if (x is String) {
       return x;
-    else {
+    } else {
       try {
         return x.toString();
       } catch (e) {

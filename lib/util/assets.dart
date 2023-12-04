@@ -14,6 +14,10 @@ class Assets {
   static const String onboardCollageGraphic =
       'images/onboard_collage-small.png';
 
+  static const String paytm = 'assets/vectors/psp/paytm.svg';
+  static const String gPay = 'assets/vectors/psp/gpay.svg';
+  static const String phonePe = 'assets/vectors/psp/phone_pe.svg';
+
   static const String noTransaction = "assets/vectors/no-transactions.png";
   static const String augmontShare = "images/augmont-share.png";
   static const String preAutosave = "assets/images/preautosave.png";
@@ -29,7 +33,6 @@ class Assets {
 
   static const String alerts = "assets/vectors/icons/alerts.svg";
   static const String token = "assets/vectors/icons/token.svg";
-  static const String tokenOutlined = "assets/vectors/icons/outline_token.svg";
   static const String tickets = "assets/vectors/icons/tickets.svg";
   static const String ticketOutlined =
       "assets/vectors/icons/horizontal_outlined_ticket.svg";

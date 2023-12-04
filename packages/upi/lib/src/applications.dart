@@ -31,9 +31,9 @@ class UpiApplication {
     this.discoveryCustomScheme,
   }) {
     if (Platform.isAndroid) {
-      lookUpMap[this.androidPackageName] = this;
-    } else if (this.iosBundleId != null) {
-      lookUpMap[this.iosBundleId!] = this;
+      lookUpMap[androidPackageName] = this;
+    } else if (iosBundleId != null) {
+      lookUpMap[iosBundleId!] = this;
     }
   }
 
@@ -593,6 +593,7 @@ class UpiApplication {
   static Map<String, UpiApplication> lookUpMap = {};
 
   /// Returns the platform-specific package name.
+  @override
   String toString() {
     return Platform.isAndroid ? androidPackageName : iosBundleId!;
   }

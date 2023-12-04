@@ -10,8 +10,8 @@ import 'package:flutter/material.dart';
 
 class ProfileHeader extends StatelessWidget {
   const ProfileHeader({
-    Key? key,
     required this.model,
+    Key? key,
   }) : super(key: key);
 
   final UserProfileVM model;

@@ -30,22 +30,22 @@ class AutosaveUpdateView extends StatelessWidget {
                 : Container(),
             centerTitle: true,
             leading: IconButton(
-              icon: Icon(
+              icon: const Icon(
                 Icons.arrow_back_ios,
                 color: UiConstants.kTextColor,
               ),
               onPressed: () => AppState.backButtonDispatcher!.didPopRoute(),
             ),
-            actions: [],
+            actions: const [],
           ),
           resizeToAvoidBottomInset: false,
           body: model.state == ViewState.Busy
-              ? Center(
+              ? const Center(
                   child: FullScreenLoader(),
                 )
               : PageView(
                   controller: model.pageController,
-                  physics: NeverScrollableScrollPhysics(),
+                  physics: const NeverScrollableScrollPhysics(),
                   children: [
                     AutosaveAssetChoiceView(model: model),
                     AutoPaySetupOrUpdateView(model: model),

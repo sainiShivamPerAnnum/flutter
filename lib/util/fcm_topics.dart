@@ -14,6 +14,6 @@ enum FcmTopic {
 
 extension ParseToString on FcmTopic {
   String value() {
-    return this.toString().split('.').last.toLowerCase();
+    return toString().split('.').last.toLowerCase();
   }
 }

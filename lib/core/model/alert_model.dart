@@ -13,8 +13,7 @@ class AlertModel {
   String? imageUrl;
   Misc? misc;
 
-  static final helper =
-      HelperModel<AlertModel>((map) => AlertModel.fromMap(map));
+  static final helper = HelperModel<AlertModel>(AlertModel.fromMap);
 
   AlertModel(
       {this.id,
@@ -35,8 +34,7 @@ class AlertModel {
         json['createdOn'] ?? TimestampModel(seconds: 0, nanoseconds: 0);
     subtitle = json['subtitile'] ?? '';
     title = json['title'] ?? '';
-    misc:
-    json["misc"] == null ? null : Misc.fromJson(json["misc"]);
+    misc = json["misc"] == null ? null : Misc.fromJson(json["misc"]);
   }
 
   Map<String, dynamic> toJson() {
@@ -94,8 +92,7 @@ class Misc {
         userType: json["userType"],
       );
 
-  Map<String, dynamic> toJson() =>
-      {
+  Map<String, dynamic> toJson() => {
         "command": command,
         "gtId": gtId,
         "amount": amount,

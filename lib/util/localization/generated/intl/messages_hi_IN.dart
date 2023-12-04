@@ -388,8 +388,6 @@ class MessageLookup extends MessageLookupByLibrary {
         "feedBackGreeting2": MessageLookupByLibrary.simpleMessage(
             "हम आपकी बेहतर सेवा करने की उम्मीद करते हैं"),
         "feildsEmpty": MessageLookupByLibrary.simpleMessage("खाली खेत"),
-        "feildsMismatch":
-            MessageLookupByLibrary.simpleMessage("फ़ील्ड्स बेमेल"),
         "felloAutoSave": MessageLookupByLibrary.simpleMessage("फेलो ऑटोसेव"),
         "felloFloEarnTxt": MessageLookupByLibrary.simpleMessage(
             "10% के स्थिर रिटर्न का आनंद लें"),
@@ -406,6 +404,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "felloTokens": MessageLookupByLibrary.simpleMessage("फेलो टोकन"),
         "fetchWinners": MessageLookupByLibrary.simpleMessage(
             "पिछले सप्ताह के विजेताओं को लाया जा रहा है।"),
+        "fieldsMismatch":
+            MessageLookupByLibrary.simpleMessage("फ़ील्ड्स बेमेल"),
         "fiftyFelloTokens":
             MessageLookupByLibrary.simpleMessage("50 फेलो\nटोकन"),
         "fillAllFeilds":
@@ -1229,7 +1229,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "txnWithDrawalSuccess": MessageLookupByLibrary.simpleMessage(
             "आपका निकासी सफलतापूर्वक संसाधित किया गया"),
         "txnWithdrawAccountText": MessageLookupByLibrary.simpleMessage(
-            "इस खाते का उपयोग आपकी \n निकासी को जमा करने के लिए किया जाएगा"),
+            "इस खाते का उपयोग नेटबैंकिंग भुगतान\nऔर निकासी जमा करने के लिए किया जाएगा"),
         "txnWithdrawablebalance":
             MessageLookupByLibrary.simpleMessage("निकासी योग्य शेष"),
         "txns": MessageLookupByLibrary.simpleMessage("लेनदेन"),

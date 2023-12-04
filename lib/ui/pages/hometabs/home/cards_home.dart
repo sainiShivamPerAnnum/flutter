@@ -1066,11 +1066,11 @@ class CardContent extends StatelessWidget {
     required this.subtitle,
     required this.infoTitle1,
     required this.infoTitle2,
-    this.message,
     required this.asset,
     required this.secondaryColor,
     required this.onCardPressed,
     required this.onButtonPressed,
+    this.message,
     super.key,
   });
 
@@ -1432,7 +1432,7 @@ class GradientBorder extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     final rect = Offset.zero & size;
-    final strokeWidth = 1.0;
+    const strokeWidth = 1.0;
     final gradientColors = [
       Colors.black26,
       isVerticalView ? Colors.black26 : Colors.grey,

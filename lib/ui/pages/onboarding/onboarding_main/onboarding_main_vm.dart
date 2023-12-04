@@ -16,10 +16,10 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class OnboardingViewModel extends BaseViewModel {
-  final AnalyticsService? _analyticsService = locator<AnalyticsService>();
-  final UserService? _userService = locator<UserService>();
-  final UserRepository? _userRepository = locator<UserRepository>();
-  final JourneyService? _journeyService = locator<JourneyService>();
+  final AnalyticsService _analyticsService = locator<AnalyticsService>();
+  final UserService _userService = locator<UserService>();
+  final UserRepository _userRepository = locator<UserRepository>();
+  final JourneyService _journeyService = locator<JourneyService>();
   PageController? _pageController;
   int _currentPage = 0;
   double dragStartPosition = 0, dragUpdatePosition = 0;
@@ -27,10 +27,10 @@ class OnboardingViewModel extends BaseViewModel {
   bool _isWalkthroughRegistrationInProgress = false;
 
   get isWalkthroughRegistrationInProgress =>
-      this._isWalkthroughRegistrationInProgress;
+      _isWalkthroughRegistrationInProgress;
 
   set isWalkthroughRegistrationInProgress(value) {
-    this._isWalkthroughRegistrationInProgress = value;
+    _isWalkthroughRegistrationInProgress = value;
     notifyListeners();
   }
 
@@ -56,7 +56,7 @@ class OnboardingViewModel extends BaseViewModel {
         );
       }),
     ),
-    SizedBox.shrink(),
+    const SizedBox.shrink(),
   ];
 
   List<List<String>>? get onboardingData => _onboardingData;
@@ -102,7 +102,8 @@ class OnboardingViewModel extends BaseViewModel {
       state: PageState.replaceAll,
       page: LoginPageConfig,
     );
-    if (_analyticsService != null)
+    if (_analyticsService != null) {
       _analyticsService!.track(eventName: AnalyticsEvents.splashScrenProceed);
+    }
   }
 }

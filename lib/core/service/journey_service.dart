@@ -561,8 +561,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
       JourneyLevel currentlevelData = levels!.firstWhere(
           (level) => level.level == _userService.userJourneyStats!.level);
 
-      if (currentlevelData != null &&
-          lastMileStoneIndex! > currentlevelData.end!) {
+      if (lastMileStoneIndex! > currentlevelData.end!) {
         return currentlevelData;
       } else {
         return null;
@@ -599,23 +598,23 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
       var matchTicket = unscratchedGTList!.firstWhere(
           (ticket) => ticket.prizeSubtype == milestone.prizeSubType,
           orElse: () => ScratchCard.none());
-      completedMilestonesPrizeList!.add(matchTicket);
+      completedMilestonesPrizeList.add(matchTicket);
     }
 
     notifyListeners(JourneyServiceProperties.Prizes);
-    _logger.d("Prizes List Updated ${completedMilestoneList!.length} ");
+    _logger.d("Prizes List Updated ${completedMilestoneList.length} ");
     _logger.d("Prizes List Updated");
     _logger.d("Prizes List Updated ${completedMilestonesPrizeList.toString()}");
   }
 
   void updateRewardStatus(String prizeSubtype) {
-    int activeRewardIndex = completedMilestonesPrizeList!.indexWhere((reward) =>
+    int activeRewardIndex = completedMilestonesPrizeList.indexWhere((reward) =>
         reward != ScratchCard.none() && reward.prizeSubtype == prizeSubtype);
     if (unscratchedGTList != null) {
       unscratchedGTList!.removeWhere((gt) => gt.prizeSubtype == prizeSubtype);
     }
     if (activeRewardIndex != -1) {
-      completedMilestonesPrizeList![activeRewardIndex] = ScratchCard.none();
+      completedMilestonesPrizeList[activeRewardIndex] = ScratchCard.none();
       notifyListeners(JourneyServiceProperties.Prizes);
       _logger.d("Prizes List Updated for prize ;$prizeSubtype ");
     }
@@ -632,7 +631,7 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   setAvatarPostion() => avatarPosition = calculatePosition(0);
 
   bool? isThereAnyMilestoneLevelChange() {
-    _logger!.i(
+    _logger.i(
         "Avatar Remote Index: $avatarRemoteMlIndex && Avatar Cached Ml Index: $avatarCachedMlIndex");
     return avatarRemoteMlIndex > (avatarCachedMlIndex ?? 1);
   }
@@ -690,10 +689,10 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
   }
 
   setCompletedMilestonesList() {
-    completedMilestoneList!.clear();
+    completedMilestoneList.clear();
     for (final milestone in currentMilestoneList) {
       if (milestone.index! < avatarRemoteMlIndex) {
-        completedMilestoneList!.add(milestone);
+        completedMilestoneList.add(milestone);
       }
     }
   }
@@ -706,9 +705,9 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
     currentMilestoneList.clear();
     customPathDataList.clear();
     journeyPathItemsList.clear();
-    completedMilestoneList?.clear();
+    completedMilestoneList.clear();
     unscratchedGTList?.clear();
-    completedMilestonesPrizeList!.clear();
+    completedMilestonesPrizeList.clear();
 
     log("Pages Details: PageCount: $pageCount Current FullView Height: $currentFullViewHeight Start page: $startPage End Page: $lastPage currentMilestoneList length: ${currentMilestoneList.length} customPathDataList length: ${customPathDataList.length} journeyPathItemsList length: ${journeyPathItemsList.length}");
   }

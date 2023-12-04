@@ -14,8 +14,8 @@ class FAQCardViewModel extends BaseViewModel {
   static const String FAQ_CAT_TAMBOLA = 'tambola';
   static const String FAQ_CAT_MUTUALFUNDS = 'mututalfunds';
 
-  final DBModel? _dbModel = locator<DBModel>();
-  final CustomLogger? _logger = locator<CustomLogger>();
+  final DBModel _dbModel = locator<DBModel>();
+  final CustomLogger _logger = locator<CustomLogger>();
   late List<bool> detStatus;
   List<String?> faqHeaders = [];
   List<String?> faqResponses = [];

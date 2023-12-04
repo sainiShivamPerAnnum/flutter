@@ -18,7 +18,8 @@ import '../../../core/service/analytics/analytics_service.dart';
 import '../../../util/locator.dart';
 
 class FelloCoinBar extends StatelessWidget {
-  final AnalyticsService? _analytics = locator<AnalyticsService>();
+  final AnalyticsService _analytics = locator<AnalyticsService>();
+  @override
   final Key? key;
   final String? svgAsset;
   final Color? borderColor;
@@ -77,12 +78,12 @@ class FelloCoinBar extends StatelessWidget {
                   width: size ?? SizeConfig.padding20,
                 ),
                 SizedBox(width: SizeConfig.padding4),
-                model!.flcBalance == null
+                model.flcBalance == null
                     ? SpinKitThreeBounce(
                         size: SizeConfig.padding16,
                         color: Colors.white,
                       )
-                    : CoinBalanceTextSE(),
+                    : const CoinBalanceTextSE(),
               ],
             ),
           ),

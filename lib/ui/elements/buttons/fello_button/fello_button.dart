@@ -34,7 +34,7 @@ class FelloButton extends StatefulWidget {
   final TextStyle? textStyle;
   final Function? onPressedAsync;
 
-  FelloButton(
+  const FelloButton(
       {this.action,
       this.onPressed,
       this.activeButtonUI,
@@ -65,25 +65,27 @@ class _FelloButtonState extends State<FelloButton> {
     ConnectivityStatus connectivityStatus =
         Provider.of<ConnectivityService>(context, listen: true)
             .connectivityStatus;
-    final JourneyService? _journeyService = locator<JourneyService>();
-    if (connectivityStatus == ConnectivityStatus.Offline)
+    final JourneyService _journeyService = locator<JourneyService>();
+    if (connectivityStatus == ConnectivityStatus.Offline) {
       return widget.offlineButtonUI != null
           ? InkWell(
               onTap: () async {
-                if (Platform.isAndroid)
+                if (Platform.isAndroid) {
                   HapticFeedback.vibrate();
-                else
+                } else {
                   HapticFeedback.lightImpact();
+                }
                 if (await BaseUtil.showNoInternetAlert()) return;
               },
               child: widget.offlineButtonUI,
             )
           : ElevatedButton(
               onPressed: () {
-                if (Platform.isAndroid)
+                if (Platform.isAndroid) {
                   HapticFeedback.vibrate();
-                else
+                } else {
                   HapticFeedback.lightImpact();
+                }
                 BaseUtil.showNoInternetAlert();
               },
               style: ElevatedButton.styleFrom(primary: Colors.grey),
@@ -92,22 +94,23 @@ class _FelloButtonState extends State<FelloButton> {
                 child: Text(widget.defaultButtonText ?? locale.btn),
               ),
             );
-    else {
-      if (isLoading)
+    } else {
+      if (isLoading) {
         return widget.loadingButtonUI != null
             ? widget.loadingButtonUI!
             : SpinKitThreeBounce(
                 size: SizeConfig.mediumTextSize!,
                 color: UiConstants.primaryColor,
               );
-      else
+      } else {
         return widget.activeButtonUI != null
             ? InkWell(
                 onTap: () async {
-                  if (Platform.isAndroid)
+                  if (Platform.isAndroid) {
                     HapticFeedback.vibrate();
-                  else
+                  } else {
                     HapticFeedback.lightImpact();
+                  }
                   if (isAlreadyClicked) return;
                   isAlreadyClicked = true;
                   if (await BaseUtil.showNoInternetAlert()) return;
@@ -118,15 +121,17 @@ class _FelloButtonState extends State<FelloButton> {
                   //       hapticVibrate: false,
                   //       content: CompleteProfileDialog());
                   if (widget.onPressedAsync != null) {
-                    if (widget.action != null)
+                    if (widget.action != null) {
                       widget.action!(true);
-                    else
+                    } else {
                       updateButtonState(true);
+                    }
                     await widget.onPressedAsync!();
-                    if (widget.action != null)
+                    if (widget.action != null) {
                       widget.action!(false);
-                    else
+                    } else {
                       updateButtonState(false);
+                    }
                   }
                   if (widget.onPressed != null) widget.onPressed!();
                   isAlreadyClicked = false;
@@ -134,24 +139,27 @@ class _FelloButtonState extends State<FelloButton> {
                 child: widget.activeButtonUI)
             : TextButton(
                 onPressed: () async {
-                  if (Platform.isAndroid)
+                  if (Platform.isAndroid) {
                     HapticFeedback.vibrate();
-                  else
+                  } else {
                     HapticFeedback.lightImpact();
+                  }
                   if (isAlreadyClicked) return;
                   isAlreadyClicked = true;
                   if (await BaseUtil.showNoInternetAlert()) return;
 
                   if (widget.onPressedAsync != null) {
-                    if (widget.action != null)
+                    if (widget.action != null) {
                       widget.action!(true);
-                    else
+                    } else {
                       updateButtonState(true);
+                    }
                     await widget.onPressedAsync!();
-                    if (widget.action != null)
+                    if (widget.action != null) {
                       widget.action!(false);
-                    else
+                    } else {
                       updateButtonState(false);
+                    }
                   }
                   if (widget.onPressed != null) widget.onPressed!();
                   isAlreadyClicked = false;
@@ -161,6 +169,7 @@ class _FelloButtonState extends State<FelloButton> {
                   style: widget.textStyle ?? TextStyles.body2.bold,
                 ),
               );
+      }
     }
   }
 }

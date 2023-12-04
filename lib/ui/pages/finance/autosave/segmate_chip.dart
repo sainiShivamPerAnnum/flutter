@@ -53,10 +53,11 @@ class SegmentChips extends StatelessWidget {
 
 extension Cases on String? {
   String toCamelCase() {
-    if (this == null)
+    if (this == null) {
       return "";
-    else
+    } else {
       return (this!.split('').first.toUpperCase() +
           this!.split('').toList().sublist(1).join('').toLowerCase());
+    }
   }
 }

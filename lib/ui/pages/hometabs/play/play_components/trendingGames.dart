@@ -105,8 +105,8 @@ class TrendingGames extends StatelessWidget {
   final GameModel? game;
   final PlayViewModel model;
   const TrendingGames({
-    this.game,
     required this.model,
+    this.game,
     Key? key,
   });
 

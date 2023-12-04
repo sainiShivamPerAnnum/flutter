@@ -490,8 +490,8 @@ class GoldenDayUiEntryPoint extends StatelessWidget {
       state: PageState.addWidget,
       widget: WebViewScreen(
         url: url,
-        onUrlChange: (value) {
-          if (value.url != url) {
+        onUrlChanged: (value) {
+          if (value != url) {
             AppState.backButtonDispatcher!.didPopRoute();
           }
         },

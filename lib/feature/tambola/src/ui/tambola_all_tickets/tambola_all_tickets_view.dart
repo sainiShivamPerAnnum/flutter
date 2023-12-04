@@ -143,10 +143,10 @@ class _AllTambolaTicketsState extends State<AllTambolaTickets> {
 
 class SingleTicket extends StatelessWidget {
   const SingleTicket({
-    super.key,
     required this.index,
     required this.weeklyPicks,
     required this.ticket,
+    super.key,
   });
   final int index;
   final List<int> weeklyPicks;

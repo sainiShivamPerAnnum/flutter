@@ -4,10 +4,10 @@ import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/transaction_state_enum.dart';
 import 'package:felloapp/core/model/aug_gold_rates_model.dart';
 import 'package:felloapp/core/model/gold_pro_models/gold_pro_scheme_model.dart';
-import 'package:felloapp/core/model/paytm_models/create_paytm_transaction_model.dart';
 import 'package:felloapp/core/model/paytm_models/deposit_fcm_response_model.dart';
 import 'package:felloapp/core/model/paytm_models/paytm_transaction_response_model.dart';
 import 'package:felloapp/core/model/power_play_models/get_matches_model.dart';
@@ -22,19 +22,27 @@ import 'package:felloapp/core/service/payments/razorpay_service.dart';
 import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/back_button_actions.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_buy/augmont_buy_vm.dart';
+import 'package:felloapp/ui/pages/static/netbanking_web_view.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
-import 'package:felloapp/util/extensions/string_extension.dart';
 import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/preference_helper.dart';
 import 'package:flutter/services.dart';
 import 'package:upi_pay/upi_pay.dart';
 
-class AugmontTransactionService extends BaseTransactionService {
+import 'transaction_service_mixin.dart';
+
+class AugmontTransactionService extends BaseTransactionService
+    with TransactionPredictionDefaultMixing {
+  @override
+  PaytmRepository get paytmRepo => _paytmRepo;
+
   final UserService _userService = locator<UserService>();
   final CustomLogger _logger = locator<CustomLogger>();
   final UserCoinService _userCoinService = locator<UserCoinService>();
@@ -75,16 +83,22 @@ class AugmontTransactionService extends BaseTransactionService {
     notifyListeners();
   }
 
-  Future<void>? initiateAugmontTransaction(
-      {required GoldPurchaseDetails details}) {
+  Future<void> initiateAugmontTransaction({
+    required GoldPurchaseDetails details,
+  }) async {
     currentGoldPurchaseDetails = details;
     currentTxnAmount = details.goldBuyAmount;
-    if (details.upiChoice != null) {
-      //Intent flow
-      return processUpiTransaction();
-    } else {
-      //RazorPay gateway
-      return processRazorpayTransaction();
+
+    if ((currentTxnAmount ?? 0) >= Constants.mandatoryNetBankingThreshold) {
+      return await processNBTransaction();
+    }
+
+    if (details.isIntentFlow && details.upiChoice != null) {
+      return await processUpiTransaction();
+    }
+
+    if (!details.isIntentFlow) {
+      return await processRazorpayTransaction();
     }
   }
 
@@ -116,8 +130,7 @@ class AugmontTransactionService extends BaseTransactionService {
           BaseUtil.digitPrecision(amount - _getTaxOnAmount(amount, netTax))
     };
     currentTxnGms = currentGoldPurchaseDetails.goldInGrams;
-    final ApiResponse<CreatePaytmTransactionModel> txnResponse =
-        await _paytmRepo.createTransaction(
+    final txnResponse = await _paytmRepo.createTransaction(
       amount,
       augMap,
       {},
@@ -131,7 +144,6 @@ class AugmontTransactionService extends BaseTransactionService {
     );
     if (txnResponse.isSuccess()) {
       currentTxnOrderId = txnResponse.model!.data!.txnId;
-      const platform = MethodChannel("methodChannel/upiIntent");
 
       try {
         if (Platform.isIOS) {
@@ -145,11 +157,12 @@ class AugmontTransactionService extends BaseTransactionService {
             AppState.unblockNavigation();
           }
         } else {
+          const platform = MethodChannel("methodChannel/upiIntent");
           final result = await platform.invokeMethod('initiatePsp', {
             'redirectUrl': txnResponse.model!.data!.intent,
             'packageName': currentGoldPurchaseDetails.upiChoice!.packageName
           });
-          _logger.d("Result from initiatePsp: ${result}");
+          _logger.d("Result from initiatePsp: $result");
 
           if (result.toString().toLowerCase().contains('failure')) {
             isGoldBuyInProgress = false;
@@ -160,14 +173,12 @@ class AugmontTransactionService extends BaseTransactionService {
             return BaseUtil.showNegativeAlert(
                 "Transaction Cancelled", locale.tryLater);
           }
-        }
-        locator<BackButtonActions>().isTransactionCancelled = false;
-
-        if (Platform.isAndroid) {
           isGoldBuyInProgress = false;
           currentTransactionState = TransactionState.ongoing;
-          unawaited(initiatePolling());
+          checkTransactionStatus();
         }
+
+        locator<BackButtonActions>().isTransactionCancelled = false;
       } catch (e) {
         _logger.e("Intent payement exception $e");
         locator<BackButtonActions>().isTransactionCancelled = false;
@@ -175,7 +186,7 @@ class AugmontTransactionService extends BaseTransactionService {
         if (Platform.isAndroid) {
           isGoldBuyInProgress = false;
           currentTransactionState = TransactionState.ongoing;
-          unawaited(initiatePolling());
+          checkTransactionStatus();
         }
       }
     } else {
@@ -185,8 +196,98 @@ class AugmontTransactionService extends BaseTransactionService {
       AppState.unblockNavigation();
 
       return BaseUtil.showNegativeAlert(
-          txnResponse.errorMessage, locale.tryLater);
+        txnResponse.errorMessage,
+        locale.tryLater,
+      );
     }
+  }
+
+  @override
+  Future<void> processNBTransaction() async {
+    isGoldBuyInProgress = true;
+    AppState.blockNavigation();
+
+    final amount = currentGoldPurchaseDetails.goldBuyAmount!;
+    final augmontRates = currentGoldPurchaseDetails.goldRates!;
+    double netTax = augmontRates.cgstPercent! + augmontRates.sgstPercent!;
+    currentTxnGms = currentGoldPurchaseDetails.goldInGrams;
+
+    Map<String, dynamic>? augProMap = {};
+    if (currentGoldPurchaseDetails.isPro) {
+      augProMap["schemeId"] = goldProScheme!.id;
+      augProMap["leaseQty"] = currentGoldPurchaseDetails.leaseQty;
+    }
+
+    final augMap = {
+      "aBlockId": augmontRates.blockId.toString(),
+      "aLockPrice": augmontRates.goldBuyPrice,
+      "aPaymode": "NET_BANKING",
+      "aGoldInTxn": _getGoldQuantityFromTaxedAmount(
+          BaseUtil.digitPrecision(amount - _getTaxOnAmount(amount, netTax)),
+          augmontRates.goldBuyPrice!),
+      "aTaxedGoldBalance":
+          BaseUtil.digitPrecision(amount - _getTaxOnAmount(amount, netTax))
+    };
+
+    currentTxnGms = currentGoldPurchaseDetails.goldInGrams;
+
+    final txnResponse = await _paytmRepo.createTransaction(
+      amount,
+      augMap,
+      null, //lb map.
+      currentGoldPurchaseDetails.couponCode,
+      currentGoldPurchaseDetails.skipMl,
+      '',
+      InvestmentType.AUGGOLD99,
+      null, //app use
+      augProMap,
+      'NET_BANKING', // pay-mode
+    );
+
+    if (txnResponse.isSuccess()) {
+      currentTxnOrderId = txnResponse.model!.data!.txnId;
+      isNetBankingInProgress = true;
+      AppState.delegate!.appState.currentAction = PageAction(
+        page: WebViewPageConfig,
+        state: PageState.addWidget,
+        widget: NetBankingWebView(
+          url: txnResponse.model!.data!.nbIntent!,
+          onPageClosed: () => _validateTransaction(shouldPop: false),
+          onUrlChanged: (value) {
+            // when transaction gets completed with success then it would be
+            // redirecting to the the defined url and on that we will be
+            // validating transaction status.
+            if (value == Constants.postNBRedirectionURL) {
+              _validateTransaction();
+            }
+          },
+        ),
+      );
+
+      locator<BackButtonActions>().isTransactionCancelled = false;
+    } else {
+      isGoldBuyInProgress = false;
+      currentTransactionState = TransactionState.idle;
+
+      AppState.unblockNavigation();
+
+      return BaseUtil.showNegativeAlert(
+        txnResponse.errorMessage,
+        locale.tryLater,
+      );
+    }
+  }
+
+  Future<void> _validateTransaction({bool shouldPop = true}) async {
+    isNetBankingInProgress = false;
+    AppState.unblockNavigation();
+    if (shouldPop) await AppState.backButtonDispatcher?.didPopRoute();
+    isGoldBuyInProgress = false;
+    currentTransactionState = TransactionState.ongoing;
+    checkTransactionStatus();
+    await Future.delayed(
+        const Duration(milliseconds: 200)); // to avoid frequent set state.
+    notifyListeners();
   }
 
   // RAZORPAY
@@ -263,10 +364,9 @@ class AugmontTransactionService extends BaseTransactionService {
   }
 
   @override
-  Future<void> processPolling(Timer? timer) async {
-    final res = await _paytmRepo.getTransactionStatus(currentTxnOrderId);
-    if (res.isSuccess()) {
-      TransactionResponseModel txnStatus = res.model!;
+  Future<void> onComplete(ApiResponse<TransactionResponseModel> value) async {
+    if (value.isSuccess()) {
+      TransactionResponseModel txnStatus = value.model!;
       switch (txnStatus.data!.status) {
         case Constants.TXN_STATUS_RESPONSE_SUCCESS:
           if (!txnStatus.data!.isUpdating!) {
@@ -285,22 +385,20 @@ class AugmontTransactionService extends BaseTransactionService {
                   unawaited(locator<PowerPlayService>()
                       .getUserTransactionHistory(matchData: liveMatchData));
                 }
-                transactionResponseModel = res.model;
-                currentTxnTambolaTicketsCount = res.model!.data!.tickets!;
+                transactionResponseModel = value.model;
+                currentTxnTambolaTicketsCount = value.model!.data!.tickets!;
                 currentTxnScratchCardCount =
-                    res.model?.data?.gtIds?.length ?? 0;
-                if (res.model!.data != null &&
-                    res.model!.data!.goldInTxnBought != null &&
-                    res.model!.data!.goldInTxnBought! > 0) {
-                  currentTxnGms = res.model!.data!.goldInTxnBought;
+                    value.model?.data?.gtIds?.length ?? 0;
+                if (value.model!.data != null &&
+                    value.model!.data!.goldInTxnBought != null &&
+                    value.model!.data!.goldInTxnBought! > 0) {
+                  currentTxnGms = value.model!.data!.goldInTxnBought;
                 }
-                timer!.cancel();
                 unawaited(transactionResponseUpdate(
                     gtIds: transactionResponseModel?.data?.gtIds ?? []));
               } else if (txnStatus.data!.fd!.status ==
                   Constants.GOLD_PRO_TXN_STATUS_FAILED) {
                 AppState.unblockNavigation();
-                timer!.cancel();
                 unawaited(transactionResponseUpdate(
                     gtIds: transactionResponseModel?.data?.gtIds ?? []));
                 AppState.isGoldProBuyInProgress = false;
@@ -322,24 +420,29 @@ class AugmontTransactionService extends BaseTransactionService {
                 unawaited(locator<PowerPlayService>()
                     .getUserTransactionHistory(matchData: liveMatchData));
               }
-              transactionResponseModel = res.model;
-              currentTxnTambolaTicketsCount = res.model!.data!.tickets!;
-              currentTxnScratchCardCount = res.model?.data?.gtIds?.length ?? 0;
-              if (res.model!.data != null &&
-                  res.model!.data!.goldInTxnBought != null &&
-                  res.model!.data!.goldInTxnBought! > 0) {
-                currentTxnGms = res.model!.data!.goldInTxnBought;
+              transactionResponseModel = value.model;
+              currentTxnTambolaTicketsCount = value.model!.data!.tickets!;
+              currentTxnScratchCardCount =
+                  value.model?.data?.gtIds?.length ?? 0;
+              if (value.model!.data != null &&
+                  value.model!.data!.goldInTxnBought != null &&
+                  value.model!.data!.goldInTxnBought! > 0) {
+                currentTxnGms = value.model!.data!.goldInTxnBought;
               }
-              timer!.cancel();
               unawaited(transactionResponseUpdate(
                   gtIds: transactionResponseModel?.data?.gtIds ?? []));
+            }
+            final upiChoice = currentGoldPurchaseDetails.upiChoice;
+            if (upiChoice != null) {
+              await PreferenceHelper.insertUsedPaymentIntent(
+                upiChoice.upiApplication.appName,
+              );
             }
           }
           break;
         case Constants.TXN_STATUS_RESPONSE_PENDING:
           break;
         case Constants.TXN_STATUS_RESPONSE_FAILURE:
-          timer!.cancel();
           AppState.unblockNavigation();
           isGoldBuyInProgress = false;
           currentTransactionState = TransactionState.idle;
@@ -368,7 +471,7 @@ class AugmontTransactionService extends BaseTransactionService {
     AppState.isRepeated = false;
     AppState.type = null;
     AppState.isTxnProcessing = true;
-    Future.delayed(Duration(seconds: 1), () {
+    Future.delayed(const Duration(seconds: 1), () {
       BaseUtil.openDialog(
         addToScreenStack: true,
         hapticVibrate: true,
@@ -392,6 +495,7 @@ class GoldPurchaseDetails {
   ApplicationMeta? upiChoice;
   double? leaseQty;
   bool isPro;
+  bool isIntentFlow;
 
   GoldPurchaseDetails({
     required this.goldBuyAmount,
@@ -402,5 +506,6 @@ class GoldPurchaseDetails {
     this.upiChoice,
     this.leaseQty,
     this.isPro = false,
+    this.isIntentFlow = false,
   });
 }

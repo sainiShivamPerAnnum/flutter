@@ -15,12 +15,12 @@ import 'package:flutter/material.dart';
 enum TranFilterType { Type, Subtype }
 
 class TransactionsHistoryViewModel extends BaseViewModel {
-  final CustomLogger? _logger = locator<CustomLogger>();
-  final UserService? _userService = locator<UserService>();
+  final CustomLogger _logger = locator<CustomLogger>();
+  final UserService _userService = locator<UserService>();
   // final PaytmService? _paytmService = locator<PaytmService>();
   final SubService _subscriptionService = locator<SubService>();
 
-  final TxnHistoryService? _txnHistoryService = locator<TxnHistoryService>();
+  final TxnHistoryService _txnHistoryService = locator<TxnHistoryService>();
 
   //local variables
   int _filter = 1;
@@ -28,7 +28,7 @@ class TransactionsHistoryViewModel extends BaseViewModel {
   List<UserTransaction> apiTxns = [];
   String? _filterValue = "All";
   String? lastSipTxnDocId;
-  List<String?> _tranTypeFilterItems = [
+  final List<String?> _tranTypeFilterItems = [
     "All",
     "Deposits",
     "Withdrawals",
@@ -37,10 +37,10 @@ class TransactionsHistoryViewModel extends BaseViewModel {
   ScrollController? _scrollController;
   ScrollController? _sipScrollController;
 
-  get sipScrollController => this._sipScrollController;
+  get sipScrollController => _sipScrollController;
 
   set sipScrollController(value) {
-    this._sipScrollController = value;
+    _sipScrollController = value;
   }
 
   PageController? _pageController;
@@ -61,7 +61,7 @@ class TransactionsHistoryViewModel extends BaseViewModel {
   ScrollController? get tranListController => _scrollController;
   PageController? get pageController => _pageController;
   int get tabIndex => _tabIndex;
-  bool get getHasMoreTxns => this._hasMoreSIPTxns;
+  bool get getHasMoreTxns => _hasMoreSIPTxns;
   bool get isMoreTxnsBeingFetched => _isMoreTxnsBeingFetched;
   InvestmentType _investmentType = InvestmentType.AUGGOLD99;
 
@@ -115,16 +115,16 @@ class TransactionsHistoryViewModel extends BaseViewModel {
   }
 
   init(InvestmentType? investmentType, bool showAutosave) {
-    this._investmentType = investmentType ?? InvestmentType.AUGGOLD99;
+    _investmentType = investmentType ?? InvestmentType.AUGGOLD99;
     _scrollController = ScrollController();
     // if (investmentType == InvestmentType.AUGGOLD99)
     _sipScrollController = ScrollController();
     _pageController = PageController(initialPage: 0);
     if (showAutosave) {
       tabIndex = 1;
-      WidgetsBinding.instance!.addPostFrameCallback((timeStamp) {
+      WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
         pageController!.animateToPage(1,
-            duration: Duration(milliseconds: 200), curve: Curves.linear);
+            duration: const Duration(milliseconds: 200), curve: Curves.linear);
       });
     }
 
@@ -178,34 +178,39 @@ class TransactionsHistoryViewModel extends BaseViewModel {
     isMoreTxnsBeingFetched = true;
     switch (filter) {
       case 1:
-        if (_txnHistoryService!.hasMoreTxns)
+        if (_txnHistoryService!.hasMoreTxns) {
           await _txnHistoryService!.fetchTransactions(
             subtype: _investmentType,
           );
+        }
         break;
       case 2:
-        if (_txnHistoryService!.hasMoreDepositTxns)
+        if (_txnHistoryService!.hasMoreDepositTxns) {
           await _txnHistoryService!.fetchTransactions(
               subtype: _investmentType,
               type: UserTransaction.TRAN_TYPE_DEPOSIT);
+        }
         break;
       case 3:
-        if (_txnHistoryService!.hasMoreWithdrawalTxns)
+        if (_txnHistoryService!.hasMoreWithdrawalTxns) {
           await _txnHistoryService!.fetchTransactions(
               subtype: _investmentType,
               type: UserTransaction.TRAN_TYPE_WITHDRAW);
+        }
         break;
       case 4:
-        if (_txnHistoryService!.hasMorePrizeTxns)
+        if (_txnHistoryService!.hasMorePrizeTxns) {
           await _txnHistoryService!.fetchTransactions(
               subtype: _investmentType, type: UserTransaction.TRAN_TYPE_PRIZE);
+        }
 
         break;
       case 5:
-        if (_txnHistoryService!.hasMoreRefundedTxns)
+        if (_txnHistoryService!.hasMoreRefundedTxns) {
           await _txnHistoryService!.fetchTransactions(
               subtype: _investmentType,
               status: UserTransaction.TRAN_STATUS_REFUNDED);
+        }
         break;
       default:
         // if (_txnHistoryService.hasMoreTxns)
@@ -261,10 +266,11 @@ class TransactionsHistoryViewModel extends BaseViewModel {
     }
     await _subscriptionService.getSubscriptionTransactionHistory(
         asset: asset.name);
-    if (asset == InvestmentType.AUGGOLD99)
+    if (asset == InvestmentType.AUGGOLD99) {
       filteredSIPList = _subscriptionService.augSubTxnList;
-    else
+    } else {
       filteredSIPList = _subscriptionService.lbSubTxnList;
+    }
 
     setState(ViewState.Idle);
   }

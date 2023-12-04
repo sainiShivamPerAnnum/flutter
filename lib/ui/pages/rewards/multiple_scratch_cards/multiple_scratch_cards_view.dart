@@ -70,7 +70,7 @@ class _MultipleScratchCardsViewState extends State<MultipleScratchCardsView> {
                           SizedBox(
                             width: SizeConfig.pageHorizontalMargins,
                           ),
-                          FelloAppBarBackButton(),
+                          const FelloAppBarBackButton(),
                           const Spacer(),
                           FelloCoinBar(),
                           SizedBox(width: SizeConfig.padding20)

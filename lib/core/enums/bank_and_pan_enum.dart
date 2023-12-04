@@ -4,5 +4,5 @@ enum BankAndPanServiceProperties {
   augmontSellNotice,
   augmontSellDisabled,
   ongoing,
-  reachedLockIn
+  reachedLockIn,
 }

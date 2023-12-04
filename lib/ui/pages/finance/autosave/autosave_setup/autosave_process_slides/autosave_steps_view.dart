@@ -13,7 +13,7 @@ import 'package:flutter_svg/flutter_svg.dart';
 class AutosaveStepsView extends StatelessWidget {
   final AutosaveProcessViewModel model;
 
-  const AutosaveStepsView({super.key, required this.model});
+  const AutosaveStepsView({required this.model, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -69,7 +69,7 @@ class AutosaveStepsView extends StatelessWidget {
             ),
           ),
         ),
-        Spacer(),
+        const Spacer(),
         Padding(
           padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
           child: Row(
@@ -112,10 +112,10 @@ class AutosaveStepTile extends StatelessWidget {
   final String title;
   final Widget subtitle;
   const AutosaveStepTile(
-      {super.key,
-      required this.image,
+      {required this.image,
       required this.subtitle,
-      required this.title});
+      required this.title,
+      super.key});
 
   @override
   Widget build(BuildContext context) {

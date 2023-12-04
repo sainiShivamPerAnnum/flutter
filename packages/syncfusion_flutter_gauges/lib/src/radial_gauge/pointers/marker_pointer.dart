@@ -8,7 +8,6 @@ import '../../radial_gauge/styles/radial_text_style.dart';
 import '../../radial_gauge/utils/enum.dart';
 import '../../radial_gauge/utils/helper.dart';
 import '../../radial_gauge/utils/radial_callback_args.dart';
-import '../../radial_gauge/utils/radial_gauge_typedef.dart';
 
 /// Create the pointer to indicate the value with built-in shape.
 ///

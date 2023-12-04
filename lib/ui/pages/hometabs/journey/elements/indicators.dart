@@ -17,7 +17,7 @@ class JRefreshIndicator extends StatelessWidget {
       bottom: SizeConfig.navBarHeight,
       child: Container(
         width: SizeConfig.screenWidth,
-        child: LinearProgressIndicator(
+        child: const LinearProgressIndicator(
           minHeight: 4,
           backgroundColor: UiConstants.gameCardColor,
           color: UiConstants.tertiarySolid,
@@ -29,7 +29,7 @@ class JRefreshIndicator extends StatelessWidget {
 
 class JPageLoader extends StatelessWidget {
   final JourneyPageViewModel model;
-  const JPageLoader({Key? key, required this.model}) : super(key: key);
+  const JPageLoader({required this.model, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -39,7 +39,7 @@ class JPageLoader extends StatelessWidget {
         top: (service.isLoading && service.isLoaderRequired)
             ? SizeConfig.pageHorizontalMargins
             : -400,
-        duration: Duration(seconds: 1),
+        duration: const Duration(seconds: 1),
         curve: Curves.decelerate,
         left: SizeConfig.pageHorizontalMargins,
         child: SafeArea(

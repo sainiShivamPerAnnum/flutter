@@ -27,7 +27,7 @@ class CurrentWinningsInfo extends StatelessWidget {
       builder: (context, userservice, properties) {
         log("BUILD: Current winnings rebuilds");
         double currentWinning =
-            userservice!.userFundWallet?.unclaimedBalance ?? 0;
+            userservice.userFundWallet?.unclaimedBalance ?? 0;
         String currentAsset = referralService.getRedeemAsset(currentWinning);
         return GestureDetector(
           onTap: () => AppState.delegate!.parseRoute(Uri.parse('/myWinnings')),

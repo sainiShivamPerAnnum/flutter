@@ -19,32 +19,36 @@ import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/marketing_event_handler_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/core/service/payments/lendbox_transaction_service.dart';
 import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
+import 'package:felloapp/ui/pages/finance/augmont/gold_buy/augmont_buy_vm.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/deposit/widget/flo_coupon_modal_sheet.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/deposit/widget/prompt.dart';
+import 'package:felloapp/ui/pages/finance/preffered_upi_option_mixin.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/haptic.dart';
-import 'package:felloapp/util/installed_upi_apps_finder.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-import 'package:upi_pay/upi_pay.dart';
 
 import '../../../../../core/repository/getters_repo.dart';
 
 enum FloPrograms { lendBox8, lendBox10, lendBox12 }
 
-class LendboxBuyViewModel extends BaseViewModel {
+class LendboxBuyViewModel extends BaseViewModel
+    with PaymentIntentMixin, NetbankingValidationMixin {
   final LendboxTransactionService _txnService =
       locator<LendboxTransactionService>();
+  @override
+  final bankingService = locator<BankAndPanService>();
   final AnalyticsService analyticsService = locator<AnalyticsService>();
   final CouponRepository _couponRepo = locator<CouponRepository>();
   final CustomLogger _logger = locator<CustomLogger>();
@@ -86,18 +90,14 @@ class LendboxBuyViewModel extends BaseViewModel {
   late String floAssetType;
   double _fieldWidth = 0.0;
   bool _forcedBuy = false;
-  String maturityPref = "NA";
   bool _showMaxCapText = false;
   bool _showMinCapText = false;
   String? couponCode;
   bool isSpecialCoupon = true;
   bool showCouponAppliedText = false;
   bool _addSpecialCoupon = false;
-  int _selectedOption = -1;
+  UserDecision _selectedOption = UserDecision.notDecided;
   bool isIntentFlow = true;
-  List<ApplicationMeta> appMetaList = [];
-  UpiApplication? upiApplication;
-  ApplicationMeta? selectedUpiApplication;
 
   ///  ---------- getter and setter ------------
 
@@ -204,9 +204,9 @@ class LendboxBuyViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  int get selectedOption => _selectedOption;
+  UserDecision get selectedOption => _selectedOption;
 
-  set selectedOption(int value) {
+  set selectedOption(UserDecision value) {
     _selectedOption = value;
     notifyListeners();
   }
@@ -218,6 +218,7 @@ class LendboxBuyViewModel extends BaseViewModel {
     required String assetTypeFlow,
     String? initialCouponCode,
     String? entryPoint,
+    bool quickCheckout = false,
   }) async {
     setState(ViewState.Busy);
     floAssetType = assetTypeFlow;
@@ -228,7 +229,7 @@ class LendboxBuyViewModel extends BaseViewModel {
     animationController?.addListener(listener);
     isLendboxOldUser =
         locator<UserService>().userSegments.contains(Constants.US_FLO_OLD);
-    appMetaList = await UpiUtils.getUpiApps();
+    await initAndSetPreferredPaymentOption();
     await getAssetOptionsModel(entryPoint: entryPoint);
     isIntentFlow = assetOptionsModel!.data.intent;
     log("isLendboxOldUser $isLendboxOldUser");
@@ -255,6 +256,10 @@ class LendboxBuyViewModel extends BaseViewModel {
     await _applyInitialCoupon(
       initialCouponCode,
     );
+
+    if (quickCheckout) {
+      await initiateBuy();
+    }
   }
 
   void listener() {
@@ -315,11 +320,12 @@ class LendboxBuyViewModel extends BaseViewModel {
     await _txnService.initiateTransaction(
       FloPurchaseDetails(
         floAssetType: floAssetType,
-        maturityPref: maturityPref,
+        maturityPref: selectedOption.lbMapping,
         couponCode: appliedCoupon?.code ?? '',
         txnAmount: amount.toDouble(),
         skipMl: skipMl,
         upiChoice: selectedUpiApplication,
+        isIntentFlow: assetOptionsModel!.data.intent,
       ),
     );
 
@@ -331,7 +337,7 @@ class LendboxBuyViewModel extends BaseViewModel {
       analyticsService
           .track(eventName: AnalyticsEvents.intentUpiAppSelected, properties: {
         "floAssetType": floAssetType,
-        "maturityPref": maturityPref,
+        "maturityPref": selectedOption.lbMapping,
         "couponCode": appliedCoupon?.code ?? '',
         "txnAmount": amount.toDouble(),
         "skipMl": skipMl,
@@ -433,19 +439,19 @@ class LendboxBuyViewModel extends BaseViewModel {
   }
 
   String getMaturityTitle() {
-    if (selectedOption == 0) {
-      return "ReInvest in ${floAssetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? 12 : 10}%";
+    switch (selectedOption) {
+      case UserDecision.notDecided:
+        return 'N/A';
+
+      case UserDecision.withdraw:
+        return "Withdraw to bank";
+
+      case UserDecision.reInvest:
+        return "ReInvest in ${floAssetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? 12 : 10}%";
+
+      case UserDecision.moveToFlexi:
+        return "Move to ${floAssetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? 10 : 8}%";
     }
-    if (selectedOption == 1) {
-      return "Move to ${floAssetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? 10 : 8}%";
-    }
-    if (selectedOption == 2) {
-      return "Withdraw to bank";
-    }
-    return "NA";
-    // if(selectedOption == -2){
-    //   return "Decide Later";
-    // }
   }
 
   void navigateToKycScreen() {
@@ -582,22 +588,6 @@ class LendboxBuyViewModel extends BaseViewModel {
     appliedCoupon = null;
   }
 
-  String calculateAmountAfterMaturity(String amount) {
-    int interest = floAssetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? 12 : 10;
-
-    double principal = double.tryParse(amount) ?? 0.0;
-    double rateOfInterest = interest / 100.0;
-    int timeInMonths = floAssetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? 2 : 4;
-
-    // 0.12 / 365 * amt * (365 / 2)
-    //0.10 / 365 * amt * (365 / 4)
-
-    double amountAfterMonths =
-        rateOfInterest / 365 * principal * (365 / timeInMonths);
-
-    return (principal + amountAfterMonths).toStringAsFixed(2);
-  }
-
   void openReinvestBottomSheet() {
     BaseUtil.openModalBottomSheet(
       isBarrierDismissible: true,
@@ -635,34 +625,69 @@ class LendboxBuyViewModel extends BaseViewModel {
     );
   }
 
+  String getMaturityTime(UserDecision decision) {
+    final maturity = assetOptionsModel!.data.maturityAt!;
+    return switch (decision) {
+      UserDecision.notDecided => maturity.notDecided,
+      UserDecision.reInvest => maturity.reInvest,
+      _ => maturity.notDecided,
+    };
+  }
+
+  /// Calculates the compound interest based on the [amount], [interestRate] and
+  /// [maturityDuration] for [terms].
+  num calculateInterest({
+    required num amount,
+    required num interestRate,
+    required int maturityDuration,
+    int terms = 1,
+  }) {
+    if (terms == 0) return 0;
+
+    double effectiveInterestRate = (maturityDuration / 12) * interestRate;
+    double normalized = effectiveInterestRate / 100.0;
+    final gainedInterest = amount * normalized;
+
+    final i2 = calculateInterest(
+      amount: amount + gainedInterest,
+      interestRate: interestRate,
+      maturityDuration: maturityDuration,
+      terms: terms - 1,
+    );
+
+    return gainedInterest + i2;
+  }
+
   Widget showReinvestSubTitle() {
-    final maturityAmount =
-        calculateAmountAfterMaturity(amountController?.text ?? "0");
+    final amount = int.tryParse(amountController!.text) ?? 0;
+    final maturityDuration =
+        floAssetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? 6 : 3;
+    final terms = selectedOption.maturityTerm;
+    final rate = floAssetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? 12 : 10;
 
-    String getText() {
-      if (selectedOption == -1) {
-        return "What will happen at maturity?";
-      }
-      if (selectedOption == 3) {
-        return "Withdrawing to your bank account after maturity";
-      }
-      if (selectedOption == 1) {
-        return "Re-investing ₹$maturityAmount in ${floAssetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? "12" : "10"}% Flo";
-      }
-      if (selectedOption == 2) {
-        return "Investing ₹$maturityAmount in ${floAssetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? "12" : "10"}% Flo after maturity";
-      }
-
-      if (selectedOption == -2) {
-        return "We will contact you before the maturity to help you decide";
-      }
-      return 'What will happen at maturity?';
-    }
+    final i = calculateInterest(
+      amount: amount,
+      interestRate: rate,
+      maturityDuration: maturityDuration,
+      terms: selectedOption.maturityTerm,
+    ).toInt();
 
     return Flexible(
-      child: Text(
-        getText(),
-        style: TextStyles.sourceSans.body3.colour(Colors.white),
+      child: Text.rich(
+        TextSpan(
+          children: [
+            TextSpan(
+              text: '${maturityDuration * terms} months',
+            ),
+            TextSpan(
+              text: ' (Returns = ₹${i + amount})',
+              style: TextStyles.sourceSansSB.body3.colour(
+                Colors.white,
+              ),
+            ),
+          ],
+        ),
+        style: TextStyles.sourceSans.body3.colour(UiConstants.grey1),
         textAlign: TextAlign.left,
         maxLines: 2,
       ),

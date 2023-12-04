@@ -7,9 +7,9 @@ const String PAYMODE = "UPI";
 const int ICICI_OTP_LEN = 5;
 
 class GetTaxStatus {
-  static final String path = 'api/getTaxStatus';
-  static final String resTaxCode = 'TAX_CODE';
-  static final String resTaxDescription = 'TAX_DESC';
+  static const String path = 'api/getTaxStatus';
+  static const String resTaxCode = 'TAX_CODE';
+  static const String resTaxDescription = 'TAX_DESC';
 }
 
 // ignore: slash_for_doc_comments
@@ -37,13 +37,13 @@ class GetTaxStatus {
  * */
 
 class GetKycStatus {
-  static final String path = 'api/getKycStatus';
-  static final String fldPan = 'firstpan';
-  static final String resName = 'F_PAN_NAME';
-  static final String resStatus = 'STATUS';
-  static final String resFatcaStatus = 'FATCA_FLAG_1';
-  static final String resPanStatus = 'F_PAN_STATUS'; //should be 'OK'
-  static final String resAppMode = 'APP_KYC_MODE';
+  static const String path = 'api/getKycStatus';
+  static const String fldPan = 'firstpan';
+  static const String resName = 'F_PAN_NAME';
+  static const String resStatus = 'STATUS';
+  static const String resFatcaStatus = 'FATCA_FLAG_1';
+  static const String resPanStatus = 'F_PAN_STATUS'; //should be 'OK'
+  static const String resAppMode = 'APP_KYC_MODE';
 
   static const String KYC_STATUS_INVALID = '0';
   static const String KYC_STATUS_VALID = '1';
@@ -62,55 +62,55 @@ class GetKycStatus {
  * Sample output: {"STATUS":"Y","ID":"752828","A_STATUS":"N"}
  * */
 class SubmitPanDetail {
-  static final String path = 'api/submitPanDetails';
-  static final String fldPan = 'firstpan';
-  static final String fldName = 'panname';
+  static const String path = 'api/submitPanDetails';
+  static const String fldPan = 'firstpan';
+  static const String fldName = 'panname';
 
-  static final String resStatus = 'STATUS'; //should be 'Y'
-  static final String resId = 'ID'; //should be saved
+  static const String resStatus = 'STATUS'; //should be 'Y'
+  static const String resId = 'ID'; //should be saved
 }
 
 /**
  * Sample output: {"STATUS":"Y"}
  * */
 class SubmitInvoiceDetail {
-  static final String path = 'api/submitInvoiceDetails';
-  static final String fldId = 'appid';
-  static final String fldDob = 'dob'; //format= '29-Aug-1996'
-  static final String fldEmail = 'email'; //encoded
-  static final String fldMobile = 'mobile'; //919986643444
-  static final String fldPan = 'firstpan';
+  static const String path = 'api/submitInvoiceDetails';
+  static const String fldId = 'appid';
+  static const String fldDob = 'dob'; //format= '29-Aug-1996'
+  static const String fldEmail = 'email'; //encoded
+  static const String fldMobile = 'mobile'; //919986643444
+  static const String fldPan = 'firstpan';
 
-  static final String resStatus = 'STATUS';
+  static const String resStatus = 'STATUS';
 }
 
 class SubmitFatca {
-  static final String path = 'api/submitFatca';
-  static final String fldId = 'appid';
-  static final String fldPan = 'firstpan';
-  static final String fldTaxId = 'taxid';
-  static final String fldIdType = 'idtype';
-  static final String fldFatcaOption = 'fatcaop';
-  static final String fldBirthplace = 'birthplace';
-  static final String fldTinResn = 'tinresn'; //'A'
-  static final String fldTinResnText = 'tinresntext'; //no idea
+  static const String path = 'api/submitFatca';
+  static const String fldId = 'appid';
+  static const String fldPan = 'firstpan';
+  static const String fldTaxId = 'taxid';
+  static const String fldIdType = 'idtype';
+  static const String fldFatcaOption = 'fatcaop';
+  static const String fldBirthplace = 'birthplace';
+  static const String fldTinResn = 'tinresn'; //'A'
+  static const String fldTinResnText = 'tinresntext'; //no idea
 
-  static final String resStatus = 'STATUS';
+  static const String resStatus = 'STATUS';
 }
 
 /**
  * Sample output: {"STATUS":"Y"}
  * */
 class SubmitInvKYCDetail {
-  static final String path = 'api/submitInvoiceKycDetails';
-  static final String fldId = 'appid';
-  static final String fldOccpCde = 'occpcde';
-  static final String fldIncome = 'income';
-  static final String fldPolOp = 'polopt';
-  static final String fldPan = 'firstpan';
-  static final String fldSrcWealth = 'srcwealth';
+  static const String path = 'api/submitInvoiceKycDetails';
+  static const String fldId = 'appid';
+  static const String fldOccpCde = 'occpcde';
+  static const String fldIncome = 'income';
+  static const String fldPolOp = 'polopt';
+  static const String fldPan = 'firstpan';
+  static const String fldSrcWealth = 'srcwealth';
 
-  static final String resStatus = 'STATUS';
+  static const String resStatus = 'STATUS';
 }
 
 /**
@@ -122,16 +122,16 @@ class SubmitInvKYCDetail {
     if not found: returns {}
  * */
 class GetBankDetail {
-  static final String path = 'api/getBankDetail';
-  static final String fldPan = 'firstpan';
-  static final String fldIFSC = 'ifsc';
+  static const String path = 'api/getBankDetail';
+  static const String fldPan = 'firstpan';
+  static const String fldIFSC = 'ifsc';
 
-  static final String resBankCode = 'BANK_CODE';
-  static final String resBankName = 'BANK_NAME';
-  static final String resStatus = 'STATUS';
-  static final String resBranchName = 'BRANCHNAME';
-  static final String resAddress = 'ADDRESS';
-  static final String resCity = 'CITY';
+  static const String resBankCode = 'BANK_CODE';
+  static const String resBankName = 'BANK_NAME';
+  static const String resStatus = 'STATUS';
+  static const String resBranchName = 'BRANCHNAME';
+  static const String resAddress = 'ADDRESS';
+  static const String resCity = 'CITY';
 }
 
 /**
@@ -139,11 +139,11 @@ class GetBankDetail {
  * {"BANK_ACT_TYPE":"Current Account","BANK_ACT_VALUE":"CA"}]
  * */
 class GetBankActType {
-  static final String path = 'api/getBankActType';
-  static final String fldPan = 'firstpan';
+  static const String path = 'api/getBankActType';
+  static const String fldPan = 'firstpan';
 
-  static final String resActType = 'BANK_ACT_TYPE';
-  static final String resActValue = 'BANK_ACT_VALUE';
+  static const String resActType = 'BANK_ACT_TYPE';
+  static const String resActValue = 'BANK_ACT_VALUE';
 }
 
 /**
@@ -151,47 +151,47 @@ class GetBankActType {
  * or if failed: {}
  * */
 class SubmitBankDetails {
-  static final String path = 'api/submitBankDetails';
-  static final String fldId = 'appid';
-  static final String fldPayMode = 'paymode';
-  static final String fldAccType = 'acctype';
-  static final String fldBankAccNo = 'bankaccno';
-  static final String fldBankName = 'bankname';
-  static final String fldBankCode = 'bankcode';
-  static final String fldIfsc = 'ifsc';
-  static final String fldCity = 'city';
-  static final String fldBranch = 'branch';
-  static final String fldAddress = 'address';
-  static final String fldPan = 'firstpan';
+  static const String path = 'api/submitBankDetails';
+  static const String fldId = 'appid';
+  static const String fldPayMode = 'paymode';
+  static const String fldAccType = 'acctype';
+  static const String fldBankAccNo = 'bankaccno';
+  static const String fldBankName = 'bankname';
+  static const String fldBankCode = 'bankcode';
+  static const String fldIfsc = 'ifsc';
+  static const String fldCity = 'city';
+  static const String fldBranch = 'branch';
+  static const String fldAddress = 'address';
+  static const String fldPan = 'firstpan';
 
-  static final String resStatus = 'STATUS';
+  static const String resStatus = 'STATUS';
 }
 
 class GetSavedDetail {
-  static final String path = 'api/getSavedDetail';
-  static final String fldPan = 'firstpan';
-  static final String fldId = 'appid';
+  static const String path = 'api/getSavedDetail';
+  static const String fldPan = 'firstpan';
+  static const String fldId = 'appid';
 
-  static final String resPan = 'PRIMARY_PAN_NO';
-  static final String resName = 'PRIMARY_INVESTOR_NAME';
-  static final String resInvestorName = 'PRIMARY_INVESTOR_NAME1';
-  static final String resDob = 'PRIMARY_DOB';
-  static final String resTaxStatus = 'TAX_STATUS';
-  static final String resAnnualIncome = 'INVGROSSANNUALINC';
-  static final String resEmailId = 'EMAIL_ID';
-  static final String resMobile = 'MOBILE_NO';
+  static const String resPan = 'PRIMARY_PAN_NO';
+  static const String resName = 'PRIMARY_INVESTOR_NAME';
+  static const String resInvestorName = 'PRIMARY_INVESTOR_NAME1';
+  static const String resDob = 'PRIMARY_DOB';
+  static const String resTaxStatus = 'TAX_STATUS';
+  static const String resAnnualIncome = 'INVGROSSANNUALINC';
+  static const String resEmailId = 'EMAIL_ID';
+  static const String resMobile = 'MOBILE_NO';
 }
 
 /**
  * Sample output: {"STATUS":"1","OTPID":"185103"}
  * */
 class SendOtp {
-  static final String path = 'api/requestSendOtp';
-  static final String fldEmail = 'email';
-  static final String fldMobile = 'mobile';
+  static const String path = 'api/requestSendOtp';
+  static const String fldEmail = 'email';
+  static const String fldMobile = 'mobile';
 
-  static final String resStatus = 'STATUS';
-  static final String resOtpId = 'OTPID';
+  static const String resStatus = 'STATUS';
+  static const String resOtpId = 'OTPID';
 
   static const String STATUS_SENT_EMAIL_MOBILE = '1';
   static const String STATUS_SENT_EMAIL = '2';
@@ -203,13 +203,13 @@ class SendOtp {
  * Sample output: {"STATUS":"1","OTPID":"185103"}
  * */
 class ResendOtp {
-  static final String path = 'api/requestSendOtp';
-  static final String fldEmail = 'email';
-  static final String fldMobile = 'mobile';
-  static final String fldOtpId = 'otpid';
+  static const String path = 'api/requestSendOtp';
+  static const String fldEmail = 'email';
+  static const String fldMobile = 'mobile';
+  static const String fldOtpId = 'otpid';
 
-  static final String resStatus = 'STATUS';
-  static final String resOtpId = 'OTPID';
+  static const String resStatus = 'STATUS';
+  static const String resOtpId = 'OTPID';
 
   static const String STATUS_SENT_EMAIL_MOBILE = '1';
   static const String STATUS_SENT_EMAIL = '2';
@@ -221,12 +221,12 @@ class ResendOtp {
  * Sample output: {"STATUS":"1","OTPID":"185103"}
  * */
 class VerifyOtp {
-  static final String path = 'api/verifyOtp';
-  static final String fldOtpId = 'otpid';
-  static final String fldOtp = 'otp';
+  static const String path = 'api/verifyOtp';
+  static const String fldOtpId = 'otpid';
+  static const String fldOtp = 'otp';
 
-  static final String resStatus = 'STATUS';
-  static final String resOtpId = 'OTPID';
+  static const String resStatus = 'STATUS';
+  static const String resOtpId = 'OTPID';
 
   static const String STATUS_OTP_VALID = '1';
   static const String STATUS_OTP_INVALID = '2';
@@ -244,17 +244,17 @@ class VerifyOtp {
     or [{"Return_Code":"237","Return_Msg":"Duplicate transaction - Folio_No: (16042281) already created for this AMC Ref No.","Category":"F"}]
  * */
 class CreatePortfolio {
-  static final String path = 'api/createPortfolio';
-  static final String fldId = 'appid';
-  static final String fldOtpId = 'otpid';
+  static const String path = 'api/createPortfolio';
+  static const String fldId = 'appid';
+  static const String fldOtpId = 'otpid';
 
-  static final String resReturnCode = "Return_Code";
-  static final String resRetMessage = "Return_Msg";
-  static final String resFolioNo = "Folio_No";
-  static final String resExpiryDate = "Exp_Date";
-  static final String resAMCRefNo = "AMC_Ref_No";
-  static final String resPayoutId = "Payout_ID";
-  static final String resChkDigit = "Chk_Digit_No";
+  static const String resReturnCode = "Return_Code";
+  static const String resRetMessage = "Return_Msg";
+  static const String resFolioNo = "Folio_No";
+  static const String resExpiryDate = "Exp_Date";
+  static const String resAMCRefNo = "AMC_Ref_No";
+  static const String resPayoutId = "Payout_ID";
+  static const String resChkDigit = "Chk_Digit_No";
 
   static const String STATUS_PORTFOLIO_CREATED = '0';
 
@@ -279,22 +279,22 @@ class CreatePortfolio {
  * */
 class SubmitUpiNewInvestor {
   //static final String path = 'api/submitUpiPurchase';
-  static final String path = 'api/submitIBankUpiPurchase';
-  static final String fldId = 'appid';
-  static final String fldEmail = 'email';
-  static final String fldBankCode = 'bankcode';
-  static final String fldPan = 'firstpan';
-  static final String fldFolioNo = 'foliono';
-  static final String fldKycMode = 'kycmode';
-  static final String fldAmount = 'amount';
-  static final String fldVPA = 'vpa';
+  static const String path = 'api/submitIBankUpiPurchase';
+  static const String fldId = 'appid';
+  static const String fldEmail = 'email';
+  static const String fldBankCode = 'bankcode';
+  static const String fldPan = 'firstpan';
+  static const String fldFolioNo = 'foliono';
+  static const String fldKycMode = 'kycmode';
+  static const String fldAmount = 'amount';
+  static const String fldVPA = 'vpa';
 
-  static final String resTrnId = "TRANID";
-  static final String resTrnDate = "TRXN_DATE";
-  static final String resUpiTime = 'UPI_DATE_TIME';
-  static final String resMultipleId = "MULTIPLE_ID";
-  static final String resAmount = "AMOUNT";
-  static final String resMsg = 'MSG';
+  static const String resTrnId = "TRANID";
+  static const String resTrnDate = "TRXN_DATE";
+  static const String resUpiTime = 'UPI_DATE_TIME';
+  static const String resMultipleId = "MULTIPLE_ID";
+  static const String resAmount = "AMOUNT";
+  static const String resMsg = 'MSG';
 }
 
 /**
@@ -305,20 +305,20 @@ class SubmitUpiNewInvestor {
  *  Please accept the request in your bank UPI App within 3 minutes to complete the transaction."}]
  * */
 class SubmitUpiExistingInvestor {
-  static final String path = 'api/submitIBankUpiPurchaseExt';
-  static final String fldFolioNo = 'foliono';
-  static final String fldChkDigit = 'chkdigit';
-  static final String fldAmount = 'amount';
-  static final String fldBankCode = 'bankcode';
-  static final String fldBankAccNo = 'bankaccno';
-  static final String fldPan = 'firstpan';
-  static final String fldVPA = 'vpa';
+  static const String path = 'api/submitIBankUpiPurchaseExt';
+  static const String fldFolioNo = 'foliono';
+  static const String fldChkDigit = 'chkdigit';
+  static const String fldAmount = 'amount';
+  static const String fldBankCode = 'bankcode';
+  static const String fldBankAccNo = 'bankaccno';
+  static const String fldPan = 'firstpan';
+  static const String fldVPA = 'vpa';
 
-  static final String resTrnId = "TRANID";
-  static final String resSessionId = "SESSION";
-  static final String resUpiTime = 'UPI_DATE_TIME';
-  static final String resMultipleId = "MULTIPLE_ID";
-  static final String resMsg = 'MSG';
+  static const String resTrnId = "TRANID";
+  static const String resSessionId = "SESSION";
+  static const String resUpiTime = 'UPI_DATE_TIME';
+  static const String resMultipleId = "MULTIPLE_ID";
+  static const String resMsg = 'MSG';
 }
 
 /**
@@ -326,12 +326,12 @@ class SubmitUpiExistingInvestor {
  * [{"STATUS":"","ERR_DESCRIPTION":"Reference No does not exist"}]
  * */
 class GetPaidStatus {
-  static final String path = 'api/getPaidStatus';
-  static final String fldTranId = 'tranid';
-  static final String fldPan = 'firstpan';
+  static const String path = 'api/getPaidStatus';
+  static const String fldTranId = 'tranid';
+  static const String fldPan = 'firstpan';
 
-  static final String resStatus = 'STATUS';
-  static final String resErrorDesc = 'ERR_DESCRIPTION';
+  static const String resStatus = 'STATUS';
+  static const String resErrorDesc = 'ERR_DESCRIPTION';
 
   static const String STATUS_SUCCESS = '1';
   static const String STATUS_INCOMPLETE = '0';
@@ -348,11 +348,11 @@ class GetPaidStatus {
  *
  */
 class CheckFolioBalance {
-  static final String path = 'api/checkIMPSAllowed';
-  static final String fldFolioNo = 'foliono';
+  static const String path = 'api/checkIMPSAllowed';
+  static const String fldFolioNo = 'foliono';
 
-  static final String resInstantBalance = "REDEEMABLEAMOUNT";
-  static final String resTotalBalance = "TAMOUNT";
+  static const String resInstantBalance = "REDEEMABLEAMOUNT";
+  static const String resTotalBalance = "TAMOUNT";
 }
 
 // ignore: slash_for_doc_comments
@@ -378,15 +378,15 @@ class CheckFolioBalance {
     "TAMOUNT":31933.3483168,"SESSIONID":"FL1670",":B2":"Y",":B1":"N"}]
  * */
 class CheckIMPSStatus {
-  static final String path = 'api/checkIMPSAllowed';
-  static final String fldFolioNo = 'foliono';
-  static final String fldAmount = 'amount';
+  static const String path = 'api/checkIMPSAllowed';
+  static const String fldFolioNo = 'foliono';
+  static const String fldAmount = 'amount';
 
-  static final String resReturnCode = "RETURNCODE";
-  static final String resReturnMsg = "MESSAGE";
-  static final String resAllowIMPSFlag = "ALLOWIMPS";
-  static final String resInstantBalance = "REDEEMABLEAMOUNT";
-  static final String resTotalBalance = "TAMOUNT";
+  static const String resReturnCode = "RETURNCODE";
+  static const String resReturnMsg = "MESSAGE";
+  static const String resAllowIMPSFlag = "ALLOWIMPS";
+  static const String resInstantBalance = "REDEEMABLEAMOUNT";
+  static const String resTotalBalance = "TAMOUNT";
 
   static const String STATUS_ALLOWED = "000";
   static const String STATUS_LESS_THAN_MIN_ALLOWED = "101";
@@ -403,12 +403,12 @@ class CheckIMPSStatus {
  * {"ApproxLoadAmt": "0.00","PopUpFlag": "N"}
  * */
 class GetExitLoad {
-  static final String path = 'api/getExitLoad';
-  static final String fldFolioNo = 'foliono';
-  static final String fldAmount = 'amount';
+  static const String path = 'api/getExitLoad';
+  static const String fldFolioNo = 'foliono';
+  static const String fldAmount = 'amount';
 
-  static final String resApproxLoadAmt = 'ApproxLoadAmt';
-  static final String resPopUpFlag = 'PopUpFlag';
+  static const String resApproxLoadAmt = 'ApproxLoadAmt';
+  static const String resPopUpFlag = 'PopUpFlag';
 
   static const String SHOW_POPUP = 'Y';
   static const String DONT_SHOW_POPUP = 'N';
@@ -435,12 +435,12 @@ class GetExitLoad {
     Ltd#159986643444#SB#DWARKA NEW DELHI##NEFT"}]
  * */
 class GetBankRedemptionDetail {
-  static final String path = 'api/getRedeemBankDetails';
-  static final String fldFolioNo = 'foliono';
+  static const String path = 'api/getRedeemBankDetails';
+  static const String fldFolioNo = 'foliono';
 
-  static final String resBankName = "BANK_NAME";
-  static final String resCombinedAccountDetails = "BANK_DETAILS";
-  static final String resCombinedBankDetails = "REDEEM_BANK_DETAILS";
+  static const String resBankName = "BANK_NAME";
+  static const String resCombinedAccountDetails = "BANK_DETAILS";
+  static const String resCombinedBankDetails = "REDEEM_BANK_DETAILS";
 
   static String getBankAccNo(String rawStr) => rawStr.split('#')[0];
   static String getBankIfsc(String rawStr) => rawStr.split('#')[1];
@@ -461,67 +461,67 @@ class GetBankRedemptionDetail {
     PM","BANK_RRN":"104220778133","IMPS_CODE":"0","IMPS_STATUS":"Transaction Successful"}
  * */
 class SubmitRedemption {
-  static final String path = 'api/submitRedemption';
-  static final String fldFolioNo = 'foliono';
-  static final String fldAmount = 'amount';
-  static final String fldBankCode = 'bankcode';
-  static final String fldMobile = 'mobile'; //'919986643444' format
-  static final String fldBankName = 'bankname';
-  static final String fldAccNo = 'accno';
-  static final String fldAccType = 'acctype';
-  static final String fldBankBranch = 'bankbranch';
-  static final String fldBankCity = 'bankcity';
-  static final String fldRedeemMode = 'redeemmode';
-  static final String fldIfsc = 'ifsc';
-  static final String fldExitLoadTick = 'exitloadtick';
-  static final String fldApproxLoadAmount = 'approxloadamt';
+  static const String path = 'api/submitRedemption';
+  static const String fldFolioNo = 'foliono';
+  static const String fldAmount = 'amount';
+  static const String fldBankCode = 'bankcode';
+  static const String fldMobile = 'mobile'; //'919986643444' format
+  static const String fldBankName = 'bankname';
+  static const String fldAccNo = 'accno';
+  static const String fldAccType = 'acctype';
+  static const String fldBankBranch = 'bankbranch';
+  static const String fldBankCity = 'bankcity';
+  static const String fldRedeemMode = 'redeemmode';
+  static const String fldIfsc = 'ifsc';
+  static const String fldExitLoadTick = 'exitloadtick';
+  static const String fldApproxLoadAmount = 'approxloadamt';
 
-  static final String resTranId = 'TRANID';
-  static final String resTrnTime = 'TRXN_TIME';
-  static final String resBankRnn = 'BANK_RNN';
-  static final String resIMPSCode = 'IMPS_CODE';
-  static final String resIMPSStatus = 'IMPS_STATUS';
+  static const String resTranId = 'TRANID';
+  static const String resTrnTime = 'TRXN_TIME';
+  static const String resBankRnn = 'BANK_RNN';
+  static const String resIMPSCode = 'IMPS_CODE';
+  static const String resIMPSStatus = 'IMPS_STATUS';
 
   static const String IMPS_TRANSACTION_SUCCESS = '0';
 }
 
 class SubmitRedemptionNonInstant {
-  static final String path = 'api/submitRedemptionNonInstant';
-  static final String fldFolioNo = 'foliono';
-  static final String fldPan = 'firstpan';
-  static final String fldAmount = 'amount';
-  static final String fldBankCode = 'bankcode';
-  static final String fldBankName = 'bankname';
-  static final String fldAccNo = 'accno';
-  static final String fldAccType = 'acctype';
-  static final String fldBankBranch = 'bankbranch';
-  static final String fldBankCity = 'bankcity';
-  static final String fldRedeemMode = 'redeemmode';
-  static final String fldIfsc = 'ifsc';
+  static const String path = 'api/submitRedemptionNonInstant';
+  static const String fldFolioNo = 'foliono';
+  static const String fldPan = 'firstpan';
+  static const String fldAmount = 'amount';
+  static const String fldBankCode = 'bankcode';
+  static const String fldBankName = 'bankname';
+  static const String fldAccNo = 'accno';
+  static const String fldAccType = 'acctype';
+  static const String fldBankBranch = 'bankbranch';
+  static const String fldBankCity = 'bankcity';
+  static const String fldRedeemMode = 'redeemmode';
+  static const String fldIfsc = 'ifsc';
 
-  static final String resTranId = 'TRANID';
-  static final String resTrnTime = 'TRXN_TIME';
-  static final String resBankRnn = 'BANK_RNN';
-  static final String resIMPSCode = 'IMPS_CODE';
-  static final String resIMPSStatus = 'IMPS_STATUS';
+  static const String resTranId = 'TRANID';
+  static const String resTrnTime = 'TRXN_TIME';
+  static const String resBankRnn = 'BANK_RNN';
+  static const String resIMPSCode = 'IMPS_CODE';
+  static const String resIMPSStatus = 'IMPS_STATUS';
 
   static const String IMPS_TRANSACTION_SUCCESS = '0';
 }
 
 class SendRedemptionOtp {
-  static final String path = 'api/sendRedemptionOtp';
-  static final String fldFolioNo = 'foliono';
-  static final String fldTranId = 'tranid';
+  static const String path = 'api/sendRedemptionOtp';
+  static const String fldFolioNo = 'foliono';
+  static const String fldTranId = 'tranid';
 
-  static final String resOtpId = 'OTP_ID';
+  static const String resOtpId = 'OTP_ID';
 }
 
 class VerifyRedemptionOtp {
-  static final String path = 'api/verifyRedemptionOtp';
-  static final String fldFolioNo = 'foliono';
-  static final String fldTranId = 'tranid';
-  static final String fldOtpId = 'otpid';
-  static final String fldOtp = 'otp';
+  static const String path = 'api/verifyRedemptionOtp';
+  static const String fldFolioNo = 'foliono';
+  static const String fldTranId = 'tranid';
+  static const String fldOtpId = 'otpid';
+  static const String fldOtp = 'otp';
 
-  static final String resStatus = 'STATUS';
+  static const String resStatus = 'STATUS';
 }

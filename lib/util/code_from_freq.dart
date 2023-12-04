@@ -7,14 +7,14 @@ class CodeFromFreq {
   ) {
     final DateTime _currentTime =
         (freq == 'weekly') ? getCorrectedMondayDate() : DateTime.now();
-    final monthlyFormat = new DateFormat('yyyy-MM');
+    final monthlyFormat = DateFormat('yyyy-MM');
     String response = monthlyFormat.format(_currentTime);
 
     if (freq == 'weekly' || freq == 'daily') {
       int weekcode = BaseUtil.getWeekNumber(currentDate: _currentTime);
       response += "-$weekcode";
       if (freq == 'daily') {
-        final dailyFormat = new DateFormat('dd');
+        final dailyFormat = DateFormat('dd');
         response += "-${dailyFormat.format(DateTime.now())}";
       }
     }
@@ -58,11 +58,11 @@ class CodeFromFreq {
   }
 
   static getPastDayCode() {
-    DateTime _currentTime = DateTime.now().subtract(Duration(days: 1));
+    DateTime _currentTime = DateTime.now().subtract(const Duration(days: 1));
 
-    final yearFormat = new DateFormat('yyyy');
-    final monthFormat = new DateFormat('MM');
-    final dayFormat = new DateFormat('dd');
+    final yearFormat = DateFormat('yyyy');
+    final monthFormat = DateFormat('MM');
+    final dayFormat = DateFormat('dd');
 
     int weekcode = BaseUtil.getWeekNumber(currentDate: _currentTime);
 
@@ -71,10 +71,10 @@ class CodeFromFreq {
 
   static getPastWeekCode() {
     DateTime _currentTime =
-        getCorrectedMondayDate().subtract(Duration(days: 7));
+        getCorrectedMondayDate().subtract(const Duration(days: 7));
 
-    final yearFormat = new DateFormat('yyyy');
-    final monthFormat = new DateFormat('MM');
+    final yearFormat = DateFormat('yyyy');
+    final monthFormat = DateFormat('MM');
     int weekcode = BaseUtil.getWeekNumber(currentDate: _currentTime);
 
     return "${yearFormat.format(_currentTime)}-${monthFormat.format(_currentTime)}-$weekcode";
@@ -121,7 +121,8 @@ class CodeFromFreq {
     return DateFormat.yMMM().format(dateTime);
   }
 
-  static DateTime getDateByWeekNumber({required int weeknumber, required int year, required bool start}) {
+  static DateTime getDateByWeekNumber(
+      {required int weeknumber, required int year, required bool start}) {
     //check if start == true retrun start date of week
     //else return end date
     var days = weeknumber * 7;
@@ -131,7 +132,8 @@ class CodeFromFreq {
       tempDate = DateTime(
           tempDate.year, tempDate.month, tempDate.day - (tempDate.weekday - 1));
     }
-    final correctedDate = start ? tempDate : tempDate.add(Duration(days: 6));
+    final correctedDate =
+        start ? tempDate : tempDate.add(const Duration(days: 6));
     return correctedDate;
   }
 }

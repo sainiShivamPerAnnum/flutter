@@ -54,8 +54,7 @@ class LastWeekData {
         cta: json["cta"] == null ? null : Cta.fromJson(json["cta"]),
       );
 
-  Map<String, dynamic> toJson() =>
-      {
+  Map<String, dynamic> toJson() => {
         "main": main?.toJson(),
         "user": user,
         "misc": misc == null

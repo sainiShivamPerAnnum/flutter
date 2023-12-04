@@ -30,7 +30,7 @@ class BlockedUserView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    S locale = S.of(context)!;
+    S locale = S.of(context);
     return Scaffold(
       resizeToAvoidBottomInset: false,
       backgroundColor: Colors.transparent,

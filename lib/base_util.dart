@@ -4,7 +4,7 @@ import 'dart:async';
 import 'dart:developer' as d;
 import 'dart:math';
 
-import 'package:another_flushbar/flushbar.dart'; //Pub Imports
+//Pub Imports
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
@@ -24,8 +24,6 @@ import 'package:felloapp/core/model/user_augmont_details_model.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
 import 'package:felloapp/core/model/user_icici_detail_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
-import 'package:felloapp/core/ops/db_ops.dart';
-import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/analytics/base_analytics.dart';
@@ -76,16 +74,13 @@ enum FileType { svg, lottie, unknown, png }
 
 class BaseUtil extends ChangeNotifier {
   final CustomLogger logger = locator<CustomLogger>();
-  final DBModel _dbModel = locator<DBModel>();
 
   // final LocalDBModel? _lModel = locator<LocalDBModel>();
   final AppState _appState = locator<AppState>();
   final UserService _userService = locator<UserService>();
-  final UserRepository _userRepo = locator<UserRepository>();
   final InternalOpsService _internalOpsService = locator<InternalOpsService>();
   final AnalyticsService _analyticsService = locator<AnalyticsService>();
   S locale = locator<S>();
-  static Flushbar? flushbar;
   BaseUser? _myUser;
   UserFundWallet? _userFundWallet;
   int? _ticketCount;
@@ -319,7 +314,7 @@ class BaseUtil extends ChangeNotifier {
     int? amt,
     bool? isSkipMl,
     double? gms,
-    Map<String, String>? queryParams,
+    Map<String, dynamic>? queryParams,
     String? entryPoint,
   }) {
     final coupon = queryParams?['coupon'];
@@ -329,6 +324,9 @@ class BaseUtil extends ChangeNotifier {
     final grams = queryParams?['grams'];
     final parsedGrams =
         double.tryParse(grams ?? ''); // For parsing default value to null.
+    final quickCheckout =
+        // ignore: sdk_version_since
+        bool.parse(queryParams?['shouldQuickCheckout'] ?? 'false');
 
     final bool? isAugDepositBanned = _userService
         .userBootUp?.data!.banMap?.investments?.deposit?.augmont?.isBanned;
@@ -374,6 +372,7 @@ class BaseUtil extends ChangeNotifier {
           gms: parsedGrams ?? gms,
           skipMl: isSkipMl ?? false,
           entryPoint: entryPoint,
+          quickCheckout: quickCheckout,
         ),
       );
     }
@@ -382,7 +381,7 @@ class BaseUtil extends ChangeNotifier {
   static void openFloBuySheet({
     required String floAssetType,
     int? amt,
-    Map<String, String>? queryParams,
+    Map<String, dynamic>? queryParams,
     bool? isSkipMl,
     String? entryPoint,
   }) {
@@ -390,6 +389,9 @@ class BaseUtil extends ChangeNotifier {
     final amount = queryParams?['amount'];
     final parsedAmount =
         int.tryParse(amount ?? ''); // For parsing default value to null.
+    final quickCheckout =
+        // ignore: sdk_version_since
+        bool.parse(queryParams?['shouldQuickCheckout'] ?? 'false');
 
     final userService = locator<UserService>();
     final locale = locator<S>();
@@ -455,6 +457,7 @@ class BaseUtil extends ChangeNotifier {
         onChanged: (p0) => p0,
         floAssetType: floAssetType,
         entryPoint: entryPoint,
+        quickCheckout: quickCheckout,
       ),
     );
   }
@@ -890,17 +893,14 @@ class BaseUtil extends ChangeNotifier {
   }
 
   static dynamic getIntOrDouble(double x) {
-    if (x - x.round() != 0) {
-      return x;
-    } else {
-      return x.toInt();
-    }
+    return x - x.round() != 0 ? x : x.toInt();
   }
 
   static double digitPrecision(double x, [int offset = 2, bool round = true]) {
-    double y = x * pow(10, offset);
+    final precision = pow(10, offset);
+    double y = x * precision;
     int z = round ? y.round() : y.truncate();
-    return z / pow(10, offset);
+    return z / precision;
   }
 
   static String formatIndianRupees(double value) {
@@ -933,7 +933,7 @@ class BaseUtil extends ChangeNotifier {
 
     /// Get the last week number when the app was opened
     final lastWeekNumber =
-        PreferenceHelper.getInt(PreferenceHelper.LAST_WEEK_NUMBER) ?? 0;
+        PreferenceHelper.getInt(PreferenceHelper.LAST_WEEK_NUMBER);
 
     /// Update the last week number in preferences
     await PreferenceHelper.setInt(

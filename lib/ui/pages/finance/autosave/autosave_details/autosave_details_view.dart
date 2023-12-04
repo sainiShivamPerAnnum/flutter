@@ -57,7 +57,7 @@ class AutosaveDetailsView extends StatelessWidget {
             backgroundColor: UiConstants.kBackgroundColor,
             elevation: 0.0,
             leading: IconButton(
-              icon: Icon(
+              icon: const Icon(
                 Icons.arrow_back_ios,
                 color: UiConstants.kTextColor,
               ),
@@ -68,7 +68,7 @@ class AutosaveDetailsView extends StatelessWidget {
           ),
           backgroundColor: UiConstants.kBackgroundColor,
           body: model.state == ViewState.Busy
-              ? Center(
+              ? const Center(
                   child: FullScreenLoader(),
                 )
               : Stack(
@@ -89,7 +89,8 @@ class AutosaveDetailsView extends StatelessWidget {
                                   indent: SizeConfig.padding32,
                                   endIndent: SizeConfig.padding32,
                                   height: SizeConfig.border1,
-                                  color: Color(0xFF999999).withOpacity(0.4),
+                                  color:
+                                      const Color(0xFF999999).withOpacity(0.4),
                                 ),
                                 Padding(
                                   padding: EdgeInsets.only(
@@ -103,7 +104,7 @@ class AutosaveDetailsView extends StatelessWidget {
                                         "Autosave Transactions",
                                         style: TextStyles.rajdhaniSB.title4,
                                       ),
-                                      Spacer(),
+                                      const Spacer(),
                                       if (!model.isFetchingTransactions &&
                                           (((model.currentPage == 0) &&
                                                   (model.augTxnList?.length ??
@@ -186,7 +187,7 @@ class AutosaveDetailsView extends StatelessWidget {
                                                               .txnPageController!
                                                               .animateToPage(0,
                                                                   duration:
-                                                                      Duration(
+                                                                      const Duration(
                                                                           seconds:
                                                                               1),
                                                                   curve: Curves
@@ -219,7 +220,7 @@ class AutosaveDetailsView extends StatelessWidget {
                                                               .txnPageController!
                                                               .animateToPage(1,
                                                                   duration:
-                                                                      Duration(
+                                                                      const Duration(
                                                                           seconds:
                                                                               1),
                                                                   curve: Curves
@@ -245,8 +246,8 @@ class AutosaveDetailsView extends StatelessWidget {
                                             Row(
                                               children: [
                                                 AnimatedContainer(
-                                                  duration:
-                                                      Duration(seconds: 1),
+                                                  duration: const Duration(
+                                                      seconds: 1),
                                                   height: 4,
                                                   width: ((SizeConfig
                                                                   .screenWidth! -
@@ -289,10 +290,10 @@ class AutosaveDetailsView extends StatelessWidget {
                                                               locale.txnsEmpty,
                                                         ))
                                                       : Container(
-                                                          color:
-                                                              Color(0xFF595F5F)
-                                                                  .withOpacity(
-                                                                      0.14),
+                                                          color: const Color(
+                                                                  0xFF595F5F)
+                                                              .withOpacity(
+                                                                  0.14),
                                                           padding: EdgeInsets
                                                               .symmetric(
                                                             horizontal:
@@ -311,7 +312,7 @@ class AutosaveDetailsView extends StatelessWidget {
                                                                     .length,
                                                             shrinkWrap: true,
                                                             physics:
-                                                                NeverScrollableScrollPhysics(),
+                                                                const NeverScrollableScrollPhysics(),
                                                             itemBuilder:
                                                                 (context,
                                                                     index) {
@@ -341,10 +342,10 @@ class AutosaveDetailsView extends StatelessWidget {
                                                               locale.txnsEmpty,
                                                         ))
                                                       : Container(
-                                                          color:
-                                                              Color(0xFF595F5F)
-                                                                  .withOpacity(
-                                                                      0.14),
+                                                          color: const Color(
+                                                                  0xFF595F5F)
+                                                              .withOpacity(
+                                                                  0.14),
                                                           padding: EdgeInsets
                                                               .symmetric(
                                                             horizontal:
@@ -363,7 +364,7 @@ class AutosaveDetailsView extends StatelessWidget {
                                                                     ?.length,
                                                             shrinkWrap: true,
                                                             physics:
-                                                                NeverScrollableScrollPhysics(),
+                                                                const NeverScrollableScrollPhysics(),
                                                             itemBuilder:
                                                                 (context,
                                                                     index) {
@@ -409,7 +410,7 @@ class AutosaveDetailsView extends StatelessWidget {
                                 ],
                                 begin: Alignment.topCenter,
                                 end: Alignment.bottomCenter,
-                                stops: [
+                                stops: const [
                                   0.02,
                                   0.8,
                                   1.0,
@@ -563,23 +564,23 @@ class AutosaveAssetDetailTile extends StatelessWidget {
 
 class SubTxnTile extends StatelessWidget {
   SubTxnTile({
-    Key? key,
     required this.txn,
     required this.isLast,
     required this.type,
+    Key? key,
   }) : super(key: key);
   final bool isLast;
   final SubscriptionTransactionModel txn;
-  final TxnHistoryService? _txnHistoryService = locator<TxnHistoryService>();
+  final TxnHistoryService _txnHistoryService = locator<TxnHistoryService>();
   final String type;
 
   String get getFormattedDate =>
       DateFormat('dd MMM, yyyy').format(DateTime.fromMillisecondsSinceEpoch(
-          txn.createdOn!.millisecondsSinceEpoch));
+          txn.createdOn.millisecondsSinceEpoch));
 
   String get formattedTime =>
       DateFormat('hh:mm a').format(DateTime.fromMillisecondsSinceEpoch(
-          txn.createdOn!.millisecondsSinceEpoch));
+          txn.createdOn.millisecondsSinceEpoch));
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -621,7 +622,7 @@ class SubTxnTile extends StatelessWidget {
                     height: SizeConfig.padding10,
                   ),
                   Text(
-                    txn.status!,
+                    txn.status,
                     style: TextStyles.sourceSansM.body3.colour(
                       _txnHistoryService!.getTileColor(txn.status),
                     ),
@@ -644,7 +645,7 @@ class SubTxnTile extends StatelessWidget {
 class AutoSaveDetailsCard extends StatelessWidget {
   final AutosaveDetailsViewModel model;
 
-  const AutoSaveDetailsCard({super.key, required this.model});
+  const AutoSaveDetailsCard({required this.model, super.key});
 
   @override
   Widget build(BuildContext context) {
@@ -742,25 +743,27 @@ class AutoSaveDetailsCard extends StatelessWidget {
   }
 
   getRichTextColor(AutosaveState autosaveState, SubscriptionModel subdata) {
-    if (autosaveState == AutosaveState.ACTIVE)
+    if (autosaveState == AutosaveState.ACTIVE) {
       return UiConstants.primaryColor;
-    else if (autosaveState == AutosaveState.PAUSED) {
-      if (subdata.resumeDate != TimestampModel.none())
+    } else if (autosaveState == AutosaveState.PAUSED) {
+      if (subdata.resumeDate != TimestampModel.none()) {
         return UiConstants.tertiarySolid;
-      else
+      } else {
         return Colors.red;
+      }
     }
   }
 
   getRichText(AutosaveState autosaveState, SubscriptionModel subdata) {
-    if (autosaveState == AutosaveState.ACTIVE)
+    if (autosaveState == AutosaveState.ACTIVE) {
       return "verified and active";
-    else if (autosaveState == AutosaveState.PAUSED) {
-      if (subdata.resumeDate != TimestampModel.none())
+    } else if (autosaveState == AutosaveState.PAUSED) {
+      if (subdata.resumeDate != TimestampModel.none()) {
         return "verified and paused till " +
             "${DateFormat.MMMEd().format(subdata.resumeDate!.toDate())} ";
-      else
+      } else {
         return "currently inactive";
+      }
     }
   }
 }

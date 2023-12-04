@@ -177,7 +177,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "bankHolderName":
             MessageLookupByLibrary.simpleMessage("Bank Holder\'s Name"),
         "bankIFSC": MessageLookupByLibrary.simpleMessage("Bank IFSC Code"),
-        "best": MessageLookupByLibrary.simpleMessage("BEST"),
+        "best": MessageLookupByLibrary.simpleMessage("Best"),
         "bestPoints": MessageLookupByLibrary.simpleMessage("Best :"),
         "betterLuckNextTime":
             MessageLookupByLibrary.simpleMessage("Better Luck Next Time"),
@@ -394,8 +394,6 @@ class MessageLookup extends MessageLookupByLibrary {
         "feedBackGreeting2":
             MessageLookupByLibrary.simpleMessage("We hope to serve you better"),
         "feildsEmpty": MessageLookupByLibrary.simpleMessage("Empty fields"),
-        "feildsMismatch":
-            MessageLookupByLibrary.simpleMessage("Fields mismatch"),
         "felloAutoSave": MessageLookupByLibrary.simpleMessage("Fello Autosave"),
         "felloFloEarnTxt":
             MessageLookupByLibrary.simpleMessage("Enjoy stable returns of 10%"),
@@ -411,6 +409,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "felloTokens": MessageLookupByLibrary.simpleMessage("Fello Tokens"),
         "fetchWinners":
             MessageLookupByLibrary.simpleMessage("Fetching last week winners."),
+        "fieldsMismatch":
+            MessageLookupByLibrary.simpleMessage("Fields mismatch"),
         "fiftyFelloTokens":
             MessageLookupByLibrary.simpleMessage("50 Fello\nTokens"),
         "fillAllFeilds":
@@ -1247,7 +1247,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "txnWithDrawalSuccess": MessageLookupByLibrary.simpleMessage(
             "Your withdrawal was successfully processed"),
         "txnWithdrawAccountText": MessageLookupByLibrary.simpleMessage(
-            "This account will be used for crediting your \n withdrawals"),
+            "This account will be used for netbanking\npayments and crediting withdrawals"),
         "txnWithdrawablebalance":
             MessageLookupByLibrary.simpleMessage("Withdrawable Balance"),
         "txns": MessageLookupByLibrary.simpleMessage("Transactions"),

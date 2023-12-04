@@ -1,10 +1,15 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/faqTypes.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
+import 'package:felloapp/core/model/bank_account_details_model.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/appbar/appbar.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
+import 'package:felloapp/ui/pages/static/web_view.dart';
 import 'package:felloapp/ui/pages/userProfile/bank_details/bank_details_vm.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -17,13 +22,30 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'bank_details_help.dart';
 
 class BankDetailsView extends StatelessWidget {
-  const BankDetailsView({super.key});
+  final bool _withNetBankingValidation;
+
+  const BankDetailsView({
+    super.key,
+    bool? validation,
+  }) : _withNetBankingValidation = validation ?? false;
+
+  void _showSupportedBanks() {
+    AppState.delegate!.appState.currentAction = PageAction(
+      page: WebViewPageConfig,
+      state: PageState.addWidget,
+      widget: const WebViewScreen(
+        url: 'https://fello.in/policy/netbanking',
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
     return BaseView<BankDetailsViewModel>(
-      onModelReady: (model) => model.init(),
+      onModelReady: (model) => model.init(
+        withNetbankingValidation: _withNetBankingValidation,
+      ),
       builder: (ctx, model, chlid) => model.inEditMode &&
               model.showBankDetailsHelpView
           ? BankDetailsHelpView(
@@ -162,9 +184,24 @@ class BankDetailsView extends StatelessWidget {
                                       return null;
                                     },
                                   ),
-                                  SizedBox(
-                                    height: SizeConfig.screenHeight! / 2,
-                                  )
+                                  if (_withNetBankingValidation)
+                                    Padding(
+                                      padding: EdgeInsets.only(
+                                        top: SizeConfig.padding12,
+                                      ),
+                                      child: InkWell(
+                                        onTap: _showSupportedBanks,
+                                        child: Text(
+                                          'List of supported Banks for Net Banking',
+                                          style: TextStyles.sourceSans.body4
+                                              .copyWith(
+                                            color: UiConstants.grey1,
+                                            decoration:
+                                                TextDecoration.underline,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
                                 ],
                               ),
                             ),
@@ -210,7 +247,8 @@ class BankDetailsView extends StatelessWidget {
                                 width: SizeConfig.navBarWidth,
                                 child: model.inEditMode
                                     ? ReactivePositiveAppButton(
-                                        btnText: model.activeBankDetails != null
+                                        btnText: model.activeBankDetails!
+                                                .isDetailsAreValid
                                             ? locale.btnUpdate
                                             : locale.btnAdd,
                                         onPressed: () async {

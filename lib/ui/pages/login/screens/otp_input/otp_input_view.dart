@@ -58,7 +58,7 @@ class LoginOtpViewState extends State<LoginOtpView> {
         return ListView(
           shrinkWrap: true,
           children: [
-            LoginImage(),
+            const LoginImage(),
             SizedBox(height: SizeConfig.padding8),
             Align(
               alignment: Alignment.center,

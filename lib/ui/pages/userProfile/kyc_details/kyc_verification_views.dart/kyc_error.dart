@@ -6,7 +6,7 @@ import 'package:flutter/material.dart';
 class NoKycView extends StatelessWidget {
   final KYCDetailsViewModel model;
 
-  const NoKycView({Key? key, required this.model}) : super(key: key);
+  const NoKycView({required this.model, Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
@@ -20,7 +20,7 @@ class NoKycView extends StatelessWidget {
           onPressed: () {
             model.init();
           },
-          icon: Icon(
+          icon: const Icon(
             Icons.rotate_left,
             color: Colors.amber,
           ),

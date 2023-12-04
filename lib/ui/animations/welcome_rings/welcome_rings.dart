@@ -73,7 +73,7 @@ class _CircularAnimState extends State<CircularAnim>
   void animate() {
     Future.delayed(
       const Duration(milliseconds: 200),
-          () {
+      () {
         _controller.reset();
         scaleFactor = 1;
         _controller.forward();
@@ -153,7 +153,7 @@ class _CircularAnimState extends State<CircularAnim>
 }
 
 class Ring extends AnimatedWidget {
-  const Ring({Key? key, required this.ringAnimation, this.widthFactor})
+  const Ring({required this.ringAnimation, Key? key, this.widthFactor})
       : super(key: key, listenable: ringAnimation);
   final Animation<double> ringAnimation;
   final int? widthFactor;
@@ -185,7 +185,7 @@ class Ring extends AnimatedWidget {
 }
 
 class Hole extends AnimatedWidget {
-  const Hole({Key? key, required this.holeAnimation})
+  const Hole({required this.holeAnimation, Key? key})
       : super(key: key, listenable: holeAnimation);
 
   final Animation<double> holeAnimation;

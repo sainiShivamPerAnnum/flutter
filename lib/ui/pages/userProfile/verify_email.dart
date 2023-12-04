@@ -48,21 +48,21 @@ class VerifyEmailState extends State<VerifyEmail> {
   late BaseUtil baseProvider;
   late DBModel dbProvider;
   String? generatedOTP;
-  bool _isContinueWithGoogle = false;
+  final bool _isContinueWithGoogle = false;
 
   //bool baseProvider.isGoogleSignInProgress = false;
   FocusNode? focusNode;
   bool _isOtpSent = false;
   bool _isProcessing = false;
   bool _isVerifying = false;
-  bool _isEmailEnabled = false;
-  bool _isSessionExpired = false;
+  final bool _isEmailEnabled = false;
+  final bool _isSessionExpired = false;
   bool _isOtpIncorrect = false;
 
   @override
   void initState() {
-    email = TextEditingController(text: _userService!.baseUser!.email ?? '');
-    WidgetsBinding.instance?.addPostFrameCallback((timeStamp) {
+    email = TextEditingController(text: _userService.baseUser!.email ?? '');
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
       baseProvider.isGoogleSignInProgress = false;
       focusNode = FocusNode();
       focusNode!.requestFocus();
@@ -92,7 +92,7 @@ class VerifyEmailState extends State<VerifyEmail> {
           onEmailSignIn: () {
             baseProvider.isGoogleSignInProgress = false;
             // _isContinueWithGoogle = false;
-            email.text = _userService!.baseUser!.email!;
+            email.text = _userService.baseUser!.email!;
             // _isEmailEnabled = true;
 
             Navigator.pop(context);
@@ -117,7 +117,7 @@ class VerifyEmailState extends State<VerifyEmail> {
 
   sendEmail() async {
     final isEmailRegistered =
-        await _userRepo!.isEmailRegistered(email.text.trim());
+        await _userRepo.isEmailRegistered(email.text.trim());
 
     if (isEmailRegistered.model!) {
       setState(() {
@@ -161,15 +161,15 @@ class VerifyEmailState extends State<VerifyEmail> {
       baseProvider.setEmail(email.text.trim());
       baseProvider.setEmailVerified();
 
-      _userService!.setEmail(email.text.trim());
-      _userService!.isEmailVerified = true;
-      _userService!.baseUser!.isEmailVerified = true;
+      _userService.setEmail(email.text.trim());
+      _userService.isEmailVerified = true;
+      _userService.baseUser!.isEmailVerified = true;
 
-      ApiResponse<bool> res = await _userRepo!.updateUser(
-        uid: _userService!.baseUser!.uid,
+      ApiResponse<bool> res = await _userRepo.updateUser(
+        uid: _userService.baseUser!.uid,
         dMap: {
-          BaseUser.fldEmail: _userService!.baseUser!.email,
-          BaseUser.fldIsEmailVerified: _userService!.baseUser!.isEmailVerified,
+          BaseUser.fldEmail: _userService.baseUser!.email,
+          BaseUser.fldIsEmailVerified: _userService.baseUser!.isEmailVerified,
         },
       );
 
@@ -177,7 +177,7 @@ class VerifyEmailState extends State<VerifyEmail> {
         _isVerifying = false;
       });
       if (res.model!) {
-        await _userService!.setBaseUser();
+        await _userService.setBaseUser();
         while (AppState.screenStack.length > 1) {
           AppState.backButtonDispatcher!.didPopRoute();
         }
@@ -209,26 +209,25 @@ class VerifyEmailState extends State<VerifyEmail> {
     final GoogleSignInAccount? googleUser = await _gSignIn.signIn();
     if (googleUser != null) {
       final isEmailRegistered =
-          await _userRepo!.isEmailRegistered(googleUser.email);
+          await _userRepo.isEmailRegistered(googleUser.email);
 
       if (!isEmailRegistered.model!) {
         email.text = googleUser.email;
-        _userService!.baseUser!.email = googleUser.email;
+        _userService.baseUser!.email = googleUser.email;
         baseProvider.setEmailVerified();
-        _userService!.isEmailVerified = true;
-        _userService!.baseUser!.isEmailVerified = true;
+        _userService.isEmailVerified = true;
+        _userService.baseUser!.isEmailVerified = true;
 
-        ApiResponse<bool> res = await _userRepo!.updateUser(
-          uid: _userService!.baseUser!.uid,
+        ApiResponse<bool> res = await _userRepo.updateUser(
+          uid: _userService.baseUser!.uid,
           dMap: {
-            BaseUser.fldEmail: _userService!.baseUser!.email,
-            BaseUser.fldIsEmailVerified:
-                _userService!.baseUser!.isEmailVerified,
+            BaseUser.fldEmail: _userService.baseUser!.email,
+            BaseUser.fldIsEmailVerified: _userService.baseUser!.isEmailVerified,
           },
         );
 
         if (res.model!) {
-          await _userService!.setBaseUser();
+          await _userService.setBaseUser();
           setState(() {
             baseProvider.isGoogleSignInProgress = false;
           });

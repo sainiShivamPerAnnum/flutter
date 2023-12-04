@@ -13,7 +13,7 @@ class UserWinningsSE extends StatelessWidget {
   Widget build(BuildContext context) {
     S? locale = S.of(context);
     return PropertyChangeConsumer<UserService, UserServiceProperties>(
-      properties: [
+      properties: const [
         UserServiceProperties.myUserFund,
         UserServiceProperties.myUserWallet
       ],

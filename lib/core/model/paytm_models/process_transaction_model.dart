@@ -12,8 +12,8 @@ class ProcessTransactionModel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    data['message'] = this.message;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['message'] = message;
     if (this.data != null) {
       data['data'] = this.data!.toJson();
     }
@@ -38,12 +38,12 @@ class Data {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    if (this.head != null) {
-      data['head'] = this.head!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    if (head != null) {
+      data['head'] = head!.toJson();
     }
-    if (this.body != null) {
-      data['body'] = this.body!.toJson();
+    if (body != null) {
+      data['body'] = body!.toJson();
     }
     return data;
   }
@@ -66,9 +66,9 @@ class Head {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    data['responseTimestamp'] = this.responseTimestamp;
-    data['version'] = this.version;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['responseTimestamp'] = responseTimestamp;
+    data['version'] = version;
     return data;
   }
 }
@@ -99,15 +99,15 @@ class Body {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    if (this.resultInfo != null) {
-      data['resultInfo'] = this.resultInfo!.toJson();
+    final Map<String, dynamic> data = <String, dynamic>{};
+    if (resultInfo != null) {
+      data['resultInfo'] = resultInfo!.toJson();
     }
-    if (this.deepLinkInfo != null) {
-      data['deepLinkInfo'] = this.deepLinkInfo!.toJson();
+    if (deepLinkInfo != null) {
+      data['deepLinkInfo'] = deepLinkInfo!.toJson();
     }
-    if (this.riskContent != null) {
-      data['riskContent'] = this.riskContent!.toJson();
+    if (riskContent != null) {
+      data['riskContent'] = riskContent!.toJson();
     }
     return data;
   }
@@ -132,10 +132,10 @@ class ResultInfo {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    data['resultStatus'] = this.resultStatus;
-    data['resultCode'] = this.resultCode;
-    data['resultMsg'] = this.resultMsg;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['resultStatus'] = resultStatus;
+    data['resultCode'] = resultCode;
+    data['resultMsg'] = resultMsg;
     return data;
   }
 }
@@ -163,11 +163,11 @@ class DeepLinkInfo {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    data['deepLink'] = this.deepLink;
-    data['orderId'] = this.orderId;
-    data['cashierRequestId'] = this.cashierRequestId;
-    data['transId'] = this.transId;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['deepLink'] = deepLink;
+    data['orderId'] = orderId;
+    data['cashierRequestId'] = cashierRequestId;
+    data['transId'] = transId;
     return data;
   }
 }
@@ -185,8 +185,8 @@ class RiskContent {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = Map<String, dynamic>();
-    data['eventLinkId'] = this.eventLinkId;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['eventLinkId'] = eventLinkId;
     return data;
   }
 }

@@ -155,8 +155,8 @@ enum ShimmerSizeEnum { mini, small, medium, large }
 
 class GoldShimmerWidget extends StatelessWidget {
   const GoldShimmerWidget(
-      {super.key,
-      required this.size,
+      {required this.size,
+      super.key,
       this.primary,
       this.secondary,
       this.tertiary});

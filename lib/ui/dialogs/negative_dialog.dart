@@ -8,11 +8,11 @@ import 'package:flutter/material.dart';
 
 class AppNegativeDialog extends StatelessWidget {
   const AppNegativeDialog({
-    Key? key,
     required this.btnText,
     required this.title,
-    this.subtitle,
     required this.btnAction,
+    Key? key,
+    this.subtitle,
   }) : super(key: key);
   final String? title, btnText, subtitle;
   final VoidCallback btnAction;
@@ -32,7 +32,7 @@ class AppNegativeDialog extends StatelessWidget {
 
   dialogContent(BuildContext context) {
     return Container(
-      decoration: new BoxDecoration(
+      decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(SizeConfig.cardBorderRadius),
         gradient: LinearGradient(
           begin: Alignment.topCenter,

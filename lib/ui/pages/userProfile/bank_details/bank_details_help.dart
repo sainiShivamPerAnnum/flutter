@@ -8,7 +8,7 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 
 class BankDetailsHelpView extends StatelessWidget {
-  const BankDetailsHelpView({super.key, required this.changeView});
+  const BankDetailsHelpView({required this.changeView, super.key});
   final VoidCallback changeView;
   @override
   Widget build(BuildContext context) {
@@ -55,9 +55,9 @@ class BankDetailsHelpView extends StatelessWidget {
               TextSpan(
                 style: TextStyles.rajdhani.body2,
                 children: [
-                  TextSpan(text: 'Name on your'),
+                  const TextSpan(text: 'Name on your'),
                   TextSpan(text: ' PAN card', style: TextStyles.body2.bold),
-                  TextSpan(text: ' should be the same as the name on'),
+                  const TextSpan(text: ' should be the same as the name on'),
                   TextSpan(text: ' Bank Account', style: TextStyles.body2.bold),
                 ],
               ),
@@ -79,7 +79,7 @@ class BankDetailsHelpView extends StatelessWidget {
             ),
             Center(
               child: Container(
-                  padding: EdgeInsets.all(8),
+                  padding: const EdgeInsets.all(8),
                   decoration: BoxDecoration(
                       border: Border.all(color: Colors.white),
                       borderRadius: BorderRadius.circular(16)),
@@ -88,7 +88,7 @@ class BankDetailsHelpView extends StatelessWidget {
                     height: SizeConfig.screenHeight! * 0.25,
                   )),
             ),
-            Spacer(),
+            const Spacer(),
             AppPositiveBtn(
               btnText: 'PROCEED TO Add Bank Details',
               onPressed: () {

@@ -8,9 +8,9 @@ import 'package:flutter/material.dart';
 
 class UserRank extends StatelessWidget {
   const UserRank({
-    Key? key,
     required this.currentUserScore,
     required this.currentUserRank,
+    Key? key,
   }) : super(key: key);
 
   final SeasonLeaderboardItemModel currentUserScore;

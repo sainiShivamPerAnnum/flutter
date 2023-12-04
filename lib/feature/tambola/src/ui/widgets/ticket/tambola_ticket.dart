@@ -191,7 +191,7 @@ class TambolaTicket extends StatelessWidget {
 
 class TicketTag extends StatelessWidget {
   final String tag;
-  const TicketTag({super.key, required this.tag});
+  const TicketTag({required this.tag, super.key});
 
   @override
   Widget build(BuildContext context) {

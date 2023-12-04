@@ -30,7 +30,7 @@ class PrizeClaimCard extends StatelessWidget {
 }
 
 class RewardBalanceWidget extends StatelessWidget {
-  const RewardBalanceWidget({super.key, required this.userService});
+  const RewardBalanceWidget({required this.userService, super.key});
 
   final UserService? userService;
 
@@ -85,9 +85,9 @@ class RewardBalanceWidget extends StatelessWidget {
 
 class RewardRedeemWidget extends StatelessWidget {
   const RewardRedeemWidget({
-    super.key,
     required this.m,
     required this.minWithdrawPrize,
+    super.key,
     this.isWinView = false,
   });
 
@@ -109,7 +109,7 @@ class RewardRedeemWidget extends StatelessWidget {
       decoration: isWinView
           ? null
           : BoxDecoration(
-        borderRadius: BorderRadius.only(
+              borderRadius: BorderRadius.only(
                   bottomLeft: Radius.circular(SizeConfig.roundness40),
                   bottomRight: Radius.circular(SizeConfig.roundness40)),
               color: UiConstants.kTambolaMidTextColor,
@@ -221,26 +221,26 @@ class RewardRedeemWidget extends StatelessWidget {
               padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding32),
               child: FittedBox(
                 child: Text(
-                  "Reward Balance can be redeemed on reaching ₹${minWithdrawPrize}",
+                  "Reward Balance can be redeemed on reaching ₹$minWithdrawPrize",
                   style: TextStyles.rajdhaniSB.body3
                       .colour(Colors.white.withOpacity(0.6)),
                 ),
               ),
             )
           else if ((m?.userFundWallet?.unclaimedBalance ?? 0) >=
-                minWithdrawPrizeAmt)
-              Container(
-                width: SizeConfig.screenWidth,
-                padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding32),
-                child: Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      "Redeem your rewards to ",
-                      style: TextStyles.rajdhaniSB.body3
-                          .colour(Colors.white.withOpacity(0.8)),
-                    ),
-                    SvgPicture.asset('assets/svg/digital_gold.svg',
+              minWithdrawPrizeAmt)
+            Container(
+              width: SizeConfig.screenWidth,
+              padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding32),
+              child: Row(
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Text(
+                    "Redeem your rewards to ",
+                    style: TextStyles.rajdhaniSB.body3
+                        .colour(Colors.white.withOpacity(0.8)),
+                  ),
+                  SvgPicture.asset('assets/svg/digital_gold.svg',
                       height: SizeConfig.padding40,
                       width: SizeConfig.padding40),
                   Text(
@@ -264,7 +264,7 @@ class ClaimButton extends StatelessWidget {
   final String text;
   final Function onTap;
 
-  ClaimButton({
+  const ClaimButton({
     required this.color,
     required this.image,
     required this.onTap,

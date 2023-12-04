@@ -132,13 +132,13 @@ class GTInstantViewModel extends BaseViewModel {
 
     try {
       _getBearerToken().then(
-        (String token) => _gtRepo!.redeemReward(scratchCard!.gtId).then(
+        (String token) => _gtRepo.redeemReward(scratchCard!.gtId).then(
           (_) {
-            _gtService!.updateUnscratchedGTCount();
-            _userService!.getUserFundWalletData();
-            _userCoinService!.getUserCoinBalance().then(
+            _gtService.updateUnscratchedGTCount();
+            _userService.getUserFundWalletData();
+            _userCoinService.getUserCoinBalance().then(
               (_) {
-                coinsCount = _userCoinService!.flcBalance;
+                coinsCount = _userCoinService.flcBalance;
                 notifyListeners();
               },
             );
@@ -150,7 +150,7 @@ class GTInstantViewModel extends BaseViewModel {
       );
       _journeyService.updateRewardStatus(scratchCard!.prizeSubtype!);
     } catch (e) {
-      _logger!.e(e);
+      _logger.e(e);
       BaseUtil.showNegativeAlert(
           locale.gtRedeemErrorTitle, locale.getRedeemErrorSubtitle);
     }
@@ -164,15 +164,15 @@ class GTInstantViewModel extends BaseViewModel {
   }
 
   Future<String> _getBearerToken() async {
-    String token = await _userService!.firebaseUser!.getIdToken();
-    _logger!.d(token);
+    String token = await _userService.firebaseUser!.getIdToken();
+    _logger.d(token);
 
     return token;
   }
 
   initNormalFlow() {
     Future.delayed(const Duration(milliseconds: 500), () {
-      coinsCount = _coinService!.flcBalance;
+      coinsCount = _coinService.flcBalance;
       showMainContent = true;
       notifyListeners();
     });

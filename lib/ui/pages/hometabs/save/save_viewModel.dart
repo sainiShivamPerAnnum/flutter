@@ -52,6 +52,7 @@ import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../core/model/quick_links_model.dart';
+import 'save_components/instant_save_card.dart';
 
 class SaveViewModel extends BaseViewModel {
   S? locale;
@@ -68,21 +69,21 @@ class SaveViewModel extends BaseViewModel {
   }
 
   final CampaignRepo _campaignRepo = locator<CampaignRepo>();
-  final SaveRepo? _saveRepo = locator<SaveRepo>();
-  final UserService? _userService = locator<UserService>();
+  final SaveRepo _saveRepo = locator<SaveRepo>();
+  final UserService _userService = locator<UserService>();
 
   // BaseUtil? baseProvider;
 
-  final BankAndPanService? _sellService = locator<BankAndPanService>();
-  final TransactionHistoryRepository? _transactionHistoryRepo =
+  final BankAndPanService _sellService = locator<BankAndPanService>();
+  final TransactionHistoryRepository _transactionHistoryRepo =
       locator<TransactionHistoryRepository>();
-  final PaymentRepository? _paymentRepo = locator<PaymentRepository>();
-  final TxnHistoryService? _txnHistoryService = locator<TxnHistoryService>();
-  final UserCoinService? _userCoinService = locator<UserCoinService>();
-  final BaseUtil? _baseUtil = locator<BaseUtil>();
+  final PaymentRepository _paymentRepo = locator<PaymentRepository>();
+  final TxnHistoryService _txnHistoryService = locator<TxnHistoryService>();
+  final UserCoinService _userCoinService = locator<UserCoinService>();
+  final BaseUtil _baseUtil = locator<BaseUtil>();
   final GetterRepository _getterRepo = locator<GetterRepository>();
 
-  final AnalyticsService? _analyticsService = locator<AnalyticsService>();
+  final AnalyticsService _analyticsService = locator<AnalyticsService>();
   final List<Color> randomBlogCardCornerColors = [
     UiConstants.kBlogCardRandomColor1,
     UiConstants.kBlogCardRandomColor2,
@@ -100,14 +101,14 @@ class SaveViewModel extends BaseViewModel {
   List<BlogPostModelByCategory>? _blogPostsByCategory;
   bool _isLoading = true;
   bool _isChallenegsLoading = true;
-  List<String> _sellingReasons = [];
+  final List<String> _sellingReasons = [];
   String _selectedReasonForSelling = '';
-  Map<String, dynamic> _filteredList = {};
+  final Map<String, dynamic> _filteredList = {};
 
-  bool _isGoldSaleActive = false;
-  bool _isongoing = false;
-  bool _isLockInReached = false;
-  bool _isSellButtonVisible = false;
+  final bool _isGoldSaleActive = false;
+  final bool _isongoing = false;
+  final bool _isLockInReached = false;
+  final bool _isSellButtonVisible = false;
   int _currentPage = 0;
 
   get currentPage => _currentPage;
@@ -274,6 +275,9 @@ class SaveViewModel extends BaseViewModel {
         case "QZ":
           saveViewItems.add(const QuizSection());
           break;
+        case "INST_SAVE":
+          saveViewItems.add(const InstantSaveCard());
+          break;
         case 'NAS':
           saveViewItems.add(const AutosaveCard());
           break;
@@ -360,7 +364,6 @@ class SaveViewModel extends BaseViewModel {
     final response = await _saveRepo!.getBlogs(5);
     if (response.isSuccess()) {
       blogPosts = response.model;
-      print(blogPosts!.length);
     } else {
       print(response.errorMessage);
     }
@@ -405,8 +408,9 @@ class SaveViewModel extends BaseViewModel {
 
     if (quantity != null) {
       return quantity;
-    } else
+    } else {
       return 0;
+    }
   }
 
   List<BlogPostModelByCategory> getAllBlogsByCategory() {

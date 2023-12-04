@@ -156,7 +156,7 @@ class TambolaService extends ChangeNotifier {
     notifyListeners();
   }
 
-  DailyPick? get weeklyPicks => this._weeklyPicks;
+  DailyPick? get weeklyPicks => _weeklyPicks;
 
   set weeklyPicks(DailyPick? value) {
     _weeklyPicks = value;

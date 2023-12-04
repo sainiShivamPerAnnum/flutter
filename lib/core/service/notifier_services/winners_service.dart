@@ -9,9 +9,9 @@ import 'package:intl/intl.dart';
 import '../../ops/db_ops.dart';
 
 class WinnerService extends ChangeNotifier {
-  final CustomLogger? _logger = locator<CustomLogger>();
-  final GetterRepository? _getterRepo = locator<GetterRepository>();
-  final DBModel? _dbModel = locator<DBModel>();
+  final CustomLogger _logger = locator<CustomLogger>();
+  final GetterRepository _getterRepo = locator<GetterRepository>();
+  final DBModel _dbModel = locator<DBModel>();
   Map<String, List<Winners>> gameWinnersMap = {};
 
   Future getProfileDpWithUid(String? uid) async {

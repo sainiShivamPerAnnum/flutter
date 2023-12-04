@@ -32,7 +32,7 @@ class JourneyMilestoneDetailsModalSheet extends StatefulWidget {
   final JOURNEY_MILESTONE_STATUS status;
   final String version;
 
-  JourneyMilestoneDetailsModalSheet(
+  const JourneyMilestoneDetailsModalSheet(
       {required this.milestone, required this.status, required this.version});
 
   @override
@@ -44,20 +44,21 @@ class _JourneyMilestoneDetailsModalSheetState
     extends State<JourneyMilestoneDetailsModalSheet> {
   final double scaleFactor = 2.5;
   final double pageHeight = SizeConfig.screenWidth! * 2.165;
-  final ScratchCardRepository? _gtService = locator<ScratchCardRepository>();
-  final JourneyService? _journeyService = locator<JourneyService>();
-  final AnalyticsService? _analyticsService = locator<AnalyticsService>();
+  final ScratchCardRepository _gtService = locator<ScratchCardRepository>();
+  final JourneyService _journeyService = locator<JourneyService>();
+  final AnalyticsService _analyticsService = locator<AnalyticsService>();
   S locale = locator<S>();
   bool _isLoading = false;
   ScratchCard? ticket;
 
-  get isLoading => this._isLoading;
+  get isLoading => _isLoading;
 
   set isLoading(value) {
-    if (mounted)
+    if (mounted) {
       setState(() {
-        this._isLoading = value;
+        _isLoading = value;
       });
+    }
   }
 
   Future<void> fetchMilestoneRewards() async {
@@ -164,7 +165,7 @@ class _JourneyMilestoneDetailsModalSheetState
                           bottom: SizeConfig.padding40,
                           left: SizeConfig.screenWidth! / 2 -
                               SizeConfig.pageHorizontalMargins * 2,
-                          child: MileStoneCheck())
+                          child: const MileStoneCheck())
                   ],
                 ),
               ),
@@ -223,9 +224,9 @@ class _JourneyMilestoneDetailsModalSheetState
                     ),
               if (widget.status == JOURNEY_MILESTONE_STATUS.COMPLETED)
                 isLoading
-                    ? CircularProgressIndicator(strokeWidth: 1)
+                    ? const CircularProgressIndicator(strokeWidth: 1)
                     : ticket == null
-                        ? SizedBox()
+                        ? const SizedBox()
                         : (ticket!.isRewarding! &&
                                 (ticket!.redeemedTimestamp == null ||
                                     ticket!.redeemedTimestamp ==
@@ -235,7 +236,7 @@ class _JourneyMilestoneDetailsModalSheetState
                             : rewardWidget(ticket!.rewardArr, context),
               SizedBox(height: SizeConfig.padding24),
               widget.status == JOURNEY_MILESTONE_STATUS.COMPLETED
-                  ? SizedBox()
+                  ? const SizedBox()
                   : widget.status == JOURNEY_MILESTONE_STATUS.ACTIVE
                       ? Column(
                           children: [
@@ -322,7 +323,7 @@ class _JourneyMilestoneDetailsModalSheetState
                               ),
                           ],
                         )
-                      : SizedBox(),
+                      : const SizedBox(),
               SizedBox(
                   height: SizeConfig.viewInsets.bottom +
                       (SizeConfig.padding24 - SizeConfig.viewInsets.bottom)
@@ -359,7 +360,7 @@ class _JourneyMilestoneDetailsModalSheetState
   Widget rewardWidget(List<Reward>? rewards, BuildContext context) {
     S locale = S.of(context);
     return (rewards == null || rewards.isEmpty)
-        ? SizedBox()
+        ? const SizedBox()
         : Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [

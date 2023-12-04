@@ -18,8 +18,9 @@ class AutosaveConfirmExitModalSheet extends StatelessWidget {
   Widget build(BuildContext context) {
     return WillPopScope(
       onWillPop: () async {
-        if (AppState.screenStack.last == ScreenItem.dialog)
+        if (AppState.screenStack.last == ScreenItem.dialog) {
           AppState.screenStack.removeLast();
+        }
         return Future.value(true);
       },
       child: Container(

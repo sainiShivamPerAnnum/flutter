@@ -130,8 +130,8 @@ class GoldInfoWidget extends StatelessWidget {
                         TextSpan(
                           children: [
                             TextSpan(
-                              text:
-                                  "${(model.userFundWallet?.augGoldQuantity ?? 0).toString()}",
+                              text: (model.userFundWallet?.augGoldQuantity ?? 0)
+                                  .toString(),
                               style: TextStyles.sourceSansSB.title5.copyWith(
                                 color: Colors.white,
                                 height: 1.27,

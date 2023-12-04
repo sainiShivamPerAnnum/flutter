@@ -242,9 +242,6 @@ class MarketingEventHandlerService
   }
 }
 
-
-
-
 //NOTES
 /**
  * startedOn: First time streak started on

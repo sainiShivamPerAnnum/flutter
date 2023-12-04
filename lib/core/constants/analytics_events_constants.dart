@@ -214,6 +214,7 @@ class AnalyticsEvents {
   static const tambolaCarousel = "Tickets top banner tapped";
   static const quizCrossTapped = "Cross on Quiz Tapped";
   static const quizBannerTapped = "Quiz Banner Tapped";
+  static const quickSaveTapped = "Quick Save Tapped";
 
   static const iconTrayTapped = "Icon tray tapped";
   static const goldProBannerTapped = "Gold Pro Banner Tapped";
@@ -324,4 +325,7 @@ class AnalyticsEvents {
   static const ticketsVideoTapped = "Tickets video tapped";
   static const ticketsMultiplierBannerTapped =
       "Tickets multiplier banner tapped";
+
+  static const payWithNetBanking = 'pay_with_nb';
+  static const editPreferredUpiOption = 'edit_preferred_upi';
 }

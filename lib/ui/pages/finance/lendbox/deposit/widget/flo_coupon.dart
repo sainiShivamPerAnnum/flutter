@@ -106,7 +106,7 @@ class _CouponView extends StatelessWidget {
         }
       },
       child: Container(
-        width: SizeConfig.screenWidth! * .7,
+        width: SizeConfig.screenWidth! * .6,
         height: SizeConfig.padding80,
         padding: const EdgeInsets.only(left: 16, right: 18, top: 8),
         decoration: BoxDecoration(

@@ -3,7 +3,6 @@ import 'package:felloapp/core/model/bank_account_details_model.dart';
 import 'package:felloapp/core/model/user_kyc_data_model.dart';
 import 'package:felloapp/core/repository/banking_repo.dart';
 import 'package:felloapp/core/repository/payment_repo.dart';
-import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/locator.dart';
@@ -11,10 +10,9 @@ import 'package:property_change_notifier/property_change_notifier.dart';
 
 class BankAndPanService
     extends PropertyChangeNotifier<BankAndPanServiceProperties> {
-  final CustomLogger? _logger = locator<CustomLogger>();
+  final CustomLogger _logger = locator<CustomLogger>();
   final UserService _userService = locator<UserService>();
-  final PaymentRepository? _paymentRepo = locator<PaymentRepository>();
-  final UserRepository _userRep = locator<UserRepository>();
+  final PaymentRepository _paymentRepo = locator<PaymentRepository>();
   final BankingRepository _bankingRepo = locator<BankingRepository>();
   String? _userPan;
   UserKycDataModel? _userKycData;
@@ -26,7 +24,7 @@ class BankAndPanService
     notifyListeners(BankAndPanServiceProperties.kycVerified);
   }
 
-  get userPan => _userPan;
+  String? get userPan => _userPan;
 
   set userPan(value) {
     _userPan = value;
@@ -38,11 +36,11 @@ class BankAndPanService
   BankAccountDetailsModel? get activeBankAccountDetails =>
       _activeBankAccountDetails;
 
-  set activeBankAccountDetails(value) {
+  set activeBankAccountDetails(BankAccountDetailsModel? value) {
     _activeBankAccountDetails = value;
 
     notifyListeners(BankAndPanServiceProperties.bankDetailsVerified);
-    _logger!.d("Bank Details Property Notified");
+    _logger.d("Bank Details Property Notified");
   }
 
   bool _isKYCVerified = false;
@@ -56,11 +54,11 @@ class BankAndPanService
   double _withdrawableQnt = 0.0;
   double _nonWithdrawableQnt = 0.0;
 
-  get withdrawableQnt => _withdrawableQnt;
+  double get withdrawableQnt => _withdrawableQnt;
 
-  get nonWithdrawableQnt => _nonWithdrawableQnt;
+  double get nonWithdrawableQnt => _nonWithdrawableQnt;
 
-  get isLockInReached => _isLockInReached;
+  bool get isLockInReached => _isLockInReached;
 
   bool get isKYCVerified => _isKYCVerified;
 
@@ -113,7 +111,7 @@ class BankAndPanService
     checkIfSellIsLocked();
   }
 
-  dump() {
+  void dump() {
     isBankDetailsAdded = false;
     isKYCVerified = false;
     isLockInReached = false;
@@ -124,7 +122,7 @@ class BankAndPanService
     activeBankAccountDetails = null;
   }
 
-  checkForUserPanDetails() async {
+  Future<void> checkForUserPanDetails() async {
     if (userKycData != null) return;
     final res = await _bankingRepo.getUserKycInfo();
 
@@ -139,42 +137,40 @@ class BankAndPanService
 
   Future<bool> verifyAugmontKyc() async {
     final res = await _bankingRepo.verifyAugmontKyc();
-    if (res.isSuccess()) {
-      return true;
-    } else {
-      return false;
-    }
+    return res.isSuccess();
   }
 
-  checkForUserBankAccountDetails() async {
+  Future<void> checkForUserBankAccountDetails({
+    bool forceRefetch = false,
+    bool withNetBankingValidation = false,
+  }) async {
+    if (forceRefetch) {
+      _activeBankAccountDetails = null;
+    }
     if (activeBankAccountDetails != null) return;
-    final res = await _paymentRepo!.getActiveBankAccountDetails();
+    final res = await _paymentRepo.getActiveBankAccountDetails(
+      withNetBankingValidation: withNetBankingValidation,
+    );
     if (res.isSuccess()) {
       activeBankAccountDetails = res.model;
+      notifyListeners();
     }
   }
 
   void verifyBankDetails() {
     if (activeBankAccountDetails != null &&
-        activeBankAccountDetails!.account != null &&
-        activeBankAccountDetails!.account!.isNotEmpty) {
+        activeBankAccountDetails!.account.isNotEmpty) {
       isBankDetailsAdded = true;
     }
   }
 
-  checkForSellNotice() {
-    // if (_userService.userAugmontDetails != null &&
-    //     _userService.userAugmontDetails.sellNotice != null &&
-    //     _userService.userAugmontDetails.sellNotice.isNotEmpty)
+  void checkForSellNotice() {
     sellNotice = _userService.userBootUp?.data?.banMap?.investments?.withdrawal
             ?.augmont?.reason ??
         '';
   }
 
-  checkIfSellIsLocked() {
-    // if (_userService.userAugmontDetails != null &&
-    //     _userService.userAugmontDetails.sellNotice != null &&
-    //     _userService.userAugmontDetails.sellNotice.isNotEmpty)
+  void checkIfSellIsLocked() {
     isSellLocked = _userService.userBootUp?.data?.banMap?.investments
             ?.withdrawal?.augmont?.isBanned ??
         false;

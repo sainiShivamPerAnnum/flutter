@@ -22,8 +22,6 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 
-// import 'package:showcaseview/showcaseview.dart';
-
 import 'widgets/view_breakdown.dart';
 
 class GoldBuyInputView extends StatefulWidget {
@@ -81,6 +79,7 @@ class _GoldBuyInputViewState extends State<GoldBuyInputView> {
   @override
   Widget build(BuildContext context) {
     final AnalyticsService analyticsService = locator<AnalyticsService>();
+    final banner = widget.model.assetOptionsModel!.data.banner;
     return Stack(
       children: [
         Column(
@@ -123,14 +122,15 @@ class _GoldBuyInputViewState extends State<GoldBuyInputView> {
                 }
               },
             ),
-            SizedBox(height: SizeConfig.padding24),
-            if (widget.model.assetOptionsModel != null)
+            if (banner != null) ...[
+              SizedBox(height: SizeConfig.padding24),
               BannerWidget(
-                model: widget.model.assetOptionsModel!.data.banner,
+                model: banner,
                 happyHourCampign: locator.isRegistered<HappyHourCampign>()
                     ? locator<HappyHourCampign>()
                     : null,
               ),
+            ],
             if (widget.model.animationController != null)
               EnterAmountView(
                 model: widget.model,
@@ -150,10 +150,6 @@ class _GoldBuyInputViewState extends State<GoldBuyInputView> {
               height: SizeConfig.padding24,
             ),
             if (widget.model.showCoupons)
-              // Showcase(
-              //   key: ShowCaseKeys.couponKey,
-              //   description: 'You can apply a coupon to get extra gold!',
-              //   child:
               CouponWidget(
                 widget.model.couponList,
                 widget.model,
@@ -161,7 +157,6 @@ class _GoldBuyInputViewState extends State<GoldBuyInputView> {
                   widget.model.applyCoupon(coupon.code, false);
                 },
               ),
-            // ),
             const Spacer(),
             widget.augTxnService.isGoldBuyInProgress
                 ? Container(

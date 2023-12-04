@@ -1,3 +1,4 @@
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
@@ -54,7 +55,7 @@ class ReferEarnCard extends StatelessWidget {
               vertical: SizeConfig.padding24,
             ),
             decoration: ShapeDecoration(
-              color: Color(0xFF6052A9),
+              color: const Color(0xFF6052A9),
               shape: RoundedRectangleBorder(
                 borderRadius: BorderRadius.circular(10),
               ),
@@ -162,7 +163,7 @@ class ReferEarnCard extends StatelessWidget {
                                 Icon(
                                   Icons.copy,
                                   color:
-                                  UiConstants.kTextColor3.withOpacity(0.7),
+                                      UiConstants.kTextColor3.withOpacity(0.7),
                                   size: SizeConfig.padding24,
                                 ),
                               ],
@@ -175,13 +176,25 @@ class ReferEarnCard extends StatelessWidget {
                       width: SizeConfig.padding20,
                     ),
                     GestureDetector(
-                      onTap: () {
+                      onTap: () async {
                         final referralService = locator<ReferralService>();
 
                         String message = (referralService.shareMsg ??
                                 'Hey I am gifting you ₹${AppConfig.getValue(AppConfigKey.referralBonus)} and ${AppConfig.getValue(AppConfigKey.referralBonus)} gaming tokens. Lets start saving and playing together! Share this code: *${referralService.refCode}* with your friends.\n') +
                             (referralService.referralShortLink ?? "");
-                        launch('whatsapp://send?text=$message');
+
+                        if (!await canLaunchUrl(
+                          Uri.parse('https://wa.me/?text=$message'),
+                        )) {
+                          BaseUtil.showNegativeAlert('Whatsapp not installed',
+                              'Please install whatsapp to share referral link');
+                          return;
+                        }
+
+                        await launchUrl(
+                          Uri.parse('https://wa.me/?text=$message'),
+                          mode: LaunchMode.externalApplication,
+                        );
                       },
                       child: Container(
                         width: SizeConfig.padding54,
@@ -189,16 +202,7 @@ class ReferEarnCard extends StatelessWidget {
                         padding: EdgeInsets.all(SizeConfig.padding16),
                         decoration: BoxDecoration(
                           color: UiConstants.kArrowButtonBackgroundColor,
-
                           borderRadius: BorderRadius.circular(8),
-                          // gradient: const LinearGradient(
-                          //   colors: [
-                          //     Color(0xff12BC9D),
-                          //     Color(0xff249680),
-                          //   ],
-                          //   begin: Alignment.topCenter,
-                          //   end: Alignment.bottomCenter,
-                          // ),
                         ),
                         child: SvgPicture.asset(
                           'assets/vectors/whatsapp.svg',

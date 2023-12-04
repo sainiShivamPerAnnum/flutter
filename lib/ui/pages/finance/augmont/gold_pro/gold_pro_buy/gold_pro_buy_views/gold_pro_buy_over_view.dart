@@ -1,6 +1,11 @@
+import 'dart:math';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/transaction_state_enum.dart';
+import 'package:felloapp/core/model/app_config_model.dart';
+import 'package:felloapp/core/repository/paytm_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
@@ -8,26 +13,161 @@ import 'package:felloapp/ui/pages/finance/augmont/gold_buy/widgets/view_breakdow
 import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_buy/gold_pro_buy_components/gold_balance_rows.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_buy/gold_pro_buy_views/gold_pro_buy_input_view.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_buy/gold_pro_buy_vm.dart';
+import 'package:felloapp/ui/pages/finance/preferred_payment_option.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/extensions/string_extension.dart';
 import 'package:felloapp/util/haptic.dart';
-import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class GoldProBuyOverView extends StatelessWidget {
-  const GoldProBuyOverView(
-      {required this.model, required this.txnService, super.key});
+  const GoldProBuyOverView({
+    required this.model,
+    required this.txnService,
+    super.key,
+  });
 
   final GoldProBuyViewModel model;
   final AugmontTransactionService txnService;
 
+  void _openPaymentSheet(
+      {bool showBreakDown = true,
+      bool showPsp = true,
+      bool isBreakDown = false}) {
+    final amt = model.totalGoldAmount;
+    BaseUtil.openModalBottomSheet(
+      isBarrierDismissible: true,
+      addToScreenStack: true,
+      isScrollControlled: true,
+      backgroundColor: const Color(0xff1A1A1A),
+      content: GoldProBreakdownView(
+        model: model,
+        showBreakDown: showBreakDown,
+        showPaymentOption: showPsp,
+        isBreakDown: isBreakDown,
+        onSave: () => _onPressed(amt),
+      ),
+    );
+  }
+
+  /// Based on various conditions either opens relative payment gateway or opens
+  /// [GoldBreakdownView].
+  ///
+  /// * If [amount] is greater than [Constants.mandatoryNetBankingThreshold]
+  ///   then opens up [GoldBreakdownView] with net-banking configuration.
+  /// * If BE provides payment mode as intent and preferred payment option is
+  ///   not null then opens up relative psp directly or else opens up
+  ///   [GoldBreakdownView] with psp payment mode configuration.
+  Future<void> _onPressed(num? amount) async {
+    if (amount == null) return;
+
+    if (model.hasEnoughGoldBalanceForLease) {
+      await model.initiateGoldProTransaction();
+      return;
+    }
+
+    if (!model.isChecked) {
+      BaseUtil.showNegativeAlert(
+        "Please accept the terms and conditions",
+        "to continue saving in ${Constants.ASSET_GOLD_STAKE}",
+      );
+      return;
+    }
+
+    if (amount >= Constants.mandatoryNetBankingThreshold) {
+      _openPaymentSheet(
+        showBreakDown: AppConfig.getValue(
+          AppConfigKey.payment_brief_view,
+        ),
+      );
+      return;
+    }
+
+    if (model.isIntentFlow && model.selectedUpiApplication != null) {
+      await model.initiateGoldProTransaction();
+    } else {
+      _openPaymentSheet(
+        showBreakDown: AppConfig.getValue(
+          AppConfigKey.payment_brief_view,
+        ),
+      );
+    }
+  }
+
+  void _onResetPaymentIntent(String? intent) {
+    _openPaymentSheet(
+      showBreakDown: AppConfig.getValue(
+        AppConfigKey.payment_brief_view,
+      ),
+    );
+
+    _trackChange(intent);
+  }
+
+  void _trackChange(String? intent) {
+    if (intent == null) {
+      return;
+    }
+
+    locator<AnalyticsService>().track(
+      eventName: AnalyticsEvents.editPreferredUpiOption,
+      properties: {
+        'current_upi': intent,
+      },
+    );
+  }
+
+  Widget _buildButtonLabel(
+      {required bool hasEnoughBalance, required num amount}) {
+    final style = TextStyles.rajdhaniB.body1.colour(
+      Colors.white,
+    );
+
+    if (hasEnoughBalance) {
+      return Text(
+        'PROCEED',
+        style: style,
+      );
+    }
+
+    return Padding(
+      padding: const EdgeInsets.symmetric(horizontal: 10),
+      child: Row(
+        children: [
+          Text(
+            '₹ $amount',
+            style: style,
+          ),
+          const Spacer(),
+          Text(
+            'SAVE',
+            style: style,
+          ),
+          SizedBox(
+            width: SizeConfig.padding16,
+          ),
+          Transform.rotate(
+            angle: pi / 2,
+            child: SvgPicture.asset(
+              Assets.arrow,
+              color: Colors.white,
+              height: 8,
+            ),
+          ),
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
-    S? locale = S.of(context);
+    final preferredOption = model.getPreferredUpiOption;
+    final amt = model.totalGoldAmount;
 
     return Column(
       children: [
@@ -42,7 +182,9 @@ class GoldProBuyOverView extends StatelessWidget {
           ),
           backgroundColor: Colors.transparent,
           elevation: 0,
+          centerTitle: true,
           title: Row(
+            mainAxisSize: MainAxisSize.min,
             children: [
               Image.asset(
                 Assets.digitalGoldBar,
@@ -73,18 +215,58 @@ class GoldProBuyOverView extends StatelessWidget {
                 style: TextStyles.rajdhaniB.title1.colour(Colors.white),
               ),
               SizedBox(height: SizeConfig.screenHeight! * 0.04),
-              ExpectedGoldProReturnsRow(model: model),
               SizedBox(height: SizeConfig.screenHeight! * 0.02),
+              Column(
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'Expected Returns in 5Y',
+                        style: TextStyles.rajdhaniB.body1,
+                      ),
+                      Text(
+                        "₹${"${model.expectedGoldReturns.toInt()}".formatToIndianNumberSystem()}*",
+                        style: TextStyles.rajdhaniB.title4,
+                      ),
+                    ],
+                  ),
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        'with Gold Pro',
+                        style: TextStyles.sourceSans.body3.colour(
+                          UiConstants.grey1,
+                        ),
+                      ),
+                      Text(
+                        '@ 15.5 % p.a',
+                        style: TextStyles.sourceSans.body3.colour(
+                          UiConstants.grey1,
+                        ),
+                      ),
+                    ],
+                  ),
+                ],
+              ),
+              SizedBox(
+                height: SizeConfig.padding16,
+              ),
               GoldBalanceRow(
                 lead: "Current Gold Balance",
                 trail: model.currentGoldBalance,
               ),
-              SizedBox(height: SizeConfig.screenHeight! * 0.02),
+              SizedBox(
+                height: SizeConfig.padding16,
+              ),
               GoldBalanceRow(
                 lead: "Additional Gold to be added",
                 trail: model.additionalGoldBalance,
               ),
-              SizedBox(height: SizeConfig.screenHeight! * 0.04),
+              SizedBox(
+                height: SizeConfig.padding16,
+              ),
               PriceAdaptiveGoldProOverViewCard(model: model),
               const GoldProLeaseCompanyDetailsStrip(),
             ],
@@ -141,73 +323,120 @@ class GoldProBuyOverView extends StatelessWidget {
                       ),
                     ),
                   Container(
-                    color: Colors.black,
                     padding: EdgeInsets.symmetric(
                       horizontal: SizeConfig.pageHorizontalMargins,
                       vertical: SizeConfig.padding16,
                     ),
-                    width: SizeConfig.screenWidth,
-                    child: Row(
+                    decoration: const BoxDecoration(
+                      color: UiConstants.grey5,
+                      borderRadius: BorderRadius.vertical(
+                        top: Radius.circular(24),
+                      ),
+                    ),
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        if (model.additionalGoldBalance != 0)
-                          Expanded(
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Row(
-                                  crossAxisAlignment: CrossAxisAlignment.end,
+                        if (!model.hasEnoughGoldBalanceForLease)
+                          Row(
+                            children: [
+                              Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Row(
+                                    children: [
+                                      SvgPicture.asset(
+                                        Assets.goldWithoutShadow,
+                                        height: 16,
+                                      ),
+                                      SizedBox(
+                                        width: SizeConfig.padding8,
+                                      ),
+                                      Text(
+                                        Constants.ASSET_GOLD_STAKE,
+                                        style:
+                                            TextStyles.rajdhaniB.body2.copyWith(
+                                          color: UiConstants.kFAQsAnswerColor,
+                                        ),
+                                      ),
+                                    ],
+                                  ),
+                                  SizedBox(
+                                    height: SizeConfig.padding10,
+                                  ),
+                                  Text(
+                                    'Inc. (GST)',
+                                    style: TextStyles.sourceSans.body3.copyWith(
+                                      color: UiConstants.kTextFieldTextColor,
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              const Spacer(),
+                              InkWell(
+                                onTap: () => _openPaymentSheet(
+                                  showPsp: false,
+                                  isBreakDown: true,
+                                ),
+                                child: Row(
                                   children: [
                                     Text(
-                                      "₹${BaseUtil.digitPrecision(model.totalGoldAmount, 2)} ",
-                                      style: TextStyles.sourceSansB.body0
-                                          .colour(Colors.white),
+                                      'Payment summary',
+                                      style: TextStyles.sourceSansSB.body4
+                                          .copyWith(
+                                        height: 1,
+                                        color: UiConstants.kFAQsAnswerColor,
+                                      ),
                                     ),
-                                    Text(
-                                      "In ${Constants.ASSET_GOLD_STAKE}",
-                                      style: TextStyles.rajdhaniSB.body2
-                                          .colour(UiConstants.kGoldProPrimary),
-                                    )
+                                    SizedBox(
+                                      width: SizeConfig.padding8,
+                                    ),
+                                    SvgPicture.asset(
+                                      Assets.arrow,
+                                      color: UiConstants.kFAQsAnswerColor,
+                                      height: 5,
+                                    ),
                                   ],
                                 ),
-                                SizedBox(height: SizeConfig.padding4),
-                                Text(
-                                  "Inc. (GST)",
-                                  style: TextStyles.rajdhaniL.body2
-                                      .colour(Colors.white),
-                                ),
-                                SizedBox(height: SizeConfig.padding10),
-                                GestureDetector(
-                                  onTap: () {
-                                    BaseUtil.openModalBottomSheet(
-                                      isBarrierDismissible: true,
-                                      backgroundColor: const Color(0xff1A1A1A),
-                                      addToScreenStack: true,
-                                      isScrollControlled: true,
-                                      content: GoldProBreakdownView(
-                                        model: model,
-                                        showPsp: false,
-                                      ),
-                                    );
-                                  },
-                                  child: Text(
-                                    "View Breakdown",
-                                    style: TextStyles.body3.underline
-                                        .colour(Colors.grey),
-                                  ),
-                                )
-                              ],
-                            ),
+                              )
+                            ],
                           ),
-                        ReactivePositiveAppButton(
-                          isDisabled: !model.isChecked,
-                          btnText: model.additionalGoldBalance != 0
-                              ? "SAVE"
-                              : "SAVE IN ${Constants.ASSET_GOLD_STAKE.toUpperCase()}",
-                          onPressed: () {
-                            model.initiateGoldProTransaction();
-                          },
-                          width: SizeConfig.screenWidth! *
-                              (model.additionalGoldBalance != 0 ? 0.3 : 0.88),
+                        if (!model.hasEnoughGoldBalanceForLease)
+                          SizedBox(
+                            height: SizeConfig.padding10,
+                          ),
+                        Row(
+                          children: [
+                            if (preferredOption != null &&
+                                amt <= Constants.mandatoryNetBankingThreshold &&
+                                model.isIntentFlow &&
+                                !model.hasEnoughGoldBalanceForLease)
+                              Padding(
+                                padding: EdgeInsets.only(
+                                  right: SizeConfig.padding12,
+                                ),
+                                child: PreferredPaymentOption(
+                                  appUse: preferredOption.getAppUseByName(),
+                                  onPressed: () => _onResetPaymentIntent(
+                                    preferredOption,
+                                  ),
+                                ),
+                              ),
+                            Expanded(
+                              child: SizedBox(
+                                height: SizeConfig.padding56,
+                                child: ReactivePositiveAppButton(
+                                  onPressed: () => _onPressed(amt),
+                                  width: double.infinity,
+                                  isDisabled: !model.isChecked,
+                                  child: _buildButtonLabel(
+                                    hasEnoughBalance:
+                                        model.hasEnoughGoldBalanceForLease,
+                                    amount: amt,
+                                  ),
+                                ),
+                              ),
+                            ),
+                          ],
                         )
                       ],
                     ),

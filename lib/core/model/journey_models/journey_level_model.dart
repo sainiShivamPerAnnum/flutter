@@ -22,12 +22,12 @@ class JourneyLevel {
   }
 
   Map<String, dynamic> toJson() {
-    final Map<String, dynamic> data = new Map<String, dynamic>();
-    data['start'] = this.start;
-    data['end'] = this.end;
-    data['breakpoint'] = this.breakpoint;
-    data['pageEnd'] = this.pageEnd;
-    data['level'] = this.level;
+    final Map<String, dynamic> data = <String, dynamic>{};
+    data['start'] = start;
+    data['end'] = end;
+    data['breakpoint'] = breakpoint;
+    data['pageEnd'] = pageEnd;
+    data['level'] = level;
     return data;
   }
 

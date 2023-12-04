@@ -385,12 +385,12 @@ class CustomStaggeredAnimatedWidget extends AnimatedWidget {
 
 class DummyAssetCard extends StatelessWidget {
   const DummyAssetCard({
-    super.key,
     required this.bgColor,
     required this.asset,
     required this.title,
     required this.subtitle,
     required this.variations,
+    super.key,
   });
 
   final Color bgColor;

@@ -1,74 +1,54 @@
-import 'dart:convert';
+// ignore_for_file: constant_identifier_names
 
-import 'package:flutter/material.dart';
+import 'package:json_annotation/json_annotation.dart';
 
+part 'bank_account_details_model.g.dart';
+
+const _deserializable = JsonSerializable(
+  createToJson: false,
+);
+
+@_deserializable
 class BankAccountDetailsModel {
-  final String?  id;
-  final String?  account;
-  final String?  ifsc;
-  final String?  name;
-  BankAccountDetailsModel({
-    @required this.id,
-    @required this.account,
-    @required this.ifsc,
-    @required this.name,
+  final String id;
+  final String account;
+  final String logo;
+  final String bankName;
+  final String ifsc;
+  final String name;
+  final NetBankingStatus netBankingStatus;
+  final BankAvailability availability;
+  final String? message;
+
+  const BankAccountDetailsModel({
+    this.id = '',
+    this.account = '',
+    this.ifsc = '',
+    this.name = '',
+    this.bankName = '',
+    this.logo = 'https://img.phonepe.com/images/banks/40/40/DEFAULT.png',
+    this.netBankingStatus = NetBankingStatus.UN_SUPPORTED,
+    this.availability = BankAvailability.UNAVAILABLE,
+    this.message,
   });
 
-  BankAccountDetailsModel copyWith({
-    String ? id,
-    String ? account,
-    String ? ifsc,
-    String ? name,
-  }) {
-    return BankAccountDetailsModel(
-      id: id ?? this.id,
-      account: account ?? this.account,
-      ifsc: ifsc ?? this.ifsc,
-      name: name ?? this.name,
-    );
-  }
+  factory BankAccountDetailsModel.fromMap(Map<String, dynamic> json) =>
+      _$BankAccountDetailsModelFromJson(json);
+}
 
-  Map<String, dynamic> toMap() {
-    return <String, dynamic>{
-      'id': id,
-      'account': account,
-      'ifsc': ifsc,
-      'name': name,
-    };
-  }
+extension BankDetailsValidator on BankAccountDetailsModel {
+  bool get isDetailsAreValid => account.isNotEmpty && ifsc.isNotEmpty;
+}
 
-  factory BankAccountDetailsModel.fromMap(Map<String, dynamic> map) {
-    return BankAccountDetailsModel(
-      id: map['id'] as String?,
-      account: map['account'] as String?,
-      ifsc: map['ifsc'] as String?,
-      name: map['name'] as String?,
-    );
-  }
+enum NetBankingStatus {
+  SUPPORTED,
+  UN_SUPPORTED;
 
-  String toJson() => json.encode(toMap());
+  bool get isSupported => this == NetBankingStatus.SUPPORTED;
+}
 
-  factory BankAccountDetailsModel.fromJson(String source) =>
-      BankAccountDetailsModel.fromMap(
-          json.decode(source) as Map<String, dynamic>);
-
-  @override
-  String toString() {
-    return 'BankAccountDetailsModel(id: $id, account: $account, ifsc: $ifsc, name: $name)';
-  }
-
-  @override
-  bool operator ==(covariant BankAccountDetailsModel other) {
-    if (identical(this, other)) return true;
-
-    return other.id == id &&
-        other.account == account &&
-        other.ifsc == ifsc &&
-        other.name == name;
-  }
-
-  @override
-  int get hashCode {
-    return id.hashCode ^ account.hashCode ^ ifsc.hashCode ^ name.hashCode;
-  }
+enum BankAvailability {
+  AVAILABLE,
+  UNAVAILABLE,
+  DEGRADED;
 }

@@ -46,7 +46,7 @@ abstract class PinDecoration {
 /// The object determine the obscure display
 class ObscureStyle {
   /// The wrap line string.
-  static final _wrapLine = '\n';
+  static const _wrapLine = '\n';
 
   /// Determine whether replace [obscureText] with number.
   final bool isTextObscure;
@@ -56,8 +56,8 @@ class ObscureStyle {
   final String obscureText;
 
   ObscureStyle({
-    this.isTextObscure: false,
-    this.obscureText: '*',
+    this.isTextObscure = false,
+    this.obscureText = '*',
   })  :
 
         /// Not allowed empty string and multiline string.
@@ -90,10 +90,10 @@ class UnderlineDecoration extends PinDecoration {
     String? hintText,
     TextStyle? hintTextStyle,
     this.enteredColor,
-    this.gapSpace: 16.0,
+    this.gapSpace = 16.0,
     this.gapSpaces,
-    this.color: Colors.cyan,
-    this.lineHeight: 2.0,
+    this.color = Colors.cyan,
+    this.lineHeight = 2.0,
   }) : super(
           textStyle: textStyle,
           obscureStyle: obscureStyle,
@@ -122,11 +122,11 @@ class UnderlineDecoration extends PinDecoration {
       errorTextStyle: errorTextStyle ?? this.errorTextStyle,
       hintText: hintText ?? this.hintText,
       hintTextStyle: hintTextStyle ?? this.hintTextStyle,
-      enteredColor: this.enteredColor,
-      color: this.color,
-      gapSpace: this.gapSpace,
-      lineHeight: this.lineHeight,
-      gapSpaces: this.gapSpaces,
+      enteredColor: enteredColor,
+      color: color,
+      gapSpace: gapSpace,
+      lineHeight: lineHeight,
+      gapSpaces: gapSpaces,
     );
   }
 }
@@ -153,9 +153,9 @@ class BoxTightDecoration extends PinDecoration {
     String? hintText,
     TextStyle? hintTextStyle,
     this.solidColor,
-    this.strokeWidth: 1.0,
-    this.radius: const Radius.circular(8.0),
-    this.strokeColor: Colors.cyan,
+    this.strokeWidth = 1.0,
+    this.radius = const Radius.circular(8.0),
+    this.strokeColor = Colors.cyan,
   }) : super(
           textStyle: textStyle,
           obscureStyle: obscureStyle,
@@ -184,10 +184,10 @@ class BoxTightDecoration extends PinDecoration {
       errorTextStyle: errorTextStyle ?? this.errorTextStyle,
       hintText: hintText ?? this.hintText,
       hintTextStyle: hintTextStyle ?? this.hintTextStyle,
-      solidColor: this.solidColor,
-      strokeColor: this.strokeColor,
-      strokeWidth: this.strokeWidth,
-      radius: this.radius,
+      solidColor: solidColor,
+      strokeColor: strokeColor,
+      strokeWidth: strokeWidth,
+      radius: radius,
     );
   }
 }
@@ -224,11 +224,11 @@ class BoxLooseDecoration extends PinDecoration {
     TextStyle? hintTextStyle,
     this.enteredColor,
     this.solidColor,
-    this.radius: const Radius.circular(8.0),
-    this.strokeWidth: 1.0,
-    this.gapSpace: 16.0,
+    this.radius = const Radius.circular(8.0),
+    this.strokeWidth = 1.0,
+    this.gapSpace = 16.0,
     this.gapSpaces,
-    this.strokeColor: Colors.cyan,
+    this.strokeColor = Colors.cyan,
   }) : super(
           textStyle: textStyle,
           obscureStyle: obscureStyle,
@@ -257,13 +257,13 @@ class BoxLooseDecoration extends PinDecoration {
       errorTextStyle: errorTextStyle ?? this.errorTextStyle,
       hintText: hintText ?? this.hintText,
       hintTextStyle: hintTextStyle ?? this.hintTextStyle,
-      solidColor: this.solidColor,
-      strokeColor: this.strokeColor,
-      strokeWidth: this.strokeWidth,
-      radius: this.radius,
-      enteredColor: this.enteredColor,
-      gapSpace: this.gapSpace,
-      gapSpaces: this.gapSpaces,
+      solidColor: solidColor,
+      strokeColor: strokeColor,
+      strokeWidth: strokeWidth,
+      radius: radius,
+      enteredColor: enteredColor,
+      gapSpace: gapSpace,
+      gapSpaces: gapSpaces,
     );
   }
 }
@@ -304,11 +304,11 @@ class PinInputTextField extends StatefulWidget {
 
   PinInputTextField({
     Key? key,
-    this.pinLength: 6,
+    this.pinLength = 6,
     this.onSubmit,
-    this.decoration: const BoxLooseDecoration(),
+    this.decoration = const BoxLooseDecoration(),
     List<TextInputFormatter>? inputFormatter,
-    this.keyboardType: TextInputType.phone,
+    this.keyboardType = TextInputType.phone,
     this.controller,
     this.focusNode,
     this.autoFocus = false,
@@ -319,8 +319,7 @@ class PinInputTextField extends StatefulWidget {
 
         /// pinLength must larger than 0.
         /// If pinEditingController isn't null, guarantee the [pinLength] equals to the pinEditingController's _pinMaxLength
-        assert(pinLength != null && pinLength > 0),
-        assert(decoration != null),
+        assert(pinLength > 0),
 
         /// Hint length must equal to the [pinLength].
         assert(decoration.hintText == null ||
@@ -400,7 +399,8 @@ class _PinInputTextFieldState extends State<PinInputTextField> {
 
     if (widget.controller == null && oldWidget.controller != null) {
       oldWidget.controller!.removeListener(_pinChanged);
-      _controller = TextEditingController.fromValue(oldWidget.controller!.value);
+      _controller =
+          TextEditingController.fromValue(oldWidget.controller!.value);
       _controller!.addListener(_pinChanged);
     } else if (widget.controller != null && oldWidget.controller == null) {
       _controller!.removeListener(_pinChanged);
@@ -443,7 +443,7 @@ class _PinInputTextFieldState extends State<PinInputTextField> {
         controller: _effectiveController,
 
         /// Fake the text style.
-        style: TextStyle(
+        style: const TextStyle(
           /// Hide the editing text.
           color: Colors.transparent,
           fontSize: 1,
@@ -500,12 +500,12 @@ class _PinInputTextFieldState extends State<PinInputTextField> {
           counterText: '',
 
           /// Hide the outline border.
-          enabledBorder: OutlineInputBorder(borderSide: BorderSide.none),
-          focusedBorder: OutlineInputBorder(borderSide: BorderSide.none),
-          disabledBorder: OutlineInputBorder(borderSide: BorderSide.none),
+          enabledBorder: const OutlineInputBorder(borderSide: BorderSide.none),
+          focusedBorder: const OutlineInputBorder(borderSide: BorderSide.none),
+          disabledBorder: const OutlineInputBorder(borderSide: BorderSide.none),
 
           /// Hide the outline border.
-          border: OutlineInputBorder(borderSide: BorderSide.none),
+          border: const OutlineInputBorder(borderSide: BorderSide.none),
 
           /// Bind the error text from pin decoration to this input decoration.
           errorText: widget.decoration.errorText,
@@ -523,7 +523,6 @@ class _PinInputTextFieldState extends State<PinInputTextField> {
 class _PinPaint extends CustomPainter {
   final String text;
   final int pinLength;
-  final PinEntryType type;
   final PinDecoration decoration;
   final ThemeData? themeData;
 
@@ -531,12 +530,12 @@ class _PinPaint extends CustomPainter {
     required this.text,
     required this.pinLength,
     required PinDecoration decoration,
-    this.type: PinEntryType.boxTight,
     this.themeData,
-  }) : this.decoration = decoration.copyWith(
+  }) : decoration = decoration.copyWith(
           textStyle: decoration.textStyle ?? themeData!.textTheme.headline5,
           errorTextStyle: decoration.errorTextStyle ??
-              themeData!.textTheme.caption!.copyWith(color: themeData.errorColor),
+              themeData!.textTheme.caption!
+                  .copyWith(color: themeData.errorColor),
           hintTextStyle: decoration.hintTextStyle ??
               themeData!.textTheme.headline5!
                   .copyWith(color: themeData.hintColor),
@@ -544,7 +543,7 @@ class _PinPaint extends CustomPainter {
 
   @override
   bool shouldRepaint(CustomPainter oldDelegate) =>
-      !(oldDelegate is _PinPaint && oldDelegate.text == this.text);
+      !(oldDelegate is _PinPaint && oldDelegate.text == text);
 
   _drawBoxTight(Canvas canvas, Size size) {
     /// Calculate the height of paint area for drawing the pin field.
@@ -987,8 +986,7 @@ class PinInputTextFormField extends FormField<String> {
     bool autovalidate = false,
     ValueChanged<String>? onChanged,
   })  : assert(initialValue == null || controller == null),
-        assert(autovalidate != null),
-        assert(pinLength != null && pinLength > 0),
+        assert(pinLength > 0),
         super(
             key: key,
             initialValue:
@@ -1010,10 +1008,13 @@ class PinInputTextFormField extends FormField<String> {
               }
               return result;
             },
-            autovalidateMode: autovalidate ? AutovalidateMode.always : AutovalidateMode.disabled,
+            autovalidateMode: autovalidate
+                ? AutovalidateMode.always
+                : AutovalidateMode.disabled,
             enabled: enabled,
             builder: (FormFieldState<String> field) {
-              final _PinInputTextFormFieldState state = field as _PinInputTextFormFieldState;
+              final _PinInputTextFormFieldState state =
+                  field as _PinInputTextFormFieldState;
               return PinInputTextField(
                 pinLength: pinLength,
                 onSubmit: onSubmit,
@@ -1057,7 +1058,8 @@ class _PinInputTextFormFieldState extends FormFieldState<String> {
 
     if (widget.controller == null && oldWidget.controller != null) {
       oldWidget.controller!.removeListener(_handleControllerChanged);
-      _controller = TextEditingController.fromValue(oldWidget.controller!.value);
+      _controller =
+          TextEditingController.fromValue(oldWidget.controller!.value);
       _controller!.addListener(_handleControllerChanged);
     } else if (widget.controller != null && oldWidget.controller == null) {
       _controller!.removeListener(_handleControllerChanged);
@@ -1120,7 +1122,8 @@ class _PinInputTextFormFieldState extends FormFieldState<String> {
     // notifications for changes originating from within this class -- for
     // example, the reset() method. In such cases, the FormField value will
     // already have been set.
-    if (_effectiveController!.text != value)
+    if (_effectiveController!.text != value) {
       didChange(_effectiveController!.text);
+    }
   }
 }

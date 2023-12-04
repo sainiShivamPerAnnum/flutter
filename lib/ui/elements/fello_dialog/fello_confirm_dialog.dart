@@ -24,7 +24,7 @@ class FelloConfirmationDialog extends StatefulWidget {
   final String? reject;
   final double? bottomPadding;
 
-  FelloConfirmationDialog({
+  const FelloConfirmationDialog({
     this.result,
     this.content,
     this.onAccept,
@@ -95,7 +95,7 @@ class _FelloConfirmationDialogState extends State<FelloConfirmationDialog> {
                   alignment: Alignment.center,
                   height: SizeConfig.padding64,
                   child: Container(
-                    child: CircularProgressIndicator(
+                    child: const CircularProgressIndicator(
                       strokeWidth: 2,
                       color: UiConstants.primaryColor,
                       backgroundColor: UiConstants.tertiarySolid,

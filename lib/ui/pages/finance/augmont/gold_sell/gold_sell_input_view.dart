@@ -32,7 +32,7 @@ class GoldSellInputView extends StatelessWidget {
   final AugmontTransactionService augTxnService;
 
   const GoldSellInputView(
-      {Key? key, required this.model, required this.augTxnService})
+      {required this.model, required this.augTxnService, Key? key})
       : super(key: key);
 
   @override
@@ -291,7 +291,7 @@ class GoldSellInputView extends StatelessWidget {
                                 FocusScope.of(context).unfocus();
                                 bool isDetailComplete =
                                     await model.verifyGoldSaleDetails();
-                                if (isDetailComplete)
+                                if (isDetailComplete) {
                                   AppState.delegate!.appState.currentAction =
                                       PageAction(
                                     widget: SellConfirmationView(
@@ -307,6 +307,7 @@ class GoldSellInputView extends StatelessWidget {
                                     page: SellConfirmationViewConfig,
                                     state: PageState.addWidget,
                                   );
+                                }
                                 // BaseUtil.openDialog(
                                 //   addToScreenStack: true,
                                 //   hapticVibrate: true,

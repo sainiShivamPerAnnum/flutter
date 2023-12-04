@@ -3,12 +3,14 @@ import 'dart:developer';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/transaction_state_enum.dart';
+import 'package:felloapp/core/model/quote_model.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_buy/augmont_buy_vm.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_buy/gold_pro_buy_vm.dart';
+import 'package:felloapp/ui/pages/finance/quotes.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
@@ -16,14 +18,25 @@ import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:lottie/lottie.dart';
 
-class GoldProBuyPendingView extends StatelessWidget {
+class GoldProBuyPendingView extends StatefulWidget {
   const GoldProBuyPendingView(
       {required this.model, required this.txnService, super.key});
 
   final GoldProBuyViewModel model;
   final AugmontTransactionService txnService;
 
+  @override
+  State<GoldProBuyPendingView> createState() => _GoldProBuyPendingViewState();
+}
+
+class _GoldProBuyPendingViewState extends State<GoldProBuyPendingView> {
   final int waitTimeInSec = 45;
+
+  @override
+  void initState() {
+    super.initState();
+    AppState.blockNavigation();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -44,6 +57,9 @@ class GoldProBuyPendingView extends StatelessWidget {
         Expanded(
           child: Lottie.network(Assets.goldDepostLoadingLottie,
               height: SizeConfig.screenHeight! * 0.7),
+        ),
+        const QuotesComponent(
+          quotesType: QuotesType.aug,
         ),
         Column(
           children: [
@@ -80,13 +96,12 @@ class GoldProBuyPendingView extends StatelessWidget {
                 end: Duration.zero,
               ),
               onEnd: () async {
-                // await txnService
-                //     .processPolling(txnService.pollingPeriodicTimer);
-                if (txnService.currentTransactionState !=
+                await widget.txnService.transactionFuture;
+                if (widget.txnService.currentTransactionState !=
                     TransactionState.ongoing) return;
-                txnService.pollingPeriodicTimer?.cancel();
-                txnService.isGoldBuyInProgress = false;
-                txnService.currentTransactionState = TransactionState.idle;
+                widget.txnService.isGoldBuyInProgress = false;
+                widget.txnService.currentTransactionState =
+                    TransactionState.idle;
                 unawaited(
                     locator<TxnHistoryService>().getGoldProTransactions());
                 AppState.unblockNavigation();
@@ -118,7 +133,7 @@ class GoldProBuyPendingView extends StatelessWidget {
 
   void showTransactionPendingDialog() {
     S locale = locator<S>();
-    Future.delayed(Duration(seconds: 1), () {
+    Future.delayed(const Duration(seconds: 1), () {
       BaseUtil.openDialog(
         addToScreenStack: true,
         hapticVibrate: true,

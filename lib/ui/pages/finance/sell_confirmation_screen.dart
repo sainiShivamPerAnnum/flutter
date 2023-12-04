@@ -23,11 +23,11 @@ class SellConfirmationView extends StatefulWidget {
   final InvestmentType investmentType;
 
   const SellConfirmationView(
-      {Key? key,
-      required this.amount,
+      {required this.amount,
       required this.grams,
       required this.onSuccess,
-      required this.investmentType})
+      required this.investmentType,
+      Key? key})
       : super(key: key);
 
   @override

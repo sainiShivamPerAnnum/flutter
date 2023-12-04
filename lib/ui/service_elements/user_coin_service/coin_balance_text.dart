@@ -5,7 +5,7 @@ import 'package:provider/provider.dart';
 
 class CoinBalanceTextSE extends StatelessWidget {
   final TextStyle? style;
-  CoinBalanceTextSE({this.style});
+  const CoinBalanceTextSE({this.style});
   @override
   Widget build(BuildContext context) {
     return Consumer<UserCoinService>(

@@ -20,7 +20,7 @@ class LendboxRepo extends BaseRepo {
     String? payoutSourceId,
   ) async {
     try {
-      final uid = userService!.baseUser!.uid;
+      final uid = userService.baseUser!.uid;
 
       final response = await APIService.instance.postData(
         ApiPath.createLbWithdrawal(uid),
@@ -35,7 +35,7 @@ class LendboxRepo extends BaseRepo {
       final data = response['data'];
       return ApiResponse(model: data['txnId'], code: 200);
     } catch (e) {
-      logger!.e(e);
+      logger.e(e);
       return ApiResponse.withError(e.toString(), 400);
     }
   }
@@ -43,7 +43,7 @@ class LendboxRepo extends BaseRepo {
   Future<ApiResponse<LendboxWithdrawableQuantity>>
       getWithdrawableQuantity() async {
     try {
-      final uid = userService!.baseUser!.uid;
+      final uid = userService.baseUser!.uid;
 
       final response = await APIService.instance.getData(
         ApiPath.lbWithdrawableQuantity(uid),
@@ -55,7 +55,7 @@ class LendboxRepo extends BaseRepo {
       return ApiResponse(
           model: LendboxWithdrawableQuantity.fromMap(data), code: 200);
     } catch (e) {
-      logger!.e(e);
+      logger.e(e);
       BaseUtil.showNegativeAlert(
           e.toString(), "Please try again after sometime");
       return ApiResponse.withError(e.toString(), 400);
@@ -90,7 +90,7 @@ class LendboxRepo extends BaseRepo {
 
   Future<ApiResponse<LendboxMaturityResponse>> getLendboxMaturity() async {
     try {
-      final uid = userService!.baseUser!.uid;
+      final uid = userService.baseUser!.uid;
 
       final response = await APIService.instance.getData(
         ApiPath.lbMaturity(uid),
@@ -101,7 +101,7 @@ class LendboxRepo extends BaseRepo {
       return ApiResponse(
           model: LendboxMaturityResponse.fromJson(response), code: 200);
     } catch (e) {
-      logger!.e(e);
+      logger.e(e);
       BaseUtil.showNegativeAlert(
           e.toString(), "Please try again after sometime");
       return ApiResponse.withError(e.toString(), 400);

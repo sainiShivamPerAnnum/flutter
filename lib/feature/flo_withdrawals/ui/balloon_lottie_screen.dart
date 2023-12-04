@@ -73,9 +73,9 @@ class _BalloonLottieScreenState extends State<BalloonLottieScreen>
         eventName: AnalyticsEvents.confirmWithdrawOnFixedWithdrawal,
         properties: {
           "Maturity Date": formatDate(depositData!.maturityOn!),
-          "Maturity Amount": depositData?.maturityAmt,
-          "principal amount": depositData?.investedAmt,
-          'asset': depositData?.fundType
+          "Maturity Amount": depositData.maturityAmt,
+          "principal amount": depositData.investedAmt,
+          'asset': depositData.fundType
         },
       );
     } else {
@@ -403,9 +403,9 @@ class _BalloonLottieScreenState extends State<BalloonLottieScreen>
 
 class LineIndicator extends StatelessWidget {
   const LineIndicator(
-      {super.key,
-      required this.heightFactor,
+      {required this.heightFactor,
       required this.lineColor,
+      super.key,
       this.show10label = true,
       this.show8label = true});
 
@@ -498,7 +498,7 @@ class LineIndicator extends StatelessWidget {
 }
 
 class _BackGround extends StatelessWidget {
-  const _BackGround({super.key});
+  const _BackGround();
 
   @override
   Widget build(BuildContext context) {
@@ -663,7 +663,7 @@ class _BackGround extends StatelessWidget {
 }
 
 class BalloonGestureDetectors extends StatelessWidget {
-  const BalloonGestureDetectors({super.key, required this.onTap});
+  const BalloonGestureDetectors({required this.onTap, super.key});
 
   final ValueChanged<int> onTap;
 
@@ -816,9 +816,9 @@ class MoonCustomPainter extends CustomPainter {
     path_0.lineTo(size.width * 0.9848696, size.height * 0.8239500);
     path_0.close();
 
-    Paint paint_0_fill = Paint()..style = PaintingStyle.fill;
-    paint_0_fill.color = const Color(0xffF1ADAB7).withOpacity(0.5);
-    canvas.drawPath(path_0, paint_0_fill);
+    Paint paint0Fill = Paint()..style = PaintingStyle.fill;
+    paint0Fill.color = const Color(0xffF1ADAB7).withOpacity(0.5);
+    canvas.drawPath(path_0, paint0Fill);
   }
 
   @override

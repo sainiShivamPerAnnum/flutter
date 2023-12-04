@@ -20,18 +20,21 @@ import 'package:felloapp/core/service/payments/augmont_transaction_service.dart'
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
-import 'package:felloapp/ui/pages/finance/augmont/gold_buy/widgets/view_breakdown.dart';
+import 'package:felloapp/ui/pages/finance/augmont/gold_buy/augmont_buy_vm.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_buy/gold_pro_buy_components/gold_pro_choice_chips.dart';
+import 'package:felloapp/ui/pages/finance/preffered_upi_option_mixin.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/haptic.dart';
-import 'package:felloapp/util/installed_upi_apps_finder.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
-import 'package:upi_pay/upi_pay.dart';
 
-class GoldProBuyViewModel extends BaseViewModel {
+class GoldProBuyViewModel extends BaseViewModel
+    with PaymentIntentMixin, NetbankingValidationMixin {
+  @override
+  BankAndPanService get bankingService => _bankAndPanService;
+
   final AugmontTransactionService _txnService =
       locator<AugmontTransactionService>();
   final UserService userService = locator<UserService>();
@@ -57,6 +60,7 @@ class GoldProBuyViewModel extends BaseViewModel {
   double consecutiveDifference =
       AppConfig.getValue(AppConfigKey.goldProInvestmentChips)[1].toDouble() -
           AppConfig.getValue(AppConfigKey.goldProInvestmentChips)[0].toDouble();
+
   bool _isDescriptionView = false;
   double _totalGoldBalance = 0.0;
   double _currentGoldBalance = 0.0;
@@ -100,9 +104,6 @@ class GoldProBuyViewModel extends BaseViewModel {
     ),
   ];
 
-  List<ApplicationMeta> appMetaList = [];
-  UpiApplication? upiApplication;
-  ApplicationMeta? selectedUpiApplication;
   AssetOptionsModel? assetOptionsModel;
   bool isIntentFlow = true;
   String _unavailabilityText = "";
@@ -158,6 +159,8 @@ class GoldProBuyViewModel extends BaseViewModel {
     notifyListeners();
   }
 
+  bool get hasEnoughGoldBalanceForLease => additionalGoldBalance == 0;
+
   bool get isDescriptionView => _isDescriptionView;
 
   set isDescriptionView(value) {
@@ -212,7 +215,8 @@ class GoldProBuyViewModel extends BaseViewModel {
         userService.userFundWallet!.augGoldQuantity, 4, false);
     totalGoldBalance = chipsList[1].value;
     _isChecked = userService.userPortfolio.augmont.fd.isGoldProUser;
-    appMetaList = await UpiUtils.getUpiApps();
+    await initAndSetPreferredPaymentOption();
+
     unawaited(fetchGoldRates());
 
     await verifyAugmontKyc();
@@ -278,47 +282,19 @@ class GoldProBuyViewModel extends BaseViewModel {
   }
 
   Future<void> _initiateBuyAndLease() async {
-    if (isIntentFlow) {
-      await BaseUtil.openModalBottomSheet(
-        isBarrierDismissible: true,
-        backgroundColor: const Color(0xff1A1A1A),
-        addToScreenStack: true,
-        isScrollControlled: true,
-        content: UpiAppsGridView(
-          apps: appMetaList,
-          padTop: true,
-          onTap: (i) {
-            Haptic.vibrate();
-            AppState.backButtonDispatcher!.didPopRoute();
-            selectedUpiApplication = appMetaList[i];
-            _txnService.initiateAugmontTransaction(
-              details: GoldPurchaseDetails(
-                goldBuyAmount: totalGoldAmount,
-                goldRates: goldRates,
-                couponCode: '',
-                skipMl: false,
-                goldInGrams: additionalGoldBalance,
-                leaseQty: totalGoldBalance,
-                isPro: true,
-                upiChoice: selectedUpiApplication,
-              ),
-            );
-          },
-        ),
-      );
-    } else {
-      await _txnService.initiateAugmontTransaction(
-        details: GoldPurchaseDetails(
-          goldBuyAmount: totalGoldAmount,
-          goldRates: goldRates,
-          couponCode: '',
-          skipMl: false,
-          goldInGrams: additionalGoldBalance,
-          leaseQty: totalGoldBalance,
-          isPro: true,
-        ),
-      );
-    }
+    await _txnService.initiateAugmontTransaction(
+      details: GoldPurchaseDetails(
+        goldBuyAmount: totalGoldAmount,
+        goldRates: goldRates,
+        couponCode: '',
+        skipMl: false,
+        goldInGrams: additionalGoldBalance,
+        leaseQty: totalGoldBalance,
+        isPro: true,
+        upiChoice: selectedUpiApplication,
+        isIntentFlow: assetOptionsModel!.data.intent,
+      ),
+    );
   }
 
   GoldProInvestmentResponseModel? _leaseModel;
@@ -415,8 +391,9 @@ class GoldProBuyViewModel extends BaseViewModel {
 
   void onTextFieldValueChanged(String val) {
     selectedChipIndex = -1;
-    if (double.tryParse(val) != null) {
-      totalGoldBalance = double.tryParse(val)!;
+    final value = double.tryParse(val);
+    if (value != null) {
+      totalGoldBalance = value;
     }
   }
 
@@ -541,12 +518,19 @@ class GoldProBuyViewModel extends BaseViewModel {
         (goldRates?.cgstPercent ?? 0) + (goldRates?.sgstPercent ?? 0);
 
     if (goldBuyPrice != 0.0) {
-      // additionalGoldBalance += 0.0004;
-      totalGoldAmount = BaseUtil.digitPrecision(
-              (goldBuyPrice! * additionalGoldBalance) +
-                  (netTax * goldBuyPrice! * additionalGoldBalance) / 100,
-              2) +
-          3;
+      // If gold rate changes before request reaches to augmont gateway from
+      // client.
+      const variableAmount = 3;
+
+      final amountWithPrecision = BaseUtil.digitPrecision(
+          (goldBuyPrice! * additionalGoldBalance) +
+              (netTax * goldBuyPrice! * additionalGoldBalance) / 100,
+          2);
+
+      // Add variable amount if
+      totalGoldAmount = amountWithPrecision == 0
+          ? amountWithPrecision
+          : amountWithPrecision + variableAmount;
 
       double expectedGoldReturnsAmount = BaseUtil.digitPrecision(
           totalGoldBalance * goldBuyPrice! + netTax, 2, false);

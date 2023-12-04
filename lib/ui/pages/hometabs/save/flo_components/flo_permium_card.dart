@@ -12,15 +12,15 @@ import 'package:flutter/material.dart';
 
 class FloPremiumTierCard extends StatelessWidget {
   const FloPremiumTierCard({
-    super.key,
     required this.userService,
     required this.tier,
+    required this.actionUri,
+    required this.cta,
+    super.key,
     this.title,
     this.lockIn,
     this.minInvestment,
     this.summary,
-    required this.actionUri,
-    required this.cta,
     this.promoText,
   });
 

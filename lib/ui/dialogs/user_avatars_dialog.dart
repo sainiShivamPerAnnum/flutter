@@ -6,14 +6,13 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/widgets.dart';
 import 'package:flutter_svg/svg.dart';
 
 class UserAvatarSelectionDialog extends StatefulWidget {
   const UserAvatarSelectionDialog(
-      {Key? key,
-      required this.onCustomAvatarSelection,
+      {required this.onCustomAvatarSelection,
       required this.onPresetAvatarSelection,
+      Key? key,
       this.itemCount = 6})
       : super(key: key);
   final Function onCustomAvatarSelection;
@@ -28,13 +27,14 @@ class UserAvatarSelectionDialog extends StatefulWidget {
 class _UserAvatarSelectionDialogState extends State<UserAvatarSelectionDialog> {
   int _currentSelectedAvatar = 0;
 
-  get currentSelectedAvatar => this._currentSelectedAvatar;
+  get currentSelectedAvatar => _currentSelectedAvatar;
 
   set currentSelectedAvatar(value) {
-    if (mounted)
+    if (mounted) {
       setState(() {
-        this._currentSelectedAvatar = value;
+        _currentSelectedAvatar = value;
       });
+    }
   }
 
   @override
@@ -60,7 +60,7 @@ class _UserAvatarSelectionDialogState extends State<UserAvatarSelectionDialog> {
               crossAxisSpacing: SizeConfig.padding24,
               mainAxisSpacing: SizeConfig.padding24,
             ),
-            physics: NeverScrollableScrollPhysics(),
+            physics: const NeverScrollableScrollPhysics(),
             shrinkWrap: true,
             itemCount: widget.itemCount,
             itemBuilder: (ctx, i) => i == widget.itemCount - 1
