@@ -789,7 +789,7 @@ class LendboxBuyViewModel extends BaseViewModel
           CouponModel(
               code: model.code,
               createdOn: TimestampModel.currentTimeStamp(),
-              description: model.message,
+              description: model.desc,
               expiresOn: TimestampModel.currentTimeStamp(),
               highlight: '',
               maxUse: 0,
