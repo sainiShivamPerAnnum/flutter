@@ -16,7 +16,6 @@ class LoginOtpViewModel extends BaseViewModel with CodeAutoFill {
   final pinEditingController = TextEditingController();
   final iosScreenShotChannel = const MethodChannel('secureScreenshotChannel');
   Log log = const Log("OtpInputScreen");
-  String _loaderMessage = "Enter the received OTP..";
   FocusNode otpFocusNode = FocusNode();
   late LoginControllerViewModel parentModelInstance;
   String? mobileNo;
@@ -28,11 +27,11 @@ class LoginOtpViewModel extends BaseViewModel with CodeAutoFill {
 
   bool get otpFieldEnabled => _otpFieldEnabled;
 
-  get isTriesExceeded => _isTriesExceeded;
+  bool get isTriesExceeded => _isTriesExceeded;
 
-  get isResendClicked => _isResendClicked;
+  bool get isResendClicked => _isResendClicked;
 
-  get autoDetectingOtp => _autoDetectingOtp;
+  bool get autoDetectingOtp => _autoDetectingOtp;
 
   bool get showResendOption => _showResendOption;
 
@@ -48,7 +47,7 @@ class LoginOtpViewModel extends BaseViewModel with CodeAutoFill {
     notifyListeners();
   }
 
-  init() async {
+  Future<void> init() async {
     if (Platform.isAndroid) {
       logger.d("Disabling Screenshots in OTP Screen for Android");
       await FlutterWindowManager.addFlags(FlutterWindowManager.FLAG_SECURE);
@@ -58,7 +57,10 @@ class LoginOtpViewModel extends BaseViewModel with CodeAutoFill {
       await iosScreenShotChannel.invokeMethod('secureiOS');
     }
     listenForCode();
-    listenForDummyCode();
+    assert(() {
+      listenForDummyCode();
+      return true;
+    }());
     Future.delayed(const Duration(seconds: 30), () {
       try {
         showResendOption = true;
@@ -68,7 +70,7 @@ class LoginOtpViewModel extends BaseViewModel with CodeAutoFill {
     });
   }
 
-  listenForDummyCode() {
+  void listenForDummyCode() {
     Future.delayed(const Duration(seconds: 2), () {
       if (parentModelInstance.userMobile ==
           FlavorConfig.instance!.values.dummyMobileNo) {
@@ -79,27 +81,23 @@ class LoginOtpViewModel extends BaseViewModel with CodeAutoFill {
     });
   }
 
-  onOtpReceived() {
+  void onOtpReceived() {
     _otpFieldEnabled = false;
-    _loaderMessage = "Signing in..";
-    // notifyListeners();
   }
 
-  onOtpAutoDetectTimeout() {
+  void onOtpAutoDetectTimeout() {
     _otpFieldEnabled = true;
     _autoDetectingOtp = false;
-    _loaderMessage = "Please enter the received otp or request another";
     notifyListeners();
   }
 
-  onOtpResendConfirmed(bool flag) {
+  void onOtpResendConfirmed(bool flag) {
     if (flag) {
       //otp successfully resent
       listenForCode();
       _isTriesExceeded = false;
       _isResendClicked = false;
       _otpFieldEnabled = true;
-      _loaderMessage = 'OTP has been successfully resent';
       _autoDetectingOtp = true;
       notifyListeners();
     } else {
@@ -108,7 +106,6 @@ class LoginOtpViewModel extends BaseViewModel with CodeAutoFill {
       _isResendClicked = true;
       _otpFieldEnabled = true;
       _autoDetectingOtp = false;
-      _loaderMessage = 'OTP requests exceeded. Please try again after sometime';
       notifyListeners();
     }
   }
@@ -122,7 +119,7 @@ class LoginOtpViewModel extends BaseViewModel with CodeAutoFill {
     }
   }
 
-  void exit() async {
+  Future<void> exit() async {
     if (Platform.isAndroid) {
       logger.d("Enabling Screenshots in OTP Screen for Android");
       await FlutterWindowManager.clearFlags(FlutterWindowManager.FLAG_SECURE);
