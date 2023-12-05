@@ -50,7 +50,7 @@ class FelloBadgesCubit extends Cubit<FelloBadgesState> {
     try {
       await _repo.getFelloBadges().then((res) {
         if (res.isSuccess()) {
-          emit(FelloBadgesSuccess(res.model!.data!,
+          emit(FelloBadgesSuccess(res.model!.data,
               currentBadge: updateLevel(1)));
 
           callLeaderBoardApi();
@@ -72,11 +72,9 @@ class FelloBadgesCubit extends Cubit<FelloBadgesState> {
         await locator<CampaignRepo>().getBadgesLeaderboard().then(
           (res) {
             if (res.isSuccess()) {
-              log("BadgesLeaderBoardModel: ${res.model?.toJson()}");
-
               emit(currentState.copyWith(badgesLeaderBoardModel: res.model));
 
-              checkBadgeUpdate(currentState.felloBadgesModel.levels!);
+              checkBadgeUpdate(currentState.felloBadgesModel.levels);
             }
           },
         );
@@ -99,15 +97,13 @@ class FelloBadgesCubit extends Cubit<FelloBadgesState> {
     var temp = DateTime.parse(currentTimeStamp);
 
     for (int i = 0; i < levelDetails.length; i++) {
-      for (int j = 0; j < levelDetails[i].lvlData!.length; j++) {
-        if (temp.isBefore(levelDetails[i].lvlData![j].updatedAt!) ||
-            temp.isAtSameMomentAs(levelDetails[i].lvlData![j].updatedAt!)) {
-          log("Badge Unlocked => ${levelDetails[i].lvlData![j].toJson()}");
-
+      for (int j = 0; j < levelDetails[i].lvlData.length; j++) {
+        if (temp.isBefore(levelDetails[i].lvlData[j].updatedAt) ||
+            temp.isAtSameMomentAs(levelDetails[i].lvlData[j].updatedAt)) {
           showPopUp(
-            title: levelDetails[i].lvlData![j].title,
-            subtitle: levelDetails[i].lvlData![j].barHeading,
-            imageUrl: levelDetails[i].lvlData![j].badgeurl,
+            title: levelDetails[i].lvlData[j].title,
+            subtitle: levelDetails[i].lvlData[j].barHeading,
+            imageUrl: levelDetails[i].lvlData[j].badgeurl,
             actionUri: '',
           );
           break;

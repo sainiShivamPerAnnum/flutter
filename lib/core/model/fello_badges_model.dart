@@ -1,172 +1,114 @@
-class FelloBadgesModel {
-  final String? message;
-  final FelloBadgesData? data;
+import 'package:json_annotation/json_annotation.dart';
 
-  FelloBadgesModel({
-    this.message,
-    this.data,
+part 'fello_badges_model.g.dart';
+
+const _deserializable = JsonSerializable(
+  createToJson: false,
+);
+
+@_deserializable
+class FelloBadgesModel {
+  final String message;
+  final FelloBadgesData data;
+
+  const FelloBadgesModel({
+    required this.data,
+    this.message = '',
   });
 
   factory FelloBadgesModel.fromJson(Map<String, dynamic> json) =>
-      FelloBadgesModel(
-        message: json["message"],
-        data: json["data"] == null
-            ? null
-            : FelloBadgesData.fromJson(json["data"]),
-      );
-
-  Map<String, dynamic> toJson() => {
-        "message": message,
-        "data": data?.toJson(),
-      };
+      _$FelloBadgesModelFromJson(json);
 }
 
+@_deserializable
 class FelloBadgesData {
-  final String? title;
-  final String? titleColor;
-  final List<Level>? levels;
-  final SuperFelloWorks? superFelloWorks;
-  final int? currentLevel;
+  final String title;
 
-  FelloBadgesData({
-    this.title,
-    this.titleColor,
-    this.levels,
-    this.superFelloWorks,
-    this.currentLevel,
+  final List<Level> levels;
+  final SuperFelloWorks superFelloWorks;
+
+  const FelloBadgesData({
+    required this.superFelloWorks,
+    this.levels = const [],
+    this.title = '',
   });
 
   factory FelloBadgesData.fromJson(Map<String, dynamic> json) =>
-      FelloBadgesData(
-        title: json["title"],
-        titleColor: json["titleColor"],
-        levels: json["levels"] == null
-            ? []
-            : List<Level>.from(json["levels"]!.map((x) => Level.fromJson(x))),
-        superFelloWorks: json["superFelloWorks"] == null
-            ? null
-            : SuperFelloWorks.fromJson(json["superFelloWorks"]),
-        currentLevel: 1,
-      );
-
-  Map<String, dynamic> toJson() => {
-        "title": title,
-        "titleColor": titleColor,
-        "levels": levels == null
-            ? []
-            : List<dynamic>.from(levels!.map((x) => x.toJson())),
-        "superFelloWorks": superFelloWorks?.toJson(),
-      };
+      _$FelloBadgesDataFromJson(json);
 }
 
+@_deserializable
+class LevelBenefit {
+  const LevelBenefit({
+    this.title = '',
+    this.list = const [],
+  });
+
+  final String title;
+  final List<String> list;
+
+  factory LevelBenefit.fromJson(Map<String, dynamic> json) =>
+      _$LevelBenefitFromJson(json);
+}
+
+@_deserializable
 class Level {
-  final String? badgeurl;
-  final List<String>? benefits;
-  final List<LvlDatum>? lvlData;
-  final bool? isCompleted;
+  final String badgeurl;
+  final LevelBenefit benefits;
+  @JsonKey(name: 'lvl_data')
+  final List<LevelData> lvlData;
+  final bool isCompleted;
 
-  Level({
-    this.badgeurl,
-    this.benefits,
-    this.lvlData,
-    this.isCompleted,
+  const Level({
+    required this.benefits,
+    this.badgeurl = '',
+    this.lvlData = const [],
+    this.isCompleted = false,
   });
 
-  factory Level.fromJson(Map<String, dynamic> json) => Level(
-        badgeurl: json["badgeurl"],
-        benefits: json["benefits"] == null
-            ? []
-            : List<String>.from(json["benefits"]!.map((x) => x)),
-        isCompleted: false,
-        lvlData: json["lvl_data"] == null
-            ? []
-            : List<LvlDatum>.from(
-                json["lvl_data"]!.map((x) => LvlDatum.fromJson(x))),
-      );
-
-  Map<String, dynamic> toJson() =>
-      {
-        "badgeurl": badgeurl,
-        "benefits":
-            benefits == null ? [] : List<dynamic>.from(benefits!.map((x) => x)),
-        "isCompleted": isCompleted,
-        "lvl_data": lvlData == null
-            ? []
-            : List<dynamic>.from(lvlData!.map((x) => x.toJson())),
-      };
+  factory Level.fromJson(Map<String, dynamic> json) => _$LevelFromJson(json);
 }
 
-class LvlDatum {
-  final double? achieve;
-  final String? title;
-  final String? barHeading;
-  final String? badgeurl;
-  final String? referText;
-  final String? bottomSheetText;
-  final String? bottomSheetCta;
-  final String? ctaUrl;
-  final DateTime? updatedAt;
+@_deserializable
+class LevelData {
+  final num achieve;
+  final String title;
+  final String barHeading;
+  final String badgeurl;
+  final String referText;
+  final String bottomSheetText;
+  final String bottomSheetCta;
+  final String ctaUrl;
+  final DateTime updatedAt;
 
-  LvlDatum({
-    this.achieve,
-    this.title,
-    this.barHeading,
-    this.badgeurl,
-    this.referText,
-    this.bottomSheetText,
-    this.bottomSheetCta,
-    this.ctaUrl,
-    this.updatedAt,
+  const LevelData({
+    required this.updatedAt,
+    this.achieve = 0.0,
+    this.title = '',
+    this.barHeading = '',
+    this.badgeurl = '',
+    this.referText = '',
+    this.bottomSheetText = '',
+    this.bottomSheetCta = '',
+    this.ctaUrl = '',
   });
 
-  factory LvlDatum.fromJson(Map<String, dynamic> json) => LvlDatum(
-        achieve: json["achieve"]?.toDouble(),
-        title: json["title"],
-        barHeading: json["barHeading"],
-        badgeurl: json["badgeurl"],
-        referText: json["referText"],
-        bottomSheetText: json["bottomSheetText"],
-        bottomSheetCta: json["bottomSheetCta"],
-        ctaUrl: json["cta_url"],
-        updatedAt: json["updatedAt"] == null
-            ? null
-            : DateTime.parse(json["updatedAt"]),
-      );
-
-  Map<String, dynamic> toJson() => {
-        "achieve": achieve,
-        "title": title,
-        "barHeading": barHeading,
-        "badgeurl": badgeurl,
-        "referText": referText,
-        "bottomSheetText": bottomSheetText,
-        "bottomSheetCta": bottomSheetCta,
-        "cta_url": ctaUrl,
-        "updatedAt": updatedAt?.toIso8601String(),
-      };
+  factory LevelData.fromJson(Map<String, dynamic> json) =>
+      _$LevelDataFromJson(json);
 }
 
+@_deserializable
 class SuperFelloWorks {
-  final String? mainText;
-  final List<String>? subText;
+  @JsonKey(name: 'main_text')
+  final String mainText;
+  @JsonKey(name: 'sub_text')
+  final List<String> subText;
 
-  SuperFelloWorks({
-    this.mainText,
-    this.subText,
+  const SuperFelloWorks({
+    this.mainText = '',
+    this.subText = const [],
   });
 
   factory SuperFelloWorks.fromJson(Map<String, dynamic> json) =>
-      SuperFelloWorks(
-        mainText: json["main_text"],
-        subText: json["sub_text"] == null
-            ? []
-            : List<String>.from(json["sub_text"]!.map((x) => x)),
-      );
-
-  Map<String, dynamic> toJson() =>
-      {
-        "main_text": mainText,
-        "sub_text":
-            subText == null ? [] : List<dynamic>.from(subText!.map((x) => x)),
-      };
+      _$SuperFelloWorksFromJson(json);
 }

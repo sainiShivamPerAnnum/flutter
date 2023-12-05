@@ -8,7 +8,6 @@ import 'package:felloapp/feature/fello_badges/ui/widgets/badges_top_user_widget.
 import 'package:felloapp/feature/fello_badges/ui/widgets/fello_badges_backround.dart';
 import 'package:felloapp/feature/fello_badges/ui/widgets/fello_badges_details.dart';
 import 'package:felloapp/feature/fello_badges/ui/widgets/fello_badges_list.dart';
-import 'package:felloapp/feature/fello_badges/ui/widgets/how_superfello_work_widget.dart';
 import 'package:felloapp/feature/fello_badges/ui/widgets/user_badges_container.dart';
 import 'package:felloapp/feature/fello_badges/ui/widgets/user_progress_indicator.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -24,6 +23,8 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
+
+import 'widgets/how_superfello_work_widget.dart';
 
 class FelloBadgeHome extends StatelessWidget {
   const FelloBadgeHome({super.key});
@@ -150,10 +151,10 @@ class _FelloBadgeUiState extends State<FelloBadgeUi> {
 
 class FelloBadgeSuccessScreen extends StatelessWidget {
   const FelloBadgeSuccessScreen({
-    super.key,
     required this.badgeBorderColor,
     required this.badgeUrl,
     required this.state,
+    super.key,
   });
 
   final Color badgeBorderColor;
@@ -186,10 +187,8 @@ class FelloBadgeSuccessScreen extends StatelessWidget {
           Padding(
             padding: EdgeInsets.symmetric(
                 horizontal: SizeConfig.pageHorizontalMargins),
-            child: state.felloBadgesModel.title!.beautify(
-              style: TextStyles.rajdhaniB.body1.colour(
-                state.felloBadgesModel.titleColor!.toColor(),
-              ),
+            child: state.felloBadgesModel.title.beautify(
+              style: TextStyles.rajdhaniB.body1,
               boldStyle: TextStyles.rajdhaniB.body1.colour(
                 const Color(0xFF26F1CC),
               ),
@@ -211,7 +210,7 @@ class FelloBadgeSuccessScreen extends StatelessWidget {
           ),
           HowSuperFelloWorksWidget(
             isBoxOpen: false,
-            superFelloWorks: state.felloBadgesModel.superFelloWorks!,
+            superFelloWorks: state.felloBadgesModel.superFelloWorks,
           ),
           SizedBox(
             height: SizeConfig.padding32,
@@ -240,7 +239,6 @@ class FelloBadgeSuccessScreen extends StatelessWidget {
           ),
           Container(
             width: SizeConfig.screenWidth,
-            // height: 500,
             padding: EdgeInsets.symmetric(
                 horizontal: SizeConfig.padding28,
                 vertical: SizeConfig.padding42),
