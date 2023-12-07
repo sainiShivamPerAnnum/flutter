@@ -15,7 +15,11 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class GoldProSellCard extends StatelessWidget {
-  const GoldProSellCard({required this.data, required this.model, super.key});
+  const GoldProSellCard({
+    required this.data,
+    required this.model,
+    super.key,
+  });
 
   final GoldProInvestmentResponseModel data;
   final GoldProSellViewModel model;
@@ -27,7 +31,7 @@ class GoldProSellCard extends StatelessWidget {
           horizontal: SizeConfig.pageHorizontalMargins,
           vertical: SizeConfig.padding14),
       decoration: BoxDecoration(
-        color: UiConstants.kArrowButtonBackgroundColor,
+        color: UiConstants.grey5,
         borderRadius: BorderRadius.circular(SizeConfig.roundness16),
       ),
       padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
@@ -47,7 +51,6 @@ class GoldProSellCard extends StatelessWidget {
           trailSubtitleColor: UiConstants.kGoldProPrimary,
           trailTitleColor: Colors.grey,
           percent: data.interest_collected,
-          isPro: true,
           isGainInGms: true,
         ),
         SizedBox(height: SizeConfig.padding12),

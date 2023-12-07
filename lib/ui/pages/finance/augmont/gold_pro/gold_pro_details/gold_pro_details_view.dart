@@ -3,6 +3,7 @@ import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
+import 'package:felloapp/core/model/gold_pro_models/gold_pro_config_model.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -187,7 +188,6 @@ class GoldProDetailsView extends StatelessWidget {
                                                   child:
                                                       const GoldBalanceBriefRow(
                                                     mini: true,
-                                                    isPro: true,
                                                   ),
                                                 ),
                                               ),
@@ -460,11 +460,13 @@ class GoldProInterestBreakdownWidget extends StatelessWidget {
     return Container(
       margin: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
       padding: EdgeInsets.symmetric(
-          vertical: SizeConfig.pageHorizontalMargins,
-          horizontal: SizeConfig.pageHorizontalMargins / 2),
+        vertical: SizeConfig.pageHorizontalMargins,
+        horizontal: SizeConfig.pageHorizontalMargins / 2,
+      ),
       decoration: BoxDecoration(
-          color: Colors.black,
-          borderRadius: BorderRadius.circular(SizeConfig.roundness24)),
+        color: UiConstants.grey5,
+        borderRadius: BorderRadius.circular(SizeConfig.roundness24),
+      ),
       child: Column(
         children: [
           Row(
@@ -496,10 +498,6 @@ class GoldProInterestBreakdownWidget extends StatelessWidget {
                       )
                     ],
                   )),
-              Icon(
-                Icons.add_rounded,
-                color: UiConstants.kGoldProPrimary,
-              ),
               Expanded(
                 flex: 6,
                 child: Column(
@@ -534,11 +532,6 @@ class GoldProInterestBreakdownWidget extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              SvgPicture.asset(
-                Assets.multiAvatars,
-                height: SizeConfig.padding12,
-              ),
-              SizedBox(width: SizeConfig.padding4),
               Text(
                 model.goldProConfig?.data?.interestBreakDown?.subText ??
                     '10K + Users are enjoying ${AppConfig.getValue(AppConfigKey.goldProInterest).toDouble()}% Extra Gold',
@@ -639,97 +632,112 @@ class WhyGoldProSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    // List<Tuple2<String, String>> whyDigitalGoldList = [
-    //   const Tuple2("48 h", "Lock-In"),
-    //   const Tuple2("15.5%", "Returns p.a."),
-    //   Tuple2("${AppConfig.getValue(AppConfigKey.goldProInterest).toDouble()}%",
-    //       "Extra Gold"),
-    // ];
-    return (model.goldProConfig?.data?.highlights ?? []).isNotEmpty
-        ? Container(
-            margin: EdgeInsets.symmetric(vertical: SizeConfig.padding14),
-            child: Column(
-              children: [
-                Text(
-                  "Why ${Constants.ASSET_GOLD_STAKE}?",
-                  style: TextStyles.rajdhaniSB.title3.colour(Colors.white),
-                ),
-                SizedBox(height: SizeConfig.padding16),
-                SizedBox(
-                  height: SizeConfig.screenWidth! * 0.39,
-                  child: ListView.builder(
-                    scrollDirection: Axis.horizontal,
-                    padding: EdgeInsets.symmetric(
-                        horizontal: SizeConfig.pageHorizontalMargins),
-                    itemBuilder: (context, index) => Container(
-                        width: SizeConfig.screenWidth! * 0.35,
-                        margin: EdgeInsets.only(right: SizeConfig.padding16),
-                        decoration: BoxDecoration(
-                          gradient: LinearGradient(
-                              colors: [
-                                UiConstants.KGoldProPrimaryDark,
-                                const Color(0xffEAAC4D),
-                              ],
-                              begin: Alignment.bottomLeft,
-                              end: Alignment.topRight),
-                          borderRadius: BorderRadius.circular(
-                            SizeConfig.roundness24,
-                          ),
-                        ),
-                        alignment: Alignment.center,
-                        child: Stack(
-                          children: [
-                            ClipRRect(
-                              borderRadius: BorderRadius.circular(
-                                SizeConfig.roundness24,
-                              ),
-                              child: const GoldShimmerWidget(
-                                size: ShimmerSizeEnum.small,
-                                primary: Colors.white24,
-                                secondary: Color(0xffF7C463),
-                                tertiary: Colors.white24,
-                              ),
-                            ),
-                            Align(
-                              alignment: Alignment.center,
-                              child: Column(
-                                mainAxisAlignment: MainAxisAlignment.center,
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  SizedBox(
-                                    height: SizeConfig.padding24,
-                                  ),
-                                  Expanded(
-                                    child: Center(
-                                      child: Text(
-                                        model.goldProConfig!.data!
-                                            .highlights![index].title!,
-                                        style: TextStyles.rajdhaniB.title0
-                                            .colour(Colors.black),
-                                      ),
-                                    ),
-                                  ),
-                                  Text(
-                                    model.goldProConfig!.data!
-                                        .highlights![index].subTitle!,
-                                    style: TextStyles.sourceSansSB.body0
-                                        .colour(Colors.black),
-                                    textAlign: TextAlign.center,
-                                  ),
-                                  SizedBox(
-                                    height: SizeConfig.padding24,
-                                  ),
-                                ],
-                              ),
-                            )
-                          ],
-                        )),
-                    itemCount: model.goldProConfig!.data!.highlights!.length,
-                  ),
-                )
-              ],
+    final highlights = model.goldProConfig?.data?.highlights ?? [];
+
+    if (highlights.isEmpty) {
+      return const SizedBox();
+    }
+
+    return Container(
+      margin: EdgeInsets.symmetric(vertical: SizeConfig.padding14),
+      child: Column(
+        children: [
+          Text(
+            "Why ${Constants.ASSET_GOLD_STAKE}?",
+            style: TextStyles.rajdhaniSB.title3.colour(Colors.white),
+          ),
+          SizedBox(
+            height: SizeConfig.padding16,
+          ),
+          SizedBox(
+            height: SizeConfig.screenWidth! * 0.45,
+            child: ListView.builder(
+              itemCount: model.goldProConfig!.data!.highlights!.length,
+              scrollDirection: Axis.horizontal,
+              padding: EdgeInsets.symmetric(
+                  horizontal: SizeConfig.pageHorizontalMargins),
+              itemBuilder: (context, index) => HighLightCard(
+                highlight: highlights[index],
+              ),
             ),
           )
-        : const SizedBox();
+        ],
+      ),
+    );
+  }
+}
+
+class HighLightCard extends StatelessWidget {
+  const HighLightCard({
+    required this.highlight,
+    super.key,
+  });
+
+  final Highlights highlight;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: SizeConfig.screenWidth! * 0.38,
+      margin: EdgeInsets.only(right: SizeConfig.padding16),
+      decoration: BoxDecoration(
+        gradient: LinearGradient(colors: [
+          UiConstants.KGoldProPrimaryDark,
+          const Color(0xffEAAC4D),
+        ], begin: Alignment.bottomLeft, end: Alignment.topRight),
+        borderRadius: BorderRadius.circular(
+          SizeConfig.roundness24,
+        ),
+      ),
+      alignment: Alignment.center,
+      child: Stack(
+        children: [
+          ClipRRect(
+            borderRadius: BorderRadius.circular(
+              SizeConfig.roundness24,
+            ),
+            child: const GoldShimmerWidget(
+              size: ShimmerSizeEnum.small,
+              primary: Colors.white24,
+              secondary: Color(0xffF7C463),
+              tertiary: Colors.white24,
+            ),
+          ),
+          Align(
+            alignment: Alignment.center,
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: SizeConfig.padding6,
+              ),
+              child: Column(
+                mainAxisAlignment: MainAxisAlignment.center,
+                crossAxisAlignment: CrossAxisAlignment.center,
+                children: [
+                  SizedBox(
+                    height: SizeConfig.padding24,
+                  ),
+                  Expanded(
+                    child: Center(
+                      child: Text(
+                        highlight.title!,
+                        style: TextStyles.rajdhaniB.title0.colour(Colors.black),
+                      ),
+                    ),
+                  ),
+                  Text(
+                    highlight.subTitle!,
+                    style: TextStyles.sourceSansSB.body0.colour(Colors.black),
+                    textAlign: TextAlign.center,
+                  ),
+                  SizedBox(
+                    height: SizeConfig.padding24,
+                  ),
+                ],
+              ),
+            ),
+          )
+        ],
+      ),
+    );
   }
 }

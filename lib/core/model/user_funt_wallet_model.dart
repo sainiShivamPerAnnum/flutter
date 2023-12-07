@@ -87,39 +87,6 @@ class UserFundWallet {
       : this(0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, 0, {}, 0, 0, 0, 0, 0, 0, 0, 0,
             0, 0, false);
 
-  UserFundWallet.base() {
-    _augGoldPrinciple = 0.0;
-    _augGoldBalance = 0.0;
-    _augGoldQuantity = 0.0;
-
-    //lendbox
-    wLbBalance = 0.0;
-    wLbPrinciple = 0.0;
-    wLbProcessingAmt = 0.0;
-
-    netWorth = 0.0;
-
-    //icici
-    _iciciPrinciple = 0.0;
-    _iciciBalance = 0.0;
-
-    //prizes
-    _prizeBalance = 0.0;
-    _lockedPrizeBalance = 0.0;
-    _prizeLifetimeWin = 0.0;
-    tickets = {};
-    wLbLifetimeInterest = 0;
-    wLbF1Balance = 0;
-    wLbF1Principle = 0;
-    wLbF1LifetimeInterest = 0;
-    wLbF2Balance = 0;
-    wLbF2Principle = 0;
-    wLbF2LifetimeInterest = 0;
-    wAugFdQty = 0;
-    wAugTotal = 0;
-    isGoldProUser = false;
-  }
-
   UserFundWallet.fromMap(Map<String, dynamic> data)
       : this(
             BaseUtil.toDouble(data[fldAugmontGoldPrinciple]),
@@ -224,14 +191,14 @@ class UserFundWallet {
   double get processingRedemptionBalance => _processingRedemptionBalance!;
 
   bool isPrizeBalanceUnclaimed() {
-    double _a = _prizeBalance ?? 0.0;
-    double _b = _processingRedemptionBalance ?? 0.0;
-    return (_a - _b > 0);
+    double a = _prizeBalance ?? 0.0;
+    double b = _processingRedemptionBalance ?? 0.0;
+    return a - b > 0;
   }
 
   double get unclaimedBalance {
-    double _a = _prizeBalance ?? 0.0;
-    double _b = _processingRedemptionBalance ?? 0.0;
-    return math.max(_a - _b, 0);
+    double a = _prizeBalance ?? 0.0;
+    double b = _processingRedemptionBalance ?? 0.0;
+    return math.max(a - b, 0);
   }
 }

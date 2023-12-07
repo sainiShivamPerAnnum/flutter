@@ -6,11 +6,9 @@ import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/ui/elements/fello_rich_text.dart';
 import 'package:felloapp/ui/pages/hometabs/save/gold_components/gold_pro_card.dart';
-import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
 class GoldProHero extends StatelessWidget {
@@ -356,95 +354,30 @@ class InvestedGoldProHero extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Leased Amount",
-                      style: TextStyles.rajdhaniM.colour(Colors.white60),
-                    ),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Flexible(
-                          fit: FlexFit.loose,
-                          child: Text(
-                            "₹${BaseUtil.digitPrecision(model.userPortfolio.augmont.fd.balance)}",
-                            style: TextStyles.sourceSansSB.title4
-                                .colour(UiConstants.kGoldProPrimary),
-                          ),
-                        ),
-                        Column(
-                          children: [
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                SizedBox(width: SizeConfig.padding6),
-                                Transform.translate(
-                                  offset: Offset(0, -SizeConfig.padding4),
-                                  child: RotatedBox(
-                                    quarterTurns: BaseUtil.digitPrecision(
-                                                model.userPortfolio.augmont.fd
-                                                    .absGains,
-                                                2) >=
-                                            0
-                                        ? 0
-                                        : 2,
-                                    child: SvgPicture.asset(
-                                      Assets.arrow,
-                                      width: SizeConfig.iconSize2,
-                                      color: BaseUtil.digitPrecision(
-                                                  model.userPortfolio.augmont.fd
-                                                      .absGains,
-                                                  2) >=
-                                              0
-                                          ? UiConstants.primaryColor
-                                          : Colors.red,
-                                    ),
-                                  ),
-                                ),
-                                Text(
-                                    " ${BaseUtil.digitPrecision(
-                                      BaseUtil.digitPrecision(
-                                          model.userPortfolio.augmont.fd
-                                              .percGains,
-                                          2),
-                                      2,
-                                      false,
-                                    )}%",
-                                    style: TextStyles.sourceSans.body3.colour(
-                                        BaseUtil.digitPrecision(
-                                                    model.userPortfolio.augmont
-                                                        .fd.absGains,
-                                                    2) >=
-                                                0
-                                            ? UiConstants.primaryColor
-                                            : Colors.red)),
-                              ],
-                            ),
-                            SizedBox(
-                              height: SizeConfig.padding4,
-                            )
-                          ],
-                        ),
-                      ],
-                    )
-                  ],
-                ),
-              ),
-              Expanded(
-                flex: 3,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Leased Value",
+                      "Gold Leased",
                       style: TextStyles.rajdhaniM.colour(Colors.white60),
                     ),
                     Text(
                       "${BaseUtil.digitPrecision(model.userFundWallet?.wAugFdQty ?? 0.0, 2)}gms",
                       style: TextStyles.sourceSansSB.title4
                           .colour(UiConstants.kGoldProPrimary),
-                    )
+                    ),
                   ],
                 ),
+              ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Current Value",
+                    style: TextStyles.rajdhaniM.colour(Colors.white60),
+                  ),
+                  Text(
+                    "${model.userFundWallet?.augGoldQuantity ?? 0} gms",
+                    style: TextStyles.sourceSansSB.title4
+                        .colour(UiConstants.kGoldProPrimary),
+                  )
+                ],
               )
             ],
           ),

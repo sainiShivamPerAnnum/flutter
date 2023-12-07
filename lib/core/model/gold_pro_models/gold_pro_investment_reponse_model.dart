@@ -15,6 +15,7 @@ class GoldProInvestmentResponseModel {
   final double amount;
   final bool isWithdrawable;
   final double interest_collected;
+  final num interestPaid;
   final String message;
   final TimestampModel createdOn;
   final TimestampModel updatedOn;
@@ -38,6 +39,7 @@ class GoldProInvestmentResponseModel {
     required this.createdOn,
     required this.updatedOn,
     required this.message_un_lease,
+    required this.interestPaid,
     this.subText,
   });
 
@@ -47,6 +49,8 @@ class GoldProInvestmentResponseModel {
   factory GoldProInvestmentResponseModel.fromMap(Map<String, dynamic> map,
       {String? subText}) {
     return GoldProInvestmentResponseModel(
+      interestPaid:
+          map['interest_paid'] != null ? map['interest_paid'] as num : 0,
       id: map['id'] as String,
       uid: map['uid'] as String,
       status: map['status'] as String,

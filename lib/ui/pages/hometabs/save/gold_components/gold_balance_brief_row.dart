@@ -9,11 +9,8 @@ import 'package:provider/provider.dart';
 
 class GoldBalanceBriefRow extends StatelessWidget {
   const GoldBalanceBriefRow({
-    this.isPro = false,
     this.isGainInGms = false,
     this.mini = false,
-    this.leftAlign = false,
-    this.endAlign = false,
     this.lead,
     this.trail,
     this.percent,
@@ -29,9 +26,6 @@ class GoldBalanceBriefRow extends StatelessWidget {
   final double? lead, trail, percent;
   final String? leadTitle, trailTitle;
   final bool mini;
-  final bool leftAlign;
-  final bool endAlign;
-  final bool isPro;
   final bool isGainInGms;
   final Color? leadTitleColor,
       trailTitleColor,
@@ -93,9 +87,7 @@ class GoldBalanceBriefRow extends StatelessWidget {
                                       (percent ?? goldGains) >= 0 ? 0 : 2,
                                   child: SvgPicture.asset(
                                     Assets.arrow,
-                                    width: mini
-                                        ? SizeConfig.iconSize2
-                                        : SizeConfig.iconSize2,
+                                    width: SizeConfig.iconSize2,
                                     color: (percent ?? goldGains) >= 0
                                         ? UiConstants.primaryColor
                                         : Colors.red,
@@ -104,7 +96,7 @@ class GoldBalanceBriefRow extends StatelessWidget {
                               ),
                               Text(
                                   " ${BaseUtil.digitPrecision(
-                                    (percent ?? goldGainsPerc),
+                                    percent ?? goldGainsPerc,
                                     isGainInGms ? 4 : 2,
                                     false,
                                   )}${isGainInGms ? "gms" : "%"}",
