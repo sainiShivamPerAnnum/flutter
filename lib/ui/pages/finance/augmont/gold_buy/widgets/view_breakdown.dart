@@ -785,11 +785,8 @@ class _FloBreakdownViewState extends State<FloBreakdownView> {
 
   @override
   Widget build(BuildContext context) {
-    final maturityDuration =
-        widget.model.floAssetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? 6 : 3;
-    final terms = widget.model.selectedOption.maturityTerm;
-    final showMaturity = widget.model.floAssetType == Constants.ASSET_TYPE_FLO_FELXI ? false: true;
-    final months = maturityDuration * terms;
+    final showMaturity =
+        !(widget.model.floAssetType == Constants.ASSET_TYPE_FLO_FELXI);
     final currentDateTime = DateTime.now();
     return WillPopScope(
       onWillPop: () async {
