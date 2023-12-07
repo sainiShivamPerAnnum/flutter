@@ -454,6 +454,10 @@ class LendboxPaymentSummaryHeader extends StatelessWidget {
       return "10% Flo";
     }
 
+    if (assetType == Constants.ASSET_TYPE_FLO_FELXI) {
+      return "8% Flo";
+    }
+
     return "";
   }
 
@@ -465,7 +469,7 @@ class LendboxPaymentSummaryHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final formatter = NumberFormat("#,##0", "en_US");
     final amt = num.parse(amount);
-
+    final showPaymentSummaryheader = assetType == Constants.ASSET_TYPE_FLO_FELXI ? false: true;
     final interest = model
         .calculateInterest(
           amount: amt,
@@ -503,23 +507,25 @@ class LendboxPaymentSummaryHeader extends StatelessWidget {
               ),
             ],
           ),
-          SizedBox(
-            height: SizeConfig.padding12,
-          ),
-          Row(
-            children: [
-              _AmountSectionView(
-                header: 'Savings Amount',
-                sub: '₹${formatter.format(amt)}',
-              ),
-              const Spacer(),
-              _AmountSectionView(
-                header: 'Maturity Amount',
-                sub: '₹${formatter.format(amt)}+',
-                subTail: "₹${formatter.format(interest)}",
-              ),
-            ],
-          ),
+          if (showPaymentSummaryheader) ...[
+            SizedBox(
+              height: SizeConfig.padding12,
+            ),
+            Row(
+              children: [
+                _AmountSectionView(
+                  header: 'Savings Amount',
+                  sub: '₹${formatter.format(amt)}',
+                ),
+                const Spacer(),
+                _AmountSectionView(
+                  header: 'Maturity Amount',
+                  sub: '₹${formatter.format(amt)}+',
+                  subTail: "₹${formatter.format(interest)}",
+                ),
+              ],
+            ),
+          ],
           if (showMaturity) ...[
             SizedBox(
               height: SizeConfig.padding16,

@@ -788,6 +788,7 @@ class _FloBreakdownViewState extends State<FloBreakdownView> {
     final maturityDuration =
         widget.model.floAssetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? 6 : 3;
     final terms = widget.model.selectedOption.maturityTerm;
+    final showMaturity = widget.model.floAssetType == Constants.ASSET_TYPE_FLO_FELXI ? false: true;
     final months = maturityDuration * terms;
     final currentDateTime = DateTime.now();
     return WillPopScope(
@@ -835,7 +836,7 @@ class _FloBreakdownViewState extends State<FloBreakdownView> {
                     amount: widget.model.amountController?.text ?? '0',
                     assetType: widget.model.floAssetType,
                     maturityTerm: widget.model.selectedOption.maturityTerm,
-                    showMaturity: true,
+                    showMaturity: showMaturity,
                     model: widget.model,
                   ),
                   Row(
