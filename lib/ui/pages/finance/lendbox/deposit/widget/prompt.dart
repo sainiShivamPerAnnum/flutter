@@ -432,9 +432,7 @@ class LendboxPaymentSummaryHeader extends StatelessWidget {
     this.showMaturity = false,
     this.maturityTerm = 1,
     super.key,
-  })  : _maturityDuration =
-            assetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? 6 : 3,
-        _interest = assetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? 12 : 10;
+  });
 
   final String amount;
   final String assetType;
@@ -442,8 +440,25 @@ class LendboxPaymentSummaryHeader extends StatelessWidget {
   final int maturityTerm;
   final LendboxBuyViewModel model;
 
-  final int _maturityDuration;
-  final int _interest;
+  static final _durationMap = {
+    Constants.ASSET_TYPE_FLO_FELXI : 12,
+    Constants.ASSET_TYPE_FLO_FIXED_3 : 3,
+    Constants.ASSET_TYPE_FLO_FIXED_6 : 6
+  };
+
+  static final _interestMap = {
+    Constants.ASSET_TYPE_FLO_FELXI : 8,
+    Constants.ASSET_TYPE_FLO_FIXED_3 : 10,
+    Constants.ASSET_TYPE_FLO_FIXED_6 : 12
+  };
+
+  int get _maturityDuration {
+    return _durationMap[assetType]!;
+  }
+
+  int get _interest {
+    return _interestMap[assetType]!;
+  }
 
   String _getTitle() {
     if (assetType == Constants.ASSET_TYPE_FLO_FIXED_6) {
@@ -469,7 +484,7 @@ class LendboxPaymentSummaryHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final formatter = NumberFormat("#,##0", "en_US");
     final amt = num.parse(amount);
-    final showPaymentSummaryheader = assetType == Constants.ASSET_TYPE_FLO_FELXI ? false: true;
+    final isFlexi = assetType == Constants.ASSET_TYPE_FLO_FELXI;
     final interest = model
         .calculateInterest(
           amount: amt,
@@ -507,25 +522,24 @@ class LendboxPaymentSummaryHeader extends StatelessWidget {
               ),
             ],
           ),
-          if (showPaymentSummaryheader) ...[
-            SizedBox(
-              height: SizeConfig.padding12,
-            ),
-            Row(
-              children: [
-                _AmountSectionView(
-                  header: 'Savings Amount',
-                  sub: '₹${formatter.format(amt)}',
-                ),
-                const Spacer(),
-                _AmountSectionView(
-                  header: 'Maturity Amount',
-                  sub: '₹${formatter.format(amt)}+',
-                  subTail: "₹${formatter.format(interest)}",
-                ),
-              ],
-            ),
-          ],
+
+          SizedBox(
+            height: SizeConfig.padding12,
+          ),
+          Row(
+            children: [
+              _AmountSectionView(
+                header: 'Savings Amount',
+                sub: '₹${formatter.format(amt)}',
+              ),
+              const Spacer(),
+              _AmountSectionView(
+                header: isFlexi ? "Savings (after 1 Year)": 'Maturity Amount',
+                sub: '₹${formatter.format(amt)}+',
+                subTail: "₹${formatter.format(interest)}",
+              ),
+            ],
+          ),
           if (showMaturity) ...[
             SizedBox(
               height: SizeConfig.padding16,
