@@ -2,13 +2,21 @@
 
 printf "\e[33;1m%s\e[0m\n" 'Running the Flutter formatter'
 changed_files=$(git diff --cached --name-only | grep 'lib/.*' | tr '\n' ' ')
+dart_files=$(find lib -name '*.dart')
 
 if [ -n "$changed_files" ]
 then
-      dart format $changed_files
-      git add $changed_files
+    files_to_format=$(comm -12 <(echo "$changed_files" | tr ' ' '\n' | sort) <(echo "$dart_files" | tr ' ' '\n' | sort))
+    
+    if [ -n "$files_to_format" ]
+    then
+        dart format $files_to_format
+        git add $files_to_format
+    else
+        printf "\e[33;1m%s\e[0m\n" "No Dart files changed"
+    fi
 else
-      printf "\e[33;1m%s\e[0m\n" "No flutter file changed"
+    printf "\e[33;1m%s\e[0m\n" "No flutter file changed"
 fi
 
 printf "\e[33;1m%s\e[0m\n" 'Finished running the Flutter formatter'
