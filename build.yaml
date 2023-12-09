@@ -1,0 +1,11 @@
+targets:
+  $default:
+    builders:
+      json_serializable|json_serializable:
+        enabled: true
+        generate_for:
+          - "lib/core/model/**.dart"
+      isar_generator|isar_generator:
+        enabled: true
+        generate_for:
+          - "lib/core/model/**.dart"
