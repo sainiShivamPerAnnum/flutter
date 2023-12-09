@@ -16,7 +16,7 @@ then
         printf "\e[33;1m%s\e[0m\n" "No Dart files changed"
     fi
 else
-    printf "\e[33;1m%s\e[0m\n" "No dart file changed"
+    printf "\e[33;1m%s\e[0m\n" "No Dart file changed"
 fi
 
 printf "\e[33;1m%s\e[0m\n" 'Finished running the Dart formatter'
