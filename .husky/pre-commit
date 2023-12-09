@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 
-printf "\e[33;1m%s\e[0m\n" 'Running the Flutter formatter'
+printf "\e[33;1m%s\e[0m\n" 'Running the Dart formatter'
 changed_files=$(git diff --cached --name-only | grep 'lib/.*' | tr '\n' ' ')
 dart_files=$(find lib -name '*.dart')
 
@@ -16,7 +16,7 @@ then
         printf "\e[33;1m%s\e[0m\n" "No Dart files changed"
     fi
 else
-    printf "\e[33;1m%s\e[0m\n" "No flutter file changed"
+    printf "\e[33;1m%s\e[0m\n" "No dart file changed"
 fi
 
-printf "\e[33;1m%s\e[0m\n" 'Finished running the Flutter formatter'
+printf "\e[33;1m%s\e[0m\n" 'Finished running the Dart formatter'
