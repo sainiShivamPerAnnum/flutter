@@ -11,67 +11,61 @@ class BadgesTopUserWidget extends StatelessWidget {
     super.key,
   });
 
-  final LeaderBoard? leaderBoard;
+  final LeaderBoard leaderBoard;
 
   @override
   Widget build(BuildContext context) {
     return Stack(
+      alignment: Alignment.center,
       children: [
         CustomPaint(
-          size: Size(SizeConfig.screenWidth! * 0.27, SizeConfig.padding144),
-          painter: RPSCustomPainter(),
-        ),
-        Transform.translate(
-          offset: Offset(SizeConfig.padding16, -SizeConfig.padding8),
-          child: Align(
-            alignment: Alignment.topRight,
-            child: CustomPaint(
-              size: Size(SizeConfig.padding26, SizeConfig.padding34),
-              painter: UserBadgeCustomPainter(),
+          painter: const RPSCustomPainter(),
+          child: Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: SizeConfig.padding12,
+              vertical: SizeConfig.padding12,
+            ),
+            child: Column(
+              children: [
+                Container(
+                  width: SizeConfig.padding68,
+                  height: SizeConfig.padding68,
+                  padding: const EdgeInsets.all(2),
+                  decoration: ShapeDecoration(
+                    shape: OvalBorder(
+                      side: BorderSide(
+                        width: 1.70,
+                        color: Colors.white.withOpacity(0.4),
+                      ),
+                    ),
+                  ),
+                  child: const DefaultAvatar(),
+                ),
+                SizedBox(
+                  height: SizeConfig.padding6,
+                ),
+                Text(
+                  leaderBoard.name,
+                  textAlign: TextAlign.center,
+                  style: TextStyles.sourceSans.body4.colour(
+                    Colors.white,
+                  ),
+                ),
+                Text(
+                  leaderBoard.totalSaving.toString(),
+                  style: TextStyles.sourceSans.body4.colour(
+                    UiConstants.textGray70,
+                  ),
+                ),
+              ],
             ),
           ),
         ),
         Align(
-          alignment: Alignment.center,
-          child: Transform.translate(
-            offset: Offset(SizeConfig.padding3, 0),
-            child: Container(
-              width: SizeConfig.padding68,
-              height: SizeConfig.padding68,
-              padding: const EdgeInsets.all(2),
-              decoration: ShapeDecoration(
-                shape: OvalBorder(
-                  side: BorderSide(
-                      width: 1.70, color: Colors.white.withOpacity(0.4)),
-                ),
-              ),
-              child: DefaultAvatar(),
-            ),
-          ),
-        ),
-        Transform.translate(
-          offset: Offset(0, SizeConfig.padding10),
-          child: Align(
-            alignment: Alignment.bottomCenter,
-            child: Text(
-              leaderBoard?.name ?? 'User',
-              textAlign: TextAlign.center,
-              style: TextStyles.sourceSans.body4.colour(
-                Colors.white,
-              ),
-            ),
-          ),
-        ),
-        Transform.translate(
-          offset: Offset(0, SizeConfig.padding26),
-          child: Align(
-            alignment: Alignment.bottomCenter,
-            child: Text(
-              leaderBoard?.totalSaving.toString() ?? "",
-              style: TextStyles.sourceSans.body4.colour(
-                const Color(0xFFBDBDBE).withOpacity(0.8),
-              ),
-            ),
+          alignment: const Alignment(1.2, -1.2),
+          child: CustomPaint(
+            size: Size(SizeConfig.padding26, SizeConfig.padding34),
+            painter: UserBadgeCustomPainter(),
           ),
         ),
       ],

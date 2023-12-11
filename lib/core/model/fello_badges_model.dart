@@ -23,12 +23,13 @@ class FelloBadgesModel {
 @_deserializable
 class FelloBadgesData {
   final String title;
-
   final List<Level> levels;
   final SuperFelloWorks superFelloWorks;
+  final List<OtherBadge> otherBadges;
 
   const FelloBadgesData({
     required this.superFelloWorks,
+    this.otherBadges = const [],
     this.levels = const [],
     this.title = '',
   });
@@ -51,6 +52,15 @@ class LevelBenefit {
       _$LevelBenefitFromJson(json);
 }
 
+enum SuperFelloLevel {
+  BEGINNER(0),
+  INTERMEDIATE(1),
+  SUPERFELLO(2);
+
+  const SuperFelloLevel(this.level);
+  final int level;
+}
+
 @_deserializable
 class Level {
   final String badgeurl;
@@ -58,12 +68,17 @@ class Level {
   @JsonKey(name: 'lvl_data')
   final List<LevelData> lvlData;
   final bool isCompleted;
+  @JsonKey(name: 'lvl_title')
+  final String levelTitle;
+  final SuperFelloLevel level;
 
   const Level({
     required this.benefits,
+    required this.level,
     this.badgeurl = '',
     this.lvlData = const [],
     this.isCompleted = false,
+    this.levelTitle = '',
   });
 
   factory Level.fromJson(Map<String, dynamic> json) => _$LevelFromJson(json);
@@ -79,10 +94,8 @@ class LevelData {
   final String bottomSheetText;
   final String bottomSheetCta;
   final String ctaUrl;
-  final DateTime updatedAt;
 
   const LevelData({
-    required this.updatedAt,
     this.achieve = 0.0,
     this.title = '',
     this.barHeading = '',
@@ -111,4 +124,34 @@ class SuperFelloWorks {
 
   factory SuperFelloWorks.fromJson(Map<String, dynamic> json) =>
       _$SuperFelloWorksFromJson(json);
+}
+
+@_deserializable
+class OtherBadge {
+  final String url;
+  final String title;
+  final bool enable;
+  final String description;
+  final String action;
+  final String buttonText;
+  final String referText;
+  final String bottomSheetText;
+  final String bottomSheetCta;
+  final String ctaUrl;
+
+  const OtherBadge({
+    this.url = '',
+    this.title = '',
+    this.enable = false,
+    this.description = '',
+    this.action = '',
+    this.buttonText = '',
+    this.referText = '',
+    this.bottomSheetText = '',
+    this.bottomSheetCta = '',
+    this.ctaUrl = '',
+  });
+
+  factory OtherBadge.fromJson(Map<String, dynamic> json) =>
+      _$OtherBadgeFromJson(json);
 }

@@ -149,14 +149,11 @@ class _ProfileBadgeWidgetState extends State<ProfileBadgeWidget> {
             Expanded(
               child: Padding(
                 padding: EdgeInsets.only(left: SizeConfig.padding8),
-                child: Hero(
-                  tag: 'user_badge',
-                  child: Transform.scale(
-                    scale: 1.2,
-                    child: UserBadgeContainer(
-                      badgeColor: getBorderColor(),
-                      badgeUrl: getBadgeUrl(),
-                    ),
+                child: Transform.scale(
+                  scale: 1.2,
+                  child: UserBadgeContainer(
+                    badgeColor: getBorderColor(),
+                    badgeUrl: getBadgeUrl(),
                   ),
                 ),
               ),
@@ -169,11 +166,14 @@ class _ProfileBadgeWidgetState extends State<ProfileBadgeWidget> {
                   PropertyChangeConsumer<UserService, UserServiceProperties>(
                     properties: const [UserServiceProperties.myName],
                     builder: (context, model, child) {
+                      final baseUser = model!.baseUser!;
+                      final kycName = baseUser.kycName;
+                      final userName = baseUser.name;
                       return Text(
-                        (model!.baseUser!.kycName!.isNotEmpty
-                                ? model.baseUser!.kycName!
-                                : model.baseUser!.name!.isNotEmpty
-                                    ? model.baseUser!.name!
+                        (kycName!.isNotEmpty
+                                ? kycName
+                                : userName!.isNotEmpty
+                                    ? userName
                                     : "User")
                             .trim()
                             .split(' ')

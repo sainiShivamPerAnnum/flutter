@@ -97,7 +97,6 @@ class _FelloBadgeDetailsState extends State<FelloBadgeDetails> {
         itemCount: 3,
         scrollDirection: Axis.horizontal,
         shrinkWrap: true,
-        physics: const AlwaysScrollableScrollPhysics(),
         itemBuilder: (context, index) {
           return BadgeDetailsContainer(
             index: index,

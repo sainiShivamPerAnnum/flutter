@@ -25,7 +25,7 @@ import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
-import 'package:felloapp/ui/pages/hometabs/win/redeem_sucessfull_screen.dart';
+import 'package:felloapp/ui/pages/hometabs/my_account/redeem_sucessfull_screen.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';

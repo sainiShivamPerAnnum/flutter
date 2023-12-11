@@ -6,9 +6,9 @@ import 'package:shimmer/shimmer.dart';
 
 class FelloBadgeLoadingScreen extends StatelessWidget {
   const FelloBadgeLoadingScreen({
-    super.key,
     required this.badgeBorderColor,
     required this.badgeUrl,
+    super.key,
   });
 
   final Color badgeBorderColor;
@@ -27,12 +27,9 @@ class FelloBadgeLoadingScreen extends StatelessWidget {
           SizedBox(
             height: SizeConfig.padding12,
           ),
-          Hero(
-            tag: 'user_badge',
-            child: UserBadgeContainer(
-              badgeColor: badgeBorderColor,
-              badgeUrl: badgeUrl,
-            ),
+          UserBadgeContainer(
+            badgeColor: badgeBorderColor,
+            badgeUrl: badgeUrl,
           ),
           SizedBox(
             height: SizeConfig.padding12,

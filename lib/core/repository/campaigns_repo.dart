@@ -128,12 +128,10 @@ class CampaignRepo extends BaseRepo {
     }
   }
 
-  Future<ApiResponse<BadgesLeaderBoardModel>> getBadgesLeaderboard() async {
+  Future<ApiResponse<BadgesLeaderBoardModel>> getBadgesLeaderBoard() async {
     try {
-      final uid = userService.baseUser!.uid;
-
       final res = await APIService.instance.getData(
-        ApiPath.badgesLeaderBoard(uid!),
+        ApiPath.badgesLeaderBoard,
         cBaseUrl: _baseUrl,
         apiName: '$_superFello/leaderboard',
       );
@@ -155,12 +153,10 @@ class CampaignRepo extends BaseRepo {
 
   Future<ApiResponse<FelloBadgesModel>> getFelloBadges() async {
     try {
-      final uid = userService.baseUser!.uid;
-
       final res = await APIService.instance.getData(
-        ApiPath.felloBadges(uid!),
+        ApiPath.felloBadges,
         cBaseUrl: _baseUrl,
-        apiName: '$_superFello/id',
+        apiName: _superFello,
       );
 
       return res != null && res['data'] != null && res['data'].isNotEmpty

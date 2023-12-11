@@ -1,4 +1,6 @@
 import 'package:felloapp/core/enums/faqTypes.dart';
+import 'package:felloapp/core/model/badges_leader_board_model.dart';
+import 'package:felloapp/core/model/fello_badges_model.dart';
 import 'package:felloapp/core/model/portfolio_model.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -92,29 +94,28 @@ class _FelloBadgeUiState extends State<FelloBadgeUi> {
       body: FelloBadgesBackground(
         child: BlocBuilder<FelloBadgesCubit, FelloBadgesState>(
           builder: (context, state) {
-            if (state is FelloBadgesError) {
-              return Center(
-                child: Text(
-                  state.errorMsg!,
-                  style: TextStyles.sourceSans.title3.colour(Colors.white),
+            return switch (state) {
+              FelloBadgesLoading() ||
+              FelloBadgesInitial() =>
+                FelloBadgeLoadingScreen(
+                  badgeBorderColor: badgeBorderColor,
+                  badgeUrl: badgeUrl,
                 ),
-              );
-            }
-
-            if (state is FelloBadgesSuccess) {
-              updateUserBadge(state.currentLevel);
-
-              return FelloBadgeSuccessScreen(
-                badgeBorderColor: badgeBorderColor,
-                badgeUrl: badgeUrl,
-                state: state,
-              );
-            }
-
-            return FelloBadgeLoadingScreen(
-              badgeBorderColor: badgeBorderColor,
-              badgeUrl: badgeUrl,
-            );
+              FelloBadgesSuccess() => () {
+                  updateUserBadge(state.currentLevel);
+                  return FelloBadgeSuccessScreen(
+                    badgeBorderColor: badgeBorderColor,
+                    badgeUrl: badgeUrl,
+                    state: state,
+                  );
+                }(),
+              FelloBadgesError() => Center(
+                  child: Text(
+                    state.errorMsg!,
+                    style: TextStyles.sourceSans.title3.colour(Colors.white),
+                  ),
+                ),
+            };
           },
         ),
       ),
@@ -163,6 +164,8 @@ class FelloBadgeSuccessScreen extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final badgesModel = state.felloBadgesModel;
+    final leaderBoardModel = state.badgesLeaderBoardModel?.data;
     return SingleChildScrollView(
       child: Column(
         children: [
@@ -170,16 +173,14 @@ class FelloBadgeSuccessScreen extends StatelessWidget {
             height: SizeConfig.padding32,
           ),
           SvgPicture.network(
-              'https://fello-dev-uploads.s3.ap-south-1.amazonaws.com/super_fello_title.svg'),
+            'https://fello-dev-uploads.s3.ap-south-1.amazonaws.com/super_fello_title.svg',
+          ),
           SizedBox(
             height: SizeConfig.padding12,
           ),
-          Hero(
-            tag: 'user_badge',
-            child: UserBadgeContainer(
-              badgeColor: badgeBorderColor,
-              badgeUrl: badgeUrl,
-            ),
+          UserBadgeContainer(
+            badgeColor: badgeBorderColor,
+            badgeUrl: badgeUrl,
           ),
           SizedBox(
             height: SizeConfig.padding12,
@@ -187,9 +188,9 @@ class FelloBadgeSuccessScreen extends StatelessWidget {
           Padding(
             padding: EdgeInsets.symmetric(
                 horizontal: SizeConfig.pageHorizontalMargins),
-            child: state.felloBadgesModel.title.beautify(
-              style: TextStyles.rajdhaniB.body1,
-              boldStyle: TextStyles.rajdhaniB.body1.colour(
+            child: badgesModel.title.beautify(
+              style: TextStyles.rajdhaniSB.body1,
+              boldStyle: TextStyles.rajdhaniSB.body1.colour(
                 const Color(0xFF26F1CC),
               ),
               alignment: TextAlign.center,
@@ -201,86 +202,132 @@ class FelloBadgeSuccessScreen extends StatelessWidget {
           SizedBox(
             height: SizeConfig.padding34,
           ),
+
           FelloBadgeDetails(
-            levelsData: state.felloBadgesModel.levels,
+            levelsData: badgesModel.levels,
             currentLevel: state.currentLevel,
           ),
+
           SizedBox(
             height: SizeConfig.padding34,
           ),
+
           HowSuperFelloWorksWidget(
             isBoxOpen: false,
-            superFelloWorks: state.felloBadgesModel.superFelloWorks,
+            superFelloWorks: badgesModel.superFelloWorks,
           ),
-          SizedBox(
-            height: SizeConfig.padding32,
-          ),
-          Text(
-            'Other Badges on Fello',
-            textAlign: TextAlign.center,
-            style: TextStyles.rajdhaniB.body2.colour(
-              Colors.white,
+
+          /// Other badges.
+          if (badgesModel.otherBadges.isNotEmpty)
+            Padding(
+              padding: EdgeInsets.only(
+                top: SizeConfig.padding32,
+              ),
+              child: OtherBadges(
+                otherBadges: badgesModel.otherBadges,
+              ),
             ),
-          ),
-          SizedBox(
-            height: SizeConfig.padding16,
-          ),
-          FelloBadgeList(
-            badges: state.badgesLeaderBoardModel?.data?.otherBadges,
-          ),
-          SizedBox(
-            height: SizeConfig.padding16,
-          ),
-          SvgPicture.network(
-            'https://fello-dev-uploads.s3.ap-south-1.amazonaws.com/Group+1244832512.svg',
-            height: SizeConfig.padding80,
-            width: SizeConfig.padding68,
-            fit: BoxFit.fill,
-          ),
-          Container(
-            width: SizeConfig.screenWidth,
-            padding: EdgeInsets.symmetric(
-                horizontal: SizeConfig.padding28,
-                vertical: SizeConfig.padding42),
-            decoration: const BoxDecoration(color: Color(0xFF1B3637)),
-            child: Column(
-              mainAxisSize: MainAxisSize.min,
-              children: [
-                GridView.builder(
-                  physics: const NeverScrollableScrollPhysics(),
-                  gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
-                    crossAxisCount: 3,
-                    crossAxisSpacing: SizeConfig.padding18,
-                    mainAxisSpacing: SizeConfig.padding86,
-                    // childAspectRatio: 3,
-                  ),
-                  padding: EdgeInsets.zero,
-                  itemCount:
-                      state.badgesLeaderBoardModel?.data?.leaderBoard?.length ??
-                          0,
-                  shrinkWrap: true,
-                  itemBuilder: (context, index) {
-                    return BadgesTopUserWidget(
-                      leaderBoard: state
-                          .badgesLeaderBoardModel?.data?.leaderBoard?[index],
-                    );
-                  },
-                ),
-                SizedBox(
-                  height: SizeConfig.padding44,
-                ),
-              ],
+
+          /// Super fello wall of frame.
+          if (leaderBoardModel != null &&
+              leaderBoardModel.leaderBoard.isNotEmpty)
+            Padding(
+              padding: EdgeInsets.only(
+                top: SizeConfig.padding16,
+              ),
+              child: SuperFelloWallFrame(
+                badgesLeaderBoard: leaderBoardModel,
+              ),
             ),
-          ),
+
           SizedBox(
             height: SizeConfig.padding28,
           ),
-          LottieBuilder.network(Assets.bottomBannerLottie),
+          LottieBuilder.network(
+            Assets.bottomBannerLottie,
+          ),
           SizedBox(
             height: SizeConfig.padding8,
           ),
         ],
       ),
+    );
+  }
+}
+
+class SuperFelloWallFrame extends StatelessWidget {
+  const SuperFelloWallFrame({
+    required this.badgesLeaderBoard,
+    super.key,
+  });
+
+  final BadgesLeaderBoardData badgesLeaderBoard;
+
+  @override
+  Widget build(BuildContext context) {
+    final leaderBoard = badgesLeaderBoard.leaderBoard;
+    final heroImage = badgesLeaderBoard.heroImage;
+    return Column(
+      children: [
+        SvgPicture.network(
+          heroImage,
+          height: SizeConfig.padding80,
+          width: SizeConfig.padding68,
+          fit: BoxFit.fill,
+        ),
+        Container(
+          width: SizeConfig.screenWidth,
+          padding: EdgeInsets.symmetric(
+            horizontal: SizeConfig.padding28,
+            vertical: SizeConfig.padding42,
+          ),
+          decoration: const BoxDecoration(color: Color(0xFF1B3637)),
+          child: GridView.builder(
+            physics: const NeverScrollableScrollPhysics(),
+            gridDelegate: SliverGridDelegateWithFixedCrossAxisCount(
+              crossAxisCount: 3,
+              crossAxisSpacing: SizeConfig.padding18,
+              mainAxisSpacing: SizeConfig.padding86,
+              childAspectRatio: .72,
+            ),
+            itemCount: leaderBoard.length,
+            shrinkWrap: true,
+            itemBuilder: (context, index) => BadgesTopUserWidget(
+              leaderBoard: leaderBoard[index],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class OtherBadges extends StatelessWidget {
+  const OtherBadges({
+    super.key,
+    this.otherBadges = const [],
+  });
+
+  final List<OtherBadge> otherBadges;
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Text(
+          'Other Badges on Fello',
+          textAlign: TextAlign.center,
+          style: TextStyles.rajdhaniB.body2.colour(
+            Colors.white,
+          ),
+        ),
+        SizedBox(
+          height: SizeConfig.padding16,
+        ),
+        FelloBadgeList(
+          badges: otherBadges,
+        ),
+      ],
     );
   }
 }

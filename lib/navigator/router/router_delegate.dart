@@ -31,10 +31,10 @@ import 'package:felloapp/ui/pages/finance/autosave/autosave_update/autosave_upda
 import 'package:felloapp/ui/pages/finance/lendbox/detail_page/flo_premium_details_view.dart';
 import 'package:felloapp/ui/pages/finance/transactions_history/transactions_history_view.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/journey_view.dart';
+import 'package:felloapp/ui/pages/hometabs/my_account/my_account_view.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/asset_view_section.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/blogs.dart';
-import 'package:felloapp/ui/pages/hometabs/win/win_view.dart';
 import 'package:felloapp/ui/pages/login/login_controller_view.dart';
 import 'package:felloapp/ui/pages/notifications/notifications_view.dart';
 import 'package:felloapp/ui/pages/onboarding/blocked_user.dart';
@@ -230,7 +230,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           _addPageData(const UserProfileDetails(), UserProfileDetailsConfig);
           break;
         case Pages.AccountsView:
-          _addPageData(const Win(), AccountsViewConfig);
+          _addPageData(const MyAccount(), AccountsViewConfig);
           break;
         case Pages.TxnHistory:
           _addPageData(

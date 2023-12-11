@@ -1,6 +1,6 @@
 import 'dart:math' as math;
 
-import 'package:felloapp/ui/pages/hometabs/win/win_viewModel.dart';
+import 'package:felloapp/ui/pages/hometabs/my_account/my_account_vm.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -16,7 +16,7 @@ List<Color> randomColors = [
 ];
 
 class FelloNewsComponent extends StatelessWidget {
-  final WinViewModel model;
+  final MyAccountVM model;
   const FelloNewsComponent({required this.model, Key? key}) : super(key: key);
 
   @override
@@ -39,7 +39,7 @@ class FelloNewsComponent extends StatelessWidget {
             ),
           ),
           SizedBox(height: SizeConfig.padding24),
-          Container(
+          SizedBox(
             width: SizeConfig.screenWidth,
             height: SizeConfig.screenWidth! * 0.4026,
             child: model.isFelloFactsLoading

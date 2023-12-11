@@ -69,7 +69,7 @@ class FelloBadgesCubit extends Cubit<FelloBadgesState> {
       var currentState = state;
 
       if (currentState is FelloBadgesSuccess) {
-        await locator<CampaignRepo>().getBadgesLeaderboard().then(
+        await locator<CampaignRepo>().getBadgesLeaderBoard().then(
           (res) {
             if (res.isSuccess()) {
               emit(currentState.copyWith(badgesLeaderBoardModel: res.model));
@@ -96,22 +96,22 @@ class FelloBadgesCubit extends Cubit<FelloBadgesState> {
 
     var temp = DateTime.parse(currentTimeStamp);
 
-    for (int i = 0; i < levelDetails.length; i++) {
-      for (int j = 0; j < levelDetails[i].lvlData.length; j++) {
-        if (temp.isBefore(levelDetails[i].lvlData[j].updatedAt) ||
-            temp.isAtSameMomentAs(levelDetails[i].lvlData[j].updatedAt)) {
-          showPopUp(
-            title: levelDetails[i].lvlData[j].title,
-            subtitle: levelDetails[i].lvlData[j].barHeading,
-            imageUrl: levelDetails[i].lvlData[j].badgeurl,
-            actionUri: '',
-          );
-          break;
-        } else {
-          log("Badge Not Updated");
-        }
-      }
-    }
+    // for (int i = 0; i < levelDetails.length; i++) {
+    //   for (int j = 0; j < levelDetails[i].lvlData.length; j++) {
+    //     if (temp.isBefore(levelDetails[i].lvlData[j].updatedAt) ||
+    //         temp.isAtSameMomentAs(levelDetails[i].lvlData[j].updatedAt)) {
+    //       showPopUp(
+    //         title: levelDetails[i].lvlData[j].title,
+    //         subtitle: levelDetails[i].lvlData[j].barHeading,
+    //         imageUrl: levelDetails[i].lvlData[j].badgeurl,
+    //         actionUri: '',
+    //       );
+    //       break;
+    //     } else {
+    //       log("Badge Not Updated");
+    //     }
+    //   }
+    // }
   }
 
   void showPopUp(

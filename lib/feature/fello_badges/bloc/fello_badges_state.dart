@@ -1,7 +1,7 @@
 part of 'fello_badges_cubit.dart';
 
 @immutable
-abstract class FelloBadgesState {}
+sealed class FelloBadgesState {}
 
 class FelloBadgesInitial extends FelloBadgesState {}
 
@@ -10,19 +10,16 @@ class FelloBadgesLoading extends FelloBadgesState {}
 class FelloBadgesSuccess extends FelloBadgesState {
   final FelloBadgesData felloBadgesModel;
   final FelloBadges currentBadge;
-  int currentLevel;
+  final int currentLevel;
   final BadgesLeaderBoardModel? badgesLeaderBoardModel;
 
   FelloBadgesSuccess(
     this.felloBadgesModel, {
     required this.currentBadge,
     this.badgesLeaderBoardModel,
-    this.currentLevel = 1,
-  }) {
-    currentLevel = getUserLevel(locator<UserService>().userSegments);
-  }
+  }) : currentLevel = _getUserLevel(locator<UserService>().userSegments);
 
-  int getUserLevel(List<dynamic> segments) {
+  static int _getUserLevel(List<dynamic> segments) {
     log("UserSegments: $segments");
     if (segments.contains(Constants.SF_COMPLETED)) {
       return 4;

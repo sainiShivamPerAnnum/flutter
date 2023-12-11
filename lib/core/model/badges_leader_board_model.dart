@@ -23,11 +23,12 @@ class BadgesLeaderBoardModel {
 @_deserializable
 class BadgesLeaderBoardData {
   final List<LeaderBoard> leaderBoard;
-  final List<OtherBadge> otherBadges;
+  final String heroImage;
 
   const BadgesLeaderBoardData({
     this.leaderBoard = const [],
-    this.otherBadges = const [],
+    this.heroImage =
+        'https://fello-dev-uploads.s3.ap-south-1.amazonaws.com/Group+1244832512.svg',
   });
 
   factory BadgesLeaderBoardData.fromJson(Map<String, dynamic> json) =>
@@ -48,34 +49,4 @@ class LeaderBoard {
 
   factory LeaderBoard.fromJson(Map<String, dynamic> json) =>
       _$LeaderBoardFromJson(json);
-}
-
-@_deserializable
-class OtherBadge {
-  final String url;
-  final String title;
-  final bool enable;
-  final String description;
-  final String action;
-  final String buttonText;
-  final String referText;
-  final String bottomSheetText;
-  final String bottomSheetCta;
-  final String ctaUrl;
-
-  const OtherBadge({
-    this.url = '',
-    this.title = '',
-    this.enable = false,
-    this.description = '',
-    this.action = '',
-    this.buttonText = '',
-    this.referText = '',
-    this.bottomSheetText = '',
-    this.bottomSheetCta = '',
-    this.ctaUrl = '',
-  });
-
-  factory OtherBadge.fromJson(Map<String, dynamic> json) =>
-      _$OtherBadgeFromJson(json);
 }

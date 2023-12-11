@@ -1,5 +1,5 @@
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/model/badges_leader_board_model.dart';
+import 'package:felloapp/core/model/fello_badges_model.dart';
 import 'package:felloapp/feature/fello_badges/ui/widgets/progress_bottom_sheet.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/styles.dart';
@@ -7,9 +7,29 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class FelloBadgeList extends StatelessWidget {
-  const FelloBadgeList({super.key, this.badges});
+  const FelloBadgeList({
+    required this.badges,
+    super.key,
+  });
 
-  final List<OtherBadge>? badges;
+  final List<OtherBadge> badges;
+
+  void _onTapBadge(OtherBadge badge) {
+    BaseUtil.openModalBottomSheet(
+      addToScreenStack: true,
+      enableDrag: false,
+      hapticVibrate: true,
+      isBarrierDismissible: true,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      content: ProgressBottomSheet(
+        badgeUrl: Assets.tambolaTitanBadge,
+        title: badge.title,
+        description: badge.bottomSheetText,
+        buttonText: (badge.enable) ? 'GET MORE TICKETS' : badge.bottomSheetCta,
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -20,41 +40,22 @@ class FelloBadgeList extends StatelessWidget {
         shrinkWrap: true,
         physics: const AlwaysScrollableScrollPhysics(),
         scrollDirection: Axis.horizontal,
-        itemCount: badges?.length ?? 0,
-        itemBuilder: (context, index) {
+        itemCount: badges.length,
+        itemBuilder: (context, i) {
           return Row(
             children: [
               GestureDetector(
-                onTap: () {
-                  BaseUtil.openModalBottomSheet(
-                    addToScreenStack: true,
-                    enableDrag: false,
-                    hapticVibrate: true,
-                    isBarrierDismissible: true,
-                    backgroundColor: Colors.transparent,
-                    isScrollControlled: true,
-                    content: ProgressBottomSheet(
-                      badgeUrl: Assets.tambolaTitanBadge,
-                      // TODO: Replace with badges?[index].imageUrl
-                      title: badges?[index].title ?? '',
-                      description: badges?[index].bottomSheetText ?? '',
-                      buttonText: (badges?[index].enable ?? false)
-                          ? 'GET MORE TICKETS'
-                          : badges![index].bottomSheetCta!,
-                      onButtonPressed: () {},
-                    ),
-                  );
-                },
+                onTap: () => _onTapBadge(badges[i]),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     ClipPath(
-                      clipper: HexagonClipper(),
+                      clipper: const HexagonClipper(),
                       child: Transform.translate(
                         offset: Offset(SizeConfig.padding1, 0),
                         child: ColorFiltered(
                           colorFilter: ColorFilter.mode(
-                            (badges?[index].enable ?? false)
+                            (badges[i].enable)
                                 ? Colors.transparent
                                 : const Color(0xFF191919),
                             BlendMode.saturation,
@@ -71,7 +72,7 @@ class FelloBadgeList extends StatelessWidget {
                       height: SizeConfig.padding6,
                     ),
                     Text(
-                      badges?[index].title ?? "",
+                      badges[i].title,
                       style: TextStyles.sourceSans.body4.colour(
                         Colors.white,
                       ),
@@ -91,6 +92,8 @@ class FelloBadgeList extends StatelessWidget {
 }
 
 class HexagonClipper extends CustomClipper<Path> {
+  const HexagonClipper();
+
   @override
   Path getClip(Size size) {
     final path = Path();
@@ -114,13 +117,5 @@ class HexagonClipper extends CustomClipper<Path> {
   }
 
   @override
-  bool shouldReclip(covariant CustomClipper<Path> oldClipper) {
-    return true;
-  }
+  bool shouldReclip(covariant CustomClipper<Path> oldClipper) => false;
 }
-// path.moveTo(w / SizeConfig.padding2, 0); // Move to the top center
-// path.lineTo(w, h / SizeConfig.padding4); // Line to the top-right
-// path.lineTo(w, (SizeConfig.padding3 * h) / SizeConfig.padding4); // Line to the bottom-right
-// path.lineTo(w / SizeConfig.padding2, h); // Line to the bottom center
-// path.lineTo(0, (SizeConfig.padding3 * h) / SizeConfig.padding4); // Line to the bottom-left
-// path.lineTo(0, h / SizeConfig.padding4); // Line to the top-left

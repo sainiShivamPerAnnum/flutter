@@ -3,13 +3,13 @@ import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/appbar/appbar.dart';
 import 'package:felloapp/ui/keys/keys.dart';
-import 'package:felloapp/ui/pages/hometabs/win/win_components/current_winnings_info.dart';
-import 'package:felloapp/ui/pages/hometabs/win/win_components/fello_badge_profile_widget.dart';
-import 'package:felloapp/ui/pages/hometabs/win/win_components/news_component.dart';
-import 'package:felloapp/ui/pages/hometabs/win/win_components/refer_and_earn_card.dart';
-import 'package:felloapp/ui/pages/hometabs/win/win_components/scratch_card_info_strip.dart';
-import 'package:felloapp/ui/pages/hometabs/win/win_components/win_helpers.dart';
-import 'package:felloapp/ui/pages/hometabs/win/win_viewModel.dart';
+import 'package:felloapp/ui/pages/hometabs/my_account/my_account_components/current_winnings_info.dart';
+import 'package:felloapp/ui/pages/hometabs/my_account/my_account_components/fello_badge_profile_widget.dart';
+import 'package:felloapp/ui/pages/hometabs/my_account/my_account_components/news_component.dart';
+import 'package:felloapp/ui/pages/hometabs/my_account/my_account_components/refer_and_earn_card.dart';
+import 'package:felloapp/ui/pages/hometabs/my_account/my_account_components/scratch_card_info_strip.dart';
+import 'package:felloapp/ui/pages/hometabs/my_account/my_account_components/win_helpers.dart';
+import 'package:felloapp/ui/pages/hometabs/my_account/my_account_vm.dart';
 import 'package:felloapp/ui/pages/static/dev_rel.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
@@ -17,15 +17,14 @@ import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
-import 'package:property_change_notifier/property_change_notifier.dart';
 
-class Win extends StatelessWidget {
-  const Win({Key? key}) : super(key: key);
+class MyAccount extends StatelessWidget {
+  const MyAccount({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final S locale = locator<S>();
-    return BaseView<WinViewModel>(
+    return BaseView<MyAccountVM>(
       onModelReady: (model) => model.init(),
       onModelDispose: (model) => model.clear(),
       builder: (ctx, model, child) {
@@ -98,5 +97,3 @@ class Win extends StatelessWidget {
     );
   }
 }
-
-

@@ -87,15 +87,15 @@ class StarCustomPainter extends CustomPainter {
     path_0.lineTo(size.width * 0.4859731, size.height * 0.1438654);
     path_0.close();
 
-    Paint paint_0_stroke = Paint()
+    Paint paint0Stroke = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = size.width * 0.01190477;
-    paint_0_stroke.color = Colors.black.withOpacity(1.0);
-    canvas.drawPath(path_0, paint_0_stroke);
+    paint0Stroke.color = Colors.black.withOpacity(1.0);
+    canvas.drawPath(path_0, paint0Stroke);
 
-    Paint paint_0_fill = Paint()..style = PaintingStyle.fill;
-    paint_0_fill.color = Colors.white.withOpacity(1.0);
-    canvas.drawPath(path_0, paint_0_fill);
+    Paint paint0Fill = Paint()..style = PaintingStyle.fill;
+    paint0Fill.color = Colors.white.withOpacity(1.0);
+    canvas.drawPath(path_0, paint0Fill);
 
     Path path_1 = Path();
     path_1.moveTo(size.width * 0.4437615, size.height * 0.09873231);
@@ -181,15 +181,15 @@ class StarCustomPainter extends CustomPainter {
     path_1.lineTo(size.width * 0.4437615, size.height * 0.09873231);
     path_1.close();
 
-    Paint paint_1_stroke = Paint()
+    Paint paint1Stroke = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = size.width * 0.02380954;
-    paint_1_stroke.color = Colors.black.withOpacity(1.0);
-    canvas.drawPath(path_1, paint_1_stroke);
+    paint1Stroke.color = Colors.black.withOpacity(1.0);
+    canvas.drawPath(path_1, paint1Stroke);
 
-    Paint paint_1_fill = Paint()..style = PaintingStyle.fill;
-    paint_1_fill.color = const Color(0xffFFD979).withOpacity(1.0);
-    canvas.drawPath(path_1, paint_1_fill);
+    Paint paint1Fill = Paint()..style = PaintingStyle.fill;
+    paint1Fill.color = const Color(0xffFFD979).withOpacity(1.0);
+    canvas.drawPath(path_1, paint1Fill);
   }
 
   @override
@@ -209,9 +209,9 @@ class FelloBadgeBGCustomPainter extends CustomPainter {
     path_0.lineTo(size.width * 1.016000, 0);
     path_0.close();
 
-    Paint paint_0_fill = Paint()..style = PaintingStyle.fill;
-    paint_0_fill.color = const Color(0xff023C40).withOpacity(1.0);
-    canvas.drawPath(path_0, paint_0_fill);
+    Paint paint0Fill = Paint()..style = PaintingStyle.fill;
+    paint0Fill.color = const Color(0xff023C40).withOpacity(1.0);
+    canvas.drawPath(path_0, paint0Fill);
   }
 
   @override
@@ -231,9 +231,9 @@ class FelloBadgeBG2CustomPainter extends CustomPainter {
     path_0.lineTo(size.width * 1.016000, 0);
     path_0.close();
 
-    Paint paint_0_fill = Paint()..style = PaintingStyle.fill;
-    paint_0_fill.color = const Color(0xff023C40).withOpacity(1.0);
-    canvas.drawPath(path_0, paint_0_fill);
+    Paint paint0Fill = Paint()..style = PaintingStyle.fill;
+    paint0Fill.color = const Color(0xff023C40).withOpacity(1.0);
+    canvas.drawPath(path_0, paint0Fill);
   }
 
   @override
@@ -243,31 +243,32 @@ class FelloBadgeBG2CustomPainter extends CustomPainter {
 }
 
 class RPSCustomPainter extends CustomPainter {
+  const RPSCustomPainter();
+
   @override
   void paint(Canvas canvas, Size size) {
-    Path path_0 = Path();
-    path_0.moveTo(95.3289, 113.06);
-    path_0.cubicTo(95.3289, 114.892, 94.3265, 116.578, 92.7164, 117.453);
-    path_0.lineTo(50.5499, 140.368);
-    path_0.cubicTo(49.061, 141.178, 47.2636, 141.178, 45.7748, 140.368);
-    path_0.lineTo(3.61235, 117.453);
-    path_0.cubicTo(2.00236, 116.578, 1, 114.892, 1, 113.06);
-    path_0.lineTo(1, 6.667);
-    path_0.cubicTo(1, 3.90557, 3.23858, 1.66699, 6, 1.66699);
-    path_0.lineTo(90.3289, 1.66699);
-    path_0.cubicTo(93.0903, 1.66699, 95.3289, 3.90557, 95.3289, 6.66699);
-    path_0.lineTo(95.3289, 113.06);
-    path_0.close();
+    const rad = 5.0;
+    const bottomPadding = 30;
+    Path path = Path();
 
-    Paint paint_0_stroke = Paint()
+    path.moveTo(rad, 0);
+    path.lineTo(size.width - rad, 0);
+    path.quadraticBezierTo(size.width, 0, size.width, rad);
+    path.lineTo(size.width, size.height - bottomPadding);
+    path.lineTo(size.width / 2, size.height);
+    path.lineTo(0, size.height - bottomPadding);
+    path.lineTo(0, rad);
+    path.quadraticBezierTo(0, 0, rad, 0);
+
+    Paint linePainter = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = size.width * 0.01549845;
-    paint_0_stroke.color = const Color(0xff2E8C76).withOpacity(1.0);
-    canvas.drawPath(path_0, paint_0_stroke);
+    linePainter.color = const Color(0xff2E8C76).withOpacity(1.0);
+    canvas.drawPath(path, linePainter);
 
-    Paint paint_0_fill = Paint()..style = PaintingStyle.fill;
-    paint_0_fill.color = const Color(0xff232326).withOpacity(1.0);
-    canvas.drawPath(path_0, paint_0_fill);
+    Paint backgroundPainter = Paint()..style = PaintingStyle.fill;
+    backgroundPainter.color = const Color(0xff232326).withOpacity(1.0);
+    canvas.drawPath(path, backgroundPainter);
   }
 
   @override

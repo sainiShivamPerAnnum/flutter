@@ -25,7 +25,7 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m1(Value) => " and ${Value} Fello tokens.";
 
   static String m2(amount) =>
-      "By continuing, ₹${amount} will be credited to your linked bank account instantly";
+      "By continuing, ₹${amount} will be credited to your linked bank account";
 
   static String m3(currentDay) => "Claim day ${currentDay} Reward";
 

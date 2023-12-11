@@ -467,8 +467,6 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
         return;
       }
       _baseUser = response.model;
-      _logger
-          .d("Base user initialized, UID: ${_baseUser?.toJson().toString()}");
 
       _idToken = await CacheManager.readCache(key: 'token');
 

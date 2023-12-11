@@ -5,18 +5,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class ProgressBottomSheet extends StatelessWidget {
-  const ProgressBottomSheet({required this.title,
+  const ProgressBottomSheet({
+    required this.title,
     required this.description,
     required this.badgeUrl,
     required this.buttonText,
-    required this.onButtonPressed,
-    super.key});
+    this.onButtonPressed,
+    super.key,
+  });
 
   final String title;
   final String description;
   final String badgeUrl;
   final String buttonText;
-  final VoidCallback onButtonPressed;
+  final VoidCallback? onButtonPressed;
 
   @override
   Widget build(BuildContext context) {

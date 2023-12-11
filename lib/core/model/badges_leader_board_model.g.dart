@@ -21,27 +21,12 @@ BadgesLeaderBoardData _$BadgesLeaderBoardDataFromJson(
               ?.map((e) => LeaderBoard.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
-      otherBadges: (json['otherBadges'] as List<dynamic>?)
-              ?.map((e) => OtherBadge.fromJson(e as Map<String, dynamic>))
-              .toList() ??
-          const [],
+      heroImage: json['heroImage'] as String? ??
+          'https://fello-dev-uploads.s3.ap-south-1.amazonaws.com/Group+1244832512.svg',
     );
 
 LeaderBoard _$LeaderBoardFromJson(Map<String, dynamic> json) => LeaderBoard(
       name: json['name'] as String? ?? '',
       totalSaving: json['totalSaving'] as num? ?? 0.0,
       uid: json['uid'] as String? ?? '',
-    );
-
-OtherBadge _$OtherBadgeFromJson(Map<String, dynamic> json) => OtherBadge(
-      url: json['url'] as String? ?? '',
-      title: json['title'] as String? ?? '',
-      enable: json['enable'] as bool? ?? false,
-      description: json['description'] as String? ?? '',
-      action: json['action'] as String? ?? '',
-      buttonText: json['buttonText'] as String? ?? '',
-      referText: json['referText'] as String? ?? '',
-      bottomSheetText: json['bottomSheetText'] as String? ?? '',
-      bottomSheetCta: json['bottomSheetCta'] as String? ?? '',
-      ctaUrl: json['ctaUrl'] as String? ?? '',
     );
