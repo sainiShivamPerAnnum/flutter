@@ -160,7 +160,7 @@ class DBModel extends ChangeNotifier {
   Future<String?> getUserDP(String? uid) async {
     try {
       logger!.i("CALLING: getFileFromDPBucketURL");
-      return await _api!.getFileFromDPBucketURL(uid, 'image');
+      return await _api.getFileFromDPBucketURL(uid, 'image');
     } catch (e) {
       log.error('Failed to fetch dp url');
       return null;
@@ -171,19 +171,19 @@ class DBModel extends ChangeNotifier {
 
   Future<bool> checkIfUsernameIsAvailable(String username) async {
     logger!.i("CALLING: checkUserNameAvailability");
-    return await _api!.checkUserNameAvailability(username);
+    return await _api.checkUserNameAvailability(username);
   }
 
   Future<bool> sendEmailToVerifyEmail(String email, String otp) async {
     logger!.i("CALLING: createEmailVerificationDocument");
-    return await _api!.createEmailVerificationDocument(email, otp);
+    return await _api.createEmailVerificationDocument(email, otp);
   }
 
   Future fetchCategorySpecificFAQ(String category) async {
     try {
       logger!.i("CALLING: fetchFaqs");
       final DocumentSnapshot response =
-          (await _api!.fetchFaqs(category)) as DocumentSnapshot<Object?>;
+          (await _api.fetchFaqs(category)) as DocumentSnapshot<Object?>;
       logger!.d(response.data().toString());
       return ApiResponse(
           model: FAQModel.fromMap(response.data() as Map<String, dynamic>),

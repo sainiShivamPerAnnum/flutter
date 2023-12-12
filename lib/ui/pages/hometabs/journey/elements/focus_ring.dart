@@ -143,7 +143,7 @@ class _FocusRingState extends State<FocusRing>
                             curve: Curves.bounceOut,
                             child: GestureDetector(
                               onTap: () {
-                                _analyticsService!.track(
+                                _analyticsService.track(
                                     eventName:
                                         AnalyticsEvents.journeyMileStarted);
                                 BaseUtil.openModalBottomSheet(

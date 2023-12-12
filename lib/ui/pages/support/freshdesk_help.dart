@@ -47,7 +47,7 @@ class _FreshDeskHelpState extends State<FreshDeskHelp> {
             await _webViewController!.runJavaScript('openWidget()');
             //prefill form with name email mobile and userid
             await _webViewController!.runJavaScript(
-                'prefillForm("${_userService!.baseUser!.name}","${_userService!.baseUser!.email}","${_userService!.baseUser!.mobile}","${_userService!.baseUser!.uid}" )');
+                'prefillForm("${_userService.baseUser!.name}","${_userService.baseUser!.email}","${_userService.baseUser!.mobile}","${_userService.baseUser!.uid}" )');
             //hide fields which are disabled and uneditable
             await _webViewController!.runJavaScript('hideFields()');
             exitLoading();

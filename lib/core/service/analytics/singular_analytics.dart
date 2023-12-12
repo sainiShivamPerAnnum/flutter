@@ -27,7 +27,7 @@ class SingularAnalytics extends BaseAnalyticsService {
         Singular.registerDeviceTokenForUninstall(token);
       }
     } catch (e) {
-      _logger!.e('Singular implementation failed to capture fcm token');
+      _logger.e('Singular implementation failed to capture fcm token');
     }
   }
 
@@ -54,7 +54,7 @@ class SingularAnalytics extends BaseAnalyticsService {
       _singularConfig!.skAdNetworkEnabled = true;
       _singularConfig!.manualSkanConversionManagement = true;
       _singularConfig!.conversionValueUpdatedCallback = (conversionValue) {
-        _logger!.d('Conversion value updated: $conversionValue');
+        _logger.d('Conversion value updated: $conversionValue');
       };
     }
   }
@@ -67,7 +67,7 @@ class SingularAnalytics extends BaseAnalyticsService {
         Singular.clearGlobalProperties();
         Singular.unsetCustomUserId();
       } catch (e) {
-        _logger!.e('Singular implementation failed to sign out');
+        _logger.e('Singular implementation failed to sign out');
       }
     }
   }
@@ -82,7 +82,7 @@ class SingularAnalytics extends BaseAnalyticsService {
           Singular.eventWithArgs(eventName!, properties);
         }
       } catch (e) {
-        _logger!.e('Singular tracking failed: ', e.toString());
+        _logger.e('Singular tracking failed: ', e.toString());
       }
     }
   }

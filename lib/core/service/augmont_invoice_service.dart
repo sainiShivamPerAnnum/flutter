@@ -47,14 +47,14 @@ class AugmontInvoiceService {
         customer: Customer(
           name: userDetails != null
               ? userDetails["name"]
-              : (_userService!.baseUser!.kycName != null &&
-                          _userService!.baseUser!.kycName!.isNotEmpty
-                      ? _userService!.baseUser!.kycName
-                      : _userService!.baseUser!.name) ??
+              : (_userService.baseUser!.kycName != null &&
+                          _userService.baseUser!.kycName!.isNotEmpty
+                      ? _userService.baseUser!.kycName
+                      : _userService.baseUser!.name) ??
                   "N/A",
           address: userDetails != null
               ? userDetails["email"]
-              : _userService!.baseUser!.email ?? "N/A",
+              : _userService.baseUser!.email ?? "N/A",
         ),
         info: InvoiceInfo(
           date: data[GetInvoice.resDate] != null

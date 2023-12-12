@@ -28,10 +28,10 @@ class FAQCardViewModel extends BaseViewModel {
   }
 
   Future fetchFaqs(String category) async {
-    ApiResponse response = await (_dbModel!.fetchCategorySpecificFAQ(category)
+    ApiResponse response = await (_dbModel.fetchCategorySpecificFAQ(category)
         as Future<ApiResponse<dynamic>>);
     if (response.code == 200) {
-      _logger!.d("FAQs fetched for category: ${response.model.category}");
+      _logger.d("FAQs fetched for category: ${response.model.category}");
       faqHeaders.clear();
       faqResponses.clear();
       List<FAQ> faqs = response.model.faqList;

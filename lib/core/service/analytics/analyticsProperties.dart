@@ -22,19 +22,19 @@ class AnalyticsProperties {
   static final BaseUtil _baseUtil = locator<BaseUtil>();
 
   static getTotalReferralCount() {
-    if (!_baseUtil!.referralsFetched!) {
+    if (!_baseUtil.referralsFetched!) {
       return 0;
     } else {
-      return _baseUtil!.userReferralsList?.length;
+      return _baseUtil.userReferralsList?.length;
     }
   }
 
   static getSuccessReferralCount() {
-    if (!_baseUtil!.referralsFetched!) {
+    if (!_baseUtil.referralsFetched!) {
       return 0;
     } else {
       int counter = 0;
-      for (ReferralDetail r in _baseUtil!.userReferralsList!) {
+      for (ReferralDetail r in _baseUtil.userReferralsList!) {
         if (r.isRefereeBonusUnlocked) counter++;
       }
       return counter;
@@ -51,7 +51,7 @@ class AnalyticsProperties {
 
   static int getSucessTxnCount() {
     int count = 0;
-    for (UserTransaction ut in _txnHistoryService!.txnList!) {
+    for (UserTransaction ut in _txnHistoryService.txnList!) {
       if (ut.tranStatus == UserTransaction.TRAN_STATUS_COMPLETE) count++;
     }
 
@@ -60,7 +60,7 @@ class AnalyticsProperties {
 
   static int getPendingTxnCount() {
     int count = 0;
-    for (UserTransaction ut in _txnHistoryService!.txnList!) {
+    for (UserTransaction ut in _txnHistoryService.txnList!) {
       if (ut.tranStatus == UserTransaction.TRAN_STATUS_PENDING) count++;
     }
 
@@ -69,7 +69,7 @@ class AnalyticsProperties {
 
   static int getFailedTxnCount() {
     int count = 0;
-    for (UserTransaction ut in _txnHistoryService!.txnList!) {
+    for (UserTransaction ut in _txnHistoryService.txnList!) {
       if (ut.tranStatus == UserTransaction.TRAN_STATUS_FAILED) count++;
     }
 
@@ -77,19 +77,19 @@ class AnalyticsProperties {
   }
 
   static double getGoldInvestedAmount() {
-    return _userService!.userFundWallet?.augGoldPrinciple ?? 0;
+    return _userService.userFundWallet?.augGoldPrinciple ?? 0;
   }
 
   static double getGoldQuantityInGrams() {
-    return _userService!.userFundWallet?.augGoldQuantity ?? 0;
+    return _userService.userFundWallet?.augGoldQuantity ?? 0;
   }
 
   static double getFelloFloAmount() {
-    return _userService!.userFundWallet?.wLbPrinciple ?? 0;
+    return _userService.userFundWallet?.wLbPrinciple ?? 0;
   }
 
   static bool isKYCVerified() {
-    return _userService!.baseUser!.isSimpleKycVerified ?? false;
+    return _userService.baseUser!.isSimpleKycVerified ?? false;
   }
 
   static int getCurrentLevel() {
@@ -102,7 +102,7 @@ class AnalyticsProperties {
 
   static int getMileStonesCompleted() {
     if ((_userService?.userJourneyStats?.mlIndex ?? 0) > 1) {
-      return _userService!.userJourneyStats!.mlIndex! - 1;
+      return _userService.userJourneyStats!.mlIndex! - 1;
     } else {
       return 0;
     }
@@ -113,7 +113,7 @@ class AnalyticsProperties {
   }
 
   static double getUserCurrentWinnings() {
-    double currentWinning = _userService!.userFundWallet?.unclaimedBalance ?? 0;
+    double currentWinning = _userService.userFundWallet?.unclaimedBalance ?? 0;
     return currentWinning;
   }
 
@@ -138,23 +138,23 @@ class AnalyticsProperties {
   }
 
   static String getJouneryCapsuleText() {
-    return _journeyService!
-            .currentMilestoneList[_userService!.userJourneyStats!.mlIndex! - 1]
+    return _journeyService
+            .currentMilestoneList[_userService.userJourneyStats!.mlIndex! - 1]
             .tooltip ??
         "null";
   }
 
   static String getJourneyMileStoneText() {
-    return _journeyService!
-            .currentMilestoneList[_userService!.userJourneyStats!.mlIndex! - 1]
+    return _journeyService
+            .currentMilestoneList[_userService.userJourneyStats!.mlIndex! - 1]
             .steps[0]
             .title ??
         "null";
   }
 
   static String getJourneyMileStoneSubText() {
-    return _journeyService!
-            .currentMilestoneList[_userService!.userJourneyStats!.mlIndex! - 1]
+    return _journeyService
+            .currentMilestoneList[_userService.userJourneyStats!.mlIndex! - 1]
             .steps[0]
             .subtitle ??
         "null";

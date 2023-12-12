@@ -31,7 +31,7 @@ class SubscriptionCardViewModel extends BaseViewModel {
   }
 
   isUserProfileComplete() {
-    return _userService!.userJourneyStats!.mlIndex! > 1;
+    return _userService.userJourneyStats!.mlIndex! > 1;
   }
 
   String getactiveSubtitle(ActiveSubscriptionModel subscription) {

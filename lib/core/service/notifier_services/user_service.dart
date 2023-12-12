@@ -279,7 +279,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   }
 
   Future<void> updatePortFolio() async {
-    final res = await _userRepo!.getPortfolioData();
+    final res = await _userRepo.getPortfolioData();
     if (res.isSuccess()) {
       userPortfolio = res.model!;
     } else {
@@ -332,7 +332,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
       userId = FirebaseAuth.instance.currentUser!.uid;
 
       Map<String, dynamic> response =
-          await _internalOpsService!.initDeviceInfo();
+          await _internalOpsService.initDeviceInfo();
       deviceId = response["deviceId"];
       platform = Platform.isAndroid ? 'android' : 'ios';
 
@@ -342,8 +342,8 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
       lastOpened = PreferenceHelper.getString(Constants.LAST_OPENED) ?? "";
       dayOpenCount = PreferenceHelper.getInt(Constants.DAY_OPENED_COUNT) ?? 0;
 
-      final ApiResponse<UserBootUpDetailsModel> res = await _userRepo!
-          .fetchUserBootUpRssponse(
+      final ApiResponse<UserBootUpDetailsModel> res =
+          await _userRepo.fetchUserBootUpRssponse(
               userId: userId,
               deviceId: deviceId,
               platform: platform,
@@ -420,7 +420,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
       }
     } catch (e) {
       _logger.e(e.toString());
-      _internalOpsService!
+      _internalOpsService
           .logFailure(baseUser?.uid ?? '', FailType.UserServiceInitFailed, {
         "title": "UserService initialization Failed",
         "error": e.toString(),
@@ -430,12 +430,12 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
 
   Future<bool> signOut(Function signOut) async {
     try {
-      await _userRepo!.logOut();
+      await _userRepo.logOut();
       await signOut();
       await CacheService.invalidateAll();
       await FirebaseAuth.instance.signOut();
       await CacheManager.clearCacheMemory();
-      _journeyRepo!.dump();
+      _journeyRepo.dump();
       // await _apiCacheManager!.clearCacheMemory();
       _logger.d("UserService signout called");
       _userFundWallet = null;
@@ -461,7 +461,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
 
   Future<void> setBaseUser() async {
     if (_firebaseUser != null) {
-      final response = await _userRepo!.getUserById(id: _firebaseUser?.uid);
+      final response = await _userRepo.getUserById(id: _firebaseUser?.uid);
       if (response.code == 400) {
         _logger.d("Unable to cast user data object.");
         return;
@@ -505,7 +505,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
 
         String? myUserDpUrl;
         if (baseUser != null) {
-          myUserDpUrl = await _dbModel!.getUserDP(baseUser!.uid);
+          myUserDpUrl = await _dbModel.getUserDP(baseUser!.uid);
         }
         if (myUserDpUrl != null) {
           await CacheManager.writeCache(
@@ -543,7 +543,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
 
   Future<void> getUserFundWalletData() async {
     if (baseUser != null) {
-      UserFundWallet? temp = (await _userRepo!.getFundBalance()).model;
+      UserFundWallet? temp = (await _userRepo.getFundBalance()).model;
       if (temp == null) {
         _compileUserWallet();
       } else {
@@ -593,7 +593,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     // NOTE: CACHE REQUIRED, FOR CALLED FROM JOURUNY SERVICE AGAIN
     if (baseUser != null) {
       ApiResponse<UserJourneyStatsModel> res =
-          await _journeyRepo!.getUserJourneyStats();
+          await _journeyRepo.getUserJourneyStats();
       if (res.isSuccess()) {
         userJourneyStats = res.model;
         return true;
@@ -614,7 +614,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
 
   Future<void> checkForNewNotifications() async {
     _logger.d("Looking for new notifications");
-    await _userRepo!.checkIfUserHasNewNotifications().then((value) {
+    await _userRepo.checkIfUserHasNewNotifications().then((value) {
       if (value.code == 200) {
         if (value.model!['notification'] != null) {
           referralAlertDialog = value.model!['notification'];
@@ -683,7 +683,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
 
   Future<bool?> updateClientToken(String? token) async {
     ApiResponse<bool> response =
-        await _userRepo!.updateFcmToken(fcmToken: token);
+        await _userRepo.updateFcmToken(fcmToken: token);
     return response.model;
   }
 
@@ -732,7 +732,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
       TaskSnapshot res = await uploadTask;
       String url = await res.ref.getDownloadURL();
       setMyAvatarId('CUSTOM');
-      final updateUserAvatarResponse = await _userRepo!.updateUser(
+      final updateUserAvatarResponse = await _userRepo.updateUser(
           dMap: {BaseUser.fldAvatarId: avatarId}, uid: baseUser!.uid);
       if (updateUserAvatarResponse.isSuccess() &&
           updateUserAvatarResponse.model!) {
@@ -751,7 +751,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
         Map<String, dynamic> errorDetails = {
           'error_msg': 'Method call to upload picture failed',
         };
-        _internalOpsService!.logFailure(
+        _internalOpsService.logFailure(
           baseUser!.uid,
           FailType.ProfilePictureUpdateFailed,
           errorDetails,

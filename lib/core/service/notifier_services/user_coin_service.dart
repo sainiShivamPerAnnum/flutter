@@ -22,18 +22,18 @@ class UserCoinService extends ChangeNotifier {
       _flcBalance = balance;
       notifyListeners();
 
-      _logger!.d("Initial Coin Balance added");
+      _logger.d("Initial Coin Balance added");
     } else {
       _flcBalance = balance;
       notifyListeners();
-      _logger!.d("Coin Balance Updated");
+      _logger.d("Coin Balance Updated");
     }
   }
 
   Future<void> getUserCoinBalance() async {
-    _logger!.d("FLC Balance called");
-    final ApiResponse<FlcModel> response = await _userRepo!.getCoinBalance();
-    _logger!.d(response.model?.toJson().toString());
+    _logger.d("FLC Balance called");
+    final ApiResponse<FlcModel> response = await _userRepo.getCoinBalance();
+    _logger.d(response.model?.toJson().toString());
     setFlcBalance(response.model?.flcBalance);
   }
 }

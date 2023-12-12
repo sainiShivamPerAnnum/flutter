@@ -103,7 +103,7 @@ class OnboardingViewModel extends BaseViewModel {
       page: LoginPageConfig,
     );
     if (_analyticsService != null) {
-      _analyticsService!.track(eventName: AnalyticsEvents.splashScrenProceed);
+      _analyticsService.track(eventName: AnalyticsEvents.splashScrenProceed);
     }
   }
 }

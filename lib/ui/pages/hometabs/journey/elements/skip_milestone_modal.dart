@@ -44,9 +44,9 @@ class _SkipMilestoneModalSheetState extends State<SkipMilestoneModalSheet> {
   onTokenSkipPressed() async {
     AppState.screenStack.add(ScreenItem.loader);
     skippingInProgress = true;
-    final res = await _scratchCardRepo!.skipMilestone();
+    final res = await _scratchCardRepo.skipMilestone();
     if (res.isSuccess()) {
-      _userCoinService!.getUserCoinBalance();
+      _userCoinService.getUserCoinBalance();
       skippingInProgress = false;
       AppState.screenStack.removeLast();
       while (AppState.screenStack.length > 1) {
@@ -55,8 +55,8 @@ class _SkipMilestoneModalSheetState extends State<SkipMilestoneModalSheet> {
 
       BaseUtil.showPositiveAlert(
           locale.skipMileStoneSuccessTitle, locale.skipMileStoneSuccessSubtile);
-      _journeyService!.updateAvatarIndexDirectly();
-      _journeyService!.checkAndAnimateAvatar();
+      _journeyService.updateAvatarIndexDirectly();
+      _journeyService.checkAndAnimateAvatar();
     } else {
       skippingInProgress = false;
       AppState.screenStack.removeLast();

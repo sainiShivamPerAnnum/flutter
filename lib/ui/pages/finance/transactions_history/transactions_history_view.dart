@@ -458,18 +458,18 @@ class TransactionSIPTile extends StatelessWidget {
       title: Text(locale.btnDeposit.toUpperCase(),
           style: TextStyles.sourceSans.body3),
       subtitle: Text(
-        _txnHistoryService!.getFormattedSIPDate(
+        _txnHistoryService.getFormattedSIPDate(
             DateTime.parse(txn!.createdOn.toDate().toString())),
         style: TextStyles.sourceSans.body4.colour(UiConstants.kTextColor2),
       ),
       trailing: Wrap(
         children: [
           TransactionStatusChip(
-            color: _txnHistoryService!.getTileColor(txn!.status),
+            color: _txnHistoryService.getTileColor(txn!.status),
             status: txn!.status,
           ),
           Text(
-            _txnHistoryService!.getFormattedTxnAmount(double.tryParse(
+            _txnHistoryService.getFormattedTxnAmount(double.tryParse(
                     model!.investmentType == InvestmentType.AUGGOLD99
                         ? txn!.augMap?.amount ?? '0'
                         : txn!.lbMap?.amount ?? '0') ??

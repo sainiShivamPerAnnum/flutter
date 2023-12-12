@@ -43,18 +43,18 @@ class AppFlyerAnalytics extends BaseAnalyticsService {
       _appsflyerSdk.logEvent(eventName!, properties ?? {});
     } catch (e) {
       String error = e as String ?? "Unable to track event: $eventName";
-      _logger!.e(error);
+      _logger.e(error);
     }
   }
 
   @override
   void trackScreen({String? screen, Map<String, dynamic>? properties}) {
     try {
-      _logger!.d('analytics : $screen');
+      _logger.d('analytics : $screen');
       WebEngagePlugin.trackScreen(screen!, properties);
     } catch (e) {
       String error = e as String ?? "Unable to track screen event: $screen";
-      _logger!.e(error);
+      _logger.e(error);
     }
   }
 
@@ -72,17 +72,16 @@ class AppFlyerAnalytics extends BaseAnalyticsService {
 
       _appsflyerSdk = AppsflyerSdk(appsFlyerOptions);
       _appsflyerSdk.setAppInviteOneLinkID('uxu0', (res) {
-        _logger!
-            .d("appsflyer setAppInviteOneLinkID callback:" + res.toString());
+        _logger.d("appsflyer setAppInviteOneLinkID callback:" + res.toString());
       });
       // _appsflyerSdk.setOneLinkCustomDomain([_brandedDomain]);
 
       _appsflyerSdk.onDeepLinking((DeepLinkResult result) {
-        _logger!.d('appflyer deeplink $result');
+        _logger.d('appflyer deeplink $result');
       });
 
       _appsflyerSdk.onInstallConversionData((res) {
-        _logger!.d('appflyer onInstallConversionData $res');
+        _logger.d('appflyer onInstallConversionData $res');
         if (res['status'] == 'success') {
           BaseUtil.referrerUserId = res['payload']['af_referrer_customer_id'];
         }
@@ -94,9 +93,9 @@ class AppFlyerAnalytics extends BaseAnalyticsService {
       );
 
       id = await (_appsflyerSdk.getAppsFlyerUID());
-      _logger!.d('appflyer initialized');
+      _logger.d('appflyer initialized');
     } catch (e) {
-      _logger!.e('appflyer $e');
+      _logger.e('appflyer $e');
     }
 
     return id;
@@ -104,10 +103,10 @@ class AppFlyerAnalytics extends BaseAnalyticsService {
 
 // TTL for link generated is 31 days, so we can cache this link for 31 days.
   Future<dynamic> inviteLink() async {
-    _logger!.d('appflyer get invite link');
+    _logger.d('appflyer get invite link');
     final cache = await _cacheService.getData(CacheKeys.APP_FLYER_LINK);
     if (cache != null) {
-      _logger!.d('cache $cache');
+      _logger.d('cache $cache');
       return json.decode(cache.data!);
     }
 
@@ -121,7 +120,7 @@ class AppFlyerAnalytics extends BaseAnalyticsService {
 
     final Completer<dynamic> completer = Completer();
     _appsflyerSdk.generateInviteLink(inviteLinkParams, (success) async {
-      _logger!.d('appflyer invite link $success');
+      _logger.d('appflyer invite link $success');
       await _cacheService.writeMap(
         CacheKeys.APP_FLYER_LINK,
         30 * 24 * 60,
@@ -129,7 +128,7 @@ class AppFlyerAnalytics extends BaseAnalyticsService {
       );
       completer.complete(success);
     }, (error) {
-      _logger!.d('appflyer invite link $error');
+      _logger.d('appflyer invite link $error');
       completer.completeError(error);
     });
 

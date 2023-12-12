@@ -38,7 +38,7 @@ class AnalyticsRepository extends BaseRepo {
       logger.d('CHECK BODY: $_body');
 
       final res = await APIService.instance.postData(
-        _apiPaths!.kSetInstallInfo,
+        _apiPaths.kSetInstallInfo,
         cBaseUrl: _baseUrl,
         body: _body,
         apiName: '$_analytics/setInstallInfo',

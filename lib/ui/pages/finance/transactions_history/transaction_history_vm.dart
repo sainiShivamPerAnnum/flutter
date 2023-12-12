@@ -133,8 +133,8 @@ class TransactionsHistoryViewModel extends BaseViewModel {
     getTransactions();
     // }
 
-    if (_txnHistoryService!.txnList != null) {
-      filteredList = _txnHistoryService!.txnList;
+    if (_txnHistoryService.txnList != null) {
+      filteredList = _txnHistoryService.txnList;
     } else {
       filteredList = [];
     }
@@ -158,7 +158,7 @@ class TransactionsHistoryViewModel extends BaseViewModel {
       if (_scrollController!.offset >=
               _scrollController!.position.maxScrollExtent &&
           !_scrollController!.position.outOfRange) {
-        if (_txnHistoryService!.hasMoreTxns && state == ViewState.Idle) {
+        if (_txnHistoryService.hasMoreTxns && state == ViewState.Idle) {
           getMoreTransactions();
         }
       }
@@ -168,46 +168,46 @@ class TransactionsHistoryViewModel extends BaseViewModel {
   Future getTransactions() async {
     setState(ViewState.Busy);
 
-    await _txnHistoryService!.updateTransactions(_investmentType);
-    _filteredList = _txnHistoryService!.txnList;
+    await _txnHistoryService.updateTransactions(_investmentType);
+    _filteredList = _txnHistoryService.txnList;
     setState(ViewState.Idle);
   }
 
   getMoreTransactions() async {
-    _logger!.d("fetching more transactions...");
+    _logger.d("fetching more transactions...");
     isMoreTxnsBeingFetched = true;
     switch (filter) {
       case 1:
-        if (_txnHistoryService!.hasMoreTxns) {
-          await _txnHistoryService!.fetchTransactions(
+        if (_txnHistoryService.hasMoreTxns) {
+          await _txnHistoryService.fetchTransactions(
             subtype: _investmentType,
           );
         }
         break;
       case 2:
-        if (_txnHistoryService!.hasMoreDepositTxns) {
-          await _txnHistoryService!.fetchTransactions(
+        if (_txnHistoryService.hasMoreDepositTxns) {
+          await _txnHistoryService.fetchTransactions(
               subtype: _investmentType,
               type: UserTransaction.TRAN_TYPE_DEPOSIT);
         }
         break;
       case 3:
-        if (_txnHistoryService!.hasMoreWithdrawalTxns) {
-          await _txnHistoryService!.fetchTransactions(
+        if (_txnHistoryService.hasMoreWithdrawalTxns) {
+          await _txnHistoryService.fetchTransactions(
               subtype: _investmentType,
               type: UserTransaction.TRAN_TYPE_WITHDRAW);
         }
         break;
       case 4:
-        if (_txnHistoryService!.hasMorePrizeTxns) {
-          await _txnHistoryService!.fetchTransactions(
+        if (_txnHistoryService.hasMorePrizeTxns) {
+          await _txnHistoryService.fetchTransactions(
               subtype: _investmentType, type: UserTransaction.TRAN_TYPE_PRIZE);
         }
 
         break;
       case 5:
-        if (_txnHistoryService!.hasMoreRefundedTxns) {
-          await _txnHistoryService!.fetchTransactions(
+        if (_txnHistoryService.hasMoreRefundedTxns) {
+          await _txnHistoryService.fetchTransactions(
               subtype: _investmentType,
               status: UserTransaction.TRAN_STATUS_REFUNDED);
         }
@@ -224,34 +224,34 @@ class TransactionsHistoryViewModel extends BaseViewModel {
   filterTransactions({required bool update}) {
     switch (filter) {
       case 1:
-        filteredList = _txnHistoryService!.txnList;
+        filteredList = _txnHistoryService.txnList;
         break;
       case 2:
         filteredList = [
-          ..._txnHistoryService!.txnList!
+          ..._txnHistoryService.txnList!
               .where((txn) => txn.type == UserTransaction.TRAN_TYPE_DEPOSIT)
         ];
         break;
       case 3:
         filteredList = [
-          ..._txnHistoryService!.txnList!
+          ..._txnHistoryService.txnList!
               .where((txn) => txn.type == UserTransaction.TRAN_TYPE_WITHDRAW)
         ];
         break;
       case 4:
         filteredList = [
-          ..._txnHistoryService!.txnList!
+          ..._txnHistoryService.txnList!
               .where((txn) => txn.type == UserTransaction.TRAN_TYPE_PRIZE)
         ];
         break;
       case 5:
         filteredList = [
-          ..._txnHistoryService!.txnList!.where(
+          ..._txnHistoryService.txnList!.where(
               (txn) => txn.tranStatus == UserTransaction.TRAN_STATUS_REFUNDED)
         ];
         break;
       default:
-        filteredList = _txnHistoryService!.txnList;
+        filteredList = _txnHistoryService.txnList;
         break;
     }
     if (update && filteredList!.length < 30) getMoreTransactions();

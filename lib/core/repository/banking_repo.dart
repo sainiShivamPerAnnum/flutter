@@ -39,7 +39,7 @@ class BankingRepository extends BaseRepo {
 
     try {
       final response = await APIService.instance.postData(
-        _apiPaths!.kVerifyPan,
+        _apiPaths.kVerifyPan,
         body: body,
         cBaseUrl: _baseUrl,
         apiName: '$_banking/verifyPan',

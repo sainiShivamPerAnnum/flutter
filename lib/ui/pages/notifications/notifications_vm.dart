@@ -47,7 +47,7 @@ class NotificationsViewModel extends BaseViewModel {
               _scrollController.position.maxScrollExtent &&
           !_scrollController.position.outOfRange) {
         if (hasMoreAlerts && state == ViewState.Idle) {
-          _logger!.d("fetching more alerts...");
+          _logger.d("fetching more alerts...");
           fetchNotifications(true);
         }
       }
@@ -59,11 +59,11 @@ class NotificationsViewModel extends BaseViewModel {
     if (more) isMoreNotificationsLoading = true;
 
     ApiResponse<List<AlertModel>> userNotifications =
-        await _userRepo!.getUserNotifications(
+        await _userRepo.getUserNotifications(
       lastAlertDocumentId,
     );
     if (userNotifications.code == 200) {
-      _logger!.d("no of alerts fetched: ${userNotifications.model!.length}");
+      _logger.d("no of alerts fetched: ${userNotifications.model!.length}");
       if (notifications == null || notifications!.length == 0) {
         notifications = userNotifications.model;
       } else {
@@ -87,7 +87,7 @@ class NotificationsViewModel extends BaseViewModel {
     notifications!.addAll(list);
     notifications!.sort(
         (a, b) => b.createdTime!.seconds.compareTo(a.createdTime!.seconds));
-    _logger!.d("total alerts now: ${notifications!.length}");
+    _logger.d("total alerts now: ${notifications!.length}");
     notifyListeners();
     notifications!.forEach((e) {
       print(e.title);

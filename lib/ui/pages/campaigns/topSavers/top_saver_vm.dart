@@ -109,7 +109,7 @@ class TopSaverViewModel extends BaseViewModel {
 
   List<PastHighestSaver>? get pastWinners => _pastWinners;
 
-  displayUsername(username) => _userService!.diplayUsername(username);
+  displayUsername(username) => _userService.diplayUsername(username);
 
   set pastWinners(List<PastHighestSaver>? value) {
     _pastWinners = value;
@@ -148,7 +148,7 @@ class TopSaverViewModel extends BaseViewModel {
 
     campaignType = event!.type;
     // eventService.getEventType(event.type);
-    _logger!
+    _logger
         .d("Top Saver Viewmodel initialised with saver type : ${event!.type}");
     setAppbarTitle();
     fetchTopSavers();
@@ -157,8 +157,8 @@ class TopSaverViewModel extends BaseViewModel {
     // _logger.d(CodeFromFreq.getPastDayCode());
     // _logger.d(CodeFromFreq.getPastWeekCode());
     // _logger.d(CodeFromFreq.getPastMonthCode());
-    _logger!.d(event!.type);
-    _logger!.d(isGameRedirected);
+    _logger.d(event!.type);
+    _logger.d(isGameRedirected);
     // if (event.type == "FPL" && isGameRedirected)
     //   BaseUtil.openModalBottomSheet(
     //     addToScreenStack: true,
@@ -255,9 +255,9 @@ class TopSaverViewModel extends BaseViewModel {
 
   Future<EventModel?> getSingleEventDetails(String? eventType) async {
     EventModel? event;
-    _logger!.d(eventType);
+    _logger.d(eventType);
 
-    final response = await _campaignRepo!.getOngoingEvents();
+    final response = await _campaignRepo.getOngoingEvents();
     if (response.code == 200) {
       List<EventModel> ongoingEvents = response.model!;
       // ongoingEvents.sort((a, b) => a.position.compareTo(b.position));
@@ -267,13 +267,12 @@ class TopSaverViewModel extends BaseViewModel {
     } else {
       BaseUtil.showNegativeAlert(response.errorMessage, locale.tryLater);
     }
-    _logger!.d(event.toString());
+    _logger.d(event.toString());
     return event;
   }
 
   fetchTopSavers() async {
-    ApiResponse response =
-        await _getterRepo!.getStatisticsByFreqGameTypeAndCode(
+    ApiResponse response = await _getterRepo.getStatisticsByFreqGameTypeAndCode(
       freq: saverFreq,
       type: eventStandingsType,
     );
@@ -321,18 +320,18 @@ class TopSaverViewModel extends BaseViewModel {
   }
 
   Future getProfileDpWithUid(String? uid) async {
-    return await _dbModel!.getUserDP(uid);
+    return await _dbModel.getUserDP(uid);
   }
 
   getUserRankIfAny() {
     if (currentParticipants != null && currentParticipants!.isNotEmpty) {
       if (currentParticipants!.firstWhereOrNull(
-              (e) => e.userid == _userService!.baseUser!.uid) !=
+              (e) => e.userid == _userService.baseUser!.uid) !=
           null) {
         final ScoreBoard curentUserStat = currentParticipants!
-            .firstWhere((e) => e.userid == _userService!.baseUser!.uid);
+            .firstWhere((e) => e.userid == _userService.baseUser!.uid);
         int rank = currentParticipants!
-            .indexWhere((e) => e.userid == _userService!.baseUser!.uid);
+            .indexWhere((e) => e.userid == _userService.baseUser!.uid);
         userRank = rank + 1;
         userDisplayAmount = curentUserStat.displayScore; //TODO
       }
@@ -407,8 +406,7 @@ class TopSaverViewModel extends BaseViewModel {
 
   Future<List<WinnersModel>?> getPastWinners(
       String gameType, String freq) async {
-    ApiResponse<List<WinnersModel>> response =
-        await _getterRepo!.getPastWinners(
+    ApiResponse<List<WinnersModel>> response = await _getterRepo.getPastWinners(
       type: gameType,
       freq: freq,
     );

@@ -63,7 +63,7 @@ class LendboxWithdrawalViewModel extends BaseViewModel {
       text: "1",
     );
 
-    final response = await _lendboxRepo!.getWithdrawableQuantity();
+    final response = await _lendboxRepo.getWithdrawableQuantity();
     if (response.isSuccess()) {
       withdrawableQuantity = response.model;
     } else {
@@ -130,7 +130,7 @@ class LendboxWithdrawalViewModel extends BaseViewModel {
     _inProgress = true;
     notifyListeners();
 
-    _analyticsService!.track(
+    _analyticsService.track(
       eventName: AnalyticsEvents.sellInitiate,
       properties: {
         'Amount to be sold': amountController!.text,
@@ -140,27 +140,27 @@ class LendboxWithdrawalViewModel extends BaseViewModel {
     );
 
     AppState.blockNavigation();
-    final bankRes = await _paymentRepo!.getActiveBankAccountDetails();
+    final bankRes = await _paymentRepo.getActiveBankAccountDetails();
     if (bankRes.isSuccess()) {
-      final withdrawalTxn = await _lendboxRepo!.createWithdrawal(
+      final withdrawalTxn = await _lendboxRepo.createWithdrawal(
         amount,
         bankRes.model!.id,
       );
 
       if (withdrawalTxn.isSuccess()) {
-        await _txnService!.initiateWithdrawal(
+        await _txnService.initiateWithdrawal(
           amount.toDouble(),
           withdrawalTxn.model,
         );
       } else {
-        _logger!.e(withdrawalTxn.errorMessage);
+        _logger.e(withdrawalTxn.errorMessage);
         BaseUtil.showNegativeAlert(
           locale.withDrawalFailed,
           withdrawalTxn.errorMessage,
         );
       }
     } else {
-      _logger!.e(bankRes.errorMessage);
+      _logger.e(bankRes.errorMessage);
       BaseUtil.showNegativeAlert(locale.withDrawalFailed, bankRes.errorMessage);
     }
 

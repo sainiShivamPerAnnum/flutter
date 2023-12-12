@@ -163,7 +163,7 @@ class SaveViewModel extends BaseViewModel {
 
   UserService? get userService => _userService;
 
-  UserFundWallet? get userFundWallet => _userService!.userFundWallet;
+  UserFundWallet? get userFundWallet => _userService.userFundWallet;
 
   double get nonWithdrawableQnt => _nonWithdrawableQnt;
 
@@ -197,12 +197,12 @@ class SaveViewModel extends BaseViewModel {
   Future<void> init() async {
     // _baseUtil.fetchUserAugmontDetail();
     // baseProvider = BaseUtil();
-    await _userService!.getUserFundWalletData();
-    await _userCoinService!.getUserCoinBalance();
+    await _userService.getUserFundWalletData();
+    await _userCoinService.getUserCoinBalance();
     await locator<SubService>().init();
 
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      _sellService!.init();
+      _sellService.init();
       getCampaignEvents().then((val) {
         if ((ongoingEvents?.length ?? 0) > 1) {
           _timer = Timer.periodic(const Duration(seconds: 5), (timer) {
@@ -241,7 +241,7 @@ class SaveViewModel extends BaseViewModel {
   }
 
   void openProfile() {
-    _baseUtil!.openProfileDetailsScreen();
+    _baseUtil.openProfileDetailsScreen();
   }
 
   List<Widget> getSaveViewItems(SaveViewModel smodel) {
@@ -361,7 +361,7 @@ class SaveViewModel extends BaseViewModel {
   }
 
   Future<void> getSaveViewBlogs() async {
-    final response = await _saveRepo!.getBlogs(5);
+    final response = await _saveRepo.getBlogs(5);
     if (response.isSuccess()) {
       blogPosts = response.model;
     } else {
@@ -372,7 +372,7 @@ class SaveViewModel extends BaseViewModel {
 
   Future<void> getAllBlogs() async {
     updateIsLoading(true);
-    final response = await _saveRepo!.getBlogs(30);
+    final response = await _saveRepo.getBlogs(30);
     blogPosts = response.model;
     blogPosts!
         .sort(((a, b) => a.acf!.categories!.compareTo(b.acf!.categories!)));
@@ -383,9 +383,9 @@ class SaveViewModel extends BaseViewModel {
   }
 
   Future<void> refreshTransactions(InvestmentType investmentType) async {
-    await _txnHistoryService!.updateTransactions(investmentType);
-    await _userCoinService!.getUserCoinBalance();
-    await _userService!.getUserFundWalletData();
+    await _txnHistoryService.updateTransactions(investmentType);
+    await _userCoinService.getUserCoinBalance();
+    await _userService.getUserFundWalletData();
   }
 
   double getQuantity(
@@ -435,7 +435,7 @@ class SaveViewModel extends BaseViewModel {
 
   /// `Navigation`
   void navigateToBlogWebView(String? slug, String? title) {
-    _analyticsService!.track(eventName: AnalyticsEvents.blogWebView);
+    _analyticsService.track(eventName: AnalyticsEvents.blogWebView);
 
     AppState.delegate!.appState.currentAction = PageAction(
         state: PageState.addWidget,
@@ -452,7 +452,7 @@ class SaveViewModel extends BaseViewModel {
     Haptic.vibrate();
 
     if (investmentType == InvestmentType.AUGGOLD99) {
-      _analyticsService!.track(
+      _analyticsService.track(
           eventName: AnalyticsEvents.assetBannerTapped,
           properties:
               AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
@@ -472,7 +472,7 @@ class SaveViewModel extends BaseViewModel {
         ),
       );
     } else {
-      _analyticsService!.track(
+      _analyticsService.track(
           eventName: AnalyticsEvents.assetBannerTapped,
           properties:
               AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
@@ -495,7 +495,7 @@ class SaveViewModel extends BaseViewModel {
   }
 
   void trackChallengeTapped(String bannerUri, String actionUri, int order) {
-    _analyticsService!.track(
+    _analyticsService.track(
         eventName: AnalyticsEvents.offerBannerTapped,
         properties: AnalyticsProperties.getDefaultPropertiesMap(
             extraValuesMap: {
@@ -506,7 +506,7 @@ class SaveViewModel extends BaseViewModel {
   }
 
   void trackBannerClickEvent(int orderNumber) {
-    _analyticsService!
+    _analyticsService
         .track(eventName: AnalyticsEvents.bannerClick, properties: {
       "Location": "Fin Gyaan",
       "Order": orderNumber,
@@ -515,7 +515,7 @@ class SaveViewModel extends BaseViewModel {
 
   void navigateToViewAllBlogs() {
     Haptic.vibrate();
-    _analyticsService!.track(eventName: AnalyticsEvents.allblogsview);
+    _analyticsService.track(eventName: AnalyticsEvents.allblogsview);
     AppState.delegate!.appState.currentAction = PageAction(
       state: PageState.addWidget,
       page: ViewAllBlogsViewConfig,

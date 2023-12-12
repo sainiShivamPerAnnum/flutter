@@ -42,7 +42,7 @@ class FelloCoinBar extends StatelessWidget {
         return GestureDetector(
           onTap: () {
             if (JourneyService.isAvatarAnimationInProgress) return;
-            _analytics!.track(eventName: AnalyticsEvents.addFLCTokensTopRight);
+            _analytics.track(eventName: AnalyticsEvents.addFLCTokensTopRight);
             BaseUtil.openModalBottomSheet(
               addToScreenStack: true,
               backgroundColor: UiConstants.gameCardColor,

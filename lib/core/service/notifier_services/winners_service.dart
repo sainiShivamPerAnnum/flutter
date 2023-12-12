@@ -15,7 +15,7 @@ class WinnerService extends ChangeNotifier {
   Map<String, List<Winners>> gameWinnersMap = {};
 
   Future getProfileDpWithUid(String? uid) async {
-    return _dbModel!.getUserDP(uid);
+    return _dbModel.getUserDP(uid);
   }
 
   String getDateRange() {
@@ -45,9 +45,9 @@ class WinnerService extends ChangeNotifier {
     String gameType,
     String freq,
   ) async {
-    _logger!.d("Winner Game Type : $gameType \n Frequency: $freq");
+    _logger.d("Winner Game Type : $gameType \n Frequency: $freq");
 
-    final ApiResponse response = await _getterRepo!.getWinnerByFreqGameType(
+    final ApiResponse response = await _getterRepo.getWinnerByFreqGameType(
       type: gameType,
       freq: freq,
     );

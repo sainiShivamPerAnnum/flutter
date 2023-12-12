@@ -65,7 +65,7 @@ class TxnHistoryService extends ChangeNotifier {
     String? type,
   }) async {
     //fetch filtered transactions
-    final response = await _transactionHistoryRepo!.getUserTransactions(
+    final response = await _transactionHistoryRepo.getUserTransactions(
       type: type,
       subtype: subtype.name,
       status: status,
@@ -85,7 +85,7 @@ class TxnHistoryService extends ChangeNotifier {
       // if transaction list already have some items
       appendTxns(response.model!.transactions!);
     }
-    _logger!.d("Current Transaction List length: ${_txnList!.length}");
+    _logger.d("Current Transaction List length: ${_txnList!.length}");
 
     // check and set which category has no more items to fetch
     if (response.model!.transactions!.length < 30) {
@@ -136,7 +136,7 @@ class TxnHistoryService extends ChangeNotifier {
       hasMoreRefundedTxns = false;
       hasMoreWithdrawalTxns = false;
       findFirstAugmontTransaction();
-      _logger!.d("Transaction fetch complete, no more operations from here on");
+      _logger.d("Transaction fetch complete, no more operations from here on");
     } else if (status != null) {
       hasMoreRefundedTxns = false;
     } else if (type != null) {
@@ -153,12 +153,12 @@ class TxnHistoryService extends ChangeNotifier {
   findFirstAugmontTransaction() {
     try {
       List<UserTransaction> reversedList = txnList!.reversed.toList();
-      _baseUtil!.firstAugmontTransaction = reversedList.firstWhere((element) =>
+      _baseUtil.firstAugmontTransaction = reversedList.firstWhere((element) =>
           element.type == UserTransaction.TRAN_TYPE_DEPOSIT &&
           element.tranStatus == UserTransaction.TRAN_STATUS_COMPLETE &&
           element.subType == UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD);
     } catch (e) {
-      _logger!.i("No transaction found");
+      _logger.i("No transaction found");
     }
   }
 
@@ -171,7 +171,7 @@ class TxnHistoryService extends ChangeNotifier {
     hasMoreRefundedTxns = true;
     txnList?.clear();
     await fetchTransactions(subtype: investmentType);
-    _logger!.i("Transactions got updated");
+    _logger.i("Transactions got updated");
   }
 
   // Clear transactions
