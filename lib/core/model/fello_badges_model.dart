@@ -2,11 +2,9 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'fello_badges_model.g.dart';
 
-const _deserializable = JsonSerializable(
-  createToJson: false,
-);
+const _serializable = JsonSerializable();
 
-@_deserializable
+@_serializable
 class FelloBadgesModel {
   final String message;
   final FelloBadgesData data;
@@ -18,9 +16,11 @@ class FelloBadgesModel {
 
   factory FelloBadgesModel.fromJson(Map<String, dynamic> json) =>
       _$FelloBadgesModelFromJson(json);
+
+  Map<String, dynamic> toJson() => _$FelloBadgesModelToJson(this);
 }
 
-@_deserializable
+@_serializable
 class FelloBadgesData {
   final String title;
   final List<Level> levels;
@@ -36,9 +36,11 @@ class FelloBadgesData {
 
   factory FelloBadgesData.fromJson(Map<String, dynamic> json) =>
       _$FelloBadgesDataFromJson(json);
+
+  Map<String, dynamic> toJson() => _$FelloBadgesDataToJson(this);
 }
 
-@_deserializable
+@_serializable
 class LevelBenefit {
   const LevelBenefit({
     this.title = '',
@@ -50,6 +52,8 @@ class LevelBenefit {
 
   factory LevelBenefit.fromJson(Map<String, dynamic> json) =>
       _$LevelBenefitFromJson(json);
+
+  Map<String, dynamic> toJson() => _$LevelBenefitToJson(this);
 }
 
 enum SuperFelloLevel {
@@ -61,12 +65,12 @@ enum SuperFelloLevel {
   final int level;
 }
 
-@_deserializable
+@_serializable
 class Level {
   final String badgeurl;
   final LevelBenefit benefits;
   @JsonKey(name: 'lvl_data')
-  final List<LevelData> lvlData;
+  final List<BadgeLevelInformation> lvlData;
   final bool isCompleted;
   @JsonKey(name: 'lvl_title')
   final String levelTitle;
@@ -82,10 +86,12 @@ class Level {
   });
 
   factory Level.fromJson(Map<String, dynamic> json) => _$LevelFromJson(json);
+
+  Map<String, dynamic> toJson() => _$LevelToJson(this);
 }
 
-@_deserializable
-class LevelData {
+@_serializable
+class BadgeLevelInformation {
   final num achieve;
   final String title;
   final String barHeading;
@@ -94,8 +100,10 @@ class LevelData {
   final String bottomSheetText;
   final String bottomSheetCta;
   final String ctaUrl;
+  final String id;
+  final bool isBadgeAchieved;
 
-  const LevelData({
+  const BadgeLevelInformation({
     this.achieve = 0.0,
     this.title = '',
     this.barHeading = '',
@@ -104,13 +112,17 @@ class LevelData {
     this.bottomSheetText = '',
     this.bottomSheetCta = '',
     this.ctaUrl = '',
+    this.id = '',
+    this.isBadgeAchieved = false,
   });
 
-  factory LevelData.fromJson(Map<String, dynamic> json) =>
-      _$LevelDataFromJson(json);
+  factory BadgeLevelInformation.fromJson(Map<String, dynamic> json) =>
+      _$BadgeLevelInformationFromJson(json);
+
+  Map<String, dynamic> toJson() => _$BadgeLevelInformationToJson(this);
 }
 
-@_deserializable
+@_serializable
 class SuperFelloWorks {
   @JsonKey(name: 'main_text')
   final String mainText;
@@ -124,9 +136,11 @@ class SuperFelloWorks {
 
   factory SuperFelloWorks.fromJson(Map<String, dynamic> json) =>
       _$SuperFelloWorksFromJson(json);
+
+  Map<String, dynamic> toJson() => _$SuperFelloWorksToJson(this);
 }
 
-@_deserializable
+@_serializable
 class OtherBadge {
   final String url;
   final String title;
@@ -154,4 +168,6 @@ class OtherBadge {
 
   factory OtherBadge.fromJson(Map<String, dynamic> json) =>
       _$OtherBadgeFromJson(json);
+
+  Map<String, dynamic> toJson() => _$OtherBadgeToJson(this);
 }

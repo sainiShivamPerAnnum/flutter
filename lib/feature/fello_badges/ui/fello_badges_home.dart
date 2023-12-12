@@ -111,7 +111,7 @@ class _FelloBadgeUiState extends State<FelloBadgeUi> {
                 }(),
               FelloBadgesError() => Center(
                   child: Text(
-                    state.errorMsg!,
+                    state.errorMsg,
                     style: TextStyles.sourceSans.title3.colour(Colors.white),
                   ),
                 ),

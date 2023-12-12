@@ -461,8 +461,8 @@ class AppPositiveCustomChildBtn extends StatelessWidget {
 
 class ReactivePositiveAppButton extends HookWidget {
   const ReactivePositiveAppButton({
-    this.btnText = '',
     required this.onPressed,
+    this.btnText = '',
     super.key,
     this.isDisabled = false,
     this.width,
@@ -946,6 +946,37 @@ class _ExpandableState extends State<Expandable> {
             ),
           )
       ],
+    );
+  }
+}
+
+class SecondaryButton extends StatelessWidget {
+  const SecondaryButton({
+    required this.onPressed,
+    required this.label,
+    super.key,
+  });
+
+  final VoidCallback onPressed;
+  final String label;
+
+  @override
+  Widget build(BuildContext context) {
+    return MaterialButton(
+      height: SizeConfig.padding44,
+      shape: RoundedRectangleBorder(
+        borderRadius: BorderRadius.circular(SizeConfig.roundness8),
+      ),
+      materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
+      minWidth: SizeConfig.screenWidth! - SizeConfig.pageHorizontalMargins * 2,
+      color: Colors.white,
+      onPressed: onPressed,
+      child: Text(
+        label,
+        style: TextStyles.rajdhaniB.body1.colour(
+          Colors.black,
+        ),
+      ),
     );
   }
 }

@@ -1,11 +1,17 @@
 part of 'fello_badges_cubit.dart';
 
 @immutable
-sealed class FelloBadgesState {}
+sealed class FelloBadgesState {
+  const FelloBadgesState();
+}
 
-class FelloBadgesInitial extends FelloBadgesState {}
+class FelloBadgesInitial extends FelloBadgesState {
+  const FelloBadgesInitial();
+}
 
-class FelloBadgesLoading extends FelloBadgesState {}
+class FelloBadgesLoading extends FelloBadgesState {
+  const FelloBadgesLoading();
+}
 
 class FelloBadgesSuccess extends FelloBadgesState {
   final FelloBadgesData felloBadgesModel;
@@ -72,7 +78,7 @@ class FelloBadgesSuccess extends FelloBadgesState {
 }
 
 class FelloBadgesError extends FelloBadgesState {
-  final String? errorMsg;
+  final String errorMsg;
 
-  FelloBadgesError(this.errorMsg) : assert(errorMsg != null);
+  const FelloBadgesError(this.errorMsg);
 }

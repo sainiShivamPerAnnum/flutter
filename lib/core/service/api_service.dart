@@ -254,13 +254,6 @@ class APIService implements API {
     return decryptedData;
   }
 
-  static const _enumMapping = {
-    _RequestType.GET: HttpMethod.Get,
-    _RequestType.PUT: HttpMethod.Put,
-    _RequestType.POST: HttpMethod.Post,
-    _RequestType.PATCH: HttpMethod.Patch,
-  };
-
   Future<Response> _request<T>(
     _RequestType method,
     String path, {

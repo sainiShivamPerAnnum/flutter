@@ -29,12 +29,6 @@ class _FelloBadgeDetailsState extends State<FelloBadgeDetails> {
     UiConstants.kAutoSaveOnboardingTextColor,
   ];
 
-  final List<String> title = [
-    "Beginner\nFello Level",
-    "Intermediate\nFello Level",
-    "Super\nFello Level"
-  ];
-
   double getIndex() {
     switch (widget.currentLevel) {
       case 1:
@@ -87,7 +81,7 @@ class _FelloBadgeDetailsState extends State<FelloBadgeDetails> {
   Widget build(BuildContext context) {
     return SizedBox(
       width: SizeConfig.screenWidth!,
-      height: SizeConfig.screenHeight! * 0.765,
+      height: SizeConfig.screenHeight! * 0.785,
       child: ListView.builder(
         controller: _scrollController,
         padding: EdgeInsets.symmetric(
@@ -101,7 +95,6 @@ class _FelloBadgeDetailsState extends State<FelloBadgeDetails> {
           return BadgeDetailsContainer(
             index: index,
             backgroundColor: colors[index],
-            title: title[index],
             levelDetails: widget.levelsData[index],
           );
         },
@@ -114,7 +107,6 @@ class BadgeDetailsContainer extends StatelessWidget {
   BadgeDetailsContainer({
     required this.index,
     required this.backgroundColor,
-    required this.title,
     required this.levelDetails,
     super.key,
   });
@@ -122,7 +114,6 @@ class BadgeDetailsContainer extends StatelessWidget {
   final int index;
   final Level levelDetails;
   final Color backgroundColor;
-  final String title;
 
   final List<Color> borderColor = const [
     Color(0xFFE19366),
@@ -178,15 +169,19 @@ class BadgeDetailsContainer extends StatelessWidget {
                 Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
-                    Text(
-                      title,
-                      style: TextStyles.rajdhaniB.title2
-                          .colour(
-                            index == 2 ? const Color(0xFFFFD979) : Colors.white,
-                          )
-                          .copyWith(
-                            height: 1.27,
-                          ),
+                    Expanded(
+                      child: Text(
+                        levelDetails.levelTitle,
+                        style: TextStyles.rajdhaniB.title2
+                            .colour(
+                              index == 2
+                                  ? const Color(0xFFFFD979)
+                                  : Colors.white,
+                            )
+                            .copyWith(
+                              height: 1.27,
+                            ),
+                      ),
                     ),
                     SvgPicture.network(
                       levelDetails.badgeurl,
@@ -199,7 +194,6 @@ class BadgeDetailsContainer extends StatelessWidget {
                 ),
                 (levelDetails.isCompleted)
                     ? Container(
-                        width: SizeConfig.padding86,
                         padding: EdgeInsets.symmetric(
                             horizontal: SizeConfig.padding8,
                             vertical: SizeConfig.padding4),
