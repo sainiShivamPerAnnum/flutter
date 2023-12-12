@@ -1,8 +1,11 @@
+import 'package:felloapp/core/model/action.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 part 'fello_badges_model.g.dart';
 
-const _serializable = JsonSerializable();
+const _serializable = JsonSerializable(
+  explicitToJson: true,
+);
 
 @_serializable
 class FelloBadgesModel {
@@ -25,7 +28,7 @@ class FelloBadgesData {
   final String title;
   final List<Level> levels;
   final SuperFelloWorks superFelloWorks;
-  final List<OtherBadge> otherBadges;
+  final List<BadgeLevelInformation> otherBadges;
 
   const FelloBadgesData({
     required this.superFelloWorks,
@@ -99,7 +102,7 @@ class BadgeLevelInformation {
   final String referText;
   final String bottomSheetText;
   final String bottomSheetCta;
-  final String ctaUrl;
+  final Action? ctaAction;
   final String id;
   final bool isBadgeAchieved;
 
@@ -111,7 +114,7 @@ class BadgeLevelInformation {
     this.referText = '',
     this.bottomSheetText = '',
     this.bottomSheetCta = '',
-    this.ctaUrl = '',
+    this.ctaAction,
     this.id = '',
     this.isBadgeAchieved = false,
   });
@@ -138,36 +141,4 @@ class SuperFelloWorks {
       _$SuperFelloWorksFromJson(json);
 
   Map<String, dynamic> toJson() => _$SuperFelloWorksToJson(this);
-}
-
-@_serializable
-class OtherBadge {
-  final String url;
-  final String title;
-  final bool enable;
-  final String description;
-  final String action;
-  final String buttonText;
-  final String referText;
-  final String bottomSheetText;
-  final String bottomSheetCta;
-  final String ctaUrl;
-
-  const OtherBadge({
-    this.url = '',
-    this.title = '',
-    this.enable = false,
-    this.description = '',
-    this.action = '',
-    this.buttonText = '',
-    this.referText = '',
-    this.bottomSheetText = '',
-    this.bottomSheetCta = '',
-    this.ctaUrl = '',
-  });
-
-  factory OtherBadge.fromJson(Map<String, dynamic> json) =>
-      _$OtherBadgeFromJson(json);
-
-  Map<String, dynamic> toJson() => _$OtherBadgeToJson(this);
 }

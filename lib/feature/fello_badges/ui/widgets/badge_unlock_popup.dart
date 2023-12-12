@@ -2,6 +2,7 @@ import 'package:felloapp/core/model/fello_badges_model.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
+import 'package:felloapp/util/action_resolver.dart';
 import 'package:felloapp/util/extensions/rich_text_extension.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
@@ -16,14 +17,14 @@ class BadgeUnlockDialog extends StatelessWidget {
 
   final BadgeLevelInformation badgeInformation;
 
-  void _onPressed() {
+  Future<void> _onPressed() async {
     locator<UserService>().referralFromNotification = true;
-    AppState.backButtonDispatcher?.didPopRoute();
-    AppState.delegate!.parseRoute(
-      Uri.parse(
-        badgeInformation.ctaUrl,
-      ),
-    );
+    await AppState.backButtonDispatcher?.didPopRoute();
+    final action = badgeInformation.ctaAction;
+
+    if (action != null) {
+      await ActionResolver.instance.resolve(action);
+    }
   }
 
   void _onClose() {

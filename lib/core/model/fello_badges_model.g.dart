@@ -15,7 +15,7 @@ FelloBadgesModel _$FelloBadgesModelFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$FelloBadgesModelToJson(FelloBadgesModel instance) =>
     <String, dynamic>{
       'message': instance.message,
-      'data': instance.data,
+      'data': instance.data.toJson(),
     };
 
 FelloBadgesData _$FelloBadgesDataFromJson(Map<String, dynamic> json) =>
@@ -23,7 +23,8 @@ FelloBadgesData _$FelloBadgesDataFromJson(Map<String, dynamic> json) =>
       superFelloWorks: SuperFelloWorks.fromJson(
           json['superFelloWorks'] as Map<String, dynamic>),
       otherBadges: (json['otherBadges'] as List<dynamic>?)
-              ?.map((e) => OtherBadge.fromJson(e as Map<String, dynamic>))
+              ?.map((e) =>
+                  BadgeLevelInformation.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
       levels: (json['levels'] as List<dynamic>?)
@@ -36,9 +37,9 @@ FelloBadgesData _$FelloBadgesDataFromJson(Map<String, dynamic> json) =>
 Map<String, dynamic> _$FelloBadgesDataToJson(FelloBadgesData instance) =>
     <String, dynamic>{
       'title': instance.title,
-      'levels': instance.levels,
-      'superFelloWorks': instance.superFelloWorks,
-      'otherBadges': instance.otherBadges,
+      'levels': instance.levels.map((e) => e.toJson()).toList(),
+      'superFelloWorks': instance.superFelloWorks.toJson(),
+      'otherBadges': instance.otherBadges.map((e) => e.toJson()).toList(),
     };
 
 LevelBenefit _$LevelBenefitFromJson(Map<String, dynamic> json) => LevelBenefit(
@@ -69,8 +70,8 @@ Level _$LevelFromJson(Map<String, dynamic> json) => Level(
 
 Map<String, dynamic> _$LevelToJson(Level instance) => <String, dynamic>{
       'badgeurl': instance.badgeurl,
-      'benefits': instance.benefits,
-      'lvl_data': instance.lvlData,
+      'benefits': instance.benefits.toJson(),
+      'lvl_data': instance.lvlData.map((e) => e.toJson()).toList(),
       'isCompleted': instance.isCompleted,
       'lvl_title': instance.levelTitle,
       'level': _$SuperFelloLevelEnumMap[instance.level]!,
@@ -92,7 +93,9 @@ BadgeLevelInformation _$BadgeLevelInformationFromJson(
       referText: json['referText'] as String? ?? '',
       bottomSheetText: json['bottomSheetText'] as String? ?? '',
       bottomSheetCta: json['bottomSheetCta'] as String? ?? '',
-      ctaUrl: json['ctaUrl'] as String? ?? '',
+      ctaAction: json['ctaAction'] == null
+          ? null
+          : Action.fromJson(json['ctaAction'] as Map<String, dynamic>),
       id: json['id'] as String? ?? '',
       isBadgeAchieved: json['isBadgeAchieved'] as bool? ?? false,
     );
@@ -107,7 +110,7 @@ Map<String, dynamic> _$BadgeLevelInformationToJson(
       'referText': instance.referText,
       'bottomSheetText': instance.bottomSheetText,
       'bottomSheetCta': instance.bottomSheetCta,
-      'ctaUrl': instance.ctaUrl,
+      'ctaAction': instance.ctaAction?.toJson(),
       'id': instance.id,
       'isBadgeAchieved': instance.isBadgeAchieved,
     };
@@ -125,31 +128,4 @@ Map<String, dynamic> _$SuperFelloWorksToJson(SuperFelloWorks instance) =>
     <String, dynamic>{
       'main_text': instance.mainText,
       'sub_text': instance.subText,
-    };
-
-OtherBadge _$OtherBadgeFromJson(Map<String, dynamic> json) => OtherBadge(
-      url: json['url'] as String? ?? '',
-      title: json['title'] as String? ?? '',
-      enable: json['enable'] as bool? ?? false,
-      description: json['description'] as String? ?? '',
-      action: json['action'] as String? ?? '',
-      buttonText: json['buttonText'] as String? ?? '',
-      referText: json['referText'] as String? ?? '',
-      bottomSheetText: json['bottomSheetText'] as String? ?? '',
-      bottomSheetCta: json['bottomSheetCta'] as String? ?? '',
-      ctaUrl: json['ctaUrl'] as String? ?? '',
-    );
-
-Map<String, dynamic> _$OtherBadgeToJson(OtherBadge instance) =>
-    <String, dynamic>{
-      'url': instance.url,
-      'title': instance.title,
-      'enable': instance.enable,
-      'description': instance.description,
-      'action': instance.action,
-      'buttonText': instance.buttonText,
-      'referText': instance.referText,
-      'bottomSheetText': instance.bottomSheetText,
-      'bottomSheetCta': instance.bottomSheetCta,
-      'ctaUrl': instance.ctaUrl,
     };

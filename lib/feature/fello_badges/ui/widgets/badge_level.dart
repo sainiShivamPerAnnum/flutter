@@ -6,10 +6,11 @@ import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import 'badge_progress_indicator.dart';
 import 'progress_bottom_sheet.dart';
 
-class FelloBadgeDetails extends StatefulWidget {
-  const FelloBadgeDetails({
+class BadgeLevel extends StatefulWidget {
+  const BadgeLevel({
     required this.levelsData,
     required this.currentLevel,
     super.key,
@@ -19,10 +20,10 @@ class FelloBadgeDetails extends StatefulWidget {
   final int currentLevel;
 
   @override
-  State<FelloBadgeDetails> createState() => _FelloBadgeDetailsState();
+  State<BadgeLevel> createState() => _BadgeLevelState();
 }
 
-class _FelloBadgeDetailsState extends State<FelloBadgeDetails> {
+class _BadgeLevelState extends State<BadgeLevel> {
   final List<Color> colors = [
     const Color(0xFF5B413E),
     const Color(0xFF394B71),
@@ -356,6 +357,8 @@ class BadgeDetailsContainer extends StatelessWidget {
                     shrinkWrap: true,
                     physics: const NeverScrollableScrollPhysics(),
                     itemBuilder: (context, i) {
+                      final data = levelDetails.lvlData[i];
+
                       return GestureDetector(
                         onTap: () {
                           BaseUtil.openModalBottomSheet(
@@ -366,207 +369,15 @@ class BadgeDetailsContainer extends StatelessWidget {
                             backgroundColor: Colors.transparent,
                             isScrollControlled: true,
                             content: ProgressBottomSheet(
-                              badgeUrl: levelDetails.lvlData[i].badgeurl,
-                              title: levelDetails.lvlData[i].title,
-                              description:
-                                  levelDetails.lvlData[i].bottomSheetText,
-                              buttonText:
-                                  (levelDetails.lvlData[i].achieve) >= 100.0
-                                      ? 'GET MORE TICKETS'
-                                      : levelDetails.lvlData[i].bottomSheetCta,
-                              onButtonPressed: () {},
+                              badgeInformation: data,
                             ),
                           );
                         },
-                        child: Container(
-                          height: SizeConfig.padding86,
-                          width: SizeConfig.screenWidth! * 0.775,
-                          padding: EdgeInsets.symmetric(
-                              horizontal: SizeConfig.padding16,
-                              vertical: SizeConfig.padding8),
-                          decoration: ShapeDecoration(
-                            color: Colors.black.withOpacity(0.2),
-                            shape: RoundedRectangleBorder(
-                              borderRadius: BorderRadius.circular(12),
-                            ),
-                          ),
-                          child: Row(
-                            mainAxisSize: MainAxisSize.max,
-                            children: [
-                              SvgPicture.network(
-                                levelDetails.lvlData[i].badgeurl,
-                                height: SizeConfig.padding56,
-                                width: SizeConfig.padding50,
-                                fit: BoxFit.fill,
-                              ),
-                              SizedBox(
-                                width: SizeConfig.padding12,
-                              ),
-                              Expanded(
-                                child: SizedBox(
-                                  child: Column(
-                                    crossAxisAlignment:
-                                        CrossAxisAlignment.start,
-                                    mainAxisAlignment: MainAxisAlignment.center,
-                                    children: [
-                                      Row(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.spaceBetween,
-                                        children: [
-                                          Text(
-                                            levelDetails.lvlData[i].title,
-                                            style: TextStyles.sourceSans.body3
-                                                .colour(
-                                              Colors.white,
-                                            ),
-                                          ),
-                                          ((levelDetails.lvlData[i].achieve) !=
-                                                  100)
-                                              ? Icon(
-                                                  Icons.arrow_forward_ios,
-                                                  color: Colors.white,
-                                                  size: SizeConfig.padding12,
-                                                  weight: 700,
-                                                  grade: 200,
-                                                  opticalSize: 48,
-                                                )
-                                              : Transform.translate(
-                                                  offset: Offset(
-                                                      0, SizeConfig.padding6),
-                                                  child: Container(
-                                                    height:
-                                                        SizeConfig.padding20,
-                                                    width: SizeConfig.padding20,
-                                                    decoration: BoxDecoration(
-                                                      border: Border.all(
-                                                        color: const Color(
-                                                            0xff62E3C4),
-                                                        width:
-                                                            SizeConfig.padding1,
-                                                      ),
-                                                      shape: BoxShape.circle,
-                                                    ),
-                                                    child: Icon(
-                                                      Icons.done,
-                                                      color: const Color(
-                                                          0xff62E3C4),
-                                                      size:
-                                                          SizeConfig.padding12,
-                                                      weight: 700,
-                                                      grade: 200,
-                                                      opticalSize: 48,
-                                                    ),
-                                                  ),
-                                                )
-                                        ],
-                                      ),
-                                      SizedBox(
-                                        height: SizeConfig.padding4,
-                                      ),
-                                      Text(
-                                        levelDetails.lvlData[i].barHeading,
-                                        style:
-                                            TextStyles.sourceSans.body4.colour(
-                                          Colors.white.withOpacity(0.8),
-                                        ),
-                                      ),
-                                      SizedBox(
-                                        height: SizeConfig.padding4,
-                                      ),
-                                      if ((levelDetails.lvlData[i].achieve) !=
-                                          100)
-                                        Row(
-                                          mainAxisAlignment:
-                                              MainAxisAlignment.spaceBetween,
-                                          children: [
-                                            Expanded(
-                                              flex: 3,
-                                              child: SizedBox(
-                                                width: SizeConfig.padding152,
-                                                height: SizeConfig.padding6,
-                                                child: Stack(
-                                                  children: [
-                                                    Container(
-                                                      width:
-                                                          SizeConfig.padding168,
-                                                      height:
-                                                          SizeConfig.padding6,
-                                                      decoration:
-                                                          ShapeDecoration(
-                                                        color: const Color(
-                                                                0xFFD9D9D9)
-                                                            .withOpacity(0.25),
-                                                        shape:
-                                                            RoundedRectangleBorder(
-                                                                borderRadius:
-                                                                    BorderRadius
-                                                                        .circular(
-                                                                            4)),
-                                                      ),
-                                                    ),
-                                                    Container(
-                                                      alignment:
-                                                          Alignment.centerLeft,
-                                                      height:
-                                                          SizeConfig.padding6,
-                                                      child: AnimatedContainer(
-                                                        alignment: Alignment
-                                                            .bottomCenter,
-                                                        width: ((levelDetails
-                                                                    .lvlData[i]
-                                                                    .achieve) /
-                                                                100) *
-                                                            (SizeConfig
-                                                                .padding168),
-                                                        height:
-                                                            SizeConfig.padding6,
-                                                        duration:
-                                                            const Duration(
-                                                                milliseconds:
-                                                                    500),
-                                                        curve:
-                                                            Curves.easeInExpo,
-                                                        decoration:
-                                                            ShapeDecoration(
-                                                          color: index == 0
-                                                              ? const Color(
-                                                                  0xFFFFCCBF)
-                                                              : const Color(
-                                                                  0xFFA5E4FF),
-                                                          shape:
-                                                              RoundedRectangleBorder(
-                                                            borderRadius:
-                                                                BorderRadius
-                                                                    .circular(
-                                                                        4),
-                                                          ),
-                                                        ),
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                              ),
-                                            ),
-                                            Expanded(
-                                              child: Text(
-                                                '${levelDetails.lvlData[i].achieve} %',
-                                                textAlign: TextAlign.right,
-                                                style: TextStyles
-                                                    .sourceSans.body4
-                                                    .colour(
-                                                  Colors.white
-                                                      .withOpacity(0.75),
-                                                ),
-                                              ),
-                                            )
-                                          ],
-                                        )
-                                    ],
-                                  ),
-                                ),
-                              )
-                            ],
-                          ),
+                        child: BadgeProgressWidget(
+                          badgeInformation: data,
+                          progressColor: index == 0
+                              ? const Color(0xFFFFCCBF)
+                              : const Color(0xFFA5E4FF),
                         ),
                       );
                     },
@@ -612,6 +423,122 @@ class BadgeDetailsContainer extends StatelessWidget {
                 height: SizeConfig.padding54,
                 width: SizeConfig.screenWidth!,
                 color: Colors.white.withOpacity(0.05),
+              ),
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class BadgeProgressWidget extends StatelessWidget {
+  const BadgeProgressWidget({
+    required this.badgeInformation,
+    required this.progressColor,
+    super.key,
+  });
+
+  final BadgeLevelInformation badgeInformation;
+  final Color progressColor;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      height: SizeConfig.padding86,
+      padding: EdgeInsets.symmetric(
+        horizontal: SizeConfig.padding16,
+        vertical: SizeConfig.padding8,
+      ),
+      decoration: ShapeDecoration(
+        color: Colors.black.withOpacity(0.2),
+        shape: RoundedRectangleBorder(
+          borderRadius: BorderRadius.circular(12),
+        ),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.max,
+        children: [
+          SvgPicture.network(
+            badgeInformation.badgeurl,
+            height: SizeConfig.padding56,
+            width: SizeConfig.padding50,
+            fit: BoxFit.fill,
+          ),
+          SizedBox(
+            width: SizeConfig.padding12,
+          ),
+          Expanded(
+            child: SizedBox(
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                mainAxisAlignment: MainAxisAlignment.center,
+                children: [
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                    children: [
+                      Text(
+                        badgeInformation.title,
+                        style: TextStyles.sourceSans.body3.colour(
+                          Colors.white,
+                        ),
+                      ),
+                      Visibility(
+                        visible: !badgeInformation.isBadgeAchieved,
+                        replacement: Transform.translate(
+                          offset: Offset(0, SizeConfig.padding6),
+                          child: Container(
+                            height: SizeConfig.padding20,
+                            width: SizeConfig.padding20,
+                            decoration: BoxDecoration(
+                              border: Border.all(
+                                color: const Color(0xff62E3C4),
+                                width: SizeConfig.padding1,
+                              ),
+                              shape: BoxShape.circle,
+                            ),
+                            child: Icon(
+                              Icons.done,
+                              color: const Color(0xff62E3C4),
+                              size: SizeConfig.padding12,
+                              weight: 700,
+                              grade: 200,
+                              opticalSize: 48,
+                            ),
+                          ),
+                        ),
+                        child: Icon(
+                          Icons.arrow_forward_ios,
+                          color: Colors.white,
+                          size: SizeConfig.padding12,
+                          weight: 700,
+                          grade: 200,
+                          opticalSize: 48,
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: SizeConfig.padding4,
+                  ),
+                  Text(
+                    badgeInformation.barHeading,
+                    style: TextStyles.sourceSans.body4.colour(
+                      Colors.white.withOpacity(0.8),
+                    ),
+                  ),
+                  SizedBox(
+                    height: SizeConfig.padding4,
+                  ),
+
+                  // Progress indicator.
+                  if (!badgeInformation.isBadgeAchieved)
+                    BadgeProgressIndicator(
+                      achieve: badgeInformation.achieve,
+                      color: progressColor,
+                      spacing: 18,
+                    )
+                ],
               ),
             ),
           )

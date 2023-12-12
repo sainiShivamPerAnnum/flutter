@@ -5,10 +5,10 @@ import 'package:felloapp/core/model/portfolio_model.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/feature/fello_badges/bloc/fello_badges_cubit.dart';
+import 'package:felloapp/feature/fello_badges/ui/widgets/badge_level.dart';
 import 'package:felloapp/feature/fello_badges/ui/widgets/badges_loading_screen.dart';
 import 'package:felloapp/feature/fello_badges/ui/widgets/badges_top_user_widget.dart';
 import 'package:felloapp/feature/fello_badges/ui/widgets/fello_badges_backround.dart';
-import 'package:felloapp/feature/fello_badges/ui/widgets/fello_badges_details.dart';
 import 'package:felloapp/feature/fello_badges/ui/widgets/fello_badges_list.dart';
 import 'package:felloapp/feature/fello_badges/ui/widgets/user_badges_container.dart';
 import 'package:felloapp/feature/fello_badges/ui/widgets/user_progress_indicator.dart';
@@ -203,7 +203,7 @@ class FelloBadgeSuccessScreen extends StatelessWidget {
             height: SizeConfig.padding34,
           ),
 
-          FelloBadgeDetails(
+          BadgeLevel(
             levelsData: badgesModel.levels,
             currentLevel: state.currentLevel,
           ),
@@ -308,7 +308,7 @@ class OtherBadges extends StatelessWidget {
     this.otherBadges = const [],
   });
 
-  final List<OtherBadge> otherBadges;
+  final List<BadgeLevelInformation> otherBadges;
 
   @override
   Widget build(BuildContext context) {

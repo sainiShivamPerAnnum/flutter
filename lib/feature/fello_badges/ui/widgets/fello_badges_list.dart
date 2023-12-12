@@ -1,10 +1,10 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/fello_badges_model.dart';
-import 'package:felloapp/feature/fello_badges/ui/widgets/progress_bottom_sheet.dart';
-import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+
+import 'progress_bottom_sheet.dart';
 
 class FelloBadgeList extends StatelessWidget {
   const FelloBadgeList({
@@ -12,9 +12,9 @@ class FelloBadgeList extends StatelessWidget {
     super.key,
   });
 
-  final List<OtherBadge> badges;
+  final List<BadgeLevelInformation> badges;
 
-  void _onTapBadge(OtherBadge badge) {
+  void _onTapBadge(BadgeLevelInformation badge) {
     BaseUtil.openModalBottomSheet(
       addToScreenStack: true,
       enableDrag: false,
@@ -23,10 +23,7 @@ class FelloBadgeList extends StatelessWidget {
       backgroundColor: Colors.transparent,
       isScrollControlled: true,
       content: ProgressBottomSheet(
-        badgeUrl: Assets.tambolaTitanBadge,
-        title: badge.title,
-        description: badge.bottomSheetText,
-        buttonText: (badge.enable) ? 'GET MORE TICKETS' : badge.bottomSheetCta,
+        badgeInformation: badge,
       ),
     );
   }
@@ -42,31 +39,18 @@ class FelloBadgeList extends StatelessWidget {
         scrollDirection: Axis.horizontal,
         itemCount: badges.length,
         itemBuilder: (context, i) {
+          final badge = badges[i];
           return Row(
             children: [
               GestureDetector(
-                onTap: () => _onTapBadge(badges[i]),
+                onTap: () => _onTapBadge(badge),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [
-                    ClipPath(
-                      clipper: const HexagonClipper(),
-                      child: Transform.translate(
-                        offset: Offset(SizeConfig.padding1, 0),
-                        child: ColorFiltered(
-                          colorFilter: ColorFilter.mode(
-                            (badges[i].enable)
-                                ? Colors.transparent
-                                : const Color(0xFF191919),
-                            BlendMode.saturation,
-                          ),
-                          child: SvgPicture.network(
-                            'https://fello-dev-uploads.s3.ap-south-1.amazonaws.com/badges/saving_marvel.svg',
-                            height: SizeConfig.padding80,
-                            width: SizeConfig.padding68,
-                          ),
-                        ),
-                      ),
+                    SvgPicture.network(
+                      badge.badgeurl,
+                      height: SizeConfig.padding80,
+                      width: SizeConfig.padding68,
                     ),
                     SizedBox(
                       height: SizeConfig.padding6,
@@ -89,33 +73,4 @@ class FelloBadgeList extends StatelessWidget {
       ),
     );
   }
-}
-
-class HexagonClipper extends CustomClipper<Path> {
-  const HexagonClipper();
-
-  @override
-  Path getClip(Size size) {
-    final path = Path();
-    final h = SizeConfig.padding72;
-    final w = SizeConfig.padding70;
-
-    path.moveTo(w / SizeConfig.padding4, 0); // Move to the top center
-    path.lineTo(w, h / SizeConfig.padding6); // Line to the top-right
-    path.lineTo(
-        w,
-        (SizeConfig.padding4 * h) /
-            SizeConfig.padding2); // Line to the bottom-right
-    path.lineTo(w / SizeConfig.padding4, h); // Line to the bottom center
-    path.lineTo(
-        0,
-        (SizeConfig.padding6 * h) /
-            SizeConfig.padding4); // Line to the bottom-left
-    path.lineTo(0, h / SizeConfig.padding4); // Line to the top-left
-
-    return path;
-  }
-
-  @override
-  bool shouldReclip(covariant CustomClipper<Path> oldClipper) => false;
 }

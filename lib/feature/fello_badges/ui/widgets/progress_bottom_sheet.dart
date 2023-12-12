@@ -1,75 +1,75 @@
-import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/core/model/fello_badges_model.dart';
+import 'package:felloapp/ui/pages/static/app_widget.dart';
+import 'package:felloapp/util/action_resolver.dart';
 import 'package:felloapp/util/extensions/rich_text_extension.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import 'badge_progress_indicator.dart';
+
 class ProgressBottomSheet extends StatelessWidget {
   const ProgressBottomSheet({
-    required this.title,
-    required this.description,
-    required this.badgeUrl,
-    required this.buttonText,
-    this.onButtonPressed,
+    required this.badgeInformation,
     super.key,
   });
 
-  final String title;
-  final String description;
-  final String badgeUrl;
-  final String buttonText;
-  final VoidCallback? onButtonPressed;
+  final BadgeLevelInformation badgeInformation;
+
+  void _onTap() {
+    final action = badgeInformation.ctaAction;
+    if (action != null) {
+      ActionResolver.instance.resolve(action);
+    }
+  }
 
   @override
   Widget build(BuildContext context) {
-    return WillPopScope(
-      onWillPop: () async {
-        AppState.removeOverlay();
-        return true;
-      },
-      child: Container(
-        padding: EdgeInsets.symmetric(
-            vertical: SizeConfig.padding16, horizontal: SizeConfig.padding52),
-        decoration: BoxDecoration(
-          color: const Color(0xff39393C),
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(SizeConfig.padding16),
-            topRight: Radius.circular(SizeConfig.padding16),
-          ),
+    return Container(
+      padding: EdgeInsets.symmetric(
+          vertical: SizeConfig.padding16, horizontal: SizeConfig.padding52),
+      decoration: BoxDecoration(
+        color: const Color(0xff39393C),
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(SizeConfig.padding16),
+          topRight: Radius.circular(SizeConfig.padding16),
         ),
-        child: Column(
-          mainAxisSize: MainAxisSize.min,
-          children: [
-            Container(
-              width: SizeConfig.padding100,
-              height: SizeConfig.padding4,
-              decoration: BoxDecoration(
-                color: const Color(0xFFD9D9D9).withOpacity(0.4),
-                borderRadius: BorderRadius.circular(SizeConfig.padding4),
-              ),
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Container(
+            width: SizeConfig.padding100,
+            height: SizeConfig.padding4,
+            decoration: BoxDecoration(
+              color: const Color(0xFFD9D9D9).withOpacity(0.4),
+              borderRadius: BorderRadius.circular(SizeConfig.padding4),
             ),
-            SizedBox(
-              height: SizeConfig.padding24,
+          ),
+          SizedBox(
+            height: SizeConfig.padding24,
+          ),
+          SvgPicture.network(
+            badgeInformation.badgeurl,
+            width: SizeConfig.padding132,
+            height: SizeConfig.padding132,
+          ),
+          SizedBox(
+            height: SizeConfig.padding16,
+          ),
+          Text(
+            badgeInformation.title,
+            textAlign: TextAlign.center,
+            style: TextStyles.rajdhaniSB.title4,
+          ),
+          SizedBox(
+            height: SizeConfig.padding4,
+          ),
+          Padding(
+            padding: EdgeInsets.symmetric(
+              horizontal: SizeConfig.padding40,
             ),
-            SvgPicture.network(
-              badgeUrl,
-              width: SizeConfig.padding132,
-              height: SizeConfig.padding132,
-            ),
-            SizedBox(
-              height: SizeConfig.padding16,
-            ),
-            Text(
-              title,
-              textAlign: TextAlign.center,
-              style: TextStyles.rajdhaniSB.title4.colour(
-                Colors.white,
-              ),
-            ),
-            SizedBox(
-              height: SizeConfig.padding4,
-            ),
-            description.beautify(
+            child: badgeInformation.bottomSheetText.beautify(
               style: TextStyles.sourceSans.body3.colour(
                 const Color(0xFFBDBDBE),
               ),
@@ -78,27 +78,35 @@ class ProgressBottomSheet extends StatelessWidget {
               ),
               alignment: TextAlign.center,
             ),
-            SizedBox(
-              height: SizeConfig.padding36,
-            ),
-            MaterialButton(
-              onPressed: onButtonPressed,
-              color: Colors.white,
-              minWidth: SizeConfig.padding100,
-              padding: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.padding60,
-                  vertical: SizeConfig.padding12),
-              shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(SizeConfig.roundness5),
+          ),
+
+          SizedBox(
+            height: SizeConfig.padding12,
+          ),
+
+          // Progress indicator.
+          if (badgeInformation.isBadgeAchieved)
+            Text(
+              'You have completed this task!',
+              style: TextStyles.sourceSans.body3.colour(
+                UiConstants.teal3,
               ),
-              height: SizeConfig.padding34,
-              child: Text(
-                buttonText,
-                style: TextStyles.rajdhaniB.body3.colour(Colors.black),
-              ),
+            )
+          else
+            BadgeProgressIndicator(
+              achieve: badgeInformation.achieve,
             ),
-          ],
-        ),
+          SizedBox(
+            height: SizeConfig.padding18,
+          ),
+          SecondaryButton(
+            onPressed: _onTap,
+            label: badgeInformation.bottomSheetCta,
+          ),
+          SizedBox(
+            height: SizeConfig.padding20,
+          ),
+        ],
       ),
     );
   }
