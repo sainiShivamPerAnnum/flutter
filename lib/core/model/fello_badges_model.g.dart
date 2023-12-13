@@ -78,9 +78,10 @@ Map<String, dynamic> _$LevelToJson(Level instance) => <String, dynamic>{
     };
 
 const _$SuperFelloLevelEnumMap = {
+  SuperFelloLevel.NEW_FELLO: 'NEW_FELLO',
   SuperFelloLevel.BEGINNER: 'BEGINNER',
   SuperFelloLevel.INTERMEDIATE: 'INTERMEDIATE',
-  SuperFelloLevel.SUPERFELLO: 'SUPERFELLO',
+  SuperFelloLevel.SUPER_FELLO: 'SUPER_FELLO',
 };
 
 BadgeLevelInformation _$BadgeLevelInformationFromJson(

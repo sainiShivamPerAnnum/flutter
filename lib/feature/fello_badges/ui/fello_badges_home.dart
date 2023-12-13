@@ -5,8 +5,6 @@ import 'package:felloapp/core/model/portfolio_model.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/feature/fello_badges/bloc/fello_badges_cubit.dart';
-import 'package:felloapp/feature/fello_badges/ui/widgets/badge_level.dart';
-import 'package:felloapp/feature/fello_badges/ui/widgets/badges_loading_screen.dart';
 import 'package:felloapp/feature/fello_badges/ui/widgets/badges_top_user_widget.dart';
 import 'package:felloapp/feature/fello_badges/ui/widgets/fello_badges_backround.dart';
 import 'package:felloapp/feature/fello_badges/ui/widgets/fello_badges_list.dart';
@@ -15,6 +13,7 @@ import 'package:felloapp/feature/fello_badges/ui/widgets/user_progress_indicator
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/elements/appbar/appbar.dart';
 import 'package:felloapp/ui/elements/coin_bar/coin_bar_view.dart';
+import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/extensions/rich_text_extension.dart';
 import 'package:felloapp/util/haptic.dart';
@@ -26,6 +25,7 @@ import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 
+import 'widgets/badge_level.dart';
 import 'widgets/how_superfello_work_widget.dart';
 
 class FelloBadgeHome extends StatelessWidget {
@@ -48,42 +48,11 @@ class FelloBadgeUi extends StatefulWidget {
 }
 
 class _FelloBadgeUiState extends State<FelloBadgeUi> {
-  Color badgeBorderColor = Colors.white.withOpacity(0.30);
-  String badgeUrl = '';
-
   @override
   void initState() {
     super.initState();
 
     BlocProvider.of<FelloBadgesCubit>(context).getFelloBadges();
-  }
-
-  void updateUserBadge(int? level) {
-    switch (level) {
-      case 1:
-        badgeBorderColor = Colors.white.withOpacity(0.30);
-        badgeUrl = '';
-        break;
-      case 2:
-        badgeBorderColor = const Color(0xFFF79780);
-        badgeUrl = 'https://d37gtxigg82zaw.cloudfront.net/loyalty/level-0.svg';
-        break;
-
-      case 3:
-        badgeBorderColor = const Color(0xFF93B5FE);
-        badgeUrl = 'https://d37gtxigg82zaw.cloudfront.net/loyalty/level-1.svg';
-        break;
-
-      case 4:
-        badgeBorderColor = const Color(0xFFFFDA72);
-        badgeUrl = 'https://d37gtxigg82zaw.cloudfront.net/loyalty/level-2.svg';
-        break;
-
-      default:
-        badgeBorderColor = Colors.white.withOpacity(0.30);
-        badgeUrl = '';
-        break;
-    }
   }
 
   @override
@@ -95,23 +64,13 @@ class _FelloBadgeUiState extends State<FelloBadgeUi> {
         child: BlocBuilder<FelloBadgesCubit, FelloBadgesState>(
           builder: (context, state) {
             return switch (state) {
-              FelloBadgesLoading() ||
-              FelloBadgesInitial() =>
-                FelloBadgeLoadingScreen(
-                  badgeBorderColor: badgeBorderColor,
-                  badgeUrl: badgeUrl,
+              FelloBadgesLoading() || FelloBadgesInitial() => const Center(
+                  child: FullScreenLoader(),
                 ),
-              FelloBadgesSuccess() => () {
-                  updateUserBadge(state.currentLevel);
-                  return FelloBadgeSuccessScreen(
-                    badgeBorderColor: badgeBorderColor,
-                    badgeUrl: badgeUrl,
-                    state: state,
-                  );
-                }(),
-              FelloBadgesError() => Center(
+              FelloBadgesSuccess() => FelloBadgeSuccessScreen(state: state),
+              FelloBadgesError(:final errorMsg) => Center(
                   child: Text(
-                    state.errorMsg,
+                    errorMsg,
                     style: TextStyles.sourceSans.title3.colour(Colors.white),
                   ),
                 ),
@@ -152,14 +111,10 @@ class _FelloBadgeUiState extends State<FelloBadgeUi> {
 
 class FelloBadgeSuccessScreen extends StatelessWidget {
   const FelloBadgeSuccessScreen({
-    required this.badgeBorderColor,
-    required this.badgeUrl,
     required this.state,
     super.key,
   });
 
-  final Color badgeBorderColor;
-  final String badgeUrl;
   final FelloBadgesSuccess state;
 
   @override
@@ -179,8 +134,7 @@ class FelloBadgeSuccessScreen extends StatelessWidget {
             height: SizeConfig.padding12,
           ),
           UserBadgeContainer(
-            badgeColor: badgeBorderColor,
-            badgeUrl: badgeUrl,
+            level: state.userLevel,
           ),
           SizedBox(
             height: SizeConfig.padding12,
@@ -197,7 +151,7 @@ class FelloBadgeSuccessScreen extends StatelessWidget {
             ),
           ),
           UserProgressIndicator(
-            level: state.currentLevel,
+            level: state.userLevel,
           ),
           SizedBox(
             height: SizeConfig.padding34,
@@ -205,7 +159,7 @@ class FelloBadgeSuccessScreen extends StatelessWidget {
 
           BadgeLevel(
             levelsData: badgesModel.levels,
-            currentLevel: state.currentLevel,
+            currentLevel: state.userLevel.level,
           ),
 
           SizedBox(

@@ -1,3 +1,5 @@
+import 'package:felloapp/core/model/fello_badges_model.dart';
+import 'package:felloapp/feature/fello_badges/shared/sf_level_mapping_extension.dart';
 import 'package:felloapp/feature/fello_badges/ui/widgets/badges_custom_painters.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
@@ -5,51 +7,18 @@ import 'package:flutter/material.dart';
 class UserProgressIndicator extends StatefulWidget {
   const UserProgressIndicator({required this.level, super.key});
 
-  final int level;
+  final SuperFelloLevel level;
 
   @override
   State<UserProgressIndicator> createState() => _UserProgressIndicatorState();
 }
 
 class _UserProgressIndicatorState extends State<UserProgressIndicator> {
-  double level0 = 0.1;
-  double level1 = 0.0;
-  double level2 = 0.0;
-
-  void _updateProgress() {
-    switch (widget.level) {
-      case 2:
-        setState(() {
-          level0 = 1.0;
-          level1 = 0.1;
-        });
-        break;
-      case 3:
-        setState(() {
-          level0 = 1.0;
-          level1 = 1.0;
-          level2 = 0.1;
-        });
-        break;
-
-      case 4:
-        setState(() {
-          level0 = 1.0;
-          level1 = 1.0;
-          level2 = 1.0;
-        });
-        break;
-    }
-  }
-
-  @override
-  void initState() {
-    super.initState();
-
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-      _updateProgress();
-    });
-  }
+  final _levels = [
+    SuperFelloLevel.BEGINNER,
+    SuperFelloLevel.INTERMEDIATE,
+    SuperFelloLevel.SUPER_FELLO,
+  ];
 
   @override
   Widget build(BuildContext context) {
@@ -64,111 +33,23 @@ class _UserProgressIndicatorState extends State<UserProgressIndicator> {
               SizedBox(
                 height: SizeConfig.padding24,
               ),
-              SizedBox(
-                width: SizeConfig.screenWidth,
-                child: Row(
-                  mainAxisSize: MainAxisSize.min,
-                  mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-                  children: [
+              Row(
+                mainAxisSize: MainAxisSize.min,
+                children: [
+                  for (var i = 0; i < _levels.length; i++) ...[
                     Expanded(
-                      child: Stack(
-                        children: [
-                          Container(
-                            width: SizeConfig.padding120,
-                            height: SizeConfig.padding6,
-                            decoration: ShapeDecoration(
-                              color: const Color(0xFFD9D9D9).withOpacity(0.25),
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(4)),
-                            ),
-                          ),
-                          Container(
-                            alignment: Alignment.centerLeft,
-                            height: SizeConfig.padding6,
-                            child: AnimatedContainer(
-                              alignment: Alignment.bottomCenter,
-                              width: level0 * (SizeConfig.padding120),
-                              height: SizeConfig.padding6,
-                              duration: const Duration(milliseconds: 800),
-                              curve: Curves.easeInExpo,
-                              decoration: ShapeDecoration(
-                                color: const Color(0xFFF79780),
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(4)),
-                              ),
-                              // color: const Color(0xFFF79780),
-                            ),
-                          ),
-                        ],
+                      child: _Indicator(
+                        progress:
+                            _levels[i].level <= widget.level.level ? 1 : 0,
+                        color: _levels[i].getLevelData.borderColor,
                       ),
                     ),
-                    Expanded(
-                      child: Stack(
-                        children: [
-                          Container(
-                            width: SizeConfig.padding120,
-                            height: SizeConfig.padding6,
-                            decoration: ShapeDecoration(
-                              color: const Color(0xFFD9D9D9).withOpacity(0.25),
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(4)),
-                            ),
-                          ),
-                          Container(
-                            alignment: Alignment.centerLeft,
-                            height: SizeConfig.padding6,
-                            child: AnimatedContainer(
-                              alignment: Alignment.bottomCenter,
-                              width: level1 * (SizeConfig.padding120),
-                              height: SizeConfig.padding6,
-                              duration: const Duration(milliseconds: 800),
-                              curve: Curves.easeInExpo,
-                              decoration: ShapeDecoration(
-                                color: const Color(0xFF93B5FE),
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(4)),
-                              ),
-                              // color: const Color(0xFFF79780),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                    // SizedBox(width: SizeConfig.padding2),
-                    Expanded(
-                      child: Stack(
-                        children: [
-                          Container(
-                            width: SizeConfig.padding120,
-                            height: SizeConfig.padding6,
-                            decoration: ShapeDecoration(
-                              color: const Color(0xFFD9D9D9).withOpacity(0.25),
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(4)),
-                            ),
-                          ),
-                          Container(
-                            alignment: Alignment.centerLeft,
-                            height: SizeConfig.padding6,
-                            child: AnimatedContainer(
-                              alignment: Alignment.bottomCenter,
-                              width: level2 * (SizeConfig.padding120),
-                              height: SizeConfig.padding6,
-                              duration: const Duration(milliseconds: 800),
-                              curve: Curves.easeInExpo,
-                              decoration: ShapeDecoration(
-                                color: const Color(0xFFFFD979),
-                                shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(4)),
-                              ),
-                              // color: const Color(0xFFF79780),
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  ],
-                ),
+                    if (i != _levels.length - 1)
+                      const SizedBox(
+                        width: 4,
+                      )
+                  ]
+                ],
               ),
               SizedBox(
                 height: SizeConfig.padding10,
@@ -213,5 +94,51 @@ class _UserProgressIndicatorState extends State<UserProgressIndicator> {
         ),
       ],
     );
+  }
+}
+
+class _Indicator extends StatelessWidget {
+  final double progress;
+  final Color color;
+
+  const _Indicator({
+    required this.progress,
+    required this.color,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(builder: (context, constraints) {
+      final maxWidth = constraints.biggest.width;
+      return Stack(
+        children: [
+          Container(
+            width: maxWidth,
+            height: SizeConfig.padding6,
+            decoration: ShapeDecoration(
+              color: const Color(0xFFD9D9D9).withOpacity(0.25),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(4)),
+            ),
+          ),
+          Container(
+            alignment: Alignment.centerLeft,
+            height: SizeConfig.padding6,
+            child: AnimatedContainer(
+              alignment: Alignment.bottomCenter,
+              width: progress * maxWidth,
+              height: SizeConfig.padding6,
+              duration: const Duration(milliseconds: 800),
+              curve: Curves.easeInExpo,
+              decoration: ShapeDecoration(
+                color: color,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(4)),
+              ),
+            ),
+          ),
+        ],
+      );
+    });
   }
 }

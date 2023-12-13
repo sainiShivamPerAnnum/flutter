@@ -4,6 +4,7 @@ import 'package:felloapp/base_util.dart';
 // import 'package:felloapp/core/base_remote_config.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/model/fello_badges_model.dart';
 import 'package:felloapp/core/model/fello_facts_model.dart';
 import 'package:felloapp/core/repository/campaigns_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
@@ -59,8 +60,10 @@ class MyAccountVM extends BaseViewModel {
   double get getUnclaimedPrizeBalance =>
       _userService.userFundWallet!.unclaimedBalance;
 
+  SuperFelloLevel get superFelloLevel => _userService.baseUser!.superFelloLevel;
+
   Future<void> init() async {
-    getFelloFacts();
+    await getFelloFacts();
     // _lbService!.fetchReferralLeaderBoard();
     await locator<ScratchCardService>().updateUnscratchedGTCount();
   }
@@ -98,7 +101,7 @@ class MyAccountVM extends BaseViewModel {
     );
   }
 
-  openProfile() {
+  void openProfile() {
     _baseUtil.openProfileDetailsScreen();
   }
 
@@ -110,7 +113,7 @@ class MyAccountVM extends BaseViewModel {
     return heightToFill;
   }
 
-  getFelloFacts() async {
+  Future<void> getFelloFacts() async {
     isFelloFactsLoading = true;
     final res = await _campaignRepo.getFelloFacts();
     if (res.isSuccess()) {

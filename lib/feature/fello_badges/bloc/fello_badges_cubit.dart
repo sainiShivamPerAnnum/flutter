@@ -10,41 +10,20 @@ import 'package:felloapp/core/model/fello_badges_model.dart';
 import 'package:felloapp/core/repository/campaigns_repo.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/feature/fello_badges/ui/widgets/badge_unlock_popup.dart';
-import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
 import 'package:flutter/material.dart';
 
 part 'fello_badges_state.dart';
 
-enum FelloBadges {
-  Beginner,
-  Intermediate,
-  SuperFello_InProgress,
-  SuperFello_Complete,
-}
-
 class FelloBadgesCubit extends Cubit<FelloBadgesState> {
   FelloBadgesCubit()
-      : _repo = locator<CampaignRepo>(),
+      : _repo = locator(),
+        _userService = locator(),
         super(const FelloBadgesInitial());
 
   final CampaignRepo _repo;
-
-  FelloBadges updateLevel(int i) {
-    switch (i) {
-      case 1:
-        return FelloBadges.Beginner;
-      case 2:
-        return FelloBadges.Intermediate;
-      case 3:
-        return FelloBadges.SuperFello_InProgress;
-      case 4:
-        return FelloBadges.SuperFello_Complete;
-      default:
-        return FelloBadges.Beginner;
-    }
-  }
+  final UserService _userService;
 
   Future<void> getFelloBadges() async {
     emit(const FelloBadgesLoading());
@@ -55,7 +34,7 @@ class FelloBadgesCubit extends Cubit<FelloBadgesState> {
           emit(
             FelloBadgesSuccess(
               res.model!.data,
-              currentBadge: updateLevel(1),
+              userLevel: _userService.baseUser!.superFelloLevel,
             ),
           );
 

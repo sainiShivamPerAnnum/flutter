@@ -1,6 +1,8 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
+import 'package:felloapp/core/model/fello_badges_model.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/feature/fello_badges/shared/sf_level_mapping_extension.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/styles/styles.dart';
@@ -9,13 +11,17 @@ import 'package:flutter_svg/flutter_svg.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
 class UserBadgeContainer extends StatelessWidget {
-  const UserBadgeContainer({super.key, this.badgeUrl, this.badgeColor});
+  const UserBadgeContainer({
+    required this.level,
+    super.key,
+  });
 
-  final String? badgeUrl;
-  final Color? badgeColor;
+  final SuperFelloLevel level;
 
   @override
   Widget build(BuildContext context) {
+    final data = level.getLevelData;
+
     return SizedBox(
       width: SizeConfig.padding132,
       height: SizeConfig.padding132,
@@ -72,14 +78,7 @@ class UserBadgeContainer extends StatelessWidget {
                                     key: const ValueKey(Constants.PROFILE),
                                     radius: SizeConfig.avatarRadius,
                                     backgroundColor: Colors.black,
-                                    child: model!.avatarId != null &&
-                                            model.avatarId != 'CUSTOM'
-                                        ? SvgPicture.asset(
-                                            "assets/vectors/userAvatars/${model.avatarId}.svg",
-                                            fit: BoxFit.cover,
-                                          )
-                                        : const SizedBox(),
-                                    backgroundImage: (model.avatarId != null &&
+                                    backgroundImage: (model!.avatarId != null &&
                                             model.avatarId == 'CUSTOM' &&
                                             model.myUserDpUrl != null &&
                                             model.myUserDpUrl!.isNotEmpty)
@@ -89,6 +88,13 @@ class UserBadgeContainer extends StatelessWidget {
                                         : const AssetImage(
                                             Assets.profilePic,
                                           ) as ImageProvider<Object>?,
+                                    child: model.avatarId != null &&
+                                            model.avatarId != 'CUSTOM'
+                                        ? SvgPicture.asset(
+                                            "assets/vectors/userAvatars/${model.avatarId}.svg",
+                                            fit: BoxFit.cover,
+                                          )
+                                        : const SizedBox(),
                                   );
                                 },
                               ),
@@ -109,8 +115,9 @@ class UserBadgeContainer extends StatelessWidget {
                       decoration: ShapeDecoration(
                         shape: OvalBorder(
                           side: BorderSide(
-                              width: 3,
-                              color: badgeColor ?? const Color(0xFFA7A7A8)),
+                            width: 3,
+                            color: data.borderColor,
+                          ),
                         ),
                       ),
                     ),
@@ -225,12 +232,12 @@ class UserBadgeContainer extends StatelessWidget {
               ),
             ),
           ),
-          if (badgeUrl != null && badgeUrl!.isNotEmpty)
+          if (data.url.isNotEmpty)
             Positioned(
-              right: 22,
-              bottom: 18,
+              right: 30,
+              bottom: 20,
               child: SvgPicture.network(
-                badgeUrl ?? "",
+                data.url,
                 height: SizeConfig.padding34,
                 width: SizeConfig.padding40,
                 fit: BoxFit.fill,

@@ -60,12 +60,15 @@ class LevelBenefit {
 }
 
 enum SuperFelloLevel {
-  BEGINNER(0),
-  INTERMEDIATE(1),
-  SUPERFELLO(2);
+  NEW_FELLO(0),
+  BEGINNER(1),
+  INTERMEDIATE(2),
+  SUPER_FELLO(3);
 
   const SuperFelloLevel(this.level);
   final int level;
+
+  bool get isSuperFello => this == SuperFelloLevel.SUPER_FELLO;
 }
 
 @_serializable

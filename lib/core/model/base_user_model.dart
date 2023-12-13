@@ -30,7 +30,7 @@ class BaseUser {
   String? avatarId;
   bool? isOldUser;
   List segments;
-  SuperFelloLevel superFelloLevel = SuperFelloLevel.BEGINNER;
+  SuperFelloLevel superFelloLevel = SuperFelloLevel.NEW_FELLO;
   static const String fldId = "mID";
   static const String fldMobile = "mMobile";
   static const String fldEmail = "mEmail";
@@ -67,7 +67,8 @@ class BaseUser {
   static const _$UserBadgeLevelEnumMap = {
     'BEGINNER': SuperFelloLevel.BEGINNER,
     'INTERMEDIATE': SuperFelloLevel.INTERMEDIATE,
-    'SUPERFELLO': SuperFelloLevel.SUPERFELLO,
+    'SUPER_FELLO': SuperFelloLevel.SUPER_FELLO,
+    'NEW_FELLO': SuperFelloLevel.NEW_FELLO,
   };
 
   BaseUser(

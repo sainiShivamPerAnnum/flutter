@@ -30,18 +30,12 @@ class _BadgeLevelState extends State<BadgeLevel> {
     UiConstants.kAutoSaveOnboardingTextColor,
   ];
 
-  double getIndex() {
-    switch (widget.currentLevel) {
-      case 1:
-        return 0.0;
-      case 2:
-        return 1.0;
-      case 3:
-      case 4:
-        return 2.0;
-      default:
-        return 0.0;
+  double _getIndex() {
+    if (widget.currentLevel case 0 || 1) {
+      return 0;
     }
+
+    return widget.currentLevel.toDouble();
   }
 
   final ScrollController _scrollController = ScrollController();
@@ -62,7 +56,7 @@ class _BadgeLevelState extends State<BadgeLevel> {
             );
 
             _scrollController.animateTo(
-                (getIndex() * SizeConfig.screenWidth!) -
+                (_getIndex() * SizeConfig.screenWidth!) -
                     SizeConfig.pageHorizontalMargins,
                 duration: const Duration(milliseconds: 800),
                 curve: Curves.easeInOut);

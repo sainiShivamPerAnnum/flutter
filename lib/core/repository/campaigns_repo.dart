@@ -24,6 +24,10 @@ class CampaignRepo extends BaseRepo {
       ? 'https://d18gbwu7fwwwtf.cloudfront.net/'
       : 'https://d11q4cti75qmcp.cloudfront.net/';
 
+  final _superFelloBaseUrl = FlavorConfig.isDevelopment()
+      ? 'https://api2.fello-dev.net/campaigns'
+      : 'https://api2.fello-prod.net/campaigns';
+
   static const _campaigns = 'campaigns';
   static const _superFello = 'super-fello';
 
@@ -132,7 +136,7 @@ class CampaignRepo extends BaseRepo {
     try {
       final res = await APIService.instance.getData(
         ApiPath.badgesLeaderBoard,
-        cBaseUrl: _baseUrl,
+        cBaseUrl: _superFelloBaseUrl,
         apiName: '$_superFello/leaderboard',
       );
 
@@ -155,7 +159,7 @@ class CampaignRepo extends BaseRepo {
     try {
       final res = await APIService.instance.getData(
         ApiPath.felloBadges,
-        cBaseUrl: _baseUrl,
+        cBaseUrl: _superFelloBaseUrl,
         apiName: _superFello,
       );
 

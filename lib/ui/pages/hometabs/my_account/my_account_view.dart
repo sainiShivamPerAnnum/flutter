@@ -49,7 +49,9 @@ class MyAccount extends StatelessWidget {
             body: ListView(
               padding: EdgeInsets.zero,
               children: [
-                const ProfileBadgeWidget(),
+                ProfileBadgeWidget(
+                  superFelloLevel: model.superFelloLevel,
+                ),
 
                 AccountInfoTiles(
                   key: K.userProfileEntryCTAKey,

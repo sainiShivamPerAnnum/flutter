@@ -15,38 +15,23 @@ class FelloBadgesLoading extends FelloBadgesState {
 
 class FelloBadgesSuccess extends FelloBadgesState {
   final FelloBadgesData felloBadgesModel;
-  final FelloBadges currentBadge;
-  final int currentLevel;
+  final SuperFelloLevel userLevel;
   final BadgesLeaderBoardModel? badgesLeaderBoardModel;
 
-  FelloBadgesSuccess(
+  const FelloBadgesSuccess(
     this.felloBadgesModel, {
-    required this.currentBadge,
+    required this.userLevel,
     this.badgesLeaderBoardModel,
-  }) : currentLevel = _getUserLevel(locator<UserService>().userSegments);
-
-  static int _getUserLevel(List<dynamic> segments) {
-    log("UserSegments: $segments");
-    if (segments.contains(Constants.SF_COMPLETED)) {
-      return 4;
-    } else if (segments.contains(Constants.SF_ONGOING)) {
-      return 3;
-    } else if (segments.contains(Constants.SF_INTERMEDIATE)) {
-      return 2;
-    } else {
-      return 1;
-    }
-  }
+  });
 
   FelloBadgesSuccess copyWith({
     FelloBadgesData? felloBadgesModel,
-    FelloBadges? currentBadge,
     int? currentLevel,
     BadgesLeaderBoardModel? badgesLeaderBoardModel,
   }) {
     return FelloBadgesSuccess(
+      userLevel: userLevel,
       felloBadgesModel ?? this.felloBadgesModel,
-      currentBadge: currentBadge ?? this.currentBadge,
       badgesLeaderBoardModel:
           badgesLeaderBoardModel ?? this.badgesLeaderBoardModel,
     );
@@ -58,22 +43,17 @@ class FelloBadgesSuccess extends FelloBadgesState {
 
     return other is FelloBadgesSuccess &&
         other.felloBadgesModel == felloBadgesModel &&
-        other.currentBadge == currentBadge &&
-        other.currentLevel == currentLevel &&
         other.badgesLeaderBoardModel == badgesLeaderBoardModel;
   }
 
   @override
   int get hashCode {
-    return felloBadgesModel.hashCode ^
-        currentBadge.hashCode ^
-        currentLevel.hashCode ^
-        badgesLeaderBoardModel.hashCode;
+    return felloBadgesModel.hashCode ^ badgesLeaderBoardModel.hashCode;
   }
 
   @override
   String toString() {
-    return 'FelloBadgesSuccess(felloBadgesModel: $felloBadgesModel, currentBadge: $currentBadge, currentLevel: $currentLevel, badgesLeaderBoardModel: $badgesLeaderBoardModel)';
+    return 'FelloBadgesSuccess(felloBadgesModel: $felloBadgesModel, badgesLeaderBoardModel: $badgesLeaderBoardModel)';
   }
 }
 

@@ -1,121 +1,47 @@
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
+import 'package:felloapp/core/model/fello_badges_model.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/feature/fello_badges/shared/sf_level_mapping_extension.dart';
 import 'package:felloapp/feature/fello_badges/ui/widgets/badges_progress_indicator.dart';
 import 'package:felloapp/feature/fello_badges/ui/widgets/user_badges_container.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
-import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/extensions/string_extension.dart';
-import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 
 class ProfileBadgeWidget extends StatefulWidget {
   const ProfileBadgeWidget({
+    required this.superFelloLevel,
     super.key,
   });
+
+  final SuperFelloLevel superFelloLevel;
 
   @override
   State<ProfileBadgeWidget> createState() => _ProfileBadgeWidgetState();
 }
 
 class _ProfileBadgeWidgetState extends State<ProfileBadgeWidget> {
-  int userLevel = 1;
+  int userLevel = 0;
 
   @override
   void initState() {
-    getUserLevel(locator<UserService>().userSegments);
     super.initState();
-  }
-
-  void getUserLevel(List<dynamic> segments) {
-    if (segments.contains(Constants.SF_COMPLETED)) {
-      setState(() {
-        userLevel = 4;
-      });
-    } else if (segments.contains(Constants.SF_ONGOING)) {
-      setState(() {
-        userLevel = 3;
-      });
-    } else if (segments.contains(Constants.SF_INTERMEDIATE)) {
-      setState(() {
-        userLevel = 2;
-      });
-    } else {
-      setState(() {
-        userLevel = 1;
-      });
-    }
-  }
-
-  String getTitle() {
-    if (userLevel == 1) {
-      return "New Fello";
-    } else if (userLevel == 2) {
-      return "Beginner Fello";
-    } else if (userLevel == 3) {
-      return "Intermediate Fello";
-    } else if (userLevel == 4) {
-      return "Super Fello";
-    } else {
-      return "Beginner Fello";
-    }
-  }
-
-  String getBadgeUrl() {
-    if (userLevel == 1) {
-      return "";
-    } else if (userLevel == 2) {
-      return "https://d37gtxigg82zaw.cloudfront.net/loyalty/level-0.svg";
-    } else if (userLevel == 3) {
-      return "https://d37gtxigg82zaw.cloudfront.net/loyalty/level-1.svg";
-    } else if (userLevel == 4) {
-      return "https://d37gtxigg82zaw.cloudfront.net/loyalty/level-2.svg";
-    } else {
-      return "";
-    }
+    userLevel = widget.superFelloLevel.level;
   }
 
   String getContainerText() {
-    if (userLevel == 4) {
-      return "View Your Benefits";
-    } else {
-      return "Become a Super Fello";
-    }
-  }
-
-  Color getBorderColor() {
-    if (userLevel == 1) {
-      return Colors.white.withOpacity(0.30);
-    } else if (userLevel == 2) {
-      return const Color(0xFFF79780);
-    } else if (userLevel == 3) {
-      return const Color(0xFF93B5FE);
-    } else if (userLevel == 4) {
-      return const Color(0xFFFFD979);
-    } else {
-      return Colors.white.withOpacity(0.30);
-    }
-  }
-
-  Color getTextColor() {
-    if (userLevel == 1) {
-      return const Color(0xFF61E3C4);
-    } else if (userLevel == 2) {
-      return const Color(0xFFF79780);
-    } else if (userLevel == 3) {
-      return const Color(0xFF93B5FE);
-    } else if (userLevel == 4) {
-      return const Color(0xFFFFD979);
-    } else {
-      return const Color(0xFF191919);
-    }
+    return userLevel == 3 ? "View Your Benefits" : "Become a Super Fello";
   }
 
   @override
   Widget build(BuildContext context) {
+    final (url: _, :textColor, :title, borderColor: _) =
+        widget.superFelloLevel.getLevelData;
+
     return GestureDetector(
       onTap: () {
         AppState.delegate!.appState.currentAction = PageAction(
@@ -127,7 +53,7 @@ class _ProfileBadgeWidgetState extends State<ProfileBadgeWidget> {
         height: SizeConfig.padding180,
         width: SizeConfig.screenWidth,
         decoration: BoxDecoration(
-          gradient: userLevel == 4
+          gradient: userLevel == 3
               ? const LinearGradient(
                   begin: Alignment(0.00, -1.00),
                   end: Alignment(0, 1),
@@ -144,19 +70,18 @@ class _ProfileBadgeWidgetState extends State<ProfileBadgeWidget> {
           horizontal: SizeConfig.pageHorizontalMargins,
         ),
         child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Expanded(
-              child: Padding(
-                padding: EdgeInsets.only(left: SizeConfig.padding8),
-                child: Transform.scale(
-                  scale: 1.2,
-                  child: UserBadgeContainer(
-                    badgeColor: getBorderColor(),
-                    badgeUrl: getBadgeUrl(),
-                  ),
+            Padding(
+              padding: EdgeInsets.only(left: SizeConfig.padding8),
+              child: Transform.scale(
+                scale: 1.2,
+                child: UserBadgeContainer(
+                  level: widget.superFelloLevel,
                 ),
               ),
+            ),
+            SizedBox(
+              width: SizeConfig.padding20,
             ),
             Expanded(
               child: Column(
@@ -187,21 +112,18 @@ class _ProfileBadgeWidgetState extends State<ProfileBadgeWidget> {
                     },
                   ),
                   Text(
-                    getTitle(),
+                    title,
                     style: TextStyles.sourceSans.body3.colour(
-                      getTextColor(),
+                      textColor,
                     ),
                   ),
                   SizedBox(height: SizeConfig.padding12),
-                  BadgesProgressIndicator(
-                    level: userLevel,
-                    isSuperFello: false,
-                    width: SizeConfig.padding50,
-                  ),
+                  if (!widget.superFelloLevel.isSuperFello)
+                    BadgesProgressIndicator(
+                      level: widget.superFelloLevel,
+                    ),
                   SizedBox(height: SizeConfig.padding20),
                   Container(
-                    // width: 141.11,
-                    // height: SizeC,
                     padding: EdgeInsets.symmetric(
                       horizontal: SizeConfig.padding8,
                       vertical: SizeConfig.padding4,
