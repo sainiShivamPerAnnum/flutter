@@ -2,6 +2,7 @@ import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/feature/fello_badges/shared/sf_level_mapping_extension.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
@@ -15,38 +16,12 @@ class ProfileImageSE extends StatelessWidget {
   final bool reactive;
   final bool showBadge;
 
-  const ProfileImageSE(
-      {super.key, this.radius, this.reactive = true, this.showBadge = false});
-
-  Color getBorderColor(List<dynamic>? segments) {
-    if (segments == null) {
-      return Colors.white.withOpacity(0.30);
-    }
-    if (segments.contains('SuperFello')) {
-      return const Color(0xFFFFD979);
-    } else if (segments.contains('Intermediate')) {
-      return const Color(0xFF93B5FE);
-    } else if (segments.contains('Beginner')) {
-      return const Color(0xFFF79780);
-    } else {
-      return Colors.white.withOpacity(0.30);
-    }
-  }
-
-  String getBadgeUrl(List<dynamic>? segments) {
-    if (segments == null) {
-      return '';
-    }
-    if (segments.contains('SuperFello')) {
-      return "https://d37gtxigg82zaw.cloudfront.net/loyalty/level-2.svg";
-    } else if (segments.contains('Intermediate')) {
-      return "https://d37gtxigg82zaw.cloudfront.net/loyalty/level-1.svg";
-    } else if (segments.contains('Beginner')) {
-      return "https://d37gtxigg82zaw.cloudfront.net/loyalty/level-0.svg";
-    } else {
-      return '';
-    }
-  }
+  const ProfileImageSE({
+    super.key,
+    this.radius,
+    this.reactive = true,
+    this.showBadge = false,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -58,27 +33,22 @@ class ProfileImageSE extends StatelessWidget {
         UserServiceProperties.myAvatarId
       ],
       builder: (context, model, properties) {
-        var badgeUrl = getBadgeUrl(model?.userSegments);
+        final data = model!.baseUser!.superFelloLevel.getLevelData;
         return GestureDetector(
-          onTap: reactive ? () => baseUtil!.openProfileDetailsScreen() : () {},
+          onTap: reactive ? baseUtil.openProfileDetailsScreen : null,
           child: Stack(
+            clipBehavior: Clip.none,
             children: [
               Container(
                 padding: const EdgeInsets.all(2.0),
                 decoration: BoxDecoration(
-                  color: getBorderColor(model?.userSegments),
                   shape: BoxShape.circle,
+                  color: data.borderColor,
                 ),
                 child: CircleAvatar(
                   key: const ValueKey(Constants.PROFILE),
                   radius: radius ?? SizeConfig.avatarRadius,
                   backgroundColor: Colors.black,
-                  child: model!.avatarId != null && model.avatarId != 'CUSTOM'
-                      ? SvgPicture.asset(
-                          "assets/vectors/userAvatars/${model.avatarId}.svg",
-                          fit: BoxFit.cover,
-                        )
-                      : const SizedBox(),
                   backgroundImage: (model.avatarId != null &&
                           model.avatarId == 'CUSTOM' &&
                           model.myUserDpUrl != null &&
@@ -89,16 +59,21 @@ class ProfileImageSE extends StatelessWidget {
                       : const AssetImage(
                           Assets.profilePic,
                         ) as ImageProvider<Object>?,
+                  child: model.avatarId != null && model.avatarId != 'CUSTOM'
+                      ? SvgPicture.asset(
+                          "assets/vectors/userAvatars/${model.avatarId}.svg",
+                          fit: BoxFit.cover,
+                        )
+                      : const SizedBox(),
                 ),
               ),
-              if (showBadge && badgeUrl.isNotEmpty)
+              if (showBadge && data.url.isNotEmpty)
                 Positioned(
-                  right: 0,
-                  bottom: 0,
+                  right: -02,
+                  bottom: -03,
                   child: SvgPicture.network(
-                    badgeUrl,
-                    height: SizeConfig.padding22,
-                    // width: SizeConfig.padding40,
+                    data.url,
+                    height: SizeConfig.padding20,
                     fit: BoxFit.fill,
                   ),
                 )
