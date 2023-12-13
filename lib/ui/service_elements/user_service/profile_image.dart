@@ -43,7 +43,7 @@ class ProfileImageSE extends StatelessWidget {
                 padding: const EdgeInsets.all(2.0),
                 decoration: BoxDecoration(
                   shape: BoxShape.circle,
-                  color: data.borderColor,
+                  color: showBadge ? data.borderColor : null,
                 ),
                 child: CircleAvatar(
                   key: const ValueKey(Constants.PROFILE),

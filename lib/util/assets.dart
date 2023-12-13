@@ -361,6 +361,8 @@ class Assets {
   // static const String gtScratch = "assets/lotties/scratch.json";
 
   static const String crypto = "assets/svg/crypto.svg";
+  static const String lock = "assets/svg/lock.svg";
+  static const String giftIcon = "assets/svg/gift_icon.svg";
   static const String single_gold_brick = "assets/svg/single_gold_brick.svg";
   static const String tri_gold_brick = "assets/svg/tri_gold_bricks.svg";
   static const String multiple_gold_brick =
