@@ -152,6 +152,8 @@
 	<string>We use contact identifiers to link records.</string>
 	<key>NSContactsUsageDescription</key>
 	<string>We need access to your contacts to find and invite friends.</string>
+	<key>NSUserTrackingUsageDescription</key>
+	<string>We use user tracking to improve your experience and provide personalized content in our app. This helps us understand how you interact with our app and allows us to tailor our services to better suit your needs. Your data is handled securely and in accordance with our privacy policy.</string>
 	<key>UIBackgroundModes</key>
 	<array>
 		<string>fetch</string>
