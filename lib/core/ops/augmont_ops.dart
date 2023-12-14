@@ -85,9 +85,9 @@ class AugmontService extends ChangeNotifier {
   Future<AugmontRates?> getRates() async {
     if (!isInit()) await _init();
     ApiResponse<Map<String, dynamic>> response =
-        await _investmentActionsRepository!.getGoldRates();
+        await _investmentActionsRepository.getGoldRates();
     if (response.code == 400) {
-      _logger!.e(response.errorMessage);
+      _logger.e(response.errorMessage);
       return null;
     } else {
       return AugmontRates.fromMap(response.model!);
@@ -104,18 +104,18 @@ class AugmontService extends ChangeNotifier {
       SubmitGoldSell.fldLockPrice: sellRates.goldSellPrice,
     };
 
-    _logger!.d(_params);
+    _logger.d(_params);
     ApiResponse<bool> _onSellCompleteResponse =
-        await _investmentActionsRepository!.withdrawlComplete(
+        await _investmentActionsRepository.withdrawlComplete(
       amount: -1 * BaseUtil.digitPrecision(quantity * sellRates.goldSellPrice!),
       sellGoldMap: _params,
-      userUid: _userService!.baseUser!.uid,
+      userUid: _userService.baseUser!.uid,
     );
 
     if (_onSellCompleteResponse.code == 200) {
       return true;
     } else {
-      _augTxnService!.currentTransactionState = TransactionState.idle;
+      _augTxnService.currentTransactionState = TransactionState.idle;
       AppState.unblockNavigation();
       if (_onSellCompleteResponse.errorMessage != null &&
           _onSellCompleteResponse.errorMessage!.isNotEmpty) {
@@ -125,8 +125,8 @@ class AugmontService extends ChangeNotifier {
         BaseUtil.showNegativeAlert(locale.txnVerify, locale.txnVerifySubTitle);
       }
 
-      _internalOpsService!.logFailure(
-          _userService!.baseUser!.uid, FailType.WithdrawlCompleteApiFailed, {
+      _internalOpsService.logFailure(
+          _userService.baseUser!.uid, FailType.WithdrawlCompleteApiFailed, {
         'message':
             _initialDepositResponse?.errorMessage ?? "Withdrawal api failed"
       });
@@ -175,9 +175,9 @@ class AugmontService extends ChangeNotifier {
     // _baseProvider.currentAugmontTxn = null;
     _augmontTxnProcessListener = null;
 
-    _baseProvider!.userMiniTxnList = null;
-    _baseProvider!.hasMoreTransactionListDocuments = true;
-    _baseProvider!.lastTransactionListDocument =
+    _baseProvider.userMiniTxnList = null;
+    _baseProvider.hasMoreTransactionListDocuments = true;
+    _baseProvider.lastTransactionListDocument =
         null; //this is to ensure that the transactions list gets refreshed
   }
 

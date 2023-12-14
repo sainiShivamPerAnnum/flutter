@@ -74,7 +74,7 @@ class NotificationButton extends StatelessWidget {
                 if (JourneyService.isAvatarAnimationInProgress) return;
 
                 Haptic.vibrate();
-                _analytics!.track(
+                _analytics.track(
                     eventName: AnalyticsEvents.notificationsClicked,
                     properties: AnalyticsProperties.getDefaultPropertiesMap());
                 model.hasNewNotifications = false;

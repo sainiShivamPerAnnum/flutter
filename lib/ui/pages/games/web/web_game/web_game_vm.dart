@@ -96,11 +96,11 @@ class WebGameViewModel extends BaseViewModel {
   }
 
   bool handleGameRoundEnd(Map<String, dynamic> data) {
-    _logger!.d(
+    _logger.d(
         "round end at  ${DateFormat('yyyy-MM-dd - hh:mm a').format(DateTime.now())}");
 
     if (data['gt_id'] != null && data['gt_id'].toString().isNotEmpty) {
-      _logger!.d("Recived a Golden ticket with id: ${data['gt_id']}");
+      _logger.d("Recived a Golden ticket with id: ${data['gt_id']}");
 
       BaseUtil.showPositiveAlert("You have won a Scratch Card!",
           "Scratch card has been added in the Account Section",
@@ -109,12 +109,12 @@ class WebGameViewModel extends BaseViewModel {
       ScratchCardService.scratchCardId = data['gt_id'];
     }
     if (data['mlIndex'] != null) {
-      _journeyService!.avatarRemoteMlIndex = data["mlIndex"];
+      _journeyService.avatarRemoteMlIndex = data["mlIndex"];
     }
-    _logger!.d("MLIndex found: ${data['mlIndex']}");
+    _logger.d("MLIndex found: ${data['mlIndex']}");
     if (data[FcmCommands.GAME_END_MESSAGE_KEY] != null &&
         data[FcmCommands.GAME_END_MESSAGE_KEY].toString().isNotEmpty) {
-      _logger!.d("Game end message: ${data[FcmCommands.GAME_END_MESSAGE_KEY]}");
+      _logger.d("Game end message: ${data[FcmCommands.GAME_END_MESSAGE_KEY]}");
       ScratchCardService.gameEndMsgText =
           data[FcmCommands.GAME_END_MESSAGE_KEY].toString();
     }
@@ -129,10 +129,10 @@ class WebGameViewModel extends BaseViewModel {
 
     locator<UserStatsRepo>().getGameStats();
 
-    _logger!.d("Checking for golden tickets");
+    _logger.d("Checking for golden tickets");
     if (ScratchCardService.gameEndMsgText != null &&
         ScratchCardService.gameEndMsgText!.isNotEmpty) {
-      _logger!.d("Showing game end message");
+      _logger.d("Showing game end message");
       Future.delayed(duration ?? const Duration(milliseconds: 500), () {
         BaseUtil.openDialog(
           addToScreenStack: true,
@@ -145,9 +145,9 @@ class WebGameViewModel extends BaseViewModel {
       });
       return;
     }
-    _gtService!.fetchAndVerifyScratchCardByID().then((value) {
+    _gtService.fetchAndVerifyScratchCardByID().then((value) {
       if (value) {
-        _gtService!.showInstantScratchCardView(source: GTSOURCE.game);
+        _gtService.showInstantScratchCardView(source: GTSOURCE.game);
       }
     });
   }

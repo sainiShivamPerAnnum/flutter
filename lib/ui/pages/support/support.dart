@@ -42,7 +42,7 @@ class _SupportPageState extends State<SupportPage> {
   final AnalyticsService _analyticsService = locator<AnalyticsService>();
 
   void init() {
-    _requestCallPhoneController.text = _userService!.baseUser!.mobile!;
+    _requestCallPhoneController.text = _userService.baseUser!.mobile!;
     // enableFlashChat();
     isInit = true;
   }
@@ -177,7 +177,7 @@ class _SupportPageState extends State<SupportPage> {
   }
 
   void _launchEmail() {
-    _analyticsService!.track(eventName: AnalyticsEvents.emailInitiated);
+    _analyticsService.track(eventName: AnalyticsEvents.emailInitiated);
     final Uri emailLaunchUri = Uri(scheme: 'mailto', path: 'support@fello.in');
     launch(emailLaunchUri.toString());
   }

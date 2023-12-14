@@ -63,7 +63,7 @@ class RSAEncryption {
         "data": encrypted
       };
     } catch (e) {
-      _logger!.e('Encryption Failed: $e');
+      _logger.e('Encryption Failed: $e');
       return data;
     }
   }
@@ -77,10 +77,10 @@ class RSAEncryption {
       ));
       return true;
     } catch (e) {
-      _logger!.e(e.toString());
-      if (_userService!.isUserOnboarded) {
-        _internalOpsService!.logFailure(
-            _userService!.baseUser!.uid, FailType.RSAEncryterInitFailed, {
+      _logger.e(e.toString());
+      if (_userService.isUserOnboarded) {
+        _internalOpsService.logFailure(
+            _userService.baseUser!.uid, FailType.RSAEncryterInitFailed, {
           "err_message":
               "RSA Encrypter generation Failed while parsing local file",
         });
@@ -101,10 +101,10 @@ class RSAEncryption {
           Encrypter(AES(aesKey, mode: AESMode.cbc, padding: "PKCS7"));
       return true;
     } catch (e) {
-      _logger!.e(e.toString());
-      if (_userService!.isUserOnboarded) {
-        _internalOpsService!.logFailure(
-            _userService!.baseUser!.uid, FailType.AESEncryptionInitFailed, {
+      _logger.e(e.toString());
+      if (_userService.isUserOnboarded) {
+        _internalOpsService.logFailure(
+            _userService.baseUser!.uid, FailType.AESEncryptionInitFailed, {
           "message": "AES Encrypter generation Failed",
         });
       }
@@ -113,7 +113,7 @@ class RSAEncryption {
   }
 
   String _rsaEncrypt() {
-    _logger!.d("KEY: $randomAesKey");
+    _logger.d("KEY: $randomAesKey");
     final encryptedKey = rsaEncrypter?.encrypt(aesKey.base64);
     return encryptedKey!.base64;
   }
@@ -137,7 +137,7 @@ class RSAEncryption {
       final parser = RSAKeyParser();
       return parser.parse(key) as T;
     } catch (e) {
-      _logger!.e(e.toString());
+      _logger.e(e.toString());
     }
   }
 

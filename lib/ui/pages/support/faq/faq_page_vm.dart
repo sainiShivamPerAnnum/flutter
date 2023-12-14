@@ -19,7 +19,7 @@ class FaqPageViewModel extends BaseViewModel {
   Future<void> fetchFaqs(FaqsType type) async {
     setState(ViewState.Busy);
 
-    final res = await _gettersRepo!.getFaqs(type: type);
+    final res = await _gettersRepo.getFaqs(type: type);
     if (res.isSuccess()) {
       _list = res.model;
     } else {

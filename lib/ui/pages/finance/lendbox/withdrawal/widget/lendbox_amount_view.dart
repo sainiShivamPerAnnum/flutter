@@ -195,7 +195,7 @@ class _LendboxAmountInputViewState extends State<LendboxAmountInputView> {
                   amt: item.value,
                   isBest: item.best,
                   onClick: (amt) {
-                    _analyticsService!.track(
+                    _analyticsService.track(
                         eventName: AnalyticsEvents.suggestedAmountTapped,
                         properties: {
                           'order': i,

@@ -14,7 +14,7 @@ class WebEngageAnalytics extends BaseAnalyticsService {
   @override
   Future<void> login({bool? isOnBoarded, BaseUser? baseUser}) async {
     if (isOnBoarded != null && isOnBoarded && baseUser != null) {
-      _logger!.d(baseUser);
+      _logger.d(baseUser);
 
       final nameParts = (baseUser.name ?? '').split(' ');
       final len = nameParts.length;
@@ -33,7 +33,7 @@ class WebEngageAnalytics extends BaseAnalyticsService {
       WebEngagePlugin.setUserAttribute(
           "KYC Verified", baseUser.isSimpleKycVerified ?? false);
 
-      _logger!.d("Analytics SERVICE :: User identify properties added.");
+      _logger.d("Analytics SERVICE :: User identify properties added.");
     }
   }
 
@@ -49,7 +49,7 @@ class WebEngageAnalytics extends BaseAnalyticsService {
     try {
       WebEngagePlugin.userLogout();
     } catch (e) {
-      _logger!.e(e);
+      _logger.e(e);
     }
   }
 
@@ -65,18 +65,18 @@ class WebEngageAnalytics extends BaseAnalyticsService {
       }
     } catch (e) {
       String error = e as String ?? "Unable to track event: $eventName";
-      _logger!.e(error);
+      _logger.e(error);
     }
   }
 
   @override
   void trackScreen({String? screen, Map<String, dynamic>? properties}) {
     try {
-      _logger!.d('analytics : $screen');
+      _logger.d('analytics : $screen');
       WebEngagePlugin.trackScreen(screen!, properties);
     } catch (e) {
       String error = e as String ?? "Unable to track screen event: $screen";
-      _logger!.e(error);
+      _logger.e(error);
     }
   }
 }

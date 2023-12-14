@@ -28,7 +28,7 @@ class LeaderboardService extends ChangeNotifier {
   set isLeaderboardLoading(value) {
     _isLeaderboardLoading = value;
     notifyListeners();
-    _logger!.d("Leaderboard state notifier updated");
+    _logger.d("Leaderboard state notifier updated");
   }
 
   int currentUserRank = 0;
@@ -46,22 +46,21 @@ class LeaderboardService extends ChangeNotifier {
 
   setReferralLeaderBoard() {
     notifyListeners();
-    _logger!.d("Referral Leaderboard updated, property listeners notified");
+    _logger.d("Referral Leaderboard updated, property listeners notified");
   }
 
   setWebGameLeaderBoard() {
     notifyListeners();
-    _logger!.d("Web Game leaderboard updated, property listeners notified");
+    _logger.d("Web Game leaderboard updated, property listeners notified");
   }
 
   setUserProfilePicUrl() {
     notifyListeners();
-    _logger!.d("User profile pic url updated, property listeners notified");
+    _logger.d("User profile pic url updated, property listeners notified");
   }
 
   fetchReferralLeaderBoard() async {
-    ApiResponse response =
-        await _getterRepo!.getStatisticsByFreqGameTypeAndCode(
+    ApiResponse response = await _getterRepo.getStatisticsByFreqGameTypeAndCode(
       type: "REF-ACTIVE",
       freq: "monthly",
     );
@@ -71,7 +70,7 @@ class LeaderboardService extends ChangeNotifier {
       _referralLeaderBoard =
           LeaderboardModel.fromMap(response.model).scoreboard;
       setReferralLeaderBoard();
-      _logger!.d("Referral Leaderboard successfully fetched");
+      _logger.d("Referral Leaderboard successfully fetched");
     }
   }
 
@@ -100,7 +99,7 @@ class LeaderboardService extends ChangeNotifier {
 
   Future getProfileDpWithUid(String? uid) async {
     log("BUILD: get profile picture build called");
-    return await _dbModel!.getUserDP(uid);
+    return await _dbModel.getUserDP(uid);
   }
 
   String getDateRange({bool monthly = false}) {
@@ -158,7 +157,7 @@ class LeaderboardService extends ChangeNotifier {
     isUserInTopThree = false;
     for (var i = 0; i < WebGameLeaderBoard!.scoreboard!.length; i++) {
       if (WebGameLeaderBoard!.scoreboard![i].userid ==
-          _userService!.baseUser!.uid) {
+          _userService.baseUser!.uid) {
         currentUserRank = i + 1;
         break;
       }
@@ -170,6 +169,6 @@ class LeaderboardService extends ChangeNotifier {
   }
 
   Future<String?> getPlayerProfileImageUrl({String? userId}) async {
-    return await _dbModel!.getUserDP(userId);
+    return await _dbModel.getUserDP(userId);
   }
 }

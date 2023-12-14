@@ -30,7 +30,7 @@ class JourneyBannersViewModel extends BaseViewModel {
 
   loadOfferList() async {
     isOfferListLoading = true;
-    final response = await _getterRepo!.getPromoCards();
+    final response = await _getterRepo.getPromoCards();
     if (response.code == 200) {
       _offerList = response.model;
     } else {
@@ -58,8 +58,7 @@ class JourneyBannersViewModel extends BaseViewModel {
   }
 
   void trackJourneyBannerClickEvent(int bannerOrder, PromoCardModel promo) {
-    _analyticService!
-        .track(eventName: AnalyticsEvents.bannerClick, properties: {
+    _analyticService.track(eventName: AnalyticsEvents.bannerClick, properties: {
       "Location": "Journey Footer",
       "Order": bannerOrder,
       "Title": promo.title ?? '',

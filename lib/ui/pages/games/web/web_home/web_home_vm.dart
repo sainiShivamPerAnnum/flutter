@@ -128,7 +128,7 @@ class WebHomeViewModel extends BaseViewModel {
   init(String game) async {
     currentGame = game;
     isLoading = true;
-    currentCoinValue = _coinService!.flcBalance;
+    currentCoinValue = _coinService.flcBalance;
     await setGameDetails(game);
     // fetchTopSaversPastWeek(game);
     isLoading = false;
@@ -169,7 +169,7 @@ class WebHomeViewModel extends BaseViewModel {
   }
 
   Future<bool> checkIfDeviceIsNotAnEmulator() async {
-    final bool isReal = await _internalOps!.checkIfDeviceIsReal();
+    final bool isReal = await _internalOps.checkIfDeviceIsReal();
     if (!isReal) {
       BaseUtil.showNegativeAlert(
           locale.simulatorsNotAllowed, locale.tryOnRealDevice);
@@ -184,12 +184,11 @@ class WebHomeViewModel extends BaseViewModel {
 
 //MOVE THIS TO AN ISOLATED WIDGET --START
   Future getProfileDpWithUid(String? uid) async {
-    return await _dbModel!.getUserDP(uid);
+    return await _dbModel.getUserDP(uid);
   }
 
   fetchTopSaversPastWeek(String game) async {
-    ApiResponse response =
-        await _getterRepo!.getStatisticsByFreqGameTypeAndCode(
+    ApiResponse response = await _getterRepo.getStatisticsByFreqGameTypeAndCode(
       freq: "weekly",
       type: game,
       isForPast: true,
@@ -299,7 +298,7 @@ class WebHomeViewModel extends BaseViewModel {
   launchGame(int lastScore, int bestScore) {
     trackGameStart(lastScore, bestScore);
     String initialUrl = generateGameUrl();
-    _logger!.d("Game Url: $initialUrl");
+    _logger.d("Game Url: $initialUrl");
 
     AppState.delegate!.appState.currentAction = PageAction(
       state: PageState.addWidget,
@@ -316,9 +315,9 @@ class WebHomeViewModel extends BaseViewModel {
   Future<bool> _checkIfUserHasEnoughTokens() async {
     setState(ViewState.Busy);
     int? _playCost = _currentGameModel!.playCost;
-    ApiResponse<FlcModel> _flcResponse = await _userRepo!.getCoinBalance();
+    ApiResponse<FlcModel> _flcResponse = await _userRepo.getCoinBalance();
     final response =
-        _gamesRepo!.getGameToken(gameName: currentGameModel!.gameCode);
+        _gamesRepo.getGameToken(gameName: currentGameModel!.gameCode);
     if (response.isSuccess()) gameToken = response.model;
     setState(ViewState.Idle);
     if (_flcResponse.model!.flcBalance != null &&
@@ -361,14 +360,14 @@ class WebHomeViewModel extends BaseViewModel {
 
   setGameDetails(String game) async {
     isGameLoading = true;
-    GameModel? gameData = _gamesRepo!.allgames!.firstWhereOrNull(
+    GameModel? gameData = _gamesRepo.allgames!.firstWhereOrNull(
       (g) => g.gameCode == game,
     );
     if (gameData != null) {
       currentGameModel = gameData;
       return;
     }
-    final response = await _gamesRepo!.getGameByCode(gameCode: game);
+    final response = await _gamesRepo.getGameByCode(gameCode: game);
     if (response.isSuccess()) {
       currentGameModel = response.model;
       isGameLoading = false;

@@ -65,7 +65,7 @@ class _JourneyMilestoneDetailsModalSheetState
     if (widget.status != JOURNEY_MILESTONE_STATUS.COMPLETED) return;
     isLoading = true;
     final res =
-        await _gtService!.getGTByPrizeSubtype(widget.milestone.prizeSubType);
+        await _gtService.getGTByPrizeSubtype(widget.milestone.prizeSubType);
     if (res.isSuccess()) ticket = res.model;
     // else
     // BaseUtil.showNegativeAlert(res.errorMessage, "");
@@ -73,8 +73,8 @@ class _JourneyMilestoneDetailsModalSheetState
   }
 
   String getTicketType(mlIndex) {
-    for (int i = 0; i < _journeyService!.levels!.length; i++) {
-      if (_journeyService!.levels![i].end == mlIndex) {
+    for (int i = 0; i < _journeyService.levels!.length; i++) {
+      if (_journeyService.levels![i].end == mlIndex) {
         return "Green Scratch";
       }
     }
@@ -82,8 +82,8 @@ class _JourneyMilestoneDetailsModalSheetState
   }
 
   String getTicketAsset(mlIndex) {
-    for (int i = 0; i < _journeyService!.levels!.length; i++) {
-      if (_journeyService!.levels![i].end == mlIndex) {
+    for (int i = 0; i < _journeyService.levels!.length; i++) {
+      if (_journeyService.levels![i].end == mlIndex) {
         return Assets.levelUpUnRedeemedScratchCardBG;
       }
     }
@@ -91,8 +91,8 @@ class _JourneyMilestoneDetailsModalSheetState
   }
 
   Color getTicketColor(mlIndex) {
-    for (int i = 0; i < _journeyService!.levels!.length; i++) {
-      if (_journeyService!.levels![i].end == mlIndex) {
+    for (int i = 0; i < _journeyService.levels!.length; i++) {
+      if (_journeyService.levels![i].end == mlIndex) {
         return UiConstants.primaryColor;
       }
     }
@@ -276,7 +276,7 @@ class _JourneyMilestoneDetailsModalSheetState
                                   }
 
                                   try {
-                                    _analyticsService!.track(
+                                    _analyticsService.track(
                                         eventName:
                                             AnalyticsEvents.journeyMileStarted,
                                         properties: AnalyticsProperties

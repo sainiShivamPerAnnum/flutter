@@ -35,10 +35,10 @@ class MixpanelAnalytics extends BaseAnalyticsService {
             .getPeople()
             .set("KYC Verified", baseUser.isSimpleKycVerified ?? false);
 
-        _logger!.d("MIXPANEL SERVICE :: User identify properties added.");
+        _logger.d("MIXPANEL SERVICE :: User identify properties added.");
       }
     } catch (e) {
-      _logger!.e(e.toString());
+      _logger.e(e.toString());
     }
   }
 
@@ -63,7 +63,7 @@ class MixpanelAnalytics extends BaseAnalyticsService {
         }
       }
     } catch (e) {
-      _logger!.e(e.toString());
+      _logger.e(e.toString());
     }
   }
 

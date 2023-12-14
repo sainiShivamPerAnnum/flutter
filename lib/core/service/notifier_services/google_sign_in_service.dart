@@ -33,7 +33,7 @@ class GoogleSignInService extends ChangeNotifier {
       }
 
       final isEmailRegistered =
-          await _userRepo!.isEmailRegistered(googleUser.email);
+          await _userRepo.isEmailRegistered(googleUser.email);
 
       if (isEmailRegistered.model!) {
         BaseUtil.showNegativeAlert(
@@ -44,13 +44,13 @@ class GoogleSignInService extends ChangeNotifier {
       }
 
       final userEmail = googleUser.email;
-      _userService!.setEmail(userEmail);
-      final res = await _userRepo!.updateUser(dMap: {
+      _userService.setEmail(userEmail);
+      final res = await _userRepo.updateUser(dMap: {
         BaseUser.fldIsEmailVerified: true,
         BaseUser.fldEmail: userEmail,
       });
       if (res.isSuccess() && res.model!) {
-        _userService!.isEmailVerified = true;
+        _userService.isEmailVerified = true;
         return userEmail;
       } else {
         BaseUtil.showNegativeAlert(
@@ -59,7 +59,7 @@ class GoogleSignInService extends ChangeNotifier {
       }
       return null;
     } catch (e) {
-      _logger!.d(e.toString());
+      _logger.d(e.toString());
       BaseUtil.showNegativeAlert(
         locale.verifyFailed,
         locale.tryAnotherMethod,

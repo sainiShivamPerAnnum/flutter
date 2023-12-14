@@ -31,7 +31,7 @@ class ProfileImageSE extends StatelessWidget {
       ],
       builder: (context, model, properties) {
         return GestureDetector(
-          onTap: reactive ? () => _baseUtil!.openProfileDetailsScreen() : () {},
+          onTap: reactive ? () => _baseUtil.openProfileDetailsScreen() : () {},
           child: CircleAvatar(
             key: const ValueKey(Constants.PROFILE),
             radius: radius ?? SizeConfig.avatarRadius,

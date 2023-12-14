@@ -624,7 +624,7 @@ class SubTxnTile extends StatelessWidget {
                   Text(
                     txn.status,
                     style: TextStyles.sourceSansM.body3.colour(
-                      _txnHistoryService!.getTileColor(txn.status),
+                      _txnHistoryService.getTileColor(txn.status),
                     ),
                   ),
                 ],

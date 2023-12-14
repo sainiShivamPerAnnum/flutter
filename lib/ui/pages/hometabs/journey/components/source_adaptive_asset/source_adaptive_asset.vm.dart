@@ -27,13 +27,13 @@ class SourceAdaptiveAssetViewModel extends BaseViewModel {
   dump() {}
 
   Future<void> completeNViewDownloadSaveLViewAsset() async {
-    if (_journeyRepo!.checkIfAssetIsAvailableLocally(assetName!)) {
+    if (_journeyRepo.checkIfAssetIsAvailableLocally(assetName!)) {
       log("ROOTVM: Asset path found cached in local storage.showing asset from cache");
-      assetUrl = _journeyRepo!.getAssetLocalFilePath(assetName!);
+      assetUrl = _journeyRepo.getAssetLocalFilePath(assetName!);
     } else {
       // svgSource = "https://journey-assets-x.s3.ap-south-1.amazonaws.com/b1.svg";
       log("ROOTVM: Asset path not found in cache. Downloading and caching it now. also showing network Image for now");
-      final bool result = await _journeyRepo!.downloadAndSaveFile(assetUrl!);
+      final bool result = await _journeyRepo.downloadAndSaveFile(assetUrl!);
       if (result) {
         log("ROOTVM: Asset downloading & caching completed successfully. will load it from local next start onwards");
         // assetUrl = _journeyRepo.getAssetLocalFilePath(assetName);
