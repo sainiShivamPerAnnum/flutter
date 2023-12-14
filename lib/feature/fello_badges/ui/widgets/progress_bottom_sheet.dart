@@ -65,19 +65,14 @@ class ProgressBottomSheet extends StatelessWidget {
           SizedBox(
             height: SizeConfig.padding4,
           ),
-          Padding(
-            padding: EdgeInsets.symmetric(
-              horizontal: SizeConfig.padding40,
+          badgeInformation.bottomSheetText.beautify(
+            style: TextStyles.sourceSans.body3.colour(
+              const Color(0xFFBDBDBE),
             ),
-            child: badgeInformation.bottomSheetText.beautify(
-              style: TextStyles.sourceSans.body3.colour(
-                const Color(0xFFBDBDBE),
-              ),
-              boldStyle: TextStyles.sourceSansSB.body3.colour(
-                const Color(0xFFBDBDBE),
-              ),
-              alignment: TextAlign.center,
+            boldStyle: TextStyles.sourceSansSB.body3.colour(
+              const Color(0xFFBDBDBE),
             ),
+            alignment: TextAlign.center,
           ),
 
           SizedBox(

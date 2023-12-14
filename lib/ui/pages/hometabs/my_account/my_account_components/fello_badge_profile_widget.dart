@@ -15,26 +15,22 @@ import 'package:property_change_notifier/property_change_notifier.dart';
 class ProfileBadgeWidget extends StatefulWidget {
   const ProfileBadgeWidget({
     required this.superFelloLevel,
+    required this.onPickImage,
     super.key,
   });
 
   final SuperFelloLevel superFelloLevel;
+  final VoidCallback onPickImage;
 
   @override
   State<ProfileBadgeWidget> createState() => _ProfileBadgeWidgetState();
 }
 
 class _ProfileBadgeWidgetState extends State<ProfileBadgeWidget> {
-  int userLevel = 0;
-
-  @override
-  void initState() {
-    super.initState();
-    userLevel = widget.superFelloLevel.level;
-  }
-
   String getContainerText() {
-    return userLevel == 3 ? "View Your Benefits" : "Become a Super Fello";
+    return widget.superFelloLevel.isSuperFello
+        ? "View Your Benefits"
+        : "Become a Super Fello";
   }
 
   @override
@@ -53,7 +49,7 @@ class _ProfileBadgeWidgetState extends State<ProfileBadgeWidget> {
         height: SizeConfig.padding180,
         width: SizeConfig.screenWidth,
         decoration: BoxDecoration(
-          gradient: userLevel == 3
+          gradient: widget.superFelloLevel.isSuperFello
               ? const LinearGradient(
                   begin: Alignment(0.00, -1.00),
                   end: Alignment(0, 1),
@@ -64,7 +60,9 @@ class _ProfileBadgeWidgetState extends State<ProfileBadgeWidget> {
                   ],
                 )
               : null,
-          color: userLevel == 4 ? null : const Color(0xFF191919),
+          color: widget.superFelloLevel.isSuperFello
+              ? null
+              : const Color(0xFF191919),
         ),
         padding: EdgeInsets.symmetric(
           horizontal: SizeConfig.pageHorizontalMargins,
@@ -77,6 +75,8 @@ class _ProfileBadgeWidgetState extends State<ProfileBadgeWidget> {
                 scale: 1.2,
                 child: UserBadgeContainer(
                   level: widget.superFelloLevel,
+                  showImagePickIcon: true,
+                  onPickImage: widget.onPickImage,
                 ),
               ),
             ),

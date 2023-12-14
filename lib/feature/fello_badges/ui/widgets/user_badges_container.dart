@@ -9,14 +9,19 @@ import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
+import 'package:provider/provider.dart';
 
 class UserBadgeContainer extends StatelessWidget {
   const UserBadgeContainer({
     required this.level,
+    this.showImagePickIcon = false,
+    this.onPickImage,
     super.key,
   });
 
   final SuperFelloLevel level;
+  final bool showImagePickIcon;
+  final VoidCallback? onPickImage;
 
   @override
   Widget build(BuildContext context) {
@@ -242,7 +247,29 @@ class UserBadgeContainer extends StatelessWidget {
                 width: SizeConfig.padding40,
                 fit: BoxFit.fill,
               ),
-            )
+            ),
+          Consumer<UserService>(builder: (context, service, _) {
+            if (showImagePickIcon && service.myUserDpUrl!.isEmpty) {
+              return Positioned(
+                right: 30,
+                top: 20,
+                child: InkWell(
+                  onTap: onPickImage,
+                  child: const CircleAvatar(
+                    radius: 12,
+                    backgroundColor: Colors.white,
+                    child: Icon(
+                      Icons.add_outlined,
+                      size: 15,
+                      color: UiConstants.grey4,
+                    ),
+                  ),
+                ),
+              );
+            }
+
+            return const SizedBox.shrink();
+          })
         ],
       ),
     );

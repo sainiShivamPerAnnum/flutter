@@ -130,6 +130,17 @@ class BadgeDetailsContainer extends StatelessWidget {
     const Color(0xFFFFD979),
   ];
 
+  String _getBadgeHeader() {
+    final level = switch (levelDetails.level) {
+      SuperFelloLevel.BEGINNER => 'Beginner',
+      SuperFelloLevel.INTERMEDIATE => 'Intermediate',
+      SuperFelloLevel.SUPER_FELLO => 'Super',
+      _ => ''
+    };
+
+    return 'Unlock $level Benefits';
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -337,7 +348,7 @@ class BadgeDetailsContainer extends StatelessWidget {
                       height: SizeConfig.padding16,
                     ),
                     Text(
-                      'Unlock Beginner Benefits',
+                      _getBadgeHeader(),
                       style: TextStyles.sourceSansSB.body2.colour(
                         titleColor[index],
                       ),
@@ -399,40 +410,40 @@ class BadgeDetailsContainer extends StatelessWidget {
                       ),
                     ),
                   ),
-                  Positioned.fill(
-                    child: Container(
-                      decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(.70),
-                        borderRadius: BorderRadius.vertical(
-                          bottom: Radius.circular(
-                            SizeConfig.roundness16,
+                  if (!levelDetails.levelUnlocked)
+                    Positioned.fill(
+                      child: Container(
+                        decoration: BoxDecoration(
+                          color: Colors.black.withOpacity(.70),
+                          borderRadius: BorderRadius.vertical(
+                            bottom: Radius.circular(
+                              SizeConfig.roundness16,
+                            ),
+                          ),
+                        ),
+                        child: Align(
+                          child: Padding(
+                            padding: EdgeInsets.symmetric(
+                              horizontal: SizeConfig.padding60,
+                            ),
+                            child: Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                const AppImage(Assets.lock),
+                                SizedBox(
+                                  height: SizeConfig.padding16,
+                                ),
+                                Text(
+                                  'Complete tasks in Beginner Level to unlock this level',
+                                  style: TextStyles.sourceSansSB.body1,
+                                  textAlign: TextAlign.center,
+                                )
+                              ],
+                            ),
                           ),
                         ),
                       ),
                     ),
-                  ),
-                  Positioned.fill(
-                      child: Align(
-                    child: Padding(
-                      padding: EdgeInsets.symmetric(
-                        horizontal: SizeConfig.padding60,
-                      ),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          const AppImage(Assets.lock),
-                          SizedBox(
-                            height: SizeConfig.padding16,
-                          ),
-                          Text(
-                            'Complete tasks in Beginner Level to unlock this level',
-                            style: TextStyles.sourceSansSB.body1,
-                            textAlign: TextAlign.center,
-                          )
-                        ],
-                      ),
-                    ),
-                  )),
                 ],
               )
             ],

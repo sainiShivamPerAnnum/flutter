@@ -50,6 +50,7 @@ class MyAccount extends StatelessWidget {
               padding: EdgeInsets.zero,
               children: [
                 ProfileBadgeWidget(
+                  onPickImage: model.showCustomAvatarsDialog,
                   superFelloLevel: model.superFelloLevel,
                 ),
 

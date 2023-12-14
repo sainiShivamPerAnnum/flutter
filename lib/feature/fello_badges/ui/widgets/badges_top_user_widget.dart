@@ -51,12 +51,6 @@ class BadgesTopUserWidget extends StatelessWidget {
                     Colors.white,
                   ),
                 ),
-                Text(
-                  leaderBoard.totalSaving.toString(),
-                  style: TextStyles.sourceSans.body4.colour(
-                    UiConstants.textGray70,
-                  ),
-                ),
               ],
             ),
           ),

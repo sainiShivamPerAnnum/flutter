@@ -27,6 +27,5 @@ BadgesLeaderBoardData _$BadgesLeaderBoardDataFromJson(
 
 LeaderBoard _$LeaderBoardFromJson(Map<String, dynamic> json) => LeaderBoard(
       name: json['name'] as String? ?? '',
-      totalSaving: json['totalSaving'] as num? ?? 0.0,
       uid: json['uid'] as String? ?? '',
     );

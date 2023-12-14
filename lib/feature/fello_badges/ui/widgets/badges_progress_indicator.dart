@@ -27,7 +27,11 @@ class _BadgesProgressIndicatorState extends State<BadgesProgressIndicator> {
         for (var i = 0; i < _levels.length; i++) ...[
           Expanded(
             child: _Indicator(
-              progress: _levels[i].level <= widget.level.level ? 1 : 0,
+              progress: _levels[i].level <= widget.level.level
+                  ? 1
+                  : (_levels[i].level == widget.level.level + 1)
+                      ? .1
+                      : 0,
               color: _levels[i].getLevelData.borderColor,
             ),
           ),

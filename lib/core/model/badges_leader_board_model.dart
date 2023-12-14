@@ -38,12 +38,10 @@ class BadgesLeaderBoardData {
 @_deserializable
 class LeaderBoard {
   final String name;
-  final num totalSaving;
   final String uid;
 
   const LeaderBoard({
     this.name = '',
-    this.totalSaving = 0.0,
     this.uid = '',
   });
 

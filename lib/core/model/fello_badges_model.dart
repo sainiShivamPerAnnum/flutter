@@ -81,6 +81,7 @@ class Level {
   @JsonKey(name: 'lvl_title')
   final String levelTitle;
   final SuperFelloLevel level;
+  final bool levelUnlocked;
 
   const Level({
     required this.benefits,
@@ -89,6 +90,7 @@ class Level {
     this.lvlData = const [],
     this.isCompleted = false,
     this.levelTitle = '',
+    this.levelUnlocked = false,
   });
 
   factory Level.fromJson(Map<String, dynamic> json) => _$LevelFromJson(json);

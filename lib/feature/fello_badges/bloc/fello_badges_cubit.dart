@@ -85,25 +85,12 @@ class FelloBadgesCubit extends Cubit<FelloBadgesState> {
       );
 
       if (badgeInformation != null) {
+        await Future.delayed(const Duration(seconds: 1));
         onBadgeLevelChanged?.call(badgeInformation);
       }
     }
 
     await _cacheDetails(currentBadgeInfo);
-  }
-
-  Future<FelloBadgesData?> _getCachedDetails() async {
-    final cache = PreferenceHelper.getString(
-      PreferenceHelper.badgeLevelData,
-    );
-
-    if (cache.isEmpty) {
-      return null;
-    }
-
-    final cachedMap = jsonDecode(cache);
-    final cachedBadgeInfo = FelloBadgesData.fromJson(cachedMap);
-    return cachedBadgeInfo;
   }
 
   /// Checks for badges updates for any level.
@@ -136,7 +123,7 @@ class FelloBadgesCubit extends Cubit<FelloBadgesState> {
         (e) => e.level == cachedLevel.level,
       );
 
-      if (currentLevel == null) {
+      if (currentLevel == null || !currentLevel.levelUnlocked) {
         continue;
       }
 
@@ -170,6 +157,20 @@ class FelloBadgesCubit extends Cubit<FelloBadgesState> {
       PreferenceHelper.badgeLevelData,
       encoded,
     );
+  }
+
+  Future<FelloBadgesData?> _getCachedDetails() async {
+    final cache = PreferenceHelper.getString(
+      PreferenceHelper.badgeLevelData,
+    );
+
+    if (cache.isEmpty) {
+      return null;
+    }
+
+    final cachedMap = jsonDecode(cache);
+    final cachedBadgeInfo = FelloBadgesData.fromJson(cachedMap);
+    return cachedBadgeInfo;
   }
 
   void _showBadgeAchievedPopup(BadgeLevelInformation badgeInformation) {

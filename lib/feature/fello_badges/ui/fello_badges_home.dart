@@ -242,7 +242,7 @@ class SuperFelloWallFrame extends StatelessWidget {
               crossAxisCount: 3,
               crossAxisSpacing: SizeConfig.padding18,
               mainAxisSpacing: SizeConfig.padding86,
-              childAspectRatio: .72,
+              childAspectRatio: .82,
             ),
             itemCount: leaderBoard.length,
             shrinkWrap: true,

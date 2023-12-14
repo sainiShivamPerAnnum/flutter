@@ -66,6 +66,7 @@ Level _$LevelFromJson(Map<String, dynamic> json) => Level(
           const [],
       isCompleted: json['isCompleted'] as bool? ?? false,
       levelTitle: json['lvl_title'] as String? ?? '',
+      levelUnlocked: json['levelUnlocked'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$LevelToJson(Level instance) => <String, dynamic>{
@@ -75,6 +76,7 @@ Map<String, dynamic> _$LevelToJson(Level instance) => <String, dynamic>{
       'isCompleted': instance.isCompleted,
       'lvl_title': instance.levelTitle,
       'level': _$SuperFelloLevelEnumMap[instance.level]!,
+      'levelUnlocked': instance.levelUnlocked,
     };
 
 const _$SuperFelloLevelEnumMap = {

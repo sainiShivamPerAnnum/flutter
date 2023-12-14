@@ -33,7 +33,6 @@ import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
 import 'package:felloapp/ui/dialogs/user_avatars_dialog.dart';
 import 'package:felloapp/ui/pages/static/profile_image.dart';
 import 'package:felloapp/ui/pages/userProfile/userProfile/components/sign_in_options.dart';
-import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/date_helper.dart';
 import 'package:felloapp/util/debouncer.dart';
 import 'package:felloapp/util/haptic.dart';
@@ -156,9 +155,9 @@ class UserProfileVM extends BaseViewModel {
 
   bool get hasInputError => _hasInputError;
 
-  get isEmailEnabled => _isEmailEnabled;
+  bool get isEmailEnabled => _isEmailEnabled;
 
-  get isContinuedWithGoogle => _isContinuedWithGoogle;
+  bool get isContinuedWithGoogle => _isContinuedWithGoogle;
 
   bool get isSigningInWithGoogle => _isSigningInWithGoogle;
 
@@ -186,13 +185,13 @@ class UserProfileVM extends BaseViewModel {
   bool get isUpdaingUserDetails => _isUpdaingUserDetails;
 
   // get isNewUser => this._isNewUser;
-  get isgmailFieldEnabled => _isgmailFieldEnabled;
+  bool get isgmailFieldEnabled => _isgmailFieldEnabled;
 
-  get errorPadding => _errorPadding;
+  double get errorPadding => _errorPadding;
 
-  get isNameEnabled => _isNameEnabled;
+  bool get isNameEnabled => _isNameEnabled;
 
-  get isDateEnabled => _isDateEnabled;
+  bool get isDateEnabled => _isDateEnabled;
 
   // Setters
   set isTambolaNotificationLoading(bool val) {
@@ -328,13 +327,13 @@ class UserProfileVM extends BaseViewModel {
     }
   }
 
-  void showAndroidDatePicker() async {
+  Future<void> showAndroidDatePicker() async {
     var res = await showDatePicker(
       context: AppState.delegate!.navigatorKey.currentContext!,
       initialDate: DateTime(2000, 1, 1),
       firstDate: DateTime(1950, 1, 1),
       lastDate: DateTime(2004, 1, 1),
-      builder: (BuildContext context, Widget? child) {
+      builder: (context, child) {
         return Theme(
           data: ThemeData.dark().copyWith(
             colorScheme: const ColorScheme.dark(
@@ -346,16 +345,9 @@ class UserProfileVM extends BaseViewModel {
             dialogBackgroundColor: UiConstants.kBackgroundColor,
             textButtonTheme: TextButtonThemeData(
               style: TextButton.styleFrom(
-                textStyle: TextStyles.rajdhaniSB.body3,
-                primary: UiConstants.primaryColor, // color of button's letters
-                // backgroundColor: Colors.black54, // Background color
-                // shape: RoundedRectangleBorder(
-                //   side: const BorderSide(
-                //       color: Colors.transparent,
-                //       width: 1,
-                //       style: BorderStyle.solid),
-                //   borderRadius: BorderRadius.circular(50),
-                // ),
+                foregroundColor: UiConstants.primaryColor,
+                textStyle:
+                    TextStyles.rajdhaniSB.body3, // color of button's letters
               ),
             ),
           ),
@@ -427,23 +419,16 @@ class UserProfileVM extends BaseViewModel {
               BaseUser.fldAvatarId: _userService.avatarId,
               BaseUser.fldUsername: _userService.baseUser!.username
             },
-          ).then((ApiResponse<bool> res) async {
+          ).then((res) async {
             if (res.isSuccess()) {
               await _userRepo.getUserById(id: _userService.baseUser!.uid);
               await _userService.setBaseUser();
-              // _userService!.setMyUserName(_userService?.baseUser?.kycName ??
-              //     _userService!.baseUser!.name);
-              // _userService!.setEmail(_userService!.baseUser!.email);
-              // _userService!.setDateOfBirth(_userService!.baseUser!.dob);
-              // _userService!.setGender(_userService!.baseUser!.gender);
               setGender();
               setDate();
               nameController!.text = _userService.name!;
               dobController!.text = _userService.baseUser!.dob!;
               isUpdaingUserDetails = false;
               inEditMode = false;
-              // if (isNewUser) AppState.backButtonDispatcher!.didPopRoute();
-              // isNewUser = false;
               isEmailEnabled = false;
               BaseUtil.showPositiveAlert(
                 locale.updatedSuccessfully,
@@ -456,6 +441,7 @@ class UserProfileVM extends BaseViewModel {
                 locale.tryLater,
               );
             }
+            return null;
           });
         } else {
           BaseUtil.showNegativeAlert(
@@ -476,20 +462,6 @@ class UserProfileVM extends BaseViewModel {
       return DateHelper.isAdult(selectedDate);
     }
   }
-
-  // Future<bool> usernameIsValid() async {
-  //   if (!isNewUser) return true;
-  //   if (!(await (validateUsername()) ?? false)) {
-  //     BaseUtil.showNegativeAlert(
-  //         locale.invalidUsername, locale.anotherUserName);
-  //     return false;
-  //   }
-  //   return (username != null &&
-  //       username.isNotEmpty &&
-  //       isValid != null &&
-  //       isValid! &&
-  //       isUsernameLoading == false);
-  // }
 
   bool _checkForChanges() {
     // if (isNewUser) return true;
@@ -535,7 +507,7 @@ class UserProfileVM extends BaseViewModel {
     }
   }
 
-  getGender() {
+  String getGender() {
     if (gen == 1) {
       return "M";
     } else if (gen == 0) {
@@ -594,7 +566,7 @@ class UserProfileVM extends BaseViewModel {
                 locator<SubService>().dump();
                 _tambolaService.dump();
                 locator<LendboxMaturityService>().dump();
-                AppState.backButtonDispatcher!.didPopRoute();
+                await AppState.backButtonDispatcher!.didPopRoute();
 
                 AppState.delegate!.appState.currentAction = PageAction(
                     state: PageState.replaceAll, page: SplashPageConfig);
@@ -626,7 +598,7 @@ class UserProfileVM extends BaseViewModel {
     String inputDate = yearFieldController!.text +
         monthFieldController!.text +
         dateFieldController!.text;
-    print("Input date : " + inputDate);
+    print("Input date : $inputDate");
     if (inputDate.isEmpty) {
       dateInputError = "Invalid date";
       return false;
@@ -649,9 +621,9 @@ class UserProfileVM extends BaseViewModel {
 
   Future<bool> checkGalleryPermission() async {
     if (await BaseUtil.showNoInternetAlert()) return false;
-    var _status = await Permission.photos.status;
-    if (_status.isRestricted || _status.isLimited || _status.isDenied) {
-      BaseUtil.openDialog(
+    var status = await Permission.photos.status;
+    if (status.isRestricted || status.isLimited || status.isDenied) {
+      await BaseUtil.openDialog(
         isBarrierDismissible: false,
         addToScreenStack: true,
         content: ConfirmationDialog(
@@ -674,7 +646,7 @@ class UserProfileVM extends BaseViewModel {
           },
         ),
       );
-    } else if (_status.isGranted) {
+    } else if (status.isGranted) {
       _chooseprofilePicture();
     } else {
       BaseUtil.showNegativeAlert(
@@ -686,49 +658,13 @@ class UserProfileVM extends BaseViewModel {
     return false;
   }
 
-  handleDPOperation() async {
+  Future<void> handleDPOperation() async {
     if (await BaseUtil.showNoInternetAlert()) return;
-    AppState.backButtonDispatcher!.didPopRoute();
-    checkGalleryPermission();
-
-    // var _status = await Permission.photos.status;
-    // if (_status.isRestricted || _status.isLimited || _status.isDenied) {
-    //   BaseUtil.openDialog(
-    //     isBarrierDismissable: false,
-    //     addToScreenStack: true,
-    //     content: ConfirmationDialog(
-    //       title: "Request Permission",
-    //       description:
-    //           "Access to the gallery is requested. This is only required for choosing your profile picture 🤳🏼",
-    //       buttonText: "Continue",
-    //       asset: Padding(
-    //         padding: EdgeInsets.symmetric(vertical: 8),
-    //         child: Image.asset(
-    //           "images/gallery.png",
-    //           height: SizeConfig.screenWidth * 0.24,
-    //         ),
-    //       ),
-    //       confirmAction: () {
-    //         AppState.backButtonDispatcher.didPopRoute();
-    //         _chooseprofilePicture();
-    //       },
-    //       cancelAction: () {
-    //         AppState.backButtonDispatcher.didPopRoute();
-    //       },
-    //     ),
-    //   );
-    // } else if (_status.isGranted) {
-    //   await _chooseprofilePicture();
-    //   _analyticsService.track(eventName: AnalyticsEvents.updatedProfilePicture);
-    // } else {
-    //   BaseUtil.showNegativeAlert(
-    //     'Permission Unavailable',
-    //     'Please enable permission from settings to continue',
-    //   );
-    // }
+    await AppState.backButtonDispatcher!.didPopRoute();
+    await checkGalleryPermission();
   }
 
-  showCustomAvatarsDialog() {
+  Future<void> showCustomAvatarsDialog() {
     return BaseUtil.openDialog(
       addToScreenStack: true,
       isBarrierDismissible: false,
@@ -740,11 +676,11 @@ class UserProfileVM extends BaseViewModel {
     );
   }
 
-  updateUserAvatar({String? avatarId}) async {
+  Future<void> updateUserAvatar({String? avatarId}) async {
     final res = await _userRepo.updateUser(
         dMap: {BaseUser.fldAvatarId: avatarId},
         uid: _userService.baseUser!.uid);
-    AppState.backButtonDispatcher!.didPopRoute();
+    await AppState.backButtonDispatcher!.didPopRoute();
     if (res.isSuccess() && res.model!) {
       _userService.setMyAvatarId(avatarId);
 
@@ -760,9 +696,7 @@ class UserProfileVM extends BaseViewModel {
     selectedProfilePicture = await ImagePicker()
         .pickImage(source: ImageSource.gallery, imageQuality: 45);
     if (selectedProfilePicture != null) {
-      print(File(selectedProfilePicture!.path).lengthSync() / 1024);
-      Haptic.vibrate();
-      BaseUtil.openDialog(
+      await BaseUtil.openDialog(
         addToScreenStack: true,
         isBarrierDismissible: false,
         content: ConfirmationDialog(
@@ -780,7 +714,7 @@ class UserProfileVM extends BaseViewModel {
           description: locale.profileUpdateAlert,
           confirmAction: () {
             _userService.updateProfilePicture(selectedProfilePicture).then(
-                  (flag) => _postProfilePictureUpdate(flag),
+                  _postProfilePictureUpdate,
                 );
           },
           cancelAction: () {
@@ -822,7 +756,7 @@ class UserProfileVM extends BaseViewModel {
     isApplockLoading = true;
     _userService.baseUser!.userPreferences.setPreference(
       Preferences.APPLOCK,
-      (val) ? 1 : 0,
+      val ? 1 : 0,
     );
     await _userRepo.updateUser(
       uid: _userService.baseUser!.uid,
@@ -885,7 +819,7 @@ class UserProfileVM extends BaseViewModel {
     bool res = await fcmlistener!.toggleTambolaDrawNotificationStatus(val);
     if (res) {
       _userService.baseUser!.userPreferences
-          .setPreference(Preferences.TAMBOLANOTIFICATIONS, (val) ? 1 : 0);
+          .setPreference(Preferences.TAMBOLANOTIFICATIONS, val ? 1 : 0);
       await _userRepo.updateUser(
         uid: _userService.baseUser!.uid,
         dMap: {
@@ -940,11 +874,11 @@ class UserProfileVM extends BaseViewModel {
     });
   }
 
-  void handleSignInWithGoogle() async {
+  Future<void> handleSignInWithGoogle() async {
     isSigningInWithGoogle = true;
     String? email = await _googleSignInService.signInWithGoogle();
     if (email != null) {
-      AppState.backButtonDispatcher!.didPopRoute();
+      await AppState.backButtonDispatcher!.didPopRoute();
       isgmailFieldEnabled = false;
       emailController!.text = email;
       // isGoogleVerified = true;
@@ -974,7 +908,7 @@ class UserProfileVM extends BaseViewModel {
       await _userService.setBaseUser();
       isUsernameUpdated = true;
       notifyListeners();
-      AppState.backButtonDispatcher!.didPopRoute();
+      await AppState.backButtonDispatcher!.didPopRoute();
       BaseUtil.showPositiveAlert(
           locale.userNameSuccess,
           locale.userNameSuccessSubtitle(
@@ -987,7 +921,7 @@ class UserProfileVM extends BaseViewModel {
   }
 
   Widget showResult() {
-    print("Response " + response.toString());
+    print("Response $response");
 
     if (isValid == null || isUsernameUpdated) {
       return const SizedBox();
@@ -995,7 +929,7 @@ class UserProfileVM extends BaseViewModel {
     if (isUsernameLoading) {
       return Row(
         children: [
-          Container(
+          SizedBox(
             height: SizeConfig.padding16,
             width: SizeConfig.padding16,
             child: const CircularProgressIndicator(
@@ -1011,7 +945,7 @@ class UserProfileVM extends BaseViewModel {
       );
     } else if (response == UsernameResponse.UNAVAILABLE) {
       return Text(
-        "@${usernameController!.text.trim()} " + locale.isNotAvailable,
+        "@${usernameController!.text.trim()} ${locale.isNotAvailable}",
         style: const TextStyle(
           color: Colors.red,
           fontWeight: FontWeight.w500,
@@ -1019,7 +953,7 @@ class UserProfileVM extends BaseViewModel {
       );
     } else if (response == UsernameResponse.AVAILABLE) {
       return Text(
-        "@${usernameController!.text.trim()} " + locale.isAvailable,
+        "@${usernameController!.text.trim()} ${locale.isAvailable}",
         style: const TextStyle(
           color: UiConstants.primaryColor,
           fontWeight: FontWeight.w500,
@@ -1046,7 +980,7 @@ class UserProfileVM extends BaseViewModel {
         );
       } else {
         return Text(
-          "@${usernameController!.text.trim()}" + locale.isValid,
+          "@${usernameController!.text.trim()}${locale.isValid}",
           maxLines: 2,
           style: const TextStyle(
             color: Colors.red,

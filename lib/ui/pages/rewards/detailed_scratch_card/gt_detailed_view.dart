@@ -230,7 +230,10 @@ class GTDetailedView extends StatelessWidget {
                     height: SizeConfig.padding14,
                   ),
                   GestureDetector(
-                    onTap: () {
+                    onTap: () async {
+                      await AppState.backButtonDispatcher!.didPopRoute();
+                      await Future.delayed(const Duration(
+                          milliseconds: 400)); // For hero animation.
                       AppState.delegate!.appState.currentAction = PageAction(
                         state: PageState.addPage,
                         page: FelloBadgeHomeViewPageConfig,
