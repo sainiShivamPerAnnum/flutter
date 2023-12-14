@@ -4,6 +4,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/repository/lendbox_repo.dart';
 import 'package:felloapp/core/service/lendbox_maturity_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/deposit/lendbox_buy_vm.dart';
 import 'package:felloapp/util/assets.dart';
@@ -432,20 +433,31 @@ class LendboxPaymentSummaryHeader extends StatelessWidget {
     this.showMaturity = false,
     this.maturityTerm = 1,
     super.key,
-  })  : _maturityDuration =
-            assetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? 6 : 3,
-        _interest = assetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? 12 : 10;
+  }) : _maturityDuration =
+            assetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? 6 : 3;
 
   final String amount;
   final String assetType;
   final bool showMaturity;
   final int maturityTerm;
   final LendboxBuyViewModel model;
-
   final int _maturityDuration;
-  final int _interest;
+
+  static final _isOldUser = locator<UserService>().userSegments.contains(
+        Constants.US_FLO_OLD,
+      );
+
+  static final _interestMapping = {
+    Constants.ASSET_TYPE_FLO_FIXED_6: 12,
+    Constants.ASSET_TYPE_FLO_FIXED_3: 10,
+    Constants.ASSET_TYPE_FLO_FELXI: _isOldUser ? 10 : 8,
+  };
 
   String _getTitle() {
+    final isNewUser = !locator<UserService>().userSegments.contains(
+          Constants.US_FLO_OLD,
+        );
+
     if (assetType == Constants.ASSET_TYPE_FLO_FIXED_6) {
       return "12% Flo";
     }
@@ -454,7 +466,9 @@ class LendboxPaymentSummaryHeader extends StatelessWidget {
       return "10% Flo";
     }
 
-    return "";
+    return assetType == Constants.ASSET_TYPE_FLO_FELXI && isNewUser
+        ? "8% Flo"
+        : "10% Flo";
   }
 
   String _getSubTitle({int terms = 1}) {
@@ -465,13 +479,14 @@ class LendboxPaymentSummaryHeader extends StatelessWidget {
   Widget build(BuildContext context) {
     final formatter = NumberFormat("#,##0", "en_US");
     final amt = num.parse(amount);
+    final isFlexi = assetType == Constants.ASSET_TYPE_FLO_FELXI;
 
     final interest = model
         .calculateInterest(
           amount: amt,
-          interestRate: _interest,
-          maturityDuration: _maturityDuration,
-          terms: maturityTerm,
+          interestRate: _interestMapping[assetType]!,
+          maturityDuration: isFlexi ? 12 : _maturityDuration,
+          terms: isFlexi ? 1 : maturityTerm,
         )
         .toInt();
 
@@ -514,7 +529,7 @@ class LendboxPaymentSummaryHeader extends StatelessWidget {
               ),
               const Spacer(),
               _AmountSectionView(
-                header: 'Maturity Amount',
+                header: isFlexi ? 'Savings (after 1 Year)' : 'Maturity Amount',
                 sub: '₹${formatter.format(amt)}+',
                 subTail: "₹${formatter.format(interest)}",
               ),
@@ -785,7 +800,7 @@ class _MaturityPrefModalSheetState extends State<MaturityPrefModalSheet> {
                             hasConfirmed: hasConfirmed ?? false);
                     if (res.isSuccess()) {
                       unawaited(AppState.backButtonDispatcher!.didPopRoute());
-                      locator<LendboxMaturityService>().init();
+                      await locator<LendboxMaturityService>().init();
                       BaseUtil.showPositiveAlert(
                           "You preference recorded successfully",
                           "We'll contact you if required");
