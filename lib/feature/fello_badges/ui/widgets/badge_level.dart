@@ -31,6 +31,7 @@ class _BadgeLevelState extends State<BadgeLevel> {
     const Color(0xFF394B71),
     UiConstants.kAutoSaveOnboardingTextColor,
   ];
+  late final PageController _pageController;
 
   double _getIndex() {
     if (widget.currentLevel case 0 || 1) {
@@ -40,11 +41,10 @@ class _BadgeLevelState extends State<BadgeLevel> {
     return widget.currentLevel.toDouble();
   }
 
-  final ScrollController _scrollController = ScrollController();
-
   @override
   void initState() {
     super.initState();
+    _pageController = PageController(viewportFraction: .90);
     WidgetsBinding.instance.addPostFrameCallback(
       (timeStamp) {
         Future.delayed(
@@ -57,9 +57,7 @@ class _BadgeLevelState extends State<BadgeLevel> {
               alignment: 0.8,
             );
 
-            _scrollController.animateTo(
-                (_getIndex() * SizeConfig.screenWidth!) -
-                    SizeConfig.pageHorizontalMargins,
+            _pageController.animateTo(_getIndex(),
                 duration: const Duration(milliseconds: 800),
                 curve: Curves.easeInOut);
           },
@@ -70,29 +68,28 @@ class _BadgeLevelState extends State<BadgeLevel> {
 
   @override
   void dispose() {
-    _scrollController.dispose();
+    _pageController.dispose();
     super.dispose();
   }
 
   @override
   Widget build(BuildContext context) {
     return SizedBox(
-      width: SizeConfig.screenWidth!,
-      height: SizeConfig.screenHeight! * 0.785,
-      child: ListView.builder(
-        controller: _scrollController,
-        padding: EdgeInsets.symmetric(
-          horizontal: SizeConfig.pageHorizontalMargins,
-          vertical: SizeConfig.padding2,
-        ),
-        itemCount: 3,
+      height: SizeConfig.screenHeight! * 0.8,
+      child: PageView.builder(
+        controller: _pageController,
+        itemCount: widget.levelsData.length,
         scrollDirection: Axis.horizontal,
-        shrinkWrap: true,
         itemBuilder: (context, index) {
-          return BadgeDetailsContainer(
-            index: index,
-            backgroundColor: colors[index],
-            levelDetails: widget.levelsData[index],
+          return Padding(
+            padding: EdgeInsets.symmetric(
+              vertical: SizeConfig.padding8,
+            ),
+            child: BadgeDetailsContainer(
+              index: index,
+              backgroundColor: colors[index],
+              levelDetails: widget.levelsData[index],
+            ),
           );
         },
       ),
@@ -131,14 +128,7 @@ class BadgeDetailsContainer extends StatelessWidget {
   ];
 
   String _getBadgeHeader() {
-    final level = switch (levelDetails.level) {
-      SuperFelloLevel.BEGINNER => 'Beginner',
-      SuperFelloLevel.INTERMEDIATE => 'Intermediate',
-      SuperFelloLevel.SUPER_FELLO => 'Super',
-      _ => ''
-    };
-
-    return 'Unlock $level Benefits';
+    return 'Unlock Benefits of this level';
   }
 
   @override

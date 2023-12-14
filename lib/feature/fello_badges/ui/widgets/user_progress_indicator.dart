@@ -20,6 +20,20 @@ class _UserProgressIndicatorState extends State<UserProgressIndicator> {
     SuperFelloLevel.SUPER_FELLO,
   ];
 
+  double _getProgress(int index) {
+    // If level is current.
+    if (_levels[index].level <= widget.level.level) {
+      return 1;
+    }
+
+    // For next level.
+    if (_levels[index].level == widget.level.level + 1) {
+      return .1;
+    }
+
+    return 0;
+  }
+
   @override
   Widget build(BuildContext context) {
     return Stack(
@@ -39,11 +53,7 @@ class _UserProgressIndicatorState extends State<UserProgressIndicator> {
                   for (var i = 0; i < _levels.length; i++) ...[
                     Expanded(
                       child: _Indicator(
-                        progress: _levels[i].level <= widget.level.level
-                            ? 1
-                            : (_levels[i].level == widget.level.level + 1)
-                                ? .1
-                                : 0,
+                        progress: _getProgress(i),
                         color: _levels[i].getLevelData.borderColor,
                       ),
                     ),
