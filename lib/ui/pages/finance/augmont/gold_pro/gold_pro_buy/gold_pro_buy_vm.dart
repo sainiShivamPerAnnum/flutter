@@ -49,6 +49,8 @@ class GoldProBuyViewModel extends BaseViewModel
           .toDouble()
           .toString());
 
+  bool get isGoldBuyInProgress => _txnService.isGoldBuyInProgress;
+
   double minimumGrams =
       AppConfig.getValue(AppConfigKey.goldProInvestmentChips)[0].toDouble();
   double maximumGrams =

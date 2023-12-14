@@ -1151,12 +1151,12 @@ class _GoldProBreakdownViewState extends State<GoldProBreakdownView> {
             ),
             if (widget.showPaymentOption) ...[
               // Intent.
+              const Divider(
+                color: UiConstants.grey2,
+                height: 40,
+                thickness: .5,
+              ),
               if (widget.model.isIntentFlow && !_isNetbankingMandatory) ...[
-                const Divider(
-                  color: UiConstants.grey2,
-                  height: 40,
-                  thickness: .5,
-                ),
                 UpiAppsGridView(
                   apps: widget.model.appMetaList,
                   onTap: (i) {
@@ -1180,9 +1180,12 @@ class _GoldProBreakdownViewState extends State<GoldProBreakdownView> {
                 AppPositiveBtn(
                   width: SizeConfig.screenWidth!,
                   onPressed: () {
+                    if (widget.model.isGoldBuyInProgress) {
+                      return;
+                    }
                     FocusScope.of(context).unfocus();
-                    widget.model.initiateGoldProTransaction();
                     AppState.backButtonDispatcher?.didPopRoute();
+                    widget.model.initiateGoldProTransaction();
                   },
                   btnText: 'Save'.toUpperCase(),
                 ),
