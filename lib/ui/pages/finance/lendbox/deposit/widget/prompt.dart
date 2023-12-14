@@ -441,18 +441,16 @@ class LendboxPaymentSummaryHeader extends StatelessWidget {
   final bool showMaturity;
   final int maturityTerm;
   final LendboxBuyViewModel model;
-
   final int _maturityDuration;
+
+  static final _isOldUser = locator<UserService>().userSegments.contains(
+        Constants.US_FLO_OLD,
+      );
 
   static final _interestMapping = {
     Constants.ASSET_TYPE_FLO_FIXED_6: 12,
     Constants.ASSET_TYPE_FLO_FIXED_3: 10,
-    if (locator<UserService>().userSegments.contains(
-          Constants.US_FLO_OLD,
-        ))
-      Constants.ASSET_TYPE_FLO_FELXI: 10
-    else
-      Constants.ASSET_TYPE_FLO_FELXI: 8,
+    Constants.ASSET_TYPE_FLO_FELXI: _isOldUser ? 10 : 8,
   };
 
   String _getTitle() {
