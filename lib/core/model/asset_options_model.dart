@@ -20,8 +20,8 @@ class AssetOptionsModel {
 
 class Data {
   const Data({
-    this.banner,
     required this.userOptions,
+    this.banner,
     this.maturityAt,
     this.intent = false,
     this.minAmount = 0,
