@@ -374,8 +374,6 @@ class Assets {
   static const String ticket_icon = 'assets/svg/ticket_icon.svg';
   static const String tambolaPrizeAsset = 'assets/svg/tambola_prize_asset.svg';
   static const String one_cr_bg = 'assets/svg/1_cr.svg';
-  static const String bottomBannerLottie =
-      'https://d37gtxigg82zaw.cloudfront.net/scroll-animation.json';
   static const String tambolaTopBannerLottie =
       '${assetBaseUrl}lotties/tambola_animation.json';
   static const String tambolaTopBannerTharLottie =

@@ -50,7 +50,7 @@ class ProgressBottomSheet extends StatelessWidget {
             height: SizeConfig.padding24,
           ),
           SvgPicture.network(
-            badgeInformation.badgeurl,
+            badgeInformation.badgeUrl,
             width: SizeConfig.padding132,
             height: SizeConfig.padding132,
           ),

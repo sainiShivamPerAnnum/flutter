@@ -3,7 +3,6 @@ import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/extensions/rich_text_extension.dart';
-import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -40,7 +39,6 @@ class SaveCustomCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    S locale = S();
     return GestureDetector(
       onTap: onCardTap,
       child: Container(

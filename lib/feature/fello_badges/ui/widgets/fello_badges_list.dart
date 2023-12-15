@@ -48,7 +48,7 @@ class FelloBadgeList extends StatelessWidget {
                   mainAxisSize: MainAxisSize.min,
                   children: [
                     SvgPicture.network(
-                      badge.badgeurl,
+                      badge.badgeUrl,
                       height: SizeConfig.padding80,
                       width: SizeConfig.padding68,
                     ),

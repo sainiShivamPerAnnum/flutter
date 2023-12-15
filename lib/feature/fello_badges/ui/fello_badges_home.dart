@@ -21,7 +21,6 @@ import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:lottie/lottie.dart';
 import 'package:provider/provider.dart';
 import 'package:tuple/tuple.dart';
 
@@ -125,7 +124,7 @@ class FelloBadgeSuccessScreen extends StatelessWidget {
       child: Column(
         children: [
           SizedBox(
-            height: SizeConfig.padding32,
+            height: SizeConfig.padding20,
           ),
           SvgPicture.network(
             'https://fello-dev-uploads.s3.ap-south-1.amazonaws.com/super_fello_title.svg',
@@ -137,7 +136,7 @@ class FelloBadgeSuccessScreen extends StatelessWidget {
             level: state.userLevel,
           ),
           SizedBox(
-            height: SizeConfig.padding12,
+            height: SizeConfig.padding6,
           ),
           Padding(
             padding: EdgeInsets.symmetric(
@@ -154,7 +153,7 @@ class FelloBadgeSuccessScreen extends StatelessWidget {
             level: state.userLevel,
           ),
           SizedBox(
-            height: SizeConfig.padding34,
+            height: SizeConfig.padding24,
           ),
 
           BadgeLevel(
@@ -193,16 +192,6 @@ class FelloBadgeSuccessScreen extends StatelessWidget {
                 badgesLeaderBoard: leaderBoardModel,
               ),
             ),
-
-          SizedBox(
-            height: SizeConfig.padding28,
-          ),
-          LottieBuilder.network(
-            Assets.bottomBannerLottie,
-          ),
-          SizedBox(
-            height: SizeConfig.padding8,
-          ),
         ],
       ),
     );

@@ -58,7 +58,7 @@ Map<String, dynamic> _$LevelBenefitToJson(LevelBenefit instance) =>
 Level _$LevelFromJson(Map<String, dynamic> json) => Level(
       benefits: LevelBenefit.fromJson(json['benefits'] as Map<String, dynamic>),
       level: $enumDecode(_$SuperFelloLevelEnumMap, json['level']),
-      badgeurl: json['badgeurl'] as String? ?? '',
+      badgeUrl: json['badgeUrl'] as String? ?? '',
       lvlData: (json['lvl_data'] as List<dynamic>?)
               ?.map((e) =>
                   BadgeLevelInformation.fromJson(e as Map<String, dynamic>))
@@ -70,7 +70,7 @@ Level _$LevelFromJson(Map<String, dynamic> json) => Level(
     );
 
 Map<String, dynamic> _$LevelToJson(Level instance) => <String, dynamic>{
-      'badgeurl': instance.badgeurl,
+      'badgeUrl': instance.badgeUrl,
       'benefits': instance.benefits.toJson(),
       'lvl_data': instance.lvlData.map((e) => e.toJson()).toList(),
       'isCompleted': instance.isCompleted,
@@ -92,7 +92,7 @@ BadgeLevelInformation _$BadgeLevelInformationFromJson(
       achieve: json['achieve'] as num? ?? 0.0,
       title: json['title'] as String? ?? '',
       barHeading: json['barHeading'] as String? ?? '',
-      badgeurl: json['badgeurl'] as String? ?? '',
+      badgeUrl: json['badgeUrl'] as String? ?? '',
       referText: json['referText'] as String? ?? '',
       bottomSheetText: json['bottomSheetText'] as String? ?? '',
       bottomSheetCta: json['bottomSheetCta'] as String? ?? '',
@@ -109,7 +109,7 @@ Map<String, dynamic> _$BadgeLevelInformationToJson(
       'achieve': instance.achieve,
       'title': instance.title,
       'barHeading': instance.barHeading,
-      'badgeurl': instance.badgeurl,
+      'badgeUrl': instance.badgeUrl,
       'referText': instance.referText,
       'bottomSheetText': instance.bottomSheetText,
       'bottomSheetCta': instance.bottomSheetCta,

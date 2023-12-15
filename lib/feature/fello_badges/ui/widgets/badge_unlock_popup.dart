@@ -81,7 +81,7 @@ class BadgeUnlockDialog extends StatelessWidget {
                     height: SizeConfig.padding20,
                   ),
                   SvgPicture.network(
-                    badgeInformation.badgeurl,
+                    badgeInformation.badgeUrl,
                     height: SizeConfig.padding132,
                     width: SizeConfig.padding132,
                   ),

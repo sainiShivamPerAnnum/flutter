@@ -4,7 +4,7 @@ import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 
 class FelloBadgesBackground extends StatelessWidget {
-  const FelloBadgesBackground({super.key, required this.child});
+  const FelloBadgesBackground({required this.child, super.key});
 
   final Widget child;
 
@@ -14,7 +14,6 @@ class FelloBadgesBackground extends StatelessWidget {
       height: SizeConfig.screenHeight,
       decoration: const BoxDecoration(
         color: Color(0xFF191919),
-        // backgroundBlendMode: BlendMode.darken,
       ),
       child: Stack(
         children: [
@@ -23,42 +22,31 @@ class FelloBadgesBackground extends StatelessWidget {
               SizedBox(
                 height: SizeConfig.fToolBarHeight * 1,
               ),
-              Row(
-                children: [
-                  Flexible(
-                    child: Transform.rotate(
-                      angle: -pi / 9,
-                      child: Transform.scale(
-                        scale: 2,
-                        child: Container(
+              Transform.translate(
+                offset: const Offset(-60, 0),
+                child: Transform.scale(
+                  scale: 2,
+                  child: Transform.rotate(
+                    angle: -(pi / 9.5),
+                    child: Column(
+                      children: [
+                        Container(
                           height: 30,
                           width: SizeConfig.screenWidth! * 2,
-                          color: const Color(0xff023C40),
+                          color: const Color(0xff023C40).withOpacity(.3),
                         ),
-                      ),
-                    ),
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: SizeConfig.padding36,
-              ),
-              Row(
-                children: [
-                  Expanded(
-                    child: Transform.rotate(
-                      angle: -pi / 9,
-                      child: Transform.scale(
-                        scale: 2,
-                        child: Container(
-                          height: SizeConfig.padding6,
+                        SizedBox(
+                          height: SizeConfig.padding8,
+                        ),
+                        Container(
+                          height: 10,
                           width: SizeConfig.screenWidth! * 2,
-                          color: const Color(0xff023C40),
+                          color: const Color(0xff023C40).withOpacity(.3),
                         ),
-                      ),
+                      ],
                     ),
                   ),
-                ],
+                ),
               )
             ],
           ),

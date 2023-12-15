@@ -9,7 +9,6 @@ import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
-import 'package:provider/provider.dart';
 
 class UserBadgeContainer extends StatelessWidget {
   const UserBadgeContainer({
@@ -28,8 +27,8 @@ class UserBadgeContainer extends StatelessWidget {
     final data = level.getLevelData;
 
     return SizedBox(
-      width: SizeConfig.padding132,
-      height: SizeConfig.padding132,
+      width: 132,
+      height: 132,
       child: Stack(
         children: [
           Positioned(
@@ -240,7 +239,7 @@ class UserBadgeContainer extends StatelessWidget {
           if (data.url.isNotEmpty)
             Positioned(
               right: 30,
-              bottom: 20,
+              bottom: 30,
               child: SvgPicture.network(
                 data.url,
                 height: SizeConfig.padding34,
@@ -248,28 +247,23 @@ class UserBadgeContainer extends StatelessWidget {
                 fit: BoxFit.fill,
               ),
             ),
-          Consumer<UserService>(builder: (context, service, _) {
-            if (showImagePickIcon && service.myUserDpUrl!.isEmpty) {
-              return Positioned(
-                right: 30,
-                top: 20,
-                child: InkWell(
-                  onTap: onPickImage,
-                  child: const CircleAvatar(
-                    radius: 12,
-                    backgroundColor: Colors.white,
-                    child: Icon(
-                      Icons.add_outlined,
-                      size: 15,
-                      color: UiConstants.grey4,
-                    ),
+          if (showImagePickIcon)
+            Positioned(
+              right: 30,
+              top: 20,
+              child: InkWell(
+                onTap: onPickImage,
+                child: const CircleAvatar(
+                  radius: 12,
+                  backgroundColor: Colors.white,
+                  child: Icon(
+                    Icons.add_outlined,
+                    size: 15,
+                    color: UiConstants.grey4,
                   ),
                 ),
-              );
-            }
-
-            return const SizedBox.shrink();
-          })
+              ),
+            )
         ],
       ),
     );

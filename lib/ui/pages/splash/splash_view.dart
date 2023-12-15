@@ -24,7 +24,7 @@ class _LauncherViewState extends State<LauncherView>
     with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
-    SizeConfig().init(context);
+    SizeConfig.init(context);
 
     S? locale = S.of(context);
     return Consumer<ConnectivityService>(

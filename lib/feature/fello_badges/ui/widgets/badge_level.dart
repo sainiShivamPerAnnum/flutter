@@ -1,5 +1,6 @@
 import 'dart:math';
 
+import 'package:carousel_slider/carousel_slider.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/fello_badges_model.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
@@ -31,20 +32,20 @@ class _BadgeLevelState extends State<BadgeLevel> {
     const Color(0xFF394B71),
     UiConstants.kAutoSaveOnboardingTextColor,
   ];
-  late final PageController _pageController;
+  late final CarouselController _carouselController;
 
-  double _getIndex() {
-    if (widget.currentLevel case 0 || 1) {
+  int _getIndex() {
+    if (widget.currentLevel < 1) {
       return 0;
     }
 
-    return widget.currentLevel.toDouble();
+    return widget.currentLevel;
   }
 
   @override
   void initState() {
     super.initState();
-    _pageController = PageController(viewportFraction: .90);
+    _carouselController = CarouselController();
     WidgetsBinding.instance.addPostFrameCallback(
       (timeStamp) {
         Future.delayed(
@@ -57,9 +58,11 @@ class _BadgeLevelState extends State<BadgeLevel> {
               alignment: 0.8,
             );
 
-            _pageController.animateTo(_getIndex(),
-                duration: const Duration(milliseconds: 800),
-                curve: Curves.easeInOut);
+            _carouselController.animateToPage(
+              _getIndex(),
+              duration: const Duration(milliseconds: 800),
+              curve: Curves.easeInOut,
+            );
           },
         );
       },
@@ -67,23 +70,21 @@ class _BadgeLevelState extends State<BadgeLevel> {
   }
 
   @override
-  void dispose() {
-    _pageController.dispose();
-    super.dispose();
-  }
-
-  @override
   Widget build(BuildContext context) {
     return SizedBox(
-      height: SizeConfig.screenHeight! * 0.8,
-      child: PageView.builder(
-        controller: _pageController,
+      child: CarouselSlider.builder(
+        options: CarouselOptions(
+          viewportFraction: .91,
+          aspectRatio: .55,
+          enableInfiniteScroll: false,
+        ),
+        carouselController: _carouselController,
         itemCount: widget.levelsData.length,
-        scrollDirection: Axis.horizontal,
-        itemBuilder: (context, index) {
+        itemBuilder: (context, index, reason) {
           return Padding(
             padding: EdgeInsets.symmetric(
               vertical: SizeConfig.padding8,
+              horizontal: SizeConfig.padding12,
             ),
             child: BadgeDetailsContainer(
               index: index,
@@ -131,14 +132,19 @@ class BadgeDetailsContainer extends StatelessWidget {
     return 'Unlock Benefits of this level';
   }
 
+  String _lockLabel() {
+    final level = switch (levelDetails.level) {
+      SuperFelloLevel.INTERMEDIATE => 'Beginner Level',
+      SuperFelloLevel.SUPER_FELLO => 'Intermediate Level',
+      _ => ''
+    };
+
+    return 'Complete tasks in $level to unlock this level';
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: SizeConfig.screenWidth! * 0.864,
-      constraints: BoxConstraints(
-        minHeight: SizeConfig.screenHeight! * 0.72,
-      ),
-      margin: EdgeInsets.only(right: index == 2 ? 0 : SizeConfig.padding24),
       decoration: ShapeDecoration(
         color: backgroundColor,
         shape: RoundedRectangleBorder(
@@ -158,285 +164,295 @@ class BadgeDetailsContainer extends StatelessWidget {
           Positioned.fill(
             child: buildBackgroundStack(),
           ),
-          Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.padding20,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      height: SizeConfig.padding20,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Expanded(
-                          child: Text(
-                            levelDetails.levelTitle,
-                            style: TextStyles.rajdhaniB.title2
-                                .colour(
-                                  index == 2
-                                      ? const Color(0xFFFFD979)
-                                      : Colors.white,
-                                )
-                                .copyWith(
-                                  height: 1.27,
-                                ),
-                          ),
-                        ),
-                        SvgPicture.network(
-                          levelDetails.badgeurl,
-                          height: SizeConfig.padding78,
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: SizeConfig.padding10,
-                    ),
-                    (levelDetails.isCompleted)
-                        ? Container(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: SizeConfig.padding8,
-                                vertical: SizeConfig.padding4),
-                            decoration: ShapeDecoration(
-                              color: const Color(0xFFCEF8F5),
-                              shape: RoundedRectangleBorder(
-                                borderRadius: BorderRadius.circular(9),
-                              ),
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Text(
-                                  'UNLOCKED',
-                                  textAlign: TextAlign.right,
-                                  style: TextStyles.sourceSansB.body4.colour(
-                                    Colors.black,
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: SizeConfig.padding4,
-                                ),
-                                Icon(
-                                  Icons.done,
-                                  size: SizeConfig.padding14,
-                                  color: Colors.black,
-                                ),
-                              ],
-                            ),
-                          )
-                        : Container(
-                            width: SizeConfig.padding86,
-                            padding: EdgeInsets.symmetric(
-                                horizontal: SizeConfig.padding8,
-                                vertical: SizeConfig.padding4),
-                            decoration: ShapeDecoration(
-                              color: index == 0
-                                  ? const Color(0xFFEFD7D2)
-                                  : index == 1
-                                      ? const Color(0xFFC9E4F0)
-                                      : const Color(0xFFFFE9B1),
-                              shape: RoundedRectangleBorder(
-                                side: const BorderSide(
-                                    width: 1, color: Color(0xFF232326)),
-                                borderRadius: BorderRadius.circular(9),
-                              ),
-                            ),
-                            child: Row(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                Icon(
-                                  Icons.lock,
-                                  size: SizeConfig.padding14,
-                                  color: Colors.black,
-                                ),
-                                SizedBox(
-                                  width: SizeConfig.padding4,
-                                ),
-                                Text(
-                                  'LOCKED',
-                                  textAlign: TextAlign.right,
-                                  style: TextStyles.sourceSansB.body4.colour(
-                                    Colors.black,
-                                  ),
-                                )
-                              ],
-                            ),
-                          ),
-                    SizedBox(
-                      height: SizeConfig.padding16,
-                    ),
-                    Container(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: SizeConfig.padding12,
-                          vertical: SizeConfig.padding12),
-                      decoration: ShapeDecoration(
-                        color: benefitContainerColor[index],
-                        shape: RoundedRectangleBorder(
-                          borderRadius: BorderRadius.circular(12),
-                        ),
-                      ),
-                      child: Column(
-                        mainAxisSize: MainAxisSize.min,
-                        children: [
-                          Row(
-                            children: [
-                              SvgPicture.asset(
-                                'assets/svg/gift_icon.svg',
-                                height: SizeConfig.padding26,
-                              ),
-                              SizedBox(
-                                width: SizeConfig.padding8,
-                              ),
-                              Text(
-                                'Benefits you get',
-                                textAlign: TextAlign.right,
-                                style: TextStyles.sourceSansSB.body1.colour(
-                                  titleColor[index],
-                                ),
-                              )
-                            ],
-                          ),
-                          SizedBox(
-                            height: SizeConfig.padding8,
-                          ),
-                          for (var i = 0;
-                              i < (levelDetails.benefits.list.length);
-                              i++)
-                            Row(
-                              children: [
-                                SizedBox(
-                                  width: SizeConfig.padding14,
-                                ),
-                                Container(
-                                  width: SizeConfig.padding6,
-                                  height: SizeConfig.padding6,
-                                  decoration: const ShapeDecoration(
-                                    color: Colors.white,
-                                    shape: CircleBorder(),
-                                  ),
-                                ),
-                                SizedBox(
-                                  width: SizeConfig.padding14,
-                                ),
-                                Text(
-                                  levelDetails.benefits.list[index],
-                                  style: TextStyles.rajdhaniSB.body2.colour(
-                                    Colors.white,
-                                  ),
-                                )
-                              ],
-                            )
-                        ],
-                      ),
-                    ),
-                    SizedBox(
-                      height: SizeConfig.padding16,
-                    ),
-                    Text(
-                      _getBadgeHeader(),
-                      style: TextStyles.sourceSansSB.body2.colour(
-                        titleColor[index],
-                      ),
-                    ),
-                    Text(
-                      levelDetails.isCompleted
-                          ? "Completed these tasks"
-                          : 'Get these badges to unlock this level',
-                      style: TextStyles.sourceSans.body3.colour(
-                        Colors.white,
-                      ),
-                    ),
-                    SizedBox(
-                      height: SizeConfig.padding12,
-                    ),
-                  ],
-                ),
-              ),
-              Stack(
-                children: [
-                  Padding(
+          Positioned.fill(
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Expanded(
+                  child: Padding(
                     padding: EdgeInsets.symmetric(
                       horizontal: SizeConfig.padding20,
                     ),
-                    child: SizedBox(
-                      child: ListView.separated(
-                        padding: const EdgeInsets.only(bottom: 18),
-                        itemCount: levelDetails.lvlData.length,
-                        shrinkWrap: true,
-                        physics: const NeverScrollableScrollPhysics(),
-                        itemBuilder: (context, i) {
-                          final data = levelDetails.lvlData[i];
-
-                          return GestureDetector(
-                            onTap: () {
-                              BaseUtil.openModalBottomSheet(
-                                addToScreenStack: true,
-                                enableDrag: false,
-                                hapticVibrate: true,
-                                isBarrierDismissible: true,
-                                backgroundColor: Colors.transparent,
-                                isScrollControlled: true,
-                                content: ProgressBottomSheet(
-                                  badgeInformation: data,
-                                ),
-                              );
-                            },
-                            child: BadgeProgressWidget(
-                              badgeInformation: data,
-                              progressColor: index == 0
-                                  ? const Color(0xFFFFCCBF)
-                                  : const Color(0xFFA5E4FF),
-                            ),
-                          );
-                        },
-                        separatorBuilder: (context, i) => SizedBox(
-                          height: SizeConfig.padding12,
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        SizedBox(
+                          height: SizeConfig.padding20,
                         ),
-                      ),
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            Expanded(
+                              child: Text(
+                                levelDetails.levelTitle,
+                                style: TextStyles.rajdhaniB.title2
+                                    .colour(
+                                      index == 2
+                                          ? const Color(0xFFFFD979)
+                                          : Colors.white,
+                                    )
+                                    .copyWith(
+                                      height: 1.27,
+                                    ),
+                              ),
+                            ),
+                            SvgPicture.network(
+                              levelDetails.badgeUrl,
+                              height: SizeConfig.padding78,
+                            ),
+                          ],
+                        ),
+                        SizedBox(
+                          height: SizeConfig.padding10,
+                        ),
+                        (levelDetails.isCompleted)
+                            ? Container(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: SizeConfig.padding8,
+                                    vertical: SizeConfig.padding4),
+                                decoration: ShapeDecoration(
+                                  color: const Color(0xFFCEF8F5),
+                                  shape: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(9),
+                                  ),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Text(
+                                      'UNLOCKED',
+                                      textAlign: TextAlign.right,
+                                      style:
+                                          TextStyles.sourceSansB.body4.colour(
+                                        Colors.black,
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: SizeConfig.padding4,
+                                    ),
+                                    Icon(
+                                      Icons.done,
+                                      size: SizeConfig.padding14,
+                                      color: Colors.black,
+                                    ),
+                                  ],
+                                ),
+                              )
+                            : Container(
+                                width: SizeConfig.padding86,
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: SizeConfig.padding8,
+                                    vertical: SizeConfig.padding4),
+                                decoration: ShapeDecoration(
+                                  color: index == 0
+                                      ? const Color(0xFFEFD7D2)
+                                      : index == 1
+                                          ? const Color(0xFFC9E4F0)
+                                          : const Color(0xFFFFE9B1),
+                                  shape: RoundedRectangleBorder(
+                                    side: const BorderSide(
+                                        width: 1, color: Color(0xFF232326)),
+                                    borderRadius: BorderRadius.circular(9),
+                                  ),
+                                ),
+                                child: Row(
+                                  mainAxisSize: MainAxisSize.min,
+                                  children: [
+                                    Icon(
+                                      Icons.lock,
+                                      size: SizeConfig.padding14,
+                                      color: Colors.black,
+                                    ),
+                                    SizedBox(
+                                      width: SizeConfig.padding4,
+                                    ),
+                                    Text(
+                                      'LOCKED',
+                                      textAlign: TextAlign.right,
+                                      style:
+                                          TextStyles.sourceSansB.body4.colour(
+                                        Colors.black,
+                                      ),
+                                    )
+                                  ],
+                                ),
+                              ),
+                        SizedBox(
+                          height: SizeConfig.padding16,
+                        ),
+                        Container(
+                          padding: EdgeInsets.symmetric(
+                              horizontal: SizeConfig.padding12,
+                              vertical: SizeConfig.padding12),
+                          decoration: ShapeDecoration(
+                            color: benefitContainerColor[index],
+                            shape: RoundedRectangleBorder(
+                              borderRadius: BorderRadius.circular(12),
+                            ),
+                          ),
+                          child: Column(
+                            mainAxisSize: MainAxisSize.min,
+                            children: [
+                              Row(
+                                children: [
+                                  SvgPicture.asset(
+                                    'assets/svg/gift_icon.svg',
+                                    height: SizeConfig.padding26,
+                                  ),
+                                  SizedBox(
+                                    width: SizeConfig.padding8,
+                                  ),
+                                  Text(
+                                    'Benefits you get',
+                                    textAlign: TextAlign.right,
+                                    style: TextStyles.sourceSansSB.body1.colour(
+                                      titleColor[index],
+                                    ),
+                                  )
+                                ],
+                              ),
+                              SizedBox(
+                                height: SizeConfig.padding8,
+                              ),
+                              for (var i = 0;
+                                  i < (levelDetails.benefits.list.length);
+                                  i++)
+                                Row(
+                                  children: [
+                                    SizedBox(
+                                      width: SizeConfig.padding14,
+                                    ),
+                                    Container(
+                                      width: SizeConfig.padding6,
+                                      height: SizeConfig.padding6,
+                                      decoration: const ShapeDecoration(
+                                        color: Colors.white,
+                                        shape: CircleBorder(),
+                                      ),
+                                    ),
+                                    SizedBox(
+                                      width: SizeConfig.padding14,
+                                    ),
+                                    Text(
+                                      levelDetails.benefits.list[index],
+                                      style: TextStyles.rajdhaniSB.body2.colour(
+                                        Colors.white,
+                                      ),
+                                    )
+                                  ],
+                                )
+                            ],
+                          ),
+                        ),
+                        SizedBox(
+                          height: SizeConfig.padding16,
+                        ),
+                        Text(
+                          _getBadgeHeader(),
+                          style: TextStyles.sourceSansSB.body2.colour(
+                            titleColor[index],
+                          ),
+                        ),
+                        Text(
+                          levelDetails.isCompleted
+                              ? "Completed these tasks"
+                              : 'Get these badges to unlock this level',
+                          style: TextStyles.sourceSans.body3.colour(
+                            Colors.white,
+                          ),
+                        ),
+                        SizedBox(
+                          height: SizeConfig.padding8,
+                        )
+                      ],
                     ),
                   ),
-                  if (!levelDetails.levelUnlocked)
-                    Positioned.fill(
-                      child: Container(
-                        decoration: BoxDecoration(
-                          color: Colors.black.withOpacity(.70),
-                          borderRadius: BorderRadius.vertical(
-                            bottom: Radius.circular(
-                              SizeConfig.roundness16,
-                            ),
-                          ),
-                        ),
-                        child: Align(
-                          child: Padding(
-                            padding: EdgeInsets.symmetric(
-                              horizontal: SizeConfig.padding60,
-                            ),
-                            child: Column(
-                              mainAxisSize: MainAxisSize.min,
-                              children: [
-                                const AppImage(Assets.lock),
-                                SizedBox(
-                                  height: SizeConfig.padding16,
-                                ),
-                                Text(
-                                  'Complete tasks in Beginner Level to unlock this level',
-                                  style: TextStyles.sourceSansSB.body1,
-                                  textAlign: TextAlign.center,
-                                )
-                              ],
-                            ),
+                ),
+                Stack(
+                  children: [
+                    Padding(
+                      padding: EdgeInsets.fromLTRB(
+                        SizeConfig.padding20,
+                        SizeConfig.padding16,
+                        SizeConfig.padding20,
+                        0,
+                      ),
+                      child: SizedBox(
+                        child: ListView.separated(
+                          padding: const EdgeInsets.only(bottom: 18),
+                          itemCount: levelDetails.lvlData.length,
+                          shrinkWrap: true,
+                          physics: const NeverScrollableScrollPhysics(),
+                          itemBuilder: (context, i) {
+                            final data = levelDetails.lvlData[i];
+
+                            return GestureDetector(
+                              onTap: () {
+                                BaseUtil.openModalBottomSheet(
+                                  addToScreenStack: true,
+                                  enableDrag: false,
+                                  hapticVibrate: true,
+                                  isBarrierDismissible: true,
+                                  backgroundColor: Colors.transparent,
+                                  isScrollControlled: true,
+                                  content: ProgressBottomSheet(
+                                    badgeInformation: data,
+                                  ),
+                                );
+                              },
+                              child: BadgeProgressWidget(
+                                badgeInformation: data,
+                                progressColor: index == 0
+                                    ? const Color(0xFFFFCCBF)
+                                    : const Color(0xFFA5E4FF),
+                              ),
+                            );
+                          },
+                          separatorBuilder: (context, i) => SizedBox(
+                            height: SizeConfig.padding12,
                           ),
                         ),
                       ),
                     ),
-                ],
-              )
-            ],
+                    if (!levelDetails.levelUnlocked)
+                      Positioned.fill(
+                        child: Container(
+                          decoration: BoxDecoration(
+                            color: Colors.black.withOpacity(.70),
+                            borderRadius: BorderRadius.vertical(
+                              bottom: Radius.circular(
+                                SizeConfig.roundness16,
+                              ),
+                            ),
+                          ),
+                          child: Align(
+                            child: Padding(
+                              padding: EdgeInsets.symmetric(
+                                horizontal: SizeConfig.padding60,
+                              ),
+                              child: Column(
+                                mainAxisSize: MainAxisSize.min,
+                                children: [
+                                  const AppImage(Assets.lock),
+                                  SizedBox(
+                                    height: SizeConfig.padding16,
+                                  ),
+                                  Text(
+                                    _lockLabel(),
+                                    style: TextStyles.sourceSansSB.body1,
+                                    textAlign: TextAlign.center,
+                                  )
+                                ],
+                              ),
+                            ),
+                          ),
+                        ),
+                      ),
+                  ],
+                )
+              ],
+            ),
           )
         ],
       ),
@@ -509,7 +525,7 @@ class BadgeProgressWidget extends StatelessWidget {
         mainAxisSize: MainAxisSize.max,
         children: [
           SvgPicture.network(
-            badgeInformation.badgeurl,
+            badgeInformation.badgeUrl,
             height: SizeConfig.padding56,
             width: SizeConfig.padding50,
             fit: BoxFit.fill,
@@ -594,5 +610,57 @@ class BadgeProgressWidget extends StatelessWidget {
         ],
       ),
     );
+  }
+}
+
+class GradientBorder extends CustomPainter {
+  final AnimationController gradientController;
+  final bool isVerticalView;
+  final double borderRadius;
+
+  const GradientBorder({
+    required this.gradientController,
+    required this.isVerticalView,
+    required this.borderRadius,
+  }) : super(repaint: gradientController);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final rect = Offset.zero & size;
+    const strokeWidth = 1.0;
+    final gradientColors = [
+      Colors.black26,
+      isVerticalView ? Colors.black26 : Colors.grey,
+      Colors.black26,
+    ];
+
+    // Draw the outline border with sweep gradient
+    final gradient = SweepGradient(
+      colors: gradientColors,
+      startAngle: 0.0,
+      endAngle: 2 * pi,
+      transform: GradientRotation(gradientController.value * 6),
+    );
+
+    final borderPaint = Paint()
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = strokeWidth;
+    final outerPath = Path.combine(
+      PathOperation.difference,
+      Path()
+        ..addRRect(
+            RRect.fromRectAndRadius(rect, Radius.circular(borderRadius))),
+      Path()
+        ..addRRect(RRect.fromRectAndRadius(
+            rect.deflate(strokeWidth / 2), Radius.circular(borderRadius))),
+    );
+
+    borderPaint.shader = gradient.createShader(rect);
+    canvas.drawPath(outerPath, borderPaint);
+  }
+
+  @override
+  bool shouldRepaint(CustomPainter oldDelegate) {
+    return false;
   }
 }

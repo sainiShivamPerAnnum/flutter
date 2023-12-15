@@ -73,7 +73,7 @@ enum SuperFelloLevel {
 
 @_serializable
 class Level {
-  final String badgeurl;
+  final String badgeUrl;
   final LevelBenefit benefits;
   @JsonKey(name: 'lvl_data')
   final List<BadgeLevelInformation> lvlData;
@@ -86,7 +86,7 @@ class Level {
   const Level({
     required this.benefits,
     required this.level,
-    this.badgeurl = '',
+    this.badgeUrl = '',
     this.lvlData = const [],
     this.isCompleted = false,
     this.levelTitle = '',
@@ -103,7 +103,7 @@ class BadgeLevelInformation {
   final num achieve;
   final String title;
   final String barHeading;
-  final String badgeurl;
+  final String badgeUrl;
   final String referText;
   final String bottomSheetText;
   final String bottomSheetCta;
@@ -115,7 +115,7 @@ class BadgeLevelInformation {
     this.achieve = 0.0,
     this.title = '',
     this.barHeading = '',
-    this.badgeurl = '',
+    this.badgeUrl = '',
     this.referText = '',
     this.bottomSheetText = '',
     this.bottomSheetCta = '',
