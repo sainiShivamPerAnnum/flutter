@@ -64,9 +64,10 @@ Level _$LevelFromJson(Map<String, dynamic> json) => Level(
                   BadgeLevelInformation.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
-      isCompleted: json['isCompleted'] as bool? ?? false,
       levelTitle: json['lvl_title'] as String? ?? '',
+      isCompleted: json['isCompleted'] as bool? ?? false,
       levelUnlocked: json['levelUnlocked'] as bool? ?? false,
+      isOnGoing: json['isOnGoing'] as bool? ?? false,
     );
 
 Map<String, dynamic> _$LevelToJson(Level instance) => <String, dynamic>{
@@ -74,6 +75,7 @@ Map<String, dynamic> _$LevelToJson(Level instance) => <String, dynamic>{
       'benefits': instance.benefits.toJson(),
       'lvl_data': instance.lvlData.map((e) => e.toJson()).toList(),
       'isCompleted': instance.isCompleted,
+      'isOnGoing': instance.isOnGoing,
       'lvl_title': instance.levelTitle,
       'level': _$SuperFelloLevelEnumMap[instance.level]!,
       'levelUnlocked': instance.levelUnlocked,

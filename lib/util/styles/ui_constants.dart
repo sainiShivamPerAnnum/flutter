@@ -238,6 +238,7 @@ class UiConstants {
   static const textGray60 = Color(0xFFA7A7A8);
   static const textGray70 = Color(0xFFBDBDBE);
 
+  static const peach1 = Color(0xFFEFD8D2);
   static const peach2 = Color(0xFFFFCCBF);
 }
 

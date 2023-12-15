@@ -77,10 +77,13 @@ class Level {
   final LevelBenefit benefits;
   @JsonKey(name: 'lvl_data')
   final List<BadgeLevelInformation> lvlData;
-  final bool isCompleted;
   @JsonKey(name: 'lvl_title')
   final String levelTitle;
   final SuperFelloLevel level;
+
+  /// TODO: can be a enum in future.
+  final bool isCompleted;
+  final bool isOnGoing;
   final bool levelUnlocked;
 
   const Level({
@@ -88,9 +91,10 @@ class Level {
     required this.level,
     this.badgeUrl = '',
     this.lvlData = const [],
-    this.isCompleted = false,
     this.levelTitle = '',
+    this.isCompleted = false,
     this.levelUnlocked = false,
+    this.isOnGoing = false,
   });
 
   factory Level.fromJson(Map<String, dynamic> json) => _$LevelFromJson(json);

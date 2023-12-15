@@ -142,6 +142,100 @@ class BadgeDetailsContainer extends StatelessWidget {
     return 'Complete tasks in $level to unlock this level';
   }
 
+  Widget _benefitStatus() {
+    if (levelDetails.isOnGoing) {
+      return Container(
+        decoration: BoxDecoration(
+          color: UiConstants.peach1,
+          borderRadius: BorderRadius.circular(9),
+          border: Border.all(
+            color: UiConstants.bg,
+          ),
+        ),
+        padding: EdgeInsets.symmetric(
+          horizontal: SizeConfig.padding8,
+          vertical: SizeConfig.padding4,
+        ),
+        child: Text(
+          'IN-PROGRESS',
+          style: TextStyles.sourceSansB.body4.colour(
+            Colors.black,
+          ),
+        ),
+      );
+    }
+
+    if (levelDetails.isCompleted) {
+      return Container(
+        padding: EdgeInsets.symmetric(
+            horizontal: SizeConfig.padding8, vertical: SizeConfig.padding4),
+        decoration: ShapeDecoration(
+          color: const Color(0xFFCEF8F5),
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(9),
+          ),
+        ),
+        child: Row(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            Text(
+              'UNLOCKED',
+              textAlign: TextAlign.right,
+              style: TextStyles.sourceSansB.body4.colour(
+                Colors.black,
+              ),
+            ),
+            SizedBox(
+              width: SizeConfig.padding4,
+            ),
+            Icon(
+              Icons.done,
+              size: SizeConfig.padding14,
+              color: Colors.black,
+            ),
+          ],
+        ),
+      );
+    }
+
+    return Container(
+      width: SizeConfig.padding86,
+      padding: EdgeInsets.symmetric(
+          horizontal: SizeConfig.padding8, vertical: SizeConfig.padding4),
+      decoration: ShapeDecoration(
+        color: index == 0
+            ? const Color(0xFFEFD7D2)
+            : index == 1
+                ? const Color(0xFFC9E4F0)
+                : const Color(0xFFFFE9B1),
+        shape: RoundedRectangleBorder(
+          side: const BorderSide(width: 1, color: Color(0xFF232326)),
+          borderRadius: BorderRadius.circular(9),
+        ),
+      ),
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Icon(
+            Icons.lock,
+            size: SizeConfig.padding14,
+            color: Colors.black,
+          ),
+          SizedBox(
+            width: SizeConfig.padding4,
+          ),
+          Text(
+            'LOCKED',
+            textAlign: TextAlign.right,
+            style: TextStyles.sourceSansB.body4.colour(
+              Colors.black,
+            ),
+          )
+        ],
+      ),
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -206,78 +300,7 @@ class BadgeDetailsContainer extends StatelessWidget {
                         SizedBox(
                           height: SizeConfig.padding10,
                         ),
-                        (levelDetails.isCompleted)
-                            ? Container(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: SizeConfig.padding8,
-                                    vertical: SizeConfig.padding4),
-                                decoration: ShapeDecoration(
-                                  color: const Color(0xFFCEF8F5),
-                                  shape: RoundedRectangleBorder(
-                                    borderRadius: BorderRadius.circular(9),
-                                  ),
-                                ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Text(
-                                      'UNLOCKED',
-                                      textAlign: TextAlign.right,
-                                      style:
-                                          TextStyles.sourceSansB.body4.colour(
-                                        Colors.black,
-                                      ),
-                                    ),
-                                    SizedBox(
-                                      width: SizeConfig.padding4,
-                                    ),
-                                    Icon(
-                                      Icons.done,
-                                      size: SizeConfig.padding14,
-                                      color: Colors.black,
-                                    ),
-                                  ],
-                                ),
-                              )
-                            : Container(
-                                width: SizeConfig.padding86,
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: SizeConfig.padding8,
-                                    vertical: SizeConfig.padding4),
-                                decoration: ShapeDecoration(
-                                  color: index == 0
-                                      ? const Color(0xFFEFD7D2)
-                                      : index == 1
-                                          ? const Color(0xFFC9E4F0)
-                                          : const Color(0xFFFFE9B1),
-                                  shape: RoundedRectangleBorder(
-                                    side: const BorderSide(
-                                        width: 1, color: Color(0xFF232326)),
-                                    borderRadius: BorderRadius.circular(9),
-                                  ),
-                                ),
-                                child: Row(
-                                  mainAxisSize: MainAxisSize.min,
-                                  children: [
-                                    Icon(
-                                      Icons.lock,
-                                      size: SizeConfig.padding14,
-                                      color: Colors.black,
-                                    ),
-                                    SizedBox(
-                                      width: SizeConfig.padding4,
-                                    ),
-                                    Text(
-                                      'LOCKED',
-                                      textAlign: TextAlign.right,
-                                      style:
-                                          TextStyles.sourceSansB.body4.colour(
-                                        Colors.black,
-                                      ),
-                                    )
-                                  ],
-                                ),
-                              ),
+                        _benefitStatus(),
                         SizedBox(
                           height: SizeConfig.padding16,
                         ),

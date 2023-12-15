@@ -55,13 +55,6 @@ class Root extends StatelessWidget {
                     children: [
                       const RootAppBar(),
                       const HeadAlerts(),
-                      // TextButton(
-                      //   onPressed: () {
-                      //     DioService dioService = DioService();
-                      //     dioService.get();
-                      //   },
-                      //   child: Text("Autosave"),
-                      // ),
                       Expanded(
                         child: RefreshIndicator(
                           triggerMode: RefreshIndicatorTriggerMode.onEdge,
