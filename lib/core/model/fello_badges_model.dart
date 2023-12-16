@@ -69,6 +69,7 @@ enum SuperFelloLevel {
   final int level;
 
   bool get isSuperFello => this == SuperFelloLevel.SUPER_FELLO;
+  bool get isNewFello => this == SuperFelloLevel.NEW_FELLO;
 }
 
 @_serializable

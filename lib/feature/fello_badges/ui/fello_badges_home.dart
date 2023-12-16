@@ -166,7 +166,6 @@ class FelloBadgeSuccessScreen extends StatelessWidget {
           ),
 
           HowSuperFelloWorksWidget(
-            isBoxOpen: false,
             superFelloWorks: badgesModel.superFelloWorks,
           ),
 

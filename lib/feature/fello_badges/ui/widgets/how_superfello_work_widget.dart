@@ -18,7 +18,7 @@ class HowSuperFelloWorksWidget extends StatefulWidget {
 }
 
 class _HowSuperFelloWorksWidgetState extends State<HowSuperFelloWorksWidget> {
-  bool _isBoxOpen = false;
+  bool _isBoxOpen = true;
 
   @override
   void initState() {
