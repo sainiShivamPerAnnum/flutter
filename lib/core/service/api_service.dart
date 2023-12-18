@@ -6,6 +6,7 @@ import 'dart:io';
 
 import 'package:dio/dio.dart';
 import 'package:dio/io.dart';
+import 'package:dio_http2_adapter/dio_http2_adapter.dart';
 import 'package:encrypt/encrypt.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/util/app_exceptions.dart';
@@ -50,12 +51,18 @@ abstract class API {
 
 class APIService implements API {
   APIService._() : _dio = Dio() {
-    _dio.interceptors.addAll(
-      [
-        CoreInterceptor(),
-        LogInterceptor(),
-      ],
-    );
+    _dio
+      ..interceptors.addAll(
+        [
+          CoreInterceptor(),
+          LogInterceptor(),
+        ],
+      )
+      ..httpClientAdapter = Http2Adapter(
+        ConnectionManager(
+          idleTimeout: const Duration(seconds: 35),
+        ),
+      );
 
     assert(() {
       _dio.httpClientAdapter = IOHttpClientAdapter();
