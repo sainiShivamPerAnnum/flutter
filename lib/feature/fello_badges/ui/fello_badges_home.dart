@@ -1,7 +1,10 @@
+import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/model/badges_leader_board_model.dart';
 import 'package:felloapp/core/model/fello_badges_model.dart';
 import 'package:felloapp/core/model/portfolio_model.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/feature/fello_badges/bloc/fello_badges_cubit.dart';
@@ -17,6 +20,7 @@ import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/extensions/rich_text_extension.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -26,6 +30,7 @@ import 'package:tuple/tuple.dart';
 
 import 'widgets/badge_level.dart';
 import 'widgets/how_superfello_work_widget.dart';
+import 'widgets/progress_bottom_sheet.dart';
 
 class FelloBadgeHome extends StatelessWidget {
   const FelloBadgeHome({super.key});
@@ -252,6 +257,28 @@ class OtherBadges extends StatelessWidget {
 
   final List<BadgeLevelInformation> otherBadges;
 
+  void _onTapBadge(BadgeLevelInformation badge) {
+    BaseUtil.openModalBottomSheet(
+      addToScreenStack: true,
+      enableDrag: false,
+      hapticVibrate: true,
+      isBarrierDismissible: true,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      content: ProgressBottomSheet(
+        badgeInformation: badge,
+      ),
+    );
+
+    locator<AnalyticsService>().track(
+      eventName: AnalyticsEvents.tapOtherBadges,
+      properties: {
+        'badge_name': badge.title,
+        'current_level': locator<UserService>().baseUser!.superFelloLevel.name,
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -268,6 +295,7 @@ class OtherBadges extends StatelessWidget {
         ),
         FelloBadgeList(
           badges: otherBadges,
+          onBadgeTapped: _onTapBadge,
         ),
       ],
     );

@@ -236,9 +236,15 @@ class BaseUtil extends ChangeNotifier {
   void openProfileDetailsScreen() {
     AppState.delegate!.parseRoute(Uri.parse("accounts"));
     _analyticsService.track(
-        eventName: AnalyticsEvents.profileClicked,
-        properties: AnalyticsProperties.getDefaultPropertiesMap(
-            extraValuesMap: {"location": getLocationForCurrentTab()}));
+      eventName: AnalyticsEvents.profileClicked,
+      properties: AnalyticsProperties.getDefaultPropertiesMap(
+        extraValuesMap: {
+          "location": getLocationForCurrentTab(),
+          'current_level':
+              locator<UserService>().baseUser!.superFelloLevel.name,
+        },
+      ),
+    );
   }
 
   String getLocationForCurrentTab() {

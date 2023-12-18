@@ -1,7 +1,11 @@
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/model/fello_badges_model.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/action_resolver.dart';
 import 'package:felloapp/util/extensions/rich_text_extension.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -21,6 +25,17 @@ class ProgressBottomSheet extends StatelessWidget {
     if (action != null) {
       ActionResolver.instance.resolve(action);
     }
+
+    locator<AnalyticsService>().track(
+      eventName: AnalyticsEvents.taskBottomSheetCTA,
+      properties: {
+        'task_heading': badgeInformation.title,
+        'task_subheading': badgeInformation.bottomSheetText,
+        'progress': badgeInformation.achieve,
+        'progress_bar_text': badgeInformation.progressInfo,
+        'current_level': locator<UserService>().baseUser!.superFelloLevel.name,
+      },
+    );
   }
 
   @override

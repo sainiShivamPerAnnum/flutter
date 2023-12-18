@@ -1,6 +1,8 @@
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/model/fello_badges_model.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/feature/fello_badges/shared/sf_level_mapping_extension.dart';
 import 'package:felloapp/feature/fello_badges/ui/widgets/badges_progress_indicator.dart';
@@ -8,6 +10,7 @@ import 'package:felloapp/feature/fello_badges/ui/widgets/user_badges_container.d
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/util/extensions/string_extension.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
@@ -33,18 +36,26 @@ class _ProfileBadgeWidgetState extends State<ProfileBadgeWidget> {
         : "Become a Super Fello";
   }
 
+  void _onTap() {
+    AppState.delegate!.appState.currentAction = PageAction(
+      state: PageState.addPage,
+      page: FelloBadgeHomeViewPageConfig,
+    );
+
+    locator<AnalyticsService>()
+        .track(eventName: AnalyticsEvents.superFelloEntryPoint, properties: {
+      'current_level': locator<UserService>().baseUser!.superFelloLevel.name,
+      'location': 'account_section',
+    });
+  }
+
   @override
   Widget build(BuildContext context) {
     final (url: _, :textColor, :title, borderColor: _) =
         widget.superFelloLevel.getLevelData;
 
     return GestureDetector(
-      onTap: () {
-        AppState.delegate!.appState.currentAction = PageAction(
-          state: PageState.addPage,
-          page: FelloBadgeHomeViewPageConfig,
-        );
-      },
+      onTap: _onTap,
       child: Container(
         height: SizeConfig.padding180,
         width: SizeConfig.screenWidth,

@@ -115,6 +115,7 @@ class BadgeLevelInformation {
   final Action? ctaAction;
   final String id;
   final bool isBadgeAchieved;
+  final String progressInfo;
 
   const BadgeLevelInformation({
     this.achieve = 0.0,
@@ -127,6 +128,7 @@ class BadgeLevelInformation {
     this.ctaAction,
     this.id = '',
     this.isBadgeAchieved = false,
+    this.progressInfo = '',
   });
 
   factory BadgeLevelInformation.fromJson(Map<String, dynamic> json) =>

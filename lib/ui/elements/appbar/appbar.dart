@@ -24,30 +24,26 @@ class FAppBar extends StatelessWidget implements PreferredSizeWidget {
   final Widget? titleWidget;
   final bool? centerTitle;
   final bool leadingPadding;
-
-  // final bool hasBackButton;
   final TextStyle? style;
 
-  const FAppBar(
-      {Key? key,
-      this.type,
-      this.title,
-      this.showCoinBar = true,
-      this.leading,
-      this.showLeading = true,
-      this.showAvatar = true,
-      this.showHelpButton = true,
-      this.backgroundColor,
-      this.style,
-      this.action,
-      this.leftPad,
-      this.subtitle,
-      this.centerTitle,
-      this.titleWidget,
-      this.leadingPadding = true
-      // this.hasBackButton = true
-      })
-      : super(key: key);
+  const FAppBar({
+    super.key,
+    this.type,
+    this.title,
+    this.showCoinBar = true,
+    this.leading,
+    this.showLeading = true,
+    this.showAvatar = true,
+    this.showHelpButton = true,
+    this.backgroundColor,
+    this.style,
+    this.action,
+    this.leftPad,
+    this.subtitle,
+    this.centerTitle,
+    this.titleWidget,
+    this.leadingPadding = true,
+  });
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);

@@ -1,32 +1,17 @@
-import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/fello_badges_model.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import 'progress_bottom_sheet.dart';
-
 class FelloBadgeList extends StatelessWidget {
   const FelloBadgeList({
     required this.badges,
+    required this.onBadgeTapped,
     super.key,
   });
 
   final List<BadgeLevelInformation> badges;
-
-  void _onTapBadge(BadgeLevelInformation badge) {
-    BaseUtil.openModalBottomSheet(
-      addToScreenStack: true,
-      enableDrag: false,
-      hapticVibrate: true,
-      isBarrierDismissible: true,
-      backgroundColor: Colors.transparent,
-      isScrollControlled: true,
-      content: ProgressBottomSheet(
-        badgeInformation: badge,
-      ),
-    );
-  }
+  final ValueChanged<BadgeLevelInformation> onBadgeTapped;
 
   @override
   Widget build(BuildContext context) {
@@ -43,7 +28,7 @@ class FelloBadgeList extends StatelessWidget {
           return Row(
             children: [
               GestureDetector(
-                onTap: () => _onTapBadge(badge),
+                onTap: () => onBadgeTapped(badge),
                 child: Column(
                   mainAxisSize: MainAxisSize.min,
                   children: [

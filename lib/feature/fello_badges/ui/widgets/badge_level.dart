@@ -2,9 +2,13 @@ import 'dart:math';
 
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/model/fello_badges_model.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -236,6 +240,31 @@ class BadgeDetailsContainer extends StatelessWidget {
     );
   }
 
+  void _onTapTask(BadgeLevelInformation badgeInformation) {
+    BaseUtil.openModalBottomSheet(
+      addToScreenStack: true,
+      enableDrag: false,
+      hapticVibrate: true,
+      isBarrierDismissible: true,
+      backgroundColor: Colors.transparent,
+      isScrollControlled: true,
+      content: ProgressBottomSheet(
+        badgeInformation: badgeInformation,
+      ),
+    );
+
+    locator<AnalyticsService>().track(
+      eventName: AnalyticsEvents.tapBadgeProgress,
+      properties: {
+        'task_heading': badgeInformation.title,
+        'task_subheading': badgeInformation.bottomSheetText,
+        'progress': badgeInformation.achieve,
+        'task_level': levelDetails.level.name,
+        'current_level': locator<UserService>().baseUser!.superFelloLevel.name,
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -411,19 +440,7 @@ class BadgeDetailsContainer extends StatelessWidget {
                             final data = levelDetails.lvlData[i];
 
                             return GestureDetector(
-                              onTap: () {
-                                BaseUtil.openModalBottomSheet(
-                                  addToScreenStack: true,
-                                  enableDrag: false,
-                                  hapticVibrate: true,
-                                  isBarrierDismissible: true,
-                                  backgroundColor: Colors.transparent,
-                                  isScrollControlled: true,
-                                  content: ProgressBottomSheet(
-                                    badgeInformation: data,
-                                  ),
-                                );
-                              },
+                              onTap: () => _onTapTask(data),
                               child: BadgeProgressWidget(
                                 badgeInformation: data,
                                 progressColor: index == 0
@@ -633,57 +650,5 @@ class BadgeProgressWidget extends StatelessWidget {
         ],
       ),
     );
-  }
-}
-
-class GradientBorder extends CustomPainter {
-  final AnimationController gradientController;
-  final bool isVerticalView;
-  final double borderRadius;
-
-  const GradientBorder({
-    required this.gradientController,
-    required this.isVerticalView,
-    required this.borderRadius,
-  }) : super(repaint: gradientController);
-
-  @override
-  void paint(Canvas canvas, Size size) {
-    final rect = Offset.zero & size;
-    const strokeWidth = 1.0;
-    final gradientColors = [
-      Colors.black26,
-      isVerticalView ? Colors.black26 : Colors.grey,
-      Colors.black26,
-    ];
-
-    // Draw the outline border with sweep gradient
-    final gradient = SweepGradient(
-      colors: gradientColors,
-      startAngle: 0.0,
-      endAngle: 2 * pi,
-      transform: GradientRotation(gradientController.value * 6),
-    );
-
-    final borderPaint = Paint()
-      ..style = PaintingStyle.stroke
-      ..strokeWidth = strokeWidth;
-    final outerPath = Path.combine(
-      PathOperation.difference,
-      Path()
-        ..addRRect(
-            RRect.fromRectAndRadius(rect, Radius.circular(borderRadius))),
-      Path()
-        ..addRRect(RRect.fromRectAndRadius(
-            rect.deflate(strokeWidth / 2), Radius.circular(borderRadius))),
-    );
-
-    borderPaint.shader = gradient.createShader(rect);
-    canvas.drawPath(outerPath, borderPaint);
-  }
-
-  @override
-  bool shouldRepaint(CustomPainter oldDelegate) {
-    return false;
   }
 }

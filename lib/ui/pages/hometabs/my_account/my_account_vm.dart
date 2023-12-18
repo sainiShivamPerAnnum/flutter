@@ -162,8 +162,8 @@ class MyAccountVM extends BaseViewModel {
     );
   }
 
-  Future<void> showCustomAvatarsDialog() {
-    return BaseUtil.openDialog(
+  Future<void> showCustomAvatarsDialog() async {
+    await BaseUtil.openDialog(
       addToScreenStack: true,
       isBarrierDismissible: false,
       hapticVibrate: true,
@@ -171,6 +171,13 @@ class MyAccountVM extends BaseViewModel {
         onCustomAvatarSelection: handleDPOperation,
         onPresetAvatarSelection: updateUserAvatar,
       ),
+    );
+
+    locator<AnalyticsService>().track(
+      eventName: AnalyticsEvents.addProfilePicture,
+      properties: {
+        'location': 'profile',
+      },
     );
   }
 

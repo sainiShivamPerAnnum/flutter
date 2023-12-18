@@ -1,10 +1,13 @@
 import 'dart:developer';
 
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/scratch_card_model.dart';
 import 'package:felloapp/core/model/timestamp_model.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
@@ -30,6 +33,21 @@ class GTDetailedView extends StatelessWidget {
   final ScratchCard ticket;
 
   const GTDetailedView({required this.ticket, super.key});
+
+  Future<void> _onTapViewAllBadges() async {
+    await AppState.backButtonDispatcher!.didPopRoute();
+    await Future.delayed(const Duration(milliseconds: 400)); // For animation.
+    AppState.delegate!.appState.currentAction = PageAction(
+      state: PageState.addPage,
+      page: FelloBadgeHomeViewPageConfig,
+    );
+
+    locator<AnalyticsService>()
+        .track(eventName: AnalyticsEvents.superFelloEntryPoint, properties: {
+      'current_level': locator<UserService>().baseUser!.superFelloLevel.name,
+      'location': 'scratch_card',
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -230,15 +248,7 @@ class GTDetailedView extends StatelessWidget {
                     height: SizeConfig.padding14,
                   ),
                   GestureDetector(
-                    onTap: () async {
-                      await AppState.backButtonDispatcher!.didPopRoute();
-                      await Future.delayed(const Duration(
-                          milliseconds: 400)); // For hero animation.
-                      AppState.delegate!.appState.currentAction = PageAction(
-                        state: PageState.addPage,
-                        page: FelloBadgeHomeViewPageConfig,
-                      );
-                    },
+                    onTap: _onTapViewAllBadges,
                     child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
