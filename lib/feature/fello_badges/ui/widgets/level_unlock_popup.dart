@@ -1,3 +1,5 @@
+// ignore_for_file: lines_longer_than_80_chars
+
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/model/fello_badges_model.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
@@ -9,6 +11,7 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
+import 'package:share_plus/share_plus.dart';
 
 typedef _LevelInformation = ({
   String badgeUrl,
@@ -26,6 +29,11 @@ class LevelUnlockDialog extends StatelessWidget {
   Future<void> _onPressed() async {
     locator<UserService>().referralFromNotification = true;
     await AppState.backButtonDispatcher?.didPopRoute();
+
+    /// TODO(@DK070202): change contente for share.
+    await Share.share(
+      'Join me and let\'s compete on who becomes a Super Fello first. Sign up and save now!',
+    );
 
     locator<AnalyticsService>().track(
       eventName: AnalyticsEvents.badgeUnlock,
