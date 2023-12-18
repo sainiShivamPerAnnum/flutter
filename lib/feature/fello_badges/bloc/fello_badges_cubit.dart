@@ -10,6 +10,7 @@ import 'package:felloapp/core/model/fello_badges_model.dart';
 import 'package:felloapp/core/repository/campaigns_repo.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/feature/fello_badges/ui/widgets/badge_unlock_popup.dart';
+import 'package:felloapp/feature/fello_badges/ui/widgets/level_unlock_popup.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
 import 'package:flutter/material.dart';
@@ -43,6 +44,7 @@ class FelloBadgesCubit extends Cubit<FelloBadgesState> {
           await _postBadgeFetchHook(
             res.model!.data,
             onBadgeLevelChanged: _showBadgeAchievedPopup,
+            onLevelChanged: _showLevelChangePopup,
           );
         } else {
           emit(FelloBadgesError(res.model?.message ??
@@ -75,17 +77,22 @@ class FelloBadgesCubit extends Cubit<FelloBadgesState> {
   Future<void> _postBadgeFetchHook(
     FelloBadgesData currentBadgeInfo, {
     ValueChanged<BadgeLevelInformation>? onBadgeLevelChanged,
+    ValueChanged<SuperFelloLevel>? onLevelChanged,
   }) async {
     final cachedBadgeInfo = await _getCachedDetails();
 
     if (cachedBadgeInfo != null) {
-      final badgeInformation = await _checkForBadgeUpdate(
+      final (badgeInformation, levelInfo) = await _checkForStatusUpdate(
         currentBadgeInfo: currentBadgeInfo,
         cachedBadgeInfo: cachedBadgeInfo,
       );
+      await Future.delayed(const Duration(seconds: 1));
+
+      if (levelInfo != null) {
+        onLevelChanged?.call(levelInfo);
+      }
 
       if (badgeInformation != null) {
-        await Future.delayed(const Duration(seconds: 1));
         onBadgeLevelChanged?.call(badgeInformation);
       }
     }
@@ -104,13 +111,13 @@ class FelloBadgesCubit extends Cubit<FelloBadgesState> {
   /// addition and that particular is being received as complete from backend.
   /// - If there is addition of the new badge level inside any particular level
   /// and that badge level is received as completed.
-  Future<BadgeLevelInformation?> _checkForBadgeUpdate({
+  Future<(BadgeLevelInformation?, SuperFelloLevel?)> _checkForStatusUpdate({
     required FelloBadgesData currentBadgeInfo,
     required FelloBadgesData cachedBadgeInfo,
   }) async {
     final currentLevels = currentBadgeInfo.levels;
     if (currentLevels.isEmpty) {
-      return null;
+      return (null, null);
     }
 
     final cachedLevels = cachedBadgeInfo.levels;
@@ -125,6 +132,10 @@ class FelloBadgesCubit extends Cubit<FelloBadgesState> {
 
       if (currentLevel == null || !currentLevel.levelUnlocked) {
         continue;
+      }
+
+      if (!cachedLevel.isCompleted && currentLevel.isCompleted) {
+        return (null, cachedLevel.level);
       }
 
       final cachedLevelData = cachedLevel.lvlData;
@@ -147,7 +158,7 @@ class FelloBadgesCubit extends Cubit<FelloBadgesState> {
       }
     }
 
-    return badgeToBeDisplayed;
+    return (badgeToBeDisplayed, null);
   }
 
   Future<void> _cacheDetails(FelloBadgesData levelDetails) async {
@@ -180,6 +191,17 @@ class FelloBadgesCubit extends Cubit<FelloBadgesState> {
       hapticVibrate: true,
       content: BadgeUnlockDialog(
         badgeInformation: badgeInformation,
+      ),
+    );
+  }
+
+  void _showLevelChangePopup(SuperFelloLevel level) {
+    BaseUtil.openDialog(
+      isBarrierDismissible: true,
+      addToScreenStack: true,
+      hapticVibrate: true,
+      content: LevelUnlockDialog(
+        level: level,
       ),
     );
   }

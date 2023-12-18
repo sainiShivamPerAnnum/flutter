@@ -74,10 +74,10 @@ Map<String, dynamic> _$LevelToJson(Level instance) => <String, dynamic>{
       'badgeUrl': instance.badgeUrl,
       'benefits': instance.benefits.toJson(),
       'lvl_data': instance.lvlData.map((e) => e.toJson()).toList(),
-      'isCompleted': instance.isCompleted,
-      'isOnGoing': instance.isOnGoing,
       'lvl_title': instance.levelTitle,
       'level': _$SuperFelloLevelEnumMap[instance.level]!,
+      'isCompleted': instance.isCompleted,
+      'isOnGoing': instance.isOnGoing,
       'levelUnlocked': instance.levelUnlocked,
     };
 
@@ -103,6 +103,7 @@ BadgeLevelInformation _$BadgeLevelInformationFromJson(
           : Action.fromJson(json['ctaAction'] as Map<String, dynamic>),
       id: json['id'] as String? ?? '',
       isBadgeAchieved: json['isBadgeAchieved'] as bool? ?? false,
+      progressInfo: json['progressInfo'] as String? ?? '',
     );
 
 Map<String, dynamic> _$BadgeLevelInformationToJson(
@@ -118,6 +119,7 @@ Map<String, dynamic> _$BadgeLevelInformationToJson(
       'ctaAction': instance.ctaAction?.toJson(),
       'id': instance.id,
       'isBadgeAchieved': instance.isBadgeAchieved,
+      'progressInfo': instance.progressInfo,
     };
 
 SuperFelloWorks _$SuperFelloWorksFromJson(Map<String, dynamic> json) =>
