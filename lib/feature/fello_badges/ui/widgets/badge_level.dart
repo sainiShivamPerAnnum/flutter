@@ -356,7 +356,7 @@ class BadgeDetailsContainer extends StatelessWidget {
                                     width: SizeConfig.padding8,
                                   ),
                                   Text(
-                                    'Benefits you get',
+                                    levelDetails.benefits.title,
                                     textAlign: TextAlign.right,
                                     style: TextStyles.sourceSansSB.body1.colour(
                                       titleColor[index],
@@ -387,7 +387,7 @@ class BadgeDetailsContainer extends StatelessWidget {
                                       width: SizeConfig.padding14,
                                     ),
                                     Text(
-                                      levelDetails.benefits.list[index],
+                                      levelDetails.benefits.list[i],
                                       style: TextStyles.rajdhaniSB.body2.colour(
                                         Colors.white,
                                       ),
