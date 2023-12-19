@@ -115,22 +115,6 @@ class UserFundWallet {
             BaseUtil.toDouble(data["wAugTotal"] ?? 0.0),
             data['isGoldProUser'] ?? false);
 
-  Map<String, dynamic> cloneMap() => {
-        fldAugmontGoldPrinciple: _augGoldPrinciple,
-        fldAugmontGoldBalance: _augGoldBalance,
-        fldAugmontGoldQuantity: _augGoldQuantity,
-        fldIciciPrinciple: _iciciPrinciple,
-        fldIciciBalance: _iciciBalance,
-        fldPrizeBalance: _prizeBalance,
-        fldPrizeLockedBalance: _lockedPrizeBalance,
-        fldPrizeLifetimeWin: _prizeLifetimeWin,
-        fldProcessingRedemption: _processingRedemptionBalance,
-        'wLbBalance': wLbBalance,
-        'wLbPrinciple': wLbPrinciple,
-        'wLbProcessingAmt': wLbProcessingAmt,
-        'wTmbLifetimeWin': wTmbLifetimeWin
-      };
-
   double getEstTotalWealth() {
     return BaseUtil.digitPrecision(
       BaseUtil.toDouble(_iciciBalance) +

@@ -71,7 +71,7 @@ class GoldProSellCard extends StatelessWidget {
         SizedBox(
           height: SizeConfig.padding12,
         ),
-        InterestGainLabel(interest: interest),
+        InterestGainLabel(interestQuantity: interest),
         Divider(
           height: SizeConfig.padding24,
           color: Colors.white.withOpacity(.1),

@@ -50,7 +50,7 @@ class GoldProDetailsView extends StatelessWidget {
                         builder: (context, wallet, child) {
                           return Container(
                             height: (wallet.wAugFdQty ?? 0) > 0
-                                ? SizeConfig.screenWidth
+                                ? (SizeConfig.screenWidth! * 1.03)
                                 : SizeConfig.screenWidth! * 0.88,
                             width: SizeConfig.screenWidth,
                             decoration: BoxDecoration(
@@ -166,8 +166,10 @@ class GoldProDetailsView extends StatelessWidget {
                                         ),
                                       ),
                                       (wallet.wAugFdQty ?? 0) > 0
-                                          ? Align(
-                                              alignment: Alignment.bottomCenter,
+                                          ? Positioned(
+                                              bottom: 0,
+                                              left: 0,
+                                              right: 0,
                                               child: Transform.translate(
                                                 offset: Offset(
                                                     0, SizeConfig.padding44),
@@ -179,7 +181,7 @@ class GoldProDetailsView extends StatelessWidget {
                                                       SizeConfig
                                                           .pageHorizontalMargins),
                                                   decoration: BoxDecoration(
-                                                    color: Colors.black,
+                                                    color: UiConstants.grey5,
                                                     borderRadius:
                                                         BorderRadius.circular(
                                                             SizeConfig

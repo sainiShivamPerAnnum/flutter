@@ -130,8 +130,11 @@ class Asset {
   final double absGains;
   final double percGains;
   final double principle;
-  final double balance;
+  final double balance; // gold balance in rupees.
   final bool isGoldProUser;
+  final num currentValue; // total gold quantity with principle and interest.
+  final num leased; // total leased amount in quantity.
+  final num payout; // interest gain in quantity.
 
   const Asset({
     required this.absGains,
@@ -139,23 +142,34 @@ class Asset {
     required this.principle,
     required this.balance,
     required this.isGoldProUser,
+    required this.currentValue,
+    required this.leased,
+    required this.payout,
   });
 
   factory Asset.fromMap(Map<String, dynamic>? map) {
     if (map == null || map.isEmpty) return Asset.base();
     return Asset(
-        absGains: (map['absGain'] ?? 0.0) * 1.0,
-        percGains: (map['percGain'] ?? 0.0) * 1.0,
-        principle: (map["principle"] ?? 0.0) * 1.0,
-        balance: (map["balance"] ?? 0.0) * 1.0,
-        isGoldProUser: map['isGoldProUser'] ?? false);
+      absGains: (map['absGain'] ?? 0.0) * 1.0,
+      percGains: (map['percGain'] ?? 0.0) * 1.0,
+      principle: (map["principle"] ?? 0.0) * 1.0,
+      balance: (map["balance"] ?? 0.0) * 1.0,
+      currentValue: map['currentValue'] ?? 0.0,
+      isGoldProUser: map['isGoldProUser'] ?? false,
+      leased: map['leased'] ?? 0.0,
+      payout: map['payout'] ?? 0.0,
+    );
   }
   factory Asset.base() {
     return const Asset(
-        absGains: 0.0,
-        percGains: 0.0,
-        principle: 0.0,
-        balance: 0.0,
-        isGoldProUser: false);
+      absGains: 0.0,
+      percGains: 0.0,
+      principle: 0.0,
+      balance: 0.0,
+      currentValue: 0,
+      isGoldProUser: false,
+      leased: 0.0,
+      payout: 0.0,
+    );
   }
 }

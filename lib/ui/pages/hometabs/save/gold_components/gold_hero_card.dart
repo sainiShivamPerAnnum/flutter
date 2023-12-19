@@ -64,7 +64,7 @@ class GoldInfoWidget extends StatelessWidget {
                         crossAxisAlignment: CrossAxisAlignment.end,
                         children: [
                           Text(
-                            "₹${BaseUtil.digitPrecision(model.userPortfolio.augmont.gold.balance ?? 0, 2)}",
+                            "₹${BaseUtil.digitPrecision(model.userPortfolio.augmont.gold.balance, 2)}",
                             textAlign: TextAlign.center,
                             style: TextStyles.sourceSansSB.title5.copyWith(
                               color: Colors.white,
