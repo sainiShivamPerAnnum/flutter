@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
+import 'package:felloapp/core/model/portfolio_model.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/ui/elements/fello_rich_text.dart';
 import 'package:felloapp/ui/pages/hometabs/save/gold_components/gold_pro_card.dart';
@@ -22,7 +23,9 @@ class GoldProHero extends StatelessWidget {
             model.userFundWallet?.augGoldQuantity ?? 0.0;
         final double goldProQuantity = model.userFundWallet?.wAugFdQty ?? 0.0;
         if (goldProQuantity != 0) {
-          return InvestedGoldProHero(model: model);
+          return InvestedGoldProHero(
+            portfolio: model.userPortfolio,
+          );
         } else if (goldQuantity <= 0) {
           return NewGoldProHero(model: model);
         } else if (goldQuantity <=
@@ -316,12 +319,18 @@ class EligibleGoldProHero extends StatelessWidget {
 }
 
 class InvestedGoldProHero extends StatelessWidget {
-  const InvestedGoldProHero({required this.model, super.key});
+  const InvestedGoldProHero({
+    required this.portfolio,
+    super.key,
+  });
 
-  final UserService model;
+  final Portfolio portfolio;
 
   @override
   Widget build(BuildContext context) {
+    final fd = portfolio.augmont.fd;
+    final leasedQuant = BaseUtil.digitPrecision(fd.leased.toDouble(), 4);
+    final currentQuant = BaseUtil.digitPrecision(fd.currentValue.toDouble(), 4);
     return Padding(
       padding: const EdgeInsets.symmetric(
         horizontal: 17,
@@ -358,7 +367,7 @@ class InvestedGoldProHero extends StatelessWidget {
                       style: TextStyles.rajdhaniM.colour(Colors.white60),
                     ),
                     Text(
-                      "${BaseUtil.digitPrecision(model.userFundWallet?.wAugFdQty ?? 0.0, 2)}gms",
+                      "$leasedQuant gms",
                       style: TextStyles.sourceSansSB.title4
                           .colour(UiConstants.kGoldProPrimary),
                     ),
@@ -373,7 +382,7 @@ class InvestedGoldProHero extends StatelessWidget {
                     style: TextStyles.rajdhaniM.colour(Colors.white60),
                   ),
                   Text(
-                    "${model.userFundWallet?.augGoldQuantity ?? 0} gms",
+                    "$currentQuant gms",
                     style: TextStyles.sourceSansSB.title4
                         .colour(UiConstants.kGoldProPrimary),
                   )
