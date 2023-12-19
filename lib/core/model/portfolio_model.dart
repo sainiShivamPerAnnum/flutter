@@ -7,7 +7,7 @@ class Portfolio {
   final double lifeTimeRewards;
   final Asset absolute;
 
-  Portfolio({
+  const Portfolio({
     required this.augmont,
     required this.flo,
     required this.rewards,
@@ -44,7 +44,7 @@ class AugmontTiers {
   final Asset gold;
   final Asset fd;
 
-  AugmontTiers({
+  const AugmontTiers({
     required this.absGains,
     required this.percGains,
     required this.principle,
@@ -132,7 +132,8 @@ class Asset {
   final double principle;
   final double balance;
   final bool isGoldProUser;
-  Asset({
+
+  const Asset({
     required this.absGains,
     required this.percGains,
     required this.principle,
@@ -150,7 +151,7 @@ class Asset {
         isGoldProUser: map['isGoldProUser'] ?? false);
   }
   factory Asset.base() {
-    return Asset(
+    return const Asset(
         absGains: 0.0,
         percGains: 0.0,
         principle: 0.0,
