@@ -865,6 +865,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     var rootController = locator<RootController>();
 
     switch (screenKey) {
+      case 'super-fello':
+        pageConfiguration = FelloBadgeHomeViewPageConfig;
+
       case 'journey':
         pageConfiguration = JourneyViewPageConfig;
         break;
@@ -1028,6 +1031,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case 'pop':
         AppState.backButtonDispatcher!.didPopRoute();
         break;
+
       case 'autosaveDetails':
         if (!(AppConfig.getValue(AppConfigKey.showNewAutosave) as bool)) break;
         pageConfiguration = AutosaveDetailsViewPageConfig;
