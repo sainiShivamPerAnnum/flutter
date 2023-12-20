@@ -6,7 +6,6 @@ import 'dart:developer';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/constants/cache_keys.dart';
-import 'package:felloapp/core/enums/ttl.dart';
 import 'package:felloapp/core/model/alert_model.dart';
 import 'package:felloapp/core/model/app_environment.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
@@ -35,7 +34,6 @@ import 'base_repo.dart';
 
 class UserRepository extends BaseRepo {
   final AppFlyerAnalytics _appsFlyerService = locator<AppFlyerAnalytics>();
-  final _cacheService = CacheService();
   final CustomLogger _logger = locator<CustomLogger>();
   final Api _api = locator<Api>();
   final ApiPath _apiPaths = locator<ApiPath>();
@@ -104,40 +102,31 @@ class UserRepository extends BaseRepo {
           model: {"flag": responseData['flag'], "gtId": responseData['gtId']});
     } catch (e) {
       logger.d(e);
-      return ApiResponse.withError(
-          e.toString() ?? "Unable to create user account", 400);
+      return ApiResponse.withError(e.toString(), 400);
     }
   }
 
   Future<ApiResponse<BaseUser>> getUserById({required String? id}) async {
     try {
-      return await _cacheService.cachedApi(
-          CacheKeys.USER,
-          TTL.ONE_DAY,
-          () => APIService.instance.getData(
-                ApiPath.kGetUserById(id),
-                cBaseUrl: AppEnvironment.instance.userOps,
-                apiName: '$_userOps/getUser',
-              ), (res) {
-        try {
-          if (res != null && res['data'] != null && res['data'].isNotEmpty) {
-            final user = BaseUser.fromMap(res['data'], id!);
-            return ApiResponse<BaseUser>(model: user, code: 200);
-          } else {
-            return ApiResponse<BaseUser>(model: null, code: 200);
-          }
-        } catch (e) {
-          locator<InternalOpsService>().logFailure(
-            id,
-            FailType.UserDataCorrupted,
-            {'message': "User data corrupted"},
-          );
-          return ApiResponse.withError("User data corrupted", 400);
-        }
-      });
+      final res = await APIService.instance.getData(
+        ApiPath.kGetUserById(id),
+        cBaseUrl: AppEnvironment.instance.userOps,
+        apiName: '$_userOps/getUser',
+      );
+      if (res != null && res['data'] != null && res['data'].isNotEmpty) {
+        final user = BaseUser.fromMap(res['data'], id!);
+        return ApiResponse<BaseUser>(model: user, code: 200);
+      } else {
+        return ApiResponse<BaseUser>(model: null, code: 200);
+      }
     } catch (e) {
       logger.d(e.toString());
-      return ApiResponse.withError(e.toString() ?? "Unable to get user", 400);
+      await locator<InternalOpsService>().logFailure(
+        id,
+        FailType.UserDataCorrupted,
+        {'message': "User data corrupted"},
+      );
+      return ApiResponse.withError(e.toString(), 400);
     }
   }
 
@@ -192,7 +181,7 @@ class UserRepository extends BaseRepo {
         FailType.VerifyOtpFailed,
         {'message': "Verify Otp failed"},
       ));
-      return ApiResponse.withError(e.toString() ?? "send OTP failed", 400);
+      return ApiResponse.withError(e.toString(), 400);
     }
   }
 
@@ -454,7 +443,7 @@ class UserRepository extends BaseRepo {
         {'message': "Update user failed"},
       ));
       return ApiResponse.withError(
-        e.toString() ?? "Unable to update user",
+        e.toString(),
         400,
       );
     }
