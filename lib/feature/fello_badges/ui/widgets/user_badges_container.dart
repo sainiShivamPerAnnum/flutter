@@ -249,11 +249,11 @@ class UserBadgeContainer extends StatelessWidget {
             ),
           if (showImagePickIcon)
             Positioned(
-              right: 30,
-              top: 20,
-              child: InkWell(
-                onTap: onPickImage,
-                child: const CircleAvatar(
+              right: 20,
+              top: 10,
+              child: IconButton(
+                onPressed: onPickImage,
+                icon: const CircleAvatar(
                   radius: 12,
                   backgroundColor: Colors.white,
                   child: Icon(

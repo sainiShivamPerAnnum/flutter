@@ -322,7 +322,7 @@ class BadgeDetailsContainer extends StatelessWidget {
                             ),
                             SvgPicture.network(
                               levelDetails.badgeUrl,
-                              height: SizeConfig.padding78,
+                              height: SizeConfig.padding82,
                             ),
                           ],
                         ),

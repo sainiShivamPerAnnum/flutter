@@ -125,7 +125,7 @@ class _CirclePainter extends CustomPainter {
       size.width / 2,
     );
 
-    canvas.drawCircle(c, 20, paint);
+    canvas.drawCircle(c, 22, paint);
   }
 
   @override
