@@ -26,7 +26,7 @@ class CampaignRepo extends BaseRepo {
 
   final _superFelloBaseUrl = FlavorConfig.isDevelopment()
       ? 'https://api2.fello-dev.net/campaigns'
-      : 'https://api2.fello-prod.net/campaigns';
+      : 'https://api.fello-prod.net/campaigns';
 
   static const _campaigns = 'campaigns';
   static const _superFello = 'super-fello';

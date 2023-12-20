@@ -31,10 +31,8 @@ initializing the AppEnvironment. Initialize app environment prior access it.''')
 
     if (isDev) {
       _instance = AppEnvironment._(
-        userOps: data?['userOps'] ??
-            'https://6w37rw51hj.execute-api.ap-south-1.amazonaws.com/dev',
-        rewards: data?['rewards'] ??
-            'https://3yoxli7gxc.execute-api.ap-south-1.amazonaws.com/dev',
+        userOps: data?['userOps'] ?? 'https://api2.fello-dev.net',
+        rewards: data?['rewards'] ?? 'https://api2.fello-dev.net',
         stats: data?['stats'] ??
             'https://l6e3g2pr2b.execute-api.ap-south-1.amazonaws.com/dev',
         referral: data?['referral'] ??
@@ -47,10 +45,8 @@ initializing the AppEnvironment. Initialize app environment prior access it.''')
     }
 
     _instance = AppEnvironment._(
-      userOps: data?['userOps'] ??
-          'https://7y9layzs7j.execute-api.ap-south-1.amazonaws.com/prod',
-      rewards: data?['rewards'] ??
-          'https://bdqsoy9h84.execute-api.ap-south-1.amazonaws.com/prod',
+      userOps: data?['userOps'] ?? 'api.fello-prod.net',
+      rewards: data?['rewards'] ?? 'api.fello-prod.net',
       stats: data?['stats'] ??
           'https://08wplse7he.execute-api.ap-south-1.amazonaws.com/prod',
       referral: data?['referral'] ??
