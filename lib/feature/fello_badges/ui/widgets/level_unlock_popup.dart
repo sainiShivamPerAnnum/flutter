@@ -24,15 +24,26 @@ class LevelUnlockDialog extends StatelessWidget {
     required this.level,
     super.key,
   });
+
   final SuperFelloLevel level;
+
+  String _getLevelName() {
+    return switch (level) {
+      SuperFelloLevel.BEGINNER => 'Beginner',
+      SuperFelloLevel.INTERMEDIATE => 'Intermediate',
+      SuperFelloLevel.SUPER_FELLO => 'Super Fello',
+      _ => ''
+    };
+  }
 
   Future<void> _onPressed() async {
     locator<UserService>().referralFromNotification = true;
     await AppState.backButtonDispatcher?.didPopRoute();
 
-    /// TODO(@DK070202): change contente for share.
+    final label = _getLevelName();
+
     await Share.share(
-      'Join me and let\'s compete on who becomes a Super Fello first. Sign up and save now!',
+      'I just upgraded to $label on the FELLO app! This gives me access to some great benefits. You can become one too! Come, let\'s become save together!',
     );
 
     locator<AnalyticsService>().track(
