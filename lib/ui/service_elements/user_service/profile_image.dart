@@ -17,6 +17,7 @@ class ProfileImageSE extends StatefulWidget {
   final bool reactive;
   final bool showBadge;
   final bool highLightNewUser;
+  final EdgeInsetsGeometry? padding;
 
   const ProfileImageSE({
     super.key,
@@ -24,6 +25,7 @@ class ProfileImageSE extends StatefulWidget {
     this.reactive = true,
     this.showBadge = false,
     this.highLightNewUser = false,
+    this.padding,
   });
 
   @override
@@ -59,32 +61,33 @@ class _ProfileImageSEState extends State<ProfileImageSE> {
           child: Stack(
             clipBehavior: Clip.none,
             children: [
-              Container(
-                padding: const EdgeInsets.all(2.0),
-                decoration: BoxDecoration(
-                  shape: BoxShape.circle,
-                  color: _getColorFromLevel(model.baseUser!.superFelloLevel),
+              CustomPaint(
+                painter: _CirclePainter(
+                  _getColorFromLevel(model.baseUser!.superFelloLevel),
                 ),
-                child: CircleAvatar(
-                  key: const ValueKey(Constants.PROFILE),
-                  radius: widget.radius ?? SizeConfig.avatarRadius,
-                  backgroundColor: Colors.black,
-                  backgroundImage: (model.avatarId != null &&
-                          model.avatarId == 'CUSTOM' &&
-                          model.myUserDpUrl != null &&
-                          model.myUserDpUrl!.isNotEmpty)
-                      ? CachedNetworkImageProvider(
-                          model.myUserDpUrl!,
-                        )
-                      : const AssetImage(
-                          Assets.profilePic,
-                        ) as ImageProvider<Object>?,
-                  child: model.avatarId != null && model.avatarId != 'CUSTOM'
-                      ? SvgPicture.asset(
-                          "assets/vectors/userAvatars/${model.avatarId}.svg",
-                          fit: BoxFit.cover,
-                        )
-                      : const SizedBox(),
+                child: Padding(
+                  padding: widget.padding ?? EdgeInsets.zero,
+                  child: CircleAvatar(
+                    key: const ValueKey(Constants.PROFILE),
+                    radius: widget.radius ?? SizeConfig.avatarRadius,
+                    backgroundColor: Colors.black,
+                    backgroundImage: (model.avatarId != null &&
+                            model.avatarId == 'CUSTOM' &&
+                            model.myUserDpUrl != null &&
+                            model.myUserDpUrl!.isNotEmpty)
+                        ? CachedNetworkImageProvider(
+                            model.myUserDpUrl!,
+                          )
+                        : const AssetImage(
+                            Assets.profilePic,
+                          ) as ImageProvider<Object>?,
+                    child: model.avatarId != null && model.avatarId != 'CUSTOM'
+                        ? SvgPicture.asset(
+                            "assets/vectors/userAvatars/${model.avatarId}.svg",
+                            fit: BoxFit.cover,
+                          )
+                        : const SizedBox(),
+                  ),
                 ),
               ),
               if (widget.showBadge && data.url.isNotEmpty)
@@ -102,5 +105,31 @@ class _ProfileImageSEState extends State<ProfileImageSE> {
         );
       },
     );
+  }
+}
+
+class _CirclePainter extends CustomPainter {
+  final Color? color;
+
+  const _CirclePainter(this.color);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final paint = Paint()
+      ..color = color ?? Colors.transparent
+      ..strokeWidth = 1
+      ..style = PaintingStyle.stroke;
+
+    Offset c = Offset(
+      size.width / 2,
+      size.width / 2,
+    );
+
+    canvas.drawCircle(c, 20, paint);
+  }
+
+  @override
+  bool shouldRepaint(covariant _CirclePainter oldDelegate) {
+    return color != oldDelegate.color;
   }
 }

@@ -60,6 +60,7 @@ class FAppBar extends StatelessWidget implements PreferredSizeWidget {
             Transform.translate(
               offset: Offset(0, SizeConfig.padding2),
               child: ProfileImageSE(
+                padding: EdgeInsets.all(SizeConfig.padding6),
                 key: K.userAvatarKey,
                 radius: SizeConfig.avatarRadius * 0.9,
                 showBadge: true,
