@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/faqTypes.dart';
@@ -71,7 +73,11 @@ class _FelloBadgeUiState extends State<FelloBadgeUi> {
               FelloBadgesLoading() || FelloBadgesInitial() => const Center(
                   child: FullScreenLoader(),
                 ),
-              FelloBadgesSuccess() => FelloBadgeSuccessScreen(state: state),
+              FelloBadgesSuccess() => FelloBadgeSuccessScreen(
+                  state: state,
+                  onRefresh: () => BlocProvider.of<FelloBadgesCubit>(context)
+                      .getFelloBadges(),
+                ),
               FelloBadgesError(:final errorMsg) => Center(
                   child: Text(
                     errorMsg,
@@ -116,87 +122,95 @@ class _FelloBadgeUiState extends State<FelloBadgeUi> {
 class FelloBadgeSuccessScreen extends StatelessWidget {
   const FelloBadgeSuccessScreen({
     required this.state,
+    required this.onRefresh,
     super.key,
   });
 
   final FelloBadgesSuccess state;
+  final Future<void> Function() onRefresh;
 
   @override
   Widget build(BuildContext context) {
     final badgesModel = state.felloBadgesModel;
     final leaderBoardModel = state.badgesLeaderBoardModel?.data;
-    return SingleChildScrollView(
-      child: Column(
-        children: [
-          SizedBox(
-            height: SizeConfig.padding20,
-          ),
-          SvgPicture.network(
-            'https://fello-dev-uploads.s3.ap-south-1.amazonaws.com/super_fello_title.svg',
-          ),
-          SizedBox(
-            height: SizeConfig.padding12,
-          ),
-          UserBadgeContainer(
-            level: state.userLevel,
-          ),
-          SizedBox(
-            height: SizeConfig.padding6,
-          ),
-          Padding(
-            padding: EdgeInsets.symmetric(
-                horizontal: SizeConfig.pageHorizontalMargins),
-            child: badgesModel.title.beautify(
-              style: TextStyles.rajdhaniSB.body1,
-              boldStyle: TextStyles.rajdhaniSB.body1.colour(
-                const Color(0xFF26F1CC),
-              ),
-              alignment: TextAlign.center,
+    return RefreshIndicator(
+      color: UiConstants.primaryColor,
+      backgroundColor: Colors.black,
+      onRefresh: onRefresh,
+      child: SingleChildScrollView(
+        child: Column(
+          children: [
+            SizedBox(
+              height: SizeConfig.padding20,
             ),
-          ),
-          UserProgressIndicator(
-            level: state.userLevel,
-          ),
-          SizedBox(
-            height: SizeConfig.padding24,
-          ),
-
-          BadgeLevel(
-            levelsData: badgesModel.levels,
-            currentLevel: state.userLevel.level,
-          ),
-
-          SizedBox(
-            height: SizeConfig.padding34,
-          ),
-
-          HowSuperFelloWorksWidget(
-            superFelloWorks: badgesModel.superFelloWorks,
-          ),
-
-          /// Other badges.
-          if (badgesModel.otherBadges.isNotEmpty)
+            SvgPicture.network(
+              Assets.superFelloTitle,
+              height: SizeConfig.padding46,
+            ),
+            SizedBox(
+              height: SizeConfig.padding12,
+            ),
+            UserBadgeContainer(
+              level: state.userLevel,
+            ),
+            SizedBox(
+              height: SizeConfig.padding6,
+            ),
             Padding(
-              padding: EdgeInsets.only(
-                top: SizeConfig.padding32,
+              padding: EdgeInsets.symmetric(
+                  horizontal: SizeConfig.pageHorizontalMargins),
+              child: badgesModel.title.beautify(
+                style: TextStyles.rajdhaniSB.body1,
+                boldStyle: TextStyles.rajdhaniSB.body1.colour(
+                  const Color(0xFF26F1CC),
+                ),
+                alignment: TextAlign.center,
               ),
-              child: OtherBadges(
-                otherBadges: badgesModel.otherBadges,
-              ),
+            ),
+            UserProgressIndicator(
+              level: state.userLevel,
+            ),
+            SizedBox(
+              height: SizeConfig.padding24,
             ),
 
-          /// Super fello wall of frame.
-          if (leaderBoardModel != null &&
-              leaderBoardModel.leaderBoard.isNotEmpty)
-            Padding(
-              padding: EdgeInsets.only(
-                top: SizeConfig.padding16,
-              ),
-              child: SuperFelloWallFrame(
-                badgesLeaderBoard: leaderBoardModel,
-              ),
+            BadgeLevel(
+              levelsData: badgesModel.levels,
+              currentLevel: state.userLevel.level,
             ),
-        ],
+
+            SizedBox(
+              height: SizeConfig.padding34,
+            ),
+
+            HowSuperFelloWorksWidget(
+              superFelloWorks: badgesModel.superFelloWorks,
+            ),
+
+            /// Other badges.
+            if (badgesModel.otherBadges.isNotEmpty)
+              Padding(
+                padding: EdgeInsets.only(
+                  top: SizeConfig.padding32,
+                ),
+                child: OtherBadges(
+                  otherBadges: badgesModel.otherBadges,
+                ),
+              ),
+
+            /// Super fello wall of frame.
+            if (leaderBoardModel != null &&
+                leaderBoardModel.leaderBoard.isNotEmpty)
+              Padding(
+                padding: EdgeInsets.only(
+                  top: SizeConfig.padding16,
+                ),
+                child: SuperFelloWallFrame(
+                  badgesLeaderBoard: leaderBoardModel,
+                ),
+              ),
+          ],
+        ),
       ),
     );
   }

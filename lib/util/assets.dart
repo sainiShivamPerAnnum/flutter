@@ -426,4 +426,10 @@ class Assets {
 
   //Tickets
   static const String polkaDots = "assets/images/polkadots.png";
+
+  // super-fello.
+  static const String superFelloStar =
+      'https://ik.imagekit.io/9xfwtu0xm/Badges/star.svg';
+  static const String superFelloTitle =
+      'https://fello-dev-uploads.s3.ap-south-1.amazonaws.com/super_fello_title.svg';
 }

@@ -1,6 +1,7 @@
 import 'package:felloapp/core/model/fello_badges_model.dart';
 import 'package:felloapp/feature/fello_badges/shared/sf_level_mapping_extension.dart';
-import 'package:felloapp/feature/fello_badges/ui/widgets/badges_custom_painters.dart';
+import 'package:felloapp/ui/pages/static/app_widget.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 
@@ -99,10 +100,10 @@ class _UserProgressIndicatorState extends State<UserProgressIndicator> {
         Positioned(
           right: SizeConfig.padding18,
           top: SizeConfig.padding12,
-          child: CustomPaint(
-            size: Size(
-                SizeConfig.padding26, (SizeConfig.padding26 * 1).toDouble()),
-            painter: StarCustomPainter(),
+          child: SizedBox(
+            height: SizeConfig.padding26,
+            width: (SizeConfig.padding26 * 1).toDouble(),
+            child: const AppImage(Assets.superFelloStar),
           ),
         ),
       ],

@@ -78,7 +78,7 @@ class _BadgeLevelState extends State<BadgeLevel> {
     return SizedBox(
       child: CarouselSlider.builder(
         options: CarouselOptions(
-          viewportFraction: .91,
+          viewportFraction: .88,
           aspectRatio: .55,
           enableInfiniteScroll: false,
         ),
@@ -88,7 +88,7 @@ class _BadgeLevelState extends State<BadgeLevel> {
           return Padding(
             padding: EdgeInsets.symmetric(
               vertical: SizeConfig.padding8,
-              horizontal: SizeConfig.padding12,
+              horizontal: SizeConfig.padding8,
             ),
             child: BadgeDetailsContainer(
               index: index,

@@ -233,7 +233,7 @@ class GTDetailedView extends StatelessWidget {
                               height: SizeConfig.padding4,
                             ),
                             Text(
-                              ticket.tag ?? 'Ticket Titan',
+                              ticket.tag ?? 'Fello Badge',
                               // 'Tambola Titan',
                               style: TextStyles.sourceSansSB.body2
                                   .colour(Colors.white),
