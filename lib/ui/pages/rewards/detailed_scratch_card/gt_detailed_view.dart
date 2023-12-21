@@ -148,6 +148,7 @@ class GTDetailedView extends StatelessWidget {
     GTDetailedViewModel model,
   ) {
     S locale = locator<S>();
+    final tag = ticket.tag;
     if (ticket.redeemedTimestamp != null &&
         ticket.redeemedTimestamp !=
             TimestampModel(seconds: 0, nanoseconds: 0)) {
@@ -166,7 +167,7 @@ class GTDetailedView extends StatelessWidget {
           SizedBox(
             height: SizeConfig.padding40,
           ),
-          if (ticket.tag != null && (ticket.tag?.isNotEmpty ?? false))
+          if (tag != null && tag.isNotEmpty)
             Container(
               padding: EdgeInsets.symmetric(vertical: SizeConfig.padding16),
               margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding32),

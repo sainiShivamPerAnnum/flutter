@@ -95,28 +95,21 @@ class ProgressBottomSheet extends StatelessWidget {
           ),
 
           // Progress indicator.
-          if (badgeInformation.isBadgeAchieved)
-            Text(
-              'You have completed this task!',
-              style: TextStyles.sourceSans.body3.colour(
-                UiConstants.teal3,
-              ),
-            )
-          else ...[
+          if (!badgeInformation.isBadgeAchieved)
             BadgeProgressIndicator(
               achieve: badgeInformation.achieve,
             ),
+
+          if (badgeInformation.progressInfo.isNotEmpty) ...[
             SizedBox(
               height: SizeConfig.padding12,
             ),
-            if (badgeInformation.progressInfo.isNotEmpty) ...[
-              Text(
-                badgeInformation.progressInfo,
-                style: TextStyles.sourceSans.body3.copyWith(
-                  color: UiConstants.peach2,
-                ),
+            Text(
+              badgeInformation.progressInfo,
+              style: TextStyles.sourceSans.body3.copyWith(
+                color: UiConstants.peach2,
               ),
-            ]
+            ),
           ],
           SizedBox(
             height: SizeConfig.padding18,
