@@ -1,3 +1,4 @@
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 
@@ -12,7 +13,7 @@ class InterestGainLabel extends StatelessWidget {
   final VoidCallback? onTap;
 
   void _onTap() {
-    //
+    AppState.delegate!.parseRoute(Uri.parse('/augTxns'));
   }
 
   @override

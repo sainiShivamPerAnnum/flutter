@@ -15,6 +15,8 @@ class GoldProInvestmentResponseModel {
   final TimestampModel updatedOn;
   final String message_un_lease;
   final String? subText;
+  final num currentValue;
+  final String payoutMessage;
 
   const GoldProInvestmentResponseModel({
     required this.id,
@@ -28,6 +30,8 @@ class GoldProInvestmentResponseModel {
     required this.createdOn,
     required this.updatedOn,
     required this.message_un_lease,
+    required this.currentValue,
+    required this.payoutMessage,
     this.subText,
   });
 
@@ -47,6 +51,8 @@ class GoldProInvestmentResponseModel {
       message: map["message"] ?? "",
       createdOn: TimestampModel.fromMap(map['createdOn']),
       updatedOn: TimestampModel.fromMap(map['updatedOn']),
+      currentValue: map['current_value'],
+      payoutMessage: map['payout_message'],
       message_un_lease:
           map["message_un_lease"] ?? "Unable to un-lease at the moment",
       subText: subText,

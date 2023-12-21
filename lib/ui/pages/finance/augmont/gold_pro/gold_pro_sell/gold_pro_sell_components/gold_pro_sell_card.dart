@@ -28,7 +28,11 @@ class GoldProSellCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final invested = BaseUtil.digitPrecision(data.qty, 4, false);
     final interest = BaseUtil.digitPrecision(data.interest_collected, 4, false);
-    final total = BaseUtil.digitPrecision(invested + interest, 4, false);
+    final total = BaseUtil.digitPrecision(
+      data.currentValue.toDouble(),
+      4,
+      false,
+    );
     final dateOfInvestment = DateFormat('dd MMM, yyyy').format(
       DateTime.fromMillisecondsSinceEpoch(
         data.createdOn.millisecondsSinceEpoch,
@@ -68,10 +72,12 @@ class GoldProSellCard extends StatelessWidget {
             ),
           ],
         ),
-        SizedBox(
-          height: SizeConfig.padding12,
-        ),
-        InterestGainLabel(interestQuantity: interest),
+        if (interest != 0) ...[
+          InterestGainLabel(interestQuantity: interest),
+          SizedBox(
+            height: SizeConfig.padding12,
+          ),
+        ],
         Divider(
           height: SizeConfig.padding24,
           color: Colors.white.withOpacity(.1),
