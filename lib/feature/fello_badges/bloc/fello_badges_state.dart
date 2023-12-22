@@ -26,11 +26,11 @@ class FelloBadgesSuccess extends FelloBadgesState {
 
   FelloBadgesSuccess copyWith({
     FelloBadgesData? felloBadgesModel,
-    int? currentLevel,
+    SuperFelloLevel? level,
     BadgesLeaderBoardModel? badgesLeaderBoardModel,
   }) {
     return FelloBadgesSuccess(
-      userLevel: userLevel,
+      userLevel: level ?? userLevel,
       felloBadgesModel ?? this.felloBadgesModel,
       badgesLeaderBoardModel:
           badgesLeaderBoardModel ?? this.badgesLeaderBoardModel,
@@ -43,7 +43,8 @@ class FelloBadgesSuccess extends FelloBadgesState {
 
     return other is FelloBadgesSuccess &&
         other.felloBadgesModel == felloBadgesModel &&
-        other.badgesLeaderBoardModel == badgesLeaderBoardModel;
+        other.badgesLeaderBoardModel == badgesLeaderBoardModel &&
+        other.userLevel == userLevel;
   }
 
   @override

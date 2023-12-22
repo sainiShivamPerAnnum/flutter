@@ -1,9 +1,11 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/feature/tambola/tambola.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/fello_rich_text.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_buy/gold_buy_success_view.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_buy/gold_pro_buy_vm.dart';
@@ -49,6 +51,57 @@ class _GoldProBuySuccessViewState extends State<GoldProBuySuccessView>
     await Future.delayed(const Duration(seconds: 4));
   }
 
+  String _getButtonLabel(S locale, bool hasSuperFelloInStack) {
+    if (hasSuperFelloInStack) {
+      return 'Go back to Super Fello';
+    }
+
+    return locale.obDone;
+  }
+
+  Future<void> _onPressed(bool hasSuperFelloInStack) async {
+    AppState.isRepeated = true;
+    AppState.unblockNavigation();
+
+    if (hasSuperFelloInStack) {
+      while (AppState.delegate!.pages.last.name !=
+          FelloBadgeHomeViewPageConfig.path) {
+        await AppState.backButtonDispatcher!.didPopRoute();
+      }
+
+      await AppState.backButtonDispatcher!
+          .didPopRoute(); // remove super fello page.
+
+      await Future.delayed(const Duration(milliseconds: 100));
+
+      AppState.delegate!.appState.currentAction = PageAction(
+        state: PageState.addPage,
+        page: FelloBadgeHomeViewPageConfig,
+      );
+    }
+
+    await AppState.backButtonDispatcher!.didPopRoute();
+    AppState.delegate!.appState.setCurrentTabIndex =
+        DynamicUiUtils.navBar.indexWhere((element) => element == 'SV');
+
+    await locator<TambolaService>().getBestTambolaTickets();
+
+    await widget.txnService.showGtIfAvailable();
+
+    locator<AnalyticsService>().track(
+      eventName: AnalyticsEvents.doneTappedOnGoldProSuccess,
+      properties: {
+        "grams of gold leased": "${BaseUtil.digitPrecision(
+          widget.txnService.currentGoldPurchaseDetails.leaseQty!,
+          2,
+          false,
+        )} gms",
+        "Amount leased":
+            "₹ ${BaseUtil.getIntOrDouble(widget.txnService.currentGoldPurchaseDetails.goldBuyAmount!)}"
+      },
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     S locale = locator<S>();
@@ -56,6 +109,10 @@ class _GoldProBuySuccessViewState extends State<GoldProBuySuccessView>
     final responseText =
         widget.txnService.transactionResponseModel?.data?.subText;
     final subText = leaseText ?? responseText;
+
+    final superFelloIndex = AppState.delegate!.pages.indexWhere(
+      (element) => element.name == FelloBadgeHomeViewPageConfig.path,
+    );
 
     return Container(
       height: double.infinity,
@@ -360,33 +417,9 @@ class _GoldProBuySuccessViewState extends State<GoldProBuySuccessView>
                   height: SizeConfig.padding16,
                 ),
                 TextButton(
-                  onPressed: () {
-                    AppState.isRepeated = true;
-                    AppState.unblockNavigation();
-                    AppState.backButtonDispatcher!.didPopRoute();
-                    AppState.delegate!.appState.setCurrentTabIndex =
-                        DynamicUiUtils.navBar
-                            .indexWhere((element) => element == 'SV');
-
-                    locator<TambolaService>().getBestTambolaTickets();
-
-                    widget.txnService.showGtIfAvailable();
-                    locator<AnalyticsService>().track(
-                      eventName: AnalyticsEvents.doneTappedOnGoldProSuccess,
-                      properties: {
-                        "grams of gold leased": "${BaseUtil.digitPrecision(
-                          widget
-                              .txnService.currentGoldPurchaseDetails.leaseQty!,
-                          2,
-                          false,
-                        )} gms",
-                        "Amount leased":
-                            "₹ ${BaseUtil.getIntOrDouble(widget.txnService.currentGoldPurchaseDetails.goldBuyAmount!)}"
-                      },
-                    );
-                  },
+                  onPressed: () => _onPressed(superFelloIndex != -1),
                   child: Text(
-                    locale.obDone,
+                    _getButtonLabel(locale, superFelloIndex != -1),
                     style: TextStyles.rajdhaniSB.body0
                         .colour(UiConstants.primaryColor),
                   ),

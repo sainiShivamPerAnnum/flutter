@@ -29,8 +29,8 @@ class LevelUnlockDialog extends StatelessWidget {
 
   String _getLevelName() {
     return switch (level) {
-      SuperFelloLevel.BEGINNER => 'Beginner',
-      SuperFelloLevel.INTERMEDIATE => 'Intermediate',
+      SuperFelloLevel.GOOD => 'Good',
+      SuperFelloLevel.WISE => 'Wise',
       SuperFelloLevel.SUPER_FELLO => 'Super Fello',
       _ => ''
     };
@@ -43,7 +43,7 @@ class LevelUnlockDialog extends StatelessWidget {
     final label = _getLevelName();
 
     await Share.share(
-      'I just upgraded to $label on the FELLO app! This gives me access to some great benefits. You can become one too! Come, let\'s become save together!',
+      'I just upgraded to $label on the FELLO app! This gives me access to some great benefits. You can become one too! Come, let\'s save together!',
     );
 
     locator<AnalyticsService>().track(
@@ -61,15 +61,15 @@ class LevelUnlockDialog extends StatelessWidget {
 
   _LevelInformation _levelData() {
     return switch (level) {
-      SuperFelloLevel.BEGINNER => (
-          title: 'You are a Beginner Fello!',
-          description: 'You have earned all badges in beginner level',
+      SuperFelloLevel.GOOD => (
+          title: 'You are a Good Fello!',
+          description: 'You have earned all badges in good fello level',
           badgeUrl:
               'https://ik.imagekit.io/9xfwtu0xm/Badges/beginner_fello.svg',
         ),
-      SuperFelloLevel.INTERMEDIATE => (
-          title: 'You are a Intermediate Fello!',
-          description: 'You have earned all badges in intermediate level',
+      SuperFelloLevel.WISE => (
+          title: 'You are a Wise Fello!',
+          description: 'You have earned all badges in wise fello level',
           badgeUrl:
               'https://ik.imagekit.io/9xfwtu0xm/Badges/intermediate_fello.svg',
         ),

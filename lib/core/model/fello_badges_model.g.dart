@@ -83,8 +83,8 @@ Map<String, dynamic> _$LevelToJson(Level instance) => <String, dynamic>{
 
 const _$SuperFelloLevelEnumMap = {
   SuperFelloLevel.NEW_FELLO: 'NEW_FELLO',
-  SuperFelloLevel.BEGINNER: 'BEGINNER',
-  SuperFelloLevel.INTERMEDIATE: 'INTERMEDIATE',
+  SuperFelloLevel.GOOD: 'GOOD',
+  SuperFelloLevel.WISE: 'WISE',
   SuperFelloLevel.SUPER_FELLO: 'SUPER_FELLO',
 };
 

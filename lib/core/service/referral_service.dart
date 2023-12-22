@@ -58,7 +58,7 @@ class ReferralService extends ChangeNotifier {
   StreamSubscription<PendingDynamicLinkData>? _dynamicLinkSubscription;
   final S locale = locator<S>();
   final GlobalKey imageKey = GlobalKey();
-  String? _minWithdrawPrize;
+  num? _minWithdrawPrize;
   String? _refUnlock;
   int? _refUnlockAmt;
   String refCode = "---";
@@ -72,7 +72,7 @@ class ReferralService extends ChangeNotifier {
   String? shareMsg;
   int? _minWithdrawPrizeAmt;
 
-  String? get minWithdrawPrize => _minWithdrawPrize;
+  num? get minWithdrawPrize => _minWithdrawPrize;
 
   String? get refUnlock => _refUnlock;
 
@@ -380,8 +380,7 @@ class ReferralService extends ChangeNotifier {
   }
 
   fetchBasicConstantValues() {
-    _minWithdrawPrize =
-        AppConfig.getValue(AppConfigKey.min_withdrawable_prize).toString();
+    _minWithdrawPrize = locator<UserService>().baseUser!.minRedemptionAmt;
     _refUnlock = AppConfig.getValue(AppConfigKey.unlock_referral_amt);
     _refUnlockAmt = BaseUtil.toInt(_refUnlock);
     _minWithdrawPrizeAmt = BaseUtil.toInt(_minWithdrawPrize);

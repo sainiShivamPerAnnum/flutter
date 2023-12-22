@@ -71,9 +71,7 @@ class _ProfileBadgeWidgetState extends State<ProfileBadgeWidget> {
                   ],
                 )
               : null,
-          color: widget.superFelloLevel.isSuperFello
-              ? null
-              : const Color(0xFF191919),
+          color: const Color(0xFF191919),
         ),
         padding: EdgeInsets.symmetric(
           horizontal: SizeConfig.pageHorizontalMargins,

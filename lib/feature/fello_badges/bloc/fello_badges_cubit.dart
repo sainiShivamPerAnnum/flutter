@@ -39,12 +39,14 @@ class FelloBadgesCubit extends Cubit<FelloBadgesState> {
             ),
           );
 
-          unawaited(callLeaderBoardApi());
+          if (state is FelloBadgesSuccess) {
+            unawaited(callLeaderBoardApi());
+          }
 
-          await _postBadgeFetchHook(
+          await _postFetchHook(
             res.model!.data,
             onBadgeLevelChanged: _showBadgeAchievedPopup,
-            onLevelChanged: _showLevelChangePopup,
+            onLevelChanged: _onLevelChanged,
           );
         } else {
           emit(FelloBadgesError(res.model?.message ??
@@ -74,7 +76,7 @@ class FelloBadgesCubit extends Cubit<FelloBadgesState> {
     }
   }
 
-  Future<void> _postBadgeFetchHook(
+  Future<void> _postFetchHook(
     FelloBadgesData currentBadgeInfo, {
     ValueChanged<BadgeLevelInformation>? onBadgeLevelChanged,
     ValueChanged<SuperFelloLevel>? onLevelChanged,
@@ -195,8 +197,17 @@ class FelloBadgesCubit extends Cubit<FelloBadgesState> {
     );
   }
 
-  void _showLevelChangePopup(SuperFelloLevel level) {
-    BaseUtil.openDialog(
+  Future<void> _onLevelChanged(SuperFelloLevel level) async {
+    if (state is FelloBadgesSuccess) {
+      final newState = (state as FelloBadgesSuccess).copyWith(
+        level: level,
+      );
+
+      locator<UserService>().baseUser!.superFelloLevel = level;
+      emit(newState);
+    }
+
+    await BaseUtil.openDialog(
       isBarrierDismissible: true,
       addToScreenStack: true,
       hapticVibrate: true,

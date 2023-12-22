@@ -31,6 +31,7 @@ class BaseUser {
   bool? isOldUser;
   List segments;
   SuperFelloLevel superFelloLevel = SuperFelloLevel.NEW_FELLO;
+  num minRedemptionAmt = 200;
   static const String fldId = "mID";
   static const String fldMobile = "mMobile";
   static const String fldEmail = "mEmail";
@@ -63,10 +64,11 @@ class BaseUser {
   static const String fldIsOldUser = "isOldUser";
   static const String fldReferralCode = "referralCode";
   static const String fieldSuperFelloLevel = 'superFelloLevel';
+  static const String fieldMinRedemptionAmt = 'minRedemptionAmt';
 
   static const _$UserBadgeLevelEnumMap = {
-    'BEGINNER': SuperFelloLevel.BEGINNER,
-    'INTERMEDIATE': SuperFelloLevel.INTERMEDIATE,
+    'GOOD': SuperFelloLevel.GOOD,
+    'WISE': SuperFelloLevel.WISE,
     'SUPER_FELLO': SuperFelloLevel.SUPER_FELLO,
     'NEW_FELLO': SuperFelloLevel.NEW_FELLO,
   };
@@ -97,7 +99,8 @@ class BaseUser {
     this.avatarId,
     this.isOldUser,
     this.segments, {
-    this.superFelloLevel = SuperFelloLevel.BEGINNER,
+    this.superFelloLevel = SuperFelloLevel.NEW_FELLO,
+    this.minRedemptionAmt = 200,
   });
 
   BaseUser.newUser(String id, String mobile)
@@ -156,13 +159,13 @@ class BaseUser {
           data[fldAvatarId] ?? '',
           data[fldIsOldUser] ?? false,
           data['mSegments'] ?? [],
+          minRedemptionAmt: data[fieldMinRedemptionAmt] ?? 200,
           superFelloLevel: data[fieldSuperFelloLevel] != null
               ? _$UserBadgeLevelEnumMap[data[fieldSuperFelloLevel]]!
-              : SuperFelloLevel.BEGINNER,
+              : SuperFelloLevel.NEW_FELLO,
         );
 
   bool hasIncompleteDetails() {
-    //return ((_mobile?.isEmpty??true) || (_name?.isEmpty??true) || (_email?.isEmpty??true));
     return (mobile?.isEmpty ?? true) || (name?.isEmpty ?? true);
   }
 

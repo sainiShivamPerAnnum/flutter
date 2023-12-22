@@ -57,7 +57,6 @@ class _FelloBadgeUiState extends State<FelloBadgeUi> {
   @override
   void initState() {
     super.initState();
-
     BlocProvider.of<FelloBadgesCubit>(context).getFelloBadges();
   }
 
@@ -133,6 +132,7 @@ class FelloBadgeSuccessScreen extends StatelessWidget {
   Widget build(BuildContext context) {
     final badgesModel = state.felloBadgesModel;
     final leaderBoardModel = state.badgesLeaderBoardModel?.data;
+    final level = state.userLevel;
     return RefreshIndicator(
       color: UiConstants.primaryColor,
       backgroundColor: Colors.black,
@@ -150,8 +150,12 @@ class FelloBadgeSuccessScreen extends StatelessWidget {
             SizedBox(
               height: SizeConfig.padding12,
             ),
-            UserBadgeContainer(
-              level: state.userLevel,
+            BlocBuilder<FelloBadgesCubit, FelloBadgesState>(
+              builder: (context, s) {
+                return UserBadgeContainer(
+                  level: level,
+                );
+              },
             ),
             SizedBox(
               height: SizeConfig.padding6,

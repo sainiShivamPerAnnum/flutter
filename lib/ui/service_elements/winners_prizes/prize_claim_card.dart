@@ -1,8 +1,6 @@
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/prize_claim_choice.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
-import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/referral_service.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
@@ -36,9 +34,8 @@ class RewardBalanceWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    String minWithdrawPrize =
-        AppConfig.getValue(AppConfigKey.min_withdrawable_prize).toString();
-    int minWithdrawPrizeAmt = BaseUtil.toInt(minWithdrawPrize);
+    final minWithdrawPrize = locator<UserService>().baseUser!.minRedemptionAmt;
+    int minWithdrawPrizeAmt = minWithdrawPrize.toInt();
     bool showBottomInfo =
         (userService?.userFundWallet?.prizeLifetimeWin.toInt() ?? 0) >
                 minWithdrawPrizeAmt &&
@@ -92,13 +89,13 @@ class RewardRedeemWidget extends StatelessWidget {
   });
 
   final UserService? m;
-  final String minWithdrawPrize;
+  final num minWithdrawPrize;
   final bool isWinView;
 
   @override
   Widget build(BuildContext context) {
     var referralService = locator<ReferralService>();
-    int minWithdrawPrizeAmt = BaseUtil.toInt(minWithdrawPrize);
+    int minWithdrawPrizeAmt = minWithdrawPrize.toInt();
     String currentAsset = referralService
         .getRedeemAsset(m?.userFundWallet?.unclaimedBalance.toDouble() ?? 0.0);
     bool isEnabled = (m?.userFundWallet?.unclaimedBalance.toInt() ?? 0) >=
@@ -269,6 +266,7 @@ class ClaimButton extends StatelessWidget {
     required this.image,
     required this.onTap,
     required this.text,
+    super.key,
   });
 
   @override

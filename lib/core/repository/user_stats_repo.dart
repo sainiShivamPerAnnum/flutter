@@ -4,15 +4,12 @@ import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/model/app_environment.dart';
 import 'package:felloapp/core/model/game_stats_model.dart';
 import 'package:felloapp/core/repository/base_repo.dart';
-import 'package:felloapp/core/service/api.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
 
 class UserStatsRepo extends BaseRepo with ChangeNotifier {
-  final Api _api = locator<Api>();
-  final ApiPath _apiPaths = locator<ApiPath>();
   final _userService = locator<UserService>();
 
   static const _stats = 'stats';

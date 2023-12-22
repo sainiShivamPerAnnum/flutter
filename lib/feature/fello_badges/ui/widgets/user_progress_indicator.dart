@@ -16,8 +16,8 @@ class UserProgressIndicator extends StatefulWidget {
 
 class _UserProgressIndicatorState extends State<UserProgressIndicator> {
   final _levels = [
-    SuperFelloLevel.BEGINNER,
-    SuperFelloLevel.INTERMEDIATE,
+    SuperFelloLevel.GOOD,
+    SuperFelloLevel.WISE,
     SuperFelloLevel.SUPER_FELLO,
   ];
 
@@ -72,7 +72,7 @@ class _UserProgressIndicatorState extends State<UserProgressIndicator> {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    'BEGINNER',
+                    'GOOD FELLO',
                     style: TextStyles.sourceSansB.body4.colour(
                       const Color(0xFFB3B3B3),
                     ),
@@ -80,7 +80,7 @@ class _UserProgressIndicatorState extends State<UserProgressIndicator> {
                   Padding(
                     padding: EdgeInsets.only(left: SizeConfig.padding18),
                     child: Text(
-                      'INTERMEDIATE',
+                      'WISE FELLO',
                       style: TextStyles.sourceSansB.body4.colour(
                         const Color(0xFFB3B3B3),
                       ),

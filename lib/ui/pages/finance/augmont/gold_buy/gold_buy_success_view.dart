@@ -2,6 +2,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/faqTypes.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/subscription_models/subscription_model.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
@@ -11,6 +12,7 @@ import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/feature/tambola/tambola.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/asset_selection.dart';
 import 'package:felloapp/ui/pages/finance/transaction_faqs.dart';
 import 'package:felloapp/ui/pages/hometabs/save/gold_components/gold_pro_card.dart';
@@ -62,9 +64,52 @@ class _GoldBuySuccessViewState extends State<GoldBuySuccessView>
     await Future.delayed(const Duration(seconds: 4));
   }
 
+  String _getButtonLabel(S locale, bool hasSuperFelloInStack) {
+    if (hasSuperFelloInStack) {
+      return 'Go back to Super Fello';
+    }
+
+    return PowerPlayService.powerPlayDepositFlow
+        ? "Make another prediction"
+        : locale.obDone;
+  }
+
+  Future<void> _onPressed(bool hasSuperFelloInStack) async {
+    AppState.isRepeated = true;
+    AppState.unblockNavigation();
+
+    if (hasSuperFelloInStack) {
+      while (AppState.delegate!.pages.last.name !=
+          FelloBadgeHomeViewPageConfig.path) {
+        await AppState.backButtonDispatcher!.didPopRoute();
+      }
+
+      await AppState.backButtonDispatcher!
+          .didPopRoute(); // remove super fello page.
+
+      await Future.delayed(const Duration(milliseconds: 100));
+
+      AppState.delegate!.appState.currentAction = PageAction(
+        state: PageState.addPage,
+        page: FelloBadgeHomeViewPageConfig,
+      );
+    }
+
+    await AppState.backButtonDispatcher!.didPopRoute();
+    AppState.delegate!.appState.setCurrentTabIndex =
+        DynamicUiUtils.navBar.indexWhere((element) => element == 'SV');
+
+    await _augTxnService.showGtIfAvailable();
+  }
+
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
+
+    final superFelloIndex = AppState.delegate!.pages.indexWhere(
+      (element) => element.name == FelloBadgeHomeViewPageConfig.path,
+    );
+
     return Stack(
       children: [
         Padding(
@@ -336,20 +381,9 @@ class _GoldBuySuccessViewState extends State<GoldBuySuccessView>
             width: double.infinity,
             color: UiConstants.kBackgroundColor2,
             child: TextButton(
-              onPressed: () {
-                AppState.isRepeated = true;
-                AppState.unblockNavigation();
-                AppState.backButtonDispatcher!.didPopRoute();
-                AppState.delegate!.appState.setCurrentTabIndex = DynamicUiUtils
-                    .navBar
-                    .indexWhere((element) => element == 'SV');
-
-                _augTxnService.showGtIfAvailable();
-              },
+              onPressed: () => _onPressed(superFelloIndex != -1),
               child: Text(
-                PowerPlayService.powerPlayDepositFlow
-                    ? "Make another prediction"
-                    : locale.obDone,
+                _getButtonLabel(locale, superFelloIndex != -1),
                 style: TextStyles.rajdhaniSB.body0.copyWith(
                   color: UiConstants.primaryColor,
                   height: 1,

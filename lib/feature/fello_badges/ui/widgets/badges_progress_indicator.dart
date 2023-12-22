@@ -14,8 +14,8 @@ class BadgesProgressIndicator extends StatefulWidget {
 
 class _BadgesProgressIndicatorState extends State<BadgesProgressIndicator> {
   final _levels = [
-    SuperFelloLevel.BEGINNER,
-    SuperFelloLevel.INTERMEDIATE,
+    SuperFelloLevel.GOOD,
+    SuperFelloLevel.WISE,
     SuperFelloLevel.SUPER_FELLO,
   ];
 

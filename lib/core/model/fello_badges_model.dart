@@ -61,8 +61,8 @@ class LevelBenefit {
 
 enum SuperFelloLevel {
   NEW_FELLO(0),
-  BEGINNER(1),
-  INTERMEDIATE(2),
+  GOOD(1),
+  WISE(2),
   SUPER_FELLO(3);
 
   const SuperFelloLevel(this.level);

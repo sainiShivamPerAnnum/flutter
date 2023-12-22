@@ -116,7 +116,7 @@ class BadgeDetailsContainer extends StatelessWidget {
 
   final List<Color> borderColor = const [
     Color(0xFFE19366),
-    Color(0xff394B72),
+    Color(0xff93B5FE),
     Color(0xffFFD979),
   ];
 
@@ -138,8 +138,8 @@ class BadgeDetailsContainer extends StatelessWidget {
 
   String _lockLabel() {
     final level = switch (levelDetails.level) {
-      SuperFelloLevel.INTERMEDIATE => 'Beginner Level',
-      SuperFelloLevel.SUPER_FELLO => 'Intermediate Level',
+      SuperFelloLevel.WISE => 'Good Level',
+      SuperFelloLevel.SUPER_FELLO => 'Wise Level',
       _ => ''
     };
 
