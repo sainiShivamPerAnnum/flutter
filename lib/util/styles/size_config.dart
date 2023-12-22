@@ -3,6 +3,7 @@ import 'dart:math' as math;
 import 'package:flutter/material.dart';
 
 class SizeConfig {
+  const SizeConfig._();
   // reference
   static late MediaQueryData _mediaQueryData;
 
@@ -32,7 +33,7 @@ class SizeConfig {
   static EdgeInsets? viewPadding;
   static late double fToolBarHeight;
 
-  void init(BuildContext context) {
+  static void init(BuildContext context) {
     _mediaQueryData = MediaQuery.of(context);
     screenWidth = _mediaQueryData.size.width;
     screenHeight = _mediaQueryData.size.height;

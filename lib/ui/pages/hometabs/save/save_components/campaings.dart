@@ -1,9 +1,6 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
-import 'package:felloapp/util/localization/generated/l10n.dart';
-import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
 
@@ -13,15 +10,16 @@ class Campaigns extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    S locale = S.of(context);
     return CampaignCardSection(saveVm: model);
   }
 }
 
 class CampaignCardSection extends StatelessWidget {
   final SaveViewModel saveVm;
-  final UserService _userService = locator<UserService>();
-  CampaignCardSection({required this.saveVm, Key? key}) : super(key: key);
+  const CampaignCardSection({
+    required this.saveVm,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {

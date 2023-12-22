@@ -2,7 +2,6 @@ import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/extensions/string_extension.dart';
-import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -11,10 +10,10 @@ import 'package:property_change_notifier/property_change_notifier.dart';
 
 class Salutation extends StatelessWidget {
   const Salutation({
-    Key? key,
+    super.key,
     this.leftMargin,
     this.textStyle,
-  }) : super(key: key);
+  });
 
   final double? leftMargin;
   final TextStyle? textStyle;
@@ -23,7 +22,6 @@ class Salutation extends StatelessWidget {
   Widget build(BuildContext context) {
     return GestureDetector(
       onTap: () {
-        Haptic.vibrate();
         AppState.delegate!.parseRoute(Uri.parse('/accounts'));
       },
       child: Padding(

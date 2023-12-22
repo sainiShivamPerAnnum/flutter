@@ -1,14 +1,14 @@
-import 'dart:developer';
-
 import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/transaction_type_enum.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/service/payments/lendbox_transaction_service.dart';
 import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/feature/tambola/tambola.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_buy/gold_buy_success_view.dart';
 import 'package:felloapp/ui/pages/finance/transaction_faqs.dart';
 import 'package:felloapp/ui/service_elements/user_service/user_fund_quantity_se.dart';
@@ -88,9 +88,55 @@ class _LendboxSuccessViewState extends State<LendboxSuccessView>
     return "";
   }
 
+  String _getButtonLabel(S locale, bool hasSuperFelloInStack) {
+    if (hasSuperFelloInStack) {
+      return 'Go back to Super Fello';
+    }
+
+    return PowerPlayService.powerPlayDepositFlow
+        ? "Make another prediction"
+        : locale.obDone;
+  }
+
+  Future<void> _onPressed(bool hasSuperFelloInStack) async {
+    AppState.isRepeated = true;
+    AppState.unblockNavigation();
+
+    if (hasSuperFelloInStack) {
+      while (AppState.delegate!.pages.last.name !=
+          FelloBadgeHomeViewPageConfig.path) {
+        await AppState.backButtonDispatcher!.didPopRoute();
+      }
+
+      await AppState.backButtonDispatcher!
+          .didPopRoute(); // remove super fello page.
+
+      await Future.delayed(const Duration(milliseconds: 100));
+
+      AppState.delegate!.appState.currentAction = PageAction(
+        state: PageState.addPage,
+        page: FelloBadgeHomeViewPageConfig,
+      );
+    }
+
+    while (AppState.screenStack.length > 1) {
+      await AppState.backButtonDispatcher!.didPopRoute();
+    }
+
+    AppState.delegate!.appState.setCurrentTabIndex =
+        DynamicUiUtils.navBar.indexWhere((element) => element == 'SV');
+
+    showGtIfAvailable();
+  }
+
   @override
   Widget build(BuildContext context) {
-    S locale = S.of(context);
+    final locale = S.of(context);
+
+    final superFelloIndex = AppState.delegate!.pages.indexWhere(
+      (element) => element.name == FelloBadgeHomeViewPageConfig.path,
+    );
+
     return Stack(
       children: [
         Material(
@@ -418,26 +464,9 @@ class _LendboxSuccessViewState extends State<LendboxSuccessView>
             height: SizeConfig.padding64,
             width: double.infinity,
             child: TextButton(
-              onPressed: () async {
-                AppState.isRepeated = true;
-                AppState.unblockNavigation();
-
-                log("Current Configuration: ${AppState.delegate!.currentConfiguration!.key} ||  screenStack.last ${AppState.screenStack.last}");
-
-                while (AppState.screenStack.length > 1) {
-                  await AppState.backButtonDispatcher!.didPopRoute();
-                }
-
-                AppState.delegate!.appState.setCurrentTabIndex = DynamicUiUtils
-                    .navBar
-                    .indexWhere((element) => element == 'SV');
-
-                showGtIfAvailable();
-              },
+              onPressed: () => _onPressed(superFelloIndex != -1),
               child: Text(
-                PowerPlayService.powerPlayDepositFlow
-                    ? "Make another prediction"
-                    : locale.obDone,
+                _getButtonLabel(locale, superFelloIndex != -1),
                 style: TextStyles.rajdhaniSB.body0
                     .colour(UiConstants.primaryColor),
               ),

@@ -5,25 +5,25 @@ class ApiPath {
   const ApiPath();
 
   //Analytics
-  get kSetInstallInfo => "/set-install-info";
+  String get kSetInstallInfo => "/set-install-info";
 
   //Augmont Ops
-  get kGetGoldRates => "/gold/rates";
+  String get kGetGoldRates => "/gold/rates";
 
   static String get happyHour => "/happy-hours/active";
 
   //User Ops Apis
-  get kAddNewUser => "/v2/new";
+  String get kAddNewUser => "/v2/new";
 
-  get kUpdateUserAppflyer => "/appflyer";
+  String get kUpdateUserAppflyer => "/appflyer";
 
   static const String kAddBankAccount = "/bank";
 
   static String kGetBankAccountDetails(String? uid) => '/$uid/bank';
 
-  get kVerifyPan => "/verify/pan";
+  String get kVerifyPan => "/verify/pan";
 
-  static getGameStats(String uid) => "/user/$uid/game/stats";
+  static String getGameStats(String uid) => "/user/$uid/game/stats";
 
   static String kGetSignedImageUrl(String uid) => "/upload/$uid/image";
 
@@ -31,7 +31,7 @@ class ApiPath {
 
   static String kGetPan(String uid) => "/$uid/pan";
 
-  get kCustomAuthToken => "/api/v3/trucallerAuthToken";
+  String get kCustomAuthToken => "/api/v3/trucallerAuthToken";
   static const acquisitionTracking = "/userOps/api/v3/opt-analytics";
   static const String updateFcm = '/fcm/client_token';
 
@@ -83,23 +83,23 @@ class ApiPath {
       : "/eligible";
 
   //DeviceInfo
-  get kSetUserDeviceId => "/setUserDeviceId";
+  String get kSetUserDeviceId => "/setUserDeviceId";
   static const kCreatePaytmTransaction = "/transaction";
   static const kProcessPaytmTransaction = "/process";
 
-  get kCreateSubscription => "/subscription";
+  String get kCreateSubscription => "/subscription";
 
-  get kPauseSubscription => "/subscription/pause";
+  String get kPauseSubscription => "/subscription/pause";
 
-  get kResumeSubscription => "/subscription/resume";
+  String get kResumeSubscription => "/subscription/resume";
 
-  get kValidateVpa => "/subscription/vpa";
+  String get kValidateVpa => "/subscription/vpa";
 
-  get kProcessSubscription => "/process";
+  String get kProcessSubscription => "/process";
 
-  get kActiveSubscription => "/subscription";
+  String get kActiveSubscription => "/subscription";
 
-  get kNextDebitDate => "/debit";
+  String get kNextDebitDate => "/debit";
   static const kOngoingCampaigns = "/campaigns";
   static const kFelloFacts = "/fello/facts";
 
@@ -123,9 +123,9 @@ class ApiPath {
 
   static String getMilestone(String uid) => "/user/$uid/milestones";
 
-  static prizeBySubtype(String? uid) => '/user/$uid/gt';
+  static String prizeBySubtype(String? uid) => '/user/$uid/gt';
 
-  static getScratchCard(String? uid) => '/user/$uid/golden_tickets';
+  static String getScratchCard(String? uid) => '/user/$uid/golden_tickets';
 
   // Payment Apis
   static String get validateVPA => "/vpa";
@@ -252,4 +252,8 @@ class ApiPath {
 
   static String getComponent(ComponentType componentType) =>
       '/component/${componentType.value}';
+
+  static const String felloBadges = "/super-fello";
+
+  static const String badgesLeaderBoard = "/super-fello/leaderboard";
 }

@@ -424,8 +424,6 @@ class LineIndicator extends StatelessWidget {
           child: Container(
             alignment: Alignment.bottomLeft,
             height: SizeConfig.screenHeight! * 0.48,
-            // width: SizeConfig.padding200,
-            // color: Colors.red,
             child: AnimatedContainer(
               alignment: Alignment.bottomCenter,
               height: heightFactor * (SizeConfig.screenHeight! * 0.57),

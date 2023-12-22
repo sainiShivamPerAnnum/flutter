@@ -153,7 +153,7 @@
   "couldHaveGrown": "could have grown to ",
   "by2030": "by 2030! 💸",
   "wantToSell": "Are you sure you want to sell?",
-  "creditedToYourLinkedBankAccount": "By continuing, ₹{amount} will be credited to your linked bank account instantly",
+  "creditedToYourLinkedBankAccount": "By continuing, ₹{amount} will be credited to your linked bank account",
   "digitalGoldSubTitle": "99.9% pure | 24K Gold | 100% secure",
   "maxAmountMessage": "Upto ₹ {amount} can be invested at one go",
   "@maxAmountMessage": {

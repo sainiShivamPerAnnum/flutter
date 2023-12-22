@@ -656,6 +656,17 @@ class _FloPendingActionState extends State<FloPendingAction>
                 child: GestureDetector(
                   onTap: () {
                     Haptic.vibrate();
+                    locator<AnalyticsService>().track(
+                      eventName: AnalyticsEvents.pendingActionsFloTapped,
+                      properties: {
+                        "Transaction count": model.pendingMaturityCount,
+                        "initial decision taken": model.userDecision.name,
+                        "asset": model.filteredDeposits?[0].fundType,
+                        "principal amount":
+                            model.filteredDeposits?[0].investedAmt
+                      },
+                    );
+
                     BaseUtil.openModalBottomSheet(
                       addToScreenStack: true,
                       enableDrag: false,
@@ -667,17 +678,6 @@ class _FloPendingActionState extends State<FloPendingAction>
                         decision: model.userDecision,
                         depositData: model.filteredDeposits![0],
                       ),
-                    );
-
-                    locator<AnalyticsService>().track(
-                      eventName: AnalyticsEvents.pendingActionsFloTapped,
-                      properties: {
-                        "Transaction count": model.pendingMaturityCount,
-                        "initial decision taken": model.userDecision.name,
-                        "asset": model.filteredDeposits![0].fundType,
-                        "principal amount":
-                            model.filteredDeposits?[0].investedAmt
-                      },
                     );
                   },
                   child: Container(

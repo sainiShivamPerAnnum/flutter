@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:advertising_id/advertising_id.dart';
@@ -252,7 +251,7 @@ class LoginControllerViewModel extends BaseViewModel {
 
             bool flag = false;
             String message = "Please try again in sometime";
-            log(userService.baseUser!.toJson().toString());
+
             try {
               userService.baseUser!.mobile = userMobile;
               final ApiResponse response =

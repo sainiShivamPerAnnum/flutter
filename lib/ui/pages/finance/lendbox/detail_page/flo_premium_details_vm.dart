@@ -60,14 +60,14 @@ class FloPremiumDetailsViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  List<bool> detStatus = [false, false, false, false, false, false];
+  List<bool> detStatus = List.filled(6, false);
   List<String?> faqHeaders = [
     "How safe is the invested money? Who is the money lent to?",
     "How does Lendbox (P2P Lending partner) manage the risk of default on my money?",
     "What happens to my money after maturity?",
     "How can I withdraw my money after maturity?",
     "How is maturity different from a lock-in?",
-    "Can I withdraw my money before Maturity in 10/12% returns ?"
+    "Can I withdraw my money before Maturity in 10/12% returns?",
   ];
   List<String?> faqResponses = [
     "Your funds are safe and secure with our lending partner Lendbox. To safeguard the investments, a lender's money is distributed across borrowers who are assessed on 200+ parameters to check the creditworthiness of the borrowers to ensure the credibility of borrowers.",
@@ -75,7 +75,7 @@ class FloPremiumDetailsViewModel extends BaseViewModel {
     "Fello Flo Premium plans allow you to decide what happens to your money after maturity. You can choose what you want to do with your money while you invest. If you do not select a preference, we will contact you and confirm what you want to do with the corpus post maturity.",
     "You can select the option 'Withdraw to Bank' when you save any amount and the money with the interest will be credited to your respective bank account. Make sure to fill in the bank account details before the end of maturity period.",
     "You can withdraw your money at any point post the end of a Lock-in period. In case of maturity, you need to decide before hand if your money can be re-invested into the same asset or a different asset or withdrawn to bank at the end of the period",
-    "No, you can't withdraw your money before maturity or lock in period."
+    "No, you can't withdraw your money before maturity or lock in period.",
   ];
 
   List<UserTransaction> transactionsList = [];

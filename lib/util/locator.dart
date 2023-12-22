@@ -83,9 +83,9 @@ import 'package:felloapp/ui/pages/hometabs/home/card_actions_notifier.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/components/journey_banners/journey_banners_vm.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/components/source_adaptive_asset/source_adaptive_asset.vm.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/journey_vm.dart';
+import 'package:felloapp/ui/pages/hometabs/my_account/my_account_vm.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_viewModel.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
-import 'package:felloapp/ui/pages/hometabs/win/win_viewModel.dart';
 import 'package:felloapp/ui/pages/login/login_controller_vm.dart';
 import 'package:felloapp/ui/pages/login/screens/mobile_input/mobile_input_vm.dart';
 import 'package:felloapp/ui/pages/login/screens/name_input/name_input_vm.dart';
@@ -207,7 +207,7 @@ Future<void> setupLocator() async {
   /// Hometabs
   locator.registerFactory(PlayViewModel.new);
   locator.registerFactory(SaveViewModel.new);
-  locator.registerFactory(WinViewModel.new);
+  locator.registerFactory(MyAccountVM.new);
   locator.registerFactory(JourneyPageViewModel.new);
 
   /// VIEW MODELS

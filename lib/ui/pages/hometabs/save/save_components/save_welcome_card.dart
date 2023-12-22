@@ -1,8 +1,8 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/portfolio_model.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/ui/pages/hometabs/my_account/my_account_components/win_helpers.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/walkthrough_video_section.dart';
-import 'package:felloapp/ui/pages/hometabs/win/win_components/win_helpers.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';

@@ -338,36 +338,6 @@ class TambolaService extends ChangeNotifier {
 
   Future<void> fetchWeeklyPicks({bool forcedRefresh = false}) async {
     try {
-      //
-      /**
-       * 
-       * if Today's Picks != null 
-       * {
-       *     Check if user has spined to slot machine or not 
-       * 
-       *     Check from Shared Prefs TT_LAST_CACHE_DAY
-       * 
-       * If day is today && month is this month
-       * --> user has already spined the wheel, show the numbers instead of slot machine
-       * --> show today's numbers at slot machine numbers
-       * --> no spin button
-       * 
-       * else 
-       * --> user has not spined today, show slot machine and set today's picks 
-       *     to slot results
-       * --> set slot result to today's picks and
-       * 
-       * 
-       * }
-       * 
-       * else {
-       * -->  show all picks
-       * }
-       * 
-       * 
-       * 
-       * 
-       */
       _logger.i('Requesting for weekly picks');
       final ApiResponse picksResponse = await _tambolaRepo.getWeeklyPicks();
       if (picksResponse.isSuccess()) {

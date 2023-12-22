@@ -24,30 +24,26 @@ class FAppBar extends StatelessWidget implements PreferredSizeWidget {
   final Widget? titleWidget;
   final bool? centerTitle;
   final bool leadingPadding;
-
-  // final bool hasBackButton;
   final TextStyle? style;
 
-  const FAppBar(
-      {Key? key,
-      this.type,
-      this.title,
-      this.showCoinBar = true,
-      this.leading,
-      this.showLeading = true,
-      this.showAvatar = true,
-      this.showHelpButton = true,
-      this.backgroundColor,
-      this.style,
-      this.action,
-      this.leftPad,
-      this.subtitle,
-      this.centerTitle,
-      this.titleWidget,
-      this.leadingPadding = true
-      // this.hasBackButton = true
-      })
-      : super(key: key);
+  const FAppBar({
+    super.key,
+    this.type,
+    this.title,
+    this.showCoinBar = true,
+    this.leading,
+    this.showLeading = true,
+    this.showAvatar = true,
+    this.showHelpButton = true,
+    this.backgroundColor,
+    this.style,
+    this.action,
+    this.leftPad,
+    this.subtitle,
+    this.centerTitle,
+    this.titleWidget,
+    this.leadingPadding = true,
+  });
 
   @override
   Size get preferredSize => const Size.fromHeight(kToolbarHeight);
@@ -60,15 +56,16 @@ class FAppBar extends StatelessWidget implements PreferredSizeWidget {
         mainAxisSize: MainAxisSize.min,
         children: [
           if (leadingPadding) SizedBox(width: SizeConfig.padding8),
-          showAvatar
-              ? Transform.translate(
-                  offset: Offset(0, SizeConfig.padding2),
-                  child: ProfileImageSE(
-                    key: K.userAvatarKey,
-                    radius: SizeConfig.avatarRadius * 0.9,
-                  ),
-                )
-              : const SizedBox(),
+          if (showAvatar)
+            Transform.translate(
+              offset: Offset(0, SizeConfig.padding2),
+              child: ProfileImageSE(
+                padding: EdgeInsets.all(SizeConfig.padding6),
+                key: K.userAvatarKey,
+                radius: SizeConfig.avatarRadius * 0.9,
+                showBadge: true,
+              ),
+            ),
           titleWidget ??
               Text(
                 title ?? '',

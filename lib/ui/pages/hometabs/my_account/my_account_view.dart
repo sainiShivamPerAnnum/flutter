@@ -3,12 +3,13 @@ import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/appbar/appbar.dart';
 import 'package:felloapp/ui/keys/keys.dart';
-import 'package:felloapp/ui/pages/hometabs/win/win_components/current_winnings_info.dart';
-import 'package:felloapp/ui/pages/hometabs/win/win_components/news_component.dart';
-import 'package:felloapp/ui/pages/hometabs/win/win_components/refer_and_earn_card.dart';
-import 'package:felloapp/ui/pages/hometabs/win/win_components/scratch_card_info_strip.dart';
-import 'package:felloapp/ui/pages/hometabs/win/win_components/win_helpers.dart';
-import 'package:felloapp/ui/pages/hometabs/win/win_viewModel.dart';
+import 'package:felloapp/ui/pages/hometabs/my_account/my_account_components/current_winnings_info.dart';
+import 'package:felloapp/ui/pages/hometabs/my_account/my_account_components/fello_badge_profile_widget.dart';
+import 'package:felloapp/ui/pages/hometabs/my_account/my_account_components/news_component.dart';
+import 'package:felloapp/ui/pages/hometabs/my_account/my_account_components/refer_and_earn_card.dart';
+import 'package:felloapp/ui/pages/hometabs/my_account/my_account_components/scratch_card_info_strip.dart';
+import 'package:felloapp/ui/pages/hometabs/my_account/my_account_components/win_helpers.dart';
+import 'package:felloapp/ui/pages/hometabs/my_account/my_account_vm.dart';
 import 'package:felloapp/ui/pages/static/dev_rel.dart';
 import 'package:felloapp/ui/pages/static/fello_appbar.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
@@ -17,13 +18,13 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 
-class Win extends StatelessWidget {
-  const Win({Key? key}) : super(key: key);
+class MyAccount extends StatelessWidget {
+  const MyAccount({Key? key}) : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     final S locale = locator<S>();
-    return BaseView<WinViewModel>(
+    return BaseView<MyAccountVM>(
       onModelReady: (model) => model.init(),
       onModelDispose: (model) => model.clear(),
       builder: (ctx, model, child) {
@@ -48,16 +49,11 @@ class Win extends StatelessWidget {
             body: ListView(
               padding: EdgeInsets.zero,
               children: [
-                // const Salutation(),
-                // AccountInfoTiles(
-                //   title: 'App Walkthrough',
-                //   uri: "",
-                //   onTap: () {
-                //     locator<AnalyticsService>()
-                //         .track(eventName: 'App Walkthrough');
-                //     SpotLightController.instance.startQuickTour();
-                //   },
-                // ),
+                ProfileBadgeWidget(
+                  onPickImage: model.showCustomAvatarsDialog,
+                  superFelloLevel: model.superFelloLevel,
+                ),
+
                 AccountInfoTiles(
                   key: K.userProfileEntryCTAKey,
                   title: locale.abMyProfile,
@@ -87,56 +83,15 @@ class Win extends StatelessWidget {
                 const CurrentWinningsInfo(),
                 //Refer and Earn
                 const ReferEarnCard(),
-                // Referral Leaderboard
-                // const ReferralLeaderboard(),
                 //Fello News
                 FelloNewsComponent(model: model),
                 SizedBox(
                   height: SizeConfig.padding12,
                 ),
-                // Center(
-                //   child: Container(
-                //     width: SizeConfig.screenWidth! * 0.48,
-                //     padding:
-                //         EdgeInsets.symmetric(vertical: SizeConfig.padding16),
-                //     child: OutlinedButton(
-                //       style: OutlinedButton.styleFrom(
-                //         side: const BorderSide(width: 1.0, color: Colors.white),
-                //       ),
-                //       onPressed: () {
-                //         Haptic.vibrate();
-
-                //         BaseUtil.openModalBottomSheet(
-                //           addToScreenStack: true,
-                //           enableDrag: false,
-                //           hapticVibrate: true,
-                //           isBarrierDismissible: true,
-                //           backgroundColor: Colors.transparent,
-                //           isScrollControlled: true,
-                //           content: const FoundBug(),
-                //         );
-
-                //         locator<AnalyticsService>().track(
-                //           eventName: AnalyticsEvents.reportBugTapped,
-                //         );
-                //       },
-                //       child: Text(
-                //         "Issues with the App?",
-                //         style: TextStyles.sourceSansB.body2,
-                //       ),
-                //     ),
-                //   ),
-                // ),
-                // DEV PURPOSE ONLY
                 const CacheClearWidget(),
                 SizedBox(
                   height: SizeConfig.padding10,
                 ),
-
-                // LottieBuilder.network(
-                //     "https://d37gtxigg82zaw.cloudfront.net/scroll-animation.json"),
-
-                // SizedBox(height: SizeConfig.navBarHeight),
               ],
             ),
           );

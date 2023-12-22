@@ -2,7 +2,6 @@ import 'package:felloapp/ui/pages/static/profile_image.dart';
 import 'package:felloapp/ui/pages/userProfile/userProfile/components/user_brief.dart';
 import 'package:felloapp/ui/pages/userProfile/userProfile/userProfile_viewModel.dart';
 import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
-import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -18,18 +17,13 @@ class ProfileHeader extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    S locale = S.of(context);
     return Container(
       margin: EdgeInsets.only(
         bottom: SizeConfig.padding40,
       ),
       width: SizeConfig.screenWidth,
       decoration: BoxDecoration(
-        color:
-            //  model.isNewUser
-            //     ? Colors.transparent
-            //     :
-            UiConstants.kSecondaryBackgroundColor,
+        color: UiConstants.kSecondaryBackgroundColor,
         borderRadius: BorderRadius.only(
           bottomLeft: Radius.circular(SizeConfig.roundness24),
           bottomRight: Radius.circular(SizeConfig.roundness24),
@@ -40,8 +34,6 @@ class ProfileHeader extends StatelessWidget {
         mainAxisAlignment: MainAxisAlignment.start,
         children: [
           NewProfileImage(
-            // isNewUser: model.isNewUser,
-
             updateProfilePicture: model.showCustomAvatarsDialog,
             image: ProfileImageSE(
               radius: SizeConfig.screenWidth! * 0.25,
@@ -49,7 +41,6 @@ class ProfileHeader extends StatelessWidget {
             ),
           ),
           SizedBox(height: SizeConfig.padding6),
-          // if (!model.isNewUser)
           UserBrief(model: model),
           SizedBox(height: SizeConfig.padding12),
           Container(

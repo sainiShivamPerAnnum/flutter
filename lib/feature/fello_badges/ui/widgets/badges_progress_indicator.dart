@@ -1,0 +1,102 @@
+import 'package:felloapp/core/model/fello_badges_model.dart';
+import 'package:felloapp/feature/fello_badges/shared/sf_level_mapping_extension.dart';
+import 'package:felloapp/util/styles/styles.dart';
+import 'package:flutter/material.dart';
+
+class BadgesProgressIndicator extends StatefulWidget {
+  const BadgesProgressIndicator({required this.level, super.key});
+  final SuperFelloLevel level;
+
+  @override
+  State<BadgesProgressIndicator> createState() =>
+      _BadgesProgressIndicatorState();
+}
+
+class _BadgesProgressIndicatorState extends State<BadgesProgressIndicator> {
+  final _levels = [
+    SuperFelloLevel.GOOD,
+    SuperFelloLevel.WISE,
+    SuperFelloLevel.SUPER_FELLO,
+  ];
+
+  double _getProgress(int index) {
+    // If level is current.
+    if (_levels[index].level <= widget.level.level) {
+      return 1;
+    }
+
+    // For next level.
+    if (_levels[index].level == widget.level.level + 1) {
+      return .1;
+    }
+
+    return 0;
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisSize: MainAxisSize.min,
+      children: [
+        for (var i = 0; i < _levels.length; i++) ...[
+          Expanded(
+            child: _Indicator(
+              progress: _getProgress(i),
+              color: _levels[i].getLevelData.borderColor,
+            ),
+          ),
+          if (i != _levels.length - 1)
+            const SizedBox(
+              width: 4,
+            )
+        ]
+      ],
+    );
+  }
+}
+
+class _Indicator extends StatelessWidget {
+  final double progress;
+  final Color color;
+
+  const _Indicator({
+    required this.progress,
+    required this.color,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return LayoutBuilder(builder: (context, constraints) {
+      final maxWidth = constraints.biggest.width;
+      return Stack(
+        children: [
+          Container(
+            width: maxWidth,
+            height: SizeConfig.padding6,
+            decoration: ShapeDecoration(
+              color: const Color(0xFFD9D9D9).withOpacity(0.25),
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(4)),
+            ),
+          ),
+          Container(
+            alignment: Alignment.centerLeft,
+            height: SizeConfig.padding6,
+            child: AnimatedContainer(
+              alignment: Alignment.bottomCenter,
+              width: progress * maxWidth,
+              height: SizeConfig.padding6,
+              duration: const Duration(milliseconds: 800),
+              curve: Curves.easeInExpo,
+              decoration: ShapeDecoration(
+                color: color,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(4)),
+              ),
+            ),
+          ),
+        ],
+      );
+    });
+  }
+}

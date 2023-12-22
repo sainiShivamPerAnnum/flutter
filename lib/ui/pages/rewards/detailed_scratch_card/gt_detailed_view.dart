@@ -1,10 +1,15 @@
 import 'dart:developer';
 
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/scratch_card_model.dart';
 import 'package:felloapp/core/model/timestamp_model.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/rewards/detailed_scratch_card/gt_detailed_vm.dart';
 import 'package:felloapp/ui/pages/rewards/scratch_card_const.dart';
@@ -28,6 +33,21 @@ class GTDetailedView extends StatelessWidget {
   final ScratchCard ticket;
 
   const GTDetailedView({required this.ticket, super.key});
+
+  Future<void> _onTapViewAllBadges() async {
+    await AppState.backButtonDispatcher!.didPopRoute();
+    await Future.delayed(const Duration(milliseconds: 400)); // For animation.
+    AppState.delegate!.appState.currentAction = PageAction(
+      state: PageState.addPage,
+      page: FelloBadgeHomeViewPageConfig,
+    );
+
+    locator<AnalyticsService>()
+        .track(eventName: AnalyticsEvents.superFelloEntryPoint, properties: {
+      'current_level': locator<UserService>().baseUser!.superFelloLevel.name,
+      'location': 'scratch_card',
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -128,6 +148,7 @@ class GTDetailedView extends StatelessWidget {
     GTDetailedViewModel model,
   ) {
     S locale = locator<S>();
+    final tag = ticket.tag;
     if (ticket.redeemedTimestamp != null &&
         ticket.redeemedTimestamp !=
             TimestampModel(seconds: 0, nanoseconds: 0)) {
@@ -146,71 +167,111 @@ class GTDetailedView extends StatelessWidget {
           SizedBox(
             height: SizeConfig.padding40,
           ),
-          if (ticket.tag != null && (ticket.tag?.isNotEmpty ?? false))
-            SizedBox(
-              height: SizeConfig.padding120,
-              child: Row(
+          if (tag != null && tag.isNotEmpty)
+            Container(
+              padding: EdgeInsets.symmetric(vertical: SizeConfig.padding16),
+              margin: EdgeInsets.symmetric(horizontal: SizeConfig.padding32),
+              decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(SizeConfig.padding12),
+                color: Colors.black,
+              ),
+              child: Column(
                 mainAxisAlignment: MainAxisAlignment.center,
+                mainAxisSize: MainAxisSize.min,
                 children: [
-                  Expanded(
-                    child: Column(
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Expanded(
+                        child: Column(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              ScratchCardConstants.getTitle(
+                                  ticket.tag!)['title']!,
+                              style: TextStyles.sourceSans.body3
+                                  .colour(Colors.white),
+                              textAlign: TextAlign.center,
+                            ),
+                            SizedBox(
+                              height: SizeConfig.padding8,
+                            ),
+                            Text(
+                              ScratchCardConstants.getTitle(
+                                  ticket.tag!)['subtitle']!,
+                              style: TextStyles.rajdhaniSB.title5
+                                  .colour(Colors.white),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
+                        ),
+                      ),
+                      //vertical divider
+                      Container(
+                        height: SizeConfig.padding90,
+                        width: 2,
+                        color: Colors.white,
+                        // child:
+                      ),
+                      Expanded(
+                        child: Column(
+                          children: [
+                            Text(
+                              'You earned a badge',
+                              style: TextStyles.sourceSans.body3
+                                  .colour(Colors.white.withOpacity(0.6)),
+                              textAlign: TextAlign.center,
+                            ),
+                            SizedBox(
+                              height: SizeConfig.padding8,
+                            ),
+                            SvgPicture.network(
+                                ScratchCardConstants.getBadges(ticket.tag!),
+                                // fit: BoxFit.fitHeight,
+                                height: SizeConfig.padding60,
+                                width: SizeConfig.padding60),
+                            SizedBox(
+                              height: SizeConfig.padding4,
+                            ),
+                            Text(
+                              ticket.tag ?? 'Fello Badge',
+                              // 'Tambola Titan',
+                              style: TextStyles.sourceSansSB.body2
+                                  .colour(Colors.white),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+                  SizedBox(
+                    height: SizeConfig.padding14,
+                  ),
+                  GestureDetector(
+                    onTap: _onTapViewAllBadges,
+                    child: Row(
                       mainAxisAlignment: MainAxisAlignment.center,
                       children: [
                         Text(
-                          ScratchCardConstants.getTitle(ticket.tag!)['title']!,
-                          style:
-                              TextStyles.sourceSans.body3.colour(Colors.white),
-                          textAlign: TextAlign.center,
+                          'View All Badges',
+                          style: TextStyles.sourceSans.body3.colour(
+                            Colors.white.withOpacity(0.6),
+                          ),
                         ),
                         SizedBox(
-                          height: SizeConfig.padding8,
+                          width: SizeConfig.padding4,
                         ),
-                        Text(
-                          ScratchCardConstants.getTitle(
-                              ticket.tag!)['subtitle']!,
-                          style:
-                              TextStyles.rajdhaniSB.title5.colour(Colors.white),
-                          textAlign: TextAlign.center,
-                        ),
+                        Icon(
+                          Icons.arrow_forward_ios,
+                          size: SizeConfig.padding12,
+                          color: Colors.white.withOpacity(0.6),
+                        )
                       ],
                     ),
                   ),
-                  //vertical divider
-                  Container(
-                    height: SizeConfig.padding90,
-                    width: 2,
-                    color: Colors.white,
-                    // child:
-                  ),
-                  Expanded(
-                    child: Column(
-                      children: [
-                        SvgPicture.network(
-                            ScratchCardConstants.getBadges(ticket.tag!),
-                            // fit: BoxFit.fitHeight,
-                            height: SizeConfig.padding60,
-                            width: SizeConfig.padding60),
-                        SizedBox(
-                          height: SizeConfig.padding8,
-                        ),
-                        Text(
-                          'You earned a badge',
-                          style: TextStyles.sourceSans.body3
-                              .colour(Colors.white.withOpacity(0.6)),
-                          textAlign: TextAlign.center,
-                        ),
-                        SizedBox(
-                          height: SizeConfig.padding4,
-                        ),
-                        Text(
-                          ticket.tag ?? 'Ticket Titan',
-                          // 'Tambola Titan',
-                          style: TextStyles.sourceSansSB.body2
-                              .colour(Colors.white),
-                          textAlign: TextAlign.center,
-                        ),
-                      ],
-                    ),
+                  SizedBox(
+                    height: SizeConfig.padding4,
                   ),
                 ],
               ),

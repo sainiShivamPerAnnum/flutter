@@ -13,7 +13,7 @@ import 'package:felloapp/ui/elements/bottom_nav_bar/bottom_nav_bar.dart';
 import 'package:felloapp/ui/elements/coin_bar/coin_bar_view.dart';
 import 'package:felloapp/ui/elements/dev_rel/flavor_banners.dart';
 import 'package:felloapp/ui/pages/hometabs/home/card_actions_notifier.dart';
-import 'package:felloapp/ui/pages/hometabs/win/win_components/win_helpers.dart';
+import 'package:felloapp/ui/pages/hometabs/my_account/my_account_components/win_helpers.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
@@ -55,13 +55,6 @@ class Root extends StatelessWidget {
                     children: [
                       const RootAppBar(),
                       const HeadAlerts(),
-                      // TextButton(
-                      //   onPressed: () {
-                      //     DioService dioService = DioService();
-                      //     dioService.get();
-                      //   },
-                      //   child: Text("Autosave"),
-                      // ),
                       Expanded(
                         child: RefreshIndicator(
                           triggerMode: RefreshIndicatorTriggerMode.onEdge,

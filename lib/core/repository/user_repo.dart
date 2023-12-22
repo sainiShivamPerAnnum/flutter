@@ -6,7 +6,6 @@ import 'dart:developer';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/constants/cache_keys.dart';
-import 'package:felloapp/core/enums/ttl.dart';
 import 'package:felloapp/core/model/alert_model.dart';
 import 'package:felloapp/core/model/app_environment.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
@@ -35,7 +34,6 @@ import 'base_repo.dart';
 
 class UserRepository extends BaseRepo {
   final AppFlyerAnalytics _appsFlyerService = locator<AppFlyerAnalytics>();
-  final _cacheService = CacheService();
   final CustomLogger _logger = locator<CustomLogger>();
   final Api _api = locator<Api>();
   final ApiPath _apiPaths = locator<ApiPath>();
@@ -104,40 +102,31 @@ class UserRepository extends BaseRepo {
           model: {"flag": responseData['flag'], "gtId": responseData['gtId']});
     } catch (e) {
       logger.d(e);
-      return ApiResponse.withError(
-          e.toString() ?? "Unable to create user account", 400);
+      return ApiResponse.withError(e.toString(), 400);
     }
   }
 
   Future<ApiResponse<BaseUser>> getUserById({required String? id}) async {
     try {
-      return await _cacheService.cachedApi(
-          CacheKeys.USER,
-          TTL.ONE_DAY,
-          () => APIService.instance.getData(
-                ApiPath.kGetUserById(id),
-                cBaseUrl: AppEnvironment.instance.userOps,
-                apiName: '$_userOps/getUser',
-              ), (res) {
-        try {
-          if (res != null && res['data'] != null && res['data'].isNotEmpty) {
-            final user = BaseUser.fromMap(res['data'], id!);
-            return ApiResponse<BaseUser>(model: user, code: 200);
-          } else {
-            return ApiResponse<BaseUser>(model: null, code: 200);
-          }
-        } catch (e) {
-          locator<InternalOpsService>().logFailure(
-            id,
-            FailType.UserDataCorrupted,
-            {'message': "User data corrupted"},
-          );
-          return ApiResponse.withError("User data corrupted", 400);
-        }
-      });
+      final res = await APIService.instance.getData(
+        ApiPath.kGetUserById(id),
+        cBaseUrl: AppEnvironment.instance.userOps,
+        apiName: '$_userOps/getUser',
+      );
+      if (res != null && res['data'] != null && res['data'].isNotEmpty) {
+        final user = BaseUser.fromMap(res['data'], id!);
+        return ApiResponse<BaseUser>(model: user, code: 200);
+      } else {
+        return ApiResponse<BaseUser>(model: null, code: 200);
+      }
     } catch (e) {
       logger.d(e.toString());
-      return ApiResponse.withError(e.toString() ?? "Unable to get user", 400);
+      await locator<InternalOpsService>().logFailure(
+        id,
+        FailType.UserDataCorrupted,
+        {'message': "User data corrupted"},
+      );
+      return ApiResponse.withError(e.toString(), 400);
     }
   }
 
@@ -192,7 +181,7 @@ class UserRepository extends BaseRepo {
         FailType.VerifyOtpFailed,
         {'message': "Verify Otp failed"},
       ));
-      return ApiResponse.withError(e.toString() ?? "send OTP failed", 400);
+      return ApiResponse.withError(e.toString(), 400);
     }
   }
 
@@ -331,16 +320,24 @@ class UserRepository extends BaseRepo {
           notifications[0].createdTime != null) {
         var notifTime = notifications[0].createdTime!.seconds.toString();
 
-        log('Referral Notification: ${notifications[0].toJson()}');
-
-        // notifications[0] is the latest notification
-        // if the notification is persistent then we need to show the notification only once in 48 hours
-        // so we are checking if the notification is created in last 48 hours
-
         if (!PreferenceHelper.exists(
             PreferenceHelper.CACHE_REFERRAL_PERSISTENT_NOTIFACTION_ID)) {
-          log('Referral Notification Valid');
+          if (notifications[0].misc != null &&
+              notifications[0].misc!.isSuperFello!) {
+            await PreferenceHelper.setString(
+              CacheManager.CACHE_REFERRAL_PERSISTENT_NOTIFACTION_ID,
+              notifications[0].id!.toString(),
+            );
 
+            return ApiResponse(
+                model: {"flag": true, "notification": notifications[0]},
+                code: 200);
+          }
+
+          log('Referral Notification Valid');
+          // notifications[0] is the latest notification
+          // if the notification is persistent then we need to show the notification only once in 48 hours
+          // so we are checking if the notification is created in last 48 hours
           int notifTimeInSeconds = int.tryParse(notifTime)!;
           int currentTimeInSeconds =
               DateTime.now().millisecondsSinceEpoch ~/ 1000;
@@ -446,7 +443,7 @@ class UserRepository extends BaseRepo {
         {'message': "Update user failed"},
       ));
       return ApiResponse.withError(
-        e.toString() ?? "Unable to update user",
+        e.toString(),
         400,
       );
     }

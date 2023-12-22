@@ -1548,10 +1548,10 @@ class S {
     );
   }
 
-  /// `By continuing, ₹{amount} will be credited to your linked bank account instantly`
+  /// `By continuing, ₹{amount} will be credited to your linked bank account`
   String creditedToYourLinkedBankAccount(Object amount) {
     return Intl.message(
-      'By continuing, ₹$amount will be credited to your linked bank account instantly',
+      'By continuing, ₹$amount will be credited to your linked bank account',
       name: 'creditedToYourLinkedBankAccount',
       desc: '',
       args: [amount],

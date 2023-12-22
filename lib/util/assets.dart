@@ -361,6 +361,8 @@ class Assets {
   // static const String gtScratch = "assets/lotties/scratch.json";
 
   static const String crypto = "assets/svg/crypto.svg";
+  static const String lock = "assets/svg/lock.svg";
+  static const String giftIcon = "assets/svg/gift_icon.svg";
   static const String single_gold_brick = "assets/svg/single_gold_brick.svg";
   static const String tri_gold_brick = "assets/svg/tri_gold_bricks.svg";
   static const String multiple_gold_brick =
@@ -372,8 +374,6 @@ class Assets {
   static const String ticket_icon = 'assets/svg/ticket_icon.svg';
   static const String tambolaPrizeAsset = 'assets/svg/tambola_prize_asset.svg';
   static const String one_cr_bg = 'assets/svg/1_cr.svg';
-  static const String bottomBannerLottie =
-      'https://d37gtxigg82zaw.cloudfront.net/scroll-animation.json';
   static const String tambolaTopBannerLottie =
       '${assetBaseUrl}lotties/tambola_animation.json';
   static const String tambolaTopBannerTharLottie =
@@ -426,4 +426,10 @@ class Assets {
 
   //Tickets
   static const String polkaDots = "assets/images/polkadots.png";
+
+  // super-fello.
+  static const String superFelloStar =
+      'https://ik.imagekit.io/9xfwtu0xm/Badges/star.svg';
+  static const String superFelloTitle =
+      'https://fello-dev-uploads.s3.ap-south-1.amazonaws.com/super_fello_title.svg';
 }

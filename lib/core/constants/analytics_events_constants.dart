@@ -328,4 +328,13 @@ class AnalyticsEvents {
 
   static const payWithNetBanking = 'pay_with_nb';
   static const editPreferredUpiOption = 'edit_preferred_upi';
+
+  // SuperFello
+  static const profileIconTapped = 'Profile Icon Tapped';
+  static const superFelloEntryPoint = 'Super Fello Entry Point';
+  static const addProfilePicture = 'Add profile picture';
+  static const tapBadgeProgress = 'Task Tapped in Super Fello';
+  static const taskBottomSheetCTA = 'Task Bottom Sheet Action CTA';
+  static const tapOtherBadges = 'Other Badge tapped in Super Fello';
+  static const badgeUnlock = 'Tell Everyone Now Super Fello';
 }

@@ -82,8 +82,14 @@ class Misc {
   final String? command;
   final String? amount;
   final String? userType;
+  final bool? isSuperFello;
 
-  Misc({this.command, this.gtId, this.amount, this.userType});
+  Misc(
+      {this.command,
+      this.gtId,
+      this.amount,
+      this.userType,
+      this.isSuperFello = true});
 
   factory Misc.fromJson(Map<String, dynamic> json) => Misc(
         command: json["command"],

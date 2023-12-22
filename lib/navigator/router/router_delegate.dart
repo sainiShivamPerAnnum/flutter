@@ -12,6 +12,7 @@ import 'package:felloapp/core/model/bottom_nav_bar_item_model.dart';
 import 'package:felloapp/core/repository/games_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/feature/fello_badges/ui/fello_badges_home.dart';
 import 'package:felloapp/feature/flo_withdrawals/ui/balloon_lottie_screen.dart';
 import 'package:felloapp/feature/referrals/ui/referral_home.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -30,10 +31,10 @@ import 'package:felloapp/ui/pages/finance/autosave/autosave_update/autosave_upda
 import 'package:felloapp/ui/pages/finance/lendbox/detail_page/flo_premium_details_view.dart';
 import 'package:felloapp/ui/pages/finance/transactions_history/transactions_history_view.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/journey_view.dart';
+import 'package:felloapp/ui/pages/hometabs/my_account/my_account_view.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/asset_view_section.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/blogs.dart';
-import 'package:felloapp/ui/pages/hometabs/win/win_view.dart';
 import 'package:felloapp/ui/pages/login/login_controller_view.dart';
 import 'package:felloapp/ui/pages/notifications/notifications_view.dart';
 import 'package:felloapp/ui/pages/onboarding/blocked_user.dart';
@@ -229,7 +230,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           _addPageData(const UserProfileDetails(), UserProfileDetailsConfig);
           break;
         case Pages.AccountsView:
-          _addPageData(const Win(), AccountsViewConfig);
+          _addPageData(const MyAccount(), AccountsViewConfig);
           break;
         case Pages.TxnHistory:
           _addPageData(
@@ -357,6 +358,10 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.BalloonLottieScreen:
           _addPageData(
               const BalloonLottieScreen(), BalloonLottieScreenViewConfig);
+          break;
+
+        case Pages.FelloBadgeHome:
+          _addPageData(const FelloBadgeHome(), FelloBadgeHomeViewPageConfig);
           break;
 
         default:
@@ -860,6 +865,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     var rootController = locator<RootController>();
 
     switch (screenKey) {
+      case 'super-fello':
+        pageConfiguration = FelloBadgeHomeViewPageConfig;
+
       case 'journey':
         pageConfiguration = JourneyViewPageConfig;
         break;
@@ -1023,6 +1031,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case 'pop':
         AppState.backButtonDispatcher!.didPopRoute();
         break;
+
       case 'autosaveDetails':
         if (!(AppConfig.getValue(AppConfigKey.showNewAutosave) as bool)) break;
         pageConfiguration = AutosaveDetailsViewPageConfig;

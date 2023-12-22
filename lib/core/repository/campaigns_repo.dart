@@ -1,7 +1,9 @@
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/constants/cache_keys.dart';
 import 'package:felloapp/core/enums/ttl.dart';
+import 'package:felloapp/core/model/badges_leader_board_model.dart';
 import 'package:felloapp/core/model/event_model.dart';
+import 'package:felloapp/core/model/fello_badges_model.dart';
 import 'package:felloapp/core/model/fello_facts_model.dart';
 import 'package:felloapp/core/model/happy_hour_campign.dart';
 import 'package:felloapp/core/model/last_week_model.dart';
@@ -22,13 +24,18 @@ class CampaignRepo extends BaseRepo {
       ? 'https://d18gbwu7fwwwtf.cloudfront.net/'
       : 'https://d11q4cti75qmcp.cloudfront.net/';
 
+  final _superFelloBaseUrl = FlavorConfig.isDevelopment()
+      ? 'https://api2.fello-dev.net/campaigns'
+      : 'https://api.fello-prod.net/campaigns';
+
   static const _campaigns = 'campaigns';
+  static const _superFello = 'super-fello';
 
   Future<ApiResponse<dynamic>> getOngoingEvents() async {
     List<EventModel> events = [];
     try {
-      final String? _uid = userService.baseUser!.uid;
-      final _queryParams = {"uid": _uid};
+      final String? uid = userService.baseUser!.uid;
+      final queryParams = {"uid": uid};
 
       return await _cacheService.cachedApi(
         CacheKeys.CAMPAIGNS,
@@ -36,7 +43,7 @@ class CampaignRepo extends BaseRepo {
         () => APIService.instance.getData(
           ApiPath.kOngoingCampaigns,
           cBaseUrl: _baseUrl,
-          queryParams: _queryParams,
+          queryParams: queryParams,
           apiName: _campaigns,
         ),
         (response) {
@@ -47,14 +54,15 @@ class CampaignRepo extends BaseRepo {
               events.add(EventModel.fromMap(e));
             });
           }
-          print(responseData["campaigns"]);
           return ApiResponse<List<EventModel>>(model: events, code: 200);
         },
       );
     } catch (e) {
       logger.e(e.toString());
       return ApiResponse.withError(
-          e.toString() ?? "Unable to fetch campaigns", 400);
+        e.toString(),
+        400,
+      );
     }
   }
 
@@ -68,7 +76,6 @@ class CampaignRepo extends BaseRepo {
         apiName: "felloFacts",
       );
 
-      // final responseData = response["data"];
       logger.d(response);
       if (response != null) {
         response.forEach((e) {
@@ -79,7 +86,9 @@ class CampaignRepo extends BaseRepo {
     } catch (e) {
       logger.e(e.toString());
       return ApiResponse.withError(
-          e.toString() ?? "Unable to fetch campaigns", 400);
+        e.toString(),
+        400,
+      );
     }
   }
 
@@ -120,6 +129,52 @@ class CampaignRepo extends BaseRepo {
     } catch (e) {
       logger.e(e.toString());
       return ApiResponse.withError("Unable to fetch data", 400);
+    }
+  }
+
+  Future<ApiResponse<BadgesLeaderBoardModel>> getBadgesLeaderBoard() async {
+    try {
+      final res = await APIService.instance.getData(
+        ApiPath.badgesLeaderBoard,
+        cBaseUrl: _superFelloBaseUrl,
+        apiName: '$_superFello/leaderboard',
+      );
+
+      return res != null && res['data'] != null && res['data'].isNotEmpty
+          ? ApiResponse<BadgesLeaderBoardModel>(
+              model: BadgesLeaderBoardModel.fromJson(res),
+              code: 200,
+            )
+          : ApiResponse<BadgesLeaderBoardModel>(
+              model: null,
+              code: 200,
+            );
+    } catch (e) {
+      logger.d(e);
+      return ApiResponse.withError(e.toString(), 400);
+    }
+  }
+
+  Future<ApiResponse<FelloBadgesModel>> getFelloBadges() async {
+    try {
+      final res = await APIService.instance.getData(
+        ApiPath.felloBadges,
+        cBaseUrl: _superFelloBaseUrl,
+        apiName: _superFello,
+      );
+
+      return res != null && res['data'] != null && res['data'].isNotEmpty
+          ? ApiResponse<FelloBadgesModel>(
+              model: FelloBadgesModel.fromJson(res),
+              code: 200,
+            )
+          : ApiResponse<FelloBadgesModel>(
+              model: null,
+              code: 200,
+            );
+    } catch (e) {
+      logger.d(e);
+      return ApiResponse.withError(e.toString(), 400);
     }
   }
 }

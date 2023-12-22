@@ -1,3 +1,4 @@
+import 'package:felloapp/core/model/fello_badges_model.dart';
 import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/util/logger.dart';
 
@@ -29,6 +30,8 @@ class BaseUser {
   String? avatarId;
   bool? isOldUser;
   List segments;
+  SuperFelloLevel superFelloLevel = SuperFelloLevel.NEW_FELLO;
+  num minRedemptionAmt = 200;
   static const String fldId = "mID";
   static const String fldMobile = "mMobile";
   static const String fldEmail = "mEmail";
@@ -60,6 +63,15 @@ class BaseUser {
   static const String fldAvatarId = "mAvatarId";
   static const String fldIsOldUser = "isOldUser";
   static const String fldReferralCode = "referralCode";
+  static const String fieldSuperFelloLevel = 'superFelloLevel';
+  static const String fieldMinRedemptionAmt = 'minRedemptionAmt';
+
+  static const _$UserBadgeLevelEnumMap = {
+    'GOOD': SuperFelloLevel.GOOD,
+    'WISE': SuperFelloLevel.WISE,
+    'SUPER_FELLO': SuperFelloLevel.SUPER_FELLO,
+    'NEW_FELLO': SuperFelloLevel.NEW_FELLO,
+  };
 
   BaseUser(
     this.uid,
@@ -86,8 +98,10 @@ class BaseUser {
     this.appFlyerId,
     this.avatarId,
     this.isOldUser,
-    this.segments,
-  );
+    this.segments, {
+    this.superFelloLevel = SuperFelloLevel.NEW_FELLO,
+    this.minRedemptionAmt = 200,
+  });
 
   BaseUser.newUser(String id, String mobile)
       : this(
@@ -120,67 +134,38 @@ class BaseUser {
 
   BaseUser.fromMap(Map<String, dynamic> data, String id, [String? client_token])
       : this(
-            id,
-            data[fldMobile]?.toString() ?? '',
-            data[fldEmail]?.toString() ?? '',
-            data[fldName]?.toString() ?? '',
-            data[fldDob]?.toString() ?? '',
-            data[fldGender]?.toString().toUpperCase() ?? '',
-            client_token?.toString() ?? '',
-            data[fldIsInvested] ?? false,
-            data[fldIsIciciOnboarded],
-            data[fldIsAugmontOnboarded] ?? false,
-            data[fldIsSimpleKycVerified] ?? false,
-            data[fldIsKycVerified] ?? 0,
-            data[fldKycName] ?? '',
-            data[fldPendingTxnId] ?? '',
-            data[fldIsIciciEnabled] ?? false,
-            data[fldIsAugmontEnabled] ?? false,
-            data[fldUsername]?.toString() ?? '',
-            data[fldIsEmailVerified] ?? false,
-            data[fldIsBlocked] ?? false,
-            UserPreferences(data[fldUserPrefs]),
-            TimestampModel.fromMap(data[fldCreatedOn]),
-            data[fldAppFlyerId] ?? '',
-            data[fldAvatarId] ?? '',
-            data[fldIsOldUser] ?? false,
-            data['mSegments'] ?? []);
-
-  //to send user object to server
-  toJson() {
-    var userObj = {
-      fldMobile: mobile,
-      fldName: name,
-      fldEmail: email,
-      fldDob: dob,
-      fldGender: gender,
-      fldIsInvested: isInvested,
-      fldIsAugmontOnboarded: isAugmontOnboarded,
-      fldIsSimpleKycVerified: isSimpleKycVerified,
-      fldUsername: username,
-      fldIsEmailVerified: isEmailVerified,
-      fldCreatedOn: createdOn
-    };
-    if (isKycVerified != 0) userObj[fldIsKycVerified] = isKycVerified;
-    if (kycName != null) userObj[fldKycName] = kycName;
-    if (isIciciOnboarded != null) {
-      userObj[fldIsIciciOnboarded] = isIciciOnboarded;
-    }
-    if (isIciciEnabled != null) userObj[fldIsIciciEnabled] = isIciciEnabled;
-    if (isAugmontEnabled != null) {
-      userObj[fldIsAugmontEnabled] = isAugmontEnabled;
-    }
-    if (userPreferences != UserPreferences({})) {
-      userObj[fldUserPrefs] = userPreferences.toJson();
-    }
-    if (isBlocked != null) userObj[fldIsBlocked] = isBlocked;
-    if (appFlyerId != null) userObj[fldAppFlyerId] = appFlyerId;
-    if (avatarId != null) userObj[fldAvatarId] = avatarId;
-    return userObj;
-  }
+          id,
+          data[fldMobile]?.toString() ?? '',
+          data[fldEmail]?.toString() ?? '',
+          data[fldName]?.toString() ?? '',
+          data[fldDob]?.toString() ?? '',
+          data[fldGender]?.toString().toUpperCase() ?? '',
+          client_token?.toString() ?? '',
+          data[fldIsInvested] ?? false,
+          data[fldIsIciciOnboarded],
+          data[fldIsAugmontOnboarded] ?? false,
+          data[fldIsSimpleKycVerified] ?? false,
+          data[fldIsKycVerified] ?? 0,
+          data[fldKycName] ?? '',
+          data[fldPendingTxnId] ?? '',
+          data[fldIsIciciEnabled] ?? false,
+          data[fldIsAugmontEnabled] ?? false,
+          data[fldUsername]?.toString() ?? '',
+          data[fldIsEmailVerified] ?? false,
+          data[fldIsBlocked] ?? false,
+          UserPreferences(data[fldUserPrefs]),
+          TimestampModel.fromMap(data[fldCreatedOn]),
+          data[fldAppFlyerId] ?? '',
+          data[fldAvatarId] ?? '',
+          data[fldIsOldUser] ?? false,
+          data['mSegments'] ?? [],
+          minRedemptionAmt: data[fieldMinRedemptionAmt] ?? 200,
+          superFelloLevel: data[fieldSuperFelloLevel] != null
+              ? _$UserBadgeLevelEnumMap[data[fieldSuperFelloLevel]]!
+              : SuperFelloLevel.NEW_FELLO,
+        );
 
   bool hasIncompleteDetails() {
-    //return ((_mobile?.isEmpty??true) || (_name?.isEmpty??true) || (_email?.isEmpty??true));
     return (mobile?.isEmpty ?? true) || (name?.isEmpty ?? true);
   }
 
@@ -218,7 +203,7 @@ class UserPreferences {
   final Map<String?, int?> _activePrefs = {};
 
   UserPreferences(Map<dynamic, dynamic>? remValues) {
-    for (Preferences p in Preferences.values) {
+    for (final Preferences p in Preferences.values) {
       String? fKey = _index[p];
       int? defValue = _defValues[p];
       _activePrefs[fKey] = (remValues != {} &&
@@ -233,9 +218,9 @@ class UserPreferences {
 
   int? getPreference(Preferences p) => _activePrefs[_index[p]];
 
-  setPreference(Preferences p, int val) => _activePrefs[_index[p]] = val;
+  int setPreference(Preferences p, int val) => _activePrefs[_index[p]] = val;
 
-  toJson() => _activePrefs;
+  Map<String?, int?> toJson() => _activePrefs;
 
   @override
   String toString() {

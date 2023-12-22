@@ -1,9 +1,4 @@
-import 'dart:developer';
-
-import 'package:felloapp/core/enums/app_config_keys.dart';
-import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
-import 'package:felloapp/core/service/referral_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/service_elements/winners_prizes/prize_claim_card.dart';
 import 'package:felloapp/util/locator.dart';
@@ -17,18 +12,9 @@ class CurrentWinningsInfo extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    log("BUILD: Current winnings main rebuilds");
-    // S locale = locator<S>();
-    final referralService = locator<ReferralService>();
-    String minWithdrawPrize =
-        AppConfig.getValue(AppConfigKey.min_withdrawable_prize).toString();
+    final minWithdrawPrize = locator<UserService>().baseUser!.minRedemptionAmt;
     return Consumer<UserService>(
-      // properties: [UserServiceProperties.myUserFund],
       builder: (context, userservice, properties) {
-        log("BUILD: Current winnings rebuilds");
-        double currentWinning =
-            userservice.userFundWallet?.unclaimedBalance ?? 0;
-        String currentAsset = referralService.getRedeemAsset(currentWinning);
         return GestureDetector(
           onTap: () => AppState.delegate!.parseRoute(Uri.parse('/myWinnings')),
           child: RewardRedeemWidget(

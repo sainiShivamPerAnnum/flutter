@@ -853,40 +853,4 @@ class JourneyService extends PropertyChangeNotifier<JourneyServiceProperties> {
       //     title: 'Congratulations!', source: GTSOURCE.newuser, onJourney: true);
     }));
   }
-
-  // checkIfUserIsOldAndNeedsStoryView() {
-  //   Future.delayed(
-  //     const Duration(seconds: 2),
-  //     () {
-  //       if (_userService!.baseUser!.isOldUser! && avatarRemoteMlIndex == 2) {
-  //         isJourneyOnboardingInView = true;
-  //         PreferenceHelper.setBool(
-  //             PreferenceHelper.CACHE_IS_USER_JOURNEY_ONBOARDED, true);
-  //         AppState.screenStack.add(ScreenItem.dialog);
-  //         Navigator.of(AppState.delegate!.navigatorKey.currentContext!).push(
-  //           PageRouteBuilder(
-  //             pageBuilder: (context, animation, anotherAnimation) {
-  //               return const InfoStories(
-  //                 topic: "onboarding",
-  //               );
-  //             },
-  //             transitionDuration: const Duration(milliseconds: 500),
-  //             transitionsBuilder:
-  //                 (context, animation, anotherAnimation, child) {
-  //               animation = CurvedAnimation(
-  //                   curve: Curves.easeInCubic, parent: animation);
-  //               return Align(
-  //                 child: SizeTransition(
-  //                   sizeFactor: animation,
-  //                   child: child,
-  //                   axisAlignment: 0.0,
-  //                 ),
-  //               );
-  //             },
-  //           ),
-  //         );
-  //       }
-  //     },
-  //   );
-  // }
 }

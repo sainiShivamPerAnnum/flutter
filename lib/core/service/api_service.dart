@@ -5,6 +5,7 @@ import 'dart:developer';
 import 'dart:io';
 
 import 'package:dio/dio.dart';
+import 'package:dio/io.dart';
 import 'package:dio_http2_adapter/dio_http2_adapter.dart';
 import 'package:encrypt/encrypt.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -49,18 +50,28 @@ abstract class API {
 }
 
 class APIService implements API {
-  final Dio _dio = Dio()
-    ..interceptors.addAll(
-      [
-        CoreInterceptor(),
-        LogInterceptor(),
-      ],
-    )
-    ..httpClientAdapter = Http2Adapter(
-      ConnectionManager(
-        idleTimeout: const Duration(seconds: 35),
-      ),
-    );
+  APIService._() : _dio = Dio() {
+    _dio
+      ..interceptors.addAll(
+        [
+          CoreInterceptor(),
+          LogInterceptor(),
+        ],
+      )
+      ..httpClientAdapter = Http2Adapter(
+        ConnectionManager(
+          idleTimeout: const Duration(seconds: 35),
+        ),
+      );
+
+    assert(() {
+      _dio.httpClientAdapter = IOHttpClientAdapter();
+      return true;
+    }());
+  }
+  static final instance = APIService._();
+
+  final Dio _dio;
 
   PackageInfo? _info;
   final FirebasePerformance _performance = FirebasePerformance.instance;
@@ -69,10 +80,6 @@ class APIService implements API {
       'https://${FlavorConfig.instance!.values.baseUriAsia}';
   final CustomLogger? logger = locator<CustomLogger>();
   final UserService? userService = locator<UserService>();
-
-  APIService._();
-
-  static final instance = APIService._();
 
   static const _cacheEncryptionKey = "264a239b0d87e175509b2aeb2a44b28c";
   static const _cacheEncryptionIV = "cffb220f03eaac73";
@@ -246,13 +253,6 @@ class APIService implements API {
 
     return decryptedData;
   }
-
-  static const _enumMapping = {
-    _RequestType.GET: HttpMethod.Get,
-    _RequestType.PUT: HttpMethod.Put,
-    _RequestType.POST: HttpMethod.Post,
-    _RequestType.PATCH: HttpMethod.Patch,
-  };
 
   Future<Response> _request<T>(
     _RequestType method,
