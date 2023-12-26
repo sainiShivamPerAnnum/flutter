@@ -38,6 +38,7 @@ enum AppConfigKey {
   goldProInterest,
   goldProInvestmentChips,
   quickActions,
+  postMaturityPreference
 }
 
 extension AppConfigKeys on String {
@@ -120,6 +121,8 @@ extension AppConfigKeys on String {
         return AppConfigKey.goldProInterest;
       case 'goldProInvestmentChips':
         return AppConfigKey.goldProInvestmentChips;
+      case 'postMaturityPreference':
+          return AppConfigKey.postMaturityPreference;
       default:
         return AppConfigKey.unknown;
     }
