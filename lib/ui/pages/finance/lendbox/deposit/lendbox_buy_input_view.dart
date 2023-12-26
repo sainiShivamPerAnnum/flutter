@@ -227,7 +227,7 @@ class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
                 ],
                 canChangeMaturityDate
                     ? MaturityDetailsWidget(model: widget.model)
-                    : MaturityTextWidget(),
+                    : const MaturityTextWidget(),
               ],
             ),
           ),
