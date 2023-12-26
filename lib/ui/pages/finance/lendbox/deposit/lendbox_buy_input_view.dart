@@ -627,7 +627,7 @@ class MaturityDetailsWidget extends StatelessWidget {
     return Selector<BankAndPanService, bool>(
       selector: (p0, p1) => p1.isKYCVerified,
       builder: (ctx, isKYCVerified, child) {
-        return isKYCVerified
+        return (!isKYCVerified)
             ? const SizedBox()
             : (model.floAssetType == Constants.ASSET_TYPE_FLO_FIXED_6 ||
                     model.floAssetType == Constants.ASSET_TYPE_FLO_FIXED_3)
