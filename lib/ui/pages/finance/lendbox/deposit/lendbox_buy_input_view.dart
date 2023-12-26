@@ -102,6 +102,9 @@ class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
   @override
   Widget build(BuildContext context) {
     final banner = widget.model.assetOptionsModel!.data.banner;
+    bool canChangeMaturityDate =
+        AppConfig.getValue(AppConfigKey.canChangePostMaturityPreference) ??
+            false;
     log("floAssetType ${widget.model.floAssetType}");
 
     S locale = S.of(context);
@@ -222,8 +225,9 @@ class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
                   ),
                   SizedBox(height: SizeConfig.padding24),
                 ],
-
-                MaturityDetailsWidget(model: widget.model),
+                canChangeMaturityDate
+                    ? MaturityDetailsWidget(model: widget.model)
+                    : MaturityTextWidget(),
               ],
             ),
           ),
@@ -620,9 +624,6 @@ class MaturityDetailsWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    bool canChangePostMaturityPreference =
-        AppConfig.getValue(AppConfigKey.canChangePostMaturityPreference) ??
-            false;
     return Selector<BankAndPanService, bool>(
       selector: (p0, p1) => p1.isKYCVerified,
       builder: (ctx, isKYCVerified, child) {
@@ -632,8 +633,6 @@ class MaturityDetailsWidget extends StatelessWidget {
                     model.floAssetType == Constants.ASSET_TYPE_FLO_FIXED_3)
                 ? GestureDetector(
                     onTap: () {
-                      if (!canChangePostMaturityPreference) return;
-
                       if (!model.isBuyInProgress) {
                         model.openReinvestBottomSheet();
                       }
@@ -650,6 +649,7 @@ class MaturityDetailsWidget extends StatelessWidget {
                       padding: EdgeInsets.symmetric(
                           horizontal: SizeConfig.pageHorizontalMargins),
                       child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
                           Container(
                             height: 1,
@@ -660,9 +660,34 @@ class MaturityDetailsWidget extends StatelessWidget {
                           SizedBox(
                             height: SizeConfig.padding16,
                           ),
-                          MaturityTextWidget(
-                            model: model,
-                            canChangeMaturity: canChangePostMaturityPreference,
+                          Text(
+                            'Choose your maturity period',
+                            style: TextStyles.sourceSansSB.body2,
+                            textAlign: TextAlign.left,
+                          ),
+                          SizedBox(
+                            height: SizeConfig.padding16,
+                          ),
+                          Container(
+                            padding: const EdgeInsets.symmetric(
+                              vertical: 7,
+                              horizontal: 12,
+                            ),
+                            decoration: BoxDecoration(
+                              borderRadius: BorderRadius.circular(10),
+                              color: UiConstants.grey2.withOpacity(.2),
+                            ),
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                              children: [
+                                model.showReinvestSubTitle(),
+                                Text(
+                                  "Change",
+                                  style: TextStyles.sourceSans.body3
+                                      .colour(UiConstants.kTabBorderColor),
+                                ),
+                              ],
+                            ),
                           ),
                         ],
                       ),
@@ -676,50 +701,26 @@ class MaturityDetailsWidget extends StatelessWidget {
 
 class MaturityTextWidget extends StatelessWidget {
   const MaturityTextWidget({
-    required this.model,
-    required this.canChangeMaturity,
     super.key,
   });
 
-  final LendboxBuyViewModel model;
-  final bool canChangeMaturity;
-
   @override
   Widget build(BuildContext context) {
-    return Column(
-      crossAxisAlignment: CrossAxisAlignment.start,
-      children: [
-        if (canChangeMaturity) ...[
-          Text(
-            'Choose your maturity period',
-            style: TextStyles.sourceSansSB.body2,
-            textAlign: TextAlign.left,
+    return Container(
+      width: SizeConfig.screenWidth,
+      padding:
+          EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Container(
+            height: 1,
+            color: UiConstants.kModalSheetSecondaryBackgroundColor
+                .withOpacity(0.2),
           ),
           SizedBox(
             height: SizeConfig.padding16,
           ),
-          Container(
-            padding: const EdgeInsets.symmetric(
-              vertical: 7,
-              horizontal: 12,
-            ),
-            decoration: BoxDecoration(
-              borderRadius: BorderRadius.circular(10),
-              color: UiConstants.grey2.withOpacity(.2),
-            ),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                model.showReinvestSubTitle(),
-                Text(
-                  "Change",
-                  style: TextStyles.sourceSans.body3
-                      .colour(UiConstants.kTabBorderColor),
-                ),
-              ],
-            ),
-          ),
-        ] else ...[
           RichText(
             text: TextSpan(
               text: "Note: ",
@@ -732,9 +733,9 @@ class MaturityTextWidget extends StatelessWidget {
                         TextStyles.sourceSans.body3.colour(UiConstants.grey1)),
               ],
             ),
-          )
+          ),
         ],
-      ],
+      ),
     );
   }
 }
