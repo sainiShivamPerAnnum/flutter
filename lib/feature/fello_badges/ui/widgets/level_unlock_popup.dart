@@ -29,8 +29,8 @@ class LevelUnlockDialog extends StatelessWidget {
 
   String _getLevelName() {
     return switch (level) {
-      SuperFelloLevel.GOOD => 'Good',
-      SuperFelloLevel.WISE => 'Wise',
+      SuperFelloLevel.GOOD => 'Good Fello',
+      SuperFelloLevel.WISE => 'Wise Fello',
       SuperFelloLevel.SUPER_FELLO => 'Super Fello',
       _ => ''
     };
@@ -63,19 +63,19 @@ class LevelUnlockDialog extends StatelessWidget {
     return switch (level) {
       SuperFelloLevel.GOOD => (
           title: 'You are a Good Fello!',
-          description: 'You have earned all badges in good fello level',
+          description: 'You have earned all badges in Good Fello level',
           badgeUrl:
               'https://ik.imagekit.io/9xfwtu0xm/Badges/beginner_fello.svg',
         ),
       SuperFelloLevel.WISE => (
           title: 'You are a Wise Fello!',
-          description: 'You have earned all badges in wise fello level',
+          description: 'You have earned all badges in Wise Fello level',
           badgeUrl:
               'https://ik.imagekit.io/9xfwtu0xm/Badges/intermediate_fello.svg',
         ),
       SuperFelloLevel.SUPER_FELLO => (
           title: 'You are a Super Fello!',
-          description: 'You have earned all badges in super fello level',
+          description: 'You have earned all badges in Super Fello level',
           badgeUrl: 'https://ik.imagekit.io/9xfwtu0xm/Badges/supe_fello.svg',
         ),
       SuperFelloLevel.NEW_FELLO => (

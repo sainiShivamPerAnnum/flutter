@@ -93,7 +93,7 @@ class _FelloBadgeUiState extends State<FelloBadgeUi> {
   FAppBar buildFAppBar() {
     return FAppBar(
       showHelpButton: true,
-      type: FaqsType.yourAccount,
+      type: FaqsType.superFello,
       showCoinBar: false,
       showAvatar: false,
       leadingPadding: false,
