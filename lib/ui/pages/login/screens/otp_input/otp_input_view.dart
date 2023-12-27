@@ -209,11 +209,14 @@ class LoginOtpViewState extends State<LoginOtpView> {
                       value,
                       child,
                     ) {
-                      final minutes = (value.inMinutes).toString().padLeft(2, '0');
-                      final seconds = (value.inSeconds % 60).toString().padLeft(2, '0');
+                      final minutes =
+                          (value.inMinutes).toString().padLeft(2, '0');
+                      final seconds =
+                          (value.inSeconds % 60).toString().padLeft(2, '0');
                       return Text(
                         "$minutes:$seconds",
-                        style: TextStyles.sourceSansB.body3.colour(UiConstants.primaryColor),
+                        style: TextStyles.sourceSansB.body3
+                            .colour(UiConstants.primaryColor),
                       );
                     },
                   ),
