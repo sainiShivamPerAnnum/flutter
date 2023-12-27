@@ -713,7 +713,7 @@ class MaturityTextWidget extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Container(
+          Divider(
             height: 1,
             color: UiConstants.kModalSheetSecondaryBackgroundColor
                 .withOpacity(0.2),
