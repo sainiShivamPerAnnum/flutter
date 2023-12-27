@@ -5,10 +5,10 @@ import 'dart:developer';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/enums/transaction_state_enum.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
-import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
@@ -39,7 +39,6 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
   final WebGameViewModel _webGameViewModel = locator<WebGameViewModel>();
   final AugmontTransactionService _augTxnService =
       locator<AugmontTransactionService>();
-  final JourneyService _journeyService = locator<JourneyService>();
   final AnalyticsService _analyticsService = locator<AnalyticsService>();
 
   FelloBackButtonDispatcher(this._routerDelegate) : super();
@@ -239,12 +238,31 @@ class FelloBackButtonDispatcher extends RootBackButtonDispatcher {
       return _confirmExit(
         "Exit Quiz",
         "Are you sure you want to leave?",
-        () {
+        () async {
           AppState.isQuizInProgress = false;
-          didPopRoute();
-          didPopRoute();
-          // _webGameViewModel.handleGameSessionEnd(
-          //     duration: const Duration(milliseconds: 500));
+
+          final superFelloIndex = AppState.delegate!.pages.indexWhere(
+            (element) => element.name == FelloBadgeHomeViewPageConfig.path,
+          );
+
+          if (superFelloIndex != -1) {
+            while (AppState.delegate!.pages.last.name !=
+                FelloBadgeHomeViewPageConfig.path) {
+              await didPopRoute();
+            }
+
+            await didPopRoute();
+
+            await Future.delayed(const Duration(milliseconds: 100));
+
+            AppState.delegate!.appState.currentAction = PageAction(
+              state: PageState.addPage,
+              page: FelloBadgeHomeViewPageConfig,
+            );
+          } else {
+            await didPopRoute();
+            await didPopRoute();
+          }
         },
         false,
       );

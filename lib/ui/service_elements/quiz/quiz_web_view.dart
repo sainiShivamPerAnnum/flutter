@@ -4,10 +4,12 @@ import 'dart:io';
 import 'package:dart_jsonwebtoken/dart_jsonwebtoken.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
@@ -47,6 +49,33 @@ class _QuizWebViewState extends State<QuizWebView> {
     return "${quizSectionData['baseUrl']}?token=$key";
   }
 
+  Future<void> _onExitQuiz() async {
+    log("Close the quiz web window");
+
+    final superFelloIndex = AppState.delegate!.pages.indexWhere(
+      (element) => element.name == FelloBadgeHomeViewPageConfig.path,
+    );
+
+    if (superFelloIndex != -1) {
+      while (AppState.delegate!.pages.last.name !=
+          FelloBadgeHomeViewPageConfig.path) {
+        await AppState.backButtonDispatcher!.didPopRoute();
+      }
+
+      await AppState.backButtonDispatcher!.didPopRoute();
+
+      await Future.delayed(const Duration(milliseconds: 100));
+
+      AppState.delegate!.appState.currentAction = PageAction(
+        state: PageState.addPage,
+        page: FelloBadgeHomeViewPageConfig,
+      );
+    } else {
+      AppState.unblockNavigation();
+      await AppState.backButtonDispatcher!.didPopRoute();
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -62,9 +91,7 @@ class _QuizWebViewState extends State<QuizWebView> {
         log(message.message);
         String data = message.message;
         if (data.startsWith('exit|')) {
-          log("Close the quiz web window");
-          AppState.unblockNavigation();
-          AppState.backButtonDispatcher!.didPopRoute();
+          await _onExitQuiz();
         } else if (data.startsWith('share|')) {
           String text = data.substring(6);
           await Share.share(text);
@@ -83,8 +110,8 @@ class _QuizWebViewState extends State<QuizWebView> {
 
   @override
   Widget build(BuildContext context) {
-    bool keyboardIsOpen = MediaQuery.of(context).viewInsets.bottom != 0;
-    log("build run", name: "QuizWebView");
+    final keyboardIsOpen = MediaQuery.of(context).viewInsets.bottom != 0;
+
     return Scaffold(
       backgroundColor: UiConstants.kBackgroundColor,
       floatingActionButton: keyboardIsOpen && Platform.isIOS

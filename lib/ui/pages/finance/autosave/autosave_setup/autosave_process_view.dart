@@ -37,9 +37,29 @@ class AutosaveProcessView extends StatefulWidget {
 }
 
 class _AutosaveProcessViewState extends State<AutosaveProcessView> {
+  Future<void> _onPressedBack(
+      AutosaveState autosaveState, AutosaveProcessViewModel model) async {
+    FocusScope.of(context).unfocus();
+
+    if (autosaveState == AutosaveState.INIT ||
+        autosaveState == AutosaveState.ACTIVE ||
+        model.pageController!.page == 0 ||
+        model.pageController!.page == 3) {
+      await AppState.backButtonDispatcher!.didPopRoute();
+    } else {
+      await model.pageController!.animateToPage(
+        model.pageController!.page!.toInt() - 1,
+        duration: const Duration(milliseconds: 500),
+        curve: Curves.decelerate,
+      );
+      return;
+    }
+
+    model.trackAutosaveBackPress();
+  }
+
   @override
   Widget build(BuildContext context) {
-    // S locale = S.of(context);
     return Selector<SubService, AutosaveState>(
       selector: (_, subService) => subService.autosaveState,
       builder: (context, autosaveState, child) =>
@@ -64,19 +84,7 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
                   Icons.arrow_back_ios,
                   color: UiConstants.kTextColor,
                 ),
-                onPressed: () {
-                  FocusScope.of(context).unfocus();
-                  (autosaveState == AutosaveState.INIT ||
-                          autosaveState == AutosaveState.ACTIVE ||
-                          model.pageController!.page == 0 ||
-                          model.pageController!.page == 3)
-                      ? AppState.backButtonDispatcher!.didPopRoute()
-                      : model.pageController!.animateToPage(
-                          model.pageController!.page!.toInt() - 1,
-                          duration: const Duration(milliseconds: 500),
-                          curve: Curves.decelerate);
-                  model.trackAutosaveBackPress();
-                },
+                onPressed: () => _onPressedBack(autosaveState, model),
               ),
               actions: const [
                 Row(
@@ -93,13 +101,13 @@ class _AutosaveProcessViewState extends State<AutosaveProcessView> {
                     children: [
                       const NewSquareBackground(),
                       SafeArea(
-                        child: autosaveState == AutosaveState.INIT
-                            ? const AutosavePendingView()
-                            : autosaveState == AutosaveState.IDLE
-                                ? AutosaveSetupView(model: model)
-                                : autosaveState == AutosaveState.ACTIVE
-                                    ? AutosaveSuccessView(model: model)
-                                    : const SizedBox(),
+                        child: switch (autosaveState) {
+                          AutosaveState.INIT => const AutosavePendingView(),
+                          AutosaveState.IDLE => AutosaveSetupView(model: model),
+                          AutosaveState.ACTIVE =>
+                            AutosaveSuccessView(model: model),
+                          _ => const SizedBox.shrink(),
+                        },
                       ),
                     ],
                   ),
@@ -229,8 +237,8 @@ class AutosavePendingView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    S locale = locator<S>();
-    return Container(
+    final locale = locator<S>();
+    return SizedBox(
       width: SizeConfig.screenWidth,
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.center,

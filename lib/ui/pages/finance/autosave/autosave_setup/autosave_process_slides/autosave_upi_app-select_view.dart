@@ -14,20 +14,16 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class UpiAppSelectView extends StatelessWidget {
-  UpiAppSelectView({required this.model, super.key
-      // required this.appList,
-      // this.selectedApp,
-      // required this.onAppSelect,
-      // required this.onCtaPressed
-      });
+  const UpiAppSelectView({
+    required this.model,
+    super.key,
+  });
+
   final AutosaveProcessViewModel model;
-  // final List<ApplicationMeta> appList;
-  // final ApplicationMeta? selectedApp;
-  // final Function onAppSelect;
-  // final Function onCtaPressed;
-  final S locale = locator<S>();
+
   @override
   Widget build(BuildContext context) {
+    final locale = locator<S>();
     return model.appsList.isNotEmpty
         ? Stack(
             children: [
