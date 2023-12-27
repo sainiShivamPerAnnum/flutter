@@ -49,6 +49,33 @@ class _QuizWebViewState extends State<QuizWebView> {
     return "${quizSectionData['baseUrl']}?token=$key";
   }
 
+  Future<void> _onExitQuiz() async {
+    log("Close the quiz web window");
+
+    final superFelloIndex = AppState.delegate!.pages.indexWhere(
+      (element) => element.name == FelloBadgeHomeViewPageConfig.path,
+    );
+
+    if (superFelloIndex != -1) {
+      while (AppState.delegate!.pages.last.name !=
+          FelloBadgeHomeViewPageConfig.path) {
+        await AppState.backButtonDispatcher!.didPopRoute();
+      }
+
+      await AppState.backButtonDispatcher!.didPopRoute();
+
+      await Future.delayed(const Duration(milliseconds: 100));
+
+      AppState.delegate!.appState.currentAction = PageAction(
+        state: PageState.addPage,
+        page: FelloBadgeHomeViewPageConfig,
+      );
+    } else {
+      AppState.unblockNavigation();
+      await AppState.backButtonDispatcher!.didPopRoute();
+    }
+  }
+
   @override
   void initState() {
     super.initState();
@@ -64,9 +91,7 @@ class _QuizWebViewState extends State<QuizWebView> {
         log(message.message);
         String data = message.message;
         if (data.startsWith('exit|')) {
-          log("Close the quiz web window");
-          AppState.unblockNavigation();
-          await AppState.backButtonDispatcher!.didPopRoute();
+          await _onExitQuiz();
         } else if (data.startsWith('share|')) {
           String text = data.substring(6);
           await Share.share(text);
@@ -83,33 +108,10 @@ class _QuizWebViewState extends State<QuizWebView> {
       ..loadRequest(Uri.parse(finalUrl));
   }
 
-  Future<void> _onTapBack(bool hasSuperFellInStack) async {
-    if (hasSuperFellInStack) {
-      while (AppState.delegate!.pages.last.name !=
-          FelloBadgeHomeViewPageConfig.path) {
-        await AppState.backButtonDispatcher!.didPopRoute();
-      }
-
-      await AppState.backButtonDispatcher!
-          .didPopRoute(); // remove super fello page.
-
-      await Future.delayed(const Duration(milliseconds: 100));
-
-      AppState.delegate!.appState.currentAction = PageAction(
-        state: PageState.addPage,
-        page: FelloBadgeHomeViewPageConfig,
-      );
-    } else {
-      await AppState.backButtonDispatcher!.didPopRoute();
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final keyboardIsOpen = MediaQuery.of(context).viewInsets.bottom != 0;
-    final superFelloIndex = AppState.delegate!.pages.indexWhere(
-      (element) => element.name == FelloBadgeHomeViewPageConfig.path,
-    );
+
     return Scaffold(
       backgroundColor: UiConstants.kBackgroundColor,
       floatingActionButton: keyboardIsOpen && Platform.isIOS
@@ -127,12 +129,6 @@ class _QuizWebViewState extends State<QuizWebView> {
         toolbarHeight: 0,
         elevation: 0,
         backgroundColor: const Color(0xff227c74),
-        leading: InkWell(
-          onTap: () => _onTapBack(superFelloIndex != -1),
-          child: const Icon(
-            Icons.arrow_back,
-          ),
-        ),
       ),
       body: SafeArea(
         child: Stack(
