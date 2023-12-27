@@ -52,11 +52,14 @@ class _QuizWebViewState extends State<QuizWebView> {
   Future<void> _onExitQuiz() async {
     log("Close the quiz web window");
 
+    AppState.unblockNavigation();
+
     final superFelloIndex = AppState.delegate!.pages.indexWhere(
       (element) => element.name == FelloBadgeHomeViewPageConfig.path,
     );
 
     if (superFelloIndex != -1) {
+      AppState.isQuizInProgress = false;
       while (AppState.delegate!.pages.last.name !=
           FelloBadgeHomeViewPageConfig.path) {
         await AppState.backButtonDispatcher!.didPopRoute();
@@ -71,7 +74,6 @@ class _QuizWebViewState extends State<QuizWebView> {
         page: FelloBadgeHomeViewPageConfig,
       );
     } else {
-      AppState.unblockNavigation();
       await AppState.backButtonDispatcher!.didPopRoute();
     }
   }
