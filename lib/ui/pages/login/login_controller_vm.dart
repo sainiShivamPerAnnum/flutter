@@ -534,6 +534,9 @@ class LoginControllerViewModel extends BaseViewModel {
         .then((value) => {
               setState(ViewState.Idle),
             });
+    Future.delayed(const Duration(seconds: 1), () {
+      _otpScreenKey.currentState!.model!.otpFocusNode.unfocus();
+    });
   }
 
   Future<void> _verifyPhone() async {

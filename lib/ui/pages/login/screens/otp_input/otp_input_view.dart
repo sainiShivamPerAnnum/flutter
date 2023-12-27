@@ -48,6 +48,7 @@ class LoginOtpViewState extends State<LoginOtpView> {
       onModelReady: (model) {
         this.model = model;
         model.parentModelInstance = widget.loginModel;
+        model.mobileNo = model.parentModelInstance.userMobile;
         model.init();
       },
       onModelDispose: (model) {

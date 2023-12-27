@@ -56,7 +56,6 @@ class LoginOtpViewModel extends BaseViewModel with CodeAutoFill {
       logger.d("Disabling Screenshots in OTP Screen for iOS");
       await iosScreenShotChannel.invokeMethod('secureiOS');
     }
-    mobileNo = parentModelInstance.userMobile;
     logger.d("Mobile No: $mobileNo");
     listenForCode();
     assert(() {
