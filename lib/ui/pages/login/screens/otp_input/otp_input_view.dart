@@ -69,6 +69,33 @@ class LoginOtpViewState extends State<LoginOtpView> {
             ),
             SizedBox(height: SizeConfig.padding20),
             //input
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  "Login as +91-${model.mobileNo}",
+                  style: TextStyles.sourceSans.body3.colour(
+                    UiConstants.kTextFieldTextColor,
+                  ),
+                ),
+                SizedBox(
+                  width: SizeConfig.padding12,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    if (BaseUtil.showNoInternetAlert()) return;
+                    model.parentModelInstance.editPhone();
+                  },
+                  child: Text(
+                    "EDIT",
+                    style: TextStyles.sourceSans.body2.colour(
+                      const Color(0xFF34C3A7),
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: SizeConfig.padding16),
             Padding(
               padding: EdgeInsets.symmetric(
                 horizontal: SizeConfig.pageHorizontalMargins * 2,
@@ -115,7 +142,7 @@ class LoginOtpViewState extends State<LoginOtpView> {
                     ),
                   ),
                   SizedBox(
-                    width: SizeConfig.padding4,
+                    width: SizeConfig.padding12,
                   ),
                   GestureDetector(
                     onTap: () {
@@ -181,14 +208,11 @@ class LoginOtpViewState extends State<LoginOtpView> {
                       value,
                       child,
                     ) {
-                      final minutes =
-                          (value.inMinutes).toString().padLeft(2, '0');
-                      final seconds =
-                          (value.inSeconds % 60).toString().padLeft(2, '0');
+                      final minutes = (value.inMinutes).toString().padLeft(2, '0');
+                      final seconds = (value.inSeconds % 60).toString().padLeft(2, '0');
                       return Text(
                         "$minutes:$seconds",
-                        style: TextStyles.sourceSansB.body3
-                            .colour(UiConstants.primaryColor),
+                        style: TextStyles.sourceSansB.body3.colour(UiConstants.primaryColor),
                       );
                     },
                   ),
