@@ -43,7 +43,7 @@ class LevelUnlockDialog extends StatelessWidget {
     final label = _getLevelName();
 
     await Share.share(
-      'I just upgraded to $label on the FELLO app! This gives me access to some great benefits. You can become one too! Come, let\'s save together!',
+      'I just upgraded to $label on the FELLO app! This gives me access to some great benefits. You can become one too! Come, let\'s save together!\n\n https://fello.in/download/app ',
     );
 
     locator<AnalyticsService>().track(
