@@ -672,16 +672,6 @@ class S {
     );
   }
 
-  /// `Login as +91-{Value}`
-  String obLoginAsText(Object Value) {
-    return Intl.message(
-      'Login as +91-$Value',
-      name: 'obLoginAsText',
-      desc: '',
-      args: [Value],
-    );
-  }
-
   /// `DONE`
   String get obDone {
     return Intl.message(
@@ -959,6 +949,16 @@ class S {
       name: 'obPreferNotToSay',
       desc: '',
       args: [],
+    );
+  }
+
+  /// `Login as +91-{mobileNumber}`
+  String obLoginAsText(String mobileNumber) {
+    return Intl.message(
+      'Login as +91-$mobileNumber',
+      name: 'obLoginAsText',
+      desc: '',
+      args: [mobileNumber],
     );
   }
 

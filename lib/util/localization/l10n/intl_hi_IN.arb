@@ -91,6 +91,14 @@
   "obMale": "नर",
   "obFemale": "मादा",
   "obPreferNotToSay": "मैं कहना नहीं चाहूँगा",
+  "obLoginAsText": "लॉगिन करें +91-{mobileNumber}",
+  "@obLoginAsText": {
+    "placeholders": {
+      "mobileNumber": {
+        "type": "String"
+      }
+    }
+  },
   "-----------------------------------": "----------------------------",
   "navBarJourney": "यात्रा",
   "navBarPlay": "खेलें",

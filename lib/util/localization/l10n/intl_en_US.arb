@@ -91,6 +91,14 @@
   "obMale": "Male",
   "obFemale": "Female",
   "obPreferNotToSay": "Rather Not Say",
+  "obLoginAsText": "Login as +91-{mobileNumber}",
+  "@obLoginAsText": {
+      "placeholders": {
+        "mobileNumber": {
+          "type": "String"
+        }
+      }
+    },
   "-----------------------------------": "----------------------------",
   "navBarJourney": "Journey",
   "navBarPlay": "Play",
