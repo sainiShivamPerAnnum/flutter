@@ -672,6 +672,16 @@ class S {
     );
   }
 
+  /// `Login as +91-{Value}`
+  String obLoginAsText(Object Value) {
+    return Intl.message(
+      'Login as +91-$Value',
+      name: 'obLoginAsText',
+      desc: '',
+      args: [Value],
+    );
+  }
+
   /// `DONE`
   String get obDone {
     return Intl.message(

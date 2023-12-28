@@ -583,15 +583,15 @@ class LoginControllerViewModel extends BaseViewModel {
 
   Future<void> editPhone() async {
     setState(ViewState.Busy);
-    _controller!
+    unawaited(_controller!
         .animateToPage(
           LoginMobileView.index,
           duration: const Duration(milliseconds: 500),
           curve: Curves.easeInToLinear,
         )
-        .then((value) => {
-              setState(ViewState.Idle),
-            });
+        .then(
+          (value) => setState(ViewState.Idle),
+        ));
     Future.delayed(const Duration(seconds: 1), () {
       _otpScreenKey.currentState!.model!.otpFocusNode.unfocus();
     });

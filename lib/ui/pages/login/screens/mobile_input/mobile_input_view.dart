@@ -123,7 +123,6 @@ class LoginMobileViewState extends State<LoginMobileView> {
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                 maxLength: 10,
                 prefixText: "+91 ",
-                onSubmit: (val) => () {},
                 prefixTextStyle: TextStyles.sourceSans.body3,
                 scrollPadding: EdgeInsets.only(
                     bottom: MediaQuery.of(context).viewInsets.bottom >

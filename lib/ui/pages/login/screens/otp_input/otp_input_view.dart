@@ -74,7 +74,7 @@ class LoginOtpViewState extends State<LoginOtpView> {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 Text(
-                  "Login as +91-${model.mobileNo}",
+                  locale.obLoginAsText(model.mobileNo!),
                   style: TextStyles.sourceSans.body3.colour(
                     UiConstants.kTextFieldTextColor,
                   ),
@@ -88,9 +88,9 @@ class LoginOtpViewState extends State<LoginOtpView> {
                     model.parentModelInstance.editPhone();
                   },
                   child: Text(
-                    "EDIT",
+                    locale.obEdit,
                     style: TextStyles.sourceSans.body2.colour(
-                      const Color(0xFF34C3A7),
+                      UiConstants.primaryColor,
                     ),
                   ),
                 ),
@@ -170,7 +170,7 @@ class LoginOtpViewState extends State<LoginOtpView> {
                     child: Text(
                       locale.obResend,
                       style: TextStyles.sourceSans.body2.colour(
-                        const Color(0xFF34C3A7),
+                        UiConstants.primaryColor,
                       ),
                     ),
                   ),
