@@ -1,0 +1,40 @@
+import 'package:felloapp/core/model/action.dart';
+import 'package:json_annotation/json_annotation.dart';
+
+part 'in_app_notification_payload.g.dart';
+
+const _deserializable = JsonSerializable(
+  createToJson: false,
+);
+
+enum InAppNotificationType {
+  popUp,
+}
+
+@_deserializable
+class InAppNotificationPayload {
+  final InAppNotificationType type;
+  final Map<String, dynamic> payload;
+
+  const InAppNotificationPayload(
+    this.type,
+    this.payload,
+  );
+
+  factory InAppNotificationPayload.fromJson(Map<String, dynamic> json) =>
+      _$InAppNotificationPayloadFromJson(json);
+}
+
+@_deserializable
+class PopupNotification {
+  final String image;
+  final Action? action;
+
+  const PopupNotification(
+    this.image,
+    this.action,
+  );
+
+  factory PopupNotification.fromJson(Map<String, dynamic> json) =>
+      _$PopupNotificationFromJson(json);
+}

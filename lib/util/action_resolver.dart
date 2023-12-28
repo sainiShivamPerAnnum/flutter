@@ -37,7 +37,8 @@ class ActionResolver {
         await Share.share(content);
         break;
 
-      default:
+      case ActionType.POP:
+        await AppState.backButtonDispatcher!.didPopRoute();
     }
   }
 }

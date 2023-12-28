@@ -20,5 +20,6 @@ const _$ActionTypeEnumMap = {
   ActionType.DEEP_LINK: 'DEEP_LINK',
   ActionType.LAUNCH_EXTERNAL_APPLICATION: 'LAUNCH_EXTERNAL_APPLICATION',
   ActionType.LAUNCH_WEBVIEW: 'LAUNCH_WEBVIEW',
+  ActionType.POP: 'POP',
   ActionType.SHARE: 'SHARE',
 };

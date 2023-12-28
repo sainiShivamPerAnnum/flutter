@@ -5,7 +5,6 @@ import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
-import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
@@ -22,7 +21,6 @@ import 'package:flutter/services.dart';
 
 class FcmListener {
   final BaseUtil _baseUtil = locator<BaseUtil>();
-  final DBModel _dbModel = locator<DBModel>();
   final CustomLogger? logger = locator<CustomLogger>();
   final FcmHandler _handler;
   final UserService _userService = locator<UserService>();
@@ -46,16 +44,16 @@ class FcmListener {
           : logger!.d("Fcm instance not created");
 
       String? idToken = await _fcm!.getToken();
-      _saveDeviceToken(idToken);
+      await _saveDeviceToken(idToken);
 
       ///update fcm user token if required
       Stream<String> fcmStream = _fcm!.onTokenRefresh;
       fcmStream.listen((token) async {
         logger!.d("OnTokenRefresh called, updated FCM token: $token");
-        _saveDeviceToken(token);
+        await _saveDeviceToken(token);
       });
 
-      unawaited(_fcm!.getInitialMessage().then((RemoteMessage? message) {
+      unawaited(_fcm!.getInitialMessage().then((message) {
         if (message != null) {
           logger!.d("terminated onMessage received: ${message.data}");
           // _handler.handleMessage(message.data, MsgSource.Terminated);
@@ -67,17 +65,17 @@ class FcmListener {
 
       if (AppState.startupNotifMessage == null && data.isNotEmpty) {
         AppState.startupNotifMessage = jsonDecode(data);
-        PreferenceHelper.remove("fcmData");
+        await PreferenceHelper.remove("fcmData");
       }
 
       FirebaseMessaging.onMessage.listen((message) async {
         RemoteNotification? notification = message.notification;
         if (message.data.isNotEmpty) {
-          _handler.handleMessage(message.data, MsgSource.Foreground);
+          await _handler.handleMessage(message.data, MsgSource.Foreground);
         } else if (notification != null) {
           logger!.d(
               "Handle Notification: ${notification.title} ${notification.body}, ${message.data['command']}");
-          _handler.handleNotification(
+          await _handler.handleNotification(
               notification.title, notification.body, message.data['command']);
         }
       });
@@ -98,15 +96,10 @@ class FcmListener {
       ///setup android notification channels
       if (Platform.isAndroid) {
         _androidNativeSetup();
-        // ApxorFlutter.setDeeplinkListener((url) {
-        //   // interpret the URL and handle redirection within the application
-        //   logger!.d("rerouting to Apxor" + url!);
-        //   AppState.delegate!.parseRoute(Uri.parse(url));
-        // });
       }
     } catch (e) {
       logger!.e(e.toString());
-      _internalOpsService.logFailure(
+      await _internalOpsService.logFailure(
           _userService.baseUser?.uid ?? '', FailType.FcmListenerSetupFailed, {
         "title": "FcmListener setup Failed",
         "error": e.toString(),
@@ -126,28 +119,27 @@ class FcmListener {
         (suffix.isEmpty) ? subId.value() : '${subId.value()}$suffix');
   }
 
-  _manageInitSubscriptions() async {
-    if (_baseUtil == null) return;
+  Future<void> _manageInitSubscriptions() async {
     if (_baseUtil.isOldCustomer()) {
-      addSubscription(FcmTopic.OLDCUSTOMER);
+      await addSubscription(FcmTopic.OLDCUSTOMER);
     }
 
     if (_userService.baseUser != null &&
         _userService.baseUser!.isInvested != null &&
         !_userService.baseUser!.isInvested!) {
-      addSubscription(FcmTopic.NEVERINVESTEDBEFORE);
+      await addSubscription(FcmTopic.NEVERINVESTEDBEFORE);
     }
 
     if (_userService.baseUser != null &&
         !_userService.baseUser!.isAugmontOnboarded!) {
-      addSubscription(FcmTopic.MISSEDCONNECTION);
+      await addSubscription(FcmTopic.MISSEDCONNECTION);
     }
 
     if (_userService.baseUser != null &&
         _userService.baseUser!.isAugmontOnboarded! &&
         _baseUtil.userFundWallet != null &&
         _baseUtil.userFundWallet!.augGoldBalance > 300) {
-      addSubscription(FcmTopic.FREQUENTFLYER)
+      await addSubscription(FcmTopic.FREQUENTFLYER)
           .then((value) => logger!.d("Added frequent flyer subscription"));
     }
 
@@ -156,20 +148,20 @@ class FcmListener {
         _userService.baseUser!.userPreferences
                 .getPreference(Preferences.TAMBOLANOTIFICATIONS) ==
             1) {
-      addSubscription(FcmTopic.TAMBOLAPLAYER);
+      await addSubscription(FcmTopic.TAMBOLAPLAYER);
     }
 
     if (BaseUtil.packageInfo != null) {
-      String cde = BaseUtil.packageInfo!.version ?? 'NA';
+      String cde = BaseUtil.packageInfo!.version;
       cde = cde.replaceAll('.', '');
-      addSubscription(FcmTopic.VERSION, suffix: cde);
+      await addSubscription(FcmTopic.VERSION, suffix: cde);
     }
 
-    addSubscription(FcmTopic.PROMOTION);
+    await addSubscription(FcmTopic.PROMOTION);
   }
 
   _androidNativeSetup() async {
-    const MethodChannel _channel =
+    const MethodChannel channel =
         MethodChannel('fello.in/dev/notifications/channel/tambola');
     Map<String, String> tambolaChannelMap = {
       "id": "TAMBOLA_PICK_NOTIF",
@@ -177,7 +169,7 @@ class FcmListener {
       "description": "Tambola notifications",
     };
 
-    _channel
+    await channel
         .invokeMethod('createNotificationChannel', tambolaChannelMap)
         .then((value) {
       logger!.d('Tambola Notification channel created successfully');
@@ -196,7 +188,7 @@ class FcmListener {
       if (savedToken != fcmToken) {
         logger!.d(
             "FCM changed or app is opened for first time, so updating pref and server token");
-        PreferenceHelper.setString(PreferenceHelper.FCM_TOKEN, fcmToken!);
+        await PreferenceHelper.setString(PreferenceHelper.FCM_TOKEN, fcmToken!);
         await _userService.updateClientToken(fcmToken);
 
         try {

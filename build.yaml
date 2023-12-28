@@ -5,6 +5,7 @@ targets:
         enabled: true
         generate_for:
           - "lib/core/model/**.dart"
+          - "lib/core/service/fcm/**.dart"
       isar_generator|isar_generator:
         enabled: true
         generate_for:
