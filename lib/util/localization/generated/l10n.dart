@@ -952,6 +952,16 @@ class S {
     );
   }
 
+  /// `Login as +91-{mobileNumber}`
+  String obLoginAsText(String mobileNumber) {
+    return Intl.message(
+      'Login as +91-$mobileNumber',
+      name: 'obLoginAsText',
+      desc: '',
+      args: [mobileNumber],
+    );
+  }
+
   // skipped getter for the '-----------------------------------' key
 
   /// `Journey`

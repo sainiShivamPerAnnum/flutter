@@ -581,6 +581,20 @@ class LoginControllerViewModel extends BaseViewModel {
     //process complete
   }
 
+  Future<void> editPhone() async {
+    setState(ViewState.Busy);
+    unawaited(_controller!
+        .animateToPage(
+          LoginMobileView.index,
+          duration: const Duration(milliseconds: 500),
+          curve: Curves.easeInToLinear,
+        )
+        .then(
+          (value) => setState(ViewState.Idle),
+        ));
+    _otpScreenKey.currentState!.model!.otpFocusNode.unfocus();
+  }
+
   Future<void> _verifyPhone() async {
     final hash = await SmsAutoFill().getAppSignature;
     final res = await _userRepo.sendOtp(_verificationId, hash);

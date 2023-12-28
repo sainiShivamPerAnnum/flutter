@@ -48,6 +48,7 @@ class LoginOtpViewState extends State<LoginOtpView> {
       onModelReady: (model) {
         this.model = model;
         model.parentModelInstance = widget.loginModel;
+        model.mobileNo = model.parentModelInstance.userMobile;
         model.init();
       },
       onModelDispose: (model) {
@@ -69,6 +70,33 @@ class LoginOtpViewState extends State<LoginOtpView> {
             ),
             SizedBox(height: SizeConfig.padding20),
             //input
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                Text(
+                  locale.obLoginAsText(model.mobileNo!),
+                  style: TextStyles.sourceSans.body3.colour(
+                    UiConstants.kTextFieldTextColor,
+                  ),
+                ),
+                SizedBox(
+                  width: SizeConfig.padding12,
+                ),
+                GestureDetector(
+                  onTap: () {
+                    if (BaseUtil.showNoInternetAlert()) return;
+                    model.parentModelInstance.editPhone();
+                  },
+                  child: Text(
+                    locale.obEdit,
+                    style: TextStyles.sourceSans.body2.colour(
+                      UiConstants.primaryColor,
+                    ),
+                  ),
+                ),
+              ],
+            ),
+            SizedBox(height: SizeConfig.padding16),
             Padding(
               padding: EdgeInsets.symmetric(
                 horizontal: SizeConfig.pageHorizontalMargins * 2,
@@ -115,7 +143,7 @@ class LoginOtpViewState extends State<LoginOtpView> {
                     ),
                   ),
                   SizedBox(
-                    width: SizeConfig.padding4,
+                    width: SizeConfig.padding12,
                   ),
                   GestureDetector(
                     onTap: () {
@@ -142,7 +170,7 @@ class LoginOtpViewState extends State<LoginOtpView> {
                     child: Text(
                       locale.obResend,
                       style: TextStyles.sourceSans.body2.colour(
-                        const Color(0xFF34C3A7),
+                        UiConstants.primaryColor,
                       ),
                     ),
                   ),
