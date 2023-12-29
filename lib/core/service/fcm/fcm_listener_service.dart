@@ -30,10 +30,6 @@ class FcmListener {
   FirebaseMessaging? _fcm;
   bool isTambolaNotificationLoading = false;
 
-  static Future<dynamic> backgroundMessageHandler(RemoteMessage message) async {
-    return Future<void>.value();
-  }
-
   FcmListener(this._handler);
 
   Future<FirebaseMessaging?> setupFcm() async {
@@ -55,7 +51,7 @@ class FcmListener {
 
       unawaited(_fcm!.getInitialMessage().then((message) {
         if (message != null) {
-          logger!.d("terminated onMessage received: ${message.data}");
+          logger!.d("Opened app with notification data: ${message.data}");
           // _handler.handleMessage(message.data, MsgSource.Terminated);
           AppState.startupNotifMessage = message.data;
         }
@@ -81,7 +77,7 @@ class FcmListener {
       });
 
       FirebaseMessaging.onMessageOpenedApp.listen((message) {
-        logger!.i('A new onMessageOpenedApp event was published!');
+        logger!.i('Opened app from background state with message: $message');
 
         _handler.handleMessage(message.data, MsgSource.Background);
       });

@@ -19,10 +19,26 @@ abstract interface class InAppNotificationHandler {
     switch (type) {
       case InAppNotificationType.popUp:
         return PopUpNotificationHandler();
+      case InAppNotificationType.snackbar:
+        return SnackBarNotificationHandler();
     }
   }
 
   FutureOr<void> call(Map<String, dynamic> payload);
+}
+
+final class SnackBarNotificationHandler implements InAppNotificationHandler {
+  @override
+  FutureOr<void> call(Map<String, dynamic> payload) {
+    final snackBarNotificationData = SnackbarNotification.fromJson(
+      payload,
+    );
+
+    BaseUtil.showPositiveAlert(
+      snackBarNotificationData.title,
+      snackBarNotificationData.subTitle,
+    );
+  }
 }
 
 final class PopUpNotificationHandler implements InAppNotificationHandler {
@@ -32,6 +48,8 @@ final class PopUpNotificationHandler implements InAppNotificationHandler {
       payload,
     );
 
+    // Caches images in local flutter engine before showing dialog to avoid
+    // image downloading inside Image component.
     await precacheImage(
       NetworkImage(popUpData.image),
       AppState.delegate!.navigatorKey.currentContext!,

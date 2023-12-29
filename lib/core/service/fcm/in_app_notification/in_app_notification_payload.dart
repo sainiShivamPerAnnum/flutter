@@ -9,6 +9,7 @@ const _deserializable = JsonSerializable(
 
 enum InAppNotificationType {
   popUp,
+  snackbar,
 }
 
 @_deserializable
@@ -37,4 +38,18 @@ class PopupNotification {
 
   factory PopupNotification.fromJson(Map<String, dynamic> json) =>
       _$PopupNotificationFromJson(json);
+}
+
+@_deserializable
+class SnackbarNotification {
+  final String title;
+  final String subTitle;
+
+  const SnackbarNotification(
+    this.title,
+    this.subTitle,
+  );
+
+  factory SnackbarNotification.fromJson(Map<String, dynamic> json) =>
+      _$SnackbarNotificationFromJson(json);
 }

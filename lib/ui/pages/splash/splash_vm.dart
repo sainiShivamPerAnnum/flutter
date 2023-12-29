@@ -168,18 +168,4 @@ class LauncherViewModel extends BaseViewModel {
     ///Check if app needs to be open securely
     userService.authenticateDevice();
   }
-
-// Future<void> _togglePerformanceCollection() async {
-//   // No-op for web.
-//   await _performance
-//       .setPerformanceCollectionEnabled(!_isPerformanceCollectionEnabled);
-
-//   // Always true for web.
-//   final bool isEnabled = await _performance.isPerformanceCollectionEnabled();
-
-//   _isPerformanceCollectionEnabled = isEnabled;
-//   _performanceCollectionMessage = _isPerformanceCollectionEnabled
-//       ? 'Performance collection is enabled.'
-//       : 'Performance collection is disabled.';
-// }
 }
