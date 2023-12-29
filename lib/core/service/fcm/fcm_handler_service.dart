@@ -7,7 +7,6 @@ import 'dart:developer';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/fcm_commands_constants.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
-import 'package:felloapp/core/enums/transaction_state_enum.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_datapayload.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_v2/fcm_handler_v2.dart';
 import 'package:felloapp/core/service/journey_service.dart';
@@ -71,7 +70,12 @@ class FcmHandler extends ChangeNotifier {
     }
 
     var v2 = data?['v2'];
-    if (v2 != null) {
+    final isTransactionInProgress = _augTxnService.currentTxnState.isGoingOn ||
+        _floTxnService.currentTransactionState.isGoingOn;
+
+    if (v2 != null &&
+        !_augTxnService.isIOSTxnInProgress &&
+        !isTransactionInProgress) {
       if (v2 is String) {
         v2 = jsonDecode(v2);
       }
@@ -107,9 +111,7 @@ class FcmHandler extends ChangeNotifier {
           source == MsgSource.Terminated) {
         showSnackbar = false;
         await Future.delayed(const Duration(milliseconds: 800), () {
-          if (_augTxnService.currentTxnState == TransactionState.ongoing ||
-              _floTxnService.currentTransactionState ==
-                  TransactionState.ongoing) return true;
+          if (isTransactionInProgress) return true;
           AppState.delegate!.parseRoute(Uri.parse(url!));
         });
 
