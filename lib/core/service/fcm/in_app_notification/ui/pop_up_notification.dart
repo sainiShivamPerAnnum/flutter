@@ -13,8 +13,7 @@ class PopupNotificationView extends StatelessWidget {
   final PopupNotification notification;
 
   void _onTapImage() {
-    AppState.unblockNavigation();
-    AppState.backButtonDispatcher!.didPopRoute();
+    _onClose();
 
     final action = notification.action;
     if (action != null) {

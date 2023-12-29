@@ -3,19 +3,23 @@
 import 'dart:async';
 
 import 'package:felloapp/core/service/fcm/fcm_handler_v2/payload.dart';
+import 'package:felloapp/util/custom_logger.dart';
 
 import '../in_app_notification/in_app_notification_handler.dart'
     as in_app_handler;
 
 class FcmHandlerV2 {
-  const FcmHandlerV2._();
+  const FcmHandlerV2(this._logger);
+  final CustomLogger _logger;
 
-  static const instance = FcmHandlerV2._();
-
-  Future<void> handle(Map<String, dynamic> data) async {
-    final v2 = NotificationPayloadV2.fromJson(data);
-    final handler = NotificationHandler.fromNotificationType(v2.type);
-    await handler(v2.payload);
+  Future<void> call(Map<String, dynamic> data) async {
+    try {
+      final v2 = NotificationPayloadV2.fromJson(data);
+      final handler = NotificationHandler.fromNotificationType(v2.type);
+      await handler(v2.payload);
+    } catch (e, stack) {
+      _logger.e('FcmHandlerV2: failed to handle notification', e, stack);
+    }
   }
 }
 

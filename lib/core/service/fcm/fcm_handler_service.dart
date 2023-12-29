@@ -79,7 +79,8 @@ class FcmHandler extends ChangeNotifier {
       if (v2 is String) {
         v2 = jsonDecode(v2);
       }
-      await FcmHandlerV2.instance.handle(v2);
+      final handler = locator<FcmHandlerV2>();
+      await handler(v2);
       return true;
     }
 
