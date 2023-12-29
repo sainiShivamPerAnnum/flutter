@@ -89,8 +89,8 @@ class FcmHandler extends ChangeNotifier {
     String? command = data['command'];
     String? url;
     if (data["source"] != null && data["source"] == "webengage") {
-      final data0 = jsonDecode(data['message_data']);
-      final listOfData = data0["custom"] as List;
+      final messageData = jsonDecode(data['message_data']);
+      final listOfData = messageData["custom"] as List;
       try {
         url = listOfData.firstWhere(
           (element) => element['key'] == 'route',

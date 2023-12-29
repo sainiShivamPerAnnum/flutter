@@ -48,8 +48,8 @@ final class PopUpNotificationHandler implements InAppNotificationHandler {
       payload,
     );
 
-    // Caches images in local flutter engine before showing dialog to avoid
-    // image downloading inside Image component.
+    // Caches images in local flutter engine before showing dialog, to avoid
+    // image downloading inside Image component as future.
     await precacheImage(
       NetworkImage(popUpData.image),
       AppState.delegate!.navigatorKey.currentContext!,
