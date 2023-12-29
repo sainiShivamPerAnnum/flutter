@@ -19,7 +19,7 @@ class FcmHandlerV2 {
   }
 }
 
-abstract class NotificationHandler {
+abstract interface class NotificationHandler {
   const NotificationHandler();
 
   factory NotificationHandler.fromNotificationType(NotificationType type) {
@@ -32,7 +32,7 @@ abstract class NotificationHandler {
   FutureOr<void> call(Map<String, dynamic> data);
 }
 
-final class InAppNotificationHandler extends NotificationHandler {
+final class InAppNotificationHandler implements NotificationHandler {
   @override
   FutureOr<void> call(Map<String, dynamic> data) async {
     final notification = in_app_handler.InAppNotificationPayload.fromJson(data);

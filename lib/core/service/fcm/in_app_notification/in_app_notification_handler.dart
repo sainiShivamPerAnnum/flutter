@@ -11,7 +11,7 @@ import 'in_app_notification_payload.dart';
 
 export 'in_app_notification_payload.dart';
 
-abstract class InAppNotificationHandler {
+abstract interface class InAppNotificationHandler {
   const InAppNotificationHandler();
 
   factory InAppNotificationHandler.fromNotificationType(
