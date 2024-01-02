@@ -20,6 +20,7 @@ import 'package:felloapp/navigator/router/transition_delegate.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/ui/elements/fello_dialog/fello_in_app_review.dart';
+import 'package:felloapp/ui/pages/asset_prefs/asset_prefs.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_buy/gold_pro_buy_view.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_details/gold_pro_details_view.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_sell/gold_pro_sell_view.dart';
@@ -222,6 +223,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           break;
         case Pages.Login:
           _addPageData(const LoginControllerView(), LoginPageConfig);
+          break;
+        case Pages.AssetPreference:
+          _addPageData(const AssetPrefView(), pageConfig);
           break;
         case Pages.Root:
           _addPageData(const Root(), RootPageConfig);

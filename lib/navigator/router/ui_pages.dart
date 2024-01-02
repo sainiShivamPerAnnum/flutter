@@ -4,6 +4,7 @@ import 'package:felloapp/navigator/app_state.dart';
 
 const String SplashPath = '/splash';
 const String LoginPath = '/login';
+const String AssetPreferencePath = '/assetPref';
 const String OnboardPath = '/onboard';
 const String RootPath = '/approot';
 const String UserProfileDetailsPath = '/userProfileDetails';
@@ -114,6 +115,7 @@ const String TicketsTutorialViewPath = "/ticketsTutorialViewPath";
 enum Pages {
   Splash,
   Login,
+  AssetPreference,
   Onboard,
   Root,
   UserProfileDetails,
@@ -267,6 +269,13 @@ PageConfiguration LoginPageConfig = PageConfiguration(
   path: LoginPath,
   uiPage: Pages.Login,
   name: 'Login Screen',
+);
+
+PageConfiguration AssetPrefPageConfig = PageConfiguration(
+  key: 'AssetPref',
+  path: AssetPreferencePath,
+  uiPage: Pages.AssetPreference,
+  name: 'Asset Preference Screen',
 );
 
 PageConfiguration RootPageConfig = PageConfiguration(
