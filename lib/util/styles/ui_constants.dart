@@ -246,6 +246,8 @@ class UiConstants {
   static const peach1 = Color(0xFFEFD8D2);
   static const peach2 = Color(0xFFFFCCBF);
   static const peach3 = Color(0xFFF79780);
+
+  static const greyDivider = Color(0xFF7F86A3);
 }
 
 extension ColorExtension on String {

@@ -111,21 +111,25 @@ class AssetPrefView extends StatelessWidget {
                                 assetPrefOptions: AssetPrefOptions.NO_PREF,
                                 model: model)
                           ]),
-                      SecondaryButton(
-                          onPressed: () {
-                            if (model.selectedAsset == null) return;
-                            if (model.selectedAsset ==
-                                AssetPrefOptions.NO_PREF) {
-                              BaseUtil.openModalBottomSheet(
-                                  isBarrierDismissible: true,
-                                  content: AssetPrefBottomSheet(
-                                      comingFromSkip: false, model: model));
-                              return;
-                            } else {
-                              model.handleRouting(model.selectedAsset);
-                            }
-                          },
-                          label: "PROCEED ${model.getButtonText()}")
+                      Spacer(),
+                      Padding(
+                        padding: EdgeInsets.only(bottom: SizeConfig.padding20),
+                        child: SecondaryButton(
+                            onPressed: () {
+                              if (model.selectedAsset == null) return;
+                              if (model.selectedAsset ==
+                                  AssetPrefOptions.NO_PREF) {
+                                BaseUtil.openModalBottomSheet(
+                                    isBarrierDismissible: true,
+                                    content: AssetPrefBottomSheet(
+                                        comingFromSkip: false, model: model));
+                                return;
+                              } else {
+                                model.handleRouting(model.selectedAsset);
+                              }
+                            },
+                            label: "PROCEED ${model.getButtonText()}"),
+                      )
                     ],
                   ),
                 )

@@ -69,18 +69,19 @@ class _AssetSelectorState extends State<AssetSelector>
                       child: Stack(
                         alignment: Alignment.bottomCenter,
                         children: [
-                          Transform.translate(
-                            offset: Offset(
-                                0, _controller.value * SizeConfig.padding44),
-                            child: LearnMoreSlider(
-                              assetPrefOption: widget.assetPrefOptions,
-                              offsetValue: _controller.value,
-                            ),
-                          ),
-                          AssetCard(
-                            opacity: _controller.value,
+                          LearnMoreSlider(
                             assetPrefOption: widget.assetPrefOptions,
+                            offsetValue: _controller.value,
                           ),
+                          Padding(
+                            padding: EdgeInsets.only(
+                                bottom:
+                                    _controller.value * SizeConfig.padding44),
+                            child: AssetCard(
+                              opacity: _controller.value,
+                              assetPrefOption: widget.assetPrefOptions,
+                            ),
+                          )
                         ],
                       ),
                     )
@@ -90,8 +91,7 @@ class _AssetSelectorState extends State<AssetSelector>
             ],
           ),
           SizedBox(
-            height: SizeConfig.padding24 +
-                _controller.value * (SizeConfig.padding44),
+            height: SizeConfig.padding24,
           ),
         ],
       ),
@@ -128,13 +128,7 @@ class LearnMoreSlider extends StatelessWidget {
               width: SizeConfig.padding26,
             ),
             GestureDetector(
-              onTap: () {
-                print("object");
-                BaseUtil.openModalBottomSheet(
-                  isBarrierDismissible: true,
-                  addToScreenStack: true,
-                );
-              },
+              onTap: () {},
               child: Text(
                 "LEARN MORE",
                 style: TextStyles.rajdhaniB.body2.colour(Colors.white),
@@ -178,82 +172,88 @@ class AssetCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(right: SizeConfig.padding4),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
-        border: Border.all(
-            color: (assetPrefOption == AssetPrefOptions.LENDBOX_P2P)
-                ? UiConstants.teal2.withOpacity(opacity)
-                : UiConstants.kBlogTitleColor.withOpacity(opacity),
-            width: 1.5),
-        color: (assetPrefOption == AssetPrefOptions.LENDBOX_P2P)
-            ? UiConstants.teal4
-            : UiConstants.kSaveDigitalGoldCardBg,
-      ),
-      padding: EdgeInsets.only(
-          left: SizeConfig.padding4,
-          right: SizeConfig.padding4,
-          bottom: SizeConfig.padding4,
-          top: SizeConfig.padding12),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SvgPicture.asset(
-                (assetPrefOption == AssetPrefOptions.LENDBOX_P2P)
-                    ? a.Assets.floAsset
-                    : a.Assets.digitalGold,
-                height: SizeConfig.padding30,
-              ),
-              SizedBox(
-                width: SizeConfig.padding12,
-              ),
-              Text(
-                (assetPrefOption == AssetPrefOptions.LENDBOX_P2P)
-                    ? "Fello P2P"
-                    : "Digital Gold",
-                style: TextStyles.rajdhaniSB.title5.colour(Colors.white),
-              )
-            ],
-          ),
-          Padding(
-            padding: EdgeInsets.only(
-                left: SizeConfig.padding14,
-                right: SizeConfig.padding14,
-                top: SizeConfig.padding4),
-            child: getDescriptionText(assetPrefOption),
-          ),
-          Padding(
-            padding: EdgeInsets.only(
-                bottom: SizeConfig.padding4,
-                left: SizeConfig.padding4,
-                right: SizeConfig.padding4,
-                top: SizeConfig.padding20),
-            child: DetailsRow(
-              upperText1: (assetPrefOption == AssetPrefOptions.LENDBOX_P2P)
-                  ? "P2P"
-                  : "24K",
-              lowerText1: (assetPrefOption == AssetPrefOptions.LENDBOX_P2P)
-                  ? "Asset"
-                  : "Gold",
-              upperText2: (assetPrefOption == AssetPrefOptions.LENDBOX_P2P)
-                  ? "Upto 12%"
-                  : "Stable Returns",
-              lowerText2: (assetPrefOption == AssetPrefOptions.LENDBOX_P2P)
-                  ? "Returns"
-                  : "@Market Rate",
-              upperText3: (assetPrefOption == AssetPrefOptions.LENDBOX_P2P)
-                  ? "KYC"
-                  : "No KYC",
-              lowerText3: "Required",
-              bgColor: (assetPrefOption == AssetPrefOptions.LENDBOX_P2P)
-                  ? UiConstants.teal5
-                  : UiConstants.goldSellCardColor,
+    return Opacity(
+      opacity: 1,
+      child: Container(
+        margin: EdgeInsets.only(right: SizeConfig.padding4),
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          border: Border.all(
+              color: (assetPrefOption == AssetPrefOptions.LENDBOX_P2P)
+                  ? UiConstants.teal2.withOpacity(opacity)
+                  : UiConstants.kBlogTitleColor.withOpacity(opacity),
+              width: 1.5),
+          color: (assetPrefOption == AssetPrefOptions.LENDBOX_P2P)
+              ? UiConstants.teal4
+              : UiConstants.kSaveDigitalGoldCardBg,
+        ),
+        padding: EdgeInsets.only(
+            left: SizeConfig.padding4,
+            right: SizeConfig.padding4,
+            bottom: SizeConfig.padding4,
+            top: SizeConfig.padding12),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: [
+                SvgPicture.asset(
+                  (assetPrefOption == AssetPrefOptions.LENDBOX_P2P)
+                      ? a.Assets.floAsset
+                      : a.Assets.digitalGold,
+                  height: SizeConfig.padding30,
+                ),
+                SizedBox(
+                  width: SizeConfig.padding12,
+                ),
+                Text(
+                  (assetPrefOption == AssetPrefOptions.LENDBOX_P2P)
+                      ? "Fello P2P"
+                      : "Digital Gold",
+                  style: TextStyles.rajdhaniSB.title5.colour(Colors.white),
+                )
+              ],
             ),
-          )
-        ],
+            Padding(
+              padding: EdgeInsets.only(
+                  left: SizeConfig.padding14,
+                  right: SizeConfig.padding14,
+                  top: SizeConfig.padding4),
+              child: getDescriptionText(assetPrefOption),
+            ),
+            Padding(
+              padding: EdgeInsets.only(
+                  bottom: SizeConfig.padding4,
+                  left: SizeConfig.padding4,
+                  right: SizeConfig.padding4,
+                  top: SizeConfig.padding20),
+              child: DetailsRow(
+                upperText1: (assetPrefOption == AssetPrefOptions.LENDBOX_P2P)
+                    ? "P2P"
+                    : "24K",
+                lowerText1: (assetPrefOption == AssetPrefOptions.LENDBOX_P2P)
+                    ? "Asset"
+                    : "Gold",
+                upperText2: (assetPrefOption == AssetPrefOptions.LENDBOX_P2P)
+                    ? "Upto 12%"
+                    : "Stable Returns",
+                lowerText2: (assetPrefOption == AssetPrefOptions.LENDBOX_P2P)
+                    ? "Returns"
+                    : "@Market Rate",
+                upperText3: (assetPrefOption == AssetPrefOptions.LENDBOX_P2P)
+                    ? "KYC"
+                    : "No KYC",
+                lowerText3: "Required",
+                bgColor: (assetPrefOption == AssetPrefOptions.LENDBOX_P2P)
+                    ? UiConstants.teal5
+                    : UiConstants.goldSellCardColor,
+                dividerColor: (assetPrefOption == AssetPrefOptions.LENDBOX_P2P)
+                    ? UiConstants.greyDivider
+                    : UiConstants.kBlogTitleColor,
+              ),
+            )
+          ],
+        ),
       ),
     );
   }
@@ -268,6 +268,7 @@ class DetailsRow extends StatelessWidget {
       required this.upperText3,
       required this.lowerText3,
       required this.bgColor,
+      required this.dividerColor,
       super.key});
   final String upperText1;
   final String lowerText1;
@@ -276,6 +277,7 @@ class DetailsRow extends StatelessWidget {
   final String upperText3;
   final String lowerText3;
   final Color bgColor;
+  final Color dividerColor;
 
   @override
   Widget build(BuildContext context) {
@@ -308,9 +310,12 @@ class DetailsRow extends StatelessWidget {
                 ],
               ),
             ),
-            const VerticalDivider(
-              color: Colors.white,
-              thickness: 2,
+            SizedBox(
+              height: SizeConfig.padding36,
+              child: VerticalDivider(
+                color: dividerColor,
+                thickness: 2,
+              ),
             ),
             Padding(
               padding: EdgeInsets.only(
@@ -328,9 +333,12 @@ class DetailsRow extends StatelessWidget {
                 ],
               ),
             ),
-            const VerticalDivider(
-              color: Colors.white,
-              thickness: 2,
+            SizedBox(
+              height: SizeConfig.padding36,
+              child: VerticalDivider(
+                color: dividerColor,
+                thickness: 2,
+              ),
             ),
             Padding(
               padding: EdgeInsets.only(
