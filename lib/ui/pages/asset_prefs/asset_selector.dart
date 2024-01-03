@@ -1,3 +1,4 @@
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/ui/pages/asset_prefs/asset_pref_vm.dart';
 import 'package:felloapp/util/assets.dart' as a;
 import 'package:felloapp/util/styles/styles.dart';
@@ -63,19 +64,29 @@ class _AssetSelectorState extends State<AssetSelector>
               SizedBox(
                 width: SizeConfig.padding16,
               ),
-              Stack(
-                children: [
-                  Transform.translate(
-                      offset:
-                          Offset(0, _controller.value * SizeConfig.padding44),
-                      child: LearnMoreSlider(
-                          assetPrefOption: widget.assetPrefOptions)),
-                  AssetCard(
-                    opacity: _controller.value,
-                    assetPrefOption: widget.assetPrefOptions,
-                  ),
-                ],
-              )
+              (widget.assetPrefOptions != AssetPrefOptions.NO_PREF)
+                  ? Expanded(
+                      child: Stack(
+                        alignment: Alignment.bottomCenter,
+                        children: [
+                          Transform.translate(
+                            offset: Offset(
+                                0, _controller.value * SizeConfig.padding44),
+                            child: LearnMoreSlider(
+                              assetPrefOption: widget.assetPrefOptions,
+                              offsetValue: _controller.value,
+                            ),
+                          ),
+                          AssetCard(
+                            opacity: _controller.value,
+                            assetPrefOption: widget.assetPrefOptions,
+                          ),
+                        ],
+                      ),
+                    )
+                  : NoPrefButton(
+                      opacity: _controller.value,
+                      assetPrefOption: widget.assetPrefOptions)
             ],
           ),
           SizedBox(
@@ -89,45 +100,79 @@ class _AssetSelectorState extends State<AssetSelector>
 }
 
 class LearnMoreSlider extends StatelessWidget {
-  LearnMoreSlider({Key? key, required this.assetPrefOption}) : super(key: key);
+  LearnMoreSlider(
+      {Key? key, required this.assetPrefOption, required this.offsetValue})
+      : super(key: key);
   AssetPrefOptions assetPrefOption;
-
+  double offsetValue;
   @override
   Widget build(BuildContext context) {
     return Container(
-      width: SizeConfig.padding1 * 335,
-      height: SizeConfig.padding20 * 9,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
         color: (assetPrefOption == AssetPrefOptions.LENDBOX_P2P)
             ? UiConstants.teal5
             : UiConstants.goldSellCardColor,
       ),
-      child: Column(mainAxisAlignment: MainAxisAlignment.end, children: [
-        Padding(
-          padding: EdgeInsets.only(
-              left: SizeConfig.padding16,
-              right: SizeConfig.padding16,
-              bottom: SizeConfig.padding12),
-          child: Row(
-            mainAxisSize: MainAxisSize.max,
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              Text(
-                (assetPrefOption == AssetPrefOptions.LENDBOX_P2P)
-                    ? "₹12Cr+ invested on Fello P2P"
-                    : "Trust By 1 Lac+ Fello Investors",
-                style: TextStyles.sourceSans.body4.colour(Colors.white),
-              ),
-              Text(
+      child: Padding(
+        padding: EdgeInsets.only(
+            left: SizeConfig.padding16,
+            right: SizeConfig.padding16,
+            bottom: SizeConfig.padding12,
+            top: SizeConfig.padding22),
+        child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Text(
+              (assetPrefOption == AssetPrefOptions.LENDBOX_P2P)
+                  ? "₹12Cr+ invested on Fello P2P"
+                  : "Trust By 1 Lac+ Fello Investors",
+              style: TextStyles.sourceSans.body4.colour(Colors.white),
+            ),
+            SizedBox(
+              width: SizeConfig.padding26,
+            ),
+            GestureDetector(
+              onTap: () {
+                print("object");
+                BaseUtil.openModalBottomSheet(
+                  isBarrierDismissible: true,
+                  addToScreenStack: true,
+                );
+              },
+              child: Text(
                 "LEARN MORE",
                 style: TextStyles.rajdhaniB.body2.colour(Colors.white),
-              )
-            ],
-          ),
+              ),
+            )
+          ],
         ),
-      ]),
+      ),
     );
+  }
+}
+
+class NoPrefButton extends StatelessWidget {
+  NoPrefButton(
+      {super.key, required this.opacity, required this.assetPrefOption});
+  double opacity;
+  AssetPrefOptions assetPrefOption;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(10),
+          border:
+              Border.all(color: Colors.white.withOpacity(opacity), width: 1.5),
+          color: UiConstants.kTambolaMidTextColor,
+        ),
+        padding: EdgeInsets.symmetric(
+            vertical: SizeConfig.padding12, horizontal: SizeConfig.padding104),
+        child: Text(
+          "I'm not sure",
+          style: TextStyles.rajdhaniSB.body1.colour(Colors.white),
+        ));
   }
 }
 
@@ -135,12 +180,11 @@ class AssetCard extends StatelessWidget {
   AssetCard({super.key, required this.opacity, required this.assetPrefOption});
   double opacity;
   AssetPrefOptions assetPrefOption;
+
   @override
   Widget build(BuildContext context) {
     return Container(
       margin: EdgeInsets.only(right: SizeConfig.padding4),
-      width: SizeConfig.padding1 * 335,
-      height: SizeConfig.padding20 * 9,
       decoration: BoxDecoration(
         borderRadius: BorderRadius.circular(10),
         border: Border.all(
@@ -152,20 +196,21 @@ class AssetCard extends StatelessWidget {
             ? UiConstants.teal4
             : UiConstants.kSaveDigitalGoldCardBg,
       ),
+      padding: EdgeInsets.only(
+          left: SizeConfig.padding4,
+          right: SizeConfig.padding4,
+          bottom: SizeConfig.padding4,
+          top: SizeConfig.padding12),
       child: Column(
         children: [
           Row(
-            mainAxisSize: MainAxisSize.max,
             mainAxisAlignment: MainAxisAlignment.center,
             children: [
-              Padding(
-                padding: EdgeInsets.only(top: SizeConfig.padding10),
-                child: SvgPicture.asset(
-                  (assetPrefOption == AssetPrefOptions.LENDBOX_P2P)
-                      ? a.Assets.floAsset
-                      : a.Assets.digitalGold,
-                  height: SizeConfig.padding30,
-                ),
+              SvgPicture.asset(
+                (assetPrefOption == AssetPrefOptions.LENDBOX_P2P)
+                    ? a.Assets.floAsset
+                    : a.Assets.digitalGold,
+                height: SizeConfig.padding30,
               ),
               SizedBox(
                 width: SizeConfig.padding12,
@@ -189,12 +234,12 @@ class AssetCard extends StatelessWidget {
               textAlign: TextAlign.center,
             ),
           ),
-          const Spacer(),
           Padding(
             padding: EdgeInsets.only(
                 bottom: SizeConfig.padding4,
                 left: SizeConfig.padding4,
-                right: SizeConfig.padding4),
+                right: SizeConfig.padding4,
+                top: SizeConfig.padding20),
             child: DetailsRow(
               upperText1: (assetPrefOption == AssetPrefOptions.LENDBOX_P2P)
                   ? "P2P"
@@ -240,83 +285,80 @@ class DetailsRow extends StatelessWidget {
   final String upperText3;
   final String lowerText3;
   final Color bgColor;
+
   @override
   Widget build(BuildContext context) {
     return Container(
-      height: SizeConfig.padding4 * 19,
       decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10), color: bgColor),
       padding: EdgeInsets.only(
-          top: SizeConfig.padding10,
+          top: SizeConfig.padding8,
           bottom: SizeConfig.padding8,
           right: SizeConfig.padding16,
           left: SizeConfig.padding16),
-      child: Row(crossAxisAlignment: CrossAxisAlignment.center, children: [
-        Padding(
-          padding: EdgeInsets.only(
-            top: SizeConfig.padding8,
-            bottom: SizeConfig.padding8,
-          ),
-          child: Column(
-            children: [
-              Text(
-                upperText1,
-                style: TextStyles.rajdhaniSB.body1.colour(Colors.white),
+      child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            Padding(
+              padding: EdgeInsets.only(
+                top: SizeConfig.padding4,
+                bottom: SizeConfig.padding4,
               ),
-              const Spacer(),
-              Text(lowerText1,
-                  style: TextStyles.rajdhani.body4.colour(Colors.white))
-            ],
-          ),
-        ),
-        Spacer(),
-        const VerticalDivider(
-          color: UiConstants.grey2,
-          thickness: 1,
-        ),
-        Spacer(),
-        Padding(
-          padding: EdgeInsets.only(
-            top: SizeConfig.padding8,
-            bottom: SizeConfig.padding8,
-          ),
-          child: Column(
-            children: [
-              Text(
-                upperText2,
-                style: TextStyles.rajdhaniSB.body1.colour(Colors.white),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    upperText1,
+                    style: TextStyles.rajdhaniSB.body1.colour(Colors.white),
+                  ),
+                  Text(lowerText1,
+                      style: TextStyles.rajdhani.body4.colour(Colors.white))
+                ],
               ),
-              const Spacer(),
-              Text(lowerText2,
-                  style: TextStyles.rajdhani.body4.colour(Colors.white))
-            ],
-          ),
-        ),
-        Spacer(),
-        const VerticalDivider(
-          color: UiConstants.grey2,
-          thickness: 1,
-        ),
-        Spacer(),
-        Padding(
-          padding: EdgeInsets.only(
-            top: SizeConfig.padding8,
-            bottom: SizeConfig.padding8,
-          ),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.end,
-            children: [
-              Text(
-                upperText3,
-                style: TextStyles.rajdhaniSB.body1.colour(Colors.white),
+            ),
+            VerticalDivider(
+              color: Colors.white,
+              thickness: 2,
+            ),
+            Padding(
+              padding: EdgeInsets.only(
+                top: SizeConfig.padding4,
+                bottom: SizeConfig.padding4,
               ),
-              const Spacer(),
-              Text(lowerText3,
-                  style: TextStyles.rajdhani.body4.colour(Colors.white))
-            ],
-          ),
-        ),
-      ]),
+              child: Column(
+                children: [
+                  Text(
+                    upperText2,
+                    style: TextStyles.rajdhaniSB.body1.colour(Colors.white),
+                  ),
+                  Text(lowerText2,
+                      style: TextStyles.rajdhani.body4.colour(Colors.white))
+                ],
+              ),
+            ),
+            VerticalDivider(
+              color: Colors.white,
+              thickness: 2,
+            ),
+            Padding(
+              padding: EdgeInsets.only(
+                top: SizeConfig.padding4,
+                bottom: SizeConfig.padding4,
+              ),
+              child: Column(
+                crossAxisAlignment: CrossAxisAlignment.end,
+                children: [
+                  Text(
+                    upperText3,
+                    style: TextStyles.rajdhaniSB.body1.colour(Colors.white),
+                  ),
+                  Text(lowerText3,
+                      style: TextStyles.rajdhani.body4.colour(Colors.white))
+                ],
+              ),
+            ),
+          ]),
     );
   }
 }

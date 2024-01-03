@@ -1,4 +1,7 @@
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/cupertino.dart';
@@ -13,6 +16,7 @@ class AssetPreferenceViewModel extends BaseViewModel {
   List<dynamic> assets = AssetPrefOptions.values;
   AssetPrefOptions? selectedAsset;
   String? name = locator<UserService>().name;
+  static AppState appStateProvider = AppState.delegate!.appState;
   AnimationController? oldSelectedController;
   AnimationController? newSelectedController;
   Animation<double>? oldSelectedAnimation;
@@ -23,14 +27,21 @@ class AssetPreferenceViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  void handleRouting(AssetPrefOptions assetPrefOptions) {
+  void handleRouting(AssetPrefOptions? assetPrefOptions) {
     switch (assetPrefOptions) {
       case AssetPrefOptions.LENDBOX_P2P:
+        appStateProvider.currentAction = PageAction(
+            state: PageState.replaceAll, page: FelloBadgeHomeViewPageConfig);
         break;
       case AssetPrefOptions.AUGMONT_GOLD:
         break;
       case AssetPrefOptions.NO_PREF:
+        appStateProvider.currentAction =
+            PageAction(state: PageState.replaceAll, page: RootPageConfig);
         break;
+      default:
+        appStateProvider.currentAction =
+            PageAction(state: PageState.replaceAll, page: RootPageConfig);
     }
   }
 
@@ -54,6 +65,19 @@ class AssetPreferenceViewModel extends BaseViewModel {
 
         oldSelectedController!.reverse(from: 1.0);
       }
+    }
+  }
+
+  String getButtonText() {
+    switch (selectedAsset) {
+      case AssetPrefOptions.LENDBOX_P2P:
+        return "WITH FELLO P2P";
+      case AssetPrefOptions.AUGMONT_GOLD:
+        return "WITH DIGITAL GOLD";
+      case AssetPrefOptions.NO_PREF:
+        return "";
+      default:
+        return "";
     }
   }
 }

@@ -100,7 +100,7 @@ class OnboardingViewModel extends BaseViewModel {
         PreferenceHelper.CACHE_ONBOARDING_COMPLETION, true);
     AppState.delegate!.appState.currentAction = PageAction(
       state: PageState.replaceAll,
-      page: AssetPrefPageConfig,
+      page: LoginPageConfig,
     );
     if (_analyticsService != null) {
       _analyticsService.track(eventName: AnalyticsEvents.splashScrenProceed);

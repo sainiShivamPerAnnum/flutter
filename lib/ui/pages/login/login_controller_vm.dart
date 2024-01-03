@@ -571,9 +571,9 @@ class LoginControllerViewModel extends BaseViewModel {
     }
 
     _analyticsService.track(eventName: "SignIn: moving user to home screen");
-
-    appStateProvider.currentAction =
-        PageAction(state: PageState.replaceAll, page: RootPageConfig);
+    appStateProvider.currentAction = _isSignup
+        ? PageAction(state: PageState.replaceAll, page: AssetPrefPageConfig)
+        : PageAction(state: PageState.replaceAll, page: RootPageConfig);
     BaseUtil.showPositiveAlert(
       'Sign In Complete',
       'Welcome to ${Constants.APP_NAME}, ${userService.baseUser!.name}',
