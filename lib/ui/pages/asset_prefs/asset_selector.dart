@@ -123,12 +123,7 @@ class LearnMoreSlider extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(
-              (assetPrefOption == AssetPrefOptions.LENDBOX_P2P)
-                  ? "₹12Cr+ invested on Fello P2P"
-                  : "Trust By 1 Lac+ Fello Investors",
-              style: TextStyles.sourceSans.body4.colour(Colors.white),
-            ),
+            getStatsText(assetPrefOption),
             SizedBox(
               width: SizeConfig.padding26,
             ),
@@ -228,11 +223,7 @@ class AssetCard extends StatelessWidget {
                 left: SizeConfig.padding14,
                 right: SizeConfig.padding14,
                 top: SizeConfig.padding4),
-            child: Text(
-              "A P2P lending asset powered by Lendbox with 8%, 10% & 12% returns plans",
-              style: TextStyles.sourceSans.body3.colour(Colors.white),
-              textAlign: TextAlign.center,
-            ),
+            child: getDescriptionText(assetPrefOption),
           ),
           Padding(
             padding: EdgeInsets.only(
@@ -337,7 +328,7 @@ class DetailsRow extends StatelessWidget {
                 ],
               ),
             ),
-            VerticalDivider(
+            const VerticalDivider(
               color: Colors.white,
               thickness: 2,
             ),
@@ -361,4 +352,62 @@ class DetailsRow extends StatelessWidget {
           ]),
     );
   }
+}
+
+Widget getStatsText(AssetPrefOptions assetPrefOptions) {
+  return (assetPrefOptions == AssetPrefOptions.LENDBOX_P2P)
+      ? RichText(
+          text: TextSpan(
+              text: "₹12Cr+ invested",
+              style: TextStyles.sourceSansB.body4.colour(UiConstants.teal3),
+              children: [
+              TextSpan(
+                  text: " on Fello P2P",
+                  style: TextStyles.sourceSans.body4.colour(Colors.white))
+            ]))
+      : RichText(
+          text: TextSpan(
+              text: "Trusted by",
+              style: TextStyles.sourceSans.body4.colour(Colors.white),
+              children: [
+              TextSpan(
+                  text: " 1Lac+",
+                  style: TextStyles.sourceSansB.body4
+                      .colour(UiConstants.kBlogTitleColor)),
+              TextSpan(
+                  text: " Fello Investors",
+                  style: TextStyles.sourceSans.body4.colour(Colors.white))
+            ]));
+}
+
+Widget getDescriptionText(AssetPrefOptions assetPrefOptions) {
+  return (assetPrefOptions == AssetPrefOptions.LENDBOX_P2P)
+      ? RichText(
+          text: TextSpan(
+              text: "A P2P lending asset powered by",
+              style: TextStyles.sourceSans.body3.colour(Colors.white),
+              children: [
+                TextSpan(
+                    text: " Lendbox",
+                    style: TextStyles.sourceSansB.body3.colour(Colors.white)),
+                TextSpan(
+                    text: " with 8%, 10% & 12% returns plans",
+                    style: TextStyles.sourceSans.body3.colour(Colors.white))
+              ]),
+          textAlign: TextAlign.center,
+        )
+      : RichText(
+          text: TextSpan(
+              text: "Invest in trusted gold at market rates, powered by",
+              style: TextStyles.sourceSans.body3.colour(Colors.white),
+              children: [
+                TextSpan(
+                    text: " Augmont",
+                    style: TextStyles.sourceSansB.body3.colour(Colors.white)),
+                TextSpan(
+                    text: " and get stable returns",
+                    style: TextStyles.sourceSans.body3.colour(Colors.white))
+              ]),
+          textAlign: TextAlign.center,
+        );
 }
