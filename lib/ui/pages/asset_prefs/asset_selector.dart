@@ -317,7 +317,7 @@ class DetailsRow extends StatelessWidget {
                 ],
               ),
             ),
-            VerticalDivider(
+            const VerticalDivider(
               color: Colors.white,
               thickness: 2,
             ),

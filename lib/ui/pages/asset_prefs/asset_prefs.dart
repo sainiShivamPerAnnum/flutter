@@ -52,7 +52,10 @@ class AssetPrefView extends StatelessWidget {
                           SizedBox(
                             width: SizeConfig.padding6,
                           ),
-                          SvgPicture.asset(a.Assets.arrowDottedRight)
+                          SvgPicture.asset(
+                            a.Assets.chevRonRightArrow,
+                            color: Colors.white,
+                          )
                         ],
                       ),
                       SizedBox(
