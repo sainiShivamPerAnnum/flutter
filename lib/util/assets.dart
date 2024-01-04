@@ -276,6 +276,9 @@ class Assets {
       "assets/vectors/icons/ic_upload_file.svg";
   static const String ic_upload_success =
       "assets/vectors/icons/ic_upload_success.svg";
+  static const String ic_upload_procced =
+      "assets/vectors/icons/ic_upload_proceed.svg";
+  static const String dummyPan = "assets/images/pancard dummy.webp";
 
   static const String wohoo = "assets/vectors/wohoo.svg";
   static const String graph = "assets/vectors/icons/graph.svg";
@@ -432,4 +435,6 @@ class Assets {
       'https://ik.imagekit.io/9xfwtu0xm/Badges/star.svg';
   static const String superFelloTitle =
       'https://fello-dev-uploads.s3.ap-south-1.amazonaws.com/super_fello_title.svg';
+  static const String kycSecurity = "assets/images/kyc_security.png";
+  static const String stepCircle = "assets/svg/steps_circle.svg";
 }

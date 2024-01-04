@@ -12,6 +12,7 @@ import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
+import 'package:felloapp/ui/modalsheets/upload_pan_modal.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -30,9 +31,10 @@ class KYCDetailsViewModel extends BaseViewModel {
   String? get email => _userService.email;
   bool _isUpdatingKycDetails = false;
   bool _isEmailUpdating = false;
-  get isEmailUpdating => _isEmailUpdating;
+  bool get isEmailUpdating => _isEmailUpdating;
   bool isPanTileOpen = false;
   bool isEmailTileOpen = false;
+  int _currentStep = 1;
 
   set isEmailUpdating(value) {
     _isEmailUpdating = value;
@@ -40,23 +42,24 @@ class KYCDetailsViewModel extends BaseViewModel {
   }
 
   int permissionFailureCount = 0;
-  get isUpdatingKycDetails => _isUpdatingKycDetails;
+  bool get isUpdatingKycDetails => _isUpdatingKycDetails;
 
   bool _isPanVerified = false;
-  // bool _isEmailVerified = false;
   bool get isPanVerified => _isPanVerified;
+
+  int get currentStep => _currentStep;
+
+  set setCurrentStep(int value) {
+    _currentStep = value;
+    notifyListeners();
+  }
 
   set isPanVerified(bool value) {
     _isPanVerified = value;
     notifyListeners();
   }
 
-  get isEmailVerified => _userService.isEmailVerified;
-
-  // set isEmailVerified(value) {
-  //   this._isEmailVerified = value;
-  //   notifyListeners();
-  // }
+  bool get isEmailVerified => _userService.isEmailVerified;
 
   set isUpdatingKycDetails(value) {
     _isUpdatingKycDetails = value;
@@ -70,7 +73,7 @@ class KYCDetailsViewModel extends BaseViewModel {
   UserKycDataModel? _userKycData;
   String? _kycErrorMessage;
 
-  get kycErrorMessage => _kycErrorMessage;
+  String? get kycErrorMessage => _kycErrorMessage;
 
   set kycErrorMessage(value) {
     _kycErrorMessage = value;
@@ -89,7 +92,7 @@ class KYCDetailsViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  get fileSize => _fileSize;
+  double? get fileSize => _fileSize;
 
   set fileSize(value) {
     _fileSize = value;
@@ -116,7 +119,6 @@ class KYCDetailsViewModel extends BaseViewModel {
   final UserService _userService = locator<UserService>();
   final BankingRepository _bankingRepo = locator<BankingRepository>();
 
-  final _cacheService = CacheService();
   bool get isConfirmDialogInView => _userService.isConfirmationDialogOpen;
 
   FocusNode kycNameFocusNode = FocusNode();
@@ -126,14 +128,15 @@ class KYCDetailsViewModel extends BaseViewModel {
 
   final depositformKey3 = GlobalKey<FormState>();
 
-  get hasDetails => _hasDetails;
+  bool get hasDetails => _hasDetails;
 
   set hasDetails(value) {
     _hasDetails = value;
     notifyListeners();
   }
 
-  init() {
+  void init() {
+    setState(ViewState.Busy);
     nameController = TextEditingController();
     panController = TextEditingController();
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
@@ -141,7 +144,18 @@ class KYCDetailsViewModel extends BaseViewModel {
     });
   }
 
-  void verifyImage() {
+  void panUploadProceed(KYCDetailsViewModel model) {
+    kycVerificationStatus == KycVerificationStatus.VERIFIED
+        ? setCurrentStep = 2
+        : BaseUtil.openModalBottomSheet(
+            isBarrierDismissible: true,
+            addToScreenStack: true,
+            content: UploadPanModal(
+              model: model,
+            ));
+  }
+
+  void verifyImage(BuildContext context) {
     if (capturedImage == null) return;
     final String ext = capturedImage!.name.split('.').last.toLowerCase();
 
@@ -149,8 +163,7 @@ class KYCDetailsViewModel extends BaseViewModel {
       File imageFile = File(capturedImage!.path);
       fileSize =
           BaseUtil.digitPrecision(imageFile.lengthSync() / 1048576, 2, true);
-      print("File size: $fileSize");
-      if (fileSize > 5) {
+      if (fileSize! > 5.0) {
         capturedImage = null;
         BaseUtil.openDialog(
             addToScreenStack: true,
@@ -159,6 +172,7 @@ class KYCDetailsViewModel extends BaseViewModel {
             content: MoreInfoDialog(
                 title: locale.invalidFile, text: locale.invalidFileSubtitle));
       } else {
+        onSubmit(context);
         return;
       }
     } else {
@@ -174,7 +188,6 @@ class KYCDetailsViewModel extends BaseViewModel {
 
   Future checkForKycExistence() async {
     _logger.d("${_bankAndPanService.userKycData?.toString()}");
-    setState(ViewState.Busy);
     if (_bankAndPanService.isKYCVerified &&
         _bankAndPanService.userKycData != null) {
       userKycData = _bankAndPanService.userKycData;
@@ -191,6 +204,7 @@ class KYCDetailsViewModel extends BaseViewModel {
         inEditMode = false;
         hasDetails = true;
         isPanTileOpen = false;
+        _currentStep = 2;
         if (!isEmailVerified) isEmailTileOpen = true;
       } else {
         isPanTileOpen = true;
@@ -227,24 +241,15 @@ class KYCDetailsViewModel extends BaseViewModel {
 
   Future<void> onSubmit(context) async {
     kycErrorMessage = null;
-    if (isEmailUpdating) {
-      return BaseUtil.showNegativeAlert(
-          "Updating your email", "please wait for this process to finish");
-    }
-
     if (capturedImage == null) {
       return BaseUtil.showNegativeAlert(
           locale.noFileSelected, locale.selectValidPan);
     }
-    if (!_userService.isEmailVerified) {
-      return BaseUtil.showNegativeAlert(
-          "Email not verified", "please verify an email to continue");
-    }
     if (isUpdatingKycDetails) return;
     isUpdatingKycDetails = true;
+    await AppState.backButtonDispatcher!.didPopRoute();
     AppState.blockNavigation();
     final res = await _bankingRepo.getSignedImageUrl(capturedImage!.name);
-
     if (res.isSuccess()) {
       final imageUploadRes =
           await _bankingRepo.uploadPanImageFile(res.model!.url, capturedImage!);
@@ -256,11 +261,11 @@ class KYCDetailsViewModel extends BaseViewModel {
           _bankAndPanService.activeBankAccountDetails = null;
           _bankAndPanService.isBankDetailsAdded = false;
           await checkForKycExistence();
+          _currentStep = 1;
           await CacheService.invalidateByKey(CacheKeys.USER);
           await _userService.setBaseUser();
-
-          _bankAndPanService.checkForUserBankAccountDetails();
-          AppState.backButtonDispatcher!.didPopRoute();
+          await _bankAndPanService.checkForUserBankAccountDetails();
+          await AppState.backButtonDispatcher!.didPopRoute();
           BaseUtil.showPositiveAlert(
               locale.kycSuccessTitle, locale.kycSuccessSubTitle);
         } else {

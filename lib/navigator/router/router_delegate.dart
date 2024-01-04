@@ -55,7 +55,7 @@ import 'package:felloapp/ui/pages/support/freshdesk_help.dart';
 import 'package:felloapp/ui/pages/support/referral_policy_page.dart';
 import 'package:felloapp/ui/pages/support/support.dart';
 import 'package:felloapp/ui/pages/userProfile/bank_details/bank_details_view.dart';
-import 'package:felloapp/ui/pages/userProfile/kyc_details/kyc_details_view.dart';
+import 'package:felloapp/ui/pages/userProfile/kyc_details/kyc_details_view_new.dart';
 import 'package:felloapp/ui/pages/userProfile/my_winnings/my_winnings_view.dart';
 import 'package:felloapp/ui/pages/userProfile/settings/settings_view.dart';
 import 'package:felloapp/ui/pages/userProfile/userProfile/userProfile_view.dart';
@@ -237,7 +237,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
               const TransactionsHistory(), TransactionsHistoryPageConfig);
           break;
         case Pages.KycDetails:
-          _addPageData(const KYCDetailsView(), KycDetailsPageConfig);
+          _addPageData(const KYCDetailsViewNew(), KycDetailsPageConfig);
           break;
         case Pages.BankDetails:
           _addPageData(

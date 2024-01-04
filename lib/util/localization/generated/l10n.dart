@@ -2706,6 +2706,226 @@ class S {
     );
   }
 
+  /// `No Kyc Data Found`
+  String get noKYCfound {
+    return Intl.message(
+      'No Kyc Data Found',
+      name: 'noKYCfound',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please refresh`
+  String get refreshKYC {
+    return Intl.message(
+      'Please refresh',
+      name: 'refreshKYC',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Linked Account`
+  String get KyclinkedAccount {
+    return Intl.message(
+      'Linked Account',
+      name: 'KyclinkedAccount',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Verify your Email`
+  String get verifyEmailKyc {
+    return Intl.message(
+      'Verify your Email',
+      name: 'verifyEmailKyc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Congratulations`
+  String get kycComplete {
+    return Intl.message(
+      'Congratulations',
+      name: 'kycComplete',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `On completing your KYC`
+  String get kycCompleteSub {
+    return Intl.message(
+      'On completing your KYC',
+      name: 'kycCompleteSub',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Now, let’s start investing on Fello!`
+  String get startInvesting {
+    return Intl.message(
+      'Now, let’s start investing on Fello!',
+      name: 'startInvesting',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Just one step away from starting your Investment Journey`
+  String get preKYC {
+    return Intl.message(
+      'Just one step away from starting your Investment Journey',
+      name: 'preKYC',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `SKIP FOR NOW`
+  String get skipKYC {
+    return Intl.message(
+      'SKIP FOR NOW',
+      name: 'skipKYC',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `DONE`
+  String get donePAN {
+    return Intl.message(
+      'DONE',
+      name: 'donePAN',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `VERIFY EMAIL`
+  String get kycEmailProceed {
+    return Intl.message(
+      'VERIFY EMAIL',
+      name: 'kycEmailProceed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Select an account`
+  String get selectGmail {
+    return Intl.message(
+      'Select an account',
+      name: 'selectGmail',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `to verify email`
+  String get toverifyEmail {
+    return Intl.message(
+      'to verify email',
+      name: 'toverifyEmail',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `NOTE: Name on your PAN Card should be the same as Name on your Bank Account`
+  String get panNote {
+    return Intl.message(
+      'NOTE: Name on your PAN Card should be the same as Name on your Bank Account',
+      name: 'panNote',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Over 10,000 Users have trusted Fello with their KYC`
+  String get panSecurity {
+    return Intl.message(
+      'Over 10,000 Users have trusted Fello with their KYC',
+      name: 'panSecurity',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `UPLOAD PAN CARD`
+  String get uploadPan {
+    return Intl.message(
+      'UPLOAD PAN CARD',
+      name: 'uploadPan',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `PROCEED`
+  String get proceed {
+    return Intl.message(
+      'PROCEED',
+      name: 'proceed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Complete KYC to start investing`
+  String get kycForInvesting {
+    return Intl.message(
+      'Complete KYC to start investing',
+      name: 'kycForInvesting',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Upload a clear picture of your PAN card`
+  String get uploadImagePan {
+    return Intl.message(
+      'Upload a clear picture of your PAN card',
+      name: 'uploadImagePan',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `PAN Card Uploaded`
+  String get panUploaded {
+    return Intl.message(
+      'PAN Card Uploaded',
+      name: 'panUploaded',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Step 1 - Upload PAN Card`
+  String get kycStep1 {
+    return Intl.message(
+      'Step 1 - Upload PAN Card',
+      name: 'kycStep1',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Step 2 - Verify Email`
+  String get kycStep2 {
+    return Intl.message(
+      'Step 2 - Verify Email',
+      name: 'kycStep2',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Transactions`
   String get dTransactions {
     return Intl.message(
