@@ -77,7 +77,8 @@ class AssetPrefView extends StatelessWidget {
                               Text(
                                 "Choose an asset to to start investing",
                                 style: TextStyles.rajdhaniSB.body1
-                                    .colour(Colors.white),
+                                    .colour(Colors.white)
+                                    .setOpacity(0.8),
                                 textAlign: TextAlign.start,
                               ),
                               SizedBox(
@@ -85,7 +86,8 @@ class AssetPrefView extends StatelessWidget {
                               ),
                               Text("Read more about assets when you proceed",
                                   style: TextStyles.rajdhani.body2
-                                      .colour(UiConstants.grey1))
+                                      .colour(UiConstants.grey1)
+                                      .setOpacity(0.8))
                             ],
                           ),
                           const Spacer()

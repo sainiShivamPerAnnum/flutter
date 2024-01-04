@@ -172,88 +172,85 @@ class AssetCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Opacity(
-      opacity: 1,
-      child: Container(
-        margin: EdgeInsets.only(right: SizeConfig.padding4),
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(
-              color: (assetPrefOption == AssetPrefOptions.LENDBOX_P2P)
-                  ? UiConstants.teal2.withOpacity(opacity)
-                  : UiConstants.kBlogTitleColor.withOpacity(opacity),
-              width: 1.5),
-          color: (assetPrefOption == AssetPrefOptions.LENDBOX_P2P)
-              ? UiConstants.teal4
-              : UiConstants.kSaveDigitalGoldCardBg,
-        ),
-        padding: EdgeInsets.only(
-            left: SizeConfig.padding4,
-            right: SizeConfig.padding4,
-            bottom: SizeConfig.padding4,
-            top: SizeConfig.padding12),
-        child: Column(
-          children: [
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SvgPicture.asset(
-                  (assetPrefOption == AssetPrefOptions.LENDBOX_P2P)
-                      ? a.Assets.floAsset
-                      : a.Assets.digitalGold,
-                  height: SizeConfig.padding30,
-                ),
-                SizedBox(
-                  width: SizeConfig.padding12,
-                ),
-                Text(
-                  (assetPrefOption == AssetPrefOptions.LENDBOX_P2P)
-                      ? "Fello P2P"
-                      : "Digital Gold",
-                  style: TextStyles.rajdhaniSB.title5.colour(Colors.white),
-                )
-              ],
-            ),
-            Padding(
-              padding: EdgeInsets.only(
-                  left: SizeConfig.padding14,
-                  right: SizeConfig.padding14,
-                  top: SizeConfig.padding4),
-              child: getDescriptionText(assetPrefOption),
-            ),
-            Padding(
-              padding: EdgeInsets.only(
-                  bottom: SizeConfig.padding4,
-                  left: SizeConfig.padding4,
-                  right: SizeConfig.padding4,
-                  top: SizeConfig.padding20),
-              child: DetailsRow(
-                upperText1: (assetPrefOption == AssetPrefOptions.LENDBOX_P2P)
-                    ? "P2P"
-                    : "24K",
-                lowerText1: (assetPrefOption == AssetPrefOptions.LENDBOX_P2P)
-                    ? "Asset"
-                    : "Gold",
-                upperText2: (assetPrefOption == AssetPrefOptions.LENDBOX_P2P)
-                    ? "Upto 12%"
-                    : "Stable Returns",
-                lowerText2: (assetPrefOption == AssetPrefOptions.LENDBOX_P2P)
-                    ? "Returns"
-                    : "@Market Rate",
-                upperText3: (assetPrefOption == AssetPrefOptions.LENDBOX_P2P)
-                    ? "KYC"
-                    : "No KYC",
-                lowerText3: "Required",
-                bgColor: (assetPrefOption == AssetPrefOptions.LENDBOX_P2P)
-                    ? UiConstants.teal5
-                    : UiConstants.goldSellCardColor,
-                dividerColor: (assetPrefOption == AssetPrefOptions.LENDBOX_P2P)
-                    ? UiConstants.greyDivider
-                    : UiConstants.kBlogTitleColor,
+    return Container(
+      margin: EdgeInsets.only(right: SizeConfig.padding4),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.circular(10),
+        border: Border.all(
+            color: (assetPrefOption == AssetPrefOptions.LENDBOX_P2P)
+                ? UiConstants.teal2.withOpacity(opacity)
+                : UiConstants.kBlogTitleColor.withOpacity(opacity),
+            width: 1.5),
+        color: (assetPrefOption == AssetPrefOptions.LENDBOX_P2P)
+            ? UiConstants.teal4
+            : UiConstants.kSaveDigitalGoldCardBg,
+      ),
+      padding: EdgeInsets.only(
+          left: SizeConfig.padding4,
+          right: SizeConfig.padding4,
+          bottom: SizeConfig.padding4,
+          top: SizeConfig.padding12),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              SvgPicture.asset(
+                (assetPrefOption == AssetPrefOptions.LENDBOX_P2P)
+                    ? a.Assets.floAsset
+                    : a.Assets.digitalGold,
+                height: SizeConfig.padding30,
               ),
-            )
-          ],
-        ),
+              SizedBox(
+                width: SizeConfig.padding12,
+              ),
+              Text(
+                (assetPrefOption == AssetPrefOptions.LENDBOX_P2P)
+                    ? "Fello P2P"
+                    : "Digital Gold",
+                style: TextStyles.rajdhaniSB.title5.colour(Colors.white),
+              )
+            ],
+          ),
+          Padding(
+            padding: EdgeInsets.only(
+                left: SizeConfig.padding14,
+                right: SizeConfig.padding14,
+                top: SizeConfig.padding4),
+            child: getDescriptionText(assetPrefOption),
+          ),
+          Padding(
+            padding: EdgeInsets.only(
+                bottom: SizeConfig.padding4,
+                left: SizeConfig.padding4,
+                right: SizeConfig.padding4,
+                top: SizeConfig.padding20),
+            child: DetailsRow(
+              upperText1: (assetPrefOption == AssetPrefOptions.LENDBOX_P2P)
+                  ? "P2P"
+                  : "24K",
+              lowerText1: (assetPrefOption == AssetPrefOptions.LENDBOX_P2P)
+                  ? "Asset"
+                  : "Gold",
+              upperText2: (assetPrefOption == AssetPrefOptions.LENDBOX_P2P)
+                  ? "Upto 12%"
+                  : "Stable Returns",
+              lowerText2: (assetPrefOption == AssetPrefOptions.LENDBOX_P2P)
+                  ? "Returns"
+                  : "@Market Rate",
+              upperText3: (assetPrefOption == AssetPrefOptions.LENDBOX_P2P)
+                  ? "KYC"
+                  : "No KYC",
+              lowerText3: "Required",
+              bgColor: (assetPrefOption == AssetPrefOptions.LENDBOX_P2P)
+                  ? UiConstants.teal5
+                  : UiConstants.goldSellCardColor,
+              dividerColor: (assetPrefOption == AssetPrefOptions.LENDBOX_P2P)
+                  ? UiConstants.greyDivider
+                  : UiConstants.kBlogTitleColor,
+            ),
+          )
+        ],
       ),
     );
   }
@@ -303,10 +300,14 @@ class DetailsRow extends StatelessWidget {
                 children: [
                   Text(
                     upperText1,
-                    style: TextStyles.rajdhaniSB.body1.colour(Colors.white),
+                    style: TextStyles.rajdhaniSB.body1
+                        .colour(Colors.white)
+                        .setOpacity(0.8),
                   ),
                   Text(lowerText1,
-                      style: TextStyles.rajdhani.body4.colour(Colors.white))
+                      style: TextStyles.rajdhani.body4
+                          .colour(Colors.white)
+                          .setOpacity(0.4))
                 ],
               ),
             ),
@@ -326,10 +327,14 @@ class DetailsRow extends StatelessWidget {
                 children: [
                   Text(
                     upperText2,
-                    style: TextStyles.rajdhaniSB.body1.colour(Colors.white),
+                    style: TextStyles.rajdhaniSB.body1
+                        .colour(Colors.white)
+                        .setOpacity(0.8),
                   ),
                   Text(lowerText2,
-                      style: TextStyles.rajdhani.body4.colour(Colors.white))
+                      style: TextStyles.rajdhani.body4
+                          .colour(Colors.white)
+                          .setOpacity(0.4))
                 ],
               ),
             ),
@@ -350,10 +355,14 @@ class DetailsRow extends StatelessWidget {
                 children: [
                   Text(
                     upperText3,
-                    style: TextStyles.rajdhaniSB.body1.colour(Colors.white),
+                    style: TextStyles.rajdhaniSB.body1
+                        .colour(Colors.white)
+                        .setOpacity(0.8),
                   ),
                   Text(lowerText3,
-                      style: TextStyles.rajdhani.body4.colour(Colors.white))
+                      style: TextStyles.rajdhani.body4
+                          .colour(Colors.white)
+                          .setOpacity(0.4))
                 ],
               ),
             ),
@@ -393,28 +402,40 @@ Widget getDescriptionText(AssetPrefOptions assetPrefOptions) {
       ? RichText(
           text: TextSpan(
               text: "A P2P lending asset powered by",
-              style: TextStyles.sourceSans.body3.colour(Colors.white),
+              style: TextStyles.sourceSans.body3
+                  .colour(Colors.white)
+                  .setOpacity(0.6),
               children: [
                 TextSpan(
                     text: " Lendbox",
-                    style: TextStyles.sourceSansB.body3.colour(Colors.white)),
+                    style: TextStyles.sourceSansB.body3
+                        .colour(Colors.white)
+                        .setOpacity(0.6)),
                 TextSpan(
                     text: " with 8%, 10% & 12% returns plans",
-                    style: TextStyles.sourceSans.body3.colour(Colors.white))
+                    style: TextStyles.sourceSans.body3
+                        .colour(Colors.white)
+                        .setOpacity(0.6))
               ]),
           textAlign: TextAlign.center,
         )
       : RichText(
           text: TextSpan(
               text: "Invest in trusted gold at market rates, powered by",
-              style: TextStyles.sourceSans.body3.colour(Colors.white),
+              style: TextStyles.sourceSans.body3
+                  .colour(Colors.white)
+                  .setOpacity(0.6),
               children: [
                 TextSpan(
                     text: " Augmont",
-                    style: TextStyles.sourceSansB.body3.colour(Colors.white)),
+                    style: TextStyles.sourceSansB.body3
+                        .colour(Colors.white)
+                        .setOpacity(0.6)),
                 TextSpan(
                     text: " and get stable returns",
-                    style: TextStyles.sourceSans.body3.colour(Colors.white))
+                    style: TextStyles.sourceSans.body3
+                        .colour(Colors.white)
+                        .setOpacity(0.6))
               ]),
           textAlign: TextAlign.center,
         );
