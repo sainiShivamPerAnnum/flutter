@@ -23,6 +23,7 @@ class AssetPreferenceViewModel extends BaseViewModel {
   Animation<double>? newSelectedAnimation;
 
   void changeSelectedAsset(AssetPrefOptions assetPrefOptions) {
+    if (selectedAsset == assetPrefOptions) return;
     selectedAsset = assetPrefOptions;
     notifyListeners();
   }

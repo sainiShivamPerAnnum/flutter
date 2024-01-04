@@ -684,6 +684,22 @@ class MessageLookup extends MessageLookupByLibrary {
             "जारी रखकर, आप हमारी सहमति देते हैं "),
         "obAppLock": MessageLookupByLibrary.simpleMessage("एप्लिकेशन का ताला"),
         "obAppUpdate": MessageLookupByLibrary.simpleMessage("ऐप अपडेट आवश्यक"),
+        "obAssetPrefBottomSheet1ButtonText":
+            MessageLookupByLibrary.simpleMessage("आगे बढ़ना"),
+        "obAssetPrefBottomSheet1LowerText":
+            MessageLookupByLibrary.simpleMessage(
+                "आप इस कार्ड पर क्लिक करके इस स्क्रीन को जारी रख सकते हैं"),
+        "obAssetPrefBottomSheet1UpperText":
+            MessageLookupByLibrary.simpleMessage("चिंता मत करो"),
+        "obAssetPrefBottomSheet2ButtonText1":
+            MessageLookupByLibrary.simpleMessage("होम स्क्रीन पर जाएँ"),
+        "obAssetPrefBottomSheet2ButtonText2":
+            MessageLookupByLibrary.simpleMessage("अधिक जानकारी जानें"),
+        "obAssetPrefBottomSheet2LowerText": MessageLookupByLibrary.simpleMessage(
+            "हम आपके लिए अधिक उपयुक्त संपत्ति तय करने में आपकी सहायता कर सकते हैं"),
+        "obAssetPrefBottomSheet2UpperText":
+            MessageLookupByLibrary.simpleMessage(
+                "फेलो के बारे में और जानना चाहते हैं?"),
         "obBankDetails":
             MessageLookupByLibrary.simpleMessage("आपका बैंक खाता विवरण"),
         "obBlockedAb": MessageLookupByLibrary.simpleMessage("खाते की जानकारी"),

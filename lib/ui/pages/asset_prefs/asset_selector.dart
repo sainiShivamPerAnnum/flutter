@@ -8,11 +8,11 @@ class AssetSelector extends StatefulWidget {
   const AssetSelector(
       {required this.assetPrefOptions,
       required this.model,
-      required this.callback,
+      required this.onSelect,
       super.key});
   final AssetPrefOptions assetPrefOptions;
   final AssetPreferenceViewModel model;
-  final VoidCallback callback;
+  final void Function(AssetPrefOptions) onSelect;
 
   @override
   State<AssetSelector> createState() => _AssetSelectorState();
@@ -43,9 +43,7 @@ class _AssetSelectorState extends State<AssetSelector>
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {
-        widget.callback();
-      },
+      onTap: () => widget.onSelect(widget.assetPrefOptions),
       child: Column(
         children: [
           Row(
@@ -55,14 +53,18 @@ class _AssetSelectorState extends State<AssetSelector>
               SizedBox(
                 width: SizeConfig.padding16,
               ),
-              (widget.assetPrefOptions != AssetPrefOptions.NO_PREF)
-                  ? AssetRadioOption(
-                      assetPrefOption: widget.assetPrefOptions,
-                      controller: _controller,
-                    )
-                  : NoPrefButton(
-                      controller: _controller,
-                      assetPrefOption: widget.assetPrefOptions)
+              switch (widget.assetPrefOptions) {
+                AssetPrefOptions.NO_PREF => NoPrefButton(
+                    controller: _controller,
+                    assetPrefOption: widget.assetPrefOptions,
+                  ),
+                AssetPrefOptions.LENDBOX_P2P ||
+                AssetPrefOptions.AUGMONT_GOLD =>
+                  AssetRadioOption(
+                    assetPrefOption: widget.assetPrefOptions,
+                    controller: _controller,
+                  )
+              },
             ],
           ),
           SizedBox(
@@ -89,10 +91,10 @@ class AssetRadioButton extends StatefulWidget {
 class _AssetRadioButtonState extends State<AssetRadioButton> {
   @override
   void initState() {
+    super.initState();
     widget.controller.addListener(() {
       setState(() {});
     });
-    super.initState();
   }
 
   @override
@@ -232,20 +234,23 @@ class _NoPrefButtonState extends State<NoPrefButton> {
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-        decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10),
-          border: Border.all(
-              color: Colors.white.withOpacity(widget.controller.value),
-              width: 1.5),
-          color: UiConstants.kTambolaMidTextColor,
-        ),
-        padding: EdgeInsets.symmetric(
-            vertical: SizeConfig.padding12, horizontal: SizeConfig.padding104),
-        child: Text(
-          "I'm not sure",
-          style: TextStyles.rajdhaniSB.body1.colour(Colors.white),
-        ));
+    return Expanded(
+      child: Container(
+          decoration: BoxDecoration(
+            borderRadius: BorderRadius.circular(10),
+            border: Border.all(
+                color: Colors.white.withOpacity(widget.controller.value),
+                width: 1.5),
+            color: UiConstants.kTambolaMidTextColor,
+          ),
+          padding: EdgeInsets.symmetric(vertical: SizeConfig.padding12),
+          child: Center(
+            child: Text(
+              "I'm not sure",
+              style: TextStyles.rajdhaniSB.body1.colour(Colors.white),
+            ),
+          )),
+    );
   }
 }
 

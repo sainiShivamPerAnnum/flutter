@@ -962,6 +962,76 @@ class S {
     );
   }
 
+  /// `Don't Worry`
+  String get obAssetPrefBottomSheet1UpperText {
+    return Intl.message(
+      'Don\'t Worry',
+      name: 'obAssetPrefBottomSheet1UpperText',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You can continue this screen by clicking on this card`
+  String get obAssetPrefBottomSheet1LowerText {
+    return Intl.message(
+      'You can continue this screen by clicking on this card',
+      name: 'obAssetPrefBottomSheet1LowerText',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `We can help you decide assets more suitable for you`
+  String get obAssetPrefBottomSheet2LowerText {
+    return Intl.message(
+      'We can help you decide assets more suitable for you',
+      name: 'obAssetPrefBottomSheet2LowerText',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Want to know more about Fello?`
+  String get obAssetPrefBottomSheet2UpperText {
+    return Intl.message(
+      'Want to know more about Fello?',
+      name: 'obAssetPrefBottomSheet2UpperText',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Proceed`
+  String get obAssetPrefBottomSheet1ButtonText {
+    return Intl.message(
+      'Proceed',
+      name: 'obAssetPrefBottomSheet1ButtonText',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `SKIP TO HOME`
+  String get obAssetPrefBottomSheet2ButtonText1 {
+    return Intl.message(
+      'SKIP TO HOME',
+      name: 'obAssetPrefBottomSheet2ButtonText1',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `KNOW MORE`
+  String get obAssetPrefBottomSheet2ButtonText2 {
+    return Intl.message(
+      'KNOW MORE',
+      name: 'obAssetPrefBottomSheet2ButtonText2',
+      desc: '',
+      args: [],
+    );
+  }
+
   // skipped getter for the '-----------------------------------' key
 
   /// `Journey`

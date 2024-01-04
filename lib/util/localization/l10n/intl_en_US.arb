@@ -99,6 +99,13 @@
         }
       }
     },
+  "obAssetPrefBottomSheet1UpperText": "Don't Worry",
+  "obAssetPrefBottomSheet1LowerText": "You can continue this screen by clicking on this card",
+  "obAssetPrefBottomSheet2LowerText": "We can help you decide assets more suitable for you",
+  "obAssetPrefBottomSheet2UpperText": "Want to know more about Fello?",
+  "obAssetPrefBottomSheet1ButtonText": "Proceed",
+  "obAssetPrefBottomSheet2ButtonText1": "SKIP TO HOME",
+  "obAssetPrefBottomSheet2ButtonText2": "KNOW MORE",
   "-----------------------------------": "----------------------------",
   "navBarJourney": "Journey",
   "navBarPlay": "Play",

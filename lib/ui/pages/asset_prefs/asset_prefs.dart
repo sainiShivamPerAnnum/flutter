@@ -123,37 +123,17 @@ class AssetPrefView extends StatelessWidget {
                       Column(
                         children: [
                           AssetSelector(
-                            assetPrefOptions: AssetPrefOptions.LENDBOX_P2P,
-                            model: model,
-                            callback: () {
-                              if (model.selectedAsset !=
-                                  AssetPrefOptions.LENDBOX_P2P) {
-                                model.changeSelectedAsset(
-                                    AssetPrefOptions.LENDBOX_P2P);
-                              }
-                            },
-                          ),
+                              assetPrefOptions: AssetPrefOptions.LENDBOX_P2P,
+                              model: model,
+                              onSelect: model.changeSelectedAsset),
                           AssetSelector(
-                            assetPrefOptions: AssetPrefOptions.AUGMONT_GOLD,
-                            model: model,
-                            callback: () {
-                              if (model.selectedAsset !=
-                                  AssetPrefOptions.AUGMONT_GOLD) {
-                                model.changeSelectedAsset(
-                                    AssetPrefOptions.AUGMONT_GOLD);
-                              }
-                            },
-                          ),
+                              assetPrefOptions: AssetPrefOptions.AUGMONT_GOLD,
+                              model: model,
+                              onSelect: model.changeSelectedAsset),
                           AssetSelector(
                             assetPrefOptions: AssetPrefOptions.NO_PREF,
                             model: model,
-                            callback: () {
-                              if (model.selectedAsset !=
-                                  AssetPrefOptions.NO_PREF) {
-                                model.changeSelectedAsset(
-                                    AssetPrefOptions.NO_PREF);
-                              }
-                            },
+                            onSelect: model.changeSelectedAsset,
                           ),
                         ],
                       ),

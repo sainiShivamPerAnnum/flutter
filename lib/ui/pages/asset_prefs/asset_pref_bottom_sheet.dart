@@ -1,5 +1,6 @@
 import 'package:felloapp/ui/pages/asset_prefs/asset_pref_vm.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -10,6 +11,7 @@ class SkipToHomeBottomSheet extends StatelessWidget {
   AssetPreferenceViewModel model;
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return Container(
       padding: EdgeInsets.only(
           top: SizeConfig.padding24,
@@ -18,12 +20,12 @@ class SkipToHomeBottomSheet extends StatelessWidget {
       child: Column(
         children: [
           Text(
-            "Don't Worry",
+            locale.obAssetPrefBottomSheet1UpperText,
             style: TextStyles.rajdhaniSB.body0
                 .colour(UiConstants.kTextFieldTextColor),
           ),
           Text(
-            "You can continue this screen by clicking on this card ",
+            locale.obAssetPrefBottomSheet1LowerText,
             style: TextStyles.rajdhaniSB.title5.colour(Colors.white),
             textAlign: TextAlign.center,
           ),
@@ -38,7 +40,7 @@ class SkipToHomeBottomSheet extends StatelessWidget {
               onPressed: () {
                 model.handleRouting(AssetPrefOptions.NO_PREF);
               },
-              label: "Proceed"),
+              label: locale.obAssetPrefBottomSheet1ButtonText),
         ],
       ),
     );
@@ -51,6 +53,7 @@ class NoPrefBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return Container(
       padding: EdgeInsets.only(
           top: SizeConfig.padding24,
@@ -59,12 +62,12 @@ class NoPrefBottomSheet extends StatelessWidget {
       child: Column(
         children: [
           Text(
-            "Want to know more about Fello?",
+            locale.obAssetPrefBottomSheet2UpperText,
             style: TextStyles.rajdhaniSB.body0
                 .colour(UiConstants.kTextFieldTextColor),
           ),
           Text(
-            "We can help you decide assets more suitable for you",
+            locale.obAssetPrefBottomSheet2LowerText,
             style: TextStyles.rajdhaniSB.title5.colour(Colors.white),
             textAlign: TextAlign.center,
           ),
@@ -91,7 +94,7 @@ class NoPrefBottomSheet extends StatelessWidget {
                       vertical: SizeConfig.padding8,
                       horizontal: SizeConfig.padding16),
                   child: Text(
-                    "SKIP TO HOME",
+                    locale.obAssetPrefBottomSheet2ButtonText1,
                     style: TextStyles.rajdhaniB.body1.colour(
                       Colors.white,
                     ),
@@ -109,7 +112,7 @@ class NoPrefBottomSheet extends StatelessWidget {
                 color: Colors.white,
                 onPressed: () {},
                 child: Text(
-                  "KNOW MORE",
+                  locale.obAssetPrefBottomSheet2ButtonText2,
                   style: TextStyles.rajdhaniB.body1.colour(
                     Colors.black,
                   ),

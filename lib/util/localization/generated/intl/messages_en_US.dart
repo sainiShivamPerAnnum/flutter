@@ -694,6 +694,23 @@ class MessageLookup extends MessageLookupByLibrary {
         "obAppLock": MessageLookupByLibrary.simpleMessage("App Lock"),
         "obAppUpdate":
             MessageLookupByLibrary.simpleMessage("App Update Required"),
+        "obAssetPrefBottomSheet1ButtonText":
+            MessageLookupByLibrary.simpleMessage("Proceed"),
+        "obAssetPrefBottomSheet1LowerText":
+            MessageLookupByLibrary.simpleMessage(
+                "You can continue this screen by clicking on this card"),
+        "obAssetPrefBottomSheet1UpperText":
+            MessageLookupByLibrary.simpleMessage("Don\'t Worry"),
+        "obAssetPrefBottomSheet2ButtonText1":
+            MessageLookupByLibrary.simpleMessage("SKIP TO HOME"),
+        "obAssetPrefBottomSheet2ButtonText2":
+            MessageLookupByLibrary.simpleMessage("KNOW MORE"),
+        "obAssetPrefBottomSheet2LowerText":
+            MessageLookupByLibrary.simpleMessage(
+                "We can help you decide assets more suitable for you"),
+        "obAssetPrefBottomSheet2UpperText":
+            MessageLookupByLibrary.simpleMessage(
+                "Want to know more about Fello?"),
         "obBankDetails":
             MessageLookupByLibrary.simpleMessage("Bank Account Details"),
         "obBlockedAb":

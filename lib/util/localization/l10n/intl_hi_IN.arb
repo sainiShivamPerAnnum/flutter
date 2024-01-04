@@ -99,6 +99,13 @@
       }
     }
   },
+  "obAssetPrefBottomSheet1UpperText": "चिंता मत करो",
+  "obAssetPrefBottomSheet1LowerText": "आप इस कार्ड पर क्लिक करके इस स्क्रीन को जारी रख सकते हैं",
+  "obAssetPrefBottomSheet2LowerText": "हम आपके लिए अधिक उपयुक्त संपत्ति तय करने में आपकी सहायता कर सकते हैं",
+  "obAssetPrefBottomSheet2UpperText": "फेलो के बारे में और जानना चाहते हैं?",
+  "obAssetPrefBottomSheet2ButtonText1": "होम स्क्रीन पर जाएँ",
+  "obAssetPrefBottomSheet2ButtonText2": "अधिक जानकारी जानें",
+  "obAssetPrefBottomSheet1ButtonText": "आगे बढ़ना",
   "-----------------------------------": "----------------------------",
   "navBarJourney": "यात्रा",
   "navBarPlay": "खेलें",
