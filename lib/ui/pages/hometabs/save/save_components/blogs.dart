@@ -75,7 +75,7 @@ class SaveBlogSection extends StatelessWidget {
     return Padding(
       padding: EdgeInsets.only(
           left: SizeConfig.padding24, top: SizeConfig.padding10),
-      child: Container(
+      child: SizedBox(
         height: SizeConfig.screenWidth! * 0.4,
         child: model.isLoading
             ? ListView.builder(

@@ -82,6 +82,7 @@ class UiConstants {
   static const Color kTabBorderColor = Color(0xFF62E3C4);
   static const Color kDividerColor = Color(0xFF9EA1A1);
   static const Color kBackgroundDividerColor = Color(0xFF23272B);
+  static const Color kGridLineColor = Color(0x32414145);
   static const Color kFirstRankPillerColor = Color(0xFFF2B826);
   static const Color kSecondRankPillerColor = Color(0x0f5371ee);
   static const Color kThirdRankPillerColor = Color(0xFF34C3A7);
@@ -244,6 +245,7 @@ class UiConstants {
 
   static const peach1 = Color(0xFFEFD8D2);
   static const peach2 = Color(0xFFFFCCBF);
+  static const peach3 = Color(0xFFF79780);
 }
 
 extension ColorExtension on String {

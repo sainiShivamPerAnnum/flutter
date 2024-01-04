@@ -48,7 +48,7 @@ class Root extends StatelessWidget {
           children: [
             Scaffold(
               resizeToAvoidBottomInset: false,
-              backgroundColor: UiConstants.kBackgroundColor,
+              backgroundColor: UiConstants.bg,
               body: Stack(
                 children: [
                   const NewSquareBackground(),

@@ -21,10 +21,10 @@ class SaveAssetsGroupCard extends StatelessWidget {
   const SaveAssetsGroupCard({required this.saveViewModel, Key? key})
       : super(key: key);
 
-  getAssetsOrder() {
+  Column getAssetsOrder() {
     S locale = locator<S>();
     List<Widget> orderedAssets = [];
-    DynamicUiUtils.saveViewOrder[0].forEach((key) {
+    for (final key in DynamicUiUtils.saveViewOrder[0]) {
       switch (key) {
         case 'LB':
           orderedAssets.add(
@@ -106,7 +106,7 @@ class SaveAssetsGroupCard extends StatelessWidget {
           );
           break;
       }
-    });
+    }
     return Column(
       children: orderedAssets,
     );
@@ -133,20 +133,24 @@ class MiniAssetsGroupSection extends StatelessWidget {
       ),
       child: Row(
         children: [
-          const MiniAssetCard(
-            color: UiConstants.kSaveStableFelloCardBg,
-            asset: Assets.floAsset,
-            title: "Fello Flo",
-            subtitle: "upto 12% returns",
-            actionUri: "floDetails",
+          const Expanded(
+            child: MiniAssetCard(
+              color: UiConstants.kSaveDigitalGoldCardBg,
+              asset: Assets.goldAsset,
+              title: "Digital Gold",
+              subtitle: "Know Digital Gold",
+              actionUri: "goldDetails",
+            ),
           ),
           SizedBox(width: SizeConfig.padding16),
-          const MiniAssetCard(
-            color: UiConstants.kSaveDigitalGoldCardBg,
-            asset: Assets.goldAsset,
-            title: "Digital Gold",
-            subtitle: "100% Safe",
-            actionUri: "goldDetails",
+          const Expanded(
+            child: MiniAssetCard(
+              color: UiConstants.kSaveStableFelloCardBg,
+              asset: Assets.floAsset,
+              title: "Fello P2P",
+              subtitle: "Know Fello P2P",
+              actionUri: "floDetails",
+            ),
           ),
         ],
       ),
@@ -158,61 +162,82 @@ class MiniAssetCard extends StatelessWidget {
   final String asset, title, subtitle, actionUri;
   final Color color;
 
-  const MiniAssetCard(
-      {required this.asset,
-      required this.title,
-      required this.subtitle,
-      required this.actionUri,
-      required this.color,
-      super.key});
+  const MiniAssetCard({
+    required this.asset,
+    required this.title,
+    required this.subtitle,
+    required this.actionUri,
+    required this.color,
+    super.key,
+  });
+
+  void _onTapCard() {
+    Haptic.vibrate();
+    AppState.delegate!.parseRoute(Uri.parse(actionUri));
+  }
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: InkWell(
-        onTap: () {
-          Haptic.vibrate();
-          AppState.delegate!.parseRoute(Uri.parse(actionUri));
-        },
-        child: Container(
-          decoration: BoxDecoration(
-              color: color,
-              borderRadius: BorderRadius.circular(SizeConfig.roundness16)),
-          padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins / 2),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  SvgPicture.asset(
-                    asset,
-                    width: SizeConfig.padding70,
-                  ),
-                  const Spacer(),
-                  SvgPicture.asset(
+    return InkWell(
+      onTap: _onTapCard,
+      child: Container(
+        decoration: BoxDecoration(
+          color: color,
+          borderRadius: BorderRadius.circular(SizeConfig.roundness16),
+          boxShadow: [
+            BoxShadow(
+              offset: const Offset(0, 4),
+              blurRadius: 6,
+              spreadRadius: 4,
+              color: Colors.black.withOpacity(.15),
+            ),
+            BoxShadow(
+              offset: const Offset(0, 2),
+              blurRadius: 3,
+              spreadRadius: 0,
+              color: Colors.black.withOpacity(.30),
+            ),
+          ],
+        ),
+        padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins / 2),
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Row(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                SvgPicture.asset(
+                  asset,
+                  height: SizeConfig.padding60,
+                ),
+                const Spacer(),
+                Padding(
+                  padding: EdgeInsets.only(top: SizeConfig.padding10),
+                  child: SvgPicture.asset(
                     Assets.chevRonRightArrow,
                     color: Colors.white,
-                    width: SizeConfig.iconSize0,
-                  )
-                ],
-              ),
-              Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    "  $title",
-                    style: TextStyles.rajdhaniSB.body0.colour(Colors.white),
+                    width: SizeConfig.padding24,
                   ),
-                  Text(
-                    "    $subtitle",
-                    style: TextStyles.sourceSans.body3.colour(Colors.white54),
+                )
+              ],
+            ),
+            Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "  $title",
+                  style: TextStyles.rajdhaniSB.title5.copyWith(
+                    color: Colors.white,
                   ),
-                ],
-              ),
-              SizedBox(height: SizeConfig.padding14)
-            ],
-          ),
+                ),
+                Text(
+                  "    $subtitle",
+                  style: TextStyles.sourceSans.body4.colour(Colors.white54),
+                ),
+              ],
+            ),
+            SizedBox(height: SizeConfig.padding14)
+          ],
         ),
       ),
     );

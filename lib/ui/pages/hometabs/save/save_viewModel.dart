@@ -21,7 +21,6 @@ import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
-import 'package:felloapp/feature/tambola/src/ui/widgets/referral_claim_widget.dart';
 import 'package:felloapp/feature/tambola/src/ui/widgets/tambola_mini_info_card.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -34,8 +33,6 @@ import 'package:felloapp/ui/pages/hometabs/save/save_components/asset_section.da
 import 'package:felloapp/ui/pages/hometabs/save/save_components/asset_view_section.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/blogs.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/campaings.dart';
-import 'package:felloapp/ui/pages/hometabs/save/save_components/save_welcome_card.dart';
-import 'package:felloapp/ui/pages/hometabs/save/save_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/ticket_components.dart/ticket_pendingAction.dart';
 import 'package:felloapp/ui/pages/power_play/root_card.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
@@ -52,6 +49,7 @@ import 'package:provider/provider.dart';
 
 import '../../../../core/model/quick_links_model.dart';
 import 'save_components/instant_save_card.dart';
+import 'save_components/quiz_section.dart';
 
 class SaveViewModel extends BaseViewModel {
   S? locale;
@@ -289,53 +287,6 @@ class SaveViewModel extends BaseViewModel {
       }
     }
 
-    saveViewItems.addAll([
-      SizedBox(height: SizeConfig.padding32),
-      const SaveAssetsFooter(),
-      const HelpFooter(),
-      SizedBox(
-        height: SizeConfig.navBarHeight * 0.5,
-      )
-    ]);
-    return saveViewItems;
-  }
-
-  List<Widget> getNewUserSaveViewItems(SaveViewModel smodel) {
-    List<Widget> saveViewItems = [];
-    saveViewItems.addAll([
-      const SaveWelcomeCard(),
-    ]);
-
-    saveViewItems.add(const ReferralClaimWidget());
-    print(DynamicUiUtils.saveViewOrder[2]);
-    for (final key in DynamicUiUtils.saveViewOrder[2]) {
-      switch (key) {
-        case "AST":
-          saveViewItems.add(SaveAssetsGroupCard(saveViewModel: smodel));
-          break;
-        case "QL":
-          saveViewItems.add(const QuickLinks());
-          break;
-        case "TM":
-          saveViewItems.add(const TambolaMiniInfoCard());
-          break;
-        case "PP":
-          saveViewItems.add(const PowerPlayCard());
-          break;
-        case 'NAS':
-          saveViewItems.add(const AutosaveCard());
-          break;
-        case "QZ":
-          saveViewItems.add(const QuizSection());
-          break;
-        case 'CH':
-          saveViewItems.add(Campaigns(model: smodel));
-          break;
-        case 'BL':
-          saveViewItems.add(Blogs(model: smodel));
-          break;
-      }
-    }
     saveViewItems.addAll([
       SizedBox(height: SizeConfig.padding32),
       const SaveAssetsFooter(),
