@@ -10,9 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class KycPanHelpView extends StatelessWidget {
-  const KycPanHelpView(
-      {required this.callBack, required this.model, super.key});
-  final VoidCallback callBack;
+  const KycPanHelpView({required this.model, super.key});
   final KYCDetailsViewModel model;
   @override
   Widget build(BuildContext context) {

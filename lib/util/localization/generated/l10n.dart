@@ -2876,6 +2876,36 @@ class S {
     );
   }
 
+  /// `Max size: 5 MB`
+  String get maxSize {
+    return Intl.message(
+      'Max size: 5 MB',
+      name: 'maxSize',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Formats: PNG, JPEG, JPG`
+  String get formats {
+    return Intl.message(
+      'Formats: PNG, JPEG, JPG',
+      name: 'formats',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Upload your PAN Card`
+  String get uploadModal {
+    return Intl.message(
+      'Upload your PAN Card',
+      name: 'uploadModal',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Complete KYC to start investing`
   String get kycForInvesting {
     return Intl.message(

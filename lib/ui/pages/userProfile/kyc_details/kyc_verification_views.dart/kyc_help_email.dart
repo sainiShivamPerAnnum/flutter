@@ -1,5 +1,5 @@
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/ui/pages/userProfile/kyc_details/kyc_details_view_new.dart';
+import 'package:felloapp/ui/pages/userProfile/kyc_details/kyc_details_view.dart';
 import 'package:felloapp/ui/pages/userProfile/kyc_details/kyc_details_vm.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -10,9 +10,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 
 class KycEmailHelpView extends StatelessWidget {
-  const KycEmailHelpView(
-      {required this.callBack, required this.model, super.key});
-  final VoidCallback callBack;
+  const KycEmailHelpView({required this.model, super.key});
   final KYCDetailsViewModel model;
 
   @override

@@ -1,4 +1,4 @@
-import 'package:felloapp/ui/pages/userProfile/kyc_details/kyc_details_view_new.dart';
+import 'package:felloapp/ui/pages/userProfile/kyc_details/kyc_details_view.dart';
 import 'package:felloapp/ui/pages/userProfile/kyc_details/kyc_details_vm.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';

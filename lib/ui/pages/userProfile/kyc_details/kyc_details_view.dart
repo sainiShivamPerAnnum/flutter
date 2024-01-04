@@ -17,15 +17,15 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-class KYCDetailsViewNew extends StatelessWidget {
-  const KYCDetailsViewNew({super.key});
+class KYCDetailsView extends StatelessWidget {
+  const KYCDetailsView({super.key});
 
   StatelessWidget getKycView(KYCDetailsViewModel model) {
     switch (model.currentStep) {
       case 2:
-        return KycEmailHelpView(model: model, callBack: () {});
+        return KycEmailHelpView(model: model);
       case 1:
-        return KycPanHelpView(model: model, callBack: () {});
+        return KycPanHelpView(model: model);
       default:
         return NoKycView(model: model);
     }

@@ -24,7 +24,7 @@ class UploadPanModal extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    S locale = S.of(context);
+    final S locale = S.of(context);
     return WillPopScope(
       onWillPop: () {
         AppState.backButtonDispatcher!.didPopRoute();
@@ -39,7 +39,7 @@ class UploadPanModal extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             Text(
-              'Upload your PAN Card',
+              locale.uploadModal,
               style: TextStyles.sourceSansSB.title5
                   .colour(Colors.white.withOpacity(0.8)),
             ),
@@ -50,8 +50,7 @@ class UploadPanModal extends StatelessWidget {
               icon: Assets.ic_camera,
               trailingIcon: Assets.ic_upload_procced,
               desc: locale.kycUseCamera,
-              padding: EdgeInsets.all(SizeConfig.padding12),
-              func: () async {
+              onTap: () async {
                 try {
                   model.capturedImage =
                       await ImagePicker().pickImage(source: ImageSource.camera);
@@ -62,7 +61,7 @@ class UploadPanModal extends StatelessWidget {
                 } catch (e) {
                   final internalOpsService = locator<InternalOpsService>();
                   final userService = locator<UserService>();
-                  internalOpsService.logFailure(
+                  await internalOpsService.logFailure(
                     userService.baseUser?.uid ?? '',
                     FailType.KycImageCaptureFailed,
                     {
@@ -72,7 +71,6 @@ class UploadPanModal extends StatelessWidget {
                   );
 
                   model.permissionFailureCount += 1;
-                  print(e.runtimeType);
                   const Permission cameraPermission = Permission.camera;
                   final PermissionStatus cameraPermissionStatus =
                       await cameraPermission.status;
@@ -113,8 +111,7 @@ class UploadPanModal extends StatelessWidget {
               icon: Assets.ic_upload_file,
               desc: locale.uploadFromDevice,
               trailingIcon: Assets.ic_upload_procced,
-              padding: EdgeInsets.all(SizeConfig.padding16),
-              func: () async {
+              onTap: () async {
                 model.capturedImage =
                     await ImagePicker().pickImage(source: ImageSource.gallery);
                 model.verifyImage(context);
@@ -128,12 +125,12 @@ class UploadPanModal extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  'Max size: 5 MB',
+                  locale.maxSize,
                   style: TextStyles.sourceSans.body3
                       .colour(const Color.fromRGBO(167, 167, 168, 0.8)),
                 ),
                 Text(
-                  'Formats: PNG, JPEG, JPG',
+                  locale.formats,
                   style: TextStyles.sourceSans.body3
                       .colour(const Color.fromRGBO(167, 167, 168, 0.8)),
                 )
@@ -150,23 +147,21 @@ class FileCaptureOption extends StatelessWidget {
   final String icon;
   final String trailingIcon;
   final String? desc;
-  final Function func;
-  final EdgeInsets? padding;
-  const FileCaptureOption({
-    required this.icon,
-    required this.func,
-    required this.trailingIcon,
-    Key? key,
-    this.desc,
-    this.padding,
-  }) : super(key: key);
+  final Function onTap;
+  const FileCaptureOption(
+      {required this.icon,
+      required this.onTap,
+      required this.trailingIcon,
+      Key? key,
+      this.desc})
+      : super(key: key);
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
         Haptic.vibrate();
-        func();
+        onTap();
       },
       highlightColor: Colors.white,
       child: Container(
