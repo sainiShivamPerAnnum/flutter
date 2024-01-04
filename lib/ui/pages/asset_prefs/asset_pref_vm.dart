@@ -67,17 +67,11 @@ class AssetPreferenceViewModel extends BaseViewModel {
       }
     }
   }
+}
 
-  String getButtonText() {
-    switch (selectedAsset) {
-      case AssetPrefOptions.LENDBOX_P2P:
-        return "WITH FELLO P2P";
-      case AssetPrefOptions.AUGMONT_GOLD:
-        return "WITH DIGITAL GOLD";
-      case AssetPrefOptions.NO_PREF:
-        return "";
-      default:
-        return "";
-    }
-  }
+class Benefit {
+  final String title;
+  final String subtitle;
+
+  Benefit({required this.title, required this.subtitle});
 }

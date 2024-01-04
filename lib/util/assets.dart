@@ -441,7 +441,6 @@ class Assets {
   static const String stepCircle = "assets/svg/steps_circle.svg";
 
   //asset-prefs
-  static const String assetPrefRadio = "assets/vectors/asset_pref_radio.svg";
   static const String assetPrefBottomSheet1 =
       "assets/svg/asset_pref_bottomsheet1.svg";
   static const String assetPrefBottomSheet2 =

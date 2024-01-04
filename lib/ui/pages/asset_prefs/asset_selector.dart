@@ -1,4 +1,3 @@
-import 'package:felloapp/base_util.dart';
 import 'package:felloapp/ui/pages/asset_prefs/asset_pref_vm.dart';
 import 'package:felloapp/util/assets.dart' as a;
 import 'package:felloapp/util/styles/styles.dart';
@@ -7,10 +6,13 @@ import 'package:flutter_svg/svg.dart';
 
 class AssetSelector extends StatefulWidget {
   const AssetSelector(
-      {Key? key, required this.assetPrefOptions, required this.model})
-      : super(key: key);
+      {required this.assetPrefOptions,
+      required this.model,
+      required this.callback,
+      super.key});
   final AssetPrefOptions assetPrefOptions;
   final AssetPreferenceViewModel model;
+  final VoidCallback callback;
 
   @override
   State<AssetSelector> createState() => _AssetSelectorState();
@@ -20,6 +22,7 @@ class _AssetSelectorState extends State<AssetSelector>
     with TickerProviderStateMixin {
   late AnimationController _controller;
 
+  @override
   void initState() {
     super.initState();
 
@@ -28,65 +31,37 @@ class _AssetSelectorState extends State<AssetSelector>
       vsync: this,
     );
 
-    _controller.addListener(() {
-      setState(() {});
+    widget.model.addListener(() {
+      if (widget.model.selectedAsset == widget.assetPrefOptions) {
+        _controller.forward(from: 0.0);
+      } else if (_controller.value == 1.0) {
+        _controller.reverse(from: 1.0);
+      }
     });
   }
 
   @override
   Widget build(BuildContext context) {
-    return GestureDetector(
+    return InkWell(
       onTap: () {
-        if (widget.model.selectedAsset != widget.assetPrefOptions) {
-          widget.model.changeSelectedAsset(widget.assetPrefOptions);
-          widget.model.triggerAnimation(_controller, widget.assetPrefOptions);
-        }
+        widget.callback();
       },
       child: Column(
         children: [
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              Padding(
-                padding: EdgeInsets.only(top: SizeConfig.padding20),
-                child: Container(
-                  width: SizeConfig.padding1 * 23,
-                  height: SizeConfig.padding1 * 23,
-                  decoration: BoxDecoration(
-                      shape: BoxShape.circle,
-                      border: Border.all(color: UiConstants.grey2)),
-                  padding: EdgeInsets.all(SizeConfig.padding4),
-                  child: Opacity(
-                      opacity: _controller.value,
-                      child: SvgPicture.asset(a.Assets.assetPrefRadio)),
-                ),
-              ),
+              AssetRadioButton(controller: _controller),
               SizedBox(
                 width: SizeConfig.padding16,
               ),
               (widget.assetPrefOptions != AssetPrefOptions.NO_PREF)
-                  ? Expanded(
-                      child: Stack(
-                        alignment: Alignment.bottomCenter,
-                        children: [
-                          LearnMoreSlider(
-                            assetPrefOption: widget.assetPrefOptions,
-                            offsetValue: _controller.value,
-                          ),
-                          Padding(
-                            padding: EdgeInsets.only(
-                                bottom:
-                                    _controller.value * SizeConfig.padding44),
-                            child: AssetCard(
-                              opacity: _controller.value,
-                              assetPrefOption: widget.assetPrefOptions,
-                            ),
-                          )
-                        ],
-                      ),
+                  ? AssetRadioOption(
+                      assetPrefOption: widget.assetPrefOptions,
+                      controller: _controller,
                     )
                   : NoPrefButton(
-                      opacity: _controller.value,
+                      controller: _controller,
                       assetPrefOption: widget.assetPrefOptions)
             ],
           ),
@@ -99,12 +74,107 @@ class _AssetSelectorState extends State<AssetSelector>
   }
 }
 
+class AssetRadioButton extends StatefulWidget {
+  const AssetRadioButton({
+    required this.controller,
+    super.key,
+  });
+
+  final AnimationController controller;
+
+  @override
+  State<AssetRadioButton> createState() => _AssetRadioButtonState();
+}
+
+class _AssetRadioButtonState extends State<AssetRadioButton> {
+  @override
+  void initState() {
+    widget.controller.addListener(() {
+      setState(() {});
+    });
+    super.initState();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.only(top: SizeConfig.padding20),
+      child: Container(
+        width: SizeConfig.padding1 * 23,
+        height: SizeConfig.padding1 * 23,
+        decoration: BoxDecoration(
+            shape: BoxShape.circle,
+            border: Border.all(color: UiConstants.grey2)),
+        padding: EdgeInsets.all(SizeConfig.padding4),
+        child: Opacity(
+            opacity: widget.controller.value,
+            child: Container(
+              padding: EdgeInsets.all(SizeConfig.padding4),
+              decoration: const BoxDecoration(
+                  color: UiConstants.teal3, shape: BoxShape.circle),
+              child: Container(
+                decoration: const BoxDecoration(
+                    shape: BoxShape.circle,
+                    color: UiConstants.kBackgroundColor),
+              ),
+            )),
+      ),
+    );
+  }
+}
+
+class AssetRadioOption extends StatefulWidget {
+  const AssetRadioOption({
+    required this.assetPrefOption,
+    required this.controller,
+    super.key,
+  });
+
+  final AnimationController controller;
+  final AssetPrefOptions assetPrefOption;
+
+  @override
+  State<AssetRadioOption> createState() => _AssetRadioOptionState();
+}
+
+class _AssetRadioOptionState extends State<AssetRadioOption> {
+  @override
+  void initState() {
+    super.initState();
+    widget.controller.addListener(() {
+      setState(() {});
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Expanded(
+      child: Stack(
+        alignment: Alignment.bottomCenter,
+        children: [
+          LearnMoreSlider(
+            assetPrefOption: widget.assetPrefOption,
+            offsetValue: widget.controller.value,
+          ),
+          Padding(
+            padding: EdgeInsets.only(
+                bottom: widget.controller.value * SizeConfig.padding44),
+            child: AssetCard(
+              opacity: widget.controller.value,
+              assetPrefOption: widget.assetPrefOption,
+            ),
+          )
+        ],
+      ),
+    );
+  }
+}
+
 class LearnMoreSlider extends StatelessWidget {
-  LearnMoreSlider(
-      {Key? key, required this.assetPrefOption, required this.offsetValue})
-      : super(key: key);
-  AssetPrefOptions assetPrefOption;
-  double offsetValue;
+  const LearnMoreSlider(
+      {required this.assetPrefOption, required this.offsetValue, super.key});
+  final AssetPrefOptions assetPrefOption;
+  final double offsetValue;
   @override
   Widget build(BuildContext context) {
     return Container(
@@ -127,7 +197,7 @@ class LearnMoreSlider extends StatelessWidget {
             SizedBox(
               width: SizeConfig.padding26,
             ),
-            GestureDetector(
+            InkWell(
               onTap: () {},
               child: Text(
                 "LEARN MORE",
@@ -141,19 +211,33 @@ class LearnMoreSlider extends StatelessWidget {
   }
 }
 
-class NoPrefButton extends StatelessWidget {
-  NoPrefButton(
-      {super.key, required this.opacity, required this.assetPrefOption});
-  double opacity;
-  AssetPrefOptions assetPrefOption;
+class NoPrefButton extends StatefulWidget {
+  const NoPrefButton(
+      {required this.controller, required this.assetPrefOption, super.key});
+  final AnimationController controller;
+  final AssetPrefOptions assetPrefOption;
+
+  @override
+  State<NoPrefButton> createState() => _NoPrefButtonState();
+}
+
+class _NoPrefButtonState extends State<NoPrefButton> {
+  @override
+  void initState() {
+    widget.controller.addListener(() {
+      setState(() {});
+    });
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
     return Container(
         decoration: BoxDecoration(
           borderRadius: BorderRadius.circular(10),
-          border:
-              Border.all(color: Colors.white.withOpacity(opacity), width: 1.5),
+          border: Border.all(
+              color: Colors.white.withOpacity(widget.controller.value),
+              width: 1.5),
           color: UiConstants.kTambolaMidTextColor,
         ),
         padding: EdgeInsets.symmetric(
@@ -166,9 +250,10 @@ class NoPrefButton extends StatelessWidget {
 }
 
 class AssetCard extends StatelessWidget {
-  AssetCard({super.key, required this.opacity, required this.assetPrefOption});
-  double opacity;
-  AssetPrefOptions assetPrefOption;
+  const AssetCard(
+      {required this.opacity, required this.assetPrefOption, super.key});
+  final double opacity;
+  final AssetPrefOptions assetPrefOption;
 
   @override
   Widget build(BuildContext context) {
@@ -226,22 +311,18 @@ class AssetCard extends StatelessWidget {
                 right: SizeConfig.padding4,
                 top: SizeConfig.padding20),
             child: DetailsRow(
-              upperText1: (assetPrefOption == AssetPrefOptions.LENDBOX_P2P)
-                  ? "P2P"
-                  : "24K",
-              lowerText1: (assetPrefOption == AssetPrefOptions.LENDBOX_P2P)
-                  ? "Asset"
-                  : "Gold",
-              upperText2: (assetPrefOption == AssetPrefOptions.LENDBOX_P2P)
-                  ? "Upto 12%"
-                  : "Stable Returns",
-              lowerText2: (assetPrefOption == AssetPrefOptions.LENDBOX_P2P)
-                  ? "Returns"
-                  : "@Market Rate",
-              upperText3: (assetPrefOption == AssetPrefOptions.LENDBOX_P2P)
-                  ? "KYC"
-                  : "No KYC",
-              lowerText3: "Required",
+              benefits: (assetPrefOption == AssetPrefOptions.LENDBOX_P2P)
+                  ? [
+                      Benefit(title: "P2P", subtitle: "Asset"),
+                      Benefit(title: "Upto 12%", subtitle: "Returns"),
+                      Benefit(title: "KYC", subtitle: "Required")
+                    ]
+                  : [
+                      Benefit(title: "24K", subtitle: "Gold"),
+                      Benefit(
+                          title: "Stable Returns", subtitle: "@Market Rate"),
+                      Benefit(title: "No KYC", subtitle: "Required")
+                    ],
               bgColor: (assetPrefOption == AssetPrefOptions.LENDBOX_P2P)
                   ? UiConstants.teal5
                   : UiConstants.goldSellCardColor,
@@ -258,23 +339,26 @@ class AssetCard extends StatelessWidget {
 
 class DetailsRow extends StatelessWidget {
   const DetailsRow(
-      {required this.upperText1,
-      required this.lowerText1,
-      required this.upperText2,
-      required this.lowerText2,
-      required this.upperText3,
-      required this.lowerText3,
+      {required this.benefits,
       required this.bgColor,
       required this.dividerColor,
       super.key});
-  final String upperText1;
-  final String lowerText1;
-  final String upperText2;
-  final String lowerText2;
-  final String upperText3;
-  final String lowerText3;
+
   final Color bgColor;
   final Color dividerColor;
+  final List<Benefit> benefits;
+
+  CrossAxisAlignment? getColumnAlignment(int i) {
+    switch (i) {
+      case 0:
+        return CrossAxisAlignment.start;
+      case 1:
+        return CrossAxisAlignment.center;
+      case 2:
+        return CrossAxisAlignment.end;
+    }
+    return null;
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -290,82 +374,37 @@ class DetailsRow extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Padding(
-              padding: EdgeInsets.only(
-                top: SizeConfig.padding4,
-                bottom: SizeConfig.padding4,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Text(
-                    upperText1,
-                    style: TextStyles.rajdhaniSB.body1
-                        .colour(Colors.white)
-                        .setOpacity(0.8),
-                  ),
-                  Text(lowerText1,
-                      style: TextStyles.rajdhani.body4
+            for (int i = 0; i < benefits.length; i++) ...[
+              Padding(
+                padding: EdgeInsets.only(
+                  top: SizeConfig.padding4,
+                  bottom: SizeConfig.padding4,
+                ),
+                child: Column(
+                  crossAxisAlignment: getColumnAlignment(i)!,
+                  children: [
+                    Text(
+                      benefits[i].title,
+                      style: TextStyles.rajdhaniSB.body1
                           .colour(Colors.white)
-                          .setOpacity(0.4))
-                ],
+                          .setOpacity(0.8),
+                    ),
+                    Text(benefits[i].subtitle,
+                        style: TextStyles.rajdhani.body4
+                            .colour(Colors.white)
+                            .setOpacity(0.4))
+                  ],
+                ),
               ),
-            ),
-            SizedBox(
-              height: SizeConfig.padding36,
-              child: VerticalDivider(
-                color: dividerColor,
-                thickness: 2,
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(
-                top: SizeConfig.padding4,
-                bottom: SizeConfig.padding4,
-              ),
-              child: Column(
-                children: [
-                  Text(
-                    upperText2,
-                    style: TextStyles.rajdhaniSB.body1
-                        .colour(Colors.white)
-                        .setOpacity(0.8),
+              if (i != 2)
+                SizedBox(
+                  height: SizeConfig.padding36,
+                  child: VerticalDivider(
+                    color: dividerColor,
+                    thickness: 2,
                   ),
-                  Text(lowerText2,
-                      style: TextStyles.rajdhani.body4
-                          .colour(Colors.white)
-                          .setOpacity(0.4))
-                ],
-              ),
-            ),
-            SizedBox(
-              height: SizeConfig.padding36,
-              child: VerticalDivider(
-                color: dividerColor,
-                thickness: 2,
-              ),
-            ),
-            Padding(
-              padding: EdgeInsets.only(
-                top: SizeConfig.padding4,
-                bottom: SizeConfig.padding4,
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.end,
-                children: [
-                  Text(
-                    upperText3,
-                    style: TextStyles.rajdhaniSB.body1
-                        .colour(Colors.white)
-                        .setOpacity(0.8),
-                  ),
-                  Text(lowerText3,
-                      style: TextStyles.rajdhani.body4
-                          .colour(Colors.white)
-                          .setOpacity(0.4))
-                ],
-              ),
-            ),
+                )
+            ],
           ]),
     );
   }

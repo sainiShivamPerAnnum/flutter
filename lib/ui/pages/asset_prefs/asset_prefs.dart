@@ -14,6 +14,31 @@ import 'asset_pref_bottom_sheet.dart';
 class AssetPrefView extends StatelessWidget {
   const AssetPrefView({Key? key}) : super(key: key);
 
+  String getButtonText(AssetPrefOptions? selectedAsset) {
+    switch (selectedAsset) {
+      case AssetPrefOptions.LENDBOX_P2P:
+        return "WITH FELLO P2P";
+      case AssetPrefOptions.AUGMONT_GOLD:
+        return "WITH DIGITAL GOLD";
+      case AssetPrefOptions.NO_PREF:
+        return "";
+      default:
+        return "";
+    }
+  }
+
+  void handleProceedButton(AssetPreferenceViewModel model) {
+    if (model.selectedAsset == null) return;
+    if (model.selectedAsset == AssetPrefOptions.NO_PREF) {
+      BaseUtil.openModalBottomSheet(
+          isBarrierDismissible: true,
+          content: SkipToHomeBottomSheet(model: model));
+      return;
+    } else {
+      model.handleRouting(model.selectedAsset);
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return BaseView<AssetPreferenceViewModel>(
@@ -38,8 +63,7 @@ class AssetPrefView extends StatelessWidget {
                             onTap: () {
                               BaseUtil.openModalBottomSheet(
                                   isBarrierDismissible: true,
-                                  content: AssetPrefBottomSheet(
-                                    comingFromSkip: true,
+                                  content: NoPrefBottomSheet(
                                     model: model,
                                   ));
                             },
@@ -96,41 +120,52 @@ class AssetPrefView extends StatelessWidget {
                       SizedBox(
                         height: SizeConfig.padding24,
                       ),
-                      ListView(
-                          shrinkWrap: true,
-                          padding: EdgeInsets.zero,
-                          scrollDirection: Axis.vertical,
-                          children: [
-                            AssetSelector(
-                              assetPrefOptions: AssetPrefOptions.LENDBOX_P2P,
-                              model: model,
-                            ),
-                            AssetSelector(
-                              assetPrefOptions: AssetPrefOptions.AUGMONT_GOLD,
-                              model: model,
-                            ),
-                            AssetSelector(
-                                assetPrefOptions: AssetPrefOptions.NO_PREF,
-                                model: model)
-                          ]),
+                      Column(
+                        children: [
+                          AssetSelector(
+                            assetPrefOptions: AssetPrefOptions.LENDBOX_P2P,
+                            model: model,
+                            callback: () {
+                              if (model.selectedAsset !=
+                                  AssetPrefOptions.LENDBOX_P2P) {
+                                model.changeSelectedAsset(
+                                    AssetPrefOptions.LENDBOX_P2P);
+                              }
+                            },
+                          ),
+                          AssetSelector(
+                            assetPrefOptions: AssetPrefOptions.AUGMONT_GOLD,
+                            model: model,
+                            callback: () {
+                              if (model.selectedAsset !=
+                                  AssetPrefOptions.AUGMONT_GOLD) {
+                                model.changeSelectedAsset(
+                                    AssetPrefOptions.AUGMONT_GOLD);
+                              }
+                            },
+                          ),
+                          AssetSelector(
+                            assetPrefOptions: AssetPrefOptions.NO_PREF,
+                            model: model,
+                            callback: () {
+                              if (model.selectedAsset !=
+                                  AssetPrefOptions.NO_PREF) {
+                                model.changeSelectedAsset(
+                                    AssetPrefOptions.NO_PREF);
+                              }
+                            },
+                          ),
+                        ],
+                      ),
                       Spacer(),
                       Padding(
                         padding: EdgeInsets.only(bottom: SizeConfig.padding20),
                         child: SecondaryButton(
                             onPressed: () {
-                              if (model.selectedAsset == null) return;
-                              if (model.selectedAsset ==
-                                  AssetPrefOptions.NO_PREF) {
-                                BaseUtil.openModalBottomSheet(
-                                    isBarrierDismissible: true,
-                                    content: AssetPrefBottomSheet(
-                                        comingFromSkip: false, model: model));
-                                return;
-                              } else {
-                                model.handleRouting(model.selectedAsset);
-                              }
+                              handleProceedButton(model);
                             },
-                            label: "PROCEED ${model.getButtonText()}"),
+                            label:
+                                "PROCEED ${getButtonText(model.selectedAsset)}"),
                       )
                     ],
                   ),
