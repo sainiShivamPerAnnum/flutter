@@ -7,6 +7,7 @@ import 'package:felloapp/core/model/user_kyc_data_model.dart';
 import 'package:felloapp/core/repository/banking_repo.dart';
 import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/core/service/notifier_services/google_sign_in_service.dart';
+import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -14,11 +15,14 @@ import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/ui/modalsheets/upload_pan_modal.dart';
 import 'package:felloapp/util/custom_logger.dart';
+import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
+import 'package:permission_handler/permission_handler.dart';
 
 enum KycVerificationStatus { UNVERIFIED, FAILED, VERIFIED, NONE }
 
@@ -83,6 +87,63 @@ class KYCDetailsViewModel extends BaseViewModel {
   void changeView() {
     showKycHelpView = false;
     notifyListeners();
+  }
+
+  Future<void> imageCapture(BuildContext context) async {
+    try {
+      capturedImage = await ImagePicker().pickImage(source: ImageSource.camera);
+      verifyImage(context);
+      if (capturedImage != null) {
+        Log(capturedImage!.path);
+      }
+    } catch (e) {
+      final internalOpsService = locator<InternalOpsService>();
+      final userService = locator<UserService>();
+      await internalOpsService.logFailure(
+        userService.baseUser?.uid ?? '',
+        FailType.KycImageCaptureFailed,
+        {'message': "Kyc image caputre failed", 'reason': e.toString()},
+      );
+
+      permissionFailureCount += 1;
+      const Permission cameraPermission = Permission.camera;
+      final PermissionStatus cameraPermissionStatus =
+          await cameraPermission.status;
+      if (permissionFailureCount > 2) {
+        return BaseUtil.openDialog(
+          isBarrierDismissible: true,
+          addToScreenStack: true,
+          hapticVibrate: true,
+          content: MoreInfoDialog(
+            title: locale.btnAlert,
+            text: locale.kycGrantPermissionText,
+            btnText: locale.btnGrantPermission,
+            onPressed: () async {
+              await openAppSettings();
+              await AppState.backButtonDispatcher!.didPopRoute();
+            },
+          ),
+        );
+      } else if (cameraPermissionStatus == PermissionStatus.denied) {
+        return BaseUtil.openDialog(
+          isBarrierDismissible: true,
+          addToScreenStack: true,
+          hapticVibrate: true,
+          content: MoreInfoDialog(
+            title: locale.btnAlert,
+            text: locale.kycGrantPermissionText,
+          ),
+        );
+      }
+    }
+  }
+
+  Future<void> selectImage(BuildContext context) async {
+    capturedImage = await ImagePicker().pickImage(source: ImageSource.gallery);
+    verifyImage(context);
+    if (capturedImage != null) {
+      Log(capturedImage!.path);
+    }
   }
 
   UserKycDataModel? get userKycData => _userKycData;

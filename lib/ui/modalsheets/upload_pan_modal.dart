@@ -1,22 +1,13 @@
-import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
-import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/ui/pages/userProfile/kyc_details/kyc_details_vm.dart';
 import 'package:felloapp/util/assets.dart';
-import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
-import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/logger.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:image_picker/image_picker.dart';
-import 'package:permission_handler/permission_handler.dart';
 
 class UploadPanModal extends StatelessWidget {
   const UploadPanModal({required this.model, super.key});
@@ -47,63 +38,10 @@ class UploadPanModal extends StatelessWidget {
               height: SizeConfig.padding16,
             ),
             FileCaptureOption(
-              icon: Assets.ic_camera,
-              trailingIcon: Assets.ic_upload_procced,
-              desc: locale.kycUseCamera,
-              onTap: () async {
-                try {
-                  model.capturedImage =
-                      await ImagePicker().pickImage(source: ImageSource.camera);
-                  model.verifyImage(context);
-                  if (model.capturedImage != null) {
-                    Log(model.capturedImage!.path);
-                  }
-                } catch (e) {
-                  final internalOpsService = locator<InternalOpsService>();
-                  final userService = locator<UserService>();
-                  await internalOpsService.logFailure(
-                    userService.baseUser?.uid ?? '',
-                    FailType.KycImageCaptureFailed,
-                    {
-                      'message': "Kyc image caputre failed",
-                      'reason': e.toString()
-                    },
-                  );
-
-                  model.permissionFailureCount += 1;
-                  const Permission cameraPermission = Permission.camera;
-                  final PermissionStatus cameraPermissionStatus =
-                      await cameraPermission.status;
-                  if (model.permissionFailureCount > 2) {
-                    return BaseUtil.openDialog(
-                      isBarrierDismissible: true,
-                      addToScreenStack: true,
-                      hapticVibrate: true,
-                      content: MoreInfoDialog(
-                        title: locale.btnAlert,
-                        text: locale.kycGrantPermissionText,
-                        btnText: locale.btnGrantPermission,
-                        onPressed: () async {
-                          await openAppSettings();
-                          await AppState.backButtonDispatcher!.didPopRoute();
-                        },
-                      ),
-                    );
-                  } else if (cameraPermissionStatus ==
-                      PermissionStatus.denied) {
-                    return BaseUtil.openDialog(
-                      isBarrierDismissible: true,
-                      addToScreenStack: true,
-                      hapticVibrate: true,
-                      content: MoreInfoDialog(
-                        title: locale.btnAlert,
-                        text: locale.kycGrantPermissionText,
-                      ),
-                    );
-                  }
-                }
-              },
-            ),
+                icon: Assets.ic_camera,
+                trailingIcon: Assets.ic_upload_procced,
+                desc: locale.kycUseCamera,
+                onTap: () => model.imageCapture(context)),
             SizedBox(
               height: SizeConfig.padding16,
             ),
@@ -111,14 +49,7 @@ class UploadPanModal extends StatelessWidget {
               icon: Assets.ic_upload_file,
               desc: locale.uploadFromDevice,
               trailingIcon: Assets.ic_upload_procced,
-              onTap: () async {
-                model.capturedImage =
-                    await ImagePicker().pickImage(source: ImageSource.gallery);
-                model.verifyImage(context);
-                if (model.capturedImage != null) {
-                  Log(model.capturedImage!.path);
-                }
-              },
+              onTap: () => model.selectImage(context),
             ),
             SizedBox(height: SizeConfig.padding16),
             Row(
