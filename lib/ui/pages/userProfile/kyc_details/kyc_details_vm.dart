@@ -26,6 +26,17 @@ import 'package:permission_handler/permission_handler.dart';
 
 enum KycVerificationStatus { UNVERIFIED, FAILED, VERIFIED, NONE }
 
+enum CurrentStep {
+  pan(1),
+  email(2);
+
+  const CurrentStep(this.value);
+  final int value;
+  factory CurrentStep.fromValue(int val) {
+    return values.firstWhere((e) => e.value == val);
+  }
+}
+
 class KYCDetailsViewModel extends BaseViewModel {
   final _bankAndPanService = locator<BankAndPanService>();
   final GoogleSignInService _googleService = locator<GoogleSignInService>();
@@ -38,7 +49,8 @@ class KYCDetailsViewModel extends BaseViewModel {
   bool get isEmailUpdating => _isEmailUpdating;
   bool isPanTileOpen = false;
   bool isEmailTileOpen = false;
-  int _currentStep = 1;
+  CurrentStep _currentStep = CurrentStep.fromValue(1);
+  //int _currentStep = 1;
 
   set isEmailUpdating(value) {
     _isEmailUpdating = value;
@@ -51,9 +63,9 @@ class KYCDetailsViewModel extends BaseViewModel {
   bool _isPanVerified = false;
   bool get isPanVerified => _isPanVerified;
 
-  int get currentStep => _currentStep;
+  CurrentStep get currentStep => _currentStep;
 
-  set setCurrentStep(int value) {
+  set setCurrentStep(CurrentStep value) {
     _currentStep = value;
     notifyListeners();
   }
@@ -90,6 +102,7 @@ class KYCDetailsViewModel extends BaseViewModel {
   }
 
   Future<void> imageCapture(BuildContext context) async {
+    Haptic.vibrate();
     try {
       capturedImage = await ImagePicker().pickImage(source: ImageSource.camera);
       verifyImage(context);
@@ -139,6 +152,7 @@ class KYCDetailsViewModel extends BaseViewModel {
   }
 
   Future<void> selectImage(BuildContext context) async {
+    Haptic.vibrate();
     capturedImage = await ImagePicker().pickImage(source: ImageSource.gallery);
     verifyImage(context);
     if (capturedImage != null) {
@@ -207,7 +221,7 @@ class KYCDetailsViewModel extends BaseViewModel {
 
   void panUploadProceed(KYCDetailsViewModel model) {
     kycVerificationStatus == KycVerificationStatus.VERIFIED
-        ? setCurrentStep = 2
+        ? setCurrentStep = CurrentStep.email
         : BaseUtil.openModalBottomSheet(
             isBarrierDismissible: true,
             addToScreenStack: true,
@@ -265,7 +279,7 @@ class KYCDetailsViewModel extends BaseViewModel {
         inEditMode = false;
         hasDetails = true;
         isPanTileOpen = false;
-        _currentStep = 2;
+        _currentStep = CurrentStep.fromValue(2);
         if (!isEmailVerified) isEmailTileOpen = true;
       } else {
         isPanTileOpen = true;
@@ -322,7 +336,7 @@ class KYCDetailsViewModel extends BaseViewModel {
           _bankAndPanService.activeBankAccountDetails = null;
           _bankAndPanService.isBankDetailsAdded = false;
           await checkForKycExistence();
-          _currentStep = 1;
+          _currentStep = CurrentStep.fromValue(1);
           await CacheService.invalidateByKey(CacheKeys.USER);
           await _userService.setBaseUser();
           await _bankAndPanService.checkForUserBankAccountDetails();

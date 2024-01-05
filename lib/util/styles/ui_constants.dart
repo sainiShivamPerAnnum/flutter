@@ -61,6 +61,7 @@ class UiConstants {
   static const Color kTextColor = Color(0xFFFFFFFF);
   static const Color kTextColor2 = Color(0xFF919193);
   static const Color kTextColor3 = Color(0xFFA7A7A8);
+  static const Color kTextColor4 = Color(0xFF000000);
 
   static const Color kYellowTextColor = Color(0xFFFEF5DC);
   static const Color kTealTextColor = Color(0xFFA5FCE7);
@@ -108,6 +109,7 @@ class UiConstants {
   static const Color kcashBackAmountTextColor = Color(0xFFFFE9B1);
   static const Color kTicketPeachColor = Color(0xFFFFCCBF);
   static const Color kSelectedDotColor = Color(0xFFCEF8F5);
+  static const Color kInfoBackgroundColor = Color(0xFF121212);
 
   static const Color kFAQsAnswerColor = Color(0xFFA9C6D6);
 

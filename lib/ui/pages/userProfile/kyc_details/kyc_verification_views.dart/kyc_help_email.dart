@@ -15,7 +15,7 @@ class KycEmailHelpView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final S locale = S.of(context);
+    final locale = S.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -31,7 +31,7 @@ class KycEmailHelpView extends StatelessWidget {
                     ? locale.KyclinkedAccount
                     : locale.verifyEmailKyc,
                 style: TextStyles.sourceSansSB.body1
-                    .colour(Colors.white.withOpacity(0.8)),
+                    .colour(UiConstants.kTextColor.withOpacity(0.8)),
               ),
               EmailVerificationTile(model: model),
               SizedBox(
@@ -39,12 +39,12 @@ class KycEmailHelpView extends StatelessWidget {
               ),
               Divider(
                 color: model.isEmailVerified
-                    ? Colors.white
-                    : const Color.fromRGBO(255, 255, 255, 0.2),
-                height: 10,
+                    ? UiConstants.kTextColor
+                    : UiConstants.kTextColor.withOpacity(0.2),
+                height: SizeConfig.padding10,
               ),
-              if (model.isEmailVerified) SizedBox(height: SizeConfig.padding24),
-              if (model.isEmailVerified)
+              if (model.isEmailVerified) ...[
+                SizedBox(height: SizeConfig.padding24),
                 Center(
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.center,
@@ -52,12 +52,12 @@ class KycEmailHelpView extends StatelessWidget {
                       Text(
                         locale.kycComplete,
                         style: TextStyles.sourceSansSB.title5
-                            .colour(Colors.white.withOpacity(0.8)),
+                            .colour(UiConstants.kTextColor.withOpacity(0.8)),
                       ),
                       Text(
                         locale.kycCompleteSub,
                         style: TextStyles.sourceSansSB.body1
-                            .colour(Colors.white.withOpacity(0.8)),
+                            .colour(UiConstants.kTextColor.withOpacity(0.8)),
                       ),
                       Padding(
                         padding: EdgeInsets.symmetric(
@@ -66,7 +66,8 @@ class KycEmailHelpView extends StatelessWidget {
                           height: SizeConfig.padding200,
                           width: SizeConfig.padding200,
                           decoration: const BoxDecoration(
-                              shape: BoxShape.circle, color: Color(0xFF1A1A1A)),
+                              shape: BoxShape.circle,
+                              color: UiConstants.kArrowButtonBackgroundColor),
                           child: Center(
                               child: Text('🙌',
                                   style: TextStyles.rajdhaniB.title98)),
@@ -75,17 +76,17 @@ class KycEmailHelpView extends StatelessWidget {
                       Text(
                         locale.startInvesting,
                         style: TextStyles.sourceSansSB.body1
-                            .colour(Colors.white.withOpacity(0.8)),
+                            .colour(UiConstants.kTextColor.withOpacity(0.8)),
                       ),
                     ],
                   ),
                 ),
-              if (!model.isEmailVerified)
+              ] else ...[
                 Container(
                   margin: EdgeInsets.only(top: SizeConfig.padding22),
                   padding: EdgeInsets.symmetric(vertical: SizeConfig.padding14),
                   decoration: BoxDecoration(
-                    color: const Color.fromRGBO(18, 18, 18, 1),
+                    color: UiConstants.kInfoBackgroundColor,
                     borderRadius: BorderRadius.circular(SizeConfig.roundness8),
                   ),
                   child: Row(children: [
@@ -102,13 +103,14 @@ class KycEmailHelpView extends StatelessWidget {
                         padding: EdgeInsets.only(right: SizeConfig.padding18),
                         child: Text(
                           locale.preKYC,
-                          style: TextStyles.sourceSans.body3
-                              .colour(const Color.fromRGBO(189, 189, 190, 0.8)),
+                          style: TextStyles.sourceSans.body3.colour(
+                              UiConstants.kTextFieldTextColor.withOpacity(0.8)),
                         ),
                       ),
                     )
                   ]),
                 )
+              ]
             ],
           ),
         ),
@@ -123,7 +125,8 @@ class KycEmailHelpView extends StatelessWidget {
               onPressed: () => AppState.backButtonDispatcher!.didPopRoute(),
               child: Text(
                 locale.skipKYC,
-                style: TextStyles.rajdhaniB.body1.colour(Colors.white),
+                style:
+                    TextStyles.rajdhaniB.body1.colour(UiConstants.kTextColor),
               ),
             ),
           ),
@@ -137,7 +140,7 @@ class KycEmailHelpView extends StatelessWidget {
                 borderRadius: BorderRadius.circular(SizeConfig.roundness5)),
             minWidth:
                 SizeConfig.screenWidth! - SizeConfig.pageHorizontalMargins * 2,
-            color: Colors.white,
+            color: UiConstants.kTextColor,
             onPressed: model.isEmailVerified
                 ? () => AppState.backButtonDispatcher!.didPopRoute()
                 : model.veryGmail,
@@ -161,7 +164,7 @@ class EmailVerificationTile extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final S locale = S.of(context);
+    final locale = S.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -196,7 +199,7 @@ class EmailVerificationTile extends StatelessWidget {
                                 right: SizeConfig.pageHorizontalMargins),
                             child: Icon(
                               Icons.arrow_forward_ios,
-                              color: Colors.white,
+                              color: UiConstants.kTextColor,
                               size: SizeConfig.iconSize0,
                             ),
                           ),

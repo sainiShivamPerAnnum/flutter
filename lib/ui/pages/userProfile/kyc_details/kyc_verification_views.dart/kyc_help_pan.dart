@@ -14,7 +14,7 @@ class KycPanHelpView extends StatelessWidget {
   final KYCDetailsViewModel model;
   @override
   Widget build(BuildContext context) {
-    final S locale = S.of(context);
+    final locale = S.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -22,26 +22,27 @@ class KycPanHelpView extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.center,
             children: [
-              model.kycVerificationStatus != KycVerificationStatus.VERIFIED
-                  ? const UploadPanCard()
-                  : const PanUploaded(),
+              switch (model.kycVerificationStatus) {
+                KycVerificationStatus.VERIFIED => const PanUploaded(),
+                _ => const UploadPanCard(),
+              },
               Text(
                 locale.panNote,
                 style: TextStyles.sourceSansSB.body3
-                    .colour(const Color.fromRGBO(189, 189, 190, 0.8)),
+                    .colour(UiConstants.kTextFieldTextColor.withOpacity(0.8)),
               ),
               SizedBox(
                 height: SizeConfig.padding18,
               ),
-              const Divider(
-                color: Color.fromRGBO(255, 255, 255, 0.2),
-                height: 10,
+              Divider(
+                color: UiConstants.kTextColor.withOpacity(0.2),
+                height: SizeConfig.padding10,
               ),
               Container(
                 margin: EdgeInsets.only(top: SizeConfig.padding22),
                 padding: EdgeInsets.symmetric(vertical: SizeConfig.padding14),
                 decoration: BoxDecoration(
-                  color: const Color.fromRGBO(18, 18, 18, 1),
+                  color: UiConstants.kInfoBackgroundColor,
                   borderRadius: BorderRadius.circular(SizeConfig.roundness8),
                 ),
                 child: Row(children: [
@@ -58,8 +59,8 @@ class KycPanHelpView extends StatelessWidget {
                       padding: EdgeInsets.only(right: SizeConfig.padding18),
                       child: Text(
                         locale.panSecurity,
-                        style: TextStyles.sourceSans.body3
-                            .colour(const Color.fromRGBO(189, 189, 190, 0.8)),
+                        style: TextStyles.sourceSans.body3.colour(
+                            UiConstants.kTextFieldTextColor.withOpacity(0.8)),
                       ),
                     ),
                   )
@@ -68,7 +69,7 @@ class KycPanHelpView extends StatelessWidget {
             ],
           ),
         ),
-        if (!model.isUpdatingKycDetails)
+        if (!model.isUpdatingKycDetails) ...[
           Center(
             child: TextButton(
               style: TextButton.styleFrom(
@@ -79,37 +80,38 @@ class KycPanHelpView extends StatelessWidget {
               onPressed: () => AppState.backButtonDispatcher!.didPopRoute(),
               child: Text(
                 locale.skipKYC,
-                style: TextStyles.rajdhaniB.body1.colour(Colors.white),
+                style: TextStyles.rajdhaniB.body1
+                    .colour(UiConstants.kTextFieldTextColor),
               ),
             ),
           ),
-        if (!model.isUpdatingKycDetails)
           SizedBox(
             height: SizeConfig.padding20,
           ),
-        model.isUpdatingKycDetails
-            ? const LinearProgressIndicator(
-                backgroundColor: Colors.black,
-              )
-            : Center(
-                child: MaterialButton(
-                  height: SizeConfig.padding44,
-                  shape: RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.circular(SizeConfig.roundness5)),
-                  minWidth: SizeConfig.screenWidth! -
-                      SizeConfig.pageHorizontalMargins * 2,
-                  color: Colors.white,
-                  onPressed: () => model.panUploadProceed(model),
-                  child: Text(
-                    model.kycVerificationStatus ==
-                            KycVerificationStatus.VERIFIED
-                        ? locale.proceed
-                        : locale.uploadPan,
-                    style: TextStyles.rajdhaniB.body1.colour(Colors.black),
-                  ),
-                ),
+        ],
+        if (model.isUpdatingKycDetails)
+          const LinearProgressIndicator(
+            backgroundColor: UiConstants.kTextColor4,
+          )
+        else
+          Center(
+            child: MaterialButton(
+              height: SizeConfig.padding44,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(SizeConfig.roundness5)),
+              minWidth: SizeConfig.screenWidth! -
+                  SizeConfig.pageHorizontalMargins * 2,
+              color: UiConstants.kTextColor,
+              onPressed: () => model.panUploadProceed(model),
+              child: Text(
+                model.kycVerificationStatus == KycVerificationStatus.VERIFIED
+                    ? locale.proceed
+                    : locale.uploadPan,
+                style:
+                    TextStyles.rajdhaniB.body1.colour(UiConstants.kTextColor4),
               ),
+            ),
+          ),
         SizedBox(
           height: SizeConfig.padding16,
         ),
@@ -123,7 +125,7 @@ class UploadPanCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final S locale = S.of(context);
+    final locale = S.of(context);
     return Column(
       children: [
         Text(
@@ -136,7 +138,7 @@ class UploadPanCard extends StatelessWidget {
         Text(
           locale.uploadImagePan,
           style: TextStyles.sourceSans.body3
-              .colour(const Color.fromRGBO(167, 167, 168, 0.8)),
+              .colour(UiConstants.kTextColor3.withOpacity(0.8)),
         ),
         SizedBox(
           height: SizeConfig.padding22,
@@ -160,7 +162,7 @@ class PanUploaded extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final S locale = S.of(context);
+    final locale = S.of(context);
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
@@ -170,7 +172,7 @@ class PanUploaded extends StatelessWidget {
         Text(
           locale.panUploaded,
           style: TextStyles.sourceSansSB.body1
-              .colour(Colors.white.withOpacity(0.8)),
+              .colour(UiConstants.kTextFieldTextColor.withOpacity(0.8)),
         ),
         Container(
           width: SizeConfig.screenWidth,
@@ -187,9 +189,9 @@ class PanUploaded extends StatelessWidget {
                 padding: EdgeInsets.all(SizeConfig.padding12),
                 width: SizeConfig.avatarRadius * 4,
                 decoration: BoxDecoration(
-                  border: Border.all(color: Colors.white),
+                  border: Border.all(color: UiConstants.kTextFieldTextColor),
                   shape: BoxShape.circle,
-                  color: Colors.black,
+                  color: UiConstants.kTextColor4,
                 ),
                 child: SvgPicture.asset(
                   Assets.ic_upload_success,
@@ -198,7 +200,8 @@ class PanUploaded extends StatelessWidget {
               Expanded(
                 child: Text(
                   "PAN3948.png",
-                  style: TextStyles.sourceSansSB.body2.colour(Colors.white),
+                  style: TextStyles.sourceSansSB.body2
+                      .colour(UiConstants.kTextFieldTextColor),
                 ),
               ),
               Container(

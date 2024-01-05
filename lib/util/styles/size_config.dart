@@ -60,7 +60,7 @@ class SizeConfig {
   // TEXT SIZES
   static double get titleSize => screenWidth! * 0.1;
 
-  static double get title98 => screenWidth! * 0.23; //98
+  static double get title98 => screenWidth! * 0.2254; //98
   static double get title68 => screenWidth! * 0.181; //68
   static double get title50 => screenWidth! * 0.133; //50
   static double get title0 => screenWidth! * 0.106; //40
@@ -235,6 +235,8 @@ class SizeConfig {
   static double get padding196 => screenWidth! * 0.4704;
 
   static double get padding200 => screenWidth! * 0.48;
+
+  static double get padding252 => screenWidth! * 0.579;
 
   static double get padding300 => screenWidth! * 0.8;
 

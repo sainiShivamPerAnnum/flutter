@@ -22,9 +22,9 @@ class KYCDetailsView extends StatelessWidget {
 
   StatelessWidget getKycView(KYCDetailsViewModel model) {
     switch (model.currentStep) {
-      case 2:
+      case CurrentStep.email:
         return KycEmailHelpView(model: model);
-      case 1:
+      case CurrentStep.pan:
         return KycPanHelpView(model: model);
       default:
         return NoKycView(model: model);
@@ -33,7 +33,7 @@ class KYCDetailsView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    S locale = S.of(context);
+    final locale = S.of(context);
     return BaseView<KYCDetailsViewModel>(
       onModelReady: (model) {
         model.init();
@@ -59,74 +59,52 @@ class KYCDetailsView extends StatelessWidget {
           ],
         ),
         backgroundColor: UiConstants.kBackgroundColor,
-        body: model.state == ViewState.Busy
-            ? const Center(
-                child: FullScreenLoader(),
-              )
-            : SizedBox(
-                width: SizeConfig.screenWidth,
-                height: SizeConfig.screenHeight! - SizeConfig.fToolBarHeight,
-                child: Padding(
-                  padding: EdgeInsets.symmetric(
-                          horizontal: SizeConfig.pageHorizontalMargins)
-                      .copyWith(right: SizeConfig.padding32),
-                  child: Column(
-                    children: [
-                      SizedBox(
-                        height: SizeConfig.padding22,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: [
-                          CustomPaint(
-                            size: Size(
-                                SizeConfig.padding10, SizeConfig.padding10),
-                            painter: CirclePainter(
-                                const Color.fromRGBO(98, 227, 196, 1)),
-                          ),
-                          Container(
-                            margin: const EdgeInsets.symmetric(horizontal: 5),
-                            color: model.currentStep == 2
-                                ? const Color.fromRGBO(98, 227, 196, 1)
-                                : const Color.fromRGBO(145, 145, 147, 1),
-                            height: SizeConfig.padding4,
-                            width: SizeConfig.padding200,
-                          ),
-                          CustomPaint(
-                            size: Size(
-                                SizeConfig.padding10, SizeConfig.padding10),
-                            painter: CirclePainter(model.currentStep == 2
-                                ? const Color.fromRGBO(98, 227, 196, 1)
-                                : const Color.fromRGBO(145, 145, 147, 1)),
-                          ),
-                        ],
-                      ),
-                      SizedBox(
-                        height: SizeConfig.padding4,
-                      ),
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          Text(
-                            locale.kycStep1,
-                            style: TextStyles.sourceSans.body3
-                                .colour(Colors.white.withOpacity(0.8)),
-                          ),
-                          Text(
-                            locale.kycStep2,
-                            style: TextStyles.sourceSans.body3
-                                .colour(Colors.white.withOpacity(0.8)),
-                          )
-                        ],
-                      ),
-                      SizedBox(
-                        height: SizeConfig.padding32,
-                      ),
-                      Expanded(child: getKycView(model)),
-                    ],
-                  ),
+        body: switch (model.state) {
+          ViewState.Busy => const Center(
+              child: FullScreenLoader(),
+            ),
+          ViewState.Idle || ViewState.Offline => SizedBox(
+              width: SizeConfig.screenWidth,
+              height: SizeConfig.screenHeight! - SizeConfig.fToolBarHeight,
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                        horizontal: SizeConfig.pageHorizontalMargins)
+                    .copyWith(right: SizeConfig.padding32),
+                child: Column(
+                  children: [
+                    SizedBox(
+                      height: SizeConfig.padding22,
+                    ),
+                    _Stepper(
+                      currentStep: model.currentStep,
+                    ),
+                    SizedBox(
+                      height: SizeConfig.padding10,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          locale.kycStep1,
+                          style: TextStyles.sourceSans.body3
+                              .colour(UiConstants.kTextColor.withOpacity(0.8)),
+                        ),
+                        Text(
+                          locale.kycStep2,
+                          style: TextStyles.sourceSans.body3
+                              .colour(UiConstants.kTextColor.withOpacity(0.8)),
+                        )
+                      ],
+                    ),
+                    SizedBox(
+                      height: SizeConfig.padding32,
+                    ),
+                    Expanded(child: getKycView(model)),
+                  ],
                 ),
               ),
+            ),
+        },
       ),
     );
   }
@@ -171,7 +149,7 @@ class KycBriefTile extends StatelessWidget {
                 padding: EdgeInsets.all(SizeConfig.padding12),
                 width: SizeConfig.avatarRadius * 4,
                 decoration: BoxDecoration(
-                  border: Border.all(color: Colors.white),
+                  border: Border.all(color: UiConstants.kTextColor),
                   shape: BoxShape.circle,
                   color: Colors.black,
                 ),
@@ -186,7 +164,8 @@ class KycBriefTile extends StatelessWidget {
                   children: [
                     Text(
                       title,
-                      style: TextStyles.sourceSansSB.body2.colour(Colors.white),
+                      style: TextStyles.sourceSansSB.body2
+                          .colour(UiConstants.kTextColor),
                     ),
                     if (subtitle != null)
                       Padding(
@@ -227,4 +206,41 @@ class CirclePainter extends CustomPainter {
 
   @override
   bool shouldRepaint(CustomPainter oldDelegate) => false;
+}
+
+class _Stepper extends StatelessWidget {
+  const _Stepper({required this.currentStep});
+  final CurrentStep currentStep;
+  @override
+  Widget build(BuildContext context) {
+    return Row(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        CustomPaint(
+          size: Size(SizeConfig.padding10, SizeConfig.padding10),
+          painter: CirclePainter(UiConstants.kTabBorderColor),
+        ),
+        Container(
+          margin: EdgeInsets.symmetric(
+            horizontal: SizeConfig.padding4,
+          ),
+          color: currentStep == CurrentStep.email
+              ? UiConstants.kTabBorderColor
+              : UiConstants.kLastUpdatedTextColor,
+          // switch (currentStep) {
+          //   2 => UiConstants.kTabBorderColor,
+          //   1 => UiConstants.kLastUpdatedTextColor
+          // },
+          height: SizeConfig.padding4,
+          width: SizeConfig.padding252,
+        ),
+        CustomPaint(
+          size: Size(SizeConfig.padding10, SizeConfig.padding10),
+          painter: CirclePainter(currentStep == CurrentStep.email
+              ? UiConstants.kTabBorderColor
+              : UiConstants.kLastUpdatedTextColor),
+        ),
+      ],
+    );
+  }
 }

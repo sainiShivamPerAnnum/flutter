@@ -1,7 +1,6 @@
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/userProfile/kyc_details/kyc_details_vm.dart';
 import 'package:felloapp/util/assets.dart';
-import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -15,7 +14,7 @@ class UploadPanModal extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final S locale = S.of(context);
+    final locale = S.of(context);
     return WillPopScope(
       onWillPop: () {
         AppState.backButtonDispatcher!.didPopRoute();
@@ -32,7 +31,7 @@ class UploadPanModal extends StatelessWidget {
             Text(
               locale.uploadModal,
               style: TextStyles.sourceSansSB.title5
-                  .colour(Colors.white.withOpacity(0.8)),
+                  .colour(UiConstants.kTextColor.withOpacity(0.8)),
             ),
             SizedBox(
               height: SizeConfig.padding16,
@@ -58,12 +57,12 @@ class UploadPanModal extends StatelessWidget {
                 Text(
                   locale.maxSize,
                   style: TextStyles.sourceSans.body3
-                      .colour(const Color.fromRGBO(167, 167, 168, 0.8)),
+                      .colour(UiConstants.kTextColor3.withOpacity(0.8)),
                 ),
                 Text(
                   locale.formats,
                   style: TextStyles.sourceSans.body3
-                      .colour(const Color.fromRGBO(167, 167, 168, 0.8)),
+                      .colour(UiConstants.kTextColor3.withOpacity(0.8)),
                 )
               ],
             )
@@ -78,23 +77,20 @@ class FileCaptureOption extends StatelessWidget {
   final String icon;
   final String trailingIcon;
   final String? desc;
-  final Function onTap;
-  const FileCaptureOption(
-      {required this.icon,
-      required this.onTap,
-      required this.trailingIcon,
-      Key? key,
-      this.desc})
-      : super(key: key);
+  final VoidCallback onTap;
+  const FileCaptureOption({
+    required this.icon,
+    required this.onTap,
+    required this.trailingIcon,
+    this.desc,
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
     return InkWell(
-      onTap: () {
-        Haptic.vibrate();
-        onTap();
-      },
-      highlightColor: Colors.white,
+      onTap: onTap,
+      highlightColor: UiConstants.kTextColor,
       child: Container(
         decoration: BoxDecoration(
           color: UiConstants.kBackgroundColor3,
@@ -119,7 +115,7 @@ class FileCaptureOption extends StatelessWidget {
                 child: Text(
                   desc!,
                   style: TextStyles.sourceSansSB.body2
-                      .colour(Colors.white.withOpacity(0.8)),
+                      .colour(UiConstants.kTextColor.withOpacity(0.8)),
                 ),
               ),
             ),
