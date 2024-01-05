@@ -1,18 +1,18 @@
 import 'package:felloapp/ui/pages/asset_prefs/asset_pref_vm.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
+import 'package:felloapp/util/assets.dart' as a;
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
-import 'package:felloapp/util/assets.dart' as a;
 
 class SkipToHomeBottomSheet extends StatelessWidget {
-  SkipToHomeBottomSheet({Key? key, required this.model});
-  AssetPreferenceViewModel model;
+  const SkipToHomeBottomSheet({super.key, required this.model});
+  final AssetPreferenceViewModel model;
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
-    return Container(
+    return Padding(
       padding: EdgeInsets.only(
           top: SizeConfig.padding24,
           left: SizeConfig.padding24,
@@ -48,13 +48,13 @@ class SkipToHomeBottomSheet extends StatelessWidget {
 }
 
 class NoPrefBottomSheet extends StatelessWidget {
-  NoPrefBottomSheet({Key? key, required this.model});
-  AssetPreferenceViewModel model;
+  const NoPrefBottomSheet({super.key, required this.model});
+  final AssetPreferenceViewModel model;
 
   @override
   Widget build(BuildContext context) {
     S locale = S.of(context);
-    return Container(
+    return Padding(
       padding: EdgeInsets.only(
           top: SizeConfig.padding24,
           left: SizeConfig.padding24,

@@ -106,6 +106,25 @@
   "obAssetPrefBottomSheet1ButtonText": "Proceed",
   "obAssetPrefBottomSheet2ButtonText1": "SKIP TO HOME",
   "obAssetPrefBottomSheet2ButtonText2": "KNOW MORE",
+  "obAssetWelcomeText": "Welcome To Fello",
+  "obAssetPrefDescText1": "Choose an asset to start investing",
+  "obAssetPrefDescText2": "Read more about assets when you proceed",
+  "obAssetPrefGreeting": "Hi {name}",
+  "@obAssetPrefGreeting": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "obAssetPrefMainButton": "PROCEED {assetName}",
+  "@obAssetPrefMainButton": {
+    "placeholders": {
+      "assetName": {
+        "type": "String"
+      }
+    }
+  },
   "-----------------------------------": "----------------------------",
   "navBarJourney": "Journey",
   "navBarPlay": "Play",

@@ -106,6 +106,25 @@
   "obAssetPrefBottomSheet2ButtonText1": "होम स्क्रीन पर जाएँ",
   "obAssetPrefBottomSheet2ButtonText2": "अधिक जानकारी जानें",
   "obAssetPrefBottomSheet1ButtonText": "आगे बढ़ना",
+  "obAssetWelcomeText": "फेलो में आपका स्वागत है",
+  "obAssetPrefDescText1": "निवेश शुरू करने के लिए एक संपत्ति चुनें",
+  "obAssetPrefDescText2": "जब आप आगे बढ़ें तो संपत्तियों के बारे में और पढ़ें",
+  "obAssetPrefGreeting": "नमस्ते {name}",
+  "@obAssetPrefGreeting": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "obAssetPrefMainButton": "आगे बढ़ना {assetName}",
+  "@obAssetPrefMainButton": {
+    "placeholders": {
+      "assetName": {
+        "type": "String"
+      }
+    }
+  },
   "-----------------------------------": "----------------------------",
   "navBarJourney": "यात्रा",
   "navBarPlay": "खेलें",

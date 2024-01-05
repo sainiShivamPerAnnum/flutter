@@ -1032,6 +1032,56 @@ class S {
     );
   }
 
+  /// `Welcome To Fello`
+  String get obAssetWelcomeText {
+    return Intl.message(
+      'Welcome To Fello',
+      name: 'obAssetWelcomeText',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Choose an asset to start investing`
+  String get obAssetPrefDescText1 {
+    return Intl.message(
+      'Choose an asset to start investing',
+      name: 'obAssetPrefDescText1',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Read more about assets when you proceed`
+  String get obAssetPrefDescText2 {
+    return Intl.message(
+      'Read more about assets when you proceed',
+      name: 'obAssetPrefDescText2',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Hi {name}`
+  String obAssetPrefGreeting(String name) {
+    return Intl.message(
+      'Hi $name',
+      name: 'obAssetPrefGreeting',
+      desc: '',
+      args: [name],
+    );
+  }
+
+  /// `PROCEED {assetName}`
+  String obAssetPrefMainButton(String assetName) {
+    return Intl.message(
+      'PROCEED $assetName',
+      name: 'obAssetPrefMainButton',
+      desc: '',
+      args: [assetName],
+    );
+  }
+
   // skipped getter for the '-----------------------------------' key
 
   /// `Journey`

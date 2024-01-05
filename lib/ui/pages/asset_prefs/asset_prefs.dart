@@ -5,6 +5,7 @@ import 'package:felloapp/ui/pages/asset_prefs/asset_selector.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/util/assets.dart' as a;
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
@@ -45,6 +46,7 @@ class AssetPrefView extends StatelessWidget {
         onModelDispose: (model) {},
         onModelReady: (model) {},
         builder: (context, model, child) {
+          S locale = S.of(context);
           return Scaffold(
             body: Stack(
               children: [
@@ -68,7 +70,7 @@ class AssetPrefView extends StatelessWidget {
                                   ));
                             },
                             child: Text(
-                              "SKIP TO HOME",
+                              locale.obAssetPrefBottomSheet2ButtonText1,
                               style: TextStyles.rajdhaniB.body2
                                   .colour(Colors.white),
                             ),
@@ -85,10 +87,10 @@ class AssetPrefView extends StatelessWidget {
                       SizedBox(
                         height: SizeConfig.padding24,
                       ),
-                      Text("Hi ${model.name}",
+                      Text(locale.obAssetPrefGreeting(model.name ?? ""),
                           style: TextStyles.rajdhaniSB.title5
                               .colour(Colors.white)),
-                      Text("Welcome to Fello",
+                      Text(locale.obAssetWelcomeText,
                           style:
                               TextStyles.rajdhaniSB.body1.colour(Colors.white)),
                       SizedBox(
@@ -99,7 +101,7 @@ class AssetPrefView extends StatelessWidget {
                           Column(
                             children: [
                               Text(
-                                "Choose an asset to to start investing",
+                                locale.obAssetPrefDescText1,
                                 style: TextStyles.rajdhaniSB.body1
                                     .colour(Colors.white)
                                     .setOpacity(0.8),
@@ -108,7 +110,7 @@ class AssetPrefView extends StatelessWidget {
                               SizedBox(
                                 height: SizeConfig.padding4,
                               ),
-                              Text("Read more about assets when you proceed",
+                              Text(locale.obAssetPrefDescText2,
                                   style: TextStyles.rajdhani.body2
                                       .colour(UiConstants.grey1)
                                       .setOpacity(0.8))
@@ -144,8 +146,8 @@ class AssetPrefView extends StatelessWidget {
                             onPressed: () {
                               handleProceedButton(model);
                             },
-                            label:
-                                "PROCEED ${getButtonText(model.selectedAsset)}"),
+                            label: locale.obAssetPrefMainButton(
+                                getButtonText(model.selectedAsset))),
                       )
                     ],
                   ),
