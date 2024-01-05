@@ -32,9 +32,6 @@ enum CurrentStep {
 
   const CurrentStep(this.value);
   final int value;
-  factory CurrentStep.fromValue(int val) {
-    return values.firstWhere((e) => e.value == val);
-  }
 }
 
 class KYCDetailsViewModel extends BaseViewModel {
@@ -49,8 +46,7 @@ class KYCDetailsViewModel extends BaseViewModel {
   bool get isEmailUpdating => _isEmailUpdating;
   bool isPanTileOpen = false;
   bool isEmailTileOpen = false;
-  CurrentStep _currentStep = CurrentStep.fromValue(1);
-  //int _currentStep = 1;
+  CurrentStep _currentStep = CurrentStep.pan;
 
   set isEmailUpdating(value) {
     _isEmailUpdating = value;
@@ -279,7 +275,7 @@ class KYCDetailsViewModel extends BaseViewModel {
         inEditMode = false;
         hasDetails = true;
         isPanTileOpen = false;
-        _currentStep = CurrentStep.fromValue(2);
+        _currentStep = CurrentStep.email;
         if (!isEmailVerified) isEmailTileOpen = true;
       } else {
         isPanTileOpen = true;
@@ -336,7 +332,7 @@ class KYCDetailsViewModel extends BaseViewModel {
           _bankAndPanService.activeBankAccountDetails = null;
           _bankAndPanService.isBankDetailsAdded = false;
           await checkForKycExistence();
-          _currentStep = CurrentStep.fromValue(1);
+          _currentStep = CurrentStep.pan;
           await CacheService.invalidateByKey(CacheKeys.USER);
           await _userService.setBaseUser();
           await _bankAndPanService.checkForUserBankAccountDetails();

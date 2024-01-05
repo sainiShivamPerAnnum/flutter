@@ -88,12 +88,6 @@ class KycPanHelpView extends StatelessWidget {
           SizedBox(
             height: SizeConfig.padding20,
           ),
-        ],
-        if (model.isUpdatingKycDetails)
-          const LinearProgressIndicator(
-            backgroundColor: UiConstants.kTextColor4,
-          )
-        else
           Center(
             child: MaterialButton(
               height: SizeConfig.padding44,
@@ -111,6 +105,10 @@ class KycPanHelpView extends StatelessWidget {
                     TextStyles.rajdhaniB.body1.colour(UiConstants.kTextColor4),
               ),
             ),
+          ),
+        ] else
+          const LinearProgressIndicator(
+            backgroundColor: UiConstants.kTextColor4,
           ),
         SizedBox(
           height: SizeConfig.padding16,
