@@ -19,7 +19,6 @@ import 'package:felloapp/util/fail_types.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/logger.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
@@ -47,6 +46,7 @@ class KYCDetailsViewModel extends BaseViewModel {
   bool isPanTileOpen = false;
   bool isEmailTileOpen = false;
   CurrentStep _currentStep = CurrentStep.pan;
+  final ImagePicker _imagePicker = ImagePicker();
 
   set isEmailUpdating(value) {
     _isEmailUpdating = value;
@@ -100,11 +100,8 @@ class KYCDetailsViewModel extends BaseViewModel {
   Future<void> imageCapture(BuildContext context) async {
     Haptic.vibrate();
     try {
-      capturedImage = await ImagePicker().pickImage(source: ImageSource.camera);
+      capturedImage = await _imagePicker.pickImage(source: ImageSource.camera);
       verifyImage(context);
-      if (capturedImage != null) {
-        Log(capturedImage!.path);
-      }
     } catch (e) {
       final internalOpsService = locator<InternalOpsService>();
       final userService = locator<UserService>();
@@ -149,11 +146,8 @@ class KYCDetailsViewModel extends BaseViewModel {
 
   Future<void> selectImage(BuildContext context) async {
     Haptic.vibrate();
-    capturedImage = await ImagePicker().pickImage(source: ImageSource.gallery);
+    capturedImage = await _imagePicker.pickImage(source: ImageSource.gallery);
     verifyImage(context);
-    if (capturedImage != null) {
-      Log(capturedImage!.path);
-    }
   }
 
   UserKycDataModel? get userKycData => _userKycData;

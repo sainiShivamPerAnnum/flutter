@@ -189,13 +189,13 @@ class KycBriefTile extends StatelessWidget {
 }
 
 class CirclePainter extends CustomPainter {
-  final Color colour;
-  CirclePainter(this.colour);
+  final Color color;
+  CirclePainter(this.color);
 
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()
-      ..color = colour
+      ..color = color
       ..strokeWidth = 5
       ..style = PaintingStyle.stroke;
     canvas.drawOval(
@@ -205,7 +205,9 @@ class CirclePainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(CustomPainter oldDelegate) => false;
+  bool shouldRepaint(covariant CirclePainter oldDelegate) {
+    return color != oldDelegate.color;
+  }
 }
 
 class _Stepper extends StatelessWidget {
