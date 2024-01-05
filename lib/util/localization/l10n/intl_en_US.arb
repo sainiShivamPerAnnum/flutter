@@ -109,6 +109,7 @@
   "obAssetWelcomeText": "Welcome To Fello",
   "obAssetPrefDescText1": "Choose an asset to start investing",
   "obAssetPrefDescText2": "Read more about assets when you proceed",
+  "obAssetNoPrefButton": "I'm not sure",
   "obAssetPrefGreeting": "Hi {name}",
   "@obAssetPrefGreeting": {
     "placeholders": {

@@ -109,6 +109,7 @@
   "obAssetWelcomeText": "फेलो में आपका स्वागत है",
   "obAssetPrefDescText1": "निवेश शुरू करने के लिए एक संपत्ति चुनें",
   "obAssetPrefDescText2": "जब आप आगे बढ़ें तो संपत्तियों के बारे में और पढ़ें",
+  "obAssetNoPrefButton": "मैं ठीक से नहीं कह सकता।",
   "obAssetPrefGreeting": "नमस्ते {name}",
   "@obAssetPrefGreeting": {
     "placeholders": {

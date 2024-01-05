@@ -1062,6 +1062,16 @@ class S {
     );
   }
 
+  /// `I'm not sure`
+  String get obAssetNoPrefButton {
+    return Intl.message(
+      'I\'m not sure',
+      name: 'obAssetNoPrefButton',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Hi {name}`
   String obAssetPrefGreeting(String name) {
     return Intl.message(

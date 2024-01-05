@@ -1,5 +1,6 @@
 import 'package:felloapp/ui/pages/asset_prefs/asset_pref_vm.dart';
 import 'package:felloapp/util/assets.dart' as a;
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
@@ -234,6 +235,7 @@ class _NoPrefButtonState extends State<NoPrefButton> {
 
   @override
   Widget build(BuildContext context) {
+    S locale = S.of(context);
     return Expanded(
       child: Container(
           decoration: BoxDecoration(
@@ -246,7 +248,7 @@ class _NoPrefButtonState extends State<NoPrefButton> {
           padding: EdgeInsets.symmetric(vertical: SizeConfig.padding12),
           child: Center(
             child: Text(
-              "I'm not sure",
+              locale.obAssetNoPrefButton,
               style: TextStyles.rajdhaniSB.body1.colour(Colors.white),
             ),
           )),
