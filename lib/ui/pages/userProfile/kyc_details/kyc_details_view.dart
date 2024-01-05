@@ -211,6 +211,14 @@ class CirclePainter extends CustomPainter {
 class _Stepper extends StatelessWidget {
   const _Stepper({required this.currentStep});
   final CurrentStep currentStep;
+
+  Color _getColor(CurrentStep currentStep) {
+    return switch (currentStep) {
+      CurrentStep.email => UiConstants.kTabBorderColor,
+      CurrentStep.pan => UiConstants.kLastUpdatedTextColor
+    };
+  }
+
   @override
   Widget build(BuildContext context) {
     return Row(
@@ -224,21 +232,15 @@ class _Stepper extends StatelessWidget {
           margin: EdgeInsets.symmetric(
             horizontal: SizeConfig.padding4,
           ),
-          color: currentStep == CurrentStep.email
-              ? UiConstants.kTabBorderColor
-              : UiConstants.kLastUpdatedTextColor,
-          // switch (currentStep) {
-          //   2 => UiConstants.kTabBorderColor,
-          //   1 => UiConstants.kLastUpdatedTextColor
-          // },
+          color: _getColor(currentStep),
           height: SizeConfig.padding4,
           width: SizeConfig.padding252,
         ),
         CustomPaint(
           size: Size(SizeConfig.padding10, SizeConfig.padding10),
-          painter: CirclePainter(currentStep == CurrentStep.email
-              ? UiConstants.kTabBorderColor
-              : UiConstants.kLastUpdatedTextColor),
+          painter: CirclePainter(
+            _getColor(currentStep),
+          ),
         ),
       ],
     );
