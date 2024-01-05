@@ -38,6 +38,13 @@ class KycPanHelpView extends StatelessWidget {
                 color: UiConstants.kTextColor.withOpacity(0.2),
                 height: SizeConfig.padding10,
               ),
+              if (model.kycVerificationStatus == KycVerificationStatus.FAILED)
+                Text(
+                  model.kycErrorMessage ??
+                      'PAN image not verified. Attach valid PAN image',
+                  style: TextStyles.sourceSans.body4
+                      .colour(UiConstants.kBlogCardRandomColor1),
+                ),
               Container(
                 margin: EdgeInsets.only(top: SizeConfig.padding22),
                 padding: EdgeInsets.symmetric(vertical: SizeConfig.padding14),
