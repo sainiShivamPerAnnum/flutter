@@ -27,14 +27,16 @@ class AssetPrefView extends StatelessWidget {
   }
 
   void handleProceedButton(AssetPreferenceViewModel model) {
-    if (model.selectedAsset == null) return;
-    if (model.selectedAsset == AssetPrefOptions.NO_PREF) {
-      BaseUtil.openModalBottomSheet(
-          isBarrierDismissible: true,
-          content: SkipToHomeBottomSheet(model: model));
-      return;
-    } else {
-      model.handleRouting(model.selectedAsset);
+    switch (model.selectedAsset) {
+      case AssetPrefOptions.NO_PREF:
+        BaseUtil.openModalBottomSheet(
+            isBarrierDismissible: true,
+            content: SkipToHomeBottomSheet(model: model));
+        return;
+      case AssetPrefOptions.LENDBOX_P2P || AssetPrefOptions.AUGMONT_GOLD:
+        model.handleRouting(model.selectedAsset);
+      default:
+        return;
     }
   }
 
