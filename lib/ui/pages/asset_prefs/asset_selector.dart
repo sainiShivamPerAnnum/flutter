@@ -182,7 +182,7 @@ class LearnMoreSlider extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(SizeConfig.roundness8),
         color: (assetPrefOption == AssetPrefOptions.LENDBOX_P2P)
             ? UiConstants.teal5
             : UiConstants.goldSellCardColor,
@@ -239,7 +239,7 @@ class _NoPrefButtonState extends State<NoPrefButton> {
     return Expanded(
       child: Container(
           decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(10),
+            borderRadius: BorderRadius.circular(SizeConfig.roundness8),
             border: Border.all(
                 color: Colors.white.withOpacity(widget.controller.value),
                 width: 1.5),
@@ -267,7 +267,7 @@ class AssetCard extends StatelessWidget {
     return Container(
       margin: EdgeInsets.only(right: SizeConfig.padding4),
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(10),
+        borderRadius: BorderRadius.circular(SizeConfig.roundness8),
         border: Border.all(
             color: (assetPrefOption == AssetPrefOptions.LENDBOX_P2P)
                 ? UiConstants.teal2.withOpacity(opacity)
@@ -371,7 +371,8 @@ class DetailsRow extends StatelessWidget {
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(10), color: bgColor),
+          borderRadius: BorderRadius.circular(SizeConfig.roundness8),
+          color: bgColor),
       padding: EdgeInsets.only(
           top: SizeConfig.padding8,
           bottom: SizeConfig.padding8,
