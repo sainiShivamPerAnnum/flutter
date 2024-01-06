@@ -33,8 +33,6 @@ class AssetPreferenceViewModel extends BaseViewModel {
   void handleRouting(AssetPrefOptions? assetPrefOptions) {
     switch (assetPrefOptions) {
       case AssetPrefOptions.LENDBOX_P2P:
-        appStateProvider.currentAction = PageAction(
-            state: PageState.replaceAll, page: FelloBadgeHomeViewPageConfig);
         break;
       case AssetPrefOptions.AUGMONT_GOLD:
         break;
