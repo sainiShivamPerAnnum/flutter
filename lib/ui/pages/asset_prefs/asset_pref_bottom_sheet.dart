@@ -11,7 +11,7 @@ class SkipToHomeBottomSheet extends StatelessWidget {
   final AssetPreferenceViewModel model;
   @override
   Widget build(BuildContext context) {
-    S locale = S.of(context);
+    final S locale = S.of(context);
     return Padding(
       padding: EdgeInsets.only(
           top: SizeConfig.padding24,
@@ -53,7 +53,7 @@ class NoPrefBottomSheet extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    S locale = S.of(context);
+    final S locale = S.of(context);
     return Padding(
       padding: EdgeInsets.only(
           top: SizeConfig.padding24,
@@ -81,7 +81,7 @@ class NoPrefBottomSheet extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
-              GestureDetector(
+              InkWell(
                 onTap: () {
                   model.handleRouting(AssetPrefOptions.NO_PREF);
                 },

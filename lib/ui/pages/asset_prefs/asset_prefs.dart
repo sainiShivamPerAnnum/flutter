@@ -21,8 +21,6 @@ class AssetPrefView extends StatelessWidget {
         return "WITH FELLO P2P";
       case AssetPrefOptions.AUGMONT_GOLD:
         return "WITH DIGITAL GOLD";
-      case AssetPrefOptions.NO_PREF:
-        return "";
       default:
         return "";
     }
@@ -42,119 +40,110 @@ class AssetPrefView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BaseView<AssetPreferenceViewModel>(
-        onModelDispose: (model) {},
-        onModelReady: (model) {},
-        builder: (context, model, child) {
-          S locale = S.of(context);
-          return Scaffold(
-            body: Stack(
-              children: [
-                const NewSquareBackground(),
-                Padding(
-                  padding: EdgeInsets.only(
-                      top: SizeConfig.viewInsets.top,
-                      right: SizeConfig.padding16,
-                      left: SizeConfig.padding20),
-                  child: Column(
+    return BaseView<AssetPreferenceViewModel>(builder: (context, model, child) {
+      final S locale = S.of(context);
+      return Scaffold(
+        body: Stack(
+          children: [
+            const NewSquareBackground(),
+            Padding(
+              padding: EdgeInsets.only(
+                  top: SizeConfig.viewInsets.top,
+                  right: SizeConfig.padding16,
+                  left: SizeConfig.padding20),
+              child: Column(
+                children: [
+                  Row(
                     children: [
-                      Row(
-                        children: [
-                          const Spacer(),
-                          GestureDetector(
-                            onTap: () {
-                              BaseUtil.openModalBottomSheet(
-                                  isBarrierDismissible: true,
-                                  content: NoPrefBottomSheet(
-                                    model: model,
-                                  ));
-                            },
-                            child: Text(
-                              locale.obAssetPrefBottomSheet2ButtonText1,
-                              style: TextStyles.rajdhaniB.body2
-                                  .colour(Colors.white),
-                            ),
-                          ),
-                          SizedBox(
-                            width: SizeConfig.padding6,
-                          ),
-                          SvgPicture.asset(
-                            a.Assets.chevRonRightArrow,
-                            color: Colors.white,
-                          )
-                        ],
-                      ),
-                      SizedBox(
-                        height: SizeConfig.padding24,
-                      ),
-                      Text(locale.obAssetPrefGreeting(model.name ?? ""),
-                          style: TextStyles.rajdhaniSB.title5
-                              .colour(Colors.white)),
-                      Text(locale.obAssetWelcomeText,
+                      const Spacer(),
+                      InkWell(
+                        onTap: () {
+                          model.handleBottomSheet();
+                        },
+                        child: Text(
+                          locale.obAssetPrefBottomSheet2ButtonText1,
                           style:
-                              TextStyles.rajdhaniSB.body1.colour(Colors.white)),
-                      SizedBox(
-                        height: SizeConfig.padding30,
-                      ),
-                      Row(
-                        children: [
-                          Column(
-                            children: [
-                              Text(
-                                locale.obAssetPrefDescText1,
-                                style: TextStyles.rajdhaniSB.body1
-                                    .colour(Colors.white)
-                                    .setOpacity(0.8),
-                                textAlign: TextAlign.start,
-                              ),
-                              SizedBox(
-                                height: SizeConfig.padding4,
-                              ),
-                              Text(locale.obAssetPrefDescText2,
-                                  style: TextStyles.rajdhani.body2
-                                      .colour(UiConstants.grey1)
-                                      .setOpacity(0.8))
-                            ],
-                          ),
-                          const Spacer()
-                        ],
+                              TextStyles.rajdhaniB.body2.colour(Colors.white),
+                        ),
                       ),
                       SizedBox(
-                        height: SizeConfig.padding24,
+                        width: SizeConfig.padding6,
                       ),
-                      Column(
-                        children: [
-                          AssetSelector(
-                              assetPrefOptions: AssetPrefOptions.LENDBOX_P2P,
-                              model: model,
-                              onSelect: model.changeSelectedAsset),
-                          AssetSelector(
-                              assetPrefOptions: AssetPrefOptions.AUGMONT_GOLD,
-                              model: model,
-                              onSelect: model.changeSelectedAsset),
-                          AssetSelector(
-                            assetPrefOptions: AssetPrefOptions.NO_PREF,
-                            model: model,
-                            onSelect: model.changeSelectedAsset,
-                          ),
-                        ],
-                      ),
-                      Spacer(),
-                      Padding(
-                        padding: EdgeInsets.only(bottom: SizeConfig.padding20),
-                        child: SecondaryButton(
-                            onPressed: () {
-                              handleProceedButton(model);
-                            },
-                            label: locale.obAssetPrefMainButton(
-                                getButtonText(model.selectedAsset))),
+                      SvgPicture.asset(
+                        a.Assets.chevRonRightArrow,
+                        color: Colors.white,
                       )
                     ],
                   ),
-                )
-              ],
-            ),
-          );
-        });
+                  SizedBox(
+                    height: SizeConfig.padding24,
+                  ),
+                  Text(locale.obAssetPrefGreeting(model.name ?? ""),
+                      style: TextStyles.rajdhaniSB.title5.colour(Colors.white)),
+                  Text(locale.obAssetWelcomeText,
+                      style: TextStyles.rajdhaniSB.body1.colour(Colors.white)),
+                  SizedBox(
+                    height: SizeConfig.padding30,
+                  ),
+                  Row(
+                    children: [
+                      Column(
+                        children: [
+                          Text(
+                            locale.obAssetPrefDescText1,
+                            style: TextStyles.rajdhaniSB.body1
+                                .colour(Colors.white)
+                                .setOpacity(0.8),
+                            textAlign: TextAlign.start,
+                          ),
+                          SizedBox(
+                            height: SizeConfig.padding4,
+                          ),
+                          Text(locale.obAssetPrefDescText2,
+                              style: TextStyles.rajdhani.body2
+                                  .colour(UiConstants.grey1)
+                                  .setOpacity(0.8))
+                        ],
+                      ),
+                      const Spacer()
+                    ],
+                  ),
+                  SizedBox(
+                    height: SizeConfig.padding24,
+                  ),
+                  Column(
+                    children: [
+                      AssetSelector(
+                          assetPrefOptions: AssetPrefOptions.LENDBOX_P2P,
+                          model: model,
+                          onSelect: model.changeSelectedAsset),
+                      AssetSelector(
+                          assetPrefOptions: AssetPrefOptions.AUGMONT_GOLD,
+                          model: model,
+                          onSelect: model.changeSelectedAsset),
+                      AssetSelector(
+                        assetPrefOptions: AssetPrefOptions.NO_PREF,
+                        model: model,
+                        onSelect: model.changeSelectedAsset,
+                      ),
+                    ],
+                  ),
+                  Spacer(),
+                  Padding(
+                    padding: EdgeInsets.only(bottom: SizeConfig.padding20),
+                    child: SecondaryButton(
+                        onPressed: () {
+                          handleProceedButton(model);
+                        },
+                        label: locale.obAssetPrefMainButton(
+                            getButtonText(model.selectedAsset))),
+                  )
+                ],
+              ),
+            )
+          ],
+        ),
+      );
+    });
   }
 }
