@@ -8,6 +8,147 @@ const _deserializable = JsonSerializable(
   createToJson: false,
 );
 
+@_deserializable
+class PageData {
+  final Styles styles;
+  final ScreenData screens;
+
+  const PageData({
+    required this.styles,
+    required this.screens,
+  });
+
+  factory PageData.fromJson(Map<String, dynamic> json) =>
+      _$PageDataFromJson(json);
+}
+
+@_deserializable
+class ScreenData {
+  final HomePageScreenData home;
+  final AssetPreferenceData assetPreference;
+
+  const ScreenData({
+    required this.home,
+    required this.assetPreference,
+  });
+
+  factory ScreenData.fromJson(Map<String, dynamic> json) =>
+      _$ScreenDataFromJson(json);
+}
+
+@_deserializable
+class AssetPreferenceData {
+  final String title;
+  final String subtitle;
+  final List<AssetPrefOption> options;
+  final BottomSheetData notSure;
+  final BottomSheetData skipToHome;
+
+  const AssetPreferenceData({
+    required this.notSure,
+    required this.skipToHome,
+    this.title = '',
+    this.subtitle = '',
+    this.options = const [],
+  });
+
+  factory AssetPreferenceData.fromJson(Map<String, dynamic> json) =>
+      _$AssetPreferenceDataFromJson(json);
+}
+
+enum AssetPrefType {
+  P2P,
+  GOLD,
+  NONE;
+}
+
+@_deserializable
+class AssetPrefOption {
+  final AssetPrefType assetType;
+  final String icon;
+  final String title;
+  final String description;
+  final List<AssetOptionInfo> info;
+
+  const AssetPrefOption({
+    this.assetType = AssetPrefType.GOLD,
+    this.icon = '',
+    this.title = '',
+    this.description = '',
+    this.info = const [],
+  });
+
+  factory AssetPrefOption.fromJson(Map<String, dynamic> json) =>
+      _$AssetPrefOptionFromJson(json);
+}
+
+@_deserializable
+class AssetOptionInfo {
+  final String title;
+  final String subtitle;
+
+  const AssetOptionInfo({
+    this.title = '',
+    this.subtitle = '',
+  });
+
+  factory AssetOptionInfo.fromJson(Map<String, dynamic> json) =>
+      _$AssetOptionInfoFromJson(json);
+}
+
+@_deserializable
+class BottomSheetData {
+  final String title;
+  final String subtitle;
+  final String image;
+  final List<Cta> cta;
+
+  const BottomSheetData({
+    this.title = '',
+    this.subtitle = '',
+    this.image = '',
+    this.cta = const [],
+  });
+
+  factory BottomSheetData.fromJson(Map<String, dynamic> json) =>
+      _$BottomSheetDataFromJson(json);
+}
+
+enum CTAType {
+  secondary,
+  secondaryOutline;
+}
+
+@_deserializable
+class Cta {
+  final String label;
+  final CTAType type;
+  final Action? action;
+
+  const Cta({
+    this.label = '',
+    this.type = CTAType.secondary,
+    this.action,
+  });
+
+  factory Cta.fromJson(Map<String, dynamic> json) => _$CtaFromJson(json);
+}
+
+@_deserializable
+class HomePageScreenData {
+  @SectionsConverter()
+  final Map<String, HomePageSection> sections;
+  final List<String> sectionOrder;
+
+  const HomePageScreenData({
+    this.sections = const {},
+    this.sectionOrder = const [],
+  });
+
+  factory HomePageScreenData.fromJson(Map<String, dynamic> json) =>
+      _$HomePageScreenDataFromJson(json);
+}
+
 @Freezed(unionKey: 'type', toJson: false)
 sealed class HomePageSection with _$HomePageSection {
   @FreezedUnionValue('stories')
@@ -16,12 +157,12 @@ sealed class HomePageSection with _$HomePageSection {
   @FreezedUnionValue('steps')
   const factory HomePageSection.steps(StepsData data) = StepsSection;
 
+  @FreezedUnionValue('infoCards')
+  const factory HomePageSection.quickActions(QuickActionsCardsData data) =
+      QuickActions;
+
   @FreezedUnionValue('image')
   const factory HomePageSection.image(ImageSectionData data) = ImageSection;
-
-  @FreezedUnionValue('quickActionCards')
-  const factory HomePageSection.quickActions(ImageSectionData data) =
-      QuickActions;
 
   factory HomePageSection.fromJson(Map<String, dynamic> json) =>
       _$HomePageSectionFromJson(json);
@@ -29,9 +170,11 @@ sealed class HomePageSection with _$HomePageSection {
 
 @_deserializable
 class QuickActionsCardsData {
+  final String title;
   final List<QuickActionCard> cards;
 
   const QuickActionsCardsData({
+    required this.title,
     this.cards = const [],
   });
 
@@ -41,18 +184,18 @@ class QuickActionsCardsData {
 
 @_deserializable
 class QuickActionCard {
-  final int order;
   final String icon;
   final String title;
   final String subtitle;
+  final Action? action;
   final String style;
 
   const QuickActionCard({
     required this.style,
-    this.order = 0,
     this.icon = '',
     this.title = '',
     this.subtitle = '',
+    this.action,
   });
 
   factory QuickActionCard.fromJson(Map<String, dynamic> json) =>
@@ -74,10 +217,10 @@ class QuickActionCardStyle {
 @_deserializable
 class ImageSectionData {
   final String url;
-  final Action action;
+  final Action? action;
 
   const ImageSectionData({
-    required this.action,
+    this.action,
     this.url = '',
   });
 
@@ -99,19 +242,19 @@ class StoriesData {
 
 @_deserializable
 class Story {
-  final int order;
   final String title;
   final String subtitle;
   final String thumbnail;
-  final String hash;
+  final String blurHash;
   final String story;
+  final List<Cta> cta;
 
   const Story({
-    this.order = 0,
+    this.cta = const [],
     this.title = '',
     this.subtitle = '',
     this.thumbnail = '',
-    this.hash = '',
+    this.blurHash = '',
     this.story = '',
   });
 
@@ -122,13 +265,10 @@ class Story {
 class StepsData {
   final String title;
   final List<Step> steps;
-  @StylesConverter()
-  final Map<String, StepStyle> styles;
 
   const StepsData({
     this.title = '',
     this.steps = const [],
-    this.styles = const {},
   });
 
   factory StepsData.fromJson(Map<String, dynamic> json) =>
@@ -137,18 +277,16 @@ class StepsData {
 
 @_deserializable
 class Step {
-  final int order;
   final String icon;
   final String title;
   final String description;
   final String ctaLabel;
-  final Action action;
   final String style;
+  final Cta cta;
 
   const Step({
-    required this.action,
     required this.style,
-    this.order = 0,
+    required this.cta,
     this.icon = '',
     this.title = '',
     this.description = '',
@@ -158,9 +296,73 @@ class Step {
   factory Step.fromJson(Map<String, dynamic> json) => _$StepFromJson(json);
 }
 
-class StylesConverter<T>
+@_deserializable
+class Styles {
+  @StepStyleConverter()
+  final Map<String, StepStyle> steps;
+  final Map<String, InfoCardStyle> infoCards;
+
+  const Styles({
+    this.steps = const {},
+    this.infoCards = const {},
+  });
+
+  factory Styles.fromJson(Map<String, dynamic> json) => _$StylesFromJson(json);
+}
+
+@JsonSerializable()
+class StepStyle {
+  final String backgroundColor;
+  final String ctaColor;
+  final String ctaBgColor;
+
+  const StepStyle(
+    this.backgroundColor,
+    this.ctaBgColor,
+    this.ctaColor,
+  );
+
+  factory StepStyle.fromJson(Map<String, dynamic> json) =>
+      _$StepStyleFromJson(json);
+
+  Map<String, dynamic> toJson() => _$StepStyleToJson(this);
+}
+
+@JsonSerializable()
+class InfoCardStyle {
+  final String bgColor;
+
+  const InfoCardStyle({
+    this.bgColor = '',
+  });
+
+  factory InfoCardStyle.fromJson(Map<String, dynamic> json) =>
+      _$InfoCardStyleFromJson(json);
+
+  Map<String, dynamic> toJson() => _$InfoCardStyleToJson(this);
+}
+
+class InfoCardStyleConverter
+    extends JsonConverter<Map<String, InfoCardStyle>, Map<String, dynamic>> {
+  const InfoCardStyleConverter();
+  @override
+  Map<String, InfoCardStyle> fromJson(Map<String, dynamic> json) {
+    return json.map<String, InfoCardStyle>(
+      (key, value) => MapEntry(key, InfoCardStyle.fromJson(value)),
+    );
+  }
+
+  @override
+  Map<String, dynamic> toJson(Map<String, InfoCardStyle> object) {
+    return object.map<String, dynamic>(
+      (key, value) => MapEntry(key, value.toJson()),
+    );
+  }
+}
+
+class StepStyleConverter
     extends JsonConverter<Map<String, StepStyle>, Map<String, dynamic>> {
-  const StylesConverter();
+  const StepStyleConverter();
   @override
   Map<String, StepStyle> fromJson(Map<String, dynamic> json) {
     return json.map<String, StepStyle>(
@@ -176,20 +378,18 @@ class StylesConverter<T>
   }
 }
 
-@JsonSerializable()
-class StepStyle {
-  final String backgroundColor;
-  final String ctaLabelColor;
-  final String ctaColor;
+class SectionsConverter
+    extends JsonConverter<Map<String, HomePageSection>, Map<String, dynamic>> {
+  const SectionsConverter();
+  @override
+  Map<String, HomePageSection> fromJson(Map<String, dynamic> json) {
+    return json.map<String, HomePageSection>(
+      (key, value) => MapEntry(key, HomePageSection.fromJson(value)),
+    );
+  }
 
-  const StepStyle(
-    this.backgroundColor,
-    this.ctaLabelColor,
-    this.ctaColor,
-  );
-
-  factory StepStyle.fromJson(Map<String, dynamic> json) =>
-      _$StepStyleFromJson(json);
-
-  Map<String, dynamic> toJson() => _$StepStyleToJson(this);
+  @override
+  Map<String, dynamic> toJson(Map<String, HomePageSection> object) {
+    throw UnimplementedError();
+  }
 }

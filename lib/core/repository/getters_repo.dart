@@ -71,8 +71,7 @@ class GetterRepository extends BaseRepo {
       return ApiResponse(model: statisticsResponse["data"], code: 200);
     } catch (e) {
       logger.e(e.toString());
-      return ApiResponse.withError(
-          e.toString() ?? "Unable to fetch statistics", 400);
+      return ApiResponse.withError(e.toString(), 400);
     }
   }
 
@@ -99,8 +98,7 @@ class GetterRepository extends BaseRepo {
       );
     } catch (e) {
       logger.e(e.toString());
-      return ApiResponse.withError(
-          e.toString() ?? "Unable to fetch statistics", 400);
+      return ApiResponse.withError(e.toString(), 400);
     }
   }
 
@@ -287,8 +285,7 @@ class GetterRepository extends BaseRepo {
       );
     } catch (e) {
       logger.e(e.toString());
-      return ApiResponse.withError(
-          e.toString() ?? "Unable to fetch statistics", 400);
+      return ApiResponse.withError(e.toString(), 400);
     }
   }
 

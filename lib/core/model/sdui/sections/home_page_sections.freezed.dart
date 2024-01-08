@@ -20,10 +20,10 @@ HomePageSection _$HomePageSectionFromJson(Map<String, dynamic> json) {
       return StoriesSection.fromJson(json);
     case 'steps':
       return StepsSection.fromJson(json);
+    case 'infoCards':
+      return QuickActions.fromJson(json);
     case 'image':
       return ImageSection.fromJson(json);
-    case 'quickActionCards':
-      return QuickActions.fromJson(json);
 
     default:
       throw CheckedFromJsonException(json, 'type', 'HomePageSection',
@@ -34,14 +34,6 @@ HomePageSection _$HomePageSectionFromJson(Map<String, dynamic> json) {
 /// @nodoc
 mixin _$HomePageSection {
   Object get data => throw _privateConstructorUsedError;
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function(StoriesData data) stories,
-    required TResult Function(StepsData data) steps,
-    required TResult Function(ImageSectionData data) image,
-    required TResult Function(ImageSectionData data) quickActions,
-  }) =>
-      throw _privateConstructorUsedError;
 }
 
 /// @nodoc
@@ -75,17 +67,6 @@ class _$StoriesSectionImpl implements StoriesSection {
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, data);
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function(StoriesData data) stories,
-    required TResult Function(StepsData data) steps,
-    required TResult Function(ImageSectionData data) image,
-    required TResult Function(ImageSectionData data) quickActions,
-  }) {
-    return stories(data);
-  }
 }
 
 abstract class StoriesSection implements HomePageSection {
@@ -129,17 +110,6 @@ class _$StepsSectionImpl implements StepsSection {
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, data);
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function(StoriesData data) stories,
-    required TResult Function(StepsData data) steps,
-    required TResult Function(ImageSectionData data) image,
-    required TResult Function(ImageSectionData data) quickActions,
-  }) {
-    return steps(data);
-  }
 }
 
 abstract class StepsSection implements HomePageSection {
@@ -150,6 +120,50 @@ abstract class StepsSection implements HomePageSection {
 
   @override
   StepsData get data;
+}
+
+/// @nodoc
+@JsonSerializable(createToJson: false)
+class _$QuickActionsImpl implements QuickActions {
+  const _$QuickActionsImpl(this.data, {final String? $type})
+      : $type = $type ?? 'infoCards';
+
+  factory _$QuickActionsImpl.fromJson(Map<String, dynamic> json) =>
+      _$$QuickActionsImplFromJson(json);
+
+  @override
+  final QuickActionsCardsData data;
+
+  @JsonKey(name: 'type')
+  final String $type;
+
+  @override
+  String toString() {
+    return 'HomePageSection.quickActions(data: $data)';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType &&
+            other is _$QuickActionsImpl &&
+            (identical(other.data, data) || other.data == data));
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => Object.hash(runtimeType, data);
+}
+
+abstract class QuickActions implements HomePageSection {
+  const factory QuickActions(final QuickActionsCardsData data) =
+      _$QuickActionsImpl;
+
+  factory QuickActions.fromJson(Map<String, dynamic> json) =
+      _$QuickActionsImpl.fromJson;
+
+  @override
+  QuickActionsCardsData get data;
 }
 
 /// @nodoc
@@ -183,17 +197,6 @@ class _$ImageSectionImpl implements ImageSection {
   @JsonKey(ignore: true)
   @override
   int get hashCode => Object.hash(runtimeType, data);
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function(StoriesData data) stories,
-    required TResult Function(StepsData data) steps,
-    required TResult Function(ImageSectionData data) image,
-    required TResult Function(ImageSectionData data) quickActions,
-  }) {
-    return image(data);
-  }
 }
 
 abstract class ImageSection implements HomePageSection {
@@ -201,60 +204,6 @@ abstract class ImageSection implements HomePageSection {
 
   factory ImageSection.fromJson(Map<String, dynamic> json) =
       _$ImageSectionImpl.fromJson;
-
-  @override
-  ImageSectionData get data;
-}
-
-/// @nodoc
-@JsonSerializable(createToJson: false)
-class _$QuickActionsImpl implements QuickActions {
-  const _$QuickActionsImpl(this.data, {final String? $type})
-      : $type = $type ?? 'quickActionCards';
-
-  factory _$QuickActionsImpl.fromJson(Map<String, dynamic> json) =>
-      _$$QuickActionsImplFromJson(json);
-
-  @override
-  final ImageSectionData data;
-
-  @JsonKey(name: 'type')
-  final String $type;
-
-  @override
-  String toString() {
-    return 'HomePageSection.quickActions(data: $data)';
-  }
-
-  @override
-  bool operator ==(Object other) {
-    return identical(this, other) ||
-        (other.runtimeType == runtimeType &&
-            other is _$QuickActionsImpl &&
-            (identical(other.data, data) || other.data == data));
-  }
-
-  @JsonKey(ignore: true)
-  @override
-  int get hashCode => Object.hash(runtimeType, data);
-
-  @override
-  @optionalTypeArgs
-  TResult when<TResult extends Object?>({
-    required TResult Function(StoriesData data) stories,
-    required TResult Function(StepsData data) steps,
-    required TResult Function(ImageSectionData data) image,
-    required TResult Function(ImageSectionData data) quickActions,
-  }) {
-    return quickActions(data);
-  }
-}
-
-abstract class QuickActions implements HomePageSection {
-  const factory QuickActions(final ImageSectionData data) = _$QuickActionsImpl;
-
-  factory QuickActions.fromJson(Map<String, dynamic> json) =
-      _$QuickActionsImpl.fromJson;
 
   @override
   ImageSectionData get data;
