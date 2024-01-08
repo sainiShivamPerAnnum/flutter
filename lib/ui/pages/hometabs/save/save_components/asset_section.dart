@@ -21,7 +21,7 @@ class SaveAssetsGroupCard extends StatelessWidget {
   const SaveAssetsGroupCard({required this.saveViewModel, Key? key})
       : super(key: key);
 
-  Column getAssetsOrder() {
+  Widget getAssetsOrder() {
     S locale = locator<S>();
     List<Widget> orderedAssets = [];
     for (final key in DynamicUiUtils.saveViewOrder[0]) {

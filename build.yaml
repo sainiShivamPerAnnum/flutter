@@ -10,3 +10,14 @@ targets:
         enabled: true
         generate_for:
           - "lib/core/model/**.dart"
+      freezed: 
+        enabled: true
+        generate_for:
+          - "lib/core/model/sdui/**.dart"
+        options: 
+          copy_with: false
+          map: false
+          when:
+            when: true
+            maybe_when: false
+            when_or_null: false

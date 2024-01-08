@@ -291,7 +291,7 @@ class StoriesSection extends StatelessWidget {
                   right: i == 9 ? SizeConfig.padding20 : 0,
                 ),
                 child: StoryCardView(
-                  shouldHighlight: i == 2,
+                  shouldHighlight: i == 0,
                 ),
               ),
           ],
@@ -369,7 +369,7 @@ class _StoryCardViewState extends State<StoryCardView>
     return Column(
       children: [
         CustomPaint(
-          painter: RadiusPainter(
+          painter: _StoryFocusPainter(
             radius: radius,
             animation: _tween,
             borderColor:
@@ -409,12 +409,12 @@ class _StoryCardViewState extends State<StoryCardView>
   }
 }
 
-class RadiusPainter extends CustomPainter {
+class _StoryFocusPainter extends CustomPainter {
   final Color borderColor;
   final Radius radius;
   final Animation<double> animation;
 
-  const RadiusPainter({
+  const _StoryFocusPainter({
     required this.radius,
     required this.animation,
     this.borderColor = Colors.white,
@@ -450,7 +450,7 @@ class RadiusPainter extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(covariant RadiusPainter oldDelegate) =>
+  bool shouldRepaint(covariant _StoryFocusPainter oldDelegate) =>
       oldDelegate.borderColor != borderColor ||
       oldDelegate.radius != radius ||
       oldDelegate.animation != animation;
