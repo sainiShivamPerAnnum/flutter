@@ -23,9 +23,6 @@ class KycEmailHelpView extends StatelessWidget {
           child: Column(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              SizedBox(
-                height: SizeConfig.padding16,
-              ),
               Text(
                 model.isEmailVerified
                     ? locale.KyclinkedAccount
@@ -83,7 +80,7 @@ class KycEmailHelpView extends StatelessWidget {
                 ),
               ] else ...[
                 Container(
-                  margin: EdgeInsets.only(top: SizeConfig.padding22),
+                  margin: EdgeInsets.only(top: SizeConfig.padding16),
                   padding: EdgeInsets.symmetric(vertical: SizeConfig.padding14),
                   decoration: BoxDecoration(
                     color: UiConstants.kInfoBackgroundColor,
@@ -168,7 +165,7 @@ class EmailVerificationTile extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(height: SizeConfig.padding12),
+        SizedBox(height: SizeConfig.padding16),
         GestureDetector(
           onTap: model.veryGmail,
           child: KycBriefTile(

@@ -79,7 +79,7 @@ class KYCDetailsView extends StatelessWidget {
                       currentStep: model.currentStep,
                     ),
                     SizedBox(
-                      height: SizeConfig.padding10,
+                      height: SizeConfig.padding6,
                     ),
                     Row(
                       mainAxisAlignment: MainAxisAlignment.spaceBetween,

@@ -865,7 +865,7 @@ class Testomonials extends StatelessWidget {
       child: ListView.builder(
         itemCount: testimonials.length,
         scrollDirection: Axis.horizontal,
-        itemBuilder: (BuildContext context, int index) {
+        itemBuilder: (context, index) {
           String name = shuffledKeys[index];
           String? testimonial = testimonials[name]![0];
           String image = testimonials[name]![1];

@@ -32,7 +32,7 @@ class KycPanHelpView extends StatelessWidget {
                     .colour(UiConstants.kTextFieldTextColor.withOpacity(0.8)),
               ),
               SizedBox(
-                height: SizeConfig.padding18,
+                height: SizeConfig.padding16,
               ),
               Divider(
                 color: UiConstants.kTextColor.withOpacity(0.2),
@@ -46,7 +46,7 @@ class KycPanHelpView extends StatelessWidget {
                       .colour(UiConstants.kBlogCardRandomColor1),
                 ),
               Container(
-                margin: EdgeInsets.only(top: SizeConfig.padding22),
+                margin: EdgeInsets.only(top: SizeConfig.padding20),
                 padding: EdgeInsets.symmetric(vertical: SizeConfig.padding14),
                 decoration: BoxDecoration(
                   color: UiConstants.kInfoBackgroundColor,
@@ -171,9 +171,6 @@ class PanUploaded extends StatelessWidget {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
-        SizedBox(
-          height: SizeConfig.padding16,
-        ),
         Text(
           locale.panUploaded,
           style: TextStyles.sourceSansSB.body1
@@ -204,7 +201,7 @@ class PanUploaded extends StatelessWidget {
               ),
               Expanded(
                 child: Text(
-                  "PAN3948.png",
+                  "PAN1234.png",
                   style: TextStyles.sourceSansSB.body2
                       .colour(UiConstants.kTextFieldTextColor),
                 ),
