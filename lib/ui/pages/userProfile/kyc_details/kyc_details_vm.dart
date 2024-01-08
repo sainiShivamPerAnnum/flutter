@@ -209,10 +209,8 @@ class KYCDetailsViewModel extends BaseViewModel {
     });
   }
 
-  @override
-  void dispose() {
+  void disposeImagePicker() {
     _imagePicker = null;
-    super.dispose();
   }
 
   void panUploadProceed() {

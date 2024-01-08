@@ -38,7 +38,7 @@ class KYCDetailsView extends StatelessWidget {
       onModelReady: (model) {
         model.init();
       },
-      onModelDispose: (model) => model.dispose(),
+      onModelDispose: (model) => model.disposeImagePicker(),
       builder: (ctx, model, child) => Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
