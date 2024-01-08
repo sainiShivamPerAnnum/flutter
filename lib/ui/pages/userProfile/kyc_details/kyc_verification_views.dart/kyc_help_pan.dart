@@ -103,7 +103,7 @@ class KycPanHelpView extends StatelessWidget {
               minWidth: SizeConfig.screenWidth! -
                   SizeConfig.pageHorizontalMargins * 2,
               color: UiConstants.kTextColor,
-              onPressed: () => model.panUploadProceed(model),
+              onPressed: model.panUploadProceed,
               child: Text(
                 model.kycVerificationStatus == KycVerificationStatus.VERIFIED
                     ? locale.proceed

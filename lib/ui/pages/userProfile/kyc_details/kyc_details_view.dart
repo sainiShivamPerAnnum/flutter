@@ -38,6 +38,7 @@ class KYCDetailsView extends StatelessWidget {
       onModelReady: (model) {
         model.init();
       },
+      onModelDispose: (model) => model.dispose(),
       builder: (ctx, model, child) => Scaffold(
         resizeToAvoidBottomInset: false,
         appBar: AppBar(
@@ -198,8 +199,12 @@ class CirclePainter extends CustomPainter {
       ..color = color
       ..strokeWidth = 5
       ..style = PaintingStyle.stroke;
-    canvas.drawOval(
-      Rect.fromLTWH(0, 0, size.width, size.height),
+
+    final rect = Offset.zero & size;
+
+    canvas.drawCircle(
+      rect.center,
+      6,
       paint,
     );
   }
@@ -232,7 +237,7 @@ class _Stepper extends StatelessWidget {
         ),
         Container(
           margin: EdgeInsets.symmetric(
-            horizontal: SizeConfig.padding4,
+            horizontal: SizeConfig.padding6,
           ),
           color: _getColor(currentStep),
           height: SizeConfig.padding4,

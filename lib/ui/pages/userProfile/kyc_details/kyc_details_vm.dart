@@ -46,7 +46,7 @@ class KYCDetailsViewModel extends BaseViewModel {
   bool isPanTileOpen = false;
   bool isEmailTileOpen = false;
   CurrentStep _currentStep = CurrentStep.pan;
-  final ImagePicker _imagePicker = ImagePicker();
+  ImagePicker? _imagePicker = ImagePicker();
 
   set isEmailUpdating(value) {
     _isEmailUpdating = value;
@@ -100,7 +100,7 @@ class KYCDetailsViewModel extends BaseViewModel {
   Future<void> imageCapture(BuildContext context) async {
     Haptic.vibrate();
     try {
-      capturedImage = await _imagePicker.pickImage(source: ImageSource.camera);
+      capturedImage = await _imagePicker?.pickImage(source: ImageSource.camera);
       verifyImage(context);
     } catch (e) {
       final internalOpsService = locator<InternalOpsService>();
@@ -146,7 +146,7 @@ class KYCDetailsViewModel extends BaseViewModel {
 
   Future<void> selectImage(BuildContext context) async {
     Haptic.vibrate();
-    capturedImage = await _imagePicker.pickImage(source: ImageSource.gallery);
+    capturedImage = await _imagePicker?.pickImage(source: ImageSource.gallery);
     verifyImage(context);
   }
 
@@ -209,15 +209,24 @@ class KYCDetailsViewModel extends BaseViewModel {
     });
   }
 
-  void panUploadProceed(KYCDetailsViewModel model) {
-    kycVerificationStatus == KycVerificationStatus.VERIFIED
-        ? setCurrentStep = CurrentStep.email
-        : BaseUtil.openModalBottomSheet(
-            isBarrierDismissible: true,
-            addToScreenStack: true,
-            content: UploadPanModal(
-              model: model,
-            ));
+  @override
+  void dispose() {
+    _imagePicker = null;
+    super.dispose();
+  }
+
+  void panUploadProceed() {
+    if (kycVerificationStatus == KycVerificationStatus.VERIFIED) {
+      setCurrentStep = CurrentStep.email;
+    } else {
+      BaseUtil.openModalBottomSheet(
+        isBarrierDismissible: true,
+        addToScreenStack: true,
+        content: UploadPanModal(
+          model: this,
+        ),
+      );
+    }
   }
 
   void verifyImage(BuildContext context) {
