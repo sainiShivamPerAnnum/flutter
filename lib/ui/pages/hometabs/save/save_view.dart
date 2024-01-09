@@ -16,7 +16,7 @@ import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:provider/provider.dart';
 
 import '../../../../util/styles/styles.dart';
-import 'new_user_save_view.dart';
+import 'new_user_save_view/new_user_save_view.dart';
 
 const HtmlEscape htmlEscape = HtmlEscape();
 
