@@ -111,7 +111,9 @@ class SaveViewWrapper extends StatelessWidget {
                   ),
                 ],
               )
-            : const NewUserSaveView();
+            : NewUserSaveView(
+                data: locator(),
+              );
       },
     );
   }

@@ -164,6 +164,10 @@ sealed class HomePageSection with _$HomePageSection {
   @FreezedUnionValue('image')
   const factory HomePageSection.image(ImageSectionData data) = ImageSection;
 
+  /// TODO(@DK070202): Placeholder thing here.
+  @FreezedUnionValue('nudgeCard')
+  const factory HomePageSection.nudge() = NudgeSection;
+
   factory HomePageSection.fromJson(Map<String, dynamic> json) =>
       _$HomePageSectionFromJson(json);
 }
@@ -200,18 +204,6 @@ class QuickActionCard {
 
   factory QuickActionCard.fromJson(Map<String, dynamic> json) =>
       _$QuickActionCardFromJson(json);
-}
-
-@_deserializable
-class QuickActionCardStyle {
-  final String bgColor;
-
-  const QuickActionCardStyle(
-    this.bgColor,
-  );
-
-  factory QuickActionCardStyle.fromJson(Map<String, dynamic> json) =>
-      _$QuickActionCardStyleFromJson(json);
 }
 
 @_deserializable
@@ -312,12 +304,12 @@ class Styles {
 
 @JsonSerializable()
 class StepStyle {
-  final String backgroundColor;
+  final String shadowColor;
   final String ctaColor;
   final String ctaBgColor;
 
   const StepStyle(
-    this.backgroundColor,
+    this.shadowColor,
     this.ctaBgColor,
     this.ctaColor,
   );

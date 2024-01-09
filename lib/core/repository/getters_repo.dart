@@ -15,6 +15,7 @@ import 'package:felloapp/core/model/home_screen_carousel_items.dart';
 import 'package:felloapp/core/model/page_config_model.dart';
 import 'package:felloapp/core/model/promo_cards_model.dart';
 import 'package:felloapp/core/model/quick_save_model.dart';
+import 'package:felloapp/core/model/sdui/sections/home_page_sections.dart';
 import 'package:felloapp/core/model/story_model.dart';
 import 'package:felloapp/core/model/sub_combos_model.dart';
 import 'package:felloapp/core/model/tambola_offers_model.dart';
@@ -153,6 +154,25 @@ class GetterRepository extends BaseRepo {
         "message": "Default Values",
         "data": BaseRemoteConfig.DEFAULTS,
       });
+    }
+  }
+
+  Future<ApiResponse<PageData>> getPageData() async {
+    final response = await APIService.instance.getData(
+      '',
+      apiName: '$_getters/getPageData',
+      cBaseUrl: 'https://mocki.io/v1/3f8eefa5-6d89-4eeb-9b4e-d734ee85343b',
+    );
+    try {
+      return ApiResponse(
+        code: 200,
+        model: PageData.fromJson(response),
+      );
+    } catch (e) {
+      return ApiResponse.withError(
+        e.toString(),
+        404,
+      );
     }
   }
 

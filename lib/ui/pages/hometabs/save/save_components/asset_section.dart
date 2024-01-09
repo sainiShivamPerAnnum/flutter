@@ -159,15 +159,16 @@ class MiniAssetsGroupSection extends StatelessWidget {
 }
 
 class MiniAssetCard extends StatelessWidget {
-  final String asset, title, subtitle, actionUri;
+  final String asset, title, subtitle;
+  final String actionUri;
   final Color color;
 
   const MiniAssetCard({
     required this.asset,
     required this.title,
     required this.subtitle,
-    required this.actionUri,
     required this.color,
+    required this.actionUri,
     super.key,
   });
 

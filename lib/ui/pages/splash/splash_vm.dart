@@ -4,7 +4,6 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/repository/games_repo.dart';
 import 'package:felloapp/core/repository/getters_repo.dart';
-import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
@@ -21,15 +20,12 @@ import 'package:felloapp/util/preference_helper.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 
-import '../../../core/repository/user_repo.dart';
-
 class LauncherViewModel extends BaseViewModel {
   bool _isSlowConnection = false;
   Timer? _timer3;
   Stopwatch? _logoWatch;
-  bool _isPerformanceCollectionEnabled = false, _isFetchingData = true;
-  final String _performanceCollectionMessage =
-      'Unknown status of performance collection.';
+  bool _isFetchingData = true;
+
   final navigator = AppState.delegate!.appState;
 
   AnimationController? loopOutlottieAnimationController,
@@ -42,12 +38,10 @@ class LauncherViewModel extends BaseViewModel {
   final UserService userService = locator<UserService>();
   final CustomLogger _logger = locator<CustomLogger>();
   final AnalyticsService _analyticsService = locator<AnalyticsService>();
-  final UserRepository _userRepo = locator<UserRepository>();
+
   final InternalOpsService _internalOpsService = locator<InternalOpsService>();
   final ReferralService _referralService = locator<ReferralService>();
   final GetterRepository _getterRepo = locator<GetterRepository>();
-  final AnalyticsProperties _analyticsProperties =
-      locator<AnalyticsProperties>();
 
   //GETTERS
   bool get isSlowConnection => _isSlowConnection;
@@ -106,6 +100,12 @@ class LauncherViewModel extends BaseViewModel {
       await CacheService.initialize();
       //Initialize every time
       await _getterRepo.setUpAppConfigs();
+      final response = await _getterRepo.getPageData();
+      final pageData = response.model;
+      if (pageData != null) {
+        locator.registerSingleton(pageData);
+      }
+
       await userService.init();
       //Initialize only if user is onboarded
       if (userService.isUserOnboarded) {
@@ -131,16 +131,6 @@ class LauncherViewModel extends BaseViewModel {
 
     _timer3?.cancel();
     _isFetchingData = false;
-
-    // if (isStillLooping && !isPreExecuted) {
-    //   int delayedSecond =
-    //       _logoWatch.elapsed.inMilliseconds % loopLottieDuration;
-    //   delayedSecond = loopLottieDuration - delayedSecond;
-    //   await Future.delayed(Duration(milliseconds: delayedSecond));
-    //   unawaited(loopOutlottieAnimationController!.forward());
-    //   await Future.delayed(const Duration(milliseconds: 900));
-    //   exitSplash();
-    // }
   }
 
   void exitSplash() {

@@ -115,12 +115,6 @@ QuickActionCard _$QuickActionCardFromJson(Map<String, dynamic> json) =>
           : Action.fromJson(json['action'] as Map<String, dynamic>),
     );
 
-QuickActionCardStyle _$QuickActionCardStyleFromJson(
-        Map<String, dynamic> json) =>
-    QuickActionCardStyle(
-      json['bgColor'] as String,
-    );
-
 ImageSectionData _$ImageSectionDataFromJson(Map<String, dynamic> json) =>
     ImageSectionData(
       action: json['action'] == null
@@ -178,13 +172,13 @@ Styles _$StylesFromJson(Map<String, dynamic> json) => Styles(
     );
 
 StepStyle _$StepStyleFromJson(Map<String, dynamic> json) => StepStyle(
-      json['backgroundColor'] as String,
+      json['shadowColor'] as String,
       json['ctaBgColor'] as String,
       json['ctaColor'] as String,
     );
 
 Map<String, dynamic> _$StepStyleToJson(StepStyle instance) => <String, dynamic>{
-      'backgroundColor': instance.backgroundColor,
+      'shadowColor': instance.shadowColor,
       'ctaColor': instance.ctaColor,
       'ctaBgColor': instance.ctaBgColor,
     };
@@ -220,5 +214,10 @@ _$QuickActionsImpl _$$QuickActionsImplFromJson(Map<String, dynamic> json) =>
 _$ImageSectionImpl _$$ImageSectionImplFromJson(Map<String, dynamic> json) =>
     _$ImageSectionImpl(
       ImageSectionData.fromJson(json['data'] as Map<String, dynamic>),
+      $type: json['type'] as String?,
+    );
+
+_$NudgeSectionImpl _$$NudgeSectionImplFromJson(Map<String, dynamic> json) =>
+    _$NudgeSectionImpl(
       $type: json['type'] as String?,
     );

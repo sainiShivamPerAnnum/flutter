@@ -24,6 +24,8 @@ HomePageSection _$HomePageSectionFromJson(Map<String, dynamic> json) {
       return QuickActions.fromJson(json);
     case 'image':
       return ImageSection.fromJson(json);
+    case 'nudgeCard':
+      return NudgeSection.fromJson(json);
 
     default:
       throw CheckedFromJsonException(json, 'type', 'HomePageSection',
@@ -32,9 +34,7 @@ HomePageSection _$HomePageSectionFromJson(Map<String, dynamic> json) {
 }
 
 /// @nodoc
-mixin _$HomePageSection {
-  Object get data => throw _privateConstructorUsedError;
-}
+mixin _$HomePageSection {}
 
 /// @nodoc
 @JsonSerializable(createToJson: false)
@@ -75,7 +75,6 @@ abstract class StoriesSection implements HomePageSection {
   factory StoriesSection.fromJson(Map<String, dynamic> json) =
       _$StoriesSectionImpl.fromJson;
 
-  @override
   StoriesData get data;
 }
 
@@ -118,7 +117,6 @@ abstract class StepsSection implements HomePageSection {
   factory StepsSection.fromJson(Map<String, dynamic> json) =
       _$StepsSectionImpl.fromJson;
 
-  @override
   StepsData get data;
 }
 
@@ -162,7 +160,6 @@ abstract class QuickActions implements HomePageSection {
   factory QuickActions.fromJson(Map<String, dynamic> json) =
       _$QuickActionsImpl.fromJson;
 
-  @override
   QuickActionsCardsData get data;
 }
 
@@ -205,6 +202,40 @@ abstract class ImageSection implements HomePageSection {
   factory ImageSection.fromJson(Map<String, dynamic> json) =
       _$ImageSectionImpl.fromJson;
 
-  @override
   ImageSectionData get data;
+}
+
+/// @nodoc
+@JsonSerializable(createToJson: false)
+class _$NudgeSectionImpl implements NudgeSection {
+  const _$NudgeSectionImpl({final String? $type})
+      : $type = $type ?? 'nudgeCard';
+
+  factory _$NudgeSectionImpl.fromJson(Map<String, dynamic> json) =>
+      _$$NudgeSectionImplFromJson(json);
+
+  @JsonKey(name: 'type')
+  final String $type;
+
+  @override
+  String toString() {
+    return 'HomePageSection.nudge()';
+  }
+
+  @override
+  bool operator ==(Object other) {
+    return identical(this, other) ||
+        (other.runtimeType == runtimeType && other is _$NudgeSectionImpl);
+  }
+
+  @JsonKey(ignore: true)
+  @override
+  int get hashCode => runtimeType.hashCode;
+}
+
+abstract class NudgeSection implements HomePageSection {
+  const factory NudgeSection() = _$NudgeSectionImpl;
+
+  factory NudgeSection.fromJson(Map<String, dynamic> json) =
+      _$NudgeSectionImpl.fromJson;
 }
