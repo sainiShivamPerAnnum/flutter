@@ -86,6 +86,8 @@ class MessageLookup extends MessageLookupByLibrary {
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
+        "KyclinkedAccount":
+            MessageLookupByLibrary.simpleMessage("Linked Account"),
         "ObGenderLabel": MessageLookupByLibrary.simpleMessage("Gender"),
         "SignOutFailedSubTitle": MessageLookupByLibrary.simpleMessage(
             "Couldn\'t signout. Please try again"),
@@ -338,6 +340,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "digitalGoldSubTitle": MessageLookupByLibrary.simpleMessage(
             "99.9% pure | 24K Gold | 100% secure"),
         "digitalGoldText": MessageLookupByLibrary.simpleMessage("Digital Gold"),
+        "donePAN": MessageLookupByLibrary.simpleMessage("DONE"),
         "dummyNoAlert": MessageLookupByLibrary.simpleMessage(
             "Only dummy numbers are allowed in QA mode"),
         "earn": MessageLookupByLibrary.simpleMessage("Earn"),
@@ -423,6 +426,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Earn 10% returns"),
         "forTheRequest":
             MessageLookupByLibrary.simpleMessage("for the request."),
+        "formats":
+            MessageLookupByLibrary.simpleMessage("Formats: PNG, JPEG, JPG"),
         "formatsText":
             MessageLookupByLibrary.simpleMessage("Formats: PNG, JPEG, JPG"),
         "g": MessageLookupByLibrary.simpleMessage("g"),
@@ -556,6 +561,12 @@ class MessageLookup extends MessageLookupByLibrary {
         "jWon": MessageLookupByLibrary.simpleMessage("YOU WON"),
         "keepInvestingText": MessageLookupByLibrary.simpleMessage(
             "Keep investing, keep playing and win big!"),
+        "kycComplete": MessageLookupByLibrary.simpleMessage("Congratulations"),
+        "kycCompleteSub":
+            MessageLookupByLibrary.simpleMessage("On completing your KYC"),
+        "kycEmailProceed": MessageLookupByLibrary.simpleMessage("VERIFY EMAIL"),
+        "kycForInvesting": MessageLookupByLibrary.simpleMessage(
+            "Complete KYC to start investing"),
         "kycGrantPermissionText": MessageLookupByLibrary.simpleMessage(
             "Please grant camera access permission to continue"),
         "kycIncomplete": MessageLookupByLibrary.simpleMessage(
@@ -564,6 +575,10 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Name as per your PAN Card"),
         "kycPanUpload": MessageLookupByLibrary.simpleMessage(
             "Step 1: Upload your PAN Card"),
+        "kycStep1":
+            MessageLookupByLibrary.simpleMessage("Step 1 - Upload PAN Card"),
+        "kycStep2":
+            MessageLookupByLibrary.simpleMessage("Step 2 - Verify Email"),
         "kycSuccessSubTitle": MessageLookupByLibrary.simpleMessage(
             "Your KYC verification has been successfully completed"),
         "kycSuccessTitle": MessageLookupByLibrary.simpleMessage(
@@ -594,6 +609,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "A maximum of 8 gms can be sold in one go"),
         "maxAmountIs": MessageLookupByLibrary.simpleMessage("Max amount is "),
         "maxAmountMessage": m7,
+        "maxSize": MessageLookupByLibrary.simpleMessage("Max size: 5 MB"),
         "maxSizeText": MessageLookupByLibrary.simpleMessage("Max size: 5 MB"),
         "mayBeLater": MessageLookupByLibrary.simpleMessage("Maybe later"),
         "mb": MessageLookupByLibrary.simpleMessage("mb"),
@@ -643,6 +659,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("No changes detected"),
         "noFileSelected":
             MessageLookupByLibrary.simpleMessage("No file selected"),
+        "noKYCfound": MessageLookupByLibrary.simpleMessage("No Kyc Data Found"),
         "noRewards": MessageLookupByLibrary.simpleMessage("No rewards yet"),
         "noTransaction":
             MessageLookupByLibrary.simpleMessage("No transactions to show yet"),
@@ -812,6 +829,12 @@ class MessageLookup extends MessageLookupByLibrary {
             "Please use other option to share. "),
         "otpSentSuccess":
             MessageLookupByLibrary.simpleMessage("OTP resent successfully"),
+        "panNote": MessageLookupByLibrary.simpleMessage(
+            "NOTE: Name on your PAN Card should be the same as Name on your Bank Account"),
+        "panSecurity": MessageLookupByLibrary.simpleMessage(
+            "Over 10,000 Users have trusted Fello with their KYC"),
+        "panUploaded":
+            MessageLookupByLibrary.simpleMessage("PAN Card Uploaded"),
         "panVerifyFailed":
             MessageLookupByLibrary.simpleMessage("PAN verification failed"),
         "participants": MessageLookupByLibrary.simpleMessage("Participants"),
@@ -839,6 +862,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Portal unavailable"),
         "powerPlaySlog":
             MessageLookupByLibrary.simpleMessage("Predict | Save | Win"),
+        "preKYC": MessageLookupByLibrary.simpleMessage(
+            "Just one step away from starting your Investment Journey"),
         "priceClaimTitle1": MessageLookupByLibrary.simpleMessage(
             "You\'ve won an Amazon Gift Voucher\n worth"),
         "priceClaimTitle2": m11,
@@ -850,6 +875,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "prizeFetchFailed": MessageLookupByLibrary.simpleMessage(
             "This week\'s prizes could not be fetched"),
         "prizeText": MessageLookupByLibrary.simpleMessage("Prize"),
+        "proceed": MessageLookupByLibrary.simpleMessage("PROCEED"),
         "processing":
             MessageLookupByLibrary.simpleMessage("We\'re still Processing"),
         "profileUpdateAlert": MessageLookupByLibrary.simpleMessage(
@@ -912,6 +938,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Refer your friends"),
         "referrals": MessageLookupByLibrary.simpleMessage("referrals"),
         "referralsTitle": MessageLookupByLibrary.simpleMessage("Referrals"),
+        "refreshKYC": MessageLookupByLibrary.simpleMessage("Please refresh"),
         "refstep1": MessageLookupByLibrary.simpleMessage(
             "Your friend installs Fello and signs up using your referral link or referral code."),
         "refsubtitle": MessageLookupByLibrary.simpleMessage(
@@ -974,6 +1001,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "scratchCards": MessageLookupByLibrary.simpleMessage("Scratch Cards"),
         "secureFelloTitle":
             MessageLookupByLibrary.simpleMessage("Secure Fello"),
+        "selectGmail":
+            MessageLookupByLibrary.simpleMessage("Select an account"),
         "selectRating":
             MessageLookupByLibrary.simpleMessage("Please select a rating"),
         "selectValidPan": MessageLookupByLibrary.simpleMessage(
@@ -1026,6 +1055,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "single": MessageLookupByLibrary.simpleMessage("Single"),
         "sipWithAutoSave": MessageLookupByLibrary.simpleMessage(
             "Start an SIP with Fello Autosave"),
+        "skipKYC": MessageLookupByLibrary.simpleMessage("SKIP FOR NOW"),
         "skipMileStoneSuccessSubtile": MessageLookupByLibrary.simpleMessage(
             "Let\'s get to the next milestone"),
         "skipMileStoneSuccessTitle": MessageLookupByLibrary.simpleMessage(
@@ -1043,6 +1073,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "splashTagline":
             MessageLookupByLibrary.simpleMessage("Your savings and gaming app"),
         "startAnSIP": MessageLookupByLibrary.simpleMessage("Start an SIP"),
+        "startInvesting": MessageLookupByLibrary.simpleMessage(
+            "Now, let’s start investing on Fello!"),
         "startPlayingToSeeLB": MessageLookupByLibrary.simpleMessage(
             "Start playing to see yourself on the leaderboard"),
         "startSaving": MessageLookupByLibrary.simpleMessage("Start Saving"),
@@ -1162,6 +1194,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "totalRewards": MessageLookupByLibrary.simpleMessage("Total Rewards"),
         "totalSavings": MessageLookupByLibrary.simpleMessage("Total Savings"),
         "totalWinnings": MessageLookupByLibrary.simpleMessage("Total Winnings"),
+        "toverifyEmail":
+            MessageLookupByLibrary.simpleMessage("to verify email"),
         "transactionProgress": MessageLookupByLibrary.simpleMessage(
             "Your transaction is in progress"),
         "trustedBy": MessageLookupByLibrary.simpleMessage("Trusted by"),
@@ -1280,6 +1314,11 @@ class MessageLookup extends MessageLookupByLibrary {
             "Failed to connect to upi app"),
         "uploadFromDevice":
             MessageLookupByLibrary.simpleMessage("Upload from device"),
+        "uploadImagePan": MessageLookupByLibrary.simpleMessage(
+            "Upload a clear picture of your PAN card"),
+        "uploadModal":
+            MessageLookupByLibrary.simpleMessage("Upload your PAN Card"),
+        "uploadPan": MessageLookupByLibrary.simpleMessage("UPLOAD PAN CARD"),
         "upto4DecimalsAllowed":
             MessageLookupByLibrary.simpleMessage("Upto 4 decimals allowed"),
         "userNameEmptyAlert":
@@ -1298,6 +1337,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Enter a valid mobile number"),
         "verificationFailed":
             MessageLookupByLibrary.simpleMessage("Verification Failed"),
+        "verifyEmailKyc":
+            MessageLookupByLibrary.simpleMessage("Verify your Email"),
         "verifyFailed":
             MessageLookupByLibrary.simpleMessage("Unable to verify"),
         "view": MessageLookupByLibrary.simpleMessage("View"),

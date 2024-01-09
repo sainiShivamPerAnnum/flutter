@@ -143,6 +143,8 @@ extension TextStyleHelpers on TextStyle {
 // }
 
 extension FontSize on TextStyle {
+  /// Title 68 Size == 98
+  TextStyle get title98 => copyWith(fontSize: SizeConfig.title98);
   /// Title 68 Size == 68
   TextStyle get title68 => copyWith(fontSize: SizeConfig.title68);
 

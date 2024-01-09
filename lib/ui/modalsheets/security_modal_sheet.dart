@@ -11,7 +11,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/svg.dart';
 
 class SecurityModalSheet extends StatelessWidget {
-  SecurityModalSheet();
+  SecurityModalSheet({super.key});
   final UserRepository? userRepo = locator<UserRepository>();
   S locale = locator<S>();
   final UserService? userService = locator<UserService>();
@@ -20,7 +20,7 @@ class SecurityModalSheet extends StatelessWidget {
     S locale = S.of(context);
     return WillPopScope(
       onWillPop: () async {
-        AppState.backButtonDispatcher!.didPopRoute();
+        await AppState.backButtonDispatcher!.didPopRoute();
         return Future.value(true);
       },
       child: Padding(
@@ -62,7 +62,7 @@ class SecurityModalSheet extends StatelessWidget {
                         BaseUser.fldUserPrefsAl: true,
                       }).then((value) => userService!.setBaseUser());
 
-                      AppState.backButtonDispatcher!.didPopRoute();
+                      await AppState.backButtonDispatcher!.didPopRoute();
                     },
                   ),
                   SizedBox(height: SizeConfig.padding16),
