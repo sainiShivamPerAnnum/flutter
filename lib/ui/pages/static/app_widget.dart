@@ -1016,7 +1016,9 @@ class SecondaryOutlinedButton extends StatelessWidget {
 
     return OutlinedButton(
       style: ButtonStyle(
-        iconColor: const MaterialStatePropertyAll(Colors.white),
+        iconColor: MaterialStatePropertyAll(
+          disabled ? Colors.white54 : Colors.white,
+        ),
         minimumSize: MaterialStatePropertyAll(size),
         tapTargetSize: MaterialTapTargetSize.shrinkWrap,
         shape: MaterialStatePropertyAll(
