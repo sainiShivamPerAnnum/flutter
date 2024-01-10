@@ -99,17 +99,12 @@
         }
       }
     },
-  "obAssetPrefBottomSheet1UpperText": "Don't Worry",
-  "obAssetPrefBottomSheet1LowerText": "You can continue this screen by clicking on this card",
   "obAssetPrefBottomSheet2LowerText": "We can help you decide assets more suitable for you",
   "obAssetPrefBottomSheet2UpperText": "Want to know more about Fello?",
   "obAssetPrefBottomSheet1ButtonText": "Proceed",
   "obAssetPrefBottomSheet2ButtonText1": "SKIP TO HOME",
   "obAssetPrefBottomSheet2ButtonText2": "KNOW MORE",
   "obAssetWelcomeText": "Welcome To Fello",
-  "obAssetPrefDescText1": "Choose an asset to start investing",
-  "obAssetPrefDescText2": "Read more about assets when you proceed",
-  "obAssetNoPrefButton": "I'm not sure",
   "obAssetPrefGreeting": "Hi {name}",
   "@obAssetPrefGreeting": {
     "placeholders": {
@@ -118,14 +113,8 @@
       }
     }
   },
-  "obAssetPrefMainButton": "PROCEED {assetName}",
-  "@obAssetPrefMainButton": {
-    "placeholders": {
-      "assetName": {
-        "type": "String"
-      }
-    }
-  },
+  "obProceedWithP2P" : "PROCEED WITH FELLO P2P",
+  "obProceedWithGold" : "PROCEED WITH DIGITAL GOLD",
   "-----------------------------------": "----------------------------",
   "navBarJourney": "Journey",
   "navBarPlay": "Play",

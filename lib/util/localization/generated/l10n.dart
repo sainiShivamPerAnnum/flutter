@@ -962,26 +962,6 @@ class S {
     );
   }
 
-  /// `Don't Worry`
-  String get obAssetPrefBottomSheet1UpperText {
-    return Intl.message(
-      'Don\'t Worry',
-      name: 'obAssetPrefBottomSheet1UpperText',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `You can continue this screen by clicking on this card`
-  String get obAssetPrefBottomSheet1LowerText {
-    return Intl.message(
-      'You can continue this screen by clicking on this card',
-      name: 'obAssetPrefBottomSheet1LowerText',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `We can help you decide assets more suitable for you`
   String get obAssetPrefBottomSheet2LowerText {
     return Intl.message(
@@ -1042,36 +1022,6 @@ class S {
     );
   }
 
-  /// `Choose an asset to start investing`
-  String get obAssetPrefDescText1 {
-    return Intl.message(
-      'Choose an asset to start investing',
-      name: 'obAssetPrefDescText1',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Read more about assets when you proceed`
-  String get obAssetPrefDescText2 {
-    return Intl.message(
-      'Read more about assets when you proceed',
-      name: 'obAssetPrefDescText2',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `I'm not sure`
-  String get obAssetNoPrefButton {
-    return Intl.message(
-      'I\'m not sure',
-      name: 'obAssetNoPrefButton',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `Hi {name}`
   String obAssetPrefGreeting(String name) {
     return Intl.message(
@@ -1082,13 +1032,23 @@ class S {
     );
   }
 
-  /// `PROCEED {assetName}`
-  String obAssetPrefMainButton(String assetName) {
+  /// `PROCEED WITH FELLO P2P`
+  String get obProceedWithP2P {
     return Intl.message(
-      'PROCEED $assetName',
-      name: 'obAssetPrefMainButton',
+      'PROCEED WITH FELLO P2P',
+      name: 'obProceedWithP2P',
       desc: '',
-      args: [assetName],
+      args: [],
+    );
+  }
+
+  /// `PROCEED WITH DIGITAL GOLD`
+  String get obProceedWithGold {
+    return Intl.message(
+      'PROCEED WITH DIGITAL GOLD',
+      name: 'obProceedWithGold',
+      desc: '',
+      args: [],
     );
   }
 

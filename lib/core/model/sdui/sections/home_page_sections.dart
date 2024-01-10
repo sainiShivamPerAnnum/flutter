@@ -41,8 +41,8 @@ class AssetPreferenceData {
   final String title;
   final String subtitle;
   final List<AssetPrefOption> options;
-  final BottomSheetData notSure;
-  final BottomSheetData skipToHome;
+  final BottomSheetComponent notSure;
+  final BottomSheetComponent skipToHome;
 
   const AssetPreferenceData({
     required this.notSure,
@@ -94,6 +94,16 @@ class AssetOptionInfo {
 
   factory AssetOptionInfo.fromJson(Map<String, dynamic> json) =>
       _$AssetOptionInfoFromJson(json);
+}
+
+@_deserializable
+class BottomSheetComponent {
+  final BottomSheetData data;
+
+  const BottomSheetComponent(this.data);
+
+  factory BottomSheetComponent.fromJson(Map<String, dynamic> json) =>
+      _$BottomSheetComponentFromJson(json);
 }
 
 @_deserializable

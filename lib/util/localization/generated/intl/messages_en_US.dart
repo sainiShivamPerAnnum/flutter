@@ -43,50 +43,48 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m10(name) => "Hi ${name}";
 
-  static String m11(assetName) => "PROCEED ${assetName}";
+  static String m11(mobileNumber) => "Login as +91-${mobileNumber}";
 
-  static String m12(mobileNumber) => "Login as +91-${mobileNumber}";
-
-  static String m13(prizeAmount) =>
+  static String m12(prizeAmount) =>
       "I\'ve won ₹\$${prizeAmount} as\nDigital Gold on Fello!";
 
-  static String m14(i) => "Prize \$${i}";
+  static String m13(i) => "Prize \$${i}";
 
-  static String m15(Value) =>
+  static String m14(Value) =>
       "Are you sure you want to redeem ₹${Value} as an Amazon gift voucher?";
 
-  static String m16(Value) =>
+  static String m15(Value) =>
       "Are you sure you want to redeem ₹${Value} as Digital Gold?";
 
-  static String m17(refUnlock) =>
+  static String m16(refUnlock) =>
       "Savings of ₹ ${refUnlock} required to redeem your winnings.";
 
-  static String m18(servingSize) => "*Based on ${servingSize} fl. oz serving.";
+  static String m17(servingSize) => "*Based on ${servingSize} fl. oz serving.";
 
-  static String m19(quantity, formattedNumber) =>
+  static String m18(quantity, formattedNumber) =>
       "${Intl.plural(quantity, one: 'One serving.', other: '${formattedNumber} servings in your system at one time.')}";
 
-  static String m20(quantity, formattedNumber) =>
+  static String m19(quantity, formattedNumber) =>
       "${Intl.plural(quantity, one: 'One serving per day.', other: '${formattedNumber} servings per day.')}";
 
-  static String m21(goldAmount) => "${goldAmount} gm";
+  static String m20(goldAmount) => "${goldAmount} gm";
 
-  static String m22(winningsAmout) => "₹ ${winningsAmout}";
+  static String m21(winningsAmout) => "₹ ${winningsAmout}";
 
-  static String m23(cost) => "SKIP WITH ${cost} TOKENS";
+  static String m22(cost) => "SKIP WITH ${cost} TOKENS";
 
-  static String m24(prize) => "Complete ${prize} to get ";
+  static String m23(prize) => "Complete ${prize} to get ";
 
-  static String m25(ticketGenerateCount) =>
+  static String m24(ticketGenerateCount) =>
       "of your ${ticketGenerateCount} tickets";
 
-  static String m26(username) =>
+  static String m25(username) =>
       "Your username ${username} has been successfully registered!";
 
-  static String m27(ticketType, rewardAmount) =>
+  static String m26(ticketType, rewardAmount) =>
       "Win a ${ticketType} Card worth upto ₹${rewardAmount}";
 
-  static String m28(prize) => "Winnings can be redeemed on reaching ₹${prize}";
+  static String m27(prize) => "Winnings can be redeemed on reaching ₹${prize}";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -698,15 +696,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "obAppLock": MessageLookupByLibrary.simpleMessage("App Lock"),
         "obAppUpdate":
             MessageLookupByLibrary.simpleMessage("App Update Required"),
-        "obAssetNoPrefButton":
-            MessageLookupByLibrary.simpleMessage("I\'m not sure"),
         "obAssetPrefBottomSheet1ButtonText":
             MessageLookupByLibrary.simpleMessage("Proceed"),
-        "obAssetPrefBottomSheet1LowerText":
-            MessageLookupByLibrary.simpleMessage(
-                "You can continue this screen by clicking on this card"),
-        "obAssetPrefBottomSheet1UpperText":
-            MessageLookupByLibrary.simpleMessage("Don\'t Worry"),
         "obAssetPrefBottomSheet2ButtonText1":
             MessageLookupByLibrary.simpleMessage("SKIP TO HOME"),
         "obAssetPrefBottomSheet2ButtonText2":
@@ -717,12 +708,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "obAssetPrefBottomSheet2UpperText":
             MessageLookupByLibrary.simpleMessage(
                 "Want to know more about Fello?"),
-        "obAssetPrefDescText1": MessageLookupByLibrary.simpleMessage(
-            "Choose an asset to start investing"),
-        "obAssetPrefDescText2": MessageLookupByLibrary.simpleMessage(
-            "Read more about assets when you proceed"),
         "obAssetPrefGreeting": m10,
-        "obAssetPrefMainButton": m11,
         "obAssetWelcomeText":
             MessageLookupByLibrary.simpleMessage("Welcome To Fello"),
         "obBankDetails":
@@ -796,7 +782,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "obLoading": MessageLookupByLibrary.simpleMessage("Loading..."),
         "obLoggingInWith":
             MessageLookupByLibrary.simpleMessage("Logging in with"),
-        "obLoginAsText": m12,
+        "obLoginAsText": m11,
         "obLoginHeading": MessageLookupByLibrary.simpleMessage("Login/Sign up"),
         "obMale": MessageLookupByLibrary.simpleMessage("Male"),
         "obMinutes": MessageLookupByLibrary.simpleMessage(" minutes."),
@@ -822,6 +808,10 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Please try again"),
         "obPreferNotToSay":
             MessageLookupByLibrary.simpleMessage("Rather Not Say"),
+        "obProceedWithGold":
+            MessageLookupByLibrary.simpleMessage("PROCEED WITH DIGITAL GOLD"),
+        "obProceedWithP2P":
+            MessageLookupByLibrary.simpleMessage("PROCEED WITH FELLO P2P"),
         "obResend": MessageLookupByLibrary.simpleMessage("RESEND"),
         "obSendOTP": MessageLookupByLibrary.simpleMessage("Send OTP"),
         "obSendingOtp": MessageLookupByLibrary.simpleMessage("Sending OTP"),
@@ -919,12 +909,12 @@ class MessageLookup extends MessageLookupByLibrary {
             "Just one step away from starting your Investment Journey"),
         "priceClaimTitle1": MessageLookupByLibrary.simpleMessage(
             "You\'ve won an Amazon Gift Voucher\n worth"),
-        "priceClaimTitle2": m13,
+        "priceClaimTitle2": m12,
         "priceClaimTitle3": MessageLookupByLibrary.simpleMessage(
             "You\'ve won Fello Rewards\n worth"),
         "primaryUPI": MessageLookupByLibrary.simpleMessage("Primary UPI"),
         "privacyPolicy": MessageLookupByLibrary.simpleMessage("Privacy Policy"),
-        "prize": m14,
+        "prize": m13,
         "prizeFetchFailed": MessageLookupByLibrary.simpleMessage(
             "This week\'s prizes could not be fetched"),
         "prizeText": MessageLookupByLibrary.simpleMessage("Prize"),
@@ -954,8 +944,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "received": MessageLookupByLibrary.simpleMessage("Received"),
         "receivedOn": MessageLookupByLibrary.simpleMessage("Received on "),
         "redeem": MessageLookupByLibrary.simpleMessage("Redeem"),
-        "redeemAmznGiftVchr": m15,
-        "redeemDigitalGold": m16,
+        "redeemAmznGiftVchr": m14,
+        "redeemDigitalGold": m15,
         "redeemed": MessageLookupByLibrary.simpleMessage("Redeemed"),
         "redeemedOn": MessageLookupByLibrary.simpleMessage("Redeemed on "),
         "reedomAmznPay":
@@ -984,7 +974,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "refStep3": MessageLookupByLibrary.simpleMessage(
             "Both you and your friend receive ₹ 25 and 200 Fello tokens in your account."),
         "refUnAvailable": MessageLookupByLibrary.simpleMessage("Unavailable"),
-        "refUnlockText": m17,
+        "refUnlockText": m16,
         "refWhatsapp": MessageLookupByLibrary.simpleMessage("WhatsApp"),
         "refer": MessageLookupByLibrary.simpleMessage("Refer"),
         "referFriends":
@@ -1001,9 +991,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "restart": MessageLookupByLibrary.simpleMessage("Restart"),
         "restartAndTry": MessageLookupByLibrary.simpleMessage(
             "Please restart and try again"),
-        "resultsPageFirstDisclaimer": m18,
-        "resultsPageLethalDosageMessage": m19,
-        "resultsPageSafeDosageMessage": m20,
+        "resultsPageFirstDisclaimer": m17,
+        "resultsPageLethalDosageMessage": m18,
+        "resultsPageSafeDosageMessage": m19,
         "resultsPageSafeDosageTitle":
             MessageLookupByLibrary.simpleMessage("Daily Safe Maximum"),
         "resultsPageSecondDisclaimer": MessageLookupByLibrary.simpleMessage(
@@ -1031,7 +1021,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "saveBaseline": MessageLookupByLibrary.simpleMessage(
             "You get 1 token for every Rupee saved"),
         "saveGold24k": MessageLookupByLibrary.simpleMessage("24K"),
-        "saveGoldBalanceValue": m21,
+        "saveGoldBalanceValue": m20,
         "saveGoldBalancelabel":
             MessageLookupByLibrary.simpleMessage("Gold Balance:"),
         "saveGoldPure": MessageLookupByLibrary.simpleMessage("99.99% Pure"),
@@ -1042,8 +1032,6 @@ class MessageLookup extends MessageLookupByLibrary {
         "saveViewAll": MessageLookupByLibrary.simpleMessage("View All"),
         "saveWinningsLabel":
             MessageLookupByLibrary.simpleMessage("My Active Winnings"),
-        "saveWinningsValue": m22,
-        "savingsMade": MessageLookupByLibrary.simpleMessage("Savings made"),
         "savingsOnAuto": MessageLookupByLibrary.simpleMessage(
             "Put your savings on autopilot"),
         "savingsOnAutoPilot":
@@ -1119,7 +1107,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "Let\'s get to the next milestone"),
         "skipMileStoneSuccessTitle": MessageLookupByLibrary.simpleMessage(
             "Milestone Skipped Successfully"),
-        "skipWithtokenCost": m23,
+        "skipWithtokenCost": m22,
         "sold": MessageLookupByLibrary.simpleMessage("Sold"),
         "someThingWentWrongError": MessageLookupByLibrary.simpleMessage(
             "Something went wrong, please try again."),
@@ -1151,7 +1139,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "tBottomRow": MessageLookupByLibrary.simpleMessage("Bottom Row"),
         "tCheckIfWon": MessageLookupByLibrary.simpleMessage(
             "Find out if your tickets won"),
-        "tCompleteToGet": m24,
+        "tCompleteToGet": m23,
         "tCorners": MessageLookupByLibrary.simpleMessage("Corners"),
         "tDailyPicks": MessageLookupByLibrary.simpleMessage("Daily Picks"),
         "tDrawTime":
@@ -1220,7 +1208,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "termsOfService":
             MessageLookupByLibrary.simpleMessage("Terms of Service"),
         "tgenerated": MessageLookupByLibrary.simpleMessage("Generated"),
-        "tgeneratedCount": m25,
+        "tgeneratedCount": m24,
         "tgetFirstTkt":
             MessageLookupByLibrary.simpleMessage("Get your first ticket"),
         "ticketsExceeded":
@@ -1398,7 +1386,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("username cannot be empty"),
         "userNameSuccess": MessageLookupByLibrary.simpleMessage(
             "Username created successfully"),
-        "userNameSuccessSubtitle": m26,
+        "userNameSuccessSubtitle": m25,
         "userNameVal1": MessageLookupByLibrary.simpleMessage(
             "please enter a username with more than 3 characters."),
         "userNameVal2": MessageLookupByLibrary.simpleMessage(
@@ -1428,7 +1416,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "whyToInvest": MessageLookupByLibrary.simpleMessage("Why to invest?"),
         "win": MessageLookupByLibrary.simpleMessage("Win"),
         "win1Crore": MessageLookupByLibrary.simpleMessage("Win ₹1 Crore!"),
-        "winATicket": m27,
+        "winATicket": m26,
         "winChipsTitle1":
             MessageLookupByLibrary.simpleMessage("Use tokens to play games!"),
         "winChipsTitle2":
@@ -1453,7 +1441,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "winRewardsTitle": MessageLookupByLibrary.simpleMessage("My Rewards"),
         "winipadText": MessageLookupByLibrary.simpleMessage(
             " from every Scratch Card. Highest referrer wins an iPad every month."),
-        "winningsRedeem": m28,
+        "winningsRedeem": m27,
         "withDrawalFailed":
             MessageLookupByLibrary.simpleMessage("Withdrawal Failed"),
         "withDrawalProcessing":

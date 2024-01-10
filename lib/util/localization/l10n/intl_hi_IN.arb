@@ -99,17 +99,12 @@
       }
     }
   },
-  "obAssetPrefBottomSheet1UpperText": "चिंता मत करो",
-  "obAssetPrefBottomSheet1LowerText": "आप इस कार्ड पर क्लिक करके इस स्क्रीन को जारी रख सकते हैं",
   "obAssetPrefBottomSheet2LowerText": "हम आपके लिए अधिक उपयुक्त संपत्ति तय करने में आपकी सहायता कर सकते हैं",
   "obAssetPrefBottomSheet2UpperText": "फेलो के बारे में और जानना चाहते हैं?",
   "obAssetPrefBottomSheet2ButtonText1": "होम स्क्रीन पर जाएँ",
   "obAssetPrefBottomSheet2ButtonText2": "अधिक जानकारी जानें",
   "obAssetPrefBottomSheet1ButtonText": "आगे बढ़ना",
   "obAssetWelcomeText": "फेलो में आपका स्वागत है",
-  "obAssetPrefDescText1": "निवेश शुरू करने के लिए एक संपत्ति चुनें",
-  "obAssetPrefDescText2": "जब आप आगे बढ़ें तो संपत्तियों के बारे में और पढ़ें",
-  "obAssetNoPrefButton": "मैं ठीक से नहीं कह सकता।",
   "obAssetPrefGreeting": "नमस्ते {name}",
   "@obAssetPrefGreeting": {
     "placeholders": {
@@ -118,14 +113,8 @@
       }
     }
   },
-  "obAssetPrefMainButton": "आगे बढ़ना {assetName}",
-  "@obAssetPrefMainButton": {
-    "placeholders": {
-      "assetName": {
-        "type": "String"
-      }
-    }
-  },
+  "obProceedWithP2P" : "फेलो पी2पी के साथ आगे बढ़ें",
+  "obProceedWithGold" : "डिजिटल गोल्ड के साथ आगे बढ़ें",
   "-----------------------------------": "----------------------------",
   "navBarJourney": "यात्रा",
   "navBarPlay": "खेलें",

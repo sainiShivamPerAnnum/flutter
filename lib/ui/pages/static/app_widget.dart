@@ -954,23 +954,30 @@ class SecondaryButton extends StatelessWidget {
   const SecondaryButton({
     required this.onPressed,
     required this.label,
+    this.disabled = false,
     super.key,
   });
 
   final VoidCallback onPressed;
   final String label;
+  final bool disabled;
+
+  void _onTap() {
+    if (disabled) return;
+    onPressed();
+  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialButton(
       height: SizeConfig.padding44,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(SizeConfig.roundness8),
+        borderRadius: BorderRadius.circular(SizeConfig.roundness5),
       ),
       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
       minWidth: SizeConfig.screenWidth! - SizeConfig.pageHorizontalMargins * 2,
-      color: Colors.white,
-      onPressed: onPressed,
+      color: disabled ? Colors.white54 : Colors.white,
+      onPressed: _onTap,
       child: Text(
         label,
         style: TextStyles.rajdhaniB.body1.colour(

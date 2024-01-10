@@ -1,3 +1,4 @@
+import 'package:felloapp/core/model/sdui/sections/home_page_sections.dart';
 import 'package:felloapp/ui/pages/asset_prefs/asset_pref_vm.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart' as a;
@@ -7,40 +8,62 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class SkipToHomeBottomSheet extends StatelessWidget {
-  const SkipToHomeBottomSheet({super.key, required this.model});
+  const SkipToHomeBottomSheet({
+    required this.model,
+    required this.bottomSheetData,
+    super.key,
+  });
+
   final AssetPreferenceViewModel model;
+  final BottomSheetComponent bottomSheetData;
   @override
   Widget build(BuildContext context) {
-    final S locale = S.of(context);
+    final data = bottomSheetData.data;
     return Padding(
       padding: EdgeInsets.only(
-          top: SizeConfig.padding24,
-          left: SizeConfig.padding24,
-          right: SizeConfig.padding22),
+        top: SizeConfig.padding24,
+        left: SizeConfig.padding24,
+        right: SizeConfig.padding22,
+      ),
       child: Column(
+        mainAxisSize: MainAxisSize.min,
         children: [
           Text(
-            locale.obAssetPrefBottomSheet1UpperText,
-            style: TextStyles.rajdhaniSB.body0
-                .colour(UiConstants.kTextFieldTextColor),
+            data.title,
+            style: TextStyles.rajdhaniSB.body1.copyWith(
+              color: UiConstants.textGray70,
+              height: 1.4,
+            ),
+          ),
+          SizedBox(
+            height: SizeConfig.padding4,
           ),
           Text(
-            locale.obAssetPrefBottomSheet1LowerText,
-            style: TextStyles.rajdhaniSB.title5.colour(Colors.white),
+            data.subtitle,
+            style: TextStyles.rajdhaniSB.title5.copyWith(
+              height: 1.4,
+            ),
             textAlign: TextAlign.center,
           ),
           Padding(
             padding: EdgeInsets.only(top: SizeConfig.padding24),
-            child: SvgPicture.asset(a.Assets.assetPrefBottomSheet1),
+            child: AppImage(
+              data.image,
+              height: SizeConfig.padding148,
+            ),
           ),
           SizedBox(
-            height: SizeConfig.padding32,
+            height: SizeConfig.padding24,
           ),
           SecondaryButton(
-              onPressed: () {
-                model.handleRouting(AssetPrefOptions.NO_PREF);
-              },
-              label: locale.obAssetPrefBottomSheet1ButtonText),
+            onPressed: () {
+              model.handleRouting(AssetPrefType.NONE);
+            },
+            label: 'PROCEED TO HOME',
+          ),
+          SizedBox(
+            height: SizeConfig.padding18,
+          ),
         ],
       ),
     );
@@ -48,7 +71,7 @@ class SkipToHomeBottomSheet extends StatelessWidget {
 }
 
 class NoPrefBottomSheet extends StatelessWidget {
-  const NoPrefBottomSheet({super.key, required this.model});
+  const NoPrefBottomSheet({required this.model, super.key});
   final AssetPreferenceViewModel model;
 
   @override
@@ -83,7 +106,7 @@ class NoPrefBottomSheet extends StatelessWidget {
             children: [
               InkWell(
                 onTap: () {
-                  model.handleRouting(AssetPrefOptions.NO_PREF);
+                  model.handleRouting(AssetPrefType.NONE);
                 },
                 child: Container(
                   decoration: BoxDecoration(

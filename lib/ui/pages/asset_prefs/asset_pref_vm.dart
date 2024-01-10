@@ -1,86 +1,78 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/model/sdui/sections/home_page_sections.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/pages/asset_prefs/asset_pref_bottom_sheet.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:flutter/cupertino.dart';
-
-enum AssetPrefOptions {
-  NO_PREF,
-  LENDBOX_P2P,
-  AUGMONT_GOLD,
-}
+import 'package:felloapp/util/styles/styles.dart';
+import 'package:flutter/material.dart';
 
 class AssetPreferenceViewModel extends BaseViewModel {
-  List<dynamic> assets = AssetPrefOptions.values;
-  AssetPrefOptions? selectedAsset;
-  String? name = locator<UserService>().name;
+  AssetPrefType? selectedAsset;
+  String name = locator<UserService>().name ?? '';
   static AppState appStateProvider = AppState.delegate!.appState;
-  AnimationController? oldSelectedController;
-  AnimationController? newSelectedController;
-  Animation<double>? oldSelectedAnimation;
-  Animation<double>? newSelectedAnimation;
 
-  void changeSelectedAsset(AssetPrefOptions assetPrefOptions) {
+  void changeSelectedAsset(AssetPrefType assetPrefOptions) {
     if (selectedAsset == assetPrefOptions) return;
     selectedAsset = assetPrefOptions;
     notifyListeners();
   }
 
-  void handleRouting(AssetPrefOptions? assetPrefOptions) {
+  void handleRouting(AssetPrefType? assetPrefOptions) {
     switch (assetPrefOptions) {
-      case AssetPrefOptions.LENDBOX_P2P:
+      case AssetPrefType.P2P:
         break;
-      case AssetPrefOptions.AUGMONT_GOLD:
+      case AssetPrefType.GOLD:
         break;
-      case AssetPrefOptions.NO_PREF:
-        appStateProvider.currentAction =
-            PageAction(state: PageState.replaceAll, page: RootPageConfig);
+      case AssetPrefType.NONE:
+        appStateProvider.currentAction = PageAction(
+          state: PageState.replaceAll,
+          page: RootPageConfig,
+        );
         break;
       default:
-        appStateProvider.currentAction =
-            PageAction(state: PageState.replaceAll, page: RootPageConfig);
-    }
-  }
-
-  void triggerAnimation(
-      AnimationController controller, AssetPrefOptions assetPrefOptions) {
-    if (selectedAsset == assetPrefOptions) {
-      oldSelectedController = newSelectedController;
-      newSelectedController = controller;
-
-      newSelectedAnimation = CurvedAnimation(
-        parent: newSelectedController!,
-        curve: Curves.bounceInOut,
-      );
-      newSelectedController!.forward(from: 0.0);
-
-      if (oldSelectedController != null) {
-        oldSelectedAnimation = CurvedAnimation(
-          parent: oldSelectedController!,
-          curve: Curves.bounceInOut,
+        appStateProvider.currentAction = PageAction(
+          state: PageState.replaceAll,
+          page: RootPageConfig,
         );
-
-        oldSelectedController!.reverse(from: 1.0);
-      }
     }
   }
 
-  void handleBottomSheet() {
+  void onPressedSkip() {
     BaseUtil.openModalBottomSheet(
-        isBarrierDismissible: true,
-        content: NoPrefBottomSheet(
-          model: this,
-        ));
+      isBarrierDismissible: true,
+      content: NoPrefBottomSheet(
+        model: this,
+      ),
+    );
   }
-}
 
-class Benefit {
-  final String title;
-  final String subtitle;
+  void onProceed(BottomSheetComponent bottomSheetData) {
+    switch (selectedAsset) {
+      case AssetPrefType.NONE:
+        BaseUtil.openModalBottomSheet(
+          addToScreenStack: true,
+          isBarrierDismissible: true,
+          isScrollControlled: true,
+          backgroundColor: UiConstants.grey4,
+          borderRadius: BorderRadius.vertical(
+            top: Radius.circular(SizeConfig.roundness24),
+          ),
+          content: SkipToHomeBottomSheet(
+            model: this,
+            bottomSheetData: bottomSheetData,
+          ),
+        );
+        break;
 
-  Benefit({required this.title, required this.subtitle});
+      case AssetPrefType.P2P || AssetPrefType.GOLD:
+        handleRouting(selectedAsset);
+        break;
+
+      default:
+    }
+  }
 }

@@ -19,10 +19,10 @@ ScreenData _$ScreenDataFromJson(Map<String, dynamic> json) => ScreenData(
 
 AssetPreferenceData _$AssetPreferenceDataFromJson(Map<String, dynamic> json) =>
     AssetPreferenceData(
-      notSure:
-          BottomSheetData.fromJson(json['notSure'] as Map<String, dynamic>),
-      skipToHome:
-          BottomSheetData.fromJson(json['skipToHome'] as Map<String, dynamic>),
+      notSure: BottomSheetComponent.fromJson(
+          json['notSure'] as Map<String, dynamic>),
+      skipToHome: BottomSheetComponent.fromJson(
+          json['skipToHome'] as Map<String, dynamic>),
       title: json['title'] as String? ?? '',
       subtitle: json['subtitle'] as String? ?? '',
       options: (json['options'] as List<dynamic>?)
@@ -55,6 +55,12 @@ AssetOptionInfo _$AssetOptionInfoFromJson(Map<String, dynamic> json) =>
     AssetOptionInfo(
       title: json['title'] as String? ?? '',
       subtitle: json['subtitle'] as String? ?? '',
+    );
+
+BottomSheetComponent _$BottomSheetComponentFromJson(
+        Map<String, dynamic> json) =>
+    BottomSheetComponent(
+      BottomSheetData.fromJson(json['data'] as Map<String, dynamic>),
     );
 
 BottomSheetData _$BottomSheetDataFromJson(Map<String, dynamic> json) =>

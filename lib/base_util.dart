@@ -620,9 +620,8 @@ class BaseUtil extends ChangeNotifier {
       constraints: boxContraints,
       shape: RoundedRectangleBorder(
         borderRadius: borderRadius ??
-            BorderRadius.only(
-              topLeft: Radius.circular(SizeConfig.padding16),
-              topRight: Radius.circular(SizeConfig.padding16),
+            BorderRadius.vertical(
+              top: Radius.circular(SizeConfig.padding16),
             ),
       ),
       isScrollControlled: isScrollControlled,

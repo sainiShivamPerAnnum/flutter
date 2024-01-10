@@ -1,6 +1,11 @@
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/sdui/sections/home_page_sections.dart'
     as sections;
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/ui/pages/asset_prefs/asset_prefs.dart';
 import 'package:felloapp/ui/pages/hometabs/save/stories/stories_section/stories_section_view.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart' hide Action;
 
 import '../../../../../util/styles/styles.dart';
@@ -53,6 +58,18 @@ class NewUserSaveView extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
+            ElevatedButton(
+              onPressed: () {
+                AppState.delegate!.appState.currentAction = PageAction(
+                  state: PageState.addWidget,
+                  page: AssetPrefPageConfig,
+                  widget: AssetPrefView(
+                    data: locator(),
+                  ),
+                );
+              },
+              child: null,
+            ),
             for (var i = 0; i < sectionOrder.length; i++)
               _getWidgetBySection(section[sectionOrder[i]]),
           ],

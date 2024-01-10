@@ -1,19 +1,21 @@
-import 'package:felloapp/ui/pages/asset_prefs/asset_pref_vm.dart';
-import 'package:felloapp/util/assets.dart' as a;
-import 'package:felloapp/util/localization/generated/l10n.dart';
+import 'package:felloapp/core/model/sdui/sections/home_page_sections.dart';
+import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
+
+const _kAnimationDuration = Duration(milliseconds: 200);
 
 class AssetSelector extends StatefulWidget {
-  const AssetSelector(
-      {required this.assetPrefOptions,
-      required this.model,
-      required this.onSelect,
-      super.key});
-  final AssetPrefOptions assetPrefOptions;
-  final AssetPreferenceViewModel model;
-  final void Function(AssetPrefOptions) onSelect;
+  const AssetSelector({
+    required this.onSelect,
+    required this.isSelected,
+    required this.assetPrefOption,
+    super.key,
+  });
+
+  final AssetPrefOption assetPrefOption;
+  final ValueChanged<AssetPrefType> onSelect;
+  final bool Function(AssetPrefType) isSelected;
 
   @override
   State<AssetSelector> createState() => _AssetSelectorState();
@@ -21,51 +23,34 @@ class AssetSelector extends StatefulWidget {
 
 class _AssetSelectorState extends State<AssetSelector>
     with TickerProviderStateMixin {
-  late AnimationController _controller;
-
-  @override
-  void initState() {
-    super.initState();
-
-    _controller = AnimationController(
-      duration: const Duration(milliseconds: 200),
-      vsync: this,
-    );
-
-    widget.model.addListener(() {
-      if (widget.model.selectedAsset == widget.assetPrefOptions) {
-        _controller.forward(from: 0.0);
-      } else if (_controller.value == 1.0) {
-        _controller.reverse(from: 1.0);
-      }
-    });
-  }
-
   @override
   Widget build(BuildContext context) {
+    final isSelected = widget.isSelected(widget.assetPrefOption.assetType);
     return InkWell(
-      onTap: () => widget.onSelect(widget.assetPrefOptions),
+      onTap: () => widget.onSelect(widget.assetPrefOption.assetType),
       child: Column(
         children: [
           Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              AssetRadioButton(controller: _controller),
+              _Radio(
+                isSelected: isSelected,
+              ),
               SizedBox(
                 width: SizeConfig.padding16,
               ),
-              switch (widget.assetPrefOptions) {
-                AssetPrefOptions.NO_PREF => NoPrefButton(
-                    controller: _controller,
-                    assetPrefOption: widget.assetPrefOptions,
-                  ),
-                AssetPrefOptions.LENDBOX_P2P ||
-                AssetPrefOptions.AUGMONT_GOLD =>
-                  AssetRadioOption(
-                    assetPrefOption: widget.assetPrefOptions,
-                    controller: _controller,
-                  )
-              },
+              Expanded(
+                child: switch (widget.assetPrefOption.assetType) {
+                  AssetPrefType.NONE => NoPrefButton(
+                      isSelected: isSelected,
+                      assetPrefOption: widget.assetPrefOption,
+                    ),
+                  AssetPrefType.P2P || AssetPrefType.GOLD => AssetCard(
+                      isSelected: isSelected,
+                      assetPrefOption: widget.assetPrefOption,
+                    )
+                },
+              ),
             ],
           ),
           SizedBox(
@@ -77,26 +62,12 @@ class _AssetSelectorState extends State<AssetSelector>
   }
 }
 
-class AssetRadioButton extends StatefulWidget {
-  const AssetRadioButton({
-    required this.controller,
-    super.key,
+class _Radio extends StatelessWidget {
+  const _Radio({
+    this.isSelected = false,
   });
 
-  final AnimationController controller;
-
-  @override
-  State<AssetRadioButton> createState() => _AssetRadioButtonState();
-}
-
-class _AssetRadioButtonState extends State<AssetRadioButton> {
-  @override
-  void initState() {
-    super.initState();
-    widget.controller.addListener(() {
-      setState(() {});
-    });
-  }
+  final bool isSelected;
 
   @override
   Widget build(BuildContext context) {
@@ -106,93 +77,283 @@ class _AssetRadioButtonState extends State<AssetRadioButton> {
         width: SizeConfig.padding1 * 23,
         height: SizeConfig.padding1 * 23,
         decoration: BoxDecoration(
-            shape: BoxShape.circle,
-            border: Border.all(color: UiConstants.grey2)),
+          shape: BoxShape.circle,
+          border: Border.all(color: UiConstants.grey2),
+        ),
         padding: EdgeInsets.all(SizeConfig.padding4),
-        child: Opacity(
-            opacity: widget.controller.value,
+        child: AnimatedOpacity(
+          duration: _kAnimationDuration,
+          opacity: isSelected ? 1 : 0,
+          child: Container(
+            padding: EdgeInsets.all(SizeConfig.padding4),
+            decoration: const BoxDecoration(
+              color: UiConstants.teal3,
+              shape: BoxShape.circle,
+            ),
             child: Container(
-              padding: EdgeInsets.all(SizeConfig.padding4),
               decoration: const BoxDecoration(
-                  color: UiConstants.teal3, shape: BoxShape.circle),
-              child: Container(
-                decoration: const BoxDecoration(
-                    shape: BoxShape.circle,
-                    color: UiConstants.kBackgroundColor),
+                shape: BoxShape.circle,
+                color: UiConstants.kBackgroundColor,
               ),
-            )),
+            ),
+          ),
+        ),
       ),
     );
   }
 }
 
-class AssetRadioOption extends StatefulWidget {
-  const AssetRadioOption({
+class NoPrefButton extends StatelessWidget {
+  const NoPrefButton({
     required this.assetPrefOption,
-    required this.controller,
+    this.isSelected = false,
     super.key,
   });
 
-  final AnimationController controller;
-  final AssetPrefOptions assetPrefOption;
+  final AssetPrefOption assetPrefOption;
+  final bool isSelected;
 
   @override
-  State<AssetRadioOption> createState() => _AssetRadioOptionState();
+  Widget build(BuildContext context) {
+    return AnimatedContainer(
+      duration: _kAnimationDuration,
+      alignment: Alignment.center,
+      decoration: BoxDecoration(
+        color: UiConstants.kTambolaMidTextColor,
+        borderRadius: BorderRadius.circular(SizeConfig.roundness8),
+        border: Border.all(
+          color: isSelected ? Colors.white : Colors.transparent,
+          width: 1.5,
+        ),
+      ),
+      padding: EdgeInsets.symmetric(vertical: SizeConfig.padding12),
+      child: Text(
+        assetPrefOption.title,
+        style: TextStyles.rajdhaniSB.body1,
+      ),
+    );
+  }
 }
 
-class _AssetRadioOptionState extends State<AssetRadioOption> {
-  @override
-  void initState() {
-    super.initState();
-    widget.controller.addListener(() {
-      setState(() {});
-    });
+class AssetCard extends StatelessWidget {
+  const AssetCard({
+    required this.isSelected,
+    required this.assetPrefOption,
+    super.key,
+  });
+
+  final bool isSelected;
+  final AssetPrefOption assetPrefOption;
+
+  Color _getBorderColor() {
+    if (!isSelected) {
+      return Colors.transparent;
+    }
+
+    return switch (assetPrefOption.assetType) {
+      AssetPrefType.P2P => UiConstants.teal2,
+      AssetPrefType.GOLD => UiConstants.blue3,
+      _ => Colors.transparent,
+    };
+  }
+
+  Color _getBackGroundColor() {
+    return switch (assetPrefOption.assetType) {
+      AssetPrefType.P2P => UiConstants.teal4,
+      AssetPrefType.GOLD => UiConstants.kSaveDigitalGoldCardBg,
+      _ => Colors.transparent,
+    };
+  }
+
+  Color _benefitsBackgroundColor() {
+    return switch (assetPrefOption.assetType) {
+      AssetPrefType.P2P => UiConstants.teal5,
+      AssetPrefType.GOLD => UiConstants.goldSellCardColor,
+      _ => Colors.transparent,
+    };
   }
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-      child: Stack(
-        alignment: Alignment.bottomCenter,
-        children: [
-          LearnMoreSlider(
-            assetPrefOption: widget.assetPrefOption,
-            offsetValue: widget.controller.value,
+    return Stack(
+      alignment: Alignment.bottomCenter,
+      children: [
+        LearnMoreSlider(
+          assetPrefOption: assetPrefOption.assetType,
+        ),
+        AnimatedPadding(
+          duration: _kAnimationDuration,
+          padding: EdgeInsets.only(
+            bottom: isSelected ? SizeConfig.padding44 : 0,
           ),
-          Padding(
-            padding: EdgeInsets.only(
-                bottom: widget.controller.value * SizeConfig.padding44),
-            child: AssetCard(
-              opacity: widget.controller.value,
-              assetPrefOption: widget.assetPrefOption,
+          child: AnimatedContainer(
+            duration: _kAnimationDuration,
+            margin: EdgeInsets.only(right: SizeConfig.padding4),
+            decoration: BoxDecoration(
+              borderRadius: BorderRadius.circular(SizeConfig.roundness8),
+              border: Border.all(
+                color: _getBorderColor(),
+                width: 1.5,
+              ),
+              color: _getBackGroundColor(),
             ),
-          )
-        ],
+            padding: EdgeInsets.only(
+              left: SizeConfig.padding4,
+              right: SizeConfig.padding4,
+              bottom: SizeConfig.padding4,
+              top: SizeConfig.padding12,
+            ),
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    AppImage(
+                      assetPrefOption.icon,
+                      height: SizeConfig.padding30,
+                    ),
+                    SizedBox(
+                      width: SizeConfig.padding12,
+                    ),
+                    Text(
+                      assetPrefOption.title,
+                      style: TextStyles.rajdhaniSB.title5.colour(Colors.white),
+                    )
+                  ],
+                ),
+                Padding(
+                  padding: EdgeInsets.only(
+                    left: SizeConfig.padding14,
+                    right: SizeConfig.padding14,
+                    top: SizeConfig.padding4,
+                  ),
+                  child: Text(
+                    assetPrefOption.description,
+                    style: TextStyles.sourceSans.body3.copyWith(
+                      color: Colors.white60,
+                    ),
+                    textAlign: TextAlign.center,
+                  ),
+                ),
+                Padding(
+                  padding: EdgeInsets.only(
+                    bottom: SizeConfig.padding4,
+                    left: SizeConfig.padding4,
+                    right: SizeConfig.padding4,
+                    top: SizeConfig.padding20,
+                  ),
+                  child: Container(
+                    decoration: BoxDecoration(
+                      borderRadius: BorderRadius.circular(
+                        SizeConfig.roundness8,
+                      ),
+                      color: _benefitsBackgroundColor(),
+                    ),
+                    child: _Benefits(
+                      info: assetPrefOption.info,
+                    ),
+                  ),
+                )
+              ],
+            ),
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _Benefits extends StatelessWidget {
+  const _Benefits({
+    required this.info,
+  });
+
+  final List<AssetOptionInfo> info;
+
+  CrossAxisAlignment getColumnAlignment(int i) {
+    switch (i) {
+      case 0:
+        return CrossAxisAlignment.start;
+      case 2:
+        return CrossAxisAlignment.end;
+      default:
+        return CrossAxisAlignment.center;
+    }
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(
+        vertical: SizeConfig.padding8,
+        horizontal: SizeConfig.padding16,
       ),
+      child: Row(
+          crossAxisAlignment: CrossAxisAlignment.center,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            for (int i = 0; i < info.length; i++) ...[
+              Padding(
+                padding: EdgeInsets.only(
+                  top: SizeConfig.padding4,
+                  bottom: SizeConfig.padding4,
+                ),
+                child: Column(
+                  crossAxisAlignment: getColumnAlignment(i),
+                  children: [
+                    Text(
+                      info[i].title,
+                      style: TextStyles.rajdhaniSB.body1
+                          .colour(Colors.white.withOpacity(0.8)),
+                    ),
+                    Text(
+                      info[i].subtitle,
+                      style: TextStyles.rajdhani.body4
+                          .colour(Colors.white.withOpacity(0.4)),
+                    )
+                  ],
+                ),
+              ),
+              if (i != 2)
+                SizedBox(
+                  height: SizeConfig.padding36,
+                  child: const VerticalDivider(
+                    color: UiConstants.greyDivider,
+                    thickness: .2,
+                  ),
+                )
+            ],
+          ]),
     );
   }
 }
 
 class LearnMoreSlider extends StatelessWidget {
-  const LearnMoreSlider(
-      {required this.assetPrefOption, required this.offsetValue, super.key});
-  final AssetPrefOptions assetPrefOption;
-  final double offsetValue;
+  const LearnMoreSlider({
+    required this.assetPrefOption,
+    super.key,
+  });
+
+  final AssetPrefType assetPrefOption;
+
   @override
   Widget build(BuildContext context) {
     return Container(
       decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(SizeConfig.roundness8),
-        color: (assetPrefOption == AssetPrefOptions.LENDBOX_P2P)
+        borderRadius: BorderRadius.vertical(
+          bottom: Radius.circular(SizeConfig.roundness8),
+        ),
+        color: (assetPrefOption == AssetPrefType.P2P)
             ? UiConstants.teal5
             : UiConstants.goldSellCardColor,
       ),
       child: Padding(
         padding: EdgeInsets.only(
-            left: SizeConfig.padding16,
-            right: SizeConfig.padding16,
-            bottom: SizeConfig.padding12,
-            top: SizeConfig.padding22),
+          left: SizeConfig.padding16,
+          right: SizeConfig.padding16,
+          bottom: SizeConfig.padding12,
+          top: SizeConfig.padding22,
+        ),
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -201,7 +362,6 @@ class LearnMoreSlider extends StatelessWidget {
               width: SizeConfig.padding26,
             ),
             InkWell(
-              onTap: () {},
               child: Text(
                 "LEARN MORE",
                 style: TextStyles.rajdhaniB.body2.colour(Colors.white),
@@ -214,212 +374,8 @@ class LearnMoreSlider extends StatelessWidget {
   }
 }
 
-class NoPrefButton extends StatefulWidget {
-  const NoPrefButton(
-      {required this.controller, required this.assetPrefOption, super.key});
-  final AnimationController controller;
-  final AssetPrefOptions assetPrefOption;
-
-  @override
-  State<NoPrefButton> createState() => _NoPrefButtonState();
-}
-
-class _NoPrefButtonState extends State<NoPrefButton> {
-  @override
-  void initState() {
-    widget.controller.addListener(() {
-      setState(() {});
-    });
-    super.initState();
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    S locale = S.of(context);
-    return Expanded(
-      child: Container(
-          decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(SizeConfig.roundness8),
-            border: Border.all(
-                color: Colors.white.withOpacity(widget.controller.value),
-                width: 1.5),
-            color: UiConstants.kTambolaMidTextColor,
-          ),
-          padding: EdgeInsets.symmetric(vertical: SizeConfig.padding12),
-          child: Center(
-            child: Text(
-              locale.obAssetNoPrefButton,
-              style: TextStyles.rajdhaniSB.body1.colour(Colors.white),
-            ),
-          )),
-    );
-  }
-}
-
-class AssetCard extends StatelessWidget {
-  const AssetCard(
-      {required this.opacity, required this.assetPrefOption, super.key});
-  final double opacity;
-  final AssetPrefOptions assetPrefOption;
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      margin: EdgeInsets.only(right: SizeConfig.padding4),
-      decoration: BoxDecoration(
-        borderRadius: BorderRadius.circular(SizeConfig.roundness8),
-        border: Border.all(
-            color: (assetPrefOption == AssetPrefOptions.LENDBOX_P2P)
-                ? UiConstants.teal2.withOpacity(opacity)
-                : UiConstants.kBlogTitleColor.withOpacity(opacity),
-            width: 1.5),
-        color: (assetPrefOption == AssetPrefOptions.LENDBOX_P2P)
-            ? UiConstants.teal4
-            : UiConstants.kSaveDigitalGoldCardBg,
-      ),
-      padding: EdgeInsets.only(
-          left: SizeConfig.padding4,
-          right: SizeConfig.padding4,
-          bottom: SizeConfig.padding4,
-          top: SizeConfig.padding12),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: [
-              SvgPicture.asset(
-                (assetPrefOption == AssetPrefOptions.LENDBOX_P2P)
-                    ? a.Assets.floAsset
-                    : a.Assets.digitalGold,
-                height: SizeConfig.padding30,
-              ),
-              SizedBox(
-                width: SizeConfig.padding12,
-              ),
-              Text(
-                (assetPrefOption == AssetPrefOptions.LENDBOX_P2P)
-                    ? "Fello P2P"
-                    : "Digital Gold",
-                style: TextStyles.rajdhaniSB.title5.colour(Colors.white),
-              )
-            ],
-          ),
-          Padding(
-            padding: EdgeInsets.only(
-                left: SizeConfig.padding14,
-                right: SizeConfig.padding14,
-                top: SizeConfig.padding4),
-            child: getDescriptionText(assetPrefOption),
-          ),
-          Padding(
-            padding: EdgeInsets.only(
-                bottom: SizeConfig.padding4,
-                left: SizeConfig.padding4,
-                right: SizeConfig.padding4,
-                top: SizeConfig.padding20),
-            child: DetailsRow(
-              benefits: (assetPrefOption == AssetPrefOptions.LENDBOX_P2P)
-                  ? [
-                      Benefit(title: "P2P", subtitle: "Asset"),
-                      Benefit(title: "Upto 12%", subtitle: "Returns"),
-                      Benefit(title: "KYC", subtitle: "Required")
-                    ]
-                  : [
-                      Benefit(title: "24K", subtitle: "Gold"),
-                      Benefit(
-                          title: "Stable Returns", subtitle: "@Market Rate"),
-                      Benefit(title: "No KYC", subtitle: "Required")
-                    ],
-              bgColor: (assetPrefOption == AssetPrefOptions.LENDBOX_P2P)
-                  ? UiConstants.teal5
-                  : UiConstants.goldSellCardColor,
-              dividerColor: (assetPrefOption == AssetPrefOptions.LENDBOX_P2P)
-                  ? UiConstants.greyDivider
-                  : UiConstants.kBlogTitleColor,
-            ),
-          )
-        ],
-      ),
-    );
-  }
-}
-
-class DetailsRow extends StatelessWidget {
-  const DetailsRow(
-      {required this.benefits,
-      required this.bgColor,
-      required this.dividerColor,
-      super.key});
-
-  final Color bgColor;
-  final Color dividerColor;
-  final List<Benefit> benefits;
-
-  CrossAxisAlignment? getColumnAlignment(int i) {
-    switch (i) {
-      case 0:
-        return CrossAxisAlignment.start;
-      case 1:
-        return CrossAxisAlignment.center;
-      case 2:
-        return CrossAxisAlignment.end;
-    }
-    return null;
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      decoration: BoxDecoration(
-          borderRadius: BorderRadius.circular(SizeConfig.roundness8),
-          color: bgColor),
-      padding: EdgeInsets.only(
-          top: SizeConfig.padding8,
-          bottom: SizeConfig.padding8,
-          right: SizeConfig.padding16,
-          left: SizeConfig.padding16),
-      child: Row(
-          crossAxisAlignment: CrossAxisAlignment.center,
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            for (int i = 0; i < benefits.length; i++) ...[
-              Padding(
-                padding: EdgeInsets.only(
-                  top: SizeConfig.padding4,
-                  bottom: SizeConfig.padding4,
-                ),
-                child: Column(
-                  crossAxisAlignment: getColumnAlignment(i)!,
-                  children: [
-                    Text(
-                      benefits[i].title,
-                      style: TextStyles.rajdhaniSB.body1
-                          .colour(Colors.white)
-                          .setOpacity(0.8),
-                    ),
-                    Text(benefits[i].subtitle,
-                        style: TextStyles.rajdhani.body4
-                            .colour(Colors.white)
-                            .setOpacity(0.4))
-                  ],
-                ),
-              ),
-              if (i != 2)
-                SizedBox(
-                  height: SizeConfig.padding36,
-                  child: VerticalDivider(
-                    color: dividerColor,
-                    thickness: 2,
-                  ),
-                )
-            ],
-          ]),
-    );
-  }
-}
-
-Widget getStatsText(AssetPrefOptions assetPrefOptions) {
-  return (assetPrefOptions == AssetPrefOptions.LENDBOX_P2P)
+Widget getStatsText(AssetPrefType assetPrefOptions) {
+  return (assetPrefOptions == AssetPrefType.P2P)
       ? RichText(
           text: TextSpan(
               text: "₹12Cr+ invested",
@@ -442,48 +398,4 @@ Widget getStatsText(AssetPrefOptions assetPrefOptions) {
                   text: " Fello Investors",
                   style: TextStyles.sourceSans.body4.colour(Colors.white))
             ]));
-}
-
-Widget getDescriptionText(AssetPrefOptions assetPrefOptions) {
-  return (assetPrefOptions == AssetPrefOptions.LENDBOX_P2P)
-      ? RichText(
-          text: TextSpan(
-              text: "A P2P lending asset powered by",
-              style: TextStyles.sourceSans.body3
-                  .colour(Colors.white)
-                  .setOpacity(0.6),
-              children: [
-                TextSpan(
-                    text: " Lendbox",
-                    style: TextStyles.sourceSansB.body3
-                        .colour(Colors.white)
-                        .setOpacity(0.6)),
-                TextSpan(
-                    text: " with 8%, 10% & 12% returns plans",
-                    style: TextStyles.sourceSans.body3
-                        .colour(Colors.white)
-                        .setOpacity(0.6))
-              ]),
-          textAlign: TextAlign.center,
-        )
-      : RichText(
-          text: TextSpan(
-              text: "Invest in trusted gold at market rates, powered by",
-              style: TextStyles.sourceSans.body3
-                  .colour(Colors.white)
-                  .setOpacity(0.6),
-              children: [
-                TextSpan(
-                    text: " Augmont",
-                    style: TextStyles.sourceSansB.body3
-                        .colour(Colors.white)
-                        .setOpacity(0.6)),
-                TextSpan(
-                    text: " and get stable returns",
-                    style: TextStyles.sourceSans.body3
-                        .colour(Colors.white)
-                        .setOpacity(0.6))
-              ]),
-          textAlign: TextAlign.center,
-        );
 }

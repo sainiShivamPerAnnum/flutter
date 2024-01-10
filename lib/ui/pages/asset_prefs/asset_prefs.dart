@@ -1,4 +1,5 @@
-import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/model/sdui/sections/home_page_sections.dart'
+    as sections;
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/asset_prefs/asset_pref_vm.dart';
 import 'package:felloapp/ui/pages/asset_prefs/asset_selector.dart';
@@ -10,135 +11,107 @@ import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
-import 'asset_pref_bottom_sheet.dart';
-
 class AssetPrefView extends StatelessWidget {
-  const AssetPrefView({Key? key}) : super(key: key);
+  const AssetPrefView({required this.data, super.key});
+  final sections.PageData data;
 
-  String getButtonText(AssetPrefOptions? selectedAsset) {
+  String _getButtonLabel(S locale, sections.AssetPrefType? selectedAsset) {
     switch (selectedAsset) {
-      case AssetPrefOptions.LENDBOX_P2P:
-        return "WITH FELLO P2P";
-      case AssetPrefOptions.AUGMONT_GOLD:
-        return "WITH DIGITAL GOLD";
+      case sections.AssetPrefType.P2P:
+        return locale.obProceedWithP2P;
+      case sections.AssetPrefType.GOLD:
+        return locale.obProceedWithGold;
       default:
-        return "";
-    }
-  }
-
-  void handleProceedButton(AssetPreferenceViewModel model) {
-    switch (model.selectedAsset) {
-      case AssetPrefOptions.NO_PREF:
-        BaseUtil.openModalBottomSheet(
-            isBarrierDismissible: true,
-            content: SkipToHomeBottomSheet(model: model));
-        return;
-      case AssetPrefOptions.LENDBOX_P2P || AssetPrefOptions.AUGMONT_GOLD:
-        model.handleRouting(model.selectedAsset);
-      default:
-        return;
+        return locale.proceed;
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    final prefViewData = data.screens.assetPreference;
+
     return BaseView<AssetPreferenceViewModel>(builder: (context, model, child) {
-      final S locale = S.of(context);
+      final locale = S.of(context);
       return Scaffold(
         body: Stack(
           children: [
             const NewSquareBackground(),
             Padding(
               padding: EdgeInsets.only(
-                  top: SizeConfig.viewInsets.top,
-                  right: SizeConfig.padding16,
-                  left: SizeConfig.padding20),
+                top: SizeConfig.viewInsets.top,
+                right: SizeConfig.padding16,
+                left: SizeConfig.padding20,
+              ),
               child: Column(
                 children: [
-                  Row(
-                    children: [
-                      const Spacer(),
-                      InkWell(
-                        onTap: () {
-                          model.handleBottomSheet();
-                        },
-                        child: Text(
-                          locale.obAssetPrefBottomSheet2ButtonText1,
-                          style:
-                              TextStyles.rajdhaniB.body2.colour(Colors.white),
-                        ),
-                      ),
-                      SizedBox(
-                        width: SizeConfig.padding6,
-                      ),
-                      SvgPicture.asset(
-                        a.Assets.chevRonRightArrow,
-                        color: Colors.white,
-                      )
-                    ],
+                  Align(
+                    alignment: Alignment.centerRight,
+                    child: _SkipButton(
+                      label: locale.obAssetPrefBottomSheet2ButtonText1,
+                      onTap: model.onPressedSkip,
+                    ),
                   ),
                   SizedBox(
                     height: SizeConfig.padding24,
                   ),
-                  Text(locale.obAssetPrefGreeting(model.name ?? ""),
-                      style: TextStyles.rajdhaniSB.title5.colour(Colors.white)),
-                  Text(locale.obAssetWelcomeText,
-                      style: TextStyles.rajdhaniSB.body1.colour(Colors.white)),
+                  Text(
+                    locale.obAssetPrefGreeting(model.name),
+                    style: TextStyles.rajdhaniSB.title5,
+                  ),
+                  Text(
+                    locale.obAssetWelcomeText,
+                    style: TextStyles.rajdhaniSB.body1,
+                  ),
                   SizedBox(
                     height: SizeConfig.padding30,
                   ),
-                  Row(
-                    children: [
-                      Column(
-                        children: [
-                          Text(
-                            locale.obAssetPrefDescText1,
-                            style: TextStyles.rajdhaniSB.body1
-                                .colour(Colors.white)
-                                .setOpacity(0.8),
-                            textAlign: TextAlign.start,
+                  Align(
+                    alignment: Alignment.centerLeft,
+                    child: Column(
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          prefViewData.title,
+                          style: TextStyles.rajdhaniSB.body1.colour(
+                            Colors.white.withOpacity(.8),
                           ),
-                          SizedBox(
-                            height: SizeConfig.padding4,
+                        ),
+                        SizedBox(
+                          height: SizeConfig.padding4,
+                        ),
+                        Text(
+                          prefViewData.subtitle,
+                          style: TextStyles.rajdhani.body2.colour(
+                            UiConstants.grey1.withOpacity(.8),
                           ),
-                          Text(locale.obAssetPrefDescText2,
-                              style: TextStyles.rajdhani.body2
-                                  .colour(UiConstants.grey1)
-                                  .setOpacity(0.8))
-                        ],
-                      ),
-                      const Spacer()
-                    ],
+                        )
+                      ],
+                    ),
                   ),
                   SizedBox(
                     height: SizeConfig.padding24,
                   ),
                   Column(
                     children: [
-                      AssetSelector(
-                          assetPrefOptions: AssetPrefOptions.LENDBOX_P2P,
-                          model: model,
-                          onSelect: model.changeSelectedAsset),
-                      AssetSelector(
-                          assetPrefOptions: AssetPrefOptions.AUGMONT_GOLD,
-                          model: model,
-                          onSelect: model.changeSelectedAsset),
-                      AssetSelector(
-                        assetPrefOptions: AssetPrefOptions.NO_PREF,
-                        model: model,
-                        onSelect: model.changeSelectedAsset,
-                      ),
+                      for (int i = 0; i < prefViewData.options.length; i++)
+                        AssetSelector(
+                          isSelected: (pref) => pref == model.selectedAsset,
+                          assetPrefOption: prefViewData.options[i],
+                          onSelect: model.changeSelectedAsset,
+                        ),
                     ],
                   ),
-                  Spacer(),
+                  const Spacer(),
                   Padding(
                     padding: EdgeInsets.only(bottom: SizeConfig.padding20),
                     child: SecondaryButton(
-                        onPressed: () {
-                          handleProceedButton(model);
-                        },
-                        label: locale.obAssetPrefMainButton(
-                            getButtonText(model.selectedAsset))),
+                      disabled: model.selectedAsset == null,
+                      onPressed: () => model.onProceed(prefViewData.notSure),
+                      label: _getButtonLabel(
+                        locale,
+                        model.selectedAsset,
+                      ),
+                    ),
                   )
                 ],
               ),
@@ -147,5 +120,39 @@ class AssetPrefView extends StatelessWidget {
         ),
       );
     });
+  }
+}
+
+class _SkipButton extends StatelessWidget {
+  const _SkipButton({
+    required this.label,
+    required this.onTap,
+  });
+  final String label;
+  final VoidCallback onTap;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: onTap,
+      child: Row(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Text(
+            label,
+            style: TextStyles.rajdhaniB.body2.colour(
+              Colors.white,
+            ),
+          ),
+          SizedBox(
+            width: SizeConfig.padding6,
+          ),
+          SvgPicture.asset(
+            a.Assets.chevRonRightArrow,
+            color: Colors.white,
+          )
+        ],
+      ),
+    );
   }
 }
