@@ -41,31 +41,14 @@ class AssetPreferenceViewModel extends BaseViewModel {
     }
   }
 
-  void onPressedSkip() {
-    BaseUtil.openModalBottomSheet(
-      isBarrierDismissible: true,
-      content: NoPrefBottomSheet(
-        model: this,
-      ),
-    );
+  void onPressedSkip(BottomSheetComponent bottomSheetData) {
+    _showBottomSheet(bottomSheetData);
   }
 
   void onProceed(BottomSheetComponent bottomSheetData) {
     switch (selectedAsset) {
       case AssetPrefType.NONE:
-        BaseUtil.openModalBottomSheet(
-          addToScreenStack: true,
-          isBarrierDismissible: true,
-          isScrollControlled: true,
-          backgroundColor: UiConstants.grey4,
-          borderRadius: BorderRadius.vertical(
-            top: Radius.circular(SizeConfig.roundness24),
-          ),
-          content: SkipToHomeBottomSheet(
-            model: this,
-            bottomSheetData: bottomSheetData,
-          ),
-        );
+        _showBottomSheet(bottomSheetData);
         break;
 
       case AssetPrefType.P2P || AssetPrefType.GOLD:
@@ -74,5 +57,21 @@ class AssetPreferenceViewModel extends BaseViewModel {
 
       default:
     }
+  }
+
+  void _showBottomSheet(BottomSheetComponent bottomSheetData) {
+    BaseUtil.openModalBottomSheet(
+      addToScreenStack: true,
+      isBarrierDismissible: true,
+      isScrollControlled: true,
+      backgroundColor: UiConstants.grey4,
+      borderRadius: BorderRadius.vertical(
+        top: Radius.circular(SizeConfig.roundness24),
+      ),
+      content: DSLBottomSheet(
+        model: this,
+        bottomSheetData: bottomSheetData,
+      ),
+    );
   }
 }
