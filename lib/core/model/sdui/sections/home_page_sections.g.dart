@@ -140,6 +140,8 @@ Story _$StoryFromJson(Map<String, dynamic> json) => Story(
       thumbnail: json['thumbnail'] as String? ?? '',
       blurHash: json['blurHash'] as String? ?? '',
       story: json['story'] as String? ?? '',
+      id: json['id'] as String? ?? '',
+      order: json['order'] as int? ?? 0,
     );
 
 StepsData _$StepsDataFromJson(Map<String, dynamic> json) => StepsData(

@@ -9,9 +9,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:lottie/lottie.dart';
 
-const String COMING_FROM_SPLASH = "fromSplash";
-const String COMING_FROM_HOME = "fromHome";
-
 class OnBoardingView extends StatefulWidget {
   const OnBoardingView({Key? key}) : super(key: key);
 

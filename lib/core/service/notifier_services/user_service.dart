@@ -12,7 +12,6 @@ import 'package:felloapp/core/model/journey_models/user_journey_stats_model.dart
 import 'package:felloapp/core/model/page_config_model.dart';
 import 'package:felloapp/core/model/portfolio_model.dart';
 import 'package:felloapp/core/model/quick_save_model.dart';
-import 'package:felloapp/core/model/user_augmont_details_model.dart';
 import 'package:felloapp/core/model/user_bootup_model.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
@@ -90,7 +89,6 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
 
   UserFundWallet? _userFundWallet;
   UserJourneyStatsModel? _userJourneyStats;
-  UserAugmontDetail? _userAugmontDetails;
   UserBootUpDetailsModel? userBootUp;
   DynamicUI? pageConfigs;
   QuickSaveModel? quickSaveModel;
@@ -228,7 +226,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   }
 
   set userJourneyStats(UserJourneyStatsModel? stats) {
-    if (stats?.prizeSubtype != _userJourneyStats?.prizeSubtype ?? '' as bool) {
+    if (stats?.prizeSubtype != _userJourneyStats?.prizeSubtype) {
       ScratchCardService.previousPrizeSubtype =
           _userJourneyStats?.prizeSubtype ?? '';
     }
@@ -264,13 +262,6 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     _isSimpleKycVerified = val;
     notifyListeners(UserServiceProperties.mySimpleKycVerified);
     _logger.d("Email:User simple kyc verified, property listeners notified");
-  }
-
-  setUserAugmontDetails(value) {
-    _userAugmontDetails = value;
-    notifyListeners(UserServiceProperties.myAugmontDetails);
-    _logger.d(
-        "AgmontDetails :User augmontDetails updated, property listeners notified");
   }
 
   bool checkIfUsernameHasAddedUsername() {
@@ -339,8 +330,8 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
       PackageInfo packageInfo = await PackageInfo.fromPlatform();
       appVersion = packageInfo.buildNumber;
 
-      lastOpened = PreferenceHelper.getString(Constants.LAST_OPENED) ?? "";
-      dayOpenCount = PreferenceHelper.getInt(Constants.DAY_OPENED_COUNT) ?? 0;
+      lastOpened = PreferenceHelper.getString(Constants.LAST_OPENED);
+      dayOpenCount = PreferenceHelper.getInt(Constants.DAY_OPENED_COUNT);
 
       final ApiResponse<UserBootUpDetailsModel> res =
           await _userRepo.fetchUserBootUpRssponse(
@@ -394,8 +385,8 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
       String formattedTime = DateFormat('kk:mm:ss:a').format(now);
       String formattedDate = formatter.format(now);
 
-      prefs.setString(
-          Constants.LAST_OPENED, formattedDate + " " + formattedTime);
+      await prefs.setString(
+          Constants.LAST_OPENED, "$formattedDate $formattedTime");
     } catch (e) {
       log(e.toString());
     }
@@ -420,7 +411,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
       }
     } catch (e) {
       _logger.e(e.toString());
-      _internalOpsService
+      await _internalOpsService
           .logFailure(baseUser?.uid ?? '', FailType.UserServiceInitFailed, {
         "title": "UserService initialization Failed",
         "error": e.toString(),
@@ -448,7 +439,6 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
       _isEmailVerified = false;
       _isSimpleKycVerified = false;
       showSecurityPrompt = false;
-      _userAugmontDetails = null;
       referralAlertDialog = null;
 
       // _myUpiId = null;
@@ -518,27 +508,6 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     }
   }
 
-  // Note: Already Setting in Root uneccessary Calling
-  // Future<void> setProfilePicture() async {
-  //   if (await CacheManager.readCache(key: 'dpUrl') == null) {
-  //     try {
-  //       if (_baseUser != null) {
-  //         setMyUserDpUrl(await _dbModel.getUserDP(baseUser.uid));
-  //         _logger.d("No cached profile picture found. updated from server");
-  //       }
-  //       if (_myUserDpUrl != null) {
-  //         await CacheManager.writeCache(
-  //             key: 'dpUrl', value: _myUserDpUrl, type: CacheType.string);
-  //         _logger.d("Profile picture fetched from server and cached");
-  //       }
-  //     } catch (e) {
-  //       _logger.e(e.toString());
-  //     }
-  //   } else {
-  //     setMyUserDpUrl(await CacheManager.readCache(key: 'dpUrl'));
-  //   }
-  // }
-
   Future<void> getUserFundWalletData() async {
     if (baseUser != null) {
       UserFundWallet? temp = (await _userRepo.getFundBalance()).model;
@@ -550,7 +519,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
           temp.tickets?["total"] ?? 0,
         ));
         userFundWallet = temp;
-        _triggerHomeScreenWidgetUpdate();
+        await _triggerHomeScreenWidgetUpdate();
       }
     }
   }
@@ -572,7 +541,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
                 prefs.getString(Constants.FELLO_BALANCE)!.isNotEmpty &&
                 prefs.getString(Constants.FELLO_BALANCE) !=
                     userFundWallet!.netWorth!.toString())) {
-      prefs.setString(
+      await prefs.setString(
         Constants.FELLO_BALANCE,
         userFundWallet!.netWorth!.toString(),
       );
@@ -634,7 +603,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
       log("Showing referral alert dialog",
           name: "checkForNewNotifications method");
 
-      BaseUtil.openDialog(
+      await BaseUtil.openDialog(
         isBarrierDismissible: true,
         addToScreenStack: true,
         hapticVibrate: true,
@@ -646,9 +615,9 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     }
   }
 
-  Future<void> fcmHandlerReferralGT(String? _gtId) async {
+  Future<void> fcmHandlerReferralGT(String? gtId) async {
     _logger.d("Handling referral GT");
-    checkForNewNotifications();
+    await checkForNewNotifications();
   }
 
   void setPageConfigs(DynamicUI dynamicUi) {
@@ -685,19 +654,6 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     return response.model;
   }
 
-  // Future<void> fetchUserAugmontDetail() async {
-  //   if (userAugmontDetails == null) {
-  //     ApiResponse<UserAugmontDetail> augmontDetailResponse =
-  //         await _userRepo.getUserAugmontDetails();
-  //     if (augmontDetailResponse.isSuccess())
-  //       setUserAugmontDetails(augmontDetailResponse.model);
-  //   }
-  // }
-  // Future<bool> completeOnboarding() async {
-  //   ApiResponse response = await _userRepo.completeOnboarding();
-  //   return response.model;
-  // }
-
   Future<bool> updateProfilePicture(XFile? selectedProfilePicture) async {
     Directory supportDir;
     UploadTask uploadTask;
@@ -711,8 +667,8 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
 
     String imageName = selectedProfilePicture!.path.split("/").last;
     String targetPath = "${supportDir.path}/c-$imageName";
-    print("temp path: " + targetPath);
-    print("orignal path: " + selectedProfilePicture.path);
+    print("temp path: $targetPath");
+    print("orignal path: ${selectedProfilePicture.path}");
 
     File compressedFile = File(selectedProfilePicture.path);
 
@@ -749,7 +705,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
         Map<String, dynamic> errorDetails = {
           'error_msg': 'Method call to upload picture failed',
         };
-        _internalOpsService.logFailure(
+        await _internalOpsService.logFailure(
           baseUser!.uid,
           FailType.ProfilePictureUpdateFailed,
           errorDetails,
@@ -760,7 +716,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     }
   }
 
-  authenticateDevice() async {
+  Future authenticateDevice() async {
     try {
       if (baseUser?.userPreferences != null &&
           baseUser?.userPreferences.getPreference(Preferences.APPLOCK) == 1) {
@@ -866,7 +822,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
       const platform = MethodChannel("methodChannel/deviceData");
       try {
         final List result = await platform.invokeMethod('getInstalledApps');
-        for (var e in result) {
+        for (final e in result) {
           packages[e["app_name"]] = e["package_name"];
           // packages.add(_parseData(e));
           print(packages.length);
@@ -879,11 +835,4 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     }
     return {};
   }
-
-// Package _parseData(Map<dynamic, dynamic> data) {
-//   final appName = data["app_name"];
-//   final packageName = data["package_name"];
-//   final icon = data["icon"];
-//   return {"appName": appName, "packageName": packageName};
-// }
 }

@@ -1,5 +1,6 @@
 import 'package:felloapp/core/model/sdui/sections/home_page_sections.dart'
     as sections;
+import 'package:felloapp/ui/pages/hometabs/save/stories/stories_section/stories_section_view.dart';
 import 'package:flutter/material.dart' hide Action;
 
 import '../../../../../util/styles/styles.dart';
@@ -43,13 +44,19 @@ class NewUserSaveView extends StatelessWidget {
     final homePageData = data.screens.home;
     final sectionOrder = homePageData.sectionOrder;
     final section = homePageData.sections;
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          for (var i = 0; i < sectionOrder.length; i++)
-            _getWidgetBySection(section[sectionOrder[i]]),
-        ],
+    return NotificationListener<OverscrollIndicatorNotification>(
+      onNotification: (notification) {
+        notification.disallowIndicator(); // to avoid glow
+        return true;
+      },
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            for (var i = 0; i < sectionOrder.length; i++)
+              _getWidgetBySection(section[sectionOrder[i]]),
+          ],
+        ),
       ),
     );
   }

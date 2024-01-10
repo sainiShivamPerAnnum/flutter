@@ -13,6 +13,7 @@ import 'package:felloapp/core/repository/internal_ops_repo.dart';
 import 'package:felloapp/core/repository/investment_actions_repo.dart';
 import 'package:felloapp/core/repository/journey_repo.dart';
 import 'package:felloapp/core/repository/lendbox_repo.dart';
+import 'package:felloapp/core/repository/local/stories_repo.dart';
 import 'package:felloapp/core/repository/payment_repo.dart';
 import 'package:felloapp/core/repository/paytm_repo.dart';
 import 'package:felloapp/core/repository/power_play_repo.dart';
@@ -32,6 +33,7 @@ import 'package:felloapp/core/service/analytics/mixpanel_analytics.dart';
 import 'package:felloapp/core/service/analytics/singular_analytics.dart';
 import 'package:felloapp/core/service/analytics/webengage_analytics.dart';
 import 'package:felloapp/core/service/api.dart';
+import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_datapayload.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_v2/fcm_handler_v2.dart';
@@ -129,6 +131,11 @@ Future<void> setupLocator() async {
   locator.registerLazySingleton(S.new);
 
   //Services
+  locator.registerSingletonAsync<LocalDbService>(() async {
+    final db = LocalDbService();
+    await db.initialize();
+    return db;
+  });
   locator.registerLazySingleton(Api.new);
   locator.registerLazySingleton(LocalApi.new);
   locator.registerLazySingleton(FcmHandlerDataPayloads.new);
@@ -199,6 +206,9 @@ Future<void> setupLocator() async {
   locator.registerLazySingleton(ClientCommsRepo.new);
   locator.registerLazySingleton(ReportRepository.new);
   locator.registerLazySingleton(() => FcmHandlerV2(locator()));
+  locator.registerLazySingleton<StoriesRepository>(
+    () => StoriesRepository(locator()),
+  );
 
   //ROOT
   locator.registerLazySingleton(CardActionsNotifier.new);

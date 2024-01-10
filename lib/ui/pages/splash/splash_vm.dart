@@ -23,12 +23,11 @@ import 'package:flutter/material.dart';
 class LauncherViewModel extends BaseViewModel {
   bool _isSlowConnection = false;
   Timer? _timer3;
-  Stopwatch? _logoWatch;
   bool _isFetchingData = true;
 
   final navigator = AppState.delegate!.appState;
 
-  AnimationController? loopOutlottieAnimationController,
+  AnimationController? loopOutLottieAnimationController,
       loopingLottieAnimationController;
   int loopLottieDuration = 2500;
 
@@ -71,7 +70,7 @@ class LauncherViewModel extends BaseViewModel {
         if (!isFetchingData) {
           notifyListeners();
           loopingLottieAnimationController!.stop();
-          unawaited(loopOutlottieAnimationController!.forward());
+          unawaited(loopOutLottieAnimationController!.forward());
           Future.delayed(const Duration(milliseconds: 900)).then((_) {
             exitSplash();
           });
@@ -92,12 +91,10 @@ class LauncherViewModel extends BaseViewModel {
 
   void exit() {
     _timer3?.cancel();
-    _logoWatch?.stop();
   }
 
   Future<void> initLogic() async {
     try {
-      await CacheService.initialize();
       //Initialize every time
       await _getterRepo.setUpAppConfigs();
       final response = await _getterRepo.getPageData();
@@ -140,7 +137,7 @@ class LauncherViewModel extends BaseViewModel {
       bool showOnboarding = PreferenceHelper.getBool(
           PreferenceHelper.CACHE_ONBOARDING_COMPLETION);
 
-      if (showOnboarding == false) {
+      if (!showOnboarding) {
         navigator.currentAction = PageAction(
           state: PageState.replaceAll,
           page: OnBoardingViewPageConfig,

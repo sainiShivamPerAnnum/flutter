@@ -5,6 +5,8 @@ const assetBaseUrl = 'https://d37gtxigg82zaw.cloudfront.net/';
 class Assets {
   const Assets._();
   static const String logoMaxSize = 'images/fello_logo.png';
+  static const String logoWhite =
+      'https://ik.imagekit.io/9xfwtu0xm/fello_stories_logo.png';
   static const String logoShortform = 'assets/svg/fello-short-logo.svg';
 
   static const String referGraphic = 'images/transfer.png';

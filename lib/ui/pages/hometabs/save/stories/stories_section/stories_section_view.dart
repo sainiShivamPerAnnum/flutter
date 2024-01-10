@@ -1,17 +1,47 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/model/cache_model/story_model.dart';
 import 'package:felloapp/core/model/sdui/sections/home_page_sections.dart'
     as sections;
+import 'package:felloapp/core/repository/local/stories_repo.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/ui/pages/hometabs/save/stories/stories_page.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart' hide Action;
 
-/// TODO(@DK070202): Current active story.
-class StoriesSection extends StatelessWidget {
+class StoriesSection extends StatefulWidget {
   const StoriesSection({
     required this.data,
     super.key,
   });
 
   final sections.StoriesData data;
+
+  @override
+  State<StoriesSection> createState() => _StoriesSectionState();
+}
+
+class _StoriesSectionState extends State<StoriesSection> {
+  late final StoriesRepository _storiesRepo = locator();
+
+  @override
+  void initState() {
+    super.initState();
+    _storiesRepo.addOrUpdateStories(widget.data.stories);
+  }
+
+  void _onTapStory(int index) {
+    AppState.delegate!.appState.currentAction = PageAction(
+      state: PageState.addWidget,
+      page: StoriesPageConfig,
+      widget: StoriesPage(
+        stories: widget.data.stories,
+        entryIndex: index,
+      ),
+    );
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -39,21 +69,32 @@ class StoriesSection extends StatelessWidget {
           )
         ],
       ),
-      child: SingleChildScrollView(
-        scrollDirection: Axis.horizontal,
-        child: Row(
-          children: [
-            for (var i = 0; i < 10; i++)
-              Padding(
-                padding: EdgeInsets.only(
-                  left: i == 0 ? SizeConfig.padding20 : SizeConfig.padding24,
-                  right: i == 9 ? SizeConfig.padding20 : 0,
+      child: StreamBuilder<List<StoryCollection>>(
+        stream: _storiesRepo.listenChangesInStories(),
+        builder: (context, snapshot) => SingleChildScrollView(
+          scrollDirection: Axis.horizontal,
+          child: Row(
+            children: [
+              for (var i = 0; i < widget.data.stories.length; i++)
+                Padding(
+                  padding: EdgeInsets.only(
+                    left: i == 0 ? SizeConfig.padding20 : SizeConfig.padding24,
+                    right: i == widget.data.stories.length - 1
+                        ? SizeConfig.padding20
+                        : 0,
+                  ),
+                  child: InkWell(
+                    onTap: () => _onTapStory(i),
+                    child: _StoryCard(
+                      storyStatus: _storiesRepo.getStoryStatusById(
+                        widget.data.stories[i].id,
+                      ),
+                      story: widget.data.stories[i],
+                    ),
+                  ),
                 ),
-                child: _StoryCard(
-                  shouldHighlight: i == 0,
-                ),
-              ),
-          ],
+            ],
+          ),
         ),
       ),
     );
@@ -61,10 +102,12 @@ class StoriesSection extends StatelessWidget {
 }
 
 class _StoryCard extends StatefulWidget {
-  final bool shouldHighlight;
+  final StoryStatus storyStatus;
+  final sections.Story story;
 
   const _StoryCard({
-    this.shouldHighlight = false,
+    required this.story,
+    required this.storyStatus,
   });
 
   @override
@@ -92,7 +135,7 @@ class _StoryCardState extends State<_StoryCard>
       curve: Curves.easeIn,
     ));
 
-    if (widget.shouldHighlight) {
+    if (widget.storyStatus.isFocused) {
       _focusAnimationController.repeat(
         reverse: true,
       );
@@ -103,45 +146,47 @@ class _StoryCardState extends State<_StoryCard>
   void didUpdateWidget(covariant _StoryCard oldWidget) {
     super.didUpdateWidget(oldWidget);
 
-    if (oldWidget.shouldHighlight && !widget.shouldHighlight) {
+    if (oldWidget.storyStatus.isFocused && !widget.storyStatus.isFocused) {
       _focusAnimationController.reset();
     }
 
-    if (!oldWidget.shouldHighlight && widget.shouldHighlight) {
+    if (!oldWidget.storyStatus.isFocused && widget.storyStatus.isFocused) {
       _focusAnimationController.repeat(
         reverse: true,
       );
     }
   }
 
+  Color _getColorByStatus() {
+    return switch (widget.storyStatus) {
+      StoryStatus.focused => UiConstants.teal3,
+      StoryStatus.toBeViewed => Colors.white,
+      StoryStatus.viewed => Colors.white.withOpacity(.5)
+    };
+  }
+
   @override
   Widget build(BuildContext context) {
-    final radius = Radius.circular(
-      SizeConfig.roundness16,
-    );
-
-    final innerRadius = Radius.circular(
-      SizeConfig.roundness12,
-    );
+    final story = widget.story;
 
     return Column(
       children: [
         CustomPaint(
           painter: _StoryFocusPainter(
-            radius: radius,
+            radius: Radius.circular(SizeConfig.roundness16),
             animation: _tween,
-            borderColor:
-                widget.shouldHighlight ? UiConstants.teal3 : Colors.white,
+            borderColor: _getColorByStatus(),
           ),
           child: Container(
             padding: EdgeInsets.all(SizeConfig.padding4),
             height: 88,
             width: 80,
             child: ClipRRect(
-              borderRadius: BorderRadius.all(innerRadius),
+              borderRadius: BorderRadius.all(
+                Radius.circular(SizeConfig.roundness12),
+              ),
               child: CachedNetworkImage(
-                imageUrl:
-                    'https://ik.imagekit.io/9xfwtu0xm/story%20thumbnail/fello.png',
+                imageUrl: story.thumbnail,
               ),
             ),
           ),
@@ -150,14 +195,14 @@ class _StoryCardState extends State<_StoryCard>
           height: SizeConfig.padding8,
         ),
         Text(
-          'KNOW',
+          story.title,
           style: TextStyles.sourceSansSB.body4.copyWith(
             color: UiConstants.teal3,
             height: 1.5,
           ),
         ),
         Text(
-          'FELLO',
+          story.subtitle,
           style: TextStyles.sourceSansSB.body4.copyWith(
             height: 1.5,
           ),

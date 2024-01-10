@@ -16,7 +16,6 @@ import 'package:felloapp/core/model/page_config_model.dart';
 import 'package:felloapp/core/model/promo_cards_model.dart';
 import 'package:felloapp/core/model/quick_save_model.dart';
 import 'package:felloapp/core/model/sdui/sections/home_page_sections.dart';
-import 'package:felloapp/core/model/story_model.dart';
 import 'package:felloapp/core/model/sub_combos_model.dart';
 import 'package:felloapp/core/model/tambola_offers_model.dart';
 import 'package:felloapp/core/model/ui_config_models/ui_config_models.dart';
@@ -161,7 +160,7 @@ class GetterRepository extends BaseRepo {
     final response = await APIService.instance.getData(
       '',
       apiName: '$_getters/getPageData',
-      cBaseUrl: 'https://mocki.io/v1/3f8eefa5-6d89-4eeb-9b4e-d734ee85343b',
+      cBaseUrl: 'https://mocki.io/v1/c247e363-e66d-46ca-a64b-a675d0ce0011',
     );
     try {
       return ApiResponse(
@@ -306,27 +305,6 @@ class GetterRepository extends BaseRepo {
     } catch (e) {
       logger.e(e.toString());
       return ApiResponse.withError(e.toString(), 400);
-    }
-  }
-
-  Future<ApiResponse<List<StoryItemModel>>> getStory({String? topic}) async {
-    try {
-      final response = await APIService.instance.getData(
-        '${ApiPath.kStory}/$topic',
-        cBaseUrl: _baseUrl,
-        queryParams: {"topic": topic},
-        apiName: '$_getters/getStoryByTopic',
-      );
-
-      final responseData = response["data"];
-
-      logger.d(responseData);
-      final events = StoryItemModel.helper.fromMapArray(responseData['slides']);
-
-      return ApiResponse<List<StoryItemModel>>(model: events, code: 200);
-    } catch (e) {
-      logger.e(e.toString());
-      return ApiResponse.withError("Unable to fetch stories", 400);
     }
   }
 

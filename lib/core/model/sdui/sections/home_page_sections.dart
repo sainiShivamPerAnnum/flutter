@@ -240,6 +240,8 @@ class Story {
   final String blurHash;
   final String story;
   final List<Cta> cta;
+  final String id;
+  final int order;
 
   const Story({
     this.cta = const [],
@@ -248,6 +250,8 @@ class Story {
     this.thumbnail = '',
     this.blurHash = '',
     this.story = '',
+    this.id = '',
+    this.order = 0,
   });
 
   factory Story.fromJson(Map<String, dynamic> json) => _$StoryFromJson(json);

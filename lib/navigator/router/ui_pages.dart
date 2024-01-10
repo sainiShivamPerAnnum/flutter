@@ -100,6 +100,7 @@ const String BalloonLottieScreenPath = "/bolloonLottieScreenPath";
 const String MaturityWithdrawalSuccessViewPath =
     "/maturityWithdrawalSuccessViewPath";
 const String FelloBadgeHomePath = "/felloBadgeHomePath";
+const String StoriesPath = "/storiesPath";
 
 //GoldPro
 const String GoldProDetailsPath = "/goldProDetailsPath";
@@ -215,7 +216,8 @@ enum Pages {
   GoldProTxnsDetailsView,
   //TICKETS
   TicketsIntroViewPath,
-  TicketsTutorialViewPath
+  TicketsTutorialViewPath,
+  Stories,
 }
 
 class PageConfiguration {
@@ -886,3 +888,10 @@ PageConfiguration FelloBadgeHomeViewPageConfig = PageConfiguration(
     path: FelloBadgeHomePath,
     uiPage: Pages.FelloBadgeHome,
     name: "Fello Badge Home View Screen");
+
+PageConfiguration StoriesPageConfig = PageConfiguration(
+  key: 'StoriesViewPath',
+  path: StoriesPath,
+  uiPage: Pages.Stories,
+  name: "New user stories",
+);
