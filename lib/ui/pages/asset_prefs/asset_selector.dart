@@ -4,9 +4,10 @@ import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 
 const _kAnimationDuration = Duration(milliseconds: 200);
+const _kCurve = Curves.easeIn;
 
-class AssetSelector extends StatefulWidget {
-  const AssetSelector({
+class AssetOptionWidget extends StatefulWidget {
+  const AssetOptionWidget({
     required this.onSelect,
     required this.isSelected,
     required this.assetPrefOption,
@@ -18,10 +19,10 @@ class AssetSelector extends StatefulWidget {
   final bool Function(AssetPrefType) isSelected;
 
   @override
-  State<AssetSelector> createState() => _AssetSelectorState();
+  State<AssetOptionWidget> createState() => _AssetOptionWidgetState();
 }
 
-class _AssetSelectorState extends State<AssetSelector>
+class _AssetOptionWidgetState extends State<AssetOptionWidget>
     with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
@@ -31,7 +32,7 @@ class _AssetSelectorState extends State<AssetSelector>
       child: Column(
         children: [
           Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
+            crossAxisAlignment: CrossAxisAlignment.center,
             children: [
               _Radio(
                 isSelected: isSelected,
@@ -53,9 +54,6 @@ class _AssetSelectorState extends State<AssetSelector>
               ),
             ],
           ),
-          SizedBox(
-            height: SizeConfig.padding24,
-          ),
         ],
       ),
     );
@@ -71,30 +69,28 @@ class _Radio extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Padding(
-      padding: EdgeInsets.only(top: SizeConfig.padding20),
-      child: Container(
-        width: SizeConfig.padding1 * 23,
-        height: SizeConfig.padding1 * 23,
-        decoration: BoxDecoration(
-          shape: BoxShape.circle,
-          border: Border.all(color: UiConstants.grey2),
-        ),
-        padding: EdgeInsets.all(SizeConfig.padding4),
-        child: AnimatedOpacity(
-          duration: _kAnimationDuration,
-          opacity: isSelected ? 1 : 0,
+    return Container(
+      width: SizeConfig.padding1 * 23,
+      height: SizeConfig.padding1 * 23,
+      decoration: BoxDecoration(
+        shape: BoxShape.circle,
+        border: Border.all(color: UiConstants.grey2),
+      ),
+      padding: EdgeInsets.all(SizeConfig.padding4),
+      child: AnimatedOpacity(
+        duration: _kAnimationDuration,
+        curve: _kCurve,
+        opacity: isSelected ? 1 : 0,
+        child: Container(
+          padding: EdgeInsets.all(SizeConfig.padding4),
+          decoration: const BoxDecoration(
+            color: UiConstants.teal3,
+            shape: BoxShape.circle,
+          ),
           child: Container(
-            padding: EdgeInsets.all(SizeConfig.padding4),
             decoration: const BoxDecoration(
-              color: UiConstants.teal3,
               shape: BoxShape.circle,
-            ),
-            child: Container(
-              decoration: const BoxDecoration(
-                shape: BoxShape.circle,
-                color: UiConstants.kBackgroundColor,
-              ),
+              color: UiConstants.kBackgroundColor,
             ),
           ),
         ),
@@ -117,6 +113,7 @@ class NoPrefButton extends StatelessWidget {
   Widget build(BuildContext context) {
     return AnimatedContainer(
       duration: _kAnimationDuration,
+      curve: _kCurve,
       alignment: Alignment.center,
       decoration: BoxDecoration(
         color: UiConstants.kTambolaMidTextColor,
@@ -183,12 +180,13 @@ class AssetCard extends StatelessWidget {
         ),
         AnimatedPadding(
           duration: _kAnimationDuration,
+          curve: _kCurve,
           padding: EdgeInsets.only(
             bottom: isSelected ? SizeConfig.padding44 : 0,
           ),
           child: AnimatedContainer(
             duration: _kAnimationDuration,
-            margin: EdgeInsets.only(right: SizeConfig.padding4),
+            curve: _kCurve,
             decoration: BoxDecoration(
               borderRadius: BorderRadius.circular(SizeConfig.roundness8),
               border: Border.all(

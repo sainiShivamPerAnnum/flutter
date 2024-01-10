@@ -1,6 +1,8 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/connectivity_status_enum.dart';
+import 'package:felloapp/core/model/sdui/sections/home_page_sections.dart';
 import 'package:felloapp/core/service/notifier_services/connectivity_service.dart';
+import 'package:felloapp/util/action_resolver.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -985,6 +987,87 @@ class SecondaryButton extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class SecondaryOutlinedButton extends StatelessWidget {
+  const SecondaryOutlinedButton({
+    required this.onPressed,
+    required this.label,
+    this.disabled = false,
+    super.key,
+  });
+
+  final VoidCallback onPressed;
+  final String label;
+  final bool disabled;
+
+  void _onTap() {
+    if (disabled) return;
+    onPressed();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final size = Size(
+      SizeConfig.screenWidth! - SizeConfig.pageHorizontalMargins * 2,
+      SizeConfig.padding44,
+    );
+
+    return OutlinedButton(
+      style: ButtonStyle(
+        iconColor: const MaterialStatePropertyAll(Colors.white),
+        minimumSize: MaterialStatePropertyAll(size),
+        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        shape: MaterialStatePropertyAll(
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(SizeConfig.roundness5),
+          ),
+        ),
+        side: const MaterialStatePropertyAll(
+          BorderSide(color: Colors.white),
+        ),
+      ),
+      onPressed: _onTap,
+      child: Text(
+        label,
+        style: TextStyles.rajdhaniB.body1.colour(
+          Colors.white,
+        ),
+      ),
+    );
+  }
+}
+
+class DSLButtonResolver extends StatelessWidget {
+  const DSLButtonResolver({
+    required this.cta,
+    super.key,
+    this.preResolve,
+  });
+
+  final Cta cta;
+  final VoidCallback? preResolve;
+
+  void _onPressed() {
+    preResolve?.call();
+    final action = cta.action;
+    if (action == null) return;
+    ActionResolver.instance.resolve(action);
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return switch (cta.type) {
+      CTAType.secondary => SecondaryButton(
+          onPressed: _onPressed,
+          label: cta.label,
+        ),
+      CTAType.secondaryOutline => SecondaryOutlinedButton(
+          onPressed: _onPressed,
+          label: cta.label,
+        ),
+    };
   }
 }
 

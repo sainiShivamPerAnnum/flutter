@@ -94,10 +94,15 @@ class AssetPrefView extends StatelessWidget {
                   Column(
                     children: [
                       for (int i = 0; i < prefViewData.options.length; i++)
-                        AssetSelector(
-                          isSelected: (pref) => pref == model.selectedAsset,
-                          assetPrefOption: prefViewData.options[i],
-                          onSelect: model.changeSelectedAsset,
+                        Padding(
+                          padding: EdgeInsets.only(
+                            bottom: SizeConfig.padding24,
+                          ),
+                          child: AssetOptionWidget(
+                            isSelected: (pref) => pref == model.selectedAsset,
+                            assetPrefOption: prefViewData.options[i],
+                            onSelect: model.changeSelectedAsset,
+                          ),
                         ),
                     ],
                   ),

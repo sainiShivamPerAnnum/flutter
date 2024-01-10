@@ -55,11 +55,20 @@ class SkipToHomeBottomSheet extends StatelessWidget {
           SizedBox(
             height: SizeConfig.padding24,
           ),
-          SecondaryButton(
-            onPressed: () {
-              model.handleRouting(AssetPrefType.NONE);
-            },
-            label: 'PROCEED TO HOME',
+          Row(
+            children: [
+              for (int i = 0; i < data.cta.length; i++) ...[
+                Expanded(
+                  child: DSLButtonResolver(
+                    cta: data.cta[i],
+                  ),
+                ),
+                if (i != data.cta.length - 1)
+                  SizedBox(
+                    width: SizeConfig.padding14,
+                  )
+              ]
+            ],
           ),
           SizedBox(
             height: SizeConfig.padding18,
