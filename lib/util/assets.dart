@@ -437,4 +437,11 @@ class Assets {
       'https://fello-dev-uploads.s3.ap-south-1.amazonaws.com/super_fello_title.svg';
   static const String kycSecurity = "assets/images/kyc_security.png";
   static const String stepCircle = "assets/svg/steps_circle.svg";
+
+  static const String editIcon = "assets/vectors/edit_icon.svg";
+  static const String pauseIcon = "assets/vectors/pause_icon.svg";
+  static const String normalChevronLeftArrow =
+      "assets/vectors/normal_chevron_left.svg";
+  static const String normalChevronRightArrow =
+      "assets/vectors/normal_chevron_right.svg";
 }

@@ -48,6 +48,7 @@ import 'package:felloapp/ui/pages/power_play/welcome_page/power_play_welcome_pag
 import 'package:felloapp/ui/pages/rewards/scratch_card/scratch_card_view.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/ui/pages/root/root_view.dart';
+import 'package:felloapp/ui/pages/sip/sip.dart';
 import 'package:felloapp/ui/pages/splash/splash_view.dart';
 import 'package:felloapp/ui/pages/static/earn_more_returns_view.dart';
 import 'package:felloapp/ui/pages/static/web_view.dart';
@@ -362,6 +363,10 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
 
         case Pages.FelloBadgeHome:
           _addPageData(const FelloBadgeHome(), FelloBadgeHomeViewPageConfig);
+          break;
+
+        case Pages.Sip:
+          _addPageData(const SipScreen(), SipPageConfig);
           break;
 
         default:

@@ -159,7 +159,7 @@ class LauncherViewModel extends BaseViewModel {
       } else {
         navigator.currentAction = PageAction(
           state: PageState.replaceAll,
-          page: LoginPageConfig,
+          page: SipPageConfig,
         );
         return;
       }

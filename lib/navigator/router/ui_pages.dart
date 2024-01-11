@@ -111,6 +111,8 @@ const String GoldProTxnsDetailsViewPath = "goldProTxnsDetailsView";
 const String TicketsIntroViewPath = "/ticketsIntroViewPath";
 const String TicketsTutorialViewPath = "/ticketsTutorialViewPath";
 
+const String SipPageViewPath = "/sip";
+
 enum Pages {
   Splash,
   Login,
@@ -213,7 +215,8 @@ enum Pages {
   GoldProTxnsDetailsView,
   //TICKETS
   TicketsIntroViewPath,
-  TicketsTutorialViewPath
+  TicketsTutorialViewPath,
+  Sip
 }
 
 class PageConfiguration {
@@ -877,3 +880,10 @@ PageConfiguration FelloBadgeHomeViewPageConfig = PageConfiguration(
     path: FelloBadgeHomePath,
     uiPage: Pages.FelloBadgeHome,
     name: "Fello Badge Home View Screen");
+
+PageConfiguration SipPageConfig = PageConfiguration(
+  key: 'Sip',
+  path: SipPageViewPath,
+  uiPage: Pages.Sip,
+  name: 'Login Screen',
+);

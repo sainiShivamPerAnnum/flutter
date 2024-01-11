@@ -101,6 +101,7 @@ import 'package:felloapp/ui/pages/rewards/instant_scratch_card/gt_instant_vm.dar
 import 'package:felloapp/ui/pages/rewards/multiple_scratch_cards/multiple_scratch_cards_vm.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/ui/pages/root/root_vm.dart';
+import 'package:felloapp/ui/pages/sip/sip_vm.dart';
 import 'package:felloapp/ui/pages/splash/splash_vm.dart';
 import 'package:felloapp/ui/pages/support/faq/faq_page_vm.dart';
 import 'package:felloapp/ui/pages/userProfile/bank_details/bank_details_vm.dart';
@@ -259,6 +260,7 @@ Future<void> setupLocator() async {
   locator.registerFactory(SourceAdaptiveAssetViewModel.new);
   locator.registerFactory(SubscriptionCardViewModel.new);
   locator.registerFactory(FloPremiumDetailsViewModel.new);
+  locator.registerFactory(SipViewModel.new);
 
   // locator.registerFactory<UsernameInputViewModel>(() => UsernameInputViewModel());
   await locator.allReady();
