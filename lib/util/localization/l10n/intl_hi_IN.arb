@@ -99,10 +99,9 @@
       }
     }
   },
-  "obAssetPrefBottomSheet2LowerText": "हम आपके लिए अधिक उपयुक्त संपत्ति तय करने में आपकी सहायता कर सकते हैं",
-  "obAssetPrefBottomSheet2UpperText": "फेलो के बारे में और जानना चाहते हैं?",
+  
   "obAssetPrefBottomSheet2ButtonText1": "होम स्क्रीन पर जाएँ",
-  "obAssetPrefBottomSheet2ButtonText2": "अधिक जानकारी जानें",
+  "learnMore" : "और अधिक जानें",
   "obAssetPrefBottomSheet1ButtonText": "आगे बढ़ना",
   "obAssetWelcomeText": "फेलो में आपका स्वागत है",
   "obAssetPrefGreeting": "नमस्ते {name}",
@@ -334,6 +333,14 @@
   "refsubtitle": "हर रेफरल के लिए ₹ 25 और 200 फेलो टोकन कमाएं और महीने के रेफर करने वाले को एक नया आईफोन 13 मिलेगा",
   "refWhatsapp": "WhatsApp",
   "refShareLink": "लिंक शेयर करें",
+  "referralNudgeMessage" : "बचत करके {amount} रेफरल बोनस प्राप्त करें",
+  "@referralNudgeMessage": {
+    "placeholders" : {
+      "amount" : {
+        "type":"num"
+      }
+    }
+  },
   "myreferrals": "मेरा सिफ़ारिशें",
   "refHIW": "आप कैसे कमाते हैं?",
   "refstep1": "आपका मित्र फेलो को स्थापित करता है और आपके रेफ़रल लिंक या रेफ़रल कोड का उपयोग करके साइन अप करता है।",

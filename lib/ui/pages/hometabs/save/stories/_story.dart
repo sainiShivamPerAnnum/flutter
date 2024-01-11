@@ -61,11 +61,9 @@ class StoryController {
 
 class StoryItem {
   final Duration duration;
-
   bool shown;
-
   final Widget view;
-
+  final Widget overlay;
   final String id;
 
   StoryItem(
@@ -73,27 +71,22 @@ class StoryItem {
     required this.id,
     required this.duration,
     this.shown = false,
+    this.overlay = const SizedBox.shrink(),
   });
 
-  factory StoryItem.pageVideo(
+  StoryItem.pageVideo(
     String url, {
     required StoryController controller,
-    required String id,
-    Duration? duration,
-    bool shown = false,
+    required this.id,
+    this.duration = const Duration(seconds: 10),
+    this.overlay = const SizedBox.shrink(),
+    this.shown = false,
     Map<String, dynamic>? requestHeaders,
-  }) {
-    return StoryItem(
-      id: id,
-      shown: shown,
-      duration: duration ?? const Duration(seconds: 10),
-      StoryVideo.url(
-        url,
-        controller: controller,
-        requestHeaders: requestHeaders,
-      ),
-    );
-  }
+  }) : view = StoryVideo.url(
+          url,
+          storyController: controller,
+          requestHeaders: requestHeaders,
+        );
 }
 
 class StoryView extends StatefulWidget {
@@ -141,10 +134,13 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
     return widget.storyItems.firstWhereOrNull((it) => !it!.shown);
   }
 
-  Widget get _currentView {
+  ({Widget view, Widget overlay}) get _currentView {
     var item = widget.storyItems.firstWhereOrNull((it) => !it!.shown);
     item ??= widget.storyItems.last;
-    return item?.view ?? Container();
+    return (
+      view: item?.view ?? const SizedBox.shrink(),
+      overlay: item?.overlay ?? const SizedBox.shrink()
+    );
   }
 
   @override
@@ -322,11 +318,12 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
 
   @override
   Widget build(BuildContext context) {
+    final (:view, :overlay) = _currentView;
     return Container(
       color: Colors.white,
       child: Stack(
         children: <Widget>[
-          _currentView,
+          view,
           Align(
               alignment: Alignment.centerRight,
               heightFactor: 1,
@@ -434,6 +431,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
               ],
             ),
           ),
+          overlay,
         ],
       ),
     );
@@ -550,16 +548,18 @@ class StoryVideo extends StatefulWidget {
   final StoryController? storyController;
   final VideoLoader videoLoader;
 
-  StoryVideo(this.videoLoader, {this.storyController, Key? key})
-      : super(key: key ?? UniqueKey());
+  const StoryVideo(
+    this.videoLoader, {
+    this.storyController,
+    super.key,
+  });
 
   StoryVideo.url(
     String url, {
     super.key,
-    StoryController? controller,
+    this.storyController,
     Map<String, dynamic>? requestHeaders,
-  })  : storyController = controller,
-        videoLoader = VideoLoader(url, requestHeaders: requestHeaders);
+  }) : videoLoader = VideoLoader(url, requestHeaders: requestHeaders);
 
   @override
   State<StatefulWidget> createState() {
@@ -606,6 +606,13 @@ class StoryVideoState extends State<StoryVideo> {
     });
   }
 
+  @override
+  void dispose() {
+    playerController?.dispose();
+    _streamSubscription?.cancel();
+    super.dispose();
+  }
+
   Widget getContentView() {
     if (widget.videoLoader.state == LoadState.success &&
         playerController!.value.isInitialized) {
@@ -645,13 +652,6 @@ class StoryVideoState extends State<StoryVideo> {
       width: double.infinity,
       child: getContentView(),
     );
-  }
-
-  @override
-  void dispose() {
-    playerController?.dispose();
-    _streamSubscription?.cancel();
-    super.dispose();
   }
 }
 

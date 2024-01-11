@@ -1060,7 +1060,7 @@ class DSLButtonResolver extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return switch (cta.type) {
+    return switch (cta.style) {
       CTAType.secondary => SecondaryButton(
           onPressed: _onPressed,
           label: cta.label,

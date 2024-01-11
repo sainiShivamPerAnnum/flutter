@@ -9,6 +9,7 @@ import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/bottom_nav_bar_item_model.dart';
+import 'package:felloapp/core/model/sdui/sections/home_page_sections.dart';
 import 'package:felloapp/core/repository/games_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -36,6 +37,7 @@ import 'package:felloapp/ui/pages/hometabs/my_account/my_account_view.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/asset_view_section.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/blogs.dart';
+import 'package:felloapp/ui/pages/hometabs/save/stories/stories_page.dart';
 import 'package:felloapp/ui/pages/login/login_controller_view.dart';
 import 'package:felloapp/ui/pages/notifications/notifications_view.dart';
 import 'package:felloapp/ui/pages/onboarding/blocked_user.dart';
@@ -225,7 +227,13 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           _addPageData(const LoginControllerView(), LoginPageConfig);
           break;
         case Pages.AssetPreference:
-          _addPageData(AssetPrefView(data: locator()), AssetPrefPageConfig);
+          _addPageData(
+            AssetPrefView(
+              data: locator(),
+              enteredFromHomePage: queryParams?['entryPoint'] == 'home',
+            ),
+            AssetPrefPageConfig,
+          );
           break;
         case Pages.Root:
           _addPageData(const Root(), RootPageConfig);
@@ -838,6 +846,21 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     }
   }
 
+  List<Story> _getStories() {
+    final pageData = locator<PageData>();
+    final sections = pageData.screens.home.sections;
+
+    for (var i = 0; i < sections.entries.length; i++) {
+      final section = sections.entries.toList()[i].value;
+
+      if (section is StoriesSection) {
+        return section.data.stories;
+      }
+    }
+
+    return const [];
+  }
+
   void screenCheck(String screenKey, [Map<String, String>? queryParams]) {
     PageConfiguration? pageConfiguration;
 
@@ -875,6 +898,20 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
               type: InvestmentType.AUGGOLD99,
             ));
         break;
+
+      case 'stories':
+        appState.currentAction = PageAction(
+          state: PageState.addWidget,
+          page: StoriesPageConfig,
+          widget: StoriesPage(
+            stories: _getStories(),
+          ),
+        );
+        break;
+
+      case 'assetPref':
+        pageConfiguration = AssetPrefPageConfig;
+
       case "floDetails":
         appState.currentAction = PageAction(
           state: PageState.addWidget,
@@ -962,7 +999,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case 'tambolaHome':
         if (rootController.navItems
             .containsValue(RootController.tambolaNavBar)) {
-            onTapItem(RootController.tambolaNavBar);
+          onTapItem(RootController.tambolaNavBar);
           break;
         }
         pageConfiguration = THomePageConfig;
@@ -1095,14 +1132,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     appState.setCurrentTabIndex =
         rootController.navItems.values.toList().indexOf(item);
   }
-
-  // openTopSaverScreen(String eventType) {
-  //   AppState.delegate!.appState.currentAction = PageAction(
-  //     page: CampaignViewPageConfig,
-  //     state: PageState.addWidget,
-  //     widget: CampaignView(eventType: eventType),
-  //   );
-  // }
 
   void openWebGame(String game) {
     bool isLocked = false;

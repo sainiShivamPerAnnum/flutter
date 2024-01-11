@@ -99,11 +99,8 @@
         }
       }
     },
-  "obAssetPrefBottomSheet2LowerText": "We can help you decide assets more suitable for you",
-  "obAssetPrefBottomSheet2UpperText": "Want to know more about Fello?",
-  "obAssetPrefBottomSheet1ButtonText": "Proceed",
   "obAssetPrefBottomSheet2ButtonText1": "SKIP TO HOME",
-  "obAssetPrefBottomSheet2ButtonText2": "KNOW MORE",
+  "learnMore" : "LEARN MORE",
   "obAssetWelcomeText": "Welcome To Fello",
   "obAssetPrefGreeting": "Hi {name}",
   "@obAssetPrefGreeting": {
@@ -350,6 +347,14 @@
   "refsubtitle": "Earn ₹ 25 and 200 Fello tokens for every referral and referrer of the month will get a brand new iphone 13",
   "refWhatsapp": "WhatsApp",
   "refShareLink": "Share Link",
+  "referralNudgeMessage" : "Claim {amount} referral bonus by saving",
+  "@referralNudgeMessage": {
+    "placeholders" : {
+      "amount" : {
+        "type":"num"
+      }
+    }
+  },
   "myreferrals": "My Referrals",
   "refHIW": "How do you earn?",
   "refstep1": "Your friend installs Fello and signs up using your referral link or referral code.",

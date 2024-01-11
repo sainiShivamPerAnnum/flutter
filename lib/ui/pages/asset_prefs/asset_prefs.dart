@@ -13,8 +13,13 @@ import 'package:flutter/services.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class AssetPrefView extends StatelessWidget {
-  const AssetPrefView({required this.data, super.key});
+  const AssetPrefView({
+    required this.data,
+    this.enteredFromHomePage = false,
+    super.key,
+  });
   final sections.PageData data;
+  final bool enteredFromHomePage;
 
   String _getButtonLabel(S locale, sections.AssetPrefType? selectedAsset) {
     switch (selectedAsset) {
@@ -56,6 +61,7 @@ class AssetPrefView extends StatelessWidget {
                       child: _SkipButton(
                         label: locale.obAssetPrefBottomSheet2ButtonText1,
                         onTap: () => model.onPressedSkip(
+                          enteredFromHomePage,
                           prefViewData.skipToHome,
                         ),
                       ),

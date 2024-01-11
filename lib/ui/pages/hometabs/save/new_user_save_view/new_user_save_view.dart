@@ -1,9 +1,7 @@
-import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/sdui/sections/home_page_sections.dart'
     as sections;
-import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/navigator/router/ui_pages.dart';
-import 'package:felloapp/ui/pages/asset_prefs/asset_prefs.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/ui/pages/hometabs/save/stories/stories_section/stories_section_view.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart' hide Action;
@@ -18,7 +16,13 @@ class NewUserSaveView extends StatelessWidget {
   });
   final sections.PageData data;
 
-  Widget _getWidgetBySection(sections.HomePageSection? section) {
+  Widget _getWidgetBySection(
+      sections.HomePageSection? section, bool hasReferred) {
+    // ⛔️ hack because of static things on backend 🤷🏻.
+    if (section is sections.NudgeSection && !hasReferred) {
+      return const SizedBox.shrink();
+    }
+
     final widget = switch (section) {
       sections.StoriesSection(data: final d) => StoriesSection(
           data: d,
@@ -49,6 +53,10 @@ class NewUserSaveView extends StatelessWidget {
     final homePageData = data.screens.home;
     final sectionOrder = homePageData.sectionOrder;
     final section = homePageData.sections;
+    final showReferral = (BaseUtil.referrerUserId != null ||
+            BaseUtil.manualReferralCode != null) &&
+        locator<UserService>().userPortfolio.absolute.balance <= 0;
+
     return NotificationListener<OverscrollIndicatorNotification>(
       onNotification: (notification) {
         notification.disallowIndicator(); // to avoid glow
@@ -58,20 +66,8 @@ class NewUserSaveView extends StatelessWidget {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
-            ElevatedButton(
-              onPressed: () {
-                AppState.delegate!.appState.currentAction = PageAction(
-                  state: PageState.addWidget,
-                  page: AssetPrefPageConfig,
-                  widget: AssetPrefView(
-                    data: locator(),
-                  ),
-                );
-              },
-              child: null,
-            ),
             for (var i = 0; i < sectionOrder.length; i++)
-              _getWidgetBySection(section[sectionOrder[i]]),
+              _getWidgetBySection(section[sectionOrder[i]], showReferral),
           ],
         ),
       ),

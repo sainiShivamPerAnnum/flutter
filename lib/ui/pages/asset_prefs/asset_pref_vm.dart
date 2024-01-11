@@ -24,8 +24,12 @@ class AssetPreferenceViewModel extends BaseViewModel {
   void handleRouting(AssetPrefType? assetPrefOptions) {
     switch (assetPrefOptions) {
       case AssetPrefType.P2P:
+        AppState.backButtonDispatcher!.didPopRoute();
+        AppState.delegate!.parseRoute(Uri.parse('/floDetails'));
         break;
       case AssetPrefType.GOLD:
+        AppState.backButtonDispatcher!.didPopRoute();
+        AppState.delegate!.parseRoute(Uri.parse('/goldDetails'));
         break;
       case AssetPrefType.NONE:
         appStateProvider.currentAction = PageAction(
@@ -41,7 +45,12 @@ class AssetPreferenceViewModel extends BaseViewModel {
     }
   }
 
-  void onPressedSkip(BottomSheetComponent bottomSheetData) {
+  void onPressedSkip(
+      bool enteredFromHomePage, BottomSheetComponent bottomSheetData) {
+    if (enteredFromHomePage) {
+      AppState.backButtonDispatcher!.didPopRoute();
+    }
+
     _showBottomSheet(bottomSheetData);
   }
 

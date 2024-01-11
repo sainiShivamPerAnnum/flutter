@@ -962,36 +962,6 @@ class S {
     );
   }
 
-  /// `We can help you decide assets more suitable for you`
-  String get obAssetPrefBottomSheet2LowerText {
-    return Intl.message(
-      'We can help you decide assets more suitable for you',
-      name: 'obAssetPrefBottomSheet2LowerText',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Want to know more about Fello?`
-  String get obAssetPrefBottomSheet2UpperText {
-    return Intl.message(
-      'Want to know more about Fello?',
-      name: 'obAssetPrefBottomSheet2UpperText',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Proceed`
-  String get obAssetPrefBottomSheet1ButtonText {
-    return Intl.message(
-      'Proceed',
-      name: 'obAssetPrefBottomSheet1ButtonText',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `SKIP TO HOME`
   String get obAssetPrefBottomSheet2ButtonText1 {
     return Intl.message(
@@ -1002,11 +972,11 @@ class S {
     );
   }
 
-  /// `KNOW MORE`
-  String get obAssetPrefBottomSheet2ButtonText2 {
+  /// `LEARN MORE`
+  String get learnMore {
     return Intl.message(
-      'KNOW MORE',
-      name: 'obAssetPrefBottomSheet2ButtonText2',
+      'LEARN MORE',
+      name: 'learnMore',
       desc: '',
       args: [],
     );
@@ -3117,6 +3087,16 @@ class S {
       name: 'refShareLink',
       desc: '',
       args: [],
+    );
+  }
+
+  /// `Claim {amount} referral bonus by saving`
+  String referralNudgeMessage(num amount) {
+    return Intl.message(
+      'Claim $amount referral bonus by saving',
+      name: 'referralNudgeMessage',
+      desc: '',
+      args: [amount],
     );
   }
 

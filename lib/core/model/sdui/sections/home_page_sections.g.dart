@@ -76,7 +76,8 @@ BottomSheetData _$BottomSheetDataFromJson(Map<String, dynamic> json) =>
 
 Cta _$CtaFromJson(Map<String, dynamic> json) => Cta(
       label: json['label'] as String? ?? '',
-      type: $enumDecodeNullable(_$CTATypeEnumMap, json['type']) ??
+      style: $enumDecodeNullable(_$CTATypeEnumMap, json['style'],
+              unknownValue: CTAType.secondary) ??
           CTAType.secondary,
       action: json['action'] == null
           ? null

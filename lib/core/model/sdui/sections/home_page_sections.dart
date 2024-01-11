@@ -132,12 +132,13 @@ enum CTAType {
 @_deserializable
 class Cta {
   final String label;
-  final CTAType type;
+  @JsonKey(unknownEnumValue: CTAType.secondary)
+  final CTAType style;
   final Action? action;
 
   const Cta({
     this.label = '',
-    this.type = CTAType.secondary,
+    this.style = CTAType.secondary,
     this.action,
   });
 

@@ -1,5 +1,8 @@
 import 'package:felloapp/core/model/sdui/sections/home_page_sections.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 
@@ -334,8 +337,23 @@ class LearnMoreSlider extends StatelessWidget {
 
   final AssetPrefType assetPrefOption;
 
+  void _onTap() {
+    switch (assetPrefOption) {
+      case AssetPrefType.P2P:
+        AppState.backButtonDispatcher!.didPopRoute();
+        AppState.delegate!.parseRoute(Uri.parse('/floDetails'));
+        break;
+      case AssetPrefType.GOLD:
+        AppState.backButtonDispatcher!.didPopRoute();
+        AppState.delegate!.parseRoute(Uri.parse('/goldDetails'));
+        break;
+      default:
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
+    final locale = locator<S>();
     return Container(
       decoration: BoxDecoration(
         borderRadius: BorderRadius.vertical(
@@ -360,8 +378,9 @@ class LearnMoreSlider extends StatelessWidget {
               width: SizeConfig.padding26,
             ),
             InkWell(
+              onTap: _onTap,
               child: Text(
-                "LEARN MORE",
+                locale.learnMore,
                 style: TextStyles.rajdhaniB.body2.colour(Colors.white),
               ),
             )
@@ -376,24 +395,31 @@ Widget getStatsText(AssetPrefType assetPrefOptions) {
   return (assetPrefOptions == AssetPrefType.P2P)
       ? RichText(
           text: TextSpan(
-              text: "₹12Cr+ invested",
-              style: TextStyles.sourceSansB.body4.colour(UiConstants.teal3),
-              children: [
+            text: "₹12Cr+ invested",
+            style: TextStyles.sourceSansB.body4.colour(UiConstants.teal3),
+            children: [
               TextSpan(
-                  text: " on Fello P2P",
-                  style: TextStyles.sourceSans.body4.colour(Colors.white))
-            ]))
+                text: " on Fello P2P",
+                style: TextStyles.sourceSans.body4.colour(Colors.white),
+              )
+            ],
+          ),
+        )
       : RichText(
           text: TextSpan(
-              text: "Trusted by",
-              style: TextStyles.sourceSans.body4.colour(Colors.white),
-              children: [
+            text: "Trusted by",
+            style: TextStyles.sourceSans.body4.colour(Colors.white),
+            children: [
               TextSpan(
-                  text: " 1Lac+",
-                  style: TextStyles.sourceSansB.body4
-                      .colour(UiConstants.kBlogTitleColor)),
+                text: " 1Lac+",
+                style: TextStyles.sourceSansB.body4
+                    .colour(UiConstants.kBlogTitleColor),
+              ),
               TextSpan(
-                  text: " Fello Investors",
-                  style: TextStyles.sourceSans.body4.colour(Colors.white))
-            ]));
+                text: " Fello Investors",
+                style: TextStyles.sourceSans.body4.colour(Colors.white),
+              )
+            ],
+          ),
+        );
 }
