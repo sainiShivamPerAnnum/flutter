@@ -1,11 +1,10 @@
-import 'dart:math';
-
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/last_week_model.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/marketing_event_handler_service.dart';
+import 'package:felloapp/feature/tambola/src/ui/widgets/leaderBoards.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/default_avatar.dart';
@@ -190,7 +189,7 @@ class LastWeekUi extends StatelessWidget {
                       ),
                     ],
                     SizedBox(
-                      height: SizeConfig.padding22,
+                      height: SizeConfig.padding32,
                     ),
                     Center(
                       child: Text(
@@ -198,80 +197,14 @@ class LastWeekUi extends StatelessWidget {
                         style: TextStyles.rajdhaniSB.body0,
                       ),
                     ),
-                    ...List.generate(
-                      min(lastWeekViewModel.pastWeekWinners!.length, 10),
-                      (i) {
-                        String countSumString =
-                            '${lastWeekViewModel.pastWeekWinners?[i].matchMap?.fold(0, (sum, element) => sum + element.count)} Tickets';
-                        return Column(
-                          children: [
-                            Container(
-                              width: SizeConfig.screenWidth,
-                              padding: EdgeInsets.symmetric(
-                                  vertical: SizeConfig.padding12),
-                              child: Row(
-                                crossAxisAlignment: CrossAxisAlignment.center,
-                                children: [
-                                  DefaultAvatar(
-                                    size: Size(SizeConfig.padding24,
-                                        SizeConfig.padding24),
-                                  ),
-                                  SizedBox(width: SizeConfig.padding10),
-                                  Expanded(
-                                    child: Text(
-                                        lastWeekViewModel
-                                            .pastWeekWinners![i].username!
-                                            .replaceAll('@', '.'),
-                                        style: TextStyles.sourceSans.body3
-                                            .colour(Colors.white)),
-                                  ),
-                                  SizedBox(
-                                    width: SizeConfig.padding100,
-                                    // color: Colors.blue,
-                                    child: Column(
-                                      crossAxisAlignment:
-                                          CrossAxisAlignment.end,
-                                      children: [
-                                        Text.rich(TextSpan(
-                                            text: 'Earned ',
-                                            style: TextStyles.sourceSans.body3
-                                                .colour(UiConstants.kTextColor),
-                                            children: [
-                                              TextSpan(
-                                                text:
-                                                    "₹${lastWeekViewModel.pastWeekWinners![i].amount?.toInt() ?? "00"}",
-                                                style: TextStyles
-                                                    .sourceSansSB.body2
-                                                    .colour(UiConstants
-                                                        .kGoldProPrimary),
-                                              )
-                                            ])),
-                                        Text(
-                                          countSumString,
-                                          style: TextStyles.sourceSans.body3
-                                              .colour(UiConstants.kTextColor),
-                                        )
-                                      ],
-                                    ),
-                                  )
-                                ],
-                              ),
-                            ),
-                            if (i + 1 <
-                                min(lastWeekViewModel.pastWeekWinners!.length,
-                                    10))
-                              Padding(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: SizeConfig.padding8),
-                                child: const Divider(
-                                  color: Colors.white,
-                                  thickness: 0.2,
-                                ),
-                              )
-                          ],
-                        );
-                      },
+                    SizedBox(
+                      height: SizeConfig.padding4,
                     ),
+                    LeaderBoards(
+                        winners: lastWeekViewModel.pastWeekWinners ?? [],
+                        showMyRankings: false,
+                        backgroundTransparent: true,
+                        showSeeAllButton: true),
                     SizedBox(
                       height: SizeConfig.navBarHeight * 1.5,
                     ),
@@ -443,7 +376,7 @@ class MyWinningsLastWeek extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
-                    Text('Tickets matched',
+                    Text(locale.ticketsMatched,
                         style: TextStyles.sourceSans.body3
                             .colour(UiConstants.textGray70)),
                     Text(data.user!.matchedTickets.toString() ?? '',
@@ -454,7 +387,7 @@ class MyWinningsLastWeek extends StatelessWidget {
                 Column(
                   crossAxisAlignment: CrossAxisAlignment.end,
                   children: [
-                    Text('Reward won',
+                    Text(locale.rewardsWon,
                         style: TextStyles.sourceSans.body3
                             .colour(UiConstants.textGray70)),
                     Text('₹${data.user!.rewardsWon}',
@@ -480,55 +413,48 @@ class MySavingsLastWeek extends StatelessWidget {
     final locale = locator<S>();
     return Row(
       children: [
-        Container(
-          width: SizeConfig.screenWidth! * 0.389,
-          padding: EdgeInsets.symmetric(
-              vertical: SizeConfig.padding14, horizontal: SizeConfig.padding20),
-          decoration: BoxDecoration(
-            border: Border.all(color: const Color(0xff919193)),
-            color: Colors.black.withOpacity(0.28),
-            borderRadius: BorderRadius.circular(SizeConfig.roundness8),
+        Expanded(
+          child: ReturnsContainer(
+            title: locale.totalReturnGained,
+            value: '₹${data.user!.returns}',
           ),
-          child:
-              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-            SvgPicture.asset(
-              Assets.savingsAvatar,
-              height: SizeConfig.padding22,
-            ),
-            SizedBox(
-              height: SizeConfig.padding4,
-            ),
-            Text(locale.totalSavingswithFello,
-                style: TextStyles.sourceSans.body3
-                    .colour(UiConstants.kWinnerPlayerPrimaryColor)),
-            SizedBox(
-              height: SizeConfig.padding6,
-            ),
-            Text('₹${data.user!.invested}',
-                style: TextStyles.rajdhaniSB.title5
-                    .colour(UiConstants.kTextColor)),
-          ]),
         ),
+        // Container(
+        //   width: SizeConfig.screenWidth! * 0.389,
+        //   padding: EdgeInsets.symmetric(
+        //       vertical: SizeConfig.padding14, horizontal: SizeConfig.padding20),
+        //   decoration: BoxDecoration(
+        //     border: Border.all(color: const Color(0xff919193)),
+        //     color: Colors.black.withOpacity(0.28),
+        //     borderRadius: BorderRadius.circular(SizeConfig.roundness8),
+        //   ),
+        //   child:
+        //       Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+        //     SvgPicture.asset(
+        //       Assets.savingsAvatar,
+        //       height: SizeConfig.padding22,
+        //     ),
+        //     SizedBox(
+        //       height: SizeConfig.padding4,
+        //     ),
+        //     Text(locale.totalSavingswithFello,
+        //         style: TextStyles.sourceSans.body3
+        //             .colour(UiConstants.kWinnerPlayerPrimaryColor)),
+        //     SizedBox(
+        //       height: SizeConfig.padding6,
+        //     ),
+        //     Text('₹${data.user!.invested}',
+        //         style: TextStyles.rajdhaniSB.title5
+        //             .colour(UiConstants.kTextColor)),
+        //   ]),
+        // ),
         SizedBox(
           width: SizeConfig.padding10,
         ),
         Expanded(
-          child: SizedBox(
-            child: Column(
-              children: [
-                ReturnsContainer(
-                  title: locale.totalReturnGained,
-                  value: '₹${data.user!.returns}',
-                ),
-                SizedBox(
-                  height: SizeConfig.padding6,
-                ),
-                ReturnsContainer(
-                  title: locale.totalPercentage,
-                  value: '${data.user!.gainsPerc}%',
-                ),
-              ],
-            ),
+          child: ReturnsContainer(
+            title: locale.totalPercentage,
+            value: '${data.user!.gainsPerc}%',
           ),
         ),
       ],

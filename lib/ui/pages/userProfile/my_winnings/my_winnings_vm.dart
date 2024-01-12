@@ -73,7 +73,6 @@ class MyWinningsViewModel extends BaseViewModel {
       _gtService.isLastPageForScratchCards = false;
       _gtService.scratchCardsListLastTicketId = null;
       _gtService.fetchScratchCards();
-      _gtService.fetchRewardsQuickLinks();
     });
   }
 

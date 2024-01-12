@@ -138,52 +138,32 @@ class ScratchCardRepository extends BaseRepo {
   Future<ApiResponse<Map<String, dynamic>>> getScratchCards(
       {String? start}) async {
     final List<ScratchCard> scratchCardsList = [];
-    try {
-      final prizeResponse = await APIService.instance.getData(
-        ApiPath.getScratchCard(userService.baseUser!.uid),
-        cBaseUrl: AppEnvironment.instance.rewards,
-        queryParams: {
-          if (start != null) 'start': start,
-        },
-        apiName: '$_rewards/getScratchCardByID',
-      );
-      final Map<String, dynamic>? responseData = prizeResponse["data"];
-      if (responseData != null && responseData.isNotEmpty) {
-        responseData["gts"].forEach((gt) {
-          scratchCardsList.add(ScratchCard.fromJson(gt, ""));
-        });
-      }
-
-      return ApiResponse(model: {
-        "tickets": scratchCardsList,
-        "isLastPage": responseData!["isLastPage"]
-      }, code: 200);
-    } catch (e) {
-      logger.e(e.toString());
-      return ApiResponse.withError(e.toString(), 400);
-    }
-  }
-
-  Future<ApiResponse<Map<String, dynamic>>> getRewardsQuickLinks() async {
     final List<RewardsQuickLinksModel> quickLinks = [];
     try {
-      final quickLinkResponse = await APIService.instance.getData(
+      final prizeResponse = await APIService.instance.getData(
         '',
-        cBaseUrl: 'https://mocki.io/v1/1eb711bc-4082-4a96-851c-29f53b00e6dd',
+        // ApiPath.getScratchCard(userService.baseUser!.uid),
         // cBaseUrl: AppEnvironment.instance.rewards,
+        cBaseUrl: 'https://mocki.io/v1/4f376db7-c4e3-4011-b222-d0cb5a866a83',
         // queryParams: {
         //   if (start != null) 'start': start,
         // },
         apiName: '$_rewards/getScratchCardByID',
       );
-      final List<dynamic>? responseData = quickLinkResponse;
+      final Map<String, dynamic>? responseData = prizeResponse;
       if (responseData != null && responseData.isNotEmpty) {
-        for (final link in responseData) {
-          quickLinks.add(RewardsQuickLinksModel.fromJson(link));
-        }
+        responseData["gts"].forEach((gt) {
+          scratchCardsList.add(ScratchCard.fromJson(gt, ""));
+        });
+        responseData["quickLinks"].forEach((links) {
+          quickLinks.add(RewardsQuickLinksModel.fromJson(links));
+        });
       }
+
       return ApiResponse(model: {
+        "tickets": scratchCardsList,
         "links": quickLinks,
+        "isLastPage": responseData!["isLastPage"]
       }, code: 200);
     } catch (e) {
       logger.e(e.toString());

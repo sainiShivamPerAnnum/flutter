@@ -886,5 +886,8 @@
   "totalReturnGained": "कुल रिटर्न प्राप्त",
   "totalPercentage": "कुल ब्याज प्रतिशत",
   "totalRewardsTilldate": "अब तक फेलो पर जीते गए कुल पुरस्कार-",
-  "rewardsWithFello": "फेलो के साथ पुरस्कार"
+  "rewardsWithFello": "फेलो के साथ पुरस्कार",
+  "ticketsMatched": "टिकट मिलान हुआ",
+  "rewardsWon": "इनाम जीता गया",
+  "leaderBoardswillUpdate": "लीडरबोर्ड जल्द ही अपडेट होगा"
 }

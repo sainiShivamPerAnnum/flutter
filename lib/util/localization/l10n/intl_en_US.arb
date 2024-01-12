@@ -912,5 +912,8 @@
   "totalRewardsTilldate": "Total rewards won on Fello till date -",
   "rewardsWithFello": "Rewards with Fello",
   "powerPlaySlog": "Predict | Save | Win",
-  "earned": "Earned "
+  "earned": "Earned ",
+  "ticketsMatched": "Tickets matched",
+  "rewardsWon":"Reward won",
+  "leaderBoardswillUpdate": "Leaderboard will be updated soon"
 }

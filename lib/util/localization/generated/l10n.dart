@@ -8655,6 +8655,36 @@ class S {
       args: [],
     );
   }
+
+  /// `Tickets matched`
+  String get ticketsMatched {
+    return Intl.message(
+      'Tickets matched',
+      name: 'ticketsMatched',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Reward won`
+  String get rewardsWon {
+    return Intl.message(
+      'Reward won',
+      name: 'rewardsWon',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Leaderboard will be updated soon`
+  String get leaderBoardswillUpdate {
+    return Intl.message(
+      'Leaderboard will be updated soon',
+      name: 'leaderBoardswillUpdate',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

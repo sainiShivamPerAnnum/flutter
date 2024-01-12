@@ -606,6 +606,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "leaderBoard": MessageLookupByLibrary.simpleMessage("Leaderboard"),
         "leaderBoardUpdate": MessageLookupByLibrary.simpleMessage(
             "Leaderboard will be updated soon"),
+        "leaderBoardswillUpdate": MessageLookupByLibrary.simpleMessage(
+            "Leaderboard will be updated soon"),
         "leaderboardUpdateSoon": MessageLookupByLibrary.simpleMessage(
             "Leaderboard will be updated soon"),
         "loadingGoldRates":
@@ -987,6 +989,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Rewards Redeemed"),
         "rewardsWithFello":
             MessageLookupByLibrary.simpleMessage("Rewards with Fello"),
+        "rewardsWon": MessageLookupByLibrary.simpleMessage("Reward won"),
         "rs": MessageLookupByLibrary.simpleMessage("Rs"),
         "safestDigitalInvestment":
             MessageLookupByLibrary.simpleMessage("Safest Digital Investment"),
@@ -1191,6 +1194,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Get your first ticket"),
         "ticketsExceeded":
             MessageLookupByLibrary.simpleMessage("Maximum tickets exceeded"),
+        "ticketsMatched":
+            MessageLookupByLibrary.simpleMessage("Tickets matched"),
         "ticketsThisWeek":
             MessageLookupByLibrary.simpleMessage("Your tickets won this week"),
         "ticketsWiting": MessageLookupByLibrary.simpleMessage(

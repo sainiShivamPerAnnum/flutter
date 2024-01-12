@@ -49,7 +49,7 @@ class LastWeekData {
             : UserLastWeekData.fromJson(json["user"]),
         misc: json["misc"] == null
             ? []
-            : List<Misc>.from(json["misc"]!.map(Misc.fromJson)),
+            : List<Misc>.from(json["misc"]!.map((x) => Misc.fromJson(x))),
         isTopSaver: json["isTopSaver"],
         cta: json["cta"] == null ? null : Cta.fromJson(json["cta"]),
       );
@@ -191,15 +191,15 @@ class UserLastWeekData {
   final double? gainsPerc;
   final int? invested;
   final double? returns;
-  final int? matchedTickets;
-  final int? rewardsWon;
+  final num? matchedTickets;
+  final num? rewardsWon;
 
   UserLastWeekData copyWith({
     double? gainsPerc,
     int? invested,
     double? returns,
-    int? matchedTickets,
-    int? rewardsWon,
+    num? matchedTickets,
+    num? rewardsWon,
   }) =>
       UserLastWeekData(
         gainsPerc: gainsPerc ?? this.gainsPerc,

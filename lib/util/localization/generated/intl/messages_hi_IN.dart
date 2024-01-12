@@ -597,6 +597,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "leaderBoard": MessageLookupByLibrary.simpleMessage("लीडरबोर्ड"),
         "leaderBoardUpdate": MessageLookupByLibrary.simpleMessage(
             "लीडरबोर्ड जल्द ही अपडेट किया जाएगा"),
+        "leaderBoardswillUpdate": MessageLookupByLibrary.simpleMessage(
+            "लीडरबोर्ड जल्द ही अपडेट होगा"),
         "leaderboardUpdateSoon": MessageLookupByLibrary.simpleMessage(
             "लीडरबोर्ड जल्द ही अपडेट किया जाएगा"),
         "loadingGoldRates":
@@ -981,6 +983,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("पुरस्कार भुनाए गए"),
         "rewardsWithFello":
             MessageLookupByLibrary.simpleMessage("फेलो के साथ पुरस्कार"),
+        "rewardsWon": MessageLookupByLibrary.simpleMessage("इनाम जीता गया"),
         "rs": MessageLookupByLibrary.simpleMessage("रुपये"),
         "safestDigitalInvestment":
             MessageLookupByLibrary.simpleMessage("सबसे सुरक्षित डिजिटल निवेश"),
@@ -1180,6 +1183,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("अपना पहला टिकट प्राप्त करें"),
         "ticketsExceeded":
             MessageLookupByLibrary.simpleMessage("अधिकतम टिकट पार हो गए"),
+        "ticketsMatched":
+            MessageLookupByLibrary.simpleMessage("टिकट मिलान हुआ"),
         "ticketsThisWeek":
             MessageLookupByLibrary.simpleMessage("इस सप्ताह जीते गए आपके टिकट"),
         "ticketsWiting": MessageLookupByLibrary.simpleMessage(

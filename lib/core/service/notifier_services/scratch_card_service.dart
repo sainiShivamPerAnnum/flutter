@@ -420,6 +420,7 @@ class ScratchCardService
       final res =
           await _gtRepo.getScratchCards(start: scratchCardsListLastTicketId);
       if (res.isSuccess()) {
+        allRewardsQuickLinks = res.model?["links"];
         if (allScratchCards.isEmpty) {
           allScratchCards = res.model?["tickets"];
           isLastPageForScratchCards = res.model?["isLastPage"];
@@ -439,26 +440,6 @@ class ScratchCardService
       ));
       allScratchCards = [];
       isFetchingScratchCards = false;
-    }
-  }
-
-  Future<void> fetchRewardsQuickLinks({bool more = false}) async {
-    try {
-      if (isFetchingQuickLinks) return;
-      isFetchingQuickLinks = true;
-      final res = await _gtRepo.getRewardsQuickLinks();
-      if (res.isSuccess()) {
-        allRewardsQuickLinks = res.model?["links"];
-      }
-      isFetchingQuickLinks = false;
-    } catch (e) {
-      // unawaited(locator<InternalOpsService>().logFailure(
-      //   _userService.baseUser!.uid,
-      //   FailType.ScratchCardListFailed,
-      //   {'message': "Scratch Card data fetch failed"},
-      // ));
-      allRewardsQuickLinks = [];
-      isFetchingQuickLinks = false;
     }
   }
 
