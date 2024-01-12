@@ -5,6 +5,7 @@ import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/model/app_environment.dart';
 import 'package:felloapp/core/model/daily_bonus_event_model.dart';
 import 'package:felloapp/core/model/prizes_model.dart';
+import 'package:felloapp/core/model/rewardsquickLinks_model.dart';
 import 'package:felloapp/core/model/scratch_card_model.dart';
 import 'package:felloapp/core/repository/base_repo.dart';
 import 'package:felloapp/core/service/api_service.dart';
@@ -156,6 +157,33 @@ class ScratchCardRepository extends BaseRepo {
       return ApiResponse(model: {
         "tickets": scratchCardsList,
         "isLastPage": responseData!["isLastPage"]
+      }, code: 200);
+    } catch (e) {
+      logger.e(e.toString());
+      return ApiResponse.withError(e.toString(), 400);
+    }
+  }
+
+  Future<ApiResponse<Map<String, dynamic>>> getRewardsQuickLinks() async {
+    final List<RewardsQuickLinksModel> quickLinks = [];
+    try {
+      final quickLinkResponse = await APIService.instance.getData(
+        '',
+        cBaseUrl: 'https://mocki.io/v1/1eb711bc-4082-4a96-851c-29f53b00e6dd',
+        // cBaseUrl: AppEnvironment.instance.rewards,
+        // queryParams: {
+        //   if (start != null) 'start': start,
+        // },
+        apiName: '$_rewards/getScratchCardByID',
+      );
+      final List<dynamic>? responseData = quickLinkResponse;
+      if (responseData != null && responseData.isNotEmpty) {
+        for (final link in responseData) {
+          quickLinks.add(RewardsQuickLinksModel.fromJson(link));
+        }
+      }
+      return ApiResponse(model: {
+        "links": quickLinks,
       }, code: 200);
     } catch (e) {
       logger.e(e.toString());

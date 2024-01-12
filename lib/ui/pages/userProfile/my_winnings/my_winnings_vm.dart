@@ -53,7 +53,7 @@ class MyWinningsViewModel extends BaseViewModel {
   // LOCAL VARIABLES
   PrizeClaimChoice? _choice;
 
-  get choice => _choice;
+  PrizeClaimChoice? get choice => _choice;
   final GlobalKey imageKey = GlobalKey();
   final UserRepository? userRepo = locator<UserRepository>();
 
@@ -73,6 +73,7 @@ class MyWinningsViewModel extends BaseViewModel {
       _gtService.isLastPageForScratchCards = false;
       _gtService.scratchCardsListLastTicketId = null;
       _gtService.fetchScratchCards();
+      _gtService.fetchRewardsQuickLinks();
     });
   }
 
@@ -287,8 +288,9 @@ class MyWinningsViewModel extends BaseViewModel {
     );
 
     if (response.isSuccess()) {
-      _userService.getUserFundWalletData();
-      _transactionHistoryService.updateTransactions(InvestmentType.AUGGOLD99);
+      await _userService.getUserFundWalletData();
+      await _transactionHistoryService
+          .updateTransactions(InvestmentType.AUGGOLD99);
       notifyListeners();
       // await _localDBModel!.savePrizeClaimChoice(choice);
 
@@ -381,11 +383,11 @@ class MyWinningsViewModel extends BaseViewModel {
         Map<String, dynamic> errorDetails = {
           'error_msg': 'Share reward card creation failed'
         };
-        _internalOpsService.logFailure(_userService.baseUser!.uid,
+        await _internalOpsService.logFailure(_userService.baseUser!.uid,
             FailType.FelloRewardCardShareFailed, errorDetails);
       }
 
-      AppState.backButtonDispatcher!.didPopRoute();
+      await AppState.backButtonDispatcher!.didPopRoute();
       print(e.toString());
       BaseUtil.showNegativeAlert(locale.taskFailed, locale.unableToCapture);
     }

@@ -216,6 +216,7 @@ class Assets {
 
   static const String trophySvg = "assets/vectors/trophy.svg";
   static const String trophyGlitterSvg = "assets/vectors/trophyGlitter.svg";
+  static const String trophyWonSvg = "assets/svg/trophyWons.svg";
   static const String dailyAppBonusHero =
       "assets/vectors/dailyAppBonusHero.svg";
 
@@ -437,4 +438,10 @@ class Assets {
       'https://fello-dev-uploads.s3.ap-south-1.amazonaws.com/super_fello_title.svg';
   static const String kycSecurity = "assets/images/kyc_security.png";
   static const String stepCircle = "assets/svg/steps_circle.svg";
+  static const String earnShadow = "assets/images/earn_shadow.png";
+  static const String ticketsCard = "assets/images/tickets.png";
+  static const String noScratchCards = "assets/images/noScratchCards.png";
+  static const String savingsAvatar = "assets/vectors/savings_avatar.svg";
+  static const String paperPlane = "assets/svg/paper_plane.svg";
+  static const String a6 = "assets/vectors/userAvatars/A6.svg";
 }

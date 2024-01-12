@@ -891,6 +891,26 @@
   "prizeText": "Prize",
   "autoSipText": "AUTO SIP",
   "withdrawal": "Withdrawal",
-
-  "powerPlaySlog": "Predict | Save | Win"
+  "ticketsWiting": "Your Tickets Rewards are waiting",
+  "earnRewards": "Earn Rewards",
+  "earnRewardsSub": "from Ticket draws every week",
+  "earnRewardsConv": "Grab a Ticket to start earning",
+  "earnRewardsConvSub": "Get 50 Tickets as Reward for your 1st Investment",
+  "howtoearn": "How to Earn Rewards",
+  "noScratchCards": "You don’t have any Scratch Cards",
+  "noScratchCardsSub": "Earn Scratch Cards to win assured rewards with Fello",
+  "sctab1":"Your Rewards",
+  "sctab2": "Earn Rewards",
+  "loadingScratchCards": "Loading more tickets",
+  "lastWeekFello": "Last Week on Fello",
+  "lastWeekleaderBoard": "Winners Leaderboard",
+  "ticketsThisWeek": "Your tickets won this week",
+  "savingsMade": "Savings made",
+  "totalSavingswithFello": "Total Saved with Fello",
+  "totalReturnGained": "Total Returns Gained",
+  "totalPercentage": "Total Interest Percentage",
+  "totalRewardsTilldate": "Total rewards won on Fello till date -",
+  "rewardsWithFello": "Rewards with Fello",
+  "powerPlaySlog": "Predict | Save | Win",
+  "earned": "Earned "
 }

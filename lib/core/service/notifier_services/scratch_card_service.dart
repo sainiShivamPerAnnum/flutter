@@ -7,6 +7,7 @@ import 'dart:ui';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/golden_ticket_service_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
+import 'package:felloapp/core/model/rewardsquickLinks_model.dart';
 import 'package:felloapp/core/model/scratch_card_model.dart';
 import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/core/repository/scratch_card_repo.dart';
@@ -41,12 +42,19 @@ class ScratchCardService
 
   bool isLastPageForScratchCards = false;
   bool _isFetchingScratchCards = false;
+  bool _isFetchingQuickLinks = false;
   String? scratchCardsListLastTicketId;
 
   bool get isFetchingScratchCards => _isFetchingScratchCards;
+  bool get isFetchingQuickLinks => _isFetchingQuickLinks;
 
   set isFetchingScratchCards(bool val) {
     _isFetchingScratchCards = val;
+    notifyListeners();
+  }
+
+  set isFetchingQuickLinks(bool val) {
+    _isFetchingQuickLinks = val;
     notifyListeners();
   }
 
@@ -56,16 +64,30 @@ class ScratchCardService
     _allScratchCards = value;
   }
 
+  List<RewardsQuickLinksModel> _allQuickLinks = [];
+  List<RewardsQuickLinksModel> get allRewardsQuickLinks => _allQuickLinks;
+  set allRewardsQuickLinks(List<RewardsQuickLinksModel> value) {
+    _allQuickLinks = value;
+  }
+
   void addScratchCards(List<ScratchCard>? value) {
     if (value != null) _allScratchCards.addAll(value);
   }
 
   int _unscratchedMilestoneScratchCardCount = 0;
+  int _unscratchedTicketsScratchCardCount = 0;
 
   int get unscratchedMilestoneScratchCardCount =>
       _unscratchedMilestoneScratchCardCount;
+  int get unscratchedTicketsScratchCardCount =>
+      _unscratchedTicketsScratchCardCount;
   set unscratchedMilestoneScratchCardCount(int value) {
     _unscratchedMilestoneScratchCardCount = value;
+    notifyListeners();
+  }
+
+  set unscratchedTicketsScratchCardCount(int value) {
+    _unscratchedTicketsScratchCardCount = value;
     notifyListeners();
   }
 
@@ -91,6 +113,7 @@ class ScratchCardService
     previousPrizeSubtype = '';
     _unscratchedTicketsCount = 0;
     _unscratchedMilestoneScratchCardCount = 0;
+    _unscratchedTicketsScratchCardCount = 0;
   }
 
   List<ScratchCard>? _unscratchedScratchCards;
@@ -187,7 +210,7 @@ class ScratchCardService
             .push(
           PageRouteBuilder(
             opaque: false,
-            pageBuilder: (BuildContext context, _, __) => GTInstantView(
+            pageBuilder: (context, _, __) => GTInstantView(
               source: source,
               title: title,
               amount: amount,
@@ -211,8 +234,7 @@ class ScratchCardService
         Navigator.of(AppState.delegate!.navigatorKey.currentContext!).push(
           PageRouteBuilder(
             opaque: false,
-            pageBuilder: (BuildContext context, _, __) =>
-                const MultipleScratchCardsView(),
+            pageBuilder: (context, _, __) => const MultipleScratchCardsView(),
           ),
         );
       }
@@ -224,11 +246,15 @@ class ScratchCardService
     if (res.isSuccess()) {
       unscratchedTicketsCount = res.model!.length;
       unscratchedMilestoneScratchCardCount = 0;
-      res.model!.forEach((sc) {
+      unscratchedTicketsScratchCardCount = 0;
+      for (final sc in res.model!) {
         if (sc.prizeSubtype!.toLowerCase().contains("_mlst_")) {
           unscratchedMilestoneScratchCardCount += 1;
         }
-      });
+        if (sc.eventType!.contains("buyTambolaTickets")) {
+          unscratchedTicketsScratchCardCount += 1;
+        }
+      }
     } else {
       unscratchedTicketsCount = 0;
     }
@@ -236,7 +262,7 @@ class ScratchCardService
 
   //HELPERS
 
-  isGTValid(ScratchCard ticket) {
+  bool isGTValid(ScratchCard ticket) {
     if (ticket.isRewarding != null &&
         ticket.gtId != null &&
         ticket.gtType != null &&
@@ -318,11 +344,11 @@ class ScratchCardService
         Map<String, dynamic> errorDetails = {
           'error_msg': 'Share reward card creation failed'
         };
-        _internalOpsService.logFailure(_userService.baseUser!.uid,
+        await _internalOpsService.logFailure(_userService.baseUser!.uid,
             FailType.FelloRewardCardShareFailed, errorDetails);
       }
 
-      AppState.backButtonDispatcher!.didPopRoute();
+      await AppState.backButtonDispatcher!.didPopRoute();
       print(e.toString());
       BaseUtil.showNegativeAlert(locale.taskFailed, locale.unableToCapture);
     }
@@ -413,6 +439,26 @@ class ScratchCardService
       ));
       allScratchCards = [];
       isFetchingScratchCards = false;
+    }
+  }
+
+  Future<void> fetchRewardsQuickLinks({bool more = false}) async {
+    try {
+      if (isFetchingQuickLinks) return;
+      isFetchingQuickLinks = true;
+      final res = await _gtRepo.getRewardsQuickLinks();
+      if (res.isSuccess()) {
+        allRewardsQuickLinks = res.model?["links"];
+      }
+      isFetchingQuickLinks = false;
+    } catch (e) {
+      // unawaited(locator<InternalOpsService>().logFailure(
+      //   _userService.baseUser!.uid,
+      //   FailType.ScratchCardListFailed,
+      //   {'message': "Scratch Card data fetch failed"},
+      // ));
+      allRewardsQuickLinks = [];
+      isFetchingQuickLinks = false;
     }
   }
 

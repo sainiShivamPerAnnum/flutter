@@ -36,6 +36,7 @@ import 'package:felloapp/ui/modalsheets/security_modal_sheet.dart';
 import 'package:felloapp/ui/pages/onboarding/blocked_user.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/ui/service_elements/last_week/last_week_view.dart';
+import 'package:felloapp/ui/service_elements/last_week/last_week_vm.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/haptic.dart';
@@ -635,6 +636,7 @@ class RootViewModel extends BaseViewModel {
                 model: response.model!.data!,
                 fromRoot: true,
                 callCampaign: true,
+                lastWeekViewModel: locator<LastWeekViewModel>(),
               ),
               hapticVibrate: true,
               isScrollControlled: true,

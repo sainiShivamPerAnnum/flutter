@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
@@ -12,6 +14,7 @@ import 'package:felloapp/ui/service_elements/last_week/last_week_bg.dart';
 import 'package:felloapp/ui/service_elements/last_week/last_week_vm.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -79,6 +82,7 @@ class LastWeekOverView extends StatelessWidget {
           callCampaign: callCampaign,
           fromRoot: fromRoot,
           model: model.data!,
+          lastWeekViewModel: model,
         );
       },
     );
@@ -90,15 +94,18 @@ class LastWeekUi extends StatelessWidget {
     required this.callCampaign,
     required this.fromRoot,
     required this.model,
+    required this.lastWeekViewModel,
     super.key,
   });
 
   final LastWeekData model;
   final bool callCampaign;
   final bool fromRoot;
+  final LastWeekViewModel lastWeekViewModel;
 
   @override
   Widget build(BuildContext context) {
+    final locale = locator<S>();
     return LastWeekBg(
       callCampaign: callCampaign,
       iconUrl: model.cta?.iconUrl,
@@ -150,7 +157,7 @@ class LastWeekUi extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.center,
               children: [
                 SvgPicture.asset(
-                  'assets/svg/paper_plane.svg',
+                  Assets.paperPlane,
                   height: SizeConfig.padding32,
                   width: SizeConfig.padding32,
                 ),
@@ -158,66 +165,115 @@ class LastWeekUi extends StatelessWidget {
                   width: SizeConfig.padding16,
                 ),
                 Text(
-                  'Last Week on Fello',
+                  locale.lastWeekFello,
                   style: TextStyles.rajdhaniSB.title3,
                 ),
               ],
             ),
             SizedBox(
-              height: SizeConfig.padding24,
+              height: SizeConfig.padding16,
             ),
             Expanded(
               child: SingleChildScrollView(
                 physics: const BouncingScrollPhysics(),
                 child: Column(
                   children: [
-                    TotalInvestmentWidget(data: model),
-                    SizedBox(
-                      height: SizeConfig.padding40,
-                    ),
-                    Center(
-                      child: Text(
-                        model.user == null
-                            ? "😥 You missed last week on "
-                            : ' 💰 Your Weekly Report',
-                        style: TextStyles.rajdhaniSB.title5,
-                      ),
-                    ),
                     if (model.user != null) ...[
-                      SizedBox(
-                        height: SizeConfig.padding16,
+                      MyWinningsLastWeek(
+                        data: model,
                       ),
-                      UserInvestmentWidget(
-                        data: model.user!,
+                      SizedBox(
+                        height: SizeConfig.padding8,
+                      ),
+                      MySavingsLastWeek(
+                        data: model,
                       ),
                     ],
                     SizedBox(
-                      height: SizeConfig.padding16,
+                      height: SizeConfig.padding22,
                     ),
-                    ListView.separated(
-                      itemCount: model.misc?.length ?? 0,
-                      shrinkWrap: true,
-                      physics: const NeverScrollableScrollPhysics(),
-                      itemBuilder: (context, index) {
-                        return WeekReportRowView(
-                            title: model.misc?[index].title ?? '',
-                            subTitle: model.misc?[index].subtitle ?? '',
-                            value: model.misc?[index].numeric ?? '',
-                            icon: model.misc?[index].iconUrl ?? '',
-                            backgroundColor:
-                                model.misc![index].bgHex!.toColor()!);
-                      },
-                      separatorBuilder: (context, index) {
-                        return SizedBox(
-                          height: SizeConfig.padding12,
+                    Center(
+                      child: Text(
+                        locale.lastWeekleaderBoard,
+                        style: TextStyles.rajdhaniSB.body0,
+                      ),
+                    ),
+                    ...List.generate(
+                      min(lastWeekViewModel.pastWeekWinners!.length, 10),
+                      (i) {
+                        String countSumString =
+                            '${lastWeekViewModel.pastWeekWinners?[i].matchMap?.fold(0, (sum, element) => sum + element.count)} Tickets';
+                        return Column(
+                          children: [
+                            Container(
+                              width: SizeConfig.screenWidth,
+                              padding: EdgeInsets.symmetric(
+                                  vertical: SizeConfig.padding12),
+                              child: Row(
+                                crossAxisAlignment: CrossAxisAlignment.center,
+                                children: [
+                                  DefaultAvatar(
+                                    size: Size(SizeConfig.padding24,
+                                        SizeConfig.padding24),
+                                  ),
+                                  SizedBox(width: SizeConfig.padding10),
+                                  Expanded(
+                                    child: Text(
+                                        lastWeekViewModel
+                                            .pastWeekWinners![i].username!
+                                            .replaceAll('@', '.'),
+                                        style: TextStyles.sourceSans.body3
+                                            .colour(Colors.white)),
+                                  ),
+                                  SizedBox(
+                                    width: SizeConfig.padding100,
+                                    // color: Colors.blue,
+                                    child: Column(
+                                      crossAxisAlignment:
+                                          CrossAxisAlignment.end,
+                                      children: [
+                                        Text.rich(TextSpan(
+                                            text: 'Earned ',
+                                            style: TextStyles.sourceSans.body3
+                                                .colour(UiConstants.kTextColor),
+                                            children: [
+                                              TextSpan(
+                                                text:
+                                                    "₹${lastWeekViewModel.pastWeekWinners![i].amount?.toInt() ?? "00"}",
+                                                style: TextStyles
+                                                    .sourceSansSB.body2
+                                                    .colour(UiConstants
+                                                        .kGoldProPrimary),
+                                              )
+                                            ])),
+                                        Text(
+                                          countSumString,
+                                          style: TextStyles.sourceSans.body3
+                                              .colour(UiConstants.kTextColor),
+                                        )
+                                      ],
+                                    ),
+                                  )
+                                ],
+                              ),
+                            ),
+                            if (i + 1 <
+                                min(lastWeekViewModel.pastWeekWinners!.length,
+                                    10))
+                              Padding(
+                                padding: EdgeInsets.symmetric(
+                                    horizontal: SizeConfig.padding8),
+                                child: const Divider(
+                                  color: Colors.white,
+                                  thickness: 0.2,
+                                ),
+                              )
+                          ],
                         );
                       },
                     ),
                     SizedBox(
-                      height: SizeConfig.padding20,
-                    ),
-                    SizedBox(
-                      height: SizeConfig.navBarHeight * 2,
+                      height: SizeConfig.navBarHeight * 1.5,
                     ),
                   ],
                 ),
@@ -240,6 +296,7 @@ class UserInvestmentWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final locale = locator<S>();
     return Row(
       children: [
         Expanded(
@@ -255,13 +312,6 @@ class UserInvestmentWidget extends StatelessWidget {
             child: Column(
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
-                // Container(
-                //   height: SizeConfig.padding38,
-                //   width: SizeConfig.padding38,
-                //   decoration: BoxDecoration(
-                //       color: Colors.red.withOpacity(0.50),
-                //       shape: BoxShape.circle),
-                // ),
                 DefaultAvatar(
                   size: Size(SizeConfig.padding38, SizeConfig.padding38),
                 ),
@@ -269,7 +319,7 @@ class UserInvestmentWidget extends StatelessWidget {
                   height: SizeConfig.padding20,
                 ),
                 Text(
-                  'Savings made',
+                  locale.savingsMade,
                   style: TextStyles.sourceSans.body3
                       .colour(const Color(0xffFFD979)),
                 ),
@@ -343,6 +393,144 @@ class UserInvestmentWidget extends StatelessWidget {
             ],
           ),
         )
+      ],
+    );
+  }
+}
+
+class MyWinningsLastWeek extends StatelessWidget {
+  const MyWinningsLastWeek({required this.data, super.key});
+  final LastWeekData data;
+
+  @override
+  Widget build(BuildContext context) {
+    final locale = locator<S>();
+    return Column(
+      children: [
+        Container(
+          width: SizeConfig.screenWidth!,
+          padding: EdgeInsets.symmetric(
+              vertical: SizeConfig.padding16, horizontal: SizeConfig.padding20),
+          decoration: BoxDecoration(
+            border: Border.all(color: const Color(0xff919193)),
+            color: Colors.black.withOpacity(0.28),
+            borderRadius: BorderRadius.circular(SizeConfig.roundness8),
+          ),
+          child: Column(children: [
+            SvgPicture.asset(
+              Assets.trophyWonSvg,
+              height: SizeConfig.padding64,
+              fit: BoxFit.fill,
+            ),
+            SizedBox(
+              height: SizeConfig.padding8,
+            ),
+            Text(
+              locale.btnCongratulations,
+              style:
+                  TextStyles.sourceSansSB.body2.colour(UiConstants.kTextColor),
+            ),
+            Text(
+              locale.ticketsThisWeek,
+              style: TextStyles.sourceSans.body4.colour(UiConstants.textGray70),
+            ),
+            SizedBox(
+              height: SizeConfig.padding12,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text('Tickets matched',
+                        style: TextStyles.sourceSans.body3
+                            .colour(UiConstants.textGray70)),
+                    Text(data.user!.matchedTickets.toString() ?? '',
+                        style: TextStyles.rajdhaniSB.title5
+                            .colour(UiConstants.kTextColor))
+                  ],
+                ),
+                Column(
+                  crossAxisAlignment: CrossAxisAlignment.end,
+                  children: [
+                    Text('Reward won',
+                        style: TextStyles.sourceSans.body3
+                            .colour(UiConstants.textGray70)),
+                    Text('₹${data.user!.rewardsWon}',
+                        style: TextStyles.rajdhaniSB.title5
+                            .colour(UiConstants.kTextColor))
+                  ],
+                )
+              ],
+            )
+          ]),
+        ),
+      ],
+    );
+  }
+}
+
+class MySavingsLastWeek extends StatelessWidget {
+  const MySavingsLastWeek({required this.data, super.key});
+  final LastWeekData data;
+
+  @override
+  Widget build(BuildContext context) {
+    final locale = locator<S>();
+    return Row(
+      children: [
+        Container(
+          width: SizeConfig.screenWidth! * 0.389,
+          padding: EdgeInsets.symmetric(
+              vertical: SizeConfig.padding14, horizontal: SizeConfig.padding20),
+          decoration: BoxDecoration(
+            border: Border.all(color: const Color(0xff919193)),
+            color: Colors.black.withOpacity(0.28),
+            borderRadius: BorderRadius.circular(SizeConfig.roundness8),
+          ),
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            SvgPicture.asset(
+              Assets.savingsAvatar,
+              height: SizeConfig.padding22,
+            ),
+            SizedBox(
+              height: SizeConfig.padding4,
+            ),
+            Text(locale.totalSavingswithFello,
+                style: TextStyles.sourceSans.body3
+                    .colour(UiConstants.kWinnerPlayerPrimaryColor)),
+            SizedBox(
+              height: SizeConfig.padding6,
+            ),
+            Text('₹${data.user!.invested}',
+                style: TextStyles.rajdhaniSB.title5
+                    .colour(UiConstants.kTextColor)),
+          ]),
+        ),
+        SizedBox(
+          width: SizeConfig.padding10,
+        ),
+        Expanded(
+          child: SizedBox(
+            child: Column(
+              children: [
+                ReturnsContainer(
+                  title: locale.totalReturnGained,
+                  value: '₹${data.user!.returns}',
+                ),
+                SizedBox(
+                  height: SizeConfig.padding6,
+                ),
+                ReturnsContainer(
+                  title: locale.totalPercentage,
+                  value: '${data.user!.gainsPerc}%',
+                ),
+              ],
+            ),
+          ),
+        ),
       ],
     );
   }
@@ -558,6 +746,40 @@ class AssetContainer extends StatelessWidget {
           ),
         ],
       ),
+    );
+  }
+}
+
+class ReturnsContainer extends StatelessWidget {
+  const ReturnsContainer({required this.title, required this.value, super.key});
+  final String title;
+  final String value;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(
+          vertical: SizeConfig.padding14, horizontal: SizeConfig.padding12),
+      decoration: BoxDecoration(
+        border: Border.all(color: const Color(0xff919193)),
+        color: Colors.black.withOpacity(0.28),
+        borderRadius: BorderRadius.circular(SizeConfig.roundness8),
+      ),
+      child: Row(
+          mainAxisSize: MainAxisSize.max,
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            SizedBox(
+              width: SizeConfig.padding100,
+              child: Text(title,
+                  maxLines: 2,
+                  style: TextStyles.sourceSans.body4
+                      .colour(UiConstants.textGray70)),
+            ),
+            Text(value,
+                style:
+                    TextStyles.rajdhaniSB.body1.colour(UiConstants.kTextColor))
+          ]),
     );
   }
 }

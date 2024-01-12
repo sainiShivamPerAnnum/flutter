@@ -49,7 +49,7 @@ class LastWeekData {
             : UserLastWeekData.fromJson(json["user"]),
         misc: json["misc"] == null
             ? []
-            : List<Misc>.from(json["misc"]!.map((x) => Misc.fromJson(x))),
+            : List<Misc>.from(json["misc"]!.map(Misc.fromJson)),
         isTopSaver: json["isTopSaver"],
         cta: json["cta"] == null ? null : Cta.fromJson(json["cta"]),
       );
@@ -181,25 +181,32 @@ class Misc {
 }
 
 class UserLastWeekData {
-  UserLastWeekData({
-    this.gainsPerc,
-    this.invested,
-    this.returns,
-  });
+  UserLastWeekData(
+      {this.gainsPerc,
+      this.invested,
+      this.returns,
+      this.matchedTickets,
+      this.rewardsWon});
 
   final double? gainsPerc;
   final int? invested;
   final double? returns;
+  final int? matchedTickets;
+  final int? rewardsWon;
 
   UserLastWeekData copyWith({
     double? gainsPerc,
     int? invested,
     double? returns,
+    int? matchedTickets,
+    int? rewardsWon,
   }) =>
       UserLastWeekData(
         gainsPerc: gainsPerc ?? this.gainsPerc,
         invested: invested ?? this.invested,
         returns: returns ?? this.returns,
+        matchedTickets: matchedTickets ?? this.matchedTickets,
+        rewardsWon: rewardsWon ?? this.rewardsWon,
       );
 
   factory UserLastWeekData.fromJson(Map<String, dynamic> json) =>
@@ -207,12 +214,16 @@ class UserLastWeekData {
         gainsPerc: json["gainsPerc"]?.toDouble(),
         invested: json["invested"],
         returns: json["returns"]?.toDouble(),
+        matchedTickets: json["matchedTickets"],
+        rewardsWon: json["rewardsWon"],
       );
 
   Map<String, dynamic> toJson() => {
         "gainsPerc": gainsPerc,
         "invested": invested,
         "returns": returns,
+        "matchedTickets": matchedTickets,
+        "rewardsWon": rewardsWon
       };
 }
 

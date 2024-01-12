@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/constants/cache_keys.dart';
 import 'package:felloapp/core/enums/ttl.dart';
@@ -127,6 +129,7 @@ class CampaignRepo extends BaseRepo {
         code: 200,
       );
     } catch (e) {
+      log(e.toString(), name: 'mydata');
       logger.e(e.toString());
       return ApiResponse.withError("Unable to fetch data", 400);
     }
