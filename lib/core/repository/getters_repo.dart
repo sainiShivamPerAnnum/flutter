@@ -28,7 +28,8 @@ import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/code_from_freq.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/flavor_config.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
 //[TODO]:Added Prod CDN url;
 class GetterRepository extends BaseRepo {
@@ -160,18 +161,43 @@ class GetterRepository extends BaseRepo {
     final response = await APIService.instance.getData(
       '',
       apiName: '$_getters/getPageData',
-      cBaseUrl: 'https://mocki.io/v1/5be62b44-1095-4ce8-8a75-0a50331bbfe4',
+      cBaseUrl: 'https://mocki.io/v1/eb714039-a9fa-46b1-a932-acb55e0c1a43',
     );
     try {
+      final pageData = PageData.fromJson(response);
+      unawaited(_downloadStories(pageData));
       return ApiResponse(
         code: 200,
-        model: PageData.fromJson(response),
+        model: pageData,
       );
     } catch (e) {
       return ApiResponse.withError(
         e.toString(),
         404,
       );
+    }
+  }
+
+  Future<void> _downloadStories(PageData data) async {
+    DefaultCacheManager cacheManager = DefaultCacheManager();
+    final homePageData = data.screens.home;
+    StoriesSection? section;
+    for (final element in homePageData.sections.entries) {
+      if (element.value is StoriesSection) {
+        section = element.value as StoriesSection;
+        break;
+      }
+    }
+
+    if (section != null) {
+      final stories = section.data.stories;
+      for (var i = 0; i < stories.length; i++) {
+        try {
+          await cacheManager.getSingleFile(stories[i].story);
+        } catch (e) {
+          debugPrint('Failed to load story ${stories[i].story}');
+        }
+      }
     }
   }
 

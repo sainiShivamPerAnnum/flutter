@@ -60,6 +60,8 @@ enum AssetPrefType {
   P2P,
   GOLD,
   NONE;
+
+  bool get isNone => this == AssetPrefType.NONE;
 }
 
 @_deserializable

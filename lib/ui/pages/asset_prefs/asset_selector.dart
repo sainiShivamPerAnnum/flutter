@@ -14,12 +14,14 @@ class AssetOptionWidget extends StatefulWidget {
     required this.onSelect,
     required this.isSelected,
     required this.assetPrefOption,
+    this.hideNoteSureOption = false,
     super.key,
   });
 
   final AssetPrefOption assetPrefOption;
   final ValueChanged<AssetPrefType> onSelect;
   final bool Function(AssetPrefType) isSelected;
+  final bool hideNoteSureOption;
 
   @override
   State<AssetOptionWidget> createState() => _AssetOptionWidgetState();
@@ -29,6 +31,9 @@ class _AssetOptionWidgetState extends State<AssetOptionWidget>
     with TickerProviderStateMixin {
   @override
   Widget build(BuildContext context) {
+    if (widget.hideNoteSureOption && widget.assetPrefOption.assetType.isNone) {
+      return const SizedBox.shrink();
+    }
     final isSelected = widget.isSelected(widget.assetPrefOption.assetType);
     return InkWell(
       onTap: () => widget.onSelect(widget.assetPrefOption.assetType),

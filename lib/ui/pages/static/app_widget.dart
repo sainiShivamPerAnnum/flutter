@@ -1,3 +1,5 @@
+import 'dart:async';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/connectivity_status_enum.dart';
 import 'package:felloapp/core/model/sdui/sections/home_page_sections.dart';
@@ -1049,13 +1051,13 @@ class DSLButtonResolver extends StatelessWidget {
   });
 
   final Cta cta;
-  final VoidCallback? preResolve;
+  final FutureOr<void> Function()? preResolve;
 
-  void _onPressed() {
-    preResolve?.call();
+  FutureOr<void> _onPressed() async {
+    await preResolve?.call();
     final action = cta.action;
     if (action == null) return;
-    ActionResolver.instance.resolve(action);
+    await ActionResolver.instance.resolve(action);
   }
 
   @override

@@ -373,7 +373,7 @@ class AugmontTransactionService extends BaseTransactionService
             if (currentGoldPurchaseDetails.isPro) {
               if (txnStatus.data!.fd!.status ==
                   Constants.GOLD_PRO_TXN_STATUS_ACTIVE) {
-                await locator<BaseUtil>().newUserCheck();
+                await locator<BaseUtil>().updateUser();
                 PowerPlayService.powerPlayDepositFlow = false;
                 MatchData? liveMatchData =
                     locator<PowerPlayService>().liveMatchData;
@@ -410,7 +410,7 @@ class AugmontTransactionService extends BaseTransactionService
                 );
               }
             } else {
-              await locator<BaseUtil>().newUserCheck();
+              await locator<BaseUtil>().updateUser();
               PowerPlayService.powerPlayDepositFlow = false;
               MatchData? liveMatchData =
                   locator<PowerPlayService>().liveMatchData;

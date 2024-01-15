@@ -1,9 +1,11 @@
+import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/sdui/sections/home_page_sections.dart'
     as sections;
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/asset_prefs/asset_pref_vm.dart';
 import 'package:felloapp/ui/pages/asset_prefs/asset_selector.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
+import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/util/assets.dart' as a;
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -36,111 +38,122 @@ class AssetPrefView extends StatelessWidget {
   Widget build(BuildContext context) {
     final prefViewData = data.screens.assetPreference;
 
-    return BaseView<AssetPreferenceViewModel>(builder: (context, model, child) {
-      final locale = S.of(context);
-      return AnnotatedRegion(
-        value: const SystemUiOverlayStyle(
-          statusBarBrightness: Brightness.dark,
-          statusBarIconBrightness: Brightness.light,
-          statusBarColor: Colors.transparent,
-        ),
-        child: Scaffold(
-          body: Stack(
-            children: [
-              const NewSquareBackground(),
-              Padding(
-                padding: EdgeInsets.only(
-                  top: SizeConfig.viewInsets.top,
-                  right: SizeConfig.padding16,
-                  left: SizeConfig.padding20,
-                ),
-                child: Column(
-                  children: [
-                    Align(
-                      alignment: Alignment.centerRight,
-                      child: _SkipButton(
-                        label: locale.obAssetPrefBottomSheet2ButtonText1,
-                        onTap: () => model.onPressedSkip(
-                          enteredFromHomePage,
-                          prefViewData.skipToHome,
-                        ),
+    return BaseView<AssetPreferenceViewModel>(
+        onModelReady: (model) => model.init(),
+        builder: (context, model, child) {
+          final locale = S.of(context);
+          return AnnotatedRegion(
+            value: const SystemUiOverlayStyle(
+              statusBarBrightness: Brightness.dark,
+              statusBarIconBrightness: Brightness.light,
+              statusBarColor: Colors.transparent,
+            ),
+            child: Scaffold(
+              body: Stack(
+                children: [
+                  const NewSquareBackground(),
+                  if (model.state.isBusy)
+                    const FullScreenLoader()
+                  else
+                    Padding(
+                      padding: EdgeInsets.only(
+                        top: SizeConfig.viewInsets.top,
+                        right: SizeConfig.padding16,
+                        left: SizeConfig.padding20,
                       ),
-                    ),
-                    SizedBox(
-                      height: SizeConfig.padding24,
-                    ),
-                    Text(
-                      locale.obAssetPrefGreeting(model.name),
-                      style: TextStyles.rajdhaniSB.title5,
-                    ),
-                    Text(
-                      locale.obAssetWelcomeText,
-                      style: TextStyles.rajdhaniSB.body1,
-                    ),
-                    SizedBox(
-                      height: SizeConfig.padding30,
-                    ),
-                    Align(
-                      alignment: Alignment.centerLeft,
                       child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Text(
-                            prefViewData.title,
-                            style: TextStyles.rajdhaniSB.body1.colour(
-                              Colors.white.withOpacity(.8),
+                          Align(
+                            alignment: Alignment.centerRight,
+                            child: _SkipButton(
+                              label: locale.obAssetPrefBottomSheet2ButtonText1,
+                              onTap: () => model.onPressedSkip(
+                                enteredFromHomePage,
+                                prefViewData.skipToHome,
+                              ),
                             ),
                           ),
                           SizedBox(
-                            height: SizeConfig.padding4,
+                            height: SizeConfig.padding24,
                           ),
                           Text(
-                            prefViewData.subtitle,
-                            style: TextStyles.rajdhani.body2.colour(
-                              UiConstants.grey1.withOpacity(.8),
+                            locale.obAssetPrefGreeting(model.name),
+                            style: TextStyles.rajdhaniSB.title5,
+                          ),
+                          Text(
+                            locale.obAssetWelcomeText,
+                            style: TextStyles.rajdhaniSB.body1,
+                          ),
+                          SizedBox(
+                            height: SizeConfig.padding30,
+                          ),
+                          Align(
+                            alignment: Alignment.centerLeft,
+                            child: Column(
+                              crossAxisAlignment: CrossAxisAlignment.start,
+                              children: [
+                                Text(
+                                  prefViewData.title,
+                                  style: TextStyles.rajdhaniSB.body1.colour(
+                                    Colors.white.withOpacity(.8),
+                                  ),
+                                ),
+                                SizedBox(
+                                  height: SizeConfig.padding4,
+                                ),
+                                Text(
+                                  prefViewData.subtitle,
+                                  style: TextStyles.rajdhani.body2.colour(
+                                    UiConstants.grey1.withOpacity(.8),
+                                  ),
+                                )
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            height: SizeConfig.padding24,
+                          ),
+                          Column(
+                            children: [
+                              for (int i = 0;
+                                  i < prefViewData.options.length;
+                                  i++)
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                    bottom: SizeConfig.padding24,
+                                  ),
+                                  child: AssetOptionWidget(
+                                    hideNoteSureOption: enteredFromHomePage,
+                                    isSelected: (pref) =>
+                                        pref == model.selectedAsset,
+                                    assetPrefOption: prefViewData.options[i],
+                                    onSelect: model.changeSelectedAsset,
+                                  ),
+                                ),
+                            ],
+                          ),
+                          const Spacer(),
+                          Padding(
+                            padding:
+                                EdgeInsets.only(bottom: SizeConfig.padding20),
+                            child: SecondaryButton(
+                              disabled: model.selectedAsset == null,
+                              onPressed: () =>
+                                  model.onProceed(prefViewData.notSure),
+                              label: _getButtonLabel(
+                                locale,
+                                model.selectedAsset,
+                              ),
                             ),
                           )
                         ],
                       ),
-                    ),
-                    SizedBox(
-                      height: SizeConfig.padding24,
-                    ),
-                    Column(
-                      children: [
-                        for (int i = 0; i < prefViewData.options.length; i++)
-                          Padding(
-                            padding: EdgeInsets.only(
-                              bottom: SizeConfig.padding24,
-                            ),
-                            child: AssetOptionWidget(
-                              isSelected: (pref) => pref == model.selectedAsset,
-                              assetPrefOption: prefViewData.options[i],
-                              onSelect: model.changeSelectedAsset,
-                            ),
-                          ),
-                      ],
-                    ),
-                    const Spacer(),
-                    Padding(
-                      padding: EdgeInsets.only(bottom: SizeConfig.padding20),
-                      child: SecondaryButton(
-                        disabled: model.selectedAsset == null,
-                        onPressed: () => model.onProceed(prefViewData.notSure),
-                        label: _getButtonLabel(
-                          locale,
-                          model.selectedAsset,
-                        ),
-                      ),
                     )
-                  ],
-                ),
-              )
-            ],
-          ),
-        ),
-      );
-    });
+                ],
+              ),
+            ),
+          );
+        });
   }
 }
 

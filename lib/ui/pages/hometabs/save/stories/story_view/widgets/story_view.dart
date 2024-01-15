@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:io';
 
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:collection/collection.dart' show IterableExtension;
@@ -7,98 +6,135 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_cache_manager/flutter_cache_manager.dart';
-import 'package:rxdart/rxdart.dart';
-import 'package:video_player/video_player.dart';
 
-enum PlaybackState { pause, play, next, previous }
+import '../controller/story_controller.dart';
+import '../utils.dart';
+import 'story_video.dart';
 
-enum LoadState { loading, success, failure }
+/// This is used to specify the height of the progress indicator. Inline stories
+/// should use [small]
+enum IndicatorHeight { small, large }
 
-enum Direction { up, down, left, right }
-
-class VerticalDragInfo {
-  bool cancel = false;
-
-  Direction? direction;
-
-  void update(double primaryDelta) {
-    Direction tmpDirection;
-
-    tmpDirection = primaryDelta > 0 ? Direction.down : Direction.up;
-
-    if (direction != null && tmpDirection != direction) {
-      cancel = true;
-    }
-
-    direction = tmpDirection;
-  }
-}
-
-class StoryController {
-  final playbackNotifier = BehaviorSubject<PlaybackState>();
-
-  void pause() {
-    playbackNotifier.add(PlaybackState.pause);
-  }
-
-  void play() {
-    playbackNotifier.add(PlaybackState.play);
-  }
-
-  void next() {
-    playbackNotifier.add(PlaybackState.next);
-  }
-
-  void previous() {
-    playbackNotifier.add(PlaybackState.previous);
-  }
-
-  void dispose() {
-    playbackNotifier.close();
-  }
-}
-
+/// This is a representation of a story item (or page).
 class StoryItem {
+  /// Specifies how long the page should be displayed. It should be a reasonable
+  /// amount of time greater than 0 milliseconds.
   final Duration duration;
+
+  /// Has this page been shown already? This is used to indicate that the page
+  /// has been displayed. If some pages are supposed to be skipped in a story,
+  /// mark them as shown `shown = true`.
+  ///
+  /// However, during initialization of the story view, all pages after the
+  /// last unshown page will have their `shown` attribute altered to false. This
+  /// is because the next item to be displayed is taken by the last unshown
+  /// story item.
   bool shown;
+
+  /// The page content
   final Widget view;
   final Widget overlay;
-  final String id;
+  final Object id;
 
   StoryItem(
     this.view, {
-    required this.id,
     required this.duration,
+    required this.id,
     this.shown = false,
     this.overlay = const SizedBox.shrink(),
   });
 
-  StoryItem.pageVideo(
+  /// Shorthand for creating page video. [controller] should be same instance as
+  /// one passed to the `StoryView`
+  factory StoryItem.pageVideo(
     String url, {
     required StoryController controller,
-    required this.id,
-    this.duration = const Duration(seconds: 10),
-    this.overlay = const SizedBox.shrink(),
-    this.shown = false,
+    required Widget overlay,
+    required Object id,
+    Key? key,
+    Duration? duration,
+    String? caption,
+    bool shown = false,
     Map<String, dynamic>? requestHeaders,
-  }) : view = StoryVideo.url(
-          url,
-          storyController: controller,
-          requestHeaders: requestHeaders,
-        );
+  }) {
+    return StoryItem(
+        id: id,
+        overlay: overlay,
+        Container(
+          key: key,
+          color: Colors.black,
+          child: Stack(
+            children: <Widget>[
+              StoryVideo.url(
+                url,
+                controller: controller,
+                requestHeaders: requestHeaders,
+              ),
+              SafeArea(
+                child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: Container(
+                    width: double.infinity,
+                    margin: const EdgeInsets.only(bottom: 24),
+                    padding:
+                        const EdgeInsets.symmetric(horizontal: 24, vertical: 8),
+                    color:
+                        caption != null ? Colors.black54 : Colors.transparent,
+                    child: caption != null
+                        ? Text(
+                            caption,
+                            style: const TextStyle(
+                                fontSize: 15, color: Colors.white),
+                            textAlign: TextAlign.center,
+                          )
+                        : const SizedBox(),
+                  ),
+                ),
+              )
+            ],
+          ),
+        ),
+        shown: shown,
+        duration: duration ?? const Duration(seconds: 10));
+  }
 }
 
+/// Widget to display stories just like Whatsapp and Instagram. Can also be used
+/// inline/inside [ListView] or [Column] just like Google News app. Comes with
+/// gestures to pause, forward and go to previous page.
 class StoryView extends StatefulWidget {
+  /// The pages to displayed.
   final List<StoryItem?> storyItems;
+
+  /// Callback for when a full cycle of story is shown. This will be called
+  /// each time the full story completes when [repeat] is set to `true`.
   final VoidCallback? onComplete;
+
+  /// Callback for when a vertical swipe gesture is detected. If you do not
+  /// want to listen to such event, do not provide it. For instance,
+  /// for inline stories inside ListViews, it is preferrable to not to
+  /// provide this callback so as to enable scroll events on the list view.
   final Function(Direction?)? onVerticalSwipeComplete;
+
+  /// Callback for when a story is currently being shown.
   final ValueChanged<StoryItem>? onStoryShow;
+
+  /// Should the story be repeated forever?
   final bool repeat;
+
+  /// If you would like to display the story as full-page, then set this to
+  /// `false`. But in case you would display this as part of a page (eg. in
+  /// a [ListView] or [Column]) then set this to `true`.
   final bool inline;
+
+  // Controls the playback of the stories
   final StoryController controller;
+
+  // Indicator Color
   final Color? indicatorColor;
+  // Indicator Foreground Color
   final Color? indicatorForegroundColor;
+
   final int initialIndex;
 
   const StoryView({
@@ -124,7 +160,7 @@ class StoryView extends StatefulWidget {
 class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
   AnimationController? _animationController;
   Animation<double>? _currentAnimation;
-  Timer? _nextDebounce;
+  Timer? _nextDebouncer;
 
   StreamSubscription<PlaybackState>? _playbackSubscription;
 
@@ -151,6 +187,8 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
       widget.storyItems[i]?.shown = true;
     }
 
+    // All pages after the first unshown page should have their shown value as
+    // false
     final firstPage = widget.storyItems.firstWhereOrNull((it) => !it!.shown);
     if (firstPage == null) {
       for (final it2 in widget.storyItems) {
@@ -172,7 +210,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
           break;
 
         case PlaybackState.pause:
-          _holdNext();
+          _holdNext(); // then pause animation
           _animationController?.stop(canceled: false);
           break;
 
@@ -193,7 +231,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
 
   @override
   void dispose() {
-    _clearDebounce();
+    _clearDebouncer();
 
     _animationController?.dispose();
     _playbackSubscription?.cancel();
@@ -202,7 +240,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
   }
 
   @override
-  void setState(VoidCallback fn) {
+  void setState(fn) {
     if (mounted) {
       super.setState(fn);
     }
@@ -210,7 +248,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
 
   void _play() {
     _animationController?.dispose();
-
+    // get the next playing page
     final storyItem = widget.storyItems.firstWhere((it) {
       return !it!.shown;
     })!;
@@ -228,6 +266,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
         if (widget.storyItems.last != storyItem) {
           _beginPlay();
         } else {
+          // done playing
           _onComplete();
         }
       }
@@ -283,6 +322,7 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
     if (_currentStory != widget.storyItems.last) {
       _animationController!.stop();
 
+      // get last showing
       final last = _currentStory;
 
       if (last != null) {
@@ -292,24 +332,25 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
         }
       }
     } else {
+      // this is the last page, progress animation should skip to end
       _animationController!
           .animateTo(1.0, duration: const Duration(milliseconds: 10));
     }
   }
 
-  void _clearDebounce() {
-    _nextDebounce?.cancel();
-    _nextDebounce = null;
+  void _clearDebouncer() {
+    _nextDebouncer?.cancel();
+    _nextDebouncer = null;
   }
 
   void _removeNextHold() {
-    _nextDebounce?.cancel();
-    _nextDebounce = null;
+    _nextDebouncer?.cancel();
+    _nextDebouncer = null;
   }
 
   void _holdNext() {
-    _nextDebounce?.cancel();
-    _nextDebounce = Timer(const Duration(milliseconds: 500), () {});
+    _nextDebouncer?.cancel();
+    _nextDebouncer = Timer(const Duration(milliseconds: 500), () {});
   }
 
   void _onTapClose() {
@@ -335,7 +376,8 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                   widget.controller.play();
                 },
                 onTapUp: (details) {
-                  if (_nextDebounce?.isActive == false) {
+                  // if debounce timed out (not active) then continue anim
+                  if (_nextDebouncer?.isActive == false) {
                     widget.controller.play();
                   } else {
                     widget.controller.next();
@@ -357,12 +399,14 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
                         verticalDragInfo ??= VerticalDragInfo();
 
                         verticalDragInfo!.update(details.primaryDelta!);
+
+                        // TODO: provide callback interface for animation purposes
                       },
                 onVerticalDragEnd: widget.onVerticalSwipeComplete == null
                     ? null
                     : (details) {
                         widget.controller.play();
-
+                        // finish up drag cycle
                         if (!verticalDragInfo!.cancel &&
                             widget.onVerticalSwipeComplete != null) {
                           widget.onVerticalSwipeComplete!(
@@ -438,6 +482,8 @@ class StoryViewState extends State<StoryView> with TickerProviderStateMixin {
   }
 }
 
+/// Capsule holding the duration and shown property of each story. Passed down
+/// to the pages bar to render the page indicators.
 class PageData {
   Duration duration;
   bool shown;
@@ -445,15 +491,19 @@ class PageData {
   PageData(this.duration, this.shown);
 }
 
+/// Horizontal bar displaying a row of [StoryProgressIndicator] based on the
+/// [pages] provided.
 class PageBar extends StatefulWidget {
   final List<PageData> pages;
   final Animation<double>? animation;
+  final IndicatorHeight indicatorHeight;
   final Color? indicatorColor;
   final Color? indicatorForegroundColor;
 
   const PageBar(
     this.pages,
     this.animation, {
+    this.indicatorHeight = IndicatorHeight.large,
     this.indicatorColor,
     this.indicatorForegroundColor,
     Key? key,
@@ -481,7 +531,7 @@ class PageBarState extends State<PageBar> {
   }
 
   @override
-  void setState(VoidCallback fn) {
+  void setState(fn) {
     if (mounted) {
       super.setState(fn);
     }
@@ -501,7 +551,8 @@ class PageBarState extends State<PageBar> {
                 EdgeInsets.only(right: widget.pages.last == it ? 0 : spacing),
             child: StoryProgressIndicator(
               isPlaying(it) ? widget.animation!.value : (it.shown ? 1 : 0),
-              indicatorHeight: 4,
+              indicatorHeight:
+                  widget.indicatorHeight == IndicatorHeight.large ? 5 : 3,
               indicatorColor: widget.indicatorColor,
               indicatorForegroundColor: widget.indicatorForegroundColor,
             ),
@@ -512,150 +563,10 @@ class PageBarState extends State<PageBar> {
   }
 }
 
-class VideoLoader {
-  String url;
-
-  File? videoFile;
-
-  Map<String, dynamic>? requestHeaders;
-
-  LoadState state = LoadState.loading;
-
-  VideoLoader(this.url, {this.requestHeaders});
-
-  void loadVideo(VoidCallback onComplete) {
-    if (videoFile != null) {
-      state = LoadState.success;
-      onComplete();
-    }
-
-    final fileStream = DefaultCacheManager()
-        .getFileStream(url, headers: requestHeaders as Map<String, String>?);
-
-    fileStream.listen((fileResponse) {
-      if (fileResponse is FileInfo) {
-        if (videoFile == null) {
-          state = LoadState.success;
-          videoFile = fileResponse.file;
-          onComplete();
-        }
-      }
-    });
-  }
-}
-
-class StoryVideo extends StatefulWidget {
-  final StoryController? storyController;
-  final VideoLoader videoLoader;
-
-  const StoryVideo(
-    this.videoLoader, {
-    this.storyController,
-    super.key,
-  });
-
-  StoryVideo.url(
-    String url, {
-    super.key,
-    this.storyController,
-    Map<String, dynamic>? requestHeaders,
-  }) : videoLoader = VideoLoader(url, requestHeaders: requestHeaders);
-
-  @override
-  State<StatefulWidget> createState() {
-    return StoryVideoState();
-  }
-}
-
-class StoryVideoState extends State<StoryVideo> {
-  Future<void>? playerLoader;
-
-  StreamSubscription? _streamSubscription;
-
-  VideoPlayerController? playerController;
-
-  @override
-  void initState() {
-    super.initState();
-
-    widget.storyController!.pause();
-
-    widget.videoLoader.loadVideo(() {
-      if (widget.videoLoader.state == LoadState.success) {
-        playerController =
-            VideoPlayerController.file(widget.videoLoader.videoFile!);
-
-        playerController!.initialize().then((v) {
-          setState(() {});
-          widget.storyController!.play();
-        });
-
-        if (widget.storyController != null) {
-          _streamSubscription =
-              widget.storyController!.playbackNotifier.listen((playbackState) {
-            if (playbackState == PlaybackState.pause) {
-              playerController!.pause();
-            } else {
-              playerController!.play();
-            }
-          });
-        }
-      } else {
-        setState(() {});
-      }
-    });
-  }
-
-  @override
-  void dispose() {
-    playerController?.dispose();
-    _streamSubscription?.cancel();
-    super.dispose();
-  }
-
-  Widget getContentView() {
-    if (widget.videoLoader.state == LoadState.success &&
-        playerController!.value.isInitialized) {
-      return Center(
-        child: AspectRatio(
-          aspectRatio: playerController!.value.aspectRatio,
-          child: VideoPlayer(playerController!),
-        ),
-      );
-    }
-
-    return widget.videoLoader.state == LoadState.loading
-        ? const Center(
-            child: SizedBox(
-              width: 70,
-              height: 70,
-              child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                strokeWidth: 3,
-              ),
-            ),
-          )
-        : const Center(
-            child: Text(
-            "Media failed to load.",
-            style: TextStyle(
-              color: Colors.white,
-            ),
-          ));
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      color: Colors.black,
-      height: double.infinity,
-      width: double.infinity,
-      child: getContentView(),
-    );
-  }
-}
-
+/// Custom progress bar. Supposed to be lighter than the
+/// original [ProgressIndicator], and rounded at the sides.
 class StoryProgressIndicator extends StatelessWidget {
+  /// From `0.0` to `1.0`, determines the progress of the indicator
   final double value;
   final double indicatorHeight;
   final Color? indicatorColor;
@@ -691,24 +602,20 @@ class IndicatorOval extends CustomPainter {
   final Color color;
   final double widthFactor;
 
-  const IndicatorOval(
-    this.color,
-    this.widthFactor,
-  );
+  IndicatorOval(this.color, this.widthFactor);
 
   @override
   void paint(Canvas canvas, Size size) {
     final paint = Paint()..color = color;
     canvas.drawRRect(
-      RRect.fromRectAndRadius(
-        Rect.fromLTWH(0, 0, size.width * widthFactor, size.height),
-        const Radius.circular(3),
-      ),
-      paint,
-    );
+        RRect.fromRectAndRadius(
+            Rect.fromLTWH(0, 0, size.width * widthFactor, size.height),
+            const Radius.circular(3)),
+        paint);
   }
 
   @override
-  bool shouldRepaint(covariant IndicatorOval oldDelegate) =>
-      oldDelegate.color != color || oldDelegate.widthFactor != widthFactor;
+  bool shouldRepaint(CustomPainter oldDelegate) {
+    return true;
+  }
 }

@@ -468,12 +468,16 @@ class BaseUtil extends ChangeNotifier {
     );
   }
 
-  Future<void> newUserCheck() async {
+  Future<void> updateUser() async {
     unawaited(locator<MarketingEventHandlerService>().getHappyHourCampaign());
 
     if (_userService.userSegments.contains("NEW_USER")) {
       await CacheService.invalidateByKey(CacheKeys.USER);
       await _userService.setBaseUser();
+      // Another hack because microservices take time to update user data post
+      // transaction 🤷🏻. And app uses this segment to check wether user is new
+      // user or not.
+      _userService.userSegments.remove('NEW_USER');
     }
   }
 

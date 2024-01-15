@@ -178,7 +178,7 @@ class _StoryCardState extends State<_StoryCard>
             borderColor: _getColorByStatus(),
           ),
           child: Container(
-            padding: EdgeInsets.all(SizeConfig.padding4),
+            padding: EdgeInsets.all(SizeConfig.padding1 * 5),
             height: 88,
             width: 80,
             child: ClipRRect(
@@ -228,12 +228,12 @@ class _StoryFocusPainter extends CustomPainter {
     final outerRectPainter = Paint()
       ..style = PaintingStyle.stroke
       ..color = borderColor
-      ..strokeWidth = 1;
+      ..strokeWidth = 1.5;
 
     final innerRectPainter = Paint()
       ..style = PaintingStyle.stroke
       ..color = borderColor
-      ..strokeWidth = 4 * animation.value;
+      ..strokeWidth = 4.5 * animation.value;
 
     final rect = Offset.zero & size;
 

@@ -2,13 +2,12 @@ import 'package:felloapp/core/model/sdui/sections/home_page_sections.dart'
     as sections;
 import 'package:felloapp/core/repository/local/stories_repo.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/ui/pages/hometabs/save/stories/story_view/story_view.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
-
-import '_story.dart';
 
 class StoriesPage extends StatefulWidget {
   const StoriesPage({
@@ -32,6 +31,12 @@ class _StoriesPageState extends State<StoriesPage> {
     _repository?.markStoryAsViewed(storyId);
   }
 
+  Future<void> _preResolveAction() async {
+    await AppState.backButtonDispatcher!.didPopRoute();
+    await Future.delayed(
+        const Duration(milliseconds: 200)); // nasty navigation 🤷🏻
+  }
+
   @override
   void dispose() {
     _storyController.dispose();
@@ -53,14 +58,15 @@ class _StoriesPageState extends State<StoriesPage> {
           children: [
             Expanded(
               child: StoryView(
+                onComplete: () => AppState.backButtonDispatcher!.didPopRoute(),
                 initialIndex: widget.entryIndex,
-                onStoryShow: (value) => _markStoryViewed(value.id),
+                onStoryShow: (value) => _markStoryViewed(value.id as String),
                 controller: _storyController,
                 storyItems: widget.stories
                     .map(
                       (e) => StoryItem.pageVideo(
-                        id: e.id,
                         e.story,
+                        id: e.id,
                         controller: _storyController,
                         overlay: Positioned(
                           bottom: SizeConfig.padding24,
@@ -74,9 +80,7 @@ class _StoriesPageState extends State<StoriesPage> {
                                     right: SizeConfig.pageHorizontalMargins,
                                   ),
                                   child: DSLButtonResolver(
-                                    preResolve: () => AppState
-                                        .backButtonDispatcher!
-                                        .didPopRoute(),
+                                    preResolve: _preResolveAction,
                                     cta: e.cta[i],
                                   ),
                                 )

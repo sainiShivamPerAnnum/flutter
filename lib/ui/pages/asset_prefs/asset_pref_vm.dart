@@ -1,5 +1,6 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/sdui/sections/home_page_sections.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -12,8 +13,15 @@ import 'package:flutter/material.dart';
 
 class AssetPreferenceViewModel extends BaseViewModel {
   AssetPrefType? selectedAsset;
-  String name = locator<UserService>().name ?? '';
+  final _userService = locator<UserService>();
+  String get name => _userService.name ?? '';
   static AppState appStateProvider = AppState.delegate!.appState;
+
+  Future<void> init() async {
+    setState(ViewState.Busy);
+    await _userService.getUserFundWalletData();
+    setState(ViewState.Idle);
+  }
 
   void changeSelectedAsset(AssetPrefType assetPrefOptions) {
     if (selectedAsset == assetPrefOptions) return;
@@ -70,7 +78,6 @@ class AssetPreferenceViewModel extends BaseViewModel {
 
   void _showBottomSheet(BottomSheetComponent bottomSheetData) {
     BaseUtil.openModalBottomSheet(
-      addToScreenStack: true,
       isBarrierDismissible: true,
       isScrollControlled: true,
       backgroundColor: UiConstants.grey4,
