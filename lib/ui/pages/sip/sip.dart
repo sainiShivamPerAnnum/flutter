@@ -130,60 +130,48 @@ class SipCalculator extends StatelessWidget {
               right: SizeConfig.padding16),
           child: Column(
             children: [
-              Container(
-                width: SizeConfig.padding200 + SizeConfig.padding32,
-                height: SizeConfig.padding32,
-                padding: EdgeInsets.all(SizeConfig.padding3),
-                decoration: BoxDecoration(
-                    border: Border.all(color: Colors.white),
-                    borderRadius:
-                        BorderRadius.circular(SizeConfig.roundness16)),
-                child: Row(
-                  children: [
-                    Expanded(
-                      child: TabBar(
-                          controller: model.tabController,
-                          padding: EdgeInsets.zero,
-                          labelStyle: TextStyles.sourceSansSB.body3,
-                          labelColor: Colors.white,
-                          unselectedLabelStyle: TextStyles.sourceSansSB.body3,
-                          unselectedLabelColor: UiConstants.textGray70,
-                          labelPadding: EdgeInsets.zero,
-                          indicatorSize: TabBarIndicatorSize.label,
-                          indicatorPadding: EdgeInsets.zero,
-                          indicator: BoxDecoration(
-                            color: UiConstants.teal3,
-                            borderRadius:
-                                BorderRadius.circular(SizeConfig.roundness12),
-                          ),
-                          tabs: [
-                            Tab(
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: SizeConfig.padding18,
-                                    vertical: SizeConfig.padding2),
+              Padding(
+                padding: EdgeInsets.only(
+                    left: SizeConfig.padding35, right: SizeConfig.padding35),
+                child: Container(
+                  height: SizeConfig.padding32,
+                  padding: EdgeInsets.all(SizeConfig.padding3),
+                  decoration: BoxDecoration(
+                      border: Border.all(color: UiConstants.kDividerColor),
+                      borderRadius:
+                          BorderRadius.circular(SizeConfig.roundness16)),
+                  child: Row(
+                    children: [
+                      Expanded(
+                        child: TabBar(
+                            controller: model.tabController,
+                            padding: EdgeInsets.zero,
+                            labelStyle: TextStyles.sourceSansSB.body3,
+                            labelColor: Colors.white,
+                            unselectedLabelStyle: TextStyles.sourceSansSB.body3,
+                            unselectedLabelColor: UiConstants.textGray70,
+                            labelPadding: EdgeInsets.zero,
+                            indicatorSize: TabBarIndicatorSize.tab,
+                            indicatorPadding: EdgeInsets.zero,
+                            indicator: BoxDecoration(
+                              color: UiConstants.teal3,
+                              borderRadius:
+                                  BorderRadius.circular(SizeConfig.roundness12),
+                            ),
+                            tabs: [
+                              Tab(
                                 child: const Text("DAILY"),
                               ),
-                            ),
-                            Tab(
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: SizeConfig.padding10,
-                                    vertical: SizeConfig.padding2),
+                              Tab(
                                 child: const Text("WEEKLY"),
                               ),
-                            ),
-                            Tab(
-                              child: Padding(
-                                padding: EdgeInsets.symmetric(
-                                    horizontal: SizeConfig.padding4,
-                                    vertical: SizeConfig.padding2),
+                              Tab(
                                 child: const Text("MONTHLY"),
                               ),
-                            ),
-                          ]),
-                    )
-                  ],
+                            ]),
+                      )
+                    ],
+                  ),
                 ),
               ),
               SizedBox(
