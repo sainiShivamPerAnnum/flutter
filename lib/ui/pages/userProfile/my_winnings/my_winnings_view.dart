@@ -5,7 +5,6 @@ import 'package:felloapp/ui/pages/rewards/earn_rewards/rewards_details.dart';
 import 'package:felloapp/ui/pages/rewards/earn_rewards/rewards_intro.dart';
 import 'package:felloapp/ui/pages/rewards/scratch_card/scratch_card_view.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
-import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/ui/pages/userProfile/my_winnings/my_winnings_vm.dart';
 import 'package:felloapp/ui/service_elements/winners_prizes/prize_claim_card.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -18,24 +17,15 @@ import 'package:flutter/services.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:provider/provider.dart';
 
-class MyWinningsView extends StatefulWidget {
-  final openFirst;
-  // final WinViewModel winModel;
+class MyWinningsView extends StatelessWidget {
+  const MyWinningsView({super.key});
 
-  const MyWinningsView({this.openFirst = false, Key? key}) : super(key: key);
 
-  @override
-  State<MyWinningsView> createState() => _MyWinningsViewState();
-}
-
-class _MyWinningsViewState extends State<MyWinningsView> {
-  final locale = locator<S>();
   @override
   Widget build(BuildContext context) {
+  final locale = locator<S>();
     return BaseView<MyWinningsViewModel>(
-      onModelReady: (model) {
-        model.init();
-      },
+      onModelReady: (model) => model.init(),
       builder: (ctx, model, child) {
         return AnnotatedRegion<SystemUiOverlayStyle>(
           value: SystemUiOverlayStyle(
@@ -69,7 +59,7 @@ class _MyWinningsViewState extends State<MyWinningsView> {
                       backgroundColor: UiConstants.kBackgroundColor,
                       body: Stack(
                         children: [
-                          const NewSquareBackground(),
+                         // const NewSquareBackground(),
                           NotificationListener<ScrollEndNotification>(
                             onNotification: (scrollInfo) {
                               if (scrollInfo.metrics.pixels >=
@@ -95,6 +85,8 @@ class _MyWinningsViewState extends State<MyWinningsView> {
                                   headerSliverBuilder: (context, value) {
                                     return <Widget>[
                                       SliverAppBar(
+                                        elevation: 0,
+                                        toolbarHeight: 54,
                                         backgroundColor:
                                             UiConstants.kTambolaMidTextColor,
                                         centerTitle: false,
@@ -120,9 +112,8 @@ class _MyWinningsViewState extends State<MyWinningsView> {
                                         sliver: SliverAppBar(
                                           pinned: true,
                                           toolbarHeight: 0,
-                                          bottom: ColoredTabBar(
-                                            UiConstants.kBackgroundColor,
-                                            TabBar(
+                                          backgroundColor: UiConstants.kBackgroundColor,
+                                          bottom: TabBar(
                                               indicatorColor: Colors.white,
                                               indicatorSize:
                                                   TabBarIndicatorSize.label,
@@ -130,9 +121,6 @@ class _MyWinningsViewState extends State<MyWinningsView> {
                                                   SizeConfig.padding4,
                                               labelColor: Colors.white,
                                               isScrollable: false,
-                                              onTap: (value) {
-                                                setState(() {});
-                                              },
                                               tabs: [
                                                 Tab(
                                                     child: Text(
@@ -148,7 +136,6 @@ class _MyWinningsViewState extends State<MyWinningsView> {
                                                 )),
                                               ],
                                             ),
-                                          ),
                                         ),
                                       ),
                                     ];
@@ -238,19 +225,4 @@ class _MyWinningsViewState extends State<MyWinningsView> {
   }
 }
 
-class ColoredTabBar extends Container implements PreferredSizeWidget {
-  ColoredTabBar(this.color, this.tabBar, {super.key});
 
-  @override
-  final Color color;
-  final TabBar tabBar;
-
-  @override
-  Size get preferredSize => tabBar.preferredSize;
-
-  @override
-  Widget build(BuildContext context) => Container(
-        color: color,
-        child: tabBar,
-      );
-}

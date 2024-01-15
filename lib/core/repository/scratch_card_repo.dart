@@ -141,16 +141,14 @@ class ScratchCardRepository extends BaseRepo {
     final List<RewardsQuickLinksModel> quickLinks = [];
     try {
       final prizeResponse = await APIService.instance.getData(
-        '',
-        // ApiPath.getScratchCard(userService.baseUser!.uid),
-        // cBaseUrl: AppEnvironment.instance.rewards,
-        cBaseUrl: 'https://mocki.io/v1/4f376db7-c4e3-4011-b222-d0cb5a866a83',
-        // queryParams: {
-        //   if (start != null) 'start': start,
-        // },
+        ApiPath.getScratchCard(userService.baseUser!.uid),
+        cBaseUrl: AppEnvironment.instance.rewards,
+        queryParams: {
+          if (start != null) 'start': start,
+        },
         apiName: '$_rewards/getScratchCardByID',
       );
-      final Map<String, dynamic>? responseData = prizeResponse;
+      final Map<String, dynamic>? responseData = prizeResponse['data'];
       if (responseData != null && responseData.isNotEmpty) {
         responseData["gts"].forEach((gt) {
           scratchCardsList.add(ScratchCard.fromJson(gt, ""));
