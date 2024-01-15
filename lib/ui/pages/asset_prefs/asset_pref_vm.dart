@@ -80,6 +80,7 @@ class AssetPreferenceViewModel extends BaseViewModel {
     BaseUtil.openModalBottomSheet(
       isBarrierDismissible: true,
       isScrollControlled: true,
+      addToScreenStack: true,
       backgroundColor: UiConstants.grey4,
       borderRadius: BorderRadius.vertical(
         top: Radius.circular(SizeConfig.roundness24),

@@ -27,7 +27,6 @@ class LoginMobileViewModel extends BaseViewModel {
       GlobalKey<FormFieldState<String>>();
   String code = "+91";
 
-  // bool hasReferralCode = false;
   get formKey => _formKey;
 
   get showTickCheck => _showTickCheck;
@@ -43,11 +42,6 @@ class LoginMobileViewModel extends BaseViewModel {
   get referralCodeController => _referralCodeController;
   S locale = locator<S>();
 
-  // set validate(bool val) {
-  //   _validate = val;
-  //   notifyListeners();
-  // }
-
   void showAvailablePhoneNumbers() async {
     if (Platform.isAndroid && showAvailableMobileNos) {
       showAvailableMobileNos = false;
@@ -58,7 +52,6 @@ class LoginMobileViewModel extends BaseViewModel {
         _mobileController.text =
             completePhoneNumber.substring(completePhoneNumber.length - 10);
         upDateCheckTick();
-        // notifyListeners();
       } else {
         mobileFocusNode.requestFocus();
       }
@@ -66,10 +59,6 @@ class LoginMobileViewModel extends BaseViewModel {
           const Duration(milliseconds: 500), mobileFocusNode.requestFocus);
     }
   }
-
-  // setError() {
-  //   validate = false;
-  // }
 
   String? validateMobile() {
     Pattern pattern = "^[0-9]*\$";
@@ -79,23 +68,14 @@ class LoginMobileViewModel extends BaseViewModel {
       return locale.validMobileNumber;
     }
 
-    if (!(_mobileController.text.startsWith("6") ||
-        _mobileController.text.startsWith("7") ||
-        _mobileController.text.startsWith("8") ||
-        _mobileController.text.startsWith("9"))) {
-      return locale.validMobileNumber;
-    } else {
-      return null;
-    }
+    RegExp numberPattern = RegExp(r"^[6-9]");
+    return !numberPattern.hasMatch(_mobileController.text)
+        ? locale.validMobileNumber
+        : null;
   }
 
   void upDateCheckTick() {
-    if (_mobileController.text.length == 10) {
-      _showTickCheck = true;
-    } else {
-      _showTickCheck = false;
-    }
-
+    _showTickCheck = _mobileController.text.length == 10;
     notifyListeners();
   }
 

@@ -1,5 +1,4 @@
 import 'package:felloapp/core/model/sdui/sections/home_page_sections.dart';
-import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/asset_prefs/asset_pref_vm.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/styles/styles.dart';
@@ -14,11 +13,6 @@ class DSLBottomSheet extends StatelessWidget {
 
   final AssetPreferenceViewModel model;
   final BottomSheetComponent bottomSheetData;
-
-  void _preResolve() {
-    AppState.backButtonDispatcher!.didPopRoute();
-    AppState.backButtonDispatcher!.didPopRoute();
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -64,7 +58,6 @@ class DSLBottomSheet extends StatelessWidget {
               for (int i = 0; i < data.cta.length; i++) ...[
                 Expanded(
                   child: DSLButtonResolver(
-                    preResolve: _preResolve,
                     cta: data.cta[i],
                   ),
                 ),

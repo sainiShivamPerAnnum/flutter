@@ -1,5 +1,4 @@
 import 'dart:developer' as dev;
-import 'dart:io';
 
 import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
@@ -40,15 +39,7 @@ class _LoginControllerViewState extends State<LoginControllerView> {
         MediaQuery.of(context).viewInsets.bottom > SizeConfig.viewInsets.bottom;
     return BaseView<LoginControllerViewModel>(
       onModelReady: (model) {
-        model.init(widget.initPage, model);
-        if (Platform.isAndroid) {
-          // if (AppConfig.getValue<bool?>(AppConfigKey.enable_truecaller_login) ??
-          //     false) {
-          // Future.delayed(const Duration(seconds: 1), () {
-          //   model.initTruecaller();
-          // });
-        }
-        // }
+        model.init(widget.initPage);
       },
       onModelDispose: (model) => model.exit(),
       builder: (ctx, model, child) {
@@ -84,14 +75,6 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                         ],
                       ),
                     ),
-                    // AnimatedContainer(
-                    //   height: keyboardIsOpen && model.currentPage == 2
-                    //       ? SizeConfig.screenHeight * 0.1
-                    //       : 0,
-                    //   duration: Duration(
-                    //     milliseconds: 200,
-                    //   ),
-                    // ),
                   ],
                 ),
               ),
@@ -194,10 +177,6 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                             ],
                           ),
                         ),
-                        // TnC(
-                        //   locale: locale,
-                        //   model: model,
-                        // ),
                         Padding(
                           padding: EdgeInsets.fromLTRB(SizeConfig.padding10,
                               SizeConfig.padding16, SizeConfig.padding10, 0),
