@@ -149,7 +149,6 @@ class Cta {
 
 @_deserializable
 class HomePageScreenData {
-  @SectionsConverter()
   final Map<String, HomePageSection> sections;
   final List<String> sectionOrder;
 
@@ -307,19 +306,30 @@ class Step {
 
 @_deserializable
 class Styles {
-  @StepStyleConverter()
   final Map<String, StepStyle> steps;
   final Map<String, InfoCardStyle> infoCards;
+  final Map<String, StoryStyle> stories;
 
   const Styles({
     this.steps = const {},
     this.infoCards = const {},
+    this.stories = const {},
   });
 
   factory Styles.fromJson(Map<String, dynamic> json) => _$StylesFromJson(json);
 }
 
-@JsonSerializable()
+@_deserializable
+class StoryStyle {
+  final String textColor;
+
+  const StoryStyle(this.textColor);
+
+  factory StoryStyle.fromJson(Map<String, dynamic> json) =>
+      _$StoryStyleFromJson(json);
+}
+
+@_deserializable
 class StepStyle {
   final String shadowColor;
   final String ctaColor;
@@ -333,11 +343,9 @@ class StepStyle {
 
   factory StepStyle.fromJson(Map<String, dynamic> json) =>
       _$StepStyleFromJson(json);
-
-  Map<String, dynamic> toJson() => _$StepStyleToJson(this);
 }
 
-@JsonSerializable()
+@_deserializable
 class InfoCardStyle {
   final String bgColor;
 
@@ -347,58 +355,4 @@ class InfoCardStyle {
 
   factory InfoCardStyle.fromJson(Map<String, dynamic> json) =>
       _$InfoCardStyleFromJson(json);
-
-  Map<String, dynamic> toJson() => _$InfoCardStyleToJson(this);
-}
-
-class InfoCardStyleConverter
-    extends JsonConverter<Map<String, InfoCardStyle>, Map<String, dynamic>> {
-  const InfoCardStyleConverter();
-  @override
-  Map<String, InfoCardStyle> fromJson(Map<String, dynamic> json) {
-    return json.map<String, InfoCardStyle>(
-      (key, value) => MapEntry(key, InfoCardStyle.fromJson(value)),
-    );
-  }
-
-  @override
-  Map<String, dynamic> toJson(Map<String, InfoCardStyle> object) {
-    return object.map<String, dynamic>(
-      (key, value) => MapEntry(key, value.toJson()),
-    );
-  }
-}
-
-class StepStyleConverter
-    extends JsonConverter<Map<String, StepStyle>, Map<String, dynamic>> {
-  const StepStyleConverter();
-  @override
-  Map<String, StepStyle> fromJson(Map<String, dynamic> json) {
-    return json.map<String, StepStyle>(
-      (key, value) => MapEntry(key, StepStyle.fromJson(value)),
-    );
-  }
-
-  @override
-  Map<String, dynamic> toJson(Map<String, StepStyle> object) {
-    return object.map<String, dynamic>(
-      (key, value) => MapEntry(key, value.toJson()),
-    );
-  }
-}
-
-class SectionsConverter
-    extends JsonConverter<Map<String, HomePageSection>, Map<String, dynamic>> {
-  const SectionsConverter();
-  @override
-  Map<String, HomePageSection> fromJson(Map<String, dynamic> json) {
-    return json.map<String, HomePageSection>(
-      (key, value) => MapEntry(key, HomePageSection.fromJson(value)),
-    );
-  }
-
-  @override
-  Map<String, dynamic> toJson(Map<String, HomePageSection> object) {
-    throw UnimplementedError();
-  }
 }

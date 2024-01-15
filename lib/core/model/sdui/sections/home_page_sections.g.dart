@@ -91,10 +91,11 @@ const _$CTATypeEnumMap = {
 
 HomePageScreenData _$HomePageScreenDataFromJson(Map<String, dynamic> json) =>
     HomePageScreenData(
-      sections: json['sections'] == null
-          ? const {}
-          : const SectionsConverter()
-              .fromJson(json['sections'] as Map<String, dynamic>),
+      sections: (json['sections'] as Map<String, dynamic>?)?.map(
+            (k, e) => MapEntry(
+                k, HomePageSection.fromJson(e as Map<String, dynamic>)),
+          ) ??
+          const {},
       sectionOrder: (json['sectionOrder'] as List<dynamic>?)
               ?.map((e) => e as String)
               .toList() ??
@@ -169,15 +170,25 @@ Step _$StepFromJson(Map<String, dynamic> json) => Step(
     );
 
 Styles _$StylesFromJson(Map<String, dynamic> json) => Styles(
-      steps: json['steps'] == null
-          ? const {}
-          : const StepStyleConverter()
-              .fromJson(json['steps'] as Map<String, dynamic>),
+      steps: (json['steps'] as Map<String, dynamic>?)?.map(
+            (k, e) =>
+                MapEntry(k, StepStyle.fromJson(e as Map<String, dynamic>)),
+          ) ??
+          const {},
       infoCards: (json['infoCards'] as Map<String, dynamic>?)?.map(
             (k, e) =>
                 MapEntry(k, InfoCardStyle.fromJson(e as Map<String, dynamic>)),
           ) ??
           const {},
+      stories: (json['stories'] as Map<String, dynamic>?)?.map(
+            (k, e) =>
+                MapEntry(k, StoryStyle.fromJson(e as Map<String, dynamic>)),
+          ) ??
+          const {},
+    );
+
+StoryStyle _$StoryStyleFromJson(Map<String, dynamic> json) => StoryStyle(
+      json['textColor'] as String,
     );
 
 StepStyle _$StepStyleFromJson(Map<String, dynamic> json) => StepStyle(
@@ -186,21 +197,10 @@ StepStyle _$StepStyleFromJson(Map<String, dynamic> json) => StepStyle(
       json['ctaColor'] as String,
     );
 
-Map<String, dynamic> _$StepStyleToJson(StepStyle instance) => <String, dynamic>{
-      'shadowColor': instance.shadowColor,
-      'ctaColor': instance.ctaColor,
-      'ctaBgColor': instance.ctaBgColor,
-    };
-
 InfoCardStyle _$InfoCardStyleFromJson(Map<String, dynamic> json) =>
     InfoCardStyle(
       bgColor: json['bgColor'] as String? ?? '',
     );
-
-Map<String, dynamic> _$InfoCardStyleToJson(InfoCardStyle instance) =>
-    <String, dynamic>{
-      'bgColor': instance.bgColor,
-    };
 
 _$StoriesSectionImpl _$$StoriesSectionImplFromJson(Map<String, dynamic> json) =>
     _$StoriesSectionImpl(
