@@ -64,7 +64,7 @@ class LastWeekBg extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  GestureDetector(
+                  InkWell(
                     onTap: () {
                       Haptic.vibrate();
                       AppState.backButtonDispatcher!.didPopRoute();

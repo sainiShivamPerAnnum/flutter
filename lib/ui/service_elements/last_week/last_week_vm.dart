@@ -37,7 +37,7 @@ class LastWeekViewModel extends BaseViewModel {
           response.model != null &&
           response.model?.data != null) {
         data = response.model!.data!;
-        pastWeekWinners = winnersModel!.winners!;
+        pastWeekWinners = winnersModel!.winners;
         notifyListeners();
       }
       setState(ViewState.Idle);

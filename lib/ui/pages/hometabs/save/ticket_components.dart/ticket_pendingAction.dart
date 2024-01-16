@@ -61,27 +61,26 @@ class _TicketsPendingActionState extends State<TicketsPendingAction>
                       final sineValue = math
                           .sin(3 * 2 * math.pi * animationController!.value);
                       return Transform.translate(
-                        offset: Offset(sineValue * 10, 0),
-                        child: GestureDetector(
-                            onTap: () {
-                              Haptic.vibrate();
-                              AppState.delegate!
-                                  .parseRoute(Uri.parse("myWinnings"));
-                            },
-                            child: Stack(
-                              children: [
-                                CustomPaint(
-                                  size: Size(
-                                      SizeConfig.screenWidth!,
-                                      (SizeConfig.screenHeight! * 0.12)
-                                          .toDouble()),
-                                  painter: RPSCustomPainter(),
-                                ),
-                                Positioned(
-                                  top: SizeConfig.padding33,
-                                  left: SizeConfig.padding34,
+                          offset: Offset(sineValue * 10, 0),
+                          child: GestureDetector(
+                              onTap: () {
+                                Haptic.vibrate();
+                                AppState.delegate!
+                                    .parseRoute(Uri.parse("myWinnings"));
+                              },
+                              child: CustomPaint(
+                                size: Size(
+                                    SizeConfig.screenWidth!,
+                                    (SizeConfig.screenHeight! * 0.12)
+                                        .toDouble()),
+                                painter: RPSCustomPainter(),
+                                child: Padding(
+                                  padding: EdgeInsets.only(
+                                      bottom: SizeConfig.padding14,
+                                      left: SizeConfig.padding38,
+                                      right: SizeConfig.padding38),
                                   child: SizedBox(
-                                    width: SizeConfig.screenWidth! * 0.85,
+                                    height: SizeConfig.screenHeight! * 0.12,
                                     child: Row(
                                       children: [
                                         Text(
@@ -103,14 +102,11 @@ class _TicketsPendingActionState extends State<TicketsPendingAction>
                                             color: Colors.black,
                                           ),
                                         ),
-                                        SizedBox(width: SizeConfig.padding18)
                                       ],
                                     ),
                                   ),
                                 ),
-                              ],
-                            )),
-                      );
+                              )));
                     });
               } else {
                 return const SizedBox.shrink();
@@ -247,6 +243,6 @@ class RPSCustomPainter extends CustomPainter {
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return true;
+    return false;
   }
 }

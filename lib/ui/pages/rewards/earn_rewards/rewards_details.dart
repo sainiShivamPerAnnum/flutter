@@ -20,9 +20,7 @@ class EarnRewardsDetails extends StatelessWidget {
     return Padding(
       padding:
           EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
-      child: ListView(
-        physics: const ClampingScrollPhysics(),
-        shrinkWrap: true,
+      child: Column(
         children: [
           SizedBox(
             height: SizeConfig.padding32,

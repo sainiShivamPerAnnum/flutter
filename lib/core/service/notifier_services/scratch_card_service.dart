@@ -423,6 +423,7 @@ class ScratchCardService
         }
       }
       allScratchCards = arrangeScratchCards();
+      await Future.delayed(const Duration(milliseconds: 600));
       scratchCardsListLastTicketId = allScratchCards.last.gtId;
       isFetchingScratchCards = false;
     } catch (e) {

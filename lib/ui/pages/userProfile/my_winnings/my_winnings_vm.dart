@@ -8,6 +8,7 @@ import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/prize_claim_choice.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
+import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/repository/prizing_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
@@ -69,10 +70,12 @@ class MyWinningsViewModel extends BaseViewModel {
   }
 
   void init() {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
+      setState(ViewState.Busy);
       _gtService.isLastPageForScratchCards = false;
       _gtService.scratchCardsListLastTicketId = null;
-      _gtService.fetchScratchCards();
+      await _gtService.fetchScratchCards();
+      setState(ViewState.Idle);
     });
   }
 

@@ -42,7 +42,7 @@ class RewardBalanceWidget extends StatelessWidget {
     bool showBottomInfo = allScratchCards.isNotEmpty;
     return Container(
       decoration: const BoxDecoration(
-        color: Color(0xffF4EDD9),
+        color: UiConstants.kSnackBarBgColor,
       ),
       child: Column(
         children: [
@@ -79,7 +79,7 @@ class RewardBalanceWidget extends StatelessWidget {
                       child: Row(
                     children: [
                       SvgPicture.asset(
-                        Assets.a6,
+                        Assets.cvtar6,
                         width: SizeConfig.iconSize5,
                         height: SizeConfig.iconSize5,
                       ),

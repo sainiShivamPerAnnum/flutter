@@ -1,3 +1,5 @@
+import 'dart:developer';
+
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -46,6 +48,9 @@ class ScratchCardsView extends StatelessWidget {
                         vertical: SizeConfig.padding16,
                         horizontal: SizeConfig.pageHorizontalMargins),
                     itemBuilder: (ctx, i) {
+                      if (i == model.allScratchCards.length - 1 && !model.isLastPageForScratchCards) {
+                        model.fetchScratchCards(more: true);
+                      }
                       return InkWell(
                         onTap: () {
                           AppState.screenStack.add(ScreenItem.dialog);

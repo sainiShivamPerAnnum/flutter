@@ -1,4 +1,5 @@
 import 'package:cached_network_image/cached_network_image.dart';
+import 'package:felloapp/core/model/rewardsquickLinks_model.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
@@ -23,9 +24,7 @@ class EarnRewardsIntro extends StatelessWidget {
     return Padding(
       padding:
           EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
-      child: ListView(
-        physics: const ClampingScrollPhysics(),
-        shrinkWrap: true,
+      child: Column(
         children: [
           SizedBox(
             height: SizeConfig.padding20,
@@ -41,8 +40,7 @@ class EarnRewardsIntro extends StatelessWidget {
                   ),
                 );
               },
-              imageUrl:
-                  'https://ik.imagekit.io/9xfwtu0xm/rewards/rewards_2.png'),
+              imageUrl: Assets.rewardsIntro2),
           SizedBox(
             height: SizeConfig.padding16,
           ),
@@ -57,8 +55,7 @@ class EarnRewardsIntro extends StatelessWidget {
                   ),
                 );
               },
-              imageUrl:
-                  'https://ik.imagekit.io/9xfwtu0xm/rewards/rewards_1.png'),
+              imageUrl: Assets.rewardsIntro1),
           SizedBox(
             height: SizeConfig.padding32,
           ),
@@ -80,7 +77,7 @@ class EarnRewardsIntro extends StatelessWidget {
                   ),
                 );
               },
-              imageUrl: 'https://ik.imagekit.io/9xfwtu0xm/rewards/rewards.png'),
+              imageUrl: Assets.rewardsIntro),
           SizedBox(
             height: SizeConfig.padding16,
           ),
@@ -103,13 +100,14 @@ class IntroQuickLinks extends StatelessWidget {
   Widget build(BuildContext context) {
     return Column(
       children: [
-        ...List.generate(
-          gtService.allRewardsQuickLinks.length,
-          (index) => GestureDetector(
+        for (var index = 0;
+            index < gtService.allRewardsQuickLinks.length;
+            index++)
+          GestureDetector(
             onTap: () {
               Haptic.vibrate();
               AppState.delegate!.parseRoute(Uri.parse(gtService
-                  .allRewardsQuickLinks[index].cta![0].action!.payload!.url!));
+                  .allRewardsQuickLinks[index].cta![0].action!.payload['url']));
             },
             child: EarnRewardsQuickLinks(
               image: gtService.allRewardsQuickLinks[index].imageUrl!,
@@ -121,7 +119,6 @@ class IntroQuickLinks extends StatelessWidget {
               rewardType: gtService.allRewardsQuickLinks[index].rewardType!,
             ),
           ),
-        ),
       ],
     );
   }
@@ -141,7 +138,7 @@ class EarnRewardsQuickLinks extends StatelessWidget {
   final String subTitle;
   final String endingSubtitle;
   final String tickets;
-  final String rewardType;
+  final RewardsType rewardType;
 
   @override
   Widget build(BuildContext context) {
@@ -206,7 +203,7 @@ class EarnRewardsQuickLinks extends StatelessWidget {
                     Text(tickets,
                         style: TextStyles.sourceSansSB.body2
                             .colour(UiConstants.kTextColor)),
-                    if (rewardType == "ticket") ...[
+                    if (rewardType == RewardsType.ticket) ...[
                       SizedBox(
                         width: SizeConfig.padding8,
                       ),

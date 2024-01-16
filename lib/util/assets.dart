@@ -167,6 +167,7 @@ class Assets {
   static const String cvtar3 = "assets/vectors/userAvatars/AV3.svg";
   static const String cvtar4 = "assets/vectors/userAvatars/AV4.svg";
   static const String cvtar5 = "assets/vectors/userAvatars/AV5.svg";
+  static const String cvtar6 = "assets/vectors/userAvatars/AV6.svg";
 
   //FELLO REWARDS
   static const String amazonGiftVoucher = "images/amazon-share.png";
@@ -443,5 +444,7 @@ class Assets {
   static const String noScratchCards = "assets/images/noScratchCards.png";
   static const String savingsAvatar = "assets/vectors/savings_avatar.svg";
   static const String paperPlane = "assets/svg/paper_plane.svg";
-  static const String a6 = "assets/vectors/userAvatars/A6.svg";
+  static const String rewardsIntro = "https://ik.imagekit.io/9xfwtu0xm/rewards/rewards.png";
+  static const String rewardsIntro1 = "https://ik.imagekit.io/9xfwtu0xm/rewards/rewards_1.png";
+  static const String rewardsIntro2 = "https://ik.imagekit.io/9xfwtu0xm/rewards/rewards_2.png";
 }

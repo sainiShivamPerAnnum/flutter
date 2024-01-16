@@ -153,7 +153,7 @@ class ScratchCardRepository extends BaseRepo {
         responseData["gts"].forEach((gt) {
           scratchCardsList.add(ScratchCard.fromJson(gt, ""));
         });
-        responseData["quickLinks"].forEach((links) {
+        responseData["quickLinks"]?.forEach((links) {
           quickLinks.add(RewardsQuickLinksModel.fromJson(links));
         });
       }

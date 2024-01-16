@@ -1,3 +1,4 @@
+import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
@@ -20,10 +21,9 @@ import 'package:provider/provider.dart';
 class MyWinningsView extends StatelessWidget {
   const MyWinningsView({super.key});
 
-
   @override
   Widget build(BuildContext context) {
-  final locale = locator<S>();
+    final locale = locator<S>();
     return BaseView<MyWinningsViewModel>(
       onModelReady: (model) => model.init(),
       builder: (ctx, model, child) {
@@ -33,8 +33,9 @@ class MyWinningsView extends StatelessWidget {
           ),
           child:
               Consumer<ScratchCardService>(builder: (context, gtmodel, child) {
-            return gtmodel.isFetchingScratchCards &&
-                    gtmodel.allScratchCards.isEmpty
+            final initialIndex =
+                !model.state.isBusy && gtmodel.allScratchCards.isEmpty ? 1 : 0;
+            return model.state.isBusy
                 ? Scaffold(
                     appBar: AppBar(
                       backgroundColor: UiConstants.kTambolaMidTextColor,
@@ -51,134 +52,120 @@ class MyWinningsView extends StatelessWidget {
                     body: const Center(child: FullScreenLoader()))
                 : DefaultTabController(
                     length: 2,
-                    initialIndex: !gtmodel.isFetchingScratchCards &&
-                            gtmodel.allScratchCards.isEmpty
-                        ? 1
-                        : 0,
+                    initialIndex: initialIndex,
                     child: Scaffold(
                       backgroundColor: UiConstants.kBackgroundColor,
                       body: Stack(
                         children: [
-                         // const NewSquareBackground(),
-                          NotificationListener<ScrollEndNotification>(
-                            onNotification: (scrollInfo) {
-                              if (scrollInfo.metrics.pixels >=
-                                  scrollInfo.metrics.maxScrollExtent) {
-                                model.fetchMoreCards();
-                              }
-
-                              return true;
-                            },
-                            child: SafeArea(
-                              child: RefreshIndicator(
-                                backgroundColor: Colors.black,
-                                onRefresh: () async {
-                                  model.init();
-                                  await locator<UserService>()
-                                      .getUserFundWalletData();
-                                  return Future.value(null);
-                                },
-                                notificationPredicate: (notification) {
-                                  return notification.depth == 2;
-                                },
-                                child: NestedScrollView(
-                                  headerSliverBuilder: (context, value) {
-                                    return <Widget>[
-                                      SliverAppBar(
-                                        elevation: 0,
-                                        toolbarHeight: 54,
+                          SafeArea(
+                            child: RefreshIndicator(
+                              backgroundColor: Colors.black,
+                              onRefresh: () async {
+                                model.init();
+                                await locator<UserService>()
+                                    .getUserFundWalletData();
+                                return Future.value(null);
+                              },
+                              notificationPredicate: (notification) {
+                                return notification.depth == 2;
+                              },
+                              child: NestedScrollView(
+                                headerSliverBuilder: (context, value) {
+                                  return <Widget>[
+                                    SliverAppBar(
+                                      elevation: 0,
+                                      toolbarHeight: 54,
+                                      backgroundColor:
+                                          UiConstants.kTambolaMidTextColor,
+                                      centerTitle: false,
+                                      title: Text(
+                                        locale.scratchCardText,
+                                        maxLines: 1,
+                                        overflow: TextOverflow.clip,
+                                        style: TextStyles.rajdhaniSB.title5
+                                            .colour(UiConstants.kTextColor),
+                                      ),
+                                    ),
+                                    const SliverToBoxAdapter(
+                                      child: PrizeClaimCard(),
+                                    ),
+                                    SliverToBoxAdapter(
+                                      child: SizedBox(
+                                          height: SizeConfig.padding24),
+                                    ),
+                                    SliverOverlapAbsorber(
+                                      handle: NestedScrollView
+                                          .sliverOverlapAbsorberHandleFor(
+                                              context),
+                                      sliver: SliverAppBar(
+                                        pinned: true,
+                                        toolbarHeight: 0,
                                         backgroundColor:
-                                            UiConstants.kTambolaMidTextColor,
-                                        centerTitle: false,
-                                        title: Text(
-                                          locale.scratchCardText,
-                                          maxLines: 1,
-                                          overflow: TextOverflow.clip,
-                                          style: TextStyles.rajdhaniSB.title5
-                                              .colour(UiConstants.kTextColor),
+                                            UiConstants.kBackgroundColor,
+                                        bottom: TabBar(
+                                          indicatorColor: Colors.white,
+                                          indicatorSize:
+                                              TabBarIndicatorSize.label,
+                                          indicatorWeight: SizeConfig.padding4,
+                                          labelColor: Colors.white,
+                                          isScrollable: false,
+                                          tabs: [
+                                            Tab(
+                                                child: Text(
+                                              locale.sctab1,
+                                              style:
+                                                  TextStyles.sourceSansSB.body1,
+                                            )),
+                                            Tab(
+                                                child: Text(
+                                              locale.sctab2,
+                                              style:
+                                                  TextStyles.sourceSansSB.body1,
+                                            )),
+                                          ],
                                         ),
                                       ),
-                                      const SliverToBoxAdapter(
-                                        child: PrizeClaimCard(),
-                                      ),
-                                      SliverToBoxAdapter(
-                                        child: SizedBox(
-                                            height: SizeConfig.padding24),
-                                      ),
-                                      SliverOverlapAbsorber(
-                                        handle: NestedScrollView
-                                            .sliverOverlapAbsorberHandleFor(
-                                                context),
-                                        sliver: SliverAppBar(
-                                          pinned: true,
-                                          toolbarHeight: 0,
-                                          backgroundColor: UiConstants.kBackgroundColor,
-                                          bottom: TabBar(
-                                              indicatorColor: Colors.white,
-                                              indicatorSize:
-                                                  TabBarIndicatorSize.label,
-                                              indicatorWeight:
-                                                  SizeConfig.padding4,
-                                              labelColor: Colors.white,
-                                              isScrollable: false,
-                                              tabs: [
-                                                Tab(
-                                                    child: Text(
-                                                  locale.sctab1,
-                                                  style: TextStyles
-                                                      .sourceSansSB.body1,
-                                                )),
-                                                Tab(
-                                                    child: Text(
-                                                  locale.sctab2,
-                                                  style: TextStyles
-                                                      .sourceSansSB.body1,
-                                                )),
-                                              ],
-                                            ),
-                                        ),
-                                      ),
-                                    ];
-                                  },
-                                  body: TabBarView(
-                                    children: [
-                                      Builder(builder: (context) {
-                                        return CustomScrollView(
-                                          slivers: [
-                                            SliverOverlapInjector(
-                                              handle: NestedScrollView
-                                                  .sliverOverlapAbsorberHandleFor(
-                                                      context),
-                                            ),
-                                            const SliverToBoxAdapter(
-                                              child: ScratchCardsView(),
-                                            )
-                                          ],
-                                        );
-                                      }),
-                                      Builder(builder: (context) {
-                                        return CustomScrollView(
-                                          slivers: [
-                                            SliverOverlapInjector(
-                                              handle: NestedScrollView
-                                                  .sliverOverlapAbsorberHandleFor(
-                                                      context),
-                                            ),
-                                            SliverToBoxAdapter(
-                                              child: gtmodel.allScratchCards
-                                                      .isNotEmpty
-                                                  ? EarnRewardsDetails(
-                                                      gtService: gtmodel,
-                                                    )
-                                                  : EarnRewardsIntro(
-                                                      gtService: gtmodel,
-                                                    ),
-                                            )
-                                          ],
-                                        );
-                                      }),
-                                    ],
-                                  ),
+                                    ),
+                                  ];
+                                },
+                                body: TabBarView(
+                                  children: [
+                                    Builder(builder: (context) {
+                                      return CustomScrollView(
+                                        slivers: [
+                                          SliverOverlapInjector(
+                                            handle: NestedScrollView
+                                                .sliverOverlapAbsorberHandleFor(
+                                                    context),
+                                          ),
+                                          const SliverToBoxAdapter(
+                                            child: ScratchCardsView(),
+                                          )
+                                        ],
+                                      );
+                                    }),
+                                    Builder(builder: (context) {
+                                      return CustomScrollView(
+                                        slivers: [
+                                          SliverOverlapInjector(
+                                            handle: NestedScrollView
+                                                .sliverOverlapAbsorberHandleFor(
+                                                    context),
+                                          ),
+                                          SliverToBoxAdapter(
+                                            child: gtmodel
+                                                    .allScratchCards.isNotEmpty
+                                                ? EarnRewardsDetails(
+                                                    gtService: gtmodel,
+                                                  )
+                                                : EarnRewardsIntro(
+                                                    gtService: gtmodel,
+                                                  ),
+                                          )
+                                        ],
+                                      );
+                                    }),
+                                  ],
                                 ),
                               ),
                             ),
@@ -204,7 +191,7 @@ class MyWinningsView extends StatelessWidget {
                                           ),
                                           SizedBox(height: SizeConfig.padding4),
                                           Text(
-                                            "Loading more tickets",
+                                            locale.loadingScratchCards,
                                             style: TextStyles.body4
                                                 .colour(Colors.grey),
                                           )
@@ -224,5 +211,3 @@ class MyWinningsView extends StatelessWidget {
     );
   }
 }
-
-
