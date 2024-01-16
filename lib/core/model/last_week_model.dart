@@ -189,14 +189,14 @@ class UserLastWeekData {
       this.rewardsWon});
 
   final double? gainsPerc;
-  final int? invested;
+  final num? invested;
   final double? returns;
   final num? matchedTickets;
   final num? rewardsWon;
 
   UserLastWeekData copyWith({
     double? gainsPerc,
-    int? invested,
+    num? invested,
     double? returns,
     num? matchedTickets,
     num? rewardsWon,

@@ -416,7 +416,7 @@ class MySavingsLastWeek extends StatelessWidget {
         Expanded(
           child: ReturnsContainer(
             title: locale.totalReturnGained,
-            value: '₹${data.user!.returns}',
+            value: '₹${(data.user!.returns ?? 0).toStringAsFixed(2)}',
           ),
         ),
         // Container(
@@ -702,9 +702,12 @@ class ReturnsContainer extends StatelessWidget {
                   style: TextStyles.sourceSans.body4
                       .colour(UiConstants.textGray70)),
             ),
-            Text(value,
-                style:
-                    TextStyles.rajdhaniSB.body1.colour(UiConstants.kTextColor))
+            FittedBox(
+              fit: BoxFit.scaleDown,
+              child: Text(value,
+                  style: TextStyles.rajdhaniSB.body1
+                      .colour(UiConstants.kTextColor)),
+            )
           ]),
     );
   }
