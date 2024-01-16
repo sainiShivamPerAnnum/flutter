@@ -983,15 +983,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case 'tambolaHome':
         if (rootController.navItems
             .containsValue(RootController.tambolaNavBar)) {
-          if (locator<UserService>()
-                  .baseUser!
-                  .userPreferences
-                  .getPreference(Preferences.TAMBOLAONBOARDING) ==
-              1) {
             onTapItem(RootController.tambolaNavBar);
-          } else {
-            pageConfiguration = TicketsIntroViewPageConfig;
-          }
           break;
         }
         pageConfiguration = THomePageConfig;
