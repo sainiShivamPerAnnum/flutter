@@ -42,19 +42,12 @@ class ScratchCardService
 
   bool isLastPageForScratchCards = false;
   bool _isFetchingScratchCards = false;
-  bool _isFetchingQuickLinks = false;
   String? scratchCardsListLastTicketId;
 
   bool get isFetchingScratchCards => _isFetchingScratchCards;
-  bool get isFetchingQuickLinks => _isFetchingQuickLinks;
 
   set isFetchingScratchCards(bool val) {
     _isFetchingScratchCards = val;
-    notifyListeners();
-  }
-
-  set isFetchingQuickLinks(bool val) {
-    _isFetchingQuickLinks = val;
     notifyListeners();
   }
 

@@ -120,8 +120,6 @@ class CampaignRepo extends BaseRepo {
 
       final responseData = response["data"];
 
-      log(responseData.toString(), name: 'mylog');
-
       if (responseData == null) {
         return ApiResponse.withError("Unable to fetch data", 400);
       }
@@ -131,7 +129,6 @@ class CampaignRepo extends BaseRepo {
         code: 200,
       );
     } catch (e) {
-      log(e.toString(), name: 'mydata');
       logger.e(e.toString());
       return ApiResponse.withError("Unable to fetch data", 400);
     }
