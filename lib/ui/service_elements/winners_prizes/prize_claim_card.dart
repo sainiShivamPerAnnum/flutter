@@ -59,7 +59,7 @@ class RewardBalanceWidget extends StatelessWidget {
                 children: [
                   Text(
                     locale.totalRewardsTilldate,
-                    style: TextStyles.sourceSans.body4.colour(Colors.black),
+                    style: TextStyles.sourceSansSB.body3.colour(Colors.black),
                   ),
                   Text(
                     "₹${userService?.userFundWallet?.prizeLifetimeWin.toInt()}",

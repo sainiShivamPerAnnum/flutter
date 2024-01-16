@@ -25,6 +25,7 @@ class EarnRewardsIntro extends StatelessWidget {
       padding:
           EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
       child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
             height: SizeConfig.padding20,
@@ -67,7 +68,7 @@ class EarnRewardsIntro extends StatelessWidget {
             height: SizeConfig.padding16,
           ),
           CachedNetworkImage(
-              height: SizeConfig.padding252,
+              width: SizeConfig.screenWidth,
               fit: BoxFit.fill,
               placeholder: (context, placeholder) {
                 return SizedBox(

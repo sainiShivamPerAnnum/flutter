@@ -137,9 +137,9 @@ class LastWeekBg extends StatelessWidget {
                           bottom: SizeConfig.viewPadding!.bottom +
                               SizeConfig.padding8),
                       child: AppPositiveBtn(
-                        onPressed: () {
+                        onPressed: () async{
                           if (callCampaign) {
-                            locator<MarketingEventHandlerService>()
+                            await locator<MarketingEventHandlerService>()
                                 .getCampaigns();
                           }
 
@@ -152,8 +152,8 @@ class LastWeekBg extends StatelessWidget {
                                     model?.user?.gainsPerc,
                               });
 
-                          AppState.backButtonDispatcher!.didPopRoute();
-                          AppState.delegate!.parseRoute(Uri.parse('/save'));
+                          await AppState.backButtonDispatcher!.didPopRoute();
+                          AppState.delegate!.parseRoute(Uri.parse('/assetBuy'));
                         },
 
                         btnText: locale.btnSaveNow.toUpperCase(),
