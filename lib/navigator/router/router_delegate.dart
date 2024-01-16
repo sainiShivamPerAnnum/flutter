@@ -800,8 +800,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           );
         } else if (segment.startsWith('c-', 0)) {
           appState.scrollHome(num.tryParse(segment.split('-').last) as int);
-        } else if (segment.startsWith('story-')) {
-          // openStoryView(segment.split('-').last);
         } else {
           screenCheck(segment, uri.queryParameters);
         }

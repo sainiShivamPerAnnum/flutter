@@ -40,6 +40,7 @@ import 'package:felloapp/util/extensions/investment_returns_extension.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -102,7 +103,15 @@ class _AssetSectionViewState extends State<AssetSectionView> {
   }
 
   void _onSkip() {
-    AppState.delegate!.parseRoute(Uri.parse('/save'));
+    AppState.delegate!.appState.currentAction = PageAction(
+      state: PageState.replaceAll,
+      page: RootPageConfig,
+    );
+
+    PreferenceHelper.setBool(
+      PreferenceHelper.isUserOnboardingComplete,
+      true,
+    );
   }
 
   @override

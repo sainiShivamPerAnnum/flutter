@@ -8,13 +8,11 @@ class PreferenceHelper {
   static const DATE_APP_OPENED = 'date_app_opened';
   static const INSTALLATION_DAY = 'installation_day';
   static const CAMPAIGN_ID = 'campaign_id';
-  static const REFERRAL_CODE = 'referral_code';
   static const REFERRAL_PROCESSED = 'referral_processed';
   static const CACHE_RATING_IS_RATED = "isUserRated";
 
   // static const CACHE_LAST_PLAYED_GAMES = "lastTwoGamesPlayed";
   static const CACHE_RATING_EXPIRY_TIMESTAMP = 'ratingExpireTimestamp';
-  static const SHOW_TAMBOLA_PROCESSING = 'tambolaProcessingScreen';
   static const CACHE_ONBOARDING_COMPLETION = "onboardingCompletion";
   static const FCM_TOKEN = "fcm_token";
   static const CACHE_SHOW_SECURITY_MODALSHEET = "showSecurityModalSheet";
@@ -40,6 +38,8 @@ class PreferenceHelper {
   static const CACHE_LIST_OUTDATED_FLO_ASSET = "listOutdatedFloAsset";
   static const badgeLevelData = 'badgeLevelData';
   static const _preferredPaymentIntents = 'preferred_payment_intents';
+  // Decides wether to show the asset-pref screen on onboarding or not.
+  static const isUserOnboardingComplete = 'isUserOnboardingComplete';
 
   static Future<SharedPreferences?> initiate() async {
     if (_prefs == null) {

@@ -43,6 +43,7 @@ class MyApp extends HookWidget {
     final appState = useMemoized(AppState.new);
     final parser = useMemoized(FelloParser.new);
     final delegate = useMemoized(() => FelloRouterDelegate(appState));
+
     final backButtonDispatcher =
         useMemoized(() => FelloBackButtonDispatcher(delegate));
 

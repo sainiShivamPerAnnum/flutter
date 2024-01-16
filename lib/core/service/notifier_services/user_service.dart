@@ -807,8 +807,21 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
               PageAction(state: PageState.replaceAll, page: RootPageConfig);
         }
       } else {
-        return AppState.delegate!.appState.currentAction =
-            PageAction(state: PageState.replaceAll, page: RootPageConfig);
+        final isUserOnboardingComplete = PreferenceHelper.getBool(
+          PreferenceHelper.isUserOnboardingComplete,
+        );
+
+        if (isUserOnboardingComplete) {
+          AppState.delegate!.appState.currentAction = PageAction(
+            state: PageState.replaceAll,
+            page: RootPageConfig,
+          );
+        } else {
+          AppState.delegate!.appState.currentAction = PageAction(
+            state: PageState.replaceAll,
+            page: AssetPrefPageConfig,
+          );
+        }
       }
     } catch (e) {
       return BaseUtil.showNegativeAlert(

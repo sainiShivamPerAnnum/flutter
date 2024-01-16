@@ -36,6 +36,7 @@ import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -73,6 +74,7 @@ class LoginControllerViewModel extends BaseViewModel {
 
 //Private Variables
   bool _isSignup = false;
+  bool _isNewUserOnboardingComplete = false;
   bool _loginUsingTrueCaller = false;
 
   bool get loginUsingTrueCaller => _loginUsingTrueCaller;
@@ -87,7 +89,7 @@ class LoginControllerViewModel extends BaseViewModel {
   int? _currentPage;
   ValueNotifier<double?>? _pageNotifier;
   StreamSubscription? streamSubscription;
-  static List<Widget>? _pages;
+  static List<Widget> _pages = [];
   ScrollController nameViewScrollController = ScrollController();
 
 //Getters and Setters
@@ -453,6 +455,10 @@ class LoginControllerViewModel extends BaseViewModel {
       ///Existing user
 
       await BaseAnalytics.analytics?.logLogin(loginMethod: 'phonenumber');
+      await PreferenceHelper.setBool(
+        PreferenceHelper.isUserOnboardingComplete,
+        true,
+      );
       logger.d("User details available: Name: ${user.model!.name!}");
       if (source == LoginSource.TRUECALLER) {
         _analyticsService.track(eventName: AnalyticsEvents.truecallerLogin);

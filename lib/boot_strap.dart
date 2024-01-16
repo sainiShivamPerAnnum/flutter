@@ -10,7 +10,7 @@ import 'package:firebase_messaging/firebase_messaging.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
-typedef BootstrapCallBack = FutureOr<Widget> Function();
+typedef BootstrapCallBack = Widget Function();
 
 Future<void> bootStrap(BootstrapCallBack bootStrapCallBack) async {
   runZoned<void>(() async {
@@ -34,7 +34,13 @@ Future<void> bootStrap(BootstrapCallBack bootStrapCallBack) async {
     } catch (e) {}
 
     // For runApp and bootStrapCallBack is called inside the same zone.
-    final Widget app = await bootStrapCallBack();
+    final Widget app = bootStrapCallBack();
+
+    ///TODO(@DK070202): Remove it before release.
+    await PreferenceHelper.setBool(
+      PreferenceHelper.isUserOnboardingComplete,
+      false,
+    );
 
     // Run app.
     return runApp(app);

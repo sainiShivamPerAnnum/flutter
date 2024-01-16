@@ -8,6 +8,7 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/pages/asset_prefs/asset_pref_bottom_sheet.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 
@@ -60,6 +61,11 @@ class AssetPreferenceViewModel extends BaseViewModel {
     }
 
     _showBottomSheet(bottomSheetData);
+
+    PreferenceHelper.setBool(
+      PreferenceHelper.isUserOnboardingComplete,
+      true,
+    );
   }
 
   void onProceed(BottomSheetComponent bottomSheetData) {
@@ -70,11 +76,17 @@ class AssetPreferenceViewModel extends BaseViewModel {
 
       case AssetPrefType.P2P || AssetPrefType.GOLD:
         handleRouting(selectedAsset);
+        PreferenceHelper.setBool(
+          PreferenceHelper.isUserOnboardingComplete,
+          true,
+        );
         break;
 
       default:
     }
   }
+
+  void onSkip() {}
 
   void _showBottomSheet(BottomSheetComponent bottomSheetData) {
     BaseUtil.openModalBottomSheet(
