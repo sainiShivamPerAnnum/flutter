@@ -1099,6 +1099,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "single": MessageLookupByLibrary.simpleMessage("Single"),
         "sipWithAutoSave": MessageLookupByLibrary.simpleMessage(
             "Start an SIP with Fello Autosave"),
+        "skip": MessageLookupByLibrary.simpleMessage("SKIP"),
         "skipKYC": MessageLookupByLibrary.simpleMessage("SKIP FOR NOW"),
         "skipMileStoneSuccessSubtile": MessageLookupByLibrary.simpleMessage(
             "Let\'s get to the next milestone"),

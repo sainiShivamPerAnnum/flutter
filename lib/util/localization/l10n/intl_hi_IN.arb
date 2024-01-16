@@ -913,5 +913,6 @@
   "ticketsMatched": "टिकट मिलान हुआ",
   "rewardsWon": "इनाम जीता गया",
   "leaderBoardswillUpdate": "लीडरबोर्ड जल्द ही अपडेट होगा",
-  "reupload": "पुन: अपलोड"
+  "reupload": "पुन: अपलोड",
+  "skip" : "छोड़ दें"
 }

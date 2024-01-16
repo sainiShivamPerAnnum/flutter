@@ -14,10 +14,12 @@ import 'package:flutter/material.dart' hide Action;
 class StoriesSection extends StatefulWidget {
   const StoriesSection({
     required this.data,
+    required this.style,
     super.key,
   });
 
   final sections.StoriesData data;
+  final Map<String, sections.StoryStyle> style;
 
   @override
   State<StoriesSection> createState() => _StoriesSectionState();
@@ -86,6 +88,7 @@ class _StoriesSectionState extends State<StoriesSection> {
                   child: InkWell(
                     onTap: () => _onTapStory(i),
                     child: _StoryCard(
+                      style: widget.style[widget.data.stories[i].style]!,
                       storyStatus: _storiesRepo.getStoryStatusById(
                         widget.data.stories[i].id,
                       ),
@@ -104,10 +107,12 @@ class _StoriesSectionState extends State<StoriesSection> {
 class _StoryCard extends StatefulWidget {
   final StoryStatus storyStatus;
   final sections.Story story;
+  final sections.StoryStyle style;
 
   const _StoryCard({
     required this.story,
     required this.storyStatus,
+    required this.style,
   });
 
   @override
@@ -197,7 +202,7 @@ class _StoryCardState extends State<_StoryCard>
         Text(
           story.title,
           style: TextStyles.sourceSansSB.body4.copyWith(
-            color: UiConstants.teal3,
+            color: widget.style.subtitleColor.toColor(),
             height: 1.5,
           ),
         ),

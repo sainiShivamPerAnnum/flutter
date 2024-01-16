@@ -26,6 +26,7 @@ class NewUserSaveView extends StatelessWidget {
     final widget = switch (section) {
       sections.StoriesSection(data: final d) => StoriesSection(
           data: d,
+          style: data.styles.stories,
         ),
       sections.StepsSection(data: final d) => StepsSection(
           data: d,

@@ -252,6 +252,7 @@ class Story {
   final String blurHash;
   final String story;
   final List<Cta> cta;
+  final String style;
   final String id;
   final int order;
 
@@ -264,6 +265,7 @@ class Story {
     this.story = '',
     this.id = '',
     this.order = 0,
+    this.style = 'tl3',
   });
 
   factory Story.fromJson(Map<String, dynamic> json) => _$StoryFromJson(json);
@@ -321,9 +323,9 @@ class Styles {
 
 @_deserializable
 class StoryStyle {
-  final String textColor;
+  final String subtitleColor;
 
-  const StoryStyle(this.textColor);
+  const StoryStyle(this.subtitleColor);
 
   factory StoryStyle.fromJson(Map<String, dynamic> json) =>
       _$StoryStyleFromJson(json);

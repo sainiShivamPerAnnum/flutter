@@ -150,6 +150,7 @@ Story _$StoryFromJson(Map<String, dynamic> json) => Story(
       story: json['story'] as String? ?? '',
       id: json['id'] as String? ?? '',
       order: json['order'] as int? ?? 0,
+      style: json['style'] as String? ?? 'tl3',
     );
 
 StepsData _$StepsDataFromJson(Map<String, dynamic> json) => StepsData(
@@ -188,7 +189,7 @@ Styles _$StylesFromJson(Map<String, dynamic> json) => Styles(
     );
 
 StoryStyle _$StoryStyleFromJson(Map<String, dynamic> json) => StoryStyle(
-      json['textColor'] as String,
+      json['subtitleColor'] as String,
     );
 
 StepStyle _$StepStyleFromJson(Map<String, dynamic> json) => StepStyle(

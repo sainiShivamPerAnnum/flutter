@@ -8706,16 +8706,6 @@ class S {
     );
   }
 
-  /// `Predict | Save | Win`
-  String get powerPlaySlog {
-    return Intl.message(
-      'Predict | Save | Win',
-      name: 'powerPlaySlog',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `Earned `
   String get earned {
     return Intl.message(
@@ -8761,6 +8751,26 @@ class S {
     return Intl.message(
       'REUPLOAD',
       name: 'reupload',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Predict | Save | Win`
+  String get powerPlaySlog {
+    return Intl.message(
+      'Predict | Save | Win',
+      name: 'powerPlaySlog',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `SKIP`
+  String get skip {
+    return Intl.message(
+      'SKIP',
+      name: 'skip',
       desc: '',
       args: [],
     );

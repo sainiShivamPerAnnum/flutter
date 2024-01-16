@@ -857,7 +857,10 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     return const [];
   }
 
-  void screenCheck(String screenKey, [Map<String, String>? queryParams]) {
+  void screenCheck(
+    String screenKey, [
+    Map<String, String> queryParams = const {},
+  ]) {
     PageConfiguration? pageConfiguration;
 
     var rootController = locator<RootController>();
@@ -888,11 +891,15 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         break;
       case "goldDetails":
         appState.currentAction = PageAction(
-            state: PageState.addWidget,
-            page: SaveAssetsViewConfig,
-            widget: AssetSectionView(
-              type: InvestmentType.AUGGOLD99,
-            ));
+          state: PageState.addWidget,
+          page: SaveAssetsViewConfig,
+          widget: AssetSectionView(
+            type: InvestmentType.AUGGOLD99,
+            showSkipToHome: bool.parse(
+              queryParams['showSkipToHome'] ?? 'true',
+            ),
+          ),
+        );
         break;
 
       case 'stories':
