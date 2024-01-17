@@ -6,6 +6,8 @@ targets:
         generate_for:
           - "lib/core/model/**.dart"
           - "lib/core/service/fcm/**.dart"
+          - "lib/core/service/feature_flag_service/types.dart"
+
       isar_generator|isar_generator:
         enabled: true
         generate_for:
