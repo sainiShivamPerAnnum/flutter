@@ -1,6 +1,5 @@
-// ignore_for_file: empty_catches
-
 import 'dart:async';
+import 'dart:developer';
 
 import 'package:felloapp/core/service/fcm/background_fcm_handler.dart';
 import 'package:felloapp/util/locator.dart';
@@ -20,27 +19,27 @@ Future<void> bootStrap(BootstrapCallBack bootStrapCallBack) async {
       await SystemChrome.setPreferredOrientations(
         [DeviceOrientation.portraitUp],
       );
-    } catch (e) {}
+    } catch (e) {
+      log('Failed to bootstrap app, error: $e');
+    }
 
     await setupLocator();
 
     try {
       await PreferenceHelper.initiate();
       await Firebase.initializeApp();
-    } catch (e) {}
+    } catch (e) {
+      log('Failed to bootstrap app, error: $e');
+    }
 
     try {
       FirebaseMessaging.onBackgroundMessage(myBackgroundMessageHandler);
-    } catch (e) {}
+    } catch (e) {
+      log('Failed to bootstrap app, error: $e');
+    }
 
     // For runApp and bootStrapCallBack is called inside the same zone.
     final Widget app = bootStrapCallBack();
-
-    ///TODO(@DK070202): Remove it before release.
-    await PreferenceHelper.setBool(
-      PreferenceHelper.isUserOnboardingComplete,
-      false,
-    );
 
     // Run app.
     return runApp(app);
