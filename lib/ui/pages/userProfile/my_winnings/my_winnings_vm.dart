@@ -8,6 +8,7 @@ import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/prize_claim_choice.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
+import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/repository/prizing_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
@@ -53,7 +54,7 @@ class MyWinningsViewModel extends BaseViewModel {
   // LOCAL VARIABLES
   PrizeClaimChoice? _choice;
 
-  get choice => _choice;
+  PrizeClaimChoice? get choice => _choice;
   final GlobalKey imageKey = GlobalKey();
   final UserRepository? userRepo = locator<UserRepository>();
 
@@ -69,10 +70,12 @@ class MyWinningsViewModel extends BaseViewModel {
   }
 
   void init() {
-    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+    setState(ViewState.Busy);
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       _gtService.isLastPageForScratchCards = false;
       _gtService.scratchCardsListLastTicketId = null;
-      _gtService.fetchScratchCards();
+      await _gtService.fetchScratchCards();
+      setState(ViewState.Idle);
     });
   }
 
@@ -287,8 +290,9 @@ class MyWinningsViewModel extends BaseViewModel {
     );
 
     if (response.isSuccess()) {
-      _userService.getUserFundWalletData();
-      _transactionHistoryService.updateTransactions(InvestmentType.AUGGOLD99);
+      await _userService.getUserFundWalletData();
+      await _transactionHistoryService
+          .updateTransactions(InvestmentType.AUGGOLD99);
       notifyListeners();
       // await _localDBModel!.savePrizeClaimChoice(choice);
 
@@ -381,11 +385,11 @@ class MyWinningsViewModel extends BaseViewModel {
         Map<String, dynamic> errorDetails = {
           'error_msg': 'Share reward card creation failed'
         };
-        _internalOpsService.logFailure(_userService.baseUser!.uid,
+        await _internalOpsService.logFailure(_userService.baseUser!.uid,
             FailType.FelloRewardCardShareFailed, errorDetails);
       }
 
-      AppState.backButtonDispatcher!.didPopRoute();
+      await AppState.backButtonDispatcher!.didPopRoute();
       print(e.toString());
       BaseUtil.showNegativeAlert(locale.taskFailed, locale.unableToCapture);
     }

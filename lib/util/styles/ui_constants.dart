@@ -21,6 +21,8 @@ class UiConstants {
   static const Color secondaryColor = Color.fromARGB(255, 241, 227, 243);
   static const Color goldSellCardColor = Color(0xff1F2C65);
   static const Color referralIconColor = Color(0xff6052A9);
+  static const Color customBorderShadow = Color(0xfffff9f9);
+  static const Color customSubtitle = Color(0xffB9B9B9);
 
   // static final Color chipColor = const Color.fromARGB(255, 241, 227, 243);
   static final Color? chipColor = Colors.grey[200];

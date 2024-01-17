@@ -8436,11 +8436,251 @@ class S {
     );
   }
 
+  /// `Your Tickets Rewards are waiting`
+  String get ticketsWiting {
+    return Intl.message(
+      'Your Tickets Rewards are waiting',
+      name: 'ticketsWiting',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Earn Rewards`
+  String get earnRewards {
+    return Intl.message(
+      'Earn Rewards',
+      name: 'earnRewards',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `from Ticket draws every week`
+  String get earnRewardsSub {
+    return Intl.message(
+      'from Ticket draws every week',
+      name: 'earnRewardsSub',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Grab a Ticket to start earning`
+  String get earnRewardsConv {
+    return Intl.message(
+      'Grab a Ticket to start earning',
+      name: 'earnRewardsConv',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Get 50 Tickets as Reward for your 1st Investment`
+  String get earnRewardsConvSub {
+    return Intl.message(
+      'Get 50 Tickets as Reward for your 1st Investment',
+      name: 'earnRewardsConvSub',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `How to Earn Rewards`
+  String get howtoearn {
+    return Intl.message(
+      'How to Earn Rewards',
+      name: 'howtoearn',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You don’t have any Scratch Cards`
+  String get noScratchCards {
+    return Intl.message(
+      'You don’t have any Scratch Cards',
+      name: 'noScratchCards',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Earn Scratch Cards to win assured rewards with Fello`
+  String get noScratchCardsSub {
+    return Intl.message(
+      'Earn Scratch Cards to win assured rewards with Fello',
+      name: 'noScratchCardsSub',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your Rewards`
+  String get sctab1 {
+    return Intl.message(
+      'Your Rewards',
+      name: 'sctab1',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Earn Rewards`
+  String get sctab2 {
+    return Intl.message(
+      'Earn Rewards',
+      name: 'sctab2',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Loading more tickets`
+  String get loadingScratchCards {
+    return Intl.message(
+      'Loading more tickets',
+      name: 'loadingScratchCards',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Last Week on Fello`
+  String get lastWeekFello {
+    return Intl.message(
+      'Last Week on Fello',
+      name: 'lastWeekFello',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Winners Leaderboard`
+  String get lastWeekleaderBoard {
+    return Intl.message(
+      'Winners Leaderboard',
+      name: 'lastWeekleaderBoard',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your tickets won this week`
+  String get ticketsThisWeek {
+    return Intl.message(
+      'Your tickets won this week',
+      name: 'ticketsThisWeek',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Savings made`
+  String get savingsMade {
+    return Intl.message(
+      'Savings made',
+      name: 'savingsMade',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Total Saved with Fello`
+  String get totalSavingswithFello {
+    return Intl.message(
+      'Total Saved with Fello',
+      name: 'totalSavingswithFello',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Total Returns Gained`
+  String get totalReturnGained {
+    return Intl.message(
+      'Total Returns Gained',
+      name: 'totalReturnGained',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Total Interest Percentage`
+  String get totalPercentage {
+    return Intl.message(
+      'Total Interest Percentage',
+      name: 'totalPercentage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Total rewards won on Fello till date -`
+  String get totalRewardsTilldate {
+    return Intl.message(
+      'Total rewards won on Fello till date -',
+      name: 'totalRewardsTilldate',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Rewards with Fello`
+  String get rewardsWithFello {
+    return Intl.message(
+      'Rewards with Fello',
+      name: 'rewardsWithFello',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Predict | Save | Win`
   String get powerPlaySlog {
     return Intl.message(
       'Predict | Save | Win',
       name: 'powerPlaySlog',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Earned `
+  String get earned {
+    return Intl.message(
+      'Earned ',
+      name: 'earned',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tickets matched`
+  String get ticketsMatched {
+    return Intl.message(
+      'Tickets matched',
+      name: 'ticketsMatched',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Reward won`
+  String get rewardsWon {
+    return Intl.message(
+      'Reward won',
+      name: 'rewardsWon',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Leaderboard will be updated soon`
+  String get leaderBoardswillUpdate {
+    return Intl.message(
+      'Leaderboard will be updated soon',
+      name: 'leaderBoardswillUpdate',
       desc: '',
       args: [],
     );

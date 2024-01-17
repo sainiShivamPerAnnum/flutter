@@ -346,7 +346,15 @@ class MessageLookup extends MessageLookupByLibrary {
         "earn": MessageLookupByLibrary.simpleMessage("Earn"),
         "earnOneToken": MessageLookupByLibrary.simpleMessage(
             "Earn 1 Token for every ₹1 you invest"),
+        "earnRewards": MessageLookupByLibrary.simpleMessage("Earn Rewards"),
+        "earnRewardsConv": MessageLookupByLibrary.simpleMessage(
+            "Grab a Ticket to start earning"),
+        "earnRewardsConvSub": MessageLookupByLibrary.simpleMessage(
+            "Get 50 Tickets as Reward for your 1st Investment"),
+        "earnRewardsSub": MessageLookupByLibrary.simpleMessage(
+            "from Ticket draws every week"),
         "earnUpto": MessageLookupByLibrary.simpleMessage("Earn upto "),
+        "earned": MessageLookupByLibrary.simpleMessage("Earned "),
         "earnedGTText": MessageLookupByLibrary.simpleMessage(
             "You’ve earned a scratch card."),
         "emailAlreadyRegistered":
@@ -508,6 +516,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "howItworks": MessageLookupByLibrary.simpleMessage("How it works?"),
         "howToParticipate":
             MessageLookupByLibrary.simpleMessage("How to participate"),
+        "howtoearn":
+            MessageLookupByLibrary.simpleMessage("How to Earn Rewards"),
         "hurray": MessageLookupByLibrary.simpleMessage("Hurray!"),
         "icici": MessageLookupByLibrary.simpleMessage("ICICI Prudential Fund"),
         "improvingAppText": MessageLookupByLibrary.simpleMessage(
@@ -587,10 +597,16 @@ class MessageLookup extends MessageLookupByLibrary {
         "kycUseCamera": MessageLookupByLibrary.simpleMessage("Use Camera"),
         "kycVerifyText": MessageLookupByLibrary.simpleMessage(
             "This is required to securely verify your identity."),
+        "lastWeekFello":
+            MessageLookupByLibrary.simpleMessage("Last Week on Fello"),
         "lastWeekWinners":
             MessageLookupByLibrary.simpleMessage("Last week winners"),
+        "lastWeekleaderBoard":
+            MessageLookupByLibrary.simpleMessage("Winners Leaderboard"),
         "leaderBoard": MessageLookupByLibrary.simpleMessage("Leaderboard"),
         "leaderBoardUpdate": MessageLookupByLibrary.simpleMessage(
+            "Leaderboard will be updated soon"),
+        "leaderBoardswillUpdate": MessageLookupByLibrary.simpleMessage(
             "Leaderboard will be updated soon"),
         "leaderboardUpdateSoon": MessageLookupByLibrary.simpleMessage(
             "Leaderboard will be updated soon"),
@@ -598,6 +614,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Loading Gold Rates"),
         "loadingGoldRates1": MessageLookupByLibrary.simpleMessage(
             "Please wait while the Gold rates load"),
+        "loadingScratchCards":
+            MessageLookupByLibrary.simpleMessage("Loading more tickets"),
         "loadingTodaysPicks": MessageLookupByLibrary.simpleMessage(
             "Please wait, loading today\'s picks"),
         "loseAutoSave": MessageLookupByLibrary.simpleMessage(
@@ -661,6 +679,10 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("No file selected"),
         "noKYCfound": MessageLookupByLibrary.simpleMessage("No Kyc Data Found"),
         "noRewards": MessageLookupByLibrary.simpleMessage("No rewards yet"),
+        "noScratchCards": MessageLookupByLibrary.simpleMessage(
+            "You don’t have any Scratch Cards"),
+        "noScratchCardsSub": MessageLookupByLibrary.simpleMessage(
+            "Earn Scratch Cards to win assured rewards with Fello"),
         "noTransaction":
             MessageLookupByLibrary.simpleMessage("No transactions to show yet"),
         "notSaved": MessageLookupByLibrary.simpleMessage("Have not saved"),
@@ -965,6 +987,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "rewardsEmpty": MessageLookupByLibrary.simpleMessage("No Rewards won"),
         "rewardsRedemeed":
             MessageLookupByLibrary.simpleMessage("Rewards Redeemed"),
+        "rewardsWithFello":
+            MessageLookupByLibrary.simpleMessage("Rewards with Fello"),
+        "rewardsWon": MessageLookupByLibrary.simpleMessage("Reward won"),
         "rs": MessageLookupByLibrary.simpleMessage("Rs"),
         "safestDigitalInvestment":
             MessageLookupByLibrary.simpleMessage("Safest Digital Investment"),
@@ -987,6 +1012,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "saveWinningsLabel":
             MessageLookupByLibrary.simpleMessage("My Active Winnings"),
         "saveWinningsValue": m20,
+        "savingsMade": MessageLookupByLibrary.simpleMessage("Savings made"),
         "savingsOnAuto": MessageLookupByLibrary.simpleMessage(
             "Put your savings on autopilot"),
         "savingsOnAutoPilot":
@@ -999,6 +1025,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "scratchCardText":
             MessageLookupByLibrary.simpleMessage("Scratch Cards"),
         "scratchCards": MessageLookupByLibrary.simpleMessage("Scratch Cards"),
+        "sctab1": MessageLookupByLibrary.simpleMessage("Your Rewards"),
+        "sctab2": MessageLookupByLibrary.simpleMessage("Earn Rewards"),
         "secureFelloTitle":
             MessageLookupByLibrary.simpleMessage("Secure Fello"),
         "selectGmail":
@@ -1166,6 +1194,12 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Get your first ticket"),
         "ticketsExceeded":
             MessageLookupByLibrary.simpleMessage("Maximum tickets exceeded"),
+        "ticketsMatched":
+            MessageLookupByLibrary.simpleMessage("Tickets matched"),
+        "ticketsThisWeek":
+            MessageLookupByLibrary.simpleMessage("Your tickets won this week"),
+        "ticketsWiting": MessageLookupByLibrary.simpleMessage(
+            "Your Tickets Rewards are waiting"),
         "till": MessageLookupByLibrary.simpleMessage("till"),
         "title": MessageLookupByLibrary.simpleMessage("Title"),
         "tktsPurchaseLimit": MessageLookupByLibrary.simpleMessage(
@@ -1191,8 +1225,16 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("s top scorers: "),
         "topWinners": MessageLookupByLibrary.simpleMessage("Top Winners"),
         "totalBalance": MessageLookupByLibrary.simpleMessage("Total Balance"),
+        "totalPercentage":
+            MessageLookupByLibrary.simpleMessage("Total Interest Percentage"),
+        "totalReturnGained":
+            MessageLookupByLibrary.simpleMessage("Total Returns Gained"),
         "totalRewards": MessageLookupByLibrary.simpleMessage("Total Rewards"),
+        "totalRewardsTilldate": MessageLookupByLibrary.simpleMessage(
+            "Total rewards won on Fello till date -"),
         "totalSavings": MessageLookupByLibrary.simpleMessage("Total Savings"),
+        "totalSavingswithFello":
+            MessageLookupByLibrary.simpleMessage("Total Saved with Fello"),
         "totalWinnings": MessageLookupByLibrary.simpleMessage("Total Winnings"),
         "toverifyEmail":
             MessageLookupByLibrary.simpleMessage("to verify email"),

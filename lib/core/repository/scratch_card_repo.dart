@@ -5,6 +5,7 @@ import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/model/app_environment.dart';
 import 'package:felloapp/core/model/daily_bonus_event_model.dart';
 import 'package:felloapp/core/model/prizes_model.dart';
+import 'package:felloapp/core/model/rewardsquickLinks_model.dart';
 import 'package:felloapp/core/model/scratch_card_model.dart';
 import 'package:felloapp/core/repository/base_repo.dart';
 import 'package:felloapp/core/service/api_service.dart';
@@ -137,6 +138,7 @@ class ScratchCardRepository extends BaseRepo {
   Future<ApiResponse<Map<String, dynamic>>> getScratchCards(
       {String? start}) async {
     final List<ScratchCard> scratchCardsList = [];
+    final List<RewardsQuickLinksModel> quickLinks = [];
     try {
       final prizeResponse = await APIService.instance.getData(
         ApiPath.getScratchCard(userService.baseUser!.uid),
@@ -146,15 +148,19 @@ class ScratchCardRepository extends BaseRepo {
         },
         apiName: '$_rewards/getScratchCardByID',
       );
-      final Map<String, dynamic>? responseData = prizeResponse["data"];
+      final Map<String, dynamic>? responseData = prizeResponse['data'];
       if (responseData != null && responseData.isNotEmpty) {
         responseData["gts"].forEach((gt) {
           scratchCardsList.add(ScratchCard.fromJson(gt, ""));
+        });
+        responseData["quickLinks"]?.forEach((links) {
+          quickLinks.add(RewardsQuickLinksModel.fromJson(links));
         });
       }
 
       return ApiResponse(model: {
         "tickets": scratchCardsList,
+        "links": quickLinks,
         "isLastPage": responseData!["isLastPage"]
       }, code: 200);
     } catch (e) {
