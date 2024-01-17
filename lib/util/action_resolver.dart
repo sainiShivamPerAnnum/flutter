@@ -1,6 +1,8 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/action.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:share_plus/share_plus.dart';
 
 class ActionResolver {
@@ -39,6 +41,19 @@ class ActionResolver {
 
       case ActionType.POP:
         await AppState.backButtonDispatcher!.didPopRoute();
+    }
+
+    _trackAnalytics(action.events);
+  }
+
+  void _trackAnalytics(Map<String, dynamic> events) {
+    if (events.isEmpty) {
+      return;
+    }
+
+    for (final key in events.keys) {
+      final analytics = locator<AnalyticsService>();
+      analytics.track(eventName: key, properties: events[key]);
     }
   }
 }

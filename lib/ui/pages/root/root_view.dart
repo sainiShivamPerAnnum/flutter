@@ -1,4 +1,6 @@
+import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
+import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/journey_models/user_journey_stats_model.dart';
 import 'package:felloapp/core/model/portfolio_model.dart';
 import 'package:felloapp/core/model/user_bootup_model.dart';
@@ -148,6 +150,9 @@ class RootAppBar extends StatelessWidget {
                 selector: (_, tambolaService) =>
                     tambolaService.tambolaTicketCount,
                 builder: (_, ticketCount, child) {
+                  final enableJourney = AppConfig.getValue(
+                    AppConfigKey.enableJourney,
+                  );
                   return (locator<RootController>().currentNavBarItemModel !=
                           RootController.journeyNavBarItem)
                       ? Container(
@@ -195,17 +200,15 @@ class RootAppBar extends StatelessWidget {
                                 ),
                                 Selector2<UserService, TambolaService,
                                     Tuple2<TambolaBestTicketsModel?, int>>(
-                                 selector: (p0, userService,
-                                          tambolaService) =>
-                                      Tuple2(
-                                          tambolaService.bestTickets,
-                                          tambolaService
-                                              .expiringTicketsCount),
+                                  selector: (p0, userService, tambolaService) =>
+                                      Tuple2(tambolaService.bestTickets,
+                                          tambolaService.expiringTicketsCount),
                                   builder: (context, value, child) =>
                                       FelloInfoBar(
                                     svgAsset: Assets.tambolaTicket,
                                     size: SizeConfig.padding12,
-                                    child: "${value.item1?.data?.totalTicketCount}",
+                                    child:
+                                        "${value.item1?.data?.totalTicketCount}",
                                     onPressed: () {
                                       Haptic.vibrate();
                                       AppState.delegate!
@@ -235,7 +238,30 @@ class RootAppBar extends StatelessWidget {
                                           userService.userJourneyStats,
                                           scratchCardService
                                               .unscratchedMilestoneScratchCardCount),
-                                )
+                                ),
+                                if (enableJourney)
+                                  Selector2<UserService, ScratchCardService,
+                                      Tuple2<UserJourneyStatsModel?, int>>(
+                                    builder: (context, value, child) =>
+                                        FelloInfoBar(
+                                      lottieAsset: Assets.navJourneyLottie,
+                                      size: SizeConfig.padding24 -
+                                          SizeConfig.padding1,
+                                      child: "Level ${value.item1?.level ?? 0}",
+                                      onPressed: () {
+                                        Haptic.vibrate();
+                                        AppState.delegate!
+                                            .parseRoute(Uri.parse("journey"));
+                                      },
+                                      mark: value.item2 > 0,
+                                    ),
+                                    selector: (p0, userService,
+                                            scratchCardService) =>
+                                        Tuple2(
+                                            userService.userJourneyStats,
+                                            scratchCardService
+                                                .unscratchedMilestoneScratchCardCount),
+                                  )
                               ],
                             ),
                           ),
