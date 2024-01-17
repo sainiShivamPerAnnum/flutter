@@ -7,16 +7,7 @@ part of 'rewardsCta.dart';
 // **************************************************************************
 
 RewardsCta _$RewardsCtaFromJson(Map<String, dynamic> json) => RewardsCta(
-      label: json['label'] as String?,
-      style: json['style'] as String?,
       action: json['action'] == null
           ? null
           : Action.fromJson(json['action'] as Map<String, dynamic>),
     );
-
-Map<String, dynamic> _$RewardsCtaToJson(RewardsCta instance) =>
-    <String, dynamic>{
-      'label': instance.label,
-      'style': instance.style,
-      'action': instance.action,
-    };

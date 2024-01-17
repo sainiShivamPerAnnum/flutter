@@ -108,16 +108,16 @@ class IntroQuickLinks extends StatelessWidget {
             onTap: () {
               Haptic.vibrate();
               AppState.delegate!.parseRoute(Uri.parse(gtService
-                  .allRewardsQuickLinks[index].cta![0].action!.payload['url']));
+                  .allRewardsQuickLinks[index].cta[0].action!.payload['url']));
             },
             child: EarnRewardsQuickLinks(
-              image: gtService.allRewardsQuickLinks[index].imageUrl!,
+              image: gtService.allRewardsQuickLinks[index].imageUrl,
               tickets:
                   gtService.allRewardsQuickLinks[index].rewardCount.toString(),
-              title: gtService.allRewardsQuickLinks[index].title!,
-              subTitle: gtService.allRewardsQuickLinks[index].subTitle!,
-              endingSubtitle: gtService.allRewardsQuickLinks[index].rewardText!,
-              rewardType: gtService.allRewardsQuickLinks[index].rewardType!,
+              title: gtService.allRewardsQuickLinks[index].title,
+              subTitle: gtService.allRewardsQuickLinks[index].subTitle,
+              endingSubtitle: gtService.allRewardsQuickLinks[index].rewardText,
+              rewardType: gtService.allRewardsQuickLinks[index].rewardType,
             ),
           ),
       ],

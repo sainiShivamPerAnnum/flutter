@@ -3,14 +3,16 @@ import 'package:json_annotation/json_annotation.dart';
 
 part 'rewardsCta.g.dart';
 
-@JsonSerializable()
+@JsonSerializable(
+  createToJson: false,
+)
 class RewardsCta {
-  String? label;
-  String? style;
-  Action? action;
+  final Action? action;
 
-  RewardsCta({this.label, this.style, this.action});
+  RewardsCta({
+    this.action,
+  });
 
-  factory RewardsCta.fromJson(Map<String, dynamic> json) => _$RewardsCtaFromJson(json);
-  Map<String, dynamic> toJson() => _$RewardsCtaToJson(this);
+  factory RewardsCta.fromJson(Map<String, dynamic> json) =>
+      _$RewardsCtaFromJson(json);
 }

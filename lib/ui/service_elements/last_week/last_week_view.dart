@@ -419,35 +419,6 @@ class MySavingsLastWeek extends StatelessWidget {
             value: '₹${(data.user!.returns ?? 0).toStringAsFixed(2)}',
           ),
         ),
-        // Container(
-        //   width: SizeConfig.screenWidth! * 0.389,
-        //   padding: EdgeInsets.symmetric(
-        //       vertical: SizeConfig.padding14, horizontal: SizeConfig.padding20),
-        //   decoration: BoxDecoration(
-        //     border: Border.all(color: const Color(0xff919193)),
-        //     color: Colors.black.withOpacity(0.28),
-        //     borderRadius: BorderRadius.circular(SizeConfig.roundness8),
-        //   ),
-        //   child:
-        //       Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
-        //     SvgPicture.asset(
-        //       Assets.savingsAvatar,
-        //       height: SizeConfig.padding22,
-        //     ),
-        //     SizedBox(
-        //       height: SizeConfig.padding4,
-        //     ),
-        //     Text(locale.totalSavingswithFello,
-        //         style: TextStyles.sourceSans.body3
-        //             .colour(UiConstants.kWinnerPlayerPrimaryColor)),
-        //     SizedBox(
-        //       height: SizeConfig.padding6,
-        //     ),
-        //     Text('₹${data.user!.invested}',
-        //         style: TextStyles.rajdhaniSB.title5
-        //             .colour(UiConstants.kTextColor)),
-        //   ]),
-        // ),
         SizedBox(
           width: SizeConfig.padding10,
         ),

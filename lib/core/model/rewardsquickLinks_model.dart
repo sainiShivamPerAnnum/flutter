@@ -6,32 +6,32 @@ import 'package:json_annotation/json_annotation.dart';
 part 'rewardsquickLinks_model.g.dart';
 
 enum RewardsType {
-  ticket('ticket'),
-  rupee('rupee');
-  const RewardsType(this.type);
-  final String type;
+  ticket,
+  rupee,
 }
 
-@JsonSerializable()
+@JsonSerializable(
+  createToJson: false,
+)
 class RewardsQuickLinksModel {
-  String? title;
-  String? subTitle;
-  String? rewardText;
-  RewardsType? rewardType;
-  int? rewardCount;
-  String? imageUrl;
-  List<RewardsCta>? cta;
+  final String title;
+  final String subTitle;
+  final String rewardText;
+  final RewardsType rewardType;
+  final int rewardCount;
+  final String imageUrl;
+  final List<RewardsCta> cta;
 
-  RewardsQuickLinksModel(
-      {this.title,
-      this.subTitle,
-      this.rewardText,
-      this.rewardType,
-      this.rewardCount,
-      this.imageUrl,
-      this.cta});
+  RewardsQuickLinksModel({
+    this.title = '',
+    this.subTitle = '',
+    this.rewardText = '',
+    this.rewardType = RewardsType.ticket,
+    this.rewardCount = 0,
+    this.imageUrl = '',
+    this.cta = const [],
+  });
 
   factory RewardsQuickLinksModel.fromJson(Map<String, dynamic> json) =>
       _$RewardsQuickLinksModelFromJson(json);
-  Map<String, dynamic> toJson() => _$RewardsQuickLinksModelToJson(this);
 }

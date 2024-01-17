@@ -48,7 +48,7 @@ class RewardBalanceWidget extends StatelessWidget {
         children: [
           RewardRedeemWidget(
               m: userService, minWithdrawPrize: minWithdrawPrize),
-          if (showBottomInfo) ...[
+          if (showBottomInfo)
             Container(
               // margin: EdgeInsets.only(top: SizeConfig.padding16),
               padding: EdgeInsets.symmetric(
@@ -67,8 +67,8 @@ class RewardBalanceWidget extends StatelessWidget {
                   )
                 ],
               ),
-            ),
-          ] else ...[
+            )
+          else
             Container(
               padding: EdgeInsets.symmetric(
                   horizontal: SizeConfig.pageHorizontalMargins,
@@ -117,7 +117,6 @@ class RewardBalanceWidget extends StatelessWidget {
                 ],
               ),
             ),
-          ]
         ],
       ),
     );
