@@ -12,6 +12,8 @@ import 'package:felloapp/core/model/journey_models/user_journey_stats_model.dart
 import 'package:felloapp/core/model/page_config_model.dart';
 import 'package:felloapp/core/model/portfolio_model.dart';
 import 'package:felloapp/core/model/quick_save_model.dart';
+import 'package:felloapp/core/model/sdui/sections/home_page_sections.dart';
+import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/core/model/user_bootup_model.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
@@ -20,6 +22,7 @@ import 'package:felloapp/core/repository/journey_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/cache_service.dart';
+import 'package:felloapp/core/service/feature_flag_service/feature_flag_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/feature/tambola/src/services/tambola_service.dart';
@@ -61,6 +64,10 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   final GetterRepository _gettersRepo = locator<GetterRepository>();
   final AppState _appState = locator<AppState>();
   final RootController _rootController = locator<RootController>();
+  final GetterRepository _getterRepo = locator<GetterRepository>();
+  // Depends on app config so late would be required in order to lazy evaluation
+  // of expression.
+  late final _featureEvaluator = locator<FeatureFlagService>();
   Portfolio _userPortfolio = Portfolio.base();
 
   Portfolio get userPortfolio => _userPortfolio;
@@ -396,17 +403,58 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     try {
       _firebaseUser = FirebaseAuth.instance.currentUser;
       await setBaseUser();
+      final lastSpinIso = PreferenceHelper.getString(
+        PreferenceHelper.CACHE_TICKETS_LAST_SPIN_TIMESTAMP,
+      );
+      bool spinComplete = false;
+      if (lastSpinIso.isNotEmpty) {
+        final lastSpin = TimestampModel.fromIsoString(lastSpinIso).toDate();
+        spinComplete = lastSpin.day == DateTime.now().day &&
+            lastSpin.month == DateTime.now().month;
+      }
+
+      bool firstLaunch = true;
+      final lastOpenIso =
+          PreferenceHelper.getString(PreferenceHelper.CACHE_LAST_APP_OPEN);
+      if (lastOpenIso.isNotEmpty) {
+        final lastOpenTime = TimestampModel.fromIsoString(lastOpenIso).toDate();
+        firstLaunch = !(lastOpenTime.day == DateTime.now().day &&
+            lastOpenTime.month == DateTime.now().month);
+      }
+
+      final dateTime = DateTime.now();
+      locator<FeatureFlagService>().updateAttributes(attributes: {
+        "day": dateTime.day.toString(),
+        "number": _baseUser?.mobile,
+        "time": dateTime.hour,
+        "segments": _baseUser?.segments,
+        "subsStatus": _baseUser?.subsStatus,
+        "spinCompleted": spinComplete,
+        "firstLaunch": firstLaunch,
+      });
+
+      final variant = _featureEvaluator.evaluateFeature(
+        'newUserVariant',
+        defaultValue: 'a',
+      );
+      final response = await _getterRepo.getPageData(variant: variant);
+      final pageData = response.model;
+      if (pageData != null) {
+        locator.unregister<PageData>();
+        locator.registerSingleton<PageData>(pageData);
+      }
+
       if (baseUser != null) {
         unawaited(getUserJourneyStats());
         final res = await _gettersRepo.getPageConfigs();
-        final QuickSaveRes = await _gettersRepo.getQuickSave();
+        final quickSaveRes = await _gettersRepo.getQuickSave();
         if (res.isSuccess()) {
           setPageConfigs(res.model!);
           _appState.setCurrentTabIndex = 0;
         }
 
-        if (QuickSaveRes.isSuccess()) {
-          quickSaveModel = QuickSaveRes.model;
+        if (quickSaveRes.isSuccess()) {
+          quickSaveModel = quickSaveRes.model;
         }
       }
     } catch (e) {

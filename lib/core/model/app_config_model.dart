@@ -8,19 +8,15 @@ import 'app_environment.dart';
 class AppConfig {
   String message;
   Map<AppConfigKey, Object?> data = {};
-  static final Map<String, AppConfig> _instances = {};
+  static AppConfig? _instances;
 
   AppConfig({required this.message, required this.data});
 
   factory AppConfig.instance(Map<String, dynamic> json) {
     log("APP CONFIG ${json.toString()}");
-
-    _instances['instance'] = AppConfig._fromJson(json);
-
+    _instances = AppConfig._fromJson(json);
     final urls = json['overrideUrls'];
-
     AppEnvironment.init(urls);
-
     return AppConfig._fromJson(json);
   }
 
@@ -40,14 +36,14 @@ class AppConfig {
   }
 
   static T getValue<T>(AppConfigKey key) {
-    final val = _instances.values.first.data[key];
-    if (val != null) {
-      return val as T;
-    } else {
-      return BaseRemoteConfig.DEFAULTS.entries
-          .firstWhere((element) => element.key.appConfigKeyFromName == key,
-              orElse: () => MapEntry(key.name, null))
-          .value as T;
-    }
+    assert(
+        _instances != null, 'Initialize app config before calling `getValue`.');
+    final val = _instances!.data[key];
+    return val != null
+        ? val as T
+        : BaseRemoteConfig.DEFAULTS.entries
+            .firstWhere((element) => element.key.appConfigKeyFromName == key,
+                orElse: () => MapEntry(key.name, null))
+            .value as T;
   }
 }

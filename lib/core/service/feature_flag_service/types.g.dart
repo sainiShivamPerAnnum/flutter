@@ -22,4 +22,5 @@ Feature _$FeatureFromJson(Map<String, dynamic> json) => Feature(
 
 Rule _$RuleFromJson(Map<String, dynamic> json) => Rule(
       json['condition'],
+      json['force'],
     );

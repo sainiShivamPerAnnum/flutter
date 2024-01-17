@@ -97,12 +97,6 @@ class LauncherViewModel extends BaseViewModel {
     try {
       //Initialize every time
       await _getterRepo.setUpAppConfigs();
-      final response = await _getterRepo.getPageData();
-      final pageData = response.model;
-      if (pageData != null) {
-        locator.registerSingleton(pageData);
-      }
-
       await userService.init();
       //Initialize only if user is onboarded
       if (userService.isUserOnboarded) {

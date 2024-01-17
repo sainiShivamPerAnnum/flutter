@@ -157,7 +157,7 @@ class GetterRepository extends BaseRepo {
     }
   }
 
-  Future<ApiResponse<PageData>> getPageData() async {
+  Future<ApiResponse<PageData>> getPageData({required String variant}) async {
     final response = await APIService.instance.getData(
       '',
       apiName: '$_getters/getPageData',

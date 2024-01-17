@@ -1,5 +1,7 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/apis_path_constants.dart';
+import 'package:felloapp/core/enums/app_config_keys.dart';
+import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/analytics_repo.dart';
@@ -38,6 +40,7 @@ import 'package:felloapp/core/service/fcm/fcm_handler_datapayload.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_v2/fcm_handler_v2.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
+import 'package:felloapp/core/service/feature_flag_service/feature_flag_service.dart';
 import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/lcl_db_api.dart';
 import 'package:felloapp/core/service/lendbox_maturity_service.dart';
@@ -136,6 +139,12 @@ Future<void> setupLocator() async {
     await db.initialize();
     return db;
   });
+  locator.registerLazySingleton<FeatureFlagService>(
+    () => FeatureFlagService.init(
+      AppConfig.getValue(AppConfigKey.features) ?? {},
+      // const {}, // empty attributes.
+    ),
+  );
   locator.registerLazySingleton(Api.new);
   locator.registerLazySingleton(LocalApi.new);
   locator.registerLazySingleton(FcmHandlerDataPayloads.new);

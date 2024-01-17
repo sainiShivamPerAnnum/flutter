@@ -10,16 +10,15 @@ class FeatureFlagService {
   final Features _features;
   final Map<String, dynamic> _attributes;
 
-  factory FeatureFlagService.init(
-      Map<String, dynamic> feature, Map<String, dynamic> attributes) {
-    final f = Features.fromJson(feature);
+  factory FeatureFlagService.init(Map<String, dynamic> attributes) {
+    const f = Features({}); // TODO(@DK070202): Remove testing thing from here.
     return FeatureFlagService._(f, attributes);
   }
 
-  T? evaluateFeature<T>(String key) {
+  T evaluateFeature<T>(String key, {required T defaultValue}) {
     final result =
         _FeatureEvaluator.evaluateFeature(_attributes, _features, key);
-    return result as T?;
+    return result as T? ?? defaultValue;
   }
 
   void updateAttributes({Map<String, dynamic> attributes = const {}}) {
