@@ -575,10 +575,10 @@ class MessageLookup extends MessageLookupByLibrary {
             "आपके पैन कार्ड के अनुसार नाम"),
         "kycPanUpload":
             MessageLookupByLibrary.simpleMessage("अपना पैन कार्ड अपलोड करें"),
-        "kycStep1": MessageLookupByLibrary.simpleMessage(
-            "चरण 1 - पैन कार्ड अपलोड करें"),
-        "kycStep2":
-            MessageLookupByLibrary.simpleMessage("चरण 2 - ईमेल सत्यापित करें"),
+        "kycStep1":
+            MessageLookupByLibrary.simpleMessage("चरण 1 - ईमेल सत्यापित करें"),
+        "kycStep2": MessageLookupByLibrary.simpleMessage(
+            "चरण 2 - पैन कार्ड अपलोड करें"),
         "kycSuccessSubTitle": MessageLookupByLibrary.simpleMessage(
             "आपका केवाईसी सत्यापन सफलतापूर्वक पूरा हो गया है"),
         "kycSuccessTitle":

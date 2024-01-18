@@ -72,7 +72,7 @@ class EarnRewardsIntro extends StatelessWidget {
               fit: BoxFit.fill,
               placeholder: (context, placeholder) {
                 return SizedBox(
-                  width: SizeConfig.screenWidth,
+                  height: SizeConfig.padding252,
                   child: const BlurHash(
                     hash: 'L87MHEyC9atRc[W=EKa#VYR6NHae',
                   ),

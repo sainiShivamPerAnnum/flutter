@@ -444,7 +444,11 @@ class Assets {
   static const String noScratchCards = "assets/images/noScratchCards.png";
   static const String savingsAvatar = "assets/vectors/savings_avatar.svg";
   static const String paperPlane = "assets/svg/paper_plane.svg";
-  static const String rewardsIntro = "https://ik.imagekit.io/9xfwtu0xm/rewards/rewards.png";
-  static const String rewardsIntro1 = "https://ik.imagekit.io/9xfwtu0xm/rewards/rewards_1.png";
-  static const String rewardsIntro2 = "https://ik.imagekit.io/9xfwtu0xm/rewards/rewards_2.png";
+  static const String rewardsIntro =
+      "https://ik.imagekit.io/9xfwtu0xm/rewards/rewards.png";
+  static const String rewardsIntro1 =
+      "https://ik.imagekit.io/9xfwtu0xm/rewards/rewards_1.png";
+  static const String rewardsIntro2 =
+      "https://ik.imagekit.io/9xfwtu0xm/rewards/rewards_2.png";
+  static const String garbageBin = "assets/vectors/garbage-bin.svg";
 }

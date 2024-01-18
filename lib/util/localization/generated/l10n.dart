@@ -2936,20 +2936,20 @@ class S {
     );
   }
 
-  /// `Step 1 - Upload PAN Card`
+  /// `Step 1 - Verify Email`
   String get kycStep1 {
     return Intl.message(
-      'Step 1 - Upload PAN Card',
+      'Step 1 - Verify Email',
       name: 'kycStep1',
       desc: '',
       args: [],
     );
   }
 
-  /// `Step 2 - Verify Email`
+  /// `Step 2 - Upload PAN Card`
   String get kycStep2 {
     return Intl.message(
-      'Step 2 - Verify Email',
+      'Step 2 - Upload PAN Card',
       name: 'kycStep2',
       desc: '',
       args: [],

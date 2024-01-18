@@ -45,7 +45,7 @@ class KYCDetailsViewModel extends BaseViewModel {
   bool get isEmailUpdating => _isEmailUpdating;
   bool isPanTileOpen = false;
   bool isEmailTileOpen = false;
-  CurrentStep _currentStep = CurrentStep.pan;
+  CurrentStep _currentStep = CurrentStep.email;
   ImagePicker? _imagePicker = ImagePicker();
 
   set isEmailUpdating(value) {
@@ -276,13 +276,15 @@ class KYCDetailsViewModel extends BaseViewModel {
         inEditMode = false;
         hasDetails = true;
         isPanTileOpen = false;
-        _currentStep = CurrentStep.email;
+        _currentStep = !isEmailVerified ? CurrentStep.email : CurrentStep.pan;
         if (!isEmailVerified) isEmailTileOpen = true;
       } else {
+        _currentStep = !isEmailVerified ? CurrentStep.email : CurrentStep.pan;
         isPanTileOpen = true;
         kycVerificationStatus = KycVerificationStatus.UNVERIFIED;
       }
     } else {
+      _currentStep = !isEmailVerified ? CurrentStep.email : CurrentStep.pan;
       isPanTileOpen = true;
       kycVerificationStatus = KycVerificationStatus.UNVERIFIED;
     }
@@ -300,7 +302,7 @@ class KYCDetailsViewModel extends BaseViewModel {
     final String? response = await _googleService.signInWithGoogle();
     isEmailUpdating = false;
     if (response != null) {
-      // email = response;
+      _currentStep = CurrentStep.pan;
       BaseUtil.showPositiveAlert(
           "Email verified successfully", "Your email was successfully added");
       _logger.d("Email $email verified successfully");
@@ -333,7 +335,6 @@ class KYCDetailsViewModel extends BaseViewModel {
           _bankAndPanService.activeBankAccountDetails = null;
           _bankAndPanService.isBankDetailsAdded = false;
           await checkForKycExistence();
-          _currentStep = CurrentStep.pan;
           await CacheService.invalidateByKey(CacheKeys.USER);
           await _userService.setBaseUser();
           await _bankAndPanService.checkForUserBankAccountDetails();
