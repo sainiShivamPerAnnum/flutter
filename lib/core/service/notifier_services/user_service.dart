@@ -861,9 +861,16 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
           PreferenceHelper.isUserOnboardingComplete,
         );
 
-        final variant = locator<FeatureFlagService>().evaluateFeature(
+        final ff = locator<FeatureFlagService>();
+
+        final variant = ff.evaluateFeature(
           FeatureFlagService.newUserVariant,
           defaultValue: 'b',
+        );
+
+        final entryScreen = ff.evaluateFeature(
+          FeatureFlagService.entryScreen,
+          defaultValue: '/save',
         );
 
         if (isUserOnboardingComplete && variant == 'b') {
@@ -871,6 +878,13 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
             state: PageState.replaceAll,
             page: RootPageConfig,
           );
+
+          if (entryScreen == 'MOST_INVESTED') {
+            /// TODO(@DK070202): for most invested.
+          } else {
+            await Future.delayed(const Duration(seconds: 1));
+            AppState.delegate!.parseRoute(Uri.parse(entryScreen));
+          }
         } else {
           AppState.delegate!.appState.currentAction = PageAction(
             state: PageState.replaceAll,
