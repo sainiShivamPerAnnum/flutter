@@ -345,11 +345,9 @@ class LearnMoreSlider extends StatelessWidget {
   void _onTap() {
     switch (assetPrefOption) {
       case AssetPrefType.P2P:
-        AppState.backButtonDispatcher!.didPopRoute();
         AppState.delegate!.parseRoute(Uri.parse('/floDetails'));
         break;
       case AssetPrefType.GOLD:
-        AppState.backButtonDispatcher!.didPopRoute();
         AppState.delegate!.parseRoute(Uri.parse('/goldDetails'));
         break;
       default:

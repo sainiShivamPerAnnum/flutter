@@ -1,6 +1,5 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/apis_path_constants.dart';
-import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
@@ -141,8 +140,7 @@ Future<void> setupLocator() async {
   });
   locator.registerLazySingleton<FeatureFlagService>(
     () => FeatureFlagService.init(
-      AppConfig.getValue(AppConfigKey.features) ?? {},
-      // const {}, // empty attributes.
+      features: AppConfig.toRaw,
     ),
   );
   locator.registerLazySingleton(Api.new);

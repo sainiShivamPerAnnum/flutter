@@ -425,7 +425,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
       final dateTime = DateTime.now();
       locator<FeatureFlagService>().updateAttributes(attributes: {
         "day": dateTime.day.toString(),
-        "number": _baseUser?.mobile,
+        "mobile": _baseUser?.mobile,
         "time": dateTime.hour,
         "segments": _baseUser?.segments,
         "subsStatus": _baseUser?.subsStatus,
@@ -440,7 +440,9 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
       final response = await _getterRepo.getPageData(variant: variant);
       final pageData = response.model;
       if (pageData != null) {
-        locator.unregister<PageData>();
+        if (locator.isRegistered<PageData>()) {
+          locator.unregister<PageData>();
+        }
         locator.registerSingleton<PageData>(pageData);
       }
 
@@ -859,7 +861,12 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
           PreferenceHelper.isUserOnboardingComplete,
         );
 
-        if (isUserOnboardingComplete) {
+        final variant = locator<FeatureFlagService>().evaluateFeature(
+          FeatureFlagService.newUserVariant,
+          defaultValue: 'b',
+        );
+
+        if (isUserOnboardingComplete && variant == 'b') {
           AppState.delegate!.appState.currentAction = PageAction(
             state: PageState.replaceAll,
             page: RootPageConfig,

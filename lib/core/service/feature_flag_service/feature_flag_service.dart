@@ -2,17 +2,19 @@ import 'package:felloapp/core/service/feature_flag_service/condition_evaluator.d
 import 'package:felloapp/core/service/feature_flag_service/types.dart';
 
 class FeatureFlagService {
-  const FeatureFlagService._(
+  FeatureFlagService._(
     this._features,
-    this._attributes,
-  );
+  ) : _attributes = {};
 
   final Features _features;
-  final Map<String, dynamic> _attributes;
+  Map<String, dynamic> _attributes;
 
-  factory FeatureFlagService.init(Map<String, dynamic> attributes) {
-    const f = Features({}); // TODO(@DK070202): Remove testing thing from here.
-    return FeatureFlagService._(f, attributes);
+  factory FeatureFlagService.init({
+    required Map<String, dynamic> features,
+  }) {
+    final f = Features.fromJson(features);
+
+    return FeatureFlagService._(f);
   }
 
   T evaluateFeature<T>(String key, {required T defaultValue}) {
@@ -23,13 +25,16 @@ class FeatureFlagService {
 
   void updateAttributes({Map<String, dynamic> attributes = const {}}) {
     for (final MapEntry<String, dynamic> attr in attributes.entries) {
-      if (attributes.containsKey(attr.key)) {
-        attributes.update(attr.key, (value) => attr.value);
+      if (_attributes.containsKey(attr.key)) {
+        _attributes.update(attr.key, (value) => attr.value);
       } else {
-        attributes.putIfAbsent(attr.key, () => attr.value);
+        _attributes.putIfAbsent(attr.key, () => attr.value);
       }
     }
   }
+
+  static const newUserVariant = 'newUserVariant';
+  static const entryScreen = 'entryScreen';
 }
 
 class _FeatureEvaluator {

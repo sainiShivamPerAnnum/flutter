@@ -17,6 +17,7 @@ import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/analytics/base_analytics.dart';
 import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
+import 'package:felloapp/core/service/feature_flag_service/feature_flag_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -564,7 +565,15 @@ class LoginControllerViewModel extends BaseViewModel {
       state: PageState.replaceAll,
       page: RootPageConfig,
     );
-    if (_isSignup) {
+
+    final ff = locator<FeatureFlagService>();
+
+    final variant = ff.evaluateFeature(
+      FeatureFlagService.newUserVariant,
+      defaultValue: 'b',
+    );
+
+    if (_isSignup && variant == 'a') {
       await Future.delayed(const Duration(milliseconds: 1));
       appStateProvider.currentAction = PageAction(
         state: PageState.addPage,
