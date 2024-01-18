@@ -58,7 +58,7 @@ class _StoriesSectionState extends State<StoriesSection> {
         gradient: const LinearGradient(
           colors: [
             UiConstants.bg,
-            Color(0xff29292B),
+            UiConstants.bg1,
           ],
           begin: Alignment.topCenter,
           end: Alignment.bottomCenter,

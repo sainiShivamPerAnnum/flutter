@@ -86,8 +86,6 @@ class AssetPreferenceViewModel extends BaseViewModel {
     }
   }
 
-  void onSkip() {}
-
   void _showBottomSheet(BottomSheetComponent bottomSheetData) {
     BaseUtil.openModalBottomSheet(
       isBarrierDismissible: true,

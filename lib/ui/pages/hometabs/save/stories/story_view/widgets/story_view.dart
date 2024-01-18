@@ -615,7 +615,7 @@ class IndicatorOval extends CustomPainter {
   }
 
   @override
-  bool shouldRepaint(CustomPainter oldDelegate) {
-    return true;
+  bool shouldRepaint(covariant IndicatorOval oldDelegate) {
+    return oldDelegate.color != color || oldDelegate.widthFactor != widthFactor;
   }
 }

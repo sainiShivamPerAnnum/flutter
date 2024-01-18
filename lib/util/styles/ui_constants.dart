@@ -240,6 +240,7 @@ class UiConstants {
   static const blue3 = Color(0xff93B5FE);
 
   static const bg = Color(0xFF232326);
+  static const bg1 = Color(0xff29292B);
 
   static const textGray50 = Color(0xFF919193);
   static const textGray60 = Color(0xFFA7A7A8);

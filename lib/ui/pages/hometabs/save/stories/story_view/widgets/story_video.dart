@@ -1,6 +1,9 @@
 import 'dart:async';
 import 'dart:io';
 
+import 'package:felloapp/util/localization/generated/l10n.dart';
+import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 import 'package:video_player/video_player.dart';
@@ -103,45 +106,37 @@ class StoryVideoState extends State<StoryVideo> {
     });
   }
 
-  Widget getContentView() {
-    if (widget.videoLoader.state == LoadState.success &&
-        playerController!.value.isInitialized) {
-      return Center(
-        child: AspectRatio(
-          aspectRatio: playerController!.value.aspectRatio,
-          child: VideoPlayer(playerController!),
-        ),
-      );
-    }
+  Widget _getContentView() {
+    final locale = locator<S>();
 
-    return widget.videoLoader.state == LoadState.loading
-        ? const Center(
-            child: SizedBox(
-              width: 70,
-              height: 70,
-              child: CircularProgressIndicator(
-                valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-                strokeWidth: 3,
-              ),
+    return switch (widget.videoLoader.state) {
+      LoadState.success => Center(
+          child: AspectRatio(
+            aspectRatio: playerController!.value.aspectRatio,
+            child: VideoPlayer(playerController!),
+          ),
+        ),
+      LoadState.loading => Center(
+          child: SizedBox.square(
+            dimension: SizeConfig.padding70,
+            child: const CircularProgressIndicator(
+              valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+              strokeWidth: 3,
             ),
-          )
-        : const Center(
-            child: Text(
-            "Media failed to load.",
-            style: TextStyle(
-              color: Colors.white,
-            ),
-          ));
+          ),
+        ),
+      LoadState.failure => Center(
+          child: Text(
+            locale.someThingWentWrongError,
+            style: TextStyles.rajdhaniSB.body1,
+          ),
+        )
+    };
   }
 
   @override
   Widget build(BuildContext context) {
-    return Container(
-      color: Colors.black,
-      height: double.infinity,
-      width: double.infinity,
-      child: getContentView(),
-    );
+    return _getContentView();
   }
 
   @override
