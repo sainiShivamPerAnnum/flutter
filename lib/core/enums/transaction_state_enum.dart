@@ -2,6 +2,7 @@ enum TransactionState {
   idle,
   overView,
   ongoing,
-  success,
-  // successCoinTransaction,
+  success;
+
+  bool get isGoingOn => this == TransactionState.ongoing;
 }

@@ -8,6 +8,7 @@ enum ActionType {
   DEEP_LINK,
   LAUNCH_EXTERNAL_APPLICATION,
   LAUNCH_WEBVIEW,
+  POP,
   SHARE;
 }
 

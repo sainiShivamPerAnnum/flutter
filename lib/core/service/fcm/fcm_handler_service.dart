@@ -1,4 +1,4 @@
-// ignore_for_file: lines_longer_than_80_chars
+// ignore_for_file: lines_longer_than_80_chars, one_member_abstracts, constant_identifier_names
 
 import 'dart:async';
 import 'dart:convert';
@@ -7,8 +7,8 @@ import 'dart:developer';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/fcm_commands_constants.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
-import 'package:felloapp/core/enums/transaction_state_enum.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_datapayload.dart';
+import 'package:felloapp/core/service/fcm/fcm_handler_v2/fcm_handler_v2.dart';
 import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
@@ -22,7 +22,11 @@ import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
-enum MsgSource { Foreground, Background, Terminated }
+enum MsgSource {
+  Foreground,
+  Background,
+  Terminated;
+}
 
 class FcmHandler extends ChangeNotifier {
   final CustomLogger _logger = locator<CustomLogger>();
@@ -64,16 +68,32 @@ class FcmHandler extends ChangeNotifier {
     } else {
       lastFcmData = data;
     }
+
+    var v2 = data?['v2'];
+    final isTransactionInProgress = _augTxnService.currentTxnState.isGoingOn ||
+        _floTxnService.currentTransactionState.isGoingOn;
+
+    if (v2 != null &&
+        !_augTxnService.isIOSTxnInProgress &&
+        !isTransactionInProgress) {
+      if (v2 is String) {
+        v2 = jsonDecode(v2);
+      }
+      final handler = locator<FcmHandlerV2>();
+      await handler(v2);
+      return true;
+    }
+
     bool showSnackbar = true;
     String? title = data!['dialog_title'];
     String? body = data['dialog_body'];
     String? command = data['command'];
     String? url;
     if (data["source"] != null && data["source"] == "webengage") {
-      final _data = jsonDecode(data['message_data']);
-      final _listOfData = _data["custom"] as List;
+      final messageData = jsonDecode(data['message_data']);
+      final listOfData = messageData["custom"] as List;
       try {
-        url = _listOfData.firstWhere(
+        url = listOfData.firstWhere(
           (element) => element['key'] == 'route',
         )['value'];
       } catch (e) {
@@ -82,11 +102,6 @@ class FcmHandler extends ChangeNotifier {
     } else {
       url = data['deep_uri'] ?? data['route'];
     }
-
-    // if (data["test_txn"] == "paytm") {
-    // _augTxnService.isOngoingTxn = false;
-    //   return true;
-    // }
 
     // If notifications contains an url for navigation
     if (url != null && url.isNotEmpty) {
@@ -97,9 +112,7 @@ class FcmHandler extends ChangeNotifier {
           source == MsgSource.Terminated) {
         showSnackbar = false;
         await Future.delayed(const Duration(milliseconds: 800), () {
-          if (_augTxnService.currentTxnState == TransactionState.ongoing ||
-              _floTxnService.currentTransactionState ==
-                  TransactionState.ongoing) return true;
+          if (isTransactionInProgress) return true;
           AppState.delegate!.parseRoute(Uri.parse(url!));
         });
 
@@ -193,8 +206,8 @@ class FcmHandler extends ChangeNotifier {
     }
 
     if (title.isNotEmpty && body.isNotEmpty) {
-      Map<String, String> _map = {'title': title, 'body': body};
-      if (notifListener != null) notifListener!(_map);
+      Map<String, String> map = {'title': title, 'body': body};
+      if (notifListener != null) notifListener!(map);
     }
     return true;
   }
