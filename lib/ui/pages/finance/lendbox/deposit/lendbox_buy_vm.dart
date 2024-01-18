@@ -234,7 +234,6 @@ class LendboxBuyViewModel extends BaseViewModel
     isIntentFlow = assetOptionsModel!.data.intent;
     log("isLendboxOldUser $isLendboxOldUser");
     skipMl = isSkipMilestone;
-
     int? data = assetOptionsModel?.data.userOptions
         .firstWhere((element) => element.best,
             orElse: () => assetOptionsModel!.data.userOptions[1])

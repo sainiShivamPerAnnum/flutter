@@ -2,7 +2,7 @@
 
 Mobile Client App for Fello
 
-## Getting Started 🚀
+## Getting Started 🚀🚀
 
 This project contains 3 flavors:
 
