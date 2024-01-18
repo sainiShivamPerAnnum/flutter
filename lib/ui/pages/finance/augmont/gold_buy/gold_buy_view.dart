@@ -88,55 +88,58 @@ class _GoldBuyViewState extends State<GoldBuyView>
   Widget build(BuildContext context) {
     return Consumer<AugmontTransactionService>(
       builder: (transactionContext, txnService, _) {
-        return AnimatedContainer(
-          width: double.infinity,
-          height: _getHeight(txnService),
-          decoration: BoxDecoration(
-            color: UiConstants.kSecondaryBackgroundColor,
-            borderRadius: BorderRadius.only(
-              topLeft: Radius.circular(SizeConfig.padding16),
-              topRight: Radius.circular(SizeConfig.padding16),
-            ),
-          ),
-          duration: const Duration(milliseconds: 500),
-          child: Stack(
-            children: [
-              _getBackground(txnService),
-              PageTransitionSwitcher(
-                duration: const Duration(milliseconds: 500),
-                transitionBuilder: (
-                  child,
-                  animation,
-                  secondaryAnimation,
-                ) {
-                  return FadeThroughTransition(
-                    fillColor: Colors.transparent,
-                    animation: animation,
-                    secondaryAnimation: secondaryAnimation,
-                    child: child,
-                  );
-                },
-                child: BaseView<GoldBuyViewModel>(
-                  onModelReady: (model) => model.init(
-                    widget.amount,
-                    widget.skipMl,
-                    this,
-                    widget.gms,
-                    initialCouponCode: widget.initialCoupon,
-                    entryPoint: widget.entryPoint,
-                    quickCheckout: widget.quickCheckout,
-                  ),
-                  builder: (ctx, model, child) {
-                    if (model.state == ViewState.Busy) {
-                      return const Center(child: FullScreenLoader());
-                    }
-                    _secureScreenshots(txnService);
+        return MediaQuery.removePadding(
+          context: context,
+          removeTop: true,
+          child: Material(
+            borderRadius: BorderRadius.zero,
+            color: Colors.transparent,
+            elevation: 0,
+            shadowColor: Colors.transparent,
+            child: AnimatedContainer(
+              width: double.infinity,
+              height: _getHeight(txnService),
+              duration: const Duration(milliseconds: 500),
+              child: Stack(
+                children: [
+                  _getBackground(txnService),
+                  PageTransitionSwitcher(
+                    duration: const Duration(milliseconds: 500),
+                    transitionBuilder: (
+                      child,
+                      animation,
+                      secondaryAnimation,
+                    ) {
+                      return FadeThroughTransition(
+                        fillColor: Colors.transparent,
+                        animation: animation,
+                        secondaryAnimation: secondaryAnimation,
+                        child: child,
+                      );
+                    },
+                    child: BaseView<GoldBuyViewModel>(
+                      onModelReady: (model) => model.init(
+                        widget.amount,
+                        widget.skipMl,
+                        this,
+                        widget.gms,
+                        initialCouponCode: widget.initialCoupon,
+                        entryPoint: widget.entryPoint,
+                        quickCheckout: widget.quickCheckout,
+                      ),
+                      builder: (ctx, model, child) {
+                        if (model.state == ViewState.Busy) {
+                          return const Center(child: FullScreenLoader());
+                        }
+                        _secureScreenshots(txnService);
 
-                    return _getView(txnService, model);
-                  },
-                ),
+                        return _getView(txnService, model);
+                      },
+                    ),
+                  ),
+                ],
               ),
-            ],
+            ),
           ),
         );
       },
@@ -194,25 +197,13 @@ class _GoldBuyViewState extends State<GoldBuyView>
   Widget _getBackground(AugmontTransactionService txnService) {
     if (txnService.currentTransactionState == TransactionState.idle) {
       return Container(
-        decoration: BoxDecoration(
-          color: UiConstants.kRechargeModalSheetAmountSectionBackgroundColor,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(SizeConfig.padding16),
-            topRight: Radius.circular(SizeConfig.padding16),
-          ),
-        ),
+        color: UiConstants.kRechargeModalSheetAmountSectionBackgroundColor,
         width: double.infinity,
         height: double.infinity,
       );
     } else if (txnService.currentTransactionState == TransactionState.ongoing) {
       return Container(
-        decoration: BoxDecoration(
-          color: UiConstants.kRechargeModalSheetAmountSectionBackgroundColor,
-          borderRadius: BorderRadius.only(
-            topLeft: Radius.circular(SizeConfig.padding16),
-            topRight: Radius.circular(SizeConfig.padding16),
-          ),
-        ),
+        color: UiConstants.kRechargeModalSheetAmountSectionBackgroundColor,
         width: double.infinity,
         height: double.infinity,
       );

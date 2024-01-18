@@ -16,8 +16,8 @@ class FaqPill extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return InkWell(
-      onTap: () {
+    return IconButton(
+      onPressed: () {
         Haptic.vibrate();
         if (type == null) {
           AppState.delegate!.appState.currentAction = PageAction(
@@ -35,7 +35,7 @@ class FaqPill extends StatelessWidget {
         }
         if (addEvent != null) addEvent!();
       },
-      child: Container(
+      icon: Container(
         padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding8),
         decoration: BoxDecoration(
           border: Border.all(color: Colors.white),

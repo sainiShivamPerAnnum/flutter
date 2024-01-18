@@ -1,5 +1,9 @@
+import 'package:felloapp/core/enums/investment_type.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/sdui/sections/home_page_sections.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
+import 'package:felloapp/ui/pages/hometabs/save/save_components/asset_view_section.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
@@ -343,15 +347,17 @@ class LearnMoreSlider extends StatelessWidget {
   final AssetPrefType assetPrefOption;
 
   void _onTap() {
-    switch (assetPrefOption) {
-      case AssetPrefType.P2P:
-        AppState.delegate!.parseRoute(Uri.parse('/floDetails'));
-        break;
-      case AssetPrefType.GOLD:
-        AppState.delegate!.parseRoute(Uri.parse('/goldDetails'));
-        break;
-      default:
-    }
+    AppState.delegate!.appState.currentAction = PageAction(
+      state: PageState.addWidget,
+      page: SaveAssetsViewConfig,
+      widget: AssetSectionView(
+        showSkip: true,
+        type: switch (assetPrefOption) {
+          AssetPrefType.P2P => InvestmentType.LENDBOXP2P,
+          _ => InvestmentType.GOLDPRO,
+        },
+      ),
+    );
   }
 
   @override

@@ -1,4 +1,5 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/pin_input_custom_text_field.dart';
 import 'package:felloapp/ui/pages/login/login_components/login_image.dart';
@@ -82,17 +83,29 @@ class LoginOtpViewState extends State<LoginOtpView> {
                 SizedBox(
                   width: SizeConfig.padding12,
                 ),
-                GestureDetector(
-                  onTap: () {
-                    if (BaseUtil.showNoInternetAlert()) return;
-                    model.parentModelInstance.editPhone();
+                ListenableBuilder(
+                  listenable: model.parentModelInstance,
+                  builder: (context, child) {
+                    final isBusy =
+                        model.parentModelInstance.state == ViewState.Busy;
+                    return GestureDetector(
+                      onTap: () {
+                        if (isBusy) {
+                          return;
+                        }
+                        if (BaseUtil.showNoInternetAlert()) return;
+                        model.parentModelInstance.editPhone();
+                      },
+                      child: Text(
+                        locale.obEdit,
+                        style: TextStyles.sourceSans.body2.colour(
+                          isBusy
+                              ? UiConstants.kTextFieldTextColor
+                              : UiConstants.primaryColor,
+                        ),
+                      ),
+                    );
                   },
-                  child: Text(
-                    locale.obEdit,
-                    style: TextStyles.sourceSans.body2.colour(
-                      UiConstants.primaryColor,
-                    ),
-                  ),
                 ),
               ],
             ),

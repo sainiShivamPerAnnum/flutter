@@ -211,6 +211,8 @@ class LoginControllerViewModel extends BaseViewModel {
 
       case LoginNameInputView.index:
         {
+          FocusScope.of(_nameKey.currentState!.context)
+              .requestFocus(FocusNode());
           _analyticsService.track(eventName: "Name screen finish tapped");
 
           if (_nameKey.currentState!.model.formKey.currentState!.validate()) {

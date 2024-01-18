@@ -322,6 +322,7 @@ class BaseUtil extends ChangeNotifier {
     double? gms,
     Map<String, dynamic>? queryParams,
     String? entryPoint,
+    bool fullPager = false,
   }) {
     final coupon = queryParams?['coupon'];
     final amount = queryParams?['amount'];
@@ -362,6 +363,23 @@ class BaseUtil extends ChangeNotifier {
           isSkipMl: isSkipMl ?? false,
         ),
       );
+      return;
+    }
+
+    if (fullPager && investmentType == InvestmentType.AUGGOLD99) {
+      AppState.delegate!.appState.currentAction = PageAction(
+        page: AssetSelectionViewConfig,
+        state: PageState.addWidget,
+        widget: GoldBuyView(
+          amount: parsedAmount ?? amt,
+          initialCoupon: coupon,
+          gms: parsedGrams ?? gms,
+          skipMl: isSkipMl ?? false,
+          entryPoint: entryPoint,
+          quickCheckout: quickCheckout,
+        ),
+      );
+      return;
     }
 
     if (investmentType == InvestmentType.AUGGOLD99) {
@@ -381,6 +399,7 @@ class BaseUtil extends ChangeNotifier {
           quickCheckout: quickCheckout,
         ),
       );
+      return;
     }
   }
 
@@ -615,7 +634,7 @@ class BaseUtil extends ChangeNotifier {
     BoxConstraints? boxContraints,
     bool enableDrag = false,
   }) async {
-    if (addToScreenStack != null && addToScreenStack == true) {
+    if (addToScreenStack != null && addToScreenStack) {
       AppState.screenStack.add(ScreenItem.dialog);
     }
     d.log("Current Stack: ${AppState.screenStack}");

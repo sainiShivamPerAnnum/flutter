@@ -98,7 +98,11 @@ class LoginUserNameViewState extends State<LoginNameInputView> {
                           RegExp(r'[a-zA-Z ]'),
                         ),
                       ],
-                      onSubmit: (_) => widget.loginModel.processScreenInput(2),
+                      onSubmit: (_) {
+                        FocusScope.of(context)
+                            .requestFocus(FocusNode()); // to dismiss keyboard.
+                        widget.loginModel.processScreenInput(2);
+                      },
                       // suffix: SizedBox(),
                       validator: (value) {
                         if (value != null && value.trim().isNotEmpty) {

@@ -1048,16 +1048,19 @@ class DSLButtonResolver extends StatelessWidget {
     required this.cta,
     super.key,
     this.preResolve,
+    this.postResolve,
   });
 
   final Cta cta;
   final FutureOr<void> Function()? preResolve;
+  final FutureOr<void> Function()? postResolve;
 
   FutureOr<void> _onPressed() async {
     await preResolve?.call();
     final action = cta.action;
     if (action == null) return;
     await ActionResolver.instance.resolve(action);
+    await postResolve?.call();
   }
 
   @override

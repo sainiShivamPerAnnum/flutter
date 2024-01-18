@@ -56,12 +56,12 @@ import '../gold_components/gold_rate_graph.dart';
 class AssetSectionView extends StatefulWidget {
   const AssetSectionView({
     required this.type,
-    this.showSkipToHome = true,
+    this.showSkip = false,
     super.key,
   });
 
   final InvestmentType type;
-  final bool showSkipToHome;
+  final bool showSkip;
 
   @override
   State<AssetSectionView> createState() => _AssetSectionViewState();
@@ -418,7 +418,7 @@ class _AssetSectionViewState extends State<AssetSectionView> {
                                 type: _getFaqTypeFromAsset(widget.type),
                               ),
                             ),
-                            if (widget.showSkipToHome)
+                            if (widget.showSkip)
                               InkWell(
                                 onTap: _onSkip,
                                 child: Padding(

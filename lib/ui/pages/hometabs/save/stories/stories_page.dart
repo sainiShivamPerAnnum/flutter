@@ -33,8 +33,6 @@ class _StoriesPageState extends State<StoriesPage> {
 
   Future<void> _preResolveAction() async {
     await AppState.backButtonDispatcher!.didPopRoute();
-    await Future.delayed(
-        const Duration(milliseconds: 200)); // nasty navigation 🤷🏻
   }
 
   @override

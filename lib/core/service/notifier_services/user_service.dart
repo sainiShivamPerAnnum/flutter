@@ -767,6 +767,21 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   }
 
   Future authenticateDevice() async {
+    final hasCompletedOnboarding = PreferenceHelper.getBool(
+      PreferenceHelper.isUserOnboardingComplete,
+      def: false,
+    );
+
+    // If in local db onboarding is not marked as completed but user is
+    // authenticated then set onboarding as complete, so asset onboarding can
+    // be skipped.
+    if (!hasCompletedOnboarding && isUserOnboarded) {
+      await PreferenceHelper.setBool(
+        PreferenceHelper.isUserOnboardingComplete,
+        true,
+      );
+    }
+
     try {
       if (baseUser?.userPreferences != null &&
           baseUser?.userPreferences.getPreference(Preferences.APPLOCK) == 1) {
@@ -857,10 +872,6 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
               PageAction(state: PageState.replaceAll, page: RootPageConfig);
         }
       } else {
-        final isUserOnboardingComplete = PreferenceHelper.getBool(
-          PreferenceHelper.isUserOnboardingComplete,
-        );
-
         final ff = locator<FeatureFlagService>();
 
         final variant = ff.evaluateFeature(
@@ -873,7 +884,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
           defaultValue: '/save',
         );
 
-        if (isUserOnboardingComplete && variant == 'b') {
+        if (hasCompletedOnboarding && variant == 'b') {
           AppState.delegate!.appState.currentAction = PageAction(
             state: PageState.replaceAll,
             page: RootPageConfig,
@@ -885,6 +896,11 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
             await Future.delayed(const Duration(seconds: 1));
             AppState.delegate!.parseRoute(Uri.parse(entryScreen));
           }
+        } else if (hasCompletedOnboarding) {
+          AppState.delegate!.appState.currentAction = PageAction(
+            state: PageState.replaceAll,
+            page: RootPageConfig,
+          );
         } else {
           AppState.delegate!.appState.currentAction = PageAction(
             state: PageState.replaceAll,
@@ -894,7 +910,9 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
       }
     } catch (e) {
       return BaseUtil.showNegativeAlert(
-          locale.authFailed, locale.restartAndTry);
+        locale.authFailed,
+        locale.restartAndTry,
+      );
     }
   }
 

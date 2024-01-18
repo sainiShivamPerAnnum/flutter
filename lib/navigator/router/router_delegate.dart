@@ -840,21 +840,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     }
   }
 
-  List<Story> _getStories() {
-    final pageData = locator<PageData>();
-    final sections = pageData.screens.home.sections;
-
-    for (var i = 0; i < sections.entries.length; i++) {
-      final section = sections.entries.toList()[i].value;
-
-      if (section is StoriesSection) {
-        return section.data.stories;
-      }
-    }
-
-    return const [];
-  }
-
   void screenCheck(
     String screenKey, [
     Map<String, String> queryParams = const {},
@@ -891,11 +876,8 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         appState.currentAction = PageAction(
           state: PageState.addWidget,
           page: SaveAssetsViewConfig,
-          widget: AssetSectionView(
+          widget: const AssetSectionView(
             type: InvestmentType.AUGGOLD99,
-            showSkipToHome: bool.parse(
-              queryParams['showSkipToHome'] ?? 'true',
-            ),
           ),
         );
         break;
@@ -917,7 +899,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         appState.currentAction = PageAction(
           state: PageState.addWidget,
           page: SaveAssetsViewConfig,
-          widget: AssetSectionView(
+          widget: const AssetSectionView(
             type: InvestmentType.LENDBOXP2P,
           ),
         );
@@ -951,6 +933,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         BaseUtil().openRechargeModalSheet(
           investmentType: InvestmentType.AUGGOLD99,
           queryParams: queryParams,
+          fullPager: true,
         );
         break;
       case 'augSell':
@@ -1155,6 +1138,21 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     } else {
       BaseUtil.openGameModalSheet(game);
     }
+  }
+
+  List<Story> _getStories() {
+    final pageData = locator<PageData>();
+    final sections = pageData.screens.home.sections;
+
+    for (var i = 0; i < sections.entries.length; i++) {
+      final section = sections.entries.toList()[i].value;
+
+      if (section is StoriesSection) {
+        return section.data.stories;
+      }
+    }
+
+    return const [];
   }
 
   void openAppWalkthrough() {

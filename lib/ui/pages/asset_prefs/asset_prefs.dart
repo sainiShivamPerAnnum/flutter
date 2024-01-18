@@ -3,7 +3,7 @@ import 'package:felloapp/core/model/sdui/sections/home_page_sections.dart'
     as sections;
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/asset_prefs/asset_pref_vm.dart';
-import 'package:felloapp/ui/pages/asset_prefs/asset_selector.dart';
+import 'package:felloapp/ui/pages/asset_prefs/asset_prefs_options.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
