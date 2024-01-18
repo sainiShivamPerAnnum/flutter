@@ -51,8 +51,8 @@ class GoldProInvestmentResponseModel {
       message: map["message"] ?? "",
       createdOn: TimestampModel.fromMap(map['createdOn']),
       updatedOn: TimestampModel.fromMap(map['updatedOn']),
-      currentValue: map['current_value'],
-      payoutMessage: map['payout_message'],
+      currentValue: map['current_value'] ?? 0,
+      payoutMessage: map['payout_message'] ?? '',
       message_un_lease:
           map["message_un_lease"] ?? "Unable to un-lease at the moment",
       subText: subText,
