@@ -586,9 +586,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "kycPanUpload": MessageLookupByLibrary.simpleMessage(
             "Step 1: Upload your PAN Card"),
         "kycStep1":
-            MessageLookupByLibrary.simpleMessage("Step 1 - Upload PAN Card"),
+            MessageLookupByLibrary.simpleMessage("Step 1 - Verify Email"),
         "kycStep2":
-            MessageLookupByLibrary.simpleMessage("Step 2 - Verify Email"),
+            MessageLookupByLibrary.simpleMessage("Step 2 - Upload PAN Card"),
         "kycSuccessSubTitle": MessageLookupByLibrary.simpleMessage(
             "Your KYC verification has been successfully completed"),
         "kycSuccessTitle": MessageLookupByLibrary.simpleMessage(

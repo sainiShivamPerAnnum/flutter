@@ -1,4 +1,5 @@
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/userProfile/kyc_details/kyc_details_view.dart';
 import 'package:felloapp/ui/pages/userProfile/kyc_details/kyc_details_vm.dart';
 import 'package:felloapp/util/assets.dart';
@@ -20,98 +21,56 @@ class KycEmailHelpView extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Expanded(
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                model.isEmailVerified
-                    ? locale.KyclinkedAccount
-                    : locale.verifyEmailKyc,
-                style: TextStyles.sourceSansSB.body1
-                    .colour(UiConstants.kTextColor.withOpacity(0.8)),
+          child:
+              Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
+            Text(
+              model.isEmailVerified
+                  ? locale.KyclinkedAccount
+                  : locale.verifyEmailKyc,
+              style: TextStyles.sourceSansSB.body1
+                  .colour(UiConstants.kTextColor.withOpacity(0.8)),
+            ),
+            EmailVerificationTile(model: model),
+            SizedBox(
+              height: SizeConfig.padding18,
+            ),
+            Divider(
+              color: model.isEmailVerified
+                  ? UiConstants.kTextColor
+                  : UiConstants.kTextColor.withOpacity(0.2),
+              height: SizeConfig.padding10,
+            ),
+            Container(
+              margin: EdgeInsets.only(top: SizeConfig.padding20),
+              padding: EdgeInsets.symmetric(vertical: SizeConfig.padding14),
+              decoration: BoxDecoration(
+                color: UiConstants.kInfoBackgroundColor,
+                borderRadius: BorderRadius.circular(SizeConfig.roundness8),
               ),
-              EmailVerificationTile(model: model),
-              SizedBox(
-                height: SizeConfig.padding18,
-              ),
-              Divider(
-                color: model.isEmailVerified
-                    ? UiConstants.kTextColor
-                    : UiConstants.kTextColor.withOpacity(0.2),
-                height: SizeConfig.padding10,
-              ),
-              if (model.isEmailVerified) ...[
-                SizedBox(height: SizeConfig.padding24),
-                Center(
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.center,
-                    children: [
-                      Text(
-                        locale.kycComplete,
-                        style: TextStyles.sourceSansSB.title5
-                            .colour(UiConstants.kTextColor.withOpacity(0.8)),
-                      ),
-                      Text(
-                        locale.kycCompleteSub,
-                        style: TextStyles.sourceSansSB.body1
-                            .colour(UiConstants.kTextColor.withOpacity(0.8)),
-                      ),
-                      Padding(
-                        padding: EdgeInsets.symmetric(
-                            vertical: SizeConfig.padding46),
-                        child: Container(
-                          height: SizeConfig.padding200,
-                          width: SizeConfig.padding200,
-                          decoration: const BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: UiConstants.kArrowButtonBackgroundColor),
-                          child: Center(
-                              child: Text('🙌',
-                                  style: TextStyles.rajdhaniB.title98)),
-                        ),
-                      ),
-                      Text(
-                        locale.startInvesting,
-                        style: TextStyles.sourceSansSB.body1
-                            .colour(UiConstants.kTextColor.withOpacity(0.8)),
-                      ),
-                    ],
+              child: Row(children: [
+                Padding(
+                  padding:
+                      EdgeInsets.symmetric(horizontal: SizeConfig.padding12),
+                  child: AppImage(
+                    Assets.kycSecurity,
+                    width: SizeConfig.padding26,
                   ),
                 ),
-              ] else ...[
-                Container(
-                  margin: EdgeInsets.only(top: SizeConfig.padding16),
-                  padding: EdgeInsets.symmetric(vertical: SizeConfig.padding14),
-                  decoration: BoxDecoration(
-                    color: UiConstants.kInfoBackgroundColor,
-                    borderRadius: BorderRadius.circular(SizeConfig.roundness8),
-                  ),
-                  child: Row(children: [
-                    Padding(
-                      padding: EdgeInsets.symmetric(
-                          horizontal: SizeConfig.padding12),
-                      child: Image.asset(
-                        Assets.kycSecurity,
-                        width: SizeConfig.padding26,
-                      ),
+                Flexible(
+                  child: Padding(
+                    padding: EdgeInsets.only(right: SizeConfig.padding18),
+                    child: Text(
+                      locale.panSecurity,
+                      style: TextStyles.sourceSans.body3.colour(
+                          UiConstants.kTextFieldTextColor.withOpacity(0.8)),
                     ),
-                    Flexible(
-                      child: Padding(
-                        padding: EdgeInsets.only(right: SizeConfig.padding18),
-                        child: Text(
-                          locale.preKYC,
-                          style: TextStyles.sourceSans.body3.colour(
-                              UiConstants.kTextFieldTextColor.withOpacity(0.8)),
-                        ),
-                      ),
-                    )
-                  ]),
+                  ),
                 )
-              ]
-            ],
-          ),
+              ]),
+            )
+          ]),
         ),
-        if (!model.isEmailVerified)
+        if (!model.isEmailVerified) ...[
           Center(
             child: TextButton(
               style: TextButton.styleFrom(
@@ -127,29 +86,28 @@ class KycEmailHelpView extends StatelessWidget {
               ),
             ),
           ),
-        SizedBox(
-          height: SizeConfig.padding20,
-        ),
-        Center(
-          child: MaterialButton(
-            height: SizeConfig.padding44,
-            shape: RoundedRectangleBorder(
-                borderRadius: BorderRadius.circular(SizeConfig.roundness5)),
-            minWidth:
-                SizeConfig.screenWidth! - SizeConfig.pageHorizontalMargins * 2,
-            color: UiConstants.kTextColor,
-            onPressed: model.isEmailVerified
-                ? () => AppState.backButtonDispatcher!.didPopRoute()
-                : model.veryGmail,
-            child: Text(
-              model.isEmailVerified ? locale.donePAN : locale.kycEmailProceed,
-              style: TextStyles.rajdhaniB.body1.colour(Colors.black),
+          SizedBox(
+            height: SizeConfig.padding20,
+          ),
+          Center(
+            child: MaterialButton(
+              height: SizeConfig.padding44,
+              shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(SizeConfig.roundness5)),
+              minWidth: SizeConfig.screenWidth! -
+                  SizeConfig.pageHorizontalMargins * 2,
+              color: UiConstants.kTextColor,
+              onPressed: model.veryGmail,
+              child: Text(
+                locale.kycEmailProceed,
+                style: TextStyles.rajdhaniB.body1.colour(Colors.black),
+              ),
             ),
           ),
-        ),
-        SizedBox(
-          height: SizeConfig.padding16,
-        ),
+          SizedBox(
+            height: SizeConfig.padding16,
+          ),
+        ]
       ],
     );
   }

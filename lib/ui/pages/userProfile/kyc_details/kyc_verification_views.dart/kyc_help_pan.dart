@@ -24,95 +24,124 @@ class KycPanHelpView extends StatelessWidget {
             children: [
               switch (model.kycVerificationStatus) {
                 KycVerificationStatus.VERIFIED => const PanUploaded(),
+                KycVerificationStatus.FAILED => PanUploadFailed(
+                    errorMessage: model.kycErrorMessage ??
+                        'PAN image not verified. Attach valid PAN image',
+                    onDelete: () {
+                      model.kycVerificationStatus =
+                          KycVerificationStatus.UNVERIFIED;
+                    },
+                  ),
                 _ => const UploadPanCard(),
               },
-              Text(
-                locale.panNote,
-                style: TextStyles.sourceSansSB.body3
-                    .colour(UiConstants.kTextFieldTextColor.withOpacity(0.8)),
-              ),
-              SizedBox(
-                height: SizeConfig.padding16,
-              ),
-              Divider(
-                color: UiConstants.kTextColor.withOpacity(0.2),
-                height: SizeConfig.padding10,
-              ),
-              if (model.kycVerificationStatus == KycVerificationStatus.FAILED)
+              if (model.kycVerificationStatus !=
+                  KycVerificationStatus.VERIFIED) ...[
                 Text(
-                  model.kycErrorMessage ??
-                      'PAN image not verified. Attach valid PAN image',
-                  style: TextStyles.sourceSans.body4
-                      .colour(UiConstants.kBlogCardRandomColor1),
+                  locale.panNote,
+                  style: TextStyles.sourceSansSB.body3
+                      .colour(UiConstants.kTextFieldTextColor.withOpacity(0.8)),
                 ),
-              Container(
-                margin: EdgeInsets.only(top: SizeConfig.padding20),
-                padding: EdgeInsets.symmetric(vertical: SizeConfig.padding14),
-                decoration: BoxDecoration(
-                  color: UiConstants.kInfoBackgroundColor,
-                  borderRadius: BorderRadius.circular(SizeConfig.roundness8),
+                SizedBox(
+                  height: SizeConfig.padding16,
                 ),
-                child: Row(children: [
-                  Padding(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: SizeConfig.padding12),
-                    child: AppImage(
-                      Assets.kycSecurity,
-                      width: SizeConfig.padding26,
-                    ),
+                Divider(
+                  color: UiConstants.kTextColor.withOpacity(0.2),
+                  height: SizeConfig.padding10,
+                ),
+                Container(
+                  margin: EdgeInsets.only(top: SizeConfig.padding16),
+                  padding: EdgeInsets.symmetric(vertical: SizeConfig.padding14),
+                  decoration: BoxDecoration(
+                    color: UiConstants.kInfoBackgroundColor,
+                    borderRadius: BorderRadius.circular(SizeConfig.roundness8),
                   ),
-                  Flexible(
-                    child: Padding(
-                      padding: EdgeInsets.only(right: SizeConfig.padding18),
-                      child: Text(
-                        locale.panSecurity,
-                        style: TextStyles.sourceSans.body3.colour(
-                            UiConstants.kTextFieldTextColor.withOpacity(0.8)),
+                  child: Row(children: [
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: SizeConfig.padding12),
+                      child: Image.asset(
+                        Assets.kycSecurity,
+                        width: SizeConfig.padding26,
                       ),
                     ),
-                  )
-                ]),
-              )
+                    Flexible(
+                      child: Padding(
+                        padding: EdgeInsets.only(right: SizeConfig.padding18),
+                        child: Text(
+                          locale.preKYC,
+                          style: TextStyles.sourceSans.body3.colour(
+                              UiConstants.kTextFieldTextColor.withOpacity(0.8)),
+                        ),
+                      ),
+                    )
+                  ]),
+                ),
+              ]
             ],
           ),
         ),
         if (!model.isUpdatingKycDetails) ...[
-          Center(
-            child: TextButton(
-              style: TextButton.styleFrom(
-                  padding: EdgeInsets.zero,
-                  minimumSize: const Size(50, 30),
-                  tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                  alignment: Alignment.centerLeft),
-              onPressed: () => AppState.backButtonDispatcher!.didPopRoute(),
-              child: Text(
-                locale.skipKYC,
-                style: TextStyles.rajdhaniB.body1
-                    .colour(UiConstants.kTextFieldTextColor),
+          if (model.kycVerificationStatus != KycVerificationStatus.VERIFIED)
+            Center(
+              child: TextButton(
+                style: TextButton.styleFrom(
+                    padding: EdgeInsets.zero,
+                    minimumSize: const Size(50, 30),
+                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+                    alignment: Alignment.centerLeft),
+                onPressed: () => AppState.backButtonDispatcher!.didPopRoute(),
+                child: Text(
+                  locale.skipKYC,
+                  style: TextStyles.rajdhaniB.body1
+                      .colour(UiConstants.kTextFieldTextColor),
+                ),
               ),
             ),
-          ),
           SizedBox(
             height: SizeConfig.padding20,
           ),
-          Center(
-            child: MaterialButton(
-              height: SizeConfig.padding44,
-              shape: RoundedRectangleBorder(
-                  borderRadius: BorderRadius.circular(SizeConfig.roundness5)),
-              minWidth: SizeConfig.screenWidth! -
-                  SizeConfig.pageHorizontalMargins * 2,
-              color: UiConstants.kTextColor,
-              onPressed: model.panUploadProceed,
-              child: Text(
-                model.kycVerificationStatus == KycVerificationStatus.VERIFIED
-                    ? locale.proceed
-                    : locale.uploadPan,
-                style:
-                    TextStyles.rajdhaniB.body1.colour(UiConstants.kTextColor4),
+          if (model.kycVerificationStatus == KycVerificationStatus.FAILED)
+            Center(
+              child: MaterialButton(
+                height: SizeConfig.padding44,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(SizeConfig.roundness5)),
+                minWidth: SizeConfig.screenWidth! -
+                    SizeConfig.pageHorizontalMargins * 2,
+                color: UiConstants.kTextColor,
+                onPressed: () {
+                  model.kycVerificationStatus =
+                      KycVerificationStatus.UNVERIFIED;
+                },
+                child: Text(
+                  locale.proceed,
+                  style: TextStyles.rajdhaniB.body1
+                      .colour(UiConstants.kTextColor4),
+                ),
+              ),
+            )
+          else
+            Center(
+              child: MaterialButton(
+                height: SizeConfig.padding44,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(SizeConfig.roundness5)),
+                minWidth: SizeConfig.screenWidth! -
+                    SizeConfig.pageHorizontalMargins * 2,
+                color: UiConstants.kTextColor,
+                onPressed: model.kycVerificationStatus ==
+                        KycVerificationStatus.VERIFIED
+                    ? () => AppState.backButtonDispatcher!.didPopRoute()
+                    : model.panUploadProceed,
+                child: Text(
+                  model.kycVerificationStatus == KycVerificationStatus.VERIFIED
+                      ? locale.donePAN
+                      : locale.uploadPan,
+                  style: TextStyles.rajdhaniB.body1
+                      .colour(UiConstants.kTextColor4),
+                ),
               ),
             ),
-          ),
         ] else
           const LinearProgressIndicator(
             backgroundColor: UiConstants.kTextColor4,
@@ -132,6 +161,7 @@ class UploadPanCard extends StatelessWidget {
   Widget build(BuildContext context) {
     final locale = S.of(context);
     return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
       children: [
         Text(
           locale.kycForInvesting,
@@ -175,6 +205,9 @@ class PanUploaded extends StatelessWidget {
           locale.panUploaded,
           style: TextStyles.sourceSansSB.body1
               .colour(UiConstants.kTextFieldTextColor.withOpacity(0.8)),
+        ),
+        SizedBox(
+          height: SizeConfig.padding24,
         ),
         Container(
           width: SizeConfig.screenWidth,
@@ -223,6 +256,128 @@ class PanUploaded extends StatelessWidget {
                 ),
               ),
             ],
+          ),
+        ),
+        SizedBox(
+          height: SizeConfig.padding35,
+        ),
+        Divider(
+          color: UiConstants.kTextColor.withOpacity(0.2),
+          height: SizeConfig.padding10,
+        ),
+        SizedBox(
+          height: SizeConfig.padding24,
+        ),
+        Center(
+          child: Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              Text(
+                locale.kycComplete,
+                style: TextStyles.sourceSansSB.title5
+                    .colour(UiConstants.kTextColor.withOpacity(0.8)),
+              ),
+              Text(
+                locale.kycCompleteSub,
+                style: TextStyles.sourceSansSB.body1
+                    .colour(UiConstants.kTextColor.withOpacity(0.8)),
+              ),
+              Padding(
+                padding: EdgeInsets.symmetric(vertical: SizeConfig.padding46),
+                child: Container(
+                  height: SizeConfig.padding200,
+                  width: SizeConfig.padding200,
+                  decoration: const BoxDecoration(
+                      shape: BoxShape.circle,
+                      color: UiConstants.kArrowButtonBackgroundColor),
+                  child: Center(
+                      child: Text('🙌', style: TextStyles.rajdhaniB.title98)),
+                ),
+              ),
+              Text(
+                locale.startInvesting,
+                style: TextStyles.sourceSansSB.body1
+                    .colour(UiConstants.kTextColor.withOpacity(0.8)),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class PanUploadFailed extends StatelessWidget {
+  const PanUploadFailed(
+      {required this.errorMessage, required this.onDelete, super.key});
+  final String errorMessage;
+  final VoidCallback onDelete;
+
+  @override
+  Widget build(BuildContext context) {
+    final locale = S.of(context);
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          locale.panUploaded,
+          style: TextStyles.sourceSansSB.body1
+              .colour(UiConstants.kTextFieldTextColor.withOpacity(0.8)),
+        ),
+        Container(
+          width: SizeConfig.screenWidth,
+          padding: EdgeInsets.symmetric(
+            vertical: SizeConfig.padding20,
+          ),
+          decoration: BoxDecoration(
+            color: UiConstants.kBackgroundColor3,
+            borderRadius: BorderRadius.circular(SizeConfig.roundness8),
+          ),
+          child: Row(
+            children: [
+              Container(
+                padding: EdgeInsets.all(SizeConfig.padding12),
+                width: SizeConfig.avatarRadius * 4,
+                decoration: BoxDecoration(
+                  border: Border.all(color: UiConstants.kTextFieldTextColor),
+                  shape: BoxShape.circle,
+                  color: UiConstants.kTextColor4,
+                ),
+                child: SvgPicture.asset(
+                  Assets.ic_upload_success,
+                ),
+              ),
+              Expanded(
+                child: Text(
+                  "PAN1234.png",
+                  style: TextStyles.sourceSansSB.body2
+                      .colour(UiConstants.kTextFieldTextColor),
+                ),
+              ),
+              GestureDetector(
+                onTap: onDelete,
+                child: SvgPicture.asset(
+                  Assets.garbageBin,
+                  height: SizeConfig.padding28,
+                ),
+              ),
+              SizedBox(
+                width: SizeConfig.padding20,
+              ),
+            ],
+          ),
+        ),
+        SizedBox(
+          height: SizeConfig.padding8,
+        ),
+        Padding(
+          padding: EdgeInsets.symmetric(
+            horizontal: SizeConfig.padding20,
+          ),
+          child: Text(
+            errorMessage,
+            style: TextStyles.sourceSans.body4
+                .colour(UiConstants.kBlogCardRandomColor1),
           ),
         ),
         SizedBox(
