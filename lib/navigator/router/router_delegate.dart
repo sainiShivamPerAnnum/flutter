@@ -834,31 +834,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     }
   }
 
-  // void openStoryView(String topic) {
-  //   AppState.screenStack.add(ScreenItem.dialog);
-  //   Navigator.of(AppState.delegate!.navigatorKey.currentContext!).push(
-  //     PageRouteBuilder(
-  //       pageBuilder: (context, animation, anotherAnimation) {
-  //         return InfoStories(
-  //           topic: topic,
-  //         );
-  //       },
-  //       transitionDuration: const Duration(milliseconds: 500),
-  //       transitionsBuilder: (context, animation, anotherAnimation, child) {
-  //         animation =
-  //             CurvedAnimation(curve: Curves.easeInCubic, parent: animation);
-  //         return Align(
-  //           child: SizeTransition(
-  //             sizeFactor: animation,
-  //             child: child,
-  //             axisAlignment: 0.0,
-  //           ),
-  //         );
-  //       },
-  //     ),
-  //   );
-  // }
-
   void screenCheck(String screenKey, [Map<String, String>? queryParams]) {
     PageConfiguration? pageConfiguration;
 

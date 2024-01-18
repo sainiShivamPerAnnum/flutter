@@ -6,7 +6,7 @@ import 'package:felloapp/core/model/gold_pro_models/gold_pro_investment_reponse_
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_sell/gold_pro_sell_vm.dart';
-import 'package:felloapp/ui/pages/hometabs/save/gold_components/gold_balance_brief_row.dart';
+import 'package:felloapp/ui/pages/finance/augmont/shared/shared.dart';
 import 'package:felloapp/ui/pages/hometabs/save/gold_components/gold_pro_card.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
@@ -15,54 +15,83 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 
 class GoldProSellCard extends StatelessWidget {
-  const GoldProSellCard({required this.data, required this.model, super.key});
+  const GoldProSellCard({
+    required this.data,
+    required this.model,
+    super.key,
+  });
 
   final GoldProInvestmentResponseModel data;
   final GoldProSellViewModel model;
 
   @override
   Widget build(BuildContext context) {
+    final invested = BaseUtil.digitPrecision(data.qty, 4, false);
+    final interest = BaseUtil.digitPrecision(data.interest_collected, 4, false);
+    final total = BaseUtil.digitPrecision(
+      data.currentValue.toDouble(),
+      4,
+      false,
+    );
+    final dateOfInvestment = DateFormat('dd MMM, yyyy').format(
+      DateTime.fromMillisecondsSinceEpoch(
+        data.createdOn.millisecondsSinceEpoch,
+      ),
+    );
+
     return Container(
       margin: EdgeInsets.symmetric(
-          horizontal: SizeConfig.pageHorizontalMargins,
-          vertical: SizeConfig.padding14),
-      decoration: BoxDecoration(
-        color: UiConstants.kArrowButtonBackgroundColor,
-        borderRadius: BorderRadius.circular(SizeConfig.roundness16),
+        horizontal: SizeConfig.pageHorizontalMargins,
+        vertical: SizeConfig.padding14,
       ),
-      padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+      padding: EdgeInsets.all(
+        SizeConfig.pageHorizontalMargins,
+      ),
+      decoration: BoxDecoration(
+        color: UiConstants.grey5,
+        borderRadius: BorderRadius.circular(SizeConfig.roundness16),
+        boxShadow: [
+          BoxShadow(
+            offset: const Offset(0, 4),
+            blurRadius: 4,
+            color: Colors.black.withOpacity(.25),
+          )
+        ],
+      ),
       child: Column(children: [
-        GoldBalanceBriefRow(
-          mini: true,
-          leadTitle: "Current Gold Value",
-          leadTitleColor: Colors.grey,
-          lead: BaseUtil.digitPrecision(
-            BaseUtil.digitPrecision(data.qty, 4, false) +
-                BaseUtil.digitPrecision(data.interest_collected, 4, false),
-            4,
-          ),
-          leadSubtitleColor: UiConstants.kGoldProPrimary,
-          trailTitle: "Gold Leased",
-          trail: data.qty,
-          trailSubtitleColor: UiConstants.kGoldProPrimary,
-          trailTitleColor: Colors.grey,
-          percent: data.interest_collected,
-          isPro: true,
-          isGainInGms: true,
+        Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          children: [
+            _AmountLabelledText(
+              title: 'Gold Leased',
+              subTitle: '$invested gms',
+            ),
+            _AmountLabelledText(
+              title: 'Current Value',
+              subTitle: '$total gms',
+            ),
+          ],
         ),
-        SizedBox(height: SizeConfig.padding12),
+        if (interest != 0) ...[
+          InterestGainLabel(interestQuantity: interest),
+          SizedBox(
+            height: SizeConfig.padding12,
+          ),
+        ],
+        Divider(
+          height: SizeConfig.padding24,
+          color: Colors.white.withOpacity(.1),
+          thickness: 1,
+        ),
         Row(
           children: [
             Text(
               "Leased On",
-              style: TextStyles.sourceSans.body2
-                  .colour(UiConstants.kFAQDividerColor),
+              style: TextStyles.sourceSans.body3.colour(UiConstants.grey1),
             ),
             const Spacer(),
             Text(
-              DateFormat('dd MMM, yyyy').format(
-                  DateTime.fromMillisecondsSinceEpoch(
-                      data.createdOn.millisecondsSinceEpoch)),
+              dateOfInvestment,
               style: TextStyles.sourceSansSB.body2.colour(Colors.white),
             )
           ],
@@ -73,9 +102,10 @@ class GoldProSellCard extends StatelessWidget {
             Expanded(
               child: Text(
                 data.message,
-                style: TextStyles.body3
-                    .colour(UiConstants.KGoldProPrimaryDark)
-                    .setHeight(1.3),
+                style: TextStyles.body3.copyWith(
+                  color: UiConstants.yellow3,
+                  height: 1.3,
+                ),
               ),
             ),
             SizedBox(width: SizeConfig.pageHorizontalMargins),
@@ -90,13 +120,46 @@ class GoldProSellCard extends StatelessWidget {
                 },
                 child: Text(
                   "UN-LEASE",
-                  style: TextStyles.rajdhaniSB.body2.colour(Colors.white),
+                  style: TextStyles.rajdhaniB.body3.colour(
+                    Colors.white,
+                  ),
                 ),
               ),
             )
           ],
         )
       ]),
+    );
+  }
+}
+
+class _AmountLabelledText extends StatelessWidget {
+  final String title;
+  final String subTitle;
+
+  const _AmountLabelledText({
+    required this.title,
+    required this.subTitle,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.start,
+      children: [
+        Text(
+          title,
+          style: TextStyles.rajdhaniSB.body2.colour(
+            UiConstants.textGray70,
+          ),
+        ),
+        Text(
+          subTitle,
+          style: TextStyles.sourceSansSB.body1.colour(
+            UiConstants.yellow3,
+          ),
+        ),
+      ],
     );
   }
 }
@@ -191,19 +254,6 @@ class _GoldProSellConfirmationModalSheetState
                       ],
                     ),
                   ),
-
-                  // SizedBox(height: SizeConfig.padding4),
-                  // Text(
-                  //   "to be credited in your account on ${DateFormat('dd MMM, yyyy').format(
-                  //     DateTime.fromMillisecondsSinceEpoch(widget.data.createdOn
-                  //         .toDate()
-                  //         .add(
-                  //           Duration(days: widget.data.days),
-                  //         )
-                  //         .millisecondsSinceEpoch),
-                  //   )}",
-                  //   style: TextStyles.sourceSans.body3.colour(Colors.white70),
-                  // ),
                   SizedBox(height: SizeConfig.pageHorizontalMargins),
                   isGoldSellInProgress
                       ? Padding(
