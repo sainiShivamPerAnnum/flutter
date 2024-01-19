@@ -109,6 +109,11 @@ class MyWinningsView extends StatelessWidget {
                                           indicatorWeight: SizeConfig.padding4,
                                           labelColor: Colors.white,
                                           isScrollable: false,
+                                          onTap: (value) {
+                                            model.trackTabClicked(value == 0
+                                                ? 'Your Rewards'
+                                                : 'Earn Rewards');
+                                          },
                                           tabs: [
                                             Tab(
                                                 child: Text(
@@ -156,9 +161,11 @@ class MyWinningsView extends StatelessWidget {
                                             child: gtmodel
                                                     .allScratchCards.isNotEmpty
                                                 ? EarnRewardsDetails(
+                                                    model: model,
                                                     gtService: gtmodel,
                                                   )
                                                 : EarnRewardsIntro(
+                                                    model: model,
                                                     gtService: gtmodel,
                                                   ),
                                           )

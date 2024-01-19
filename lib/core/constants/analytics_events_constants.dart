@@ -341,4 +341,7 @@ class AnalyticsEvents {
   static const kycUploadPanClicked = 'KYC screen Upload pan clicked';
   static const kycScreenPanType = 'KYC screen upload pan type';
   static const kycScreenDone = 'KYC screen done clicked';
+  static const rewardsSectionTab = 'Reward Section';
+  static const howToEarnRewards = 'How to earn rewards cards clicked';
+  static const earnRewardsClicked = 'Earn rewards clicked';
 }
