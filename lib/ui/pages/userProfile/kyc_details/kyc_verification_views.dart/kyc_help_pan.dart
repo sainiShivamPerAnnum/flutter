@@ -90,12 +90,9 @@ class KycPanHelpView extends StatelessWidget {
                 minWidth: SizeConfig.screenWidth! -
                     SizeConfig.pageHorizontalMargins * 2,
                 color: UiConstants.kTextColor,
-                onPressed: () {
-                  model.kycVerificationStatus =
-                      KycVerificationStatus.UNVERIFIED;
-                },
+                onPressed: model.panUploadProceed,
                 child: Text(
-                  locale.proceed,
+                  locale.reupload,
                   style: TextStyles.rajdhaniB.body1
                       .colour(UiConstants.kTextColor4),
                 ),
@@ -304,6 +301,9 @@ class PanUploadFailed extends StatelessWidget {
           locale.panUploaded,
           style: TextStyles.sourceSansSB.body1
               .colour(UiConstants.kTextFieldTextColor.withOpacity(0.8)),
+        ),
+        SizedBox(
+          height: SizeConfig.padding24,
         ),
         Container(
           width: SizeConfig.screenWidth,

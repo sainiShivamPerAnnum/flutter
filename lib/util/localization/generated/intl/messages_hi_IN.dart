@@ -973,6 +973,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "resume": MessageLookupByLibrary.simpleMessage("फिर शुरू करना"),
         "resumeAutoSave":
             MessageLookupByLibrary.simpleMessage("ऑटोसेव फिर से शुरू करें"),
+        "reupload": MessageLookupByLibrary.simpleMessage("पुन: अपलोड"),
         "rewardWon": MessageLookupByLibrary.simpleMessage("इनाम जीत गया!"),
         "rewards": MessageLookupByLibrary.simpleMessage("पुरस्कार"),
         "rewardsCredited": MessageLookupByLibrary.simpleMessage(
