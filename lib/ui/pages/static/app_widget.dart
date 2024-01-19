@@ -967,7 +967,6 @@ class SecondaryButton extends StatelessWidget {
   final bool disabled;
 
   void _onTap() {
-    if (disabled) return;
     onPressed();
   }
 

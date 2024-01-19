@@ -139,8 +139,10 @@ class AssetPrefView extends StatelessWidget {
                                 EdgeInsets.only(bottom: SizeConfig.padding20),
                             child: SecondaryButton(
                               disabled: model.selectedAsset == null,
-                              onPressed: () =>
-                                  model.onProceed(prefViewData.notSure),
+                              onPressed: () => model.onProceed(
+                                prefViewData.notSure,
+                                isDisabled: model.selectedAsset == null,
+                              ),
                               label: _getButtonLabel(
                                 locale,
                                 model.selectedAsset,

@@ -162,16 +162,13 @@ class RootAppBar extends StatelessWidget {
                           child: FAppBar(
                             showAvatar: true,
                             leadingPadding: false,
-                            titleWidget:
-                                !userservice!.userSegments.contains("NEW_USER")
-                                    ? Expanded(
-                                        child: Salutation(
-                                          leftMargin: SizeConfig.padding8,
-                                          textStyle: TextStyles.rajdhaniSB.body0
-                                              .colour(Colors.white),
-                                        ),
-                                      )
-                                    : null,
+                            titleWidget: Expanded(
+                              child: Salutation(
+                                leftMargin: SizeConfig.padding8,
+                                textStyle: TextStyles.rajdhaniSB.body0
+                                    .colour(Colors.white),
+                              ),
+                            ),
                             backgroundColor: UiConstants.kBackgroundColor,
                             showCoinBar: false,
                             action: Row(

@@ -171,9 +171,16 @@ class RootViewModel extends BaseViewModel {
   }
 
   void showMarketingCampings() {
-    if (AppState.isRootAvailableForIncomingTaskExecution) {
+    final isComplete = PreferenceHelper.getBool(
+      PreferenceHelper.isUserOnboardingComplete,
+      def: false,
+    );
+
+    if (AppState.isRootAvailableForIncomingTaskExecution && isComplete) {
       Future.delayed(
-          const Duration(seconds: 2), _marketingService.getCampaigns);
+        const Duration(seconds: 2),
+        _marketingService.getCampaigns,
+      );
     }
   }
 

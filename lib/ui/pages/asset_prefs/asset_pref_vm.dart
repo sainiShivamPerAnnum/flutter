@@ -9,6 +9,7 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/pages/asset_prefs/asset_pref_bottom_sheet.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/asset_view_section.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/styles.dart';
@@ -76,14 +77,25 @@ class AssetPreferenceViewModel extends BaseViewModel {
     );
   }
 
-  Future<void> onProceed(BottomSheetComponent bottomSheetData) async {
+  Future<void> onProceed(
+    BottomSheetComponent bottomSheetData, {
+    bool isDisabled = false,
+  }) async {
+    if (isDisabled) {
+      final localization = locator<S>();
+      BaseUtil.showNegativeAlert(
+        localization.selectAssetMessage,
+        localization.tryAgainMessage,
+      );
+    }
+
     switch (selectedAsset) {
       case AssetPrefType.NONE:
         _showBottomSheet(bottomSheetData);
         break;
 
       case AssetPrefType.P2P || AssetPrefType.GOLD:
-        handleRouting(selectedAsset);
+        await handleRouting(selectedAsset);
         await PreferenceHelper.setBool(
           PreferenceHelper.isUserOnboardingComplete,
           true,

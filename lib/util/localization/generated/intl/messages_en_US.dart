@@ -1045,6 +1045,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "sctab2": MessageLookupByLibrary.simpleMessage("Earn Rewards"),
         "secureFelloTitle":
             MessageLookupByLibrary.simpleMessage("Secure Fello"),
+        "selectAssetMessage": MessageLookupByLibrary.simpleMessage(
+            "Choose any of the above asset to proceed"),
         "selectGmail":
             MessageLookupByLibrary.simpleMessage("Select an account"),
         "selectRating":
@@ -1258,6 +1260,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "transactionProgress": MessageLookupByLibrary.simpleMessage(
             "Your transaction is in progress"),
         "trustedBy": MessageLookupByLibrary.simpleMessage("Trusted by"),
+        "tryAgainMessage":
+            MessageLookupByLibrary.simpleMessage("Please try again"),
         "tryAnotherMethod": MessageLookupByLibrary.simpleMessage(
             "Please try a different method"),
         "tryLater":

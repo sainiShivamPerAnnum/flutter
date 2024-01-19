@@ -938,5 +938,7 @@
   "leaderBoardswillUpdate": "Leaderboard will be updated soon",
   "reupload": "REUPLOAD",
   "powerPlaySlog": "Predict | Save | Win",
-  "skip" : "SKIP"
+  "skip" : "SKIP",
+  "selectAssetMessage" : "Choose any of the above asset to proceed",
+  "tryAgainMessage": "Please try again"
 }

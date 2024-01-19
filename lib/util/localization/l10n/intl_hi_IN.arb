@@ -914,5 +914,7 @@
   "rewardsWon": "इनाम जीता गया",
   "leaderBoardswillUpdate": "लीडरबोर्ड जल्द ही अपडेट होगा",
   "reupload": "पुन: अपलोड",
-  "skip" : "छोड़ दें"
+  "skip" : "छोड़ दें",
+  "selectAssetMessage" : "आगे बढ़ने के लिए उपरोक्त परिसंपत्तियों में से कोई भी चुनें",
+  "tryAgainMessage": "कृपया पुन: प्रयास करें"
 }

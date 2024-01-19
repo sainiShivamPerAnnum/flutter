@@ -1037,6 +1037,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "sctab2": MessageLookupByLibrary.simpleMessage("पुरस्कार कमाएं"),
         "secureFelloTitle":
             MessageLookupByLibrary.simpleMessage("सुरक्षित फेलो"),
+        "selectAssetMessage": MessageLookupByLibrary.simpleMessage(
+            "आगे बढ़ने के लिए उपरोक्त परिसंपत्तियों में से कोई भी चुनें"),
         "selectGmail": MessageLookupByLibrary.simpleMessage("एक खाता चुनें"),
         "selectRating":
             MessageLookupByLibrary.simpleMessage("कृपया एक रेटिंग चुनें"),
@@ -1246,6 +1248,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("आपका लेन-देन हो रहा है"),
         "trustedBy":
             MessageLookupByLibrary.simpleMessage("द्वारा भरोसा किया गया"),
+        "tryAgainMessage":
+            MessageLookupByLibrary.simpleMessage("कृपया पुन: प्रयास करें"),
         "tryAnotherMethod": MessageLookupByLibrary.simpleMessage(
             "कृपया कोई दूसरा तरीका आजमाएं"),
         "tryLater": MessageLookupByLibrary.simpleMessage(

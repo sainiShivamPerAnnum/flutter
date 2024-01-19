@@ -8775,6 +8775,26 @@ class S {
       args: [],
     );
   }
+
+  /// `Choose any of the above asset to proceed`
+  String get selectAssetMessage {
+    return Intl.message(
+      'Choose any of the above asset to proceed',
+      name: 'selectAssetMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please try again`
+  String get tryAgainMessage {
+    return Intl.message(
+      'Please try again',
+      name: 'tryAgainMessage',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {
