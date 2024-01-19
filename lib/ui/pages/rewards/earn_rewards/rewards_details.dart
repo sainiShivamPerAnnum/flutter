@@ -2,7 +2,6 @@ import 'package:felloapp/core/service/notifier_services/scratch_card_service.dar
 import 'package:felloapp/feature/tambola/src/ui/widgets/ticket_cost_info.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/rewards/earn_rewards/rewards_intro.dart';
-import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
@@ -10,6 +9,7 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_svg/flutter_svg.dart';
 
 class EarnRewardsDetails extends StatelessWidget {
   const EarnRewardsDetails({required this.gtService, super.key});
@@ -93,8 +93,8 @@ class RewardsInfoCard extends StatelessWidget {
                   ),
                 ],
               ),
-              AppImage(
-                Assets.ticketsCard,
+              SvgPicture.asset(
+                Assets.tambolaCardAsset,
                 height: SizeConfig.padding52,
               ),
             ],

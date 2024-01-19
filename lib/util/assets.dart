@@ -440,7 +440,6 @@ class Assets {
   static const String kycSecurity = "assets/images/kyc_security.png";
   static const String stepCircle = "assets/svg/steps_circle.svg";
   static const String earnShadow = "assets/images/earn_shadow.png";
-  static const String ticketsCard = "assets/images/tickets.png";
   static const String noScratchCards = "assets/images/noScratchCards.png";
   static const String savingsAvatar = "assets/vectors/savings_avatar.svg";
   static const String paperPlane = "assets/svg/paper_plane.svg";
