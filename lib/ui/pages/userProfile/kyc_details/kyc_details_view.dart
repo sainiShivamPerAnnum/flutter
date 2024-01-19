@@ -235,7 +235,7 @@ class _Stepper extends StatelessWidget {
   }
 
   Color _getStep2Color(CurrentStep currentStep) {
-    return isPanVerified
+    return isPanVerified && isEmailVerified
         ? UiConstants.kTabBorderColor
         : UiConstants.kLastUpdatedTextColor;
   }

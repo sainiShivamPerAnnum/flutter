@@ -153,6 +153,7 @@ class LastWeekBg extends StatelessWidget {
                               });
 
                           await AppState.backButtonDispatcher!.didPopRoute();
+                          AppState.delegate!.parseRoute(Uri.parse('/save'));
                           AppState.delegate!.parseRoute(Uri.parse('/assetBuy'));
                         },
 

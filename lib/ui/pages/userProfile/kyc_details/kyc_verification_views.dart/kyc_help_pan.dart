@@ -81,25 +81,6 @@ class KycPanHelpView extends StatelessWidget {
           ),
         ),
         if (!model.isUpdatingKycDetails) ...[
-          if (model.kycVerificationStatus != KycVerificationStatus.VERIFIED)
-            Center(
-              child: TextButton(
-                style: TextButton.styleFrom(
-                    padding: EdgeInsets.zero,
-                    minimumSize: const Size(50, 30),
-                    tapTargetSize: MaterialTapTargetSize.shrinkWrap,
-                    alignment: Alignment.centerLeft),
-                onPressed: () => AppState.backButtonDispatcher!.didPopRoute(),
-                child: Text(
-                  locale.skipKYC,
-                  style: TextStyles.rajdhaniB.body1
-                      .colour(UiConstants.kTextFieldTextColor),
-                ),
-              ),
-            ),
-          SizedBox(
-            height: SizeConfig.padding20,
-          ),
           if (model.kycVerificationStatus == KycVerificationStatus.FAILED)
             Center(
               child: MaterialButton(

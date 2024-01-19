@@ -582,7 +582,6 @@ class LoginControllerViewModel extends BaseViewModel {
   }
 
   Future<void> editPhone() async {
-    setState(ViewState.Busy);
     unawaited(_controller!
         .animateToPage(
           LoginMobileView.index,

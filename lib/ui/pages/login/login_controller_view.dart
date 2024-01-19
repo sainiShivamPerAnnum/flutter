@@ -74,9 +74,9 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                               physics: const NeverScrollableScrollPhysics(),
                               scrollDirection: Axis.horizontal,
                               controller: model.controller,
-                              itemCount: model.pages.length,
+                              itemCount: model.pages!.length,
                               itemBuilder: (context, index) =>
-                                  model.pages[index],
+                                  model.pages![index],
                               onPageChanged: (index) =>
                                   model.currentPage = index,
                             ),
