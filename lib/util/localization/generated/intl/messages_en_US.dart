@@ -1094,6 +1094,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "Are you sure you want to sign out?"),
         "signOutFailed":
             MessageLookupByLibrary.simpleMessage("Sign out failed"),
+        "signUp": MessageLookupByLibrary.simpleMessage("SIGN-UP"),
         "signedOut": MessageLookupByLibrary.simpleMessage("Signed Out"),
         "signout": MessageLookupByLibrary.simpleMessage("Sign Out"),
         "simulatorsNotAllowed":

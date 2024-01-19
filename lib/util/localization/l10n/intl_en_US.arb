@@ -940,5 +940,6 @@
   "powerPlaySlog": "Predict | Save | Win",
   "skip" : "SKIP",
   "selectAssetMessage" : "Choose any of the above asset to proceed",
-  "tryAgainMessage": "Please try again"
+  "tryAgainMessage": "Please try again",
+  "signUp" : "SIGN-UP"
 }

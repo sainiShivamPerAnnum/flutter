@@ -354,7 +354,7 @@ class LearnMoreSlider extends StatelessWidget {
         showSkip: true,
         type: switch (assetPrefOption) {
           AssetPrefType.P2P => InvestmentType.LENDBOXP2P,
-          _ => InvestmentType.GOLDPRO,
+          _ => InvestmentType.AUGGOLD99,
         },
       ),
     );

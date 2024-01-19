@@ -1083,6 +1083,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "signOutAlert": MessageLookupByLibrary.simpleMessage(
             "क्या आप सुनिश्चित हैं कि आप प्रस्थान करना चाहते हैं?"),
         "signOutFailed": MessageLookupByLibrary.simpleMessage("साइन आउट विफल"),
+        "signUp": MessageLookupByLibrary.simpleMessage("साइन अप करें"),
         "signedOut": MessageLookupByLibrary.simpleMessage("साइन आउट"),
         "signout": MessageLookupByLibrary.simpleMessage("साइन आउट"),
         "simulatorsNotAllowed":
