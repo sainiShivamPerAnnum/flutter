@@ -337,4 +337,8 @@ class AnalyticsEvents {
   static const taskBottomSheetCTA = 'Task Bottom Sheet Action CTA';
   static const tapOtherBadges = 'Other Badge tapped in Super Fello';
   static const badgeUnlock = 'Tell Everyone Now Super Fello';
+  static const kycVerifyEmailClicked = 'KYC Screen Verify Email clicked';
+  static const kycUploadPanClicked = 'KYC screen Upload pan clicked';
+  static const kycScreenPanType = 'KYC screen upload pan type';
+  static const kycScreenDone = 'KYC screen done clicked';
 }
