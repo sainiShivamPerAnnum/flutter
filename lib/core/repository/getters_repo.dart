@@ -161,7 +161,7 @@ class GetterRepository extends BaseRepo {
     final response = await APIService.instance.getData(
       '',
       apiName: '$_getters/getPageData',
-      cBaseUrl: 'https://mocki.io/v1/37790175-4ea6-4e0b-a8e6-7445d10c512a',
+      cBaseUrl: 'https://mocki.io/v1/c0721405-4e94-478c-935b-0fb70a932b52',
     );
     try {
       final pageData = PageData.fromJson(response);
