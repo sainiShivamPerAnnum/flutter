@@ -151,9 +151,6 @@ class LastWeekBg extends StatelessWidget {
                                 "last week return Percentage":
                                     model?.user?.gainsPerc,
                               });
-
-                          await AppState.backButtonDispatcher!.didPopRoute();
-                          AppState.delegate!.parseRoute(Uri.parse('/save'));
                           AppState.delegate!.parseRoute(Uri.parse('/assetBuy'));
                         },
 
