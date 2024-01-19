@@ -89,7 +89,7 @@ class LoginUserNameViewState extends State<LoginNameInputView> {
                     child: AppTextField(
                       textEditingController: model.nameController,
                       isEnabled: model.enabled,
-                      maxLength: 256,
+                      maxLength: 15,
                       hintText: locale.obNameHint,
                       focusNode: model.nameFocusNode,
                       textCapitalization: TextCapitalization.words,
