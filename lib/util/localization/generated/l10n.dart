@@ -8685,6 +8685,16 @@ class S {
       args: [],
     );
   }
+
+  /// `REUPLOAD`
+  String get reupload {
+    return Intl.message(
+      'REUPLOAD',
+      name: 'reupload',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

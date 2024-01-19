@@ -915,5 +915,6 @@
   "earned": "Earned ",
   "ticketsMatched": "Tickets matched",
   "rewardsWon":"Reward won",
-  "leaderBoardswillUpdate": "Leaderboard will be updated soon"
+  "leaderBoardswillUpdate": "Leaderboard will be updated soon",
+  "reupload": "REUPLOAD"
 }
