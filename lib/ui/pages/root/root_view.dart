@@ -4,6 +4,7 @@ import 'package:felloapp/core/model/portfolio_model.dart';
 import 'package:felloapp/core/model/user_bootup_model.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/feature/tambola/src/models/tambola_best_tickets_model.dart';
 import 'package:felloapp/feature/tambola/tambola.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/animations/welcome_rings/welcome_rings.dart';
@@ -191,6 +192,27 @@ class RootAppBar extends StatelessWidget {
                                           userService.userPortfolio,
                                           scratchCardService
                                               .unscratchedTicketsCount),
+                                ),
+                                Selector2<UserService, TambolaService,
+                                    Tuple2<TambolaBestTicketsModel?, int>>(
+                                 selector: (p0, userService,
+                                          tambolaService) =>
+                                      Tuple2(
+                                          tambolaService.bestTickets,
+                                          tambolaService
+                                              .expiringTicketsCount),
+                                  builder: (context, value, child) =>
+                                      FelloInfoBar(
+                                    svgAsset: Assets.tambolaTicket,
+                                    size: SizeConfig.padding12,
+                                    child: "${value.item1?.data?.totalTicketCount}",
+                                    onPressed: () {
+                                      Haptic.vibrate();
+                                      AppState.delegate!
+                                          .parseRoute(Uri.parse("tambolaHome"));
+                                    },
+                                    mark: false,
+                                  ),
                                 ),
                                 Selector2<UserService, ScratchCardService,
                                     Tuple2<UserJourneyStatsModel?, int>>(

@@ -214,9 +214,6 @@ class KYCDetailsViewModel extends BaseViewModel {
   }
 
   void panUploadProceed() {
-    if (kycVerificationStatus == KycVerificationStatus.VERIFIED) {
-      setCurrentStep = CurrentStep.email;
-    } else {
       BaseUtil.openModalBottomSheet(
         isBarrierDismissible: true,
         addToScreenStack: true,
@@ -224,7 +221,6 @@ class KYCDetailsViewModel extends BaseViewModel {
           model: this,
         ),
       );
-    }
   }
 
   void verifyImage(BuildContext context) {
