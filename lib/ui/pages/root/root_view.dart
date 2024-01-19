@@ -205,7 +205,7 @@ class RootAppBar extends StatelessWidget {
                                     svgAsset: Assets.tambolaTicket,
                                     size: SizeConfig.padding12,
                                     child:
-                                        "${value.item1?.data?.totalTicketCount}",
+                                        "${value.item1?.data?.totalTicketCount ?? '0'}",
                                     onPressed: () {
                                       Haptic.vibrate();
                                       AppState.delegate!
