@@ -4,6 +4,7 @@ import 'package:felloapp/core/model/cache_model/story_model.dart';
 import 'package:felloapp/core/model/sdui/sections/home_page_sections.dart'
     as sections;
 import 'package:felloapp/core/repository/local/stories_repo.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/hometabs/save/stories/stories_page.dart';
@@ -34,13 +35,21 @@ class _StoriesSectionState extends State<StoriesSection> {
     _storiesRepo.addOrUpdateStories(widget.data.stories);
   }
 
-  void _onTapStory(int index) {
+  void _onTapStory(int index, sections.Story story) {
     AppState.delegate!.appState.currentAction = PageAction(
       state: PageState.addWidget,
       page: StoriesPageConfig,
       widget: StoriesPage(
         stories: widget.data.stories,
         entryIndex: index,
+      ),
+    );
+
+    final analytics = locator<AnalyticsService>();
+    story.events.forEach(
+      (k, v) => analytics.track(
+        eventName: k,
+        properties: v,
       ),
     );
   }
@@ -86,7 +95,7 @@ class _StoriesSectionState extends State<StoriesSection> {
                         : 0,
                   ),
                   child: InkWell(
-                    onTap: () => _onTapStory(i),
+                    onTap: () => _onTapStory(i, widget.data.stories[i]),
                     child: _StoryCard(
                       style: widget.style[widget.data.stories[i].style]!,
                       storyStatus: _storiesRepo.getStoryStatusById(

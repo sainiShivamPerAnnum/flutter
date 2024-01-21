@@ -437,7 +437,14 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
         'newUserVariant',
         defaultValue: 'a',
       );
-      final response = await _getterRepo.getPageData(variant: variant);
+
+      // Cache stories if user is new user else not.
+      // TODO(@DK070202): Remove this flag before release.
+      final response = await _getterRepo.getPageData(
+        variant: variant,
+        // shouldCacheStories: _baseUser?.segments.contains('NEW_USER') ?? false,
+      );
+
       final pageData = response.model;
       if (pageData != null) {
         if (locator.isRegistered<PageData>()) {
@@ -772,9 +779,9 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
       def: false,
     );
 
-    // If in local db onboarding is not marked as completed but user is
-    // authenticated then set onboarding as complete, so asset onboarding can
-    // be skipped.
+    // If in local db `isUserOnboardingComplete` is not marked as completed but
+    // user is authenticated then set onboarding as complete, so asset
+    // onboarding can be skipped.
     if (!hasCompletedOnboarding && isUserOnboarded) {
       await PreferenceHelper.setBool(
         PreferenceHelper.isUserOnboardingComplete,
@@ -872,39 +879,50 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
               PageAction(state: PageState.replaceAll, page: RootPageConfig);
         }
       } else {
-        final ff = locator<FeatureFlagService>();
+        final ffService = locator<FeatureFlagService>();
 
-        final variant = ff.evaluateFeature(
+        final variant = ffService.evaluateFeature(
           FeatureFlagService.newUserVariant,
-          defaultValue: 'b',
+          defaultValue: 'a',
         );
 
-        final entryScreen = ff.evaluateFeature(
-          FeatureFlagService.entryScreen,
-          defaultValue: '/save',
+        ffService.updateAttributes(
+          attributes: {
+            'newUserVariant': variant,
+            'hasCompletedOnboarding': hasCompletedOnboarding,
+          },
         );
 
-        if (hasCompletedOnboarding && variant == 'b') {
+        final newUser = baseUser?.segments.contains('NEW_USER') ?? false;
+
+        if (variant == 'b' && newUser) {
           AppState.delegate!.appState.currentAction = PageAction(
             state: PageState.replaceAll,
             page: RootPageConfig,
           );
 
-          if (entryScreen == 'MOST_INVESTED') {
-            /// TODO(@DK070202): for most invested.
+          await Future.delayed(const Duration(milliseconds: 100));
+
+          AppState.delegate!.appState.currentAction = PageAction(
+            state: PageState.addWidget,
+            page: StoriesPageConfig,
+          );
+        } else if (variant == 'a' && newUser) {
+          if (hasCompletedOnboarding) {
+            AppState.delegate!.appState.currentAction = PageAction(
+              state: PageState.replaceAll,
+              page: AssetPrefPageConfig,
+            );
           } else {
-            await Future.delayed(const Duration(seconds: 1));
-            AppState.delegate!.parseRoute(Uri.parse(entryScreen));
+            AppState.delegate!.appState.currentAction = PageAction(
+              state: PageState.replaceAll,
+              page: RootPageConfig,
+            );
           }
-        } else if (hasCompletedOnboarding) {
-          AppState.delegate!.appState.currentAction = PageAction(
-            state: PageState.replaceAll,
-            page: RootPageConfig,
-          );
         } else {
           AppState.delegate!.appState.currentAction = PageAction(
             state: PageState.replaceAll,
-            page: AssetPrefPageConfig,
+            page: RootPageConfig,
           );
         }
       }

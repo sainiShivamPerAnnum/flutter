@@ -71,9 +71,11 @@ class AssetPrefOption {
   final String title;
   final String description;
   final List<AssetOptionInfo> info;
+  final Map<String, dynamic> events;
 
   const AssetPrefOption({
     this.assetType = AssetPrefType.GOLD,
+    this.events = const {},
     this.icon = '',
     this.title = '',
     this.description = '',
@@ -255,6 +257,7 @@ class Story {
   final String style;
   final String id;
   final int order;
+  final Map<String, dynamic> events;
 
   const Story({
     this.cta = const [],
@@ -266,6 +269,7 @@ class Story {
     this.id = '',
     this.order = 0,
     this.style = 'tl3',
+    this.events = const {},
   });
 
   factory Story.fromJson(Map<String, dynamic> json) => _$StoryFromJson(json);

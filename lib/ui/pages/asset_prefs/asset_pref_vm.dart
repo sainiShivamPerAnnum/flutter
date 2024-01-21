@@ -3,6 +3,7 @@ import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/sdui/sections/home_page_sections.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -27,10 +28,15 @@ class AssetPreferenceViewModel extends BaseViewModel {
     setState(ViewState.Idle);
   }
 
-  void changeSelectedAsset(AssetPrefType assetPrefOptions) {
-    if (selectedAsset == assetPrefOptions) return;
-    selectedAsset = assetPrefOptions;
+  void changeSelectedAsset(AssetPrefOption assetPrefOptions) {
+    if (selectedAsset == assetPrefOptions.assetType) return;
+    selectedAsset = assetPrefOptions.assetType;
     notifyListeners();
+
+    final analytics = locator<AnalyticsService>();
+    assetPrefOptions.events.forEach(
+      (k, v) => analytics.track(eventName: k, properties: v),
+    );
   }
 
   Future<void> handleRouting(AssetPrefType? assetPrefOptions) async {

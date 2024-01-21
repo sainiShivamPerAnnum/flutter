@@ -157,7 +157,12 @@ class GetterRepository extends BaseRepo {
     }
   }
 
-  Future<ApiResponse<PageData>> getPageData({required String variant}) async {
+  /// Fetches the page configuration based on [variant] and caches stories if
+  /// page contains stories based on [shouldCacheStories] flag.
+  Future<ApiResponse<PageData>> getPageData({
+    required String variant,
+    bool shouldCacheStories = false,
+  }) async {
     final response = await APIService.instance.getData(
       '',
       apiName: '$_getters/getPageData',
@@ -165,7 +170,11 @@ class GetterRepository extends BaseRepo {
     );
     try {
       final pageData = PageData.fromJson(response);
-      unawaited(_downloadStories(pageData));
+
+      if (shouldCacheStories) {
+        unawaited(_downloadStories(pageData));
+      }
+
       return ApiResponse(
         code: 200,
         model: pageData,
