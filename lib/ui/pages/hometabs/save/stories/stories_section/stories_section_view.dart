@@ -9,6 +9,7 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/hometabs/save/stories/stories_page.dart';
 import 'package:felloapp/ui/pages/root/root_view.dart';
 import 'package:felloapp/ui/shared/show_case.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart' hide Action;
@@ -49,6 +50,7 @@ class _StoriesSectionState extends State<StoriesSection> {
 
   @override
   Widget build(BuildContext context) {
+    final locale = locator<S>();
     return Container(
       padding: EdgeInsets.symmetric(
         vertical: SizeConfig.padding24,
@@ -92,8 +94,8 @@ class _StoriesSectionState extends State<StoriesSection> {
                     child: i == 0
                         ? ShowCaseView(
                             title: null,
-                            description: 'this is a story',
-                            globalKey: tutorialkey5,
+                            description: locale.tutorial5,
+                            globalKey: i == 0 ? tutorialkey5 : GlobalKey(),
                             shapeBorder: const RoundedRectangleBorder(),
                             child: _StoryCard(
                               style:

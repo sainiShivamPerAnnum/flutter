@@ -579,19 +579,19 @@ class _ShowcaseState extends State<Showcase> {
             Positioned(
               top: 60,
               right: 30,
-              child: MaterialButton(
-                color: Colors.white,
+              child: TextButton(
+                // color: Colors.white,
                 onPressed: () {
                   showCaseWidgetState.skipButtonClicked();
                 },
-                padding: EdgeInsets.zero,
-                minWidth: 70,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(6)),
+                // padding: EdgeInsets.zero,
+                // minWidth: 70,
+                // shape: RoundedRectangleBorder(
+                //     borderRadius: BorderRadius.circular(6)),
                 child: const Text(
                   'SKIP',
                   style: TextStyle(
-                      color: Colors.black,
+                      color: Colors.white,
                       fontSize: 15,
                       fontWeight: FontWeight.bold),
                 ),
@@ -601,21 +601,42 @@ class _ShowcaseState extends State<Showcase> {
             Positioned(
               top: 60,
               left: 30,
-              child: MaterialButton(
-                color: Colors.white,
+              child: TextButton(
+                // color: Colors.white,
                 onPressed: () {
                   showCaseWidgetState.previous();
                 },
                 // padding: EdgeInsets.zero,
-                minWidth: 70,
-                shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(6)),
+                // minWidth: 70,
+                // shape: RoundedRectangleBorder(
+                //     borderRadius: BorderRadius.circular(6)),
                 child: const Text(
                   'PREVIOUS',
                   style: TextStyle(
-                      color: Colors.black,
+                      color: Colors.white,
                       fontSize: 15,
                       fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
+          if (showCaseWidgetState.activeWidgetId == 0)
+            const Align(
+              alignment: Alignment.bottomCenter,
+              child: Padding(
+                padding: EdgeInsets.only(bottom: 100),
+                child: DefaultTextStyle(
+                  style: TextStyle(
+                    color: Colors.white,
+                    fontSize: 16,
+                  ),
+                  child: Text(
+                    'Tap Anywhere for next',
+                    style: TextStyle(
+                      color: Colors.white,
+                      fontWeight: FontWeight.w500,
+                      fontSize: 20,
+                    ),
+                  ),
                 ),
               ),
             )

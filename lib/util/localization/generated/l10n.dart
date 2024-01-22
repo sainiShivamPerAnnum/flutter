@@ -8805,6 +8805,66 @@ class S {
       args: [],
     );
   }
+
+  /// `Hello User! Start your Rewarding Savings journey by selecting your assets over here`
+  String get tutorial1 {
+    return Intl.message(
+      'Hello User! Start your Rewarding Savings journey by selecting your assets over here',
+      name: 'tutorial1',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `For every Rs.500 saved, you get 1 weekly ticket which earns you rewards from Rs.1 to Rs. 1 Cr.`
+  String get tutorial2 {
+    return Intl.message(
+      'For every Rs.500 saved, you get 1 weekly ticket which earns you rewards from Rs.1 to Rs. 1 Cr.',
+      name: 'tutorial2',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You can see the tickets and play the weekly game in this section and earn rewards!`
+  String get tutorial3 {
+    return Intl.message(
+      'You can see the tickets and play the weekly game in this section and earn rewards!',
+      name: 'tutorial3',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You can see all your earned rewards in this Rewards section`
+  String get tutorial4 {
+    return Intl.message(
+      'You can see all your earned rewards in this Rewards section',
+      name: 'tutorial4',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `If you want to know more about Fello, check out these stories!`
+  String get tutorial5 {
+    return Intl.message(
+      'If you want to know more about Fello, check out these stories!',
+      name: 'tutorial5',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Now lets start your rewarding savings journey by selecting your asset over here`
+  String get tutorial6 {
+    return Intl.message(
+      'Now lets start your rewarding savings journey by selecting your asset over here',
+      name: 'tutorial6',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

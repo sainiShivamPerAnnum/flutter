@@ -20,6 +20,8 @@ import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
 import 'package:felloapp/ui/dialogs/user_avatars_dialog.dart';
 import 'package:felloapp/ui/elements/fello_dialog/fello_in_app_review.dart';
+import 'package:felloapp/ui/pages/root/root_controller.dart';
+import 'package:felloapp/ui/pages/root/root_view.dart';
 import 'package:felloapp/ui/pages/static/profile_image.dart';
 import 'package:felloapp/ui/pages/userProfile/my_winnings/my_winnings_view.dart';
 import 'package:felloapp/ui/service_elements/last_week/last_week_view.dart';
@@ -31,6 +33,7 @@ import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:permission_handler/permission_handler.dart';
+import 'package:showcaseview/showcaseview.dart';
 
 class MyAccountVM extends BaseViewModel {
   final UserService _userService = locator<UserService>();
@@ -160,6 +163,20 @@ class MyAccountVM extends BaseViewModel {
       isScrollControlled: true,
       content: const FelloInAppReview(),
     );
+  }
+
+  Future<void> showTutorial(BuildContext context) async {
+    Haptic.vibrate();
+    AppState.delegate!.onTapItem(RootController.saveNavBarItem);
+    // await AppState.backButtonDispatcher!.didPopRoute();
+    ShowCaseWidget.of(context).startShowCase([
+      tutorialkey1,
+      tutorialkey2,
+      tutorialkey3,
+      tutorialkey4,
+      tutorialkey5,
+      tutorialkey6
+    ]);
   }
 
   Future<void> showCustomAvatarsDialog() async {

@@ -6,6 +6,8 @@ import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/shared/show_case.dart';
 import 'package:felloapp/util/action_resolver.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart' hide Action;
 import 'package:showcaseview/showcaseview.dart';
@@ -21,6 +23,7 @@ class StepsSection extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final locale = locator<S>();
     final steps = data.steps;
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
@@ -52,21 +55,21 @@ class StepsSection extends StatelessWidget {
                     child: ShowCaseView(
                       globalKey: tutorialkey1,
                       title: null,
-                      description: 'you can start your journey from here!',
+                      description: locale.tutorial1,
                       toolTipPosition: TooltipPosition.top,
                       shapeBorder: const RoundedRectangleBorder(),
                       targetBorderRadius: BorderRadius.circular(10),
                       child: ShowCaseView(
                         globalKey: tutorialkey2,
                         title: null,
-                        description: 'get a ticket for 500 invested!',
+                        description: locale.tutorial2,
                         toolTipPosition: TooltipPosition.bottom,
                         shapeBorder: const RoundedRectangleBorder(),
                         targetBorderRadius: BorderRadius.circular(10),
                         child: ShowCaseView(
                           globalKey: tutorialkey6,
                           title: null,
-                          description: 'lets get started',
+                          description: locale.tutorial6,
                           toolTipPosition: TooltipPosition.bottom,
                           shapeBorder: const RoundedRectangleBorder(),
                           targetBorderRadius: BorderRadius.circular(10),

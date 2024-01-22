@@ -26,6 +26,7 @@ import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/lazy_load_indexed_stack.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
@@ -56,10 +57,9 @@ class _RootState extends State<Root> {
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
-      // && await AppState.isFirstAppOpen()
-      if (isNewUser) {
+      if (isNewUser && await AppState.isFirstAppOpen()) {
         Future.delayed(
-            const Duration(milliseconds: 500),
+            const Duration(seconds: 1),
             () => ShowCaseWidget.of(context).startShowCase([
                   tutorialkey1,
                   tutorialkey2,
@@ -179,6 +179,7 @@ class RootAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final locale = locator<S>();
     return PropertyChangeConsumer<UserService, UserServiceProperties>(
         properties: const [UserServiceProperties.mySegments],
         builder: (_, userservice, ___) {
@@ -217,8 +218,7 @@ class RootAppBar extends StatelessWidget {
                                 ShowCaseView(
                                   globalKey: tutorialkey4,
                                   title: null,
-                                  description:
-                                      'here you can see your golden tikets!',
+                                  description: locale.tutorial4,
                                   shapeBorder: RoundedRectangleBorder(
                                     borderRadius: BorderRadius.circular(
                                         SizeConfig.roundness12),

@@ -4,6 +4,7 @@ import 'package:felloapp/ui/pages/hometabs/home/card_actions_notifier.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/ui/pages/root/root_view.dart';
 import 'package:felloapp/ui/shared/show_case.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -19,6 +20,7 @@ class BottomNavBar extends StatelessWidget {
   Widget build(BuildContext context) {
     RootController rootController = locator<RootController>();
     final navItemsLength = rootController.navItems.values.length;
+    final locale = locator<S>();
     return Consumer<AppState>(
       builder: (ctx, superModel, child) => Selector<CardActionsNotifier, bool>(
           selector: (_, notifier) => notifier.isVerticalView,
@@ -70,7 +72,7 @@ class BottomNavBar extends StatelessWidget {
                                         superModel.onItemTapped(index),
                                     globalKey: tutorialkey3,
                                     title: null,
-                                    description: 'this is tickets section',
+                                    description: locale.tutorial3,
                                     shapeBorder: const RoundedRectangleBorder(),
                                     child: NavBarIcon(
                                       animate: false,
