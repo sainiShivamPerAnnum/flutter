@@ -2,7 +2,9 @@ import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/ui/elements/coin_bar/coin_bar_view.dart';
 import 'package:felloapp/ui/keys/keys.dart';
 import 'package:felloapp/ui/pages/login/login_components/login_support.dart';
+import 'package:felloapp/ui/pages/root/root_view.dart';
 import 'package:felloapp/ui/service_elements/user_service/profile_image.dart';
+import 'package:felloapp/ui/shared/show_case.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -59,11 +61,16 @@ class FAppBar extends StatelessWidget implements PreferredSizeWidget {
           if (showAvatar)
             Transform.translate(
               offset: Offset(0, SizeConfig.padding2),
-              child: ProfileImageSE(
-                padding: EdgeInsets.all(SizeConfig.padding6),
-                key: K.userAvatarKey,
-                radius: SizeConfig.avatarRadius * 0.9,
-                showBadge: true,
+              child: ShowCaseView(
+                globalKey: tutorialkey1,
+                title: 'hi ',
+                description: '',
+                child: ProfileImageSE(
+                  padding: EdgeInsets.all(SizeConfig.padding6),
+                  key: K.userAvatarKey,
+                  radius: SizeConfig.avatarRadius * 0.9,
+                  showBadge: true,
+                ),
               ),
             ),
           titleWidget ??

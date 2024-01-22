@@ -7,6 +7,8 @@ import 'package:felloapp/core/repository/local/stories_repo.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/hometabs/save/stories/stories_page.dart';
+import 'package:felloapp/ui/pages/root/root_view.dart';
+import 'package:felloapp/ui/shared/show_case.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart' hide Action;
@@ -87,13 +89,28 @@ class _StoriesSectionState extends State<StoriesSection> {
                   ),
                   child: InkWell(
                     onTap: () => _onTapStory(i),
-                    child: _StoryCard(
-                      style: widget.style[widget.data.stories[i].style]!,
-                      storyStatus: _storiesRepo.getStoryStatusById(
-                        widget.data.stories[i].id,
-                      ),
-                      story: widget.data.stories[i],
-                    ),
+                    child: i == 0
+                        ? ShowCaseView(
+                            title: 'this is a story ehere you see',
+                            description: '',
+                            globalKey: tutorialkey6,
+                            shapeBorder: const RoundedRectangleBorder(),
+                            child: _StoryCard(
+                              style:
+                                  widget.style[widget.data.stories[i].style]!,
+                              storyStatus: _storiesRepo.getStoryStatusById(
+                                widget.data.stories[i].id,
+                              ),
+                              story: widget.data.stories[i],
+                            ),
+                          )
+                        : _StoryCard(
+                            style: widget.style[widget.data.stories[i].style]!,
+                            storyStatus: _storiesRepo.getStoryStatusById(
+                              widget.data.stories[i].id,
+                            ),
+                            story: widget.data.stories[i],
+                          ),
                   ),
                 ),
             ],

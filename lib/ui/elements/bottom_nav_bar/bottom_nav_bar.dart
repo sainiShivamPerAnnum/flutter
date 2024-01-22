@@ -2,6 +2,8 @@ import 'package:felloapp/core/model/bottom_nav_bar_item_model.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/hometabs/home/card_actions_notifier.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
+import 'package:felloapp/ui/pages/root/root_view.dart';
+import 'package:felloapp/ui/shared/show_case.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -44,12 +46,18 @@ class BottomNavBar extends StatelessWidget {
                               key: ValueKey(navbarItems.title),
                               child: GestureDetector(
                                 onTap: () => superModel.onItemTapped(index),
-                                child: NavBarIcon(
-                                  key: ValueKey(navbarItems.title),
-                                  animate: true,
-                                  item: navbarItems,
-                                  style: TextStyles.rajdhaniSB
-                                      .colour(UiConstants.kTextColor),
+                                child: ShowCaseView(
+                                  globalKey: tutorialkey2,
+                                  title: 'this is save',
+                                  shapeBorder: const RoundedRectangleBorder(),
+                                  description: '',
+                                  child: NavBarIcon(
+                                    key: ValueKey(navbarItems.title),
+                                    animate: true,
+                                    item: navbarItems,
+                                    style: TextStyles.rajdhaniSB
+                                        .colour(UiConstants.kTextColor),
+                                  ),
                                 ),
                               ),
                             )
@@ -63,11 +71,19 @@ class BottomNavBar extends StatelessWidget {
                                   key: ValueKey(navbarItems.title),
                                   alignment: Alignment.center,
                                   color: Colors.transparent,
-                                  child: NavBarIcon(
-                                    animate: false,
-                                    item: navbarItems,
-                                    style: TextStyles.rajdhaniSB
-                                        .colour(UiConstants.kTextColor2),
+                                  child: ShowCaseView(
+                                    onTargetClick: () =>
+                                        superModel.onItemTapped(index),
+                                    globalKey: tutorialkey3,
+                                    title: 'this is tickets',
+                                    description: '',
+                                    shapeBorder: const RoundedRectangleBorder(),
+                                    child: NavBarIcon(
+                                      animate: false,
+                                      item: navbarItems,
+                                      style: TextStyles.rajdhaniSB
+                                          .colour(UiConstants.kTextColor2),
+                                    ),
                                   ),
                                 ),
                               ),

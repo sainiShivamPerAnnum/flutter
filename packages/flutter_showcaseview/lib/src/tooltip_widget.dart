@@ -443,24 +443,25 @@ class _ToolTipWidgetState extends State<ToolTipWidget>
                                                 ),
                                       ),
                                     ),
-                                  Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 6),
-                                    child: Text(
-                                      widget.description!,
-                                      textAlign: widget.descriptionAlignment,
-                                      style: widget.descTextStyle ??
-                                          Theme.of(context)
-                                              .textTheme
-                                              .titleSmall!
-                                              .merge(
-                                                TextStyle(
-                                                  fontSize: 15,
-                                                  color: widget.textColor,
+                                  if (widget.description != null)
+                                    Padding(
+                                      padding: const EdgeInsets.symmetric(
+                                          horizontal: 6),
+                                      child: Text(
+                                        widget.description!,
+                                        textAlign: widget.descriptionAlignment,
+                                        style: widget.descTextStyle ??
+                                            Theme.of(context)
+                                                .textTheme
+                                                .titleSmall!
+                                                .merge(
+                                                  TextStyle(
+                                                    fontSize: 15,
+                                                    color: widget.textColor,
+                                                  ),
                                                 ),
-                                              ),
+                                      ),
                                     ),
-                                  ),
                                   if (widget.showButton)
                                     Align(
                                       alignment: Alignment.topRight,

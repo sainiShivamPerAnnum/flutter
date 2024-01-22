@@ -547,8 +547,8 @@ class _ShowcaseState extends State<Showcase> {
           ),
         ],
         Positioned(
-          top: 40,
-          left: 20,
+          top: 60,
+          right: 30,
           child: MaterialButton(
             color: Colors.white,
             onPressed: () {

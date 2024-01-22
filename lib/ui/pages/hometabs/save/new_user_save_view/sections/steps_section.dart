@@ -1,7 +1,9 @@
 import 'package:felloapp/core/model/action.dart';
 import 'package:felloapp/core/model/sdui/sections/home_page_sections.dart'
     as sections;
+import 'package:felloapp/ui/pages/root/root_view.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
+import 'package:felloapp/ui/shared/show_case.dart';
 import 'package:felloapp/util/action_resolver.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/styles.dart';
@@ -39,16 +41,39 @@ class StepsSection extends StatelessWidget {
           child: Row(
             children: [
               for (var i = 0; i < steps.length; i++)
-                Padding(
-                  padding: EdgeInsets.only(
-                    left: i == 0 ? SizeConfig.padding20 : SizeConfig.padding16,
-                    right: i == steps.length - 1 ? SizeConfig.padding20 : 0,
+                if (i == 1 || i == 2)
+                  ShowCaseView(
+                    globalKey: i == 1 ? tutorialkey4 : tutorialkey5,
+                    title: i == 1 ? "tutorialkey4" : "tutorialkey5",
+                    description: '',
+                    shapeBorder: RoundedRectangleBorder(
+                      borderRadius: BorderRadius.circular(10),
+                    ),
+                    child: Padding(
+                      padding: EdgeInsets.only(
+                        left: i == 0
+                            ? SizeConfig.padding20
+                            : SizeConfig.padding16,
+                        right: i == steps.length - 1 ? SizeConfig.padding20 : 0,
+                      ),
+                      child: _Step(
+                        step: steps[i],
+                        style: styles[steps[i].style]!,
+                      ),
+                    ),
+                  )
+                else
+                  Padding(
+                    padding: EdgeInsets.only(
+                      left:
+                          i == 0 ? SizeConfig.padding20 : SizeConfig.padding16,
+                      right: i == steps.length - 1 ? SizeConfig.padding20 : 0,
+                    ),
+                    child: _Step(
+                      step: steps[i],
+                      style: styles[steps[i].style]!,
+                    ),
                   ),
-                  child: _Step(
-                    step: steps[i],
-                    style: styles[steps[i].style]!,
-                  ),
-                ),
             ],
           ),
         )

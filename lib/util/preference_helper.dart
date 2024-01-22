@@ -23,6 +23,7 @@ class PreferenceHelper {
   static const CACHE_LAST_DAILY_APP_BONUS_REWARD_CLAIM_DAY =
       "lastDailyAppBonusRewardClaimDay";
 
+  static const CACHE_FIRST_TIME_APP_OPEN = "CACHE_FIRST_TIME_APP_OPEN1";
   static const CACHE_SEGMENTS = "user_segments";
   static const CACHE_LAST_APP_OPEN = "lastAppOpen";
   static SharedPreferences? _prefs;

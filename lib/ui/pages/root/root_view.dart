@@ -22,6 +22,7 @@ import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/ui/shared/marquee_text.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/lazy_load_indexed_stack.dart';
 import 'package:felloapp/util/locator.dart';
@@ -29,12 +30,49 @@ import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:provider/provider.dart';
+import 'package:showcaseview/showcaseview.dart';
 import 'package:tuple/tuple.dart';
 
 GlobalKey felloAppBarKey = GlobalKey();
+GlobalKey tutorialkey1 = GlobalKey();
+GlobalKey tutorialkey2 = GlobalKey();
+GlobalKey tutorialkey3 = GlobalKey();
+GlobalKey tutorialkey4 = GlobalKey();
+GlobalKey tutorialkey5 = GlobalKey();
+GlobalKey tutorialkey6 = GlobalKey();
+GlobalKey tutorialkey7 = GlobalKey();
+GlobalKey tutorialkey8 = GlobalKey();
 
-class Root extends StatelessWidget {
+class Root extends StatefulWidget {
   const Root({super.key});
+
+  @override
+  State<Root> createState() => _RootState();
+}
+
+class _RootState extends State<Root> {
+  final isNewUser = locator<UserService>().userSegments.contains(
+        Constants.NEW_USER,
+      );
+  @override
+  void initState() {
+    WidgetsBinding.instance.addPostFrameCallback((_) async {
+      // && await AppState.isFirstAppOpen()
+      if (isNewUser) {
+        ShowCaseWidget.of(context).startShowCase([
+          tutorialkey1,
+          tutorialkey2,
+          tutorialkey3,
+          tutorialkey4,
+          tutorialkey5,
+          tutorialkey6,
+          tutorialkey7
+        ]);
+      }
+    });
+
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -162,13 +200,16 @@ class RootAppBar extends StatelessWidget {
                           child: FAppBar(
                             showAvatar: true,
                             leadingPadding: false,
-                            titleWidget: Expanded(
-                              child: Salutation(
-                                leftMargin: SizeConfig.padding8,
-                                textStyle: TextStyles.rajdhaniSB.body0
-                                    .colour(Colors.white),
-                              ),
-                            ),
+                            titleWidget:
+                                !userservice!.userSegments.contains("NEW_USER")
+                                    ? Expanded(
+                                        child: Salutation(
+                                          leftMargin: SizeConfig.padding8,
+                                          textStyle: TextStyles.rajdhaniSB.body0
+                                              .colour(Colors.white),
+                                        ),
+                                      )
+                                    : null,
                             backgroundColor: UiConstants.kBackgroundColor,
                             showCoinBar: false,
                             action: Row(
@@ -205,7 +246,7 @@ class RootAppBar extends StatelessWidget {
                                     svgAsset: Assets.tambolaTicket,
                                     size: SizeConfig.padding12,
                                     child:
-                                        "${value.item1?.data?.totalTicketCount}",
+                                        "${value.item1?.data?.totalTicketCount ?? '0'}",
                                     onPressed: () {
                                       Haptic.vibrate();
                                       AppState.delegate!
@@ -235,30 +276,7 @@ class RootAppBar extends StatelessWidget {
                                           userService.userJourneyStats,
                                           scratchCardService
                                               .unscratchedMilestoneScratchCardCount),
-                                ),
-                                if (enableJourney)
-                                  Selector2<UserService, ScratchCardService,
-                                      Tuple2<UserJourneyStatsModel?, int>>(
-                                    builder: (context, value, child) =>
-                                        FelloInfoBar(
-                                      lottieAsset: Assets.navJourneyLottie,
-                                      size: SizeConfig.padding24 -
-                                          SizeConfig.padding1,
-                                      child: "Level ${value.item1?.level ?? 0}",
-                                      onPressed: () {
-                                        Haptic.vibrate();
-                                        AppState.delegate!
-                                            .parseRoute(Uri.parse("journey"));
-                                      },
-                                      mark: value.item2 > 0,
-                                    ),
-                                    selector: (p0, userService,
-                                            scratchCardService) =>
-                                        Tuple2(
-                                            userService.userJourneyStats,
-                                            scratchCardService
-                                                .unscratchedMilestoneScratchCardCount),
-                                  )
+                                )
                               ],
                             ),
                           ),
