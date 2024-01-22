@@ -62,6 +62,8 @@ enum AssetPrefType {
   NONE;
 
   bool get isNone => this == AssetPrefType.NONE;
+  bool get isGold => this == AssetPrefType.GOLD;
+  bool get isP2P => this == AssetPrefType.P2P;
 }
 
 @_deserializable
@@ -71,9 +73,11 @@ class AssetPrefOption {
   final String title;
   final String description;
   final List<AssetOptionInfo> info;
+  final Map<String, dynamic> events;
 
   const AssetPrefOption({
     this.assetType = AssetPrefType.GOLD,
+    this.events = const {},
     this.icon = '',
     this.title = '',
     this.description = '',
@@ -176,7 +180,6 @@ sealed class HomePageSection with _$HomePageSection {
   @FreezedUnionValue('image')
   const factory HomePageSection.image(ImageSectionData data) = ImageSection;
 
-  /// TODO(@DK070202): Placeholder thing here.
   @FreezedUnionValue('nudgeCard')
   const factory HomePageSection.nudge() = NudgeSection;
 
@@ -255,6 +258,7 @@ class Story {
   final String style;
   final String id;
   final int order;
+  final Map<String, dynamic> events;
 
   const Story({
     this.cta = const [],
@@ -266,6 +270,7 @@ class Story {
     this.id = '',
     this.order = 0,
     this.style = 'tl3',
+    this.events = const {},
   });
 
   factory Story.fromJson(Map<String, dynamic> json) => _$StoryFromJson(json);

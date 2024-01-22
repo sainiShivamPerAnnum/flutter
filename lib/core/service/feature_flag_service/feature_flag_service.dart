@@ -13,16 +13,18 @@ class FeatureFlagService {
     required Map<String, dynamic> features,
   }) {
     final f = Features.fromJson(features);
-
     return FeatureFlagService._(f);
   }
 
-  T evaluateFeature<T>(String key, {required T defaultValue}) {
+  /// Evaluates the feature value based on provided [feature] key.
+  T evaluateFeature<T>(String feature, {required T defaultValue}) {
     final result =
-        _FeatureEvaluator.evaluateFeature(_attributes, _features, key);
+        _FeatureEvaluator.evaluateFeature(_attributes, _features, feature);
     return result as T? ?? defaultValue;
   }
 
+  /// Appends [attributes] in existing user attributes if the key were not in
+  /// existing attributes else update the existing attribute value with new.
   void updateAttributes({Map<String, dynamic> attributes = const {}}) {
     for (final MapEntry<String, dynamic> attr in attributes.entries) {
       if (_attributes.containsKey(attr.key)) {
@@ -41,23 +43,20 @@ class _FeatureEvaluator {
   const _FeatureEvaluator();
   static Object? evaluateFeature(
       Map<String, dynamic> attributes, Features context, String featureKey) {
-    // If we are not able to find feature on the basis of the passed featureKey
-    // then we are going to return unKnownFeature.
     final targetFeature = context.features[featureKey];
+
+    // If feature doesn't exists return null.
     if (targetFeature == null) {
       return null;
     }
 
-    // Loop through the feature rules (if any)
+    // Iterate through the rules if any rule passes return value if that rule.
     final rules = targetFeature.rules;
-
-    // Return if rules is not provided.
     if (rules.isNotEmpty) {
       for (final rule in rules) {
         if (rule.condition != null) {
           final attr = attributes;
-          if (!ConditionEvaluator.instance
-              .evaluateCondition(attr, rule.condition)) {
+          if (!ConditionEvaluator.instance.evaluate(attr, rule.condition)) {
             continue;
           }
 

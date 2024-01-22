@@ -612,7 +612,8 @@ class _SlotMachineWidgetState extends State<SlotMachineWidget>
                               PageAction(
                             page: AssetSelectionViewConfig,
                             widget: const AssetSelectionPage(
-                                isTicketsFlow: true, showOnlyFlo: false),
+                              isTicketsFlow: true,
+                            ),
                             state: PageState.addWidget,
                           );
                         },

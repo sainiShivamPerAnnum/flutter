@@ -437,7 +437,13 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
         'newUserVariant',
         defaultValue: 'a',
       );
-      final response = await _getterRepo.getPageData(variant: variant);
+
+      // Cache stories if user is new user else not.
+      final response = await _getterRepo.getPageData(
+        variant: variant,
+        shouldCacheStories: _baseUser?.segments.contains('NEW_USER') ?? false,
+      );
+
       final pageData = response.model;
       if (pageData != null) {
         if (locator.isRegistered<PageData>()) {
@@ -766,16 +772,16 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     }
   }
 
-  Future authenticateDevice() async {
-    final hasCompletedOnboarding = PreferenceHelper.getBool(
-      PreferenceHelper.isUserOnboardingComplete,
-      def: false,
-    );
+  late final _hasCompletedOnboarding = PreferenceHelper.getBool(
+    PreferenceHelper.isUserOnboardingComplete,
+    def: false,
+  );
 
-    // If in local db onboarding is not marked as completed but user is
-    // authenticated then set onboarding as complete, so asset onboarding can
-    // be skipped.
-    if (!hasCompletedOnboarding && isUserOnboarded) {
+  Future authenticateDevice() async {
+    // If in local db `isUserOnboardingComplete` is not marked as completed but
+    // user is authenticated then set onboarding as complete, so asset
+    // onboarding can be skipped.
+    if (!_hasCompletedOnboarding && isUserOnboarded) {
       await PreferenceHelper.setBool(
         PreferenceHelper.isUserOnboardingComplete,
         true,
@@ -872,41 +878,35 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
               PageAction(state: PageState.replaceAll, page: RootPageConfig);
         }
       } else {
-        final ff = locator<FeatureFlagService>();
+        final ffService = locator<FeatureFlagService>();
 
-        final variant = ff.evaluateFeature(
+        final variant = ffService.evaluateFeature(
           FeatureFlagService.newUserVariant,
-          defaultValue: 'b',
+          defaultValue: 'a',
         );
 
-        final entryScreen = ff.evaluateFeature(
+        ffService.updateAttributes(
+          attributes: {
+            'newUserVariant': variant,
+            'hasCompletedOnboarding': _hasCompletedOnboarding,
+          },
+        );
+
+        final entryScreen = ffService.evaluateFeature(
           FeatureFlagService.entryScreen,
           defaultValue: '/save',
         );
 
-        if (hasCompletedOnboarding && variant == 'b') {
-          AppState.delegate!.appState.currentAction = PageAction(
-            state: PageState.replaceAll,
-            page: RootPageConfig,
-          );
+        AppState.delegate!.appState.currentAction = PageAction(
+          state: PageState.replaceAll,
+          page: RootPageConfig,
+        );
 
-          if (entryScreen == 'MOST_INVESTED') {
-            /// TODO(@DK070202): for most invested.
-          } else {
-            await Future.delayed(const Duration(seconds: 1));
-            AppState.delegate!.parseRoute(Uri.parse(entryScreen));
-          }
-        } else if (hasCompletedOnboarding) {
-          AppState.delegate!.appState.currentAction = PageAction(
-            state: PageState.replaceAll,
-            page: RootPageConfig,
-          );
-        } else {
-          AppState.delegate!.appState.currentAction = PageAction(
-            state: PageState.replaceAll,
-            page: AssetPrefPageConfig,
-          );
-        }
+        await Future.delayed(const Duration(milliseconds: 100));
+
+        AppState.delegate!.parseRoute(
+          Uri.parse(entryScreen),
+        );
       }
     } catch (e) {
       return BaseUtil.showNegativeAlert(

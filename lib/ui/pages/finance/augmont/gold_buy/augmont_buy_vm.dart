@@ -26,6 +26,7 @@ import 'package:felloapp/core/service/payments/augmont_transaction_service.dart'
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/core/service/power_play_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/back_button_actions.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/dialogs/negative_dialog.dart';
 import 'package:felloapp/ui/modalsheets/coupon_modal_sheet.dart';
@@ -367,6 +368,7 @@ class GoldBuyViewModel extends BaseViewModel
   //BUY FLOW
   //1
   Future<void> initiateBuy() async {
+    locator<BackButtonActions>().isTransactionCancelled = false;
     if (_augTxnService.isGoldSellInProgress || couponApplyInProgress) return;
     _augTxnService.isGoldBuyInProgress = true;
     if (!await initChecks()) {

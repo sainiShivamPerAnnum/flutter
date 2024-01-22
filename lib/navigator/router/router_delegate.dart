@@ -231,6 +231,15 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
             AssetPrefPageConfig,
           );
           break;
+        case Pages.Stories:
+          appState.currentAction = PageAction(
+            state: PageState.addWidget,
+            page: StoriesPageConfig,
+            widget: StoriesPage(
+              stories: _getStories(),
+            ),
+          );
+          break;
         case Pages.Root:
           _addPageData(const Root(), RootPageConfig);
           break;

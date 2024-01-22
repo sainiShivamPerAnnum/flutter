@@ -207,23 +207,26 @@ class _SkipButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final locale = locator<S>();
-    return Row(
-      children: [
-        Text(
-          locale.skip,
-          style: TextStyles.rajdhaniB.body1.setHeight(
-            1.3,
+    return InkWell(
+      onTap: onTap,
+      child: Row(
+        children: [
+          Text(
+            locale.skip,
+            style: TextStyles.rajdhaniB.body1.setHeight(
+              1.3,
+            ),
           ),
-        ),
-        SizedBox(
-          width: SizeConfig.padding12,
-        ),
-        AppImage(
-          Assets.chevRonRightArrow,
-          height: SizeConfig.padding24,
-          color: Colors.white,
-        )
-      ],
+          SizedBox(
+            width: SizeConfig.padding12,
+          ),
+          AppImage(
+            Assets.chevRonRightArrow,
+            height: SizeConfig.padding24,
+            color: Colors.white,
+          )
+        ],
+      ),
     );
   }
 }

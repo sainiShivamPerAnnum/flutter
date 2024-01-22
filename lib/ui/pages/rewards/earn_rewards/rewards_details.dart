@@ -2,6 +2,7 @@ import 'package:felloapp/core/service/notifier_services/scratch_card_service.dar
 import 'package:felloapp/feature/tambola/src/ui/widgets/ticket_cost_info.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/rewards/earn_rewards/rewards_intro.dart';
+import 'package:felloapp/ui/pages/userProfile/my_winnings/my_winnings_vm.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
@@ -12,8 +13,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class EarnRewardsDetails extends StatelessWidget {
-  const EarnRewardsDetails({required this.gtService, super.key});
+  const EarnRewardsDetails({required this.gtService,required this.model, super.key});
   final ScratchCardService gtService;
+  final MyWinningsViewModel model;
 
   @override
   Widget build(BuildContext context) {
@@ -27,6 +29,7 @@ class EarnRewardsDetails extends StatelessWidget {
           ),
           GestureDetector(
               onTap: () {
+                model.trackEarnRewardsClicked();
                 AppState.delegate!.parseRoute(Uri.parse("tambolaHome"));
               },
               child: const RewardsInfoCard()),
@@ -35,6 +38,7 @@ class EarnRewardsDetails extends StatelessWidget {
           ),
           IntroQuickLinks(
             gtService: gtService,
+            model:  model,
           ),
         ],
       ),

@@ -1,8 +1,10 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:felloapp/core/model/rewardsquickLinks_model.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
+import 'package:felloapp/ui/pages/userProfile/my_winnings/my_winnings_vm.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -15,8 +17,10 @@ import 'package:flutter_blurhash/flutter_blurhash.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
 class EarnRewardsIntro extends StatelessWidget {
-  const EarnRewardsIntro({required this.gtService, super.key});
+  const EarnRewardsIntro(
+      {required this.gtService, required this.model, super.key});
   final ScratchCardService gtService;
+  final MyWinningsViewModel model;
 
   @override
   Widget build(BuildContext context) {
@@ -85,9 +89,7 @@ class EarnRewardsIntro extends StatelessWidget {
           SizedBox(
             height: SizeConfig.padding16,
           ),
-          IntroQuickLinks(
-            gtService: gtService,
-          ),
+          IntroQuickLinks(gtService: gtService, model: model),
         ],
       ),
     );
@@ -95,8 +97,11 @@ class EarnRewardsIntro extends StatelessWidget {
 }
 
 class IntroQuickLinks extends StatelessWidget {
-  const IntroQuickLinks({required this.gtService, super.key});
+  IntroQuickLinks({required this.gtService, required this.model, super.key});
   final ScratchCardService gtService;
+  final MyWinningsViewModel model;
+  final prizeLifetimeWin =
+      locator<UserService>().userFundWallet?.prizeLifetimeWin;
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -106,7 +111,15 @@ class IntroQuickLinks extends StatelessWidget {
             index++)
           GestureDetector(
             onTap: () {
+              final quickLink = gtService.allRewardsQuickLinks[index];
               Haptic.vibrate();
+              model.trackHowToEarnCard(
+                  quickLink.title,
+                  quickLink.subTitle,
+                  quickLink.rewardCount.toString(),
+                  quickLink.cta[0].action!.payload['url'],
+                  prizeLifetimeWin.toString(),
+                  index.toString());
               AppState.delegate!.parseRoute(Uri.parse(gtService
                   .allRewardsQuickLinks[index].cta[0].action!.payload['url']));
             },

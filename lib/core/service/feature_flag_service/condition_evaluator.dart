@@ -77,7 +77,7 @@ class ConditionEvaluator {
 
   /// Evaluates the condition based on the user attributes and provided
   /// [condition].
-  bool evaluateCondition(Map<String, dynamic> attributes, Object? condition) {
+  bool evaluate(Map<String, dynamic> attributes, Object? condition) {
     if (condition.isArray) {
       return false;
     } else {
@@ -100,7 +100,7 @@ class ConditionEvaluator {
 
       var targetItem = condition["\$not"];
       if (targetItem != null) {
-        return !evaluateCondition(attributes, targetItem);
+        return !evaluate(attributes, targetItem);
       }
 
       // Loop through the conditionObj key/value pairs
@@ -124,7 +124,7 @@ class ConditionEvaluator {
       return true;
     } else {
       for (final item in conditionObj) {
-        if (evaluateCondition(attributes, item)) {
+        if (evaluate(attributes, item)) {
           return true;
         }
       }
@@ -136,7 +136,7 @@ class ConditionEvaluator {
   /// Evaluate AND conditions against given attributes
   bool evalAnd(Map<String, dynamic> attributes, List conditionObj) {
     for (final item in conditionObj) {
-      if (!evaluateCondition(attributes, item)) {
+      if (!evaluate(attributes, item)) {
         return false;
       }
     }
@@ -281,7 +281,7 @@ class ConditionEvaluator {
         }
         // Else if evalCondition(item, condition), break out of loop and
         //return true
-        else if (evaluateCondition(item, condition)) {
+        else if (evaluate(item, condition)) {
           return true;
         }
       }

@@ -450,4 +450,34 @@ class MyWinningsViewModel extends BaseViewModel {
       BaseUtil.showNegativeAlert(locale.taskFailed, locale.unableToCapture);
     }
   }
+
+  void trackTabClicked(String tab) {
+    _analyticsService.track(
+      eventName: AnalyticsEvents.rewardsSectionTab,
+      properties: {
+        "tab": tab,
+      },
+    );
+  }
+
+  void trackHowToEarnCard(String title, String description, String count,
+      String url, String balance, String order) {
+    _analyticsService.track(
+      eventName: AnalyticsEvents.howToEarnRewards,
+      properties: {
+        "Title": title,
+        "Description": description,
+        "Tickets/Rupees": count,
+        "Action URL": url,
+        "Rewards Balance": balance,
+        "Priority order": order
+      },
+    );
+  }
+
+  void trackEarnRewardsClicked() {
+    _analyticsService.track(
+      eventName: AnalyticsEvents.earnRewardsClicked,
+    );
+  }
 }

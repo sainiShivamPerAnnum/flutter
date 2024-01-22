@@ -734,7 +734,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "obEnterDetails":
             MessageLookupByLibrary.simpleMessage("विवरण दर्ज करें"),
         "obEnterDetailsTitle": MessageLookupByLibrary.simpleMessage(
-            "आप 10% रिटर्न से एक कदम दूर हैं"),
+            "आप पुरस्कृत बचत अनुभव से एक कदम दूर हैं"),
         "obEnterMobile": MessageLookupByLibrary.simpleMessage(
             "अपना 10 अंकों का फ़ोन नंबर दर्ज करें"),
         "obEnterOTP": MessageLookupByLibrary.simpleMessage("ओटीपी दर्ज करें"),
@@ -892,7 +892,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "portalUnavailable":
             MessageLookupByLibrary.simpleMessage("पोर्टल अनुपलब्ध"),
         "preKYC": MessageLookupByLibrary.simpleMessage(
-            "अपने निवेश यात्रा को शुरू करने के लिए केवल एक कदम दूर"),
+            "आपकी लाभप्रद बचत यात्रा शुरू होने से एक कदम दूर"),
         "priceClaimTitle1": MessageLookupByLibrary.simpleMessage(
             "आपने अमेज़न उपहार वाउचर\n मूल्य जीता है"),
         "priceClaimTitle2": m12,
@@ -988,7 +988,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "resume": MessageLookupByLibrary.simpleMessage("फिर शुरू करना"),
         "resumeAutoSave":
             MessageLookupByLibrary.simpleMessage("ऑटोसेव फिर से शुरू करें"),
-        "reupload": MessageLookupByLibrary.simpleMessage("पुन: अपलोड"),
+        "reupload": MessageLookupByLibrary.simpleMessage("पुनः अपलोड करें"),
         "rewardWon": MessageLookupByLibrary.simpleMessage("इनाम जीत गया!"),
         "rewards": MessageLookupByLibrary.simpleMessage("पुरस्कार"),
         "rewardsCredited": MessageLookupByLibrary.simpleMessage(
@@ -1238,7 +1238,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("कुल रिटर्न प्राप्त"),
         "totalRewards": MessageLookupByLibrary.simpleMessage("कुल पुरस्कार"),
         "totalRewardsTilldate": MessageLookupByLibrary.simpleMessage(
-            "अब तक फेलो पर जीते गए कुल पुरस्कार-"),
+            "अब तक फेलो पर जीते गए कुल पुरस्कार"),
         "totalSavings": MessageLookupByLibrary.simpleMessage("कुल बचत"),
         "totalSavingswithFello":
             MessageLookupByLibrary.simpleMessage("फेलो के साथ कुल बचत"),

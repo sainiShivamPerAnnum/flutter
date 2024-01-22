@@ -1,10 +1,12 @@
 import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/constants/cache_keys.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/user_kyc_data_model.dart';
 import 'package:felloapp/core/repository/banking_repo.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/core/service/notifier_services/google_sign_in_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
@@ -35,6 +37,7 @@ enum CurrentStep {
 
 class KYCDetailsViewModel extends BaseViewModel {
   final _bankAndPanService = locator<BankAndPanService>();
+  final AnalyticsService _analyticsService = locator<AnalyticsService>();
   final GoogleSignInService _googleService = locator<GoogleSignInService>();
   S locale = locator<S>();
   TextEditingController? nameController, panController;
@@ -99,6 +102,7 @@ class KYCDetailsViewModel extends BaseViewModel {
 
   Future<void> imageCapture(BuildContext context) async {
     Haptic.vibrate();
+    trackSelectedPanType('Camera');
     try {
       capturedImage = await _imagePicker?.pickImage(source: ImageSource.camera);
       verifyImage(context);
@@ -146,6 +150,7 @@ class KYCDetailsViewModel extends BaseViewModel {
 
   Future<void> selectImage(BuildContext context) async {
     Haptic.vibrate();
+    trackSelectedPanType('Device');
     capturedImage = await _imagePicker?.pickImage(source: ImageSource.gallery);
     verifyImage(context);
   }
@@ -214,6 +219,7 @@ class KYCDetailsViewModel extends BaseViewModel {
   }
 
   void panUploadProceed() {
+    trackUploadPanClicked();
       BaseUtil.openModalBottomSheet(
         isBarrierDismissible: true,
         addToScreenStack: true,
@@ -294,6 +300,7 @@ class KYCDetailsViewModel extends BaseViewModel {
     if (isEmailVerified) return false;
     if (isEmailUpdating) return false;
     Haptic.vibrate();
+    trackEmailVerifyClicked();
     isEmailUpdating = true;
     final String? response = await _googleService.signInWithGoogle();
     isEmailUpdating = false;
@@ -362,5 +369,29 @@ class KYCDetailsViewModel extends BaseViewModel {
     }
     isUpdatingKycDetails = false;
     AppState.unblockNavigation();
+  }
+
+   void trackEmailVerifyClicked() {
+    _analyticsService.track(
+      eventName: AnalyticsEvents.kycVerifyEmailClicked
+    );
+  }
+   void trackUploadPanClicked() {
+    _analyticsService.track(
+      eventName: AnalyticsEvents.kycUploadPanClicked,
+    );
+  }
+   void trackSelectedPanType(String mode) {
+    _analyticsService.track(
+      eventName: AnalyticsEvents.kycScreenPanType,
+      properties: {
+        "mode": mode,
+      },
+    );
+  }
+  void trackKycDoneClicked() {
+    _analyticsService.track(
+      eventName: AnalyticsEvents.kycScreenDone,
+    );
   }
 }

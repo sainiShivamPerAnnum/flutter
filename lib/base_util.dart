@@ -358,7 +358,7 @@ class BaseUtil extends ChangeNotifier {
         page: AssetSelectionViewConfig,
         state: PageState.addWidget,
         widget: AssetSelectionPage(
-          showOnlyFlo: true,
+          showGold: false,
           amount: amt,
           isSkipMl: isSkipMl ?? false,
         ),
@@ -576,7 +576,6 @@ class BaseUtil extends ChangeNotifier {
           page: AssetSelectionViewConfig,
           state: PageState.addWidget,
           widget: AssetSelectionPage(
-            showOnlyFlo: false,
             amount: amount,
             isSkipMl: isSkipMl,
           ),

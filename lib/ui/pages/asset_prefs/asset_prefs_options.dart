@@ -7,6 +7,7 @@ import 'package:felloapp/ui/pages/hometabs/save/save_components/asset_view_secti
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 
@@ -23,7 +24,7 @@ class AssetOptionWidget extends StatefulWidget {
   });
 
   final AssetPrefOption assetPrefOption;
-  final ValueChanged<AssetPrefType> onSelect;
+  final ValueChanged<AssetPrefOption> onSelect;
   final bool Function(AssetPrefType) isSelected;
   final bool hideNoteSureOption;
 
@@ -40,7 +41,7 @@ class _AssetOptionWidgetState extends State<AssetOptionWidget>
     }
     final isSelected = widget.isSelected(widget.assetPrefOption.assetType);
     return InkWell(
-      onTap: () => widget.onSelect(widget.assetPrefOption.assetType),
+      onTap: () => widget.onSelect(widget.assetPrefOption),
       child: Column(
         children: [
           Row(
@@ -347,11 +348,16 @@ class LearnMoreSlider extends StatelessWidget {
   final AssetPrefType assetPrefOption;
 
   void _onTap() {
+    final isComplete = PreferenceHelper.getBool(
+      PreferenceHelper.isUserOnboardingComplete,
+      def: false,
+    );
+
     AppState.delegate!.appState.currentAction = PageAction(
       state: PageState.addWidget,
       page: SaveAssetsViewConfig,
       widget: AssetSectionView(
-        showSkip: true,
+        showSkip: !isComplete,
         type: switch (assetPrefOption) {
           AssetPrefType.P2P => InvestmentType.LENDBOXP2P,
           _ => InvestmentType.AUGGOLD99,
