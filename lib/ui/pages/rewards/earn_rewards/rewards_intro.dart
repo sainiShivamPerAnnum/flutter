@@ -97,8 +97,7 @@ class EarnRewardsIntro extends StatelessWidget {
 }
 
 class IntroQuickLinks extends StatelessWidget {
-  IntroQuickLinks(
-      {required this.gtService, required this.model, super.key});
+  IntroQuickLinks({required this.gtService, required this.model, super.key});
   final ScratchCardService gtService;
   final MyWinningsViewModel model;
   final prizeLifetimeWin =
@@ -112,13 +111,13 @@ class IntroQuickLinks extends StatelessWidget {
             index++)
           GestureDetector(
             onTap: () {
+              final quickLink = gtService.allRewardsQuickLinks[index];
               Haptic.vibrate();
               model.trackHowToEarnCard(
-                  gtService.allRewardsQuickLinks[index].title,
-                  gtService.allRewardsQuickLinks[index].subTitle,
-                  gtService.allRewardsQuickLinks[index].rewardCount.toString(),
-                  gtService.allRewardsQuickLinks[index].cta[0].action!
-                      .payload['url'],
+                  quickLink.title,
+                  quickLink.subTitle,
+                  quickLink.rewardCount.toString(),
+                  quickLink.cta[0].action!.payload['url'],
                   prizeLifetimeWin.toString(),
                   index.toString());
               AppState.delegate!.parseRoute(Uri.parse(gtService

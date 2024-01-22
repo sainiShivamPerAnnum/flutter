@@ -110,7 +110,7 @@ class KycPanHelpView extends StatelessWidget {
                 onPressed: model.kycVerificationStatus ==
                         KycVerificationStatus.VERIFIED
                     ? () => {
-                          model.trackKycDoneClicked,
+                          model.trackKycDoneClicked(),
                           AppState.backButtonDispatcher!.didPopRoute(),
                         }
                     : model.panUploadProceed,
