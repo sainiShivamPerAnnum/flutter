@@ -24,22 +24,9 @@ class ShowCaseView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Showcase(
-      // container: Container(
-      //   child: Text(title),
-      // ),
-      // height: 140,
-      // width: 140,
-      //showArrow: true,
-      // disposeOnTap: false,
-      // onTargetClick: () {},
       targetBorderRadius: targetBorderRadius,
       title: title,
       tooltipPosition: toolTipPosition,
-      // disableDefaultTargetGestures: false,
-      // onTargetClick: onTargetClick ?? () {},
-      // onBarrierClick: () {
-
-      // },
       descriptionAlignment: TextAlign.start,
       scrollLoadingWidget: const SizedBox.shrink(),
       description: description,
