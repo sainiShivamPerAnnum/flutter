@@ -83,9 +83,12 @@ class ShowCaseWidget extends StatefulWidget {
   /// Enable/disable showcase globally. Enabled by default.
   final bool enableShowcase;
 
+  final VoidCallback? onSkipButtonClicked;
+
   const ShowCaseWidget({
     required this.builder,
     this.onFinish,
+    this.onSkipButtonClicked,
     this.onStart,
     this.onComplete,
     this.autoPlay = false,
@@ -194,6 +197,12 @@ class ShowCaseWidgetState extends State<ShowCaseWidget> {
         }
       });
     }
+  }
+
+  void skipButtonClicked() {
+    widget.onSkipButtonClicked?.call();
+    widget.onFinish?.call();
+    dismiss();
   }
 
   /// Completes current active showcase and starts previous one

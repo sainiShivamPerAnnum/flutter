@@ -574,6 +574,51 @@ class _ShowcaseState extends State<Showcase> {
             titleTextDirection: widget.titleTextDirection,
             descriptionTextDirection: widget.descriptionTextDirection,
           ),
+          if (showCaseWidgetState.activeWidgetId !=
+              showCaseWidgetState.ids!.length - 1)
+            Positioned(
+              top: 60,
+              right: 30,
+              child: MaterialButton(
+                color: Colors.white,
+                onPressed: () {
+                  showCaseWidgetState.skipButtonClicked();
+                },
+                padding: EdgeInsets.zero,
+                minWidth: 70,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(6)),
+                child: const Text(
+                  'SKIP',
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
+          if (showCaseWidgetState.activeWidgetId != 0)
+            Positioned(
+              top: 60,
+              left: 30,
+              child: MaterialButton(
+                color: Colors.white,
+                onPressed: () {
+                  showCaseWidgetState.previous();
+                },
+                // padding: EdgeInsets.zero,
+                minWidth: 70,
+                shape: RoundedRectangleBorder(
+                    borderRadius: BorderRadius.circular(6)),
+                child: const Text(
+                  'PREVIOUS',
+                  style: TextStyle(
+                      color: Colors.black,
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold),
+                ),
+              ),
+            )
         ],
       ],
     );

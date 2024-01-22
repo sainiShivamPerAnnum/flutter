@@ -21,6 +21,7 @@ import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/ui/pages/root/root_vm.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/ui/shared/marquee_text.dart';
+import 'package:felloapp/ui/shared/show_case.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/haptic.dart';
@@ -40,8 +41,6 @@ GlobalKey tutorialkey3 = GlobalKey();
 GlobalKey tutorialkey4 = GlobalKey();
 GlobalKey tutorialkey5 = GlobalKey();
 GlobalKey tutorialkey6 = GlobalKey();
-GlobalKey tutorialkey7 = GlobalKey();
-GlobalKey tutorialkey8 = GlobalKey();
 
 class Root extends StatefulWidget {
   const Root({super.key});
@@ -59,15 +58,16 @@ class _RootState extends State<Root> {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       // && await AppState.isFirstAppOpen()
       if (isNewUser) {
-        ShowCaseWidget.of(context).startShowCase([
-          tutorialkey1,
-          tutorialkey2,
-          tutorialkey3,
-          tutorialkey4,
-          tutorialkey5,
-          tutorialkey6,
-          tutorialkey7
-        ]);
+        Future.delayed(
+            const Duration(milliseconds: 500),
+            () => ShowCaseWidget.of(context).startShowCase([
+                  tutorialkey1,
+                  tutorialkey2,
+                  tutorialkey3,
+                  tutorialkey4,
+                  tutorialkey5,
+                  tutorialkey6
+                ]));
       }
     });
 
@@ -214,27 +214,39 @@ class RootAppBar extends StatelessWidget {
                             showCoinBar: false,
                             action: Row(
                               children: [
-                                Selector2<UserService, ScratchCardService,
-                                    Tuple2<Portfolio?, int>>(
-                                  builder: (context, value, child) =>
-                                      FelloInfoBar(
-                                    svgAsset: Assets.scratchCard,
-                                    size: SizeConfig.padding16,
-                                    child:
-                                        "₹${value.item1?.rewards.toInt() ?? 0}",
-                                    onPressed: () {
-                                      Haptic.vibrate();
-                                      AppState.delegate!
-                                          .parseRoute(Uri.parse("myWinnings"));
-                                    },
-                                    mark: value.item2 > 0,
+                                ShowCaseView(
+                                  globalKey: tutorialkey4,
+                                  title: null,
+                                  description:
+                                      'here you can see your golden tikets!',
+                                  shapeBorder: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(
+                                        SizeConfig.roundness12),
                                   ),
-                                  selector: (p0, userService,
-                                          scratchCardService) =>
-                                      Tuple2(
-                                          userService.userPortfolio,
-                                          scratchCardService
-                                              .unscratchedTicketsCount),
+                                  child: Selector2<
+                                      UserService,
+                                      ScratchCardService,
+                                      Tuple2<Portfolio?, int>>(
+                                    builder: (context, value, child) =>
+                                        FelloInfoBar(
+                                      svgAsset: Assets.scratchCard,
+                                      size: SizeConfig.padding16,
+                                      child:
+                                          "₹${value.item1?.rewards.toInt() ?? 0}",
+                                      onPressed: () {
+                                        Haptic.vibrate();
+                                        AppState.delegate!.parseRoute(
+                                            Uri.parse("myWinnings"));
+                                      },
+                                      mark: value.item2 > 0,
+                                    ),
+                                    selector:
+                                        (p0, userService, scratchCardService) =>
+                                            Tuple2(
+                                                userService.userPortfolio,
+                                                scratchCardService
+                                                    .unscratchedTicketsCount),
+                                  ),
                                 ),
                                 Selector2<UserService, TambolaService,
                                     Tuple2<TambolaBestTicketsModel?, int>>(

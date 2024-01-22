@@ -8,6 +8,7 @@ import 'package:felloapp/util/action_resolver.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart' hide Action;
+import 'package:showcaseview/showcaseview.dart';
 
 class StepsSection extends StatelessWidget {
   const StepsSection({
@@ -41,24 +42,39 @@ class StepsSection extends StatelessWidget {
           child: Row(
             children: [
               for (var i = 0; i < steps.length; i++)
-                if (i == 1 || i == 2)
-                  ShowCaseView(
-                    globalKey: i == 1 ? tutorialkey4 : tutorialkey5,
-                    title: i == 1 ? "tutorialkey4" : "tutorialkey5",
-                    description: '',
-                    shapeBorder: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(10),
+                if (i == 0)
+                  Padding(
+                    padding: EdgeInsets.only(
+                      left:
+                          i == 0 ? SizeConfig.padding20 : SizeConfig.padding16,
+                      right: i == steps.length - 1 ? SizeConfig.padding20 : 0,
                     ),
-                    child: Padding(
-                      padding: EdgeInsets.only(
-                        left: i == 0
-                            ? SizeConfig.padding20
-                            : SizeConfig.padding16,
-                        right: i == steps.length - 1 ? SizeConfig.padding20 : 0,
-                      ),
-                      child: _Step(
-                        step: steps[i],
-                        style: styles[steps[i].style]!,
+                    child: ShowCaseView(
+                      globalKey: tutorialkey1,
+                      title: null,
+                      description: 'you can start your journey from here!',
+                      toolTipPosition: TooltipPosition.top,
+                      shapeBorder: const RoundedRectangleBorder(),
+                      targetBorderRadius: BorderRadius.circular(10),
+                      child: ShowCaseView(
+                        globalKey: tutorialkey2,
+                        title: null,
+                        description: 'get a ticket for 500 invested!',
+                        toolTipPosition: TooltipPosition.bottom,
+                        shapeBorder: const RoundedRectangleBorder(),
+                        targetBorderRadius: BorderRadius.circular(10),
+                        child: ShowCaseView(
+                          globalKey: tutorialkey6,
+                          title: null,
+                          description: 'lets get started',
+                          toolTipPosition: TooltipPosition.bottom,
+                          shapeBorder: const RoundedRectangleBorder(),
+                          targetBorderRadius: BorderRadius.circular(10),
+                          child: _Step(
+                            step: steps[i],
+                            style: styles[steps[i].style]!,
+                          ),
+                        ),
                       ),
                     ),
                   )

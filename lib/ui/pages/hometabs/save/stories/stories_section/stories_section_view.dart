@@ -91,9 +91,9 @@ class _StoriesSectionState extends State<StoriesSection> {
                     onTap: () => _onTapStory(i),
                     child: i == 0
                         ? ShowCaseView(
-                            title: 'this is a story ehere you see',
-                            description: '',
-                            globalKey: tutorialkey6,
+                            title: null,
+                            description: 'this is a story',
+                            globalKey: tutorialkey5,
                             shapeBorder: const RoundedRectangleBorder(),
                             child: _StoryCard(
                               style:

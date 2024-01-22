@@ -4,17 +4,21 @@ import 'package:showcaseview/showcaseview.dart';
 class ShowCaseView extends StatelessWidget {
   const ShowCaseView(
       {required this.globalKey,
-      required this.title,
       required this.description,
       required this.child,
+      this.title,
       this.shapeBorder = const CircleBorder(),
       this.onTargetClick,
+      this.toolTipPosition,
+      this.targetBorderRadius,
       super.key});
   final GlobalKey globalKey;
-  final String title;
+  final String? title;
   final String description;
   final Widget child;
   final ShapeBorder shapeBorder;
+  final BorderRadius? targetBorderRadius;
+  final TooltipPosition? toolTipPosition;
   final VoidCallback? onTargetClick;
 
   @override
@@ -26,18 +30,19 @@ class ShowCaseView extends StatelessWidget {
       // height: 140,
       // width: 140,
       //showArrow: true,
-      disposeOnTap: false,
+      // disposeOnTap: false,
       // onTargetClick: () {},
-      title: null,
+      targetBorderRadius: targetBorderRadius,
+      title: title,
+      tooltipPosition: toolTipPosition,
       // disableDefaultTargetGestures: false,
-      onTargetClick: onTargetClick ?? () {},
+      // onTargetClick: onTargetClick ?? () {},
       // onBarrierClick: () {
 
       // },
       descriptionAlignment: TextAlign.start,
       scrollLoadingWidget: const SizedBox.shrink(),
-      description:
-          "Sit cupidatat cupidatat qui eu velit aliquip elit consectetur irure cillum nulla. Dolore elit id ut laborum excepteur commodo sit fugiat cupidatat aute exercitation labore ut. Ex ipsum amet officia adipisicing.",
+      description: description,
       key: globalKey,
       targetShapeBorder: shapeBorder,
       child: child,

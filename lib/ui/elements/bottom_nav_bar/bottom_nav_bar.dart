@@ -46,18 +46,12 @@ class BottomNavBar extends StatelessWidget {
                               key: ValueKey(navbarItems.title),
                               child: GestureDetector(
                                 onTap: () => superModel.onItemTapped(index),
-                                child: ShowCaseView(
-                                  globalKey: tutorialkey2,
-                                  title: 'this is save',
-                                  shapeBorder: const RoundedRectangleBorder(),
-                                  description: '',
-                                  child: NavBarIcon(
-                                    key: ValueKey(navbarItems.title),
-                                    animate: true,
-                                    item: navbarItems,
-                                    style: TextStyles.rajdhaniSB
-                                        .colour(UiConstants.kTextColor),
-                                  ),
+                                child: NavBarIcon(
+                                  key: ValueKey(navbarItems.title),
+                                  animate: true,
+                                  item: navbarItems,
+                                  style: TextStyles.rajdhaniSB
+                                      .colour(UiConstants.kTextColor),
                                 ),
                               ),
                             )
@@ -75,8 +69,8 @@ class BottomNavBar extends StatelessWidget {
                                     onTargetClick: () =>
                                         superModel.onItemTapped(index),
                                     globalKey: tutorialkey3,
-                                    title: 'this is tickets',
-                                    description: '',
+                                    title: null,
+                                    description: 'this is tickets section',
                                     shapeBorder: const RoundedRectangleBorder(),
                                     child: NavBarIcon(
                                       animate: false,
