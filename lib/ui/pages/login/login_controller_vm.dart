@@ -25,6 +25,7 @@ import 'package:felloapp/core/service/referral_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
+import 'package:felloapp/ui/pages/hometabs/save/stories/stories_page.dart';
 import 'package:felloapp/ui/pages/login/login_controller_view.dart';
 import 'package:felloapp/ui/pages/login/screens/mobile_input/mobile_input_view.dart';
 import 'package:felloapp/ui/pages/login/screens/name_input/name_input_view.dart';
@@ -44,6 +45,8 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:sms_autofill/sms_autofill.dart';
 import 'package:truecaller_sdk/truecaller_sdk.dart';
+
+import '../../../core/model/sdui/sections/home_page_sections.dart';
 
 enum LoginSource { FIREBASE, TRUECALLER }
 
@@ -75,7 +78,6 @@ class LoginControllerViewModel extends BaseViewModel {
 
 //Private Variables
   bool _isSignup = false;
-  bool _isNewUserOnboardingComplete = false;
   bool _loginUsingTrueCaller = false;
 
   bool get loginUsingTrueCaller => _loginUsingTrueCaller;
@@ -583,11 +585,37 @@ class LoginControllerViewModel extends BaseViewModel {
       );
     }
 
+    if (_isSignup && variant == 'b') {
+      await Future.delayed(const Duration(milliseconds: 100));
+      appStateProvider.currentAction = PageAction(
+        state: PageState.addWidget,
+        page: StoriesPageConfig,
+        widget: StoriesPage(
+          stories: _getStories(),
+        ),
+      );
+    }
+
     BaseUtil.showPositiveAlert(
       'Sign In Complete',
       'Welcome to ${Constants.APP_NAME}, ${userService.baseUser!.name}',
     );
     //process complete
+  }
+
+  List<Story> _getStories() {
+    final pageData = locator<PageData>();
+    final sections = pageData.screens.home.sections;
+
+    for (var i = 0; i < sections.entries.length; i++) {
+      final section = sections.entries.toList()[i].value;
+
+      if (section is StoriesSection) {
+        return section.data.stories;
+      }
+    }
+
+    return const [];
   }
 
   Future<void> editPhone() async {

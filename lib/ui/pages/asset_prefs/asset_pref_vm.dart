@@ -1,5 +1,4 @@
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/sdui/sections/home_page_sections.dart';
@@ -9,7 +8,7 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/pages/asset_prefs/asset_pref_bottom_sheet.dart';
-import 'package:felloapp/ui/pages/hometabs/save/save_components/asset_view_section.dart';
+import 'package:felloapp/ui/pages/asset_selection.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
@@ -47,23 +46,17 @@ class AssetPreferenceViewModel extends BaseViewModel {
     await Future.delayed(const Duration(milliseconds: 1));
     switch (assetPrefOptions) {
       case AssetPrefType.P2P:
-        appStateProvider.currentAction = PageAction(
-          state: PageState.addWidget,
-          page: SaveAssetsViewConfig,
-          widget: const AssetSectionView(
-            type: InvestmentType.LENDBOXP2P,
-          ),
-        );
-        break;
       case AssetPrefType.GOLD:
         appStateProvider.currentAction = PageAction(
           state: PageState.addWidget,
-          page: SaveAssetsViewConfig,
-          widget: const AssetSectionView(
-            type: InvestmentType.AUGGOLD99,
+          page: AssetSelectionViewConfig,
+          widget: AssetSelectionPage(
+            showGold: assetPrefOptions!.isGold,
+            showFlo: assetPrefOptions.isP2P,
           ),
         );
         break;
+
       case AssetPrefType.NONE:
       default:
     }

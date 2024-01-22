@@ -439,10 +439,9 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
       );
 
       // Cache stories if user is new user else not.
-      // TODO(@DK070202): Remove this flag before release.
       final response = await _getterRepo.getPageData(
         variant: variant,
-        // shouldCacheStories: _baseUser?.segments.contains('NEW_USER') ?? false,
+        shouldCacheStories: _baseUser?.segments.contains('NEW_USER') ?? false,
       );
 
       final pageData = response.model;
@@ -773,16 +772,16 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     }
   }
 
-  Future authenticateDevice() async {
-    final hasCompletedOnboarding = PreferenceHelper.getBool(
-      PreferenceHelper.isUserOnboardingComplete,
-      def: false,
-    );
+  late final _hasCompletedOnboarding = PreferenceHelper.getBool(
+    PreferenceHelper.isUserOnboardingComplete,
+    def: false,
+  );
 
+  Future authenticateDevice() async {
     // If in local db `isUserOnboardingComplete` is not marked as completed but
     // user is authenticated then set onboarding as complete, so asset
     // onboarding can be skipped.
-    if (!hasCompletedOnboarding && isUserOnboarded) {
+    if (!_hasCompletedOnboarding && isUserOnboarded) {
       await PreferenceHelper.setBool(
         PreferenceHelper.isUserOnboardingComplete,
         true,
@@ -889,42 +888,25 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
         ffService.updateAttributes(
           attributes: {
             'newUserVariant': variant,
-            'hasCompletedOnboarding': hasCompletedOnboarding,
+            'hasCompletedOnboarding': _hasCompletedOnboarding,
           },
         );
 
-        final newUser = baseUser?.segments.contains('NEW_USER') ?? false;
+        final entryScreen = ffService.evaluateFeature(
+          FeatureFlagService.entryScreen,
+          defaultValue: '/save',
+        );
 
-        if (variant == 'b' && newUser) {
-          AppState.delegate!.appState.currentAction = PageAction(
-            state: PageState.replaceAll,
-            page: RootPageConfig,
-          );
+        AppState.delegate!.appState.currentAction = PageAction(
+          state: PageState.replaceAll,
+          page: RootPageConfig,
+        );
 
-          await Future.delayed(const Duration(milliseconds: 100));
+        await Future.delayed(const Duration(milliseconds: 100));
 
-          AppState.delegate!.appState.currentAction = PageAction(
-            state: PageState.addWidget,
-            page: StoriesPageConfig,
-          );
-        } else if (variant == 'a' && newUser) {
-          if (hasCompletedOnboarding) {
-            AppState.delegate!.appState.currentAction = PageAction(
-              state: PageState.replaceAll,
-              page: AssetPrefPageConfig,
-            );
-          } else {
-            AppState.delegate!.appState.currentAction = PageAction(
-              state: PageState.replaceAll,
-              page: RootPageConfig,
-            );
-          }
-        } else {
-          AppState.delegate!.appState.currentAction = PageAction(
-            state: PageState.replaceAll,
-            page: RootPageConfig,
-          );
-        }
+        AppState.delegate!.parseRoute(
+          Uri.parse(entryScreen),
+        );
       }
     } catch (e) {
       return BaseUtil.showNegativeAlert(

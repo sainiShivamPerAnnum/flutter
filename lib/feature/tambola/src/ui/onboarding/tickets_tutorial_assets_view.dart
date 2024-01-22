@@ -329,7 +329,8 @@ class _TicketsTutorialsViewState extends State<TicketsTutorialsView>
                                   PageAction(
                                 page: AssetSelectionViewConfig,
                                 widget: const AssetSelectionPage(
-                                    isTicketsFlow: true, showOnlyFlo: false),
+                                  isTicketsFlow: true,
+                                ),
                                 state: PageState.replaceWidget,
                               );
                               locator<AnalyticsService>().track(

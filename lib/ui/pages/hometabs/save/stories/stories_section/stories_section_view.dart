@@ -153,6 +153,7 @@ class _StoryCardState extends State<_StoryCard>
       _focusAnimationController.repeat(
         reverse: true,
       );
+      _focusStory();
     }
   }
 
@@ -168,7 +169,19 @@ class _StoryCardState extends State<_StoryCard>
       _focusAnimationController.repeat(
         reverse: true,
       );
+      _focusStory();
     }
+  }
+
+  /// Focuses this story in the scrollable.
+  void _focusStory() {
+    WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
+      Scrollable.ensureVisible(
+        context,
+        duration: const Duration(milliseconds: 600),
+        curve: Curves.easeIn,
+      );
+    }); // To avoid rebuild while build phase is going on.
   }
 
   Color _getColorByStatus() {

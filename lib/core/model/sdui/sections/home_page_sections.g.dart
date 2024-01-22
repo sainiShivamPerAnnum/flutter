@@ -36,6 +36,7 @@ AssetPrefOption _$AssetPrefOptionFromJson(Map<String, dynamic> json) =>
       assetType:
           $enumDecodeNullable(_$AssetPrefTypeEnumMap, json['assetType']) ??
               AssetPrefType.GOLD,
+      events: json['events'] as Map<String, dynamic>? ?? const {},
       icon: json['icon'] as String? ?? '',
       title: json['title'] as String? ?? '',
       description: json['description'] as String? ?? '',
@@ -151,6 +152,7 @@ Story _$StoryFromJson(Map<String, dynamic> json) => Story(
       id: json['id'] as String? ?? '',
       order: json['order'] as int? ?? 0,
       style: json['style'] as String? ?? 'tl3',
+      events: json['events'] as Map<String, dynamic>? ?? const {},
     );
 
 StepsData _$StepsDataFromJson(Map<String, dynamic> json) => StepsData(

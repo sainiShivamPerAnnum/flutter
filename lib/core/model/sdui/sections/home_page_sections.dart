@@ -62,6 +62,8 @@ enum AssetPrefType {
   NONE;
 
   bool get isNone => this == AssetPrefType.NONE;
+  bool get isGold => this == AssetPrefType.GOLD;
+  bool get isP2P => this == AssetPrefType.P2P;
 }
 
 @_deserializable
@@ -178,7 +180,6 @@ sealed class HomePageSection with _$HomePageSection {
   @FreezedUnionValue('image')
   const factory HomePageSection.image(ImageSectionData data) = ImageSection;
 
-  /// TODO(@DK070202): Placeholder thing here.
   @FreezedUnionValue('nudgeCard')
   const factory HomePageSection.nudge() = NudgeSection;
 
