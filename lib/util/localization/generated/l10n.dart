@@ -202,10 +202,10 @@ class S {
     );
   }
 
-  /// `You're one step away from 12% returns`
+  /// `You are a step away from Rewarding Savings experience`
   String get obEnterDetailsTitle {
     return Intl.message(
-      'You\'re one step away from 12% returns',
+      'You are a step away from Rewarding Savings experience',
       name: 'obEnterDetailsTitle',
       desc: '',
       args: [],
@@ -2836,10 +2836,10 @@ class S {
     );
   }
 
-  /// `Just one step away from starting your Investment Journey`
+  /// `One step away from starting your Rewarding Savings journey`
   String get preKYC {
     return Intl.message(
-      'Just one step away from starting your Investment Journey',
+      'One step away from starting your Rewarding Savings journey',
       name: 'preKYC',
       desc: '',
       args: [],
@@ -8686,10 +8686,10 @@ class S {
     );
   }
 
-  /// `Total rewards won on Fello till date -`
+  /// `Total rewards won on Fello till date`
   String get totalRewardsTilldate {
     return Intl.message(
-      'Total rewards won on Fello till date -',
+      'Total rewards won on Fello till date',
       name: 'totalRewardsTilldate',
       desc: '',
       args: [],
@@ -8746,10 +8746,10 @@ class S {
     );
   }
 
-  /// `REUPLOAD`
+  /// `UPLOAD AGAIN`
   String get reupload {
     return Intl.message(
-      'REUPLOAD',
+      'UPLOAD AGAIN',
       name: 'reupload',
       desc: '',
       args: [],

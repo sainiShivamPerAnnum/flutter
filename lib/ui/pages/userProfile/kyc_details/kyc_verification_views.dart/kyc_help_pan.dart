@@ -109,7 +109,10 @@ class KycPanHelpView extends StatelessWidget {
                 color: UiConstants.kTextColor,
                 onPressed: model.kycVerificationStatus ==
                         KycVerificationStatus.VERIFIED
-                    ? () => AppState.backButtonDispatcher!.didPopRoute()
+                    ? () => {
+                          model.trackKycDoneClicked(),
+                          AppState.backButtonDispatcher!.didPopRoute(),
+                        }
                     : model.panUploadProceed,
                 child: Text(
                   model.kycVerificationStatus == KycVerificationStatus.VERIFIED

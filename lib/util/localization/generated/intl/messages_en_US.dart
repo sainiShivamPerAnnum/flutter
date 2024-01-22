@@ -744,7 +744,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "Please enter the email where you would like to receive all transaction and support related updates"),
         "obEnterDetails": MessageLookupByLibrary.simpleMessage("Enter Details"),
         "obEnterDetailsTitle": MessageLookupByLibrary.simpleMessage(
-            "You\'re one step away from 12% returns"),
+            "You are a step away from Rewarding Savings experience"),
         "obEnterMobile": MessageLookupByLibrary.simpleMessage(
             " Enter your 10 digit phone number"),
         "obEnterOTP": MessageLookupByLibrary.simpleMessage("Enter the OTP"),
@@ -899,7 +899,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "powerPlaySlog":
             MessageLookupByLibrary.simpleMessage("Predict | Save | Win"),
         "preKYC": MessageLookupByLibrary.simpleMessage(
-            "Just one step away from starting your Investment Journey"),
+            "One step away from starting your Rewarding Savings journey"),
         "priceClaimTitle1": MessageLookupByLibrary.simpleMessage(
             "You\'ve won an Amazon Gift Voucher\n worth"),
         "priceClaimTitle2": m12,
@@ -995,7 +995,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "resume": MessageLookupByLibrary.simpleMessage("Resume"),
         "resumeAutoSave":
             MessageLookupByLibrary.simpleMessage("Resume Autosave"),
-        "reupload": MessageLookupByLibrary.simpleMessage("REUPLOAD"),
+        "reupload": MessageLookupByLibrary.simpleMessage("UPLOAD AGAIN"),
         "rewardWon": MessageLookupByLibrary.simpleMessage("reward won!"),
         "rewards": MessageLookupByLibrary.simpleMessage("Rewards"),
         "rewardsCredited": MessageLookupByLibrary.simpleMessage(
@@ -1251,7 +1251,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Total Returns Gained"),
         "totalRewards": MessageLookupByLibrary.simpleMessage("Total Rewards"),
         "totalRewardsTilldate": MessageLookupByLibrary.simpleMessage(
-            "Total rewards won on Fello till date -"),
+            "Total rewards won on Fello till date"),
         "totalSavings": MessageLookupByLibrary.simpleMessage("Total Savings"),
         "totalSavingswithFello":
             MessageLookupByLibrary.simpleMessage("Total Saved with Fello"),

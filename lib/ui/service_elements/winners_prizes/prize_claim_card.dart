@@ -88,7 +88,7 @@ class RewardBalanceWidget extends StatelessWidget {
                       ),
                       Text(
                         'Manvendra S. Rathore',
-                        style: TextStyles.sourceSansSB.body2
+                        style: TextStyles.sourceSans.body2
                             .colour(UiConstants.kTextColor4),
                       )
                     ],
