@@ -27,6 +27,7 @@ class ShowCaseView extends StatelessWidget {
       targetBorderRadius: targetBorderRadius,
       title: title,
       tooltipPosition: toolTipPosition,
+      descTextStyle: const TextStyle(fontSize: 19),
       descriptionAlignment: TextAlign.start,
       scrollLoadingWidget: const SizedBox.shrink(),
       description: description,

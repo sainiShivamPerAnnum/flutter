@@ -49,7 +49,7 @@ class _RootState extends State<Root> {
   final isNewUser = locator<UserService>().userSegments.contains(
         Constants.NEW_USER,
       );
-  bool _isOverlayVisible = false;
+  bool _isOverlayVisible = true;
   @override
   void initState() {
     if (isNewUser) {
@@ -144,13 +144,13 @@ class _RootState extends State<Root> {
                     setState(() => _isOverlayVisible = false);
                   },
                   child: Container(
-                    color: Colors.black.withOpacity(0.80),
+                    color: Colors.black.withOpacity(0.85),
                     child: Center(
                       child: Padding(
-                        padding: EdgeInsets.symmetric(horizontal: 20),
+                        padding:const  EdgeInsets.symmetric(horizontal: 20),
                         child: DefaultTextStyle(
                           style: TextStyles.sourceSans.body1
-                              .colour(UiConstants.kTextColor),
+                              .colour(UiConstants.kTextColor).copyWith(height: 1.5),
                           child: Text(
                             locale.tutorialstart,
                           ),
