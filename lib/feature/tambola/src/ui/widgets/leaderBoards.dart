@@ -159,7 +159,7 @@ class _LeaderBoardsState extends State<LeaderBoards> {
                               : widget.winners.length,
                       (i) {
                         String countSumString =
-                            '${widget.winners[i].matchMap?.fold(0, (sum, element) => sum + element.count)} Tickets';
+                            '${widget.winners[i].totalTickets} Tickets';
                         return Column(
                           children: [
                             Container(
