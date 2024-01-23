@@ -619,27 +619,27 @@ class _ShowcaseState extends State<Showcase> {
                 ),
               ),
             ),
-          if (showCaseWidgetState.activeWidgetId == 0)
-            const Align(
-              alignment: Alignment.bottomCenter,
-              child: Padding(
-                padding: EdgeInsets.only(bottom: 100),
-                child: DefaultTextStyle(
-                  style: TextStyle(
-                    color: Colors.white,
-                    fontSize: 16,
-                  ),
-                  child: Text(
-                    'Tap Anywhere for next',
-                    style: TextStyle(
-                      color: Colors.white,
-                      fontWeight: FontWeight.w500,
-                      fontSize: 20,
-                    ),
-                  ),
-                ),
-              ),
-            )
+          // if (showCaseWidgetState.activeWidgetId == 0)
+          //   const Align(
+          //     alignment: Alignment.bottomCenter,
+          //     child: Padding(
+          //       padding: EdgeInsets.only(bottom: 100),
+          //       child: DefaultTextStyle(
+          //         style: TextStyle(
+          //           color: Colors.white,
+          //           fontSize: 16,
+          //         ),
+          //         child: Text(
+          //           'Tap Anywhere for next',
+          //           style: TextStyle(
+          //             color: Colors.white,
+          //             fontWeight: FontWeight.w500,
+          //             fontSize: 20,
+          //           ),
+          //         ),
+          //       ),
+          //     ),
+          //   )
         ],
       ],
     );

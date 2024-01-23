@@ -8806,10 +8806,20 @@ class S {
     );
   }
 
-  /// `Hello User! Start your Rewarding Savings journey by selecting your assets over here`
+  /// `Welcome to Fello!\n\nQuick tips are here to guide you. \nClick anywhere for the next tip. \n'Skip' to close. \nRestart anytime from the 'Profile' section.🚀`
+  String get tutorialstart {
+    return Intl.message(
+      'Welcome to Fello!\n\nQuick tips are here to guide you. \nClick anywhere for the next tip. \n\'Skip\' to close. \nRestart anytime from the \'Profile\' section.🚀',
+      name: 'tutorialstart',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Start your Rewarding Savings journey by selecting your assets over here`
   String get tutorial1 {
     return Intl.message(
-      'Hello User! Start your Rewarding Savings journey by selecting your assets over here',
+      'Start your Rewarding Savings journey by selecting your assets over here',
       name: 'tutorial1',
       desc: '',
       args: [],

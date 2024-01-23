@@ -1272,7 +1272,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "tryOnRealDevice": MessageLookupByLibrary.simpleMessage(
             "Please use the app on a real device"),
         "tutorial1": MessageLookupByLibrary.simpleMessage(
-            "Hello User! Start your Rewarding Savings journey by selecting your assets over here"),
+            "Start your Rewarding Savings journey by selecting your assets over here"),
         "tutorial2": MessageLookupByLibrary.simpleMessage(
             "For every Rs.500 saved, you get 1 weekly ticket which earns you rewards from Rs.1 to Rs. 1 Cr."),
         "tutorial3": MessageLookupByLibrary.simpleMessage(
@@ -1283,6 +1283,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "If you want to know more about Fello, check out these stories!"),
         "tutorial6": MessageLookupByLibrary.simpleMessage(
             "Now lets start your rewarding savings journey by selecting your asset over here"),
+        "tutorialstart": MessageLookupByLibrary.simpleMessage(
+            "Welcome to Fello!\n\nQuick tips are here to guide you. \nClick anywhere for the next tip. \n\'Skip\' to close. \nRestart anytime from the \'Profile\' section.🚀"),
         "txnActiveCoupon":
             MessageLookupByLibrary.simpleMessage("Active Coupons"),
         "txnAmountTitle":

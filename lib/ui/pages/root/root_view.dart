@@ -54,20 +54,16 @@ class _RootState extends State<Root> {
   final isNewUser = locator<UserService>().userSegments.contains(
         Constants.NEW_USER,
       );
+  bool _isOverlayVisible = true;
   @override
   void initState() {
     WidgetsBinding.instance.addPostFrameCallback((_) async {
       if (isNewUser && await AppState.isFirstAppOpen()) {
-        Future.delayed(
-            const Duration(seconds: 1),
-            () => ShowCaseWidget.of(context).startShowCase([
-                  tutorialkey1,
-                  tutorialkey2,
-                  tutorialkey3,
-                  tutorialkey4,
-                  tutorialkey5,
-                  tutorialkey6
-                ]));
+        Future.delayed(const Duration(seconds: 1), () {
+          setState(() {
+            _isOverlayVisible = true;
+          });
+        });
       }
     });
 
@@ -76,6 +72,7 @@ class _RootState extends State<Root> {
 
   @override
   Widget build(BuildContext context) {
+    final locale = locator<S>();
     return BaseView<RootViewModel>(
       onModelReady: (model) {
         model.onInit();
@@ -135,6 +132,37 @@ class _RootState extends State<Root> {
               bottomNavigationBar: const BottomNavBar(),
             ),
             const CircularAnim(),
+            if (_isOverlayVisible)
+              Positioned.fill(
+                child: GestureDetector(
+                  onTap: () {
+                    ShowCaseWidget.of(context).startShowCase([
+                      tutorialkey1,
+                      tutorialkey2,
+                      tutorialkey3,
+                      tutorialkey4,
+                      tutorialkey5,
+                      tutorialkey6
+                    ]);
+                    setState(() => _isOverlayVisible = false);
+                  },
+                  child: Container(
+                    color: Colors.black.withOpacity(0.80),
+                    child: Center(
+                      child: Padding(
+                        padding: EdgeInsets.symmetric(horizontal: 20),
+                        child: DefaultTextStyle(
+                          style: TextStyles.sourceSans.body1.colour(UiConstants.kTextColor),
+                          child: Text(
+                            locale.tutorialstart,
+                           
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
           ],
         );
       },
@@ -223,6 +251,8 @@ class RootAppBar extends StatelessWidget {
                                     borderRadius: BorderRadius.circular(
                                         SizeConfig.roundness12),
                                   ),
+                                  targetBorderRadius: BorderRadius.circular(
+                                      SizeConfig.roundness12),
                                   child: Selector2<
                                       UserService,
                                       ScratchCardService,
