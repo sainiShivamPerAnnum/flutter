@@ -98,7 +98,7 @@ class _OnBoardingViewState extends State<OnBoardingView>
                   Align(
                     alignment: Alignment.topCenter,
                     child: Lottie.asset(
-                      "assets/lotties/onboarding.json",
+                      Assets.onboarding,
                       width: SizeConfig.screenWidth,
                       frameRate: FrameRate(60),
                       controller: controller,
