@@ -9,6 +9,7 @@ import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/feature/tambola/src/services/tambola_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
 import 'package:felloapp/ui/pages/rewards/detailed_scratch_card/gt_detailed_view.dart';
@@ -25,6 +26,7 @@ class GTDetailedViewModel extends BaseViewModel {
   final UserService _userService = locator<UserService>();
   final UserCoinService _userCoinService = locator<UserCoinService>();
   final ScratchCardService _gtService = locator<ScratchCardService>();
+  final TambolaService _tambolaService = locator<TambolaService>();
   final CustomLogger _logger = locator<CustomLogger>();
 
   // final ApiPath _apiPaths = locator<ApiPath>();
@@ -79,6 +81,7 @@ class GTDetailedViewModel extends BaseViewModel {
         unawaited(_gtService.updateUnscratchedGTCount());
         unawaited(_userService.getUserFundWalletData());
         unawaited(_userCoinService.getUserCoinBalance());
+        unawaited(_tambolaService.refreshTickets());
         _journeyService.updateRewardStatus(ticket.prizeSubtype!);
         return true;
       }

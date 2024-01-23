@@ -98,60 +98,63 @@ class Winners {
   final String? displayScore;
   final List<TicketStatsModel>? matchMap;
   final int? ticketOwned;
+  final int? totalTickets;
 
-  Winners({
-    this.amount,
-    this.isMockUser,
-    this.username,
-    this.flc,
-    this.userid,
-    this.score,
-    this.gameType,
-    this.matchMap,
-    this.displayScore,
-    this.ticketOwned,
-  });
+  Winners(
+      {this.amount,
+      this.isMockUser,
+      this.username,
+      this.flc,
+      this.userid,
+      this.score,
+      this.gameType,
+      this.matchMap,
+      this.displayScore,
+      this.ticketOwned,
+      this.totalTickets});
 
-  Winners copyWith({
-    int? amount,
-    bool? isMockUser,
-    String? username,
-    int? flc,
-    String? userid,
-    double? score,
-    String? gameType,
-    List<TicketStatsModel>? matchMap,
-    String? displayScore,
-    int? ticketOwned,
-  }) {
+  Winners copyWith(
+      {int? amount,
+      bool? isMockUser,
+      String? username,
+      int? flc,
+      String? userid,
+      double? score,
+      String? gameType,
+      List<TicketStatsModel>? matchMap,
+      String? displayScore,
+      int? ticketOwned,
+      int? totalTickets}) {
     return Winners(
-      amount: amount ?? this.amount,
-      isMockUser: isMockUser ?? this.isMockUser,
-      username: username ?? this.username,
-      flc: flc ?? this.flc,
-      userid: userid ?? this.userid,
-      score: score ?? this.score,
-      gameType: gameType ?? this.gameType,
-      matchMap: matchMap ?? this.matchMap,
-      displayScore: displayScore ?? this.displayScore,
-      ticketOwned: ticketOwned ?? this.ticketOwned,
-    );
+        amount: amount ?? this.amount,
+        isMockUser: isMockUser ?? this.isMockUser,
+        username: username ?? this.username,
+        flc: flc ?? this.flc,
+        userid: userid ?? this.userid,
+        score: score ?? this.score,
+        gameType: gameType ?? this.gameType,
+        matchMap: matchMap ?? this.matchMap,
+        displayScore: displayScore ?? this.displayScore,
+        ticketOwned: ticketOwned ?? this.ticketOwned,
+        totalTickets: totalTickets ?? this.totalTickets);
   }
 
   factory Winners.fromMap(Map<String, dynamic> map, String? gameType) {
     return Winners(
-        amount: map['amount'] ?? 0,
-        isMockUser: map['isMockUser'] ?? false,
-        username: map['username'] ?? '',
-        flc: map['flc'] ?? 0,
-        userid: map['userid'] ?? '',
-        score: (map['score'] ?? 0).toDouble(),
-        gameType: gameType ?? '',
-        matchMap: (map['matchMap'] != null)
-            ? TicketStatsModel.parseTicketsStats(map['matchMap'])
-            : TicketStatsModel.getBaseTicketsStats(),
-        displayScore: map['displayScore'] ?? '',
-        ticketOwned: map['totalTickets'] ?? 0);
+      amount: map['amount'] ?? 0,
+      isMockUser: map['isMockUser'] ?? false,
+      username: map['username'] ?? '',
+      flc: map['flc'] ?? 0,
+      userid: map['userid'] ?? '',
+      score: (map['score'] ?? 0).toDouble(),
+      gameType: gameType ?? '',
+      matchMap: (map['matchMap'] != null)
+          ? TicketStatsModel.parseTicketsStats(map['matchMap'])
+          : TicketStatsModel.getBaseTicketsStats(),
+      displayScore: map['displayScore'] ?? '',
+      ticketOwned: map['totalTickets'] ?? 0,
+      totalTickets: map['totalTickets'] ?? 0,
+    );
   }
 
   factory Winners.fromJson(String source, String gameType) =>
@@ -176,7 +179,8 @@ class Winners {
           score == other.score &&
           displayScore == other.displayScore &&
           matchMap == other.matchMap &&
-          ticketOwned == other.ticketOwned;
+          ticketOwned == other.ticketOwned &&
+          totalTickets == other.totalTickets;
 
   @override
   int get hashCode =>
@@ -189,7 +193,8 @@ class Winners {
       score.hashCode ^
       displayScore.hashCode ^
       matchMap.hashCode ^
-      ticketOwned.hashCode;
+      ticketOwned.hashCode ^
+      totalTickets.hashCode;
 }
 
 class MatchMap {
