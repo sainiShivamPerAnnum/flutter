@@ -1,6 +1,9 @@
+// ignore_for_file: equal_keys_in_map
+
 import 'dart:developer';
 
 import 'package:felloapp/core/constants/apis_path_constants.dart';
+import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/core/model/transaction_response_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
@@ -29,7 +32,10 @@ class TransactionHistoryRepository extends BaseRepo {
       final String? uid = userService.baseUser!.uid;
       final queryParams = {
         "type": type,
-        "subType": subtype,
+        "subType": [
+          subtype,
+          if (subtype == InvestmentType.AUGGOLD99.name) 'AUGGOLD99_FD',
+        ],
         "limit": limit.toString(),
         if (offset != null && offset != 0) ...{
           "offset": offset.toString(),

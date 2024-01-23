@@ -51,6 +51,7 @@ class Assets {
   static const String navSaveLottie = "assets/lotties/nav/save.json";
   static const String navWinLottie = "assets/lotties/nav/win.json";
   static const String navTambolaLottie = "assets/lotties/nav/tambola.json";
+  static const String onboarding = 'assets/lotties/onboarding.json';
 
   static const String prizeRankOne = "assets/vectors/rank_first.svg";
   static const String prizeRankTwo = "assets/vectors/rank_second.svg";

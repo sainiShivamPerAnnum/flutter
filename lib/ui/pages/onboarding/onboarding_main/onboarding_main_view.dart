@@ -26,12 +26,15 @@ class _OnBoardingViewState extends State<OnBoardingView>
 
   @override
   void initState() {
-    controller =
-        AnimationController(vsync: this, duration: const Duration(seconds: 6));
-    Future.delayed(const Duration(seconds: 2)).then((value) {
+    super.initState();
+    controller = AnimationController(
+      vsync: this,
+      duration: const Duration(milliseconds: 8500),
+    );
+
+    Future.delayed(const Duration(seconds: 1)).then((value) {
       controller!.animateTo(_entryPoint);
     });
-    super.initState();
   }
 
   @override
@@ -52,143 +55,154 @@ class _OnBoardingViewState extends State<OnBoardingView>
       builder: (context, model, child) {
         return Scaffold(
           backgroundColor: const Color(0xFF032A2E),
-          body: GestureDetector(
-            onHorizontalDragEnd: (details) {
-              bool leftSwipe =
-                  model.dragStartPosition > model.dragUpdatePosition;
-              double swipeCount =
-                  (model.dragStartPosition - model.dragUpdatePosition).abs();
-              if (swipeCount >= 40) {
-                if (leftSwipe) {
-                  if (model.currentPage == 2) {
-                    controller!.forward().then((value) {
-                      model.registerWalkthroughCompletion();
-                    });
-                    return;
+          body: NotificationListener<OverscrollIndicatorNotification>(
+            onNotification: (n) {
+              n.disallowIndicator();
+              return false;
+            },
+            child: GestureDetector(
+              onHorizontalDragEnd: (_) {
+                bool leftSwipe =
+                    model.dragStartPosition > model.dragUpdatePosition;
+                double swipeCount =
+                    (model.dragStartPosition - model.dragUpdatePosition).abs();
+                if (swipeCount >= 40) {
+                  if (leftSwipe) {
+                    if (model.currentPage == 2) {
+                      controller!.forward().then((value) {
+                        model.registerWalkthroughCompletion();
+                      });
+                      return;
+                    } else {
+                      model.pageController!.nextPage(
+                        duration: const Duration(milliseconds: 500),
+                        curve: Curves.easeIn,
+                      );
+                    }
                   } else {
-                    model.pageController!.nextPage(
+                    model.pageController!.previousPage(
                       duration: const Duration(milliseconds: 500),
                       curve: Curves.easeIn,
                     );
                   }
-                } else {
-                  model.pageController!.previousPage(
-                    duration: const Duration(milliseconds: 500),
-                    curve: Curves.easeIn,
-                  );
                 }
-              }
-            },
-            onHorizontalDragStart: (details) {
-              model.dragStartPosition = details.globalPosition.dx;
-            },
-            onHorizontalDragUpdate: (details) {
-              model.dragUpdatePosition = details.globalPosition.dx;
-            },
-            child: Stack(
-              children: [
-                Align(
-                  alignment: Alignment.topCenter,
-                  child: Lottie.asset(
-                    "assets/lotties/onboarding.json",
-                    width: SizeConfig.screenWidth,
-                    frameRate: FrameRate(60),
-                    controller: controller,
-                    fit: BoxFit.fitWidth,
+              },
+              onHorizontalDragStart: (details) {
+                model.dragStartPosition = details.globalPosition.dx;
+              },
+              onHorizontalDragUpdate: (details) {
+                model.dragUpdatePosition = details.globalPosition.dx;
+              },
+              child: Stack(
+                children: [
+                  Align(
+                    alignment: Alignment.topCenter,
+                    child: Lottie.asset(
+                      Assets.onboarding,
+                      width: SizeConfig.screenWidth,
+                      frameRate: FrameRate(60),
+                      controller: controller,
+                      fit: BoxFit.fill,
+                    ),
                   ),
-                ),
-                Positioned.fill(
-                  child: Column(
-                    mainAxisSize: MainAxisSize.min,
-                    children: [
-                      Container(
-                        height: SizeConfig.screenWidth! * 0.45,
-                        width: SizeConfig.screenWidth! * 0.8,
-                        margin: EdgeInsets.only(bottom: SizeConfig.padding32),
-                        child: PageView.builder(
-                          controller: model.pageController,
-                          // physics: NeverScrollableScrollPhysics(),
-                          onPageChanged: (val) {
-                            if (val > model.currentPage) {
-                              if (val == 2) {
-                                controller!.animateTo(_thirdPoint);
+                  Positioned.fill(
+                    child: Column(
+                      mainAxisSize: MainAxisSize.min,
+                      children: [
+                        Container(
+                          height: SizeConfig.screenWidth!,
+                          width: SizeConfig.screenWidth!,
+                          margin: EdgeInsets.only(bottom: SizeConfig.padding32),
+                          child: PageView.builder(
+                            controller: model.pageController,
+                            onPageChanged: (val) {
+                              if (val > model.currentPage) {
+                                if (val == 2) {
+                                  controller!.animateTo(_thirdPoint).then(
+                                        (_) => model.indicatorPosition = 2,
+                                      );
+                                } else {
+                                  controller!
+                                      .animateTo(_secondPoint)
+                                      .then((_) => model.indicatorPosition = 1);
+                                }
                               } else {
-                                controller!.animateTo(_secondPoint);
+                                if (val == 0) {
+                                  controller!
+                                      .animateTo(_entryPoint)
+                                      .then((_) => model.indicatorPosition = 0);
+                                } else if (val == 1) {
+                                  controller!
+                                      .animateBack(_secondPoint)
+                                      .then((_) => model.indicatorPosition = 1);
+                                } else {
+                                  controller!.animateBack(_entryPoint);
+                                }
                               }
-                            } else {
-                              if (val == 0) {
-                                controller!.animateTo(_entryPoint);
-                              } else if (val == 1) {
-                                controller!.animateBack(_secondPoint);
-                              } else {
-                                controller!.animateBack(0);
-                              }
-                            }
-                            model.currentPage = val;
-                          },
-                          itemCount: 3,
-                          itemBuilder: (context, index) {
-                            return Container(
-                              height: 200,
-                            );
-                          },
+                              model.currentPage = val;
+                            },
+                            itemCount: 3,
+                            itemBuilder: (_, __) => const SizedBox.shrink(),
+                          ),
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
-                ),
-                Positioned(
-                  bottom: SizeConfig.padding20,
-                  left: SizeConfig.padding24,
-                  right: SizeConfig.padding24,
-                  child: Row(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    children: [
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: List.generate(
-                          3,
-                          (index) {
-                            return Container(
-                              width: SizeConfig.padding8,
-                              height: SizeConfig.padding8,
-                              margin: const EdgeInsets.symmetric(horizontal: 3),
-                              decoration: BoxDecoration(
-                                color: model.currentPage == index
-                                    ? Colors.white
-                                    : Colors.transparent,
-                                border: Border.all(color: Colors.white),
-                                shape: BoxShape.circle,
-                              ),
-                            );
-                          },
+                  Positioned(
+                    bottom: SizeConfig.padding20,
+                    left: SizeConfig.padding24,
+                    right: SizeConfig.padding24,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Row(
+                          mainAxisAlignment: MainAxisAlignment.start,
+                          children: List.generate(
+                            3,
+                            (index) {
+                              return Container(
+                                width: SizeConfig.padding8,
+                                height: SizeConfig.padding8,
+                                margin:
+                                    const EdgeInsets.symmetric(horizontal: 3),
+                                decoration: BoxDecoration(
+                                  color: index == model.indicatorPosition
+                                      ? Colors.white
+                                      : Colors.transparent,
+                                  border: Border.all(color: Colors.white),
+                                  shape: BoxShape.circle,
+                                ),
+                              );
+                            },
+                          ),
                         ),
-                      ),
-                      _SignUpCTA(
-                        onTap: model.registerWalkthroughCompletion,
-                      )
-                    ],
+                        _SignUpCTA(
+                          onTap: model.registerWalkthroughCompletion,
+                        )
+                      ],
+                    ),
                   ),
-                ),
-                Positioned(
-                  right: SizeConfig.padding16,
-                  top: MediaQuery.paddingOf(context).top + SizeConfig.padding10,
-                  child: _SkipButton(
-                    onTap: () {
-                      if (model.currentPage == 2) {
-                        model.registerWalkthroughCompletion();
-                      } else {
-                        model.pageController!.animateToPage(
-                          model.currentPage + 1,
-                          duration: const Duration(milliseconds: 500),
-                          curve: Curves.easeIn,
-                        );
-                      }
-                    },
+                  Positioned(
+                    right: SizeConfig.padding16,
+                    top: MediaQuery.paddingOf(context).top,
+                    child: _SkipButton(
+                      onTap: () {
+                        if (model.currentPage == 2) {
+                          controller?.forward().then(
+                              (_) => model.registerWalkthroughCompletion());
+                        } else {
+                          model.pageController!.animateToPage(
+                            model.currentPage + 1,
+                            duration: const Duration(milliseconds: 500),
+                            curve: Curves.easeIn,
+                          );
+                        }
+                      },
+                    ),
                   ),
-                ),
-                const CircularAnim()
-              ],
+                  const CircularAnim()
+                ],
+              ),
             ),
           ),
         );
@@ -207,25 +221,13 @@ class _SkipButton extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final locale = locator<S>();
-    return InkWell(
-      onTap: onTap,
-      child: Row(
-        children: [
-          Text(
-            locale.skip,
-            style: TextStyles.rajdhaniB.body1.setHeight(
-              1.3,
-            ),
-          ),
-          SizedBox(
-            width: SizeConfig.padding12,
-          ),
-          AppImage(
-            Assets.chevRonRightArrow,
-            height: SizeConfig.padding24,
-            color: Colors.white,
-          )
-        ],
+    return TextButton(
+      onPressed: onTap,
+      child: Text(
+        locale.obNext,
+        style: TextStyles.rajdhaniB.body1.setHeight(
+          1.3,
+        ),
       ),
     );
   }

@@ -25,7 +25,7 @@ class FeatureFlagService {
 
   /// Appends [attributes] in existing user attributes if the key were not in
   /// existing attributes else update the existing attribute value with new.
-  void updateAttributes({Map<String, dynamic> attributes = const {}}) {
+  void updateAttributes({Map<String, Object> attributes = const {}}) {
     for (final MapEntry<String, dynamic> attr in attributes.entries) {
       if (_attributes.containsKey(attr.key)) {
         _attributes.update(attr.key, (value) => attr.value);

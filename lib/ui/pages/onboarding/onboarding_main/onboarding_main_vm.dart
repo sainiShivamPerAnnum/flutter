@@ -16,14 +16,17 @@ class OnboardingViewModel extends BaseViewModel {
   final AnalyticsService _analyticsService = locator<AnalyticsService>();
   PageController? _pageController;
   int _currentPage = 0;
+  // To sync indicator with lottie animation.
+  int _indicatorPosition = 0;
+
   double dragStartPosition = 0, dragUpdatePosition = 0;
   List<List<String>>? _onboardingData;
   bool _isWalkthroughRegistrationInProgress = false;
 
-  get isWalkthroughRegistrationInProgress =>
+  bool get isWalkthroughRegistrationInProgress =>
       _isWalkthroughRegistrationInProgress;
 
-  set isWalkthroughRegistrationInProgress(value) {
+  set isWalkthroughRegistrationInProgress(bool value) {
     _isWalkthroughRegistrationInProgress = value;
     notifyListeners();
   }
@@ -32,6 +35,13 @@ class OnboardingViewModel extends BaseViewModel {
   S locale = locator<S>();
 
   int get currentPage => _currentPage;
+
+  int get indicatorPosition => _indicatorPosition;
+
+  set indicatorPosition(int value) {
+    _indicatorPosition = value;
+    notifyListeners();
+  }
 
   List<Widget> assetWidgets = [
     SvgPicture.asset(
