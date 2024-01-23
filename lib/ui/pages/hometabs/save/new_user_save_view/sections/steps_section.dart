@@ -57,12 +57,16 @@ class StepsSection extends StatelessWidget {
                       title: null,
                       description: locale.tutorial1,
                       toolTipPosition: TooltipPosition.top,
+                      targetPadding:
+                          EdgeInsets.only(left: SizeConfig.padding10),
                       shapeBorder: const RoundedRectangleBorder(),
                       targetBorderRadius: BorderRadius.circular(10),
                       child: ShowCaseView(
                         globalKey: TutorialKeys.tutorialkey2,
                         title: null,
                         description: locale.tutorial2,
+                        targetPadding:
+                            EdgeInsets.only(left: SizeConfig.padding10),
                         toolTipPosition: TooltipPosition.bottom,
                         shapeBorder: const RoundedRectangleBorder(),
                         targetBorderRadius: BorderRadius.circular(10),
@@ -70,6 +74,8 @@ class StepsSection extends StatelessWidget {
                           globalKey: TutorialKeys.tutorialkey6,
                           title: null,
                           description: locale.tutorial6,
+                          targetPadding:
+                              EdgeInsets.only(left: SizeConfig.padding10),
                           toolTipPosition: TooltipPosition.bottom,
                           shapeBorder: const RoundedRectangleBorder(),
                           targetBorderRadius: BorderRadius.circular(10),
