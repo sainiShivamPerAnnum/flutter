@@ -49,7 +49,7 @@ class _RootState extends State<Root> {
   final isNewUser = locator<UserService>().userSegments.contains(
         Constants.NEW_USER,
       );
-  bool _isOverlayVisible = true;
+  bool _isOverlayVisible = false;
   @override
   void initState() {
     if (isNewUser) {
