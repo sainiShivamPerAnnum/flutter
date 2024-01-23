@@ -580,14 +580,9 @@ class _ShowcaseState extends State<Showcase> {
               top: 60,
               right: 30,
               child: TextButton(
-                // color: Colors.white,
                 onPressed: () {
                   showCaseWidgetState.skipButtonClicked();
                 },
-                // padding: EdgeInsets.zero,
-                // minWidth: 70,
-                // shape: RoundedRectangleBorder(
-                //     borderRadius: BorderRadius.circular(6)),
                 child: const Text(
                   'SKIP',
                   style: TextStyle(
@@ -602,14 +597,9 @@ class _ShowcaseState extends State<Showcase> {
               top: 60,
               left: 30,
               child: TextButton(
-                // color: Colors.white,
                 onPressed: () {
                   showCaseWidgetState.previous();
                 },
-                // padding: EdgeInsets.zero,
-                // minWidth: 70,
-                // shape: RoundedRectangleBorder(
-                //     borderRadius: BorderRadius.circular(6)),
                 child: const Text(
                   'PREVIOUS',
                   style: TextStyle(
@@ -619,27 +609,6 @@ class _ShowcaseState extends State<Showcase> {
                 ),
               ),
             ),
-          // if (showCaseWidgetState.activeWidgetId == 0)
-          //   const Align(
-          //     alignment: Alignment.bottomCenter,
-          //     child: Padding(
-          //       padding: EdgeInsets.only(bottom: 100),
-          //       child: DefaultTextStyle(
-          //         style: TextStyle(
-          //           color: Colors.white,
-          //           fontSize: 16,
-          //         ),
-          //         child: Text(
-          //           'Tap Anywhere for next',
-          //           style: TextStyle(
-          //             color: Colors.white,
-          //             fontWeight: FontWeight.w500,
-          //             fontSize: 20,
-          //           ),
-          //         ),
-          //       ),
-          //     ),
-          //   )
         ],
       ],
     );

@@ -1,7 +1,7 @@
 import 'package:felloapp/core/model/action.dart';
 import 'package:felloapp/core/model/sdui/sections/home_page_sections.dart'
     as sections;
-import 'package:felloapp/ui/pages/root/root_view.dart';
+import 'package:felloapp/ui/pages/root/tutorial_keys.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/shared/show_case.dart';
 import 'package:felloapp/util/action_resolver.dart';
@@ -53,21 +53,21 @@ class StepsSection extends StatelessWidget {
                       right: i == steps.length - 1 ? SizeConfig.padding20 : 0,
                     ),
                     child: ShowCaseView(
-                      globalKey: tutorialkey1,
+                      globalKey: TutorialKeys.tutorialkey1,
                       title: null,
                       description: locale.tutorial1,
                       toolTipPosition: TooltipPosition.top,
                       shapeBorder: const RoundedRectangleBorder(),
                       targetBorderRadius: BorderRadius.circular(10),
                       child: ShowCaseView(
-                        globalKey: tutorialkey2,
+                        globalKey: TutorialKeys.tutorialkey2,
                         title: null,
                         description: locale.tutorial2,
                         toolTipPosition: TooltipPosition.bottom,
                         shapeBorder: const RoundedRectangleBorder(),
                         targetBorderRadius: BorderRadius.circular(10),
                         child: ShowCaseView(
-                          globalKey: tutorialkey6,
+                          globalKey: TutorialKeys.tutorialkey6,
                           title: null,
                           description: locale.tutorial6,
                           toolTipPosition: TooltipPosition.bottom,

@@ -21,7 +21,7 @@ import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
 import 'package:felloapp/ui/dialogs/user_avatars_dialog.dart';
 import 'package:felloapp/ui/elements/fello_dialog/fello_in_app_review.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
-import 'package:felloapp/ui/pages/root/root_view.dart';
+import 'package:felloapp/ui/pages/root/tutorial_keys.dart';
 import 'package:felloapp/ui/pages/static/profile_image.dart';
 import 'package:felloapp/ui/pages/userProfile/my_winnings/my_winnings_view.dart';
 import 'package:felloapp/ui/service_elements/last_week/last_week_view.dart';
@@ -170,12 +170,12 @@ class MyAccountVM extends BaseViewModel {
     AppState.delegate!.onTapItem(RootController.saveNavBarItem);
     // await AppState.backButtonDispatcher!.didPopRoute();
     ShowCaseWidget.of(context).startShowCase([
-      tutorialkey1,
-      tutorialkey2,
-      tutorialkey3,
-      tutorialkey4,
-      tutorialkey5,
-      tutorialkey6
+      TutorialKeys.tutorialkey1,
+      TutorialKeys.tutorialkey2,
+      TutorialKeys.tutorialkey3,
+      TutorialKeys.tutorialkey4,
+      TutorialKeys.tutorialkey5,
+      TutorialKeys.tutorialkey6
     ]);
   }
 

@@ -19,6 +19,7 @@ import 'package:felloapp/ui/pages/hometabs/home/card_actions_notifier.dart';
 import 'package:felloapp/ui/pages/hometabs/my_account/my_account_components/win_helpers.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/ui/pages/root/root_vm.dart';
+import 'package:felloapp/ui/pages/root/tutorial_keys.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/ui/shared/marquee_text.dart';
 import 'package:felloapp/ui/shared/show_case.dart';
@@ -36,12 +37,6 @@ import 'package:showcaseview/showcaseview.dart';
 import 'package:tuple/tuple.dart';
 
 GlobalKey felloAppBarKey = GlobalKey();
-GlobalKey tutorialkey1 = GlobalKey();
-GlobalKey tutorialkey2 = GlobalKey();
-GlobalKey tutorialkey3 = GlobalKey();
-GlobalKey tutorialkey4 = GlobalKey();
-GlobalKey tutorialkey5 = GlobalKey();
-GlobalKey tutorialkey6 = GlobalKey();
 
 class Root extends StatefulWidget {
   const Root({super.key});
@@ -54,18 +49,20 @@ class _RootState extends State<Root> {
   final isNewUser = locator<UserService>().userSegments.contains(
         Constants.NEW_USER,
       );
-  bool _isOverlayVisible = true;
+  bool _isOverlayVisible = false;
   @override
   void initState() {
-    WidgetsBinding.instance.addPostFrameCallback((_) async {
-      if (isNewUser && await AppState.isFirstAppOpen()) {
-        Future.delayed(const Duration(seconds: 1), () {
-          setState(() {
-            _isOverlayVisible = true;
+    if (isNewUser) {
+      AppState.isFirstAppOpen().then((firstOpen) {
+        if (firstOpen) {
+          Future.delayed(const Duration(seconds: 1), () {
+            setState(() {
+              _isOverlayVisible = true;
+            });
           });
-        });
-      }
-    });
+        }
+      });
+    }
 
     super.initState();
   }
@@ -137,12 +134,12 @@ class _RootState extends State<Root> {
                 child: GestureDetector(
                   onTap: () {
                     ShowCaseWidget.of(context).startShowCase([
-                      tutorialkey1,
-                      tutorialkey2,
-                      tutorialkey3,
-                      tutorialkey4,
-                      tutorialkey5,
-                      tutorialkey6
+                      TutorialKeys.tutorialkey1,
+                      TutorialKeys.tutorialkey2,
+                      TutorialKeys.tutorialkey3,
+                      TutorialKeys.tutorialkey4,
+                      TutorialKeys.tutorialkey5,
+                      TutorialKeys.tutorialkey6
                     ]);
                     setState(() => _isOverlayVisible = false);
                   },
@@ -152,10 +149,10 @@ class _RootState extends State<Root> {
                       child: Padding(
                         padding: EdgeInsets.symmetric(horizontal: 20),
                         child: DefaultTextStyle(
-                          style: TextStyles.sourceSans.body1.colour(UiConstants.kTextColor),
+                          style: TextStyles.sourceSans.body1
+                              .colour(UiConstants.kTextColor),
                           child: Text(
                             locale.tutorialstart,
-                           
                           ),
                         ),
                       ),
@@ -229,22 +226,19 @@ class RootAppBar extends StatelessWidget {
                           child: FAppBar(
                             showAvatar: true,
                             leadingPadding: false,
-                            titleWidget:
-                                !userservice!.userSegments.contains("NEW_USER")
-                                    ? Expanded(
-                                        child: Salutation(
-                                          leftMargin: SizeConfig.padding8,
-                                          textStyle: TextStyles.rajdhaniSB.body0
-                                              .colour(Colors.white),
-                                        ),
-                                      )
-                                    : null,
+                           titleWidget: Expanded(
+                              child: Salutation(
+                                leftMargin: SizeConfig.padding8,
+                                textStyle: TextStyles.rajdhaniSB.body0
+                                    .colour(Colors.white),
+                              ),
+                            ),
                             backgroundColor: UiConstants.kBackgroundColor,
                             showCoinBar: false,
                             action: Row(
                               children: [
                                 ShowCaseView(
-                                  globalKey: tutorialkey4,
+                                  globalKey: TutorialKeys.tutorialkey4,
                                   title: null,
                                   description: locale.tutorial4,
                                   shapeBorder: RoundedRectangleBorder(
@@ -297,28 +291,29 @@ class RootAppBar extends StatelessWidget {
                                     mark: false,
                                   ),
                                 ),
-                                Selector2<UserService, ScratchCardService,
-                                    Tuple2<UserJourneyStatsModel?, int>>(
-                                  builder: (context, value, child) =>
-                                      FelloInfoBar(
-                                    lottieAsset: Assets.navJourneyLottie,
-                                    size: SizeConfig.padding24 -
-                                        SizeConfig.padding1,
-                                    child: "Level ${value.item1?.level ?? 0}",
-                                    onPressed: () {
-                                      Haptic.vibrate();
-                                      AppState.delegate!
-                                          .parseRoute(Uri.parse("journey"));
-                                    },
-                                    mark: value.item2 > 0,
-                                  ),
-                                  selector: (p0, userService,
-                                          scratchCardService) =>
-                                      Tuple2(
-                                          userService.userJourneyStats,
-                                          scratchCardService
-                                              .unscratchedMilestoneScratchCardCount),
-                                )
+                                if (enableJourney)
+                                  Selector2<UserService, ScratchCardService,
+                                      Tuple2<UserJourneyStatsModel?, int>>(
+                                    builder: (context, value, child) =>
+                                        FelloInfoBar(
+                                      lottieAsset: Assets.navJourneyLottie,
+                                      size: SizeConfig.padding24 -
+                                          SizeConfig.padding1,
+                                      child: "Level ${value.item1?.level ?? 0}",
+                                      onPressed: () {
+                                        Haptic.vibrate();
+                                        AppState.delegate!
+                                            .parseRoute(Uri.parse("journey"));
+                                      },
+                                      mark: value.item2 > 0,
+                                    ),
+                                    selector: (p0, userService,
+                                            scratchCardService) =>
+                                        Tuple2(
+                                            userService.userJourneyStats,
+                                            scratchCardService
+                                                .unscratchedMilestoneScratchCardCount),
+                                  )
                               ],
                             ),
                           ),

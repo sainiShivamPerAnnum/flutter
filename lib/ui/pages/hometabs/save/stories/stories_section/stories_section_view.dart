@@ -5,7 +5,7 @@ import 'package:felloapp/core/model/sdui/sections/home_page_sections.dart'
 import 'package:felloapp/core/repository/local/stories_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/ui/pages/root/root_view.dart';
+import 'package:felloapp/ui/pages/root/tutorial_keys.dart';
 import 'package:felloapp/ui/shared/show_case.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
@@ -94,7 +94,7 @@ class _StoriesSectionState extends State<StoriesSection> {
                         ? ShowCaseView(
                             title: null,
                             description: locale.tutorial5,
-                            globalKey: i == 0 ? tutorialkey5 : GlobalKey(),
+                            globalKey: i == 0 ? TutorialKeys.tutorialkey5 : GlobalKey(),
                             shapeBorder: const RoundedRectangleBorder(),
                             targetBorderRadius: BorderRadius.all(
                               Radius.circular(SizeConfig.roundness12),

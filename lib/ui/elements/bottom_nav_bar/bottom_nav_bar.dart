@@ -2,7 +2,7 @@ import 'package:felloapp/core/model/bottom_nav_bar_item_model.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/hometabs/home/card_actions_notifier.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
-import 'package:felloapp/ui/pages/root/root_view.dart';
+import 'package:felloapp/ui/pages/root/tutorial_keys.dart';
 import 'package:felloapp/ui/shared/show_case.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
@@ -70,7 +70,7 @@ class BottomNavBar extends StatelessWidget {
                                   child: ShowCaseView(
                                     onTargetClick: () =>
                                         superModel.onItemTapped(index),
-                                    globalKey: tutorialkey3,
+                                    globalKey: TutorialKeys.tutorialkey3,
                                     title: null,
                                     description: locale.tutorial3,
                                     shapeBorder: const RoundedRectangleBorder(),
