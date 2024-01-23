@@ -11,6 +11,7 @@ class ShowCaseView extends StatelessWidget {
       this.onTargetClick,
       this.toolTipPosition,
       this.targetBorderRadius,
+      this.targetPadding,
       super.key});
   final GlobalKey globalKey;
   final String? title;
@@ -20,6 +21,7 @@ class ShowCaseView extends StatelessWidget {
   final BorderRadius? targetBorderRadius;
   final TooltipPosition? toolTipPosition;
   final VoidCallback? onTargetClick;
+  final EdgeInsets? targetPadding;
 
   @override
   Widget build(BuildContext context) {
@@ -29,6 +31,7 @@ class ShowCaseView extends StatelessWidget {
       tooltipPosition: toolTipPosition,
       descTextStyle: const TextStyle(fontSize: 19),
       descriptionAlignment: TextAlign.start,
+      targetPadding: targetPadding??EdgeInsets.zero,
       scrollLoadingWidget: const SizedBox.shrink(),
       description: description,
       key: globalKey,
