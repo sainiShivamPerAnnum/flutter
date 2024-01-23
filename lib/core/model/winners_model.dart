@@ -136,7 +136,7 @@ class Winners {
         matchMap: matchMap ?? this.matchMap,
         displayScore: displayScore ?? this.displayScore,
         ticketOwned: ticketOwned ?? this.ticketOwned,
-        totalTickets: totalTickets ?? this.totalTickets);
+        totalTickets: totalTickets ?? 0);
   }
 
   factory Winners.fromMap(Map<String, dynamic> map, String? gameType) {
