@@ -1,6 +1,8 @@
 import 'dart:math' as math;
 
+import 'package:felloapp/core/model/lendbox_maturity_response.dart';
 import 'package:felloapp/core/model/portfolio_model.dart';
+import 'package:felloapp/core/service/lendbox_maturity_service.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/feature/tambola/src/services/tambola_service.dart';
@@ -44,16 +46,19 @@ class _TicketsPendingActionState extends State<TicketsPendingAction>
   @override
   Widget build(BuildContext context) {
     final locale = locator<S>();
-    return Selector<TambolaService, int>(
-        selector: (_, tambolaService) => tambolaService.tambolaTicketCount,
-        builder: (_, ticketCount, child) {
-          return Selector2<UserService, ScratchCardService,
-              Tuple2<Portfolio?, int>>(
-            selector: (p0, userService, scratchCardService) => Tuple2(
-                userService.userPortfolio,
-                scratchCardService.unscratchedTicketsScratchCardCount),
+    return Selector<LendboxMaturityService, int>(
+        selector: (_, lendboxMaturityService) =>
+            lendboxMaturityService.pendingMaturityCount,
+        builder: (_, pendingMaturityAmount, child) {
+          return Selector2<LendboxMaturityService, ScratchCardService,
+              Tuple2<List<Deposit>?, int>>(
+            selector: (p0, lendboxMaturityService, scratchCardService) =>
+                Tuple2(lendboxMaturityService.filteredDeposits,
+                    scratchCardService.unscratchedTicketsCount),
             builder: (context, value, child) {
-              if (value.item2 > 0) {
+              if (!(pendingMaturityAmount > 0 &&
+                      (value.item1 != null && value.item1?[0] != null)) &&
+                  value.item2 > 0) {
                 animationController?.forward();
                 return AnimatedBuilder(
                     animation: animationController!,

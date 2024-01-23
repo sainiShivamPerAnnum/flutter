@@ -66,6 +66,7 @@ class AssetPreferenceViewModel extends BaseViewModel {
       bool enteredFromHomePage, BottomSheetComponent bottomSheetData) {
     if (enteredFromHomePage) {
       AppState.backButtonDispatcher!.didPopRoute();
+      return;
     }
 
     _showBottomSheet(bottomSheetData);

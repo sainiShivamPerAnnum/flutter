@@ -232,12 +232,12 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           );
           break;
         case Pages.Stories:
-          appState.currentAction = PageAction(
-            state: PageState.addWidget,
-            page: StoriesPageConfig,
-            widget: StoriesPage(
+          _addPageData(
+            StoriesPage(
               stories: _getStories(),
+              entryIndex: int.tryParse(queryParams?['entryIndex']??'0')??0,
             ),
+            StoriesPageConfig,
           );
           break;
         case Pages.Root:
@@ -892,13 +892,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         break;
 
       case 'stories':
-        appState.currentAction = PageAction(
-          state: PageState.addWidget,
-          page: StoriesPageConfig,
-          widget: StoriesPage(
-            stories: _getStories(),
-          ),
-        );
+        pageConfiguration = StoriesPageConfig;
         break;
 
       case 'assetPref':

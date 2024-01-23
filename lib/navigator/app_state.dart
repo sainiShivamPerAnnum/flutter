@@ -17,6 +17,7 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
 import 'package:shared_preferences/shared_preferences.dart';
@@ -273,5 +274,16 @@ class AppState extends ChangeNotifier {
         "index": index
       });
     }
+  }
+
+  static Future<bool> isFirstAppOpen() async {
+    bool firstTime = PreferenceHelper.getBool(
+        PreferenceHelper.CACHE_FIRST_TIME_APP_OPEN,
+        def: true);
+    if (firstTime) {
+      await PreferenceHelper.setBool(
+          PreferenceHelper.CACHE_FIRST_TIME_APP_OPEN, false);
+    }
+    return firstTime;
   }
 }

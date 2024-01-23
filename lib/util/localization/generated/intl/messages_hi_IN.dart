@@ -1259,6 +1259,18 @@ class MessageLookup extends MessageLookupByLibrary {
             "कृपया कम राशि का प्रयास करें"),
         "tryOnRealDevice": MessageLookupByLibrary.simpleMessage(
             "कृपया ऐप का वास्तविक डिवाइस पर उपयोग करें"),
+        "tutorial1": MessageLookupByLibrary.simpleMessage(
+            "नमस्ते उपयोगकर्ता! यहां अपनी संपत्तियों का चयन करके अपनी इनामी बचत यात्रा शुरू करें"),
+        "tutorial2": MessageLookupByLibrary.simpleMessage(
+            "प्रत्येक 500 रुपये की बचत के लिए, आपको 1 साप्ताहिक टिकट मिलता है जिससे आप 1 रुपये से लेकर 1 करोड़ रुपये तक के इनाम जीत सकते हैं।"),
+        "tutorial3": MessageLookupByLibrary.simpleMessage(
+            "आप इस खंड में टिकट देख सकते हैं और साप्ताहिक खेल खेलकर इनाम अर्जित कर सकते हैं!"),
+        "tutorial4": MessageLookupByLibrary.simpleMessage(
+            "आप इस इनाम अनुभाग में अपने सभी अर्जित इनाम देख सकते हैं"),
+        "tutorial5": MessageLookupByLibrary.simpleMessage(
+            "यदि आप फेलो के बारे में और जानना चाहते हैं, तो इन कहानियों को देखें!"),
+        "tutorial6": MessageLookupByLibrary.simpleMessage(
+            "अब अपनी इनामी बचत यात्रा शुरू करने के लिए यहां अपनी संपत्ति का चयन करें"),
         "txnActiveCoupon": MessageLookupByLibrary.simpleMessage("सक्रिय कूपन"),
         "txnAmountTitle": MessageLookupByLibrary.simpleMessage("लेनदेन राशि"),
         "txnApply": MessageLookupByLibrary.simpleMessage("आवेदन करें"),

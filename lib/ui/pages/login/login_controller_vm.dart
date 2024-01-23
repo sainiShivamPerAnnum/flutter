@@ -578,7 +578,7 @@ class LoginControllerViewModel extends BaseViewModel {
     );
 
     if (_isSignup && variant == 'a') {
-      await Future.delayed(const Duration(milliseconds: 1));
+      await Future.delayed(const Duration(milliseconds: 10));
       appStateProvider.currentAction = PageAction(
         state: PageState.addPage,
         page: AssetPrefPageConfig,
@@ -586,14 +586,8 @@ class LoginControllerViewModel extends BaseViewModel {
     }
 
     if (_isSignup && variant == 'b') {
-      await Future.delayed(const Duration(milliseconds: 100));
-      appStateProvider.currentAction = PageAction(
-        state: PageState.addWidget,
-        page: StoriesPageConfig,
-        widget: StoriesPage(
-          stories: _getStories(),
-        ),
-      );
+      await Future.delayed(const Duration(milliseconds: 10));
+      AppState.delegate!.screenCheck('stories');
     }
 
     BaseUtil.showPositiveAlert(

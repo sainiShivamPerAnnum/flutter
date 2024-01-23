@@ -1,13 +1,13 @@
 import 'package:cached_network_image/cached_network_image.dart';
-import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/cache_model/story_model.dart';
 import 'package:felloapp/core/model/sdui/sections/home_page_sections.dart'
     as sections;
 import 'package:felloapp/core/repository/local/stories_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/navigator/router/ui_pages.dart';
-import 'package:felloapp/ui/pages/hometabs/save/stories/stories_page.dart';
+import 'package:felloapp/ui/pages/root/tutorial_keys.dart';
+import 'package:felloapp/ui/shared/show_case.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart' hide Action;
@@ -36,15 +36,9 @@ class _StoriesSectionState extends State<StoriesSection> {
   }
 
   void _onTapStory(int index, sections.Story story) {
-    AppState.delegate!.appState.currentAction = PageAction(
-      state: PageState.addWidget,
-      page: StoriesPageConfig,
-      widget: StoriesPage(
-        stories: widget.data.stories,
-        entryIndex: index,
-      ),
-    );
-
+    AppState.delegate!.screenCheck('stories', {
+      'entryIndex': index.toString(),
+    });
     final analytics = locator<AnalyticsService>();
     story.events.forEach(
       (k, v) => analytics.track(
@@ -56,6 +50,7 @@ class _StoriesSectionState extends State<StoriesSection> {
 
   @override
   Widget build(BuildContext context) {
+    final locale = locator<S>();
     return Container(
       padding: EdgeInsets.symmetric(
         vertical: SizeConfig.padding24,
@@ -95,14 +90,32 @@ class _StoriesSectionState extends State<StoriesSection> {
                         : 0,
                   ),
                   child: InkWell(
+                    child: i == 0
+                        ? ShowCaseView(
+                            title: null,
+                            description: locale.tutorial5,
+                            globalKey: i == 0 ? TutorialKeys.tutorialkey5 : GlobalKey(),
+                            shapeBorder: const RoundedRectangleBorder(),
+                            targetBorderRadius: BorderRadius.all(
+                              Radius.circular(SizeConfig.roundness12),
+                            ),
+                            child: _StoryCard(
+                              style:
+                                  widget.style[widget.data.stories[i].style]!,
+                              storyStatus: _storiesRepo.getStoryStatusById(
+                                widget.data.stories[i].id,
+                              ),
+                              story: widget.data.stories[i],
+                            ),
+                          )
+                        : _StoryCard(
+                            style: widget.style[widget.data.stories[i].style]!,
+                            storyStatus: _storiesRepo.getStoryStatusById(
+                              widget.data.stories[i].id,
+                            ),
+                            story: widget.data.stories[i],
+                          ),
                     onTap: () => _onTapStory(i, widget.data.stories[i]),
-                    child: _StoryCard(
-                      style: widget.style[widget.data.stories[i].style]!,
-                      storyStatus: _storiesRepo.getStoryStatusById(
-                        widget.data.stories[i].id,
-                      ),
-                      story: widget.data.stories[i],
-                    ),
                   ),
                 ),
             ],
