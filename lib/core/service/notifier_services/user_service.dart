@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/cache_type_enum.dart';
+import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/model/alert_model.dart';
@@ -30,6 +31,7 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
 import 'package:felloapp/ui/dialogs/referral_alert_dailog.dart';
+import 'package:felloapp/ui/pages/hometabs/save/save_components/asset_view_section.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/assets.dart';
@@ -424,13 +426,13 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
 
       final dateTime = DateTime.now();
       locator<FeatureFlagService>().updateAttributes(attributes: {
-        "day": dateTime.day.toString(),
-        "mobile": _baseUser?.mobile,
-        "time": dateTime.hour,
-        "segments": _baseUser?.segments,
-        "subsStatus": _baseUser?.subsStatus,
-        "spinCompleted": spinComplete,
-        "firstLaunch": firstLaunch,
+        'day': dateTime.day.toString(),
+        'mobile': _baseUser?.mobile ?? '',
+        'time': dateTime.hour,
+        'segments': _baseUser?.segments ?? [],
+        'subsStatus': _baseUser?.subsStatus ?? '',
+        'spinCompleted': spinComplete,
+        'firstLaunch': firstLaunch,
       });
 
       final variant = _featureEvaluator.evaluateFeature(
@@ -903,6 +905,22 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
         );
 
         await Future.delayed(const Duration(milliseconds: 100));
+
+        if (entryScreen == 'MOST_INVESTED' && baseUser?.favAsset != null) {
+          final type = baseUser?.favAsset == 'AUGGOLD99'
+              ? InvestmentType.AUGGOLD99
+              : InvestmentType.LENDBOXP2P;
+
+          AppState.delegate!.appState.currentAction = PageAction(
+            state: PageState.addWidget,
+            page: SaveAssetsViewConfig,
+            widget: AssetSectionView(
+              type: type,
+            ),
+          );
+
+          return;
+        }
 
         AppState.delegate!.parseRoute(
           Uri.parse(entryScreen),

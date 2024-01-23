@@ -30,6 +30,7 @@ class BaseUser {
   String? avatarId;
   bool? isOldUser;
   String? subsStatus;
+  String? favAsset;
   List segments;
   SuperFelloLevel superFelloLevel = SuperFelloLevel.NEW_FELLO;
   num minRedemptionAmt = 200;
@@ -67,6 +68,7 @@ class BaseUser {
   static const String fieldSuperFelloLevel = 'superFelloLevel';
   static const String fieldMinRedemptionAmt = 'minRedemptionAmt';
   static const String fieldSubscriptionStatus = 'subsStatus';
+  static const String fieldFavAsset = 'favAsset';
 
   static const _$UserBadgeLevelEnumMap = {
     'GOOD': SuperFelloLevel.GOOD,
@@ -76,34 +78,36 @@ class BaseUser {
   };
 
   BaseUser(
-      this.uid,
-      this.mobile,
-      this.email,
-      this.name,
-      this.dob,
-      this.gender,
-      this.client_token,
-      this.isInvested,
-      this.isIciciOnboarded,
-      this.isAugmontOnboarded,
-      this.isSimpleKycVerified,
-      this.isKycVerified,
-      this.kycName,
-      this.pendingTxnId,
-      this.isIciciEnabled,
-      this.isAugmontEnabled,
-      this.username,
-      this.isEmailVerified,
-      this.isBlocked,
-      this.userPreferences,
-      this.createdOn,
-      this.appFlyerId,
-      this.avatarId,
-      this.isOldUser,
-      this.segments,
-      {this.superFelloLevel = SuperFelloLevel.NEW_FELLO,
-      this.minRedemptionAmt = 200,
-      this.subsStatus});
+    this.uid,
+    this.mobile,
+    this.email,
+    this.name,
+    this.dob,
+    this.gender,
+    this.client_token,
+    this.isInvested,
+    this.isIciciOnboarded,
+    this.isAugmontOnboarded,
+    this.isSimpleKycVerified,
+    this.isKycVerified,
+    this.kycName,
+    this.pendingTxnId,
+    this.isIciciEnabled,
+    this.isAugmontEnabled,
+    this.username,
+    this.isEmailVerified,
+    this.isBlocked,
+    this.userPreferences,
+    this.createdOn,
+    this.appFlyerId,
+    this.avatarId,
+    this.isOldUser,
+    this.segments, {
+    this.superFelloLevel = SuperFelloLevel.NEW_FELLO,
+    this.minRedemptionAmt = 200,
+    this.subsStatus,
+    this.favAsset,
+  });
 
   BaseUser.newUser(String id, String mobile)
       : this(
@@ -166,6 +170,7 @@ class BaseUser {
               ? _$UserBadgeLevelEnumMap[data[fieldSuperFelloLevel]]!
               : SuperFelloLevel.NEW_FELLO,
           subsStatus: data[fieldSubscriptionStatus],
+          favAsset: data[fieldFavAsset],
         );
 
   bool hasIncompleteDetails() {

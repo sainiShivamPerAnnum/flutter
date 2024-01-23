@@ -428,7 +428,7 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage>
                                 alignment: Alignment.topLeft,
                                 child: SizedBox(
                                   child: Text(
-                                    "Tokens and Tickets are deducted for withdrawals",
+                                    "Tickets are deducted for withdrawals",
                                     style: TextStyles.sourceSans.body4
                                         .colour(const Color(0xffA0A0A0)),
                                   ),

@@ -90,7 +90,7 @@ class LoginOtpViewState extends State<LoginOtpView> {
                         model.parentModelInstance.state == ViewState.Busy;
                     return GestureDetector(
                       onTap: () {
-                        if (isBusy && BaseUtil.showNoInternetAlert()) {
+                        if (isBusy || BaseUtil.showNoInternetAlert()) {
                           return;
                         }
 

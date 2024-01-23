@@ -270,6 +270,7 @@ class APIService implements API {
     final options = Options(
       method: method.name,
       headers: modifiedHeaders,
+      listFormat: ListFormat.multi,
     );
 
     Trace? trace;

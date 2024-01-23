@@ -41,7 +41,11 @@ class MiniTransactionCard extends StatelessWidget {
               final List<UserTransaction> txnList =
                   m.txnList != null && m.txnList!.isNotEmpty
                       ? m.txnList!
-                          .where((e) => e.subType == investmentType.name)
+                          .where(
+                            (e) =>
+                                e.subType == investmentType.name ||
+                                e.subType == 'AUGGOLD99_FD',
+                          )
                           .toList()
                       : [];
 
