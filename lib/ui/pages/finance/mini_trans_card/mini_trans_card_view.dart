@@ -38,16 +38,17 @@ class MiniTransactionCard extends StatelessWidget {
           curve: Curves.easeInOutCubic,
           child: Consumer<TxnHistoryService>(
             builder: (ctx, m, child) {
-              final List<UserTransaction> txnList =
-                  m.txnList != null && m.txnList!.isNotEmpty
-                      ? m.txnList!
-                          .where(
-                            (e) =>
-                                e.subType == investmentType.name ||
-                                e.subType == 'AUGGOLD99_FD',
-                          )
-                          .toList()
-                      : [];
+              final List<UserTransaction> txnList = m.txnList != null &&
+                      m.txnList!.isNotEmpty
+                  ? m.txnList!
+                      .where(
+                        (e) =>
+                            e.subType == investmentType.name ||
+                            e.subType ==
+                                UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD_FD,
+                      )
+                      .toList()
+                  : [];
 
               return Column(
                 children: [

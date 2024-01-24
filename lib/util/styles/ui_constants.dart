@@ -134,6 +134,9 @@ class UiConstants {
   static const Color kAutoSaveOnboardingColor = Color(0xff025155);
   static const Color kAutoSaveOnboardingTextColor = Color(0xff01646B);
 
+  // snowflakes.
+  static const Color onboardingBackgroundColor = Color(0xFF1D252A);
+
   static LinearGradient kTextFieldGradient1 = const LinearGradient(
     colors: [Color(0xff111111), Colors.transparent],
     begin: Alignment.topCenter,

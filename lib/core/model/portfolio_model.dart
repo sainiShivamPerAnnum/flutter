@@ -134,7 +134,7 @@ class Asset {
   final bool isGoldProUser;
   final num currentValue; // total gold quantity with principle and interest.
   final num leased; // total leased amount in quantity.
-  final num payout; // interest gain in quantity.
+  final num payouts; // interest gain in quantity.
 
   const Asset({
     required this.absGains,
@@ -144,7 +144,7 @@ class Asset {
     required this.isGoldProUser,
     required this.currentValue,
     required this.leased,
-    required this.payout,
+    required this.payouts,
   });
 
   factory Asset.fromMap(Map<String, dynamic>? map) {
@@ -157,7 +157,7 @@ class Asset {
       currentValue: map['currentValue'] ?? 0.0,
       isGoldProUser: map['isGoldProUser'] ?? false,
       leased: map['leased'] ?? 0.0,
-      payout: map['payout'] ?? 0.0,
+      payouts: map['payouts'] ?? 0.0,
     );
   }
   factory Asset.base() {
@@ -169,7 +169,7 @@ class Asset {
       currentValue: 0,
       isGoldProUser: false,
       leased: 0.0,
-      payout: 0.0,
+      payouts: 0.0,
     );
   }
 }

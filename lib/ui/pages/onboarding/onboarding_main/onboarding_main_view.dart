@@ -54,7 +54,7 @@ class _OnBoardingViewState extends State<OnBoardingView>
       onModelReady: (model) => model.init(),
       builder: (context, model, child) {
         return Scaffold(
-          backgroundColor: const Color(0xFF032A2E),
+          backgroundColor: UiConstants.onboardingBackgroundColor,
           body: NotificationListener<OverscrollIndicatorNotification>(
             onNotification: (n) {
               n.disallowIndicator();
@@ -96,10 +96,11 @@ class _OnBoardingViewState extends State<OnBoardingView>
               child: Stack(
                 children: [
                   Align(
-                    alignment: Alignment.topCenter,
+                    alignment: Alignment.bottomCenter,
                     child: Lottie.asset(
                       Assets.onboarding,
-                      width: SizeConfig.screenWidth,
+                      width: double.infinity,
+                      height: double.infinity,
                       frameRate: FrameRate(60),
                       controller: controller,
                       fit: BoxFit.fill,
@@ -118,25 +119,24 @@ class _OnBoardingViewState extends State<OnBoardingView>
                             onPageChanged: (val) {
                               if (val > model.currentPage) {
                                 if (val == 2) {
-                                  controller!.animateTo(_thirdPoint).then(
-                                        (_) => model.indicatorPosition = 2,
-                                      );
+                                  controller!.animateTo(_thirdPoint);
+                                  model.indicatorPosition = 2;
                                 } else {
-                                  controller!
-                                      .animateTo(_secondPoint)
-                                      .then((_) => model.indicatorPosition = 1);
+                                  controller!.animateTo(_secondPoint);
+                                  model.indicatorPosition = 1;
                                 }
                               } else {
                                 if (val == 0) {
-                                  controller!
-                                      .animateTo(_entryPoint)
-                                      .then((_) => model.indicatorPosition = 0);
+                                  controller!.animateTo(_entryPoint);
+                                  model.indicatorPosition = 0;
                                 } else if (val == 1) {
                                   controller!
                                       .animateBack(_secondPoint)
                                       .then((_) => model.indicatorPosition = 1);
                                 } else {
-                                  controller!.animateBack(_entryPoint);
+                                  controller!
+                                      .animateBack(_entryPoint)
+                                      .then((_) => model.indicatorPosition = 0);
                                 }
                               }
                               model.currentPage = val;

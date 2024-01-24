@@ -120,7 +120,8 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage>
   @override
   Widget build(BuildContext context) {
     final isGold =
-        widget.txn.subType == UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD;
+        widget.txn.subType == UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD ||
+            widget.txn.subType == UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD_FD;
     return Scaffold(
       backgroundColor: const Color(0xff151D22),
       appBar: FAppBar(
@@ -279,7 +280,10 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage>
                           if (isGold &&
                               widget.txn.tranStatus ==
                                   UserTransaction.TRAN_STATUS_COMPLETE) ...[
-                            if (widget.txn.augmnt?["aLockPrice"] != null) ...[
+                            if (widget.txn.augmnt?["aLockPrice"] != null &&
+                                !(widget.txn.subType ==
+                                    UserTransaction
+                                        .TRAN_SUBTYPE_AUGMONT_GOLD_FD)) ...[
                               Padding(
                                 padding: const EdgeInsets.symmetric(
                                     horizontal: 2, vertical: 8),
@@ -390,7 +394,7 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage>
                                       ),
                                     ),
                                     Text(
-                                      "${widget.txn.couponMap!.containsKey("goldQty") ? (BaseUtil.digitPrecision(widget.txn.augmnt!["aGoldInTxn"] + widget.txn.couponMap!["goldQty"], 4, false)).toString() : BaseUtil.digitPrecision(widget.txn.augmnt!["aGoldInTxn"], 4, false).toString()} gms",
+                                      "${widget.txn.couponMap!.containsKey("goldQty") ? (BaseUtil.digitPrecision(widget.txn.augmnt!["aGoldInTxn"] + widget.txn.couponMap!["goldQty"], 6, false)).toString() : BaseUtil.digitPrecision(widget.txn.augmnt!["aGoldInTxn"], 6, false).toString()} gms",
                                       style:
                                           TextStyles.sourceSansB.body3.colour(
                                         const Color(0xffE3CD95),

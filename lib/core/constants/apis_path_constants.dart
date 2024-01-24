@@ -162,9 +162,7 @@ class ApiPath {
   static const String getGames = "/games";
 
   // Coupon Apis
-  static String getCoupons = FlavorConfig.isDevelopment()
-      ? "/mono-coupons-dev-getCoupons"
-      : "/coupons";
+  static String getCoupons = "/coupons";
 
   static String getGameByCode(String gameCode) => "/game/$gameCode";
 

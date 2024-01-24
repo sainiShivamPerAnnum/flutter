@@ -33,8 +33,9 @@ class TransactionHistoryRepository extends BaseRepo {
       final queryParams = {
         "type": type,
         "subType": [
+          if (subtype == InvestmentType.AUGGOLD99.name)
+            UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD_FD,
           subtype,
-          if (subtype == InvestmentType.AUGGOLD99.name) 'AUGGOLD99_FD',
         ],
         "limit": limit.toString(),
         if (offset != null && offset != 0) ...{
@@ -63,8 +64,7 @@ class TransactionHistoryRepository extends BaseRepo {
       return ApiResponse<TransactionResponse>(model: txnResponse, code: 200);
     } catch (e) {
       logger.e(e.toString());
-      return ApiResponse.withError(
-          e.toString() ?? "Unable to fetch transactions", 400);
+      return ApiResponse.withError(e.toString(), 400);
     }
   }
 
@@ -117,8 +117,7 @@ class TransactionHistoryRepository extends BaseRepo {
       return ApiResponse<TransactionResponse>(model: txnResponse, code: 200);
     } catch (e) {
       logger.e(e.toString());
-      return ApiResponse.withError(
-          e.toString() ?? "Unable to fetch transactions", 400);
+      return ApiResponse.withError(e.toString(), 400);
     }
   }
 }
