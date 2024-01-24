@@ -23,7 +23,7 @@ class NewSquareBackground extends StatelessWidget {
               return Divider(
                 thickness: 1,
                 height: SizeConfig.screenWidth! * 0.1667,
-                color: UiConstants.kBackgroundDividerColor,
+                color: UiConstants.kGridLineColor,
               );
             },
           ),
@@ -37,7 +37,7 @@ class NewSquareBackground extends StatelessWidget {
               return VerticalDivider(
                 thickness: 1,
                 width: SizeConfig.screenWidth! * 0.1667,
-                color: UiConstants.kBackgroundDividerColor,
+                color: UiConstants.kGridLineColor,
               );
             },
           ),

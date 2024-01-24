@@ -202,10 +202,10 @@ class S {
     );
   }
 
-  /// `You're one step away from 12% returns`
+  /// `You are a step away from Rewarding Savings experience`
   String get obEnterDetailsTitle {
     return Intl.message(
-      'You\'re one step away from 12% returns',
+      'You are a step away from Rewarding Savings experience',
       name: 'obEnterDetailsTitle',
       desc: '',
       args: [],
@@ -959,6 +959,66 @@ class S {
       name: 'obLoginAsText',
       desc: '',
       args: [mobileNumber],
+    );
+  }
+
+  /// `SKIP TO HOME`
+  String get obAssetPrefBottomSheet2ButtonText1 {
+    return Intl.message(
+      'SKIP TO HOME',
+      name: 'obAssetPrefBottomSheet2ButtonText1',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `LEARN MORE`
+  String get learnMore {
+    return Intl.message(
+      'LEARN MORE',
+      name: 'learnMore',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Welcome To Fello`
+  String get obAssetWelcomeText {
+    return Intl.message(
+      'Welcome To Fello',
+      name: 'obAssetWelcomeText',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Hi {name}`
+  String obAssetPrefGreeting(String name) {
+    return Intl.message(
+      'Hi $name',
+      name: 'obAssetPrefGreeting',
+      desc: '',
+      args: [name],
+    );
+  }
+
+  /// `PROCEED WITH FELLO P2P`
+  String get obProceedWithP2P {
+    return Intl.message(
+      'PROCEED WITH FELLO P2P',
+      name: 'obProceedWithP2P',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `PROCEED WITH DIGITAL GOLD`
+  String get obProceedWithGold {
+    return Intl.message(
+      'PROCEED WITH DIGITAL GOLD',
+      name: 'obProceedWithGold',
+      desc: '',
+      args: [],
     );
   }
 
@@ -2776,10 +2836,10 @@ class S {
     );
   }
 
-  /// `Just one step away from starting your Investment Journey`
+  /// `One step away from starting your Rewarding Savings journey`
   String get preKYC {
     return Intl.message(
-      'Just one step away from starting your Investment Journey',
+      'One step away from starting your Rewarding Savings journey',
       name: 'preKYC',
       desc: '',
       args: [],
@@ -3027,6 +3087,16 @@ class S {
       name: 'refShareLink',
       desc: '',
       args: [],
+    );
+  }
+
+  /// `Claim {amount} referral bonus by saving`
+  String referralNudgeMessage(num amount) {
+    return Intl.message(
+      'Claim $amount referral bonus by saving',
+      name: 'referralNudgeMessage',
+      desc: '',
+      args: [amount],
     );
   }
 
@@ -8616,10 +8686,10 @@ class S {
     );
   }
 
-  /// `Total rewards won on Fello till date -`
+  /// `Total rewards won on Fello till date`
   String get totalRewardsTilldate {
     return Intl.message(
-      'Total rewards won on Fello till date -',
+      'Total rewards won on Fello till date',
       name: 'totalRewardsTilldate',
       desc: '',
       args: [],
@@ -8631,16 +8701,6 @@ class S {
     return Intl.message(
       'Rewards with Fello',
       name: 'rewardsWithFello',
-      desc: '',
-      args: [],
-    );
-  }
-
-  /// `Predict | Save | Win`
-  String get powerPlaySlog {
-    return Intl.message(
-      'Predict | Save | Win',
-      name: 'powerPlaySlog',
       desc: '',
       args: [],
     );
@@ -8686,11 +8746,131 @@ class S {
     );
   }
 
-  /// `REUPLOAD`
+  /// `UPLOAD AGAIN`
   String get reupload {
     return Intl.message(
-      'REUPLOAD',
+      'UPLOAD AGAIN',
       name: 'reupload',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Predict | Save | Win`
+  String get powerPlaySlog {
+    return Intl.message(
+      'Predict | Save | Win',
+      name: 'powerPlaySlog',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `SKIP`
+  String get skip {
+    return Intl.message(
+      'SKIP',
+      name: 'skip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Choose any of the above asset to proceed`
+  String get selectAssetMessage {
+    return Intl.message(
+      'Choose any of the above asset to proceed',
+      name: 'selectAssetMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please try again`
+  String get tryAgainMessage {
+    return Intl.message(
+      'Please try again',
+      name: 'tryAgainMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `SIGN-UP`
+  String get signUp {
+    return Intl.message(
+      'SIGN-UP',
+      name: 'signUp',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Welcome to Fello!\n\nQuick tips are here to guide you. \nClick anywhere for the next tip. \n'Skip' to close. \nRestart anytime from the 'Profile' section.🚀`
+  String get tutorialstart {
+    return Intl.message(
+      'Welcome to Fello!\n\nQuick tips are here to guide you. \nClick anywhere for the next tip. \n\'Skip\' to close. \nRestart anytime from the \'Profile\' section.🚀',
+      name: 'tutorialstart',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Start your Rewarding Savings journey by selecting your assets over here`
+  String get tutorial1 {
+    return Intl.message(
+      'Start your Rewarding Savings journey by selecting your assets over here',
+      name: 'tutorial1',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `For every Rs.500 saved, you get 1 weekly ticket which earns you rewards from Rs.1 to Rs. 1 Cr.`
+  String get tutorial2 {
+    return Intl.message(
+      'For every Rs.500 saved, you get 1 weekly ticket which earns you rewards from Rs.1 to Rs. 1 Cr.',
+      name: 'tutorial2',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You can see the tickets and play the weekly game in this section and earn rewards!`
+  String get tutorial3 {
+    return Intl.message(
+      'You can see the tickets and play the weekly game in this section and earn rewards!',
+      name: 'tutorial3',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You can see all your earned rewards in this Rewards section`
+  String get tutorial4 {
+    return Intl.message(
+      'You can see all your earned rewards in this Rewards section',
+      name: 'tutorial4',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `If you want to know more about Fello, check out these stories!`
+  String get tutorial5 {
+    return Intl.message(
+      'If you want to know more about Fello, check out these stories!',
+      name: 'tutorial5',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Now lets start your rewarding savings journey by selecting your asset over here`
+  String get tutorial6 {
+    return Intl.message(
+      'Now lets start your rewarding savings journey by selecting your asset over here',
+      name: 'tutorial6',
       desc: '',
       args: [],
     );

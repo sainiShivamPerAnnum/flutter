@@ -28,27 +28,11 @@ class GoldProBuySuccessView extends StatefulWidget {
   State<GoldProBuySuccessView> createState() => _GoldProBuySuccessViewState();
 }
 
-class _GoldProBuySuccessViewState extends State<GoldProBuySuccessView>
-    with SingleTickerProviderStateMixin {
-  late AnimationController _animationController;
-  bool _showLottie = true;
-
+class _GoldProBuySuccessViewState extends State<GoldProBuySuccessView> {
   @override
   void initState() {
     super.initState();
     AppState.isGoldProBuyInProgress = false;
-    _animationController = AnimationController(vsync: this);
-    _playLottieAnimation();
-  }
-
-  @override
-  void dispose() {
-    _animationController.dispose();
-    super.dispose();
-  }
-
-  Future<void> _playLottieAnimation() async {
-    await Future.delayed(const Duration(seconds: 4));
   }
 
   String _getButtonLabel(S locale, bool hasSuperFelloInStack) {
@@ -427,28 +411,6 @@ class _GoldProBuySuccessViewState extends State<GoldProBuySuccessView>
               ],
             ),
           ),
-          if (_showLottie)
-            Container(
-              color: Colors.black.withOpacity(0.8),
-              child: Center(
-                child: Lottie.asset(
-                  'assets/lotties/whataFello_lottie.json',
-                  controller: _animationController,
-                  onLoaded: (composition) {
-                    _animationController
-                      ..duration = composition.duration
-                      ..forward().whenComplete(() {
-                        if (mounted) {
-                          setState(() {
-                            _showLottie = false;
-                            AppState.unblockNavigation();
-                          });
-                        }
-                      });
-                  },
-                ),
-              ),
-            ),
           SafeArea(
             child: Row(
               mainAxisAlignment: MainAxisAlignment.end,

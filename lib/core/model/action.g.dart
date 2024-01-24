@@ -9,11 +9,13 @@ part of 'action.dart';
 Action _$ActionFromJson(Map<String, dynamic> json) => Action(
       type: $enumDecode(_$ActionTypeEnumMap, json['type']),
       payload: json['payload'] as Map<String, dynamic>? ?? const {},
+      events: json['events'] as Map<String, dynamic>? ?? const {},
     );
 
 Map<String, dynamic> _$ActionToJson(Action instance) => <String, dynamic>{
       'type': _$ActionTypeEnumMap[instance.type]!,
       'payload': instance.payload,
+      'events': instance.events,
     };
 
 const _$ActionTypeEnumMap = {

@@ -109,6 +109,11 @@ class MyWinningsView extends StatelessWidget {
                                           indicatorWeight: SizeConfig.padding4,
                                           labelColor: Colors.white,
                                           isScrollable: false,
+                                          onTap: (value) {
+                                            model.trackTabClicked(value == 0
+                                                ? 'Your Rewards'
+                                                : 'Earn Rewards');
+                                          },
                                           tabs: [
                                             Tab(
                                                 child: Text(
@@ -131,17 +136,40 @@ class MyWinningsView extends StatelessWidget {
                                 body: TabBarView(
                                   children: [
                                     Builder(builder: (context) {
-                                      return CustomScrollView(
-                                        slivers: [
-                                          SliverOverlapInjector(
-                                            handle: NestedScrollView
-                                                .sliverOverlapAbsorberHandleFor(
-                                                    context),
-                                          ),
-                                          const SliverToBoxAdapter(
-                                            child: ScratchCardsView(),
-                                          )
-                                        ],
+                                      return NotificationListener<
+                                          ScrollNotification>(
+                                        onNotification: (notification) {
+                                          if (notification.metrics.pixels ==
+                                              notification
+                                                  .metrics.maxScrollExtent) {
+                                            gtmodel.fetchScratchCards(
+                                                more: true);
+                                          }
+                                          return false;
+                                        },
+                                        child: CustomScrollView(
+                                          physics: const ClampingScrollPhysics(),
+                                          slivers: [
+                                            SliverOverlapInjector(
+                                              handle: NestedScrollView
+                                                  .sliverOverlapAbsorberHandleFor(
+                                                      context),
+                                            ),
+                                            SliverToBoxAdapter(
+                                                child: gtmodel
+                                                            .isFetchingScratchCards &&
+                                                        gtmodel.allScratchCards
+                                                            .isEmpty
+                                                    ? const Center(
+                                                        child:
+                                                            FullScreenLoader())
+                                                    : gtmodel.allScratchCards
+                                                            .isEmpty
+                                                        ? const NoScratchCardsFound()
+                                                        : ScratchCardsView(
+                                                            model: gtmodel))
+                                          ],
+                                        ),
                                       );
                                     }),
                                     Builder(builder: (context) {
@@ -156,9 +184,11 @@ class MyWinningsView extends StatelessWidget {
                                             child: gtmodel
                                                     .allScratchCards.isNotEmpty
                                                 ? EarnRewardsDetails(
+                                                    model: model,
                                                     gtService: gtmodel,
                                                   )
                                                 : EarnRewardsIntro(
+                                                    model: model,
                                                     gtService: gtmodel,
                                                   ),
                                           )

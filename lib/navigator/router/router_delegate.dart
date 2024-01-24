@@ -9,8 +9,10 @@ import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
 import 'package:felloapp/core/model/bottom_nav_bar_item_model.dart';
+import 'package:felloapp/core/model/sdui/sections/home_page_sections.dart';
 import 'package:felloapp/core/repository/games_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/feature/fello_badges/ui/fello_badges_home.dart';
 import 'package:felloapp/feature/flo_withdrawals/ui/balloon_lottie_screen.dart';
@@ -20,6 +22,7 @@ import 'package:felloapp/navigator/router/transition_delegate.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/more_info_dialog.dart';
 import 'package:felloapp/ui/elements/fello_dialog/fello_in_app_review.dart';
+import 'package:felloapp/ui/pages/asset_prefs/asset_prefs.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_buy/gold_pro_buy_view.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_details/gold_pro_details_view.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_sell/gold_pro_sell_view.dart';
@@ -35,6 +38,7 @@ import 'package:felloapp/ui/pages/hometabs/my_account/my_account_view.dart';
 import 'package:felloapp/ui/pages/hometabs/play/play_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/asset_view_section.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/blogs.dart';
+import 'package:felloapp/ui/pages/hometabs/save/stories/stories_page.dart';
 import 'package:felloapp/ui/pages/login/login_controller_view.dart';
 import 'package:felloapp/ui/pages/notifications/notifications_view.dart';
 import 'package:felloapp/ui/pages/onboarding/blocked_user.dart';
@@ -143,11 +147,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     if (canPop()) {
       _removePage(_pages.last);
       debugPrint("Current Stack: ${AppState.screenStack}");
-      // if (AppState.screenStack.length == 1) {
-      //   _journeyService!.checkForMilestoneLevelChange();
-      // }
       notifyListeners();
-
       return Future.value(true);
     }
     notifyListeners();
@@ -223,6 +223,24 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         case Pages.Login:
           _addPageData(const LoginControllerView(), LoginPageConfig);
           break;
+        case Pages.AssetPreference:
+          _addPageData(
+            AssetPrefView(
+              data: locator(),
+              enteredFromHomePage: queryParams?['entryPoint'] == 'home',
+            ),
+            AssetPrefPageConfig,
+          );
+          break;
+        case Pages.Stories:
+          _addPageData(
+            StoriesPage(
+              stories: _getStories(),
+              entryIndex: int.tryParse(queryParams?['entryIndex'] ?? '0') ?? 0,
+            ),
+            StoriesPageConfig,
+          );
+          break;
         case Pages.Root:
           _addPageData(const Root(), RootPageConfig);
           break;
@@ -278,7 +296,8 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           break;
 
         case Pages.ScratchCardsView:
-          _addPageData(const ScratchCardsView(), ScratchCardsViewPageConfig);
+          _addPageData(ScratchCardsView(model: locator<ScratchCardService>()),
+              ScratchCardsViewPageConfig);
           break;
         case Pages.AutosaveOnboardingView:
           _addPageData(
@@ -763,7 +782,11 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     _logger.d("Url: ${uri.toString()}");
     Haptic.vibrate();
     if (uri.scheme == "http" || uri.scheme == "https") {
-      if (isExternal) {
+      final openInExternal =
+          bool.tryParse(uri.queryParameters['flOpenExternal'] ?? 'false') ??
+              false;
+
+      if (isExternal || openInExternal) {
         BaseUtil.launchUrl(uri.toString());
         return;
       }
@@ -792,8 +815,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           );
         } else if (segment.startsWith('c-', 0)) {
           appState.scrollHome(num.tryParse(segment.split('-').last) as int);
-        } else if (segment.startsWith('story-')) {
-          // openStoryView(segment.split('-').last);
         } else {
           screenCheck(segment, uri.queryParameters);
         }
@@ -834,7 +855,10 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     }
   }
 
-  void screenCheck(String screenKey, [Map<String, String>? queryParams]) {
+  void screenCheck(
+    String screenKey, [
+    Map<String, String> queryParams = const {},
+  ]) {
     PageConfiguration? pageConfiguration;
 
     var rootController = locator<RootController>();
@@ -865,17 +889,26 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         break;
       case "goldDetails":
         appState.currentAction = PageAction(
-            state: PageState.addWidget,
-            page: SaveAssetsViewConfig,
-            widget: AssetSectionView(
-              type: InvestmentType.AUGGOLD99,
-            ));
+          state: PageState.addWidget,
+          page: SaveAssetsViewConfig,
+          widget: const AssetSectionView(
+            type: InvestmentType.AUGGOLD99,
+          ),
+        );
         break;
+
+      case 'stories':
+        pageConfiguration = StoriesPageConfig;
+        break;
+
+      case 'assetPref':
+        pageConfiguration = AssetPrefPageConfig;
+
       case "floDetails":
         appState.currentAction = PageAction(
           state: PageState.addWidget,
           page: SaveAssetsViewConfig,
-          widget: AssetSectionView(
+          widget: const AssetSectionView(
             type: InvestmentType.LENDBOXP2P,
           ),
         );
@@ -903,12 +936,13 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         pageConfiguration = KycDetailsPageConfig;
         break;
       case 'assetBuy':
-        BaseUtil.openDepositOptionsModalSheet();
+        BaseUtil.openDepositOptionsModalSheet(timer: 0);
         break;
       case 'augBuy':
         BaseUtil().openRechargeModalSheet(
           investmentType: InvestmentType.AUGGOLD99,
           queryParams: queryParams,
+          fullPager: true,
         );
         break;
       case 'augSell':
@@ -958,7 +992,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case 'tambolaHome':
         if (rootController.navItems
             .containsValue(RootController.tambolaNavBar)) {
-            onTapItem(RootController.tambolaNavBar);
+          onTapItem(RootController.tambolaNavBar);
           break;
         }
         pageConfiguration = THomePageConfig;
@@ -1092,14 +1126,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         rootController.navItems.values.toList().indexOf(item);
   }
 
-  // openTopSaverScreen(String eventType) {
-  //   AppState.delegate!.appState.currentAction = PageAction(
-  //     page: CampaignViewPageConfig,
-  //     state: PageState.addWidget,
-  //     widget: CampaignView(eventType: eventType),
-  //   );
-  // }
-
   void openWebGame(String game) {
     bool isLocked = false;
     double netWorth = locator<UserService>().userPortfolio.augmont.principle +
@@ -1121,6 +1147,21 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     } else {
       BaseUtil.openGameModalSheet(game);
     }
+  }
+
+  List<Story> _getStories() {
+    final pageData = locator<PageData>();
+    final sections = pageData.screens.home.sections;
+
+    for (var i = 0; i < sections.entries.length; i++) {
+      final section = sections.entries.toList()[i].value;
+
+      if (section is StoriesSection) {
+        return section.data.stories;
+      }
+    }
+
+    return const [];
   }
 
   void openAppWalkthrough() {

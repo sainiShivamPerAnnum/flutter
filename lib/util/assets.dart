@@ -5,6 +5,8 @@ const assetBaseUrl = 'https://d37gtxigg82zaw.cloudfront.net/';
 class Assets {
   const Assets._();
   static const String logoMaxSize = 'images/fello_logo.png';
+  static const String logoWhite =
+      'https://ik.imagekit.io/9xfwtu0xm/fello_stories_logo.png';
   static const String logoShortform = 'assets/svg/fello-short-logo.svg';
 
   static const String referGraphic = 'images/transfer.png';
@@ -49,6 +51,7 @@ class Assets {
   static const String navSaveLottie = "assets/lotties/nav/save.json";
   static const String navWinLottie = "assets/lotties/nav/win.json";
   static const String navTambolaLottie = "assets/lotties/nav/tambola.json";
+  static const String onboarding = 'assets/lotties/onboarding.json';
 
   static const String prizeRankOne = "assets/vectors/rank_first.svg";
   static const String prizeRankTwo = "assets/vectors/rank_second.svg";
@@ -439,6 +442,12 @@ class Assets {
       'https://fello-dev-uploads.s3.ap-south-1.amazonaws.com/super_fello_title.svg';
   static const String kycSecurity = "assets/images/kyc_security.png";
   static const String stepCircle = "assets/svg/steps_circle.svg";
+
+  //asset-prefs
+  static const String assetPrefBottomSheet1 =
+      "assets/svg/asset_pref_bottomsheet1.svg";
+  static const String assetPrefBottomSheet2 =
+      "assets/images/asset_pref_bottomsheet2.png";
   static const String earnShadow = "assets/images/earn_shadow.png";
   static const String noScratchCards = "assets/images/noScratchCards.png";
   static const String savingsAvatar = "assets/vectors/savings_avatar.svg";

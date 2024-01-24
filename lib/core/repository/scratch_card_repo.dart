@@ -136,7 +136,7 @@ class ScratchCardRepository extends BaseRepo {
   }
 
   Future<ApiResponse<Map<String, dynamic>>> getScratchCards(
-      {String? start}) async {
+      {int? start}) async {
     final List<ScratchCard> scratchCardsList = [];
     final List<RewardsQuickLinksModel> quickLinks = [];
     try {
@@ -144,7 +144,7 @@ class ScratchCardRepository extends BaseRepo {
         ApiPath.getScratchCard(userService.baseUser!.uid),
         cBaseUrl: AppEnvironment.instance.rewards,
         queryParams: {
-          if (start != null) 'start': start,
+          if (start != null) 'offset': start,
         },
         apiName: '$_rewards/getScratchCardByID',
       );

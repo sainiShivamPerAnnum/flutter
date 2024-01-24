@@ -42,7 +42,7 @@ class ScratchCardService
 
   bool isLastPageForScratchCards = false;
   bool _isFetchingScratchCards = false;
-  String? scratchCardsListLastTicketId;
+  int scratchCardsListLastIndex =0;
 
   bool get isFetchingScratchCards => _isFetchingScratchCards;
 
@@ -411,7 +411,7 @@ class ScratchCardService
       if (!more) allScratchCards.clear();
       isFetchingScratchCards = true;
       final res =
-          await _gtRepo.getScratchCards(start: scratchCardsListLastTicketId);
+          await _gtRepo.getScratchCards(start: scratchCardsListLastIndex);
       if (res.isSuccess()) {
         allRewardsQuickLinks = res.model?["links"];
         if (allScratchCards.isEmpty) {
@@ -422,9 +422,9 @@ class ScratchCardService
           isLastPageForScratchCards = res.model?["isLastPage"];
         }
       }
+      scratchCardsListLastIndex += 50;
       allScratchCards = arrangeScratchCards();
       await Future.delayed(const Duration(milliseconds: 600));
-      scratchCardsListLastTicketId = allScratchCards.last.gtId;
       isFetchingScratchCards = false;
     } catch (e) {
       unawaited(locator<InternalOpsService>().logFailure(

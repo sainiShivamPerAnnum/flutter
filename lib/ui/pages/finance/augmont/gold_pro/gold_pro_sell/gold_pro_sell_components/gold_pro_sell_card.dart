@@ -6,7 +6,6 @@ import 'package:felloapp/core/model/gold_pro_models/gold_pro_investment_reponse_
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_sell/gold_pro_sell_vm.dart';
-import 'package:felloapp/ui/pages/finance/augmont/shared/shared.dart';
 import 'package:felloapp/ui/pages/hometabs/save/gold_components/gold_pro_card.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/locator.dart';
@@ -27,7 +26,7 @@ class GoldProSellCard extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final invested = BaseUtil.digitPrecision(data.qty, 4, false);
-    final interest = BaseUtil.digitPrecision(data.interest_collected, 4, false);
+    final message = data.payoutMessage;
     final total = BaseUtil.digitPrecision(
       data.currentValue.toDouble(),
       4,
@@ -58,7 +57,7 @@ class GoldProSellCard extends StatelessWidget {
           )
         ],
       ),
-      child: Column(children: [
+      child: Column(crossAxisAlignment: CrossAxisAlignment.start, children: [
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
@@ -72,12 +71,16 @@ class GoldProSellCard extends StatelessWidget {
             ),
           ],
         ),
-        if (interest != 0) ...[
-          InterestGainLabel(interestQuantity: interest),
-          SizedBox(
-            height: SizeConfig.padding12,
+        SizedBox(
+          height: SizeConfig.padding12,
+        ),
+        Text(
+          message,
+          style: TextStyles.sourceSans.body3.copyWith(
+            color: UiConstants.yellow3,
+            height: 1,
           ),
-        ],
+        ),
         Divider(
           height: SizeConfig.padding24,
           color: Colors.white.withOpacity(.1),

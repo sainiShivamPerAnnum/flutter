@@ -73,7 +73,7 @@ class MyWinningsViewModel extends BaseViewModel {
     setState(ViewState.Busy);
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       _gtService.isLastPageForScratchCards = false;
-      _gtService.scratchCardsListLastTicketId = null;
+      _gtService.scratchCardsListLastIndex = 0;
       await _gtService.fetchScratchCards();
       setState(ViewState.Idle);
     });
@@ -449,5 +449,35 @@ class MyWinningsViewModel extends BaseViewModel {
       print(e.toString());
       BaseUtil.showNegativeAlert(locale.taskFailed, locale.unableToCapture);
     }
+  }
+
+  void trackTabClicked(String tab) {
+    _analyticsService.track(
+      eventName: AnalyticsEvents.rewardsSectionTab,
+      properties: {
+        "tab": tab,
+      },
+    );
+  }
+
+  void trackHowToEarnCard(String title, String description, String count,
+      String url, String balance, String order) {
+    _analyticsService.track(
+      eventName: AnalyticsEvents.howToEarnRewards,
+      properties: {
+        "Title": title,
+        "Description": description,
+        "Tickets/Rupees": count,
+        "Action URL": url,
+        "Rewards Balance": balance,
+        "Priority order": order
+      },
+    );
+  }
+
+  void trackEarnRewardsClicked() {
+    _analyticsService.track(
+      eventName: AnalyticsEvents.earnRewardsClicked,
+    );
   }
 }

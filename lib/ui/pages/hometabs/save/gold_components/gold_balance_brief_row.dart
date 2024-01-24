@@ -20,7 +20,7 @@ class GoldBalanceBriefRow extends StatelessWidget {
         final portfolio = model.userPortfolio;
         final goldAmount = portfolio.augmont.fd.leased.toDouble();
         final currentValue = portfolio.augmont.fd.currentValue.toDouble();
-        final payout = portfolio.augmont.fd.payout.toDouble();
+        final payout = portfolio.augmont.fd.payouts.toDouble();
 
         return Column(
           children: [

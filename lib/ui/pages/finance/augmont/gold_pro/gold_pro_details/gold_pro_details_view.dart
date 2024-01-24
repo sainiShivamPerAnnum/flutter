@@ -48,183 +48,181 @@ class GoldProDetailsView extends StatelessWidget {
                     Selector<UserService, UserFundWallet>(
                         selector: (p0, p1) => p1.userFundWallet!,
                         builder: (context, wallet, child) {
-                          return Container(
-                            height: (wallet.wAugFdQty ?? 0) > 0
-                                ? (SizeConfig.screenWidth! * 1.03)
-                                : SizeConfig.screenWidth! * 0.88,
-                            width: SizeConfig.screenWidth,
-                            decoration: BoxDecoration(
-                              color: UiConstants.kGoldProBgColor,
-                              borderRadius: BorderRadius.only(
-                                bottomLeft:
-                                    Radius.circular(SizeConfig.roundness24),
-                                bottomRight:
-                                    Radius.circular(SizeConfig.roundness24),
-                              ),
-                            ),
+                          final height = ((wallet.wAugFdQty ?? 0) > 0
+                              ? (SizeConfig.screenWidth! * 1.03)
+                              : SizeConfig.screenWidth! * 0.88);
+                          return SizedBox(
+                            height: height + 60,
                             child: Stack(
                               children: [
-                                const GoldShimmerWidget(
-                                  size: ShimmerSizeEnum.large,
-                                ),
-                                Builder(builder: (context) {
-                                  final subText =
-                                      model.goldProConfig?.data?.subText;
-
-                                  if (subText == null || subText.isEmpty) {
-                                    return const SizedBox.shrink();
-                                  }
-
-                                  return Align(
-                                    alignment: Alignment.bottomCenter,
-                                    child: GoldProExclusiveLabel(
-                                      label: subText,
-                                      curvedRadius: CurvedRadius.bottom,
-                                    ),
-                                  );
-                                }),
-                                SizedBox(
+                                Container(
+                                  height: height,
                                   width: SizeConfig.screenWidth,
+                                  decoration: BoxDecoration(
+                                    color: UiConstants.kGoldProBgColor,
+                                    borderRadius: BorderRadius.only(
+                                      bottomLeft: Radius.circular(
+                                          SizeConfig.roundness24),
+                                      bottomRight: Radius.circular(
+                                          SizeConfig.roundness24),
+                                    ),
+                                  ),
                                   child: Stack(
                                     children: [
-                                      Align(
-                                        alignment: Alignment.center,
-                                        child: SizedBox(
-                                          width: SizeConfig.screenWidth,
-                                          child: Column(
-                                            crossAxisAlignment:
-                                                CrossAxisAlignment.center,
-                                            children: [
-                                              SizedBox(
-                                                height: SizeConfig.padding20 +
-                                                    kToolbarHeight / 2,
-                                              ),
-                                              Container(
-                                                decoration: BoxDecoration(
-                                                  shape: BoxShape.circle,
-                                                  boxShadow: [
-                                                    BoxShadow(
-                                                      color: Colors.white
-                                                          .withOpacity(0.3),
-                                                      blurRadius: 50,
-                                                    )
+                                      const GoldShimmerWidget(
+                                        size: ShimmerSizeEnum.large,
+                                      ),
+                                      Builder(builder: (context) {
+                                        final subText =
+                                            model.goldProConfig?.data?.subText;
+
+                                        if (subText == null ||
+                                            subText.isEmpty) {
+                                          return const SizedBox.shrink();
+                                        }
+
+                                        return Align(
+                                          alignment: Alignment.bottomCenter,
+                                          child: GoldProExclusiveLabel(
+                                            label: subText,
+                                            curvedRadius: CurvedRadius.bottom,
+                                          ),
+                                        );
+                                      }),
+                                      SizedBox(
+                                        width: SizeConfig.screenWidth,
+                                        child: Stack(
+                                          children: [
+                                            Align(
+                                              alignment: Alignment.center,
+                                              child: SizedBox(
+                                                width: SizeConfig.screenWidth,
+                                                child: Column(
+                                                  crossAxisAlignment:
+                                                      CrossAxisAlignment.center,
+                                                  children: [
+                                                    SizedBox(
+                                                      height: SizeConfig
+                                                              .padding20 +
+                                                          kToolbarHeight / 2,
+                                                    ),
+                                                    Container(
+                                                      decoration: BoxDecoration(
+                                                        shape: BoxShape.circle,
+                                                        boxShadow: [
+                                                          BoxShadow(
+                                                            color: Colors.white
+                                                                .withOpacity(
+                                                                    0.3),
+                                                            blurRadius: 50,
+                                                          )
+                                                        ],
+                                                      ),
+                                                      child: SvgPicture.asset(
+                                                        Assets.goldAsset,
+                                                        height: SizeConfig
+                                                                .screenHeight! *
+                                                            0.18,
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      height:
+                                                          SizeConfig.padding4,
+                                                    ),
+                                                    Text(
+                                                      Constants
+                                                          .ASSET_GOLD_STAKE,
+                                                      style: TextStyles
+                                                          .rajdhaniSB.title3
+                                                          .colour(UiConstants
+                                                              .kGoldProPrimary),
+                                                    ),
+                                                    SizedBox(
+                                                      height:
+                                                          SizeConfig.padding4,
+                                                    ),
+                                                    Text(
+                                                      "Lease your Gold with Augmont",
+                                                      style: TextStyles
+                                                          .sourceSans.body2
+                                                          .colour(UiConstants
+                                                              .KGoldProPrimaryDark),
+                                                    ),
+                                                    SizedBox(
+                                                      height:
+                                                          SizeConfig.padding26,
+                                                    ),
+                                                    RichText(
+                                                      text: TextSpan(
+                                                          text: "Earn",
+                                                          style: TextStyles
+                                                              .sourceSans.body0
+                                                              .colour(
+                                                                  Colors.white),
+                                                          children: [
+                                                            TextSpan(
+                                                              text:
+                                                                  " ${AppConfig.getValue(AppConfigKey.goldProInterest).toDouble()}% Extra Gold ",
+                                                              style: TextStyles
+                                                                  .sourceSansB
+                                                                  .body0
+                                                                  .colour(UiConstants
+                                                                      .kGoldProPrimary),
+                                                            ),
+                                                            const TextSpan(
+                                                              text:
+                                                                  "every year",
+                                                            )
+                                                          ]),
+                                                      textAlign:
+                                                          TextAlign.center,
+                                                    ),
                                                   ],
                                                 ),
-                                                child: SvgPicture.asset(
-                                                  Assets.goldAsset,
-                                                  height:
-                                                      SizeConfig.screenHeight! *
-                                                          0.18,
-                                                ),
                                               ),
-                                              SizedBox(
-                                                height: SizeConfig.padding4,
-                                              ),
-                                              Text(
-                                                Constants.ASSET_GOLD_STAKE,
-                                                style: TextStyles
-                                                    .rajdhaniSB.title3
-                                                    .colour(UiConstants
-                                                        .kGoldProPrimary),
-                                              ),
-                                              SizedBox(
-                                                height: SizeConfig.padding4,
-                                              ),
-                                              Text(
-                                                "Lease your Gold with Augmont",
-                                                style: TextStyles
-                                                    .sourceSans.body2
-                                                    .colour(UiConstants
-                                                        .KGoldProPrimaryDark),
-                                              ),
-                                              SizedBox(
-                                                height: SizeConfig.padding26,
-                                              ),
-                                              RichText(
-                                                text: TextSpan(
-                                                    text: "Earn",
-                                                    style: TextStyles
-                                                        .sourceSans.body0
-                                                        .colour(Colors.white),
-                                                    children: [
-                                                      TextSpan(
-                                                        text:
-                                                            " ${AppConfig.getValue(AppConfigKey.goldProInterest).toDouble()}% Extra Gold ",
-                                                        style: TextStyles
-                                                            .sourceSansB.body0
-                                                            .colour(UiConstants
-                                                                .kGoldProPrimary),
-                                                      ),
-                                                      const TextSpan(
-                                                        text: "every year",
-                                                      )
-                                                    ]),
-                                                textAlign: TextAlign.center,
-                                              ),
-                                            ],
-                                          ),
+                                            ),
+                                          ],
                                         ),
                                       ),
-                                      (wallet.wAugFdQty ?? 0) > 0
-                                          ? Positioned(
-                                              bottom: 0,
-                                              left: 0,
-                                              right: 0,
-                                              child: Transform.translate(
-                                                offset: Offset(
-                                                    0, SizeConfig.padding44),
-                                                child: Container(
-                                                  margin: EdgeInsets.symmetric(
-                                                      horizontal: SizeConfig
-                                                          .pageHorizontalMargins),
-                                                  padding: EdgeInsets.all(
-                                                      SizeConfig
-                                                          .pageHorizontalMargins),
-                                                  decoration: BoxDecoration(
-                                                    color: UiConstants.grey5,
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                            SizeConfig
-                                                                .roundness24),
-                                                  ),
-                                                  child:
-                                                      const GoldBalanceBriefRow(
-                                                    mini: true,
-                                                  ),
-                                                ),
-                                              ),
-                                            )
-                                          : const SizedBox()
                                     ],
                                   ),
                                 ),
+                                (wallet.wAugFdQty ?? 0) > 0
+                                    ? Positioned(
+                                        bottom: 0,
+                                        left: 0,
+                                        right: 0,
+                                        child: Container(
+                                          margin: EdgeInsets.symmetric(
+                                              horizontal: SizeConfig
+                                                  .pageHorizontalMargins),
+                                          padding: EdgeInsets.all(
+                                              SizeConfig.pageHorizontalMargins),
+                                          decoration: BoxDecoration(
+                                            color: UiConstants.grey5,
+                                            borderRadius: BorderRadius.circular(
+                                                SizeConfig.roundness24),
+                                          ),
+                                          child: const GoldBalanceBriefRow(
+                                            mini: true,
+                                          ),
+                                        ),
+                                      )
+                                    : const SizedBox()
                               ],
                             ),
                           );
                         }),
-                    Selector<UserService, UserFundWallet>(
-                        selector: (p0, p1) => p1.userFundWallet!,
-                        builder: (context, wallet, child) {
-                          return SizedBox(
-                              height: (wallet.wAugFdQty ?? 0) > 0
-                                  ? SizeConfig.padding70
-                                  : SizeConfig.padding24);
-                        }),
+                    SizedBox(height: SizeConfig.padding24),
                     const LineGradientChart(isPro: true),
                     GoldProInterestBreakdownWidget(model: model),
-                    // SizedBox(height: SizeConfig.padding14),
                     const GoldProMiniTransactions(),
                     HowGoldProWorksSection(model: model),
                     WhyGoldProSection(model: model),
-                    // SizedBox(height: SizeConfig.padding24),
                     const GoldProSellCard(),
-                    // Testomonials(type: InvestmentType.AUGGOLD99),
-
                     SizedBox(height: SizeConfig.pageHorizontalMargins),
                     GoldProFaqs(model: model),
-
                     SizedBox(height: SizeConfig.padding20),
-                    // const SaveAssetsFooter(),
                     SizedBox(height: SizeConfig.navBarHeight * 2),
                   ],
                 ),

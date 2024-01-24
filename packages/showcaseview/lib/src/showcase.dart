@@ -232,12 +232,24 @@ class Showcase extends StatefulWidget {
   /// Provides padding around the description. Default padding is zero.
   final EdgeInsets? descriptionPadding;
 
+  /// Provides text direction of tooltip title.
+  final TextDirection? titleTextDirection;
+
+  /// Provides text direction of tooltip description.
+  final TextDirection? descriptionTextDirection;
+
+  /// Provides a callback when barrier has been clicked.
+  ///
+  /// Note-: Even if barrier interactions are disabled, this handler
+  /// will still provide a callback.
+  final VoidCallback? onBarrierClick;
+
   const Showcase({
     required this.key,
+    required this.description,
     required this.child,
     this.title,
     this.titleAlignment = TextAlign.start,
-    required this.description,
     this.descriptionAlignment = TextAlign.start,
     this.targetShapeBorder = const RoundedRectangleBorder(
       borderRadius: BorderRadius.all(Radius.circular(8)),
@@ -273,6 +285,9 @@ class Showcase extends StatefulWidget {
     this.tooltipPosition,
     this.titlePadding,
     this.descriptionPadding,
+    this.titleTextDirection,
+    this.descriptionTextDirection,
+    this.onBarrierClick,
   })  : height = null,
         width = null,
         container = null,
@@ -285,10 +300,10 @@ class Showcase extends StatefulWidget {
 
   const Showcase.withWidget({
     required this.key,
-    required this.child,
-    required this.container,
     required this.height,
     required this.width,
+    required this.container,
+    required this.child,
     this.targetShapeBorder = const RoundedRectangleBorder(
       borderRadius: BorderRadius.all(
         Radius.circular(8),
@@ -309,6 +324,7 @@ class Showcase extends StatefulWidget {
     this.onTargetDoubleTap,
     this.disableDefaultTargetGestures = false,
     this.tooltipPosition,
+    this.onBarrierClick,
   })  : showArrow = false,
         onToolTipClick = null,
         scaleAnimationDuration = const Duration(milliseconds: 300),
@@ -327,6 +343,8 @@ class Showcase extends StatefulWidget {
         tooltipPadding = const EdgeInsets.symmetric(vertical: 8),
         titlePadding = null,
         descriptionPadding = null,
+        titleTextDirection = null,
+        descriptionTextDirection = null,
         assert(overlayOpacity >= 0.0 && overlayOpacity <= 1.0,
             "overlay opacity must be between 0 and 1.");
 
@@ -427,16 +445,21 @@ class _ShowcaseState extends State<Showcase> {
   }
 
   Future<void> _getOnTargetTap() async {
-    if ((widget.disposeOnTap ?? true) == false) {
+    if (widget.disposeOnTap == true) {
+      await _reverseAnimateTooltip();
       showCaseWidgetState.dismiss();
-      widget.onTargetClick?.call();
+      widget.onTargetClick!();
+    } else {
+      (widget.onTargetClick ?? _nextIfAny).call();
     }
   }
 
   Future<void> _getOnTooltipTap() async {
-    if (widget.disposeOnTap ?? true) {
-      _nextIfAny();
+    if (widget.disposeOnTap == true) {
+      await _reverseAnimateTooltip();
+      showCaseWidgetState.dismiss();
     }
+    widget.onToolTipClick?.call();
   }
 
   /// Reverse animates the provided tooltip or
@@ -462,12 +485,17 @@ class _ShowcaseState extends State<Showcase> {
     // provided blur is less than 0.
     blur = kIsWeb && blur < 0 ? 0 : blur;
 
-    if (!_showShowCase) return const SizedBox.shrink();
+    if (!_showShowCase) return const Offstage();
 
     return Stack(
       children: [
-        AbsorbPointer(
-          absorbing: true,
+        GestureDetector(
+          onTap: () {
+            if (!showCaseWidgetState.disableBarrierInteraction) {
+              _nextIfAny();
+            }
+            widget.onBarrierClick?.call();
+          },
           child: ClipPath(
             clipper: RRectClipper(
               area: _isScrollRunning ? Rect.zero : rectBound,
@@ -515,7 +543,6 @@ class _ShowcaseState extends State<Showcase> {
           ToolTipWidget(
             position: position,
             offset: offset,
-            showButton: widget.disposeOnTap ?? true,
             screenSize: screenSize,
             title: widget.title,
             titleAlignment: widget.titleAlignment,
@@ -544,29 +571,45 @@ class _ShowcaseState extends State<Showcase> {
             tooltipPosition: widget.tooltipPosition,
             titlePadding: widget.titlePadding,
             descriptionPadding: widget.descriptionPadding,
+            titleTextDirection: widget.titleTextDirection,
+            descriptionTextDirection: widget.descriptionTextDirection,
           ),
-        ],
-        Positioned(
-          top: 40,
-          left: 20,
-          child: MaterialButton(
-            color: Colors.white,
-            onPressed: () {
-              showCaseWidgetState.skipButtonClicked();
-            },
-            padding: EdgeInsets.zero,
-            minWidth: 70,
-            shape:
-                RoundedRectangleBorder(borderRadius: BorderRadius.circular(6)),
-            child: const Text(
-              'SKIP',
-              style: TextStyle(
-                  color: Colors.black,
-                  fontSize: 15,
-                  fontWeight: FontWeight.bold),
+          if (showCaseWidgetState.activeWidgetId !=
+              showCaseWidgetState.ids!.length - 1)
+            Positioned(
+              top: 60,
+              right: 30,
+              child: TextButton(
+                onPressed: () {
+                  showCaseWidgetState.skipButtonClicked();
+                },
+                child: const Text(
+                  'SKIP',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold),
+                ),
+              ),
             ),
-          ),
-        )
+          if (showCaseWidgetState.activeWidgetId != 0)
+            Positioned(
+              top: 60,
+              left: 30,
+              child: TextButton(
+                onPressed: () {
+                  showCaseWidgetState.previous();
+                },
+                child: const Text(
+                  'PREVIOUS',
+                  style: TextStyle(
+                      color: Colors.white,
+                      fontSize: 15,
+                      fontWeight: FontWeight.bold),
+                ),
+              ),
+            ),
+        ],
       ],
     );
   }
@@ -597,25 +640,33 @@ class _TargetWidget extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Positioned(
-      top: offset.dy - 20,
-      left: offset.dx - 20,
-      child: IgnorePointer(
-        ignoring: disableDefaultChildGestures,
-        child: GestureDetector(
-          onTap: onTap,
-          onLongPress: onLongPress,
-          onDoubleTap: onDoubleTap,
-          child: Container(
-            height: size!.height,
-            width: size!.width,
-            decoration: ShapeDecoration(
-              shape: radius != null
-                  ? RoundedRectangleBorder(borderRadius: radius!)
-                  : shapeBorder ??
-                      const RoundedRectangleBorder(
-                        borderRadius: BorderRadius.all(Radius.circular(8)),
-                      ),
-            ),
+      top: offset.dy,
+      left: offset.dx,
+      child: disableDefaultChildGestures
+          ? IgnorePointer(
+              child: targetWidgetContent(),
+            )
+          : targetWidgetContent(),
+    );
+  }
+
+  Widget targetWidgetContent() {
+    return FractionalTranslation(
+      translation: const Offset(-0.5, -0.5),
+      child: GestureDetector(
+        onTap: onTap,
+        onLongPress: onLongPress,
+        onDoubleTap: onDoubleTap,
+        child: Container(
+          height: size!.height + 16,
+          width: size!.width + 16,
+          decoration: ShapeDecoration(
+            shape: radius != null
+                ? RoundedRectangleBorder(borderRadius: radius!)
+                : shapeBorder ??
+                    const RoundedRectangleBorder(
+                      borderRadius: BorderRadius.all(Radius.circular(8)),
+                    ),
           ),
         ),
       ),

@@ -41,103 +41,106 @@ class _FloPendingActionState extends State<FloPendingAction>
 
   @override
   Widget build(BuildContext context) {
-    return Consumer<LendboxMaturityService>(builder: (context, model, child) {
-      if (model.pendingMaturityCount > 0 &&
-          (model.filteredDeposits != null &&
-              model.filteredDeposits?[0] != null)) {
-        animationController?.forward();
-        return AnimatedBuilder(
-            animation: animationController!,
-            builder: (context, _) {
-              final sineValue =
-                  math.sin(3 * 2 * math.pi * animationController!.value);
-              return Transform.translate(
-                offset: Offset(sineValue * 10, 0),
-                child: GestureDetector(
-                  onTap: () {
-                    Haptic.vibrate();
-                    locator<AnalyticsService>().track(
-                      eventName: AnalyticsEvents.pendingActionsFloTapped,
-                      properties: {
-                        "Transaction count": model.pendingMaturityCount,
-                        "initial decision taken": model.userDecision.name,
-                        "asset": model.filteredDeposits?[0].fundType,
-                        "principal amount":
-                            model.filteredDeposits?[0].investedAmt
-                      },
-                    );
-
-                    BaseUtil.openModalBottomSheet(
-                      addToScreenStack: true,
-                      enableDrag: false,
-                      hapticVibrate: true,
-                      isBarrierDismissible: false,
-                      backgroundColor: Colors.transparent,
-                      isScrollControlled: true,
-                      content: ReInvestmentSheet(
-                        decision: model.userDecision,
-                        depositData: model.filteredDeposits![0],
-                      ),
-                    );
-                  },
-                  child: Container(
-                    margin: EdgeInsets.only(left: SizeConfig.padding24),
-                    height: SizeConfig.padding74,
-                    child: Transform.translate(
-                      offset:
-                          Offset(-SizeConfig.padding12, -SizeConfig.padding14),
-                      child: Stack(
-                        children: [
-                          Padding(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: SizeConfig.padding10),
-                            child: CustomPaint(
-                              size: Size(SizeConfig.screenWidth!,
-                                  (SizeConfig.screenWidth! * 0.18).toDouble()),
-                              painter: CustomToolTipPainter(),
-                            ),
-                          ),
-                          Positioned(
-                            top: SizeConfig.padding36 + SizeConfig.padding1,
-                            left: SizeConfig.padding18,
-                            child: SizedBox(
-                              width: SizeConfig.screenWidth! * 0.9,
-                              child: Row(
-                                children: [
-                                  Text(
-                                    'Pending actions on ${model.pendingMaturityCount} Flo transactions',
-                                    style: TextStyles.sourceSans.body2
-                                        .colour(Colors.white),
-                                  ),
-                                  const Spacer(),
-                                  Container(
-                                    width: SizeConfig.padding20,
-                                    height: SizeConfig.padding20,
-                                    decoration: const ShapeDecoration(
-                                      color: Color(0xFF1ADAB7),
-                                      shape: OvalBorder(),
-                                    ),
-                                    child: Icon(
-                                      Icons.arrow_forward_ios_rounded,
-                                      size: SizeConfig.padding12,
-                                      color: Colors.black,
-                                    ),
-                                  ),
-                                  SizedBox(width: SizeConfig.padding18)
-                                ],
+    return Padding(
+      padding:  EdgeInsets.only(top: SizeConfig.padding14),
+      child: Consumer<LendboxMaturityService>(builder: (context, model, child) {
+        if (model.pendingMaturityCount > 0 &&
+            (model.filteredDeposits != null &&
+                model.filteredDeposits?[0] != null)) {
+          animationController?.forward();
+          return AnimatedBuilder(
+              animation: animationController!,
+              builder: (context, _) {
+                final sineValue =
+                    math.sin(3 * 2 * math.pi * animationController!.value);
+                return Transform.translate(
+                  offset: Offset(sineValue * 10, 0),
+                  child: GestureDetector(
+                    onTap: () {
+                      Haptic.vibrate();
+                      locator<AnalyticsService>().track(
+                        eventName: AnalyticsEvents.pendingActionsFloTapped,
+                        properties: {
+                          "Transaction count": model.pendingMaturityCount,
+                          "initial decision taken": model.userDecision.name,
+                          "asset": model.filteredDeposits?[0].fundType,
+                          "principal amount":
+                              model.filteredDeposits?[0].investedAmt
+                        },
+                      );
+    
+                      BaseUtil.openModalBottomSheet(
+                        addToScreenStack: true,
+                        enableDrag: false,
+                        hapticVibrate: true,
+                        isBarrierDismissible: false,
+                        backgroundColor: Colors.transparent,
+                        isScrollControlled: true,
+                        content: ReInvestmentSheet(
+                          decision: model.userDecision,
+                          depositData: model.filteredDeposits![0],
+                        ),
+                      );
+                    },
+                    child: Container(
+                      margin: EdgeInsets.only(left: SizeConfig.padding24),
+                      height: SizeConfig.padding74,
+                      child: Transform.translate(
+                        offset:
+                            Offset(-SizeConfig.padding12, -SizeConfig.padding14),
+                        child: Stack(
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                  horizontal: SizeConfig.padding10),
+                              child: CustomPaint(
+                                size: Size(SizeConfig.screenWidth!,
+                                    (SizeConfig.screenWidth! * 0.18).toDouble()),
+                                painter: CustomToolTipPainter(),
                               ),
                             ),
-                          ),
-                        ],
+                            Positioned(
+                              top: SizeConfig.padding36 + SizeConfig.padding1,
+                              left: SizeConfig.padding18,
+                              child: SizedBox(
+                                width: SizeConfig.screenWidth! * 0.9,
+                                child: Row(
+                                  children: [
+                                    Text(
+                                      'Pending actions on ${model.pendingMaturityCount} Flo transactions',
+                                      style: TextStyles.sourceSans.body2
+                                          .colour(Colors.white),
+                                    ),
+                                    const Spacer(),
+                                    Container(
+                                      width: SizeConfig.padding20,
+                                      height: SizeConfig.padding20,
+                                      decoration: const ShapeDecoration(
+                                        color: Color(0xFF1ADAB7),
+                                        shape: OvalBorder(),
+                                      ),
+                                      child: Icon(
+                                        Icons.arrow_forward_ios_rounded,
+                                        size: SizeConfig.padding12,
+                                        color: Colors.black,
+                                      ),
+                                    ),
+                                    SizedBox(width: SizeConfig.padding18)
+                                  ],
+                                ),
+                              ),
+                            ),
+                          ],
+                        ),
                       ),
                     ),
                   ),
-                ),
-              );
-            });
-      }
-      return const SizedBox.shrink();
-    });
+                );
+              });
+        }
+        return const SizedBox.shrink();
+      }),
+    );
   }
 
   @override

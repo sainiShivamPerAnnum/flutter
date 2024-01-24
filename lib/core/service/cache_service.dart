@@ -5,6 +5,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/ttl.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
+import 'package:felloapp/core/model/cache_model/story_model.dart';
 import 'package:felloapp/util/date_helper.dart';
 import 'package:isar/isar.dart';
 import 'package:path_provider/path_provider.dart';
@@ -18,25 +19,36 @@ import '../model/cache_model/cache_model.dart';
 /// type [T].
 typedef ParseCallBack<T, S> = ApiResponse<T> Function(S);
 
-class CacheService {
-  static Isar? _isar;
-  final CustomLogger _logger = locator<CustomLogger>();
+class LocalDbService {
+  LocalDbService();
+  Isar? _isar;
 
-  static Future<void> initialize() async {
+  Isar get isar {
+    assert(_isar != null, 'Service must be initialized');
+    return _isar!;
+  }
+
+  Future<void> initialize() async {
     try {
-      if (_isar == null) {
-        final dir = await getApplicationSupportDirectory();
-        _isar = await Isar.open(
-          [CacheModelSchema],
-          directory: dir.path,
-        );
-      }
+      final dir = await getApplicationSupportDirectory();
+      _isar = await Isar.open(
+        [CacheModelSchema, StoryCollectionSchema],
+        directory: dir.path,
+      );
     } catch (e) {
-      BaseUtil.showNegativeAlert("Isar initialization failed", e.toString(),
-          seconds: 20);
+      BaseUtil.showNegativeAlert(
+        "Isar initialization failed",
+        e.toString(),
+        seconds: 20,
+      );
       log("ISAR:: Unable to initialize isar");
     }
   }
+}
+
+class CacheService {
+  final CustomLogger _logger = locator<CustomLogger>();
+  static final _db = locator<LocalDbService>();
 
   static Future<void> checkIfInvalidationRequired() async {
     final now = DateTime.now().millisecondsSinceEpoch;
@@ -51,8 +63,8 @@ class CacheService {
 
     try {
       logger.d('cache: invalidate all');
-      await _isar?.writeTxn(() async {
-        await _isar?.clear();
+      await _db.isar.writeTxn(() async {
+        await _db.isar.clear();
       });
     } catch (e) {
       logger.e('cache: invalidation failed $e');
@@ -139,8 +151,8 @@ class CacheService {
         data: data,
       );
       _logger.d('cache: write $cache');
-      await _isar!.writeTxn(() async {
-        final id = await _isar!.cacheModels.put(cache);
+      await _db.isar.writeTxn(() async {
+        final id = await _db.isar.cacheModels.put(cache);
         _logger.d('cache: write id $id');
       });
 
@@ -156,8 +168,8 @@ class CacheService {
 
     try {
       logger.d('cache: invalidating key $key');
-      await _isar!.writeTxn(() async {
-        final List<CacheModel> data = await _isar!
+      await _db.isar.writeTxn(() async {
+        final List<CacheModel> data = await _db.isar
             .collection<CacheModel>()
             .filter()
             .keyEqualTo(key)
@@ -167,7 +179,7 @@ class CacheService {
 
         logger.d('cache: $data');
 
-        final c = await _isar!
+        final c = await _db.isar
             .collection<CacheModel>()
             .deleteAll(data.map((e) => e.id).toList());
         logger.d('cache: invalidated $c');
@@ -180,24 +192,10 @@ class CacheService {
     }
   }
 
-  Future<bool> _invalidate(int id) async {
-    try {
-      _logger.d('cache: invalidating id $id');
-      await _isar!.writeTxn(() async {
-        return await _isar!.cacheModels.delete(id);
-      });
-
-      return true;
-    } catch (e) {
-      _logger.e('cache: invalidation for id $id failed', e);
-      return false;
-    }
-  }
-
   Future<CacheModel?> getData(String key) async {
     try {
       final data =
-          await _isar!.cacheModels.filter().keyEqualTo(key).findFirst();
+          await _db.isar.cacheModels.filter().keyEqualTo(key).findFirst();
 
       if (data == null) return null;
 

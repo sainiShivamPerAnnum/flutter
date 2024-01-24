@@ -10,7 +10,6 @@ import 'package:felloapp/core/model/fello_badges_model.dart';
 import 'package:felloapp/core/repository/campaigns_repo.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/feature/fello_badges/ui/widgets/badge_unlock_popup.dart';
-import 'package:felloapp/feature/fello_badges/ui/widgets/level_unlock_popup.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
 import 'package:flutter/material.dart';
@@ -46,7 +45,6 @@ class FelloBadgesCubit extends Cubit<FelloBadgesState> {
           await _postFetchHook(
             res.model!.data,
             onBadgeLevelChanged: _showBadgeAchievedPopup,
-            onLevelChanged: _onLevelChanged,
           );
         } else {
           emit(FelloBadgesError(res.model?.message ??
@@ -193,26 +191,6 @@ class FelloBadgesCubit extends Cubit<FelloBadgesState> {
       hapticVibrate: true,
       content: BadgeUnlockDialog(
         badgeInformation: badgeInformation,
-      ),
-    );
-  }
-
-  Future<void> _onLevelChanged(SuperFelloLevel level) async {
-    if (state is FelloBadgesSuccess) {
-      final newState = (state as FelloBadgesSuccess).copyWith(
-        level: level,
-      );
-
-      locator<UserService>().baseUser!.superFelloLevel = level;
-      emit(newState);
-    }
-
-    await BaseUtil.openDialog(
-      isBarrierDismissible: true,
-      addToScreenStack: true,
-      hapticVibrate: true,
-      content: LevelUnlockDialog(
-        level: level,
       ),
     );
   }

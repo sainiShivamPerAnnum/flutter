@@ -34,16 +34,21 @@ import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 
 class AssetSelectionPage extends StatelessWidget {
-  const AssetSelectionPage(
-      {required this.showOnlyFlo,
-      Key? key,
-      this.amount,
-      this.isSkipMl,
-      this.isTicketsFlow = false,
-      this.isFromGlobal = false})
-      : super(key: key);
+  const AssetSelectionPage({
+    this.showFlo = true,
+    this.showGold = true,
+    super.key,
+    this.amount,
+    this.isSkipMl,
+    this.isTicketsFlow = false,
+    this.isFromGlobal = false,
+  }) : assert(
+          showFlo || showGold,
+          'Both showFlo and ShowGold can\'t be false',
+        );
 
-  final bool showOnlyFlo;
+  final bool showFlo;
+  final bool showGold;
   final int? amount;
   final bool? isSkipMl;
   final bool isTicketsFlow;
@@ -61,7 +66,7 @@ class AssetSelectionPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    log("AssetSelectionPage:: amount: $amount & isSkipMl: $isSkipMl & showOnlyFlo: $showOnlyFlo & isFromGlobal: $isFromGlobal",
+    log("AssetSelectionPage:: amount: $amount & isSkipMl: $isSkipMl & showOnlyFlo: $showFlo & isFromGlobal: $isFromGlobal",
         name: "AssetSelectionPage");
 
     return Scaffold(
@@ -155,15 +160,25 @@ class AssetSelectionPage extends StatelessWidget {
                           style: TextStyles.rajdhaniSB.title5,
                         ),
                       ),
-                if (!showOnlyFlo) SizedBox(height: SizeConfig.padding14),
-                if (!showOnlyFlo)
-                  GoldPlanWidget(
-                    fetchGoldRate: !showOnlyFlo,
-                    isSkipMl: isSkipMl,
-                    amount: amount,
+                if (showGold)
+                  Padding(
+                    padding: EdgeInsets.only(
+                      top: SizeConfig.padding14,
+                    ),
+                    child: GoldPlanWidget(
+                      fetchGoldRate: !showFlo,
+                      isSkipMl: isSkipMl,
+                      amount: amount,
+                    ),
                   ),
-                SizedBox(height: SizeConfig.padding24),
-                FloPlanWidget(amount: amount, isSkipMl: isSkipMl),
+                if (showFlo)
+                  Padding(
+                    padding: EdgeInsets.only(top: SizeConfig.padding24),
+                    child: FloPlanWidget(
+                      amount: amount,
+                      isSkipMl: isSkipMl,
+                    ),
+                  ),
               ],
             ),
           ),

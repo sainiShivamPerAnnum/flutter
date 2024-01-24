@@ -1,7 +1,4 @@
-import 'dart:convert';
-
 import 'package:flutter/foundation.dart';
-
 import 'package:isar/isar.dart';
 
 part 'cache_model.g.dart';
@@ -21,44 +18,6 @@ class CacheModel {
     @required this.expireAfterTimestamp,
     @required this.data,
   });
-
-  CacheModel copyWith({
-    String? key,
-    int? ttl,
-    int? expireAfterTimestamp,
-    String? data,
-  }) {
-    return CacheModel(
-      key: key ?? this.key,
-      ttl: ttl ?? this.ttl,
-      expireAfterTimestamp: expireAfterTimestamp ?? this.expireAfterTimestamp,
-      data: data ?? this.data,
-    );
-  }
-
-  Map<String, dynamic> toMap() {
-    return {
-      'id': id,
-      'key': key,
-      'ttl': ttl,
-      'expireAfterTimestamp': expireAfterTimestamp,
-      'data': data,
-    };
-  }
-
-  factory CacheModel.fromMap(Map<String, dynamic> map) {
-    return CacheModel(
-      key: map['key'] ?? '',
-      ttl: map['ttl']?.toInt() ?? 0,
-      expireAfterTimestamp: map['expireAfterTimestamp']?.toInt() ?? 0,
-      data: map['data'] ?? '',
-    );
-  }
-
-  String toJson() => json.encode(toMap());
-
-  factory CacheModel.fromJson(String source) =>
-      CacheModel.fromMap(json.decode(source));
 
   @override
   String toString() {

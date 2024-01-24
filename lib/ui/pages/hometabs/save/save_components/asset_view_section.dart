@@ -29,6 +29,7 @@ import 'package:felloapp/ui/pages/hometabs/save/gold_components/gold_hero_card.d
 import 'package:felloapp/ui/pages/hometabs/save/gold_components/gold_rate_widget.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/ui/pages/login/login_components/login_support.dart';
+import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/web_view.dart';
 import 'package:felloapp/ui/service_elements/auto_save_card/subscription_card.dart';
 import 'package:felloapp/ui/service_elements/gold_sell_card/sell_card_view.dart';
@@ -37,7 +38,9 @@ import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/dynamic_ui_utils.dart';
 import 'package:felloapp/util/extensions/investment_returns_extension.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -51,11 +54,14 @@ import '../gold_components/gold_pro_card.dart';
 import '../gold_components/gold_rate_graph.dart';
 
 class AssetSectionView extends StatefulWidget {
-  AssetSectionView({required this.type, Key? key, UserService? userService})
-      : _userService = userService ?? locator<UserService>(),
-        super(key: key);
+  const AssetSectionView({
+    required this.type,
+    this.showSkip = false,
+    super.key,
+  });
+
   final InvestmentType type;
-  final UserService _userService;
+  final bool showSkip;
 
   @override
   State<AssetSectionView> createState() => _AssetSectionViewState();
@@ -96,8 +102,21 @@ class _AssetSectionViewState extends State<AssetSectionView> {
     }
   }
 
+  void _onSkip() {
+    AppState.delegate!.appState.currentAction = PageAction(
+      state: PageState.replaceAll,
+      page: RootPageConfig,
+    );
+
+    PreferenceHelper.setBool(
+      PreferenceHelper.isUserOnboardingComplete,
+      true,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
+    final locale = locator<S>();
     return PropertyChangeConsumer<UserService, UserServiceProperties>(
         properties: const [
           UserServiceProperties.myUserWallet,
@@ -385,13 +404,13 @@ class _AssetSectionViewState extends State<AssetSectionView> {
                       ),
                       SafeArea(
                         child: Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           crossAxisAlignment: CrossAxisAlignment.center,
                           children: [
                             BackButton(
                               color: Colors.white,
                               onPressed: () => Navigator.of(context).pop(),
                             ),
+                            const Spacer(),
                             Padding(
                               padding:
                                   EdgeInsets.only(right: SizeConfig.padding8),
@@ -399,6 +418,31 @@ class _AssetSectionViewState extends State<AssetSectionView> {
                                 type: _getFaqTypeFromAsset(widget.type),
                               ),
                             ),
+                            if (widget.showSkip)
+                              InkWell(
+                                onTap: _onSkip,
+                                child: Padding(
+                                  padding: EdgeInsets.only(
+                                    right: SizeConfig.padding16,
+                                  ),
+                                  child: Row(
+                                    children: [
+                                      Text(
+                                        locale.skip,
+                                        style: TextStyles.rajdhaniB.body2,
+                                      ),
+                                      SizedBox(
+                                        width: SizeConfig.padding12,
+                                      ),
+                                      AppImage(
+                                        Assets.chevRonRightArrow,
+                                        color: Colors.white,
+                                        height: SizeConfig.padding20,
+                                      )
+                                    ],
+                                  ),
+                                ),
+                              )
                           ],
                         ),
                       ),

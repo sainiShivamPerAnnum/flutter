@@ -1,9 +1,7 @@
 import 'dart:math' as math;
-
-import 'package:felloapp/core/model/portfolio_model.dart';
+import 'package:felloapp/core/model/lendbox_maturity_response.dart';
+import 'package:felloapp/core/service/lendbox_maturity_service.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
-import 'package:felloapp/core/service/notifier_services/user_service.dart';
-import 'package:felloapp/feature/tambola/src/services/tambola_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -44,16 +42,19 @@ class _TicketsPendingActionState extends State<TicketsPendingAction>
   @override
   Widget build(BuildContext context) {
     final locale = locator<S>();
-    return Selector<TambolaService, int>(
-        selector: (_, tambolaService) => tambolaService.tambolaTicketCount,
-        builder: (_, ticketCount, child) {
-          return Selector2<UserService, ScratchCardService,
-              Tuple2<Portfolio?, int>>(
-            selector: (p0, userService, scratchCardService) => Tuple2(
-                userService.userPortfolio,
-                scratchCardService.unscratchedTicketsScratchCardCount),
+    return Selector<LendboxMaturityService, int>(
+        selector: (_, lendboxMaturityService) =>
+            lendboxMaturityService.pendingMaturityCount,
+        builder: (_, pendingMaturityAmount, child) {
+          return Selector2<LendboxMaturityService, ScratchCardService,
+              Tuple2<List<Deposit>?, int>>(
+            selector: (p0, lendboxMaturityService, scratchCardService) =>
+                Tuple2(lendboxMaturityService.filteredDeposits,
+                    scratchCardService.unscratchedTicketsCount),
             builder: (context, value, child) {
-              if (value.item2 > 0) {
+              if (!(pendingMaturityAmount > 0 &&
+                      (value.item1 != null && value.item1?[0] != null)) &&
+                  value.item2 > 0) {
                 animationController?.forward();
                 return AnimatedBuilder(
                     animation: animationController!,
@@ -63,50 +64,67 @@ class _TicketsPendingActionState extends State<TicketsPendingAction>
                       return Transform.translate(
                           offset: Offset(sineValue * 10, 0),
                           child: GestureDetector(
-                              onTap: () {
-                                Haptic.vibrate();
-                                AppState.delegate!
-                                    .parseRoute(Uri.parse("myWinnings"));
-                              },
-                              child: CustomPaint(
-                                size: Size(
-                                    SizeConfig.screenWidth!,
-                                    (SizeConfig.screenHeight! * 0.12)
-                                        .toDouble()),
-                                painter: RPSCustomPainter(),
-                                child: Padding(
-                                  padding: EdgeInsets.only(
-                                      bottom: SizeConfig.padding14,
-                                      left: SizeConfig.padding38,
-                                      right: SizeConfig.padding38),
-                                  child: SizedBox(
-                                    height: SizeConfig.screenHeight! * 0.12,
-                                    child: Row(
-                                      children: [
-                                        Text(
-                                          locale.ticketsWiting,
-                                          style: TextStyles.sourceSans.body2
-                                              .colour(Colors.white),
-                                        ),
-                                        const Spacer(),
-                                        Container(
-                                          width: SizeConfig.padding20,
-                                          height: SizeConfig.padding20,
-                                          decoration: const ShapeDecoration(
-                                            color: Color(0xFFFFD979),
-                                            shape: OvalBorder(),
-                                          ),
-                                          child: Icon(
-                                            Icons.arrow_forward_ios_rounded,
-                                            size: SizeConfig.padding12,
-                                            color: Colors.black,
-                                          ),
-                                        ),
-                                      ],
+                            onTap: () {
+                              Haptic.vibrate();
+                              AppState.delegate!
+                                  .parseRoute(Uri.parse("myWinnings"));
+                            },
+                            child: Container(
+                              margin:
+                                  EdgeInsets.only(left: SizeConfig.padding24),
+                              height: SizeConfig.padding74,
+                              child: Transform.translate(
+                                offset: Offset(-SizeConfig.padding12,
+                                    -SizeConfig.padding14),
+                                child: Stack(
+                                  children: [
+                                    Padding(
+                                      padding: EdgeInsets.symmetric(
+                                          horizontal: SizeConfig.padding10),
+                                      child: CustomPaint(
+                                        size: Size(
+                                            SizeConfig.screenWidth!,
+                                            (SizeConfig.screenWidth! * 0.18)
+                                                .toDouble()),
+                                        painter: RPSCustomPainter(),
+                                      ),
                                     ),
-                                  ),
+                                    Positioned(
+                                      top: SizeConfig.padding36 +
+                                          SizeConfig.padding1,
+                                      left: SizeConfig.padding22,
+                                      child: SizedBox(
+                                        width: SizeConfig.screenWidth! * 0.83,
+                                        child: Row(
+                                          children: [
+                                            Text(
+                                              locale.ticketsWiting,
+                                              style: TextStyles.sourceSans.body2
+                                                  .colour(Colors.white),
+                                            ),
+                                            const Spacer(),
+                                            Container(
+                                              width: SizeConfig.padding20,
+                                              height: SizeConfig.padding20,
+                                              decoration: const ShapeDecoration(
+                                                color: Color(0xFFFFD979),
+                                                shape: OvalBorder(),
+                                              ),
+                                              child: Icon(
+                                                Icons.arrow_forward_ios_rounded,
+                                                size: SizeConfig.padding12,
+                                                color: Colors.black,
+                                              ),
+                                            ),
+                                          ],
+                                        ),
+                                      ),
+                                    ),
+                                  ],
                                 ),
-                              )));
+                              ),
+                            ),
+                          ));
                     });
               } else {
                 return const SizedBox.shrink();
@@ -117,132 +135,76 @@ class _TicketsPendingActionState extends State<TicketsPendingAction>
   }
 }
 
+//Copy this CustomPainter code to the Bottom of the File
 class RPSCustomPainter extends CustomPainter {
   @override
   void paint(Canvas canvas, Size size) {
     Path path_0 = Path();
-    path_0.moveTo(size.width * 0.05434783, size.height * 0.3333333);
+    path_0.moveTo(size.width * 0.001524390, size.height * 0.4576271);
     path_0.cubicTo(
-        size.width * 0.05434783,
-        size.height * 0.2775475,
-        size.width * 0.06651413,
-        size.height * 0.2323232,
-        size.width * 0.08152174,
-        size.height * 0.2323232);
-    path_0.lineTo(size.width * 0.5981440, size.height * 0.2323232);
+        size.width * 0.001524390,
+        size.height * 0.3687000,
+        size.width * 0.01449174,
+        size.height * 0.2966102,
+        size.width * 0.03048780,
+        size.height * 0.2966102);
+    path_0.lineTo(size.width * 0.6101128, size.height * 0.2966102);
     path_0.cubicTo(
-        size.width * 0.6094076,
-        size.height * 0.2323232,
-        size.width * 0.6195054,
-        size.height * 0.2064949,
-        size.width * 0.6235272,
-        size.height * 0.1673879);
-    path_0.lineTo(size.width * 0.6345109, size.height * 0.06060606);
-    path_0.lineTo(size.width * 0.6477418, size.height * 0.1720848);
+        size.width * 0.6233841,
+        size.height * 0.2966102,
+        size.width * 0.6352774,
+        size.height * 0.2511034,
+        size.width * 0.6400152,
+        size.height * 0.1822017);
+    path_0.lineTo(size.width * 0.6510152, size.height * 0.02226458);
+    path_0.lineTo(size.width * 0.6643659, size.height * 0.1904780);
     path_0.cubicTo(
-        size.width * 0.6520870,
-        size.height * 0.2086980,
-        size.width * 0.6618370,
-        size.height * 0.2323232,
-        size.width * 0.6726033,
-        size.height * 0.2323232);
-    path_0.lineTo(size.width * 0.9184783, size.height * 0.2323232);
+        size.width * 0.6694848,
+        size.height * 0.2549864,
+        size.width * 0.6809695,
+        size.height * 0.2966102,
+        size.width * 0.6936524,
+        size.height * 0.2966102);
+    path_0.lineTo(size.width * 0.9695122, size.height * 0.2966102);
     path_0.cubicTo(
-        size.width * 0.9334864,
-        size.height * 0.2323232,
-        size.width * 0.9456522,
-        size.height * 0.2775475,
-        size.width * 0.9456522,
-        size.height * 0.3333333);
-    path_0.lineTo(size.width * 0.9456522, size.height * 0.5555556);
+        size.width * 0.9855091,
+        size.height * 0.2966102,
+        size.width * 0.9984756,
+        size.height * 0.3687000,
+        size.width * 0.9984756,
+        size.height * 0.4576271);
+    path_0.lineTo(size.width * 0.9984756, size.height * 0.8305085);
     path_0.cubicTo(
-        size.width * 0.9456522,
-        size.height * 0.6113414,
-        size.width * 0.9334864,
-        size.height * 0.6565657,
-        size.width * 0.9184783,
-        size.height * 0.6565657);
-    path_0.lineTo(size.width * 0.08152174, size.height * 0.6565657);
+        size.width * 0.9984756,
+        size.height * 0.9194356,
+        size.width * 0.9855091,
+        size.height * 0.9915254,
+        size.width * 0.9695122,
+        size.height * 0.9915254);
+    path_0.lineTo(size.width * 0.03048777, size.height * 0.9915254);
     path_0.cubicTo(
-        size.width * 0.06651386,
-        size.height * 0.6565657,
-        size.width * 0.05434783,
-        size.height * 0.6113414,
-        size.width * 0.05434783,
-        size.height * 0.5555556);
-    path_0.lineTo(size.width * 0.05434783, size.height * 0.3333333);
+        size.width * 0.01449174,
+        size.height * 0.9915254,
+        size.width * 0.001524390,
+        size.height * 0.9194356,
+        size.width * 0.001524390,
+        size.height * 0.8305085);
+    path_0.lineTo(size.width * 0.001524390, size.height * 0.4576271);
     path_0.close();
 
-    Paint paint0Fill = Paint()..style = PaintingStyle.fill;
-    paint0Fill.color = const Color(0xff323232).withOpacity(1.0);
-    canvas.drawPath(path_0, paint0Fill);
-
-    Path path_1 = Path();
-    path_1.moveTo(size.width * 0.05570652, size.height * 0.3333333);
-    path_1.cubicTo(
-        size.width * 0.05570652,
-        size.height * 0.2803364,
-        size.width * 0.06726440,
-        size.height * 0.2373737,
-        size.width * 0.08152174,
-        size.height * 0.2373737);
-    path_1.lineTo(size.width * 0.5981440, size.height * 0.2373737);
-    path_1.cubicTo(
-        size.width * 0.6099728,
-        size.height * 0.2373737,
-        size.width * 0.6205734,
-        size.height * 0.2102535,
-        size.width * 0.6247962,
-        size.height * 0.1691909);
-    path_1.lineTo(size.width * 0.6346005, size.height * 0.07387485);
-    path_1.lineTo(size.width * 0.6465000, size.height * 0.1741232);
-    path_1.cubicTo(
-        size.width * 0.6510625,
-        size.height * 0.2125677,
-        size.width * 0.6612989,
-        size.height * 0.2373737,
-        size.width * 0.6726033,
-        size.height * 0.2373737);
-    path_1.lineTo(size.width * 0.9184783, size.height * 0.2373737);
-    path_1.cubicTo(
-        size.width * 0.9327364,
-        size.height * 0.2373737,
-        size.width * 0.9442935,
-        size.height * 0.2803364,
-        size.width * 0.9442935,
-        size.height * 0.3333333);
-    path_1.lineTo(size.width * 0.9442935, size.height * 0.5555556);
-    path_1.cubicTo(
-        size.width * 0.9442935,
-        size.height * 0.6085525,
-        size.width * 0.9327364,
-        size.height * 0.6515152,
-        size.width * 0.9184783,
-        size.height * 0.6515152);
-    path_1.lineTo(size.width * 0.08152174, size.height * 0.6515152);
-    path_1.cubicTo(
-        size.width * 0.06726440,
-        size.height * 0.6515152,
-        size.width * 0.05570652,
-        size.height * 0.6085525,
-        size.width * 0.05570652,
-        size.height * 0.5555556);
-    path_1.lineTo(size.width * 0.05570652, size.height * 0.3333333);
-    path_1.close();
-
-    Paint paint1Stroke = Paint()
+    Paint paint_0_stroke = Paint()
       ..style = PaintingStyle.stroke
       ..strokeWidth = 2;
-    paint1Stroke.color = const Color(0xffFFD979).withOpacity(1.0);
-    canvas.drawPath(path_1, paint1Stroke);
+    paint_0_stroke.color = Color(0xffFFD979).withOpacity(1.0);
+    canvas.drawPath(path_0, paint_0_stroke);
 
-    Paint paint1Fill = Paint()..style = PaintingStyle.fill;
-    paint1Fill.color = const Color(0xff323232).withOpacity(1.0);
-    canvas.drawPath(path_1, paint1Fill);
+    Paint paint_0_fill = Paint()..style = PaintingStyle.fill;
+    paint_0_fill.color = Color(0xff323232).withOpacity(1.0);
+    canvas.drawPath(path_0, paint_0_fill);
   }
 
   @override
   bool shouldRepaint(covariant CustomPainter oldDelegate) {
-    return false;
+    return true;
   }
 }

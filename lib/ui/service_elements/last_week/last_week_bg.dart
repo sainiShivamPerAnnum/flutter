@@ -1,3 +1,4 @@
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/model/last_week_model.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
@@ -151,7 +152,7 @@ class LastWeekBg extends StatelessWidget {
                                 "last week return Percentage":
                                     model?.user?.gainsPerc,
                               });
-                          AppState.delegate!.parseRoute(Uri.parse('/assetBuy'));
+                           BaseUtil.openDepositOptionsModalSheet(timer: 0);
                         },
 
                         btnText: locale.btnSaveNow.toUpperCase(),

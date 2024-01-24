@@ -411,7 +411,8 @@ class LendboxBuyViewModel extends BaseViewModel
               .firstWhere(
                   (element) =>
                       element.value.toString() == amountController!.text,
-                  orElse: () => UserOption(order: 0, value: 0, best: false))
+                  orElse: () =>
+                      const UserOption(order: 0, value: 0, best: false))
               .value,
           "Lock-in": getLockin(),
           "Maturity Decision": getMaturityTitle(),
@@ -550,7 +551,7 @@ class LendboxBuyViewModel extends BaseViewModel
       'Amount': assetOptionsModel?.data.userOptions[index].value,
       'Best flag': assetOptionsModel?.data.userOptions
           .firstWhere((element) => element.best,
-              orElse: () => UserOption(order: 0, value: 0, best: false))
+              orElse: () => const UserOption(order: 0, value: 0, best: false))
           .value
     });
 

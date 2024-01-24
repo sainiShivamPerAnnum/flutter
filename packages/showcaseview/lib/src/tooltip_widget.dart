@@ -23,7 +23,6 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
 
 import 'enum.dart';
 import 'get_position.dart';
@@ -60,7 +59,8 @@ class ToolTipWidget extends StatefulWidget {
   final TooltipPosition? tooltipPosition;
   final EdgeInsets? titlePadding;
   final EdgeInsets? descriptionPadding;
-  final bool showButton;
+  final TextDirection? titleTextDirection;
+  final TextDirection? descriptionTextDirection;
 
   const ToolTipWidget({
     Key? key,
@@ -69,7 +69,6 @@ class ToolTipWidget extends StatefulWidget {
     required this.screenSize,
     required this.title,
     required this.titleAlignment,
-    required this.showButton,
     required this.description,
     required this.titleTextStyle,
     required this.descTextStyle,
@@ -93,6 +92,8 @@ class ToolTipWidget extends StatefulWidget {
     this.tooltipPosition,
     this.titlePadding,
     this.descriptionPadding,
+    this.titleTextDirection,
+    this.descriptionTextDirection,
   }) : super(key: key);
 
   @override
@@ -145,7 +146,7 @@ class _ToolTipWidgetState extends State<ToolTipWidget>
         Theme.of(context)
             .textTheme
             .titleSmall!
-            .merge(TextStyle(color: widget.textColor, fontSize: 15));
+            .merge(TextStyle(color: widget.textColor));
     final titleLength = widget.title == null
         ? 0
         : _textSize(widget.title!, titleStyle).width +
@@ -162,9 +163,9 @@ class _ToolTipWidgetState extends State<ToolTipWidget>
             (widget.descriptionPadding?.left ?? 0));
     var maxTextWidth = max(titleLength, descriptionLength);
     if (maxTextWidth > widget.screenSize!.width - tooltipScreenEdgePadding) {
-      tooltipWidth = widget.screenSize!.width - tooltipScreenEdgePadding - 60;
+      tooltipWidth = widget.screenSize!.width - tooltipScreenEdgePadding;
     } else {
-      tooltipWidth = maxTextWidth * 1.0 + tooltipTextPadding;
+      tooltipWidth = maxTextWidth + tooltipTextPadding;
     }
   }
 
@@ -194,7 +195,7 @@ class _ToolTipWidgetState extends State<ToolTipWidget>
         final rightPosition = widget.position!.getCenter() + (width * 0.5);
 
         return (rightPosition + width) > MediaQuery.of(context).size.width
-            ? _kDefaultPaddingFromParent - 4
+            ? _kDefaultPaddingFromParent
             : null;
       } else {
         return null;
@@ -411,15 +412,11 @@ class _ToolTipWidgetState extends State<ToolTipWidget>
                           borderRadius: widget.tooltipBorderRadius ??
                               BorderRadius.circular(8.0),
                           child: GestureDetector(
-                            onTap: () {
-                              widget.onTooltipTap?.call();
-                              HapticFeedback.mediumImpact();
-                            },
+                            onTap: widget.onTooltipTap,
                             child: Container(
-                              width: tooltipWidth.clamp(
-                                  0, MediaQuery.of(context).size.width),
+                              width: tooltipWidth,
                               padding: widget.tooltipPadding,
-                              color: const Color(0xffFAF9F6),
+                              color: widget.tooltipBackgroundColor,
                               child: Column(
                                 crossAxisAlignment: widget.title != null
                                     ? CrossAxisAlignment.start
@@ -432,6 +429,8 @@ class _ToolTipWidgetState extends State<ToolTipWidget>
                                       child: Text(
                                         widget.title!,
                                         textAlign: widget.titleAlignment,
+                                        textDirection:
+                                            widget.titleTextDirection,
                                         style: widget.titleTextStyle ??
                                             Theme.of(context)
                                                 .textTheme
@@ -444,44 +443,24 @@ class _ToolTipWidgetState extends State<ToolTipWidget>
                                       ),
                                     ),
                                   Padding(
-                                    padding: const EdgeInsets.symmetric(
-                                        horizontal: 6),
+                                    padding: widget.descriptionPadding ??
+                                        EdgeInsets.zero,
                                     child: Text(
                                       widget.description!,
                                       textAlign: widget.descriptionAlignment,
+                                      textDirection:
+                                          widget.descriptionTextDirection,
                                       style: widget.descTextStyle ??
                                           Theme.of(context)
                                               .textTheme
                                               .titleSmall!
                                               .merge(
                                                 TextStyle(
-                                                  fontSize: 15,
                                                   color: widget.textColor,
                                                 ),
                                               ),
                                     ),
                                   ),
-                                  if (widget.showButton)
-                                    Align(
-                                      alignment: Alignment.topRight,
-                                      child: MaterialButton(
-                                        onPressed: () {
-                                          widget.onTooltipTap?.call();
-                                          HapticFeedback.vibrate();
-                                        },
-                                        shape: RoundedRectangleBorder(
-                                            borderRadius:
-                                                BorderRadius.circular(6)),
-                                        color: const Color(0xFF23272B),
-                                        child: const Text(
-                                          'NEXT',
-                                          style: TextStyle(
-                                            color: Colors.white,
-                                            fontWeight: FontWeight.bold,
-                                          ),
-                                        ),
-                                      ),
-                                    ),
                                 ],
                               ),
                             ),

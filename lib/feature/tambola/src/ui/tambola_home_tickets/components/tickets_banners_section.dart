@@ -47,9 +47,7 @@ class _TambolaRewardLottieStripState extends State<TambolaRewardLottieStrip> {
         AppState.delegate!.appState.currentAction = PageAction(
           page: AssetSelectionViewConfig,
           state: PageState.addWidget,
-          widget: const AssetSelectionPage(
-            showOnlyFlo: false,
-          ),
+          widget: const AssetSelectionPage(),
         );
         break;
       case 1:
