@@ -236,7 +236,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           _addPageData(
             StoriesPage(
               stories: _getStories(),
-              entryIndex: int.tryParse(queryParams?['entryIndex']??'0')??0,
+              entryIndex: int.tryParse(queryParams?['entryIndex'] ?? '0') ?? 0,
             ),
             StoriesPageConfig,
           );
@@ -296,7 +296,8 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           break;
 
         case Pages.ScratchCardsView:
-          _addPageData(ScratchCardsView(model: locator<ScratchCardService>()), ScratchCardsViewPageConfig);
+          _addPageData(ScratchCardsView(model: locator<ScratchCardService>()),
+              ScratchCardsViewPageConfig);
           break;
         case Pages.AutosaveOnboardingView:
           _addPageData(
@@ -781,7 +782,11 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
     _logger.d("Url: ${uri.toString()}");
     Haptic.vibrate();
     if (uri.scheme == "http" || uri.scheme == "https") {
-      if (isExternal) {
+      final openInExternal =
+          bool.tryParse(uri.queryParameters['flOpenExternal'] ?? 'false') ??
+              false;
+
+      if (isExternal || openInExternal) {
         BaseUtil.launchUrl(uri.toString());
         return;
       }
@@ -931,7 +936,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         pageConfiguration = KycDetailsPageConfig;
         break;
       case 'assetBuy':
-        BaseUtil.openDepositOptionsModalSheet();
+        BaseUtil.openDepositOptionsModalSheet(timer: 0);
         break;
       case 'augBuy':
         BaseUtil().openRechargeModalSheet(
