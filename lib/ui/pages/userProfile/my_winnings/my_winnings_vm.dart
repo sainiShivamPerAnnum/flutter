@@ -73,7 +73,7 @@ class MyWinningsViewModel extends BaseViewModel {
     setState(ViewState.Busy);
     WidgetsBinding.instance.addPostFrameCallback((timeStamp) async {
       _gtService.isLastPageForScratchCards = false;
-      _gtService.scratchCardsListLastTicketId = null;
+      _gtService.scratchCardsListLastIndex = 0;
       await _gtService.fetchScratchCards();
       setState(ViewState.Idle);
     });

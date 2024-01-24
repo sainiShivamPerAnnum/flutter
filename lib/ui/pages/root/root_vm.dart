@@ -136,6 +136,7 @@ class RootViewModel extends BaseViewModel {
         await Future.wait([
           // _userService.checkForNewNotifications(),
           _gtService.updateUnscratchedGTCount(),
+          // _tambolaService.refreshTickets(),
           _userService.getProfilePicture(),
           _fcmListener.refreshTopics(),
         ]);
