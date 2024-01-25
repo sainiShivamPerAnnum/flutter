@@ -20,8 +20,6 @@
  * SOFTWARE.
  */
 
-import 'dart:async';
-
 import 'package:flutter/material.dart';
 
 import '../showcaseview.dart';
@@ -149,13 +147,10 @@ class ShowCaseWidgetState extends State<ShowCaseWidget> {
   /// Returns value of [ShowCaseWidget.blurValue]
   double get blurValue => widget.blurValue;
 
-  late Completer<bool> completer;
-
   /// Starts Showcase view from the beginning of specified list of widget ids.
   /// If this function is used when showcase has been disabled then it will
   /// throw an exception.
   void startShowCase(List<GlobalKey> widgetIds) {
-    completer = Completer();
     if (!enableShowcase) {
       throw Exception(
         "You are trying to start Showcase while it has been disabled with "
@@ -181,17 +176,10 @@ class ShowCaseWidgetState extends State<ShowCaseWidget> {
 
         if (activeWidgetId! >= ids!.length) {
           _cleanupAfterSteps();
-          completer.complete(true);
           widget.onFinish?.call();
         }
       });
     }
-  }
-
-  void skipButtonClicked() {
-    widget.onSkipButtonClicked?.call();
-    widget.onFinish?.call();
-    dismiss();
   }
 
   /// Completes current active showcase and starts next one
@@ -205,11 +193,16 @@ class ShowCaseWidgetState extends State<ShowCaseWidget> {
 
         if (activeWidgetId! >= ids!.length) {
           _cleanupAfterSteps();
-          completer.complete(true);
           widget.onFinish?.call();
         }
       });
     }
+  }
+
+  void skipButtonClicked() {
+    widget.onSkipButtonClicked?.call();
+    widget.onFinish?.call();
+    dismiss();
   }
 
   /// Completes current active showcase and starts previous one
@@ -231,7 +224,6 @@ class ShowCaseWidgetState extends State<ShowCaseWidget> {
   /// Dismiss entire showcase view
   void dismiss() {
     if (mounted) setState(_cleanupAfterSteps);
-    widget.onFinish?.call();
   }
 
   void _onStart() {

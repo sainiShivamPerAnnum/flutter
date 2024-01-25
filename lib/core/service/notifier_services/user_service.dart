@@ -4,6 +4,7 @@ import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/cache_type_enum.dart';
+import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/model/alert_model.dart';
@@ -12,7 +13,8 @@ import 'package:felloapp/core/model/journey_models/user_journey_stats_model.dart
 import 'package:felloapp/core/model/page_config_model.dart';
 import 'package:felloapp/core/model/portfolio_model.dart';
 import 'package:felloapp/core/model/quick_save_model.dart';
-import 'package:felloapp/core/model/user_augmont_details_model.dart';
+import 'package:felloapp/core/model/sdui/sections/home_page_sections.dart';
+import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/core/model/user_bootup_model.dart';
 import 'package:felloapp/core/model/user_funt_wallet_model.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
@@ -21,6 +23,7 @@ import 'package:felloapp/core/repository/journey_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/cache_manager.dart';
 import 'package:felloapp/core/service/cache_service.dart';
+import 'package:felloapp/core/service/feature_flag_service/feature_flag_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/feature/tambola/src/services/tambola_service.dart';
@@ -28,6 +31,7 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
 import 'package:felloapp/ui/dialogs/referral_alert_dailog.dart';
+import 'package:felloapp/ui/pages/hometabs/save/save_components/asset_view_section.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/assets.dart';
@@ -62,6 +66,10 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   final GetterRepository _gettersRepo = locator<GetterRepository>();
   final AppState _appState = locator<AppState>();
   final RootController _rootController = locator<RootController>();
+  final GetterRepository _getterRepo = locator<GetterRepository>();
+  // Depends on app config so late would be required in order to lazy evaluation
+  // of expression.
+  late final _featureEvaluator = locator<FeatureFlagService>();
   Portfolio _userPortfolio = Portfolio.base();
 
   Portfolio get userPortfolio => _userPortfolio;
@@ -90,7 +98,6 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
 
   UserFundWallet? _userFundWallet;
   UserJourneyStatsModel? _userJourneyStats;
-  UserAugmontDetail? _userAugmontDetails;
   UserBootUpDetailsModel? userBootUp;
   DynamicUI? pageConfigs;
   QuickSaveModel? quickSaveModel;
@@ -228,7 +235,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
   }
 
   set userJourneyStats(UserJourneyStatsModel? stats) {
-    if (stats?.prizeSubtype != _userJourneyStats?.prizeSubtype ?? '' as bool) {
+    if (stats?.prizeSubtype != _userJourneyStats?.prizeSubtype) {
       ScratchCardService.previousPrizeSubtype =
           _userJourneyStats?.prizeSubtype ?? '';
     }
@@ -264,13 +271,6 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     _isSimpleKycVerified = val;
     notifyListeners(UserServiceProperties.mySimpleKycVerified);
     _logger.d("Email:User simple kyc verified, property listeners notified");
-  }
-
-  setUserAugmontDetails(value) {
-    _userAugmontDetails = value;
-    notifyListeners(UserServiceProperties.myAugmontDetails);
-    _logger.d(
-        "AgmontDetails :User augmontDetails updated, property listeners notified");
   }
 
   bool checkIfUsernameHasAddedUsername() {
@@ -339,8 +339,8 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
       PackageInfo packageInfo = await PackageInfo.fromPlatform();
       appVersion = packageInfo.buildNumber;
 
-      lastOpened = PreferenceHelper.getString(Constants.LAST_OPENED) ?? "";
-      dayOpenCount = PreferenceHelper.getInt(Constants.DAY_OPENED_COUNT) ?? 0;
+      lastOpened = PreferenceHelper.getString(Constants.LAST_OPENED);
+      dayOpenCount = PreferenceHelper.getInt(Constants.DAY_OPENED_COUNT);
 
       final ApiResponse<UserBootUpDetailsModel> res =
           await _userRepo.fetchUserBootUpRssponse(
@@ -394,8 +394,8 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
       String formattedTime = DateFormat('kk:mm:ss:a').format(now);
       String formattedDate = formatter.format(now);
 
-      prefs.setString(
-          Constants.LAST_OPENED, formattedDate + " " + formattedTime);
+      await prefs.setString(
+          Constants.LAST_OPENED, "$formattedDate $formattedTime");
     } catch (e) {
       log(e.toString());
     }
@@ -405,22 +405,71 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     try {
       _firebaseUser = FirebaseAuth.instance.currentUser;
       await setBaseUser();
+      final lastSpinIso = PreferenceHelper.getString(
+        PreferenceHelper.CACHE_TICKETS_LAST_SPIN_TIMESTAMP,
+      );
+      bool spinComplete = false;
+      if (lastSpinIso.isNotEmpty) {
+        final lastSpin = TimestampModel.fromIsoString(lastSpinIso).toDate();
+        spinComplete = lastSpin.day == DateTime.now().day &&
+            lastSpin.month == DateTime.now().month;
+      }
+
+      bool firstLaunch = true;
+      final lastOpenIso =
+          PreferenceHelper.getString(PreferenceHelper.CACHE_LAST_APP_OPEN);
+      if (lastOpenIso.isNotEmpty) {
+        final lastOpenTime = TimestampModel.fromIsoString(lastOpenIso).toDate();
+        firstLaunch = !(lastOpenTime.day == DateTime.now().day &&
+            lastOpenTime.month == DateTime.now().month);
+      }
+
+      final dateTime = DateTime.now();
+      locator<FeatureFlagService>().updateAttributes(attributes: {
+        'day': dateTime.day.toString(),
+        'mobile': _baseUser?.mobile ?? '',
+        'time': dateTime.hour,
+        'segments': _baseUser?.segments ?? [],
+        'subsStatus': _baseUser?.subsStatus ?? '',
+        'spinCompleted': spinComplete,
+        'firstLaunch': firstLaunch,
+      });
+
+      final variant = _featureEvaluator.evaluateFeature(
+        'newUserVariant',
+        defaultValue: 'a',
+      );
+
+      // Cache stories if user is new user else not.
+      final response = await _getterRepo.getPageData(
+        variant: variant,
+        shouldCacheStories: _baseUser?.segments.contains('NEW_USER') ?? false,
+      );
+
+      final pageData = response.model;
+      if (pageData != null) {
+        if (locator.isRegistered<PageData>()) {
+          locator.unregister<PageData>();
+        }
+        locator.registerSingleton<PageData>(pageData);
+      }
+
       if (baseUser != null) {
         unawaited(getUserJourneyStats());
         final res = await _gettersRepo.getPageConfigs();
-        final QuickSaveRes = await _gettersRepo.getQuickSave();
+        final quickSaveRes = await _gettersRepo.getQuickSave();
         if (res.isSuccess()) {
           setPageConfigs(res.model!);
           _appState.setCurrentTabIndex = 0;
         }
 
-        if (QuickSaveRes.isSuccess()) {
-          quickSaveModel = QuickSaveRes.model;
+        if (quickSaveRes.isSuccess()) {
+          quickSaveModel = quickSaveRes.model;
         }
       }
     } catch (e) {
       _logger.e(e.toString());
-      _internalOpsService
+      await _internalOpsService
           .logFailure(baseUser?.uid ?? '', FailType.UserServiceInitFailed, {
         "title": "UserService initialization Failed",
         "error": e.toString(),
@@ -448,7 +497,6 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
       _isEmailVerified = false;
       _isSimpleKycVerified = false;
       showSecurityPrompt = false;
-      _userAugmontDetails = null;
       referralAlertDialog = null;
 
       // _myUpiId = null;
@@ -518,27 +566,6 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     }
   }
 
-  // Note: Already Setting in Root uneccessary Calling
-  // Future<void> setProfilePicture() async {
-  //   if (await CacheManager.readCache(key: 'dpUrl') == null) {
-  //     try {
-  //       if (_baseUser != null) {
-  //         setMyUserDpUrl(await _dbModel.getUserDP(baseUser.uid));
-  //         _logger.d("No cached profile picture found. updated from server");
-  //       }
-  //       if (_myUserDpUrl != null) {
-  //         await CacheManager.writeCache(
-  //             key: 'dpUrl', value: _myUserDpUrl, type: CacheType.string);
-  //         _logger.d("Profile picture fetched from server and cached");
-  //       }
-  //     } catch (e) {
-  //       _logger.e(e.toString());
-  //     }
-  //   } else {
-  //     setMyUserDpUrl(await CacheManager.readCache(key: 'dpUrl'));
-  //   }
-  // }
-
   Future<void> getUserFundWalletData() async {
     if (baseUser != null) {
       UserFundWallet? temp = (await _userRepo.getFundBalance()).model;
@@ -550,7 +577,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
           temp.tickets?["total"] ?? 0,
         ));
         userFundWallet = temp;
-        _triggerHomeScreenWidgetUpdate();
+        await _triggerHomeScreenWidgetUpdate();
       }
     }
   }
@@ -572,7 +599,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
                 prefs.getString(Constants.FELLO_BALANCE)!.isNotEmpty &&
                 prefs.getString(Constants.FELLO_BALANCE) !=
                     userFundWallet!.netWorth!.toString())) {
-      prefs.setString(
+      await prefs.setString(
         Constants.FELLO_BALANCE,
         userFundWallet!.netWorth!.toString(),
       );
@@ -634,7 +661,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
       log("Showing referral alert dialog",
           name: "checkForNewNotifications method");
 
-      BaseUtil.openDialog(
+      await BaseUtil.openDialog(
         isBarrierDismissible: true,
         addToScreenStack: true,
         hapticVibrate: true,
@@ -646,9 +673,9 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     }
   }
 
-  Future<void> fcmHandlerReferralGT(String? _gtId) async {
+  Future<void> fcmHandlerReferralGT(String? gtId) async {
     _logger.d("Handling referral GT");
-    checkForNewNotifications();
+    await checkForNewNotifications();
   }
 
   void setPageConfigs(DynamicUI dynamicUi) {
@@ -685,19 +712,6 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     return response.model;
   }
 
-  // Future<void> fetchUserAugmontDetail() async {
-  //   if (userAugmontDetails == null) {
-  //     ApiResponse<UserAugmontDetail> augmontDetailResponse =
-  //         await _userRepo.getUserAugmontDetails();
-  //     if (augmontDetailResponse.isSuccess())
-  //       setUserAugmontDetails(augmontDetailResponse.model);
-  //   }
-  // }
-  // Future<bool> completeOnboarding() async {
-  //   ApiResponse response = await _userRepo.completeOnboarding();
-  //   return response.model;
-  // }
-
   Future<bool> updateProfilePicture(XFile? selectedProfilePicture) async {
     Directory supportDir;
     UploadTask uploadTask;
@@ -711,8 +725,8 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
 
     String imageName = selectedProfilePicture!.path.split("/").last;
     String targetPath = "${supportDir.path}/c-$imageName";
-    print("temp path: " + targetPath);
-    print("orignal path: " + selectedProfilePicture.path);
+    print("temp path: $targetPath");
+    print("orignal path: ${selectedProfilePicture.path}");
 
     File compressedFile = File(selectedProfilePicture.path);
 
@@ -749,7 +763,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
         Map<String, dynamic> errorDetails = {
           'error_msg': 'Method call to upload picture failed',
         };
-        _internalOpsService.logFailure(
+        await _internalOpsService.logFailure(
           baseUser!.uid,
           FailType.ProfilePictureUpdateFailed,
           errorDetails,
@@ -760,7 +774,22 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     }
   }
 
-  authenticateDevice() async {
+  late final _hasCompletedOnboarding = PreferenceHelper.getBool(
+    PreferenceHelper.isUserOnboardingComplete,
+    def: false,
+  );
+
+  Future authenticateDevice() async {
+    // If in local db `isUserOnboardingComplete` is not marked as completed but
+    // user is authenticated then set onboarding as complete, so asset
+    // onboarding can be skipped.
+    if (!_hasCompletedOnboarding && isUserOnboarded) {
+      await PreferenceHelper.setBool(
+        PreferenceHelper.isUserOnboardingComplete,
+        true,
+      );
+    }
+
     try {
       if (baseUser?.userPreferences != null &&
           baseUser?.userPreferences.getPreference(Preferences.APPLOCK) == 1) {
@@ -851,12 +880,57 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
               PageAction(state: PageState.replaceAll, page: RootPageConfig);
         }
       } else {
-        return AppState.delegate!.appState.currentAction =
-            PageAction(state: PageState.replaceAll, page: RootPageConfig);
+        final ffService = locator<FeatureFlagService>();
+
+        final variant = ffService.evaluateFeature(
+          FeatureFlagService.newUserVariant,
+          defaultValue: 'a',
+        );
+
+        ffService.updateAttributes(
+          attributes: {
+            'newUserVariant': variant,
+            'hasCompletedOnboarding': _hasCompletedOnboarding,
+          },
+        );
+
+        final entryScreen = ffService.evaluateFeature(
+          FeatureFlagService.entryScreen,
+          defaultValue: '/save',
+        );
+
+        AppState.delegate!.appState.currentAction = PageAction(
+          state: PageState.replaceAll,
+          page: RootPageConfig,
+        );
+
+        await Future.delayed(const Duration(milliseconds: 100));
+
+        if (entryScreen == 'MOST_INVESTED' && baseUser?.favAsset != null) {
+          final type = baseUser?.favAsset == 'AUGGOLD99'
+              ? InvestmentType.AUGGOLD99
+              : InvestmentType.LENDBOXP2P;
+
+          AppState.delegate!.appState.currentAction = PageAction(
+            state: PageState.addWidget,
+            page: SaveAssetsViewConfig,
+            widget: AssetSectionView(
+              type: type,
+            ),
+          );
+
+          return;
+        }
+
+        AppState.delegate!.parseRoute(
+          Uri.parse(entryScreen),
+        );
       }
     } catch (e) {
       return BaseUtil.showNegativeAlert(
-          locale.authFailed, locale.restartAndTry);
+        locale.authFailed,
+        locale.restartAndTry,
+      );
     }
   }
 
@@ -866,7 +940,7 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
       const platform = MethodChannel("methodChannel/deviceData");
       try {
         final List result = await platform.invokeMethod('getInstalledApps');
-        for (var e in result) {
+        for (final e in result) {
           packages[e["app_name"]] = e["package_name"];
           // packages.add(_parseData(e));
           print(packages.length);
@@ -879,11 +953,4 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
     }
     return {};
   }
-
-// Package _parseData(Map<dynamic, dynamic> data) {
-//   final appName = data["app_name"];
-//   final packageName = data["package_name"];
-//   final icon = data["icon"];
-//   return {"appName": appName, "packageName": packageName};
-// }
 }

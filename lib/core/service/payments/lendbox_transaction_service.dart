@@ -107,7 +107,7 @@ class LendboxTransactionService extends BaseTransactionService
             }
             currentTxnTambolaTicketsCount = value.model!.data!.tickets!;
             currentTxnScratchCardCount = value.model?.data?.gtIds?.length ?? 0;
-            await locator<BaseUtil>().newUserCheck();
+            await locator<BaseUtil>().updateUser();
             transactionResponseModel = value.model!;
             return transactionResponseUpdate(
               amount: currentTxnAmount,

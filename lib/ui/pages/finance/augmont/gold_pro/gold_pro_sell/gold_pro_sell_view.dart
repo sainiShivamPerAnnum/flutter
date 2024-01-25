@@ -20,80 +20,79 @@ class GoldProSellView extends StatelessWidget {
       onModelDispose: (model) => model.dump(),
       builder: (context, model, child) {
         return Scaffold(
-            backgroundColor: UiConstants.kModalSheetBackgroundColor,
-            body: SafeArea(
-              child: RefreshIndicator(
-                color: UiConstants.kGoldProPrimary,
-                backgroundColor: Colors.black,
-                onRefresh: () async {
-                  await model.getGoldProTransactions(forced: true);
-                },
-                child: Column(
-                  children: [
-                    SizedBox(
-                      width: SizeConfig.screenWidth,
-                      height: kToolbarHeight,
-                      child: Row(
-                        mainAxisAlignment: MainAxisAlignment.start,
-                        children: [
-                          SizedBox(width: SizeConfig.padding4),
-                          IconButton(
-                            icon: const Icon(
-                              Icons.arrow_back_ios,
-                              color: Colors.white,
-                            ),
-                            onPressed: () =>
-                                AppState.backButtonDispatcher!.didPopRoute(),
+          backgroundColor: UiConstants.kModalSheetBackgroundColor,
+          body: SafeArea(
+            child: RefreshIndicator(
+              color: UiConstants.kGoldProPrimary,
+              backgroundColor: Colors.black,
+              onRefresh: () async {
+                await model.getGoldProTransactions(forced: true);
+              },
+              child: Column(
+                children: [
+                  SizedBox(
+                    width: SizeConfig.screenWidth,
+                    height: kToolbarHeight,
+                    child: Row(
+                      mainAxisAlignment: MainAxisAlignment.start,
+                      children: [
+                        SizedBox(width: SizeConfig.padding4),
+                        IconButton(
+                          icon: const Icon(
+                            Icons.arrow_back_ios,
+                            color: Colors.white,
                           ),
+                          onPressed: () =>
+                              AppState.backButtonDispatcher!.didPopRoute(),
+                        ),
 
-                          Image.asset(
-                            Assets.digitalGoldBar,
-                            width: SizeConfig.padding54,
-                            height: SizeConfig.padding54,
-                          ),
-                          // SizedBox(width: SizeConfig.padding8),
+                        Image.asset(
+                          Assets.digitalGoldBar,
+                          width: SizeConfig.padding54,
+                          height: SizeConfig.padding54,
+                        ),
+                        // SizedBox(width: SizeConfig.padding8),
 
-                          Text(
-                            'Un-Lease ${Constants.ASSET_GOLD_STAKE}',
-                            style: TextStyles.rajdhaniSB.title5,
-                          ),
-                          const Spacer()
-                        ],
+                        Text(
+                          'Un-Lease ${Constants.ASSET_GOLD_STAKE}',
+                          style: TextStyles.rajdhaniSB.title5,
+                        ),
+                        const Spacer()
+                      ],
+                    ),
+                  ),
+                  if (model.state == ViewState.Idle &&
+                      model.leasedGoldList.isNotEmpty)
+                    Padding(
+                      padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+                      child: Text(
+                        "Select Lease to Un-Lease to Digital Gold",
+                        style: TextStyles.rajdhaniM.body0.colour(Colors.white),
+                        textAlign: TextAlign.center,
                       ),
                     ),
-                    if (model.state == ViewState.Idle)
-                      Padding(
-                        padding:
-                            EdgeInsets.all(SizeConfig.pageHorizontalMargins),
-                        child: Text(
-                          model.leasedGoldList.isEmpty
-                              ? ""
-                              : "Tap 'un-lease' to move savings to Digital Gold",
-                          style:
-                              TextStyles.rajdhaniM.body0.colour(Colors.white),
-                          textAlign: TextAlign.center,
-                        ),
-                      ),
-                    Expanded(
-                        child: model.state == ViewState.Busy
-                            ? const Center(child: FullScreenLoader())
-                            : model.leasedGoldList.isEmpty
-                                ? const NoRecordDisplayWidget(
-                                    text: "No Investments made yet",
-                                  )
-                                : ListView.builder(
-                                    physics: const BouncingScrollPhysics(),
-                                    itemCount: model.leasedGoldList.length,
-                                    itemBuilder: (context, index) =>
-                                        GoldProSellCard(
-                                      data: model.leasedGoldList[index],
-                                      model: model,
-                                    ),
-                                  )),
-                  ],
-                ),
+                  Expanded(
+                    child: model.state == ViewState.Busy
+                        ? const Center(child: FullScreenLoader())
+                        : model.leasedGoldList.isEmpty
+                            ? const NoRecordDisplayWidget(
+                                text: "No Investments made yet",
+                              )
+                            : ListView.builder(
+                                physics: const BouncingScrollPhysics(),
+                                itemCount: model.leasedGoldList.length,
+                                itemBuilder: (context, index) =>
+                                    GoldProSellCard(
+                                  data: model.leasedGoldList[index],
+                                  model: model,
+                                ),
+                              ),
+                  ),
+                ],
               ),
-            ));
+            ),
+          ),
+        );
       },
     );
   }

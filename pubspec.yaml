@@ -3,7 +3,7 @@ description: Game-based Investments
 
 publish_to: "none"
 
-version: 4.7.1+250
+version: 4.8.0+251
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
@@ -99,6 +99,11 @@ dependencies:
   json_annotation: ^4.8.1
   bloc: ^8.1.2
   equatable: ^2.0.5
+  flutter_blurhash: ^0.8.2
+  story_view: ^0.16.0
+  freezed_annotation: ^2.4.1
+  showcaseview:
+    path: packages/showcaseview
 
 
 
@@ -113,10 +118,9 @@ dev_dependencies:
   husky: ^0.1.6
   dart_code_metrics: 5.7.5
   json_serializable: ^6.7.1
+  freezed: ^2.4.6
 
 
-# dependency_overrides:
-#    firebase_core_platform_interface: 4.5.1
 flutter:
   uses-material-design: true
 

@@ -6,30 +6,26 @@ import 'package:android_play_install_referrer/android_play_install_referrer.dart
 import 'package:app_set_id/app_set_id.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
-import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/constants/cache_keys.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/base_user_model.dart';
-import 'package:felloapp/core/ops/augmont_ops.dart';
-import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/analytics_repo.dart';
 import 'package:felloapp/core/repository/games_repo.dart';
-import 'package:felloapp/core/repository/journey_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/analytics/base_analytics.dart';
 import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
-import 'package:felloapp/core/service/journey_service.dart';
+import 'package:felloapp/core/service/feature_flag_service/feature_flag_service.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
-import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/referral_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
+import 'package:felloapp/ui/pages/hometabs/save/stories/stories_page.dart';
 import 'package:felloapp/ui/pages/login/login_controller_view.dart';
 import 'package:felloapp/ui/pages/login/screens/mobile_input/mobile_input_view.dart';
 import 'package:felloapp/ui/pages/login/screens/name_input/name_input_view.dart';
@@ -42,6 +38,7 @@ import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
+import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:firebase_auth/firebase_auth.dart';
 import 'package:flutter/material.dart';
@@ -49,28 +46,23 @@ import 'package:flutter/services.dart';
 import 'package:sms_autofill/sms_autofill.dart';
 import 'package:truecaller_sdk/truecaller_sdk.dart';
 
+import '../../../core/model/sdui/sections/home_page_sections.dart';
+
 enum LoginSource { FIREBASE, TRUECALLER }
 
 class LoginControllerViewModel extends BaseViewModel {
   //Locators
   final FcmListener? fcmListener = locator<FcmListener>();
-  final AugmontService? augmontProvider = locator<AugmontService>();
   final AnalyticsService _analyticsService = locator<AnalyticsService>();
   final UserService userService = locator<UserService>();
-  final UserCoinService _userCoinService = locator<UserCoinService>();
   final CustomLogger logger = locator<CustomLogger>();
-  final ApiPath? apiPaths = locator<ApiPath>();
   final BaseUtil? baseProvider = locator<BaseUtil>();
-  final DBModel? dbProvider = locator<DBModel>();
   final UserRepository _userRepo = locator<UserRepository>();
   final AnalyticsRepository _analyticsRepo = locator<AnalyticsRepository>();
-  final JourneyService _journeyService = locator<JourneyService>();
-  final JourneyRepository _journeyRepo = locator<JourneyRepository>();
   final ReferralService _referralService = locator<ReferralService>();
 
   S locale = locator<S>();
 
-  // static LocalDBModel? lclDbProvider = locator<LocalDBModel>();
   final InternalOpsService _internalOpsService = locator<InternalOpsService>();
 
   //Controllers
@@ -88,9 +80,9 @@ class LoginControllerViewModel extends BaseViewModel {
   bool _isSignup = false;
   bool _loginUsingTrueCaller = false;
 
-  get loginUsingTrueCaller => _loginUsingTrueCaller;
+  bool get loginUsingTrueCaller => _loginUsingTrueCaller;
 
-  set loginUsingTrueCaller(value) {
+  set loginUsingTrueCaller(bool value) {
     _loginUsingTrueCaller = value;
     notifyListeners();
   }
@@ -100,7 +92,7 @@ class LoginControllerViewModel extends BaseViewModel {
   int? _currentPage;
   ValueNotifier<double?>? _pageNotifier;
   StreamSubscription? streamSubscription;
-  static List<Widget>? _pages;
+  static List<Widget> _pages = [];
   ScrollController nameViewScrollController = ScrollController();
 
 //Getters and Setters
@@ -117,9 +109,8 @@ class LoginControllerViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  void init(initPage, loginModelInstance) {
+  void init(int? initPage) {
     _currentPage = (initPage != null) ? initPage : LoginMobileView.index;
-    // _formProgress = 0.2 * (_currentPage + 1);
     _controller = PageController(initialPage: _currentPage!);
     _controller!.addListener(_pageListener);
     _pageNotifier = ValueNotifier(0.0);
@@ -134,7 +125,7 @@ class LoginControllerViewModel extends BaseViewModel {
         resendOtp: _onOtpResendRequested,
         changeNumber: _onChangeNumberRequest,
         mobileNo: userMobile,
-        loginModel: loginModelInstance,
+        loginModel: this,
       ),
       LoginNameInputView(key: _nameKey, loginModel: this),
     ];
@@ -222,6 +213,8 @@ class LoginControllerViewModel extends BaseViewModel {
 
       case LoginNameInputView.index:
         {
+          FocusScope.of(_nameKey.currentState!.context)
+              .requestFocus(FocusNode());
           _analyticsService.track(eventName: "Name screen finish tapped");
 
           if (_nameKey.currentState!.model.formKey.currentState!.validate()) {
@@ -289,10 +282,7 @@ class LoginControllerViewModel extends BaseViewModel {
             if (flag) {
               _analyticsService.track(
                 eventName: AnalyticsEvents.proceedToSignUp,
-                properties: {
-                  'username': name ?? "",
-                  'referralCode': refCode ?? ""
-                },
+                properties: {'username': name, 'referralCode': refCode},
               );
               logger.d("User object saved successfully");
               // userService.showOnboardingTutorial = true;
@@ -470,6 +460,10 @@ class LoginControllerViewModel extends BaseViewModel {
       ///Existing user
 
       await BaseAnalytics.analytics?.logLogin(loginMethod: 'phonenumber');
+      await PreferenceHelper.setBool(
+        PreferenceHelper.isUserOnboardingComplete,
+        true,
+      );
       logger.d("User details available: Name: ${user.model!.name!}");
       if (source == LoginSource.TRUECALLER) {
         _analyticsService.track(eventName: AnalyticsEvents.truecallerLogin);
@@ -571,9 +565,31 @@ class LoginControllerViewModel extends BaseViewModel {
     }
 
     _analyticsService.track(eventName: "SignIn: moving user to home screen");
+    appStateProvider.currentAction = PageAction(
+      state: PageState.replaceAll,
+      page: RootPageConfig,
+    );
 
-    appStateProvider.currentAction =
-        PageAction(state: PageState.replaceAll, page: RootPageConfig);
+    final ff = locator<FeatureFlagService>();
+
+    final variant = ff.evaluateFeature(
+      FeatureFlagService.newUserVariant,
+      defaultValue: 'b',
+    );
+
+    if (_isSignup && variant == 'a') {
+      await Future.delayed(const Duration(milliseconds: 10));
+      appStateProvider.currentAction = PageAction(
+        state: PageState.addPage,
+        page: AssetPrefPageConfig,
+      );
+    }
+
+    if (_isSignup && variant == 'b') {
+      await Future.delayed(const Duration(milliseconds: 10));
+      AppState.delegate!.screenCheck('stories');
+    }
+
     BaseUtil.showPositiveAlert(
       'Sign In Complete',
       'Welcome to ${Constants.APP_NAME}, ${userService.baseUser!.name}',
@@ -581,8 +597,22 @@ class LoginControllerViewModel extends BaseViewModel {
     //process complete
   }
 
+  List<Story> _getStories() {
+    final pageData = locator<PageData>();
+    final sections = pageData.screens.home.sections;
+
+    for (var i = 0; i < sections.entries.length; i++) {
+      final section = sections.entries.toList()[i].value;
+
+      if (section is StoriesSection) {
+        return section.data.stories;
+      }
+    }
+
+    return const [];
+  }
+
   Future<void> editPhone() async {
-    setState(ViewState.Busy);
     unawaited(_controller!
         .animateToPage(
           LoginMobileView.index,

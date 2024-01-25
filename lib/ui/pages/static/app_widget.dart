@@ -1,6 +1,10 @@
+import 'dart:async';
+
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/connectivity_status_enum.dart';
+import 'package:felloapp/core/model/sdui/sections/home_page_sections.dart';
 import 'package:felloapp/core/service/notifier_services/connectivity_service.dart';
+import 'package:felloapp/util/action_resolver.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -954,23 +958,29 @@ class SecondaryButton extends StatelessWidget {
   const SecondaryButton({
     required this.onPressed,
     required this.label,
+    this.disabled = false,
     super.key,
   });
 
   final VoidCallback onPressed;
   final String label;
+  final bool disabled;
+
+  void _onTap() {
+    onPressed();
+  }
 
   @override
   Widget build(BuildContext context) {
     return MaterialButton(
       height: SizeConfig.padding44,
       shape: RoundedRectangleBorder(
-        borderRadius: BorderRadius.circular(SizeConfig.roundness8),
+        borderRadius: BorderRadius.circular(SizeConfig.roundness5),
       ),
       materialTapTargetSize: MaterialTapTargetSize.shrinkWrap,
       minWidth: SizeConfig.screenWidth! - SizeConfig.pageHorizontalMargins * 2,
-      color: Colors.white,
-      onPressed: onPressed,
+      color: disabled ? Colors.white54 : Colors.white,
+      onPressed: _onTap,
       child: Text(
         label,
         style: TextStyles.rajdhaniB.body1.colour(
@@ -978,5 +988,164 @@ class SecondaryButton extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class SecondaryOutlinedButton extends StatelessWidget {
+  const SecondaryOutlinedButton({
+    required this.onPressed,
+    required this.label,
+    this.disabled = false,
+    super.key,
+  });
+
+  final VoidCallback onPressed;
+  final String label;
+  final bool disabled;
+
+  void _onTap() {
+    if (disabled) return;
+    onPressed();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final size = Size(
+      SizeConfig.screenWidth! - SizeConfig.pageHorizontalMargins * 2,
+      SizeConfig.padding44,
+    );
+
+    return OutlinedButton(
+      style: ButtonStyle(
+        iconColor: MaterialStatePropertyAll(
+          disabled ? Colors.white54 : Colors.white,
+        ),
+        minimumSize: MaterialStatePropertyAll(size),
+        tapTargetSize: MaterialTapTargetSize.shrinkWrap,
+        shape: MaterialStatePropertyAll(
+          RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(SizeConfig.roundness5),
+          ),
+        ),
+        side: const MaterialStatePropertyAll(
+          BorderSide(color: Colors.white),
+        ),
+      ),
+      onPressed: _onTap,
+      child: Text(
+        label,
+        style: TextStyles.rajdhaniB.body1.colour(
+          Colors.white,
+        ),
+      ),
+    );
+  }
+}
+
+class DSLButtonResolver extends StatelessWidget {
+  const DSLButtonResolver({
+    required this.cta,
+    super.key,
+    this.preResolve,
+    this.postResolve,
+  });
+
+  final Cta cta;
+  final FutureOr<void> Function()? preResolve;
+  final FutureOr<void> Function()? postResolve;
+
+  FutureOr<void> _onPressed() async {
+    await preResolve?.call();
+    final action = cta.action;
+    if (action == null) return;
+    await ActionResolver.instance.resolve(action);
+    await postResolve?.call();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return switch (cta.style) {
+      CTAType.secondary => SecondaryButton(
+          onPressed: _onPressed,
+          label: cta.label,
+        ),
+      CTAType.secondaryOutline => SecondaryOutlinedButton(
+          onPressed: _onPressed,
+          label: cta.label,
+        ),
+    };
+  }
+}
+
+class GradientBoxBorder extends BoxBorder {
+  const GradientBoxBorder({required this.gradient, this.width = 1.0});
+
+  final Gradient gradient;
+
+  final double width;
+
+  @override
+  BorderSide get bottom => BorderSide.none;
+
+  @override
+  BorderSide get top => BorderSide.none;
+
+  @override
+  EdgeInsetsGeometry get dimensions => EdgeInsets.all(width);
+
+  @override
+  bool get isUniform => true;
+
+  @override
+  void paint(
+    Canvas canvas,
+    Rect rect, {
+    TextDirection? textDirection,
+    BoxShape shape = BoxShape.rectangle,
+    BorderRadius? borderRadius,
+  }) {
+    switch (shape) {
+      case BoxShape.circle:
+        assert(
+          borderRadius == null,
+          'A borderRadius can only be given for rectangular boxes.',
+        );
+        _paintCircle(canvas, rect);
+        break;
+      case BoxShape.rectangle:
+        if (borderRadius != null) {
+          _paintRRect(canvas, rect, borderRadius);
+          return;
+        }
+        _paintRect(canvas, rect);
+        break;
+    }
+  }
+
+  void _paintRect(Canvas canvas, Rect rect) {
+    canvas.drawRect(rect.deflate(width / 2), _getPaint(rect));
+  }
+
+  void _paintRRect(Canvas canvas, Rect rect, BorderRadius borderRadius) {
+    final rrect = borderRadius.toRRect(rect).deflate(width / 2);
+    canvas.drawRRect(rrect, _getPaint(rect));
+  }
+
+  void _paintCircle(Canvas canvas, Rect rect) {
+    final paint = _getPaint(rect);
+    final radius = (rect.shortestSide - width) / 2.0;
+    canvas.drawCircle(rect.center, radius, paint);
+  }
+
+  @override
+  ShapeBorder scale(double t) {
+    return this;
+  }
+
+  Paint _getPaint(Rect rect) {
+    return Paint()
+      ..strokeWidth = width
+      ..shader = gradient.createShader(rect)
+      ..style = PaintingStyle.stroke;
   }
 }

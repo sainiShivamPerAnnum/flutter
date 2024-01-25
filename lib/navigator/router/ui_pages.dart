@@ -4,6 +4,7 @@ import 'package:felloapp/navigator/app_state.dart';
 
 const String SplashPath = '/splash';
 const String LoginPath = '/login';
+const String AssetPreferencePath = '/assetPref';
 const String OnboardPath = '/onboard';
 const String RootPath = '/approot';
 const String UserProfileDetailsPath = '/userProfileDetails';
@@ -99,6 +100,7 @@ const String BalloonLottieScreenPath = "/bolloonLottieScreenPath";
 const String MaturityWithdrawalSuccessViewPath =
     "/maturityWithdrawalSuccessViewPath";
 const String FelloBadgeHomePath = "/felloBadgeHomePath";
+const String StoriesPath = "/storiesPath";
 
 //GoldPro
 const String GoldProDetailsPath = "/goldProDetailsPath";
@@ -116,6 +118,7 @@ const String SipPageViewPath = "/sip";
 enum Pages {
   Splash,
   Login,
+  AssetPreference,
   Onboard,
   Root,
   UserProfileDetails,
@@ -217,6 +220,7 @@ enum Pages {
   TicketsIntroViewPath,
   TicketsTutorialViewPath,
   Sip
+  Stories,
 }
 
 class PageConfiguration {
@@ -270,6 +274,13 @@ PageConfiguration LoginPageConfig = PageConfiguration(
   path: LoginPath,
   uiPage: Pages.Login,
   name: 'Login Screen',
+);
+
+PageConfiguration AssetPrefPageConfig = PageConfiguration(
+  key: 'AssetPref',
+  path: AssetPreferencePath,
+  uiPage: Pages.AssetPreference,
+  name: 'Asset Preference Screen',
 );
 
 PageConfiguration RootPageConfig = PageConfiguration(
@@ -886,4 +897,10 @@ PageConfiguration SipPageConfig = PageConfiguration(
   path: SipPageViewPath,
   uiPage: Pages.Sip,
   name: 'Login Screen',
+);
+PageConfiguration StoriesPageConfig = PageConfiguration(
+  key: 'StoriesViewPath',
+  path: StoriesPath,
+  uiPage: Pages.Stories,
+  name: "New user stories",
 );

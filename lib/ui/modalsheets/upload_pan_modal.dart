@@ -91,6 +91,7 @@ class FileCaptureOption extends StatelessWidget {
     return InkWell(
       onTap: onTap,
       highlightColor: UiConstants.kTextColor,
+      borderRadius: BorderRadius.circular(SizeConfig.roundness8),
       child: Container(
         decoration: BoxDecoration(
           color: UiConstants.kBackgroundColor3,
@@ -110,18 +111,15 @@ class FileCaptureOption extends StatelessWidget {
           ),
           if (desc != null)
             Expanded(
-              child: Padding(
-                padding: EdgeInsets.only(top: SizeConfig.padding8),
-                child: Text(
-                  desc!,
-                  style: TextStyles.sourceSansSB.body2
-                      .colour(UiConstants.kTextColor.withOpacity(0.8)),
-                ),
+              child: Text(
+                desc!,
+                style: TextStyles.sourceSansSB.body2
+                    .colour(UiConstants.kTextColor.withOpacity(0.8)),
               ),
             ),
           Container(
-            margin: EdgeInsets.all(SizeConfig.padding12),
-            height: SizeConfig.padding10,
+            margin: EdgeInsets.all(SizeConfig.padding20),
+            height: SizeConfig.padding16,
             child: SvgPicture.asset(
               trailingIcon,
             ),

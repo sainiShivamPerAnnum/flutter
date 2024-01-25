@@ -1,9 +1,12 @@
+import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
+import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/journey_models/user_journey_stats_model.dart';
 import 'package:felloapp/core/model/portfolio_model.dart';
 import 'package:felloapp/core/model/user_bootup_model.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/feature/tambola/src/models/tambola_best_tickets_model.dart';
 import 'package:felloapp/feature/tambola/tambola.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/animations/welcome_rings/welcome_rings.dart';
@@ -16,25 +19,57 @@ import 'package:felloapp/ui/pages/hometabs/home/card_actions_notifier.dart';
 import 'package:felloapp/ui/pages/hometabs/my_account/my_account_components/win_helpers.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/ui/pages/root/root_vm.dart';
+import 'package:felloapp/ui/pages/root/tutorial_keys.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/ui/shared/marquee_text.dart';
+import 'package:felloapp/ui/shared/show_case.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/lazy_load_indexed_stack.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:provider/provider.dart';
+import 'package:showcaseview/showcaseview.dart';
 import 'package:tuple/tuple.dart';
 
 GlobalKey felloAppBarKey = GlobalKey();
 
-class Root extends StatelessWidget {
+class Root extends StatefulWidget {
   const Root({super.key});
 
   @override
+  State<Root> createState() => _RootState();
+}
+
+class _RootState extends State<Root> {
+  final isNewUser = locator<UserService>().userSegments.contains(
+        Constants.NEW_USER,
+      );
+  bool _isOverlayVisible = false;
+  @override
+  void initState() {
+    if (isNewUser) {
+      AppState.isFirstAppOpen().then((firstOpen) {
+        if (firstOpen) {
+          Future.delayed(const Duration(seconds: 1), () {
+            setState(() {
+              _isOverlayVisible = true;
+            });
+          });
+        }
+      });
+    }
+
+    super.initState();
+  }
+
+  @override
   Widget build(BuildContext context) {
+    final locale = locator<S>();
     return BaseView<RootViewModel>(
       onModelReady: (model) {
         model.onInit();
@@ -47,7 +82,7 @@ class Root extends StatelessWidget {
           children: [
             Scaffold(
               resizeToAvoidBottomInset: false,
-              backgroundColor: UiConstants.kBackgroundColor,
+              backgroundColor: UiConstants.bg,
               body: Stack(
                 children: [
                   const NewSquareBackground(),
@@ -94,6 +129,37 @@ class Root extends StatelessWidget {
               bottomNavigationBar: const BottomNavBar(),
             ),
             const CircularAnim(),
+            if (_isOverlayVisible)
+              Positioned.fill(
+                child: GestureDetector(
+                  onTap: () {
+                    ShowCaseWidget.of(context).startShowCase([
+                      TutorialKeys.tutorialkey1,
+                      TutorialKeys.tutorialkey2,
+                      TutorialKeys.tutorialkey3,
+                      TutorialKeys.tutorialkey4,
+                      TutorialKeys.tutorialkey5,
+                      TutorialKeys.tutorialkey6
+                    ]);
+                    setState(() => _isOverlayVisible = false);
+                  },
+                  child: Container(
+                    color: Colors.black.withOpacity(0.85),
+                    child: Center(
+                      child: Padding(
+                        padding:const  EdgeInsets.symmetric(horizontal: 20),
+                        child: DefaultTextStyle(
+                          style: TextStyles.sourceSans.body1
+                              .colour(UiConstants.kTextColor).copyWith(height: 1.5),
+                          child: Text(
+                            locale.tutorialstart,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                ),
+              ),
           ],
         );
       },
@@ -138,6 +204,7 @@ class RootAppBar extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final locale = locator<S>();
     return PropertyChangeConsumer<UserService, UserServiceProperties>(
         properties: const [UserServiceProperties.mySegments],
         builder: (_, userservice, ___) {
@@ -147,6 +214,9 @@ class RootAppBar extends StatelessWidget {
                 selector: (_, tambolaService) =>
                     tambolaService.tambolaTicketCount,
                 builder: (_, ticketCount, child) {
+                  final enableJourney = AppConfig.getValue(
+                    AppConfigKey.enableJourney,
+                  );
                   return (locator<RootController>().currentNavBarItemModel !=
                           RootController.journeyNavBarItem)
                       ? Container(
@@ -156,64 +226,94 @@ class RootAppBar extends StatelessWidget {
                           child: FAppBar(
                             showAvatar: true,
                             leadingPadding: false,
-                            titleWidget:
-                                !userservice!.userSegments.contains("NEW_USER")
-                                    ? Expanded(
-                                        child: Salutation(
-                                          leftMargin: SizeConfig.padding8,
-                                          textStyle: TextStyles.rajdhaniSB.body0
-                                              .colour(Colors.white),
-                                        ),
-                                      )
-                                    : null,
+                           titleWidget: Expanded(
+                              child: Salutation(
+                                leftMargin: SizeConfig.padding8,
+                                textStyle: TextStyles.rajdhaniSB.body0
+                                    .colour(Colors.white),
+                              ),
+                            ),
                             backgroundColor: UiConstants.kBackgroundColor,
                             showCoinBar: false,
                             action: Row(
                               children: [
-                                Selector2<UserService, ScratchCardService,
-                                    Tuple2<Portfolio?, int>>(
-                                  builder: (context, value, child) =>
-                                      FelloInfoBar(
-                                    svgAsset: Assets.scratchCard,
-                                    size: SizeConfig.padding16,
-                                    child:
-                                        "₹${value.item1?.rewards.toInt() ?? 0}",
-                                    onPressed: () {
-                                      Haptic.vibrate();
-                                      AppState.delegate!
-                                          .parseRoute(Uri.parse("myWinnings"));
-                                    },
-                                    mark: value.item2 > 0,
+                                ShowCaseView(
+                                  globalKey: TutorialKeys.tutorialkey4,
+                                  title: null,
+                                  description: locale.tutorial4,
+                                  shapeBorder: RoundedRectangleBorder(
+                                    borderRadius: BorderRadius.circular(
+                                        SizeConfig.roundness12),
                                   ),
-                                  selector: (p0, userService,
-                                          scratchCardService) =>
-                                      Tuple2(
-                                          userService.userPortfolio,
-                                          scratchCardService
-                                              .unscratchedTicketsCount),
+                                  targetBorderRadius: BorderRadius.circular(
+                                      SizeConfig.roundness12),
+                                  child: Selector2<
+                                      UserService,
+                                      ScratchCardService,
+                                      Tuple2<Portfolio?, int>>(
+                                    builder: (context, value, child) =>
+                                        FelloInfoBar(
+                                      svgAsset: Assets.scratchCard,
+                                      size: SizeConfig.padding16,
+                                      child:
+                                          "₹${value.item1?.rewards.toInt() ?? 0}",
+                                      onPressed: () {
+                                        Haptic.vibrate();
+                                        AppState.delegate!.parseRoute(
+                                            Uri.parse("myWinnings"));
+                                      },
+                                      mark: value.item2 > 0,
+                                    ),
+                                    selector:
+                                        (p0, userService, scratchCardService) =>
+                                            Tuple2(
+                                                userService.userPortfolio,
+                                                scratchCardService
+                                                    .unscratchedTicketsCount),
+                                  ),
                                 ),
-                                Selector2<UserService, ScratchCardService,
-                                    Tuple2<UserJourneyStatsModel?, int>>(
+                                Selector2<UserService, TambolaService,
+                                    Tuple2<TambolaBestTicketsModel?, int>>(
+                                  selector: (p0, userService, tambolaService) =>
+                                      Tuple2(tambolaService.bestTickets,
+                                          tambolaService.expiringTicketsCount),
                                   builder: (context, value, child) =>
                                       FelloInfoBar(
-                                    lottieAsset: Assets.navJourneyLottie,
-                                    size: SizeConfig.padding24 -
-                                        SizeConfig.padding1,
-                                    child: "Level ${value.item1?.level ?? 0}",
+                                    svgAsset: Assets.tambolaTicket,
+                                    size: SizeConfig.padding12,
+                                    child:
+                                        "${value.item1?.data?.totalTicketCount ?? '0'}",
                                     onPressed: () {
                                       Haptic.vibrate();
                                       AppState.delegate!
-                                          .parseRoute(Uri.parse("journey"));
+                                          .parseRoute(Uri.parse("tambolaHome"));
                                     },
-                                    mark: value.item2 > 0,
+                                    mark: false,
                                   ),
-                                  selector: (p0, userService,
-                                          scratchCardService) =>
-                                      Tuple2(
-                                          userService.userJourneyStats,
-                                          scratchCardService
-                                              .unscratchedMilestoneScratchCardCount),
-                                )
+                                ),
+                                if (enableJourney)
+                                  Selector2<UserService, ScratchCardService,
+                                      Tuple2<UserJourneyStatsModel?, int>>(
+                                    builder: (context, value, child) =>
+                                        FelloInfoBar(
+                                      lottieAsset: Assets.navJourneyLottie,
+                                      size: SizeConfig.padding24 -
+                                          SizeConfig.padding1,
+                                      child: "Level ${value.item1?.level ?? 0}",
+                                      onPressed: () {
+                                        Haptic.vibrate();
+                                        AppState.delegate!
+                                            .parseRoute(Uri.parse("journey"));
+                                      },
+                                      mark: value.item2 > 0,
+                                    ),
+                                    selector: (p0, userService,
+                                            scratchCardService) =>
+                                        Tuple2(
+                                            userService.userJourneyStats,
+                                            scratchCardService
+                                                .unscratchedMilestoneScratchCardCount),
+                                  )
                               ],
                             ),
                           ),

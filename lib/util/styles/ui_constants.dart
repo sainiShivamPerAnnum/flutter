@@ -21,6 +21,8 @@ class UiConstants {
   static const Color secondaryColor = Color.fromARGB(255, 241, 227, 243);
   static const Color goldSellCardColor = Color(0xff1F2C65);
   static const Color referralIconColor = Color(0xff6052A9);
+  static const Color customBorderShadow = Color(0xfffff9f9);
+  static const Color customSubtitle = Color(0xffB9B9B9);
 
   // static final Color chipColor = const Color.fromARGB(255, 241, 227, 243);
   static final Color? chipColor = Colors.grey[200];
@@ -80,6 +82,7 @@ class UiConstants {
   static const Color kTabBorderColor = Color(0xFF62E3C4);
   static const Color kDividerColor = Color(0xFF9EA1A1);
   static const Color kBackgroundDividerColor = Color(0xFF23272B);
+  static const Color kGridLineColor = Color(0x32414145);
   static const Color kFirstRankPillerColor = Color(0xFFF2B826);
   static const Color kSecondRankPillerColor = Color(0x0f5371ee);
   static const Color kThirdRankPillerColor = Color(0xFF34C3A7);
@@ -130,6 +133,9 @@ class UiConstants {
   static const Color kScratchHereStripColor = Color(0xffEFAF4E);
   static const Color kAutoSaveOnboardingColor = Color(0xff025155);
   static const Color kAutoSaveOnboardingTextColor = Color(0xff01646B);
+
+  // snowflakes.
+  static const Color onboardingBackgroundColor = Color(0xFF1D252A);
 
   static LinearGradient kTextFieldGradient1 = const LinearGradient(
     colors: [Color(0xff111111), Colors.transparent],
@@ -234,7 +240,10 @@ class UiConstants {
   static const teal4 = Color(0xFF01656B);
   static const teal5 = Color(0xFF023C40);
 
+  static const blue3 = Color(0xff93B5FE);
+
   static const bg = Color(0xFF232326);
+  static const bg1 = Color(0xff29292B);
 
   static const textGray50 = Color(0xFF919193);
   static const textGray60 = Color(0xFFA7A7A8);
@@ -242,6 +251,9 @@ class UiConstants {
 
   static const peach1 = Color(0xFFEFD8D2);
   static const peach2 = Color(0xFFFFCCBF);
+  static const peach3 = Color(0xFFF79780);
+
+  static const greyDivider = Color(0xFF7F86A3);
 }
 
 extension ColorExtension on String {

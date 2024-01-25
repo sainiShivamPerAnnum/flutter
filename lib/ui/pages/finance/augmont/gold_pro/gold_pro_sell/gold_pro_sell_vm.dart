@@ -39,7 +39,9 @@ class GoldProSellViewModel extends BaseViewModel {
     await getGoldProTransactions();
   }
 
-  void dump() {}
+  void dump() {
+    leasedGoldList.clear();
+  }
 
   void onSellTapped(
       GoldProInvestmentResponseModel data, GoldProSellViewModel model) {

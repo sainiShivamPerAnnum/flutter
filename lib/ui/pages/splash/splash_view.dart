@@ -32,14 +32,14 @@ class _LauncherViewState extends State<LauncherView>
         builder: (context, service, child) => service.connectivityStatus ==
                 ConnectivityStatus.Online
             ? BaseView<LauncherViewModel>(onModelReady: (model) {
-                model.loopOutlottieAnimationController =
+                model.loopOutLottieAnimationController =
                     AnimationController(vsync: this);
                 model.loopingLottieAnimationController = AnimationController(
                     vsync: this, duration: const Duration(milliseconds: 2500));
 
                 model.init();
               }, onModelDispose: (model) {
-                model.loopOutlottieAnimationController?.dispose();
+                model.loopOutLottieAnimationController?.dispose();
                 model.loopingLottieAnimationController?.dispose();
                 model.exit();
               }, builder: (ctx, model, child) {
@@ -72,9 +72,9 @@ class _LauncherViewState extends State<LauncherView>
                                 alignment: Alignment.center,
                                 fit: BoxFit.cover,
                                 controller:
-                                    model.loopOutlottieAnimationController,
+                                    model.loopOutLottieAnimationController,
                                 onLoaded: (composition) {
-                                  model.loopOutlottieAnimationController!
+                                  model.loopOutLottieAnimationController!
                                       .duration = composition.duration;
                                 },
                               ),

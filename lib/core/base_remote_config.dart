@@ -360,6 +360,7 @@ class BaseRemoteConfig {
     ..._RZP_DEV_MID,
     ..._AUTOSAVE_ACTIVE,
     "changeAppIcon": false,
+    "enableJourney": true,
     ..._SHOW_NEW_AUTOSAVE,
     ..._YOUTUBE_VIDEOS,
     ..._APP_REFERRAL_MESSAGE,
@@ -396,7 +397,7 @@ class BaseRemoteConfig {
           'error_type': 'Remote config details fetch failed',
           'error_msg': 'Remote config fetch failed, using default values.'
         };
-        _internalOpsService.logFailure(
+        await _internalOpsService.logFailure(
           _userService.baseUser!.uid,
           FailType.RemoteConfigFailed,
           errorDetails,

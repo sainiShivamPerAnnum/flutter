@@ -35,79 +35,82 @@ class KYCDetailsView extends StatelessWidget {
   Widget build(BuildContext context) {
     final locale = S.of(context);
     return BaseView<KYCDetailsViewModel>(
-      onModelReady: (model) {
-        model.init();
-      },
-      onModelDispose: (model) => model.disposeImagePicker(),
-      builder: (ctx, model, child) => Scaffold(
-        resizeToAvoidBottomInset: false,
-        appBar: AppBar(
-          leading: BackButton(
-            onPressed: () => AppState.backButtonDispatcher!.didPopRoute(),
-          ),
-          backgroundColor: UiConstants.kTambolaMidTextColor,
-          title: Text(
-            locale.kycTitle.toUpperCase(),
-            style: TextStyles.sourceSansSB.title5,
-          ),
-          actions: [
-            const Row(
-              children: [
-                FaqPill(type: FaqsType.yourAccount),
-              ],
-            ),
-            SizedBox(width: SizeConfig.padding16)
-          ],
-        ),
-        backgroundColor: UiConstants.kBackgroundColor,
-        body: switch (model.state) {
-          ViewState.Busy => const Center(
-              child: FullScreenLoader(),
-            ),
-          ViewState.Idle || ViewState.Offline => SizedBox(
-              width: SizeConfig.screenWidth,
-              height: SizeConfig.screenHeight! - SizeConfig.fToolBarHeight,
-              child: Padding(
-                padding: EdgeInsets.symmetric(
-                        horizontal: SizeConfig.pageHorizontalMargins)
-                    .copyWith(right: SizeConfig.padding32),
-                child: Column(
-                  children: [
-                    SizedBox(
-                      height: SizeConfig.padding22,
-                    ),
-                    _Stepper(
-                      currentStep: model.currentStep,
-                    ),
-                    SizedBox(
-                      height: SizeConfig.padding6,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          locale.kycStep1,
-                          style: TextStyles.sourceSans.body3
-                              .colour(UiConstants.kTextColor.withOpacity(0.8)),
-                        ),
-                        Text(
-                          locale.kycStep2,
-                          style: TextStyles.sourceSans.body3
-                              .colour(UiConstants.kTextColor.withOpacity(0.8)),
-                        )
-                      ],
-                    ),
-                    SizedBox(
-                      height: SizeConfig.padding32,
-                    ),
-                    Expanded(child: getKycView(model)),
-                  ],
-                ),
-              ),
-            ),
+        onModelReady: (model) {
+          model.init();
         },
-      ),
-    );
+        onModelDispose: (model) => model.disposeImagePicker(),
+        builder: (ctx, model, child) => Scaffold(
+              resizeToAvoidBottomInset: false,
+              appBar: AppBar(
+                leading: BackButton(
+                  onPressed: () => AppState.backButtonDispatcher!.didPopRoute(),
+                ),
+                backgroundColor: UiConstants.kTambolaMidTextColor,
+                title: Text(
+                  locale.kycTitle.toUpperCase(),
+                  style: TextStyles.sourceSansSB.title5,
+                ),
+                actions: [
+                  const Row(
+                    children: [
+                      FaqPill(type: FaqsType.yourAccount),
+                    ],
+                  ),
+                  SizedBox(width: SizeConfig.padding16)
+                ],
+              ),
+              backgroundColor: UiConstants.kBackgroundColor,
+              body: switch (model.state) {
+                ViewState.Busy => const Center(
+                    child: FullScreenLoader(),
+                  ),
+                ViewState.Idle || ViewState.Offline => SizedBox(
+                    width: SizeConfig.screenWidth,
+                    height:
+                        SizeConfig.screenHeight! - SizeConfig.fToolBarHeight,
+                    child: Padding(
+                      padding: EdgeInsets.symmetric(
+                              horizontal: SizeConfig.pageHorizontalMargins)
+                          .copyWith(right: SizeConfig.padding32),
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            height: SizeConfig.padding22,
+                          ),
+                          _Stepper(
+                            currentStep: model.currentStep,
+                            isEmailVerified: model.isEmailVerified,
+                            isPanVerified: model.kycVerificationStatus ==
+                                KycVerificationStatus.VERIFIED,
+                          ),
+                          SizedBox(
+                            height: SizeConfig.padding6,
+                          ),
+                          Row(
+                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                            children: [
+                              Text(
+                                locale.kycStep1,
+                                style: TextStyles.sourceSans.body3.colour(
+                                    UiConstants.kTextColor.withOpacity(0.8)),
+                              ),
+                              Text(
+                                locale.kycStep2,
+                                style: TextStyles.sourceSans.body3.colour(
+                                    UiConstants.kTextColor.withOpacity(0.8)),
+                              )
+                            ],
+                          ),
+                          SizedBox(
+                            height: SizeConfig.padding32,
+                          ),
+                          Expanded(child: getKycView(model)),
+                        ],
+                      ),
+                    ),
+                  ),
+              },
+            ));
   }
 }
 
@@ -216,13 +219,31 @@ class CirclePainter extends CustomPainter {
 }
 
 class _Stepper extends StatelessWidget {
-  const _Stepper({required this.currentStep});
+  const _Stepper({
+    required this.currentStep,
+    required this.isEmailVerified,
+    required this.isPanVerified,
+  });
   final CurrentStep currentStep;
+  final bool isEmailVerified;
+  final bool isPanVerified;
 
-  Color _getColor(CurrentStep currentStep) {
+  Color _getStep1Color(CurrentStep currentStep) {
+    return isEmailVerified
+        ? UiConstants.kTabBorderColor
+        : UiConstants.kLastUpdatedTextColor;
+  }
+
+  Color _getStep2Color(CurrentStep currentStep) {
+    return isPanVerified && isEmailVerified
+        ? UiConstants.kTabBorderColor
+        : UiConstants.kLastUpdatedTextColor;
+  }
+
+  Color _getLineColor(CurrentStep currentStep) {
     return switch (currentStep) {
-      CurrentStep.email => UiConstants.kTabBorderColor,
-      CurrentStep.pan => UiConstants.kLastUpdatedTextColor
+      CurrentStep.email => UiConstants.kLastUpdatedTextColor,
+      CurrentStep.pan => UiConstants.kTabBorderColor
     };
   }
 
@@ -233,20 +254,22 @@ class _Stepper extends StatelessWidget {
       children: [
         CustomPaint(
           size: Size(SizeConfig.padding10, SizeConfig.padding10),
-          painter: CirclePainter(UiConstants.kTabBorderColor),
+          painter: CirclePainter(
+            _getStep1Color(currentStep),
+          ),
         ),
         Container(
           margin: EdgeInsets.symmetric(
             horizontal: SizeConfig.padding6,
           ),
-          color: _getColor(currentStep),
+          color: _getLineColor(currentStep),
           height: SizeConfig.padding4,
           width: SizeConfig.padding252,
         ),
         CustomPaint(
           size: Size(SizeConfig.padding10, SizeConfig.padding10),
           painter: CirclePainter(
-            _getColor(currentStep),
+            _getStep2Color(currentStep),
           ),
         ),
       ],

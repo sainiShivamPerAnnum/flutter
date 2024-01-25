@@ -322,6 +322,7 @@ class BaseUtil extends ChangeNotifier {
     double? gms,
     Map<String, dynamic>? queryParams,
     String? entryPoint,
+    bool fullPager = false,
   }) {
     final coupon = queryParams?['coupon'];
     final amount = queryParams?['amount'];
@@ -357,11 +358,28 @@ class BaseUtil extends ChangeNotifier {
         page: AssetSelectionViewConfig,
         state: PageState.addWidget,
         widget: AssetSelectionPage(
-          showOnlyFlo: true,
+          showGold: false,
           amount: amt,
           isSkipMl: isSkipMl ?? false,
         ),
       );
+      return;
+    }
+
+    if (fullPager && investmentType == InvestmentType.AUGGOLD99) {
+      AppState.delegate!.appState.currentAction = PageAction(
+        page: AssetSelectionViewConfig,
+        state: PageState.addWidget,
+        widget: GoldBuyView(
+          amount: parsedAmount ?? amt,
+          initialCoupon: coupon,
+          gms: parsedGrams ?? gms,
+          skipMl: isSkipMl ?? false,
+          entryPoint: entryPoint,
+          quickCheckout: quickCheckout,
+        ),
+      );
+      return;
     }
 
     if (investmentType == InvestmentType.AUGGOLD99) {
@@ -381,6 +399,7 @@ class BaseUtil extends ChangeNotifier {
           quickCheckout: quickCheckout,
         ),
       );
+      return;
     }
   }
 
@@ -468,12 +487,16 @@ class BaseUtil extends ChangeNotifier {
     );
   }
 
-  Future<void> newUserCheck() async {
+  Future<void> updateUser() async {
     unawaited(locator<MarketingEventHandlerService>().getHappyHourCampaign());
 
     if (_userService.userSegments.contains("NEW_USER")) {
       await CacheService.invalidateByKey(CacheKeys.USER);
       await _userService.setBaseUser();
+      // Another hack because microservices take time to update user data post
+      // transaction 🤷🏻. And app uses this segment to check wether user is new
+      // user or not.
+      _userService.userSegments.remove('NEW_USER');
     }
   }
 
@@ -553,7 +576,6 @@ class BaseUtil extends ChangeNotifier {
           page: AssetSelectionViewConfig,
           state: PageState.addWidget,
           widget: AssetSelectionPage(
-            showOnlyFlo: false,
             amount: amount,
             isSkipMl: isSkipMl,
           ),
@@ -611,7 +633,7 @@ class BaseUtil extends ChangeNotifier {
     BoxConstraints? boxContraints,
     bool enableDrag = false,
   }) async {
-    if (addToScreenStack != null && addToScreenStack == true) {
+    if (addToScreenStack != null && addToScreenStack) {
       AppState.screenStack.add(ScreenItem.dialog);
     }
     d.log("Current Stack: ${AppState.screenStack}");
@@ -620,9 +642,8 @@ class BaseUtil extends ChangeNotifier {
       constraints: boxContraints,
       shape: RoundedRectangleBorder(
         borderRadius: borderRadius ??
-            BorderRadius.only(
-              topLeft: Radius.circular(SizeConfig.padding16),
-              topRight: Radius.circular(SizeConfig.padding16),
+            BorderRadius.vertical(
+              top: Radius.circular(SizeConfig.padding16),
             ),
       ),
       isScrollControlled: isScrollControlled,
