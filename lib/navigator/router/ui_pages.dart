@@ -219,7 +219,7 @@ enum Pages {
   //TICKETS
   TicketsIntroViewPath,
   TicketsTutorialViewPath,
-  Sip
+  Sip,
   Stories,
 }
 
