@@ -348,10 +348,10 @@
 				97C146EB1CF9000F007C117D /* Frameworks */,
 				531F28C2274B7694002E8A52 /* Copy GoogleService-Info to the correct place */,
 				97C146EC1CF9000F007C117D /* Resources */,
+				4B168F0B2AADB9880050BE5F /* Embed Foundation Extensions */,
 				3B06AD1E1E4923F5004D2608 /* Thin Binary */,
 				31B4847726C28B3700B34495 /* ShellScript */,
 				88BB1BC242170CA70F1570AC /* Run Script */,
-				4B168F0B2AADB9880050BE5F /* Embed Foundation Extensions */,
 				FC716C11E46A9EA7532D4D5F /* [CP] Embed Pods Frameworks */,
 			);
 			buildRules = (

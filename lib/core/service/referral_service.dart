@@ -17,7 +17,6 @@ import 'package:felloapp/core/repository/prizing_repo.dart';
 import 'package:felloapp/core/repository/referral_repo.dart';
 import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
-import 'package:felloapp/core/service/analytics/appflyer_analytics.dart';
 import 'package:felloapp/core/service/analytics/base_analytics.dart';
 import 'package:felloapp/core/service/notifier_services/internal_ops_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
@@ -51,7 +50,6 @@ class ReferralService extends ChangeNotifier {
   final PrizingRepo _prizingRepo = locator<PrizingRepo>();
   final TxnHistoryService _transactionHistoryService =
       locator<TxnHistoryService>();
-  final AppFlyerAnalytics _appFlyer = locator<AppFlyerAnalytics>();
   final AnalyticsService _analyticsService = locator<AnalyticsService>();
   final InternalOpsService _internalOpsService = locator<InternalOpsService>();
   // ignore: cancel_subscriptions, unused_field
@@ -137,8 +135,6 @@ class ReferralService extends ChangeNotifier {
     shareLinkInProgress = true;
     notifyListeners();
 
-    // String? url = await createDynamicLink(true);
-
     String? url = referralShortLink;
 
     shareLinkInProgress = false;
@@ -186,34 +182,9 @@ class ReferralService extends ChangeNotifier {
     });
   }
 
-  Future<String?> generateLink() async {
-    if (_refUrl != "") return _refUrl;
-
-    String? url;
-    try {
-      final link = await _appFlyer.inviteLink();
-      if (link['status'] == 'success') {
-        url = link['payload']['userInviteUrl'];
-        url ??= link['payload']['userInviteURL'];
-      }
-      _logger.d('appflyer invite link as $url');
-    } catch (e) {
-      _logger.e(e);
-    }
-    return url;
-  }
-
   sharePrizeDetails(double prizeAmount) async {
     startShareLoading();
     try {
-      // String? url = await createDynamicLink(true);
-
-      // final link = await _appFlyer!.inviteLink();
-      // if (link['status'] == 'success') {
-      //   url = link['payload']['userInviteUrl'];
-      //   url ??= link['payload']['userInviteURL'];
-      // }
-
       String? url = referralShortLink;
 
       if (url != null) {
@@ -556,29 +527,16 @@ class ReferralService extends ChangeNotifier {
           shareCard(image, shareMessage);
         } else {
           try {
-            if (Platform.isIOS) {
-              Share.share(shareMessage).catchError((onError) {
-                if (_userService.baseUser!.uid != null) {
-                  Map<String, dynamic> errorDetails = {
-                    'error_msg': 'Share reward text in My winnings failed'
-                  };
-                  _internalOpsService.logFailure(_userService.baseUser!.uid,
-                      FailType.FelloRewardTextShareFailed, errorDetails);
-                }
-                _logger.e(onError);
-              });
-            } else {
-              Share.share(shareMessage).catchError((onError) {
-                if (_userService.baseUser!.uid != null) {
-                  Map<String, dynamic> errorDetails = {
-                    'error_msg': 'Share reward text in My winnings failed'
-                  };
-                  _internalOpsService.logFailure(_userService.baseUser!.uid,
-                      FailType.FelloRewardTextShareFailed, errorDetails);
-                }
-                _logger.e(onError);
-              });
-            }
+            Share.share(shareMessage).catchError((onError) {
+              if (_userService.baseUser!.uid != null) {
+                Map<String, dynamic> errorDetails = {
+                  'error_msg': 'Share reward text in My winnings failed'
+                };
+                _internalOpsService.logFailure(_userService.baseUser!.uid,
+                    FailType.FelloRewardTextShareFailed, errorDetails);
+              }
+              _logger.e(onError);
+            });
           } catch (e) {
             _logger.e(e.toString());
           }
@@ -622,7 +580,7 @@ class ReferralService extends ChangeNotifier {
         await Share.shareFiles(
           [imgg.path],
           subject: 'Fello Rewards',
-          text: shareMessage ?? "",
+          text: shareMessage,
         ).catchError((onError) {
           if (_userService.baseUser!.uid != null) {
             Map<String, dynamic> errorDetails = {
@@ -648,7 +606,7 @@ class ReferralService extends ChangeNotifier {
         await Share.shareFiles(
           [imgg.path],
           subject: 'Fello Rewards',
-          text: shareMessage ?? "",
+          text: shareMessage,
         ).catchError((onError) {
           if (_userService.baseUser!.uid != null) {
             Map<String, dynamic> errorDetails = {
@@ -666,40 +624,5 @@ class ReferralService extends ChangeNotifier {
       BaseUtil.showNegativeAlert(
           locale.taskFailed, locale.UnableToSharePicture);
     }
-  }
-
-  Future<String> createDynamicLink(bool short) async {
-    final DynamicLinkParameters parameters = DynamicLinkParameters(
-      uriPrefix:
-          '${FlavorConfig.instance!.values.dynamicLinkPrefix}/app/referral',
-      link: Uri.parse('https://fello.in/${_userService.baseUser!.uid}'),
-      socialMetaTagParameters: SocialMetaTagParameters(
-          title: 'Download ${Constants.APP_NAME}',
-          description:
-              'Fello makes saving fun, and investing a lot more simple!',
-          imageUrl: Uri.parse(
-              'https://fello-assets.s3.ap-south-1.amazonaws.com/ic_social.png')),
-      androidParameters: const AndroidParameters(
-        packageName: 'in.fello.felloapp',
-        minimumVersion: 0,
-      ),
-      iosParameters: const IOSParameters(
-        bundleId: 'in.fello.felloappiOS',
-        minimumVersion: '0',
-        appStoreId: '1558445254',
-      ),
-    );
-
-    Uri url;
-    if (short) {
-      final ShortDynamicLink shortLink = await FirebaseDynamicLinksPlatform
-          .instance
-          .buildShortLink(parameters);
-      url = shortLink.shortUrl;
-    } else {
-      url = parameters.link;
-    }
-
-    return url.toString();
   }
 }

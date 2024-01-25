@@ -2,6 +2,9 @@ import 'package:felloapp/core/model/bottom_nav_bar_item_model.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/hometabs/home/card_actions_notifier.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
+import 'package:felloapp/ui/pages/root/tutorial_keys.dart';
+import 'package:felloapp/ui/shared/show_case.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -17,6 +20,7 @@ class BottomNavBar extends StatelessWidget {
   Widget build(BuildContext context) {
     RootController rootController = locator<RootController>();
     final navItemsLength = rootController.navItems.values.length;
+    final locale = locator<S>();
     return Consumer<AppState>(
       builder: (ctx, superModel, child) => Selector<CardActionsNotifier, bool>(
           selector: (_, notifier) => notifier.isVerticalView,
@@ -63,11 +67,19 @@ class BottomNavBar extends StatelessWidget {
                                   key: ValueKey(navbarItems.title),
                                   alignment: Alignment.center,
                                   color: Colors.transparent,
-                                  child: NavBarIcon(
-                                    animate: false,
-                                    item: navbarItems,
-                                    style: TextStyles.rajdhaniSB
-                                        .colour(UiConstants.kTextColor2),
+                                  child: ShowCaseView(
+                                    onTargetClick: () =>
+                                        superModel.onItemTapped(index),
+                                    globalKey: TutorialKeys.tutorialkey3,
+                                    title: null,
+                                    description: locale.tutorial3,
+                                    shapeBorder: const RoundedRectangleBorder(),
+                                    child: NavBarIcon(
+                                      animate: false,
+                                      item: navbarItems,
+                                      style: TextStyles.rajdhaniSB
+                                          .colour(UiConstants.kTextColor2),
+                                    ),
                                   ),
                                 ),
                               ),

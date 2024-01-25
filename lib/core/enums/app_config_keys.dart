@@ -37,12 +37,19 @@ enum AppConfigKey {
   ticketsCategories,
   goldProInterest,
   goldProInvestmentChips,
+  features,
   quickActions,
+  canChangePostMaturityPreference,
+  enableJourney,
 }
 
 extension AppConfigKeys on String {
   AppConfigKey get appConfigKeyFromName {
     switch (this) {
+      case 'enableJourney':
+        return AppConfigKey.enableJourney;
+      case 'features':
+        return AppConfigKey.features;
       case 'quickActions':
         return AppConfigKey.quickActions;
       case 'loginAssetUrl':
@@ -120,6 +127,8 @@ extension AppConfigKeys on String {
         return AppConfigKey.goldProInterest;
       case 'goldProInvestmentChips':
         return AppConfigKey.goldProInvestmentChips;
+      case 'canChangePostMaturityPreference':
+        return AppConfigKey.canChangePostMaturityPreference;
       default:
         return AppConfigKey.unknown;
     }

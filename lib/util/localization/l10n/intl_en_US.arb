@@ -16,7 +16,7 @@
   "obOtpTryExceed": "OTP requests exceeded. Please try again in sometime or contact us.",
   "obEmailLabel": "Email Address",
   "obEnterDetails": "Enter Details",
-  "obEnterDetailsTitle": "You're one step away from 12% returns",
+  "obEnterDetailsTitle": "You are a step away from Rewarding Savings experience",
   "obNameLabel": "Name",
   "obGenderLabel": "Gender",
   "obDobLabel": "Date of Birth",
@@ -91,6 +91,27 @@
   "obMale": "Male",
   "obFemale": "Female",
   "obPreferNotToSay": "Rather Not Say",
+  "obLoginAsText": "Login as +91-{mobileNumber}",
+  "@obLoginAsText": {
+      "placeholders": {
+        "mobileNumber": {
+          "type": "String"
+        }
+      }
+    },
+  "obAssetPrefBottomSheet2ButtonText1": "SKIP TO HOME",
+  "learnMore" : "LEARN MORE",
+  "obAssetWelcomeText": "Welcome To Fello",
+  "obAssetPrefGreeting": "Hi {name}",
+  "@obAssetPrefGreeting": {
+    "placeholders": {
+      "name": {
+        "type": "String"
+      }
+    }
+  },
+  "obProceedWithP2P" : "PROCEED WITH FELLO P2P",
+  "obProceedWithGold" : "PROCEED WITH DIGITAL GOLD",
   "-----------------------------------": "----------------------------",
   "navBarJourney": "Journey",
   "navBarPlay": "Play",
@@ -292,6 +313,31 @@
   "-------------------------------": "----------------------------",
   "dReferNEarn": "Refer and Earn",
   "dPanNkyc": "PAN & KYC",
+  "noKYCfound": "No Kyc Data Found",
+  "refreshKYC": "Please refresh",
+  "KyclinkedAccount": "Linked Account",
+  "verifyEmailKyc": "Verify your Email",
+  "kycComplete": "Congratulations",
+  "kycCompleteSub": "On completing your KYC",
+  "startInvesting": "Now, let’s start investing on Fello!",
+  "preKYC": "One step away from starting your Rewarding Savings journey",
+  "skipKYC": "SKIP FOR NOW",
+  "donePAN": "DONE",
+  "kycEmailProceed": "VERIFY EMAIL",
+  "selectGmail": "Select an account",
+  "toverifyEmail": "to verify email",
+  "panNote": "NOTE: Name on your PAN Card should be the same as Name on your Bank Account",
+  "panSecurity": "Over 10,000 Users have trusted Fello with their KYC",
+  "uploadPan": "UPLOAD PAN CARD",
+  "proceed": "PROCEED",
+  "maxSize": "Max size: 5 MB",
+  "formats": "Formats: PNG, JPEG, JPG",
+  "uploadModal": "Upload your PAN Card",
+  "kycForInvesting": "Complete KYC to start investing",
+  "uploadImagePan": "Upload a clear picture of your PAN card",
+  "panUploaded": "PAN Card Uploaded",
+  "kycStep1": "Step 1 - Verify Email",
+  "kycStep2": "Step 2 - Upload PAN Card",
   "dTransactions": "Transactions",
   "dHelp&sprt": "Help & Support",
   "dhowitworks": "How it works?",
@@ -301,6 +347,14 @@
   "refsubtitle": "Earn ₹ 25 and 200 Fello tokens for every referral and referrer of the month will get a brand new iphone 13",
   "refWhatsapp": "WhatsApp",
   "refShareLink": "Share Link",
+  "referralNudgeMessage" : "Claim {amount} referral bonus by saving",
+  "@referralNudgeMessage": {
+    "placeholders" : {
+      "amount" : {
+        "type":"num"
+      }
+    }
+  },
   "myreferrals": "My Referrals",
   "refHIW": "How do you earn?",
   "refstep1": "Your friend installs Fello and signs up using your referral link or referral code.",
@@ -858,6 +912,41 @@
   "prizeText": "Prize",
   "autoSipText": "AUTO SIP",
   "withdrawal": "Withdrawal",
-
-  "powerPlaySlog": "Predict | Save | Win"
+  "ticketsWiting": "Your Tickets Rewards are waiting",
+  "earnRewards": "Earn Rewards",
+  "earnRewardsSub": "from Ticket draws every week",
+  "earnRewardsConv": "Grab a Ticket to start earning",
+  "earnRewardsConvSub": "Get 50 Tickets as Reward for your 1st Investment",
+  "howtoearn": "How to Earn Rewards",
+  "noScratchCards": "You don’t have any Scratch Cards",
+  "noScratchCardsSub": "Earn Scratch Cards to win assured rewards with Fello",
+  "sctab1":"Your Rewards",
+  "sctab2": "Earn Rewards",
+  "loadingScratchCards": "Loading more tickets",
+  "lastWeekFello": "Last Week on Fello",
+  "lastWeekleaderBoard": "Winners Leaderboard",
+  "ticketsThisWeek": "Your tickets won this week",
+  "savingsMade": "Savings made",
+  "totalSavingswithFello": "Total Saved with Fello",
+  "totalReturnGained": "Total Returns Gained",
+  "totalPercentage": "Total Interest Percentage",
+  "totalRewardsTilldate": "Total rewards won on Fello till date",
+  "rewardsWithFello": "Rewards with Fello",
+  "earned": "Earned ",
+  "ticketsMatched": "Tickets matched",
+  "rewardsWon":"Reward won",
+  "leaderBoardswillUpdate": "Leaderboard will be updated soon",
+  "reupload": "UPLOAD AGAIN",
+  "powerPlaySlog": "Predict | Save | Win",
+  "skip" : "SKIP",
+  "selectAssetMessage" : "Choose any of the above asset to proceed",
+  "tryAgainMessage": "Please try again",
+  "signUp" : "SIGN-UP",
+  "tutorialstart": "Welcome to Fello!\n\nQuick tips are here to guide you. \nClick anywhere for the next tip. \n'Skip' to close. \nRestart anytime from the 'Profile' section.🚀",
+  "tutorial1": "Start your Rewarding Savings journey by selecting your assets over here",
+  "tutorial2": "For every Rs.500 saved, you get 1 weekly ticket which earns you rewards from Rs.1 to Rs. 1 Cr.",
+  "tutorial3": "You can see the tickets and play the weekly game in this section and earn rewards!",
+  "tutorial4": "You can see all your earned rewards in this Rewards section",
+  "tutorial5": "If you want to know more about Fello, check out these stories!",
+  "tutorial6": "Now lets start your rewarding savings journey by selecting your asset over here"
 }

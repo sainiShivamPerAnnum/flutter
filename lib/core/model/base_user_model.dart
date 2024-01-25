@@ -29,6 +29,8 @@ class BaseUser {
   String? appFlyerId;
   String? avatarId;
   bool? isOldUser;
+  String? subsStatus;
+  String? favAsset;
   List segments;
   SuperFelloLevel superFelloLevel = SuperFelloLevel.NEW_FELLO;
   num minRedemptionAmt = 200;
@@ -65,6 +67,8 @@ class BaseUser {
   static const String fldReferralCode = "referralCode";
   static const String fieldSuperFelloLevel = 'superFelloLevel';
   static const String fieldMinRedemptionAmt = 'minRedemptionAmt';
+  static const String fieldSubscriptionStatus = 'subsStatus';
+  static const String fieldFavAsset = 'favAsset';
 
   static const _$UserBadgeLevelEnumMap = {
     'GOOD': SuperFelloLevel.GOOD,
@@ -101,6 +105,8 @@ class BaseUser {
     this.segments, {
     this.superFelloLevel = SuperFelloLevel.NEW_FELLO,
     this.minRedemptionAmt = 200,
+    this.subsStatus,
+    this.favAsset,
   });
 
   BaseUser.newUser(String id, String mobile)
@@ -163,6 +169,8 @@ class BaseUser {
           superFelloLevel: data[fieldSuperFelloLevel] != null
               ? _$UserBadgeLevelEnumMap[data[fieldSuperFelloLevel]]!
               : SuperFelloLevel.NEW_FELLO,
+          subsStatus: data[fieldSubscriptionStatus],
+          favAsset: data[fieldFavAsset],
         );
 
   bool hasIncompleteDetails() {

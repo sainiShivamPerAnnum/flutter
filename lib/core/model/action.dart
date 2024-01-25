@@ -8,6 +8,7 @@ enum ActionType {
   DEEP_LINK,
   LAUNCH_EXTERNAL_APPLICATION,
   LAUNCH_WEBVIEW,
+  POP,
   SHARE;
 }
 
@@ -15,10 +16,12 @@ enum ActionType {
 class Action {
   final ActionType type;
   final Map<String, dynamic> payload;
+  final Map<String, dynamic> events;
 
   const Action({
     required this.type,
     this.payload = const {},
+    this.events = const {},
   });
 
   factory Action.fromJson(Map<String, dynamic> json) => _$ActionFromJson(json);

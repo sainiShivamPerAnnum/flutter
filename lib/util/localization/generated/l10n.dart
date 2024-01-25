@@ -202,10 +202,10 @@ class S {
     );
   }
 
-  /// `You're one step away from 12% returns`
+  /// `You are a step away from Rewarding Savings experience`
   String get obEnterDetailsTitle {
     return Intl.message(
-      'You\'re one step away from 12% returns',
+      'You are a step away from Rewarding Savings experience',
       name: 'obEnterDetailsTitle',
       desc: '',
       args: [],
@@ -947,6 +947,76 @@ class S {
     return Intl.message(
       'Rather Not Say',
       name: 'obPreferNotToSay',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Login as +91-{mobileNumber}`
+  String obLoginAsText(String mobileNumber) {
+    return Intl.message(
+      'Login as +91-$mobileNumber',
+      name: 'obLoginAsText',
+      desc: '',
+      args: [mobileNumber],
+    );
+  }
+
+  /// `SKIP TO HOME`
+  String get obAssetPrefBottomSheet2ButtonText1 {
+    return Intl.message(
+      'SKIP TO HOME',
+      name: 'obAssetPrefBottomSheet2ButtonText1',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `LEARN MORE`
+  String get learnMore {
+    return Intl.message(
+      'LEARN MORE',
+      name: 'learnMore',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Welcome To Fello`
+  String get obAssetWelcomeText {
+    return Intl.message(
+      'Welcome To Fello',
+      name: 'obAssetWelcomeText',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Hi {name}`
+  String obAssetPrefGreeting(String name) {
+    return Intl.message(
+      'Hi $name',
+      name: 'obAssetPrefGreeting',
+      desc: '',
+      args: [name],
+    );
+  }
+
+  /// `PROCEED WITH FELLO P2P`
+  String get obProceedWithP2P {
+    return Intl.message(
+      'PROCEED WITH FELLO P2P',
+      name: 'obProceedWithP2P',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `PROCEED WITH DIGITAL GOLD`
+  String get obProceedWithGold {
+    return Intl.message(
+      'PROCEED WITH DIGITAL GOLD',
+      name: 'obProceedWithGold',
       desc: '',
       args: [],
     );
@@ -2696,6 +2766,256 @@ class S {
     );
   }
 
+  /// `No Kyc Data Found`
+  String get noKYCfound {
+    return Intl.message(
+      'No Kyc Data Found',
+      name: 'noKYCfound',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please refresh`
+  String get refreshKYC {
+    return Intl.message(
+      'Please refresh',
+      name: 'refreshKYC',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Linked Account`
+  String get KyclinkedAccount {
+    return Intl.message(
+      'Linked Account',
+      name: 'KyclinkedAccount',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Verify your Email`
+  String get verifyEmailKyc {
+    return Intl.message(
+      'Verify your Email',
+      name: 'verifyEmailKyc',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Congratulations`
+  String get kycComplete {
+    return Intl.message(
+      'Congratulations',
+      name: 'kycComplete',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `On completing your KYC`
+  String get kycCompleteSub {
+    return Intl.message(
+      'On completing your KYC',
+      name: 'kycCompleteSub',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Now, let’s start investing on Fello!`
+  String get startInvesting {
+    return Intl.message(
+      'Now, let’s start investing on Fello!',
+      name: 'startInvesting',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `One step away from starting your Rewarding Savings journey`
+  String get preKYC {
+    return Intl.message(
+      'One step away from starting your Rewarding Savings journey',
+      name: 'preKYC',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `SKIP FOR NOW`
+  String get skipKYC {
+    return Intl.message(
+      'SKIP FOR NOW',
+      name: 'skipKYC',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `DONE`
+  String get donePAN {
+    return Intl.message(
+      'DONE',
+      name: 'donePAN',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `VERIFY EMAIL`
+  String get kycEmailProceed {
+    return Intl.message(
+      'VERIFY EMAIL',
+      name: 'kycEmailProceed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Select an account`
+  String get selectGmail {
+    return Intl.message(
+      'Select an account',
+      name: 'selectGmail',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `to verify email`
+  String get toverifyEmail {
+    return Intl.message(
+      'to verify email',
+      name: 'toverifyEmail',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `NOTE: Name on your PAN Card should be the same as Name on your Bank Account`
+  String get panNote {
+    return Intl.message(
+      'NOTE: Name on your PAN Card should be the same as Name on your Bank Account',
+      name: 'panNote',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Over 10,000 Users have trusted Fello with their KYC`
+  String get panSecurity {
+    return Intl.message(
+      'Over 10,000 Users have trusted Fello with their KYC',
+      name: 'panSecurity',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `UPLOAD PAN CARD`
+  String get uploadPan {
+    return Intl.message(
+      'UPLOAD PAN CARD',
+      name: 'uploadPan',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `PROCEED`
+  String get proceed {
+    return Intl.message(
+      'PROCEED',
+      name: 'proceed',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Max size: 5 MB`
+  String get maxSize {
+    return Intl.message(
+      'Max size: 5 MB',
+      name: 'maxSize',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Formats: PNG, JPEG, JPG`
+  String get formats {
+    return Intl.message(
+      'Formats: PNG, JPEG, JPG',
+      name: 'formats',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Upload your PAN Card`
+  String get uploadModal {
+    return Intl.message(
+      'Upload your PAN Card',
+      name: 'uploadModal',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Complete KYC to start investing`
+  String get kycForInvesting {
+    return Intl.message(
+      'Complete KYC to start investing',
+      name: 'kycForInvesting',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Upload a clear picture of your PAN card`
+  String get uploadImagePan {
+    return Intl.message(
+      'Upload a clear picture of your PAN card',
+      name: 'uploadImagePan',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `PAN Card Uploaded`
+  String get panUploaded {
+    return Intl.message(
+      'PAN Card Uploaded',
+      name: 'panUploaded',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Step 1 - Verify Email`
+  String get kycStep1 {
+    return Intl.message(
+      'Step 1 - Verify Email',
+      name: 'kycStep1',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Step 2 - Upload PAN Card`
+  String get kycStep2 {
+    return Intl.message(
+      'Step 2 - Upload PAN Card',
+      name: 'kycStep2',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Transactions`
   String get dTransactions {
     return Intl.message(
@@ -2767,6 +3087,16 @@ class S {
       name: 'refShareLink',
       desc: '',
       args: [],
+    );
+  }
+
+  /// `Claim {amount} referral bonus by saving`
+  String referralNudgeMessage(num amount) {
+    return Intl.message(
+      'Claim $amount referral bonus by saving',
+      name: 'referralNudgeMessage',
+      desc: '',
+      args: [amount],
     );
   }
 
@@ -8176,11 +8506,371 @@ class S {
     );
   }
 
+  /// `Your Tickets Rewards are waiting`
+  String get ticketsWiting {
+    return Intl.message(
+      'Your Tickets Rewards are waiting',
+      name: 'ticketsWiting',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Earn Rewards`
+  String get earnRewards {
+    return Intl.message(
+      'Earn Rewards',
+      name: 'earnRewards',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `from Ticket draws every week`
+  String get earnRewardsSub {
+    return Intl.message(
+      'from Ticket draws every week',
+      name: 'earnRewardsSub',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Grab a Ticket to start earning`
+  String get earnRewardsConv {
+    return Intl.message(
+      'Grab a Ticket to start earning',
+      name: 'earnRewardsConv',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Get 50 Tickets as Reward for your 1st Investment`
+  String get earnRewardsConvSub {
+    return Intl.message(
+      'Get 50 Tickets as Reward for your 1st Investment',
+      name: 'earnRewardsConvSub',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `How to Earn Rewards`
+  String get howtoearn {
+    return Intl.message(
+      'How to Earn Rewards',
+      name: 'howtoearn',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You don’t have any Scratch Cards`
+  String get noScratchCards {
+    return Intl.message(
+      'You don’t have any Scratch Cards',
+      name: 'noScratchCards',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Earn Scratch Cards to win assured rewards with Fello`
+  String get noScratchCardsSub {
+    return Intl.message(
+      'Earn Scratch Cards to win assured rewards with Fello',
+      name: 'noScratchCardsSub',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your Rewards`
+  String get sctab1 {
+    return Intl.message(
+      'Your Rewards',
+      name: 'sctab1',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Earn Rewards`
+  String get sctab2 {
+    return Intl.message(
+      'Earn Rewards',
+      name: 'sctab2',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Loading more tickets`
+  String get loadingScratchCards {
+    return Intl.message(
+      'Loading more tickets',
+      name: 'loadingScratchCards',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Last Week on Fello`
+  String get lastWeekFello {
+    return Intl.message(
+      'Last Week on Fello',
+      name: 'lastWeekFello',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Winners Leaderboard`
+  String get lastWeekleaderBoard {
+    return Intl.message(
+      'Winners Leaderboard',
+      name: 'lastWeekleaderBoard',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your tickets won this week`
+  String get ticketsThisWeek {
+    return Intl.message(
+      'Your tickets won this week',
+      name: 'ticketsThisWeek',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Savings made`
+  String get savingsMade {
+    return Intl.message(
+      'Savings made',
+      name: 'savingsMade',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Total Saved with Fello`
+  String get totalSavingswithFello {
+    return Intl.message(
+      'Total Saved with Fello',
+      name: 'totalSavingswithFello',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Total Returns Gained`
+  String get totalReturnGained {
+    return Intl.message(
+      'Total Returns Gained',
+      name: 'totalReturnGained',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Total Interest Percentage`
+  String get totalPercentage {
+    return Intl.message(
+      'Total Interest Percentage',
+      name: 'totalPercentage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Total rewards won on Fello till date`
+  String get totalRewardsTilldate {
+    return Intl.message(
+      'Total rewards won on Fello till date',
+      name: 'totalRewardsTilldate',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Rewards with Fello`
+  String get rewardsWithFello {
+    return Intl.message(
+      'Rewards with Fello',
+      name: 'rewardsWithFello',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Earned `
+  String get earned {
+    return Intl.message(
+      'Earned ',
+      name: 'earned',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tickets matched`
+  String get ticketsMatched {
+    return Intl.message(
+      'Tickets matched',
+      name: 'ticketsMatched',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Reward won`
+  String get rewardsWon {
+    return Intl.message(
+      'Reward won',
+      name: 'rewardsWon',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Leaderboard will be updated soon`
+  String get leaderBoardswillUpdate {
+    return Intl.message(
+      'Leaderboard will be updated soon',
+      name: 'leaderBoardswillUpdate',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `UPLOAD AGAIN`
+  String get reupload {
+    return Intl.message(
+      'UPLOAD AGAIN',
+      name: 'reupload',
+      desc: '',
+      args: [],
+    );
+  }
+
   /// `Predict | Save | Win`
   String get powerPlaySlog {
     return Intl.message(
       'Predict | Save | Win',
       name: 'powerPlaySlog',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `SKIP`
+  String get skip {
+    return Intl.message(
+      'SKIP',
+      name: 'skip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Choose any of the above asset to proceed`
+  String get selectAssetMessage {
+    return Intl.message(
+      'Choose any of the above asset to proceed',
+      name: 'selectAssetMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please try again`
+  String get tryAgainMessage {
+    return Intl.message(
+      'Please try again',
+      name: 'tryAgainMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `SIGN-UP`
+  String get signUp {
+    return Intl.message(
+      'SIGN-UP',
+      name: 'signUp',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Welcome to Fello!\n\nQuick tips are here to guide you. \nClick anywhere for the next tip. \n'Skip' to close. \nRestart anytime from the 'Profile' section.🚀`
+  String get tutorialstart {
+    return Intl.message(
+      'Welcome to Fello!\n\nQuick tips are here to guide you. \nClick anywhere for the next tip. \n\'Skip\' to close. \nRestart anytime from the \'Profile\' section.🚀',
+      name: 'tutorialstart',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Start your Rewarding Savings journey by selecting your assets over here`
+  String get tutorial1 {
+    return Intl.message(
+      'Start your Rewarding Savings journey by selecting your assets over here',
+      name: 'tutorial1',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `For every Rs.500 saved, you get 1 weekly ticket which earns you rewards from Rs.1 to Rs. 1 Cr.`
+  String get tutorial2 {
+    return Intl.message(
+      'For every Rs.500 saved, you get 1 weekly ticket which earns you rewards from Rs.1 to Rs. 1 Cr.',
+      name: 'tutorial2',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You can see the tickets and play the weekly game in this section and earn rewards!`
+  String get tutorial3 {
+    return Intl.message(
+      'You can see the tickets and play the weekly game in this section and earn rewards!',
+      name: 'tutorial3',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You can see all your earned rewards in this Rewards section`
+  String get tutorial4 {
+    return Intl.message(
+      'You can see all your earned rewards in this Rewards section',
+      name: 'tutorial4',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `If you want to know more about Fello, check out these stories!`
+  String get tutorial5 {
+    return Intl.message(
+      'If you want to know more about Fello, check out these stories!',
+      name: 'tutorial5',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Now lets start your rewarding savings journey by selecting your asset over here`
+  String get tutorial6 {
+    return Intl.message(
+      'Now lets start your rewarding savings journey by selecting your asset over here',
+      name: 'tutorial6',
       desc: '',
       args: [],
     );

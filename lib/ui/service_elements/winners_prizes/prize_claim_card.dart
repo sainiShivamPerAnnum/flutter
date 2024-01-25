@@ -1,9 +1,11 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/prize_claim_choice.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
+import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/referral_service.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -34,21 +36,13 @@ class RewardBalanceWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final locale = locator<S>();
     final minWithdrawPrize = locator<UserService>().baseUser!.minRedemptionAmt;
-    int minWithdrawPrizeAmt = minWithdrawPrize.toInt();
-    bool showBottomInfo =
-        (userService?.userFundWallet?.prizeLifetimeWin.toInt() ?? 0) >
-                minWithdrawPrizeAmt &&
-            userService?.userFundWallet?.processingRedemptionBalance == 0;
+    final allScratchCards = locator<ScratchCardService>().allScratchCards;
+    bool showBottomInfo = allScratchCards.isNotEmpty;
     return Container(
-      // height: showBottomInfo ? SizeConfig.screenHeight! * 0.32 : null,
-      decoration: BoxDecoration(
-        borderRadius: showBottomInfo
-            ? null
-            : BorderRadius.only(
-                bottomLeft: Radius.circular(SizeConfig.roundness40),
-                bottomRight: Radius.circular(SizeConfig.roundness40)),
-        color: showBottomInfo ? const Color(0xffF4EDD9) : null,
+      decoration: const BoxDecoration(
+        color: UiConstants.kSnackBarBgColor,
       ),
       child: Column(
         children: [
@@ -64,13 +58,62 @@ class RewardBalanceWidget extends StatelessWidget {
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "Total rewards won on Fello",
+                    locale.totalRewardsTilldate,
                     style: TextStyles.sourceSansSB.body3.colour(Colors.black),
                   ),
                   Text(
                     "₹${userService?.userFundWallet?.prizeLifetimeWin.toInt()}",
                     style: TextStyles.rajdhaniB.body1.colour(Colors.black),
                   )
+                ],
+              ),
+            )
+          else
+            Container(
+              padding: EdgeInsets.symmetric(
+                  horizontal: SizeConfig.pageHorizontalMargins,
+                  vertical: SizeConfig.padding12),
+              child: Row(
+                children: [
+                  Expanded(
+                      child: Row(
+                    children: [
+                      SvgPicture.asset(
+                        Assets.cvtar6,
+                        width: SizeConfig.iconSize5,
+                        height: SizeConfig.iconSize5,
+                      ),
+                      SizedBox(
+                        width: SizeConfig.padding10,
+                      ),
+                      Text(
+                        'Manvendra S. Rathore',
+                        style: TextStyles.sourceSans.body2
+                            .colour(UiConstants.kTextColor4),
+                      )
+                    ],
+                  )),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.end,
+                    children: [
+                      Text.rich(TextSpan(
+                          text: locale.earned,
+                          style: TextStyles.sourceSans.body2
+                              .colour(UiConstants.kTextColor4),
+                          children: [
+                            TextSpan(
+                              text: "₹27,821",
+                              style: TextStyles.sourceSansSB.body2
+                                  .colour(UiConstants.kGoldProPrimaryDark2),
+                            )
+                          ])),
+                      Text(
+                        locale.rewardsWithFello,
+                        style: TextStyles.sourceSans.body2
+                            .colour(UiConstants.kTextColor4),
+                      )
+                    ],
+                  ),
                 ],
               ),
             ),
@@ -211,21 +254,7 @@ class RewardRedeemWidget extends StatelessWidget {
                 ),
               ),
             )
-          else if ((m?.userFundWallet?.unclaimedBalance ?? 0) <
-              minWithdrawPrizeAmt)
-            Container(
-              width: SizeConfig.screenWidth,
-              padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding32),
-              child: FittedBox(
-                child: Text(
-                  "Reward Balance can be redeemed on reaching ₹$minWithdrawPrize",
-                  style: TextStyles.rajdhaniSB.body3
-                      .colour(Colors.white.withOpacity(0.6)),
-                ),
-              ),
-            )
-          else if ((m?.userFundWallet?.unclaimedBalance ?? 0) >=
-              minWithdrawPrizeAmt)
+          else
             Container(
               width: SizeConfig.screenWidth,
               padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding32),

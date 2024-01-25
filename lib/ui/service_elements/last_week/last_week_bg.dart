@@ -1,3 +1,4 @@
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/model/last_week_model.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
@@ -5,9 +6,9 @@ import 'package:felloapp/core/service/notifier_services/marketing_event_handler_
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/haptic.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/styles/size_config.dart';
-import 'package:felloapp/util/styles/textStyles.dart';
+import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
@@ -35,6 +36,7 @@ class LastWeekBg extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final locale = locator<S>();
     return Scaffold(
       body: Stack(
         children: [
@@ -63,8 +65,8 @@ class LastWeekBg extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: [
-                  IconButton(
-                    onPressed: () {
+                  InkWell(
+                    onTap: () {
                       Haptic.vibrate();
                       AppState.backButtonDispatcher!.didPopRoute();
                       if (callCampaign) {
@@ -79,7 +81,7 @@ class LastWeekBg extends StatelessWidget {
                                 model?.user?.gainsPerc,
                           });
                     },
-                    icon: Container(
+                    child: Container(
                       margin: EdgeInsets.only(
                           top: SizeConfig.padding26,
                           left: SizeConfig.padding20),
@@ -125,19 +127,20 @@ class LastWeekBg extends StatelessWidget {
                     if (isTopSaver == false && (title?.isNotEmpty ?? false))
                       Text(
                         title ?? "",
-                        style: TextStyles.sourceSans.body4,
+                        style: TextStyles.sourceSans.body3
+                            .colour(UiConstants.textGray60),
                       ),
                     Container(
                       margin: EdgeInsets.only(
-                          left: SizeConfig.pageHorizontalMargins,
-                          right: SizeConfig.pageHorizontalMargins,
+                          left: SizeConfig.padding35,
+                          right: SizeConfig.padding35,
                           top: SizeConfig.padding8,
                           bottom: SizeConfig.viewPadding!.bottom +
                               SizeConfig.padding8),
                       child: AppPositiveBtn(
-                        onPressed: () {
+                        onPressed: () async{
                           if (callCampaign) {
-                            locator<MarketingEventHandlerService>()
+                            await locator<MarketingEventHandlerService>()
                                 .getCampaigns();
                           }
 
@@ -149,12 +152,10 @@ class LastWeekBg extends StatelessWidget {
                                 "last week return Percentage":
                                     model?.user?.gainsPerc,
                               });
-
-                          AppState.backButtonDispatcher!.didPopRoute();
-                          AppState.delegate!.parseRoute(Uri.parse('/save'));
+                           BaseUtil.openDepositOptionsModalSheet(timer: 0);
                         },
 
-                        btnText: "SAVE NOW",
+                        btnText: locale.btnSaveNow.toUpperCase(),
                         // child: Center(
                         //   child: Text(
                         //     'SAVE NOW',

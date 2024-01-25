@@ -32,6 +32,7 @@ import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_localizations/flutter_localizations.dart';
 import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:provider/provider.dart';
+import 'package:showcaseview/showcaseview.dart';
 
 import 'core/service/notifier_services/user_coin_service.dart';
 
@@ -43,6 +44,7 @@ class MyApp extends HookWidget {
     final appState = useMemoized(AppState.new);
     final parser = useMemoized(FelloParser.new);
     final delegate = useMemoized(() => FelloRouterDelegate(appState));
+
     final backButtonDispatcher =
         useMemoized(() => FelloBackButtonDispatcher(delegate));
 
@@ -94,6 +96,12 @@ class MyApp extends HookWidget {
           value: locator<UserService>(),
           child: MaterialApp.router(
             title: Constants.APP_NAME,
+            builder: (context, child) {
+              return ShowCaseWidget(
+                enableAutoScroll: true,
+                builder: Builder(builder: (context) => child!),
+              );
+            },
             theme: FelloTheme.darkMode(),
             debugShowCheckedModeBanner: false,
             backButtonDispatcher: backButtonDispatcher,

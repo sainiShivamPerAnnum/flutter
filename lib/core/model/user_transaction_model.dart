@@ -53,15 +53,10 @@ class UserTransaction {
   String? _type;
   String? _subType;
   String? _redeemType;
-  int? _ticketUpCount;
-  String? _note;
-  String? _userId;
   String? _tranStatus;
   String? _couponCode;
-  Map<String, dynamic>? _icici;
   Map<String, dynamic>? _rzp;
   Map<String, dynamic>? _augmnt;
-  Map<String, dynamic>? _paytmMap;
   Map<String, dynamic>? misMap;
   Timestamp? _timestamp;
   Timestamp? _updatedTime;
@@ -70,19 +65,14 @@ class UserTransaction {
   List<TransactionStatusMapItemModel>? transactionUpdatesMap;
 
   static const String fldAmount = 'tAmount';
-  static const String fldPaytmMap = 'paytmMap';
   static const String fldClosingBalance = 'tClosingBalance';
-  static const String fldNote = 'tNote';
   static const String fldSubType = 'tSubtype';
   static const String fldRedeemType = 'tRedeemType';
   static const String fldType = 'tType';
-  static const String fldTicketUpCount = 'tTicketUpdCount';
   static const String fldTranStatus = 'tTranStatus';
   static const String fldCouponCode = 'tCouponCode';
   static const String fldRzpMap = 'tRzpMap';
   static const String fldAugmontMap = 'tAugmontMap';
-  static const String fldIciciMap = 'tIciciMap';
-  static const String fldUserId = 'tUserId';
   static const String fldTimestamp = 'timestamp';
   static const String fldUpdatedTime = 'tUpdateTime';
   static const String fldtransactionUpdatesMap = "transactionUpdatesMap";
@@ -142,6 +132,7 @@ class UserTransaction {
   ///Transaction Subtype
   static const String TRAN_SUBTYPE_ICICI = 'ICICI1565';
   static const String TRAN_SUBTYPE_AUGMONT_GOLD = 'AUGGOLD99';
+  static const String TRAN_SUBTYPE_AUGMONT_GOLD_FD = 'AUGGOLD99_FD';
   static const String TRAN_SUBTYPE_TAMBOLA_WIN = 'TMB_WIN';
   static const String TRAN_SUBTYPE_CRICKET_WIN = 'CRIC2020_WIN';
   static const String TRAN_SUBTYPE_REF_BONUS = 'REF_BONUS';
@@ -156,19 +147,14 @@ class UserTransaction {
     this._docKey,
     this._amount,
     this._closingBalance,
-    this._note,
     this._subType,
     this._type,
     this._redeemType,
-    this._ticketUpCount,
-    this._userId,
     this._tranStatus,
     this._couponCode,
-    this._icici,
     this._rzp,
     this._augmnt,
     this._timestamp,
-    this._paytmMap,
     this._updatedTime,
     this.transactionUpdatesMap,
     this.misMap,
@@ -181,19 +167,14 @@ class UserTransaction {
           documentID,
           BaseUtil.toDouble(data[fldAmount] ?? 0),
           BaseUtil.toDouble(data[fldClosingBalance] ?? 0),
-          data[fldNote] ?? '',
           data[fldSubType] ?? '',
           data[fldType] ?? '',
           data[fldRedeemType] ?? '',
-          data[fldTicketUpCount] ?? 0,
-          data[fldUserId] ?? '',
           data[fldTranStatus] ?? '',
           data[fldCouponCode] ?? '',
-          data[fldIciciMap] ?? {},
           data[fldRzpMap] ?? {},
           data[fldAugmontMap] ?? {},
           parseTimeStamp(data[fldTimestamp]) ?? Timestamp(0, 0),
-          data[fldPaytmMap] ?? {},
           parseTimeStamp(data[fldUpdatedTime]) ?? Timestamp(0, 0),
           parseTransactionStatusSummary(data[fldtransactionUpdatesMap]) ?? '',
           data['miscMap'] ?? {},
@@ -206,19 +187,14 @@ class UserTransaction {
           documentID,
           BaseUtil.toDouble(data[fldAmount]),
           BaseUtil.toDouble(data[fldClosingBalance]),
-          data[fldNote],
           data[fldSubType],
           data[fldType],
           data[fldRedeemType],
-          data[fldTicketUpCount],
-          data[fldUserId],
           data[fldTranStatus],
           data[fldCouponCode],
-          data[fldIciciMap],
           data[fldRzpMap],
           data[fldAugmontMap],
           Timestamp(0, 0),
-          data[fldPaytmMap],
           Timestamp(0, 0),
           data[fldtransactionUpdatesMap],
           data['miscMap'],
@@ -226,78 +202,17 @@ class UserTransaction {
           LbMap.fromMap(data["lbMap"] ?? {}),
         );
 
-  //Augmont gold investment initiated by investor
-  // UserTransaction.newGoldDeposit(double amount, double postTax, String blockId,
-  //     double lockPrice, double quantity, String paymode, String userId)
-  //     : this(
-  //           '',
-  //           amount,
-  //           0,
-  //           'NA',
-  //           TRAN_SUBTYPE_AUGMONT_GOLD,
-  //           TRAN_TYPE_DEPOSIT,
-  //           '',
-  //           0,
-  //           userId,
-  //           TRAN_STATUS_PENDING,
-  //           '',
-  //           {},
-  //           {},
-  //           {
-  //             subFldAugBlockId: blockId,
-  //             subFldAugLockPrice: lockPrice,
-  //             subFldAugPaymode: paymode,
-  //             subFldAugCurrentGoldGm: quantity,
-  //             subFldAugPostTaxTotal: postTax
-  //           },
-  //           Timestamp.now(),
-  //           {},
-  //           Timestamp.now(),
-  //           []);
-
-  //Augmont gold investment initiated by investor
-  // UserTransaction.newGoldWithdrawal(double amount, String blockId,
-  //     double lockPrice, double quantity, String userId)
-  //     : this(
-  //           '',
-  //           amount,
-  //           0,
-  //           'NA',
-  //           TRAN_SUBTYPE_AUGMONT_GOLD,
-  //           TRAN_TYPE_WITHDRAW,
-  //           '',
-  //           0,
-  //           userId,
-  //           TRAN_STATUS_PENDING,
-  //           '',
-  //           {},
-  //           {},
-  //           {
-  //             subFldAugBlockId: blockId,
-  //             subFldAugLockPrice: lockPrice,
-  //             subFldAugCurrentGoldGm: quantity
-  //           },
-  //           Timestamp.now(),
-  //           {},
-  //           Timestamp.now(),
-  //           []);
-
   toJson() {
     return {
       fldAmount: _amount,
       fldClosingBalance: _closingBalance,
-      fldNote: _note,
       fldSubType: _subType,
       fldType: _type,
-      fldTicketUpCount: _ticketUpCount,
-      fldUserId: _userId,
       fldTranStatus: _tranStatus,
       fldCouponCode: _couponCode,
-      fldIciciMap: _icici,
       fldRzpMap: _rzp,
       fldAugmontMap: _augmnt,
       fldTimestamp: _timestamp,
-      fldPaytmMap: _paytmMap,
       fldUpdatedTime: Timestamp.now(),
     };
   }
@@ -323,22 +238,10 @@ class UserTransaction {
     _couponCode = value;
   }
 
-  String? get userId => _userId;
-
-  set userId(String? value) {
-    _userId = value;
-  }
-
   String? get type => _type;
 
   set type(String? value) {
     _type = value;
-  }
-
-  int? get ticketUpCount => _ticketUpCount;
-
-  set ticketUpCount(int? value) {
-    _ticketUpCount = value;
   }
 
   String? get subType => _subType;
@@ -353,12 +256,6 @@ class UserTransaction {
     _redeemType = value;
   }
 
-  String? get note => _note;
-
-  set note(String? value) {
-    _note = value;
-  }
-
   double get closingBalance => _closingBalance;
 
   set closingBalance(double value) {
@@ -371,12 +268,6 @@ class UserTransaction {
     _amount = value;
   }
 
-  Map<String, dynamic>? get icici => _icici;
-
-  set icici(Map<String, dynamic>? value) {
-    _icici = value;
-  }
-
   Map<String, dynamic>? get rzp => _rzp;
 
   set rzp(Map<String, dynamic>? value) {
@@ -384,7 +275,6 @@ class UserTransaction {
   }
 
   Map<String, dynamic>? get augmnt => _augmnt;
-  Map<String, dynamic>? get paytmMap => _paytmMap;
 
   set augmnt(Map<String, dynamic>? value) {
     _augmnt = value;

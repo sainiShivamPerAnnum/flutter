@@ -8,6 +8,7 @@ import 'package:felloapp/feature/tambola/src/ui/widgets/ticket/ticket_painter.da
 import 'package:felloapp/feature/tambola/tambola.dart';
 import 'package:felloapp/ui/elements/appbar/appbar.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
@@ -76,6 +77,7 @@ class _AllTambolaTicketsState extends State<AllTambolaTickets> {
 
   @override
   Widget build(BuildContext context) {
+    final locale = locator<S>();
     return Scaffold(
         backgroundColor: UiConstants.kArrowButtonBackgroundColor,
         appBar: const FAppBar(
@@ -126,7 +128,7 @@ class _AllTambolaTicketsState extends State<AllTambolaTickets> {
                                 ),
                                 SizedBox(height: SizeConfig.padding4),
                                 Text(
-                                  "Loading more tickets",
+                                  locale.loadingScratchCards,
                                   style: TextStyles.body4.colour(Colors.grey),
                                 )
                               ],

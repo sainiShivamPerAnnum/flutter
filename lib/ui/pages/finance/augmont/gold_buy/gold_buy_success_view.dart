@@ -36,32 +36,16 @@ class GoldBuySuccessView extends StatefulWidget {
   State<GoldBuySuccessView> createState() => _GoldBuySuccessViewState();
 }
 
-class _GoldBuySuccessViewState extends State<GoldBuySuccessView>
-    with SingleTickerProviderStateMixin {
+class _GoldBuySuccessViewState extends State<GoldBuySuccessView> {
   final AugmontTransactionService _augTxnService =
       locator<AugmontTransactionService>();
-
-  late AnimationController _animationController;
-  bool _showLottie = true;
 
   @override
   void initState() {
     super.initState();
-    _animationController = AnimationController(vsync: this);
     AppState.blockNavigation();
-    _playLottieAnimation();
     locator<TambolaService>().getBestTambolaTickets(forced: true);
     Future.delayed(const Duration(seconds: 3), showGoldProNudgeIfEligible);
-  }
-
-  @override
-  void dispose() {
-    _animationController.dispose();
-    super.dispose();
-  }
-
-  Future<void> _playLottieAnimation() async {
-    await Future.delayed(const Duration(seconds: 4));
   }
 
   String _getButtonLabel(S locale, bool hasSuperFelloInStack) {
@@ -351,28 +335,6 @@ class _GoldBuySuccessViewState extends State<GoldBuySuccessView>
             ),
           ),
         ),
-        if (_showLottie)
-          Container(
-            color: Colors.black.withOpacity(0.8),
-            child: Center(
-              child: Lottie.asset(
-                'assets/lotties/whataFello_lottie.json',
-                controller: _animationController,
-                onLoaded: (composition) {
-                  _animationController
-                    ..duration = composition.duration
-                    ..forward().whenComplete(() {
-                      if (mounted) {
-                        setState(() {
-                          _showLottie = false;
-                          AppState.unblockNavigation();
-                        });
-                      }
-                    });
-                },
-              ),
-            ),
-          ),
         Align(
           alignment: Alignment.bottomCenter,
           child: Container(

@@ -3,14 +3,13 @@ import 'dart:math' as math;
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
+import 'package:felloapp/core/model/portfolio_model.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/ui/elements/fello_rich_text.dart';
 import 'package:felloapp/ui/pages/hometabs/save/gold_components/gold_pro_card.dart';
-import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/flutter_svg.dart';
 import 'package:provider/provider.dart';
 
 class GoldProHero extends StatelessWidget {
@@ -24,7 +23,9 @@ class GoldProHero extends StatelessWidget {
             model.userFundWallet?.augGoldQuantity ?? 0.0;
         final double goldProQuantity = model.userFundWallet?.wAugFdQty ?? 0.0;
         if (goldProQuantity != 0) {
-          return InvestedGoldProHero(model: model);
+          return InvestedGoldProHero(
+            portfolio: model.userPortfolio,
+          );
         } else if (goldQuantity <= 0) {
           return NewGoldProHero(model: model);
         } else if (goldQuantity <=
@@ -318,12 +319,18 @@ class EligibleGoldProHero extends StatelessWidget {
 }
 
 class InvestedGoldProHero extends StatelessWidget {
-  const InvestedGoldProHero({required this.model, super.key});
+  const InvestedGoldProHero({
+    required this.portfolio,
+    super.key,
+  });
 
-  final UserService model;
+  final Portfolio portfolio;
 
   @override
   Widget build(BuildContext context) {
+    final fd = portfolio.augmont.fd;
+    final leasedQuant = BaseUtil.digitPrecision(fd.leased.toDouble(), 4);
+    final currentQuant = BaseUtil.digitPrecision(fd.currentValue.toDouble(), 4);
     return Padding(
       padding: const EdgeInsets.symmetric(
         horizontal: 17,
@@ -356,95 +363,30 @@ class InvestedGoldProHero extends StatelessWidget {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     Text(
-                      "Leased Amount",
+                      "Gold Leased",
                       style: TextStyles.rajdhaniM.colour(Colors.white60),
                     ),
-                    Row(
-                      crossAxisAlignment: CrossAxisAlignment.end,
-                      mainAxisAlignment: MainAxisAlignment.start,
-                      children: [
-                        Flexible(
-                          fit: FlexFit.loose,
-                          child: Text(
-                            "₹${BaseUtil.digitPrecision(model.userPortfolio.augmont.fd.balance)}",
-                            style: TextStyles.sourceSansSB.title4
-                                .colour(UiConstants.kGoldProPrimary),
-                          ),
-                        ),
-                        Column(
-                          children: [
-                            Row(
-                              crossAxisAlignment: CrossAxisAlignment.end,
-                              children: [
-                                SizedBox(width: SizeConfig.padding6),
-                                Transform.translate(
-                                  offset: Offset(0, -SizeConfig.padding4),
-                                  child: RotatedBox(
-                                    quarterTurns: BaseUtil.digitPrecision(
-                                                model.userPortfolio.augmont.fd
-                                                    .absGains,
-                                                2) >=
-                                            0
-                                        ? 0
-                                        : 2,
-                                    child: SvgPicture.asset(
-                                      Assets.arrow,
-                                      width: SizeConfig.iconSize2,
-                                      color: BaseUtil.digitPrecision(
-                                                  model.userPortfolio.augmont.fd
-                                                      .absGains,
-                                                  2) >=
-                                              0
-                                          ? UiConstants.primaryColor
-                                          : Colors.red,
-                                    ),
-                                  ),
-                                ),
-                                Text(
-                                    " ${BaseUtil.digitPrecision(
-                                      BaseUtil.digitPrecision(
-                                          model.userPortfolio.augmont.fd
-                                              .percGains,
-                                          2),
-                                      2,
-                                      false,
-                                    )}%",
-                                    style: TextStyles.sourceSans.body3.colour(
-                                        BaseUtil.digitPrecision(
-                                                    model.userPortfolio.augmont
-                                                        .fd.absGains,
-                                                    2) >=
-                                                0
-                                            ? UiConstants.primaryColor
-                                            : Colors.red)),
-                              ],
-                            ),
-                            SizedBox(
-                              height: SizeConfig.padding4,
-                            )
-                          ],
-                        ),
-                      ],
-                    )
+                    Text(
+                      "$leasedQuant gms",
+                      style: TextStyles.sourceSansSB.title4
+                          .colour(UiConstants.kGoldProPrimary),
+                    ),
                   ],
                 ),
               ),
-              Expanded(
-                flex: 3,
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Text(
-                      "Leased Value",
-                      style: TextStyles.rajdhaniM.colour(Colors.white60),
-                    ),
-                    Text(
-                      "${BaseUtil.digitPrecision(model.userFundWallet?.wAugFdQty ?? 0.0, 2)}gms",
-                      style: TextStyles.sourceSansSB.title4
-                          .colour(UiConstants.kGoldProPrimary),
-                    )
-                  ],
-                ),
+              Column(
+                crossAxisAlignment: CrossAxisAlignment.start,
+                children: [
+                  Text(
+                    "Current Value",
+                    style: TextStyles.rajdhaniM.colour(Colors.white60),
+                  ),
+                  Text(
+                    "$currentQuant gms",
+                    style: TextStyles.sourceSansSB.title4
+                        .colour(UiConstants.kGoldProPrimary),
+                  )
+                ],
               )
             ],
           ),

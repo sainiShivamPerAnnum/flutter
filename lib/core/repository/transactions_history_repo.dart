@@ -1,6 +1,9 @@
+// ignore_for_file: equal_keys_in_map
+
 import 'dart:developer';
 
 import 'package:felloapp/core/constants/apis_path_constants.dart';
+import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/model/timestamp_model.dart';
 import 'package:felloapp/core/model/transaction_response_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
@@ -29,7 +32,11 @@ class TransactionHistoryRepository extends BaseRepo {
       final String? uid = userService.baseUser!.uid;
       final queryParams = {
         "type": type,
-        "subType": subtype,
+        "subType": [
+          if (subtype == InvestmentType.AUGGOLD99.name)
+            UserTransaction.TRAN_SUBTYPE_AUGMONT_GOLD_FD,
+          subtype,
+        ],
         "limit": limit.toString(),
         if (offset != null && offset != 0) ...{
           "offset": offset.toString(),
@@ -57,8 +64,7 @@ class TransactionHistoryRepository extends BaseRepo {
       return ApiResponse<TransactionResponse>(model: txnResponse, code: 200);
     } catch (e) {
       logger.e(e.toString());
-      return ApiResponse.withError(
-          e.toString() ?? "Unable to fetch transactions", 400);
+      return ApiResponse.withError(e.toString(), 400);
     }
   }
 
@@ -111,8 +117,7 @@ class TransactionHistoryRepository extends BaseRepo {
       return ApiResponse<TransactionResponse>(model: txnResponse, code: 200);
     } catch (e) {
       logger.e(e.toString());
-      return ApiResponse.withError(
-          e.toString() ?? "Unable to fetch transactions", 400);
+      return ApiResponse.withError(e.toString(), 400);
     }
   }
 }

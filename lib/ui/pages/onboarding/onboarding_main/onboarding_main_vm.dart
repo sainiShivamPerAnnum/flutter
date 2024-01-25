@@ -1,9 +1,6 @@
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
-import 'package:felloapp/core/repository/user_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
-import 'package:felloapp/core/service/journey_service.dart';
-import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
@@ -17,19 +14,19 @@ import 'package:flutter_svg/flutter_svg.dart';
 
 class OnboardingViewModel extends BaseViewModel {
   final AnalyticsService _analyticsService = locator<AnalyticsService>();
-  final UserService _userService = locator<UserService>();
-  final UserRepository _userRepository = locator<UserRepository>();
-  final JourneyService _journeyService = locator<JourneyService>();
   PageController? _pageController;
   int _currentPage = 0;
+  // To sync indicator with lottie animation.
+  int _indicatorPosition = 0;
+
   double dragStartPosition = 0, dragUpdatePosition = 0;
   List<List<String>>? _onboardingData;
   bool _isWalkthroughRegistrationInProgress = false;
 
-  get isWalkthroughRegistrationInProgress =>
+  bool get isWalkthroughRegistrationInProgress =>
       _isWalkthroughRegistrationInProgress;
 
-  set isWalkthroughRegistrationInProgress(value) {
+  set isWalkthroughRegistrationInProgress(bool value) {
     _isWalkthroughRegistrationInProgress = value;
     notifyListeners();
   }
@@ -38,6 +35,13 @@ class OnboardingViewModel extends BaseViewModel {
   S locale = locator<S>();
 
   int get currentPage => _currentPage;
+
+  int get indicatorPosition => _indicatorPosition;
+
+  set indicatorPosition(int value) {
+    _indicatorPosition = value;
+    notifyListeners();
+  }
 
   List<Widget> assetWidgets = [
     SvgPicture.asset(
@@ -76,7 +80,7 @@ class OnboardingViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  init() {
+  void init() {
     pageController = PageController();
     currentPage = 0;
     onboardingData = [
@@ -95,15 +99,19 @@ class OnboardingViewModel extends BaseViewModel {
     ];
   }
 
-  registerWalkthroughCompletion() async {
-    PreferenceHelper.setBool(
-        PreferenceHelper.CACHE_ONBOARDING_COMPLETION, true);
+  Future<void> registerWalkthroughCompletion() async {
     AppState.delegate!.appState.currentAction = PageAction(
       state: PageState.replaceAll,
       page: LoginPageConfig,
     );
-    if (_analyticsService != null) {
-      _analyticsService.track(eventName: AnalyticsEvents.splashScrenProceed);
-    }
+
+    _analyticsService.track(
+      eventName: AnalyticsEvents.splashScrenProceed,
+    );
+
+    await PreferenceHelper.setBool(
+      PreferenceHelper.CACHE_ONBOARDING_COMPLETION,
+      true,
+    );
   }
 }

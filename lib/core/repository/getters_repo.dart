@@ -15,7 +15,7 @@ import 'package:felloapp/core/model/home_screen_carousel_items.dart';
 import 'package:felloapp/core/model/page_config_model.dart';
 import 'package:felloapp/core/model/promo_cards_model.dart';
 import 'package:felloapp/core/model/quick_save_model.dart';
-import 'package:felloapp/core/model/story_model.dart';
+import 'package:felloapp/core/model/sdui/sections/home_page_sections.dart';
 import 'package:felloapp/core/model/sub_combos_model.dart';
 import 'package:felloapp/core/model/tambola_offers_model.dart';
 import 'package:felloapp/core/model/ui_config_models/ui_config_models.dart';
@@ -28,7 +28,8 @@ import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/code_from_freq.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/flavor_config.dart';
-import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
+import 'package:flutter_cache_manager/flutter_cache_manager.dart';
 
 //[TODO]:Added Prod CDN url;
 class GetterRepository extends BaseRepo {
@@ -71,8 +72,7 @@ class GetterRepository extends BaseRepo {
       return ApiResponse(model: statisticsResponse["data"], code: 200);
     } catch (e) {
       logger.e(e.toString());
-      return ApiResponse.withError(
-          e.toString() ?? "Unable to fetch statistics", 400);
+      return ApiResponse.withError(e.toString(), 400);
     }
   }
 
@@ -99,8 +99,7 @@ class GetterRepository extends BaseRepo {
       );
     } catch (e) {
       logger.e(e.toString());
-      return ApiResponse.withError(
-          e.toString() ?? "Unable to fetch statistics", 400);
+      return ApiResponse.withError(e.toString(), 400);
     }
   }
 
@@ -155,6 +154,60 @@ class GetterRepository extends BaseRepo {
         "message": "Default Values",
         "data": BaseRemoteConfig.DEFAULTS,
       });
+    }
+  }
+
+  /// Fetches the page configuration based on [variant] and caches stories if
+  /// page contains stories based on [shouldCacheStories] flag.
+  Future<ApiResponse<PageData>> getPageData({
+    required String variant,
+    bool shouldCacheStories = false,
+  }) async {
+    final response = await APIService.instance.getData(
+      '',
+      apiName: '$_getters/getPageData',
+      cBaseUrl:
+          'https://d18gbwu7fwwwtf.cloudfront.net/new_user_flow/$variant.json',
+    );
+    try {
+      final pageData = PageData.fromJson(response);
+
+      if (shouldCacheStories) {
+        unawaited(_downloadStories(pageData));
+      }
+
+      return ApiResponse(
+        code: 200,
+        model: pageData,
+      );
+    } catch (e) {
+      return ApiResponse.withError(
+        e.toString(),
+        404,
+      );
+    }
+  }
+
+  Future<void> _downloadStories(PageData data) async {
+    DefaultCacheManager cacheManager = DefaultCacheManager();
+    final homePageData = data.screens.home;
+    StoriesSection? section;
+    for (final element in homePageData.sections.entries) {
+      if (element.value is StoriesSection) {
+        section = element.value as StoriesSection;
+        break;
+      }
+    }
+
+    if (section != null) {
+      final stories = section.data.stories;
+      for (var i = 0; i < stories.length; i++) {
+        try {
+          await cacheManager.getSingleFile(stories[i].story);
+        } catch (e) {
+          debugPrint('Failed to load story ${stories[i].story}');
+        }
+      }
     }
   }
 
@@ -287,29 +340,7 @@ class GetterRepository extends BaseRepo {
       );
     } catch (e) {
       logger.e(e.toString());
-      return ApiResponse.withError(
-          e.toString() ?? "Unable to fetch statistics", 400);
-    }
-  }
-
-  Future<ApiResponse<List<StoryItemModel>>> getStory({String? topic}) async {
-    try {
-      final response = await APIService.instance.getData(
-        '${ApiPath.kStory}/$topic',
-        cBaseUrl: _baseUrl,
-        queryParams: {"topic": topic},
-        apiName: '$_getters/getStoryByTopic',
-      );
-
-      final responseData = response["data"];
-
-      logger.d(responseData);
-      final events = StoryItemModel.helper.fromMapArray(responseData['slides']);
-
-      return ApiResponse<List<StoryItemModel>>(model: events, code: 200);
-    } catch (e) {
-      logger.e(e.toString());
-      return ApiResponse.withError("Unable to fetch stories", 400);
+      return ApiResponse.withError(e.toString(), 400);
     }
   }
 

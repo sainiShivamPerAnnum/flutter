@@ -1,5 +1,6 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/apis_path_constants.dart';
+import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/ops/augmont_ops.dart';
 import 'package:felloapp/core/ops/db_ops.dart';
 import 'package:felloapp/core/repository/analytics_repo.dart';
@@ -13,6 +14,7 @@ import 'package:felloapp/core/repository/internal_ops_repo.dart';
 import 'package:felloapp/core/repository/investment_actions_repo.dart';
 import 'package:felloapp/core/repository/journey_repo.dart';
 import 'package:felloapp/core/repository/lendbox_repo.dart';
+import 'package:felloapp/core/repository/local/stories_repo.dart';
 import 'package:felloapp/core/repository/payment_repo.dart';
 import 'package:felloapp/core/repository/paytm_repo.dart';
 import 'package:felloapp/core/repository/power_play_repo.dart';
@@ -32,9 +34,12 @@ import 'package:felloapp/core/service/analytics/mixpanel_analytics.dart';
 import 'package:felloapp/core/service/analytics/singular_analytics.dart';
 import 'package:felloapp/core/service/analytics/webengage_analytics.dart';
 import 'package:felloapp/core/service/api.dart';
+import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_datapayload.dart';
 import 'package:felloapp/core/service/fcm/fcm_handler_service.dart';
+import 'package:felloapp/core/service/fcm/fcm_handler_v2/fcm_handler_v2.dart';
 import 'package:felloapp/core/service/fcm/fcm_listener_service.dart';
+import 'package:felloapp/core/service/feature_flag_service/feature_flag_service.dart';
 import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/lcl_db_api.dart';
 import 'package:felloapp/core/service/lendbox_maturity_service.dart';
@@ -64,6 +69,7 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/back_button_actions.dart';
 import 'package:felloapp/ui/elements/coin_bar/coin_bar_vm.dart';
 import 'package:felloapp/ui/elements/faq_card/faq_card_vm.dart';
+import 'package:felloapp/ui/pages/asset_prefs/asset_pref_vm.dart';
 import 'package:felloapp/ui/pages/campaigns/topSavers/top_saver_vm.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_buy/augmont_buy_vm.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_buy/gold_pro_buy_vm.dart';
@@ -127,6 +133,16 @@ Future<void> setupLocator() async {
   locator.registerLazySingleton(S.new);
 
   //Services
+  locator.registerSingletonAsync<LocalDbService>(() async {
+    final db = LocalDbService();
+    await db.initialize();
+    return db;
+  });
+  locator.registerLazySingleton<FeatureFlagService>(
+    () => FeatureFlagService.init(
+      features: AppConfig.toRaw,
+    ),
+  );
   locator.registerLazySingleton(Api.new);
   locator.registerLazySingleton(LocalApi.new);
   locator.registerLazySingleton(FcmHandlerDataPayloads.new);
@@ -196,6 +212,10 @@ Future<void> setupLocator() async {
   locator.registerLazySingleton(PowerPlayRepository.new);
   locator.registerLazySingleton(ClientCommsRepo.new);
   locator.registerLazySingleton(ReportRepository.new);
+  locator.registerLazySingleton(() => FcmHandlerV2(locator()));
+  locator.registerLazySingleton<StoriesRepository>(
+    () => StoriesRepository(locator()),
+  );
 
   //ROOT
   locator.registerLazySingleton(CardActionsNotifier.new);
@@ -259,6 +279,7 @@ Future<void> setupLocator() async {
   locator.registerFactory(SourceAdaptiveAssetViewModel.new);
   locator.registerFactory(SubscriptionCardViewModel.new);
   locator.registerFactory(FloPremiumDetailsViewModel.new);
+  locator.registerFactory(AssetPreferenceViewModel.new);
 
   // locator.registerFactory<UsernameInputViewModel>(() => UsernameInputViewModel());
   await locator.allReady();

@@ -5,6 +5,8 @@ const assetBaseUrl = 'https://d37gtxigg82zaw.cloudfront.net/';
 class Assets {
   const Assets._();
   static const String logoMaxSize = 'images/fello_logo.png';
+  static const String logoWhite =
+      'https://ik.imagekit.io/9xfwtu0xm/fello_stories_logo.png';
   static const String logoShortform = 'assets/svg/fello-short-logo.svg';
 
   static const String referGraphic = 'images/transfer.png';
@@ -49,6 +51,7 @@ class Assets {
   static const String navSaveLottie = "assets/lotties/nav/save.json";
   static const String navWinLottie = "assets/lotties/nav/win.json";
   static const String navTambolaLottie = "assets/lotties/nav/tambola.json";
+  static const String onboarding = 'assets/lotties/onboarding.json';
 
   static const String prizeRankOne = "assets/vectors/rank_first.svg";
   static const String prizeRankTwo = "assets/vectors/rank_second.svg";
@@ -167,6 +170,7 @@ class Assets {
   static const String cvtar3 = "assets/vectors/userAvatars/AV3.svg";
   static const String cvtar4 = "assets/vectors/userAvatars/AV4.svg";
   static const String cvtar5 = "assets/vectors/userAvatars/AV5.svg";
+  static const String cvtar6 = "assets/vectors/userAvatars/AV6.svg";
 
   //FELLO REWARDS
   static const String amazonGiftVoucher = "images/amazon-share.png";
@@ -216,6 +220,7 @@ class Assets {
 
   static const String trophySvg = "assets/vectors/trophy.svg";
   static const String trophyGlitterSvg = "assets/vectors/trophyGlitter.svg";
+  static const String trophyWonSvg = "assets/svg/trophyWons.svg";
   static const String dailyAppBonusHero =
       "assets/vectors/dailyAppBonusHero.svg";
 
@@ -276,6 +281,9 @@ class Assets {
       "assets/vectors/icons/ic_upload_file.svg";
   static const String ic_upload_success =
       "assets/vectors/icons/ic_upload_success.svg";
+  static const String ic_upload_procced =
+      "assets/vectors/icons/ic_upload_proceed.svg";
+  static const String dummyPan = "assets/images/pancard dummy.webp";
 
   static const String wohoo = "assets/vectors/wohoo.svg";
   static const String graph = "assets/vectors/icons/graph.svg";
@@ -432,4 +440,23 @@ class Assets {
       'https://ik.imagekit.io/9xfwtu0xm/Badges/star.svg';
   static const String superFelloTitle =
       'https://fello-dev-uploads.s3.ap-south-1.amazonaws.com/super_fello_title.svg';
+  static const String kycSecurity = "assets/images/kyc_security.png";
+  static const String stepCircle = "assets/svg/steps_circle.svg";
+
+  //asset-prefs
+  static const String assetPrefBottomSheet1 =
+      "assets/svg/asset_pref_bottomsheet1.svg";
+  static const String assetPrefBottomSheet2 =
+      "assets/images/asset_pref_bottomsheet2.png";
+  static const String earnShadow = "assets/images/earn_shadow.png";
+  static const String noScratchCards = "assets/images/noScratchCards.png";
+  static const String savingsAvatar = "assets/vectors/savings_avatar.svg";
+  static const String paperPlane = "assets/svg/paper_plane.svg";
+  static const String rewardsIntro =
+      "https://ik.imagekit.io/9xfwtu0xm/rewards/rewards.png";
+  static const String rewardsIntro1 =
+      "https://ik.imagekit.io/9xfwtu0xm/rewards/rewards_1.png";
+  static const String rewardsIntro2 =
+      "https://ik.imagekit.io/9xfwtu0xm/rewards/rewards_2.png";
+  static const String garbageBin = "assets/vectors/garbage-bin.svg";
 }

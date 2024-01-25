@@ -1,5 +1,6 @@
 import 'package:felloapp/ui/pages/userProfile/kyc_details/kyc_details_view.dart';
 import 'package:felloapp/ui/pages/userProfile/kyc_details/kyc_details_vm.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:flutter/material.dart';
 
@@ -10,16 +11,15 @@ class NoKycView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    final S locale = S.of(context);
     return KycBriefTile(
-      title: "No Kyc Data Found",
-      label: "Please refresh",
+      title: locale.noKYCfound,
+      label: locale.refreshKYC,
       model: model,
       trailing: Padding(
         padding: EdgeInsets.only(right: SizeConfig.padding8),
         child: IconButton(
-          onPressed: () {
-            model.init();
-          },
+          onPressed: model.init,
           icon: const Icon(
             Icons.rotate_left,
             color: Colors.amber,

@@ -102,6 +102,9 @@ class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
   @override
   Widget build(BuildContext context) {
     final banner = widget.model.assetOptionsModel!.data.banner;
+    bool canChangeMaturityDate =
+        AppConfig.getValue(AppConfigKey.canChangePostMaturityPreference) ??
+            false;
     log("floAssetType ${widget.model.floAssetType}");
 
     S locale = S.of(context);
@@ -222,8 +225,11 @@ class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
                   ),
                   SizedBox(height: SizeConfig.padding24),
                 ],
+                if(canChangeMaturityDate)
+                  MaturityDetailsWidget(model: widget.model)
+                else
+                  const MaturityTextWidget(),
 
-                MaturityDetailsWidget(model: widget.model),
               ],
             ),
           ),
@@ -647,7 +653,7 @@ class MaturityDetailsWidget extends StatelessWidget {
                       child: Column(
                         crossAxisAlignment: CrossAxisAlignment.start,
                         children: [
-                          Container(
+                          Divider(
                             height: 1,
                             color: UiConstants
                                 .kModalSheetSecondaryBackgroundColor
@@ -691,6 +697,47 @@ class MaturityDetailsWidget extends StatelessWidget {
                   )
                 : const SizedBox();
       },
+    );
+  }
+}
+
+class MaturityTextWidget extends StatelessWidget {
+  const MaturityTextWidget({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      width: SizeConfig.screenWidth,
+      padding:
+          EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Divider(
+            height: 1,
+            color: UiConstants.kModalSheetSecondaryBackgroundColor
+                .withOpacity(0.2),
+          ),
+          SizedBox(
+            height: SizeConfig.padding16,
+          ),
+          RichText(
+            text: TextSpan(
+              text: "Note: ",
+              style: TextStyles.sourceSansSB.body3,
+              children: [
+                TextSpan(
+                    text:
+                        "Post maturity, the amount will be moved to 8% Flo which can be withdrawn anytime.",
+                    style:
+                        TextStyles.sourceSans.body3.colour(UiConstants.grey1)),
+              ],
+            ),
+          ),
+        ],
+      ),
     );
   }
 }
