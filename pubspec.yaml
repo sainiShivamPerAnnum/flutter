@@ -79,7 +79,6 @@ dependencies:
     path: packages/upi/
   url_launcher: ^6.1.8
   video_player: ^2.5.1
-  webengage_flutter: ^1.2.4
   webview_flutter: ^4.2.0
   advertising_id: ^2.4.0
   flutter_hooks: ^0.18.6
