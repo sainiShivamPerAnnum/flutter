@@ -1,4 +1,5 @@
 import 'package:felloapp/core/enums/app_config_keys.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/journey_models/user_journey_stats_model.dart';
@@ -9,13 +10,13 @@ import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/feature/tambola/src/models/tambola_best_tickets_model.dart';
 import 'package:felloapp/feature/tambola/tambola.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/animations/welcome_rings/welcome_rings.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/appbar/appbar.dart';
 import 'package:felloapp/ui/elements/bottom_nav_bar/bottom_nav_bar.dart';
 import 'package:felloapp/ui/elements/coin_bar/coin_bar_view.dart';
 import 'package:felloapp/ui/elements/dev_rel/flavor_banners.dart';
-import 'package:felloapp/ui/pages/hometabs/home/card_actions_notifier.dart';
 import 'package:felloapp/ui/pages/hometabs/my_account/my_account_components/win_helpers.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/ui/pages/root/root_vm.dart';
@@ -112,20 +113,28 @@ class _RootState extends State<Root> {
                   const QABanner(),
                 ],
               ),
-              floatingActionButtonLocation:
-                  FloatingActionButtonLocation.miniCenterDocked,
-              floatingActionButton: Selector<CardActionsNotifier, bool>(
-                  selector: (_, notifier) => notifier.isVerticalView,
-                  builder: (context, isCardsOpen, child) {
-                    return AnimatedScale(
-                      scale: isCardsOpen ? 0 : 1,
-                      curve: Curves.easeIn,
-                      duration: const Duration(milliseconds: 300),
-                      child: rootController.navItems.values.length % 2 == 0
-                          ? model.centerTab(ctx)
-                          : const SizedBox(),
-                    );
-                  }),
+              floatingActionButton: FloatingActionButton(
+                onPressed: () {
+                  AppState.delegate!.appState.currentAction = PageAction(
+                    state: PageState.addPage,
+                    page: SipViewConfig,
+                  );
+                },
+              ),
+              // floatingActionButtonLocation:
+              //     FloatingActionButtonLocation.miniCenterDocked,
+              // floatingActionButton: Selector<CardActionsNotifier, bool>(
+              //     selector: (_, notifier) => notifier.isVerticalView,
+              //     builder: (context, isCardsOpen, child) {
+              //       return AnimatedScale(
+              //         scale: isCardsOpen ? 0 : 1,
+              //         curve: Curves.easeIn,
+              //         duration: const Duration(milliseconds: 300),
+              //         child: rootController.navItems.values.length % 2 == 0
+              //             ? model.centerTab(ctx)
+              //             : const SizedBox(),
+              //       );
+              //     }),
               bottomNavigationBar: const BottomNavBar(),
             ),
             const CircularAnim(),
@@ -147,10 +156,11 @@ class _RootState extends State<Root> {
                     color: Colors.black.withOpacity(0.85),
                     child: Center(
                       child: Padding(
-                        padding:const  EdgeInsets.symmetric(horizontal: 20),
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
                         child: DefaultTextStyle(
                           style: TextStyles.sourceSans.body1
-                              .colour(UiConstants.kTextColor).copyWith(height: 1.5),
+                              .colour(UiConstants.kTextColor)
+                              .copyWith(height: 1.5),
                           child: Text(
                             locale.tutorialstart,
                           ),
@@ -226,7 +236,7 @@ class RootAppBar extends StatelessWidget {
                           child: FAppBar(
                             showAvatar: true,
                             leadingPadding: false,
-                           titleWidget: Expanded(
+                            titleWidget: Expanded(
                               child: Salutation(
                                 leftMargin: SizeConfig.padding8,
                                 textStyle: TextStyles.rajdhaniSB.body0
