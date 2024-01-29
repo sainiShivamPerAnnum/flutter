@@ -1,5 +1,4 @@
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
@@ -7,11 +6,12 @@ import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/feature/sip/cubit/sip_cubit.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
-import 'package:felloapp/ui/pages/finance/autosave/autosave_setup/autosave_process_slides/autosave_setup_view.dart';
-import 'package:felloapp/ui/pages/finance/autosave/autosave_setup/autosave_process_slides/autosave_upi_app-select_view.dart';
-import 'package:felloapp/ui/pages/finance/autosave/autosave_setup/autosave_process_vm.dart';
-import 'package:felloapp/ui/pages/finance/autosave/autosave_setup/autosave_setup_components/autosave_summary.dart';
-import 'package:felloapp/ui/pages/login/login_components/login_support.dart';
+// import 'package:felloapp/ui/pages/finance/autosave/autosave_setup/autosave_process_slides/autosave_asset_choice_view.dart';
+// import 'package:felloapp/ui/pages/finance/autosave/autosave_setup/autosave_process_slides/autosave_setup_view.dart';
+// import 'package:felloapp/ui/pages/finance/autosave/autosave_setup/autosave_process_slides/autosave_steps_view.dart';
+// import 'package:felloapp/ui/pages/finance/autosave/autosave_setup/autosave_process_slides/autosave_upi_app-select_view.dart';
+// import 'package:felloapp/ui/pages/finance/autosave/autosave_setup/autosave_process_vm.dart';
+// import 'package:felloapp/ui/pages/finance/autosave/autosave_setup/autosave_setup_components/autosave_summary.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
@@ -55,7 +55,7 @@ class SipProcessUi extends StatefulWidget {
 
 class _SipProcessUiState extends State<SipProcessUi> {
   Future<void> _onPressedBack(
-      AutosaveState autosaveState, AutosaveProcessViewModel model) async {
+      AutosaveState autosaveState, SipCubit model) async {
     FocusScope.of(context).unfocus();
 
     if (autosaveState == AutosaveState.INIT ||
@@ -77,64 +77,53 @@ class _SipProcessUiState extends State<SipProcessUi> {
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<SipCubit, SipState>(
-      builder: (context, state) => BaseView<AutosaveProcessViewModel>(
-        onModelReady: (model) => model.init(widget.investmentType),
-        onModelDispose: (model) => model.dump(),
-        builder: (context, model, child) {
-          return Scaffold(
-            backgroundColor: UiConstants.kBackgroundColor,
-            appBar: AppBar(
-              backgroundColor: UiConstants.kBackgroundColor,
-              elevation: 0.0,
-              title: model.currentPage <= 3
-                  ? Text(
-                      "Step ${model.currentPage + 1} of 4",
-                      style: TextStyles.sourceSansL.body3,
-                    )
-                  : Container(),
-              centerTitle: true,
-              leading: IconButton(
-                icon: const Icon(
-                  Icons.arrow_back_ios,
-                  color: UiConstants.kTextColor,
-                ),
-                onPressed: () => _onPressedBack(state.autosaveState, model),
-              ),
-              actions: const [
-                Row(
-                  children: [FaqPill(type: FaqsType.autosave)],
-                )
-              ],
+    return BlocBuilder<SipCubit, SipState>(builder: (context, state) {
+      final model = context.read<SipCubit>();
+      return Scaffold(
+        backgroundColor: UiConstants.kBackgroundColor,
+        appBar: AppBar(
+          backgroundColor: UiConstants.kBackgroundColor,
+          elevation: 0.0,
+          title: Text(
+            "SIP with Fello",
+            style: TextStyles.rajdhani.title4,
+          ),
+          centerTitle: true,
+          leading: IconButton(
+            icon: const Icon(
+              Icons.arrow_back_ios,
+              color: UiConstants.kTextColor,
             ),
-            resizeToAvoidBottomInset: false,
-            body: model.state == ViewState.Busy
-                ? const Center(
-                    child: FullScreenLoader(),
-                  )
-                : Stack(
-                    children: [
-                      const NewSquareBackground(),
-                      SafeArea(
-                        child: switch (state.autosaveState) {
-                          AutosaveState.INIT => const AutosavePendingView(),
-                          AutosaveState.IDLE => AutosaveSetupView(model: model),
-                          AutosaveState.ACTIVE =>
-                            AutosaveSuccessView(model: model),
-                          _ => const SizedBox.shrink(),
-                        },
-                      ),
-                    ],
-                  ),
-          );
-        },
-      ),
-    );
+            onPressed: () => _onPressedBack(state.autosaveState, model),
+          ),
+        ),
+        resizeToAvoidBottomInset: false,
+        body:
+            // model.state == ViewState.Busy
+            //     ? const Center(
+            //         child: FullScreenLoader(),
+            //       )
+            //     :
+            Stack(
+          children: [
+            const NewSquareBackground(),
+            SafeArea(
+              child: switch (state.autosaveState) {
+                AutosaveState.INIT => const AutosavePendingView(),
+                AutosaveState.IDLE => AutosaveSetupView(model: model),
+                AutosaveState.ACTIVE => AutosaveSuccessView(model: model),
+                _ => const SizedBox.shrink(),
+              },
+            ),
+          ],
+        ),
+      );
+    });
   }
 }
 
 class AutosaveSetupView extends StatelessWidget {
-  final AutosaveProcessViewModel model;
+  final SipCubit model;
 
   const AutosaveSetupView({
     required this.model,
@@ -149,15 +138,15 @@ class AutosaveSetupView extends StatelessWidget {
       children: [
         // AutosaveStepsView(model: model),
         // AutosaveAssetChoiceView(model: model),
-        AutoPaySetupOrUpdateView(model: model),
-        UpiAppSelectView(model: model),
+        // AutoPaySetupOrUpdateView(model: model),
+        // UpiAppSelectView(model: model),
       ],
     );
   }
 }
 
 class AutosaveSuccessView extends StatelessWidget {
-  final AutosaveProcessViewModel model;
+  final SipCubit model;
 
   const AutosaveSuccessView({required this.model, super.key});
 
@@ -215,14 +204,14 @@ class AutosaveSuccessView extends StatelessWidget {
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [
-                Padding(
-                  padding:
-                      EdgeInsets.symmetric(horizontal: SizeConfig.padding12),
-                  child: AutosaveSummary(
-                    model: model,
-                    showTopDivider: false,
-                  ),
-                )
+                // Padding(
+                //   padding:
+                //       EdgeInsets.symmetric(horizontal: SizeConfig.padding12),
+                //   child: AutosaveSummary(
+                //     model: model,
+                //     showTopDivider: false,
+                //   ),
+                // )
               ],
             ),
           ),
