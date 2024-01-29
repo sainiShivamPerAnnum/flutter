@@ -74,7 +74,7 @@ class InitAutosaveCard extends HookWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         mainAxisAlignment: MainAxisAlignment.center,
         children: [
-          const TitleSubtitleContainer(title: 'Setup Autosave'),
+          const TitleSubtitleContainer(title: 'SIP with Fello'),
           SizedBox(height: SizeConfig.padding10),
           Container(
             decoration: BoxDecoration(

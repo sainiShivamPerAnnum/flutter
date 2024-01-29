@@ -896,7 +896,7 @@ PageConfiguration SipPageConfig = PageConfiguration(
   key: 'Sip',
   path: SipPageViewPath,
   uiPage: Pages.Sip,
-  name: 'Login Screen',
+  name: 'Sip',
 );
 PageConfiguration StoriesPageConfig = PageConfiguration(
   key: 'StoriesViewPath',

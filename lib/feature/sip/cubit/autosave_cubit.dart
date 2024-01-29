@@ -22,19 +22,20 @@ part 'autosave_state.dart';
 
 class AutosaveCubit extends Cubit<AutosaveStatee> {
   AutosaveCubit() : super(AutosaveStatee());
-  final UserService _userService = locator<UserService>();
   // final PaytmService? _paytmService = locator<PaytmService>();
   final SubService _subService = locator<SubService>();
   final CustomLogger _logger = locator<CustomLogger>();
   final AnalyticsService _analyticsService = locator<AnalyticsService>();
-  final SubscriptionRepo _subcriptionRepo = locator<SubscriptionRepo>();
   PageController? txnPageController = PageController(initialPage: 0);
+  TextEditingController sipAmountController = TextEditingController();
   S locale = locator<S>();
 
   SubscriptionModel? _activeSubscription;
   List<SubscriptionTransactionModel>? augTxnList;
   List<SubscriptionTransactionModel>? lbTxnList;
+  List chipsList = [];
   bool hasMoreTxns = false;
+  double sliderValue = 0;
 
   init() async {
     //TODO
@@ -42,6 +43,10 @@ class AutosaveCubit extends Cubit<AutosaveStatee> {
     // setState(ViewState.Busy);
     await findActiveSubscription();
     // setState(ViewState.Idle);
+  }
+
+  dump() {
+    sipAmountController.dispose();
   }
 
   findActiveSubscription() async {

@@ -1,9 +1,7 @@
+import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
-import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/styles.dart';
-import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_svg/svg.dart';
 
 class EditSipBottomSheet extends StatefulWidget {
   const EditSipBottomSheet({super.key});
@@ -39,7 +37,7 @@ class _EditSipBottomSheetState extends State<EditSipBottomSheet> {
           ),
           Row(
             children: [
-              SvgPicture.asset(Assets.editIcon),
+              const AppImage(Assets.editIcon),
               SizedBox(
                 width: SizeConfig.padding12,
               ),
@@ -61,7 +59,7 @@ class _EditSipBottomSheetState extends State<EditSipBottomSheet> {
           ),
           Row(
             children: [
-              SvgPicture.asset(Assets.pauseIcon),
+              const AppImage(Assets.pauseIcon),
               SizedBox(
                 width: SizeConfig.padding12,
               ),

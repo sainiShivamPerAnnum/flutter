@@ -95,6 +95,8 @@ class SubscriptionRepo extends BaseRepo {
     }
   }
 
+  /// TODO: Rremove this api as there will be array of object in new api.
+  ///
   Future<ApiResponse<SubscriptionModel>> getSubscription() async {
     try {
       final response = await APIService.instance.getData(

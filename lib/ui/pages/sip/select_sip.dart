@@ -41,7 +41,7 @@ class _SelectSipScreenState extends State<SelectSipScreen> {
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
               Text(
-                "Selected Asset",
+                "Select Asset",
                 style: TextStyles.rajdhaniSB.body1.colour(Colors.white),
               ),
               SizedBox(

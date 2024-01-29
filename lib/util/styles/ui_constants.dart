@@ -113,6 +113,7 @@ class UiConstants {
   static const Color kTicketPeachColor = Color(0xFFFFCCBF);
   static const Color kSelectedDotColor = Color(0xFFCEF8F5);
   static const Color kInfoBackgroundColor = Color(0xFF121212);
+  static const Color kSipBackgroundColor = Color(0xFF1C272B);
 
   static const Color kFAQsAnswerColor = Color(0xFFA9C6D6);
 
