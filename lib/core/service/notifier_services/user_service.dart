@@ -44,6 +44,7 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/preference_helper.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:firebase_auth/firebase_auth.dart';
+import 'package:firebase_crashlytics/firebase_crashlytics.dart';
 import 'package:firebase_storage/firebase_storage.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/services.dart';
@@ -466,6 +467,12 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
         if (quickSaveRes.isSuccess()) {
           quickSaveModel = quickSaveRes.model;
         }
+      }
+
+      final uid = _baseUser?.uid;
+
+      if (uid != null) {
+        await FirebaseCrashlytics.instance.setUserIdentifier(uid);
       }
     } catch (e) {
       _logger.e(e.toString());
