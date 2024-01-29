@@ -12,7 +12,6 @@ import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:webengage_flutter/webengage_flutter.dart';
 
 class AppFlyerAnalytics extends BaseAnalyticsService {
   final CustomLogger _logger = locator<CustomLogger>();
@@ -51,7 +50,6 @@ class AppFlyerAnalytics extends BaseAnalyticsService {
   void trackScreen({String? screen, Map<String, dynamic>? properties}) {
     try {
       _logger.d('analytics : $screen');
-      WebEngagePlugin.trackScreen(screen!, properties);
     } catch (e) {
       String error = e as String ?? "Unable to track screen event: $screen";
       _logger.e(error);
