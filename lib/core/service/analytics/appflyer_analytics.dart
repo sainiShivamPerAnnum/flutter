@@ -47,14 +47,7 @@ class AppFlyerAnalytics extends BaseAnalyticsService {
   }
 
   @override
-  void trackScreen({String? screen, Map<String, dynamic>? properties}) {
-    try {
-      _logger.d('analytics : $screen');
-    } catch (e) {
-      String error = e as String ?? "Unable to track screen event: $screen";
-      _logger.e(error);
-    }
-  }
+  void trackScreen({String? screen, Map<String, dynamic>? properties}) {}
 
   Future<String?> init() async {
     String? id = '';
