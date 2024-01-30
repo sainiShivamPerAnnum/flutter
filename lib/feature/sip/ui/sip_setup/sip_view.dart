@@ -1,6 +1,8 @@
 import 'package:felloapp/feature/sip/cubit/autosave_cubit.dart';
 import 'package:felloapp/feature/sip/shared/tab_slider.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -17,8 +19,22 @@ class SipView extends StatelessWidget {
   }
 }
 
-class _SipView extends StatelessWidget {
+class _SipView extends StatefulWidget {
   const _SipView();
+
+  @override
+  State<_SipView> createState() => _SipViewState();
+}
+
+class _SipViewState extends State<_SipView> {
+  final _amount = ValueNotifier<double>(10000);
+  static const _division = 3;
+
+  @override
+  void dispose() {
+    super.dispose();
+    _amount.dispose();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -28,8 +44,18 @@ class _SipView extends StatelessWidget {
         showBackgroundGrid: false,
         backgroundColor: UiConstants.bg,
         appBar: AppBar(
+          leading: IconButton(
+            onPressed: () => Navigator.pop(context),
+            icon: const Icon(
+              Icons.chevron_left,
+              size: 32,
+            ),
+          ),
           backgroundColor: UiConstants.bg,
-          elevation: 1,
+          title: const Text('SIP with Fello'),
+          titleTextStyle: TextStyles.rajdhaniSB.title4.setHeight(1.3),
+          centerTitle: true,
+          elevation: .5,
         ),
         body: Padding(
           padding: EdgeInsets.symmetric(
@@ -58,9 +84,30 @@ class _SipView extends StatelessWidget {
               SizedBox(
                 height: SizeConfig.padding16,
               ),
-              const _AmountInputWidget(
-                1000,
-              )
+              ValueListenableBuilder(
+                valueListenable: _amount,
+                builder: (context, value, child) => Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    AmountInputWidget(
+                      division: _division,
+                      amount: _amount.value,
+                      onChange: (v) => _amount.value = v,
+                    ),
+                    SizedBox(
+                      height: SizeConfig.padding32,
+                    ),
+                    AmountSlider(
+                      division: _division,
+                      amount: _amount.value,
+                      onChanged: (v) => _amount.value = v,
+                    ),
+                  ],
+                ),
+              ),
+              SizedBox(
+                height: SizeConfig.padding16,
+              ),
             ],
           ),
         ),
@@ -69,47 +116,260 @@ class _SipView extends StatelessWidget {
   }
 }
 
-class _AmountInputWidget extends StatefulWidget {
-  const _AmountInputWidget(
-    this.preFilledAmount, {
-    this.upperLimit = 15000,
-    this.lowerLimit = 500,
-    this.adjustFactorAmount = 500,
+class SuggestionChip extends StatelessWidget {
+  final bool isBest;
+  final bool isSelected;
+  final String label;
+
+  const SuggestionChip({
+    required this.label,
+    super.key,
+    this.isBest = false,
+    this.isSelected = false,
   });
 
-  final int preFilledAmount;
-  final int upperLimit;
-  final int lowerLimit;
-  final int adjustFactorAmount;
-
   @override
-  State<_AmountInputWidget> createState() => _AmountInputWidgetState();
+  Widget build(BuildContext context) {
+    const nippleHeight = 14.0;
+    final locale = locator<S>();
+    final borderColor =
+        isSelected ? UiConstants.yellow3 : UiConstants.kSnackBarBgColor;
+    final textColor = isSelected ? UiConstants.yellow3 : Colors.white;
+
+    return Column(
+      crossAxisAlignment: CrossAxisAlignment.center,
+      children: [
+        if (isBest)
+          Container(
+            decoration: BoxDecoration(
+              color: UiConstants.yellow3,
+              borderRadius: BorderRadius.vertical(
+                top: Radius.circular(SizeConfig.roundness2),
+              ),
+            ),
+            padding: EdgeInsets.symmetric(
+              horizontal: SizeConfig.padding8,
+            ),
+            child: Text(
+              locale.best,
+              style: TextStyles.sourceSansB.copyWith(
+                fontSize: 10,
+                height: 1.4,
+                color: UiConstants.grey3,
+              ),
+            ),
+          ),
+        CustomPaint(
+          painter: BorderPainter(
+            nippleHeight: nippleHeight,
+            borderColor: borderColor,
+          ),
+          child: Padding(
+            padding: const EdgeInsets.only(bottom: nippleHeight),
+            child: Padding(
+              padding: EdgeInsets.symmetric(
+                horizontal: SizeConfig.padding10,
+                vertical: SizeConfig.padding8,
+              ),
+              child: Text(
+                label,
+                style: TextStyles.sourceSans.body3.colour(
+                  textColor,
+                ),
+              ),
+            ),
+          ),
+        ),
+      ],
+    );
+  }
 }
 
-class _AmountInputWidgetState extends State<_AmountInputWidget> {
-  final ValueNotifier<int> _amount = ValueNotifier(0);
+class BorderPainter extends CustomPainter {
+  const BorderPainter({
+    this.cornerRadius = 6.0,
+    this.nippleHeight = 5.0,
+    this.nippleBaseWidth = 20.0,
+    this.nippleRadius = 2,
+    this.nippleEdgeRadius = 1,
+    this.borderColor = UiConstants.yellow3,
+  });
+
+  final double cornerRadius;
+  final double nippleHeight;
+  final double nippleBaseWidth;
+  final double nippleRadius;
+  final double nippleEdgeRadius;
+  final Color borderColor;
 
   @override
-  void initState() {
-    super.initState();
-    _amount.value = widget.preFilledAmount;
+  void paint(Canvas canvas, Size size) {
+    Path path = Path();
+    path.moveTo(cornerRadius, 0);
+
+    path.lineTo(size.width - cornerRadius, 0);
+
+    path.quadraticBezierTo(size.width, 0, size.width, cornerRadius);
+
+    path.lineTo(size.width, size.height - nippleHeight - cornerRadius);
+
+    path.quadraticBezierTo(
+      size.width,
+      size.height - nippleHeight,
+      size.width - cornerRadius,
+      size.height - nippleHeight,
+    );
+
+    final halfOfBaseWidthWithoutNippleBase = (size.width - nippleBaseWidth) / 2;
+
+    path.lineTo(
+      size.width - halfOfBaseWidthWithoutNippleBase + (2 * nippleEdgeRadius),
+      size.height - nippleHeight,
+    );
+
+    final edgeSpacing =
+        (nippleEdgeRadius * nippleBaseWidth * .5) / nippleHeight;
+
+    final rightPoint =
+        halfOfBaseWidthWithoutNippleBase + nippleBaseWidth - edgeSpacing;
+
+    final leftPoint = halfOfBaseWidthWithoutNippleBase + edgeSpacing;
+
+    path.quadraticBezierTo(
+      size.width - halfOfBaseWidthWithoutNippleBase,
+      size.height - nippleHeight,
+      rightPoint,
+      size.height - nippleHeight + nippleRadius,
+    );
+
+    final y = size.height - nippleRadius;
+    final spacing = (nippleRadius * nippleBaseWidth) / nippleHeight;
+    final addition = (nippleBaseWidth - spacing) / 2;
+    final x2 = halfOfBaseWidthWithoutNippleBase + nippleBaseWidth - addition;
+    final x1 = halfOfBaseWidthWithoutNippleBase + addition;
+
+    path.lineTo(x2, y);
+
+    path.quadraticBezierTo(size.width / 2, size.height, x1, y);
+
+    path.lineTo(leftPoint, size.height - nippleHeight + nippleEdgeRadius);
+
+    path.quadraticBezierTo(
+      halfOfBaseWidthWithoutNippleBase,
+      size.height - nippleHeight,
+      halfOfBaseWidthWithoutNippleBase - 2 * nippleEdgeRadius,
+      size.height - nippleHeight,
+    );
+
+    path.lineTo(cornerRadius, size.height - nippleHeight);
+
+    path.quadraticBezierTo(
+      0,
+      size.height - nippleHeight,
+      0,
+      size.height - nippleHeight - cornerRadius,
+    );
+
+    path.lineTo(0, cornerRadius);
+
+    path.quadraticBezierTo(0, 0, cornerRadius, 0);
+
+    path.close();
+
+    final paint = Paint()
+      ..color = borderColor
+      ..style = PaintingStyle.stroke
+      ..strokeWidth = .5;
+
+    canvas.drawPath(path, paint);
   }
 
   @override
-  void dispose() {
-    _amount.dispose();
-    super.dispose();
+  bool shouldRepaint(covariant BorderPainter oldDelegate) =>
+      oldDelegate.cornerRadius != cornerRadius ||
+      oldDelegate.nippleBaseWidth != nippleBaseWidth ||
+      oldDelegate.nippleEdgeRadius != nippleEdgeRadius ||
+      oldDelegate.nippleHeight != nippleHeight ||
+      oldDelegate.nippleRadius != nippleRadius;
+}
+
+class AmountSlider extends StatelessWidget {
+  const AmountSlider({
+    required this.onChanged,
+    this.amount = 10000,
+    this.upperLimit = 15000,
+    this.lowerLimit = 500,
+    super.key,
+    this.division = 5,
+  });
+
+  final void Function(double) onChanged;
+  final double amount;
+  final double upperLimit;
+  final double lowerLimit;
+  final int division;
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      margin: EdgeInsets.symmetric(
+        horizontal: SizeConfig.pageHorizontalMargins,
+      ),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              for (int i = 0; i < division; i++)
+                SuggestionChip(
+                  label: '₹${((upperLimit / division) * (i + 1)).toInt()}',
+                )
+            ],
+          ),
+          Slider(
+            divisions: division,
+            max: upperLimit,
+            value: amount,
+            onChanged: (v) {
+              if (v >= upperLimit / division) {
+                onChanged(v);
+              }
+            },
+            inactiveColor: Colors.grey,
+          ),
+        ],
+      ),
+    );
   }
+}
+
+class AmountInputWidget extends StatelessWidget {
+  const AmountInputWidget({
+    required this.amount,
+    required this.onChange,
+    super.key,
+    this.upperLimit = 15000,
+    this.lowerLimit = 500,
+    this.division = 5,
+  });
+
+  final double amount;
+  final double upperLimit;
+  final double lowerLimit;
+  final int division;
+  final void Function(double value) onChange;
 
   void _onIncrement() {
-    if (_amount.value < widget.upperLimit) {
-      _amount.value += widget.adjustFactorAmount;
+    if (amount < upperLimit) {
+      final value = amount + (upperLimit / division);
+      onChange(value);
     }
   }
 
   void _onDecrement() {
-    if (_amount.value > widget.lowerLimit) {
-      _amount.value -= widget.adjustFactorAmount;
+    if (amount > lowerLimit) {
+      final value = amount - (upperLimit / division);
+      onChange(value);
     }
   }
 
@@ -137,32 +397,28 @@ class _AmountInputWidgetState extends State<_AmountInputWidget> {
             actionType: _ActionType.decrement,
             onPressed: _onDecrement,
           ),
-          ValueListenableBuilder(
-              valueListenable: _amount,
-              builder: (context, value, child) {
-                return Column(
-                  children: [
-                    Text(
-                      '₹ ${_amount.value}',
-                      style: TextStyles.rajdhaniB.title2,
+          Column(
+            children: [
+              Text(
+                '₹ $amount',
+                style: TextStyles.rajdhaniB.title2,
+              ),
+              Row(
+                children: [
+                  Text(
+                    '+10 Tambola Ticket',
+                    style: TextStyles.sourceSans.body3.copyWith(
+                      color: UiConstants.teal3,
+                      height: 1.5,
                     ),
-                    Row(
-                      children: [
-                        Text(
-                          '+10 Tambola Ticket',
-                          style: TextStyles.sourceSans.body3.copyWith(
-                            color: UiConstants.teal3,
-                            height: 1.5,
-                          ),
-                        ),
-                        SizedBox(
-                          width: SizeConfig.padding4,
-                        ),
-                      ],
-                    )
-                  ],
-                );
-              }),
+                  ),
+                  SizedBox(
+                    width: SizeConfig.padding4,
+                  ),
+                ],
+              )
+            ],
+          ),
           _ActionButton(
             actionType: _ActionType.increment,
             onPressed: _onIncrement,
