@@ -101,6 +101,7 @@ const String MaturityWithdrawalSuccessViewPath =
     "/maturityWithdrawalSuccessViewPath";
 const String FelloBadgeHomePath = "/felloBadgeHomePath";
 const String StoriesPath = "/storiesPath";
+const String sipAmount = '/sipAmount';
 
 //GoldPro
 const String GoldProDetailsPath = "/goldProDetailsPath";
@@ -219,8 +220,11 @@ enum Pages {
   //TICKETS
   TicketsIntroViewPath,
   TicketsTutorialViewPath,
-  Sip,
   Stories,
+
+  // SIP
+  SipEntryView,
+  SipView,
 }
 
 class PageConfiguration {
@@ -887,17 +891,26 @@ PageConfiguration MaturityWithdrawalSuccessViewPageConfig = PageConfiguration(
     name: "Maturity Withdrawal Success View Screen");
 
 PageConfiguration FelloBadgeHomeViewPageConfig = PageConfiguration(
-    key: 'FelloBadgeHomeViewPath',
-    path: FelloBadgeHomePath,
-    uiPage: Pages.FelloBadgeHome,
-    name: "Fello Badge Home View Screen");
+  key: 'FelloBadgeHomeViewPath',
+  path: FelloBadgeHomePath,
+  uiPage: Pages.FelloBadgeHome,
+  name: "Fello Badge Home View Screen",
+);
 
 PageConfiguration SipPageConfig = PageConfiguration(
-  key: 'Sip',
+  key: 'SipEntryViewPath',
   path: SipPageViewPath,
-  uiPage: Pages.Sip,
-  name: 'Sip',
+  uiPage: Pages.SipEntryView,
+  name: 'Sip Entry View',
 );
+
+PageConfiguration SipViewConfig = PageConfiguration(
+  key: 'SipViewPath',
+  path: SipPageViewPath,
+  uiPage: Pages.SipView,
+  name: 'Sip input View',
+);
+
 PageConfiguration StoriesPageConfig = PageConfiguration(
   key: 'StoriesViewPath',
   path: StoriesPath,
