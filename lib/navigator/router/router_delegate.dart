@@ -390,7 +390,7 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           break;
 
         case Pages.SipView:
-          _addPageData(const SipView(), SipViewConfig);
+          _addPageData(const SipPage(), SipViewConfig);
           break;
 
         default:

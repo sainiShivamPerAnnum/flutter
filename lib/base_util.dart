@@ -751,19 +751,6 @@ class BaseUtil extends ChangeNotifier {
     return parsedInt ?? 0;
   }
 
-  Future<bool> authenticateUser(AuthCredential credential) {
-    logger.d("Verification credetials: $credential");
-    // FirebaseAuth.instance.signInWithCustomToken(token)
-    return FirebaseAuth.instance.signInWithCredential(credential).then((res) {
-      firebaseUser = res.user;
-      logger.i("New Firebase User: ${res.additionalUserInfo!.isNewUser}");
-      return true;
-    }).catchError((e) {
-      logger.e("User Authentication failed with credential: Error: $e");
-      return false;
-    });
-  }
-
   Future<bool> signOut() async {
     try {
       // await _lModel!.deleteLocalAppData();
