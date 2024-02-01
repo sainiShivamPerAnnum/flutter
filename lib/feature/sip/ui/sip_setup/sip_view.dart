@@ -93,20 +93,20 @@ class _SipViewState extends State<SipView> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     AmountInputWidget(
-                      division: _division,
-                      upperLimit: _upperLimit,
-                      amount: _amount.value,
                       lowerLimit: _lowerLimit,
+                      upperLimit: _upperLimit,
+                      division: _division,
+                      amount: _amount.value,
                       onChange: (v) => _amount.value = v,
                     ),
                     SizedBox(
                       height: SizeConfig.padding32,
                     ),
                     AmountSlider(
+                      lowerLimit: _lowerLimit,
+                      upperLimit: _upperLimit,
                       division: _division,
                       amount: _amount.value,
-                      upperLimit: _upperLimit,
-                      lowerLimit: _lowerLimit,
                       onChanged: (v) => _amount.value = v,
                     ),
                   ],
