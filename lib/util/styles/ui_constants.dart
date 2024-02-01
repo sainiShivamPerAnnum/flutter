@@ -220,7 +220,7 @@ class UiConstants {
   static Color kReferralHeaderColor = const Color(0xff6052A9);
 
   //GOLD X
-  static Color kGoldProPrimary = const Color(0xffFFD979);
+  static const Color kGoldProPrimary = Color(0xffFFD979);
   static Color KGoldProSecondary = const Color(0xffFFE9B1);
   static Color KGoldProPrimaryDark = const Color(0xffEFAF4E);
   static Color kGoldProBorder = const Color(0xffFFD979).withOpacity(0.2);
