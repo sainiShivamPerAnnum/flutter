@@ -8,6 +8,7 @@ import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 
 class SipIntro extends StatelessWidget {
   const SipIntro({super.key});
@@ -142,7 +143,7 @@ class SipIntro extends StatelessWidget {
                   SizedBox(
                     height: SizeConfig.padding24,
                   ),
-                  BlocBuilder<CalculatorCubit, CalculatorState>(
+                  BlocBuilder<AutosaveCubit, AutosaveCubitState>(
                     builder: (context, state) {
                       return SipCalculator(
                         model: state,
@@ -176,6 +177,8 @@ class AssetSipContainer extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String formattedDate =
+        DateFormat('dd MMM yyyy').format(DateTime.parse(startDate));
     return Container(
       decoration: BoxDecoration(
           color: UiConstants.kArrowButtonBackgroundColor,
@@ -206,7 +209,7 @@ class AssetSipContainer extends StatelessWidget {
                             .colour(UiConstants.kTextColor),
                       ),
                       Text(
-                        "${sipInterval} SIP started on ${startDate}",
+                        "${sipInterval} SIP started on ${formattedDate}",
                         style: TextStyles.sourceSans.body4
                             .colour(UiConstants.kTextColor.withOpacity(0.8)),
                       )
@@ -250,7 +253,7 @@ class AssetSipContainer extends StatelessWidget {
 
 class SipCalculator extends StatefulWidget {
   const SipCalculator({required this.model, super.key});
-  final CalculatorState model;
+  final AutosaveCubitState model;
 
   @override
   State<SipCalculator> createState() => _SipCalculatorState();
@@ -308,7 +311,7 @@ class _SipCalculatorState extends State<SipCalculator>
               ),
               CalculatorField(
                 requiresQuickButtons: false,
-                changeFunction: context.read<CalculatorCubit>().changeSIPAmount,
+                changeFunction: context.read<AutosaveCubit>().changeSIPAmount,
                 requiresSlider: true,
                 label: "SIP Amount -",
                 prefixText: "₹",
@@ -321,8 +324,7 @@ class _SipCalculatorState extends State<SipCalculator>
               ),
               CalculatorField(
                 requiresQuickButtons: false,
-                changeFunction:
-                    context.read<CalculatorCubit>().changeTimePeriod,
+                changeFunction: context.read<AutosaveCubit>().changeTimePeriod,
                 requiresSlider: true,
                 label: "Time Period",
                 suffixText: "Year",
@@ -334,14 +336,13 @@ class _SipCalculatorState extends State<SipCalculator>
                 height: SizeConfig.padding20,
               ),
               CalculatorField(
-                  requiresQuickButtons: true,
-                  requiresSlider: false,
+                  requiresQuickButtons: false,
+                  requiresSlider: true,
+                  textAlign: TextAlign.center,
                   label: "Return Percentage",
-                  increment: () =>
-                      context.read<CalculatorCubit>().incrementRP(),
-                  decrement: () =>
-                      context.read<CalculatorCubit>().decrementRP(),
-                  value: widget.model.returnPercentage),
+                  changeFunction:
+                      context.read<AutosaveCubit>().changeRateOfInterest,
+                  value: widget.model.returnPercentage.toDouble()),
               SizedBox(
                 height: SizeConfig.padding20,
               ),
@@ -363,7 +364,7 @@ class _SipCalculatorState extends State<SipCalculator>
                         vertical: SizeConfig.padding6,
                         horizontal: SizeConfig.padding35),
                     child: Text(
-                      "₹${context.read<CalculatorCubit>().getReturn()}",
+                      "₹${context.read<AutosaveCubit>().getReturn()}",
                       style: TextStyles.sourceSansSB.body1.colour(Colors.black),
                     ),
                   )

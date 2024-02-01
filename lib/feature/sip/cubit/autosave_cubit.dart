@@ -1,3 +1,5 @@
+import 'dart:math';
+
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:felloapp/base_util.dart';
@@ -46,10 +48,126 @@ class AutosaveCubit extends Cubit<AutosaveCubitState> {
     // state = ViewState.Busy;
     // setState(ViewState.Busy);
     await findActiveSubscription();
-    ApiResponse<SipData> response = await _sipRepo.getSipScreenData();
-    sipScreenData = response.model;
+    await _sipRepo.getSipScreenData().then((value) {
+      sipScreenData = value.model;
+      emit(AutosaveCubitState(
+        sipAmount: sipScreenData
+                ?.calculatorScreen
+                ?.calculatorData
+                ?.data?[
+                    '${sipScreenData?.calculatorScreen?.calculatorData?.options?[0]}']
+                ?.sipAmount
+                ?.defaultValue ??
+            0,
+        maxSipValue: sipScreenData
+                ?.calculatorScreen
+                ?.calculatorData
+                ?.data?[
+                    '${sipScreenData?.calculatorScreen?.calculatorData?.options?[0]}']
+                ?.sipAmount
+                ?.max ??
+            0,
+        minSipValue: sipScreenData
+                ?.calculatorScreen
+                ?.calculatorData
+                ?.data?[
+                    '${sipScreenData?.calculatorScreen?.calculatorData?.options?[0]}']
+                ?.sipAmount
+                ?.min ??
+            0,
+        timePeriod: sipScreenData
+                ?.calculatorScreen
+                ?.calculatorData
+                ?.data?[
+                    '${sipScreenData?.calculatorScreen?.calculatorData?.options?[0]}']
+                ?.timePeriod
+                ?.defaultValue ??
+            0,
+        maxTimePeriod: sipScreenData
+                ?.calculatorScreen
+                ?.calculatorData
+                ?.data?[
+                    '${sipScreenData?.calculatorScreen?.calculatorData?.options?[0]}']
+                ?.timePeriod
+                ?.max ??
+            0,
+        minTimePeriod: sipScreenData
+                ?.calculatorScreen
+                ?.calculatorData
+                ?.data?[
+                    '${sipScreenData?.calculatorScreen?.calculatorData?.options?[0]}']
+                ?.timePeriod
+                ?.min ??
+            0,
+        returnPercentage: sipScreenData
+                ?.calculatorScreen
+                ?.calculatorData
+                ?.data?[
+                    '${sipScreenData?.calculatorScreen?.calculatorData?.options?[0]}']
+                ?.interest?['default'] ??
+            0,
+        numberOfPeriodsPerYear: sipScreenData
+            ?.calculatorScreen
+            ?.calculatorData
+            ?.data?[
+                '${sipScreenData?.calculatorScreen?.calculatorData?.options?[0]}']
+            ?.numberOfPeriodsPerYear,
+      ));
+    });
 
     // setState(ViewState.Idle);
+  }
+
+  int calculateMaturityValue(double P, double i, int n) {
+    double compoundInterest = ((pow(1 + i, n) - 1) / i) * (1 + i);
+    double M = P * compoundInterest;
+    return M.round();
+  }
+
+  String getReturn() {
+    double principalAmount = state.sipAmount.toDouble(); // Amount
+    int numberOfPeriods = 12;
+    double interest = state.returnPercentage.toDouble();
+    double interestRate = (interest * .001) / numberOfPeriods;
+    int numberOfYear = state.timePeriod;
+
+    int numberOfInvestments = numberOfYear * numberOfPeriods;
+    final maturityValue = calculateMaturityValue(
+        principalAmount, interestRate, numberOfInvestments);
+
+    print("Maturity Value (M): Rs $maturityValue");
+    return maturityValue.toString();
+  }
+
+  void changeTimePeriod(int value) {
+    if (value > state.maxTimePeriod) {
+      emit(state.copyWith(timePeriod: state.maxTimePeriod));
+    } else if (value < state.minTimePeriod) {
+      emit(state.copyWith(timePeriod: state.minTimePeriod));
+    } else {
+      emit(state.copyWith(timePeriod: value));
+    }
+  }
+
+  void changeSIPAmount(int value) {
+    if (value > state.maxSipValue) {
+      state.sipAmount = state.maxSipValue;
+      emit(state.copyWith(sipAmount: state.maxSipValue));
+    } else if (value < state.minSipValue) {
+      emit(state.copyWith(sipAmount: state.minSipValue));
+    } else {
+      emit(state.copyWith(sipAmount: value));
+    }
+  }
+
+  void changeRateOfInterest(int value) {
+    if (value > 30) {
+      emit(state.copyWith(returnPercentage: 30));
+    } else if (value < 0) {
+      emit(state.copyWith(returnPercentage: 0));
+    } else {
+      emit(state.copyWith(returnPercentage: value.toDouble()));
+    }
   }
 
   dump() {
@@ -134,46 +252,4 @@ class AutosaveCubit extends Cubit<AutosaveCubitState> {
   //     "Pause Value": value,
   //   });
   // }
-}
-
-class CalculatorCubit extends Cubit<CalculatorState> {
-  CalculatorCubit() : super(CalculatorState());
-  String getReturn() {
-    return "10000";
-  }
-
-  static String formatValue(double value) {
-    return value == value.floor()
-        ? value.toInt().toString()
-        : value.toStringAsFixed(2);
-  }
-
-  void changeTimePeriod(int value) {
-    if (value > state.maxTimePeriod) {
-      emit(state.copyWith(timePeriod: state.maxTimePeriod));
-    } else if (value < state.minTimePeriod) {
-      emit(state.copyWith(timePeriod: state.minTimePeriod));
-    } else {
-      emit(state.copyWith(timePeriod: value));
-    }
-  }
-
-  void changeSIPAmount(int value) {
-    if (value > state.maxSipValue) {
-      state.sipAmount = state.maxSipValue;
-      emit(state.copyWith(sipAmount: state.maxSipValue));
-    } else if (value < state.minSipValue) {
-      emit(state.copyWith(sipAmount: state.minSipValue));
-    } else {
-      emit(state.copyWith(sipAmount: value));
-    }
-  }
-
-  void incrementRP() {
-    emit(state.copyWith(returnPercentage: state.returnPercentage + 1));
-  }
-
-  void decrementRP() {
-    emit(state.copyWith(returnPercentage: state.returnPercentage - 1));
-  }
 }

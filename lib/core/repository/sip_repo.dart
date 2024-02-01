@@ -22,7 +22,7 @@ class SipRepository extends BaseRepo {
         cBaseUrl: '',
         apiName: _subscription,
       );
-      SipData sipModel = SipData.fromJson(response['data']);
+      SipData sipModel = SipData.fromJson(response);
       return ApiResponse(model: sipModel, code: 200);
     } catch (e) {
       return ApiResponse.withError(e.toString(), 400);

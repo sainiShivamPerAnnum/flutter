@@ -27,7 +27,6 @@ class SipProcessView extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => AutosaveCubit()),
-        BlocProvider(create: (_) => CalculatorCubit()),
       ],
       child: SipProcessUi(
         investmentType: investmentType,

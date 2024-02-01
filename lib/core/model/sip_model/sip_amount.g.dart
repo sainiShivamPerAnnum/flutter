@@ -10,5 +10,5 @@ SipAmount _$SipAmountFromJson(Map<String, dynamic> json) => SipAmount(
       min: json['min'] as int?,
       max: json['max'] as int?,
       multiples: json['multiples'] as int?,
-      defaultValue: json['defaultValue'] as int?,
+      defaultValue: json['default'] as int?,
     );
