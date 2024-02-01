@@ -121,10 +121,14 @@ class AnalyticsProperties {
     if (_subService.subscriptionData == null) {
       return false;
     } else {
-      return _subService.subscriptionData!.status ==
-              Constants.SUBSCRIPTION_ACTIVE
-          ? true
-          : false;
+      num length = _subService.subscriptionData?.subs?.length ?? 0;
+      for (var i = 0; i < length; i++) {
+        if (_subService.subscriptionData!.subs![i].status ==
+            Constants.SUBSCRIPTION_ACTIVE) {
+          return true;
+        }
+      }
+      return false;
     }
   }
 
@@ -132,8 +136,12 @@ class AnalyticsProperties {
     if (_subService.subscriptionData == null) {
       return 0.0;
     } else {
-      return (double.tryParse(_subService.subscriptionData!.amount ?? '0') ??
-          0.0);
+      num totalAmount = 0;
+      num length = _subService.subscriptionData?.subs?.length ?? 0;
+      for (var i = 0; i < length; i++) {
+        totalAmount += _subService.subscriptionData?.subs?[i].amount ?? 0;
+      }
+      return totalAmount.toDouble();
     }
   }
 

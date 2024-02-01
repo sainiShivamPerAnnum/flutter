@@ -246,7 +246,10 @@ class ActiveOrPausedAutosaveCard extends StatelessWidget {
   String getTitle() {
     switch (service.autosaveState) {
       case AutosaveState.ACTIVE:
-        return 'Started this Autosave on - ${DateFormat('dd MMM yyyy').format(service.subscriptionData!.startDate!.toDate())}';
+        return '';
+
+      ///TODO(@Hirdesh2101)
+      // 'Started this Autosave on - ${DateFormat('dd MMM yyyy').format(service.subscriptionData!.startDate!.toDate())}';
       case AutosaveState.PAUSED:
         return 'Go here to resume';
 
@@ -287,11 +290,12 @@ class ActiveOrPausedAutosaveCard extends StatelessWidget {
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
                   SvgPicture.asset(
-                    service.subscriptionData != null &&
-                            service.subscriptionData!.status ==
-                                Constants.SUBSCRIPTION_ACTIVE
-                        ? Assets.autoSaveOngoing
-                        : Assets.autoSavePaused,
+                    // service.subscriptionData != null &&
+                    //         service.subscriptionData!.status ==
+                    //             Constants.SUBSCRIPTION_ACTIVE
+                    //     ? Assets.autoSaveOngoing
+                    //     :
+                    Assets.autoSavePaused,
                     height: SizeConfig.padding90,
                     width: SizeConfig.padding90,
                   ),
@@ -305,8 +309,8 @@ class ActiveOrPausedAutosaveCard extends StatelessWidget {
                       FittedBox(
                         fit: BoxFit.scaleDown,
                         child: Text(
-                          getAutosaveStatusText(service.autosaveState) +
-                              " Autosave",
+                          // getAutosaveStatusText(service.autosaveState) +
+                          " Autosave",
                           style: TextStyles.sourceSansB.body0.colour(
                               service.autosaveState == AutosaveState.PAUSED
                                   ? const Color(0xFFEFAF4E)
@@ -322,14 +326,14 @@ class ActiveOrPausedAutosaveCard extends StatelessWidget {
                               .colour(UiConstants.kTextColor),
                           children: [
                             TextSpan(
-                              text:
-                                  "${asset == InvestmentType.AUGGOLD99 ? service.subscriptionData?.augAmt : asset == InvestmentType.LENDBOXP2P ? service.subscriptionData?.lbAmt : service.subscriptionData?.amount ?? 0} ",
+                              text: "",
+                              // "${asset == InvestmentType.AUGGOLD99 ? service.subscriptionData?.augAmt : asset == InvestmentType.LENDBOXP2P ? service.subscriptionData?.lbAmt : service.subscriptionData?.amount ?? 0} ",
                               style: TextStyles.rajdhaniSB.title4
                                   .colour(Colors.white),
                             ),
                             TextSpan(
-                              text:
-                                  "/${service.subscriptionData?.frequency.toCamelCase().frequencyRename() ?? "day"}",
+                              text: "",
+                              // "/${service.subscriptionData?.frequency.toCamelCase().frequencyRename() ?? "day"}",
                               style: TextStyles.sourceSans.body2
                                   .colour(Colors.white.withOpacity(0.4)),
                             ),

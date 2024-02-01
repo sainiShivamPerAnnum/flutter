@@ -243,6 +243,8 @@ class SizeConfig {
 
   static double get padding300 => screenWidth! * 0.8;
 
+  static double get padding436 => screenWidth! * 0.95;
+
   // MARGINS
   static double get pageHorizontalMargins => screenWidth! * 0.0579; //
 

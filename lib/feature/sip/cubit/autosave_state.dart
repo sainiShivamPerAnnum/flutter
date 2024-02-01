@@ -3,22 +3,56 @@ part of 'autosave_cubit.dart';
 @immutable
 abstract class AutoSaveSetupState {}
 
-final class AutosaveStatee extends Equatable {
+final class AutosaveCubitState extends AutoSaveSetupState {
   int currentPage;
-  SubscriptionModel? activeSubscription;
+  AllSubscriptionModel? activeSubscription;
   bool isFetchingTransactions;
-  AutosaveStatee({
+  AutosaveCubitState({
     this.currentPage = 0,
     this.activeSubscription,
     this.isFetchingTransactions = false,
   });
 
-  AutosaveStatee copyWith({required bool visible}) {
-    return AutosaveStatee();
+  AutosaveCubitState copyWith({required bool visible}) {
+    return AutosaveCubitState();
   }
+}
 
-  @override
-  List<Object> get props => [currentPage, isFetchingTransactions];
+class CalculatorState extends AutoSaveSetupState {
+  int sipAmount;
+  int timePeriod;
+  double returnPercentage;
+  int maxSipValue;
+  int minSipValue;
+  int maxTimePeriod;
+  int minTimePeriod;
+
+  CalculatorState(
+      {this.sipAmount = 500,
+      this.timePeriod = 5,
+      this.returnPercentage = 10,
+      this.maxSipValue = 5000,
+      this.minSipValue = 100,
+      this.maxTimePeriod = 10,
+      this.minTimePeriod = 1});
+  CalculatorState copyWith(
+      {int? sipAmount,
+      int? timePeriod,
+      double? returnPercentage,
+      int? maxSipValue,
+      int? minSipValue,
+      int? maxTimePeriod,
+      int? minTimePeriod}) {
+    return CalculatorState(
+      sipAmount: sipAmount ?? this.sipAmount,
+      timePeriod: timePeriod ?? this.timePeriod,
+      returnPercentage: returnPercentage ?? this.returnPercentage,
+      maxSipValue: maxSipValue ?? this.maxSipValue,
+      minSipValue: minSipValue ?? this.minSipValue,
+      maxTimePeriod: maxTimePeriod ?? this.maxTimePeriod,
+      minTimePeriod: minTimePeriod ?? this.minTimePeriod,
+    );
+  }
 }
 
 // class ContactsLoaded extends AutoSaveSetupState {

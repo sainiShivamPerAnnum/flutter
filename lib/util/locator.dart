@@ -204,6 +204,7 @@ Future<void> setupLocator() async {
   locator.registerLazySingleton(InternalOpsRepository.new);
   locator.registerLazySingleton(PaymentRepository.new);
   locator.registerLazySingleton(SubscriptionRepo.new);
+  locator.registerLazySingleton(SipRepository.new);
   locator.registerLazySingleton(SaveRepo.new);
   locator.registerLazySingleton(LendboxRepo.new);
   locator.registerLazySingleton(PrizingRepo.new);
@@ -215,9 +216,6 @@ Future<void> setupLocator() async {
   locator.registerLazySingleton(() => FcmHandlerV2(locator()));
   locator.registerLazySingleton<StoriesRepository>(
     () => StoriesRepository(locator()),
-  );
-  locator.registerLazySingleton<SipRepository>(
-    () => SipRepository(locator()),
   );
 
   //ROOT
@@ -257,8 +255,8 @@ Future<void> setupLocator() async {
   locator.registerFactory(GTInstantViewModel.new);
   locator.registerFactory(MultipleScratchCardsViewModel.new);
   locator.registerFactory(TopSaverViewModel.new);
-  locator.registerFactory(AutosaveProcessViewModel.new);
-  locator.registerFactory(AutosaveDetailsViewModel.new);
+  // locator.registerFactory(AutosaveProcessViewModel.new);
+  // locator.registerFactory(AutosaveDetailsViewModel.new);
   locator.registerFactory(CampaignRepo.new);
   locator.registerFactory(OnboardingViewModel.new);
   locator.registerFactory(JourneyBannersViewModel.new);

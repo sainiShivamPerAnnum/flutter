@@ -10,12 +10,14 @@ import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/amount_chips_model.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/sub_combos_model.dart';
-import 'package:felloapp/core/model/subscription_models/subscription_model.dart';
+import 'package:felloapp/core/model/subscription_models/all_subscription_model.dart';
 import 'package:felloapp/core/model/subscription_models/subscription_transaction_model.dart';
 import 'package:felloapp/core/repository/getters_repo.dart';
 import 'package:felloapp/core/repository/subscription_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/feature/sip/ui/sip_process_view.dart';
+import 'package:felloapp/feature/sip/ui/sip_setup/sip_intro.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/finance/autosave/autosave_setup/autosave_process_view.dart';
@@ -33,6 +35,8 @@ import 'package:flutter/services.dart';
 import 'package:upi_pay/upi_pay.dart';
 
 enum AutosaveState { IDLE, INIT, ACTIVE, PAUSED, INACTIVE, CANCELLED }
+
+enum FREQUENCY { daily, weekly, monthly }
 
 enum AutosavePauseOption {
   FOREVER,
@@ -121,18 +125,18 @@ class SubService extends ChangeNotifier {
     notifyListeners();
   }
 
-  AutosaveState _autosaveState = AutosaveState.IDLE;
+  List<AutosaveState> _autosaveStates = [];
 
-  AutosaveState get autosaveState => _autosaveState;
+  List<AutosaveState> get autosaveState => _autosaveStates;
 
-  set autosaveState(AutosaveState value) {
-    _autosaveState = value;
+  set autosaveState(List<AutosaveState> value) {
+    _autosaveStates = value;
     notifyListeners();
   }
 
-  SubscriptionModel? _subscriptionData;
+  AllSubscriptionModel? _subscriptionData;
 
-  SubscriptionModel? get subscriptionData => _subscriptionData;
+  AllSubscriptionModel? get subscriptionData => _subscriptionData;
 
   set subscriptionData(value) {
     // if (value == null) return;
@@ -165,7 +169,9 @@ class SubService extends ChangeNotifier {
     hasNoMoreSubsTxns = false;
     timer?.cancel();
     allSubTxnList = [];
-    autosaveState = AutosaveState.IDLE;
+
+    ///TODO(@Hirdesh2101)
+    // autosaveState = AutosaveState.IDLE;
     allSubTxnList = [];
     lbSubTxnList = [];
     augSubTxnList = [];
@@ -188,7 +194,9 @@ class SubService extends ChangeNotifier {
     required String package,
   }) async {
     pollCount = 0;
-    autosaveState = AutosaveState.IDLE;
+
+    ///TODO(@Hirdesh2101)
+    // autosaveState = AutosaveState.IDLE;
     final res = await _subscriptionRepo.createSubscription(
         amount: amount,
         freq: freq,
@@ -221,7 +229,7 @@ class SubService extends ChangeNotifier {
         return false;
       }
     } else {
-      autosaveState = AutosaveState.IDLE;
+      // autosaveState = AutosaveState.IDLE;
       BaseUtil.showNegativeAlert(res.errorMessage, "Please try after sometime");
       return false;
     }
@@ -234,14 +242,16 @@ class SubService extends ChangeNotifier {
         pollCount++;
         if (pollCount > 100) {
           t.cancel();
-          autosaveState = AutosaveState.IDLE;
+
+          ///TODO(@Hirdesh2101)
+          // autosaveState = AutosaveState.IDLE;
         }
         getSubscription().then((_) {
-          if (subscriptionData!.status != AutosaveState.INIT.name &&
-              subscriptionData!.status != AutosaveState.CANCELLED.name) {
-            _logger.i("Autosave Polling cancelled.");
-            t.cancel();
-          }
+          // if (subscriptionData!.status != AutosaveState.INIT.name &&
+          //     subscriptionData!.status != AutosaveState.CANCELLED.name) {
+          //   _logger.i("Autosave Polling cancelled.");
+          //   t.cancel();
+          // }
         });
       },
     );
@@ -256,64 +266,65 @@ class SubService extends ChangeNotifier {
     }
   }
 
-  Future<bool> updateSubscription({
-    required String freq,
-    required int lbAmt,
-    required int augAmt,
-    required int amount,
-  }) async {
-    final res = await _subscriptionRepo.updateSubscription(
-        freq: freq, lbAmt: lbAmt, augAmt: augAmt, amount: amount);
-    if (res.isSuccess()) {
-      subscriptionData = res.model;
-      AppState.backButtonDispatcher!.didPopRoute();
-      Future.delayed(const Duration(seconds: 1), () {
-        BaseUtil.showPositiveAlert("Subscription updated successfully",
-            "Effective changes will take place from tomorrow");
-      });
-      return true;
-    } else {
-      BaseUtil.showNegativeAlert(res.errorMessage, "Please try again");
-      return false;
-    }
-  }
+  ///TODO(@Hirdesh2101)
+  // Future<bool> updateSubscription({
+  //   required String freq,
+  //   required int lbAmt,
+  //   required int augAmt,
+  //   required int amount,
+  // }) async {
+  //   final res = await _subscriptionRepo.updateSubscription(
+  //       freq: freq, lbAmt: lbAmt, augAmt: augAmt, amount: amount);
+  //   if (res.isSuccess()) {
+  //     subscriptionData = res.model;
+  //     AppState.backButtonDispatcher!.didPopRoute();
+  //     Future.delayed(const Duration(seconds: 1), () {
+  //       BaseUtil.showPositiveAlert("Subscription updated successfully",
+  //           "Effective changes will take place from tomorrow");
+  //     });
+  //     return true;
+  //   } else {
+  //     BaseUtil.showNegativeAlert(res.errorMessage, "Please try again");
+  //     return false;
+  //   }
+  // }
 
-  Future<bool> pauseSubscription(AutosavePauseOption option) async {
-    if (isPauseOrResuming) return false;
-    isPauseOrResuming = true;
-    final res = await _subscriptionRepo.pauseSubscription(option: option);
-    isPauseOrResuming = false;
-    if (res.isSuccess()) {
-      subscriptionData = res.model;
-      AppState.backButtonDispatcher!.didPopRoute();
-      Future.delayed(const Duration(seconds: 1), () {
-        BaseUtil.showPositiveAlert("Subscription paused successfully",
-            "Effective changes will take place from tomorrow");
-      });
-      return true;
-    } else {
-      BaseUtil.showNegativeAlert(res.errorMessage, "Please try again");
-      return false;
-    }
-  }
+  // Future<bool> pauseSubscription(AutosavePauseOption option) async {
+  //   if (isPauseOrResuming) return false;
+  //   isPauseOrResuming = true;
+  //   final res = await _subscriptionRepo.pauseSubscription(option: option);
+  //   isPauseOrResuming = false;
+  //   if (res.isSuccess()) {
+  //     subscriptionData = res.model;
+  //     AppState.backButtonDispatcher!.didPopRoute();
+  //     Future.delayed(const Duration(seconds: 1), () {
+  //       BaseUtil.showPositiveAlert("Subscription paused successfully",
+  //           "Effective changes will take place from tomorrow");
+  //     });
+  //     return true;
+  //   } else {
+  //     BaseUtil.showNegativeAlert(res.errorMessage, "Please try again");
+  //     return false;
+  //   }
+  // }
 
-  Future<bool> resumeSubscription() async {
-    if (isPauseOrResuming) return false;
-    isPauseOrResuming = true;
-    final res = await _subscriptionRepo.resumeSubscription();
-    isPauseOrResuming = false;
-    if (res.isSuccess()) {
-      subscriptionData = res.model;
-      Future.delayed(const Duration(seconds: 1), () {
-        BaseUtil.showPositiveAlert("Subscription resumed successfully",
-            "Effective changes will take place from tomorrow");
-      });
-      return true;
-    } else {
-      BaseUtil.showNegativeAlert(res.errorMessage, "Please try again");
-      return false;
-    }
-  }
+  // Future<bool> resumeSubscription() async {
+  //   if (isPauseOrResuming) return false;
+  //   isPauseOrResuming = true;
+  //   final res = await _subscriptionRepo.resumeSubscription();
+  //   isPauseOrResuming = false;
+  //   if (res.isSuccess()) {
+  //     subscriptionData = res.model;
+  //     Future.delayed(const Duration(seconds: 1), () {
+  //       BaseUtil.showPositiveAlert("Subscription resumed successfully",
+  //           "Effective changes will take place from tomorrow");
+  //     });
+  //     return true;
+  //   } else {
+  //     BaseUtil.showNegativeAlert(res.errorMessage, "Please try again");
+  //     return false;
+  //   }
+  // }
 
   Future<void> getSubscriptionTransactionHistory(
       {bool paginate = false, String asset = ''}) async {
@@ -500,85 +511,98 @@ class SubService extends ChangeNotifier {
   }
 
   setSubscriptionState() {
-    switch (subscriptionData?.status) {
-      case "INIT":
-        autosaveState = AutosaveState.INIT;
-        break;
-      case "ACTIVE":
-        timer?.cancel();
-        autosaveState = AutosaveState.ACTIVE;
-        break;
-      case "PAUSE_FROM_APP":
-        autosaveState = AutosaveState.PAUSED;
-        break;
-      case "PAUSE_FROM_APP_FOREVER":
-        autosaveState = AutosaveState.PAUSED;
-        break;
-      case "PAUSE_FROM_PSP":
-        autosaveState = AutosaveState.PAUSED;
-        break;
-      case "CANCELLED":
-        autosaveState = AutosaveState.CANCELLED;
-        break;
-      default:
-        autosaveState = AutosaveState.IDLE;
-        break;
+    num length = subscriptionData?.subs!.length ?? 0;
+    for (var i = 0; i < length; i++) {
+      switch (subscriptionData?.subs?[i].status) {
+        case "INIT":
+          autosaveState[i] = AutosaveState.INIT;
+          break;
+        case "ACTIVE":
+          timer?.cancel();
+          autosaveState[i] = AutosaveState.ACTIVE;
+          break;
+        case "PAUSE_FROM_APP":
+          autosaveState[i] = AutosaveState.PAUSED;
+          break;
+        case "PAUSE_FROM_APP_FOREVER":
+          autosaveState[i] = AutosaveState.PAUSED;
+          break;
+        case "PAUSE_FROM_PSP":
+          autosaveState[i] = AutosaveState.PAUSED;
+          break;
+        case "CANCELLED":
+          autosaveState[i] = AutosaveState.CANCELLED;
+          break;
+        default:
+          autosaveState[i] = AutosaveState.IDLE;
+          break;
+      }
     }
   }
 
+  ///TODO(@Hirdesh2101)
   handleTap({InvestmentType? type}) {
-    Haptic.vibrate();
-    _analyticsService.track(
-        eventName: AnalyticsEvents.asCardTapped,
-        properties: {"status": autosaveState.name, "location": "Save section"});
-    switch (autosaveState) {
-      case AutosaveState.INIT:
-        return BaseUtil.showNegativeAlert(
-            "Subscription in processing", "please check back after sometime");
-      case AutosaveState.IDLE:
-        if (type != null && type == InvestmentType.AUGGOLD99) {
-          locator<AnalyticsService>().track(
-            eventName: AnalyticsEvents.autosaveCardInGoldSectionTapped,
-            properties: {
-              'progress_bar_completed':
-                  (_userService.userFundWallet?.augGoldQuantity ?? 0) > 0.5
-                      ? "YES"
-                      : (_userService.userFundWallet?.augGoldQuantity ?? 0) /
-                          0.5,
-              "existing lease amount":
-                  _userService.userPortfolio.augmont.fd.balance,
-              "existing lease grams":
-                  _userService.userFundWallet?.wAugFdQty ?? 0
-            },
-          );
-          return AppState.delegate!.appState.currentAction = PageAction(
-            page: AutosaveProcessViewPageConfig,
-            widget: AutosaveProcessView(
-              investmentType: type,
-            ),
-            state: PageState.addWidget,
-          );
-        } else {
-          return AppState.delegate!.appState.currentAction = PageAction(
-            page: (PreferenceHelper.getBool(
-                    PreferenceHelper.CACHE_IS_AUTOSAVE_FIRST_TIME,
-                    def: true))
-                ? AutosaveOnboardingViewPageConfig
-                : AutosaveProcessViewPageConfig,
-            state: PageState.addPage,
-          );
-        }
+    return AppState.delegate!.appState.currentAction = PageAction(
+      page: SipPageConfig,
+      widget: SipProcessView(),
+      state: PageState.addWidget,
+    );
+    // Haptic.vibrate();
+    // // _analyticsService.track(
+    // //     eventName: AnalyticsEvents.asCardTapped,
+    // //     properties: {"status": autosaveState.name, "location": "Save section"});
+    // switch (autosaveState) {
+    //   case AutosaveState.INIT:
+    //     return BaseUtil.showNegativeAlert(
+    //         "Subscription in processing", "please check back after sometime");
+    //   case AutosaveState.IDLE:
+    //     if (type != null && type == InvestmentType.AUGGOLD99) {
+    //       locator<AnalyticsService>().track(
+    //         eventName: AnalyticsEvents.autosaveCardInGoldSectionTapped,
+    //         properties: {
+    //           'progress_bar_completed':
+    //               (_userService.userFundWallet?.augGoldQuantity ?? 0) > 0.5
+    //                   ? "YES"
+    //                   : (_userService.userFundWallet?.augGoldQuantity ?? 0) /
+    //                       0.5,
+    //           "existing lease amount":
+    //               _userService.userPortfolio.augmont.fd.balance,
+    //           "existing lease grams":
+    //               _userService.userFundWallet?.wAugFdQty ?? 0
+    //         },
+    //       );
+    //       return AppState.delegate!.appState.currentAction = PageAction(
+    //         page: SipPageConfig,
+    //         widget: SipProcessView(),
+    //         state: PageState.addWidget,
+    //       );
+    //     } else {
+    //       return AppState.delegate!.appState.currentAction = PageAction(
+    //         page: SipPageConfig,
+    //         widget: SipProcessView(),
+    //         state: PageState.addWidget,
+    //       );
 
-      case AutosaveState.PAUSED:
-      case AutosaveState.INACTIVE:
-      case AutosaveState.ACTIVE:
-        return AppState.delegate!.appState.currentAction = PageAction(
-          page: AutosaveDetailsViewPageConfig,
-          state: PageState.addPage,
-        );
-      default:
-        return;
-    }
+    //       // AppState.delegate!.appState.currentAction = PageAction(
+    //       //   page: (PreferenceHelper.getBool(
+    //       //           PreferenceHelper.CACHE_IS_AUTOSAVE_FIRST_TIME,
+    //       //           def: true))
+    //       //       ? AutosaveOnboardingViewPageConfig
+    //       //       : AutosaveProcessViewPageConfig,
+    //       //   state: PageState.addPage,
+    //       // );
+    //     }
+
+    //   case AutosaveState.PAUSED:
+    //   case AutosaveState.INACTIVE:
+    //   case AutosaveState.ACTIVE:
+    //     return AppState.delegate!.appState.currentAction = PageAction(
+    //       page: AutosaveDetailsViewPageConfig,
+    //       state: PageState.addPage,
+    //     );
+    //   default:
+    //     return;
+    // }
   }
 
 // onAmountValueChanged(String val) {

@@ -1,19 +1,11 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
-import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
-import 'package:felloapp/feature/sip/cubit/sip_cubit.dart';
+import 'package:felloapp/feature/sip/cubit/autosave_cubit.dart';
+import 'package:felloapp/feature/sip/ui/sip_setup/sip_intro.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/ui/architecture/base_view.dart';
-// import 'package:felloapp/ui/pages/finance/autosave/autosave_setup/autosave_process_slides/autosave_asset_choice_view.dart';
-// import 'package:felloapp/ui/pages/finance/autosave/autosave_setup/autosave_process_slides/autosave_setup_view.dart';
-// import 'package:felloapp/ui/pages/finance/autosave/autosave_setup/autosave_process_slides/autosave_steps_view.dart';
-// import 'package:felloapp/ui/pages/finance/autosave/autosave_setup/autosave_process_slides/autosave_upi_app-select_view.dart';
-// import 'package:felloapp/ui/pages/finance/autosave/autosave_setup/autosave_process_vm.dart';
-// import 'package:felloapp/ui/pages/finance/autosave/autosave_setup/autosave_setup_components/autosave_summary.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
-import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -25,9 +17,6 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
 
-// import './autosave_process_slides/autosave_asset_choice_view.dart';
-// import './autosave_process_slides/autosave_steps_view.dart';
-
 class SipProcessView extends StatelessWidget {
   const SipProcessView({super.key, this.investmentType});
 
@@ -35,8 +24,11 @@ class SipProcessView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return BlocProvider<SipCubit>(
-      create: (_) => SipCubit(),
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(create: (_) => AutosaveCubit()),
+        BlocProvider(create: (_) => CalculatorCubit()),
+      ],
       child: SipProcessUi(
         investmentType: investmentType,
       ),
@@ -54,31 +46,37 @@ class SipProcessUi extends StatefulWidget {
 }
 
 class _SipProcessUiState extends State<SipProcessUi> {
-  Future<void> _onPressedBack(
-      AutosaveState autosaveState, SipCubit model) async {
-    FocusScope.of(context).unfocus();
+  // Future<void> _onPressedBack(
+  //     AutosaveState autosaveState, AutosaveCubit model) async {
+  //   FocusScope.of(context).unfocus();
 
-    if (autosaveState == AutosaveState.INIT ||
-        autosaveState == AutosaveState.ACTIVE ||
-        model.pageController!.page == 0 ||
-        model.pageController!.page == 3) {
-      await AppState.backButtonDispatcher!.didPopRoute();
-    } else {
-      await model.pageController!.animateToPage(
-        model.pageController!.page!.toInt() - 1,
-        duration: const Duration(milliseconds: 500),
-        curve: Curves.decelerate,
-      );
-      return;
-    }
+  //   if (autosaveState == AutosaveState.INIT ||
+  //       autosaveState == AutosaveState.ACTIVE ||
+  //       model.pageController!.page == 0 ||
+  //       model.pageController!.page == 3) {
+  //     await AppState.backButtonDispatcher!.didPopRoute();
+  //   } else {
+  //     await model.pageController!.animateToPage(
+  //       model.pageController!.page!.toInt() - 1,
+  //       duration: const Duration(milliseconds: 500),
+  //       curve: Curves.decelerate,
+  //     );
+  //     return;
+  //   }
 
-    model.trackAutosaveBackPress();
+  //   model.trackAutosaveBackPress();
+  // }
+  @override
+  void initState() {
+    context.read<AutosaveCubit>().init();
+    super.initState();
   }
 
   @override
   Widget build(BuildContext context) {
-    return BlocBuilder<SipCubit, SipState>(builder: (context, state) {
-      final model = context.read<SipCubit>();
+    return BlocBuilder<AutosaveCubit, AutosaveCubitState>(
+        builder: (context, state) {
+      final model = context.read<AutosaveCubit>();
       return Scaffold(
         backgroundColor: UiConstants.kBackgroundColor,
         appBar: AppBar(
@@ -90,12 +88,14 @@ class _SipProcessUiState extends State<SipProcessUi> {
           ),
           centerTitle: true,
           leading: IconButton(
-            icon: const Icon(
-              Icons.arrow_back_ios,
-              color: UiConstants.kTextColor,
-            ),
-            onPressed: () => _onPressedBack(state.autosaveState, model),
-          ),
+              icon: const Icon(
+                Icons.arrow_back_ios,
+                color: UiConstants.kTextColor,
+              ),
+              onPressed: () async =>
+                  await AppState.backButtonDispatcher!.didPopRoute()
+              // _onPressedBack(state.autosaveState, model),
+              ),
         ),
         resizeToAvoidBottomInset: false,
         body:
@@ -108,12 +108,9 @@ class _SipProcessUiState extends State<SipProcessUi> {
           children: [
             const NewSquareBackground(),
             SafeArea(
-              child: switch (state.autosaveState) {
-                AutosaveState.INIT => const AutosavePendingView(),
-                AutosaveState.IDLE => AutosaveSetupView(model: model),
-                AutosaveState.ACTIVE => AutosaveSuccessView(model: model),
-                _ => const SizedBox.shrink(),
-              },
+              child: AutosaveSetupView(
+                model: model,
+              ),
             ),
           ],
         ),
@@ -123,7 +120,7 @@ class _SipProcessUiState extends State<SipProcessUi> {
 }
 
 class AutosaveSetupView extends StatelessWidget {
-  final SipCubit model;
+  final AutosaveCubit model;
 
   const AutosaveSetupView({
     required this.model,
@@ -135,7 +132,8 @@ class AutosaveSetupView extends StatelessWidget {
     return PageView(
       controller: model.pageController,
       physics: const NeverScrollableScrollPhysics(),
-      children: [
+      children: const [
+        SipIntro(),
         // AutosaveStepsView(model: model),
         // AutosaveAssetChoiceView(model: model),
         // AutoPaySetupOrUpdateView(model: model),
@@ -146,7 +144,7 @@ class AutosaveSetupView extends StatelessWidget {
 }
 
 class AutosaveSuccessView extends StatelessWidget {
-  final SipCubit model;
+  final AutosaveCubit model;
 
   const AutosaveSuccessView({required this.model, super.key});
 
@@ -200,7 +198,7 @@ class AutosaveSuccessView extends StatelessWidget {
                 width: SizeConfig.border1,
               ),
             ),
-            child: Column(
+            child: const Column(
               crossAxisAlignment: CrossAxisAlignment.center,
               mainAxisAlignment: MainAxisAlignment.start,
               children: [

@@ -225,6 +225,7 @@ enum Pages {
   // SIP
   SipEntryView,
   SipView,
+  Sip
 }
 
 class PageConfiguration {

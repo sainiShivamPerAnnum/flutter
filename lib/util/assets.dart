@@ -465,4 +465,6 @@ class Assets {
   static const String rewardsIntro2 =
       "https://ik.imagekit.io/9xfwtu0xm/rewards/rewards_2.png";
   static const String garbageBin = "assets/vectors/garbage-bin.svg";
+  static const String sipIntroImage =
+      "https://ik.imagekit.io/9xfwtu0xm/sip/sip_intro.png?updatedAt=1706526977156";
 }

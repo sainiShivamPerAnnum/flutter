@@ -15,22 +15,38 @@ class _EditSipBottomSheetState extends State<EditSipBottomSheet> {
   Widget build(BuildContext context) {
     return Padding(
       padding: EdgeInsets.only(
-          left: SizeConfig.padding24,
-          right: SizeConfig.padding24,
-          top: SizeConfig.padding42),
+        left: SizeConfig.padding24,
+        right: SizeConfig.padding24,
+      ),
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
+        mainAxisSize: MainAxisSize.min,
         children: [
+          SizedBox(
+            height: SizeConfig.padding14,
+          ),
+          Center(
+            child: Container(
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: UiConstants.kProfileBorderColor.withOpacity(0.4)),
+              height: 5,
+              width: 94,
+            ),
+          ),
+          SizedBox(
+            height: SizeConfig.padding22,
+          ),
           Text(
             "Edit SIP Options",
-            style: TextStyles.sourceSansSB.body1.colour(Colors.white),
+            style: TextStyles.sourceSansSB.body1.colour(UiConstants.kTextColor),
           ),
           SizedBox(
             height: SizeConfig.padding24,
           ),
-          const Divider(
+          Divider(
             thickness: 1,
-            color: UiConstants.kProfileBorderColor,
+            color: UiConstants.kProfileBorderColor.withOpacity(0.2),
           ),
           SizedBox(
             height: SizeConfig.padding16,
@@ -50,9 +66,9 @@ class _EditSipBottomSheetState extends State<EditSipBottomSheet> {
           SizedBox(
             height: SizeConfig.padding16,
           ),
-          const Divider(
+          Divider(
             thickness: 1,
-            color: UiConstants.kProfileBorderColor,
+            color: UiConstants.kProfileBorderColor.withOpacity(0.2),
           ),
           SizedBox(
             height: SizeConfig.padding16,
@@ -72,13 +88,15 @@ class _EditSipBottomSheetState extends State<EditSipBottomSheet> {
           SizedBox(
             height: SizeConfig.padding16,
           ),
-          const Divider(
+          Divider(
             thickness: 1,
-            color: UiConstants.kProfileBorderColor,
+            color: UiConstants.kProfileBorderColor.withOpacity(0.2),
           ),
           Padding(
             padding: EdgeInsets.only(
-                left: SizeConfig.padding6, top: SizeConfig.padding22),
+                left: SizeConfig.padding6,
+                top: SizeConfig.padding22,
+                bottom: SizeConfig.padding28),
             child: Row(
               children: [
                 Container(

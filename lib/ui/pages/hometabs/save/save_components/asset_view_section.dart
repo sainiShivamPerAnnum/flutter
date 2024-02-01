@@ -10,7 +10,7 @@ import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/portfolio_model.dart';
-import 'package:felloapp/core/model/subscription_models/subscription_model.dart';
+import 'package:felloapp/core/model/subscription_models/all_subscription_model.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
@@ -660,7 +660,7 @@ class AssetBottomButtons extends StatelessWidget {
               ],
             ),
           )
-        : Selector<SubService, SubscriptionModel?>(
+        : Selector<SubService, AllSubscriptionModel?>(
             selector: (_, subService) => subService.subscriptionData,
             builder: (context, state, child) {
               // state = SubscriptionModel();
@@ -703,14 +703,14 @@ class AssetBottomButtons extends StatelessWidget {
                               BaseUtil()
                                   .openRechargeModalSheet(investmentType: type);
                             } else {
-                              AppState.delegate!.appState.currentAction =
-                                  PageAction(
-                                state: PageState.addWidget,
-                                page: AutosaveProcessViewPageConfig,
-                                widget: AutosaveProcessView(
-                                  investmentType: type,
-                                ),
-                              );
+                              // AppState.delegate!.appState.currentAction =
+                              //     PageAction(
+                              //   state: PageState.addWidget,
+                              //   page: AutosaveProcessViewPageConfig,
+                              //   widget: AutosaveProcessView(
+                              //     investmentType: type,
+                              //   ),
+                              // );
                             }
 
                             locator<AnalyticsService>().track(

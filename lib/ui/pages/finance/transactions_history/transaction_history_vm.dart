@@ -1,6 +1,6 @@
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
-import 'package:felloapp/core/model/subscription_models/subscription_model.dart';
+import 'package:felloapp/core/model/subscription_models/all_subscription_model.dart';
 import 'package:felloapp/core/model/subscription_models/subscription_transaction_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
@@ -47,13 +47,13 @@ class TransactionsHistoryViewModel extends BaseViewModel {
   int _tabIndex = 0;
   int get filter => _filter;
   String? get filterValue => _filterValue;
-  SubscriptionModel? _activeSubscription;
+  AllSubscriptionModel? _activeSubscription;
   List<SubscriptionTransactionModel>? _filteredSIPList = [];
   bool _hasMoreSIPTxns = false;
 
   // Map<String, int> get tranTypeFilterItems => _tranTypeFilterItems;
 
-  SubscriptionModel? get activeSubscription => _activeSubscription;
+  AllSubscriptionModel? get activeSubscription => _activeSubscription;
   List<String?> get tranTypeFilterItems => _tranTypeFilterItems;
   List<UserTransaction>? get filteredList => _filteredList;
   List<SubscriptionTransactionModel>? get filteredSIPList => _filteredSIPList;
