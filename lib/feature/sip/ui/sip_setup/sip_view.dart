@@ -1,34 +1,37 @@
 import 'package:felloapp/feature/sip/cubit/autosave_cubit.dart';
 import 'package:felloapp/feature/sip/shared/tab_slider.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
+import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class SipView extends StatelessWidget {
-  const SipView({super.key});
+class SipPage extends StatelessWidget {
+  const SipPage({super.key});
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (context) => AutosaveCubit(),
-      child: const _SipView(),
+      child: const SipView(),
     );
   }
 }
 
-class _SipView extends StatefulWidget {
-  const _SipView();
+class SipView extends StatefulWidget {
+  const SipView({super.key});
 
   @override
-  State<_SipView> createState() => _SipViewState();
+  State<SipView> createState() => _SipViewState();
 }
 
-class _SipViewState extends State<_SipView> {
-  final _amount = ValueNotifier<double>(10000);
-  static const _division = 3;
+class _SipViewState extends State<SipView> {
+  final _amount = ValueNotifier<double>(7500);
+  static const _upperLimit = 10000.0;
+  static const _lowerLimit = _upperLimit / _division;
+  static const _division = 4;
 
   @override
   void dispose() {
@@ -91,7 +94,9 @@ class _SipViewState extends State<_SipView> {
                   children: [
                     AmountInputWidget(
                       division: _division,
+                      upperLimit: _upperLimit,
                       amount: _amount.value,
+                      lowerLimit: _lowerLimit,
                       onChange: (v) => _amount.value = v,
                     ),
                     SizedBox(
@@ -100,7 +105,52 @@ class _SipViewState extends State<_SipView> {
                     AmountSlider(
                       division: _division,
                       amount: _amount.value,
+                      upperLimit: _upperLimit,
+                      lowerLimit: _lowerLimit,
                       onChanged: (v) => _amount.value = v,
+                    ),
+                  ],
+                ),
+              ),
+              const Spacer(),
+              Container(
+                padding: EdgeInsets.all(SizeConfig.padding16),
+                decoration: BoxDecoration(
+                  color: UiConstants.grey5,
+                  borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+                ),
+                child: Column(
+                  children: [
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'Expected Returns in 5Y',
+                          style: TextStyles.sourceSans.body2,
+                        ),
+                        Text(
+                          '₹10,500',
+                          style: TextStyles.sourceSansB.body1,
+                        ),
+                      ],
+                    ),
+                    SizedBox(
+                      height: SizeConfig.padding3,
+                    ),
+                    Row(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      children: [
+                        Text(
+                          'with Fello SIP',
+                          style: TextStyles.sourceSans.body4
+                              .copyWith(color: UiConstants.grey1),
+                        ),
+                        Text(
+                          'with extra 12% returns',
+                          style: TextStyles.sourceSans.body4
+                              .copyWith(color: UiConstants.grey1),
+                        ),
+                      ],
                     ),
                   ],
                 ),
@@ -111,17 +161,70 @@ class _SipViewState extends State<_SipView> {
             ],
           ),
         ),
+        bottomNavigationBar: const _Footer(),
       ),
     );
   }
 }
 
-class SuggestionChip extends StatelessWidget {
+class _Footer extends StatelessWidget {
+  const _Footer();
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      padding: EdgeInsets.symmetric(
+        horizontal: SizeConfig.padding24,
+        vertical: SizeConfig.padding20,
+      ),
+      decoration: BoxDecoration(
+        borderRadius: BorderRadius.vertical(
+          top: Radius.circular(SizeConfig.roundness12),
+        ),
+        color: UiConstants.grey5,
+      ),
+      child: Column(
+        mainAxisSize: MainAxisSize.min,
+        children: [
+          Row(
+            children: [
+              const AppImage(
+                Assets.bulb,
+                height: 45,
+                width: 45,
+              ),
+              SizedBox(
+                width: SizeConfig.padding18,
+              ),
+              Expanded(
+                child: Text(
+                  'You will receive a mandate for ₹5000 on the selected UPI App. But don’t worry, We will not deduct anymore than ₹1100/week.',
+                  style: TextStyles.sourceSans.body3.copyWith(
+                    color: UiConstants.textGray50,
+                  ),
+                ),
+              )
+            ],
+          ),
+          SizedBox(
+            height: SizeConfig.padding14,
+          ),
+          SecondaryButton(
+            label: '2 CLICKS AWAY',
+            onPressed: () {},
+          )
+        ],
+      ),
+    );
+  }
+}
+
+class SipAmountChip extends StatelessWidget {
   final bool isBest;
   final bool isSelected;
   final String label;
 
-  const SuggestionChip({
+  const SipAmountChip({
     required this.label,
     super.key,
     this.isBest = false,
@@ -159,22 +262,27 @@ class SuggestionChip extends StatelessWidget {
               ),
             ),
           ),
-        CustomPaint(
-          painter: BorderPainter(
-            nippleHeight: nippleHeight,
-            borderColor: borderColor,
-          ),
-          child: Padding(
-            padding: const EdgeInsets.only(bottom: nippleHeight),
+        SizedBox(
+          width: SizeConfig.padding60,
+          child: CustomPaint(
+            painter: BorderPainter(
+              nippleHeight: nippleHeight,
+              borderColor: borderColor,
+            ),
             child: Padding(
-              padding: EdgeInsets.symmetric(
-                horizontal: SizeConfig.padding10,
-                vertical: SizeConfig.padding8,
-              ),
-              child: Text(
-                label,
-                style: TextStyles.sourceSans.body3.colour(
-                  textColor,
+              padding: const EdgeInsets.only(bottom: nippleHeight),
+              child: Padding(
+                padding: EdgeInsets.symmetric(
+                  horizontal: SizeConfig.padding10,
+                  vertical: SizeConfig.padding8,
+                ),
+                child: FittedBox(
+                  child: Text(
+                    label,
+                    style: TextStyles.sourceSans.body3.colour(
+                      textColor,
+                    ),
+                  ),
                 ),
               ),
             ),
@@ -190,8 +298,8 @@ class BorderPainter extends CustomPainter {
     this.cornerRadius = 6.0,
     this.nippleHeight = 5.0,
     this.nippleBaseWidth = 20.0,
-    this.nippleRadius = 2,
-    this.nippleEdgeRadius = 1,
+    this.nippleRadius = 2.5,
+    this.nippleEdgeRadius = 2,
     this.borderColor = UiConstants.yellow3,
   });
 
@@ -279,7 +387,7 @@ class BorderPainter extends CustomPainter {
     final paint = Paint()
       ..color = borderColor
       ..style = PaintingStyle.stroke
-      ..strokeWidth = .5;
+      ..strokeWidth = 1;
 
     canvas.drawPath(path, paint);
   }
@@ -318,23 +426,31 @@ class AmountSlider extends StatelessWidget {
       child: Column(
         children: [
           Row(
+            crossAxisAlignment: CrossAxisAlignment.end,
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
               for (int i = 0; i < division; i++)
-                SuggestionChip(
-                  label: '₹${((upperLimit / division) * (i + 1)).toInt()}',
-                )
+                Builder(
+                  builder: (context) {
+                    final amt = (upperLimit / division) * (i + 1).toInt();
+                    return GestureDetector(
+                      onTap: () => onChanged(amt),
+                      child: SipAmountChip(
+                        isBest: i == division - 1, // Change it.
+                        isSelected: amount == amt,
+                        label: '₹$amt',
+                      ),
+                    );
+                  },
+                ),
             ],
           ),
           Slider(
-            divisions: division,
             max: upperLimit,
+            min: lowerLimit,
+            divisions: division - 1,
             value: amount,
-            onChanged: (v) {
-              if (v >= upperLimit / division) {
-                onChanged(v);
-              }
-            },
+            onChanged: onChanged,
             inactiveColor: Colors.grey,
           ),
         ],
@@ -400,7 +516,7 @@ class AmountInputWidget extends StatelessWidget {
           Column(
             children: [
               Text(
-                '₹ $amount',
+                '₹ ${amount.round()}',
                 style: TextStyles.rajdhaniB.title2,
               ),
               Row(

@@ -9,6 +9,8 @@ class Assets {
       'https://ik.imagekit.io/9xfwtu0xm/fello_stories_logo.png';
   static const String logoShortform = 'assets/svg/fello-short-logo.svg';
 
+  static const String bulb = 'assets/vectors/icons/bulb.svg';
+
   static const String referGraphic = 'images/transfer.png';
   static const String augmontGraphic = 'images/augmont.png';
   static const String winnersGraphic = 'images/winners-small.png';
