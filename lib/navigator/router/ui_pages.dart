@@ -905,13 +905,6 @@ PageConfiguration SipPageConfig = PageConfiguration(
   name: 'Sip Entry View',
 );
 
-PageConfiguration SipViewConfig = PageConfiguration(
-  key: 'SipViewPath',
-  path: SipPageViewPath,
-  uiPage: Pages.SipView,
-  name: 'Sip input View',
-);
-
 PageConfiguration StoriesPageConfig = PageConfiguration(
   key: 'StoriesViewPath',
   path: StoriesPath,
