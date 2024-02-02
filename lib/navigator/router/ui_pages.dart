@@ -224,7 +224,6 @@ enum Pages {
 
   // SIP
   SipEntryView,
-  SipView,
 }
 
 class PageConfiguration {
@@ -902,13 +901,6 @@ PageConfiguration SipPageConfig = PageConfiguration(
   path: SipPageViewPath,
   uiPage: Pages.SipEntryView,
   name: 'Sip Entry View',
-);
-
-PageConfiguration SipViewConfig = PageConfiguration(
-  key: 'SipViewPath',
-  path: SipPageViewPath,
-  uiPage: Pages.SipView,
-  name: 'Sip input View',
 );
 
 PageConfiguration StoriesPageConfig = PageConfiguration(
