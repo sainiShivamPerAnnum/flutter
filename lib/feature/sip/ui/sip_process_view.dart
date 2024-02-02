@@ -8,6 +8,7 @@ import 'package:felloapp/feature/sip/ui/sip_setup/sip_intro.dart';
 import 'package:felloapp/feature/sip/ui/sip_setup/sip_select_assset.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
+import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -79,6 +80,7 @@ class _SipProcessUiState extends State<SipProcessUi> {
     return BlocBuilder<AutosaveCubit, AutosaveCubitState>(
         builder: (context, state) {
       final model = context.read<AutosaveCubit>();
+      print(model.state.isFetchingDetails);
       return Scaffold(
         backgroundColor: UiConstants.kBackgroundColor,
         appBar: AppBar(
@@ -96,20 +98,22 @@ class _SipProcessUiState extends State<SipProcessUi> {
           elevation: .5,
         ),
         resizeToAvoidBottomInset: false,
-        body:
-            // model.state == ViewState.Busy
-            //     ? const Center(
-            //         child: FullScreenLoader(),
-            //       )
-            //     :
-            Stack(
-          children: [
-            const NewSquareBackground(),
-            AutosaveSetupView(
-              model: model,
-            ),
-          ],
-        ),
+        body: model.state.isFetchingDetails
+            ? const Center(
+                child: FullScreenLoader(),
+              )
+            : Stack(
+                children: [
+                  const NewSquareBackground(),
+                  model.state.isFetchingDetails
+                      ? const Center(
+                          child: FullScreenLoader(),
+                        )
+                      : AutosaveSetupView(
+                          model: model,
+                        ),
+                ],
+              ),
       );
     });
   }

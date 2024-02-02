@@ -6,6 +6,7 @@ import 'package:felloapp/core/service/notifier_services/connectivity_service.dar
 import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/ui/elements/title_subtitle_container.dart';
 import 'package:felloapp/ui/pages/finance/autosave/segmate_chip.dart';
+import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/extensions/string_extension.dart';
@@ -35,10 +36,7 @@ class AutosaveCard extends StatelessWidget {
                 }
                 await service.handleTap(type: investmentType);
               },
-              child: (service.subscriptionData != null)
-                  ? ActiveOrPausedAutosaveCard(service: service)
-                  : InitAutosaveCard(service: service),
-            )
+              child: AutoSaveCard(service: service))
           : const SizedBox(),
     );
   }
@@ -218,45 +216,17 @@ class InitAutosaveCard extends HookWidget {
   }
 }
 
-class ActiveOrPausedAutosaveCard extends StatelessWidget {
+class AutoSaveCard extends StatelessWidget {
   final SubService service;
   final InvestmentType? asset;
   final bool assetSpecificCard;
 
-  const ActiveOrPausedAutosaveCard(
+  const AutoSaveCard(
       {required this.service,
       Key? key,
       this.asset,
       this.assetSpecificCard = true})
       : super(key: key);
-
-  getAutosaveStatusText(AutosaveState state) {
-    switch (state) {
-      case AutosaveState.ACTIVE:
-        return "Active";
-      case AutosaveState.INIT:
-        return "Processing";
-      case AutosaveState.PAUSED:
-        return "Paused";
-      default:
-        return "N/A";
-    }
-  }
-
-  String getTitle() {
-    switch (service.autosaveState) {
-      case AutosaveState.ACTIVE:
-        return '';
-
-      ///TODO(@Hirdesh2101)
-      // 'Started this Autosave on - ${DateFormat('dd MMM yyyy').format(service.subscriptionData!.startDate!.toDate())}';
-      case AutosaveState.PAUSED:
-        return 'Go here to resume';
-
-      default:
-        return "";
-    }
-  }
 
   @override
   Widget build(BuildContext context) {
@@ -266,7 +236,7 @@ class ActiveOrPausedAutosaveCard extends StatelessWidget {
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           const TitleSubtitleContainer(
-            title: 'Autosave Details',
+            title: 'SIP with Fello',
           ),
           SizedBox(
             height: SizeConfig.padding12,
@@ -282,91 +252,61 @@ class ActiveOrPausedAutosaveCard extends StatelessWidget {
               margin: EdgeInsets.symmetric(
                   horizontal: SizeConfig.pageHorizontalMargins),
               decoration: BoxDecoration(
-                color: UiConstants.kSecondaryBackgroundColor,
-                borderRadius: BorderRadius.circular(SizeConfig.roundness16),
-                border: Border.all(color: Colors.white12),
+                color: UiConstants.kArrowButtonBackgroundColor,
+                borderRadius: BorderRadius.circular(SizeConfig.roundness12),
               ),
               child: Row(
                 crossAxisAlignment: CrossAxisAlignment.center,
                 children: [
-                  SvgPicture.asset(
-                    // service.subscriptionData != null &&
-                    //         service.subscriptionData!.status ==
-                    //             Constants.SUBSCRIPTION_ACTIVE
-                    //     ? Assets.autoSaveOngoing
-                    //     :
-                    Assets.autoSavePaused,
+                  AppImage(
+                    Assets.sipBox,
                     height: SizeConfig.padding90,
                     width: SizeConfig.padding90,
                   ),
                   SizedBox(
-                    width: SizeConfig.padding20,
+                    width: SizeConfig.padding30,
                   ),
-                  Column(
-                    // mainAxisAlignment: MainAxisAlignment.center,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      FittedBox(
-                        fit: BoxFit.scaleDown,
-                        child: Text(
-                          // getAutosaveStatusText(service.autosaveState) +
-                          " Autosave",
-                          style: TextStyles.sourceSansB.body0.colour(
-                              service.autosaveState == AutosaveState.PAUSED
-                                  ? const Color(0xFFEFAF4E)
-                                  : Colors.white),
-                          textAlign: TextAlign.left,
-                        ),
-                      ),
-                      SizedBox(height: SizeConfig.padding12),
-                      RichText(
-                        text: TextSpan(
-                          text: '₹',
-                          style: TextStyles.sourceSansSB.body0
+                  SizedBox(
+                    width: SizeConfig.padding192,
+                    child: Column(
+                      // mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          "Start your SIP & Grow money on autopilot",
+                          style: TextStyles.rajdhaniSB.body1
                               .colour(UiConstants.kTextColor),
-                          children: [
-                            TextSpan(
-                              text: "",
-                              // "${asset == InvestmentType.AUGGOLD99 ? service.subscriptionData?.augAmt : asset == InvestmentType.LENDBOXP2P ? service.subscriptionData?.lbAmt : service.subscriptionData?.amount ?? 0} ",
-                              style: TextStyles.rajdhaniSB.title4
-                                  .colour(Colors.white),
-                            ),
-                            TextSpan(
-                              text: "",
-                              // "/${service.subscriptionData?.frequency.toCamelCase().frequencyRename() ?? "day"}",
-                              style: TextStyles.sourceSans.body2
-                                  .colour(Colors.white.withOpacity(0.4)),
-                            ),
-                          ],
+                          textAlign: TextAlign.left,
+                          maxLines: 2,
                         ),
-                      ),
-                      SizedBox(height: SizeConfig.padding12),
-                      SizedBox(
-                        width: SizeConfig.screenWidth! * 0.45,
-                        child: Row(
+                        SizedBox(height: SizeConfig.padding12),
+                        Text(
+                          'Invest in Fello Flo or Digital Gold to meet your financial Goals',
+                          style: TextStyles.sourceSans.body4.colour(
+                              UiConstants.kModalSheetMutedTextBackgroundColor),
+                          textAlign: TextAlign.left,
+                          maxLines: 2,
+                        ),
+                        SizedBox(height: SizeConfig.padding20),
+                        Row(
                           children: [
                             Expanded(
                               child: Text(
-                                getTitle(),
-                                style: TextStyles.sourceSans.body4.colour(
-                                    service.autosaveState ==
-                                            AutosaveState.PAUSED
-                                        ? Colors.white
-                                        : const Color(0xFFA9C5D5)),
-                                maxLines: 2,
+                                'Setup SIP',
+                                style: TextStyles.sourceSansSB.body2
+                                    .colour(UiConstants.kTabBorderColor),
                                 textAlign: TextAlign.left,
                               ),
                             ),
-                            if (service.autosaveState == AutosaveState.PAUSED)
-                              const Icon(
-                                Icons.arrow_forward_ios_rounded,
-                                color: Colors.white,
-                                size: 15,
-                              )
+                            AppImage(
+                              Assets.chevRonRightArrow,
+                              height: SizeConfig.padding24,
+                              width: SizeConfig.padding24,
+                            )
                           ],
                         ),
-                      ),
-                    ],
+                      ],
+                    ),
                   ),
                 ],
               ),

@@ -47,9 +47,7 @@ class AutosaveCubit extends Cubit<AutosaveCubitState> {
   bool hasMoreTxns = false;
   double sliderValue = 0;
   init() async {
-    //TODO@Hirdesh2101
-    // state = ViewState.Busy;
-    // setState(ViewState.Busy);
+    state.copyWith(isFetchingDetails: true);
     await findActiveSubscription();
     await _sipRepo.getSipScreenData().then((value) {
       sipScreenData = value.model;
@@ -62,7 +60,7 @@ class AutosaveCubit extends Cubit<AutosaveCubitState> {
         sipScreenData?.calculatorScreen?.calculatorData?.data;
     dynamic sipOptions =
         sipScreenData?.calculatorScreen?.calculatorData?.options;
-    emit(AutosaveCubitState(
+    emit(state.copyWith(
       sipAmount: data?['${sipOptions[tabIndex]}']?.sipAmount?.defaultValue ?? 0,
       maxSipValue: data?['${sipOptions[tabIndex]}']?.sipAmount?.max ?? 0,
       minSipValue: data?['${sipOptions[tabIndex]}']?.sipAmount?.min ?? 0,
@@ -70,10 +68,13 @@ class AutosaveCubit extends Cubit<AutosaveCubitState> {
           data?['${sipOptions[tabIndex]}']?.timePeriod?.defaultValue ?? 0,
       maxTimePeriod: data?['${sipOptions[tabIndex]}']?.timePeriod?.max ?? 0,
       minTimePeriod: data?['${sipOptions[tabIndex]}']?.timePeriod?.min ?? 0,
-      returnPercentage:
-          data?['${sipOptions[tabIndex]}']?.interest?['default'] ?? 0,
+      returnPercentage: double.parse(
+          data?['${sipOptions[tabIndex]}']?.interest?['default'].toString() ??
+              '0'),
       numberOfPeriodsPerYear: sipScreenData?.calculatorScreen?.calculatorData
-          ?.data?['${sipOptions[tabIndex]}']?.numberOfPeriodsPerYear,
+              ?.data?['${sipOptions[tabIndex]}']?.numberOfPeriodsPerYear ??
+          12,
+      isFetchingDetails: false,
     ));
   }
 
@@ -85,7 +86,7 @@ class AutosaveCubit extends Cubit<AutosaveCubitState> {
 
   String getReturn() {
     double principalAmount = state.sipAmount.toDouble();
-    int numberOfPeriods = state.numberOfPeriodsPerYear!;
+    int numberOfPeriods = state.numberOfPeriodsPerYear;
     double interest = state.returnPercentage.toDouble();
     double interestRate = (interest * .001) / numberOfPeriods;
     int numberOfYear = state.timePeriod;
@@ -136,64 +137,48 @@ class AutosaveCubit extends Cubit<AutosaveCubitState> {
 
   findActiveSubscription() async {
     state.activeSubscription = _subService.subscriptionData;
-    if (state.activeSubscription != null) {
-      await fetchAutosaveTransactions();
+    state.autosaveState = _subService.autosaveState;
+  }
+
+  Future pauseResume(int index) async {
+    if (_subService.isPauseOrResuming) return;
+    if (_subService.autosaveState == AutosaveState.PAUSED ||
+        _subService.autosaveState == AutosaveState.INACTIVE) {
+      // locator<AnalyticsService>()
+      //     .track(eventName: AnalyticsEvents.asResumeTapped, properties: {
+      //   "frequency": state.activeSubscription!.subs![index].frequency,
+      //   "amount": state.activeSubscription!.subs![index].amount,
+      // });
+
+      // bool response = await _subService.resumeSubscription();
+      // if (!response) {
+      //   BaseUtil.showNegativeAlert(
+      //       "Failed to resume Autosave", "Please try again");
+      // } else {
+      //   BaseUtil.showPositiveAlert("Autosave resumed successfully",
+      //       "For more details check Autosave section");
+      // }
+    } else {
+      _analyticsService
+          .track(eventName: AnalyticsEvents.asPauseTapped, properties: {
+        "frequency": state.activeSubscription!.subs![index].frequency,
+        "amount": state.activeSubscription!.subs![index].amount,
+      });
+      return BaseUtil.openModalBottomSheet(
+        addToScreenStack: true,
+        hapticVibrate: true,
+        backgroundColor:
+            UiConstants.kRechargeModalSheetAmountSectionBackgroundColor,
+        borderRadius: BorderRadius.only(
+          topLeft: Radius.circular(SizeConfig.roundness16),
+          topRight: Radius.circular(SizeConfig.roundness16),
+        ),
+        isBarrierDismissible: false,
+        isScrollControlled: true,
+        content: PauseAutosaveModal(model: _subService, id: ''),
+      );
     }
   }
-
-  Future<void> fetchAutosaveTransactions() async {
-    state.isFetchingTransactions = true;
-    await _subService.getSubscriptionTransactionHistory(
-        asset: Constants.ASSET_TYPE_AUGMONT);
-    await _subService.getSubscriptionTransactionHistory(
-        asset: Constants.ASSET_TYPE_LENDBOX);
-    lbTxnList = _subService.lbSubTxnList;
-    augTxnList = _subService.augSubTxnList;
-    txnPageController = PageController();
-    state.isFetchingTransactions = false;
-  }
-
-  // Future pauseResume() async {
-  //   if (_subService.isPauseOrResuming) return;
-  //   if (_subService.autosaveState == AutosaveState.PAUSED ||
-  //       _subService.autosaveState == AutosaveState.INACTIVE) {
-  //     locator<AnalyticsService>()
-  //         .track(eventName: AnalyticsEvents.asResumeTapped, properties: {
-  //       "frequency": state.activeSubscription!.frequency,
-  //       "amount": state.activeSubscription!.amount,
-  //     });
-
-  //     bool response = await _subService.resumeSubscription();
-  //     if (!response) {
-  //       BaseUtil.showNegativeAlert(
-  //           "Failed to resume Autosave", "Please try again");
-  //     } else {
-  //       BaseUtil.showPositiveAlert("Autosave resumed successfully",
-  //           "For more details check Autosave section");
-  //     }
-  //   } else {
-  //     _analyticsService
-  //         .track(eventName: AnalyticsEvents.asPauseTapped, properties: {
-  //       "frequency": state.activeSubscription!.frequency,
-  //       "amount": state.activeSubscription!.amount,
-  //     });
-  //     return BaseUtil.openModalBottomSheet(
-  //       addToScreenStack: true,
-  //       hapticVibrate: true,
-  //       backgroundColor:
-  //           UiConstants.kRechargeModalSheetAmountSectionBackgroundColor,
-  //       borderRadius: BorderRadius.only(
-  //         topLeft: Radius.circular(SizeConfig.roundness16),
-  //         topRight: Radius.circular(SizeConfig.roundness16),
-  //       ),
-  //       isBarrierDismissible: false,
-  //       isScrollControlled: true,
-  //       content: PauseAutosaveModal(
-  //         model: _subService,
-  //       ),
-  //     );
-  //   }
-  // }
 
   // trackPauseAnalytics(int value) {
   //   _analyticsService
@@ -217,6 +202,6 @@ class SipAssetSelectCubit extends Cubit<SipAssetSelect> {
   SipAssetSelectCubit() : super(SipAssetSelect());
 
   void changeSelectedAsset(int asset) {
-    emit(SipAssetSelect(selectedAsset: asset));
+    emit(state.copyWith(selectedAsset: asset));
   }
 }

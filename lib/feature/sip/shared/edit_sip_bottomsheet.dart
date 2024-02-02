@@ -70,23 +70,28 @@ class _EditSipBottomSheetState extends State<EditSipBottomSheet> {
             thickness: 1,
             color: UiConstants.kProfileBorderColor.withOpacity(0.2),
           ),
-          SizedBox(
-            height: SizeConfig.padding16,
-          ),
-          Row(
-            children: [
-              const AppImage(Assets.pauseIcon),
+          InkWell(
+            onTap: () {},
+            child: Column(children: [
               SizedBox(
-                width: SizeConfig.padding12,
+                height: SizeConfig.padding16,
               ),
-              Text(
-                "Pause SIP",
-                style: TextStyles.sourceSansSB.body2.colour(Colors.white),
-              )
-            ],
-          ),
-          SizedBox(
-            height: SizeConfig.padding16,
+              Row(
+                children: [
+                  const AppImage(Assets.pauseIcon),
+                  SizedBox(
+                    width: SizeConfig.padding12,
+                  ),
+                  Text(
+                    "Pause SIP",
+                    style: TextStyles.sourceSansSB.body2.colour(Colors.white),
+                  )
+                ],
+              ),
+              SizedBox(
+                height: SizeConfig.padding16,
+              ),
+            ]),
           ),
           Divider(
             thickness: 1,

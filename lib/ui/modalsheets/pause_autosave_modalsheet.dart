@@ -11,8 +11,10 @@ import 'package:flutter/material.dart';
 
 class PauseAutosaveModal extends StatefulWidget {
   final SubService? model;
+  final String id;
 
-  const PauseAutosaveModal({Key? key, this.model}) : super(key: key);
+  const PauseAutosaveModal({Key? key, this.model, required this.id})
+      : super(key: key);
 
   @override
   State<PauseAutosaveModal> createState() => _PauseAutosaveModalState();
@@ -98,30 +100,25 @@ class _PauseAutosaveModalState extends State<PauseAutosaveModal> {
                 return BaseUtil.showNegativeAlert("No duration selected",
                     "Please select a duration to pause");
               }
-
-              ///TODO(@Hirdesh2101)
-              // if (pauseValue == 3) {
-              //   BaseUtil.openDialog(
-              //     addToScreenStack: true,
-              //     isBarrierDismissible: false,
-              //     hapticVibrate: true,
-              //     content: ConfirmationDialog(
-              //       title: locale.areYouSure,
-              //       description: locale.loseAutoSave,
-              //       cancelBtnText: locale.btnNo,
-              //       cancelAction: () {
-              //         AppState.backButtonDispatcher!.didPopRoute();
-              //       },
-              //       buttonText: locale.btnYes,
-              //       confirmAction: () async {
-              //         await widget.model!.pauseSubscription(pauseValue!);
-              //         AppState.backButtonDispatcher!.didPopRoute();
-              //       },
-              //     ),
-              //   );
-              // } else {
-              //   await widget.model!.pauseSubscription(pauseValue!);
-              // }
+              await BaseUtil.openDialog(
+                addToScreenStack: true,
+                isBarrierDismissible: false,
+                hapticVibrate: true,
+                content: ConfirmationDialog(
+                  title: locale.areYouSure,
+                  description: locale.loseAutoSave,
+                  cancelBtnText: locale.btnNo,
+                  cancelAction: () {
+                    AppState.backButtonDispatcher!.didPopRoute();
+                  },
+                  buttonText: locale.btnYes,
+                  confirmAction: () async {
+                    await widget.model!
+                        .pauseSubscription(pauseValue!, widget.id);
+                    await AppState.backButtonDispatcher!.didPopRoute();
+                  },
+                ),
+              );
             },
           ),
           SizedBox(height: SizeConfig.pageHorizontalMargins / 2),

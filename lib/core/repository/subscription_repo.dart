@@ -1,5 +1,6 @@
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/model/subscription_models/all_subscription_model.dart';
+import 'package:felloapp/core/model/subscription_models/subscription_model.dart';
 import 'package:felloapp/core/model/subscription_models/subscription_transaction_model.dart';
 import 'package:felloapp/core/service/api_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
@@ -158,33 +159,32 @@ class SubscriptionRepo extends BaseRepo {
     }
   }
 
-  ///TODO(@Hirdesh2101)
-  // Future<ApiResponse<SubscriptionModel>> pauseSubscription({
-  //   required AutosavePauseOption option,
-  // }) async {
-  //   try {
-  //     Map<String, dynamic> _body = {
-  //       "uid": userService.baseUser!.uid!,
-  //       "frequency": option.name,
-  //     };
+  Future<ApiResponse<SubscriptionModel>> pauseSubscription({
+    required AutosavePauseOption option,
+    required String id,
+  }) async {
+    try {
+      Map<String, dynamic> _body = {
+        "id": id,
+        "frequency": option.name,
+      };
 
-  //     final response = await APIService.instance.postData(
-  //       ApiPath.pauseSubscription,
-  //       body: _body,
-  //       cBaseUrl: baseUrl,
-  //       apiName: '$_subscription/pauseSubscription',
-  //     );
+      final response = await APIService.instance.postData(
+        ApiPath.pauseSubscription,
+        body: _body,
+        cBaseUrl: baseUrl,
+        apiName: '$_subscription/pauseSubscription',
+      );
 
-  //     SubscriptionModel subscriptionModel =
-  //         SubscriptionModel.fromMap(response['data']);
-  //     return ApiResponse(model: subscriptionModel, code: 200);
-  //   } catch (e) {
-  //     _logger.e(e.toString());
-  //     return ApiResponse.withError(e.toString(), 400);
-  //   }
-  // }
+      SubscriptionModel subscriptionModel =
+          SubscriptionModel.fromJson(response['data']);
+      return ApiResponse(model: subscriptionModel, code: 200);
+    } catch (e) {
+      _logger.e(e.toString());
+      return ApiResponse.withError(e.toString(), 400);
+    }
+  }
 
-  ///TODO(@Hirdesh2101)
   // Future<ApiResponse<SubscriptionModel>> resumeSubscription() async {
   //   try {
   //     Map<String, dynamic> _body = {
@@ -199,7 +199,7 @@ class SubscriptionRepo extends BaseRepo {
   //     );
 
   //     SubscriptionModel subscriptionModel =
-  //         SubscriptionModel.fromMap(response['data']);
+  //         SubscriptionModel.fromJson(response['data']);
   //     return ApiResponse(model: subscriptionModel, code: 200);
   //   } catch (e) {
   //     _logger.e(e.toString());

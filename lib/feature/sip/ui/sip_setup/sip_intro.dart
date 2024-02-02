@@ -1,4 +1,5 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/feature/sip/cubit/autosave_cubit.dart';
 import 'package:felloapp/feature/sip/shared/edit_sip_bottomsheet.dart';
 import 'package:felloapp/feature/sip/shared/sip.dart';
@@ -17,6 +18,7 @@ class SipIntro extends StatelessWidget {
   Widget build(BuildContext context) {
     final model = context.read<AutosaveCubit>();
     var subs = model.state.activeSubscription?.subs;
+    var substate = model.state.autosaveState;
     var activeSubsLength = model.state.activeSubscription?.length ?? 0;
     return SingleChildScrollView(
       child: Column(
@@ -130,34 +132,43 @@ class SipIntro extends StatelessWidget {
                   ),
                   for (var i = 0; i < activeSubsLength; i++) ...[
                     AssetSipContainer(
-                      assetUrl: subs![i].lENDBOXP2P != 0
-                          ? Assets.floWithoutShadow
-                          : Assets.goldWithoutShadow,
+                      assetUrl: (subs![i].lENDBOXP2P != 0.0 &&
+                              subs[i].aUGGOLD99 != 0.0)
+                          ? Assets.goldAndflo
+                          : subs[i].lENDBOXP2P != 0
+                              ? Assets.floWithoutShadow
+                              : Assets.goldWithoutShadow,
                       nextDueDate: subs[i].nextDue!,
                       sipAmount: (subs[i].amount ?? 0).toInt(),
-                      sipName: subs[i].lENDBOXP2P != 0
-                          ? "Fello P2P SIP"
-                          : "Digital Gold SIP",
+                      sipName: subs[i].lENDBOXP2P != 0 && subs[i].aUGGOLD99 != 0
+                          ? "Digital Gold & P2P SIP"
+                          : subs[i].lENDBOXP2P != 0
+                              ? "Fello P2P SIP"
+                              : "Digital Gold SIP",
                       startDate: subs[i].createdOn!,
                       sipInterval: subs[i].frequency!,
+                      pausedSip: substate![i] == AutosaveState.PAUSED,
                     ),
                     SizedBox(
                       height: SizeConfig.padding16,
                     ),
                   ],
-                  SizedBox(
-                    height: SizeConfig.padding24,
-                  ),
-                  BlocBuilder<AutosaveCubit, AutosaveCubitState>(
-                    builder: (context, state) {
-                      return SipCalculator(
-                        model: state,
-                      );
-                    },
-                  )
                 ],
               ),
             ),
+          SizedBox(
+            height: SizeConfig.padding24,
+          ),
+          BlocBuilder<AutosaveCubit, AutosaveCubitState>(
+            builder: (context, state) {
+              return Padding(
+                padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding20),
+                child: SipCalculator(
+                  model: state,
+                ),
+              );
+            },
+          )
         ],
       ),
     );
@@ -165,13 +176,15 @@ class SipIntro extends StatelessWidget {
 }
 
 class AssetSipContainer extends StatelessWidget {
-  const AssetSipContainer(
+  AssetSipContainer(
       {required this.assetUrl,
       required this.nextDueDate,
       required this.startDate,
       required this.sipInterval,
       required this.sipAmount,
       required this.sipName,
+      this.allowEdit,
+      this.pausedSip,
       super.key});
   final String assetUrl;
   final String nextDueDate;
@@ -179,6 +192,8 @@ class AssetSipContainer extends StatelessWidget {
   final String sipInterval;
   final String sipName;
   final int sipAmount;
+  bool? allowEdit;
+  bool? pausedSip;
 
   @override
   Widget build(BuildContext context) {
@@ -229,11 +244,18 @@ class AssetSipContainer extends StatelessWidget {
                         enableDrag: true,
                         content: const EditSipBottomSheet());
                   },
-                  child: Text(
-                    'Edit SIP',
-                    style: TextStyles.sourceSans.body3
-                        .colour(UiConstants.kTabBorderColor),
-                  ))
+                  child: pausedSip != null && pausedSip!
+                      ? Text(
+                          'Paused SIP',
+                          style: TextStyles.sourceSans.body3.colour(UiConstants
+                              .kWinnerPlayerPrimaryColor
+                              .withOpacity(.8)),
+                        )
+                      : Text(
+                          'Edit SIP',
+                          style: TextStyles.sourceSans.body3
+                              .colour(UiConstants.kTabBorderColor),
+                        ))
             ],
           ),
           SizedBox(
@@ -242,12 +264,21 @@ class AssetSipContainer extends StatelessWidget {
           Row(
             mainAxisAlignment: MainAxisAlignment.spaceBetween,
             children: [
+              pausedSip != null && pausedSip!
+                  ? Text(
+                      'Click on card to Resume SIP',
+                      style: TextStyles.sourceSans.body4
+                          .colour(UiConstants.kTabBorderColor),
+                    )
+                  : Text(
+                      nextDueDate,
+                      style: TextStyles.sourceSans.body4
+                          .colour(UiConstants.kTextColor.withOpacity(0.8)),
+                    ),
               Text(
-                nextDueDate,
-                style: TextStyles.sourceSans.body4
-                    .colour(UiConstants.kTextColor.withOpacity(0.8)),
-              ),
-              Text("₹${sipAmount}", style: TextStyles.sourceSansSB.body1)
+                  BaseUtil.formatIndianRupees(
+                      double.parse(sipAmount.toString())),
+                  style: TextStyles.sourceSansSB.body1)
             ],
           ),
         ],
@@ -295,6 +326,16 @@ class _SipCalculatorState extends State<SipCalculator>
           decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(SizeConfig.roundness12),
             color: UiConstants.kDarkBoxColor,
+            border: Border.all(
+                color: UiConstants.customBorderShadow.withOpacity(.1),
+                width: 1),
+            boxShadow: const [
+              BoxShadow(
+                color: UiConstants.kBackgroundColor,
+                blurRadius: 20.0,
+                offset: Offset(0, 14),
+              ),
+            ],
           ),
           padding: EdgeInsets.only(
               top: SizeConfig.padding16,
@@ -350,6 +391,7 @@ class _SipCalculatorState extends State<SipCalculator>
                   label: "Return Percentage",
                   minValue: 1,
                   maxValue: 30,
+                  isPercentage: true,
                   changeFunction:
                       context.read<AutosaveCubit>().changeRateOfInterest,
                   value: widget.model.returnPercentage.toDouble()),
@@ -360,23 +402,27 @@ class _SipCalculatorState extends State<SipCalculator>
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "Your Money in ${widget.model.timePeriod} Years",
+                    "Your Money in ${widget.model.timePeriod} Years-",
                     style: TextStyles.sourceSansSB.body2
-                        .colour(UiConstants.textGray70),
+                        .colour(UiConstants.kTextColor),
                   ),
                   Text(
-                    "₹${context.read<AutosaveCubit>().getReturn()}",
+                    BaseUtil.formatIndianRupees(double.parse(
+                        context.read<AutosaveCubit>().getReturn())),
                     style: TextStyles.sourceSansSB.title5
                         .colour(UiConstants.kTabBorderColor),
                   ),
                 ],
               ),
               SizedBox(
-                height: SizeConfig.padding28,
+                height: SizeConfig.padding18,
               ),
             ],
           ),
-        )
+        ),
+        SizedBox(
+          height: SizeConfig.padding28,
+        ),
       ],
     );
   }

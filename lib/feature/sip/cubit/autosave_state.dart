@@ -6,7 +6,8 @@ abstract class AutoSaveSetupState {}
 final class AutosaveCubitState extends AutoSaveSetupState {
   int currentPage;
   AllSubscriptionModel? activeSubscription;
-  bool isFetchingTransactions;
+  List<AutosaveState>? autosaveState;
+  bool isFetchingDetails;
   int sipAmount;
   int timePeriod;
   num returnPercentage;
@@ -14,11 +15,12 @@ final class AutosaveCubitState extends AutoSaveSetupState {
   int minSipValue;
   int maxTimePeriod;
   int minTimePeriod;
-  int? numberOfPeriodsPerYear;
+  int numberOfPeriodsPerYear;
   AutosaveCubitState({
     this.currentPage = 0,
     this.activeSubscription,
-    this.isFetchingTransactions = false,
+    this.autosaveState,
+    this.isFetchingDetails = false,
     this.sipAmount = 0,
     this.timePeriod = 0,
     this.returnPercentage = 1,
@@ -26,11 +28,12 @@ final class AutosaveCubitState extends AutoSaveSetupState {
     this.minSipValue = 0,
     this.maxTimePeriod = 0,
     this.minTimePeriod = 0,
-    this.numberOfPeriodsPerYear,
+    this.numberOfPeriodsPerYear = 12,
   });
 
   AutosaveCubitState copyWith(
-      {int? sipAmount,
+      {bool? isFetchingDetails,
+      int? sipAmount,
       int? timePeriod,
       double? returnPercentage,
       int? maxSipValue,
@@ -39,6 +42,7 @@ final class AutosaveCubitState extends AutoSaveSetupState {
       int? numberOfPeriodsPerYear,
       int? minTimePeriod}) {
     return AutosaveCubitState(
+        isFetchingDetails: isFetchingDetails ?? this.isFetchingDetails,
         sipAmount: sipAmount ?? this.sipAmount,
         timePeriod: timePeriod ?? this.timePeriod,
         returnPercentage: returnPercentage ?? this.returnPercentage,

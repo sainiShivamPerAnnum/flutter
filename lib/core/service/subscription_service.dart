@@ -288,24 +288,25 @@ class SubService extends ChangeNotifier {
   //   }
   // }
 
-  // Future<bool> pauseSubscription(AutosavePauseOption option) async {
-  //   if (isPauseOrResuming) return false;
-  //   isPauseOrResuming = true;
-  //   final res = await _subscriptionRepo.pauseSubscription(option: option);
-  //   isPauseOrResuming = false;
-  //   if (res.isSuccess()) {
-  //     subscriptionData = res.model;
-  //     AppState.backButtonDispatcher!.didPopRoute();
-  //     Future.delayed(const Duration(seconds: 1), () {
-  //       BaseUtil.showPositiveAlert("Subscription paused successfully",
-  //           "Effective changes will take place from tomorrow");
-  //     });
-  //     return true;
-  //   } else {
-  //     BaseUtil.showNegativeAlert(res.errorMessage, "Please try again");
-  //     return false;
-  //   }
-  // }
+  Future<bool> pauseSubscription(AutosavePauseOption option, String id) async {
+    if (isPauseOrResuming) return false;
+    isPauseOrResuming = true;
+    final res =
+        await _subscriptionRepo.pauseSubscription(option: option, id: id);
+    isPauseOrResuming = false;
+    if (res.isSuccess()) {
+      subscriptionData = res.model;
+      await AppState.backButtonDispatcher!.didPopRoute();
+      Future.delayed(const Duration(seconds: 1), () {
+        BaseUtil.showPositiveAlert("Subscription paused successfully",
+            "Effective changes will take place from tomorrow");
+      });
+      return true;
+    } else {
+      BaseUtil.showNegativeAlert(res.errorMessage, "Please try again");
+      return false;
+    }
+  }
 
   // Future<bool> resumeSubscription() async {
   //   if (isPauseOrResuming) return false;
@@ -514,26 +515,26 @@ class SubService extends ChangeNotifier {
     for (var i = 0; i < length; i++) {
       switch (subscriptionData?.subs?[i].status) {
         case "INIT":
-          autosaveState[i] = AutosaveState.INIT;
+          autosaveState.insert(i, AutosaveState.INIT);
           break;
         case "ACTIVE":
           timer?.cancel();
-          autosaveState[i] = AutosaveState.ACTIVE;
+          autosaveState.insert(i, AutosaveState.ACTIVE);
           break;
         case "PAUSE_FROM_APP":
-          autosaveState[i] = AutosaveState.PAUSED;
+          autosaveState.insert(i, AutosaveState.PAUSED);
           break;
         case "PAUSE_FROM_APP_FOREVER":
-          autosaveState[i] = AutosaveState.PAUSED;
+          autosaveState.insert(i, AutosaveState.PAUSED);
           break;
         case "PAUSE_FROM_PSP":
-          autosaveState[i] = AutosaveState.PAUSED;
+          autosaveState.insert(i, AutosaveState.PAUSED);
           break;
         case "CANCELLED":
-          autosaveState[i] = AutosaveState.CANCELLED;
+          autosaveState.insert(i, AutosaveState.CANCELLED);
           break;
         default:
-          autosaveState[i] = AutosaveState.IDLE;
+          autosaveState.insert(i, AutosaveState.IDLE);
           break;
       }
     }

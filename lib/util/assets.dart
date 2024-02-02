@@ -131,6 +131,7 @@ class Assets {
   static const String floAsset = "assets/svg/fello_flo.svg";
   static const String floWithoutShadow = "assets/svg/flo_without_shadow.svg";
   static const String goldWithoutShadow = "assets/svg/gold_without_shadow.svg";
+  static const String goldAndflo = "assets/svg/gold_and_flo.svg";
 
   static const String goldAsset = "assets/svg/digital_gold.svg";
   static const String icici = "assets/svg/icici.svg";
@@ -469,4 +470,5 @@ class Assets {
   static const String garbageBin = "assets/vectors/garbage-bin.svg";
   static const String sipIntroImage =
       "https://ik.imagekit.io/9xfwtu0xm/sip/sip_intro.png?updatedAt=1706526977156";
+  static const String sipBox = "assets/svg/sip_box.svg";
 }

@@ -7,6 +7,7 @@ class CalculatorField extends StatelessWidget {
       required this.label,
       required this.value,
       required this.requiresQuickButtons,
+      this.isPercentage,
       super.key,
       this.prefixText,
       this.suffixText,
@@ -19,6 +20,7 @@ class CalculatorField extends StatelessWidget {
   final Function(int)? changeFunction;
   final bool requiresSlider;
   final bool requiresQuickButtons;
+  final bool? isPercentage;
   final String label;
   final String? prefixText;
   final String? suffixText;
@@ -38,8 +40,8 @@ class CalculatorField extends StatelessWidget {
           children: [
             Text(
               label,
-              style:
-                  TextStyles.sourceSansSB.body2.colour(UiConstants.textGray70),
+              style: TextStyles.sourceSansSB.body2
+                  .colour(UiConstants.kTextFieldTextColor),
             ),
             Container(
               width: SizeConfig.padding100,
@@ -49,16 +51,17 @@ class CalculatorField extends StatelessWidget {
                   right: SizeConfig.padding12,
                   bottom: SizeConfig.padding8),
               decoration: BoxDecoration(
-                  border: Border.all(color: Colors.white),
+                  border: Border.all(color: UiConstants.kDividerColor),
                   borderRadius: BorderRadius.circular(SizeConfig.roundness12)),
               child: TextField(
                 controller: TextEditingController(
-                    text: requiresQuickButtons
+                    text: isPercentage != null && isPercentage!
                         ? '${formatValue(value.toDouble())}%'
                         : formatValue(value.toDouble())),
                 textDirection: prefixText != null ? TextDirection.rtl : null,
                 keyboardType: TextInputType.number,
-                style: TextStyles.sourceSansSB.body2.colour(Colors.white),
+                style: TextStyles.sourceSansSB.body2
+                    .colour(UiConstants.kTextColor),
                 onSubmitted: (value) {
                   changeFunction!(int.parse(value));
                 },
@@ -96,14 +99,17 @@ class CalculatorField extends StatelessWidget {
           ],
         ),
         if (requiresSlider)
+          SizedBox(
+            height: SizeConfig.padding12,
+          ),
+        if (requiresSlider)
           SliderTheme(
             data: SliderThemeData(
-              trackHeight: 1,
-              thumbShape: RoundSliderThumbShape(
-                enabledThumbRadius: SizeConfig.roundness8,
-              ),
-              trackShape: CustomTrackShape(),
-            ),
+                trackHeight: 1,
+                thumbShape: RoundSliderThumbShape(
+                  enabledThumbRadius: SizeConfig.roundness8,
+                ),
+                overlayShape: SliderComponentShape.noOverlay),
             child: Slider(
               value: value,
               max: maxValue ?? 30,
@@ -118,24 +124,6 @@ class CalculatorField extends StatelessWidget {
           )
       ],
     );
-  }
-}
-
-class CustomTrackShape extends RoundedRectSliderTrackShape {
-  @override
-  Rect getPreferredRect({
-    required RenderBox parentBox,
-    Offset offset = Offset.zero,
-    required SliderThemeData sliderTheme,
-    bool isEnabled = false,
-    bool isDiscrete = false,
-  }) {
-    final double trackHeight = sliderTheme.trackHeight ?? 4;
-    final double trackLeft = offset.dx;
-    final double trackTop =
-        offset.dy + (parentBox.size.height - trackHeight) / 1.5;
-    final double trackWidth = parentBox.size.width;
-    return Rect.fromLTWH(trackLeft, trackTop, trackWidth, trackHeight);
   }
 }
 

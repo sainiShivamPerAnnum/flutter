@@ -11,7 +11,9 @@ class SubscriptionModel {
   String? status;
   num? amount;
   String? frequency;
+  @JsonKey(name: 'AUGGOLD99')
   num? aUGGOLD99;
+  @JsonKey(name: 'LENDBOXP2P')
   num? lENDBOXP2P;
   String? resumeFrequency;
   String? createdOn;
