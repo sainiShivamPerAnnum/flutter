@@ -2,7 +2,6 @@ import 'package:felloapp/core/enums/connectivity_status_enum.dart';
 import 'package:felloapp/core/service/notifier_services/connectivity_service.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/elements/texts/breathing_text_widget.dart';
-import 'package:felloapp/ui/pages/sip/sip.dart';
 import 'package:felloapp/ui/pages/splash/splash_vm.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';

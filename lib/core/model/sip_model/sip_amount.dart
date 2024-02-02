@@ -9,6 +9,7 @@ class SipAmount {
   int? min;
   int? max;
   int? multiples;
+  @JsonKey(name: "default")
   int? defaultValue;
 
   SipAmount({this.min, this.max, this.multiples, this.defaultValue});

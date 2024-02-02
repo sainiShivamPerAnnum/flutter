@@ -1,8 +1,8 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/feature/sip/cubit/autosave_cubit.dart';
+import 'package:felloapp/feature/sip/shared/edit_sip_bottomsheet.dart';
+import 'package:felloapp/feature/sip/shared/sip.dart';
 import 'package:felloapp/feature/sip/shared/tab_slider.dart';
-import 'package:felloapp/ui/pages/sip/edit_sip_bottomsheet.dart';
-import 'package:felloapp/ui/pages/sip/sip.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/styles.dart';
@@ -91,8 +91,13 @@ class SipIntro extends StatelessWidget {
                   Padding(
                     padding:
                         EdgeInsets.symmetric(horizontal: SizeConfig.padding40),
-                    child:
-                        AppPositiveBtn(btnText: 'START SIP', onPressed: () {}),
+                    child: AppPositiveBtn(
+                        btnText: 'START SIP',
+                        onPressed: () {
+                          model.pageController.animateToPage(1,
+                              duration: Duration(milliseconds: 100),
+                              curve: Curves.easeIn);
+                        }),
                   ),
                   Padding(
                     padding: EdgeInsets.symmetric(
@@ -303,7 +308,10 @@ class _SipCalculatorState extends State<SipCalculator>
                   controller: tabController,
                   tabs: const ['DAILY', 'WEEKLY', 'MONTHLY'],
                   labelBuilder: (label) => label,
-                  onTap: (_, i) {},
+                  onTap: (_, i) {
+                    context.read<AutosaveCubit>().tabIndex = i;
+                    context.read<AutosaveCubit>().getDefaultValue(i);
+                  },
                 ),
               ),
               SizedBox(
@@ -340,6 +348,8 @@ class _SipCalculatorState extends State<SipCalculator>
                   requiresSlider: true,
                   textAlign: TextAlign.center,
                   label: "Return Percentage",
+                  minValue: 1,
+                  maxValue: 30,
                   changeFunction:
                       context.read<AutosaveCubit>().changeRateOfInterest,
                   value: widget.model.returnPercentage.toDouble()),
@@ -354,20 +364,11 @@ class _SipCalculatorState extends State<SipCalculator>
                     style: TextStyles.sourceSansSB.body2
                         .colour(UiConstants.textGray70),
                   ),
-                  Container(
-                    decoration: BoxDecoration(
-                        color: Colors.white,
-                        border: Border.all(color: UiConstants.kDividerColor),
-                        borderRadius:
-                            BorderRadius.circular(SizeConfig.roundness12)),
-                    padding: EdgeInsets.symmetric(
-                        vertical: SizeConfig.padding6,
-                        horizontal: SizeConfig.padding35),
-                    child: Text(
-                      "₹${context.read<AutosaveCubit>().getReturn()}",
-                      style: TextStyles.sourceSansSB.body1.colour(Colors.black),
-                    ),
-                  )
+                  Text(
+                    "₹${context.read<AutosaveCubit>().getReturn()}",
+                    style: TextStyles.sourceSansSB.title5
+                        .colour(UiConstants.kTabBorderColor),
+                  ),
                 ],
               ),
               SizedBox(

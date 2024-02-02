@@ -23,6 +23,8 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 
+import '../../../core/model/sip_model/calculator_details.dart';
+
 part 'autosave_state.dart';
 
 class AutosaveCubit extends Cubit<AutosaveCubitState> {
@@ -33,6 +35,7 @@ class AutosaveCubit extends Cubit<AutosaveCubitState> {
   final AnalyticsService _analyticsService = locator<AnalyticsService>();
   PageController? txnPageController = PageController(initialPage: 0);
   TextEditingController sipAmountController = TextEditingController();
+  int tabIndex = 0;
   PageController pageController = PageController();
   S locale = locator<S>();
   SipData? sipScreenData;
@@ -44,78 +47,34 @@ class AutosaveCubit extends Cubit<AutosaveCubitState> {
   bool hasMoreTxns = false;
   double sliderValue = 0;
   init() async {
-    //TODO
+    //TODO@Hirdesh2101
     // state = ViewState.Busy;
     // setState(ViewState.Busy);
     await findActiveSubscription();
     await _sipRepo.getSipScreenData().then((value) {
       sipScreenData = value.model;
-      emit(AutosaveCubitState(
-        sipAmount: sipScreenData
-                ?.calculatorScreen
-                ?.calculatorData
-                ?.data?[
-                    '${sipScreenData?.calculatorScreen?.calculatorData?.options?[0]}']
-                ?.sipAmount
-                ?.defaultValue ??
-            0,
-        maxSipValue: sipScreenData
-                ?.calculatorScreen
-                ?.calculatorData
-                ?.data?[
-                    '${sipScreenData?.calculatorScreen?.calculatorData?.options?[0]}']
-                ?.sipAmount
-                ?.max ??
-            0,
-        minSipValue: sipScreenData
-                ?.calculatorScreen
-                ?.calculatorData
-                ?.data?[
-                    '${sipScreenData?.calculatorScreen?.calculatorData?.options?[0]}']
-                ?.sipAmount
-                ?.min ??
-            0,
-        timePeriod: sipScreenData
-                ?.calculatorScreen
-                ?.calculatorData
-                ?.data?[
-                    '${sipScreenData?.calculatorScreen?.calculatorData?.options?[0]}']
-                ?.timePeriod
-                ?.defaultValue ??
-            0,
-        maxTimePeriod: sipScreenData
-                ?.calculatorScreen
-                ?.calculatorData
-                ?.data?[
-                    '${sipScreenData?.calculatorScreen?.calculatorData?.options?[0]}']
-                ?.timePeriod
-                ?.max ??
-            0,
-        minTimePeriod: sipScreenData
-                ?.calculatorScreen
-                ?.calculatorData
-                ?.data?[
-                    '${sipScreenData?.calculatorScreen?.calculatorData?.options?[0]}']
-                ?.timePeriod
-                ?.min ??
-            0,
-        returnPercentage: sipScreenData
-                ?.calculatorScreen
-                ?.calculatorData
-                ?.data?[
-                    '${sipScreenData?.calculatorScreen?.calculatorData?.options?[0]}']
-                ?.interest?['default'] ??
-            0,
-        numberOfPeriodsPerYear: sipScreenData
-            ?.calculatorScreen
-            ?.calculatorData
-            ?.data?[
-                '${sipScreenData?.calculatorScreen?.calculatorData?.options?[0]}']
-            ?.numberOfPeriodsPerYear,
-      ));
+      getDefaultValue(tabIndex);
     });
+  }
 
-    // setState(ViewState.Idle);
+  void getDefaultValue(int tabIndex) {
+    Map<String, CalculatorDetails>? data =
+        sipScreenData?.calculatorScreen?.calculatorData?.data;
+    dynamic sipOptions =
+        sipScreenData?.calculatorScreen?.calculatorData?.options;
+    emit(AutosaveCubitState(
+      sipAmount: data?['${sipOptions[tabIndex]}']?.sipAmount?.defaultValue ?? 0,
+      maxSipValue: data?['${sipOptions[tabIndex]}']?.sipAmount?.max ?? 0,
+      minSipValue: data?['${sipOptions[tabIndex]}']?.sipAmount?.min ?? 0,
+      timePeriod:
+          data?['${sipOptions[tabIndex]}']?.timePeriod?.defaultValue ?? 0,
+      maxTimePeriod: data?['${sipOptions[tabIndex]}']?.timePeriod?.max ?? 0,
+      minTimePeriod: data?['${sipOptions[tabIndex]}']?.timePeriod?.min ?? 0,
+      returnPercentage:
+          data?['${sipOptions[tabIndex]}']?.interest?['default'] ?? 0,
+      numberOfPeriodsPerYear: sipScreenData?.calculatorScreen?.calculatorData
+          ?.data?['${sipOptions[tabIndex]}']?.numberOfPeriodsPerYear,
+    ));
   }
 
   int calculateMaturityValue(double P, double i, int n) {
@@ -125,8 +84,8 @@ class AutosaveCubit extends Cubit<AutosaveCubitState> {
   }
 
   String getReturn() {
-    double principalAmount = state.sipAmount.toDouble(); // Amount
-    int numberOfPeriods = 12;
+    double principalAmount = state.sipAmount.toDouble();
+    int numberOfPeriods = state.numberOfPeriodsPerYear!;
     double interest = state.returnPercentage.toDouble();
     double interestRate = (interest * .001) / numberOfPeriods;
     int numberOfYear = state.timePeriod;
@@ -252,4 +211,12 @@ class AutosaveCubit extends Cubit<AutosaveCubitState> {
   //     "Pause Value": value,
   //   });
   // }
+}
+
+class SipAssetSelectCubit extends Cubit<SipAssetSelect> {
+  SipAssetSelectCubit() : super(SipAssetSelect());
+
+  void changeSelectedAsset(int asset) {
+    emit(SipAssetSelect(selectedAsset: asset));
+  }
 }

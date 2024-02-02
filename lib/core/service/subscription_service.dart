@@ -205,12 +205,11 @@ class SubService extends ChangeNotifier {
         augAmt: augAmt);
     if (res.isSuccess()) {
       try {
-        await getSubscription();
-        const platform = MethodChannel("methodChannel/upiIntent");
         // autosaveState = AutosaveState.INIT;
         if (Platform.isIOS) {
           BaseUtil.launchUrl(res.model!);
         } else {
+          const platform = MethodChannel("methodChannel/upiIntent");
           final result = await platform.invokeMethod('initiatePsp', {
             'redirectUrl': res.model,
             'packageName': FlavorConfig.isDevelopment()

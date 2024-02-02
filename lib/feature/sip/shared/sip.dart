@@ -1,9 +1,3 @@
-import 'package:felloapp/base_util.dart';
-import 'package:felloapp/ui/architecture/base_view.dart';
-import 'package:felloapp/ui/pages/sip/edit_sip_bottomsheet.dart';
-import 'package:felloapp/ui/pages/sip/select_sip.dart';
-import 'package:felloapp/ui/pages/static/app_widget.dart';
-import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 

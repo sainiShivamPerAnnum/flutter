@@ -8,30 +8,40 @@ import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class SipPage extends StatelessWidget {
-  const SipPage({super.key});
+class SipAmountView extends StatefulWidget {
+  const SipAmountView({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (context) => AutosaveCubit(),
-      child: const SipView(),
-    );
+  State<SipAmountView> createState() => _SipAmountViewState();
+}
+
+class _SipAmountViewState extends State<SipAmountView> {
+  var _amount;
+  late num _upperLimit;
+  late num _lowerLimit;
+  late num _division;
+  int _currentTab = 0;
+
+  @override
+  void initState() {
+    final sipmodel = context.read<AutosaveCubit>();
+    var options = sipmodel
+        .sipScreenData
+        ?.amountSelectionScreen
+        ?.data?[sipmodel
+            .sipScreenData?.amountSelectionScreen?.options?[_currentTab]]
+        ?.options;
+    var maxValueOption = options?.reduce((currentMax, next) =>
+        next.value! > currentMax.value! ? next : currentMax);
+    var bestOption = options
+        ?.firstWhere((option) => option.best != null && option.best == true);
+    double currentAmount = bestOption!.value!.toDouble();
+    _amount = ValueNotifier<double>(currentAmount);
+    _division = options?.length ?? 4;
+    _upperLimit = maxValueOption!.value as num;
+    _lowerLimit = _upperLimit / _division;
+    super.initState();
   }
-}
-
-class SipView extends StatefulWidget {
-  const SipView({super.key});
-
-  @override
-  State<SipView> createState() => _SipViewState();
-}
-
-class _SipViewState extends State<SipView> {
-  final _amount = ValueNotifier<double>(7500);
-  static const _upperLimit = 10000.0;
-  static const _lowerLimit = _upperLimit / _division;
-  static const _division = 4;
 
   @override
   void dispose() {
@@ -41,25 +51,13 @@ class _SipViewState extends State<SipView> {
 
   @override
   Widget build(BuildContext context) {
+    final sipmodel = context.read<AutosaveCubit>();
+    var options = sipmodel.sipScreenData?.amountSelectionScreen?.options ?? [];
     return DefaultTabController(
-      length: 3,
+      length: options.length,
       child: BaseScaffold(
         showBackgroundGrid: false,
         backgroundColor: UiConstants.bg,
-        appBar: AppBar(
-          leading: IconButton(
-            onPressed: () => Navigator.pop(context),
-            icon: const Icon(
-              Icons.chevron_left,
-              size: 32,
-            ),
-          ),
-          backgroundColor: UiConstants.bg,
-          title: const Text('SIP with Fello'),
-          titleTextStyle: TextStyles.rajdhaniSB.title4.setHeight(1.3),
-          centerTitle: true,
-          elevation: .5,
-        ),
         body: Padding(
           padding: EdgeInsets.symmetric(
             horizontal: SizeConfig.padding24,
@@ -72,9 +70,11 @@ class _SipViewState extends State<SipView> {
               Padding(
                 padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding28),
                 child: TabSlider<String>(
-                  tabs: const ['DAILY', 'WEEKLY', 'MONTHLY'],
+                  tabs: options,
                   labelBuilder: (label) => label,
-                  onTap: (_, i) {},
+                  onTap: (_, i) {
+                    _currentTab = i;
+                  },
                 ),
               ),
               SizedBox(
@@ -93,9 +93,9 @@ class _SipViewState extends State<SipView> {
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
                     AmountInputWidget(
-                      lowerLimit: _lowerLimit,
-                      upperLimit: _upperLimit,
-                      division: _division,
+                      lowerLimit: _lowerLimit.toDouble(),
+                      upperLimit: _upperLimit.toDouble(),
+                      division: _division.toInt(),
                       amount: _amount.value,
                       onChange: (v) => _amount.value = v,
                     ),
@@ -103,9 +103,9 @@ class _SipViewState extends State<SipView> {
                       height: SizeConfig.padding32,
                     ),
                     AmountSlider(
-                      lowerLimit: _lowerLimit,
-                      upperLimit: _upperLimit,
-                      division: _division,
+                      lowerLimit: _lowerLimit.toDouble(),
+                      upperLimit: _upperLimit.toDouble(),
+                      division: _division.toInt(),
                       amount: _amount.value,
                       onChanged: (v) => _amount.value = v,
                     ),

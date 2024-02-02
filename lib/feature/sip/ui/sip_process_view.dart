@@ -3,7 +3,9 @@ import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/feature/sip/cubit/autosave_cubit.dart';
+import 'package:felloapp/feature/sip/ui/sip_setup/sip_amount_view.dart';
 import 'package:felloapp/feature/sip/ui/sip_setup/sip_intro.dart';
+import 'package:felloapp/feature/sip/ui/sip_setup/sip_select_assset.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/new_square_background.dart';
@@ -27,6 +29,7 @@ class SipProcessView extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => AutosaveCubit()),
+        BlocProvider(create: (_) => SipAssetSelectCubit()),
       ],
       child: SipProcessUi(
         investmentType: investmentType,
@@ -79,22 +82,18 @@ class _SipProcessUiState extends State<SipProcessUi> {
       return Scaffold(
         backgroundColor: UiConstants.kBackgroundColor,
         appBar: AppBar(
-          backgroundColor: UiConstants.kBackgroundColor,
-          elevation: 0.0,
-          title: Text(
-            "SIP with Fello",
-            style: TextStyles.rajdhani.title4,
-          ),
-          centerTitle: true,
           leading: IconButton(
-              icon: const Icon(
-                Icons.arrow_back_ios,
-                color: UiConstants.kTextColor,
-              ),
-              onPressed: () async =>
-                  await AppState.backButtonDispatcher!.didPopRoute()
-              // _onPressedBack(state.autosaveState, model),
-              ),
+            onPressed: () => Navigator.pop(context),
+            icon: const Icon(
+              Icons.chevron_left,
+              size: 32,
+            ),
+          ),
+          backgroundColor: UiConstants.bg,
+          title: const Text('SIP with Fello'),
+          titleTextStyle: TextStyles.rajdhaniSB.title4.setHeight(1.3),
+          centerTitle: true,
+          elevation: .5,
         ),
         resizeToAvoidBottomInset: false,
         body:
@@ -106,10 +105,8 @@ class _SipProcessUiState extends State<SipProcessUi> {
             Stack(
           children: [
             const NewSquareBackground(),
-            SafeArea(
-              child: AutosaveSetupView(
-                model: model,
-              ),
+            AutosaveSetupView(
+              model: model,
             ),
           ],
         ),
@@ -133,8 +130,8 @@ class AutosaveSetupView extends StatelessWidget {
       physics: const NeverScrollableScrollPhysics(),
       children: const [
         SipIntro(),
-        // AutosaveStepsView(model: model),
-        // AutosaveAssetChoiceView(model: model),
+        SelectSipScreen(),
+        SipAmountView(),
         // AutoPaySetupOrUpdateView(model: model),
         // UpiAppSelectView(model: model),
       ],

@@ -15,4 +15,7 @@ SipData _$SipDataFromJson(Map<String, dynamic> json) => SipData(
           ? null
           : CalculatorScreen.fromJson(
               json['calculatorScreen'] as Map<String, dynamic>),
-    );
+    )..amountSelectionScreen = json['amoountSelectionScreen'] == null
+        ? null
+        : SipAmountSelection.fromJson(
+            json['amoountSelectionScreen'] as Map<String, dynamic>);

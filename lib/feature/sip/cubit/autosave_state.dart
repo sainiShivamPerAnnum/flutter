@@ -21,7 +21,7 @@ final class AutosaveCubitState extends AutoSaveSetupState {
     this.isFetchingTransactions = false,
     this.sipAmount = 0,
     this.timePeriod = 0,
-    this.returnPercentage = 0,
+    this.returnPercentage = 1,
     this.maxSipValue = 0,
     this.minSipValue = 0,
     this.maxTimePeriod = 0,
@@ -48,5 +48,15 @@ final class AutosaveCubitState extends AutoSaveSetupState {
         minTimePeriod: minTimePeriod ?? this.minTimePeriod,
         numberOfPeriodsPerYear:
             numberOfPeriodsPerYear ?? this.numberOfPeriodsPerYear);
+  }
+}
+
+final class SipAssetSelect extends AutoSaveSetupState {
+  int? selectedAsset;
+  SipAssetSelect({
+    this.selectedAsset,
+  });
+  SipAssetSelect copyWith({int? selectedAsset}) {
+    return SipAssetSelect(selectedAsset: selectedAsset ?? this.selectedAsset);
   }
 }

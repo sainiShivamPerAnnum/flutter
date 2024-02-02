@@ -45,7 +45,7 @@ class TabSlider<T> extends StatelessWidget {
           for (var i = 0; i < tabs.length; i++)
             Tab(
               text: labelBuilder(tabs[i]),
-              height: 35,
+              height: 32,
             )
         ],
       ),
