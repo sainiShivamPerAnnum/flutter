@@ -344,7 +344,11 @@ class _FooterState extends State<_Footer> {
             height: SizeConfig.padding22,
           ),
           SecondaryButton(
-            label: model.state.isEdit! ? 'UPDATE SIP' : '2 CLICKS AWAY',
+            label: model.state.isEdit!
+                ? 'UPDATE SIP'
+                : widget.mandateAvailable
+                    ? '1 CLICKS AWAY'
+                    : '2 CLICKS AWAY',
             onPressed: () async {
               if (model.state.isEdit!) {
                 setState(() {
@@ -357,6 +361,10 @@ class _FooterState extends State<_Footer> {
                     _isLoading = false;
                   });
                 }
+              } else {
+                await model.pageController.animateToPage(3,
+                    duration: const Duration(milliseconds: 100),
+                    curve: Curves.easeIn);
               }
             },
             child: _isLoading ? const CupertinoActivityIndicator() : null,

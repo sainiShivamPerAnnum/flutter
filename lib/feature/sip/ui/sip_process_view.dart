@@ -4,6 +4,7 @@ import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/feature/sip/cubit/autosave_cubit.dart';
 import 'package:felloapp/feature/sip/ui/sip_setup/sip_amount_view.dart';
 import 'package:felloapp/feature/sip/ui/sip_setup/sip_intro.dart';
+import 'package:felloapp/feature/sip/ui/sip_setup/sip_mandate.dart';
 import 'package:felloapp/feature/sip/ui/sip_setup/sip_select_assset.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
@@ -140,6 +141,7 @@ class AutosaveSetupView extends StatelessWidget {
         SipAmountView(
           mandateAvailable: model.state.activeSubscription?.isActive ?? false,
         ),
+        const SipMandatePage(),
         // UpiAppSelectView(model: model),
       ],
     );
