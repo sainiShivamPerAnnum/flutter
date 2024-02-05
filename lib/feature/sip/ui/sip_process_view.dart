@@ -1,5 +1,4 @@
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/feature/sip/cubit/autosave_cubit.dart';
 import 'package:felloapp/feature/sip/ui/sip_setup/sip_amount_view.dart';
@@ -21,27 +20,21 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
 
 class SipProcessView extends StatelessWidget {
-  const SipProcessView({super.key, this.investmentType});
-
-  final InvestmentType? investmentType;
+  const SipProcessView({
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(create: (_) => AutosaveCubit()),
-      ],
-      child: SipProcessUi(
-        investmentType: investmentType,
-      ),
+    return BlocProvider(
+      create: (_) => AutosaveCubit(),
+      child: const SipProcessUi(),
     );
   }
 }
 
 class SipProcessUi extends StatefulWidget {
-  const SipProcessUi({Key? key, this.investmentType}) : super(key: key);
-
-  final InvestmentType? investmentType;
+  const SipProcessUi({super.key});
 
   @override
   State<SipProcessUi> createState() => _SipProcessUiState();
@@ -141,7 +134,9 @@ class AutosaveSetupView extends StatelessWidget {
         SipAmountView(
           mandateAvailable: model.state.activeSubscription?.isActive ?? false,
         ),
-        const SipMandatePage(),
+        SipMandatePage(
+          upiApps: model.state.upiApps,
+        ),
         // UpiAppSelectView(model: model),
       ],
     );

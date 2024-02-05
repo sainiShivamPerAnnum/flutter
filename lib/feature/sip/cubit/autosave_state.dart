@@ -21,6 +21,8 @@ final class AutosaveCubitState extends AutoSaveSetupState {
   String? currentSipFrequency;
   int? selectedAsset;
   int? editIndex;
+  final List<ApplicationMeta> upiApps;
+
   AutosaveCubitState({
     this.currentPage = 0,
     this.activeSubscription,
@@ -39,9 +41,11 @@ final class AutosaveCubitState extends AutoSaveSetupState {
     this.selectedAsset = -1,
     this.editSipAmount,
     this.editIndex,
+    this.upiApps = const [],
   });
 
   AutosaveCubitState copyWith({
+    List<ApplicationMeta>? upiApps,
     int? currentPage,
     bool? isFetchingDetails,
     AllSubscriptionModel? activeSubscription,
@@ -61,24 +65,26 @@ final class AutosaveCubitState extends AutoSaveSetupState {
     int? editIndex,
   }) {
     return AutosaveCubitState(
-        currentPage: currentPage ?? this.currentPage,
-        activeSubscription: activeSubscription ?? this.activeSubscription,
-        isFetchingDetails: isFetchingDetails ?? this.isFetchingDetails,
-        sipAmount: sipAmount ?? this.sipAmount,
-        timePeriod: timePeriod ?? this.timePeriod,
-        returnPercentage: returnPercentage ?? this.returnPercentage,
-        maxSipValue: maxSipValue ?? this.maxSipValue,
-        minSipValue: minSipValue ?? this.minSipValue,
-        maxTimePeriod: maxTimePeriod ?? this.maxTimePeriod,
-        minTimePeriod: minTimePeriod ?? this.minTimePeriod,
-        isPauseOrResuming: isPauseOrResuming ?? this.isPauseOrResuming,
-        isEdit: isEdit ?? this.isEdit,
-        currentSipFrequency: currentSipFrequency ?? this.currentSipFrequency,
-        editSipAmount: editSipAmount ?? this.editSipAmount,
-        selectedAsset: selectedAsset ?? this.selectedAsset,
-        editIndex: editIndex ?? this.editIndex,
-        numberOfPeriodsPerYear:
-            numberOfPeriodsPerYear ?? this.numberOfPeriodsPerYear);
+      currentPage: currentPage ?? this.currentPage,
+      activeSubscription: activeSubscription ?? this.activeSubscription,
+      isFetchingDetails: isFetchingDetails ?? this.isFetchingDetails,
+      sipAmount: sipAmount ?? this.sipAmount,
+      timePeriod: timePeriod ?? this.timePeriod,
+      returnPercentage: returnPercentage ?? this.returnPercentage,
+      maxSipValue: maxSipValue ?? this.maxSipValue,
+      minSipValue: minSipValue ?? this.minSipValue,
+      maxTimePeriod: maxTimePeriod ?? this.maxTimePeriod,
+      minTimePeriod: minTimePeriod ?? this.minTimePeriod,
+      isPauseOrResuming: isPauseOrResuming ?? this.isPauseOrResuming,
+      isEdit: isEdit ?? this.isEdit,
+      currentSipFrequency: currentSipFrequency ?? this.currentSipFrequency,
+      editSipAmount: editSipAmount ?? this.editSipAmount,
+      selectedAsset: selectedAsset ?? this.selectedAsset,
+      editIndex: editIndex ?? this.editIndex,
+      numberOfPeriodsPerYear:
+          numberOfPeriodsPerYear ?? this.numberOfPeriodsPerYear,
+      upiApps: upiApps ?? this.upiApps,
+    );
   }
 
   AutosaveCubitState getDefault() {

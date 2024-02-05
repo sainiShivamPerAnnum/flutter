@@ -2,77 +2,77 @@ import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
+import 'package:upi_pay/upi_pay.dart';
 
 class SipMandatePage extends StatelessWidget {
-  const SipMandatePage({super.key});
+  const SipMandatePage({
+    super.key,
+    this.upiApps = const [],
+  });
+
+  final List<ApplicationMeta> upiApps;
 
   @override
   Widget build(BuildContext context) {
-    return BaseScaffold(
-      appBar: AppBar(
-        leading: IconButton(
-          onPressed: () => Navigator.pop(context),
-          icon: const Icon(
-            Icons.chevron_left,
-            size: 32,
-          ),
-        ),
-        backgroundColor: UiConstants.bg,
-        title: const Text('SIP with Fello'),
-        titleTextStyle: TextStyles.rajdhaniSB.title4.setHeight(1.3),
-        centerTitle: true,
-        elevation: .5,
+    return Padding(
+      padding: EdgeInsets.symmetric(
+        horizontal: SizeConfig.pageHorizontalMargins,
       ),
-      body: Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: SizeConfig.pageHorizontalMargins,
-        ),
-        child: Column(
-          crossAxisAlignment: CrossAxisAlignment.start,
-          children: [
-            SizedBox(
-              height: SizeConfig.padding22,
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            height: SizeConfig.padding22,
+          ),
+          Text(
+            'Set up UPI Mandate:',
+            style: TextStyles.rajdhaniSB.title5,
+          ),
+          SizedBox(
+            height: SizeConfig.padding3,
+          ),
+          Text(
+            'Just a click away',
+            style: TextStyles.rajdhaniSB.body2.colour(
+              UiConstants.grey1,
             ),
-            Text(
-              'Set up UPI Mandate:',
-              style: TextStyles.rajdhaniSB.title5,
+          ),
+          SizedBox(
+            height: SizeConfig.padding32,
+          ),
+          SelectUPIApplicationSection(
+            upiApps: upiApps,
+            onSelectApplication: print,
+          ),
+          SizedBox(
+            height: SizeConfig.padding32,
+          ),
+          const AllowUPIMandateSection(),
+          SizedBox(
+            height: SizeConfig.padding32,
+          ),
+          Align(
+            alignment: Alignment.center,
+            child: Text(
+              '3. Enter UPI pin and you are done',
+              style: TextStyles.rajdhaniSB.body1,
             ),
-            SizedBox(
-              height: SizeConfig.padding3,
-            ),
-            Text(
-              'Just a click away',
-              style: TextStyles.rajdhaniSB.body2.colour(
-                UiConstants.grey1,
-              ),
-            ),
-            SizedBox(
-              height: SizeConfig.padding32,
-            ),
-            const SelectUPIApplicationSection(),
-            SizedBox(
-              height: SizeConfig.padding32,
-            ),
-            const AllowUPIMandateSection(),
-            SizedBox(
-              height: SizeConfig.padding32,
-            ),
-            Align(
-              alignment: Alignment.center,
-              child: Text(
-                '3. Enter UPI pin and you are done',
-                style: TextStyles.rajdhaniSB.body1,
-              ),
-            ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
 }
 
 class SelectUPIApplicationSection extends StatelessWidget {
-  const SelectUPIApplicationSection({super.key});
+  const SelectUPIApplicationSection({
+    required this.onSelectApplication,
+    super.key,
+    this.upiApps = const [],
+  });
+
+  final List<ApplicationMeta> upiApps;
+  final ValueChanged<ApplicationMeta> onSelectApplication;
 
   @override
   Widget build(BuildContext context) {
@@ -86,50 +86,86 @@ class SelectUPIApplicationSection extends StatelessWidget {
         SizedBox(
           height: SizeConfig.padding16,
         ),
-        LayoutBuilder(builder: (context, constraints) {
-          final width = constraints.biggest.width;
-          final spacing = SizeConfig.padding12;
-          const horizontalCount = 3;
-          final containerWidth = (width - 2 * spacing) / horizontalCount;
+        if (upiApps.isEmpty)
+          Align(
+            alignment: Alignment.center,
+            child: Text(
+              'No upi apps found',
+              style: TextStyles.rajdhaniSB.body1,
+            ),
+          )
+        else
+          SizedBox(
+            width: double.infinity,
+            child: LayoutBuilder(builder: (context, constraints) {
+              final width = constraints.biggest.width;
+              final spacing = SizeConfig.padding12;
+              const horizontalCount = 3;
+              final containerWidth = (width - 2 * spacing) / horizontalCount;
 
-          return Wrap(
-            spacing: spacing,
-            runSpacing: spacing,
-            children: [
-              for (int i = 0; i < 3; i++)
-                Container(
-                  height: containerWidth,
-                  width: containerWidth,
-                  decoration: BoxDecoration(
-                    border: Border.all(
-                      color: Colors.white,
+              return Wrap(
+                crossAxisAlignment: WrapCrossAlignment.center,
+                spacing: spacing,
+                runSpacing: spacing,
+                children: [
+                  for (int i = 0; i < upiApps.length; i++)
+                    SizedBox(
+                      height: containerWidth,
+                      width: containerWidth,
+                      child: _PspAppContainer(
+                        meta: upiApps[i],
+                        onSelectApplication: onSelectApplication,
+                      ),
                     ),
-                    borderRadius: BorderRadius.circular(
-                      SizeConfig.roundness16,
-                    ),
-                  ),
-                  child: Center(
-                    child: Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        const AppImage(
-                          Assets.paytm,
-                        ),
-                        SizedBox(
-                          height: SizeConfig.padding12,
-                        ),
-                        Text(
-                          'Google Pay',
-                          style: TextStyles.sourceSansSB.body3,
-                        ),
-                      ],
-                    ),
-                  ),
-                ),
-            ],
-          );
-        })
+                ],
+              );
+            }),
+          )
       ],
+    );
+  }
+}
+
+class _PspAppContainer extends StatelessWidget {
+  const _PspAppContainer({
+    required this.meta,
+    required this.onSelectApplication,
+  });
+
+  final ApplicationMeta meta;
+  final ValueChanged<ApplicationMeta> onSelectApplication;
+
+  @override
+  Widget build(BuildContext context) {
+    return InkWell(
+      onTap: () => onSelectApplication(meta),
+      child: Container(
+        decoration: BoxDecoration(
+          border: Border.all(
+            color: Colors.white,
+          ),
+          borderRadius: BorderRadius.circular(
+            SizeConfig.roundness16,
+          ),
+        ),
+        child: Center(
+          child: Column(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              meta.iconImage(35),
+              SizedBox(
+                height: SizeConfig.padding12,
+              ),
+              Text(
+                meta.upiApplication.appName,
+                style: TextStyles.sourceSansSB.body3,
+                textAlign: TextAlign.center,
+                maxLines: 1,
+              ),
+            ],
+          ),
+        ),
+      ),
     );
   }
 }

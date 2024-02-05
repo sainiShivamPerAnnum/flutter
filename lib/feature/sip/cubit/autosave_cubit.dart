@@ -11,12 +11,12 @@ import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/modalsheets/pause_autosave_modalsheet.dart';
-import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
+import 'package:upi_pay/upi_pay.dart';
 
 import '../../../core/model/sip_model/calculator_details.dart';
 
@@ -26,7 +26,6 @@ class AutosaveCubit extends Cubit<AutosaveCubitState> {
   AutosaveCubit() : super(AutosaveCubitState());
   final SubService _subService = locator<SubService>();
   final SipRepository _sipRepo = locator<SipRepository>();
-  final CustomLogger _logger = locator<CustomLogger>();
   final AnalyticsService _analyticsService = locator<AnalyticsService>();
   PageController? txnPageController = PageController(initialPage: 0);
   TextEditingController sipAmountController = TextEditingController();
@@ -49,6 +48,8 @@ class AutosaveCubit extends Cubit<AutosaveCubitState> {
       sipScreenData = value.model;
       getDefaultValue(tabIndex);
     });
+    final upiApps = await _subService.getUPIApps();
+    emit(state.copyWith(upiApps: upiApps));
   }
 
   void getDefaultValue(int tabIndex) {
@@ -229,20 +230,5 @@ class AutosaveCubit extends Cubit<AutosaveCubitState> {
     }
   }
 
-  // trackPauseAnalytics(int value) {
-  //   _analyticsService
-  //       .track(eventName: AnalyticsEvents.autosavePauseModal, properties: {
-  //     "frequency": state.activeSubscription?.frequency,
-  //     "amount": state.activeSubscription?.amount,
-  //     // "SIP deducted Count": filteredList != null ? filteredList?.length : 0,
-  //     "SIP started timestamp": DateTime.fromMillisecondsSinceEpoch(
-  //         state.activeSubscription?.createdOn?.microsecondsSinceEpoch ?? 0),
-  //     "Total invested amount": AnalyticsProperties.getGoldInvestedAmount() +
-  //         AnalyticsProperties.getFelloFloAmount(),
-  //     "Amount invested in gold": AnalyticsProperties.getGoldInvestedAmount(),
-  //     "Grams of gold owned": AnalyticsProperties.getGoldQuantityInGrams(),
-  //     // "Amount Chip Selected": lastTappedChipIndex,
-  //     "Pause Value": value,
-  //   });
-  // }
+  Future<void> getAvailablePspApps() async {}
 }
