@@ -1,8 +1,11 @@
 import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/model/subscription_models/all_subscription_model.dart';
+import 'package:felloapp/core/model/subscription_models/create_subs_response.dart';
 import 'package:felloapp/core/model/subscription_models/subscription_model.dart';
+import 'package:felloapp/core/model/subscription_models/subscription_status_response.dart';
 import 'package:felloapp/core/model/subscription_models/subscription_transaction_model.dart';
 import 'package:felloapp/core/service/api_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -44,14 +47,14 @@ class SubscriptionRepo extends BaseRepo {
             SubscriptionTransactionModel.helper.fromMapArray(responseData);
         return ApiResponse(model: result, code: 200);
       }
-      return ApiResponse(model: [], code: 200);
+      return const ApiResponse(model: [], code: 200);
     } catch (e) {
       logger.e(e.toString());
       return ApiResponse.withError(e.toString(), 400);
     }
   }
 
-  Future<ApiResponse<String>> createSubscription({
+  Future<ApiResponse<CreateSubscriptionResponse>> createSubscription({
     required String freq,
     required int amount,
     required int lbAmt,
@@ -59,7 +62,7 @@ class SubscriptionRepo extends BaseRepo {
     required String package,
   }) async {
     try {
-      Map<String, dynamic> _body = {
+      Map<String, dynamic> body = {
         "amount": amount,
         "lbAmt": lbAmt,
         "augAmt": augAmt,
@@ -69,30 +72,56 @@ class SubscriptionRepo extends BaseRepo {
 
       if (package.toLowerCase().contains('phonepe')) {
         final res = await getPhonepeVersionCode();
-        if (res.isSuccess()) _body["version"] = res.model;
+        if (res.isSuccess()) body["version"] = res.model;
       }
 
       final response = await APIService.instance.postData(
         ApiPath.subscription,
-        body: _body,
+        body: body,
         cBaseUrl: baseUrl,
         apiName: '$_subscription/createSubscription',
       );
 
-      if (response['data'] != null) {
-        final responseData = response['data'];
-        if (responseData["intent"] != null) {
-          final responseIntent = responseData["intent"];
-          if ((responseIntent["redirectUrl"] ?? '').isNotEmpty) {
-            final responseRedirectUrl = responseIntent["redirectUrl"];
-            return ApiResponse(model: responseRedirectUrl, code: 200);
-          }
-        }
-      }
-      return ApiResponse.withError('No redirect url found', 400);
+      final res = CreateSubscriptionResponse.fromJson(
+        response,
+      );
+
+      return ApiResponse(
+        model: res,
+        code: 200,
+      );
     } catch (e) {
       _logger.e(e.toString());
       return ApiResponse.withError(e.toString(), 400);
+    }
+  }
+
+  Future<ApiResponse<SubscriptionStatusResponse>> getTransactionStatus(
+    String id,
+  ) async {
+    final uid = locator<UserService>().baseUser!.uid!;
+
+    try {
+      final response = await APIService.instance.getData(
+        ApiPath.getTransactionStatus(uid, id),
+        cBaseUrl: baseUrl,
+        apiName: '$_subscription/getTransactionStatus',
+      );
+
+      final res = SubscriptionStatusResponse.fromJson(
+        response,
+      );
+
+      return ApiResponse<SubscriptionStatusResponse>(
+        model: res,
+        code: 200,
+      );
+    } catch (e) {
+      _logger.e(e.toString());
+      return ApiResponse.withError(
+        e.toString(),
+        400, // client error.
+      );
     }
   }
 
@@ -155,7 +184,8 @@ class SubscriptionRepo extends BaseRepo {
     } catch (e) {
       debugPrint(e.toString());
       version = 0;
-      return ApiResponse.withError("Unable to get PhonePe version code", 400);
+      return const ApiResponse.withError(
+          "Unable to get PhonePe version code", 400);
     }
   }
 
@@ -164,14 +194,14 @@ class SubscriptionRepo extends BaseRepo {
     required String id,
   }) async {
     try {
-      Map<String, dynamic> _body = {
+      Map<String, dynamic> body = {
         "id": id,
         "frequency": option.name,
       };
 
       final response = await APIService.instance.postData(
         ApiPath.pauseSubscription,
-        body: _body,
+        body: body,
         cBaseUrl: baseUrl,
         apiName: '$_subscription/pauseSubscription',
       );

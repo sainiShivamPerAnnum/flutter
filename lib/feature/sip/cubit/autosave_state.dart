@@ -6,7 +6,6 @@ abstract class AutoSaveSetupState {}
 final class AutosaveCubitState extends AutoSaveSetupState {
   int currentPage;
   AllSubscriptionModel? activeSubscription;
-  List<AutosaveState>? autosaveState;
   bool isFetchingDetails;
   int sipAmount;
   int timePeriod;
@@ -23,7 +22,6 @@ final class AutosaveCubitState extends AutoSaveSetupState {
   AutosaveCubitState(
       {this.currentPage = 0,
       this.activeSubscription,
-      this.autosaveState,
       this.isFetchingDetails = false,
       this.sipAmount = 0,
       this.timePeriod = 0,
@@ -42,7 +40,6 @@ final class AutosaveCubitState extends AutoSaveSetupState {
     int? currentPage,
     bool? isFetchingDetails,
     AllSubscriptionModel? activeSubscription,
-    List<AutosaveState>? autosaveState,
     int? sipAmount,
     int? timePeriod,
     double? returnPercentage,
@@ -59,7 +56,6 @@ final class AutosaveCubitState extends AutoSaveSetupState {
     return AutosaveCubitState(
         currentPage: currentPage ?? this.currentPage,
         activeSubscription: activeSubscription ?? this.activeSubscription,
-        autosaveState: autosaveState ?? this.autosaveState,
         isFetchingDetails: isFetchingDetails ?? this.isFetchingDetails,
         sipAmount: sipAmount ?? this.sipAmount,
         timePeriod: timePeriod ?? this.timePeriod,
@@ -78,10 +74,12 @@ final class AutosaveCubitState extends AutoSaveSetupState {
 }
 
 final class SipAssetSelect extends AutoSaveSetupState {
-  int? selectedAsset;
+  final int? selectedAsset;
+
   SipAssetSelect({
     this.selectedAsset = -1,
   });
+
   SipAssetSelect copyWith({int? selectedAsset}) {
     return SipAssetSelect(selectedAsset: selectedAsset ?? this.selectedAsset);
   }

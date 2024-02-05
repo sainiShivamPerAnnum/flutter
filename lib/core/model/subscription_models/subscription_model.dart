@@ -1,37 +1,37 @@
 import 'package:json_annotation/json_annotation.dart';
 
+import 'subscription_status.dart';
+
 part 'subscription_model.g.dart';
 
 @JsonSerializable(
   createToJson: false,
+  checked: true,
 )
 class SubscriptionModel {
-  String? id;
-  String? subId;
-  String? status;
-  num? amount;
-  String? frequency;
+  final String id; // phone pe id on backend.
+  final String subId;
+  @JsonKey(unknownEnumValue: AutosaveState.IDLE)
+  final AutosaveState status;
+  final num amount;
+  final String frequency;
   @JsonKey(name: 'AUGGOLD99')
-  num? aUGGOLD99;
+  final num aUGGOLD99;
   @JsonKey(name: 'LENDBOXP2P')
-  num? lENDBOXP2P;
-  String? resumeFrequency;
-  String? createdOn;
-  String? updatedOn;
-  String? nextDue;
+  final num lENDBOXP2P;
+  final String createdOn;
+  final String nextDue;
 
-  SubscriptionModel({
-    this.id,
-    this.subId,
-    this.status,
-    this.amount,
-    this.frequency,
-    this.aUGGOLD99,
-    this.lENDBOXP2P,
-    this.resumeFrequency,
-    this.createdOn,
-    this.updatedOn,
-    this.nextDue,
+  const SubscriptionModel({
+    this.id = '',
+    this.subId = '',
+    this.status = AutosaveState.IDLE,
+    this.amount = 0,
+    this.frequency = '',
+    this.aUGGOLD99 = 0,
+    this.lENDBOXP2P = 0,
+    this.createdOn = '',
+    this.nextDue = '',
   });
 
   factory SubscriptionModel.fromJson(Map<String, dynamic> json) =>

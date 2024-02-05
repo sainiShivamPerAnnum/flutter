@@ -1,22 +1,15 @@
 import 'dart:math';
 
 import 'package:bloc/bloc.dart';
-import 'package:equatable/equatable.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/model/sip_model/sip_data_model.dart';
 import 'package:felloapp/core/model/subscription_models/all_subscription_model.dart';
 import 'package:felloapp/core/model/subscription_models/subscription_transaction_model.dart';
 import 'package:felloapp/core/repository/sip_repo.dart';
-import 'package:felloapp/core/repository/subscription_repo.dart';
-import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
-import 'package:felloapp/core/service/feature_flag_service/condition_evaluator.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
-import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/modalsheets/pause_autosave_modalsheet.dart';
-import 'package:felloapp/util/api_response.dart';
-import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
@@ -47,7 +40,7 @@ class AutosaveCubit extends Cubit<AutosaveCubitState> {
   List chipsList = [];
   bool hasMoreTxns = false;
   double sliderValue = 0;
-  void init() async {
+  Future<void> init() async {
     state.copyWith(isFetchingDetails: true);
     findActiveSubscription();
     await _sipRepo.getSipScreenData().then((value) {
@@ -142,7 +135,6 @@ class AutosaveCubit extends Cubit<AutosaveCubitState> {
 
   void findActiveSubscription() {
     emit(state.copyWith(activeSubscription: _subService.subscriptionData));
-    emit(state.copyWith(autosaveState: _subService.autosaveState));
   }
 
   void updatePauseResumeStatus() {
@@ -162,16 +154,17 @@ class AutosaveCubit extends Cubit<AutosaveCubitState> {
   Future pauseResume(int index) async {
     if (_subService.isPauseOrResuming) return;
     updatePauseResumeStatus();
-    if (_subService.autosaveState[index] == AutosaveState.PAUSED ||
-        _subService.autosaveState[index] == AutosaveState.INACTIVE) {
+    final status = _subService.subscriptionData!.subs![index].status;
+    if (status.isPaused) {
       locator<AnalyticsService>()
           .track(eventName: AnalyticsEvents.asResumeTapped, properties: {
         "frequency": state.activeSubscription!.subs![index].frequency,
         "amount": state.activeSubscription!.subs![index].amount,
       });
 
-      bool response = await _subService
-          .resumeSubscription(state.activeSubscription!.subs![index].id!);
+      bool response = await _subService.resumeSubscription(
+        state.activeSubscription!.subs![index].id,
+      );
       updatePauseResumeStatus();
       if (!response) {
         BaseUtil.showNegativeAlert("Failed to resume SIP", "Please try again");
@@ -197,7 +190,9 @@ class AutosaveCubit extends Cubit<AutosaveCubitState> {
         isBarrierDismissible: true,
         isScrollControlled: true,
         content: PauseAutosaveModal(
-            model: _subService, id: state.activeSubscription!.subs![index].id!),
+          model: _subService,
+          id: state.activeSubscription!.subs![index].id,
+        ),
       ).then((value) {
         updatePauseResumeStatus();
         findActiveSubscription();

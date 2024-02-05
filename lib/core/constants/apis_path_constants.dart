@@ -198,6 +198,9 @@ class ApiPath {
   static const pauseSubscription = "/sub/pause";
   static const resumeSubscription = "/sub/resume";
 
+  static String getTransactionStatus(String uid, String id) =>
+      '/$uid/sub?id=$id';
+
   static String txnsSubscription(String uid) => "/$uid/sub/txns";
 
   static String powerPlayMatches(String status, int limit, int offset) =>

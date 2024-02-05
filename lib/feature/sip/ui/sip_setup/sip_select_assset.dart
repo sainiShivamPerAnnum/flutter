@@ -1,14 +1,10 @@
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/core/model/sip_model/select_asset_options.dart';
 import 'package:felloapp/feature/sip/cubit/autosave_cubit.dart';
-import 'package:felloapp/ui/architecture/base_view.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
-import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:flutter_svg/svg.dart';
 
 class SelectSipScreen extends StatefulWidget {
   const SelectSipScreen({super.key});
@@ -82,7 +78,7 @@ class _SelectSipScreenState extends State<SelectSipScreen> {
           child: Column(
             children: [
               Padding(
-                padding: EdgeInsets.only(left: 32, top: 20, right: 43),
+                padding: const EdgeInsets.only(left: 32, top: 20, right: 43),
                 child: SizedBox(
                   height: SizeConfig.padding104,
                   width: SizeConfig.screenHeight,
@@ -139,7 +135,7 @@ class _SelectSipScreenState extends State<SelectSipScreen> {
                                   duration: const Duration(milliseconds: 500),
                                   curve: Curves.easeIn);
                             }
-                          : () => null,
+                          : () {},
                       label: "3 CLICKS AWAY"),
                 ),
               ),
@@ -152,7 +148,7 @@ class _SelectSipScreenState extends State<SelectSipScreen> {
 }
 
 class AssetBlock extends StatefulWidget {
-  const AssetBlock({super.key, required this.option, required this.index});
+  const AssetBlock({required this.option, required this.index, super.key});
   final AssetOptions option;
   final int index;
 

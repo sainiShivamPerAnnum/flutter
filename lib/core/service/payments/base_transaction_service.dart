@@ -63,9 +63,6 @@ abstract class BaseTransactionService
 /// An abstract class for scheduling and rescheduling asynchronous tasks with
 /// retry logic based on the result and a completion condition.
 abstract class Rescheduler<T> {
-  /// The current retry count.
-  int _retryCount = 0;
-
   /// The maximum number of times the task can be retried.
   int get rescheduleLimit;
 
@@ -88,23 +85,20 @@ abstract class Rescheduler<T> {
   /// continues to fail or if exceptions are thrown during execution, the
   /// retry count is incremented until it reaches the maximum retry limit.
   Future<void> run() async {
-    while (_retryCount < rescheduleLimit) {
+    int retryCount = 0;
+
+    while (retryCount < rescheduleLimit) {
       try {
         final result = await task();
         if (predicate(result)) {
           onComplete(result);
           return;
         } else {
-          _retryCount++;
+          retryCount++;
         }
       } catch (e) {
-        _retryCount++;
+        retryCount++;
       }
     }
-    _reset();
-  }
-
-  void _reset() {
-    _retryCount = 0;
   }
 }
