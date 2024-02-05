@@ -56,9 +56,9 @@ class SubscriptionRepo extends BaseRepo {
 
   Future<ApiResponse<CreateSubscriptionResponse>> createSubscription({
     required String freq,
-    required int amount,
-    required int lbAmt,
-    required int augAmt,
+    required num amount,
+    required num lbAmt,
+    required num augAmt,
     required String package,
   }) async {
     try {
@@ -76,7 +76,7 @@ class SubscriptionRepo extends BaseRepo {
       }
 
       final response = await APIService.instance.postData(
-        ApiPath.subscription,
+        ApiPath.createSubscription(userService.baseUser!.uid!),
         body: body,
         cBaseUrl: baseUrl,
         apiName: '$_subscription/createSubscription',
@@ -149,7 +149,7 @@ class SubscriptionRepo extends BaseRepo {
     required int amount,
   }) async {
     try {
-      Map<String, dynamic> _body = {
+      Map<String, dynamic> body = {
         "amount": amount,
         "id": id,
         "frequency": freq,
@@ -157,7 +157,7 @@ class SubscriptionRepo extends BaseRepo {
 
       final response = await APIService.instance.patchData(
         ApiPath.updateSubscription(userService.baseUser!.uid!),
-        body: _body,
+        body: body,
         cBaseUrl: baseUrl,
         apiName: '$_subscription/updateSubscription',
       );
@@ -214,13 +214,13 @@ class SubscriptionRepo extends BaseRepo {
 
   Future<ApiResponse<SubscriptionModel>> resumeSubscription(String id) async {
     try {
-      Map<String, dynamic> _body = {
+      Map<String, dynamic> body = {
         "id": id,
       };
 
       final response = await APIService.instance.postData(
         ApiPath.resumeSubscription,
-        body: _body,
+        body: body,
         cBaseUrl: baseUrl,
         apiName: '$_subscription/resumeSubscription',
       );
