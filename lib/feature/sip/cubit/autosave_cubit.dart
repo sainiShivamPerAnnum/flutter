@@ -43,6 +43,7 @@ class AutosaveCubit extends Cubit<AutosaveCubitState> {
   double sliderValue = 0;
   Future<void> init() async {
     state.copyWith(isFetchingDetails: true);
+    await _subService.getSubscription();
     findActiveSubscription();
     await _sipRepo.getSipScreenData().then((value) {
       sipScreenData = value.model;
