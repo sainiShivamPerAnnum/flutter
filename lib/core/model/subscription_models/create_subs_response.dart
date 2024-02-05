@@ -37,12 +37,12 @@ class SubscriptionResponseData {
 class SubscriptionIntent {
   final String redirectUrl;
   final bool alreadyExist;
-  final String id;
+  final String subId;
 
   const SubscriptionIntent({
     this.redirectUrl = '',
     this.alreadyExist = false,
-    this.id = '',
+    this.subId = '',
   });
 
   factory SubscriptionIntent.fromJson(Map<String, dynamic> json) =>

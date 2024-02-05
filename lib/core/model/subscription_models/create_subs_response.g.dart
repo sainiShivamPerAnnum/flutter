@@ -47,7 +47,7 @@ SubscriptionIntent _$SubscriptionIntentFromJson(Map<String, dynamic> json) =>
               $checkedConvert('redirectUrl', (v) => v as String? ?? ''),
           alreadyExist:
               $checkedConvert('alreadyExist', (v) => v as bool? ?? false),
-          id: $checkedConvert('id', (v) => v as String? ?? ''),
+          subId: $checkedConvert('subId', (v) => v as String? ?? ''),
         );
         return val;
       },

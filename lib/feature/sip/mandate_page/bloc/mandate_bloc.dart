@@ -64,7 +64,7 @@ class MandateBloc extends Bloc<MandateEvent, MandateState> {
         emitter(
           (state as ListedPSPApps).copyWith(
             status: SubsTransactionStatus.created(
-              subsPrimaryKey: intentData.id,
+              subsPrimaryKey: intentData.subId,
               redirectUrl: intentData.redirectUrl,
               mandateAlreadyExits: intentData.alreadyExist,
             ),

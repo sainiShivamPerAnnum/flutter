@@ -177,7 +177,7 @@ class SubService extends ChangeNotifier {
     if (res.isSuccess()) {
       final intent = res.model!.data.intent;
       final intentUrl = intent.redirectUrl;
-      final id = intent.id;
+      final id = intent.subId;
       if (intentUrl.isNotEmpty) {
         try {
           if (Platform.isIOS) {
@@ -198,9 +198,9 @@ class SubService extends ChangeNotifier {
         }
 
         if (subscriptionData != null) {
-          final result = await _pollForSubscriptionStatus(id);
-          final data = result?.model?.data;
-          if (result != null && result.isSuccess() && data != null) {
+          final result = await pollForSubscriptionStatus(id);
+          final data = result.model?.data;
+          if (result.isSuccess() && data != null) {
             if (data.status.isActive) {}
 
             if (data.status.isCancelled) {}
@@ -217,24 +217,17 @@ class SubService extends ChangeNotifier {
     }
   }
 
-  Future<ApiResponse<SubscriptionStatusResponse>?> _pollForSubscriptionStatus(
+  Future<ApiResponse<SubscriptionStatusResponse>> pollForSubscriptionStatus(
     String subscriptionKey,
   ) async {
-    int pollCount = 0;
+    int pollCount = 1;
     const pollLimit = 6;
     const relayDuration = Duration(seconds: 5);
 
-    ApiResponse<SubscriptionStatusResponse>? lastResult;
+    ApiResponse<SubscriptionStatusResponse> lastResult =
+        await getSubscriptionByStatus(subscriptionKey);
 
     while (pollCount < pollLimit) {
-      // delay between two requests.
-      if (pollCount < 1) {
-        await Future.delayed(
-          relayDuration,
-        );
-      }
-
-      lastResult = await getSubscriptionByStatus(subscriptionKey);
       final data = lastResult.model?.data;
 
       // Termination condition for polling:
@@ -249,6 +242,15 @@ class SubService extends ChangeNotifier {
       if (predicate) {
         return lastResult;
       }
+
+      // delay between two requests.
+      if (pollCount < 1) {
+        await Future.delayed(
+          relayDuration,
+        );
+      }
+
+      lastResult = await getSubscriptionByStatus(subscriptionKey);
 
       pollCount++;
     }

@@ -115,6 +115,7 @@ const String TicketsIntroViewPath = "/ticketsIntroViewPath";
 const String TicketsTutorialViewPath = "/ticketsTutorialViewPath";
 
 const String SipPageViewPath = "/sip";
+const String SipStatusPage = '/sip/status';
 
 enum Pages {
   Splash,
@@ -225,7 +226,8 @@ enum Pages {
   // SIP
   SipEntryView,
   SipView,
-  Sip
+  Sip,
+  SipStatusView,
 }
 
 class PageConfiguration {
@@ -910,4 +912,11 @@ PageConfiguration StoriesPageConfig = PageConfiguration(
   path: StoriesPath,
   uiPage: Pages.Stories,
   name: "New user stories",
+);
+
+PageConfiguration SipPollingPageConfig = PageConfiguration(
+  key: 'SipStatusViewPath',
+  path: SipStatusPage,
+  uiPage: Pages.SipStatusView,
+  name: 'Sip polling page config',
 );
