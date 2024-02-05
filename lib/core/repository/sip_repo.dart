@@ -1,12 +1,8 @@
-import 'package:felloapp/core/constants/apis_path_constants.dart';
 import 'package:felloapp/core/model/sip_model/sip_data_model.dart';
 import 'package:felloapp/core/repository/base_repo.dart';
 import 'package:felloapp/core/service/api_service.dart';
-import 'package:felloapp/core/service/cache_service.dart';
 import 'package:felloapp/util/api_response.dart';
-import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/flavor_config.dart';
-import 'package:felloapp/util/locator.dart';
 
 class SipRepository extends BaseRepo {
   String baseUrl = FlavorConfig.isProduction()

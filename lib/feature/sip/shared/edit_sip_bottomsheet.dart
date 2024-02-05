@@ -1,19 +1,18 @@
-import 'package:felloapp/core/service/subscription_service.dart';
+import 'package:felloapp/core/model/subscription_models/subscription_status.dart';
 import 'package:felloapp/feature/sip/cubit/autosave_cubit.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class EditSipBottomSheet extends StatefulWidget {
   const EditSipBottomSheet({
-    super.key,
     required this.state,
     required this.index,
     required this.model,
     required this.allowEdit,
+    super.key,
   });
   final AutosaveState state;
   final int index;
@@ -113,10 +112,7 @@ class _EditSipBottomSheetState extends State<EditSipBottomSheet> {
                     width: SizeConfig.padding12,
                   ),
                   Text(
-                    widget.state == AutosaveState.PAUSED ||
-                            widget.state == AutosaveState.INACTIVE
-                        ? "Resume SIP"
-                        : "Pause SIP",
+                    widget.state.isPaused ? "Resume SIP" : "Pause SIP",
                     style: TextStyles.sourceSansSB.body2.colour(Colors.white),
                   )
                 ],

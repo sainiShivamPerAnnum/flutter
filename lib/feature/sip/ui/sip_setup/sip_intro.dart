@@ -1,11 +1,11 @@
-import 'package:felloapp/base_util.dart';
 import 'dart:math' as math;
-import 'package:felloapp/core/service/subscription_service.dart';
+
+import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/model/subscription_models/subscription_status.dart';
 import 'package:felloapp/feature/sip/cubit/autosave_cubit.dart';
 import 'package:felloapp/feature/sip/shared/edit_sip_bottomsheet.dart';
 import 'package:felloapp/feature/sip/shared/sip.dart';
 import 'package:felloapp/feature/sip/shared/tab_slider.dart';
-import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -41,7 +41,6 @@ class _SipIntroState extends State<SipIntro> {
   Widget build(BuildContext context) {
     final model = context.watch<AutosaveCubit>();
     var subs = model.state.activeSubscription?.subs;
-    var substate = model.state.autosaveState;
     final locale = locator<S>();
     var activeSubsLength = model.state.activeSubscription?.length ?? 0;
     return SingleChildScrollView(
@@ -120,9 +119,11 @@ class _SipIntroState extends State<SipIntro> {
                     child: AppPositiveBtn(
                         btnText: 'START SIP',
                         onPressed: () {
-                          model.pageController.animateToPage(1,
-                              duration: Duration(milliseconds: 100),
-                              curve: Curves.easeIn);
+                          model.pageController.animateToPage(
+                            1,
+                            duration: const Duration(milliseconds: 100),
+                            curve: Curves.easeIn,
+                          );
                         }),
                   ),
                   Padding(
@@ -163,8 +164,8 @@ class _SipIntroState extends State<SipIntro> {
                     return Column(children: [
                       AssetSipContainer(
                         index: i,
-                        state: substate![i],
-                        allowEdit: !(subs![i].lENDBOXP2P != 0.0 &&
+                        state: subs![i].status,
+                        allowEdit: !(subs[i].lENDBOXP2P != 0.0 &&
                             subs[i].aUGGOLD99 != 0.0),
                         assetUrl: (subs[i].lENDBOXP2P != 0.0 &&
                                 subs[i].aUGGOLD99 != 0.0)
@@ -172,17 +173,17 @@ class _SipIntroState extends State<SipIntro> {
                             : subs[i].lENDBOXP2P != 0
                                 ? Assets.floWithoutShadow
                                 : Assets.goldWithoutShadow,
-                        nextDueDate: subs[i].nextDue!,
-                        sipAmount: (subs[i].amount ?? 0).toInt(),
+                        nextDueDate: subs[i].nextDue,
+                        sipAmount: subs[i].amount.toInt(),
                         sipName:
                             subs[i].lENDBOXP2P != 0 && subs[i].aUGGOLD99 != 0
                                 ? "Digital Gold & P2P SIP"
                                 : subs[i].lENDBOXP2P != 0
                                     ? "Fello P2P SIP"
                                     : "Digital Gold SIP",
-                        startDate: subs[i].createdOn!,
-                        sipInterval: subs[i].frequency!,
-                        pausedSip: substate[i] == AutosaveState.PAUSED,
+                        startDate: subs[i].createdOn,
+                        sipInterval: subs[i].frequency,
+                        pausedSip: subs[i].status.isPaused,
                         model: model,
                       ),
                       SizedBox(
@@ -248,11 +249,11 @@ class AssetSipContainer extends StatelessWidget {
       required this.sipInterval,
       required this.sipAmount,
       required this.sipName,
-      this.pausedSip,
       required this.index,
       required this.state,
       required this.model,
       required this.allowEdit,
+      this.pausedSip,
       super.key});
   final String assetUrl;
   final String nextDueDate;
@@ -315,7 +316,7 @@ class AssetSipContainer extends StatelessWidget {
                               .colour(UiConstants.kTextColor),
                         ),
                         Text(
-                          "${sipInterval} SIP started on ${formattedDate}",
+                          "$sipInterval SIP started on $formattedDate",
                           style: TextStyles.sourceSans.body4
                               .colour(UiConstants.kTextColor.withOpacity(0.8)),
                         )

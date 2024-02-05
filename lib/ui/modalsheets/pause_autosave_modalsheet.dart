@@ -2,7 +2,6 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
-import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -14,8 +13,11 @@ class PauseAutosaveModal extends StatefulWidget {
   final SubService? model;
   final String id;
 
-  const PauseAutosaveModal({Key? key, this.model, required this.id})
-      : super(key: key);
+  const PauseAutosaveModal({
+    required this.id,
+    super.key,
+    this.model,
+  });
 
   @override
   State<PauseAutosaveModal> createState() => _PauseAutosaveModalState();
@@ -82,7 +84,7 @@ class _PauseAutosaveModalState extends State<PauseAutosaveModal> {
     );
   }
 
-  pauseOptionTile(
+  Widget pauseOptionTile(
       {required String text,
       required int radioValue,
       required AutosavePauseOption option}) {
@@ -111,7 +113,7 @@ class _PauseAutosaveModalState extends State<PauseAutosaveModal> {
                     () => AppState.backButtonDispatcher!.didPopRoute());
                 return true;
               });
-              if (res != null && res) {
+              if (res) {
                 BaseUtil.showPositiveAlert("SIP paused successfully",
                     "For more details check SIP section");
               }
