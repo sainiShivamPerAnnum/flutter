@@ -10,8 +10,8 @@ import 'package:upi_pay/upi_pay.dart';
 
 class SipMandateView extends StatelessWidget {
   const SipMandateView({
-    this.amount = 0,
-    this.frequency = '',
+    this.amount = 100,
+    this.frequency = 'DAILY',
     this.assetType = '',
     super.key,
   });

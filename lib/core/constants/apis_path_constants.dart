@@ -195,6 +195,8 @@ class ApiPath {
 
   //phonepe subscriptions
   static String subscription = "/subs";
+  static String subscriptionV3 = "/sub";
+  static String createSubscription(String uid) => '/$uid/sub';
   static const pauseSubscription = "/sub/pause";
   static const resumeSubscription = "/sub/resume";
   static String updateSubscription(String uid) => "/$uid/sub";

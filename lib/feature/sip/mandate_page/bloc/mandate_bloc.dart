@@ -78,8 +78,14 @@ class MandateBloc extends Bloc<MandateEvent, MandateState> {
         emitter(
           (state as ListedPSPApps).copyWith(
             status: SubsTransactionStatus.failed(
-                res.errorMessage ?? 'Failed to create subscription'),
+              res.errorMessage ?? 'Failed to create subscription',
+            ),
           ),
+        );
+
+        BaseUtil.showNegativeAlert(
+          'Failed to create subscription',
+          res.errorMessage,
         );
       }
     }

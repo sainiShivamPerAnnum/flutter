@@ -76,7 +76,7 @@ class SubscriptionRepo extends BaseRepo {
       }
 
       final response = await APIService.instance.postData(
-        ApiPath.subscription,
+        ApiPath.createSubscription(userService.baseUser!.uid!),
         body: body,
         cBaseUrl: baseUrl,
         apiName: '$_subscription/createSubscription',
