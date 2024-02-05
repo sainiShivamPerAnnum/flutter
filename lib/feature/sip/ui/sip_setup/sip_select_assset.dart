@@ -1,8 +1,9 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/sip_model/select_asset_options.dart';
-import 'package:felloapp/feature/sip/cubit/autosave_cubit.dart';
 import 'package:felloapp/feature/sip/cubit/selectedAsset_cubit.dart';
+import 'package:felloapp/feature/sip/cubit/sip_data_handler.dart';
+import 'package:felloapp/feature/sip/cubit/sub_data_handler.dart';
 import 'package:felloapp/feature/sip/ui/sip_setup/sip_amount_view.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -18,15 +19,8 @@ class SipAssetSelectView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(
-          create: (_) => SelectAssetCubit(),
-        ),
-        BlocProvider(
-          create: (context) => AutosaveCubit(),
-        ),
-      ],
+    return BlocProvider(
+      create: (_) => SelectAssetCubit(),
       child: const SipAsssetSelect(),
     );
   }
@@ -59,8 +53,7 @@ class _SipAsssetSelectState extends State<SipAsssetSelect> {
 
   @override
   Widget build(BuildContext context) {
-    final sipmodel = context.read<AutosaveCubit>();
-    var assets = sipmodel.state.sipScreenData?.selectAssetScreen?.options;
+    var assets = SipDataHolder.instance.data.selectAssetScreen?.options;
     var assetsLength = assets?.length ?? 0;
     final selectedAssetModel = context.watch<SelectAssetCubit>();
     return Scaffold(
@@ -74,11 +67,11 @@ class _SipAsssetSelectState extends State<SipAsssetSelect> {
             size: 32,
           ),
         ),
-        backgroundColor: UiConstants.kTextColor4,
+        backgroundColor: UiConstants.bg,
         title: const Text('SIP with Fello'),
         titleTextStyle: TextStyles.rajdhaniSB.title4.setHeight(1.3),
         centerTitle: true,
-        elevation: .5,
+        elevation: 0,
       ),
       body: Column(
         children: [
@@ -179,8 +172,8 @@ class _SipAsssetSelectState extends State<SipAsssetSelect> {
                                     PageAction(
                                   page: SipFormPageConfig,
                                   widget: SipFormAmountView(
-                                    mandateAvailable: sipmodel.state
-                                            .activeSubscription?.isActive ??
+                                    mandateAvailable: AllSubscriptionHolder
+                                            .instance.data.isActive ??
                                         false,
                                   ),
                                   state: PageState.addWidget,

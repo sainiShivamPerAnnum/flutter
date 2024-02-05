@@ -8,22 +8,12 @@ final class AutosaveCubitState extends AutoSaveSetupState {
   final SipData? sipScreenData;
   final bool isFetchingDetails;
   final bool? isPauseOrResuming;
-  // bool? isEdit;
-  // num? editSipAmount;
-  // String? currentSipFrequency;
-  // int? selectedAsset;
-  // int? editIndex;
   final List<ApplicationMeta> upiApps;
   AutosaveCubitState({
     this.activeSubscription,
     this.sipScreenData,
     this.isFetchingDetails = false,
     this.isPauseOrResuming = false,
-    // this.isEdit = false,
-    // this.currentSipFrequency,
-    // this.selectedAsset = -1,
-    // this.editSipAmount,
-    // this.editIndex,
     this.upiApps = const [],
   });
 
@@ -39,13 +29,6 @@ final class AutosaveCubitState extends AutoSaveSetupState {
       isFetchingDetails: isFetchingDetails ?? this.isFetchingDetails,
       isPauseOrResuming: isPauseOrResuming ?? this.isPauseOrResuming,
       sipScreenData: sipScreenData ?? this.sipScreenData,
-      // isEdit: isEdit ?? this.isEdit,
-      // currentSipFrequency: currentSipFrequency ?? this.currentSipFrequency,
-      // editSipAmount: editSipAmount ?? this.editSipAmount,
-      // selectedAsset: selectedAsset ?? this.selectedAsset,
-      // editIndex: editIndex ?? this.editIndex,
-      // numberOfPeriodsPerYear:
-      //     numberOfPeriodsPerYear ?? this.numberOfPeriodsPerYear,
       upiApps: upiApps ?? this.upiApps,
     );
   }

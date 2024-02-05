@@ -3,8 +3,9 @@ import 'dart:math';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
-import 'package:felloapp/feature/sip/cubit/autosave_cubit.dart';
+import 'package:felloapp/feature/sip/cubit/sip_data_handler.dart';
 import 'package:felloapp/feature/sip/cubit/sip_form_cubit.dart';
+import 'package:felloapp/feature/sip/cubit/sub_data_handler.dart';
 import 'package:felloapp/feature/sip/shared/tab_slider.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
@@ -35,15 +36,8 @@ class SipFormAmountView extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MultiBlocProvider(
-      providers: [
-        BlocProvider(
-          create: (_) => SipFormCubit(),
-        ),
-        BlocProvider(
-          create: (context) => AutosaveCubit(),
-        ),
-      ],
+    return BlocProvider(
+      create: (_) => SipFormCubit(),
       child: SipFormAmount(
           mandateAvailable: mandateAvailable,
           prefillAmount: prefillAmount,
@@ -80,6 +74,7 @@ class _SipFormAmountState extends State<SipFormAmount> {
   int _currentTab = 0;
   var bestOption;
   num ticketMultiplier = AppConfig.getValue(AppConfigKey.tambola_cost);
+
   int calculateMaturityValue(double P, double i, int n) {
     double compoundInterest = ((pow(1 + i, n) - 1) / i) * (1 + i);
     double M = P * compoundInterest;
@@ -87,15 +82,13 @@ class _SipFormAmountState extends State<SipFormAmount> {
   }
 
   String getReturn() {
-    final sipmodel = context.read<AutosaveCubit>();
     final formmodel = context.read<SipFormCubit>();
-    // ValueNotifier<double> principalAmount = _amount!;
-    int numberOfPeriods = sipmodel
-            .state
-            .sipScreenData
-            ?.amountSelectionScreen
-            ?.data?[sipmodel.state.sipScreenData?.amountSelectionScreen
-                ?.options?[_currentTab]]
+    int numberOfPeriods = SipDataHolder
+            .instance
+            .data
+            .amountSelectionScreen
+            ?.data?[SipDataHolder
+                .instance.data.amountSelectionScreen?.options?[_currentTab]]
             ?.numberOfPeriodsPerYear ??
         1;
 
@@ -114,14 +107,13 @@ class _SipFormAmountState extends State<SipFormAmount> {
   }
 
   onTabChange() {
-    final sipmodel = context.read<AutosaveCubit>();
     final formmodel = context.read<SipFormCubit>();
-    var options = sipmodel
-        .state
-        .sipScreenData
-        ?.amountSelectionScreen
-        ?.data?[sipmodel
-            .state.sipScreenData?.amountSelectionScreen?.options?[_currentTab]]
+    var options = SipDataHolder
+        .instance
+        .data
+        .amountSelectionScreen
+        ?.data?[SipDataHolder
+            .instance.data.amountSelectionScreen?.options?[_currentTab]]
         ?.options;
     var maxValueOption = options?.reduce((currentMax, next) =>
         next.value! > currentMax.value! ? next : currentMax);
@@ -137,18 +129,16 @@ class _SipFormAmountState extends State<SipFormAmount> {
   @override
   void initState() {
     super.initState();
-    final sipmodel = context.read<AutosaveCubit>();
     final formmodel = context.read<SipFormCubit>();
-    var editSipTab = sipmodel
-        .state.sipScreenData?.amountSelectionScreen?.options
+    var editSipTab = SipDataHolder.instance.data.amountSelectionScreen?.options
         ?.indexOf(widget.prefillFrequency ?? 'DAILY');
     _currentTab = editSipTab ?? 0;
-    var options = sipmodel
-        .state
-        .sipScreenData
-        ?.amountSelectionScreen
-        ?.data?[sipmodel
-            .state.sipScreenData?.amountSelectionScreen?.options?[_currentTab]]
+    var options = SipDataHolder
+        .instance
+        .data
+        .amountSelectionScreen
+        ?.data?[SipDataHolder
+            .instance.data.amountSelectionScreen?.options?[_currentTab]]
         ?.options;
     var maxValueOption = options?.reduce((currentMax, next) =>
         next.value! > currentMax.value! ? next : currentMax);
@@ -164,11 +154,10 @@ class _SipFormAmountState extends State<SipFormAmount> {
 
   @override
   Widget build(BuildContext context) {
-    final sipmodel = context.read<AutosaveCubit>();
     final formmodel = context.read<SipFormCubit>();
     var options =
-        sipmodel.state.sipScreenData?.amountSelectionScreen?.options ?? [];
-    var bestOptions = sipmodel.state.sipScreenData?.amountSelectionScreen
+        SipDataHolder.instance.data.amountSelectionScreen?.options ?? [];
+    var bestOptions = SipDataHolder.instance.data.amountSelectionScreen
         ?.data?[options[_currentTab]]?.options
         ?.indexWhere((option) => option.best != null && option.best == true);
     return Scaffold(
@@ -182,11 +171,11 @@ class _SipFormAmountState extends State<SipFormAmount> {
             size: 32,
           ),
         ),
-        backgroundColor: UiConstants.kTextColor4,
+        backgroundColor: UiConstants.bg,
         title: const Text('SIP with Fello'),
         titleTextStyle: TextStyles.rajdhaniSB.title4.setHeight(1.3),
         centerTitle: true,
-        elevation: .5,
+        elevation: 0,
       ),
       resizeToAvoidBottomInset: false,
       body: DefaultTabController(
@@ -348,11 +337,11 @@ class _SipFormAmountState extends State<SipFormAmount> {
                       isEdit: widget.isEdit ?? false,
                       mandateAvailable: widget.mandateAvailable,
                       amount: state.formAmount,
-                      frequency: sipmodel.state.sipScreenData!
+                      frequency: SipDataHolder.instance.data
                           .amountSelectionScreen!.options![_currentTab],
                       id: (widget.isEdit ?? false)
-                          ? sipmodel.state.activeSubscription!
-                              .subs![widget.editIndex!].id
+                          ? AllSubscriptionHolder
+                              .instance.data.subs![widget.editIndex!].id
                           : null,
                     ),
                 listener: (context, state) {})),
@@ -383,7 +372,7 @@ class _FooterState extends State<_Footer> {
 
   @override
   Widget build(BuildContext context) {
-    var model = context.read<AutosaveCubit>();
+    final formmodel = context.read<SipFormCubit>();
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: SizeConfig.padding24,
@@ -434,7 +423,7 @@ class _FooterState extends State<_Footer> {
                 setState(() {
                   _isLoading = true;
                 });
-                var res = await model.editSipTrigger(
+                var res = await formmodel.editSipTrigger(
                     widget.amount, widget.frequency, widget.id!);
                 if (!res) {
                   setState(() {
@@ -678,7 +667,7 @@ class AmountSlider extends StatelessWidget {
                     return GestureDetector(
                       onTap: () => onChanged(amt),
                       child: SipAmountChip(
-                        isBest: i == bestOption, // Change it.
+                        isBest: i == bestOption,
                         isSelected: amount == amt,
                         label: '₹${amt.toInt()}',
                       ),
@@ -832,9 +821,9 @@ class _AmountInputWidgetState extends State<AmountInputWidget> {
                     SizedBox(
                       width: SizeConfig.padding4,
                     ),
-                    Icon(
+                    const Icon(
                       Icons.info_outline,
-                      size: 10,
+                      size: 14,
                       color: UiConstants.teal3,
                     ),
                   ],

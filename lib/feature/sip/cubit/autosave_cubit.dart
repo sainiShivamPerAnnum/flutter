@@ -4,9 +4,10 @@ import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/sip_model/sip_data_model.dart';
 import 'package:felloapp/core/model/subscription_models/all_subscription_model.dart';
-import 'package:felloapp/core/repository/sip_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
+import 'package:felloapp/feature/sip/cubit/sip_data_handler.dart';
+import 'package:felloapp/feature/sip/cubit/sub_data_handler.dart';
 import 'package:felloapp/feature/sip/ui/sip_setup/sip_amount_view.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -23,15 +24,11 @@ part 'autosave_state.dart';
 class AutosaveCubit extends Cubit<AutosaveCubitState> {
   AutosaveCubit() : super(AutosaveCubitState());
   final SubService _subService = locator<SubService>();
-  final SipRepository _sipRepo = locator<SipRepository>();
   final AnalyticsService _analyticsService = locator<AnalyticsService>();
   final locale = locator<S>();
 
   Future<void> init() async {
     await getData();
-    await _sipRepo.getSipScreenData().then((value) {
-      emit(state.copyWith(sipScreenData: value.model));
-    });
     final upiApps = await _subService.getUPIApps();
     emit(state.copyWith(upiApps: upiApps));
   }
@@ -39,7 +36,13 @@ class AutosaveCubit extends Cubit<AutosaveCubitState> {
   Future<void> getData() async {
     emit(state.copyWith(isFetchingDetails: true));
     await _subService.getSubscription();
-    emit(state.copyWith(activeSubscription: _subService.subscriptionData));
+    await _subService.getSipScreenData();
+    SipDataHolder.init(_subService.sipData!);
+    AllSubscriptionHolder.init(_subService.subscriptionData!);
+    emit(state.copyWith(
+        sipScreenData: SipDataHolder.instance.data,
+        activeSubscription: AllSubscriptionHolder.instance.data,
+        isFetchingDetails: false));
   }
 
   void updatePauseResumeStatus() {
@@ -60,22 +63,6 @@ class AutosaveCubit extends Cubit<AutosaveCubitState> {
       ),
       state: PageState.addWidget,
     );
-  }
-
-  Future<bool> editSipTrigger(
-      num principalAmount, String frequency, String id) async {
-    emit(state.copyWith(isPauseOrResuming: true));
-    bool response = await _subService.updateSubscription(
-        freq: frequency, amount: principalAmount.toInt(), id: id);
-    if (!response) {
-      BaseUtil.showNegativeAlert("Failed to update SIP", "Please try again");
-      return false;
-    } else {
-      await getData();
-      BaseUtil.showPositiveAlert("Subscription updated successfully",
-          "Effective changes will take place from tomorrow");
-      return true;
-    }
   }
 
   Future pauseResume(int index) async {

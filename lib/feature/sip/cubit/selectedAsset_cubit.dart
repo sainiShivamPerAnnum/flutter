@@ -7,6 +7,6 @@ class SelectAssetCubit extends Cubit<SelectAssetCubitState> {
   SelectAssetCubit() : super(SelectAssetCubitState());
 
   void setSelectedAsset(int index) {
-    emit(state.copyWith(selectedAsset: 0));
+    emit(state.copyWith(selectedAsset: index));
   }
 }

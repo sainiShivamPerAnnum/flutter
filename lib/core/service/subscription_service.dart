@@ -8,10 +8,12 @@ import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/amount_chips_model.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
+import 'package:felloapp/core/model/sip_model/sip_data_model.dart';
 import 'package:felloapp/core/model/sub_combos_model.dart';
 import 'package:felloapp/core/model/subscription_models/all_subscription_model.dart';
 import 'package:felloapp/core/model/subscription_models/subscription_transaction_model.dart';
 import 'package:felloapp/core/repository/getters_repo.dart';
+import 'package:felloapp/core/repository/sip_repo.dart';
 import 'package:felloapp/core/repository/subscription_repo.dart';
 import 'package:felloapp/feature/sip/ui/sip_setup/sip_intro.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -82,6 +84,7 @@ List<SubComboModel> defaultSipComboList = [
 class SubService extends ChangeNotifier {
   //DEPENDENCY - START
   final SubscriptionRepo _subscriptionRepo = locator<SubscriptionRepo>();
+  final SipRepository _sipRepo = locator<SipRepository>();
   final GetterRepository _getterRepo = locator<GetterRepository>();
   final CustomLogger _logger = locator<CustomLogger>();
 
@@ -114,10 +117,18 @@ class SubService extends ChangeNotifier {
 
   AllSubscriptionModel? _subscriptionData;
 
+  SipData? _sipData;
+
   AllSubscriptionModel? get subscriptionData => _subscriptionData;
+
+  SipData? get sipData => _sipData;
 
   set subscriptionData(AllSubscriptionModel? value) {
     _subscriptionData = value;
+  }
+
+  set sipData(SipData? value) {
+    _sipData = value;
   }
 
   bool _isPauseOrResuming = false;
@@ -259,6 +270,11 @@ class SubService extends ChangeNotifier {
   Future<void> getSubscription() async {
     final res = await _subscriptionRepo.getSubscription();
     subscriptionData = res.isSuccess() ? res.model : null;
+  }
+
+  Future<void> getSipScreenData() async {
+    final res = await _sipRepo.getSipScreenData();
+    sipData = res.isSuccess() ? res.model : null;
   }
 
   Future<ApiResponse<SubscriptionStatusResponse>> getSubscriptionByStatus(
