@@ -153,25 +153,26 @@ class AutosaveCubit extends Cubit<AutosaveCubitState> {
         editSipAmount: principalAmount,
         currentSipFrequency: frequency,
         editIndex: index));
-    await pageController.animateToPage(
-      2,
-      duration: const Duration(milliseconds: 500),
-      curve: Curves.easeIn,
-    );
+    pageController.jumpToPage(2);
     Future.delayed(
         Duration.zero, () => AppState.backButtonDispatcher!.didPopRoute());
   }
 
-  Future editSipTrigger(
+  Future<bool> editSipTrigger(
       num principalAmount, String frequency, String id) async {
+    emit(state.copyWith(isPauseOrResuming: true));
     bool response = await _subService.updateSubscription(
         freq: frequency, amount: principalAmount.toInt(), id: id);
     if (!response) {
       BaseUtil.showNegativeAlert("Failed to update SIP", "Please try again");
+      return false;
     } else {
       findActiveSubscription();
       BaseUtil.showPositiveAlert("Subscription updated successfully",
           "Effective changes will take place from tomorrow");
+      pageController.jumpToPage(0);
+      diposeEdit();
+      return true;
     }
   }
 

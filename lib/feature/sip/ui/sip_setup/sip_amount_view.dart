@@ -10,6 +10,7 @@ import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
+import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -264,22 +265,25 @@ class _SipAmountViewState extends State<SipAmountView> {
             ],
           ),
         ),
-        bottomNavigationBar: _Footer(
-          mandateAvailable: widget.mandateAvailable,
-          amount: _amount!.value,
-          frequency: sipmodel
-              .sipScreenData!.amountSelectionScreen!.options![_currentTab],
-          id: (sipmodel.state.isEdit ?? false)
-              ? sipmodel
-                  .state.activeSubscription!.subs![sipmodel.state.editIndex!].id
-              : null,
+        bottomNavigationBar: ValueListenableBuilder(
+          valueListenable: _amount!,
+          builder: (context, value, child) => _Footer(
+            mandateAvailable: widget.mandateAvailable,
+            amount: _amount!.value,
+            frequency: sipmodel
+                .sipScreenData!.amountSelectionScreen!.options![_currentTab],
+            id: (sipmodel.state.isEdit ?? false)
+                ? sipmodel.state.activeSubscription!
+                    .subs![sipmodel.state.editIndex!].id
+                : null,
+          ),
         ),
       ),
     );
   }
 }
 
-class _Footer extends StatelessWidget {
+class _Footer extends StatefulWidget {
   const _Footer(
       {required this.mandateAvailable,
       required this.amount,
@@ -291,7 +295,15 @@ class _Footer extends StatelessWidget {
   final String? id;
 
   @override
+  State<_Footer> createState() => _FooterState();
+}
+
+class _FooterState extends State<_Footer> {
+  bool _isLoading = false;
+
+  @override
   Widget build(BuildContext context) {
+    var model = context.read<AutosaveCubit>();
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: SizeConfig.padding24,
@@ -318,7 +330,7 @@ class _Footer extends StatelessWidget {
               ),
               Expanded(
                 child: Text(
-                  mandateAvailable
+                  widget.mandateAvailable
                       ? 'Your SIP amount will be deducted fro your existing mandate . No new mandate will be created for this SIP'
                       : 'You will receive a mandate for ₹5000 on the selected UPI App. But don’t worry, We will not deduct anymore than ₹1100/week.',
                   style: TextStyles.sourceSans.body3.copyWith(
@@ -332,13 +344,22 @@ class _Footer extends StatelessWidget {
             height: SizeConfig.padding22,
           ),
           SecondaryButton(
-            label: '2 CLICKS AWAY',
-            onPressed: () {
-              var model = context.read<AutosaveCubit>();
+            label: model.state.isEdit! ? 'UPDATE SIP' : '2 CLICKS AWAY',
+            onPressed: () async {
               if (model.state.isEdit!) {
-                model.editSipTrigger(amount, frequency, id!);
+                setState(() {
+                  _isLoading = true;
+                });
+                var res = await model.editSipTrigger(
+                    widget.amount, widget.frequency, widget.id!);
+                if (!res) {
+                  setState(() {
+                    _isLoading = false;
+                  });
+                }
               }
             },
+            child: _isLoading ? const CupertinoActivityIndicator() : null,
           ),
           SizedBox(
             height: SizeConfig.padding16,
@@ -678,6 +699,7 @@ class _AmountInputWidgetState extends State<AmountInputWidget> {
                       //         ? SizeConfig.padding6
                       //         : 0),
                       child: TextField(
+                        expands: false,
                         controller: _amountController,
                         keyboardType: TextInputType.number,
                         onChanged: (value) {

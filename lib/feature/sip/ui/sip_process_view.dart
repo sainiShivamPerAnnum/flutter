@@ -53,11 +53,7 @@ class _SipProcessUiState extends State<SipProcessUi> {
       await AppState.backButtonDispatcher!.didPopRoute();
     } else {
       if ((model.state.isEdit ?? false) && model.pageController.page == 2) {
-        await model.pageController.animateToPage(
-          0,
-          duration: const Duration(milliseconds: 500),
-          curve: Curves.decelerate,
-        );
+        model.pageController.jumpToPage(0);
         model.diposeEdit();
       } else {
         if (model.pageController.page == 1) {
