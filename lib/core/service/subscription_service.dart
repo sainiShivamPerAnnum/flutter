@@ -161,9 +161,9 @@ class SubService extends ChangeNotifier {
 
   Future<void> createSubscription({
     required String freq,
-    required int lbAmt,
-    required int augAmt,
-    required int amount,
+    required num lbAmt,
+    required num augAmt,
+    required num amount,
     required String package,
   }) async {
     final res = await _subscriptionRepo.createSubscription(
