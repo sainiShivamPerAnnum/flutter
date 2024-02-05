@@ -1,15 +1,15 @@
-import 'dart:math';
-
 import 'package:bloc/bloc.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/sip_model/sip_data_model.dart';
 import 'package:felloapp/core/model/subscription_models/all_subscription_model.dart';
-import 'package:felloapp/core/model/subscription_models/subscription_transaction_model.dart';
 import 'package:felloapp/core/repository/sip_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
+import 'package:felloapp/feature/sip/ui/sip_setup/sip_amount_view.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/modalsheets/pause_autosave_modalsheet.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
@@ -18,8 +18,6 @@ import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
 import 'package:upi_pay/upi_pay.dart';
 
-import '../../../core/model/sip_model/calculator_details.dart';
-
 part 'autosave_state.dart';
 
 class AutosaveCubit extends Cubit<AutosaveCubitState> {
@@ -27,127 +25,20 @@ class AutosaveCubit extends Cubit<AutosaveCubitState> {
   final SubService _subService = locator<SubService>();
   final SipRepository _sipRepo = locator<SipRepository>();
   final AnalyticsService _analyticsService = locator<AnalyticsService>();
-  PageController? txnPageController = PageController(initialPage: 0);
-  TextEditingController sipAmountController = TextEditingController();
-  int tabIndex = 0;
-  PageController pageController = PageController();
-  S locale = locator<S>();
+  final locale = locator<S>();
 
-  // SubscriptionModel? _activeSubscription;
-  List<SubscriptionTransactionModel>? augTxnList;
-  List<SubscriptionTransactionModel>? lbTxnList;
-  List chipsList = [];
-  bool hasMoreTxns = false;
-  double sliderValue = 0;
   Future<void> init() async {
-    emit(state.copyWith(isFetchingDetails: true));
-    await _subService.getSubscription();
-    findActiveSubscription();
+    await getData();
     await _sipRepo.getSipScreenData().then((value) {
-      state.sipScreenData = value.model;
-      getDefaultValue(tabIndex);
+      emit(state.copyWith(sipScreenData: value.model));
     });
     final upiApps = await _subService.getUPIApps();
     emit(state.copyWith(upiApps: upiApps));
   }
 
-  void getDefaultValue(int tabIndex) {
-    Map<String, CalculatorDetails>? data =
-        state.sipScreenData?.calculatorScreen?.calculatorData?.data;
-    dynamic sipOptions =
-        state.sipScreenData?.calculatorScreen?.calculatorData?.options;
-    emit(state.copyWith(
-      sipAmount: data?['${sipOptions[tabIndex]}']?.sipAmount?.defaultValue ?? 0,
-      maxSipValue: data?['${sipOptions[tabIndex]}']?.sipAmount?.max ?? 0,
-      minSipValue: data?['${sipOptions[tabIndex]}']?.sipAmount?.min ?? 0,
-      timePeriod:
-          data?['${sipOptions[tabIndex]}']?.timePeriod?.defaultValue ?? 0,
-      maxTimePeriod: data?['${sipOptions[tabIndex]}']?.timePeriod?.max ?? 0,
-      minTimePeriod: data?['${sipOptions[tabIndex]}']?.timePeriod?.min ?? 0,
-      returnPercentage: double.parse(
-          data?['${sipOptions[tabIndex]}']?.interest?['default'].toString() ??
-              '0'),
-      numberOfPeriodsPerYear: state
-              .sipScreenData
-              ?.calculatorScreen
-              ?.calculatorData
-              ?.data?['${sipOptions[tabIndex]}']
-              ?.numberOfPeriodsPerYear ??
-          12,
-      isFetchingDetails: false,
-    ));
-  }
-
-  int calculateMaturityValue(double P, double i, int n) {
-    double compoundInterest = ((pow(1 + i, n) - 1) / i) * (1 + i);
-    double M = P * compoundInterest;
-    return M.round();
-  }
-
-  String getReturn() {
-    double principalAmount = state.sipAmount.toDouble();
-    int numberOfPeriods = state.numberOfPeriodsPerYear;
-    double interest = state.returnPercentage.toDouble();
-    double interestRate = (interest * .001) / numberOfPeriods;
-    int numberOfYear = state.timePeriod;
-
-    int numberOfInvestments = numberOfYear * numberOfPeriods;
-    final maturityValue = calculateMaturityValue(
-        principalAmount, interestRate, numberOfInvestments);
-
-    print("Maturity Value (M): Rs $maturityValue");
-    return maturityValue.toString();
-  }
-
-  void changeTimePeriod(int value) {
-    if (value > state.maxTimePeriod) {
-      emit(state.copyWith(timePeriod: state.maxTimePeriod));
-    } else if (value < state.minTimePeriod) {
-      emit(state.copyWith(timePeriod: state.minTimePeriod));
-    } else {
-      emit(state.copyWith(timePeriod: value));
-    }
-  }
-
-  void changeSIPAmount(int value) {
-    if (value > state.maxSipValue) {
-      state.sipAmount = state.maxSipValue;
-      emit(state.copyWith(sipAmount: state.maxSipValue));
-    } else if (value < state.minSipValue) {
-      emit(state.copyWith(sipAmount: state.minSipValue));
-    } else {
-      emit(state.copyWith(sipAmount: value));
-    }
-  }
-
-  void changeRateOfInterest(int value) {
-    if (value > 30) {
-      emit(state.copyWith(returnPercentage: 30));
-    } else if (value < 0) {
-      emit(state.copyWith(returnPercentage: 0));
-    } else {
-      emit(state.copyWith(returnPercentage: value.toDouble()));
-    }
-  }
-
-  dump() {
-    sipAmountController.dispose();
-    pageController.dispose();
-  }
-
-  diposeEdit() {
-    emit(state.getDefault());
-  }
-
-  editSelectedAmount(double amount) {
-    emit(state.copyWith(selectedSipAmount: amount.toInt()));
-  }
-
-  void pageChange(value) {
-    emit(state.copyWith(currentPage: value));
-  }
-
-  void findActiveSubscription() {
+  Future<void> getData() async {
+    emit(state.copyWith(isFetchingDetails: true));
+    await _subService.getSubscription();
     emit(state.copyWith(activeSubscription: _subService.subscriptionData));
   }
 
@@ -156,14 +47,19 @@ class AutosaveCubit extends Cubit<AutosaveCubitState> {
   }
 
   Future editSip(num principalAmount, String frequency, int index) async {
-    emit(state.copyWith(
-        isEdit: true,
-        editSipAmount: principalAmount,
-        currentSipFrequency: frequency,
-        editIndex: index));
-    pageController.jumpToPage(2);
     Future.delayed(
         Duration.zero, () => AppState.backButtonDispatcher!.didPopRoute());
+    AppState.delegate!.appState.currentAction = PageAction(
+      page: SipFormPageConfig,
+      widget: SipFormAmountView(
+        mandateAvailable: true,
+        prefillAmount: principalAmount.toInt(),
+        prefillFrequency: frequency,
+        isEdit: true,
+        editIndex: index,
+      ),
+      state: PageState.addWidget,
+    );
   }
 
   Future<bool> editSipTrigger(
@@ -175,17 +71,11 @@ class AutosaveCubit extends Cubit<AutosaveCubitState> {
       BaseUtil.showNegativeAlert("Failed to update SIP", "Please try again");
       return false;
     } else {
-      findActiveSubscription();
+      await getData();
       BaseUtil.showPositiveAlert("Subscription updated successfully",
           "Effective changes will take place from tomorrow");
-      pageController.jumpToPage(0);
-      diposeEdit();
       return true;
     }
-  }
-
-  void changeSelectedAsset(int index) {
-    emit(state.copyWith(selectedAsset: index));
   }
 
   Future pauseResume(int index) async {
@@ -206,7 +96,7 @@ class AutosaveCubit extends Cubit<AutosaveCubitState> {
       if (!response) {
         BaseUtil.showNegativeAlert("Failed to resume SIP", "Please try again");
       } else {
-        findActiveSubscription();
+        await getData();
         BaseUtil.showPositiveAlert(
             "SIP resumed successfully", "For more details check SIP section");
       }
@@ -230,9 +120,9 @@ class AutosaveCubit extends Cubit<AutosaveCubitState> {
           model: _subService,
           id: state.activeSubscription!.subs![index].id,
         ),
-      ).then((value) {
+      ).then((value) async {
         updatePauseResumeStatus();
-        findActiveSubscription();
+        await getData();
       });
     }
   }

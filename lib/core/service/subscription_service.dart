@@ -13,7 +13,7 @@ import 'package:felloapp/core/model/subscription_models/all_subscription_model.d
 import 'package:felloapp/core/model/subscription_models/subscription_transaction_model.dart';
 import 'package:felloapp/core/repository/getters_repo.dart';
 import 'package:felloapp/core/repository/subscription_repo.dart';
-import 'package:felloapp/feature/sip/ui/sip_process_view.dart';
+import 'package:felloapp/feature/sip/ui/sip_setup/sip_intro.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/util/api_response.dart';
@@ -497,11 +497,10 @@ class SubService extends ChangeNotifier {
     }
   }
 
-  ///TODO(@Hirdesh2101)
   void handleTap({InvestmentType? type}) {
     AppState.delegate!.appState.currentAction = PageAction(
-      page: SipPageConfig,
-      widget: const SipProcessView(),
+      page: SipIntroPageConfig,
+      widget: const SipIntroView(),
       state: PageState.addWidget,
     );
   }

@@ -114,7 +114,9 @@ const String GoldProTxnsDetailsViewPath = "goldProTxnsDetailsView";
 const String TicketsIntroViewPath = "/ticketsIntroViewPath";
 const String TicketsTutorialViewPath = "/ticketsTutorialViewPath";
 
-const String SipPageViewPath = "/sip";
+const String SipEntryPageViewPath = "/sipintro";
+const String SipAssetsSelectViewPath = "/sipassets";
+const String SipFormPageViewPath = "/sipform";
 
 enum Pages {
   Splash,
@@ -224,8 +226,8 @@ enum Pages {
 
   // SIP
   SipEntryView,
-  SipView,
-  Sip
+  SipAssetSelectView,
+  SipFormView
 }
 
 class PageConfiguration {
@@ -898,10 +900,22 @@ PageConfiguration FelloBadgeHomeViewPageConfig = PageConfiguration(
   name: "Fello Badge Home View Screen",
 );
 
-PageConfiguration SipPageConfig = PageConfiguration(
-  key: 'SipEntryViewPath',
-  path: SipPageViewPath,
+PageConfiguration SipIntroPageConfig = PageConfiguration(
+  key: 'SipEntryPageViewPath',
+  path: SipEntryPageViewPath,
   uiPage: Pages.SipEntryView,
+  name: 'Sip Entry View',
+);
+PageConfiguration SipAssetSelectPageConfig = PageConfiguration(
+  key: 'SipAssetsSelectViewPath',
+  path: SipAssetsSelectViewPath,
+  uiPage: Pages.SipAssetSelectView,
+  name: 'Sip Entry View',
+);
+PageConfiguration SipFormPageConfig = PageConfiguration(
+  key: 'SipFormPageViewPath',
+  path: SipFormPageViewPath,
+  uiPage: Pages.SipFormView,
   name: 'Sip Entry View',
 );
 

@@ -20,6 +20,7 @@ import 'package:felloapp/feature/referrals/ui/referral_home.dart';
 import 'package:felloapp/feature/sip/ui/sip_process_view.dart';
 import 'package:felloapp/feature/sip/ui/sip_setup/sip_intro.dart';
 import 'package:felloapp/feature/sip/ui/sip_setup/sip_amount_view.dart';
+import 'package:felloapp/feature/sip/ui/sip_setup/sip_select_assset.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/transition_delegate.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -386,8 +387,18 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           _addPageData(const FelloBadgeHome(), FelloBadgeHomeViewPageConfig);
           break;
 
-        case Pages.Sip:
-          _addPageData(const SipProcessView(), SipPageConfig);
+        case Pages.SipEntryView:
+          _addPageData(const SipIntroView(), SipIntroPageConfig);
+          break;
+        case Pages.SipAssetSelectView:
+          _addPageData(const SipAssetSelectView(), SipAssetSelectPageConfig);
+          break;
+        case Pages.SipFormView:
+          _addPageData(
+              SipFormAmountView(
+                mandateAvailable: queryParams?['mandateAvailable'] ?? false,
+              ),
+              SipFormPageConfig);
           break;
 
         default:

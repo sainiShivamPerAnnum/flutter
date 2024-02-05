@@ -1,19 +1,45 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/sip_model/select_asset_options.dart';
 import 'package:felloapp/feature/sip/cubit/autosave_cubit.dart';
+import 'package:felloapp/feature/sip/cubit/selectedAsset_cubit.dart';
+import 'package:felloapp/feature/sip/ui/sip_setup/sip_amount_view.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 
-class SelectSipScreen extends StatefulWidget {
-  const SelectSipScreen({super.key});
+class SipAssetSelectView extends StatelessWidget {
+  const SipAssetSelectView({
+    super.key,
+  });
 
   @override
-  State<SelectSipScreen> createState() => _SelectSipScreenState();
+  Widget build(BuildContext context) {
+    return MultiBlocProvider(
+      providers: [
+        BlocProvider(
+          create: (_) => SelectAssetCubit(),
+        ),
+        BlocProvider(
+          create: (context) => AutosaveCubit(),
+        ),
+      ],
+      child: const SipAsssetSelect(),
+    );
+  }
 }
 
-class _SelectSipScreenState extends State<SelectSipScreen> {
+class SipAsssetSelect extends StatefulWidget {
+  const SipAsssetSelect({super.key});
+
+  @override
+  State<SipAsssetSelect> createState() => _SipAsssetSelectState();
+}
+
+class _SipAsssetSelectState extends State<SipAsssetSelect> {
   final List<String> images = [
     'assets/svg/iphone.svg',
     'assets/svg/car.svg',
@@ -33,115 +59,142 @@ class _SelectSipScreenState extends State<SelectSipScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final sipmodel = context.watch<AutosaveCubit>();
+    final sipmodel = context.read<AutosaveCubit>();
     var assets = sipmodel.state.sipScreenData?.selectAssetScreen?.options;
     var assetsLength = assets?.length ?? 0;
-    return Column(
-      children: [
-        Padding(
-          padding: EdgeInsets.only(
-              left: SizeConfig.padding24,
-              top: SizeConfig.padding24,
-              right: SizeConfig.padding24),
-          child: Column(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Text(
-                "Select Asset",
-                style: TextStyles.rajdhaniSB.body1.colour(Colors.white),
-              ),
-              SizedBox(
-                height: SizeConfig.padding30,
-              ),
-              Column(
-                children: [
-                  for (int i = 0; i < assetsLength; i++) ...[
-                    AssetBlock(
-                      option: assets![i],
-                      index: i,
-                    ),
-                    SizedBox(
-                      height: SizeConfig.padding16,
-                    ),
-                  ]
-                ],
-              ),
-              //
-            ],
+    final selectedAssetModel = context.watch<SelectAssetCubit>();
+    return Scaffold(
+      backgroundColor: UiConstants.kBackgroundColor,
+      appBar: AppBar(
+        leading: IconButton(
+          onPressed: () async =>
+              await AppState.backButtonDispatcher!.didPopRoute(),
+          icon: const Icon(
+            Icons.chevron_left,
+            size: 32,
           ),
         ),
-        const Spacer(),
-        DecoratedBox(
-          decoration:
-              BoxDecoration(color: UiConstants.kTextColor4.withOpacity(0.5)),
-          child: Column(
-            children: [
-              Padding(
-                padding: const EdgeInsets.only(left: 32, top: 20, right: 43),
-                child: SizedBox(
-                  height: SizeConfig.padding104,
-                  width: SizeConfig.screenHeight,
-                  child: CarouselSlider.builder(
-                    itemCount: 3,
-                    itemBuilder: (context, index, realIndex) {
-                      return Row(
-                        mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                        children: [
-                          SizedBox(
-                            width: SizeConfig.padding176,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  titles[index],
-                                  style: TextStyles.rajdhaniB.body2
-                                      .colour(UiConstants.kTextColor),
-                                ),
-                                SizedBox(
-                                  height: SizeConfig.padding8,
-                                ),
-                                Text(
-                                  subTitle[index],
-                                  style: TextStyles.sourceSans.body4
-                                      .colour(UiConstants.kTextColor),
-                                ),
-                              ],
+        backgroundColor: UiConstants.kTextColor4,
+        title: const Text('SIP with Fello'),
+        titleTextStyle: TextStyles.rajdhaniSB.title4.setHeight(1.3),
+        centerTitle: true,
+        elevation: .5,
+      ),
+      body: Column(
+        children: [
+          Padding(
+            padding: EdgeInsets.only(
+                left: SizeConfig.padding24,
+                top: SizeConfig.padding24,
+                right: SizeConfig.padding24),
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "Select Asset",
+                  style: TextStyles.rajdhaniSB.body1.colour(Colors.white),
+                ),
+                SizedBox(
+                  height: SizeConfig.padding30,
+                ),
+                Column(
+                  children: [
+                    for (int i = 0; i < assetsLength; i++) ...[
+                      AssetBlock(
+                        option: assets![i],
+                        index: i,
+                      ),
+                      SizedBox(
+                        height: SizeConfig.padding16,
+                      ),
+                    ]
+                  ],
+                ),
+                //
+              ],
+            ),
+          ),
+          const Spacer(),
+          DecoratedBox(
+            decoration:
+                BoxDecoration(color: UiConstants.kTextColor4.withOpacity(0.5)),
+            child: Column(
+              children: [
+                Padding(
+                  padding: const EdgeInsets.only(left: 32, top: 20, right: 43),
+                  child: SizedBox(
+                    height: SizeConfig.padding104,
+                    width: SizeConfig.screenHeight,
+                    child: CarouselSlider.builder(
+                      itemCount: 3,
+                      itemBuilder: (context, index, realIndex) {
+                        return Row(
+                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          children: [
+                            SizedBox(
+                              width: SizeConfig.padding176,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    titles[index],
+                                    style: TextStyles.rajdhaniB.body2
+                                        .colour(UiConstants.kTextColor),
+                                  ),
+                                  SizedBox(
+                                    height: SizeConfig.padding8,
+                                  ),
+                                  Text(
+                                    subTitle[index],
+                                    style: TextStyles.sourceSans.body4
+                                        .colour(UiConstants.kTextColor),
+                                  ),
+                                ],
+                              ),
                             ),
-                          ),
-                          AppImage(
-                            images[index],
-                            height: SizeConfig.padding100,
-                          ),
-                        ],
-                      );
-                    },
-                    options: CarouselOptions(
-                      autoPlay: true,
-                      viewportFraction: 1,
-                      scrollPhysics: const AlwaysScrollableScrollPhysics(),
+                            AppImage(
+                              images[index],
+                              height: SizeConfig.padding100,
+                            ),
+                          ],
+                        );
+                      },
+                      options: CarouselOptions(
+                        autoPlay: true,
+                        viewportFraction: 1,
+                        scrollPhysics: const AlwaysScrollableScrollPhysics(),
+                      ),
                     ),
                   ),
                 ),
-              ),
-              Padding(
-                padding: EdgeInsets.only(bottom: SizeConfig.padding24),
-                child: Opacity(
-                  opacity: sipmodel.state.selectedAsset != -1 ? 1 : 0.5,
-                  child: SecondaryButton(
-                      onPressed: sipmodel.state.selectedAsset != -1
-                          ? () {
-                              sipmodel.pageController.animateToPage(2,
-                                  duration: const Duration(milliseconds: 500),
-                                  curve: Curves.easeIn);
-                            }
-                          : () {},
-                      label: "3 CLICKS AWAY"),
+                Padding(
+                  padding: EdgeInsets.only(bottom: SizeConfig.padding24),
+                  child: Opacity(
+                    opacity:
+                        selectedAssetModel.state.selectedAsset != -1 ? 1 : 0.5,
+                    child: SecondaryButton(
+                        onPressed: selectedAssetModel.state.selectedAsset != -1
+                            ? () {
+                                AppState.delegate!.appState.currentAction =
+                                    PageAction(
+                                  page: SipFormPageConfig,
+                                  widget: SipFormAmountView(
+                                    mandateAvailable: sipmodel.state
+                                            .activeSubscription?.isActive ??
+                                        false,
+                                  ),
+                                  state: PageState.addWidget,
+                                );
+                              }
+                            : () => null,
+                        label: "3 CLICKS AWAY"),
+                  ),
                 ),
-              ),
-            ],
-          ),
-        )
-      ],
+              ],
+            ),
+          )
+        ],
+      ),
     );
   }
 }
@@ -167,7 +220,7 @@ class _AssetBlockState extends State<AssetBlock> with TickerProviderStateMixin {
     _controller.addListener(() {
       setState(() {});
     });
-    final model = context.read<AutosaveCubit>();
+    final model = context.read<SelectAssetCubit>();
     if (model.state.selectedAsset == widget.index) {
       _controller.forward(from: 0.0);
     }
@@ -184,10 +237,10 @@ class _AssetBlockState extends State<AssetBlock> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        final model = context.read<AutosaveCubit>();
-        model.changeSelectedAsset(widget.index);
+        final model = context.read<SelectAssetCubit>();
+        model.setSelectedAsset(widget.index);
       },
-      child: BlocListener<AutosaveCubit, AutosaveCubitState>(
+      child: BlocListener<SelectAssetCubit, SelectAssetCubitState>(
         listener: (context, state) {
           if (state.selectedAsset == widget.index) {
             _controller.forward(from: 0.0);

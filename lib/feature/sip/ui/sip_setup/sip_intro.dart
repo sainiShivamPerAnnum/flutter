@@ -1,11 +1,17 @@
 import 'dart:math' as math;
+import 'dart:math';
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/model/sip_model/calculator_details.dart';
 import 'package:felloapp/core/model/subscription_models/subscription_status.dart';
 import 'package:felloapp/feature/sip/cubit/autosave_cubit.dart';
 import 'package:felloapp/feature/sip/shared/edit_sip_bottomsheet.dart';
 import 'package:felloapp/feature/sip/shared/sip.dart';
 import 'package:felloapp/feature/sip/shared/tab_slider.dart';
+import 'package:felloapp/feature/sip/ui/sip_setup/sip_select_assset.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -14,6 +20,20 @@ import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+
+class SipIntroView extends StatelessWidget {
+  const SipIntroView({
+    super.key,
+  });
+
+  @override
+  Widget build(BuildContext context) {
+    return BlocProvider(
+      create: (_) => AutosaveCubit(),
+      child: const SipIntro(),
+    );
+  }
+}
 
 class SipIntro extends StatefulWidget {
   const SipIntro({super.key});
@@ -32,6 +52,13 @@ class _SipIntroState extends State<SipIntro> {
   }
 
   @override
+  void initState() {
+    final model = context.read<AutosaveCubit>();
+    model.init();
+    super.initState();
+  }
+
+  @override
   void dispose() {
     _seeAll = false;
     super.dispose();
@@ -43,199 +70,212 @@ class _SipIntroState extends State<SipIntro> {
     var subs = model.state.activeSubscription?.subs;
     final locale = locator<S>();
     var activeSubsLength = model.state.activeSubscription?.length ?? 0;
-    return SingleChildScrollView(
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Stack(
-            alignment: AlignmentDirectional.bottomCenter,
-            children: [
-              Column(
-                children: [
-                  Container(
-                    height: SizeConfig.padding436,
-                    decoration: const BoxDecoration(
-                      gradient: LinearGradient(
-                        begin: Alignment.bottomCenter,
-                        end: Alignment.topCenter,
-                        colors: [UiConstants.teal5, UiConstants.kTextColor4],
+    return Scaffold(
+      backgroundColor: UiConstants.kBackgroundColor,
+      appBar: AppBar(
+        leading: IconButton(
+          onPressed: () async =>
+              await AppState.backButtonDispatcher!.didPopRoute(),
+          icon: const Icon(
+            Icons.chevron_left,
+            size: 32,
+          ),
+        ),
+        backgroundColor: UiConstants.bg,
+        title: const Text('SIP with Fello'),
+        titleTextStyle: TextStyles.rajdhaniSB.title4.setHeight(1.3),
+        centerTitle: true,
+        elevation: .5,
+      ),
+      resizeToAvoidBottomInset: false,
+      body: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            Stack(
+              alignment: AlignmentDirectional.bottomCenter,
+              children: [
+                Column(
+                  children: [
+                    Container(
+                      height: SizeConfig.padding436,
+                      decoration: const BoxDecoration(
+                        gradient: LinearGradient(
+                          begin: Alignment.bottomCenter,
+                          end: Alignment.topCenter,
+                          colors: [UiConstants.teal5, UiConstants.kTextColor4],
+                        ),
                       ),
                     ),
-                  ),
-                  Container(
-                    height: SizeConfig.padding68,
-                    decoration: const BoxDecoration(
-                        color: UiConstants.kSipBackgroundColor),
-                  ),
-                ],
-              ),
-              Column(
-                children: [
-                  SizedBox(
-                    width: SizeConfig.screenWidth,
-                    child: Stack(
-                      children: [
-                        Positioned(
-                          top: 53,
-                          left: 40,
-                          child: SizedBox(
-                            width: SizeConfig.padding200,
-                            child: Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
-                              children: [
-                                Text(
-                                  'Save Weekly / Monthly  automatically & ',
-                                  style: TextStyles.sourceSansSB.body1
-                                      .colour(UiConstants.kTextColor),
-                                ),
-                                SizedBox(
-                                  height: SizeConfig.padding6,
-                                ),
-                                Text(
-                                  'Grow money on autopilot',
-                                  style: TextStyles.sourceSans.body3.colour(
-                                      UiConstants.kWinnerPlayerPrimaryColor),
-                                )
-                              ],
+                    Container(
+                      height: SizeConfig.padding68,
+                      decoration: const BoxDecoration(
+                          color: UiConstants.kSipBackgroundColor),
+                    ),
+                  ],
+                ),
+                Column(
+                  children: [
+                    SizedBox(
+                      width: SizeConfig.screenWidth,
+                      child: Stack(
+                        children: [
+                          Positioned(
+                            top: 53,
+                            left: 40,
+                            child: SizedBox(
+                              width: SizeConfig.padding200,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'Save Weekly / Monthly  automatically & ',
+                                    style: TextStyles.sourceSansSB.body1
+                                        .colour(UiConstants.kTextColor),
+                                  ),
+                                  SizedBox(
+                                    height: SizeConfig.padding6,
+                                  ),
+                                  Text(
+                                    'Grow money on autopilot',
+                                    style: TextStyles.sourceSans.body3.colour(
+                                        UiConstants.kWinnerPlayerPrimaryColor),
+                                  )
+                                ],
+                              ),
                             ),
                           ),
-                        ),
-                        Align(
-                          alignment: AlignmentDirectional.bottomEnd,
-                          child: AppImage(
-                            Assets.sipIntroImage,
-                            height: SizeConfig.padding300,
+                          Align(
+                            alignment: AlignmentDirectional.bottomEnd,
+                            child: AppImage(
+                              Assets.sipIntroImage,
+                              height: SizeConfig.padding300,
+                            ),
                           ),
-                        ),
-                      ],
-                    ),
-                  ),
-                  SizedBox(
-                    height: SizeConfig.padding20,
-                  ),
-                  Padding(
-                    padding:
-                        EdgeInsets.symmetric(horizontal: SizeConfig.padding40),
-                    child: AppPositiveBtn(
-                        btnText: 'START SIP',
-                        onPressed: () {
-                          model.pageController.animateToPage(
-                            1,
-                            duration: const Duration(milliseconds: 100),
-                            curve: Curves.easeIn,
-                          );
-                        }),
-                  ),
-                  Padding(
-                    padding: EdgeInsets.symmetric(
-                      vertical: SizeConfig.padding6,
-                    ),
-                    child: Text(
-                      '8000+ users have started SIP',
-                      style: TextStyles.sourceSans.body3
-                          .colour(UiConstants.kTabBorderColor),
-                    ),
-                  ),
-                ],
-              ),
-            ],
-          ),
-          if (activeSubsLength != 0)
-            Padding(
-              padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding20),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  Padding(
-                    padding:
-                        EdgeInsets.symmetric(vertical: SizeConfig.padding24),
-                    child: Text(
-                      'Your Existing SIP',
-                      style: TextStyles.rajdhaniSB.title5
-                          .colour(UiConstants.kTextColor),
-                    ),
-                  ),
-                  ...List.generate(
-                      _seeAll
-                          ? activeSubsLength
-                          : activeSubsLength > 3
-                              ? 3
-                              : activeSubsLength, (i) {
-                    return Column(children: [
-                      AssetSipContainer(
-                        index: i,
-                        state: subs![i].status,
-                        allowEdit: !(subs[i].lENDBOXP2P != 0.0 &&
-                            subs[i].aUGGOLD99 != 0.0),
-                        assetUrl: (subs[i].lENDBOXP2P != 0.0 &&
-                                subs[i].aUGGOLD99 != 0.0)
-                            ? Assets.goldAndflo
-                            : subs[i].lENDBOXP2P != 0
-                                ? Assets.floWithoutShadow
-                                : Assets.goldWithoutShadow,
-                        nextDueDate: subs[i].nextDue,
-                        sipAmount: subs[i].amount.toInt(),
-                        sipName:
-                            subs[i].lENDBOXP2P != 0 && subs[i].aUGGOLD99 != 0
-                                ? "Digital Gold & P2P SIP"
-                                : subs[i].lENDBOXP2P != 0
-                                    ? "Fello P2P SIP"
-                                    : "Digital Gold SIP",
-                        startDate: subs[i].createdOn,
-                        sipInterval: subs[i].frequency,
-                        pausedSip: subs[i].status.isPaused,
-                        model: model,
+                        ],
                       ),
-                      SizedBox(
-                        height: SizeConfig.padding16,
-                      ),
-                    ]);
-                  }),
-                  activeSubsLength > 3
-                      ? TextButton(
+                    ),
+                    SizedBox(
+                      height: SizeConfig.padding20,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: SizeConfig.padding40),
+                      child: AppPositiveBtn(
+                          btnText: 'START SIP',
                           onPressed: () {
-                            setState(() {
-                              _seeAll = true;
-                            });
-                          },
-                          child: Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                locale.btnSeeAll,
-                                style: TextStyles.sourceSansSB.body2
-                                    .colour(Colors.white),
-                              ),
-                              SizedBox(
-                                width: SizeConfig.padding8,
-                              ),
-                              Transform.rotate(
-                                  angle: math.pi / 2,
-                                  child: const AppImage(
-                                    Assets.chevRonRightArrow,
-                                    color: UiConstants.primaryColor,
-                                  ))
-                            ],
-                          ),
-                        )
-                      : const SizedBox()
-                ],
-              ),
-            ),
-          SizedBox(
-            height: SizeConfig.padding24,
-          ),
-          BlocBuilder<AutosaveCubit, AutosaveCubitState>(
-            builder: (context, state) {
-              return Padding(
-                padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding20),
-                child: SipCalculator(
-                  model: state,
+                            AppState.delegate!.appState.currentAction =
+                                PageAction(
+                              page: SipAssetSelectPageConfig,
+                              widget: const SipAssetSelectView(),
+                              state: PageState.addWidget,
+                            );
+                          }),
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                        vertical: SizeConfig.padding6,
+                      ),
+                      child: Text(
+                        '8000+ users have started SIP',
+                        style: TextStyles.sourceSans.body3
+                            .colour(UiConstants.kTabBorderColor),
+                      ),
+                    ),
+                  ],
                 ),
-              );
-            },
-          )
-        ],
+              ],
+            ),
+            if (activeSubsLength != 0)
+              Padding(
+                padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding20),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Padding(
+                      padding:
+                          EdgeInsets.symmetric(vertical: SizeConfig.padding24),
+                      child: Text(
+                        'Your Existing SIP',
+                        style: TextStyles.rajdhaniSB.title5
+                            .colour(UiConstants.kTextColor),
+                      ),
+                    ),
+                    ...List.generate(
+                        _seeAll
+                            ? activeSubsLength
+                            : activeSubsLength > 3
+                                ? 3
+                                : activeSubsLength, (i) {
+                      return Column(children: [
+                        AssetSipContainer(
+                          index: i,
+                          state: subs![i].status,
+                          allowEdit: !(subs[i].lENDBOXP2P != 0.0 &&
+                              subs[i].aUGGOLD99 != 0.0),
+                          assetUrl: (subs[i].lENDBOXP2P != 0.0 &&
+                                  subs[i].aUGGOLD99 != 0.0)
+                              ? Assets.goldAndflo
+                              : subs[i].lENDBOXP2P != 0
+                                  ? Assets.floWithoutShadow
+                                  : Assets.goldWithoutShadow,
+                          nextDueDate: subs[i].nextDue,
+                          sipAmount: subs[i].amount.toInt(),
+                          sipName:
+                              subs[i].lENDBOXP2P != 0 && subs[i].aUGGOLD99 != 0
+                                  ? "Digital Gold & P2P SIP"
+                                  : subs[i].lENDBOXP2P != 0
+                                      ? "Fello P2P SIP"
+                                      : "Digital Gold SIP",
+                          startDate: subs[i].createdOn,
+                          sipInterval: subs[i].frequency,
+                          pausedSip: subs[i].status.isPaused,
+                          model: model,
+                        ),
+                        SizedBox(
+                          height: SizeConfig.padding16,
+                        ),
+                      ]);
+                    }),
+                    activeSubsLength > 3
+                        ? TextButton(
+                            onPressed: () {
+                              setState(() {
+                                _seeAll = true;
+                              });
+                            },
+                            child: Row(
+                              mainAxisAlignment: MainAxisAlignment.center,
+                              children: [
+                                Text(
+                                  locale.btnSeeAll,
+                                  style: TextStyles.sourceSansSB.body2
+                                      .colour(Colors.white),
+                                ),
+                                SizedBox(
+                                  width: SizeConfig.padding8,
+                                ),
+                                Transform.rotate(
+                                    angle: math.pi / 2,
+                                    child: const AppImage(
+                                      Assets.chevRonRightArrow,
+                                      color: UiConstants.primaryColor,
+                                    ))
+                              ],
+                            ),
+                          )
+                        : const SizedBox()
+                  ],
+                ),
+              ),
+            SizedBox(
+              height: SizeConfig.padding24,
+            ),
+            SipCalculator(
+              state: model.state,
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -386,8 +426,8 @@ class AssetSipContainer extends StatelessWidget {
 }
 
 class SipCalculator extends StatefulWidget {
-  const SipCalculator({required this.model, super.key});
-  final AutosaveCubitState model;
+  const SipCalculator({required this.state, super.key});
+  final AutosaveCubitState state;
 
   @override
   State<SipCalculator> createState() => _SipCalculatorState();
@@ -395,12 +435,97 @@ class SipCalculator extends StatefulWidget {
 
 class _SipCalculatorState extends State<SipCalculator>
     with TickerProviderStateMixin {
+  int? sipAmount;
+  int? timePeriod;
+  num? returnPercentage;
+  int? maxSipValue;
+  int? minSipValue;
+  int? maxTimePeriod;
+  int? minTimePeriod;
+  int? numberOfPeriodsPerYear;
+  void getDefaultValue(int tabIndex) {
+    Map<String, CalculatorDetails>? data =
+        widget.state.sipScreenData?.calculatorScreen?.calculatorData?.data;
+    dynamic sipOptions =
+        widget.state.sipScreenData?.calculatorScreen?.calculatorData?.options;
+    sipAmount = data?['${sipOptions[tabIndex]}']?.sipAmount?.defaultValue ?? 0;
+    maxSipValue = data?['${sipOptions[tabIndex]}']?.sipAmount?.max ?? 0;
+    minSipValue = data?['${sipOptions[tabIndex]}']?.sipAmount?.min ?? 0;
+    timePeriod =
+        data?['${sipOptions[tabIndex]}']?.timePeriod?.defaultValue ?? 0;
+    maxTimePeriod = data?['${sipOptions[tabIndex]}']?.timePeriod?.max ?? 0;
+    minTimePeriod = data?['${sipOptions[tabIndex]}']?.timePeriod?.min ?? 0;
+    returnPercentage = double.parse(
+        data?['${sipOptions[tabIndex]}']?.interest?['default'].toString() ??
+            '0');
+    numberOfPeriodsPerYear =
+        data?['${sipOptions[tabIndex]}']?.numberOfPeriodsPerYear ?? 12;
+  }
+
   TabController? tabController;
 
   @override
   void initState() {
+    dynamic sipOptions =
+        widget.state.sipScreenData?.calculatorScreen?.calculatorData?.options;
     tabController = TabController(length: 3, vsync: this);
+    getDefaultValue(tabController!.index);
     super.initState();
+  }
+
+  @override
+  void dispose() {
+    tabController!.dispose();
+    super.dispose();
+  }
+
+  int calculateMaturityValue(double P, double i, int n) {
+    double compoundInterest = ((pow(1 + i, n) - 1) / i) * (1 + i);
+    double M = P * compoundInterest;
+    return M.round();
+  }
+
+  String getReturn() {
+    double principalAmount = sipAmount!.toDouble();
+    int numberOfPeriods = numberOfPeriodsPerYear!;
+    double interest = returnPercentage!.toDouble();
+    double interestRate = (interest * .001) / numberOfPeriods;
+    int numberOfYear = timePeriod!;
+
+    int numberOfInvestments = numberOfYear * numberOfPeriods;
+    final maturityValue = calculateMaturityValue(
+        principalAmount, interestRate, numberOfInvestments);
+    return maturityValue.toString();
+  }
+
+  void changeTimePeriod(int value) {
+    if (value > maxTimePeriod!) {
+      timePeriod = maxTimePeriod;
+    } else if (value < minTimePeriod!) {
+      timePeriod = minTimePeriod;
+    } else {
+      timePeriod = value;
+    }
+  }
+
+  void changeSIPAmount(int value) {
+    if (value > maxSipValue!) {
+      sipAmount = maxSipValue;
+    } else if (value < minSipValue!) {
+      sipAmount = minSipValue;
+    } else {
+      sipAmount = value;
+    }
+  }
+
+  void changeRateOfInterest(int value) {
+    if (value > 30) {
+      returnPercentage = 30;
+    } else if (value < 0) {
+      returnPercentage = 0;
+    } else {
+      returnPercentage = value;
+    }
   }
 
   @override
@@ -445,18 +570,12 @@ class _SipCalculatorState extends State<SipCalculator>
                 padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding28),
                 child: TabSlider<String>(
                   controller: tabController,
-                  tabs: context
-                          .read<AutosaveCubit>()
-                          .state
-                          .sipScreenData
-                          ?.calculatorScreen
-                          ?.calculatorData
-                          ?.options ??
+                  tabs: widget.state.sipScreenData?.calculatorScreen
+                          ?.calculatorData?.options ??
                       ['DAILY', 'WEEKLY', 'MONTHLY'],
                   labelBuilder: (label) => label,
                   onTap: (_, i) {
-                    context.read<AutosaveCubit>().tabIndex = i;
-                    context.read<AutosaveCubit>().getDefaultValue(i);
+                    getDefaultValue(i);
                   },
                 ),
               ),
@@ -465,26 +584,26 @@ class _SipCalculatorState extends State<SipCalculator>
               ),
               CalculatorField(
                 requiresQuickButtons: false,
-                changeFunction: context.read<AutosaveCubit>().changeSIPAmount,
+                changeFunction: changeSIPAmount,
                 requiresSlider: true,
                 label: "SIP Amount -",
                 prefixText: "₹",
-                maxValue: widget.model.maxSipValue.toDouble(),
-                minValue: widget.model.minSipValue.toDouble(),
-                value: widget.model.sipAmount.toDouble(),
+                maxValue: maxSipValue!.toDouble(),
+                minValue: minSipValue!.toDouble(),
+                value: sipAmount!.toDouble(),
               ),
               SizedBox(
                 height: SizeConfig.padding20,
               ),
               CalculatorField(
                 requiresQuickButtons: false,
-                changeFunction: context.read<AutosaveCubit>().changeTimePeriod,
+                changeFunction: changeTimePeriod,
                 requiresSlider: true,
                 label: "Time Period",
                 suffixText: "Year",
-                maxValue: widget.model.maxTimePeriod.toDouble(),
-                minValue: widget.model.minTimePeriod.toDouble(),
-                value: widget.model.timePeriod.toDouble(),
+                maxValue: maxTimePeriod!.toDouble(),
+                minValue: minTimePeriod!.toDouble(),
+                value: timePeriod!.toDouble(),
               ),
               SizedBox(
                 height: SizeConfig.padding20,
@@ -497,9 +616,8 @@ class _SipCalculatorState extends State<SipCalculator>
                   minValue: 1,
                   maxValue: 30,
                   isPercentage: true,
-                  changeFunction:
-                      context.read<AutosaveCubit>().changeRateOfInterest,
-                  value: widget.model.returnPercentage.toDouble()),
+                  changeFunction: changeRateOfInterest,
+                  value: returnPercentage!.toDouble()),
               SizedBox(
                 height: SizeConfig.padding20,
               ),
@@ -507,13 +625,12 @@ class _SipCalculatorState extends State<SipCalculator>
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "Your Money in ${widget.model.timePeriod} Years-",
+                    "Your Money in $timePeriod Years-",
                     style: TextStyles.sourceSansSB.body2
                         .colour(UiConstants.kTextColor),
                   ),
                   Text(
-                    BaseUtil.formatIndianRupees(double.parse(
-                        context.read<AutosaveCubit>().getReturn())),
+                    BaseUtil.formatIndianRupees(double.parse(getReturn())),
                     style: TextStyles.sourceSansSB.title5
                         .colour(UiConstants.kTabBorderColor),
                   ),
