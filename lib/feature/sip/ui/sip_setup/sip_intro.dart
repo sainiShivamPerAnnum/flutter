@@ -447,6 +447,7 @@ class _SipCalculatorState extends State<SipCalculator>
                   controller: tabController,
                   tabs: context
                           .read<AutosaveCubit>()
+                          .state
                           .sipScreenData
                           ?.calculatorScreen
                           ?.calculatorData

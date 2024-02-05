@@ -6,6 +6,7 @@ abstract class AutoSaveSetupState {}
 final class AutosaveCubitState extends AutoSaveSetupState {
   int currentPage;
   AllSubscriptionModel? activeSubscription;
+  SipData? sipScreenData;
   bool isFetchingDetails;
   int sipAmount;
   int timePeriod;
@@ -23,9 +24,11 @@ final class AutosaveCubitState extends AutoSaveSetupState {
   int? editIndex;
   final List<ApplicationMeta> upiApps;
 
+  int selectedSipAmount;
   AutosaveCubitState({
     this.currentPage = 0,
     this.activeSubscription,
+    this.sipScreenData,
     this.isFetchingDetails = false,
     this.sipAmount = 0,
     this.timePeriod = 0,
@@ -42,12 +45,14 @@ final class AutosaveCubitState extends AutoSaveSetupState {
     this.editSipAmount,
     this.editIndex,
     this.upiApps = const [],
+    this.selectedSipAmount = 0,
   });
 
   AutosaveCubitState copyWith({
     List<ApplicationMeta>? upiApps,
     int? currentPage,
     bool? isFetchingDetails,
+    SipData? sipScreenData,
     AllSubscriptionModel? activeSubscription,
     int? sipAmount,
     int? timePeriod,
@@ -63,12 +68,14 @@ final class AutosaveCubitState extends AutoSaveSetupState {
     String? currentSipFrequency,
     int? selectedAsset,
     int? editIndex,
+    int? selectedSipAmount,
   }) {
     return AutosaveCubitState(
       currentPage: currentPage ?? this.currentPage,
       activeSubscription: activeSubscription ?? this.activeSubscription,
       isFetchingDetails: isFetchingDetails ?? this.isFetchingDetails,
       sipAmount: sipAmount ?? this.sipAmount,
+      sipScreenData: sipScreenData ?? this.sipScreenData,
       timePeriod: timePeriod ?? this.timePeriod,
       returnPercentage: returnPercentage ?? this.returnPercentage,
       maxSipValue: maxSipValue ?? this.maxSipValue,
@@ -96,6 +103,7 @@ final class AutosaveCubitState extends AutoSaveSetupState {
       timePeriod: timePeriod,
       returnPercentage: returnPercentage,
       maxSipValue: maxSipValue,
+      sipScreenData: sipScreenData,
       minSipValue: minSipValue,
       maxTimePeriod: maxTimePeriod,
       minTimePeriod: minTimePeriod,
@@ -106,6 +114,7 @@ final class AutosaveCubitState extends AutoSaveSetupState {
       editSipAmount: null,
       selectedAsset: -1,
       editIndex: -1,
+      selectedSipAmount: 0,
     );
   }
 }

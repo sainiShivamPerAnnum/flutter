@@ -30,6 +30,7 @@ class _SipAmountViewState extends State<SipAmountView> {
   late num _lowerLimit;
   late num _division;
   int _currentTab = 0;
+  var bestOption;
   num ticketMultiplier = AppConfig.getValue(AppConfigKey.tambola_cost);
   int calculateMaturityValue(double P, double i, int n) {
     double compoundInterest = ((pow(1 + i, n) - 1) / i) * (1 + i);
@@ -41,10 +42,11 @@ class _SipAmountViewState extends State<SipAmountView> {
     final sipmodel = context.watch<AutosaveCubit>();
     ValueNotifier<double> principalAmount = _amount!;
     int numberOfPeriods = sipmodel
+            .state
             .sipScreenData
             ?.amountSelectionScreen
-            ?.data?[sipmodel
-                .sipScreenData?.amountSelectionScreen?.options?[_currentTab]]
+            ?.data?[sipmodel.state.sipScreenData?.amountSelectionScreen
+                ?.options?[_currentTab]]
             ?.numberOfPeriodsPerYear ??
         1;
 
@@ -63,14 +65,15 @@ class _SipAmountViewState extends State<SipAmountView> {
   onTabChange() {
     final sipmodel = context.read<AutosaveCubit>();
     var options = sipmodel
+        .state
         .sipScreenData
         ?.amountSelectionScreen
         ?.data?[sipmodel
-            .sipScreenData?.amountSelectionScreen?.options?[_currentTab]]
+            .state.sipScreenData?.amountSelectionScreen?.options?[_currentTab]]
         ?.options;
     var maxValueOption = options?.reduce((currentMax, next) =>
         next.value! > currentMax.value! ? next : currentMax);
-    var bestOption = options
+    bestOption = options
         ?.firstWhere((option) => option.best != null && option.best == true);
     double currentAmount = bestOption!.value!.toDouble();
     _amount = ValueNotifier<double>(currentAmount);
@@ -80,21 +83,23 @@ class _SipAmountViewState extends State<SipAmountView> {
   }
 
   @override
-  void didChangeDependencies() {
-    super.didChangeDependencies();
+  void initState() {
+    super.initState();
     final sipmodel = context.read<AutosaveCubit>();
-    var editSipTab = sipmodel.sipScreenData?.amountSelectionScreen?.options
+    var editSipTab = sipmodel
+        .state.sipScreenData?.amountSelectionScreen?.options
         ?.indexOf(sipmodel.state.currentSipFrequency ?? 'DAILY');
     _currentTab = editSipTab ?? 0;
     var options = sipmodel
+        .state
         .sipScreenData
         ?.amountSelectionScreen
         ?.data?[sipmodel
-            .sipScreenData?.amountSelectionScreen?.options?[_currentTab]]
+            .state.sipScreenData?.amountSelectionScreen?.options?[_currentTab]]
         ?.options;
     var maxValueOption = options?.reduce((currentMax, next) =>
         next.value! > currentMax.value! ? next : currentMax);
-    var bestOption = options
+    bestOption = options
         ?.firstWhere((option) => option.best != null && option.best == true);
     double currentAmount =
         (sipmodel.state.editSipAmount ?? bestOption!.value!).toDouble();
@@ -113,7 +118,11 @@ class _SipAmountViewState extends State<SipAmountView> {
   @override
   Widget build(BuildContext context) {
     final sipmodel = context.read<AutosaveCubit>();
-    var options = sipmodel.sipScreenData?.amountSelectionScreen?.options ?? [];
+    var options =
+        sipmodel.state.sipScreenData?.amountSelectionScreen?.options ?? [];
+    var bestOptions = sipmodel.state.sipScreenData?.amountSelectionScreen
+        ?.data?[options[_currentTab]]?.options
+        ?.indexWhere((option) => option.best != null && option.best == true);
     return DefaultTabController(
       length: options.length,
       initialIndex: _currentTab,
@@ -198,6 +207,7 @@ class _SipAmountViewState extends State<SipAmountView> {
                       division: _division.toInt(),
                       amount: _amount!.value,
                       onChanged: (v) => _amount!.value = v,
+                      bestOption: bestOptions!,
                     ),
                   ],
                 ),
@@ -270,8 +280,8 @@ class _SipAmountViewState extends State<SipAmountView> {
           builder: (context, value, child) => _Footer(
             mandateAvailable: widget.mandateAvailable,
             amount: _amount!.value,
-            frequency: sipmodel
-                .sipScreenData!.amountSelectionScreen!.options![_currentTab],
+            frequency: sipmodel.state.sipScreenData!.amountSelectionScreen!
+                .options![_currentTab],
             id: (sipmodel.state.isEdit ?? false)
                 ? sipmodel.state.activeSubscription!
                     .subs![sipmodel.state.editIndex!].id
@@ -569,6 +579,7 @@ class AmountSlider extends StatelessWidget {
     this.lowerLimit = 500,
     super.key,
     this.division = 5,
+    required this.bestOption,
   });
 
   final void Function(double) onChanged;
@@ -576,6 +587,7 @@ class AmountSlider extends StatelessWidget {
   final double upperLimit;
   final double lowerLimit;
   final int division;
+  final int bestOption;
 
   @override
   Widget build(BuildContext context) {
@@ -596,7 +608,7 @@ class AmountSlider extends StatelessWidget {
                     return GestureDetector(
                       onTap: () => onChanged(amt),
                       child: SipAmountChip(
-                        isBest: i == division - 1, // Change it.
+                        isBest: i == bestOption, // Change it.
                         isSelected: amount == amt,
                         label: '₹${amt.toInt()}',
                       ),

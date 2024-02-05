@@ -34,7 +34,7 @@ class _SelectSipScreenState extends State<SelectSipScreen> {
   @override
   Widget build(BuildContext context) {
     final sipmodel = context.watch<AutosaveCubit>();
-    var assets = sipmodel.sipScreenData?.selectAssetScreen?.options;
+    var assets = sipmodel.state.sipScreenData?.selectAssetScreen?.options;
     var assetsLength = assets?.length ?? 0;
     return Column(
       children: [

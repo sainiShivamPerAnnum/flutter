@@ -32,7 +32,6 @@ class AutosaveCubit extends Cubit<AutosaveCubitState> {
   int tabIndex = 0;
   PageController pageController = PageController();
   S locale = locator<S>();
-  SipData? sipScreenData;
 
   // SubscriptionModel? _activeSubscription;
   List<SubscriptionTransactionModel>? augTxnList;
@@ -41,11 +40,11 @@ class AutosaveCubit extends Cubit<AutosaveCubitState> {
   bool hasMoreTxns = false;
   double sliderValue = 0;
   Future<void> init() async {
-    state.copyWith(isFetchingDetails: true);
+    emit(state.copyWith(isFetchingDetails: true));
     await _subService.getSubscription();
     findActiveSubscription();
     await _sipRepo.getSipScreenData().then((value) {
-      sipScreenData = value.model;
+      state.sipScreenData = value.model;
       getDefaultValue(tabIndex);
     });
     final upiApps = await _subService.getUPIApps();
@@ -54,9 +53,9 @@ class AutosaveCubit extends Cubit<AutosaveCubitState> {
 
   void getDefaultValue(int tabIndex) {
     Map<String, CalculatorDetails>? data =
-        sipScreenData?.calculatorScreen?.calculatorData?.data;
+        state.sipScreenData?.calculatorScreen?.calculatorData?.data;
     dynamic sipOptions =
-        sipScreenData?.calculatorScreen?.calculatorData?.options;
+        state.sipScreenData?.calculatorScreen?.calculatorData?.options;
     emit(state.copyWith(
       sipAmount: data?['${sipOptions[tabIndex]}']?.sipAmount?.defaultValue ?? 0,
       maxSipValue: data?['${sipOptions[tabIndex]}']?.sipAmount?.max ?? 0,
@@ -68,8 +67,12 @@ class AutosaveCubit extends Cubit<AutosaveCubitState> {
       returnPercentage: double.parse(
           data?['${sipOptions[tabIndex]}']?.interest?['default'].toString() ??
               '0'),
-      numberOfPeriodsPerYear: sipScreenData?.calculatorScreen?.calculatorData
-              ?.data?['${sipOptions[tabIndex]}']?.numberOfPeriodsPerYear ??
+      numberOfPeriodsPerYear: state
+              .sipScreenData
+              ?.calculatorScreen
+              ?.calculatorData
+              ?.data?['${sipOptions[tabIndex]}']
+              ?.numberOfPeriodsPerYear ??
           12,
       isFetchingDetails: false,
     ));
@@ -134,6 +137,10 @@ class AutosaveCubit extends Cubit<AutosaveCubitState> {
 
   diposeEdit() {
     emit(state.getDefault());
+  }
+
+  editSelectedAmount(double amount) {
+    emit(state.copyWith(selectedSipAmount: amount.toInt()));
   }
 
   void pageChange(value) {
