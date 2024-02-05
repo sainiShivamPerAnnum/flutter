@@ -283,6 +283,8 @@ class AssetSipContainer extends StatelessWidget {
                     index: index,
                     model: model,
                     allowEdit: allowEdit,
+                    amount: sipAmount,
+                    frequency: sipInterval,
                   ));
             }
           : null,
@@ -335,6 +337,8 @@ class AssetSipContainer extends StatelessWidget {
                             index: index,
                             model: model,
                             allowEdit: allowEdit,
+                            amount: sipAmount,
+                            frequency: sipInterval,
                           ));
                     },
                     child: pausedSip != null && pausedSip!

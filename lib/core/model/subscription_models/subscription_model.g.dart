@@ -36,7 +36,8 @@ const _$AutosaveStateEnumMap = {
   AutosaveState.IDLE: 'IDLE',
   AutosaveState.INIT: 'INIT',
   AutosaveState.ACTIVE: 'ACTIVE',
-  AutosaveState.PAUSED: 'PAUSED',
-  AutosaveState.INACTIVE: 'INACTIVE',
+  AutosaveState.PAUSE_FROM_APP: 'PAUSE_FROM_APP',
+  AutosaveState.PAUSE_FROM_APP_FOREVER: 'PAUSE_FROM_APP_FOREVER',
+  AutosaveState.PAUSE_FROM_PSP: 'PAUSE_FROM_PSP',
   AutosaveState.CANCELLED: 'CANCELLED',
 };

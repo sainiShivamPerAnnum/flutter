@@ -79,14 +79,12 @@ class _SipAmountViewState extends State<SipAmountView> {
   }
 
   @override
-  void initState() {
-    super.initState();
-  }
-
-  @override
-  void didUpdateWidget(covariant SipAmountView oldWidget) {
-    super.didUpdateWidget(oldWidget);
+  void didChangeDependencies() {
+    super.didChangeDependencies();
     final sipmodel = context.read<AutosaveCubit>();
+    var editSipTab = sipmodel.sipScreenData?.amountSelectionScreen?.options
+        ?.indexOf(sipmodel.state.currentSipFrequency ?? 'DAILY');
+    _currentTab = editSipTab ?? 0;
     var options = sipmodel
         .sipScreenData
         ?.amountSelectionScreen
@@ -117,6 +115,7 @@ class _SipAmountViewState extends State<SipAmountView> {
     var options = sipmodel.sipScreenData?.amountSelectionScreen?.options ?? [];
     return DefaultTabController(
       length: options.length,
+      initialIndex: _currentTab,
       child: BaseScaffold(
         showBackgroundGrid: false,
         backgroundColor: UiConstants.bg,
@@ -267,6 +266,13 @@ class _SipAmountViewState extends State<SipAmountView> {
         ),
         bottomNavigationBar: _Footer(
           mandateAvailable: widget.mandateAvailable,
+          amount: _amount!.value,
+          frequency: sipmodel
+              .sipScreenData!.amountSelectionScreen!.options![_currentTab],
+          id: (sipmodel.state.isEdit ?? false)
+              ? sipmodel
+                  .state.activeSubscription!.subs![sipmodel.state.editIndex!].id
+              : null,
         ),
       ),
     );
@@ -274,8 +280,15 @@ class _SipAmountViewState extends State<SipAmountView> {
 }
 
 class _Footer extends StatelessWidget {
-  const _Footer({required this.mandateAvailable});
+  const _Footer(
+      {required this.mandateAvailable,
+      required this.amount,
+      required this.frequency,
+      required this.id});
   final bool mandateAvailable;
+  final num amount;
+  final String frequency;
+  final String? id;
 
   @override
   Widget build(BuildContext context) {
@@ -320,7 +333,12 @@ class _Footer extends StatelessWidget {
           ),
           SecondaryButton(
             label: '2 CLICKS AWAY',
-            onPressed: () {},
+            onPressed: () {
+              var model = context.read<AutosaveCubit>();
+              if (model.state.isEdit!) {
+                model.editSipTrigger(amount, frequency, id!);
+              }
+            },
           ),
           SizedBox(
             height: SizeConfig.padding16,
@@ -376,6 +394,7 @@ class SipAmountChip extends StatelessWidget {
           ),
         SizedBox(
           width: SizeConfig.padding60,
+          height: SizeConfig.padding44,
           child: CustomPaint(
             painter: BorderPainter(
               nippleHeight: nippleHeight,
@@ -550,7 +569,7 @@ class AmountSlider extends StatelessWidget {
                       child: SipAmountChip(
                         isBest: i == division - 1, // Change it.
                         isSelected: amount == amt,
-                        label: '₹$amt',
+                        label: '₹${amt.toInt()}',
                       ),
                     );
                   },
@@ -650,14 +669,14 @@ class _AmountInputWidgetState extends State<AmountInputWidget> {
                       '₹ ',
                       style: TextStyles.rajdhaniB.title2,
                     ),
-                    SizedBox(
-                      width: (SizeConfig.padding22 + SizeConfig.padding1) *
-                              _amountController!.text
-                                  .replaceAll('.', "")
-                                  .length +
-                          (_amountController!.text.contains('.')
-                              ? SizeConfig.padding6
-                              : 0),
+                    Expanded(
+                      // width: (SizeConfig.padding20) *
+                      //         _amountController!.text
+                      //             .replaceAll('.', "")
+                      //             .length +
+                      //     (_amountController!.text.contains('.')
+                      //         ? SizeConfig.padding6
+                      //         : 0),
                       child: TextField(
                         controller: _amountController,
                         keyboardType: TextInputType.number,
@@ -676,12 +695,12 @@ class _AmountInputWidgetState extends State<AmountInputWidget> {
                           })
                         ],
                         decoration: const InputDecoration(
-                          counter: Offstage(),
                           focusedBorder: InputBorder.none,
                           border: InputBorder.none,
                           enabledBorder: InputBorder.none,
                           disabledBorder: InputBorder.none,
                           isDense: true,
+                          contentPadding: EdgeInsets.zero,
                         ),
                         style: TextStyles.rajdhaniB.title2.colour(Colors.white),
                       ),

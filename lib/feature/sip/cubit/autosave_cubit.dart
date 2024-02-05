@@ -9,6 +9,7 @@ import 'package:felloapp/core/model/subscription_models/subscription_transaction
 import 'package:felloapp/core/repository/sip_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/modalsheets/pause_autosave_modalsheet.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -129,6 +130,10 @@ class AutosaveCubit extends Cubit<AutosaveCubitState> {
     pageController.dispose();
   }
 
+  diposeEdit() {
+    emit(state.getDefault());
+  }
+
   void pageChange(value) {
     emit(state.copyWith(currentPage: value));
   }
@@ -141,14 +146,36 @@ class AutosaveCubit extends Cubit<AutosaveCubitState> {
     emit(state.copyWith(isPauseOrResuming: _subService.isPauseOrResuming));
   }
 
-  Future editSip(num principalAmount, String frequency) async {
+  Future editSip(num principalAmount, String frequency, int index) async {
     emit(state.copyWith(
-        editSipAmount: principalAmount, currentSipFrequency: frequency));
+        isEdit: true,
+        editSipAmount: principalAmount,
+        currentSipFrequency: frequency,
+        editIndex: index));
     await pageController.animateToPage(
       2,
       duration: const Duration(milliseconds: 500),
       curve: Curves.easeIn,
     );
+    Future.delayed(
+        Duration.zero, () => AppState.backButtonDispatcher!.didPopRoute());
+  }
+
+  Future editSipTrigger(
+      num principalAmount, String frequency, String id) async {
+    bool response = await _subService.updateSubscription(
+        freq: frequency, amount: principalAmount.toInt(), id: id);
+    if (!response) {
+      BaseUtil.showNegativeAlert("Failed to update SIP", "Please try again");
+    } else {
+      findActiveSubscription();
+      BaseUtil.showPositiveAlert("Subscription updated successfully",
+          "Effective changes will take place from tomorrow");
+    }
+  }
+
+  void changeSelectedAsset(int index) {
+    emit(state.copyWith(selectedAsset: index));
   }
 
   Future pauseResume(int index) async {
@@ -216,12 +243,4 @@ class AutosaveCubit extends Cubit<AutosaveCubitState> {
   //     "Pause Value": value,
   //   });
   // }
-}
-
-class SipAssetSelectCubit extends Cubit<SipAssetSelect> {
-  SipAssetSelectCubit() : super(SipAssetSelect());
-
-  void changeSelectedAsset(int asset) {
-    emit(state.copyWith(selectedAsset: asset));
-  }
 }

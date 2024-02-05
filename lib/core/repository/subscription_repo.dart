@@ -143,36 +143,33 @@ class SubscriptionRepo extends BaseRepo {
     }
   }
 
-  ///TODO(@Hirdesh2101)
-  // Future<ApiResponse<SubscriptionModel>> updateSubscription({
-  //   required String freq,
-  //   required int lbAmt,
-  //   required int augAmt,
-  //   required int amount,
-  // }) async {
-  //   try {
-  //     Map<String, dynamic> _body = {
-  //       "amount": amount,
-  //       "lbAmt": lbAmt,
-  //       "augAmt": augAmt,
-  //       "frequency": freq,
-  //     };
+  Future<ApiResponse<SubscriptionModel>> updateSubscription({
+    required String freq,
+    required String id,
+    required int amount,
+  }) async {
+    try {
+      Map<String, dynamic> _body = {
+        "amount": amount,
+        "id": id,
+        "frequency": freq,
+      };
 
-  //     final response = await APIService.instance.patchData(
-  //       ApiPath.subscription,
-  //       body: _body,
-  //       cBaseUrl: baseUrl,
-  //       apiName: '$_subscription/updateSubscription',
-  //     );
+      final response = await APIService.instance.patchData(
+        ApiPath.updateSubscription(userService.baseUser!.uid!),
+        body: _body,
+        cBaseUrl: baseUrl,
+        apiName: '$_subscription/updateSubscription',
+      );
 
-  //     SubscriptionModel subscriptionModel =
-  //         SubscriptionModel.fromMap(response['data']['subscription']);
-  //     return ApiResponse(model: subscriptionModel, code: 200);
-  //   } catch (e) {
-  //     _logger.e(e.toString());
-  //     return ApiResponse.withError(e.toString(), 400);
-  //   }
-  // }
+      SubscriptionModel subscriptionModel =
+          SubscriptionModel.fromJson(response['data']['subscription']);
+      return ApiResponse(model: subscriptionModel, code: 200);
+    } catch (e) {
+      _logger.e(e.toString());
+      return ApiResponse.withError(e.toString(), 400);
+    }
+  }
 
   Future<ApiResponse<int>> getPhonepeVersionCode() async {
     int version = 0;

@@ -13,11 +13,15 @@ class EditSipBottomSheet extends StatefulWidget {
     required this.model,
     required this.allowEdit,
     super.key,
+    required this.frequency,
+    required this.amount,
   });
   final AutosaveState state;
   final int index;
   final AutosaveCubit model;
   final bool allowEdit;
+  final num amount;
+  final String frequency;
   @override
   State<EditSipBottomSheet> createState() => _EditSipBottomSheetState();
 }
@@ -63,7 +67,8 @@ class _EditSipBottomSheetState extends State<EditSipBottomSheet> {
           if (widget.allowEdit)
             InkWell(
               onTap: () async {
-                return widget.model.editSip(200, 'DAILY');
+                return widget.model
+                    .editSip(widget.amount, widget.frequency, widget.index);
               },
               child: Column(
                 children: [

@@ -33,8 +33,7 @@ class _SelectSipScreenState extends State<SelectSipScreen> {
 
   @override
   Widget build(BuildContext context) {
-    final model = context.watch<SipAssetSelectCubit>();
-    final sipmodel = context.read<AutosaveCubit>();
+    final sipmodel = context.watch<AutosaveCubit>();
     var assets = sipmodel.sipScreenData?.selectAssetScreen?.options;
     var assetsLength = assets?.length ?? 0;
     return Column(
@@ -127,9 +126,9 @@ class _SelectSipScreenState extends State<SelectSipScreen> {
               Padding(
                 padding: EdgeInsets.only(bottom: SizeConfig.padding24),
                 child: Opacity(
-                  opacity: model.state.selectedAsset != -1 ? 1 : 0.5,
+                  opacity: sipmodel.state.selectedAsset != -1 ? 1 : 0.5,
                   child: SecondaryButton(
-                      onPressed: model.state.selectedAsset != -1
+                      onPressed: sipmodel.state.selectedAsset != -1
                           ? () {
                               sipmodel.pageController.animateToPage(2,
                                   duration: const Duration(milliseconds: 500),
@@ -168,7 +167,7 @@ class _AssetBlockState extends State<AssetBlock> with TickerProviderStateMixin {
     _controller.addListener(() {
       setState(() {});
     });
-    final model = context.read<SipAssetSelectCubit>();
+    final model = context.read<AutosaveCubit>();
     if (model.state.selectedAsset == widget.index) {
       _controller.forward(from: 0.0);
     }
@@ -179,10 +178,10 @@ class _AssetBlockState extends State<AssetBlock> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        final model = context.read<SipAssetSelectCubit>();
+        final model = context.read<AutosaveCubit>();
         model.changeSelectedAsset(widget.index);
       },
-      child: BlocListener<SipAssetSelectCubit, SipAssetSelect>(
+      child: BlocListener<AutosaveCubit, AutosaveCubitState>(
         listener: (context, state) {
           if (state.selectedAsset == widget.index) {
             _controller.forward(from: 0.0);

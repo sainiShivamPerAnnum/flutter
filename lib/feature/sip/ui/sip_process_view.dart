@@ -29,7 +29,6 @@ class SipProcessView extends StatelessWidget {
     return MultiBlocProvider(
       providers: [
         BlocProvider(create: (_) => AutosaveCubit()),
-        BlocProvider(create: (_) => SipAssetSelectCubit()),
       ],
       child: SipProcessUi(
         investmentType: investmentType,
@@ -53,11 +52,23 @@ class _SipProcessUiState extends State<SipProcessUi> {
     if (model.pageController.page == 0 || model.pageController.page == 3) {
       await AppState.backButtonDispatcher!.didPopRoute();
     } else {
-      await model.pageController.animateToPage(
-        model.pageController.page!.toInt() - 1,
-        duration: const Duration(milliseconds: 500),
-        curve: Curves.decelerate,
-      );
+      if ((model.state.isEdit ?? false) && model.pageController.page == 2) {
+        await model.pageController.animateToPage(
+          0,
+          duration: const Duration(milliseconds: 500),
+          curve: Curves.decelerate,
+        );
+        model.diposeEdit();
+      } else {
+        if (model.pageController.page == 1) {
+          model.diposeEdit();
+        }
+        await model.pageController.animateToPage(
+          model.pageController.page!.toInt() - 1,
+          duration: const Duration(milliseconds: 500),
+          curve: Curves.decelerate,
+        );
+      }
       return;
     }
   }

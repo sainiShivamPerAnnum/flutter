@@ -270,28 +270,21 @@ class SubService extends ChangeNotifier {
     return response;
   }
 
-  ///TODO(@Hirdesh2101)
-  // Future<bool> updateSubscription({
-  //   required String freq,
-  //   required int lbAmt,
-  //   required int augAmt,
-  //   required int amount,
-  // }) async {
-  //   final res = await _subscriptionRepo.updateSubscription(
-  //       freq: freq, lbAmt: lbAmt, augAmt: augAmt, amount: amount);
-  //   if (res.isSuccess()) {
-  //     subscriptionData = res.model;
-  //     AppState.backButtonDispatcher!.didPopRoute();
-  //     Future.delayed(const Duration(seconds: 1), () {
-  //       BaseUtil.showPositiveAlert("Subscription updated successfully",
-  //           "Effective changes will take place from tomorrow");
-  //     });
-  //     return true;
-  //   } else {
-  //     BaseUtil.showNegativeAlert(res.errorMessage, "Please try again");
-  //     return false;
-  //   }
-  // }
+  Future<bool> updateSubscription({
+    required String freq,
+    required String id,
+    required int amount,
+  }) async {
+    final res = await _subscriptionRepo.updateSubscription(
+        freq: freq, id: id, amount: amount);
+    if (res.isSuccess()) {
+      await getSubscription();
+      return true;
+    } else {
+      BaseUtil.showNegativeAlert(res.errorMessage, "Please try again");
+      return false;
+    }
+  }
 
   Future<bool> pauseSubscription(AutosavePauseOption option, String id) async {
     if (isPauseOrResuming) return false;

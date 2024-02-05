@@ -19,22 +19,27 @@ final class AutosaveCubitState extends AutoSaveSetupState {
   bool? isEdit;
   num? editSipAmount;
   String? currentSipFrequency;
-  AutosaveCubitState(
-      {this.currentPage = 0,
-      this.activeSubscription,
-      this.isFetchingDetails = false,
-      this.sipAmount = 0,
-      this.timePeriod = 0,
-      this.returnPercentage = 1,
-      this.maxSipValue = 0,
-      this.minSipValue = 0,
-      this.maxTimePeriod = 0,
-      this.minTimePeriod = 0,
-      this.numberOfPeriodsPerYear = 12,
-      this.isPauseOrResuming = false,
-      this.isEdit,
-      this.currentSipFrequency,
-      this.editSipAmount});
+  int? selectedAsset;
+  int? editIndex;
+  AutosaveCubitState({
+    this.currentPage = 0,
+    this.activeSubscription,
+    this.isFetchingDetails = false,
+    this.sipAmount = 0,
+    this.timePeriod = 0,
+    this.returnPercentage = 1,
+    this.maxSipValue = 0,
+    this.minSipValue = 0,
+    this.maxTimePeriod = 0,
+    this.minTimePeriod = 0,
+    this.numberOfPeriodsPerYear = 12,
+    this.isPauseOrResuming = false,
+    this.isEdit,
+    this.currentSipFrequency,
+    this.selectedAsset = -1,
+    this.editSipAmount,
+    this.editIndex,
+  });
 
   AutosaveCubitState copyWith({
     int? currentPage,
@@ -52,6 +57,8 @@ final class AutosaveCubitState extends AutoSaveSetupState {
     bool? isEdit,
     num? editSipAmount,
     String? currentSipFrequency,
+    int? selectedAsset,
+    int? editIndex,
   }) {
     return AutosaveCubitState(
         currentPage: currentPage ?? this.currentPage,
@@ -68,19 +75,31 @@ final class AutosaveCubitState extends AutoSaveSetupState {
         isEdit: isEdit ?? this.isEdit,
         currentSipFrequency: currentSipFrequency ?? this.currentSipFrequency,
         editSipAmount: editSipAmount ?? this.editSipAmount,
+        selectedAsset: selectedAsset ?? this.selectedAsset,
+        editIndex: editIndex ?? this.editIndex,
         numberOfPeriodsPerYear:
             numberOfPeriodsPerYear ?? this.numberOfPeriodsPerYear);
   }
-}
 
-final class SipAssetSelect extends AutoSaveSetupState {
-  final int? selectedAsset;
-
-  SipAssetSelect({
-    this.selectedAsset = -1,
-  });
-
-  SipAssetSelect copyWith({int? selectedAsset}) {
-    return SipAssetSelect(selectedAsset: selectedAsset ?? this.selectedAsset);
+  AutosaveCubitState getDefault() {
+    return AutosaveCubitState(
+      currentPage: currentPage,
+      activeSubscription: activeSubscription,
+      isFetchingDetails: isFetchingDetails,
+      sipAmount: sipAmount,
+      timePeriod: timePeriod,
+      returnPercentage: returnPercentage,
+      maxSipValue: maxSipValue,
+      minSipValue: minSipValue,
+      maxTimePeriod: maxTimePeriod,
+      minTimePeriod: minTimePeriod,
+      isPauseOrResuming: isPauseOrResuming,
+      numberOfPeriodsPerYear: numberOfPeriodsPerYear,
+      isEdit: null,
+      currentSipFrequency: null,
+      editSipAmount: null,
+      selectedAsset: -1,
+      editIndex: -1,
+    );
   }
 }
