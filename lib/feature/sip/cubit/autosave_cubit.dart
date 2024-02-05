@@ -229,6 +229,4 @@ class AutosaveCubit extends Cubit<AutosaveCubitState> {
       });
     }
   }
-
-  Future<void> getAvailablePspApps() async {}
 }
