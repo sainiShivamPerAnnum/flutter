@@ -877,7 +877,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "pastWeekWinners":
             MessageLookupByLibrary.simpleMessage("Past Week Winners"),
         "pastWinners": MessageLookupByLibrary.simpleMessage("Past Winners"),
-        "pauseAutoSave": MessageLookupByLibrary.simpleMessage("Pause Autosave"),
+        "pauseAutoSave": MessageLookupByLibrary.simpleMessage("Pause SIP for"),
         "paused": MessageLookupByLibrary.simpleMessage("Paused"),
         "paymentMethod": MessageLookupByLibrary.simpleMessage("Payment Method"),
         "perGame": MessageLookupByLibrary.simpleMessage("Per Game"),

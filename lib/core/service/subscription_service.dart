@@ -258,11 +258,7 @@ class SubService extends ChangeNotifier {
 
   Future<void> getSubscription() async {
     final res = await _subscriptionRepo.getSubscription();
-    if (res.isSuccess()) {
-      subscriptionData = res.model;
-    } else {
-      subscriptionData = null;
-    }
+    subscriptionData = res.isSuccess() ? res.model : null;
   }
 
   ///TODO(@Hirdesh2101)
@@ -295,12 +291,7 @@ class SubService extends ChangeNotifier {
         await _subscriptionRepo.pauseSubscription(option: option, id: id);
     isPauseOrResuming = false;
     if (res.isSuccess()) {
-      subscriptionData = res.model;
-      await AppState.backButtonDispatcher!.didPopRoute();
-      Future.delayed(const Duration(seconds: 1), () {
-        BaseUtil.showPositiveAlert("Subscription paused successfully",
-            "Effective changes will take place from tomorrow");
-      });
+      await getSubscription();
       return true;
     } else {
       BaseUtil.showNegativeAlert(res.errorMessage, "Please try again");
@@ -308,23 +299,19 @@ class SubService extends ChangeNotifier {
     }
   }
 
-  // Future<bool> resumeSubscription() async {
-  //   if (isPauseOrResuming) return false;
-  //   isPauseOrResuming = true;
-  //   final res = await _subscriptionRepo.resumeSubscription();
-  //   isPauseOrResuming = false;
-  //   if (res.isSuccess()) {
-  //     subscriptionData = res.model;
-  //     Future.delayed(const Duration(seconds: 1), () {
-  //       BaseUtil.showPositiveAlert("Subscription resumed successfully",
-  //           "Effective changes will take place from tomorrow");
-  //     });
-  //     return true;
-  //   } else {
-  //     BaseUtil.showNegativeAlert(res.errorMessage, "Please try again");
-  //     return false;
-  //   }
-  // }
+  Future<bool> resumeSubscription(String id) async {
+    if (isPauseOrResuming) return false;
+    isPauseOrResuming = true;
+    final res = await _subscriptionRepo.resumeSubscription(id);
+    isPauseOrResuming = false;
+    if (res.isSuccess()) {
+      await getSubscription();
+      return true;
+    } else {
+      BaseUtil.showNegativeAlert(res.errorMessage, "Please try again");
+      return false;
+    }
+  }
 
   Future<void> getSubscriptionTransactionHistory(
       {bool paginate = false, String asset = ''}) async {

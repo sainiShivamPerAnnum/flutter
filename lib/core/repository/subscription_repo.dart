@@ -185,25 +185,25 @@ class SubscriptionRepo extends BaseRepo {
     }
   }
 
-  // Future<ApiResponse<SubscriptionModel>> resumeSubscription() async {
-  //   try {
-  //     Map<String, dynamic> _body = {
-  //       "uid": userService.baseUser!.uid!,
-  //     };
+  Future<ApiResponse<SubscriptionModel>> resumeSubscription(String id) async {
+    try {
+      Map<String, dynamic> _body = {
+        "id": id,
+      };
 
-  //     final response = await APIService.instance.postData(
-  //       ApiPath.resumeSubscription,
-  //       body: _body,
-  //       cBaseUrl: baseUrl,
-  //       apiName: '$_subscription/resumeSubscription',
-  //     );
+      final response = await APIService.instance.postData(
+        ApiPath.resumeSubscription,
+        body: _body,
+        cBaseUrl: baseUrl,
+        apiName: '$_subscription/resumeSubscription',
+      );
 
-  //     SubscriptionModel subscriptionModel =
-  //         SubscriptionModel.fromJson(response['data']);
-  //     return ApiResponse(model: subscriptionModel, code: 200);
-  //   } catch (e) {
-  //     _logger.e(e.toString());
-  //     return ApiResponse.withError(e.toString(), 400);
-  //   }
-  // }
+      SubscriptionModel subscriptionModel =
+          SubscriptionModel.fromJson(response['data']);
+      return ApiResponse(model: subscriptionModel, code: 200);
+    } catch (e) {
+      _logger.e(e.toString());
+      return ApiResponse.withError(e.toString(), 400);
+    }
+  }
 }

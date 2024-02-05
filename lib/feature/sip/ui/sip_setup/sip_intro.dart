@@ -1,24 +1,48 @@
 import 'package:felloapp/base_util.dart';
+import 'dart:math' as math;
 import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/feature/sip/cubit/autosave_cubit.dart';
 import 'package:felloapp/feature/sip/shared/edit_sip_bottomsheet.dart';
 import 'package:felloapp/feature/sip/shared/sip.dart';
 import 'package:felloapp/feature/sip/shared/tab_slider.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
-class SipIntro extends StatelessWidget {
+class SipIntro extends StatefulWidget {
   const SipIntro({super.key});
 
   @override
+  State<SipIntro> createState() => _SipIntroState();
+}
+
+class _SipIntroState extends State<SipIntro> {
+  bool _seeAll = false;
+
+  void seeAllClicked() {
+    setState(() {
+      _seeAll = true;
+    });
+  }
+
+  @override
+  void dispose() {
+    _seeAll = false;
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final model = context.read<AutosaveCubit>();
+    final model = context.watch<AutosaveCubit>();
     var subs = model.state.activeSubscription?.subs;
     var substate = model.state.autosaveState;
+    final locale = locator<S>();
     var activeSubsLength = model.state.activeSubscription?.length ?? 0;
     return SingleChildScrollView(
       child: Column(
@@ -130,29 +154,70 @@ class SipIntro extends StatelessWidget {
                           .colour(UiConstants.kTextColor),
                     ),
                   ),
-                  for (var i = 0; i < activeSubsLength; i++) ...[
-                    AssetSipContainer(
-                      assetUrl: (subs![i].lENDBOXP2P != 0.0 &&
-                              subs[i].aUGGOLD99 != 0.0)
-                          ? Assets.goldAndflo
-                          : subs[i].lENDBOXP2P != 0
-                              ? Assets.floWithoutShadow
-                              : Assets.goldWithoutShadow,
-                      nextDueDate: subs[i].nextDue!,
-                      sipAmount: (subs[i].amount ?? 0).toInt(),
-                      sipName: subs[i].lENDBOXP2P != 0 && subs[i].aUGGOLD99 != 0
-                          ? "Digital Gold & P2P SIP"
-                          : subs[i].lENDBOXP2P != 0
-                              ? "Fello P2P SIP"
-                              : "Digital Gold SIP",
-                      startDate: subs[i].createdOn!,
-                      sipInterval: subs[i].frequency!,
-                      pausedSip: substate![i] == AutosaveState.PAUSED,
-                    ),
-                    SizedBox(
-                      height: SizeConfig.padding16,
-                    ),
-                  ],
+                  ...List.generate(
+                      _seeAll
+                          ? activeSubsLength
+                          : activeSubsLength > 3
+                              ? 3
+                              : activeSubsLength, (i) {
+                    return Column(children: [
+                      AssetSipContainer(
+                        index: i,
+                        state: substate![i],
+                        allowEdit: !(subs![i].lENDBOXP2P != 0.0 &&
+                            subs[i].aUGGOLD99 != 0.0),
+                        assetUrl: (subs[i].lENDBOXP2P != 0.0 &&
+                                subs[i].aUGGOLD99 != 0.0)
+                            ? Assets.goldAndflo
+                            : subs[i].lENDBOXP2P != 0
+                                ? Assets.floWithoutShadow
+                                : Assets.goldWithoutShadow,
+                        nextDueDate: subs[i].nextDue!,
+                        sipAmount: (subs[i].amount ?? 0).toInt(),
+                        sipName:
+                            subs[i].lENDBOXP2P != 0 && subs[i].aUGGOLD99 != 0
+                                ? "Digital Gold & P2P SIP"
+                                : subs[i].lENDBOXP2P != 0
+                                    ? "Fello P2P SIP"
+                                    : "Digital Gold SIP",
+                        startDate: subs[i].createdOn!,
+                        sipInterval: subs[i].frequency!,
+                        pausedSip: substate[i] == AutosaveState.PAUSED,
+                        model: model,
+                      ),
+                      SizedBox(
+                        height: SizeConfig.padding16,
+                      ),
+                    ]);
+                  }),
+                  activeSubsLength > 3
+                      ? TextButton(
+                          onPressed: () {
+                            setState(() {
+                              _seeAll = true;
+                            });
+                          },
+                          child: Row(
+                            mainAxisAlignment: MainAxisAlignment.center,
+                            children: [
+                              Text(
+                                locale.btnSeeAll,
+                                style: TextStyles.sourceSansSB.body2
+                                    .colour(Colors.white),
+                              ),
+                              SizedBox(
+                                width: SizeConfig.padding8,
+                              ),
+                              Transform.rotate(
+                                  angle: math.pi / 2,
+                                  child: const AppImage(
+                                    Assets.chevRonRightArrow,
+                                    color: UiConstants.primaryColor,
+                                  ))
+                            ],
+                          ),
+                        )
+                      : const SizedBox()
                 ],
               ),
             ),
@@ -183,8 +248,11 @@ class AssetSipContainer extends StatelessWidget {
       required this.sipInterval,
       required this.sipAmount,
       required this.sipName,
-      this.allowEdit,
       this.pausedSip,
+      required this.index,
+      required this.state,
+      required this.model,
+      required this.allowEdit,
       super.key});
   final String assetUrl;
   final String nextDueDate;
@@ -192,96 +260,121 @@ class AssetSipContainer extends StatelessWidget {
   final String sipInterval;
   final String sipName;
   final int sipAmount;
-  bool? allowEdit;
   bool? pausedSip;
+  final int index;
+  final AutosaveState state;
+  final AutosaveCubit model;
+  final bool allowEdit;
 
   @override
   Widget build(BuildContext context) {
     String formattedDate =
         DateFormat('dd MMM yyyy').format(DateTime.parse(startDate));
-    return Container(
-      decoration: BoxDecoration(
-          color: UiConstants.kArrowButtonBackgroundColor,
-          borderRadius: BorderRadius.circular(SizeConfig.roundness8)),
-      padding: EdgeInsets.all(SizeConfig.padding16),
-      child: Column(
-        children: [
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              Row(
-                children: [
-                  AppImage(
-                    assetUrl,
-                    height: SizeConfig.padding40,
-                  ),
-                  SizedBox(
-                    width: SizeConfig.padding12,
-                  ),
-                  Column(
-                    mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        sipName,
-                        style: TextStyles.rajdhaniSB.body2
-                            .colour(UiConstants.kTextColor),
-                      ),
-                      Text(
-                        "${sipInterval} SIP started on ${formattedDate}",
+    return GestureDetector(
+      onTap: pausedSip != null && pausedSip!
+          ? () async {
+              await BaseUtil.openModalBottomSheet(
+                  addToScreenStack: true,
+                  isBarrierDismissible: true,
+                  enableDrag: true,
+                  content: EditSipBottomSheet(
+                    state: state,
+                    index: index,
+                    model: model,
+                    allowEdit: allowEdit,
+                  ));
+            }
+          : null,
+      child: Container(
+        decoration: BoxDecoration(
+            color: UiConstants.kArrowButtonBackgroundColor,
+            borderRadius: BorderRadius.circular(SizeConfig.roundness8)),
+        padding: EdgeInsets.all(SizeConfig.padding16),
+        child: Column(
+          children: [
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Row(
+                  children: [
+                    AppImage(
+                      assetUrl,
+                      height: SizeConfig.padding40,
+                    ),
+                    SizedBox(
+                      width: SizeConfig.padding12,
+                    ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                      crossAxisAlignment: CrossAxisAlignment.start,
+                      children: [
+                        Text(
+                          sipName,
+                          style: TextStyles.rajdhaniSB.body2
+                              .colour(UiConstants.kTextColor),
+                        ),
+                        Text(
+                          "${sipInterval} SIP started on ${formattedDate}",
+                          style: TextStyles.sourceSans.body4
+                              .colour(UiConstants.kTextColor.withOpacity(0.8)),
+                        )
+                      ],
+                    ),
+                  ],
+                ),
+                InkWell(
+                    onTap: () async {
+                      await BaseUtil.openModalBottomSheet(
+                          addToScreenStack: true,
+                          isBarrierDismissible: true,
+                          enableDrag: true,
+                          content: EditSipBottomSheet(
+                            state: state,
+                            index: index,
+                            model: model,
+                            allowEdit: allowEdit,
+                          ));
+                    },
+                    child: pausedSip != null && pausedSip!
+                        ? Text(
+                            'Paused SIP',
+                            style: TextStyles.sourceSans.body3.colour(
+                                UiConstants.kWinnerPlayerPrimaryColor
+                                    .withOpacity(.8)),
+                          )
+                        : Text(
+                            'Edit SIP',
+                            style: TextStyles.sourceSans.body3
+                                .colour(UiConstants.kTabBorderColor),
+                          ))
+              ],
+            ),
+            SizedBox(
+              height: SizeConfig.padding12,
+            ),
+            Row(
+              mainAxisAlignment: MainAxisAlignment.spaceBetween,
+              children: [
+                pausedSip != null && pausedSip!
+                    ? Text(
+                        'Click on card to Resume SIP',
+                        style: TextStyles.sourceSans.body4
+                            .colour(UiConstants.kTabBorderColor),
+                      )
+                    : Text(
+                        nextDueDate,
                         style: TextStyles.sourceSans.body4
                             .colour(UiConstants.kTextColor.withOpacity(0.8)),
-                      )
-                    ],
-                  ),
-                ],
-              ),
-              InkWell(
-                  onTap: () {
-                    BaseUtil.openModalBottomSheet(
-                        isBarrierDismissible: true,
-                        enableDrag: true,
-                        content: const EditSipBottomSheet());
-                  },
-                  child: pausedSip != null && pausedSip!
-                      ? Text(
-                          'Paused SIP',
-                          style: TextStyles.sourceSans.body3.colour(UiConstants
-                              .kWinnerPlayerPrimaryColor
-                              .withOpacity(.8)),
-                        )
-                      : Text(
-                          'Edit SIP',
-                          style: TextStyles.sourceSans.body3
-                              .colour(UiConstants.kTabBorderColor),
-                        ))
-            ],
-          ),
-          SizedBox(
-            height: SizeConfig.padding12,
-          ),
-          Row(
-            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-            children: [
-              pausedSip != null && pausedSip!
-                  ? Text(
-                      'Click on card to Resume SIP',
-                      style: TextStyles.sourceSans.body4
-                          .colour(UiConstants.kTabBorderColor),
-                    )
-                  : Text(
-                      nextDueDate,
-                      style: TextStyles.sourceSans.body4
-                          .colour(UiConstants.kTextColor.withOpacity(0.8)),
-                    ),
-              Text(
-                  BaseUtil.formatIndianRupees(
-                      double.parse(sipAmount.toString())),
-                  style: TextStyles.sourceSansSB.body1)
-            ],
-          ),
-        ],
+                      ),
+                Text(
+                    BaseUtil.formatIndianRupees(
+                        double.parse(sipAmount.toString())),
+                    style: TextStyles.sourceSansSB.body1)
+              ],
+            ),
+          ],
+        ),
       ),
     );
   }
@@ -347,7 +440,13 @@ class _SipCalculatorState extends State<SipCalculator>
                 padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding28),
                 child: TabSlider<String>(
                   controller: tabController,
-                  tabs: const ['DAILY', 'WEEKLY', 'MONTHLY'],
+                  tabs: context
+                          .read<AutosaveCubit>()
+                          .sipScreenData
+                          ?.calculatorScreen
+                          ?.calculatorData
+                          ?.options ??
+                      ['DAILY', 'WEEKLY', 'MONTHLY'],
                   labelBuilder: (label) => label,
                   onTap: (_, i) {
                     context.read<AutosaveCubit>().tabIndex = i;

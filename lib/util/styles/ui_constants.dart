@@ -36,6 +36,7 @@ class UiConstants {
   static const Color bottomNavBarColor = Colors.white;
   static const Color titleTextColor = Colors.white;
   static const Color textColor = Colors.black87;
+  static const Color errorText = Color(0xffC34B29);
 
   static const MaterialColor kPrimaryColor = MaterialColor(
     0xff2EB19F,

@@ -1,3 +1,8 @@
+import 'dart:math';
+
+import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/app_config_keys.dart';
+import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/feature/sip/cubit/autosave_cubit.dart';
 import 'package:felloapp/feature/sip/shared/tab_slider.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
@@ -6,24 +11,55 @@ import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 
 class SipAmountView extends StatefulWidget {
-  const SipAmountView({super.key});
+  const SipAmountView({super.key, required this.mandateAvailable});
+  final bool mandateAvailable;
 
   @override
   State<SipAmountView> createState() => _SipAmountViewState();
 }
 
 class _SipAmountViewState extends State<SipAmountView> {
-  var _amount;
+  ValueNotifier<double>? _amount;
   late num _upperLimit;
   late num _lowerLimit;
   late num _division;
   int _currentTab = 0;
+  num ticketMultiplier = AppConfig.getValue(AppConfigKey.tambola_cost);
+  int calculateMaturityValue(double P, double i, int n) {
+    double compoundInterest = ((pow(1 + i, n) - 1) / i) * (1 + i);
+    double M = P * compoundInterest;
+    return M.round();
+  }
 
-  @override
-  void initState() {
+  String getReturn() {
+    final sipmodel = context.watch<AutosaveCubit>();
+    ValueNotifier<double> principalAmount = _amount!;
+    int numberOfPeriods = sipmodel
+            .sipScreenData
+            ?.amountSelectionScreen
+            ?.data?[sipmodel
+                .sipScreenData?.amountSelectionScreen?.options?[_currentTab]]
+            ?.numberOfPeriodsPerYear ??
+        1;
+
+    ///TODO(@Hirdesh2101)
+    double interest = 8;
+    double interestRate = (interest * .001) / numberOfPeriods;
+    int numberOfYear = 5;
+
+    int numberOfInvestments = numberOfYear * numberOfPeriods;
+    final maturityValue = calculateMaturityValue(
+        principalAmount.value, interestRate, numberOfInvestments);
+    final totalInterest = maturityValue - _amount!.value;
+    return BaseUtil.formatRupees(double.parse(totalInterest.toString()));
+  }
+
+  onTabChange() {
     final sipmodel = context.read<AutosaveCubit>();
     var options = sipmodel
         .sipScreenData
@@ -40,13 +76,39 @@ class _SipAmountViewState extends State<SipAmountView> {
     _division = options?.length ?? 4;
     _upperLimit = maxValueOption!.value as num;
     _lowerLimit = _upperLimit / _division;
+  }
+
+  @override
+  void initState() {
     super.initState();
+  }
+
+  @override
+  void didUpdateWidget(covariant SipAmountView oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    final sipmodel = context.read<AutosaveCubit>();
+    var options = sipmodel
+        .sipScreenData
+        ?.amountSelectionScreen
+        ?.data?[sipmodel
+            .sipScreenData?.amountSelectionScreen?.options?[_currentTab]]
+        ?.options;
+    var maxValueOption = options?.reduce((currentMax, next) =>
+        next.value! > currentMax.value! ? next : currentMax);
+    var bestOption = options
+        ?.firstWhere((option) => option.best != null && option.best == true);
+    double currentAmount =
+        (sipmodel.state.editSipAmount ?? bestOption!.value!).toDouble();
+    _amount = ValueNotifier<double>(currentAmount);
+    _division = options?.length ?? 4;
+    _upperLimit = maxValueOption!.value as num;
+    _lowerLimit = _upperLimit / _division;
   }
 
   @override
   void dispose() {
     super.dispose();
-    _amount.dispose();
+    _amount!.dispose();
   }
 
   @override
@@ -73,7 +135,10 @@ class _SipAmountViewState extends State<SipAmountView> {
                   tabs: options,
                   labelBuilder: (label) => label,
                   onTap: (_, i) {
-                    _currentTab = i;
+                    setState(() {
+                      _currentTab = i;
+                      onTabChange();
+                    });
                   },
                 ),
               ),
@@ -88,7 +153,7 @@ class _SipAmountViewState extends State<SipAmountView> {
                 height: SizeConfig.padding16,
               ),
               ValueListenableBuilder(
-                valueListenable: _amount,
+                valueListenable: _amount!,
                 builder: (context, value, child) => Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
                   children: [
@@ -96,9 +161,34 @@ class _SipAmountViewState extends State<SipAmountView> {
                       lowerLimit: _lowerLimit.toDouble(),
                       upperLimit: _upperLimit.toDouble(),
                       division: _division.toInt(),
-                      amount: _amount.value,
-                      onChange: (v) => _amount.value = v,
+                      amount: _amount!,
+                      ticketMultiplier: ticketMultiplier,
+                      onChange: (v) => _amount!.value = v,
                     ),
+                    if (_amount!.value < _lowerLimit.toDouble())
+                      Padding(
+                        padding: EdgeInsets.only(
+                          left: SizeConfig.padding16,
+                          right: SizeConfig.padding16,
+                        ),
+                        child: Text(
+                          'Minimum amount - ₹${_lowerLimit.toDouble()}',
+                          style: TextStyles.sourceSans.body4
+                              .colour(UiConstants.errorText),
+                        ),
+                      ),
+                    if (_amount!.value > _upperLimit.toDouble())
+                      Padding(
+                        padding: EdgeInsets.only(
+                          left: SizeConfig.padding16,
+                          right: SizeConfig.padding16,
+                        ),
+                        child: Text(
+                          'Maximum amount - ₹${_upperLimit.toDouble()}',
+                          style: TextStyles.sourceSans.body4
+                              .colour(UiConstants.errorText),
+                        ),
+                      ),
                     SizedBox(
                       height: SizeConfig.padding32,
                     ),
@@ -106,8 +196,8 @@ class _SipAmountViewState extends State<SipAmountView> {
                       lowerLimit: _lowerLimit.toDouble(),
                       upperLimit: _upperLimit.toDouble(),
                       division: _division.toInt(),
-                      amount: _amount.value,
-                      onChanged: (v) => _amount.value = v,
+                      amount: _amount!.value,
+                      onChanged: (v) => _amount!.value = v,
                     ),
                   ],
                 ),
@@ -128,9 +218,23 @@ class _SipAmountViewState extends State<SipAmountView> {
                           'Expected Returns in 5Y',
                           style: TextStyles.sourceSans.body2,
                         ),
-                        Text(
-                          '₹10,500',
-                          style: TextStyles.sourceSansB.body1,
+                        ValueListenableBuilder(
+                          valueListenable: _amount!,
+                          builder: (context, value, child) => Text.rich(
+                            TextSpan(children: [
+                              TextSpan(
+                                text:
+                                    '${BaseUtil.formatIndianRupees(double.parse(_amount!.value.toString()))}+',
+                              ),
+                              TextSpan(
+                                text: getReturn(),
+                                style: TextStyles.sourceSansSB.body1
+                                    .colour(UiConstants.kTabBorderColor),
+                              ),
+                            ]),
+                            style: TextStyles.sourceSans.body3
+                                .colour(UiConstants.kTextColor),
+                          ),
                         ),
                       ],
                     ),
@@ -146,7 +250,7 @@ class _SipAmountViewState extends State<SipAmountView> {
                               .copyWith(color: UiConstants.grey1),
                         ),
                         Text(
-                          'with extra 12% returns',
+                          'with 12% returns',
                           style: TextStyles.sourceSans.body4
                               .copyWith(color: UiConstants.grey1),
                         ),
@@ -161,14 +265,17 @@ class _SipAmountViewState extends State<SipAmountView> {
             ],
           ),
         ),
-        bottomNavigationBar: const _Footer(),
+        bottomNavigationBar: _Footer(
+          mandateAvailable: widget.mandateAvailable,
+        ),
       ),
     );
   }
 }
 
 class _Footer extends StatelessWidget {
-  const _Footer();
+  const _Footer({required this.mandateAvailable});
+  final bool mandateAvailable;
 
   @override
   Widget build(BuildContext context) {
@@ -198,21 +305,26 @@ class _Footer extends StatelessWidget {
               ),
               Expanded(
                 child: Text(
-                  'You will receive a mandate for ₹5000 on the selected UPI App. But don’t worry, We will not deduct anymore than ₹1100/week.',
+                  mandateAvailable
+                      ? 'Your SIP amount will be deducted fro your existing mandate . No new mandate will be created for this SIP'
+                      : 'You will receive a mandate for ₹5000 on the selected UPI App. But don’t worry, We will not deduct anymore than ₹1100/week.',
                   style: TextStyles.sourceSans.body3.copyWith(
                     color: UiConstants.textGray50,
                   ),
                 ),
-              )
+              ),
             ],
           ),
           SizedBox(
-            height: SizeConfig.padding14,
+            height: SizeConfig.padding22,
           ),
           SecondaryButton(
             label: '2 CLICKS AWAY',
             onPressed: () {},
-          )
+          ),
+          SizedBox(
+            height: SizeConfig.padding16,
+          ),
         ],
       ),
     );
@@ -449,7 +561,11 @@ class AmountSlider extends StatelessWidget {
             max: upperLimit,
             min: lowerLimit,
             divisions: division - 1,
-            value: amount,
+            value: amount < lowerLimit
+                ? lowerLimit
+                : amount > upperLimit
+                    ? upperLimit
+                    : amount,
             onChanged: onChanged,
             inactiveColor: Colors.grey,
           ),
@@ -459,38 +575,49 @@ class AmountSlider extends StatelessWidget {
   }
 }
 
-class AmountInputWidget extends StatelessWidget {
+class AmountInputWidget extends StatefulWidget {
   const AmountInputWidget({
     required this.amount,
     required this.onChange,
+    required this.ticketMultiplier,
     super.key,
     this.upperLimit = 15000,
     this.lowerLimit = 500,
     this.division = 5,
   });
 
-  final double amount;
+  final ValueNotifier<double> amount;
   final double upperLimit;
   final double lowerLimit;
+  final num ticketMultiplier;
   final int division;
   final void Function(double value) onChange;
 
+  @override
+  State<AmountInputWidget> createState() => _AmountInputWidgetState();
+}
+
+class _AmountInputWidgetState extends State<AmountInputWidget> {
+  TextEditingController? _amountController;
+
   void _onIncrement() {
-    if (amount < upperLimit) {
-      final value = amount + (upperLimit / division);
-      onChange(value);
+    if (widget.amount.value < widget.upperLimit) {
+      final value = widget.amount.value + (widget.upperLimit / widget.division);
+      widget.onChange(value);
     }
   }
 
   void _onDecrement() {
-    if (amount > lowerLimit) {
-      final value = amount - (upperLimit / division);
-      onChange(value);
+    if (widget.amount.value > widget.lowerLimit) {
+      final value = widget.amount.value - (widget.upperLimit / widget.division);
+      widget.onChange(value);
     }
   }
 
   @override
   Widget build(BuildContext context) {
+    _amountController =
+        TextEditingController(text: widget.amount.value.round().toString());
     return Container(
       decoration: BoxDecoration(
         color: UiConstants.grey5,
@@ -513,27 +640,71 @@ class AmountInputWidget extends StatelessWidget {
             actionType: _ActionType.decrement,
             onPressed: _onDecrement,
           ),
-          Column(
-            children: [
-              Text(
-                '₹ ${amount.round()}',
-                style: TextStyles.rajdhaniB.title2,
-              ),
-              Row(
-                children: [
-                  Text(
-                    '+10 Tambola Ticket',
-                    style: TextStyles.sourceSans.body3.copyWith(
-                      color: UiConstants.teal3,
-                      height: 1.5,
+          Expanded(
+            child: Column(
+              children: [
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      '₹ ',
+                      style: TextStyles.rajdhaniB.title2,
                     ),
-                  ),
-                  SizedBox(
-                    width: SizeConfig.padding4,
-                  ),
-                ],
-              )
-            ],
+                    SizedBox(
+                      width: (SizeConfig.padding22 + SizeConfig.padding1) *
+                              _amountController!.text
+                                  .replaceAll('.', "")
+                                  .length +
+                          (_amountController!.text.contains('.')
+                              ? SizeConfig.padding6
+                              : 0),
+                      child: TextField(
+                        controller: _amountController,
+                        keyboardType: TextInputType.number,
+                        onChanged: (value) {
+                          widget.onChange(double.parse(value));
+                        },
+                        inputFormatters: [
+                          TextInputFormatter.withFunction((oldValue, newValue) {
+                            var decimalSeparator =
+                                NumberFormat().symbols.DECIMAL_SEP;
+                            var r = RegExp(
+                                r'^\d*(\' + decimalSeparator + r'\d*)?$');
+                            return r.hasMatch(newValue.text)
+                                ? newValue
+                                : oldValue;
+                          })
+                        ],
+                        decoration: const InputDecoration(
+                          counter: Offstage(),
+                          focusedBorder: InputBorder.none,
+                          border: InputBorder.none,
+                          enabledBorder: InputBorder.none,
+                          disabledBorder: InputBorder.none,
+                          isDense: true,
+                        ),
+                        style: TextStyles.rajdhaniB.title2.colour(Colors.white),
+                      ),
+                    ),
+                  ],
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    Text(
+                      '+${widget.amount.value ~/ widget.ticketMultiplier} Tambola Ticket',
+                      style: TextStyles.sourceSans.body3.copyWith(
+                        color: UiConstants.teal3,
+                        height: 1.5,
+                      ),
+                    ),
+                    SizedBox(
+                      width: SizeConfig.padding4,
+                    ),
+                  ],
+                )
+              ],
+            ),
           ),
           _ActionButton(
             actionType: _ActionType.increment,

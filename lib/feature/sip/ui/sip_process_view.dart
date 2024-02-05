@@ -1,7 +1,6 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
-import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/feature/sip/cubit/autosave_cubit.dart';
 import 'package:felloapp/feature/sip/ui/sip_setup/sip_amount_view.dart';
 import 'package:felloapp/feature/sip/ui/sip_setup/sip_intro.dart';
@@ -49,26 +48,20 @@ class SipProcessUi extends StatefulWidget {
 }
 
 class _SipProcessUiState extends State<SipProcessUi> {
-  // Future<void> _onPressedBack(
-  //     AutosaveState autosaveState, AutosaveCubit model) async {
-  //   FocusScope.of(context).unfocus();
+  Future<void> _onPressedBack(AutosaveCubit model) async {
+    FocusScope.of(context).unfocus();
+    if (model.pageController.page == 0 || model.pageController.page == 3) {
+      await AppState.backButtonDispatcher!.didPopRoute();
+    } else {
+      await model.pageController.animateToPage(
+        model.pageController.page!.toInt() - 1,
+        duration: const Duration(milliseconds: 500),
+        curve: Curves.decelerate,
+      );
+      return;
+    }
+  }
 
-  //   if (autosaveState == AutosaveState.INIT ||
-  //       autosaveState == AutosaveState.ACTIVE ||
-  //       model.pageController!.page == 0 ||
-  //       model.pageController!.page == 3) {
-  //     await AppState.backButtonDispatcher!.didPopRoute();
-  //   } else {
-  //     await model.pageController!.animateToPage(
-  //       model.pageController!.page!.toInt() - 1,
-  //       duration: const Duration(milliseconds: 500),
-  //       curve: Curves.decelerate,
-  //     );
-  //     return;
-  //   }
-
-  //   model.trackAutosaveBackPress();
-  // }
   @override
   void initState() {
     context.read<AutosaveCubit>().init();
@@ -79,19 +72,20 @@ class _SipProcessUiState extends State<SipProcessUi> {
   Widget build(BuildContext context) {
     return BlocBuilder<AutosaveCubit, AutosaveCubitState>(
         builder: (context, state) {
-      final model = context.read<AutosaveCubit>();
-      print(model.state.isFetchingDetails);
+      final model = context.watch<AutosaveCubit>();
       return Scaffold(
         backgroundColor: UiConstants.kBackgroundColor,
         appBar: AppBar(
           leading: IconButton(
-            onPressed: () => Navigator.pop(context),
+            onPressed: () => _onPressedBack(model),
             icon: const Icon(
               Icons.chevron_left,
               size: 32,
             ),
           ),
-          backgroundColor: UiConstants.bg,
+          backgroundColor: model.state.currentPage == 0
+              ? UiConstants.kTextColor4
+              : UiConstants.bg,
           title: const Text('SIP with Fello'),
           titleTextStyle: TextStyles.rajdhaniSB.title4.setHeight(1.3),
           centerTitle: true,
@@ -105,7 +99,7 @@ class _SipProcessUiState extends State<SipProcessUi> {
             : Stack(
                 children: [
                   const NewSquareBackground(),
-                  model.state.isFetchingDetails
+                  state.isFetchingDetails
                       ? const Center(
                           child: FullScreenLoader(),
                         )
@@ -132,11 +126,13 @@ class AutosaveSetupView extends StatelessWidget {
     return PageView(
       controller: model.pageController,
       physics: const NeverScrollableScrollPhysics(),
-      children: const [
-        SipIntro(),
-        SelectSipScreen(),
-        SipAmountView(),
-        // AutoPaySetupOrUpdateView(model: model),
+      onPageChanged: model.pageChange,
+      children: [
+        const SipIntro(),
+        const SelectSipScreen(),
+        SipAmountView(
+          mandateAvailable: model.state.activeSubscription?.isActive ?? false,
+        ),
         // UpiAppSelectView(model: model),
       ],
     );

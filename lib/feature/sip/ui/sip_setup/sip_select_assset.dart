@@ -131,13 +131,15 @@ class _SelectSipScreenState extends State<SelectSipScreen> {
               Padding(
                 padding: EdgeInsets.only(bottom: SizeConfig.padding24),
                 child: Opacity(
-                  opacity: model.state.selectedAsset != null ? 1 : 0.5,
+                  opacity: model.state.selectedAsset != -1 ? 1 : 0.5,
                   child: SecondaryButton(
-                      onPressed: () {
-                        sipmodel.pageController.animateToPage(2,
-                            duration: Duration(milliseconds: 100),
-                            curve: Curves.easeIn);
-                      },
+                      onPressed: model.state.selectedAsset != -1
+                          ? () {
+                              sipmodel.pageController.animateToPage(2,
+                                  duration: const Duration(milliseconds: 500),
+                                  curve: Curves.easeIn);
+                            }
+                          : () => null,
                       label: "3 CLICKS AWAY"),
                 ),
               ),
@@ -170,6 +172,10 @@ class _AssetBlockState extends State<AssetBlock> with TickerProviderStateMixin {
     _controller.addListener(() {
       setState(() {});
     });
+    final model = context.read<SipAssetSelectCubit>();
+    if (model.state.selectedAsset == widget.index) {
+      _controller.forward(from: 0.0);
+    }
     super.initState();
   }
 

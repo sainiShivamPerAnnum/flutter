@@ -5012,10 +5012,10 @@ class S {
     );
   }
 
-  /// `Pause Autosave`
+  /// `Pause SIP for`
   String get pauseAutoSave {
     return Intl.message(
-      'Pause Autosave',
+      'Pause SIP for',
       name: 'pauseAutoSave',
       desc: '',
       args: [],

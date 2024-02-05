@@ -13,6 +13,7 @@ import 'package:felloapp/core/service/analytics/analyticsProperties.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/feature_flag_service/condition_evaluator.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/modalsheets/pause_autosave_modalsheet.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
@@ -46,9 +47,9 @@ class AutosaveCubit extends Cubit<AutosaveCubitState> {
   List chipsList = [];
   bool hasMoreTxns = false;
   double sliderValue = 0;
-  init() async {
+  void init() async {
     state.copyWith(isFetchingDetails: true);
-    await findActiveSubscription();
+    findActiveSubscription();
     await _sipRepo.getSipScreenData().then((value) {
       sipScreenData = value.model;
       getDefaultValue(tabIndex);
@@ -135,29 +136,50 @@ class AutosaveCubit extends Cubit<AutosaveCubitState> {
     pageController.dispose();
   }
 
-  findActiveSubscription() async {
-    state.activeSubscription = _subService.subscriptionData;
-    state.autosaveState = _subService.autosaveState;
+  void pageChange(value) {
+    emit(state.copyWith(currentPage: value));
+  }
+
+  void findActiveSubscription() {
+    emit(state.copyWith(activeSubscription: _subService.subscriptionData));
+    emit(state.copyWith(autosaveState: _subService.autosaveState));
+  }
+
+  void updatePauseResumeStatus() {
+    emit(state.copyWith(isPauseOrResuming: _subService.isPauseOrResuming));
+  }
+
+  Future editSip(num principalAmount, String frequency) async {
+    emit(state.copyWith(
+        editSipAmount: principalAmount, currentSipFrequency: frequency));
+    await pageController.animateToPage(
+      2,
+      duration: const Duration(milliseconds: 500),
+      curve: Curves.easeIn,
+    );
   }
 
   Future pauseResume(int index) async {
     if (_subService.isPauseOrResuming) return;
-    if (_subService.autosaveState == AutosaveState.PAUSED ||
-        _subService.autosaveState == AutosaveState.INACTIVE) {
-      // locator<AnalyticsService>()
-      //     .track(eventName: AnalyticsEvents.asResumeTapped, properties: {
-      //   "frequency": state.activeSubscription!.subs![index].frequency,
-      //   "amount": state.activeSubscription!.subs![index].amount,
-      // });
+    updatePauseResumeStatus();
+    if (_subService.autosaveState[index] == AutosaveState.PAUSED ||
+        _subService.autosaveState[index] == AutosaveState.INACTIVE) {
+      locator<AnalyticsService>()
+          .track(eventName: AnalyticsEvents.asResumeTapped, properties: {
+        "frequency": state.activeSubscription!.subs![index].frequency,
+        "amount": state.activeSubscription!.subs![index].amount,
+      });
 
-      // bool response = await _subService.resumeSubscription();
-      // if (!response) {
-      //   BaseUtil.showNegativeAlert(
-      //       "Failed to resume Autosave", "Please try again");
-      // } else {
-      //   BaseUtil.showPositiveAlert("Autosave resumed successfully",
-      //       "For more details check Autosave section");
-      // }
+      bool response = await _subService
+          .resumeSubscription(state.activeSubscription!.subs![index].id!);
+      updatePauseResumeStatus();
+      if (!response) {
+        BaseUtil.showNegativeAlert("Failed to resume SIP", "Please try again");
+      } else {
+        findActiveSubscription();
+        BaseUtil.showPositiveAlert(
+            "SIP resumed successfully", "For more details check SIP section");
+      }
     } else {
       _analyticsService
           .track(eventName: AnalyticsEvents.asPauseTapped, properties: {
@@ -167,16 +189,19 @@ class AutosaveCubit extends Cubit<AutosaveCubitState> {
       return BaseUtil.openModalBottomSheet(
         addToScreenStack: true,
         hapticVibrate: true,
-        backgroundColor:
-            UiConstants.kRechargeModalSheetAmountSectionBackgroundColor,
+        backgroundColor: UiConstants.gameCardColor,
         borderRadius: BorderRadius.only(
           topLeft: Radius.circular(SizeConfig.roundness16),
           topRight: Radius.circular(SizeConfig.roundness16),
         ),
-        isBarrierDismissible: false,
+        isBarrierDismissible: true,
         isScrollControlled: true,
-        content: PauseAutosaveModal(model: _subService, id: ''),
-      );
+        content: PauseAutosaveModal(
+            model: _subService, id: state.activeSubscription!.subs![index].id!),
+      ).then((value) {
+        updatePauseResumeStatus();
+        findActiveSubscription();
+      });
     }
   }
 

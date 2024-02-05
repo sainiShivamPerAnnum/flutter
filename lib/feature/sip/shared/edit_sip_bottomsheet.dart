@@ -1,11 +1,24 @@
+import 'package:felloapp/core/service/subscription_service.dart';
+import 'package:felloapp/feature/sip/cubit/autosave_cubit.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 
 class EditSipBottomSheet extends StatefulWidget {
-  const EditSipBottomSheet({super.key});
-
+  const EditSipBottomSheet({
+    super.key,
+    required this.state,
+    required this.index,
+    required this.model,
+    required this.allowEdit,
+  });
+  final AutosaveState state;
+  final int index;
+  final AutosaveCubit model;
+  final bool allowEdit;
   @override
   State<EditSipBottomSheet> createState() => _EditSipBottomSheetState();
 }
@@ -48,30 +61,47 @@ class _EditSipBottomSheetState extends State<EditSipBottomSheet> {
             thickness: 1,
             color: UiConstants.kProfileBorderColor.withOpacity(0.2),
           ),
-          SizedBox(
-            height: SizeConfig.padding16,
-          ),
-          Row(
-            children: [
-              const AppImage(Assets.editIcon),
-              SizedBox(
-                width: SizeConfig.padding12,
+          if (widget.allowEdit)
+            InkWell(
+              onTap: () async {
+                return widget.model.editSip(200, 'DAILY');
+              },
+              child: Column(
+                children: [
+                  SizedBox(
+                    height: SizeConfig.padding16,
+                  ),
+                  Row(
+                    children: [
+                      const AppImage(Assets.editIcon),
+                      SizedBox(
+                        width: SizeConfig.padding12,
+                      ),
+                      Text(
+                        "Edit SIP",
+                        style:
+                            TextStyles.sourceSansSB.body2.colour(Colors.white),
+                      )
+                    ],
+                  ),
+                  SizedBox(
+                    height: SizeConfig.padding16,
+                  ),
+                ],
               ),
-              Text(
-                "Edit SIP",
-                style: TextStyles.sourceSansSB.body2.colour(Colors.white),
-              )
-            ],
-          ),
-          SizedBox(
-            height: SizeConfig.padding16,
-          ),
-          Divider(
-            thickness: 1,
-            color: UiConstants.kProfileBorderColor.withOpacity(0.2),
-          ),
+            ),
+          if (widget.allowEdit)
+            Divider(
+              thickness: 1,
+              color: UiConstants.kProfileBorderColor.withOpacity(0.2),
+            ),
           InkWell(
-            onTap: () {},
+            onTap: () async {
+              return widget.model.pauseResume(widget.index).then((value) {
+                Future.delayed(Duration.zero,
+                    () => AppState.backButtonDispatcher!.didPopRoute());
+              });
+            },
             child: Column(children: [
               SizedBox(
                 height: SizeConfig.padding16,
@@ -83,7 +113,10 @@ class _EditSipBottomSheetState extends State<EditSipBottomSheet> {
                     width: SizeConfig.padding12,
                   ),
                   Text(
-                    "Pause SIP",
+                    widget.state == AutosaveState.PAUSED ||
+                            widget.state == AutosaveState.INACTIVE
+                        ? "Resume SIP"
+                        : "Pause SIP",
                     style: TextStyles.sourceSansSB.body2.colour(Colors.white),
                   )
                 ],
