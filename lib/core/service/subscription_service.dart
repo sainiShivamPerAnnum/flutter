@@ -409,7 +409,6 @@ class SubService extends ChangeNotifier {
   Future<List<ApplicationMeta>> getUPIApps() async {
     S locale = locator<S>();
     List<ApplicationMeta> appMetaList = [];
-    print("Apps: getting upi apps");
 
     if (Platform.isIOS) {
       const platform = MethodChannel("methodChannel/deviceData");
@@ -440,7 +439,7 @@ class SubService extends ChangeNotifier {
         }
         return appMetaList;
       } on PlatformException catch (e) {
-        print("Failed to fetch installed applications on ios $e");
+        _logger.d('Failed to fetch installed applications on ios $e');
         return appMetaList;
       }
     } else {
@@ -460,11 +459,23 @@ class SubService extends ChangeNotifier {
                   .contains('E')) {
             appMetaList.add(element);
           }
+
+          // debug assertion to avoid this in production.
+          assert(() {
+            if (element.upiApplication.appName == "PhonePe Simulator" &&
+                AppConfig.getValue<String>(AppConfigKey.enabled_psp_apps)
+                    .contains('E')) {
+              appMetaList.add(element);
+            }
+            return true;
+          }());
+
           if (element.upiApplication.appName == "PhonePe Preprod" &&
               AppConfig.getValue<String>(AppConfigKey.enabled_psp_apps)
                   .contains('E')) {
             appMetaList.add(element);
           }
+
           if (element.upiApplication.appName == "Google Pay" &&
               AppConfig.getValue<String>(AppConfigKey.enabled_psp_apps)
                   .contains('G')) {
@@ -474,17 +485,21 @@ class SubService extends ChangeNotifier {
 
         return appMetaList;
       } catch (e) {
-        print("Apps: No Apps found");
+        _logger.d('Failed to list all psp app due to error: $e');
 
-        BaseUtil.showNegativeAlert(locale.unableToGetUpi, locale.tryLater);
+        BaseUtil.showNegativeAlert(
+          locale.unableToGetUpi,
+          locale.tryLater,
+        );
+
         return [];
       }
     }
   }
 
   ///TODO(@Hirdesh2101)
-  PageAction handleTap({InvestmentType? type}) {
-    return AppState.delegate!.appState.currentAction = PageAction(
+  void handleTap({InvestmentType? type}) {
+    AppState.delegate!.appState.currentAction = PageAction(
       page: SipPageConfig,
       widget: const SipProcessView(),
       state: PageState.addWidget,
