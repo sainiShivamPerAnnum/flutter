@@ -912,13 +912,13 @@ PageConfiguration SipAssetSelectPageConfig = PageConfiguration(
   key: 'SipAssetsSelectViewPath',
   path: SipAssetsSelectViewPath,
   uiPage: Pages.SipAssetSelectView,
-  name: 'Sip Entry View',
+  name: 'Sip Asset Select View',
 );
 PageConfiguration SipFormPageConfig = PageConfiguration(
   key: 'SipFormPageViewPath',
   path: SipFormPageViewPath,
   uiPage: Pages.SipFormView,
-  name: 'Sip Entry View',
+  name: 'Sip Amount Form View',
 );
 
 PageConfiguration StoriesPageConfig = PageConfiguration(

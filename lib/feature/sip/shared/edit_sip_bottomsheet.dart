@@ -8,7 +8,6 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_bloc/flutter_bloc.dart';
 
 class EditSipBottomSheet extends StatefulWidget {
   const EditSipBottomSheet({
@@ -19,6 +18,7 @@ class EditSipBottomSheet extends StatefulWidget {
     required this.amount,
     required this.assetType,
     required this.sipReturns,
+    required this.model,
     super.key,
   });
   final AutosaveState state;
@@ -28,6 +28,7 @@ class EditSipBottomSheet extends StatefulWidget {
   final String frequency;
   final SIPAssetTypes assetType;
   final String sipReturns;
+  final SipCubit model;
   @override
   State<EditSipBottomSheet> createState() => _EditSipBottomSheetState();
 }
@@ -37,7 +38,6 @@ class _EditSipBottomSheetState extends State<EditSipBottomSheet> {
   final locale = locator<S>();
   @override
   Widget build(BuildContext context) {
-    var model = context.read<SipCubit>();
     return Padding(
       padding: EdgeInsets.only(
         left: SizeConfig.padding24,
@@ -85,8 +85,8 @@ class _EditSipBottomSheetState extends State<EditSipBottomSheet> {
                 if (widget.allowEdit)
                   InkWell(
                     onTap: () async {
-                      return model.editSip(widget.amount, widget.frequency,
-                          widget.index, widget.assetType);
+                      return widget.model.editSip(widget.amount,
+                          widget.frequency, widget.index, widget.assetType);
                     },
                     child: Column(
                       children: [
@@ -122,7 +122,10 @@ class _EditSipBottomSheetState extends State<EditSipBottomSheet> {
                     setState(() {
                       _isLoading = true;
                     });
-                    return model.pauseResume(widget.index);
+                    await widget.model.pauseResume(widget.index);
+                    setState(() {
+                      _isLoading = false;
+                    });
                   },
                   child: Column(children: [
                     SizedBox(

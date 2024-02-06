@@ -108,15 +108,13 @@ class _PauseAutosaveModalState extends State<PauseAutosaveModal> {
               if (res) {
                 BaseUtil.showPositiveAlert(
                     locale.pauseSuccess, locale.pauseSuccessSub);
-                await AppState.backButtonDispatcher!.didPopRoute().then((_) {});
+                await AppState.backButtonDispatcher!.didPopRoute();
               } else {
                 BaseUtil.showNegativeAlert(locale.pauseFail, locale.tryAgain);
               }
             },
           ),
-        ).then((value) {
-          // Navigator.of(context).pop();
-        });
+        );
       },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

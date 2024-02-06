@@ -19,24 +19,28 @@ class LoadedSipData extends SipState {
     required this.activeSubscription,
     required this.sipScreenData,
     this.isPauseOrResuming = false,
+    this.seeAll = false,
   });
   final Subscriptions activeSubscription;
   final SipData sipScreenData;
   final bool isPauseOrResuming;
+  final bool seeAll;
 
   LoadedSipData copyWith({
     SipData? sipScreenData,
     Subscriptions? activeSubscription,
     bool? isPauseOrResuming,
+    bool? seeAll,
   }) {
     return LoadedSipData(
       activeSubscription: activeSubscription ?? this.activeSubscription,
       isPauseOrResuming: isPauseOrResuming ?? this.isPauseOrResuming,
       sipScreenData: sipScreenData ?? this.sipScreenData,
+      seeAll: seeAll ?? this.seeAll,
     );
   }
 
   @override
   List<Object?> get props =>
-      [activeSubscription, sipScreenData, isPauseOrResuming];
+      [activeSubscription, sipScreenData, isPauseOrResuming, seeAll];
 }

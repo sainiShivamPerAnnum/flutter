@@ -47,20 +47,6 @@ class SipIntro extends StatefulWidget {
 }
 
 class _SipIntroState extends State<SipIntro> {
-  bool _seeAll = false;
-
-  void seeAllClicked() {
-    setState(() {
-      _seeAll = true;
-    });
-  }
-
-  @override
-  void dispose() {
-    _seeAll = false;
-    super.dispose();
-  }
-
   @override
   Widget build(BuildContext context) {
     int activeSubsLength = 0;
@@ -92,6 +78,7 @@ class _SipIntroState extends State<SipIntro> {
           }
         },
         builder: (context, state) {
+          final model = context.read<SipCubit>();
           return SingleChildScrollView(
             child: (state is LoadingSipData)
                 ? const Stack(
@@ -231,13 +218,14 @@ class _SipIntroState extends State<SipIntro> {
                                     ),
                                   ),
                                   ...List.generate(
-                                      _seeAll
+                                      state.seeAll
                                           ? activeSubsLength
                                           : activeSubsLength > 3
                                               ? 3
                                               : activeSubsLength, (i) {
                                     return Column(children: [
                                       AssetSipContainer(
+                                        model: model,
                                         index: i,
                                         assetType: subs[i].assetType,
                                         state: subs[i].status,
@@ -266,12 +254,10 @@ class _SipIntroState extends State<SipIntro> {
                                       ),
                                     ]);
                                   }),
-                                  activeSubsLength > 3
+                                  activeSubsLength > 3 && !state.seeAll
                                       ? TextButton(
                                           onPressed: () {
-                                            setState(() {
-                                              _seeAll = true;
-                                            });
+                                            model.updateSeeAll(true);
                                           },
                                           child: Row(
                                             mainAxisAlignment:
@@ -332,6 +318,7 @@ class AssetSipContainer extends StatelessWidget {
       required this.state,
       required this.allowEdit,
       required this.assetType,
+      required this.model,
       this.pausedSip,
       super.key});
   final String assetUrl;
@@ -345,6 +332,7 @@ class AssetSipContainer extends StatelessWidget {
   final AutosaveState state;
   final bool allowEdit;
   final SIPAssetTypes assetType;
+  final SipCubit model;
   final locale = locator<S>();
 
   @override
@@ -364,10 +352,12 @@ class AssetSipContainer extends StatelessWidget {
                     index: index,
                     allowEdit: allowEdit,
                     amount: sipAmount,
+                    model: model,
                     frequency: sipInterval,
                     sipReturns: SipCalculation.getReturn(
                         formAmount: sipAmount,
                         currentasset: assetType,
+                        interestOnly: true,
                         frequency: sipInterval),
                   ));
             }
@@ -422,10 +412,12 @@ class AssetSipContainer extends StatelessWidget {
                             index: index,
                             allowEdit: allowEdit,
                             amount: sipAmount,
+                            model: model,
                             frequency: sipInterval,
                             sipReturns: SipCalculation.getReturn(
                                 formAmount: sipAmount,
                                 currentasset: assetType,
+                                interestOnly: true,
                                 frequency: sipInterval),
                           ));
                     },
@@ -668,13 +660,7 @@ class _SipCalculatorState extends State<SipCalculator>
                         .colour(UiConstants.kTextColor),
                   ),
                   Text(
-                    BaseUtil.formatIndianRupees(
-                        double.parse(SipCalculation.getReturn(
-                      formAmount: sipAmount,
-                      interestSelection: returnPercentage,
-                      numberOfYears: timePeriod,
-                      currentTab: tabController.index,
-                    ))),
+                    '₹${SipCalculation.getReturn(formAmount: sipAmount, interestSelection: returnPercentage, numberOfYears: timePeriod, currentTab: tabController.index, interestOnly: false)}',
                     style: TextStyles.sourceSansSB.title5
                         .colour(UiConstants.kTabBorderColor),
                   ),

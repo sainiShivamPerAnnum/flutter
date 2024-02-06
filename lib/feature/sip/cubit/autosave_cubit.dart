@@ -6,11 +6,9 @@ import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/sip_asset_type.dart';
 import 'package:felloapp/core/model/sip_model/sip_data_model.dart';
 import 'package:felloapp/core/model/subscription_models/all_subscription_model.dart';
-import 'package:felloapp/core/repository/subscription_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/feature/sip/cubit/sip_data_holder.dart';
-import 'package:felloapp/feature/sip/sip_polling_page/view/sip_polling_view.dart';
 import 'package:felloapp/feature/sip/ui/sip_setup/sip_amount_view.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -26,7 +24,6 @@ part 'autosave_state.dart';
 class SipCubit extends Cubit<SipState> {
   SipCubit() : super(const LoadingSipData());
   final _subService = locator<SubService>();
-  final _subscriptionRepo = locator<SubscriptionRepo>();
   final AnalyticsService _analyticsService = locator<AnalyticsService>();
   final locale = locator<S>();
 
@@ -48,6 +45,13 @@ class SipCubit extends Cubit<SipState> {
     final currentState = state;
     if (currentState is LoadedSipData) {
       emit(currentState.copyWith(isPauseOrResuming: isPauseOrResuming));
+    }
+  }
+
+  void updateSeeAll(bool value) {
+    final currentState = state;
+    if (currentState is LoadedSipData) {
+      emit(currentState.copyWith(seeAll: value));
     }
   }
 
@@ -96,6 +100,7 @@ class SipCubit extends Cubit<SipState> {
             BaseUtil.showPositiveAlert("SIP resumed successfully",
                 "For more details check SIP section");
             await getData();
+            await AppState.backButtonDispatcher!.didPopRoute();
           }
         } else {
           _analyticsService
@@ -120,6 +125,7 @@ class SipCubit extends Cubit<SipState> {
             ),
           ).then((value) async {
             await getData();
+            await AppState.backButtonDispatcher!.didPopRoute();
           });
         }
       }
@@ -127,41 +133,6 @@ class SipCubit extends Cubit<SipState> {
       print('Error in pauseResume: $e');
     } finally {
       updatePauseResumeStatus(false);
-    }
-  }
-
-  Future<void> createSubscription({
-    required num amount,
-    required String freq,
-    required String assetType,
-  }) async {
-    // TODO(@Hirdesh2101): emit loading state for create subscription to show
-    /// loading state for button component..
-
-    final response = await _subscriptionRepo.createSubscription(
-      freq: freq,
-      amount: amount,
-      assetType: assetType,
-      lbAmt: amount,
-      augAmt: amount,
-    );
-
-    final data = response.model?.data;
-    final subscription = data?.subscription;
-
-    if (response.isSuccess() && subscription != null) {
-      AppState.delegate!.appState.currentAction = PageAction(
-        state: PageState.addWidget,
-        page: SipPollingPageConfig,
-        widget: SipPollingPage(
-          data: subscription,
-        ),
-      );
-    } else {
-      BaseUtil.showNegativeAlert(
-        'Failed to create subscription',
-        response.errorMessage,
-      );
     }
   }
 }

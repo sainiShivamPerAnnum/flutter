@@ -1,5 +1,6 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/sip_asset_type.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/sip_model/sip_options.dart';
@@ -253,14 +254,15 @@ class _SipFormAmountState extends State<SipFormAmount> {
                                         TextSpan(children: [
                                           TextSpan(
                                             text:
-                                                '${BaseUtil.formatIndianRupees(double.parse(state.formAmount.toString()))}+',
+                                                '${BaseUtil.formatIndianRupees(SipCalculation.getPrincipal(formAmount: state.formAmount, currentTab: _currentTab).toDouble())}+',
                                           ),
                                           TextSpan(
                                             text: SipCalculation.getReturn(
-                                              formAmount: state.formAmount,
-                                              currentasset: widget.sipAssetType,
-                                              currentTab: _currentTab,
-                                            ),
+                                                formAmount: state.formAmount,
+                                                currentasset:
+                                                    widget.sipAssetType,
+                                                currentTab: _currentTab,
+                                                interestOnly: true),
                                             style: TextStyles.sourceSansSB.body1
                                                 .colour(UiConstants
                                                     .kTabBorderColor),
@@ -307,6 +309,7 @@ class _SipFormAmountState extends State<SipFormAmount> {
                             isEdit: widget.isEdit ?? false,
                             mandateAvailable: widget.mandateAvailable,
                             amount: state.formAmount,
+                            sipAssetType: widget.sipAssetType,
                             frequency: SipDataHolder.instance.data
                                 .amountSelectionScreen.options[_currentTab],
                             id: (widget.isEdit ?? false) ? widget.editId : null,
@@ -324,6 +327,7 @@ class _Footer extends StatefulWidget {
     required this.isEdit,
     required this.id,
     required this.isValidAmount,
+    required this.sipAssetType,
   });
   final bool mandateAvailable;
   final num amount;
@@ -331,6 +335,7 @@ class _Footer extends StatefulWidget {
   final String? id;
   final bool isEdit;
   final bool isValidAmount;
+  final SIPAssetTypes sipAssetType;
 
   @override
   State<_Footer> createState() => _FooterState();
@@ -392,15 +397,26 @@ class _FooterState extends State<_Footer> {
               onPressed: () async {
                 if (widget.isValidAmount) {
                   if (widget.isEdit) {
-                    var res = await formmodel.editSipTrigger(
+                    await formmodel.editSipTrigger(
                         widget.amount, widget.frequency, widget.id!);
-                    if (!res) {}
                   } else {
-                    if (!widget.mandateAvailable) {
-                    } else {}
-                    // await model.pageController.animateToPage(3,
-                    //     duration: const Duration(milliseconds: 100),
-                    //     curve: Curves.easeIn);
+                    if (widget.mandateAvailable) {
+                      await formmodel.createSubscription(
+                          amount: widget.amount,
+                          freq: widget.frequency,
+                          assetType: widget.sipAssetType);
+                    } else {
+                      ///TODO @Hirdesh2101
+                      // AppState.delegate!.appState
+                      //                       .currentAction = PageAction(
+                      //                     page: SipAssetSelectPageConfig,
+                      //                     widget: SipAssetSelectView(
+                      //                       isMandateAvailable: state
+                      //                           .activeSubscription.isActive,
+                      //                     ),
+                      //                     state: PageState.addWidget,
+                      //                   );
+                    }
                   }
                 }
               },
