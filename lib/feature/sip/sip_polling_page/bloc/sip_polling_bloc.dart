@@ -16,6 +16,14 @@ class SipPollingBloc extends Bloc<SipPollingEvent, SipPollingState> {
   SipPollingBloc(this._subscriptionService, this._logger)
       : super(const InitialPollingState()) {
     on<StartPolling>(_onStartPolling);
+    on<CreatedSubscription>(_onCreatedSubscription);
+  }
+
+  FutureOr<void> _onCreatedSubscription(
+    CreatedSubscription event,
+    Emitter<SipPollingState> emitter,
+  ) {
+    emitter(CompletedPollingWithSuccessOrPending(event.data));
   }
 
   FutureOr<void> _onStartPolling(

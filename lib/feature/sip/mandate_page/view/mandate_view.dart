@@ -58,12 +58,14 @@ class _SipMandatePage extends StatelessWidget {
     return BlocConsumer<MandateBloc, MandateState>(
       listener: (context, state) {
         if (state is ListedPSPApps && state.transactionStatus is Created) {
-          final key = (state.transactionStatus as Created).subsPrimaryKey;
+          final data = state.transactionStatus as Created;
+          final key = data.subsPrimaryKey;
           AppState.delegate!.appState.currentAction = PageAction(
             state: PageState.addWidget,
             page: SipPollingPageConfig,
             widget: SipPollingPage(
               subscriptionKey: key,
+              data: data.subscriptionData,
             ),
           );
         }
@@ -124,6 +126,13 @@ class _SipMandatePage extends StatelessWidget {
                     ),
                   ),
                   const Spacer(),
+                  switch (state.transactionStatus) {
+                    Creating() => const LinearProgressIndicator(
+                        color: UiConstants.primaryColor,
+                        backgroundColor: UiConstants.kDarkBackgroundColor,
+                      ),
+                    _ => const SizedBox.shrink(),
+                  },
                   SizedBox(
                     height: SizeConfig.padding40,
                   ),

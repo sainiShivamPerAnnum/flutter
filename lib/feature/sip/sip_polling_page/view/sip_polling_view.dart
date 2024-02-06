@@ -1,3 +1,4 @@
+import 'package:felloapp/core/model/subscription_models/subscription_status.dart';
 import 'package:felloapp/core/model/subscription_models/subscription_status_response.dart';
 import 'package:felloapp/feature/sip/sip_polling_page/bloc/sip_polling_bloc.dart';
 import 'package:felloapp/util/locator.dart';
@@ -8,17 +9,23 @@ class SipPollingPage extends StatelessWidget {
   const SipPollingPage({
     required this.subscriptionKey,
     super.key,
+    this.data,
   });
 
   final String subscriptionKey;
+  final SubscriptionStatusData? data;
 
   @override
   Widget build(BuildContext context) {
+    final event = data != null
+        ? CreatedSubscription(data!)
+        : StartPolling(subscriptionKey);
+
     return BlocProvider(
       create: (context) => SipPollingBloc(
         locator(),
         locator(),
-      )..add(StartPolling(subscriptionKey)),
+      )..add(event),
       child: const _SipPollingView(),
     );
   }
@@ -51,9 +58,22 @@ class SipCompletedOrPending extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return switch (data.status) {
-      _ => const SizedBox.shrink(),
-    };
+    return Scaffold(
+      backgroundColor: Colors.black,
+      body: switch (data.status) {
+        AutosaveState.ACTIVE => const SipCreationSuccessView(),
+        _ => const SizedBox.shrink(),
+      },
+    );
+  }
+}
+
+class SipCreationSuccessView extends StatelessWidget {
+  const SipCreationSuccessView({super.key});
+
+  @override
+  Widget build(BuildContext context) {
+    return const Placeholder();
   }
 }
 

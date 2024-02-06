@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/model/subscription_models/subscription_status_response.dart';
 import 'package:felloapp/core/repository/subscription_repo.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -58,7 +59,9 @@ class MandateBloc extends Bloc<MandateEvent, MandateState> {
         package: event.meta.packageName,
       );
 
-      final intentData = res.model?.data.intent;
+      final data = res.model?.data;
+      final subscriptionData = data?.subscription;
+      final intentData = data?.intent;
 
       if (res.isSuccess() && intentData != null) {
         emitter(
@@ -67,6 +70,7 @@ class MandateBloc extends Bloc<MandateEvent, MandateState> {
               subsPrimaryKey: intentData.subId,
               redirectUrl: intentData.redirectUrl,
               mandateAlreadyExits: intentData.alreadyExist,
+              subscriptionData: subscriptionData,
             ),
           ),
         );
