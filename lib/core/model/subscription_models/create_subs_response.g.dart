@@ -32,6 +32,11 @@ SubscriptionResponseData _$SubscriptionResponseDataFromJson(
         final val = SubscriptionResponseData(
           intent: $checkedConvert('intent',
               (v) => SubscriptionIntent.fromJson(v as Map<String, dynamic>)),
+          subscription: $checkedConvert(
+              'subscription',
+              (v) => v == null
+                  ? null
+                  : SubscriptionStatusData.fromJson(v as Map<String, dynamic>)),
         );
         return val;
       },
