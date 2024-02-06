@@ -15,6 +15,7 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
+import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
@@ -92,8 +93,15 @@ class _SipIntroState extends State<SipIntro> {
       resizeToAvoidBottomInset: false,
       body: SingleChildScrollView(
         child: model.state.isFetchingDetails
-            ? const Center(
-                child: FullScreenLoader(),
+            ? const Stack(
+                children: [
+                  NewSquareBackground(),
+                  Positioned.fill(
+                    child: Center(
+                      child: FullScreenLoader(),
+                    ),
+                  ),
+                ],
               )
             : Column(
                 crossAxisAlignment: CrossAxisAlignment.start,

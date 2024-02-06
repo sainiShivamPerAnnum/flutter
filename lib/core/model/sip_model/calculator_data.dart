@@ -7,8 +7,8 @@ part 'calculator_data.g.dart';
   createToJson: false,
 )
 class CalculatorData {
-  List<String>? options;
-  Map<String, CalculatorDetails>? data;
+  final List<String>? options;
+  final Map<String, CalculatorDetails>? data;
 
   CalculatorData({this.options, this.data});
   factory CalculatorData.fromJson(Map<String, dynamic> json) =>

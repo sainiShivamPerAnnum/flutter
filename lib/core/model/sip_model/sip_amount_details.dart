@@ -7,9 +7,9 @@ part 'sip_amount_details.g.dart';
   createToJson: false,
 )
 class SipAmountDetails {
-  int? minamount;
-  int? numberOfPeriodsPerYear;
-  List<SipOptions>? options;
+  final int? minamount;
+  final int? numberOfPeriodsPerYear;
+  final List<SipOptions>? options;
 
   SipAmountDetails({this.minamount, this.numberOfPeriodsPerYear, this.options});
   factory SipAmountDetails.fromJson(Map<String, dynamic> json) =>

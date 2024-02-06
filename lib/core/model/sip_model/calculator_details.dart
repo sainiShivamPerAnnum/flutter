@@ -7,10 +7,10 @@ part 'calculator_details.g.dart';
   createToJson: false,
 )
 class CalculatorDetails {
-  SipAmount? sipAmount;
-  SipAmount? timePeriod;
-  Map<String, dynamic>? interest;
-  int? numberOfPeriodsPerYear;
+  final SipAmount? sipAmount;
+  final SipAmount? timePeriod;
+  final Map<String, dynamic>? interest;
+  final int? numberOfPeriodsPerYear;
 
   CalculatorDetails(
       {this.sipAmount,

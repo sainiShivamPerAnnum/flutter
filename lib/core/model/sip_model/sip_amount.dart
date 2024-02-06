@@ -6,11 +6,11 @@ part 'sip_amount.g.dart';
   createToJson: false,
 )
 class SipAmount {
-  int? min;
-  int? max;
-  int? multiples;
+  final int? min;
+  final int? max;
+  final int? multiples;
   @JsonKey(name: "default")
-  int? defaultValue;
+  final int? defaultValue;
 
   SipAmount({this.min, this.max, this.multiples, this.defaultValue});
   factory SipAmount.fromJson(Map<String, dynamic> json) =>

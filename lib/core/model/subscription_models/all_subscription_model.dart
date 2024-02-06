@@ -7,9 +7,9 @@ part 'all_subscription_model.g.dart';
   createToJson: false,
 )
 class AllSubscriptionModel {
-  int? length;
-  bool? isActive;
-  List<SubscriptionModel>? subs;
+  final int? length;
+  final bool? isActive;
+  final List<SubscriptionModel>? subs;
 
   AllSubscriptionModel({this.length, this.isActive, this.subs});
   factory AllSubscriptionModel.fromJson(Map<String, dynamic> json) =>
