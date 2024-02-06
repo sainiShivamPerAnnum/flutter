@@ -32,6 +32,11 @@ SubscriptionResponseData _$SubscriptionResponseDataFromJson(
         final val = SubscriptionResponseData(
           intent: $checkedConvert('intent',
               (v) => SubscriptionIntent.fromJson(v as Map<String, dynamic>)),
+          subscription: $checkedConvert(
+              'subscription',
+              (v) => v == null
+                  ? null
+                  : SubscriptionStatusData.fromJson(v as Map<String, dynamic>)),
         );
         return val;
       },
@@ -47,7 +52,7 @@ SubscriptionIntent _$SubscriptionIntentFromJson(Map<String, dynamic> json) =>
               $checkedConvert('redirectUrl', (v) => v as String? ?? ''),
           alreadyExist:
               $checkedConvert('alreadyExist', (v) => v as bool? ?? false),
-          id: $checkedConvert('id', (v) => v as String? ?? ''),
+          subId: $checkedConvert('subId', (v) => v as String? ?? ''),
         );
         return val;
       },

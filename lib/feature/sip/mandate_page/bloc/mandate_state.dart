@@ -8,6 +8,7 @@ sealed class SubsTransactionStatus {
     required String subsPrimaryKey,
     required String redirectUrl,
     required bool mandateAlreadyExits,
+    SubscriptionStatusData? subscriptionData,
   }) = Created;
   const factory SubsTransactionStatus.failed(String message) = Failed;
 }
@@ -24,10 +25,13 @@ class Created extends SubsTransactionStatus {
   final String subsPrimaryKey;
   final String redirectUrl;
   final bool mandateAlreadyExits;
+  final SubscriptionStatusData? subscriptionData;
+
   const Created({
     required this.subsPrimaryKey,
     required this.redirectUrl,
     this.mandateAlreadyExits = false,
+    this.subscriptionData,
   });
 }
 

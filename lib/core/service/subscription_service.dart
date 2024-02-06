@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
@@ -19,7 +18,6 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
-import 'package:felloapp/util/flavor_config.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
@@ -159,82 +157,75 @@ class SubService extends ChangeNotifier {
 
   // SUBSCRIPTION CORE METHODS - START
 
-  Future<void> createSubscription({
-    required String freq,
-    required num lbAmt,
-    required num augAmt,
-    required num amount,
-    required String package,
-  }) async {
-    final res = await _subscriptionRepo.createSubscription(
-      amount: amount,
-      freq: freq,
-      lbAmt: lbAmt,
-      package: package,
-      augAmt: augAmt,
-    );
+  // Future<void> createSubscription({
+  //   required String freq,
+  //   required num lbAmt,
+  //   required num augAmt,
+  //   required num amount,
+  //   required String package,
+  // }) async {
+  //   final res = await _subscriptionRepo.createSubscription(
+  //     amount: amount,
+  //     freq: freq,
+  //     lbAmt: lbAmt,
+  //     package: package,
+  //     augAmt: augAmt,
+  //   );
 
-    if (res.isSuccess()) {
-      final intent = res.model!.data.intent;
-      final intentUrl = intent.redirectUrl;
-      final id = intent.id;
-      if (intentUrl.isNotEmpty) {
-        try {
-          if (Platform.isIOS) {
-            await BaseUtil.launchUrl(intentUrl);
-            return;
-          } else {
-            const platform = MethodChannel("methodChannel/upiIntent");
-            final result = await platform.invokeMethod('initiatePsp', {
-              'redirectUrl': res.model,
-              'packageName': FlavorConfig.isDevelopment()
-                  ? "com.phonepe.app.preprod"
-                  : package
-            });
-            log("Result from initiatePsp: $result");
-          }
-        } catch (e) {
-          _logger.e("Create subscription failed: Platform Exception");
-        }
+  //   if (res.isSuccess()) {
+  //     final intent = res.model!.data.intent;
+  //     final intentUrl = intent.redirectUrl;
+  //     final id = intent.subId;
+  //     if (intentUrl.isNotEmpty) {
+  //       try {
+  //         if (Platform.isIOS) {
+  //           await BaseUtil.launchUrl(intentUrl);
+  //           return;
+  //         } else {
+  //           const platform = MethodChannel("methodChannel/upiIntent");
+  //           final result = await platform.invokeMethod('initiatePsp', {
+  //             'redirectUrl': res.model,
+  //             'packageName': FlavorConfig.isDevelopment()
+  //                 ? "com.phonepe.app.preprod"
+  //                 : package
+  //           });
+  //           log("Result from initiatePsp: $result");
+  //         }
+  //       } catch (e) {
+  //         _logger.e("Create subscription failed: Platform Exception");
+  //       }
 
-        if (subscriptionData != null) {
-          final result = await _pollForSubscriptionStatus(id);
-          final data = result?.model?.data;
-          if (result != null && result.isSuccess() && data != null) {
-            if (data.status.isActive) {}
+  //       if (subscriptionData != null) {
+  //         final result = await pollForSubscriptionStatus(id);
+  //         final data = result.model?.data;
+  //         if (result.isSuccess() && data != null) {
+  //           if (data.status.isActive) {}
 
-            if (data.status.isCancelled) {}
-          } else {
-            _logger.d('Something went wrong while creating subscription');
-          }
-        }
-      }
-    } else {
-      BaseUtil.showNegativeAlert(
-        res.errorMessage,
-        "Please try after sometime",
-      );
-    }
-  }
+  //           if (data.status.isCancelled) {}
+  //         } else {
+  //           _logger.d('Something went wrong while creating subscription');
+  //         }
+  //       }
+  //     }
+  //   } else {
+  //     BaseUtil.showNegativeAlert(
+  //       res.errorMessage,
+  //       "Please try after sometime",
+  //     );
+  //   }
+  // }
 
-  Future<ApiResponse<SubscriptionStatusResponse>?> _pollForSubscriptionStatus(
+  Future<ApiResponse<SubscriptionStatusResponse>> pollForSubscriptionStatus(
     String subscriptionKey,
   ) async {
-    int pollCount = 0;
+    int pollCount = 1;
     const pollLimit = 6;
     const relayDuration = Duration(seconds: 5);
 
-    ApiResponse<SubscriptionStatusResponse>? lastResult;
+    ApiResponse<SubscriptionStatusResponse> lastResult =
+        await getSubscriptionByStatus(subscriptionKey);
 
     while (pollCount < pollLimit) {
-      // delay between two requests.
-      if (pollCount < 1) {
-        await Future.delayed(
-          relayDuration,
-        );
-      }
-
-      lastResult = await getSubscriptionByStatus(subscriptionKey);
       final data = lastResult.model?.data;
 
       // Termination condition for polling:
@@ -249,6 +240,15 @@ class SubService extends ChangeNotifier {
       if (predicate) {
         return lastResult;
       }
+
+      // delay between two requests.
+      if (pollCount > 1) {
+        await Future.delayed(
+          relayDuration,
+        );
+      }
+
+      lastResult = await getSubscriptionByStatus(subscriptionKey);
 
       pollCount++;
     }
