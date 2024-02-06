@@ -1,5 +1,6 @@
 import 'package:carousel_slider/carousel_slider.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/enums/sip_asset_type.dart';
 import 'package:felloapp/core/model/sip_model/select_asset_options.dart';
 import 'package:felloapp/feature/sip/cubit/selectedAsset_cubit.dart';
 import 'package:felloapp/feature/sip/cubit/sip_data_handler.dart';
@@ -95,7 +96,7 @@ class _SipAsssetSelectState extends State<SipAsssetSelect> {
                     for (int i = 0; i < assetsLength; i++) ...[
                       AssetBlock(
                         option: assets![i],
-                        index: i,
+                        asset: assets[i].type,
                       ),
                       SizedBox(
                         height: SizeConfig.padding16,
@@ -163,10 +164,12 @@ class _SipAsssetSelectState extends State<SipAsssetSelect> {
                 Padding(
                   padding: EdgeInsets.only(bottom: SizeConfig.padding24),
                   child: Opacity(
-                    opacity:
-                        selectedAssetModel.state.selectedAsset != -1 ? 1 : 0.5,
+                    opacity: selectedAssetModel.state.selectedAsset != null
+                        ? 1
+                        : 0.5,
                     child: SecondaryButton(
-                        onPressed: selectedAssetModel.state.selectedAsset != -1
+                        onPressed: selectedAssetModel.state.selectedAsset !=
+                                null
                             ? () {
                                 AppState.delegate!.appState.currentAction =
                                     PageAction(
@@ -175,6 +178,8 @@ class _SipAsssetSelectState extends State<SipAsssetSelect> {
                                     mandateAvailable: AllSubscriptionHolder
                                             .instance.data.isActive ??
                                         false,
+                                    sipAssetType:
+                                        selectedAssetModel.state.selectedAsset!,
                                   ),
                                   state: PageState.addWidget,
                                 );
@@ -193,9 +198,9 @@ class _SipAsssetSelectState extends State<SipAsssetSelect> {
 }
 
 class AssetBlock extends StatefulWidget {
-  const AssetBlock({required this.option, required this.index, super.key});
+  const AssetBlock({required this.option, required this.asset, super.key});
   final AssetOptions option;
-  final int index;
+  final SIPAssetTypes asset;
 
   @override
   State<AssetBlock> createState() => _AssetBlockState();
@@ -214,7 +219,7 @@ class _AssetBlockState extends State<AssetBlock> with TickerProviderStateMixin {
       setState(() {});
     });
     final model = context.read<SelectAssetCubit>();
-    if (model.state.selectedAsset == widget.index) {
+    if (model.state.selectedAsset == widget.asset) {
       _controller.forward(from: 0.0);
     }
     super.initState();
@@ -230,54 +235,75 @@ class _AssetBlockState extends State<AssetBlock> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
-        final model = context.read<SelectAssetCubit>();
-        model.setSelectedAsset(widget.index);
+        if (widget.asset != SIPAssetTypes.UNKNOWN) {
+          final model = context.read<SelectAssetCubit>();
+          model.setSelectedAsset(widget.asset);
+        }
       },
       child: BlocListener<SelectAssetCubit, SelectAssetCubitState>(
         listener: (context, state) {
-          if (state.selectedAsset == widget.index) {
+          if (state.selectedAsset == widget.asset) {
             _controller.forward(from: 0.0);
           } else if (_controller.value == 1.0) {
             _controller.reverse(from: 1.0);
           }
         },
-        child: Container(
-          decoration: BoxDecoration(
-              border: Border.all(
-                  color: UiConstants.teal3.withOpacity(_controller.value)),
-              color: UiConstants.kArrowButtonBackgroundColor,
-              borderRadius: BorderRadius.circular(SizeConfig.roundness8)),
-          padding: EdgeInsets.symmetric(
-            horizontal: SizeConfig.padding16,
-            vertical: SizeConfig.padding16,
-          ),
-          child: Row(
-            crossAxisAlignment: CrossAxisAlignment.start,
-            children: [
-              AppImage(
-                widget.option.imageUrl!,
-                width: SizeConfig.padding44,
-                height: SizeConfig.padding40,
-                fit: BoxFit.fitHeight,
+        child: Stack(
+          children: [
+            Container(
+              decoration: BoxDecoration(
+                  border: Border.all(
+                      color: UiConstants.teal3.withOpacity(_controller.value)),
+                  color: UiConstants.kArrowButtonBackgroundColor,
+                  borderRadius: BorderRadius.circular(SizeConfig.roundness8)),
+              padding: EdgeInsets.symmetric(
+                horizontal: SizeConfig.padding16,
+                vertical: SizeConfig.padding16,
               ),
-              SizedBox(
-                width: SizeConfig.padding18,
-              ),
-              Column(
+              child: Row(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  Text(
-                    widget.option.title!,
-                    style: TextStyles.rajdhaniSB.body1.colour(Colors.white),
+                  AppImage(
+                    widget.option.imageUrl,
+                    width: SizeConfig.padding44,
+                    height: SizeConfig.padding40,
+                    fit: BoxFit.fitHeight,
                   ),
-                  Text(
-                    widget.option.subText!,
-                    style: TextStyles.sourceSans.body3,
+                  SizedBox(
+                    width: SizeConfig.padding18,
+                  ),
+                  Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        widget.option.title,
+                        style: TextStyles.rajdhaniSB.body1.colour(Colors.white),
+                      ),
+                      Text(
+                        widget.option.subText,
+                        style: TextStyles.sourceSans.body3,
+                      )
+                    ],
                   )
                 ],
-              )
-            ],
-          ),
+              ),
+            ),
+            if (widget.asset == SIPAssetTypes.UNKNOWN)
+              Positioned.fill(
+                child: Container(
+                  decoration: BoxDecoration(
+                      color: UiConstants.kTextColor4.withOpacity(0.6),
+                      borderRadius:
+                          BorderRadius.circular(SizeConfig.roundness8)),
+                  child: Center(
+                      child: Text(
+                    'COMING SOON',
+                    style: TextStyles.rajdhaniSB.body0
+                        .colour(UiConstants.kTextColor),
+                  )),
+                ),
+              ),
+          ],
         ),
       ),
     );

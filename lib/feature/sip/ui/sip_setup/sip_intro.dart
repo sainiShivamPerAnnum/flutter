@@ -3,6 +3,7 @@ import 'dart:math';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/enums/sip_asset_type.dart';
 import 'package:felloapp/core/model/sip_model/calculator_details.dart';
 import 'package:felloapp/core/model/subscription_models/subscription_status.dart';
 import 'package:felloapp/feature/sip/cubit/autosave_cubit.dart';
@@ -221,9 +222,10 @@ class _SipIntroState extends State<SipIntro> {
                             return Column(children: [
                               AssetSipContainer(
                                 index: i,
-                                state: subs![i].status,
-                                allowEdit: !(subs[i].lENDBOXP2P != 0.0 &&
-                                    subs[i].aUGGOLD99 != 0.0),
+                                assetType: subs![i].assetType,
+                                state: subs[i].status,
+                                allowEdit:
+                                    subs[i].assetType != SIPAssetTypes.BOTH,
                                 assetUrl: (subs[i].lENDBOXP2P != 0.0 &&
                                         subs[i].aUGGOLD99 != 0.0)
                                     ? Assets.goldAndflo
@@ -308,6 +310,7 @@ class AssetSipContainer extends StatelessWidget {
       required this.state,
       required this.model,
       required this.allowEdit,
+      required this.assetType,
       this.pausedSip,
       super.key});
   final String assetUrl;
@@ -321,6 +324,7 @@ class AssetSipContainer extends StatelessWidget {
   final AutosaveState state;
   final AutosaveCubit model;
   final bool allowEdit;
+  final SIPAssetTypes assetType;
 
   @override
   Widget build(BuildContext context) {
@@ -334,6 +338,7 @@ class AssetSipContainer extends StatelessWidget {
                   isBarrierDismissible: true,
                   enableDrag: true,
                   content: EditSipBottomSheet(
+                    assetType: assetType,
                     state: state,
                     index: index,
                     model: model,
@@ -388,6 +393,7 @@ class AssetSipContainer extends StatelessWidget {
                           isBarrierDismissible: true,
                           enableDrag: true,
                           content: EditSipBottomSheet(
+                            assetType: assetType,
                             state: state,
                             index: index,
                             model: model,

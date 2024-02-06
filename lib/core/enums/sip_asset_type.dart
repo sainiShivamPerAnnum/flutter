@@ -1,0 +1,8 @@
+enum SIPAssetTypes {
+  UNI_FLEXI,
+  UNI_FIXED_3,
+  UNI_FIXED_6,
+  AUGGOLD99,
+  BOTH,
+  UNKNOWN,
+}

@@ -4,14 +4,13 @@ part of 'selectedAsset_cubit.dart';
 abstract class AutoSaveSetupState {}
 
 final class SelectAssetCubitState extends AutoSaveSetupState {
-  final int? selectedAsset;
-  // int? editIndex;
+  final SIPAssetTypes? selectedAsset;
   SelectAssetCubitState({
-    this.selectedAsset = -1,
+    this.selectedAsset,
   });
 
   SelectAssetCubitState copyWith({
-    int? selectedAsset,
+    SIPAssetTypes? selectedAsset,
   }) {
     return SelectAssetCubitState(
       selectedAsset: selectedAsset ?? this.selectedAsset,

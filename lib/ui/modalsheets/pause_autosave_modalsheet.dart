@@ -106,16 +106,22 @@ class _PauseAutosaveModalState extends State<PauseAutosaveModal> {
             },
             buttonText: locale.btnYes,
             confirmAction: () async {
-              bool res = await widget.model!
-                  .pauseSubscription(option, widget.id)
-                  .then((value) {
-                Future.delayed(Duration.zero,
-                    () => AppState.backButtonDispatcher!.didPopRoute());
-                return true;
-              });
+              bool res =
+                  await widget.model!.pauseSubscription(option, widget.id);
               if (res) {
                 BaseUtil.showPositiveAlert("SIP paused successfully",
                     "For more details check SIP section");
+
+                Navigator.of(context).pop();
+              } else {
+                BaseUtil.showNegativeAlert(
+                    "Failed to pause SIP", "Please try again");
+                Future.delayed(
+                    Duration.zero,
+                    () async =>
+                        await AppState.backButtonDispatcher!.didPopRoute());
+                Future.delayed(
+                    Duration.zero, () => AppState.screenStack.removeLast());
               }
             },
           ),

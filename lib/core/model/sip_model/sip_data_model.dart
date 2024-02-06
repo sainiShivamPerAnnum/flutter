@@ -11,7 +11,6 @@ part 'sip_data_model.g.dart';
 class SipData {
   SelectAssetScreen? selectAssetScreen;
   CalculatorScreen? calculatorScreen;
-  @JsonKey(name: 'amoountSelectionScreen')
   SipAmountSelection? amountSelectionScreen;
 
   SipData({this.selectAssetScreen, this.calculatorScreen});

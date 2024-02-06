@@ -1,3 +1,4 @@
+import 'package:felloapp/core/enums/sip_asset_type.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 import 'subscription_status.dart';
@@ -15,6 +16,8 @@ class SubscriptionModel {
   final AutosaveState status;
   final num amount;
   final String frequency;
+  @JsonKey(unknownEnumValue: SIPAssetTypes.UNKNOWN)
+  final SIPAssetTypes assetType;
   @JsonKey(name: 'AUGGOLD99')
   final num aUGGOLD99;
   @JsonKey(name: 'LENDBOXP2P')
@@ -26,6 +29,7 @@ class SubscriptionModel {
     this.id = '',
     this.subId = '',
     this.status = AutosaveState.IDLE,
+    this.assetType = SIPAssetTypes.UNKNOWN,
     this.amount = 0,
     this.frequency = '',
     this.aUGGOLD99 = 0,

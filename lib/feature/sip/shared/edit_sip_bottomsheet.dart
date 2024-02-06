@@ -1,6 +1,6 @@
+import 'package:felloapp/core/enums/sip_asset_type.dart';
 import 'package:felloapp/core/model/subscription_models/subscription_status.dart';
 import 'package:felloapp/feature/sip/cubit/autosave_cubit.dart';
-import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/styles.dart';
@@ -15,6 +15,7 @@ class EditSipBottomSheet extends StatefulWidget {
     super.key,
     required this.frequency,
     required this.amount,
+    required this.assetType,
   });
   final AutosaveState state;
   final int index;
@@ -22,6 +23,7 @@ class EditSipBottomSheet extends StatefulWidget {
   final bool allowEdit;
   final num amount;
   final String frequency;
+  final SIPAssetTypes assetType;
   @override
   State<EditSipBottomSheet> createState() => _EditSipBottomSheetState();
 }
@@ -67,8 +69,8 @@ class _EditSipBottomSheetState extends State<EditSipBottomSheet> {
           if (widget.allowEdit)
             InkWell(
               onTap: () async {
-                return widget.model
-                    .editSip(widget.amount, widget.frequency, widget.index);
+                return widget.model.editSip(widget.amount, widget.frequency,
+                    widget.index, widget.assetType);
               },
               child: Column(
                 children: [
@@ -101,10 +103,7 @@ class _EditSipBottomSheetState extends State<EditSipBottomSheet> {
             ),
           InkWell(
             onTap: () async {
-              return widget.model.pauseResume(widget.index).then((value) {
-                Future.delayed(Duration.zero,
-                    () => AppState.backButtonDispatcher!.didPopRoute());
-              });
+              return widget.model.pauseResume(widget.index);
             },
             child: Column(children: [
               SizedBox(

@@ -2,10 +2,10 @@ import 'dart:math';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
+import 'package:felloapp/core/enums/sip_asset_type.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/feature/sip/cubit/sip_data_handler.dart';
 import 'package:felloapp/feature/sip/cubit/sip_form_cubit.dart';
-import 'package:felloapp/feature/sip/cubit/sub_data_handler.dart';
 import 'package:felloapp/feature/sip/shared/tab_slider.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
@@ -21,53 +21,58 @@ import 'package:intl/intl.dart';
 
 class SipFormAmountView extends StatelessWidget {
   const SipFormAmountView({
+    required this.mandateAvailable,
+    required this.sipAssetType,
     super.key,
     this.prefillAmount,
     this.prefillFrequency,
     this.isEdit,
-    this.editIndex,
-    required this.mandateAvailable,
+    this.editId,
   });
   final bool mandateAvailable;
   final int? prefillAmount;
   final String? prefillFrequency;
   final bool? isEdit;
-  final int? editIndex;
+  final String? editId;
+  final SIPAssetTypes sipAssetType;
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => SipFormCubit(),
       child: SipFormAmount(
-          mandateAvailable: mandateAvailable,
-          prefillAmount: prefillAmount,
-          prefillFrequency: prefillFrequency,
-          isEdit: isEdit,
-          editIndex: editIndex),
+        mandateAvailable: mandateAvailable,
+        prefillAmount: prefillAmount,
+        prefillFrequency: prefillFrequency,
+        isEdit: isEdit,
+        editId: editId,
+        sipAssetType: sipAssetType,
+      ),
     );
   }
 }
 
 class SipFormAmount extends StatefulWidget {
   const SipFormAmount(
-      {super.key,
-      required this.mandateAvailable,
+      {required this.mandateAvailable,
+      required this.sipAssetType,
+      super.key,
       this.prefillAmount,
       this.isEdit,
-      this.editIndex,
+      this.editId,
       this.prefillFrequency});
   final bool mandateAvailable;
   final int? prefillAmount;
   final String? prefillFrequency;
   final bool? isEdit;
-  final int? editIndex;
+  final String? editId;
+  final SIPAssetTypes sipAssetType;
 
   @override
   State<SipFormAmount> createState() => _SipFormAmountState();
 }
 
 class _SipFormAmountState extends State<SipFormAmount> {
-  // ValueNotifier<double>? _amount;
   late num _upperLimit;
   late num _lowerLimit;
   late num _division;
@@ -92,9 +97,12 @@ class _SipFormAmountState extends State<SipFormAmount> {
             ?.numberOfPeriodsPerYear ??
         1;
 
-    ///TODO(@Hirdesh2101)
-    double interest = 8;
-    double interestRate = (interest * .001) / numberOfPeriods;
+    double? interest = SipDataHolder.instance.data.selectAssetScreen?.options
+        ?.where((element) => element.type == widget.sipAssetType)
+        .first
+        .interest!
+        .toDouble();
+    double interestRate = (interest! * .001) / numberOfPeriods;
     int numberOfYear = 5;
 
     int numberOfInvestments = numberOfYear * numberOfPeriods;
@@ -160,6 +168,10 @@ class _SipFormAmountState extends State<SipFormAmount> {
     var bestOptions = SipDataHolder.instance.data.amountSelectionScreen
         ?.data?[options[_currentTab]]?.options
         ?.indexWhere((option) => option.best != null && option.best == true);
+    var percentage = SipDataHolder.instance.data.selectAssetScreen?.options
+        ?.where((element) => element.type == widget.sipAssetType)
+        .first
+        .interest;
     return Scaffold(
       backgroundColor: UiConstants.kBackgroundColor,
       appBar: AppBar(
@@ -317,7 +329,7 @@ class _SipFormAmountState extends State<SipFormAmount> {
                                   .copyWith(color: UiConstants.grey1),
                             ),
                             Text(
-                              'with 12% returns',
+                              'with $percentage% returns',
                               style: TextStyles.sourceSans.body4
                                   .copyWith(color: UiConstants.grey1),
                             ),
@@ -334,15 +346,14 @@ class _SipFormAmountState extends State<SipFormAmount> {
             ),
             bottomNavigationBar: BlocConsumer<SipFormCubit, SipFormCubitState>(
                 builder: (context, state) => _Footer(
+                      isValidAmount: _lowerLimit <= state.formAmount &&
+                          state.formAmount <= _upperLimit,
                       isEdit: widget.isEdit ?? false,
                       mandateAvailable: widget.mandateAvailable,
                       amount: state.formAmount,
                       frequency: SipDataHolder.instance.data
                           .amountSelectionScreen!.options![_currentTab],
-                      id: (widget.isEdit ?? false)
-                          ? AllSubscriptionHolder
-                              .instance.data.subs![widget.editIndex!].id
-                          : null,
+                      id: (widget.isEdit ?? false) ? widget.editId : null,
                     ),
                 listener: (context, state) {})),
       ),
@@ -351,17 +362,20 @@ class _SipFormAmountState extends State<SipFormAmount> {
 }
 
 class _Footer extends StatefulWidget {
-  const _Footer(
-      {required this.mandateAvailable,
-      required this.amount,
-      required this.frequency,
-      required this.isEdit,
-      required this.id});
+  const _Footer({
+    required this.mandateAvailable,
+    required this.amount,
+    required this.frequency,
+    required this.isEdit,
+    required this.id,
+    required this.isValidAmount,
+  });
   final bool mandateAvailable;
   final num amount;
   final String frequency;
   final String? id;
   final bool isEdit;
+  final bool isValidAmount;
 
   @override
   State<_Footer> createState() => _FooterState();
@@ -412,31 +426,38 @@ class _FooterState extends State<_Footer> {
           SizedBox(
             height: SizeConfig.padding22,
           ),
-          SecondaryButton(
-            label: widget.isEdit
-                ? 'UPDATE SIP'
-                : widget.mandateAvailable
-                    ? '1 CLICKS AWAY'
-                    : '2 CLICKS AWAY',
-            onPressed: () async {
-              if (widget.isEdit) {
-                setState(() {
-                  _isLoading = true;
-                });
-                var res = await formmodel.editSipTrigger(
-                    widget.amount, widget.frequency, widget.id!);
-                if (!res) {
-                  setState(() {
-                    _isLoading = false;
-                  });
+          Opacity(
+            opacity: widget.isValidAmount ? 1 : 0.5,
+            child: SecondaryButton(
+              label: widget.isEdit
+                  ? 'UPDATE SIP'
+                  : widget.mandateAvailable
+                      ? '1 CLICKS AWAY'
+                      : '2 CLICKS AWAY',
+              onPressed: () async {
+                if (widget.isValidAmount) {
+                  if (widget.isEdit) {
+                    setState(() {
+                      _isLoading = true;
+                    });
+                    var res = await formmodel.editSipTrigger(
+                        widget.amount, widget.frequency, widget.id!);
+                    if (!res) {
+                      setState(() {
+                        _isLoading = false;
+                      });
+                    }
+                  } else {
+                    if (!widget.mandateAvailable) {
+                    } else {}
+                    // await model.pageController.animateToPage(3,
+                    //     duration: const Duration(milliseconds: 100),
+                    //     curve: Curves.easeIn);
+                  }
                 }
-              } else {
-                // await model.pageController.animateToPage(3,
-                //     duration: const Duration(milliseconds: 100),
-                //     curve: Curves.easeIn);
-              }
-            },
-            child: _isLoading ? const CupertinoActivityIndicator() : null,
+              },
+              child: _isLoading ? const CupertinoActivityIndicator() : null,
+            ),
           ),
           SizedBox(
             height: SizeConfig.padding16,
@@ -633,12 +654,12 @@ class BorderPainter extends CustomPainter {
 class AmountSlider extends StatelessWidget {
   const AmountSlider({
     required this.onChanged,
+    required this.bestOption,
     this.amount = 10000,
     this.upperLimit = 15000,
     this.lowerLimit = 500,
     super.key,
     this.division = 5,
-    required this.bestOption,
   });
 
   final void Function(double) onChanged;
@@ -769,14 +790,14 @@ class _AmountInputWidgetState extends State<AmountInputWidget> {
                       '₹ ',
                       style: TextStyles.rajdhaniB.title2,
                     ),
-                    Expanded(
-                      // width: (SizeConfig.padding20) *
-                      //         _amountController!.text
-                      //             .replaceAll('.', "")
-                      //             .length +
-                      //     (_amountController!.text.contains('.')
-                      //         ? SizeConfig.padding6
-                      //         : 0),
+                    SizedBox(
+                      width: (SizeConfig.padding20) *
+                              _amountController!.text
+                                  .replaceAll('.', "")
+                                  .length +
+                          (_amountController!.text.contains('.')
+                              ? SizeConfig.padding6
+                              : 0),
                       child: TextField(
                         expands: false,
                         controller: _amountController,
@@ -803,6 +824,9 @@ class _AmountInputWidgetState extends State<AmountInputWidget> {
                           isDense: true,
                           contentPadding: EdgeInsets.zero,
                         ),
+                        cursorColor: UiConstants
+                            .kModalSheetMutedTextBackgroundColor
+                            .withOpacity(0.4),
                         style: TextStyles.rajdhaniB.title2.colour(Colors.white),
                       ),
                     ),
@@ -821,10 +845,18 @@ class _AmountInputWidgetState extends State<AmountInputWidget> {
                     SizedBox(
                       width: SizeConfig.padding4,
                     ),
-                    const Icon(
-                      Icons.info_outline,
-                      size: 14,
-                      color: UiConstants.teal3,
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          height: SizeConfig.padding4,
+                        ),
+                        Icon(
+                          Icons.info_outline,
+                          size: SizeConfig.iconSize2,
+                          color: UiConstants.teal3,
+                        ),
+                      ],
                     ),
                   ],
                 )
