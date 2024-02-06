@@ -13,7 +13,7 @@ AssetOptions _$AssetOptionsFromJson(Map<String, dynamic> json) => AssetOptions(
       defaultSelected: json['defaultSelected'] as bool,
       type: $enumDecode(_$SIPAssetTypesEnumMap, json['type'],
           unknownValue: SIPAssetTypes.UNKNOWN),
-      interest: json['interest'] as num?,
+      interest: json['interest'] as num,
     );
 
 const _$SIPAssetTypesEnumMap = {

@@ -6,12 +6,16 @@ part 'all_subscription_model.g.dart';
 @JsonSerializable(
   createToJson: false,
 )
-class AllSubscriptionModel {
-  final int? length;
-  final bool? isActive;
-  final List<SubscriptionModel>? subs;
+class Subscriptions {
+  final int length;
+  final bool isActive;
+  final List<SubscriptionModel> subs;
 
-  AllSubscriptionModel({this.length, this.isActive, this.subs});
-  factory AllSubscriptionModel.fromJson(Map<String, dynamic> json) =>
-      _$AllSubscriptionModelFromJson(json);
+  Subscriptions({
+    this.length = 0,
+    this.isActive = false,
+    this.subs = const [],
+  });
+  factory Subscriptions.fromJson(Map<String, dynamic> json) =>
+      _$SubscriptionsFromJson(json);
 }

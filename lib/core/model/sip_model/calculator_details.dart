@@ -7,16 +7,16 @@ part 'calculator_details.g.dart';
   createToJson: false,
 )
 class CalculatorDetails {
-  final SipAmount? sipAmount;
-  final SipAmount? timePeriod;
-  final Map<String, dynamic>? interest;
-  final int? numberOfPeriodsPerYear;
+  final SipAmount sipAmount;
+  final SipAmount timePeriod;
+  final Map<String, dynamic> interest;
+  final int numberOfPeriodsPerYear;
 
   CalculatorDetails(
-      {this.sipAmount,
-      this.timePeriod,
-      this.interest,
-      this.numberOfPeriodsPerYear});
+      {required this.sipAmount,
+      required this.timePeriod,
+      required this.interest,
+      required this.numberOfPeriodsPerYear});
   factory CalculatorDetails.fromJson(Map<String, dynamic> json) =>
       _$CalculatorDetailsFromJson(json);
 }

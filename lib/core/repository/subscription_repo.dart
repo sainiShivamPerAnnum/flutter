@@ -127,15 +127,15 @@ class SubscriptionRepo extends BaseRepo {
 
   /// TODO: Rremove this api as there will be array of object in new api.
   ///
-  Future<ApiResponse<AllSubscriptionModel>> getSubscription() async {
+  Future<ApiResponse<Subscriptions>> getSubscription() async {
     try {
       final response = await APIService.instance.getData(
         ApiPath.subscription,
         cBaseUrl: baseUrl,
         apiName: _subscription,
       );
-      AllSubscriptionModel subscriptionModel =
-          AllSubscriptionModel.fromJson(response['data']);
+      Subscriptions subscriptionModel =
+          Subscriptions.fromJson(response['data']);
       return ApiResponse(model: subscriptionModel, code: 200);
     } catch (e) {
       _logger.e(e.toString());

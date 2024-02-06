@@ -47,13 +47,13 @@ class TransactionsHistoryViewModel extends BaseViewModel {
   int _tabIndex = 0;
   int get filter => _filter;
   String? get filterValue => _filterValue;
-  AllSubscriptionModel? _activeSubscription;
+  Subscriptions? _activeSubscription;
   List<SubscriptionTransactionModel>? _filteredSIPList = [];
   bool _hasMoreSIPTxns = false;
 
   // Map<String, int> get tranTypeFilterItems => _tranTypeFilterItems;
 
-  AllSubscriptionModel? get activeSubscription => _activeSubscription;
+  Subscriptions? get activeSubscription => _activeSubscription;
   List<String?> get tranTypeFilterItems => _tranTypeFilterItems;
   List<UserTransaction>? get filteredList => _filteredList;
   List<SubscriptionTransactionModel>? get filteredSIPList => _filteredSIPList;

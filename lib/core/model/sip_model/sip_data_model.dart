@@ -9,14 +9,14 @@ part 'sip_data_model.g.dart';
   createToJson: false,
 )
 class SipData {
-  final SelectAssetScreen? selectAssetScreen;
-  final CalculatorScreen? calculatorScreen;
-  final SipAmountSelection? amountSelectionScreen;
+  final SelectAssetScreen selectAssetScreen;
+  final CalculatorScreen calculatorScreen;
+  final SipAmountSelection amountSelectionScreen;
 
   SipData(
-      {this.selectAssetScreen,
-      this.calculatorScreen,
-      this.amountSelectionScreen});
+      {required this.selectAssetScreen,
+      required this.calculatorScreen,
+      required this.amountSelectionScreen});
   factory SipData.fromJson(Map<String, dynamic> json) =>
       _$SipDataFromJson(json);
 }

@@ -4,7 +4,7 @@ part of 'autosave_cubit.dart';
 abstract class AutoSaveSetupState {}
 
 final class AutosaveCubitState extends AutoSaveSetupState {
-  final AllSubscriptionModel? activeSubscription;
+  final Subscriptions? activeSubscription;
   final SipData? sipScreenData;
   final bool isFetchingDetails;
   final bool? isPauseOrResuming;
@@ -21,7 +21,7 @@ final class AutosaveCubitState extends AutoSaveSetupState {
     List<ApplicationMeta>? upiApps,
     bool? isFetchingDetails,
     SipData? sipScreenData,
-    AllSubscriptionModel? activeSubscription,
+    Subscriptions? activeSubscription,
     bool? isPauseOrResuming,
   }) {
     return AutosaveCubitState(

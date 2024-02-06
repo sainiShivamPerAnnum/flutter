@@ -7,10 +7,10 @@ part 'sip_options.g.dart';
 )
 class SipOptions {
   final int? order;
-  final int? value;
+  final int value;
   final bool? best;
 
-  SipOptions({this.order, this.value, this.best});
+  SipOptions({this.order = 0, required this.value, this.best = false});
   factory SipOptions.fromJson(Map<String, dynamic> json) =>
       _$SipOptionsFromJson(json);
 }

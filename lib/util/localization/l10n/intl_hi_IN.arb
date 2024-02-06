@@ -923,5 +923,96 @@
   "tutorial3": "आप इस खंड में टिकट देख सकते हैं और साप्ताहिक खेल खेलकर इनाम अर्जित कर सकते हैं!",
   "tutorial4": "आप इस इनाम अनुभाग में अपने सभी अर्जित इनाम देख सकते हैं",
   "tutorial5": "यदि आप फेलो के बारे में और जानना चाहते हैं, तो इन कहानियों को देखें!",
-  "tutorial6": "अब अपनी इनामी बचत यात्रा शुरू करने के लिए यहां अपनी संपत्ति का चयन करें"
+  "tutorial6": "अब अपनी इनामी बचत यात्रा शुरू करने के लिए यहां अपनी संपत्ति का चयन करें",
+  "scratchCardsSip": "स्क्रैच कार्ड",
+  "sipTickets": "टिकट {count}",
+  "@sipTickets": {
+    "placeholders": {
+      "count": {
+        "type": "num"
+      }
+    }
+  },
+  "sipamount": "SIP राशि",
+  "siptitle": "फेलो के साथ SIP",
+  "selectSipAmount": "SIP राशि चुनें",
+  "minSipAmount": "न्यूनतम राशि - ₹{amount}",
+  "@minSipAmount": {
+    "placeholders": {
+      "amount": {
+        "type": "double"
+      }
+    }
+  },
+  "maxSipAmount": "अधिकतम राशि - ₹{amount}",
+  "@maxSipAmount": {
+    "placeholders": {
+      "amount": {
+        "type": "double"
+      }
+    }
+  },
+  "expectedReturns5y": "5 वर्षों में अपेक्षित रिटर्न्स",
+  "returnSubText": "फेलो SIP के साथ",
+  "percentageReturns": "{percentage}% रिटर्न्स के साथ",
+  "@percentageReturns": {
+    "placeholders": {
+      "percentage": {
+        "type": "num"
+      }
+    }
+  },
+  "existingMandate": "आपकी SIP राशि आपके मौजूदा मैंडेट से कटौती की जाएगी। इस SIP के लिए कोई नया मैंडेट नहीं बनाया जाएगा",
+  "newMandate": "आपको चयनित UPI ऐप पर ₹5000 का मैंडेट प्राप्त होगा। लेकिन चिंता न करें, हम ₹1100/सप्ताह से अधिक नहीं काटेंगे।",
+  "updateSip": "SIP अपडेट करें",
+  "oneClickAway": "1 क्लिक दूर",
+  "twoClickAway": "2 क्लिक दूर",
+  "sipIntroTitle": "साप्ताहिक / मासिक रूप से स्वचालित रूप से बचत करें और",
+  "sipIntroSubTitle": "ऑटोपायलट पर पैसे बढ़ाएं",
+  "startSip": "SIP शुरू करें",
+  "sipCustomers": "8000+ उपयोगकर्ताओं ने SIP शुरू की है",
+  "existingSip": "आपकी मौजूदा SIP",
+  "bothassetSip": "डिजिटल गोल्ड और P2P SIP",
+  "floSip": "फेलो P2P SIP",
+  "goldSip": "डिजिटल गोल्ड SIP",
+  "pauseSip": "रोकी गई SIP",
+  "editSip": "SIP संपादित करें",
+  "clickToresumeSip": "SIP फिर से शुरू करने के लिए कार्ड पर क्लिक करें",
+  "SipCalculator": "SIP कैलकुलेटर",
+  "returnsCalculator": "अपने SIP रिटर्न्स की गणना करें",
+  "sipAmount": "SIP राशि -",
+  "timePeriod": "समय अवधि",
+  "rpSip": "रिटर्न प्रतिशत",
+  "yourMoneySip": "{timePeriod} वर्षों में आपका पैसा-",
+  "@yourMoneySip": {
+    "placeholders": {
+      "timePeriod": {
+        "type": "int"
+      }
+    }
+  },
+  "sipForIphone": "दैनिक SIP के साथ आप एक वर्ष में एक Iphone के लिए बचत कर सकते हैं",
+  "sipForCar": "मासिक SIP के साथ आप एक वर्ष में एक कार के लिए पर्याप्त बचत कर सकते हैं",
+  "sipForTrip": "साप्ताहिक SIP के साथ आप एक वर्ष में गोवा यात्रा के लिए पर्याप्त बचत कर सकते हैं",
+  "SipIphoneTitle": "एक Iphone के लिए SIP",
+  "SipCarTitle": "एक कार के लिए SIP",
+  "SipTripTitle": "एक यात्रा के लिए SIP",
+  "selectAsset": "एसेट चुनें",
+  "threeClicksAway": "3 क्लिक दूर",
+  "comingSoon": "जल्द आ रहा है",
+  "editSipOptions": "SIP विकल्प संपादित करें",
+  "editSipbtn": "SIP संपादित करें",
+  "resumeSipbtn": "SIP फिर से शुरू करें",
+  "pauseSipbtn": "SIP रोकें",
+  "sipReturn": "इस SIP से आप 5 वर्षों में ₹{returns} तक कमा सकते हैं",
+  "@sipReturn": {
+    "placeholders": {
+      "returns": {
+        "type": "String"
+      }
+    }
+  },
+  "setupSip": "SIP सेटअप करें",
+  "setupCardTitle": "अपना SIP शुरू करें और ऑटोपायलट पर पैसे बढ़ाएं",
+  "setupCardSubTitle": "अपने वित्तीय लक्ष्यों को पूरा करने के लिए फेलो फ्लो या डिजिटल गोल्ड में निवेश करें"
 }

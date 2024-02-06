@@ -7,11 +7,12 @@ part 'sip_amount_data.g.dart';
   createToJson: false,
 )
 class SipAmountSelection {
-  final String? title;
-  final List<String>? options;
-  final Map<String, SipAmountDetails>? data;
+  final String title;
+  final List<String> options;
+  final Map<String, SipAmountDetails> data;
 
-  SipAmountSelection({this.title, this.options, this.data});
+  SipAmountSelection(
+      {required this.title, required this.options, required this.data});
   factory SipAmountSelection.fromJson(Map<String, dynamic> json) =>
       _$SipAmountSelectionFromJson(json);
 }

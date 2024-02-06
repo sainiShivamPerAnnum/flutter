@@ -9,6 +9,9 @@ import 'package:felloapp/feature/sip/ui/sip_setup/sip_amount_view.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
+import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -35,22 +38,21 @@ class SipAsssetSelect extends StatefulWidget {
 }
 
 class _SipAsssetSelectState extends State<SipAsssetSelect> {
+  final locale = locator<S>();
   final List<String> images = [
-    'assets/svg/iphone.svg',
-    'assets/svg/car.svg',
-    'assets/svg/trip.svg',
+    Assets.iphone,
+    Assets.car,
+    Assets.trip,
   ];
+  List<String> titles = [];
+  List<String> subTitle = [];
 
-  final List<String> titles = [
-    'SIP for an Iphone',
-    'SIP For a Car',
-    'SIP for a trip',
-  ];
-  final List<String> subTitle = [
-    'With a daily SIP you can save for an Iphone in a year',
-    'With a monthly SIP You can save enough for a Car in a year',
-    'With a weekly SIP You can save enough for a Goa trip in a year',
-  ];
+  @override
+  void initState() {
+    titles = [locale.SipIphoneTitle, locale.SipCarTitle, locale.SipTripTitle];
+    subTitle = [locale.sipForIphone, locale.sipForCar, locale.sipForTrip];
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -85,7 +87,7 @@ class _SipAsssetSelectState extends State<SipAsssetSelect> {
               crossAxisAlignment: CrossAxisAlignment.start,
               children: [
                 Text(
-                  "Select Asset",
+                  locale.selectAsset,
                   style: TextStyles.rajdhaniSB.body1.colour(Colors.white),
                 ),
                 SizedBox(
@@ -185,7 +187,7 @@ class _SipAsssetSelectState extends State<SipAsssetSelect> {
                                 );
                               }
                             : () => null,
-                        label: "3 CLICKS AWAY"),
+                        label: locale.threeClicksAway),
                   ),
                 ),
               ],
@@ -208,6 +210,7 @@ class AssetBlock extends StatefulWidget {
 
 class _AssetBlockState extends State<AssetBlock> with TickerProviderStateMixin {
   late AnimationController _controller;
+  final locale = locator<S>();
 
   @override
   void initState() {
@@ -215,9 +218,6 @@ class _AssetBlockState extends State<AssetBlock> with TickerProviderStateMixin {
       duration: const Duration(milliseconds: 200),
       vsync: this,
     );
-    _controller.addListener(() {
-      setState(() {});
-    });
     final model = context.read<SelectAssetCubit>();
     if (model.state.selectedAsset == widget.asset) {
       _controller.forward(from: 0.0);
@@ -250,43 +250,49 @@ class _AssetBlockState extends State<AssetBlock> with TickerProviderStateMixin {
         },
         child: Stack(
           children: [
-            Container(
-              decoration: BoxDecoration(
-                  border: Border.all(
-                      color: UiConstants.teal3.withOpacity(_controller.value)),
-                  color: UiConstants.kArrowButtonBackgroundColor,
-                  borderRadius: BorderRadius.circular(SizeConfig.roundness8)),
-              padding: EdgeInsets.symmetric(
-                horizontal: SizeConfig.padding16,
-                vertical: SizeConfig.padding16,
-              ),
-              child: Row(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  AppImage(
-                    widget.option.imageUrl,
-                    width: SizeConfig.padding44,
-                    height: SizeConfig.padding40,
-                    fit: BoxFit.fitHeight,
+            AnimatedBuilder(
+              animation: _controller,
+              builder: (context, child) {
+                return Container(
+                  decoration: BoxDecoration(
+                    border: Border.all(
+                      color: UiConstants.teal3.withOpacity(_controller.value),
+                    ),
+                    color: UiConstants.kArrowButtonBackgroundColor,
+                    borderRadius: BorderRadius.circular(SizeConfig.roundness8),
                   ),
-                  SizedBox(
-                    width: SizeConfig.padding18,
+                  padding: EdgeInsets.symmetric(
+                    horizontal: SizeConfig.padding16,
+                    vertical: SizeConfig.padding16,
                   ),
-                  Column(
+                  child: Row(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        widget.option.title,
-                        style: TextStyles.rajdhaniSB.body1.colour(Colors.white),
+                      AppImage(
+                        widget.option.imageUrl,
+                        width: SizeConfig.padding44,
+                        height: SizeConfig.padding40,
+                        fit: BoxFit.fitHeight,
                       ),
-                      Text(
-                        widget.option.subText,
-                        style: TextStyles.sourceSans.body3,
-                      )
+                      SizedBox(width: SizeConfig.padding18),
+                      Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            widget.option.title,
+                            style: TextStyles.rajdhaniSB.body1
+                                .colour(Colors.white),
+                          ),
+                          Text(
+                            widget.option.subText,
+                            style: TextStyles.sourceSans.body3,
+                          )
+                        ],
+                      ),
                     ],
-                  )
-                ],
-              ),
+                  ),
+                );
+              },
             ),
             if (widget.asset == SIPAssetTypes.UNKNOWN)
               Positioned.fill(
@@ -297,7 +303,7 @@ class _AssetBlockState extends State<AssetBlock> with TickerProviderStateMixin {
                           BorderRadius.circular(SizeConfig.roundness8)),
                   child: Center(
                       child: Text(
-                    'COMING SOON',
+                    locale.comingSoon,
                     style: TextStyles.rajdhaniSB.body0
                         .colour(UiConstants.kTextColor),
                   )),

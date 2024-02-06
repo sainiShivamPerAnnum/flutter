@@ -79,10 +79,14 @@ class _SipFormAmountState extends State<SipFormAmount> {
   int _currentTab = 0;
   var bestOption;
   num ticketMultiplier = AppConfig.getValue(AppConfigKey.tambola_cost);
+  final locale = locator<S>();
 
-  int calculateMaturityValue(double P, double i, int n) {
-    double compoundInterest = ((pow(1 + i, n) - 1) / i) * (1 + i);
-    double M = P * compoundInterest;
+  int calculateMaturityValue(
+      double principal, double interest, int numberOfInvestments) {
+    double compoundInterest =
+        ((pow(1 + interest, numberOfInvestments) - 1) / interest) *
+            (1 + interest);
+    double M = principal * compoundInterest;
     return M.round();
   }
 
@@ -184,7 +188,7 @@ class _SipFormAmountState extends State<SipFormAmount> {
           ),
         ),
         backgroundColor: UiConstants.bg,
-        title: const Text('SIP with Fello'),
+        title: Text(locale.siptitle),
         titleTextStyle: TextStyles.rajdhaniSB.title4.setHeight(1.3),
         centerTitle: true,
         elevation: 0,
@@ -223,7 +227,7 @@ class _SipFormAmountState extends State<SipFormAmount> {
                     height: SizeConfig.padding28,
                   ),
                   Text(
-                    'Select SIP amount',
+                    locale.selectSipAmount,
                     style: TextStyles.rajdhaniSB.body1.copyWith(height: 1.2),
                   ),
                   SizedBox(
@@ -249,7 +253,7 @@ class _SipFormAmountState extends State<SipFormAmount> {
                               right: SizeConfig.padding16,
                             ),
                             child: Text(
-                              'Minimum amount - ₹${_lowerLimit.toDouble()}',
+                              locale.minSipAmount(_lowerLimit.toDouble()),
                               style: TextStyles.sourceSans.body4
                                   .colour(UiConstants.errorText),
                             ),
@@ -261,7 +265,7 @@ class _SipFormAmountState extends State<SipFormAmount> {
                               right: SizeConfig.padding16,
                             ),
                             child: Text(
-                              'Maximum amount - ₹${_upperLimit.toDouble()}',
+                              locale.maxSipAmount(_upperLimit.toDouble()),
                               style: TextStyles.sourceSans.body4
                                   .colour(UiConstants.errorText),
                             ),
@@ -294,7 +298,7 @@ class _SipFormAmountState extends State<SipFormAmount> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              'Expected Returns in 5Y',
+                              locale.expectedReturns5y,
                               style: TextStyles.sourceSans.body2,
                             ),
                             BlocConsumer<SipFormCubit, SipFormCubitState>(
@@ -324,12 +328,12 @@ class _SipFormAmountState extends State<SipFormAmount> {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              'with Fello SIP',
+                              locale.returnSubText,
                               style: TextStyles.sourceSans.body4
                                   .copyWith(color: UiConstants.grey1),
                             ),
                             Text(
-                              'with $percentage% returns',
+                              locale.percentageReturns(percentage ?? 8),
                               style: TextStyles.sourceSans.body4
                                   .copyWith(color: UiConstants.grey1),
                             ),
@@ -383,6 +387,7 @@ class _Footer extends StatefulWidget {
 
 class _FooterState extends State<_Footer> {
   bool _isLoading = false;
+  final locale = locator<S>();
 
   @override
   Widget build(BuildContext context) {
@@ -414,8 +419,8 @@ class _FooterState extends State<_Footer> {
               Expanded(
                 child: Text(
                   widget.mandateAvailable
-                      ? 'Your SIP amount will be deducted fro your existing mandate . No new mandate will be created for this SIP'
-                      : 'You will receive a mandate for ₹5000 on the selected UPI App. But don’t worry, We will not deduct anymore than ₹1100/week.',
+                      ? locale.existingMandate
+                      : locale.newMandate,
                   style: TextStyles.sourceSans.body3.copyWith(
                     color: UiConstants.textGray50,
                   ),
@@ -430,10 +435,10 @@ class _FooterState extends State<_Footer> {
             opacity: widget.isValidAmount ? 1 : 0.5,
             child: SecondaryButton(
               label: widget.isEdit
-                  ? 'UPDATE SIP'
+                  ? locale.updateSip
                   : widget.mandateAvailable
-                      ? '1 CLICKS AWAY'
-                      : '2 CLICKS AWAY',
+                      ? locale.oneClickAway
+                      : locale.twoClickAway,
               onPressed: () async {
                 if (widget.isValidAmount) {
                   if (widget.isEdit) {

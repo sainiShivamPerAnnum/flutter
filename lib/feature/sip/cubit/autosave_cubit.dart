@@ -88,13 +88,13 @@ class AutosaveCubit extends Cubit<AutosaveCubitState> {
       updatePauseResumeStatus();
       if (!response) {
         BaseUtil.showNegativeAlert("Failed to resume SIP", "Please try again");
-        Future.delayed(Duration.zero, () => AppState.screenStack.removeLast());
-      } else {
-        await getData();
-        BaseUtil.showPositiveAlert(
-            "SIP resumed successfully", "For more details check SIP section");
         Future.delayed(
             Duration.zero, () => AppState.backButtonDispatcher!.didPopRoute());
+      } else {
+        await getData();
+        await AppState.backButtonDispatcher!.didPopRoute();
+        BaseUtil.showPositiveAlert(
+            "SIP resumed successfully", "For more details check SIP section");
       }
     } else {
       _analyticsService
@@ -119,6 +119,8 @@ class AutosaveCubit extends Cubit<AutosaveCubitState> {
       ).then((value) async {
         updatePauseResumeStatus();
         await getData();
+        Future.delayed(const Duration(milliseconds: 10),
+            () async => await AppState.backButtonDispatcher!.didPopRoute());
       });
     }
   }

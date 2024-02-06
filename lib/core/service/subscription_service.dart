@@ -115,15 +115,15 @@ class SubService extends ChangeNotifier {
     notifyListeners();
   }
 
-  AllSubscriptionModel? _subscriptionData;
+  Subscriptions? _subscriptionData;
 
   SipData? _sipData;
 
-  AllSubscriptionModel? get subscriptionData => _subscriptionData;
+  Subscriptions? get subscriptionData => _subscriptionData;
 
   SipData? get sipData => _sipData;
 
-  set subscriptionData(AllSubscriptionModel? value) {
+  set subscriptionData(Subscriptions? value) {
     _subscriptionData = value;
   }
 

@@ -660,7 +660,7 @@ class AssetBottomButtons extends StatelessWidget {
               ],
             ),
           )
-        : Selector<SubService, AllSubscriptionModel?>(
+        : Selector<SubService, Subscriptions?>(
             selector: (_, subService) => subService.subscriptionData,
             builder: (context, state, child) {
               // state = SubscriptionModel();

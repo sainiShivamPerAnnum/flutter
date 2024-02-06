@@ -111,21 +111,16 @@ class _PauseAutosaveModalState extends State<PauseAutosaveModal> {
               if (res) {
                 BaseUtil.showPositiveAlert("SIP paused successfully",
                     "For more details check SIP section");
-
-                Navigator.of(context).pop();
+                await AppState.backButtonDispatcher!.didPopRoute().then((_) {});
               } else {
                 BaseUtil.showNegativeAlert(
                     "Failed to pause SIP", "Please try again");
-                Future.delayed(
-                    Duration.zero,
-                    () async =>
-                        await AppState.backButtonDispatcher!.didPopRoute());
-                Future.delayed(
-                    Duration.zero, () => AppState.screenStack.removeLast());
               }
             },
           ),
-        );
+        ).then((value) {
+          // Navigator.of(context).pop();
+        });
       },
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,

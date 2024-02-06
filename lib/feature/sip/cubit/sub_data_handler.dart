@@ -2,7 +2,7 @@ import 'package:felloapp/core/model/subscription_models/all_subscription_model.d
 
 class AllSubscriptionHolder {
   const AllSubscriptionHolder._(this.data);
-  final AllSubscriptionModel data;
+  final Subscriptions data;
 
   static AllSubscriptionHolder? _instance;
 
@@ -10,7 +10,7 @@ class AllSubscriptionHolder {
     return _instance!;
   }
 
-  factory AllSubscriptionHolder.init(AllSubscriptionModel data) {
+  factory AllSubscriptionHolder.init(Subscriptions data) {
     final d = AllSubscriptionHolder._(data);
     _instance = d;
     return _instance!;

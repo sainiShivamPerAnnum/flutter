@@ -14,7 +14,7 @@ class SipRepository extends BaseRepo {
   Future<ApiResponse<SipData>> getSipScreenData() async {
     try {
       final response = await APIService.instance.getData(
-        'https://mocki.io/v1/bf683f9f-387e-4c15-9461-27c4efb56832',
+        'https://mocki.io/v1/11fd190d-a8af-4baa-8c41-aa041f9657b1',
         cBaseUrl: '',
         apiName: _subscription,
       );

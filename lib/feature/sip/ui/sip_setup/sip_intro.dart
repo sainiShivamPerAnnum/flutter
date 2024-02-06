@@ -7,6 +7,7 @@ import 'package:felloapp/core/enums/sip_asset_type.dart';
 import 'package:felloapp/core/model/sip_model/calculator_details.dart';
 import 'package:felloapp/core/model/subscription_models/subscription_status.dart';
 import 'package:felloapp/feature/sip/cubit/autosave_cubit.dart';
+import 'package:felloapp/feature/sip/cubit/sip_data_handler.dart';
 import 'package:felloapp/feature/sip/shared/edit_sip_bottomsheet.dart';
 import 'package:felloapp/feature/sip/shared/sip.dart';
 import 'package:felloapp/feature/sip/shared/tab_slider.dart';
@@ -85,7 +86,7 @@ class _SipIntroState extends State<SipIntro> {
           ),
         ),
         backgroundColor: UiConstants.kTextColor4,
-        title: const Text('SIP with Fello'),
+        title: Text(locale.siptitle),
         titleTextStyle: TextStyles.rajdhaniSB.title4.setHeight(1.3),
         centerTitle: true,
         elevation: 0,
@@ -147,7 +148,7 @@ class _SipIntroState extends State<SipIntro> {
                                           CrossAxisAlignment.start,
                                       children: [
                                         Text(
-                                          'Save Weekly / Monthly  automatically & ',
+                                          locale.sipIntroTitle,
                                           style: TextStyles.sourceSansSB.body1
                                               .colour(UiConstants.kTextColor),
                                         ),
@@ -155,7 +156,7 @@ class _SipIntroState extends State<SipIntro> {
                                           height: SizeConfig.padding6,
                                         ),
                                         Text(
-                                          'Grow money on autopilot',
+                                          locale.sipIntroSubTitle,
                                           style: TextStyles.sourceSans.body3
                                               .colour(UiConstants
                                                   .kWinnerPlayerPrimaryColor),
@@ -181,7 +182,7 @@ class _SipIntroState extends State<SipIntro> {
                             padding: EdgeInsets.symmetric(
                                 horizontal: SizeConfig.padding40),
                             child: AppPositiveBtn(
-                                btnText: 'START SIP',
+                                btnText: locale.startSip,
                                 onPressed: () {
                                   AppState.delegate!.appState.currentAction =
                                       PageAction(
@@ -196,7 +197,7 @@ class _SipIntroState extends State<SipIntro> {
                               vertical: SizeConfig.padding6,
                             ),
                             child: Text(
-                              '8000+ users have started SIP',
+                              locale.sipCustomers,
                               style: TextStyles.sourceSans.body3
                                   .colour(UiConstants.kTabBorderColor),
                             ),
@@ -216,7 +217,7 @@ class _SipIntroState extends State<SipIntro> {
                             padding: EdgeInsets.symmetric(
                                 vertical: SizeConfig.padding24),
                             child: Text(
-                              'Your Existing SIP',
+                              locale.existingSip,
                               style: TextStyles.rajdhaniSB.title5
                                   .colour(UiConstants.kTextColor),
                             ),
@@ -244,10 +245,10 @@ class _SipIntroState extends State<SipIntro> {
                                 sipAmount: subs[i].amount.toInt(),
                                 sipName: subs[i].lENDBOXP2P != 0 &&
                                         subs[i].aUGGOLD99 != 0
-                                    ? "Digital Gold & P2P SIP"
+                                    ? locale.bothassetSip
                                     : subs[i].lENDBOXP2P != 0
-                                        ? "Fello P2P SIP"
-                                        : "Digital Gold SIP",
+                                        ? locale.floSip
+                                        : locale.goldSip,
                                 startDate: subs[i].createdOn,
                                 sipInterval: subs[i].frequency,
                                 pausedSip: subs[i].status.isPaused,
@@ -333,6 +334,36 @@ class AssetSipContainer extends StatelessWidget {
   final AutosaveCubit model;
   final bool allowEdit;
   final SIPAssetTypes assetType;
+  final locale = locator<S>();
+
+  int calculateMaturityValue(
+      double principal, double interest, int numberOfInvestments) {
+    double compoundInterest =
+        ((pow(1 + interest, numberOfInvestments) - 1) / interest) *
+            (1 + interest);
+    double M = principal * compoundInterest;
+    return M.round();
+  }
+
+  String getReturn() {
+    int numberOfPeriods = SipDataHolder.instance.data.amountSelectionScreen
+            ?.data?[sipInterval]?.numberOfPeriodsPerYear ??
+        1;
+
+    double? interest = SipDataHolder.instance.data.selectAssetScreen?.options
+        ?.where((element) => element.type == assetType)
+        .first
+        .interest!
+        .toDouble();
+    double interestRate = (interest! * .001) / numberOfPeriods;
+    int numberOfYear = 5;
+
+    int numberOfInvestments = numberOfYear * numberOfPeriods;
+    final maturityValue = calculateMaturityValue(
+        sipAmount.toDouble(), interestRate, numberOfInvestments);
+    final totalInterest = maturityValue - sipAmount;
+    return BaseUtil.formatRupees(double.parse(totalInterest.toString()));
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -353,6 +384,7 @@ class AssetSipContainer extends StatelessWidget {
                     allowEdit: allowEdit,
                     amount: sipAmount,
                     frequency: sipInterval,
+                    sipReturns: getReturn(),
                   ));
             }
           : null,
@@ -408,17 +440,18 @@ class AssetSipContainer extends StatelessWidget {
                             allowEdit: allowEdit,
                             amount: sipAmount,
                             frequency: sipInterval,
+                            sipReturns: getReturn(),
                           ));
                     },
                     child: pausedSip != null && pausedSip!
                         ? Text(
-                            'Paused SIP',
+                            locale.pauseSip,
                             style: TextStyles.sourceSans.body3.colour(
                                 UiConstants.kWinnerPlayerPrimaryColor
                                     .withOpacity(.8)),
                           )
                         : Text(
-                            'Edit SIP',
+                            locale.editSip,
                             style: TextStyles.sourceSans.body3
                                 .colour(UiConstants.kTabBorderColor),
                           ))
@@ -432,7 +465,7 @@ class AssetSipContainer extends StatelessWidget {
               children: [
                 pausedSip != null && pausedSip!
                     ? Text(
-                        'Click on card to Resume SIP',
+                        locale.clickToresumeSip,
                         style: TextStyles.sourceSans.body4
                             .colour(UiConstants.kTabBorderColor),
                       )
@@ -472,6 +505,7 @@ class _SipCalculatorState extends State<SipCalculator>
   int? maxTimePeriod;
   int? minTimePeriod;
   int? numberOfPeriodsPerYear;
+  final locale = locator<S>();
   void getDefaultValue(int tabIndex) {
     Map<String, CalculatorDetails>? data =
         widget.state.sipScreenData?.calculatorScreen?.calculatorData?.data;
@@ -508,9 +542,12 @@ class _SipCalculatorState extends State<SipCalculator>
     super.dispose();
   }
 
-  int calculateMaturityValue(double P, double i, int n) {
-    double compoundInterest = ((pow(1 + i, n) - 1) / i) * (1 + i);
-    double M = P * compoundInterest;
+  int calculateMaturityValue(
+      double principal, double interest, int numberOfInvestments) {
+    double compoundInterest =
+        ((pow(1 + interest, numberOfInvestments) - 1) / interest) *
+            (1 + interest);
+    double M = principal * compoundInterest;
     return M.round();
   }
 
@@ -570,9 +607,9 @@ class _SipCalculatorState extends State<SipCalculator>
         Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text("SIP Calculator",
+            Text(locale.SipCalculator,
                 style: TextStyles.rajdhaniSB.title5.colour(Colors.white)),
-            Text("Calculate your SIP returns",
+            Text(locale.returnsCalculator,
                 style:
                     TextStyles.rajdhaniSB.body3.colour(UiConstants.textGray70))
           ],
@@ -623,7 +660,7 @@ class _SipCalculatorState extends State<SipCalculator>
                 requiresQuickButtons: false,
                 changeFunction: changeSIPAmount,
                 requiresSlider: true,
-                label: "SIP Amount -",
+                label: locale.sipAmount,
                 prefixText: "₹",
                 maxValue: maxSipValue!.toDouble(),
                 minValue: minSipValue!.toDouble(),
@@ -636,7 +673,7 @@ class _SipCalculatorState extends State<SipCalculator>
                 requiresQuickButtons: false,
                 changeFunction: changeTimePeriod,
                 requiresSlider: true,
-                label: "Time Period",
+                label: locale.timePeriod,
                 suffixText: "Year",
                 maxValue: maxTimePeriod!.toDouble(),
                 minValue: minTimePeriod!.toDouble(),
@@ -649,7 +686,7 @@ class _SipCalculatorState extends State<SipCalculator>
                   requiresQuickButtons: false,
                   requiresSlider: true,
                   textAlign: TextAlign.center,
-                  label: "Return Percentage",
+                  label: locale.rpSip,
                   minValue: 1,
                   maxValue: 30,
                   isPercentage: true,
@@ -662,7 +699,7 @@ class _SipCalculatorState extends State<SipCalculator>
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
                   Text(
-                    "Your Money in $timePeriod Years-",
+                    locale.yourMoneySip(timePeriod!),
                     style: TextStyles.sourceSansSB.body2
                         .colour(UiConstants.kTextColor),
                   ),

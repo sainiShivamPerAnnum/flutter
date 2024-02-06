@@ -13,7 +13,7 @@ class AssetOptions {
   final bool defaultSelected;
   @JsonKey(unknownEnumValue: SIPAssetTypes.UNKNOWN)
   final SIPAssetTypes type;
-  final num? interest;
+  final num interest;
 
   AssetOptions(
       {required this.title,
@@ -21,7 +21,7 @@ class AssetOptions {
       required this.subText,
       required this.defaultSelected,
       required this.type,
-      this.interest});
+      required this.interest});
   factory AssetOptions.fromJson(Map<String, dynamic> json) =>
       _$AssetOptionsFromJson(json);
 }
