@@ -3,13 +3,17 @@ import 'dart:math';
 import 'package:bloc/bloc.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/sip_model/sip_data_model.dart';
 import 'package:felloapp/core/model/subscription_models/all_subscription_model.dart';
 import 'package:felloapp/core/model/subscription_models/subscription_transaction_model.dart';
 import 'package:felloapp/core/repository/sip_repo.dart';
+import 'package:felloapp/core/repository/subscription_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
+import 'package:felloapp/feature/sip/sip_polling_page/view/sip_polling_view.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/modalsheets/pause_autosave_modalsheet.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
@@ -234,6 +238,43 @@ class AutosaveCubit extends Cubit<AutosaveCubitState> {
         updatePauseResumeStatus();
         findActiveSubscription();
       });
+    }
+  }
+
+  final _subscriptionRepo = locator<SubscriptionRepo>();
+
+  Future<void> createSubscription({
+    required num amount,
+    required String freq,
+    required String assetType,
+  }) async {
+    // TODO(@Hirdesh2101): emit loading state for create subscription to show
+    /// loading state for button component..
+
+    final response = await _subscriptionRepo.createSubscription(
+      freq: freq,
+      amount: amount,
+      assetType: assetType,
+      lbAmt: amount,
+      augAmt: amount,
+    );
+
+    final data = response.model?.data;
+    final subscription = data?.subscription;
+
+    if (response.isSuccess() && subscription != null) {
+      AppState.delegate!.appState.currentAction = PageAction(
+        state: PageState.addWidget,
+        page: SipPollingPageConfig,
+        widget: SipPollingPage(
+          data: subscription,
+        ),
+      );
+    } else {
+      BaseUtil.showNegativeAlert(
+        'Failed to create subscription',
+        response.errorMessage,
+      );
     }
   }
 }

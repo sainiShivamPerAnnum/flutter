@@ -17,7 +17,7 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
 class SipAmountView extends StatefulWidget {
-  const SipAmountView({super.key, required this.mandateAvailable});
+  const SipAmountView({required this.mandateAvailable, super.key});
   final bool mandateAvailable;
 
   @override
@@ -574,12 +574,12 @@ class BorderPainter extends CustomPainter {
 class AmountSlider extends StatelessWidget {
   const AmountSlider({
     required this.onChanged,
+    required this.bestOption,
     this.amount = 10000,
     this.upperLimit = 15000,
     this.lowerLimit = 500,
     super.key,
     this.division = 5,
-    required this.bestOption,
   });
 
   final void Function(double) onChanged;
@@ -710,16 +710,8 @@ class _AmountInputWidgetState extends State<AmountInputWidget> {
                       '₹ ',
                       style: TextStyles.rajdhaniB.title2,
                     ),
-                    Expanded(
-                      // width: (SizeConfig.padding20) *
-                      //         _amountController!.text
-                      //             .replaceAll('.', "")
-                      //             .length +
-                      //     (_amountController!.text.contains('.')
-                      //         ? SizeConfig.padding6
-                      //         : 0),
+                    IntrinsicWidth(
                       child: TextField(
-                        expands: false,
                         controller: _amountController,
                         keyboardType: TextInputType.number,
                         onChanged: (value) {
