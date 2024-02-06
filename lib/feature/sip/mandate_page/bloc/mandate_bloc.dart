@@ -57,6 +57,7 @@ class MandateBloc extends Bloc<MandateEvent, MandateState> {
         augAmt: event.augAmt,
         amount: event.amount,
         package: event.meta.packageName,
+        assetType: event.assetType,
       );
 
       final data = res.model?.data;

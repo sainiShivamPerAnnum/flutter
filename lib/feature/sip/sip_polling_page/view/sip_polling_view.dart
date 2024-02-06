@@ -9,13 +9,16 @@ import 'widgets/widgets.dart';
 
 class SipPollingPage extends StatelessWidget {
   const SipPollingPage({
-    required this.subscriptionKey,
+    this.subscriptionKey,
     this.assetType = AssetType.aug,
     super.key,
     this.data,
-  });
+  }) : assert(
+          subscriptionKey != null || data != null,
+          'Subscription key or data must be provided both can\'t be null',
+        );
 
-  final String subscriptionKey;
+  final String? subscriptionKey;
   final SubscriptionStatusData? data;
   final AssetType assetType;
 
@@ -23,7 +26,7 @@ class SipPollingPage extends StatelessWidget {
   Widget build(BuildContext context) {
     final event = data != null
         ? CreatedSubscription(data!)
-        : StartPolling(subscriptionKey);
+        : StartPolling(subscriptionKey!);
 
     return BlocProvider(
       create: (context) => SipPollingBloc(

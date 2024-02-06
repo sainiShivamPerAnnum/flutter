@@ -102,9 +102,9 @@ class _SipMandatePage extends StatelessWidget {
                   SelectUPIApplicationSection(
                     upiApps: pspApps,
                     onSelectApplication: (meta) {
-                      final event = CrateSubscription.lb(
+                      final event = CrateSubscription(
                         meta: meta,
-                        value: amount,
+                        assetType: assetType,
                         freq: frequency,
                       );
 
