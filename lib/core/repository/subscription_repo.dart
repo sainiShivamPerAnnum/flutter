@@ -59,7 +59,8 @@ class SubscriptionRepo extends BaseRepo {
     required num amount,
     required num lbAmt,
     required num augAmt,
-    required String package,
+    required String assetType, //TODO(@DK070202) enum if possible.
+    String? package,
   }) async {
     try {
       Map<String, dynamic> body = {
@@ -67,10 +68,11 @@ class SubscriptionRepo extends BaseRepo {
         "lbAmt": lbAmt,
         "augAmt": augAmt,
         "frequency": freq,
-        "pspPackage": package,
+        "assetType": "UNI_FLEXI", //TODO(@DK070202): remove this.
+        "pspPackage": 'com.phonepe.app.preprod', //TODO(@DK070202): remove this.
       };
 
-      if (package.toLowerCase().contains('phonepe')) {
+      if (package != null && package.toLowerCase().contains('phonepe')) {
         final res = await getPhonepeVersionCode();
         if (res.isSuccess()) body["version"] = res.model;
       }

@@ -25,3 +25,14 @@ enum AutosaveState {
   // If it is cancelled.
   bool get isCancelled => this == AutosaveState.CANCELLED;
 }
+
+/// Status of frequency.
+enum Frequency {
+  DAILY('daily'),
+  WEEKLY('weekly'),
+  MONTHLY('monthly');
+
+  const Frequency(this.duration);
+
+  final String duration;
+}

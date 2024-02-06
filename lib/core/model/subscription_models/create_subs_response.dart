@@ -1,5 +1,7 @@
 import 'package:json_annotation/json_annotation.dart';
 
+import 'subscription_status_response.dart';
+
 part 'create_subs_response.g.dart';
 
 const _deserializable = JsonSerializable(
@@ -23,10 +25,16 @@ class CreateSubscriptionResponse {
 
 @_deserializable
 class SubscriptionResponseData {
+  // If mandate is not created then will be receiving this object with url.
   final SubscriptionIntent intent;
+
+  // If mandate already exists for this user then BE will be providing
+  // subscription response
+  final SubscriptionStatusData? subscription;
 
   const SubscriptionResponseData({
     required this.intent,
+    this.subscription,
   });
 
   factory SubscriptionResponseData.fromJson(Map<String, dynamic> json) =>
@@ -37,12 +45,12 @@ class SubscriptionResponseData {
 class SubscriptionIntent {
   final String redirectUrl;
   final bool alreadyExist;
-  final String id;
+  final String subId;
 
   const SubscriptionIntent({
     this.redirectUrl = '',
     this.alreadyExist = false,
-    this.id = '',
+    this.subId = '',
   });
 
   factory SubscriptionIntent.fromJson(Map<String, dynamic> json) =>

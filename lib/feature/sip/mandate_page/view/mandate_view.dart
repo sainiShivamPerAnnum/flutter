@@ -1,4 +1,8 @@
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/feature/sip/mandate_page/bloc/mandate_bloc.dart';
+import 'package:felloapp/feature/sip/sip_polling_page/view/sip_polling_view.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/util/assets.dart';
@@ -10,7 +14,7 @@ import 'package:upi_pay/upi_pay.dart';
 
 class SipMandateView extends StatelessWidget {
   const SipMandateView({
-    this.amount = 100,
+    this.amount = 1000,
     this.frequency = 'DAILY',
     this.assetType = '',
     super.key,
@@ -28,7 +32,7 @@ class SipMandateView extends StatelessWidget {
         locator(),
         locator(),
       )..add(const LoadPSPApps()),
-      child: SipMandatePage(
+      child: _SipMandatePage(
         amount: amount,
         frequency: frequency,
         assetType: assetType,
@@ -37,16 +41,16 @@ class SipMandateView extends StatelessWidget {
   }
 }
 
-class SipMandatePage extends StatelessWidget {
+/// TODO(@Dhruvin): Change name.
+class _SipMandatePage extends StatelessWidget {
   final num amount;
   final String frequency;
   final String assetType;
 
-  const SipMandatePage({
+  const _SipMandatePage({
     required this.amount,
     required this.frequency,
     required this.assetType,
-    super.key,
   });
 
   @override
@@ -54,7 +58,16 @@ class SipMandatePage extends StatelessWidget {
     return BlocConsumer<MandateBloc, MandateState>(
       listener: (context, state) {
         if (state is ListedPSPApps && state.transactionStatus is Created) {
-          print((state.transactionStatus as Created).subsPrimaryKey);
+          final data = state.transactionStatus as Created;
+          final key = data.subsPrimaryKey;
+          AppState.delegate!.appState.currentAction = PageAction(
+            state: PageState.addWidget,
+            page: SipPollingPageConfig,
+            widget: SipPollingPage(
+              subscriptionKey: key,
+              data: data.subscriptionData,
+            ),
+          );
         }
       },
       builder: (context, state) {
@@ -89,9 +102,9 @@ class SipMandatePage extends StatelessWidget {
                   SelectUPIApplicationSection(
                     upiApps: pspApps,
                     onSelectApplication: (meta) {
-                      final event = CrateSubscription.lb(
+                      final event = CrateSubscription(
                         meta: meta,
-                        value: amount,
+                        assetType: assetType,
                         freq: frequency,
                       );
 
@@ -113,6 +126,13 @@ class SipMandatePage extends StatelessWidget {
                     ),
                   ),
                   const Spacer(),
+                  switch (state.transactionStatus) {
+                    Creating() => const LinearProgressIndicator(
+                        color: UiConstants.primaryColor,
+                        backgroundColor: UiConstants.kDarkBackgroundColor,
+                      ),
+                    _ => const SizedBox.shrink(),
+                  },
                   SizedBox(
                     height: SizeConfig.padding40,
                   ),

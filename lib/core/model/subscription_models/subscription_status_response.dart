@@ -29,13 +29,15 @@ class SubscriptionStatusData {
   final String subId;
   final String uid;
   final num amount;
-  final String frequency;
+  @JsonKey(unknownEnumValue: Frequency.DAILY)
+  final Frequency frequency;
   @JsonKey(unknownEnumValue: AutosaveState.IDLE)
   final AutosaveState status;
   final bool isActive;
   final num AUGGOLD99;
   final num LENDBOXP2P;
-  final String resumeFrequency;
+  @JsonKey(unknownEnumValue: Frequency.DAILY)
+  final Frequency resumeFrequency;
   final String resumeDate;
   final String startDate;
   final String createdOn;
@@ -43,7 +45,7 @@ class SubscriptionStatusData {
   final String assetType;
   final String payResponseCode;
   final String responseCode;
-  final num tt;
+  final int tt;
   final List gts;
   @JsonKey(name: 'tambola_tts')
   final num tambola;
@@ -53,12 +55,12 @@ class SubscriptionStatusData {
     this.subId = '',
     this.uid = '',
     this.amount = 0,
-    this.frequency = '',
+    this.frequency = Frequency.DAILY,
     this.status = AutosaveState.IDLE,
     this.isActive = false,
     this.AUGGOLD99 = 0,
     this.LENDBOXP2P = 0,
-    this.resumeFrequency = '',
+    this.resumeFrequency = Frequency.DAILY,
     this.resumeDate = '',
     this.startDate = '',
     this.createdOn = '',

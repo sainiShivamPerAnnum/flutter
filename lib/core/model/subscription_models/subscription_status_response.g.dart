@@ -34,7 +34,12 @@ SubscriptionStatusData _$SubscriptionStatusDataFromJson(
           subId: $checkedConvert('subId', (v) => v as String? ?? ''),
           uid: $checkedConvert('uid', (v) => v as String? ?? ''),
           amount: $checkedConvert('amount', (v) => v as num? ?? 0),
-          frequency: $checkedConvert('frequency', (v) => v as String? ?? ''),
+          frequency: $checkedConvert(
+              'frequency',
+              (v) =>
+                  $enumDecodeNullable(_$FrequencyEnumMap, v,
+                      unknownValue: Frequency.DAILY) ??
+                  Frequency.DAILY),
           status: $checkedConvert(
               'status',
               (v) =>
@@ -44,8 +49,12 @@ SubscriptionStatusData _$SubscriptionStatusDataFromJson(
           isActive: $checkedConvert('isActive', (v) => v as bool? ?? false),
           AUGGOLD99: $checkedConvert('AUGGOLD99', (v) => v as num? ?? 0),
           LENDBOXP2P: $checkedConvert('LENDBOXP2P', (v) => v as num? ?? 0),
-          resumeFrequency:
-              $checkedConvert('resumeFrequency', (v) => v as String? ?? ''),
+          resumeFrequency: $checkedConvert(
+              'resumeFrequency',
+              (v) =>
+                  $enumDecodeNullable(_$FrequencyEnumMap, v,
+                      unknownValue: Frequency.DAILY) ??
+                  Frequency.DAILY),
           resumeDate: $checkedConvert('resumeDate', (v) => v as String? ?? ''),
           startDate: $checkedConvert('startDate', (v) => v as String? ?? ''),
           createdOn: $checkedConvert('createdOn', (v) => v as String? ?? ''),
@@ -55,7 +64,7 @@ SubscriptionStatusData _$SubscriptionStatusDataFromJson(
               $checkedConvert('payResponseCode', (v) => v as String? ?? ''),
           responseCode:
               $checkedConvert('responseCode', (v) => v as String? ?? ''),
-          tt: $checkedConvert('tt', (v) => v as num? ?? 0),
+          tt: $checkedConvert('tt', (v) => v as int? ?? 0),
           gts: $checkedConvert('gts', (v) => v as List<dynamic>? ?? const []),
           tambola: $checkedConvert('tambola_tts', (v) => v as num? ?? 0),
         );
@@ -63,6 +72,12 @@ SubscriptionStatusData _$SubscriptionStatusDataFromJson(
       },
       fieldKeyMap: const {'tambola': 'tambola_tts'},
     );
+
+const _$FrequencyEnumMap = {
+  Frequency.DAILY: 'DAILY',
+  Frequency.WEEKLY: 'WEEKLY',
+  Frequency.MONTHLY: 'MONTHLY',
+};
 
 const _$AutosaveStateEnumMap = {
   AutosaveState.IDLE: 'IDLE',

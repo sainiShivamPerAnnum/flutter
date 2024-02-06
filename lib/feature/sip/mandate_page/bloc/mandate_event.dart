@@ -14,20 +14,14 @@ class CrateSubscription extends MandateEvent {
   final num lbAmt;
   final num augAmt;
   final String freq;
+  final String assetType;
 
-  const CrateSubscription.lb({
+  const CrateSubscription({
     required this.meta,
-    required num value,
     required this.freq,
-  })  : amount = value,
-        lbAmt = value,
-        augAmt = 0;
-
-  const CrateSubscription.aug({
-    required this.meta,
-    required num value,
-    required this.freq,
-  })  : amount = value,
-        lbAmt = 0,
-        augAmt = value;
+    required this.assetType,
+    this.amount = 0,
+    this.lbAmt = 0,
+    this.augAmt = 0,
+  });
 }

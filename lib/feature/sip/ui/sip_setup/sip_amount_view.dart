@@ -742,16 +742,8 @@ class _AmountInputWidgetState extends State<AmountInputWidget> {
                       '₹ ',
                       style: TextStyles.rajdhaniB.title2,
                     ),
-                    SizedBox(
-                      width: (SizeConfig.padding20) *
-                              _amountController!.text
-                                  .replaceAll('.', "")
-                                  .length +
-                          (_amountController!.text.contains('.')
-                              ? SizeConfig.padding6
-                              : 0),
+                    IntrinsicWidth(
                       child: TextField(
-                        expands: false,
                         controller: _amountController,
                         keyboardType: TextInputType.number,
                         onChanged: (value) {

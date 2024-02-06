@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/model/subscription_models/subscription_status_response.dart';
 import 'package:felloapp/core/repository/subscription_repo.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -56,17 +57,21 @@ class MandateBloc extends Bloc<MandateEvent, MandateState> {
         augAmt: event.augAmt,
         amount: event.amount,
         package: event.meta.packageName,
+        assetType: event.assetType,
       );
 
-      final intentData = res.model?.data.intent;
+      final data = res.model?.data;
+      final subscriptionData = data?.subscription;
+      final intentData = data?.intent;
 
       if (res.isSuccess() && intentData != null) {
         emitter(
           (state as ListedPSPApps).copyWith(
             status: SubsTransactionStatus.created(
-              subsPrimaryKey: intentData.id,
+              subsPrimaryKey: intentData.subId,
               redirectUrl: intentData.redirectUrl,
               mandateAlreadyExits: intentData.alreadyExist,
+              subscriptionData: subscriptionData,
             ),
           ),
         );
