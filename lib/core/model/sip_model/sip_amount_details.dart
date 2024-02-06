@@ -12,9 +12,9 @@ class SipAmountDetails {
   final List<SipOptions> options;
 
   SipAmountDetails(
-      {required this.minamount,
-      required this.numberOfPeriodsPerYear,
-      required this.options});
+      {this.minamount = 0,
+      this.numberOfPeriodsPerYear = 1,
+      this.options = const []});
   factory SipAmountDetails.fromJson(Map<String, dynamic> json) =>
       _$SipAmountDetailsFromJson(json);
 }

@@ -913,8 +913,13 @@ class MessageLookup extends MessageLookupByLibrary {
         "pastWinners": MessageLookupByLibrary.simpleMessage("पिछले विजेता"),
         "pauseAutoSave":
             MessageLookupByLibrary.simpleMessage("स्वतः सहेजना रोकें"),
+        "pauseFail": MessageLookupByLibrary.simpleMessage("SIP रोकने में विफल"),
         "pauseSip": MessageLookupByLibrary.simpleMessage("रोकी गई SIP"),
         "pauseSipbtn": MessageLookupByLibrary.simpleMessage("SIP रोकें"),
+        "pauseSuccess": MessageLookupByLibrary.simpleMessage(
+            "SIP सफलतापूर्वक रोक दिया गया"),
+        "pauseSuccessSub": MessageLookupByLibrary.simpleMessage(
+            "अधिक जानकारी के लिए SIP अनुभाग देखें"),
         "paused": MessageLookupByLibrary.simpleMessage("रोके गए"),
         "paymentMethod":
             MessageLookupByLibrary.simpleMessage("भुगतान का तरीका"),
@@ -1167,6 +1172,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "sipTickets": m27,
         "sipWithAutoSave": MessageLookupByLibrary.simpleMessage(
             "फेलो ऑटोसेव के साथ एक एसआईपी शुरू करें"),
+        "sipYear": MessageLookupByLibrary.simpleMessage("वर्ष"),
         "sipamount": MessageLookupByLibrary.simpleMessage("SIP राशि"),
         "siptitle": MessageLookupByLibrary.simpleMessage("फेलो के साथ SIP"),
         "skip": MessageLookupByLibrary.simpleMessage("छोड़ दें"),
@@ -1330,6 +1336,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("आपका लेन-देन हो रहा है"),
         "trustedBy":
             MessageLookupByLibrary.simpleMessage("द्वारा भरोसा किया गया"),
+        "tryAgain":
+            MessageLookupByLibrary.simpleMessage("कृपया पुनः प्रयास करें"),
         "tryAgainMessage":
             MessageLookupByLibrary.simpleMessage("कृपया पुन: प्रयास करें"),
         "tryAnotherMethod": MessageLookupByLibrary.simpleMessage(

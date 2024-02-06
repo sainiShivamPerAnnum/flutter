@@ -1,4 +1,5 @@
 import 'package:bloc/bloc.dart';
+import 'package:equatable/equatable.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
@@ -7,8 +8,7 @@ import 'package:felloapp/core/model/sip_model/sip_data_model.dart';
 import 'package:felloapp/core/model/subscription_models/all_subscription_model.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
-import 'package:felloapp/feature/sip/cubit/sip_data_handler.dart';
-import 'package:felloapp/feature/sip/cubit/sub_data_handler.dart';
+import 'package:felloapp/feature/sip/cubit/sip_data_holder.dart';
 import 'package:felloapp/feature/sip/ui/sip_setup/sip_amount_view.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -18,39 +18,37 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:upi_pay/upi_pay.dart';
 
 part 'autosave_state.dart';
 
-class AutosaveCubit extends Cubit<AutosaveCubitState> {
-  AutosaveCubit() : super(AutosaveCubitState());
+class SipCubit extends Cubit<SipState> {
+  SipCubit() : super(const LoadingSipData());
   final SubService _subService = locator<SubService>();
   final AnalyticsService _analyticsService = locator<AnalyticsService>();
   final locale = locator<S>();
 
   Future<void> init() async {
     await getData();
-    final upiApps = await _subService.getUPIApps();
-    emit(state.copyWith(upiApps: upiApps));
   }
 
   Future<void> getData() async {
-    emit(state.copyWith(isFetchingDetails: true));
     await _subService.getSubscription();
     await _subService.getSipScreenData();
     SipDataHolder.init(_subService.sipData!);
-    AllSubscriptionHolder.init(_subService.subscriptionData!);
-    emit(state.copyWith(
-        sipScreenData: SipDataHolder.instance.data,
-        activeSubscription: AllSubscriptionHolder.instance.data,
-        isFetchingDetails: false));
+    emit(LoadedSipData(
+      sipScreenData: SipDataHolder.instance.data,
+      activeSubscription: _subService.subscriptionData!,
+    ));
   }
 
-  void updatePauseResumeStatus() {
-    emit(state.copyWith(isPauseOrResuming: _subService.isPauseOrResuming));
+  void updatePauseResumeStatus(bool isPauseOrResuming) {
+    final currentState = state;
+    if (currentState is LoadedSipData) {
+      emit(currentState.copyWith(isPauseOrResuming: isPauseOrResuming));
+    }
   }
 
-  Future editSip(num principalAmount, String frequency, int index,
+  Future<void> editSip(num principalAmount, String frequency, int index,
       SIPAssetTypes assetType) async {
     Future.delayed(
         Duration.zero, () => AppState.backButtonDispatcher!.didPopRoute());
@@ -62,7 +60,7 @@ class AutosaveCubit extends Cubit<AutosaveCubitState> {
         prefillAmount: principalAmount.toInt(),
         prefillFrequency: frequency,
         isEdit: true,
-        editId: AllSubscriptionHolder.instance.data.subs![index].id,
+        editId: _subService.subscriptionData!.subs[index].id,
       ),
       state: PageState.addWidget,
     );
@@ -71,57 +69,61 @@ class AutosaveCubit extends Cubit<AutosaveCubitState> {
     ///WHEN COMPLETE CALL INIT
   }
 
-  Future pauseResume(int index) async {
+  Future<void> pauseResume(int index) async {
     if (_subService.isPauseOrResuming) return;
-    updatePauseResumeStatus();
-    final status = _subService.subscriptionData!.subs![index].status;
-    if (status.isPaused) {
-      locator<AnalyticsService>()
-          .track(eventName: AnalyticsEvents.asResumeTapped, properties: {
-        "frequency": state.activeSubscription!.subs![index].frequency,
-        "amount": state.activeSubscription!.subs![index].amount,
-      });
+    updatePauseResumeStatus(true);
 
-      bool response = await _subService.resumeSubscription(
-        state.activeSubscription!.subs![index].id,
-      );
-      updatePauseResumeStatus();
-      if (!response) {
-        BaseUtil.showNegativeAlert("Failed to resume SIP", "Please try again");
-        Future.delayed(
-            Duration.zero, () => AppState.backButtonDispatcher!.didPopRoute());
-      } else {
-        await getData();
-        await AppState.backButtonDispatcher!.didPopRoute();
-        BaseUtil.showPositiveAlert(
-            "SIP resumed successfully", "For more details check SIP section");
+    try {
+      final subs = _subService.subscriptionData?.subs;
+      if (subs != null && subs.isNotEmpty) {
+        final subscription = subs[index];
+        final status = subscription.status;
+
+        if (status.isPaused) {
+          _analyticsService
+              .track(eventName: AnalyticsEvents.asResumeTapped, properties: {
+            "frequency": subscription.frequency,
+            "amount": subscription.amount,
+          });
+          bool response = await _subService.resumeSubscription(subscription.id);
+          if (!response) {
+            BaseUtil.showNegativeAlert(
+                "Failed to resume SIP", "Please try again");
+          } else {
+            BaseUtil.showPositiveAlert("SIP resumed successfully",
+                "For more details check SIP section");
+            await getData();
+          }
+        } else {
+          _analyticsService
+              .track(eventName: AnalyticsEvents.asPauseTapped, properties: {
+            "frequency": subscription.frequency,
+            "amount": subscription.amount,
+          });
+
+          await BaseUtil.openModalBottomSheet(
+            addToScreenStack: true,
+            hapticVibrate: true,
+            backgroundColor: UiConstants.gameCardColor,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(SizeConfig.roundness16),
+              topRight: Radius.circular(SizeConfig.roundness16),
+            ),
+            isBarrierDismissible: true,
+            isScrollControlled: true,
+            content: PauseAutosaveModal(
+              model: _subService,
+              id: subscription.id,
+            ),
+          ).then((value) async {
+            await getData();
+          });
+        }
       }
-    } else {
-      _analyticsService
-          .track(eventName: AnalyticsEvents.asPauseTapped, properties: {
-        "frequency": state.activeSubscription!.subs![index].frequency,
-        "amount": state.activeSubscription!.subs![index].amount,
-      });
-      return BaseUtil.openModalBottomSheet(
-        addToScreenStack: true,
-        hapticVibrate: true,
-        backgroundColor: UiConstants.gameCardColor,
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(SizeConfig.roundness16),
-          topRight: Radius.circular(SizeConfig.roundness16),
-        ),
-        isBarrierDismissible: true,
-        isScrollControlled: true,
-        content: PauseAutosaveModal(
-          model: _subService,
-          id: state.activeSubscription!.subs![index].id,
-        ),
-      ).then((value) async {
-        updatePauseResumeStatus();
-        await getData();
-        Future.delayed(const Duration(milliseconds: 10),
-            () async => await AppState.backButtonDispatcher!.didPopRoute());
-      });
+    } catch (e) {
+      print('Error in pauseResume: $e');
+    } finally {
+      updatePauseResumeStatus(false);
     }
   }
 }

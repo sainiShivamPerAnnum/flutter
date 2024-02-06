@@ -1039,5 +1039,10 @@
   },
   "setupSip": "Setup SIP",
   "setupCardTitle": "Start your SIP & Grow money on autopilot",
-  "setupCardSubTitle": "Invest in Fello Flo or Digital Gold to meet your financial Goals"
+  "setupCardSubTitle": "Invest in Fello Flo or Digital Gold to meet your financial Goals",
+  "sipYear":"Year",
+  "pauseSuccess":"SIP paused successfully",
+  "pauseSuccessSub": "For more details check SIP section",
+  "pauseFail": "Failed to pause SIP",
+  "tryAgain": "Please try again"
 }

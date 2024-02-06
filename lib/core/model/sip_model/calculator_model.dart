@@ -12,9 +12,7 @@ class CalculatorScreen {
   final CalculatorData calculatorData;
 
   CalculatorScreen(
-      {required this.title,
-      required this.imageUrl,
-      required this.calculatorData});
+      {this.title = '', this.imageUrl = '', required this.calculatorData});
   factory CalculatorScreen.fromJson(Map<String, dynamic> json) =>
       _$CalculatorScreenFromJson(json);
 }

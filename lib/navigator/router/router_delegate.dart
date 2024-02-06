@@ -386,7 +386,11 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           _addPageData(const SipIntroView(), SipIntroPageConfig);
           break;
         case Pages.SipAssetSelectView:
-          _addPageData(const SipAssetSelectView(), SipAssetSelectPageConfig);
+          _addPageData(
+              SipAssetSelectView(
+                isMandateAvailable: queryParams?['mandateAvailable'] ?? false,
+              ),
+              SipAssetSelectPageConfig);
           break;
         case Pages.SipFormView:
           _addPageData(

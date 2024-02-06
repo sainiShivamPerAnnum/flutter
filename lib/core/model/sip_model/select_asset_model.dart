@@ -12,7 +12,7 @@ class SelectAssetScreen {
   final List<AssetOptions> options;
 
   SelectAssetScreen(
-      {required this.title, required this.subTitle, required this.options});
+      {this.title = '', this.subTitle = '', this.options = const []});
   factory SelectAssetScreen.fromJson(Map<String, dynamic> json) =>
       _$SelectAssetScreenFromJson(json);
 }

@@ -7,13 +7,14 @@ part of 'select_asset_options.dart';
 // **************************************************************************
 
 AssetOptions _$AssetOptionsFromJson(Map<String, dynamic> json) => AssetOptions(
-      title: json['title'] as String,
-      imageUrl: json['imageUrl'] as String,
-      subText: json['subText'] as String,
-      defaultSelected: json['defaultSelected'] as bool,
-      type: $enumDecode(_$SIPAssetTypesEnumMap, json['type'],
-          unknownValue: SIPAssetTypes.UNKNOWN),
-      interest: json['interest'] as num,
+      title: json['title'] as String? ?? '',
+      imageUrl: json['imageUrl'] as String? ?? '',
+      subText: json['subText'] as String? ?? '',
+      defaultSelected: json['defaultSelected'] as bool? ?? false,
+      type: $enumDecodeNullable(_$SIPAssetTypesEnumMap, json['type'],
+              unknownValue: SIPAssetTypes.UNKNOWN) ??
+          SIPAssetTypes.UNKNOWN,
+      interest: json['interest'] as num? ?? 8,
     );
 
 const _$SIPAssetTypesEnumMap = {

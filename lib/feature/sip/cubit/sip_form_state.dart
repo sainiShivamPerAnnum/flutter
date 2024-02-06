@@ -4,17 +4,19 @@ part of 'sip_form_cubit.dart';
 abstract class AutoSaveSetupState {}
 
 final class SipFormCubitState extends AutoSaveSetupState {
-  final double formAmount;
-  // int? editIndex;
+  final int formAmount;
+  final bool isLoading;
   SipFormCubitState({
     this.formAmount = 0,
+    this.isLoading = false,
   });
 
   SipFormCubitState copyWith({
-    double? formAmount,
+    int? formAmount,
+    bool? isLoading,
   }) {
     return SipFormCubitState(
-      formAmount: formAmount ?? this.formAmount,
-    );
+        formAmount: formAmount ?? this.formAmount,
+        isLoading: isLoading ?? this.isLoading);
   }
 }

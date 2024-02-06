@@ -15,8 +15,8 @@ class CalculatorDetails {
   CalculatorDetails(
       {required this.sipAmount,
       required this.timePeriod,
-      required this.interest,
-      required this.numberOfPeriodsPerYear});
+      this.interest = const {},
+      this.numberOfPeriodsPerYear = 1});
   factory CalculatorDetails.fromJson(Map<String, dynamic> json) =>
       _$CalculatorDetailsFromJson(json);
 }

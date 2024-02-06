@@ -35,9 +35,6 @@ class _PauseAutosaveModalState extends State<PauseAutosaveModal> {
     return Container(
       padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
       child: Wrap(
-        //shrinkWrap: true,
-        // mainAxisSize: MainAxisSize.min,
-        // crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
             height: SizeConfig.padding14,
@@ -88,7 +85,7 @@ class _PauseAutosaveModalState extends State<PauseAutosaveModal> {
       {required String text,
       required int radioValue,
       required AutosavePauseOption option}) {
-    S locale = locator<S>();
+    final locale = locator<S>();
     return InkWell(
       splashColor: Colors.transparent,
       highlightColor: Colors.transparent,
@@ -109,12 +106,11 @@ class _PauseAutosaveModalState extends State<PauseAutosaveModal> {
               bool res =
                   await widget.model!.pauseSubscription(option, widget.id);
               if (res) {
-                BaseUtil.showPositiveAlert("SIP paused successfully",
-                    "For more details check SIP section");
+                BaseUtil.showPositiveAlert(
+                    locale.pauseSuccess, locale.pauseSuccessSub);
                 await AppState.backButtonDispatcher!.didPopRoute().then((_) {});
               } else {
-                BaseUtil.showNegativeAlert(
-                    "Failed to pause SIP", "Please try again");
+                BaseUtil.showNegativeAlert(locale.pauseFail, locale.tryAgain);
               }
             },
           ),

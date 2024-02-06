@@ -13,10 +13,10 @@ class SipAmount {
   final int defaultValue;
 
   SipAmount(
-      {required this.min,
-      required this.max,
-      required this.multiples,
-      required this.defaultValue});
+      {this.min = 0,
+      this.max = 1000,
+      this.multiples = 1,
+      this.defaultValue = 1});
   factory SipAmount.fromJson(Map<String, dynamic> json) =>
       _$SipAmountFromJson(json);
 }

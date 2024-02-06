@@ -12,7 +12,7 @@ class SipAmountSelection {
   final Map<String, SipAmountDetails> data;
 
   SipAmountSelection(
-      {required this.title, required this.options, required this.data});
+      {this.title = '', this.options = const [], this.data = const {}});
   factory SipAmountSelection.fromJson(Map<String, dynamic> json) =>
       _$SipAmountSelectionFromJson(json);
 }

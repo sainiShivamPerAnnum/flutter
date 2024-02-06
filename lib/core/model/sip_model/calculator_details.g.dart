@@ -11,6 +11,6 @@ CalculatorDetails _$CalculatorDetailsFromJson(Map<String, dynamic> json) =>
       sipAmount: SipAmount.fromJson(json['sipAmount'] as Map<String, dynamic>),
       timePeriod:
           SipAmount.fromJson(json['timePeriod'] as Map<String, dynamic>),
-      interest: json['interest'] as Map<String, dynamic>,
-      numberOfPeriodsPerYear: json['numberOfPeriodsPerYear'] as int,
+      interest: json['interest'] as Map<String, dynamic>? ?? const {},
+      numberOfPeriodsPerYear: json['numberOfPeriodsPerYear'] as int? ?? 1,
     );

@@ -7,8 +7,8 @@ part of 'sip_amount.dart';
 // **************************************************************************
 
 SipAmount _$SipAmountFromJson(Map<String, dynamic> json) => SipAmount(
-      min: json['min'] as int,
-      max: json['max'] as int,
-      multiples: json['multiples'] as int,
-      defaultValue: json['default'] as int,
+      min: json['min'] as int? ?? 0,
+      max: json['max'] as int? ?? 1000,
+      multiples: json['multiples'] as int? ?? 1,
+      defaultValue: json['default'] as int? ?? 1,
     );

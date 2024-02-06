@@ -9365,6 +9365,56 @@ class S {
       args: [],
     );
   }
+
+  /// `Year`
+  String get sipYear {
+    return Intl.message(
+      'Year',
+      name: 'sipYear',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `SIP paused successfully`
+  String get pauseSuccess {
+    return Intl.message(
+      'SIP paused successfully',
+      name: 'pauseSuccess',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `For more details check SIP section`
+  String get pauseSuccessSub {
+    return Intl.message(
+      'For more details check SIP section',
+      name: 'pauseSuccessSub',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Failed to pause SIP`
+  String get pauseFail {
+    return Intl.message(
+      'Failed to pause SIP',
+      name: 'pauseFail',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please try again`
+  String get tryAgain {
+    return Intl.message(
+      'Please try again',
+      name: 'tryAgain',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

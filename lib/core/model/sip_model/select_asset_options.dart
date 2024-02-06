@@ -16,12 +16,12 @@ class AssetOptions {
   final num interest;
 
   AssetOptions(
-      {required this.title,
-      required this.imageUrl,
-      required this.subText,
-      required this.defaultSelected,
-      required this.type,
-      required this.interest});
+      {this.title = '',
+      this.imageUrl = '',
+      this.subText = '',
+      this.defaultSelected = false,
+      this.type = SIPAssetTypes.UNKNOWN,
+      this.interest = 8});
   factory AssetOptions.fromJson(Map<String, dynamic> json) =>
       _$AssetOptionsFromJson(json);
 }

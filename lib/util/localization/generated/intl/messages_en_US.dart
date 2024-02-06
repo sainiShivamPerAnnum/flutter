@@ -918,8 +918,14 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Past Week Winners"),
         "pastWinners": MessageLookupByLibrary.simpleMessage("Past Winners"),
         "pauseAutoSave": MessageLookupByLibrary.simpleMessage("Pause SIP for"),
+        "pauseFail":
+            MessageLookupByLibrary.simpleMessage("Failed to pause SIP"),
         "pauseSip": MessageLookupByLibrary.simpleMessage("Paused SIP"),
         "pauseSipbtn": MessageLookupByLibrary.simpleMessage("Pause SIP"),
+        "pauseSuccess":
+            MessageLookupByLibrary.simpleMessage("SIP paused successfully"),
+        "pauseSuccessSub": MessageLookupByLibrary.simpleMessage(
+            "For more details check SIP section"),
         "paused": MessageLookupByLibrary.simpleMessage("Paused"),
         "paymentMethod": MessageLookupByLibrary.simpleMessage("Payment Method"),
         "perGame": MessageLookupByLibrary.simpleMessage("Per Game"),
@@ -1174,6 +1180,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "sipTickets": m27,
         "sipWithAutoSave": MessageLookupByLibrary.simpleMessage(
             "Start an SIP with Fello Autosave"),
+        "sipYear": MessageLookupByLibrary.simpleMessage("Year"),
         "sipamount": MessageLookupByLibrary.simpleMessage("SIP amount"),
         "siptitle": MessageLookupByLibrary.simpleMessage("SIP with Fello"),
         "skip": MessageLookupByLibrary.simpleMessage("SKIP"),
@@ -1339,6 +1346,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "transactionProgress": MessageLookupByLibrary.simpleMessage(
             "Your transaction is in progress"),
         "trustedBy": MessageLookupByLibrary.simpleMessage("Trusted by"),
+        "tryAgain": MessageLookupByLibrary.simpleMessage("Please try again"),
         "tryAgainMessage":
             MessageLookupByLibrary.simpleMessage("Please try again"),
         "tryAnotherMethod": MessageLookupByLibrary.simpleMessage(

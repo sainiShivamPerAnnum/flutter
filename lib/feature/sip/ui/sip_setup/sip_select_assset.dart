@@ -3,8 +3,7 @@ import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/sip_asset_type.dart';
 import 'package:felloapp/core/model/sip_model/select_asset_options.dart';
 import 'package:felloapp/feature/sip/cubit/selectedAsset_cubit.dart';
-import 'package:felloapp/feature/sip/cubit/sip_data_handler.dart';
-import 'package:felloapp/feature/sip/cubit/sub_data_handler.dart';
+import 'package:felloapp/feature/sip/cubit/sip_data_holder.dart';
 import 'package:felloapp/feature/sip/ui/sip_setup/sip_amount_view.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -18,20 +17,26 @@ import 'package:flutter_bloc/flutter_bloc.dart';
 
 class SipAssetSelectView extends StatelessWidget {
   const SipAssetSelectView({
+    required this.isMandateAvailable,
     super.key,
   });
+  final bool isMandateAvailable;
 
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
       create: (_) => SelectAssetCubit(),
-      child: const SipAsssetSelect(),
+      child: SipAsssetSelect(isMandateAvailable: isMandateAvailable),
     );
   }
 }
 
 class SipAsssetSelect extends StatefulWidget {
-  const SipAsssetSelect({super.key});
+  const SipAsssetSelect({
+    required this.isMandateAvailable,
+    super.key,
+  });
+  final bool isMandateAvailable;
 
   @override
   State<SipAsssetSelect> createState() => _SipAsssetSelectState();
@@ -56,9 +61,10 @@ class _SipAsssetSelectState extends State<SipAsssetSelect> {
 
   @override
   Widget build(BuildContext context) {
-    var assets = SipDataHolder.instance.data.selectAssetScreen?.options;
-    var assetsLength = assets?.length ?? 0;
+    var assets = SipDataHolder.instance.data.selectAssetScreen.options;
+    var assetsLength = assets.length;
     final selectedAssetModel = context.watch<SelectAssetCubit>();
+    final isBtnActive = selectedAssetModel.state.selectedAsset != null;
     return Scaffold(
       backgroundColor: UiConstants.kBackgroundColor,
       appBar: AppBar(
@@ -71,7 +77,7 @@ class _SipAsssetSelectState extends State<SipAsssetSelect> {
           ),
         ),
         backgroundColor: UiConstants.bg,
-        title: const Text('SIP with Fello'),
+        title: Text(locale.siptitle),
         titleTextStyle: TextStyles.rajdhaniSB.title4.setHeight(1.3),
         centerTitle: true,
         elevation: 0,
@@ -97,7 +103,7 @@ class _SipAsssetSelectState extends State<SipAsssetSelect> {
                   children: [
                     for (int i = 0; i < assetsLength; i++) ...[
                       AssetBlock(
-                        option: assets![i],
+                        option: assets[i],
                         asset: assets[i].type,
                       ),
                       SizedBox(
@@ -117,7 +123,10 @@ class _SipAsssetSelectState extends State<SipAsssetSelect> {
             child: Column(
               children: [
                 Padding(
-                  padding: const EdgeInsets.only(left: 32, top: 20, right: 43),
+                  padding: EdgeInsets.only(
+                      left: SizeConfig.padding32,
+                      top: SizeConfig.padding20,
+                      right: SizeConfig.padding44),
                   child: SizedBox(
                     height: SizeConfig.padding104,
                     width: SizeConfig.screenHeight,
@@ -166,20 +175,15 @@ class _SipAsssetSelectState extends State<SipAsssetSelect> {
                 Padding(
                   padding: EdgeInsets.only(bottom: SizeConfig.padding24),
                   child: Opacity(
-                    opacity: selectedAssetModel.state.selectedAsset != null
-                        ? 1
-                        : 0.5,
+                    opacity: isBtnActive ? 1 : 0.5,
                     child: SecondaryButton(
-                        onPressed: selectedAssetModel.state.selectedAsset !=
-                                null
+                        onPressed: isBtnActive
                             ? () {
                                 AppState.delegate!.appState.currentAction =
                                     PageAction(
                                   page: SipFormPageConfig,
                                   widget: SipFormAmountView(
-                                    mandateAvailable: AllSubscriptionHolder
-                                            .instance.data.isActive ??
-                                        false,
+                                    mandateAvailable: widget.isMandateAvailable,
                                     sipAssetType:
                                         selectedAssetModel.state.selectedAsset!,
                                   ),

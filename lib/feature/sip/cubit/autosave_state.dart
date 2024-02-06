@@ -1,35 +1,42 @@
 part of 'autosave_cubit.dart';
 
-@immutable
-abstract class AutoSaveSetupState {}
+sealed class SipState extends Equatable {
+  const SipState();
 
-final class AutosaveCubitState extends AutoSaveSetupState {
-  final Subscriptions? activeSubscription;
-  final SipData? sipScreenData;
-  final bool isFetchingDetails;
-  final bool? isPauseOrResuming;
-  final List<ApplicationMeta> upiApps;
-  AutosaveCubitState({
-    this.activeSubscription,
-    this.sipScreenData,
-    this.isFetchingDetails = false,
+  @override
+  List<Object?> get props => const [];
+}
+
+class LoadingSipData extends SipState {
+  const LoadingSipData();
+
+  @override
+  List<Object?> get props => const [];
+}
+
+class LoadedSipData extends SipState {
+  const LoadedSipData({
+    required this.activeSubscription,
+    required this.sipScreenData,
     this.isPauseOrResuming = false,
-    this.upiApps = const [],
   });
+  final Subscriptions activeSubscription;
+  final SipData sipScreenData;
+  final bool isPauseOrResuming;
 
-  AutosaveCubitState copyWith({
-    List<ApplicationMeta>? upiApps,
-    bool? isFetchingDetails,
+  LoadedSipData copyWith({
     SipData? sipScreenData,
     Subscriptions? activeSubscription,
     bool? isPauseOrResuming,
   }) {
-    return AutosaveCubitState(
+    return LoadedSipData(
       activeSubscription: activeSubscription ?? this.activeSubscription,
-      isFetchingDetails: isFetchingDetails ?? this.isFetchingDetails,
       isPauseOrResuming: isPauseOrResuming ?? this.isPauseOrResuming,
       sipScreenData: sipScreenData ?? this.sipScreenData,
-      upiApps: upiApps ?? this.upiApps,
     );
   }
+
+  @override
+  List<Object?> get props =>
+      [activeSubscription, sipScreenData, isPauseOrResuming];
 }
