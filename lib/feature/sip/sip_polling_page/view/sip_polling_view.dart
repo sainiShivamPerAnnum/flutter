@@ -1,5 +1,7 @@
+import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/subscription_models/subscription_status_response.dart';
 import 'package:felloapp/feature/sip/sip_polling_page/bloc/sip_polling_bloc.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
@@ -45,7 +47,23 @@ class _SipStatusView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocConsumer<SipPollingBloc, SipPollingState>(
-      listener: (context, state) => {},
+      listener: (context, state) {
+        if (state case CompletedPollingWithSuccessOrPending(:final response)) {
+          if (response.status.isPaused || response.status.isCancelled) {
+            BaseUtil.showNegativeAlert(
+              'Unable to check subscription status',
+              'Please try again later',
+            );
+
+            AppState.backButtonDispatcher!.didPopRoute();
+          }
+        }
+
+        if (state case CompletedPollingWithFailure(:final message)) {
+          BaseUtil.showNegativeAlert(message, null);
+          AppState.backButtonDispatcher!.didPopRoute();
+        }
+      },
       builder: (context, state) {
         return switch (state) {
           InitialPollingState() ||

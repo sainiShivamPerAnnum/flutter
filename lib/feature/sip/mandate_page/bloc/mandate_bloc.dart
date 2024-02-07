@@ -9,6 +9,7 @@ import 'package:felloapp/core/repository/subscription_repo.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:flutter/services.dart';
+import 'package:flutter/widgets.dart';
 import 'package:upi_pay/upi_pay.dart';
 
 part 'mandate_event.dart';
@@ -65,6 +66,10 @@ class MandateBloc extends Bloc<MandateEvent, MandateState> {
       final intentData = data?.intent;
 
       if (res.isSuccess() && intentData != null) {
+        if (intentData.redirectUrl.isNotEmpty && !intentData.alreadyExist) {
+          await _openPSPApp(intentData.redirectUrl, event.meta.packageName);
+        }
+
         emitter(
           (state as ListedPSPApps).copyWith(
             status: SubsTransactionStatus.created(
@@ -75,10 +80,6 @@ class MandateBloc extends Bloc<MandateEvent, MandateState> {
             ),
           ),
         );
-
-        if (intentData.redirectUrl.isNotEmpty && !intentData.alreadyExist) {
-          await _openPSPApp(intentData.redirectUrl, event.meta.packageName);
-        }
       } else {
         emitter(
           (state as ListedPSPApps).copyWith(
@@ -96,11 +97,25 @@ class MandateBloc extends Bloc<MandateEvent, MandateState> {
     }
   }
 
-  // Launches the psp app.
+  /// Launches the psp and wait until it re-opens the application.
+  ///
+  /// In case of android it uses `startActivityForResult` method to retrieve
+  /// result back out of the launching activity and wait until result is
+  /// completed.
+  ///
+  /// In case of ios there is no such way to get result back out of view/activity
+  /// ,so in that case it will poll async for duration 1 sec until app is opened
+  /// again and then after it will continue the execution.
   Future<void> _openPSPApp(String intentUrl, String package) async {
     try {
       if (Platform.isIOS) {
-        await BaseUtil.launchUrl(intentUrl);
+        final result = await BaseUtil.launchUrl(intentUrl);
+        if (result) {
+          while (WidgetsBinding.instance.lifecycleState !=
+              AppLifecycleState.resumed) {
+            await Future.delayed(const Duration(seconds: 1));
+          }
+        }
         return;
       } else {
         const platform = MethodChannel("methodChannel/upiIntent");

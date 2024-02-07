@@ -4,6 +4,7 @@ import 'package:felloapp/core/model/subscription_models/subscription_status_resp
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
+import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
@@ -49,7 +50,7 @@ class SipSummaryView extends StatelessWidget {
             data: data,
             assetType: assetType,
           ),
-        _ => const SizedBox.shrink(),
+        _ => const FullScreenLoader()
       },
     );
   }
