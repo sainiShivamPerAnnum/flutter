@@ -106,6 +106,8 @@ class _SipMandatePage extends StatelessWidget {
                         meta: meta,
                         assetType: assetType,
                         freq: frequency,
+                        amount: 1000,
+                        lbAmt: 1000,
                       );
 
                       context.read<MandateBloc>().add(event);
