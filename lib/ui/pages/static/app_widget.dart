@@ -1149,3 +1149,131 @@ class GradientBoxBorder extends BoxBorder {
       ..style = PaintingStyle.stroke;
   }
 }
+
+class CustomSwitch extends StatefulWidget {
+  final bool value;
+  final ValueChanged<bool> onChanged;
+
+  CustomSwitch({Key? key, required this.value, required this.onChanged})
+      : super(key: key);
+
+  @override
+  _CustomSwitchState createState() => _CustomSwitchState();
+}
+
+class _CustomSwitchState extends State<CustomSwitch>
+    with SingleTickerProviderStateMixin {
+  Animation? _circleAnimation;
+  AnimationController? _animationController;
+
+  @override
+  void initState() {
+    super.initState();
+    _animationController =
+        AnimationController(vsync: this, duration: Duration(milliseconds: 60));
+    _circleAnimation = AlignmentTween(
+            begin: widget.value ? Alignment.centerRight : Alignment.centerLeft,
+            end: widget.value ? Alignment.centerLeft : Alignment.centerRight)
+        .animate(CurvedAnimation(
+            parent: _animationController!, curve: Curves.linear));
+  }
+
+  Widget returnWidgetLayout({required Widget child1, required Widget child2}) {
+    return Padding(
+      padding: EdgeInsets.symmetric(vertical: SizeConfig.padding4),
+      child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
+          mainAxisSize: MainAxisSize.min,
+          children: _circleAnimation!.value == Alignment.centerLeft
+              ? [child1, child2]
+              : [child2, child1]),
+    );
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return AnimatedBuilder(
+      animation: _animationController!,
+      builder: (context, child) {
+        return GestureDetector(
+          onTap: () {
+            if (_animationController!.isCompleted) {
+              _animationController!.reverse();
+            } else {
+              _animationController!.forward();
+            }
+            widget.value == false
+                ? widget.onChanged(true)
+                : widget.onChanged(false);
+          },
+          child: Container(
+            width: SizeConfig.padding48,
+            height: SizeConfig.padding26,
+            decoration: BoxDecoration(
+                borderRadius: BorderRadius.circular(24.0),
+                border: Border.all(
+                    color: _circleAnimation!.value == Alignment.centerLeft
+                        ? UiConstants.grey1
+                        : UiConstants.grey2),
+                color:
+                    // _circleAnimation!.value == Alignment.centerLeft?
+                    Colors.black
+                // : Colors.blue,
+                ),
+            child: Padding(
+              padding: EdgeInsets.only(
+                  // top: SizeConfig.padding4,
+                  // bottom: SizeConfig.padding4,
+                  right: SizeConfig.padding2,
+                  left: SizeConfig.padding2),
+              child: returnWidgetLayout(
+                child1: Text(
+                    _circleAnimation!.value == Alignment.centerLeft
+                        ? 'ON'
+                        : 'OFF',
+                    style: TextStyle(
+                        color: _circleAnimation!.value == Alignment.centerLeft
+                            ? Colors.white
+                            : UiConstants.textGray60)),
+                child2: Container(
+                  alignment: widget.value
+                      ? ((Directionality.of(context) == TextDirection.rtl)
+                          ? Alignment.centerRight
+                          : Alignment.centerLeft)
+                      : ((Directionality.of(context) == TextDirection.rtl)
+                          ? Alignment.centerLeft
+                          : Alignment.centerRight),
+                  child: Container(
+                      width: 20.0,
+                      height: 20.0,
+                      decoration: BoxDecoration(
+                          shape: BoxShape.circle,
+                          color:
+                              (_circleAnimation!.value == Alignment.centerLeft)
+                                  ? UiConstants.teal3
+                                  : UiConstants.grey2),
+                      child: Center(
+                        child: _circleAnimation!.value == Alignment.centerLeft
+                            ? Container(
+                                width: 5.0,
+                                height: 5.0,
+                                decoration: BoxDecoration(
+                                    shape: BoxShape.circle,
+                                    color: Colors.black))
+                            : Container(
+                                height: 2,
+                                width: 8,
+                                decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(2),
+                                    color: Colors.black),
+                              ),
+                      )),
+                ),
+              ),
+            ),
+          ),
+        );
+      },
+    );
+  }
+}
