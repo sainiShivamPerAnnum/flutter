@@ -11,7 +11,6 @@ import 'package:felloapp/feature/sip/sip_polling_page/view/sip_polling_view.dart
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:flutter/material.dart';
 
 part 'sip_form_state.dart';
 
@@ -32,12 +31,12 @@ class SipFormCubit extends Cubit<SipFormState> {
     if (currentState is SipFormCubitState) {
       List<String> tabOptions =
           SipDataHolder.instance.data.amountSelectionScreen.options;
-      List<SipOptions>? options = SipDataHolder
-          .instance.data.amountSelectionScreen.data[tabOptions[index]]?.options;
-      SipOptions? maxValueOption = options?.reduce((currentMax, next) =>
+      List<SipOptions> options = SipDataHolder
+          .instance.data.amountSelectionScreen.data[tabOptions[index]]!.options;
+      SipOptions? maxValueOption = options.reduce((currentMax, next) =>
           next.value > currentMax.value ? next : currentMax);
-      int _upperLimit = maxValueOption!.value;
-      int _division = options!.length;
+      int _upperLimit = maxValueOption.value;
+      int _division = options.length;
       int currentAmount = options.firstWhere((option) => option.best).value;
       emit(currentState.copyWith(
           currentTab: index,
@@ -54,13 +53,13 @@ class SipFormCubit extends Cubit<SipFormState> {
         SipDataHolder.instance.data.amountSelectionScreen.options;
     int editSipTab = SipDataHolder.instance.data.amountSelectionScreen.options
         .indexOf(prefillFrequency ?? 'DAILY');
-    List<SipOptions>? options = SipDataHolder.instance.data
-        .amountSelectionScreen.data[tabOptions[editSipTab]]?.options;
-    SipOptions? maxValueOption = options?.reduce((currentMax, next) =>
+    List<SipOptions> options = SipDataHolder.instance.data.amountSelectionScreen
+        .data[tabOptions[editSipTab]]!.options;
+    SipOptions? maxValueOption = options.reduce((currentMax, next) =>
         next.value > currentMax.value ? next : currentMax);
-    SipOptions bestOption = options!.firstWhere((option) => option.best);
+    SipOptions bestOption = options.firstWhere((option) => option.best);
     int currentAmount = prefillAmount ?? bestOption.value;
-    int _upperLimit = maxValueOption!.value;
+    int _upperLimit = maxValueOption.value;
     int _division = options.length;
     emit(SipFormCubitState(
         formAmount: currentAmount,
@@ -112,8 +111,8 @@ class SipFormCubit extends Cubit<SipFormState> {
         freq: freq,
         amount: amount,
         assetType: assetType.name,
-        lbAmt: assetType != SIPAssetTypes.AUGGOLD99 ? amount : 0,
-        augAmt: assetType == SIPAssetTypes.AUGGOLD99 ? amount : 0,
+        lbAmt: assetType.isLendBox ? amount : 0,
+        augAmt: assetType.isAugGold ? amount : 0,
       );
 
       final data = response.model?.data;

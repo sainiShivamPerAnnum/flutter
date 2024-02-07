@@ -103,15 +103,7 @@ class _PauseAutosaveModalState extends State<PauseAutosaveModal> {
             },
             buttonText: locale.btnYes,
             confirmAction: () async {
-              bool res =
-                  await widget.model!.pauseSubscription(option, widget.id);
-              if (res) {
-                BaseUtil.showPositiveAlert(
-                    locale.pauseSuccess, locale.pauseSuccessSub);
-                await AppState.backButtonDispatcher!.didPopRoute();
-              } else {
-                BaseUtil.showNegativeAlert(locale.pauseFail, locale.tryAgain);
-              }
+              await widget.model!.pauseSubscription(option, widget.id);
             },
           ),
         );

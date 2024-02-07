@@ -1,8 +1,5 @@
 part of 'sip_form_cubit.dart';
 
-@immutable
-abstract class AutoSaveSetupState {}
-
 sealed class SipFormState extends Equatable {
   const SipFormState();
 }

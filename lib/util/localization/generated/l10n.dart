@@ -9415,6 +9415,16 @@ class S {
       args: [],
     );
   }
+
+  /// `Error Loading SIP data. Try Again Later!`
+  String get errorLoadingSip {
+    return Intl.message(
+      'Error Loading SIP data. Try Again Later!',
+      name: 'errorLoadingSip',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

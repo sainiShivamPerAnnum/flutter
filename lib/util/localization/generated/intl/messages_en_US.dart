@@ -421,6 +421,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "enterValidAcc": MessageLookupByLibrary.simpleMessage(
             "Please enter a valid account number"),
         "entry": MessageLookupByLibrary.simpleMessage("Entry"),
+        "errorLoadingSip": MessageLookupByLibrary.simpleMessage(
+            "Error Loading SIP data. Try Again Later!"),
         "errorOccured":
             MessageLookupByLibrary.simpleMessage("An error occured!"),
         "exceededOTPs": MessageLookupByLibrary.simpleMessage(

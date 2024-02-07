@@ -122,7 +122,9 @@ class _EditSipBottomSheetState extends State<EditSipBottomSheet> {
                     setState(() {
                       _isLoading = true;
                     });
-                    await widget.model.pauseResume(widget.index);
+                    widget.state.isPaused
+                        ? await widget.model.resume(widget.index)
+                        : await widget.model.pause(widget.index);
                     setState(() {
                       _isLoading = false;
                     });

@@ -303,6 +303,7 @@ class SubService extends ChangeNotifier {
   }
 
   Future<bool> pauseSubscription(AutosavePauseOption option, String id) async {
+    final locale = locator<S>();
     if (isPauseOrResuming) return false;
     isPauseOrResuming = true;
     final res =
@@ -310,9 +311,12 @@ class SubService extends ChangeNotifier {
     isPauseOrResuming = false;
     if (res.isSuccess()) {
       await getSubscription();
+      BaseUtil.showPositiveAlert(locale.pauseSuccess, locale.pauseSuccessSub);
+      await AppState.backButtonDispatcher!.didPopRoute();
+
       return true;
     } else {
-      BaseUtil.showNegativeAlert(res.errorMessage, "Please try again");
+      BaseUtil.showNegativeAlert(res.errorMessage, locale.tryAgain);
       return false;
     }
   }

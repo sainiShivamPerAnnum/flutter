@@ -34,11 +34,15 @@ class SipCubit extends Cubit<SipState> {
   Future<void> getData() async {
     await _subService.getSubscription();
     await _subService.getSipScreenData();
-    SipDataHolder.init(_subService.sipData!);
-    emit(LoadedSipData(
-      sipScreenData: SipDataHolder.instance.data,
-      activeSubscription: _subService.subscriptionData!,
-    ));
+    if (_subService.sipData == null || _subService.subscriptionData == null) {
+      emit(const ErrorSipState());
+    } else {
+      SipDataHolder.init(_subService.sipData!);
+      emit(LoadedSipData(
+        sipScreenData: SipDataHolder.instance.data,
+        activeSubscription: _subService.subscriptionData!,
+      ));
+    }
   }
 
   void updatePauseResumeStatus(bool isPauseOrResuming) {
@@ -51,7 +55,7 @@ class SipCubit extends Cubit<SipState> {
   void updateSeeAll(bool value) {
     final currentState = state;
     if (currentState is LoadedSipData) {
-      emit(currentState.copyWith(seeAll: value));
+      emit(currentState.copyWith(showAllSip: value));
     }
   }
 
@@ -76,7 +80,7 @@ class SipCubit extends Cubit<SipState> {
     ///WHEN COMPLETE CALL INIT
   }
 
-  Future<void> pauseResume(int index) async {
+  Future<void> resume(int index) async {
     if (_subService.isPauseOrResuming) return;
     updatePauseResumeStatus(true);
 
@@ -102,7 +106,24 @@ class SipCubit extends Cubit<SipState> {
             await getData();
             await AppState.backButtonDispatcher!.didPopRoute();
           }
-        } else {
+        }
+      }
+    } catch (e) {
+      print('Error in pauseResume: $e');
+    } finally {
+      updatePauseResumeStatus(false);
+    }
+  }
+
+  Future<void> pause(int index) async {
+    if (_subService.isPauseOrResuming) return;
+    updatePauseResumeStatus(true);
+    try {
+      final subs = _subService.subscriptionData?.subs;
+      if (subs != null && subs.isNotEmpty) {
+        final subscription = subs[index];
+        final status = subscription.status;
+        if (status.isActive) {
           _analyticsService
               .track(eventName: AnalyticsEvents.asPauseTapped, properties: {
             "frequency": subscription.frequency,

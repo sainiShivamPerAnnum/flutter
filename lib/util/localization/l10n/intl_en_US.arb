@@ -1044,5 +1044,6 @@
   "pauseSuccess":"SIP paused successfully",
   "pauseSuccessSub": "For more details check SIP section",
   "pauseFail": "Failed to pause SIP",
-  "tryAgain": "Please try again"
+  "tryAgain": "Please try again",
+  "errorLoadingSip": "Error Loading SIP data. Try Again Later!"
 }

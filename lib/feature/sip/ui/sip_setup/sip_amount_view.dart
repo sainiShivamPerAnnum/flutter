@@ -76,7 +76,6 @@ class _SipFormAmountState extends State<SipFormAmount> {
 
   @override
   Widget build(BuildContext context) {
-    print(widget.isEdit);
     num percentage = SipDataHolder.instance.data.selectAssetScreen.options
         .where((element) => element.type == widget.sipAssetType)
         .first
@@ -354,9 +353,7 @@ class _FooterState extends State<_Footer> {
             height: SizeConfig.padding22,
           ),
           BlocConsumer<SipFormCubit, SipFormState>(
-            listener: (context, state) {
-              // TODO: implement listener
-            },
+            listener: (context, state) {},
             builder: (context, state) {
               return switch (state) {
                 SipFormCubitState() => Opacity(
@@ -699,6 +696,7 @@ class _AmountInputWidgetState extends State<AmountInputWidget> {
   Widget build(BuildContext context) {
     _amountController =
         TextEditingController(text: widget.amount.round().toString());
+    int tambolaTickets = widget.amount ~/ widget.ticketMultiplier;
     return Container(
       decoration: BoxDecoration(
         color: UiConstants.grey5,
@@ -769,7 +767,7 @@ class _AmountInputWidgetState extends State<AmountInputWidget> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      '+${widget.amount ~/ widget.ticketMultiplier} Tambola Ticket',
+                      '+$tambolaTickets Tambola Ticket',
                       style: TextStyles.sourceSans.body3.copyWith(
                         color: UiConstants.teal3,
                         height: 1.5,

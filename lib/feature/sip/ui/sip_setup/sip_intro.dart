@@ -3,8 +3,8 @@ import 'dart:math' as math;
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/sip_asset_type.dart';
+import 'package:felloapp/core/model/sip_model/calculator_data.dart';
 import 'package:felloapp/core/model/sip_model/calculator_details.dart';
-import 'package:felloapp/core/model/subscription_models/subscription_model.dart';
 import 'package:felloapp/core/model/subscription_models/subscription_status.dart';
 import 'package:felloapp/feature/sip/cubit/autosave_cubit.dart';
 import 'package:felloapp/feature/sip/shared/edit_sip_bottomsheet.dart';
@@ -49,8 +49,6 @@ class SipIntro extends StatefulWidget {
 class _SipIntroState extends State<SipIntro> {
   @override
   Widget build(BuildContext context) {
-    int activeSubsLength = 0;
-    List<SubscriptionModel> subs = [];
     final locale = locator<S>();
     return Scaffold(
       backgroundColor: UiConstants.kBackgroundColor,
@@ -71,16 +69,25 @@ class _SipIntroState extends State<SipIntro> {
       ),
       resizeToAvoidBottomInset: false,
       body: BlocConsumer<SipCubit, SipState>(
-        listener: (context, state) {
-          if (state is LoadedSipData) {
-            activeSubsLength = state.activeSubscription.length;
-            subs = state.activeSubscription.subs;
-          }
-        },
+        listener: (context, state) {},
         builder: (context, state) {
           final model = context.read<SipCubit>();
           return SingleChildScrollView(
             child: switch (state) {
+              ErrorSipState() => Stack(
+                  children: [
+                    const NewSquareBackground(),
+                    Positioned.fill(
+                      child: Center(
+                        child: Text(
+                          locale.errorLoadingSip,
+                          style: TextStyles.rajdhaniSB.body0
+                              .colour(UiConstants.kTextColor),
+                        ),
+                      ),
+                    ),
+                  ],
+                ),
               LoadingSipData() => const Stack(
                   children: [
                     NewSquareBackground(),
@@ -196,7 +203,7 @@ class _SipIntroState extends State<SipIntro> {
                         ),
                       ],
                     ),
-                    if (activeSubsLength != 0)
+                    if (state.activeSubscription.length != 0)
                       Padding(
                         padding: EdgeInsets.symmetric(
                             horizontal: SizeConfig.padding20),
@@ -213,43 +220,65 @@ class _SipIntroState extends State<SipIntro> {
                               ),
                             ),
                             ...List.generate(
-                                state.seeAll
-                                    ? activeSubsLength
-                                    : activeSubsLength > 3
+                                state.showAllSip
+                                    ? state.activeSubscription.length
+                                    : state.activeSubscription.length > 3
                                         ? 3
-                                        : activeSubsLength, (i) {
+                                        : state.activeSubscription.length, (i) {
                               return Column(children: [
                                 AssetSipContainer(
                                   model: model,
                                   index: i,
-                                  assetType: subs[i].assetType,
-                                  state: subs[i].status,
-                                  allowEdit:
-                                      subs[i].assetType != SIPAssetTypes.BOTH,
-                                  assetUrl: (subs[i].lENDBOXP2P != 0.0 &&
-                                          subs[i].aUGGOLD99 != 0.0)
+                                  assetType: state
+                                      .activeSubscription.subs[i].assetType,
+                                  state:
+                                      state.activeSubscription.subs[i].status,
+                                  allowEdit: state.activeSubscription.subs[i]
+                                          .assetType !=
+                                      SIPAssetTypes.BOTH,
+                                  assetUrl: (state.activeSubscription.subs[i]
+                                                  .lENDBOXP2P !=
+                                              0.0 &&
+                                          state.activeSubscription.subs[i]
+                                                  .aUGGOLD99 !=
+                                              0.0)
                                       ? Assets.goldAndflo
-                                      : subs[i].lENDBOXP2P != 0
+                                      : state.activeSubscription.subs[i]
+                                                  .lENDBOXP2P !=
+                                              0
                                           ? Assets.floWithoutShadow
                                           : Assets.goldWithoutShadow,
-                                  nextDueDate: subs[i].nextDue,
-                                  sipAmount: subs[i].amount.toInt(),
-                                  sipName: subs[i].lENDBOXP2P != 0 &&
-                                          subs[i].aUGGOLD99 != 0
+                                  nextDueDate:
+                                      state.activeSubscription.subs[i].nextDue,
+                                  sipAmount: state
+                                      .activeSubscription.subs[i].amount
+                                      .toInt(),
+                                  sipName: state.activeSubscription.subs[i]
+                                                  .lENDBOXP2P !=
+                                              0 &&
+                                          state.activeSubscription.subs[i]
+                                                  .aUGGOLD99 !=
+                                              0
                                       ? locale.bothassetSip
-                                      : subs[i].lENDBOXP2P != 0
+                                      : state.activeSubscription.subs[i]
+                                                  .lENDBOXP2P !=
+                                              0
                                           ? locale.floSip
                                           : locale.goldSip,
-                                  startDate: subs[i].createdOn,
-                                  sipInterval: subs[i].frequency,
-                                  pausedSip: subs[i].status.isPaused,
+                                  startDate: state
+                                      .activeSubscription.subs[i].createdOn,
+                                  sipInterval: state
+                                      .activeSubscription.subs[i].frequency,
+                                  pausedSip: state.activeSubscription.subs[i]
+                                      .status.isPaused,
                                 ),
                                 SizedBox(
                                   height: SizeConfig.padding16,
                                 ),
                               ]);
                             }),
-                            activeSubsLength > 3 && !state.seeAll
+                            state.activeSubscription.length > 3 &&
+                                    !state.showAllSip
                                 ? TextButton(
                                     onPressed: () {
                                       model.updateSeeAll(true);
@@ -286,7 +315,8 @@ class _SipIntroState extends State<SipIntro> {
                       padding: EdgeInsets.symmetric(
                           horizontal: SizeConfig.padding20),
                       child: SipCalculator(
-                        state: state,
+                        state:
+                            state.sipScreenData.calculatorScreen.calculatorData,
                       ),
                     ),
                   ],
@@ -461,7 +491,7 @@ class AssetSipContainer extends StatelessWidget {
 
 class SipCalculator extends StatefulWidget {
   const SipCalculator({required this.state, super.key});
-  final LoadedSipData state;
+  final CalculatorData state;
 
   @override
   State<SipCalculator> createState() => _SipCalculatorState();
@@ -479,20 +509,17 @@ class _SipCalculatorState extends State<SipCalculator>
   int numberOfPeriodsPerYear = 1;
   final locale = locator<S>();
   void getDefaultValue(int tabIndex) {
-    Map<String, CalculatorDetails> data =
-        widget.state.sipScreenData.calculatorScreen.calculatorData.data;
-    List<String> sipOptions =
-        widget.state.sipScreenData.calculatorScreen.calculatorData.options;
-    sipAmount = data[sipOptions[tabIndex]]?.sipAmount.defaultValue ?? 0;
-    maxSipValue = data[sipOptions[tabIndex]]?.sipAmount.max ?? 0;
-    minSipValue = data[sipOptions[tabIndex]]?.sipAmount.min ?? 0;
-    timePeriod = data[sipOptions[tabIndex]]?.timePeriod.defaultValue ?? 0;
-    maxTimePeriod = data[sipOptions[tabIndex]]?.timePeriod.max ?? 0;
-    minTimePeriod = data[sipOptions[tabIndex]]?.timePeriod.min ?? 0;
+    Map<String, CalculatorDetails> data = widget.state.data;
+    List<String> sipOptions = widget.state.options;
+    sipAmount = data[sipOptions[tabIndex]]!.sipAmount.defaultValue;
+    maxSipValue = data[sipOptions[tabIndex]]!.sipAmount.max;
+    minSipValue = data[sipOptions[tabIndex]]!.sipAmount.min;
+    timePeriod = data[sipOptions[tabIndex]]!.timePeriod.defaultValue;
+    maxTimePeriod = data[sipOptions[tabIndex]]!.timePeriod.max;
+    minTimePeriod = data[sipOptions[tabIndex]]!.timePeriod.min;
     returnPercentage = double.parse(
-        data[sipOptions[tabIndex]]?.interest['default'].toString() ?? '0');
-    numberOfPeriodsPerYear =
-        data[sipOptions[tabIndex]]?.numberOfPeriodsPerYear ?? 12;
+        data[sipOptions[tabIndex]]!.interest['default'].toString());
+    numberOfPeriodsPerYear = data[sipOptions[tabIndex]]!.numberOfPeriodsPerYear;
   }
 
   late final TabController tabController;
@@ -500,8 +527,7 @@ class _SipCalculatorState extends State<SipCalculator>
 
   @override
   void initState() {
-    sipOptions =
-        widget.state.sipScreenData.calculatorScreen.calculatorData.options;
+    sipOptions = widget.state.options;
     tabController = TabController(length: sipOptions.length, vsync: this);
     getDefaultValue(tabController.index);
     super.initState();
@@ -591,8 +617,7 @@ class _SipCalculatorState extends State<SipCalculator>
                 padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding28),
                 child: TabSlider<String>(
                   controller: tabController,
-                  tabs: widget.state.sipScreenData.calculatorScreen
-                      .calculatorData.options,
+                  tabs: widget.state.options,
                   labelBuilder: (label) => label,
                   onTap: (_, i) {
                     setState(() {

@@ -416,6 +416,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "enterValidAcc": MessageLookupByLibrary.simpleMessage(
             "कृपया एक वैध खाता संख्या दर्ज करें"),
         "entry": MessageLookupByLibrary.simpleMessage("प्रवेश"),
+        "errorLoadingSip": MessageLookupByLibrary.simpleMessage(
+            "SIP डेटा लोड करने में त्रुटि। बाद में पुनः प्रयास करें!"),
         "errorOccured": MessageLookupByLibrary.simpleMessage("एक त्रुटि हुई!"),
         "exceededOTPs": MessageLookupByLibrary.simpleMessage(
             "आप स्वीकृत ओटीपी प्रयासों की संख्या को पार कर चुके हैं। कृपया कुछ देर में पुन: प्रयास करें"),
