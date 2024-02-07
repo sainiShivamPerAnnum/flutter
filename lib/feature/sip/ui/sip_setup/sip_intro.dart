@@ -25,28 +25,20 @@ import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
-class SipIntroView extends StatelessWidget {
-  const SipIntroView({
-    super.key,
-  });
+class SipIntroView extends StatefulWidget {
+  const SipIntroView({super.key});
 
   @override
-  Widget build(BuildContext context) {
-    return BlocProvider(
-      create: (_) => SipCubit()..init(),
-      child: const SipIntro(),
-    );
+  State<SipIntroView> createState() => _SipIntroViewState();
+}
+
+class _SipIntroViewState extends State<SipIntroView> {
+  @override
+  void initState() {
+    context.read<SipCubit>().init();
+    super.initState();
   }
-}
 
-class SipIntro extends StatefulWidget {
-  const SipIntro({super.key});
-
-  @override
-  State<SipIntro> createState() => _SipIntroState();
-}
-
-class _SipIntroState extends State<SipIntro> {
   @override
   Widget build(BuildContext context) {
     final locale = locator<S>();
@@ -357,7 +349,7 @@ class AssetSipContainer extends StatelessWidget {
     String formattedDate =
         DateFormat('dd MMM yyyy').format(DateTime.parse(startDate));
     return GestureDetector(
-      onTap: pausedSip != null && pausedSip!
+      onTap: pausedSip != null && (pausedSip ?? false)
           ? () async {
               await BaseUtil.openModalBottomSheet(
                   addToScreenStack: true,

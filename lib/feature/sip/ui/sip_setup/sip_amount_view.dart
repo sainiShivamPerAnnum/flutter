@@ -3,6 +3,7 @@ import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/sip_asset_type.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
+import 'package:felloapp/feature/sip/cubit/autosave_cubit.dart';
 import 'package:felloapp/feature/sip/cubit/sip_data_holder.dart';
 import 'package:felloapp/feature/sip/cubit/sip_form_cubit.dart';
 import 'package:felloapp/feature/sip/mandate_page/view/mandate_view.dart';
@@ -367,8 +368,12 @@ class _FooterState extends State<_Footer> {
                       onPressed: () async {
                         if (widget.isValidAmount) {
                           if (widget.isEdit) {
-                            await formmodel.editSipTrigger(
-                                widget.amount, widget.frequency, widget.id!);
+                            await formmodel
+                                .editSipTrigger(
+                                    widget.amount, widget.frequency, widget.id!)
+                                .then((value) {
+                              context.read<SipCubit>().getData();
+                            });
                           } else {
                             if (widget.mandateAvailable) {
                               await formmodel.createSubscription(
@@ -674,7 +679,29 @@ class AmountInputWidget extends StatefulWidget {
 }
 
 class _AmountInputWidgetState extends State<AmountInputWidget> {
-  TextEditingController? _amountController;
+  late final TextEditingController _amountController;
+
+  @override
+  void initState() {
+    super.initState();
+    _amountController =
+        TextEditingController(text: widget.amount.round().toString());
+  }
+
+  @override
+  void didUpdateWidget(covariant AmountInputWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.amount != widget.amount) {
+      _amountController.value = TextEditingValue(
+        text: widget.amount.round().toString(),
+        selection: TextSelection.fromPosition(
+          TextPosition(
+            offset: widget.amount.round().toString().length,
+          ),
+        ),
+      );
+    }
+  }
 
   void _onIncrement() {
     if (widget.amount < widget.upperLimit) {
@@ -694,8 +721,6 @@ class _AmountInputWidgetState extends State<AmountInputWidget> {
 
   @override
   Widget build(BuildContext context) {
-    _amountController =
-        TextEditingController(text: widget.amount.round().toString());
     int tambolaTickets = widget.amount ~/ widget.ticketMultiplier;
     return Container(
       decoration: BoxDecoration(

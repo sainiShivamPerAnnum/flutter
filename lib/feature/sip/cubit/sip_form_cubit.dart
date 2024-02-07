@@ -70,10 +70,6 @@ class SipFormCubit extends Cubit<SipFormState> {
         lowerLimit: _upperLimit / _division));
   }
 
-  Future<void> getData() async {
-    await _subService.getSubscription();
-  }
-
   Future<bool> editSipTrigger(
       num principalAmount, String frequency, String id) async {
     final currentState = state;
@@ -86,7 +82,6 @@ class SipFormCubit extends Cubit<SipFormState> {
         emit(currentState.copyWith(isLoading: false));
         return false;
       } else {
-        await getData();
         emit(currentState.copyWith(isLoading: false));
         BaseUtil.showPositiveAlert("Subscription updated successfully",
             "Effective changes will take place from tomorrow");

@@ -35,6 +35,7 @@ import 'package:provider/provider.dart';
 import 'package:showcaseview/showcaseview.dart';
 
 import 'core/service/notifier_services/user_coin_service.dart';
+import 'feature/sip/cubit/autosave_cubit.dart';
 
 class MyApp extends HookWidget {
   const MyApp({Key? key}) : super(key: key);
@@ -63,6 +64,7 @@ class MyApp extends HookWidget {
       ),
       child: MultiProvider(
         providers: [
+          Provider(create: (_) => SipCubit()),
           ChangeNotifierProvider(create: (_) => locator<ConnectivityService>()),
           ChangeNotifierProvider(create: (_) => locator<DBModel>()),
           ChangeNotifierProvider(create: (_) => locator<BaseUtil>()),

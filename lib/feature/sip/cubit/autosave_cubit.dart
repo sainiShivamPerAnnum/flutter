@@ -34,6 +34,7 @@ class SipCubit extends Cubit<SipState> {
   }
 
   Future<void> getData() async {
+    emit(const LoadingSipData());
     await _subService.getSubscription();
     await _subService.getSipScreenData();
     if (_subService.sipData == null || _subService.subscriptionData == null) {
