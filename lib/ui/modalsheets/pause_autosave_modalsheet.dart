@@ -12,12 +12,10 @@ import 'package:flutter/material.dart';
 class PauseAutosaveModal extends StatefulWidget {
   final SubService? model;
   final String id;
+  final Function() getData;
 
-  const PauseAutosaveModal({
-    required this.id,
-    super.key,
-    this.model,
-  });
+  const PauseAutosaveModal(
+      {required this.id, super.key, this.model, required this.getData});
 
   @override
   State<PauseAutosaveModal> createState() => _PauseAutosaveModalState();
@@ -35,9 +33,6 @@ class _PauseAutosaveModalState extends State<PauseAutosaveModal> {
     return Container(
       padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
       child: Wrap(
-        //shrinkWrap: true,
-        // mainAxisSize: MainAxisSize.min,
-        // crossAxisAlignment: CrossAxisAlignment.start,
         children: [
           SizedBox(
             height: SizeConfig.padding14,
@@ -88,11 +83,12 @@ class _PauseAutosaveModalState extends State<PauseAutosaveModal> {
       {required String text,
       required int radioValue,
       required AutosavePauseOption option}) {
-    S locale = locator<S>();
+    final locale = locator<S>();
     return InkWell(
       splashColor: Colors.transparent,
       highlightColor: Colors.transparent,
       onTap: () async {
+        await AppState.backButtonDispatcher!.didPopRoute();
         await BaseUtil.openDialog(
           addToScreenStack: true,
           isBarrierDismissible: false,
@@ -106,17 +102,9 @@ class _PauseAutosaveModalState extends State<PauseAutosaveModal> {
             },
             buttonText: locale.btnYes,
             confirmAction: () async {
-              bool res = await widget.model!
-                  .pauseSubscription(option, widget.id)
-                  .then((value) {
-                Future.delayed(Duration.zero,
-                    () => AppState.backButtonDispatcher!.didPopRoute());
-                return true;
-              });
-              if (res) {
-                BaseUtil.showPositiveAlert("SIP paused successfully",
-                    "For more details check SIP section");
-              }
+              await widget.model!.pauseSubscription(option, widget.id);
+              await widget.getData();
+              await AppState.backButtonDispatcher!.didPopRoute();
             },
           ),
         );

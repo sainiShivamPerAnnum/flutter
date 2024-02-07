@@ -7,11 +7,12 @@ part 'select_asset_model.g.dart';
   createToJson: false,
 )
 class SelectAssetScreen {
-  String? title;
-  String? subTitle;
-  List<AssetOptions>? options;
+  final String title;
+  final String subTitle;
+  final List<AssetOptions> options;
 
-  SelectAssetScreen({this.title, this.subTitle, this.options});
+  SelectAssetScreen(
+      {this.title = '', this.subTitle = '', this.options = const []});
   factory SelectAssetScreen.fromJson(Map<String, dynamic> json) =>
       _$SelectAssetScreenFromJson(json);
 }

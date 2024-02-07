@@ -8,9 +8,10 @@ part of 'sip_amount_details.dart';
 
 SipAmountDetails _$SipAmountDetailsFromJson(Map<String, dynamic> json) =>
     SipAmountDetails(
-      minamount: json['minamount'] as int?,
-      numberOfPeriodsPerYear: json['numberOfPeriodsPerYear'] as int?,
+      minamount: json['minamount'] as int? ?? 0,
+      numberOfPeriodsPerYear: json['numberOfPeriodsPerYear'] as int? ?? 1,
       options: (json['options'] as List<dynamic>?)
-          ?.map((e) => SipOptions.fromJson(e as Map<String, dynamic>))
-          .toList(),
+              ?.map((e) => SipOptions.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
     );

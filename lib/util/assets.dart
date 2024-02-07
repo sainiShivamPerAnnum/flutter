@@ -471,4 +471,7 @@ class Assets {
   static const String sipIntroImage =
       "https://ik.imagekit.io/9xfwtu0xm/sip/sip_intro.png?updatedAt=1706526977156";
   static const String sipBox = "assets/svg/sip_box.svg";
+  static const String iphone = 'assets/svg/iphone.svg';
+  static const String car = 'assets/svg/car.svg';
+  static const String trip = 'assets/svg/trip.svg';
 }

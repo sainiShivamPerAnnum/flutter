@@ -7,6 +7,8 @@ import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/ui/elements/title_subtitle_container.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -218,12 +220,13 @@ class AutoSaveCard extends StatelessWidget {
   final InvestmentType? asset;
   final bool assetSpecificCard;
 
-  const AutoSaveCard(
+  AutoSaveCard(
       {required this.service,
       Key? key,
       this.asset,
       this.assetSpecificCard = true})
       : super(key: key);
+  final locale = locator<S>();
 
   @override
   Widget build(BuildContext context) {
@@ -232,8 +235,8 @@ class AutoSaveCard extends StatelessWidget {
       child: Column(
         crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          const TitleSubtitleContainer(
-            title: 'SIP with Fello',
+          TitleSubtitleContainer(
+            title: locale.siptitle,
           ),
           SizedBox(
             height: SizeConfig.padding12,
@@ -270,7 +273,7 @@ class AutoSaveCard extends StatelessWidget {
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Text(
-                          "Start your SIP & Grow money on autopilot",
+                          locale.setupCardTitle,
                           style: TextStyles.rajdhaniSB.body1
                               .colour(UiConstants.kTextColor),
                           textAlign: TextAlign.left,
@@ -278,7 +281,7 @@ class AutoSaveCard extends StatelessWidget {
                         ),
                         SizedBox(height: SizeConfig.padding12),
                         Text(
-                          'Invest in Fello Flo or Digital Gold to meet your financial Goals',
+                          locale.setupCardSubTitle,
                           style: TextStyles.sourceSans.body4.colour(
                               UiConstants.kModalSheetMutedTextBackgroundColor),
                           textAlign: TextAlign.left,
@@ -289,7 +292,7 @@ class AutoSaveCard extends StatelessWidget {
                           children: [
                             Expanded(
                               child: Text(
-                                'Setup SIP',
+                                locale.setupSip,
                                 style: TextStyles.sourceSansSB.body2
                                     .colour(UiConstants.kTabBorderColor),
                                 textAlign: TextAlign.left,

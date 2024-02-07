@@ -7,11 +7,12 @@ part 'calculator_model.g.dart';
   createToJson: false,
 )
 class CalculatorScreen {
-  String? title;
-  String? imageUrl;
-  CalculatorData? calculatorData;
+  final String title;
+  final String imageUrl;
+  final CalculatorData calculatorData;
 
-  CalculatorScreen({this.title, this.imageUrl, this.calculatorData});
+  CalculatorScreen(
+      {this.title = '', this.imageUrl = '', required this.calculatorData});
   factory CalculatorScreen.fromJson(Map<String, dynamic> json) =>
       _$CalculatorScreenFromJson(json);
 }

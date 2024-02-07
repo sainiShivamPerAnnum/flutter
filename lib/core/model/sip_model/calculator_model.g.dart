@@ -8,10 +8,8 @@ part of 'calculator_model.dart';
 
 CalculatorScreen _$CalculatorScreenFromJson(Map<String, dynamic> json) =>
     CalculatorScreen(
-      title: json['title'] as String?,
-      imageUrl: json['imageUrl'] as String?,
-      calculatorData: json['calculatorData'] == null
-          ? null
-          : CalculatorData.fromJson(
-              json['calculatorData'] as Map<String, dynamic>),
+      title: json['title'] as String? ?? '',
+      imageUrl: json['imageUrl'] as String? ?? '',
+      calculatorData: CalculatorData.fromJson(
+          json['calculatorData'] as Map<String, dynamic>),
     );

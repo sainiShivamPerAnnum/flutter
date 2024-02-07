@@ -1,280 +1,156 @@
-import 'dart:math';
-
 import 'package:bloc/bloc.dart';
+import 'package:equatable/equatable.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/enums/sip_asset_type.dart';
 import 'package:felloapp/core/model/sip_model/sip_data_model.dart';
 import 'package:felloapp/core/model/subscription_models/all_subscription_model.dart';
-import 'package:felloapp/core/model/subscription_models/subscription_transaction_model.dart';
-import 'package:felloapp/core/repository/sip_repo.dart';
-import 'package:felloapp/core/repository/subscription_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
-import 'package:felloapp/feature/sip/sip_polling_page/view/sip_polling_view.dart';
+import 'package:felloapp/feature/sip/cubit/sip_data_holder.dart';
+import 'package:felloapp/feature/sip/ui/sip_setup/sip_amount_view.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/modalsheets/pause_autosave_modalsheet.dart';
+import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:upi_pay/upi_pay.dart';
-
-import '../../../core/model/sip_model/calculator_details.dart';
 
 part 'autosave_state.dart';
 
-class AutosaveCubit extends Cubit<AutosaveCubitState> {
-  AutosaveCubit() : super(AutosaveCubitState());
-  final SubService _subService = locator<SubService>();
-  final SipRepository _sipRepo = locator<SipRepository>();
+class SipCubit extends Cubit<SipState> {
+  SipCubit() : super(const LoadingSipData());
+  final CustomLogger logger = locator<CustomLogger>();
+  final _subService = locator<SubService>();
   final AnalyticsService _analyticsService = locator<AnalyticsService>();
-  PageController? txnPageController = PageController(initialPage: 0);
-  TextEditingController sipAmountController = TextEditingController();
-  int tabIndex = 0;
-  PageController pageController = PageController();
-  S locale = locator<S>();
+  final locale = locator<S>();
 
-  // SubscriptionModel? _activeSubscription;
-  List<SubscriptionTransactionModel>? augTxnList;
-  List<SubscriptionTransactionModel>? lbTxnList;
-  List chipsList = [];
-  bool hasMoreTxns = false;
-  double sliderValue = 0;
   Future<void> init() async {
-    emit(state.copyWith(isFetchingDetails: true));
+    await getData();
+  }
+
+  Future<void> getData() async {
+    emit(const LoadingSipData());
     await _subService.getSubscription();
-    findActiveSubscription();
-    await _sipRepo.getSipScreenData().then((value) {
-      state.sipScreenData = value.model;
-      getDefaultValue(tabIndex);
-    });
-    final upiApps = await _subService.getUPIApps();
-    emit(state.copyWith(upiApps: upiApps));
-  }
-
-  void getDefaultValue(int tabIndex) {
-    Map<String, CalculatorDetails>? data =
-        state.sipScreenData?.calculatorScreen?.calculatorData?.data;
-    dynamic sipOptions =
-        state.sipScreenData?.calculatorScreen?.calculatorData?.options;
-    emit(state.copyWith(
-      sipAmount: data?['${sipOptions[tabIndex]}']?.sipAmount?.defaultValue ?? 0,
-      maxSipValue: data?['${sipOptions[tabIndex]}']?.sipAmount?.max ?? 0,
-      minSipValue: data?['${sipOptions[tabIndex]}']?.sipAmount?.min ?? 0,
-      timePeriod:
-          data?['${sipOptions[tabIndex]}']?.timePeriod?.defaultValue ?? 0,
-      maxTimePeriod: data?['${sipOptions[tabIndex]}']?.timePeriod?.max ?? 0,
-      minTimePeriod: data?['${sipOptions[tabIndex]}']?.timePeriod?.min ?? 0,
-      returnPercentage: double.parse(
-          data?['${sipOptions[tabIndex]}']?.interest?['default'].toString() ??
-              '0'),
-      numberOfPeriodsPerYear: state
-              .sipScreenData
-              ?.calculatorScreen
-              ?.calculatorData
-              ?.data?['${sipOptions[tabIndex]}']
-              ?.numberOfPeriodsPerYear ??
-          12,
-      isFetchingDetails: false,
-    ));
-  }
-
-  int calculateMaturityValue(double P, double i, int n) {
-    double compoundInterest = ((pow(1 + i, n) - 1) / i) * (1 + i);
-    double M = P * compoundInterest;
-    return M.round();
-  }
-
-  String getReturn() {
-    double principalAmount = state.sipAmount.toDouble();
-    int numberOfPeriods = state.numberOfPeriodsPerYear;
-    double interest = state.returnPercentage.toDouble();
-    double interestRate = (interest * .001) / numberOfPeriods;
-    int numberOfYear = state.timePeriod;
-
-    int numberOfInvestments = numberOfYear * numberOfPeriods;
-    final maturityValue = calculateMaturityValue(
-        principalAmount, interestRate, numberOfInvestments);
-
-    print("Maturity Value (M): Rs $maturityValue");
-    return maturityValue.toString();
-  }
-
-  void changeTimePeriod(int value) {
-    if (value > state.maxTimePeriod) {
-      emit(state.copyWith(timePeriod: state.maxTimePeriod));
-    } else if (value < state.minTimePeriod) {
-      emit(state.copyWith(timePeriod: state.minTimePeriod));
+    await _subService.getSipScreenData();
+    if (_subService.sipData == null || _subService.subscriptionData == null) {
+      emit(const ErrorSipState());
     } else {
-      emit(state.copyWith(timePeriod: value));
+      SipDataHolder.init(_subService.sipData!);
+      emit(LoadedSipData(
+        sipScreenData: SipDataHolder.instance.data,
+        activeSubscription: _subService.subscriptionData!,
+      ));
     }
   }
 
-  void changeSIPAmount(int value) {
-    if (value > state.maxSipValue) {
-      state.sipAmount = state.maxSipValue;
-      emit(state.copyWith(sipAmount: state.maxSipValue));
-    } else if (value < state.minSipValue) {
-      emit(state.copyWith(sipAmount: state.minSipValue));
-    } else {
-      emit(state.copyWith(sipAmount: value));
+  void updatePauseResumeStatus(bool isPauseOrResuming) {
+    final currentState = state;
+    if (currentState is LoadedSipData) {
+      emit(currentState.copyWith(isPauseOrResuming: isPauseOrResuming));
     }
   }
 
-  void changeRateOfInterest(int value) {
-    if (value > 30) {
-      emit(state.copyWith(returnPercentage: 30));
-    } else if (value < 0) {
-      emit(state.copyWith(returnPercentage: 0));
-    } else {
-      emit(state.copyWith(returnPercentage: value.toDouble()));
+  void updateSeeAll(bool value) {
+    final currentState = state;
+    if (currentState is LoadedSipData) {
+      emit(currentState.copyWith(showAllSip: value));
     }
   }
 
-  dump() {
-    sipAmountController.dispose();
-    pageController.dispose();
-  }
-
-  diposeEdit() {
-    emit(state.getDefault());
-  }
-
-  editSelectedAmount(double amount) {
-    emit(state.copyWith(selectedSipAmount: amount.toInt()));
-  }
-
-  void pageChange(value) {
-    emit(state.copyWith(currentPage: value));
-  }
-
-  void findActiveSubscription() {
-    emit(state.copyWith(activeSubscription: _subService.subscriptionData));
-  }
-
-  void updatePauseResumeStatus() {
-    emit(state.copyWith(isPauseOrResuming: _subService.isPauseOrResuming));
-  }
-
-  Future editSip(num principalAmount, String frequency, int index) async {
-    emit(state.copyWith(
-        isEdit: true,
-        editSipAmount: principalAmount,
-        currentSipFrequency: frequency,
-        editIndex: index));
-    pageController.jumpToPage(2);
+  Future<void> editSip(num principalAmount, String frequency, int index,
+      SIPAssetTypes assetType) async {
     Future.delayed(
         Duration.zero, () => AppState.backButtonDispatcher!.didPopRoute());
-  }
-
-  Future<bool> editSipTrigger(
-      num principalAmount, String frequency, String id) async {
-    emit(state.copyWith(isPauseOrResuming: true));
-    bool response = await _subService.updateSubscription(
-        freq: frequency, amount: principalAmount.toInt(), id: id);
-    if (!response) {
-      BaseUtil.showNegativeAlert("Failed to update SIP", "Please try again");
-      return false;
-    } else {
-      findActiveSubscription();
-      BaseUtil.showPositiveAlert("Subscription updated successfully",
-          "Effective changes will take place from tomorrow");
-      pageController.jumpToPage(0);
-      diposeEdit();
-      return true;
-    }
-  }
-
-  void changeSelectedAsset(int index) {
-    emit(state.copyWith(selectedAsset: index));
-  }
-
-  Future pauseResume(int index) async {
-    if (_subService.isPauseOrResuming) return;
-    updatePauseResumeStatus();
-    final status = _subService.subscriptionData!.subs![index].status;
-    if (status.isPaused) {
-      locator<AnalyticsService>()
-          .track(eventName: AnalyticsEvents.asResumeTapped, properties: {
-        "frequency": state.activeSubscription!.subs![index].frequency,
-        "amount": state.activeSubscription!.subs![index].amount,
-      });
-
-      bool response = await _subService.resumeSubscription(
-        state.activeSubscription!.subs![index].id,
-      );
-      updatePauseResumeStatus();
-      if (!response) {
-        BaseUtil.showNegativeAlert("Failed to resume SIP", "Please try again");
-      } else {
-        findActiveSubscription();
-        BaseUtil.showPositiveAlert(
-            "SIP resumed successfully", "For more details check SIP section");
-      }
-    } else {
-      _analyticsService
-          .track(eventName: AnalyticsEvents.asPauseTapped, properties: {
-        "frequency": state.activeSubscription!.subs![index].frequency,
-        "amount": state.activeSubscription!.subs![index].amount,
-      });
-      return BaseUtil.openModalBottomSheet(
-        addToScreenStack: true,
-        hapticVibrate: true,
-        backgroundColor: UiConstants.gameCardColor,
-        borderRadius: BorderRadius.only(
-          topLeft: Radius.circular(SizeConfig.roundness16),
-          topRight: Radius.circular(SizeConfig.roundness16),
-        ),
-        isBarrierDismissible: true,
-        isScrollControlled: true,
-        content: PauseAutosaveModal(
-          model: _subService,
-          id: state.activeSubscription!.subs![index].id,
-        ),
-      ).then((value) {
-        updatePauseResumeStatus();
-        findActiveSubscription();
-      });
-    }
-  }
-
-  final _subscriptionRepo = locator<SubscriptionRepo>();
-
-  Future<void> createSubscription({
-    required num amount,
-    required String freq,
-    required String assetType,
-  }) async {
-    // TODO(@Hirdesh2101): emit loading state for create subscription to show
-    /// loading state for button component..
-
-    final response = await _subscriptionRepo.createSubscription(
-      freq: freq,
-      amount: amount,
-      assetType: assetType,
-      lbAmt: amount,
-      augAmt: amount,
+    AppState.delegate!.appState.currentAction = PageAction(
+      page: SipFormPageConfig,
+      widget: SipFormAmountView(
+        sipAssetType: assetType,
+        mandateAvailable: true,
+        prefillAmount: principalAmount.toInt(),
+        prefillFrequency: frequency,
+        isEdit: true,
+        editId: _subService.subscriptionData!.subs[index].id,
+      ),
+      state: PageState.addWidget,
     );
 
-    final data = response.model?.data;
-    final subscription = data?.subscription;
+    ///TODO@Hirdesh2101
+    ///WHEN COMPLETE CALL INIT
+  }
 
-    if (response.isSuccess() && subscription != null) {
-      AppState.delegate!.appState.currentAction = PageAction(
-        state: PageState.addWidget,
-        page: SipPollingPageConfig,
-        widget: SipPollingPage(
-          data: subscription,
-        ),
-      );
-    } else {
-      BaseUtil.showNegativeAlert(
-        'Failed to create subscription',
-        response.errorMessage,
-      );
+  Future<void> resume(int index) async {
+    if (_subService.isPauseOrResuming) return;
+    updatePauseResumeStatus(true);
+
+    try {
+      final subs = _subService.subscriptionData?.subs;
+      if (subs != null && subs.isNotEmpty) {
+        final subscription = subs[index];
+        final status = subscription.status;
+
+        if (status.isPaused) {
+          _analyticsService
+              .track(eventName: AnalyticsEvents.asResumeTapped, properties: {
+            "frequency": subscription.frequency,
+            "amount": subscription.amount,
+          });
+          bool response = await _subService.resumeSubscription(subscription.id);
+          if (response) {
+            await getData();
+            await AppState.backButtonDispatcher!.didPopRoute();
+          }
+        }
+      }
+    } catch (e) {
+      logger.e('Error in Resume: $e');
+    } finally {
+      updatePauseResumeStatus(false);
+    }
+  }
+
+  Future<void> pause(int index) async {
+    if (_subService.isPauseOrResuming) return;
+    updatePauseResumeStatus(true);
+    try {
+      final subs = _subService.subscriptionData?.subs;
+      if (subs != null && subs.isNotEmpty) {
+        final subscription = subs[index];
+        final status = subscription.status;
+        if (status.isActive) {
+          _analyticsService
+              .track(eventName: AnalyticsEvents.asPauseTapped, properties: {
+            "frequency": subscription.frequency,
+            "amount": subscription.amount,
+          });
+
+          await AppState.backButtonDispatcher!.didPopRoute();
+          await BaseUtil.openModalBottomSheet(
+            addToScreenStack: true,
+            hapticVibrate: true,
+            backgroundColor: UiConstants.gameCardColor,
+            borderRadius: BorderRadius.only(
+              topLeft: Radius.circular(SizeConfig.roundness16),
+              topRight: Radius.circular(SizeConfig.roundness16),
+            ),
+            isBarrierDismissible: true,
+            isScrollControlled: true,
+            content: PauseAutosaveModal(
+              model: _subService,
+              id: subscription.id,
+              getData: getData,
+            ),
+          );
+        }
+      }
+    } catch (e) {
+      logger.e('Error in pause: $e');
+    } finally {
+      updatePauseResumeStatus(false);
     }
   }
 }

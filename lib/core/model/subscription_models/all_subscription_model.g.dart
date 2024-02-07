@@ -6,12 +6,13 @@ part of 'all_subscription_model.dart';
 // JsonSerializableGenerator
 // **************************************************************************
 
-AllSubscriptionModel _$AllSubscriptionModelFromJson(
-        Map<String, dynamic> json) =>
-    AllSubscriptionModel(
-      length: json['length'] as int?,
-      isActive: json['isActive'] as bool?,
+Subscriptions _$SubscriptionsFromJson(Map<String, dynamic> json) =>
+    Subscriptions(
+      length: json['length'] as int? ?? 0,
+      isActive: json['isActive'] as bool? ?? false,
       subs: (json['subs'] as List<dynamic>?)
-          ?.map((e) => SubscriptionModel.fromJson(e as Map<String, dynamic>))
-          .toList(),
+              ?.map(
+                  (e) => SubscriptionModel.fromJson(e as Map<String, dynamic>))
+              .toList() ??
+          const [],
     );

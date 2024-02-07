@@ -1,10 +1,16 @@
-import 'dart:math';
-
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/enums/sip_asset_type.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/feature/sip/cubit/autosave_cubit.dart';
+import 'package:felloapp/feature/sip/cubit/sip_data_holder.dart';
+import 'package:felloapp/feature/sip/cubit/sip_form_cubit.dart';
+import 'package:felloapp/feature/sip/mandate_page/view/mandate_view.dart';
+import 'package:felloapp/feature/sip/shared/interestCalculator.dart';
 import 'package:felloapp/feature/sip/shared/tab_slider.dart';
+import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -16,304 +22,298 @@ import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
-class SipAmountView extends StatefulWidget {
-  const SipAmountView({required this.mandateAvailable, super.key});
+class SipFormAmountView extends StatelessWidget {
+  const SipFormAmountView({
+    required this.mandateAvailable,
+    required this.sipAssetType,
+    super.key,
+    this.prefillAmount,
+    this.prefillFrequency,
+    this.isEdit,
+    this.editId,
+  });
   final bool mandateAvailable;
-
-  @override
-  State<SipAmountView> createState() => _SipAmountViewState();
-}
-
-class _SipAmountViewState extends State<SipAmountView> {
-  ValueNotifier<double>? _amount;
-  late num _upperLimit;
-  late num _lowerLimit;
-  late num _division;
-  int _currentTab = 0;
-  var bestOption;
-  num ticketMultiplier = AppConfig.getValue(AppConfigKey.tambola_cost);
-  int calculateMaturityValue(double P, double i, int n) {
-    double compoundInterest = ((pow(1 + i, n) - 1) / i) * (1 + i);
-    double M = P * compoundInterest;
-    return M.round();
-  }
-
-  String getReturn() {
-    final sipmodel = context.watch<AutosaveCubit>();
-    ValueNotifier<double> principalAmount = _amount!;
-    int numberOfPeriods = sipmodel
-            .state
-            .sipScreenData
-            ?.amountSelectionScreen
-            ?.data?[sipmodel.state.sipScreenData?.amountSelectionScreen
-                ?.options?[_currentTab]]
-            ?.numberOfPeriodsPerYear ??
-        1;
-
-    ///TODO(@Hirdesh2101)
-    double interest = 8;
-    double interestRate = (interest * .001) / numberOfPeriods;
-    int numberOfYear = 5;
-
-    int numberOfInvestments = numberOfYear * numberOfPeriods;
-    final maturityValue = calculateMaturityValue(
-        principalAmount.value, interestRate, numberOfInvestments);
-    final totalInterest = maturityValue - _amount!.value;
-    return BaseUtil.formatRupees(double.parse(totalInterest.toString()));
-  }
-
-  onTabChange() {
-    final sipmodel = context.read<AutosaveCubit>();
-    var options = sipmodel
-        .state
-        .sipScreenData
-        ?.amountSelectionScreen
-        ?.data?[sipmodel
-            .state.sipScreenData?.amountSelectionScreen?.options?[_currentTab]]
-        ?.options;
-    var maxValueOption = options?.reduce((currentMax, next) =>
-        next.value! > currentMax.value! ? next : currentMax);
-    bestOption = options
-        ?.firstWhere((option) => option.best != null && option.best == true);
-    double currentAmount = bestOption!.value!.toDouble();
-    _amount = ValueNotifier<double>(currentAmount);
-    _division = options?.length ?? 4;
-    _upperLimit = maxValueOption!.value as num;
-    _lowerLimit = _upperLimit / _division;
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    final sipmodel = context.read<AutosaveCubit>();
-    var editSipTab = sipmodel
-        .state.sipScreenData?.amountSelectionScreen?.options
-        ?.indexOf(sipmodel.state.currentSipFrequency ?? 'DAILY');
-    _currentTab = editSipTab ?? 0;
-    var options = sipmodel
-        .state
-        .sipScreenData
-        ?.amountSelectionScreen
-        ?.data?[sipmodel
-            .state.sipScreenData?.amountSelectionScreen?.options?[_currentTab]]
-        ?.options;
-    var maxValueOption = options?.reduce((currentMax, next) =>
-        next.value! > currentMax.value! ? next : currentMax);
-    bestOption = options
-        ?.firstWhere((option) => option.best != null && option.best == true);
-    double currentAmount =
-        (sipmodel.state.editSipAmount ?? bestOption!.value!).toDouble();
-    _amount = ValueNotifier<double>(currentAmount);
-    _division = options?.length ?? 4;
-    _upperLimit = maxValueOption!.value as num;
-    _lowerLimit = _upperLimit / _division;
-  }
-
-  @override
-  void dispose() {
-    super.dispose();
-    _amount!.dispose();
-  }
+  final int? prefillAmount;
+  final String? prefillFrequency;
+  final bool? isEdit;
+  final String? editId;
+  final SIPAssetTypes sipAssetType;
 
   @override
   Widget build(BuildContext context) {
-    final sipmodel = context.read<AutosaveCubit>();
-    var options =
-        sipmodel.state.sipScreenData?.amountSelectionScreen?.options ?? [];
-    var bestOptions = sipmodel.state.sipScreenData?.amountSelectionScreen
-        ?.data?[options[_currentTab]]?.options
-        ?.indexWhere((option) => option.best != null && option.best == true);
-    return DefaultTabController(
-      length: options.length,
-      initialIndex: _currentTab,
-      child: BaseScaffold(
-        showBackgroundGrid: false,
-        backgroundColor: UiConstants.bg,
-        body: Padding(
-          padding: EdgeInsets.symmetric(
-            horizontal: SizeConfig.padding24,
-          ),
-          child: Column(
-            children: [
-              SizedBox(
-                height: SizeConfig.padding34,
-              ),
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding28),
-                child: TabSlider<String>(
-                  tabs: options,
-                  labelBuilder: (label) => label,
-                  onTap: (_, i) {
-                    setState(() {
-                      _currentTab = i;
-                      onTabChange();
-                    });
-                  },
-                ),
-              ),
-              SizedBox(
-                height: SizeConfig.padding28,
-              ),
-              Text(
-                'Select SIP amount',
-                style: TextStyles.rajdhaniSB.body1.copyWith(height: 1.2),
-              ),
-              SizedBox(
-                height: SizeConfig.padding16,
-              ),
-              ValueListenableBuilder(
-                valueListenable: _amount!,
-                builder: (context, value, child) => Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    AmountInputWidget(
-                      lowerLimit: _lowerLimit.toDouble(),
-                      upperLimit: _upperLimit.toDouble(),
-                      division: _division.toInt(),
-                      amount: _amount!,
-                      ticketMultiplier: ticketMultiplier,
-                      onChange: (v) => _amount!.value = v,
-                    ),
-                    if (_amount!.value < _lowerLimit.toDouble())
-                      Padding(
-                        padding: EdgeInsets.only(
-                          left: SizeConfig.padding16,
-                          right: SizeConfig.padding16,
-                        ),
-                        child: Text(
-                          'Minimum amount - ₹${_lowerLimit.toDouble()}',
-                          style: TextStyles.sourceSans.body4
-                              .colour(UiConstants.errorText),
-                        ),
-                      ),
-                    if (_amount!.value > _upperLimit.toDouble())
-                      Padding(
-                        padding: EdgeInsets.only(
-                          left: SizeConfig.padding16,
-                          right: SizeConfig.padding16,
-                        ),
-                        child: Text(
-                          'Maximum amount - ₹${_upperLimit.toDouble()}',
-                          style: TextStyles.sourceSans.body4
-                              .colour(UiConstants.errorText),
-                        ),
-                      ),
-                    SizedBox(
-                      height: SizeConfig.padding32,
-                    ),
-                    AmountSlider(
-                      lowerLimit: _lowerLimit.toDouble(),
-                      upperLimit: _upperLimit.toDouble(),
-                      division: _division.toInt(),
-                      amount: _amount!.value,
-                      onChanged: (v) => _amount!.value = v,
-                      bestOption: bestOptions!,
-                    ),
-                  ],
-                ),
-              ),
-              const Spacer(),
-              Container(
-                padding: EdgeInsets.all(SizeConfig.padding16),
-                decoration: BoxDecoration(
-                  color: UiConstants.grey5,
-                  borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-                ),
-                child: Column(
-                  children: [
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'Expected Returns in 5Y',
-                          style: TextStyles.sourceSans.body2,
-                        ),
-                        ValueListenableBuilder(
-                          valueListenable: _amount!,
-                          builder: (context, value, child) => Text.rich(
-                            TextSpan(children: [
-                              TextSpan(
-                                text:
-                                    '${BaseUtil.formatIndianRupees(double.parse(_amount!.value.toString()))}+',
-                              ),
-                              TextSpan(
-                                text: getReturn(),
-                                style: TextStyles.sourceSansSB.body1
-                                    .colour(UiConstants.kTabBorderColor),
-                              ),
-                            ]),
-                            style: TextStyles.sourceSans.body3
-                                .colour(UiConstants.kTextColor),
-                          ),
-                        ),
-                      ],
-                    ),
-                    SizedBox(
-                      height: SizeConfig.padding3,
-                    ),
-                    Row(
-                      mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                      children: [
-                        Text(
-                          'with Fello SIP',
-                          style: TextStyles.sourceSans.body4
-                              .copyWith(color: UiConstants.grey1),
-                        ),
-                        Text(
-                          'with 12% returns',
-                          style: TextStyles.sourceSans.body4
-                              .copyWith(color: UiConstants.grey1),
-                        ),
-                      ],
-                    ),
-                  ],
-                ),
-              ),
-              SizedBox(
-                height: SizeConfig.padding16,
-              ),
-            ],
-          ),
-        ),
-        bottomNavigationBar: ValueListenableBuilder(
-          valueListenable: _amount!,
-          builder: (context, value, child) => _Footer(
-            mandateAvailable: widget.mandateAvailable,
-            amount: _amount!.value,
-            frequency: sipmodel.state.sipScreenData!.amountSelectionScreen!
-                .options![_currentTab],
-            id: (sipmodel.state.isEdit ?? false)
-                ? sipmodel.state.activeSubscription!
-                    .subs![sipmodel.state.editIndex!].id
-                : null,
-          ),
-        ),
+    return BlocProvider(
+      create: (_) => SipFormCubit()..init(prefillAmount, prefillFrequency),
+      child: SipFormAmount(
+        mandateAvailable: mandateAvailable,
+        editId: editId,
+        sipAssetType: sipAssetType,
+        isEdit: isEdit,
       ),
     );
   }
 }
 
-class _Footer extends StatefulWidget {
-  const _Footer(
+class SipFormAmount extends StatefulWidget {
+  const SipFormAmount(
       {required this.mandateAvailable,
-      required this.amount,
-      required this.frequency,
-      required this.id});
+      required this.sipAssetType,
+      super.key,
+      this.isEdit,
+      this.editId});
+  final bool mandateAvailable;
+  final bool? isEdit;
+  final String? editId;
+  final SIPAssetTypes sipAssetType;
+
+  @override
+  State<SipFormAmount> createState() => _SipFormAmountState();
+}
+
+class _SipFormAmountState extends State<SipFormAmount> {
+  num ticketMultiplier = AppConfig.getValue(AppConfigKey.tambola_cost);
+  List<String> tabOptions =
+      SipDataHolder.instance.data.amountSelectionScreen.options;
+  final locale = locator<S>();
+
+  @override
+  Widget build(BuildContext context) {
+    num percentage = SipDataHolder.instance.data.selectAssetScreen.options
+        .where((element) => element.type == widget.sipAssetType)
+        .first
+        .interest;
+    return Scaffold(
+        backgroundColor: UiConstants.kBackgroundColor,
+        appBar: AppBar(
+          leading: IconButton(
+            onPressed: () async =>
+                await AppState.backButtonDispatcher!.didPopRoute(),
+            icon: const Icon(
+              Icons.chevron_left,
+              size: 32,
+            ),
+          ),
+          backgroundColor: UiConstants.bg,
+          title: Text(locale.siptitle),
+          titleTextStyle: TextStyles.rajdhaniSB.title4.setHeight(1.3),
+          centerTitle: true,
+          elevation: 0,
+        ),
+        resizeToAvoidBottomInset: false,
+        body: BlocConsumer<SipFormCubit, SipFormState>(
+          listener: (context, state) {
+            // TODO: implement listener
+          },
+          builder: (context, state) {
+            final formmodel = context.read<SipFormCubit>();
+            return switch (state) {
+              SipFormCubitState() => DefaultTabController(
+                  length: tabOptions.length,
+                  initialIndex: state.currentTab,
+                  child: BaseScaffold(
+                    showBackgroundGrid: false,
+                    backgroundColor: UiConstants.bg,
+                    body: Padding(
+                      padding: EdgeInsets.symmetric(
+                        horizontal: SizeConfig.padding24,
+                      ),
+                      child: Column(
+                        children: [
+                          SizedBox(
+                            height: SizeConfig.padding34,
+                          ),
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: SizeConfig.padding28),
+                            child: TabSlider<String>(
+                              tabs: tabOptions,
+                              labelBuilder: (label) => label,
+                              onTap: (_, i) {
+                                return formmodel.onTabChange(i);
+                              },
+                            ),
+                          ),
+                          SizedBox(
+                            height: SizeConfig.padding28,
+                          ),
+                          Text(
+                            locale.selectSipAmount,
+                            style: TextStyles.rajdhaniSB.body1
+                                .copyWith(height: 1.2),
+                          ),
+                          SizedBox(
+                            height: SizeConfig.padding16,
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              AmountInputWidget(
+                                lowerLimit: state.lowerLimit.toDouble(),
+                                upperLimit: state.upperLimit.toDouble(),
+                                division: state.division.toInt(),
+                                amount: state.formAmount,
+                                ticketMultiplier: ticketMultiplier,
+                                onChange: formmodel.setAmount,
+                              ),
+                              if (state.formAmount <
+                                  state.lowerLimit.toDouble())
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                    left: SizeConfig.padding16,
+                                    right: SizeConfig.padding16,
+                                  ),
+                                  child: Text(
+                                    locale.minSipAmount(
+                                        state.lowerLimit.toDouble()),
+                                    style: TextStyles.sourceSans.body4
+                                        .colour(UiConstants.errorText),
+                                  ),
+                                ),
+                              if (state.formAmount >
+                                  state.upperLimit.toDouble())
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                    left: SizeConfig.padding16,
+                                    right: SizeConfig.padding16,
+                                  ),
+                                  child: Text(
+                                    locale.maxSipAmount(
+                                        state.upperLimit.toDouble()),
+                                    style: TextStyles.sourceSans.body4
+                                        .colour(UiConstants.errorText),
+                                  ),
+                                ),
+                              SizedBox(
+                                height: SizeConfig.padding32,
+                              ),
+                              AmountSlider(
+                                lowerLimit: state.lowerLimit.toDouble(),
+                                upperLimit: state.upperLimit.toDouble(),
+                                division: state.division.toInt(),
+                                amount: state.formAmount.toDouble(),
+                                onChanged: formmodel.setAmount,
+                                bestOption: state.bestOption.order,
+                              ),
+                            ],
+                          ),
+                          const Spacer(),
+                          Container(
+                            padding: EdgeInsets.all(SizeConfig.padding16),
+                            decoration: BoxDecoration(
+                              color: UiConstants.grey5,
+                              borderRadius:
+                                  BorderRadius.circular(SizeConfig.roundness12),
+                            ),
+                            child: Column(
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      locale.expectedReturns5y,
+                                      style: TextStyles.sourceSans.body2,
+                                    ),
+                                    Text.rich(
+                                      TextSpan(children: [
+                                        TextSpan(
+                                          text:
+                                              '${BaseUtil.formatIndianRupees(SipCalculation.getPrincipal(
+                                            formAmount: state.formAmount,
+                                            currentTab: state.currentTab,
+                                          ).toDouble())}+',
+                                        ),
+                                        TextSpan(
+                                          text: SipCalculation.getReturn(
+                                              formAmount: state.formAmount,
+                                              currentasset: widget.sipAssetType,
+                                              currentTab: state.currentTab,
+                                              interestOnly: true),
+                                          style: TextStyles.sourceSansSB.body1
+                                              .colour(
+                                                  UiConstants.kTabBorderColor),
+                                        ),
+                                      ]),
+                                      style: TextStyles.sourceSans.body3
+                                          .colour(UiConstants.kTextColor),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: SizeConfig.padding3,
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      locale.returnSubText,
+                                      style: TextStyles.sourceSans.body4
+                                          .copyWith(color: UiConstants.grey1),
+                                    ),
+                                    Text(
+                                      locale.percentageReturns(percentage),
+                                      style: TextStyles.sourceSans.body4
+                                          .copyWith(color: UiConstants.grey1),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            height: SizeConfig.padding16,
+                          ),
+                        ],
+                      ),
+                    ),
+                    bottomNavigationBar: _Footer(
+                      isValidAmount: state.lowerLimit <= state.formAmount &&
+                          state.formAmount <= state.upperLimit,
+                      isEdit: widget.isEdit ?? false,
+                      mandateAvailable: widget.mandateAvailable,
+                      amount: state.formAmount,
+                      sipAssetType: widget.sipAssetType,
+                      frequency: SipDataHolder.instance.data
+                          .amountSelectionScreen.options[state.currentTab],
+                      id: (widget.isEdit ?? false) ? widget.editId : null,
+                    ),
+                  ),
+                ),
+              _ => const SizedBox.shrink(),
+            };
+          },
+        ));
+  }
+}
+
+class _Footer extends StatefulWidget {
+  const _Footer({
+    required this.mandateAvailable,
+    required this.amount,
+    required this.frequency,
+    required this.isEdit,
+    required this.id,
+    required this.isValidAmount,
+    required this.sipAssetType,
+  });
   final bool mandateAvailable;
   final num amount;
   final String frequency;
   final String? id;
+  final bool isEdit;
+  final bool isValidAmount;
+  final SIPAssetTypes sipAssetType;
 
   @override
   State<_Footer> createState() => _FooterState();
 }
 
 class _FooterState extends State<_Footer> {
-  bool _isLoading = false;
+  final locale = locator<S>();
 
   @override
   Widget build(BuildContext context) {
-    var model = context.read<AutosaveCubit>();
+    final formmodel = context.watch<SipFormCubit>();
     return Container(
       padding: EdgeInsets.symmetric(
         horizontal: SizeConfig.padding24,
@@ -341,8 +341,8 @@ class _FooterState extends State<_Footer> {
               Expanded(
                 child: Text(
                   widget.mandateAvailable
-                      ? 'Your SIP amount will be deducted fro your existing mandate . No new mandate will be created for this SIP'
-                      : 'You will receive a mandate for ₹5000 on the selected UPI App. But don’t worry, We will not deduct anymore than ₹1100/week.',
+                      ? locale.existingMandate
+                      : locale.newMandate,
                   style: TextStyles.sourceSans.body3.copyWith(
                     color: UiConstants.textGray50,
                   ),
@@ -353,31 +353,52 @@ class _FooterState extends State<_Footer> {
           SizedBox(
             height: SizeConfig.padding22,
           ),
-          SecondaryButton(
-            label: model.state.isEdit!
-                ? 'UPDATE SIP'
-                : widget.mandateAvailable
-                    ? '1 CLICKS AWAY'
-                    : '2 CLICKS AWAY',
-            onPressed: () async {
-              if (model.state.isEdit!) {
-                setState(() {
-                  _isLoading = true;
-                });
-                var res = await model.editSipTrigger(
-                    widget.amount, widget.frequency, widget.id!);
-                if (!res) {
-                  setState(() {
-                    _isLoading = false;
-                  });
-                }
-              } else {
-                await model.pageController.animateToPage(3,
-                    duration: const Duration(milliseconds: 100),
-                    curve: Curves.easeIn);
-              }
+          BlocConsumer<SipFormCubit, SipFormState>(
+            listener: (context, state) {},
+            builder: (context, state) {
+              return switch (state) {
+                SipFormCubitState() => Opacity(
+                    opacity: widget.isValidAmount ? 1 : 0.5,
+                    child: SecondaryButton(
+                      label: widget.isEdit
+                          ? locale.updateSip
+                          : widget.mandateAvailable
+                              ? locale.oneClickAway
+                              : locale.twoClickAway,
+                      onPressed: () async {
+                        if (widget.isValidAmount) {
+                          if (widget.isEdit) {
+                            await formmodel
+                                .editSipTrigger(
+                                    widget.amount, widget.frequency, widget.id!)
+                                .then((value) {
+                              context.read<SipCubit>().getData();
+                            });
+                          } else {
+                            if (widget.mandateAvailable) {
+                              await formmodel.createSubscription(
+                                  amount: widget.amount,
+                                  freq: widget.frequency,
+                                  assetType: widget.sipAssetType);
+                            } else {
+                              AppState.delegate!.appState.currentAction =
+                                  PageAction(
+                                page: SipMandatePageConfig,
+                                widget: const SipMandateView(),
+                                state: PageState.addWidget,
+                              );
+                            }
+                          }
+                        }
+                      },
+                      child: state.isLoading
+                          ? const CupertinoActivityIndicator()
+                          : null,
+                    ),
+                  ),
+                _ => SizedBox.shrink(),
+              };
             },
-            child: _isLoading ? const CupertinoActivityIndicator() : null,
           ),
           SizedBox(
             height: SizeConfig.padding16,
@@ -582,7 +603,7 @@ class AmountSlider extends StatelessWidget {
     this.division = 5,
   });
 
-  final void Function(double) onChanged;
+  final void Function(int) onChanged;
   final double amount;
   final double upperLimit;
   final double lowerLimit;
@@ -604,11 +625,11 @@ class AmountSlider extends StatelessWidget {
               for (int i = 0; i < division; i++)
                 Builder(
                   builder: (context) {
-                    final amt = (upperLimit / division) * (i + 1).toInt();
+                    final amt = ((upperLimit / division) * (i + 1)).toInt();
                     return GestureDetector(
                       onTap: () => onChanged(amt),
                       child: SipAmountChip(
-                        isBest: i == bestOption, // Change it.
+                        isBest: i == bestOption,
                         isSelected: amount == amt,
                         label: '₹${amt.toInt()}',
                       ),
@@ -626,7 +647,7 @@ class AmountSlider extends StatelessWidget {
                 : amount > upperLimit
                     ? upperLimit
                     : amount,
-            onChanged: onChanged,
+            onChanged: (value) => onChanged(value.toInt()),
             inactiveColor: Colors.grey,
           ),
         ],
@@ -646,38 +667,61 @@ class AmountInputWidget extends StatefulWidget {
     this.division = 5,
   });
 
-  final ValueNotifier<double> amount;
+  final int amount;
   final double upperLimit;
   final double lowerLimit;
   final num ticketMultiplier;
   final int division;
-  final void Function(double value) onChange;
+  final void Function(int value) onChange;
 
   @override
   State<AmountInputWidget> createState() => _AmountInputWidgetState();
 }
 
 class _AmountInputWidgetState extends State<AmountInputWidget> {
-  TextEditingController? _amountController;
+  late final TextEditingController _amountController;
+
+  @override
+  void initState() {
+    super.initState();
+    _amountController =
+        TextEditingController(text: widget.amount.round().toString());
+  }
+
+  @override
+  void didUpdateWidget(covariant AmountInputWidget oldWidget) {
+    super.didUpdateWidget(oldWidget);
+    if (oldWidget.amount != widget.amount) {
+      _amountController.value = TextEditingValue(
+        text: widget.amount.round().toString(),
+        selection: TextSelection.fromPosition(
+          TextPosition(
+            offset: widget.amount.round().toString().length,
+          ),
+        ),
+      );
+    }
+  }
 
   void _onIncrement() {
-    if (widget.amount.value < widget.upperLimit) {
-      final value = widget.amount.value + (widget.upperLimit / widget.division);
+    if (widget.amount < widget.upperLimit) {
+      final value =
+          (widget.amount + (widget.upperLimit / widget.division)).toInt();
       widget.onChange(value);
     }
   }
 
   void _onDecrement() {
-    if (widget.amount.value > widget.lowerLimit) {
-      final value = widget.amount.value - (widget.upperLimit / widget.division);
+    if (widget.amount > widget.lowerLimit) {
+      final value =
+          (widget.amount - (widget.upperLimit / widget.division)).toInt();
       widget.onChange(value);
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    _amountController =
-        TextEditingController(text: widget.amount.value.round().toString());
+    int tambolaTickets = widget.amount ~/ widget.ticketMultiplier;
     return Container(
       decoration: BoxDecoration(
         color: UiConstants.grey5,
@@ -715,7 +759,7 @@ class _AmountInputWidgetState extends State<AmountInputWidget> {
                         controller: _amountController,
                         keyboardType: TextInputType.number,
                         onChanged: (value) {
-                          widget.onChange(double.parse(value));
+                          widget.onChange(int.parse(value));
                         },
                         inputFormatters: [
                           TextInputFormatter.withFunction((oldValue, newValue) {
@@ -736,6 +780,9 @@ class _AmountInputWidgetState extends State<AmountInputWidget> {
                           isDense: true,
                           contentPadding: EdgeInsets.zero,
                         ),
+                        cursorColor: UiConstants
+                            .kModalSheetMutedTextBackgroundColor
+                            .withOpacity(0.4),
                         style: TextStyles.rajdhaniB.title2.colour(Colors.white),
                       ),
                     ),
@@ -745,7 +792,7 @@ class _AmountInputWidgetState extends State<AmountInputWidget> {
                   mainAxisAlignment: MainAxisAlignment.center,
                   children: [
                     Text(
-                      '+${widget.amount.value ~/ widget.ticketMultiplier} Tambola Ticket',
+                      '+$tambolaTickets Tambola Ticket',
                       style: TextStyles.sourceSans.body3.copyWith(
                         color: UiConstants.teal3,
                         height: 1.5,
@@ -753,6 +800,19 @@ class _AmountInputWidgetState extends State<AmountInputWidget> {
                     ),
                     SizedBox(
                       width: SizeConfig.padding4,
+                    ),
+                    Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      children: [
+                        SizedBox(
+                          height: SizeConfig.padding4,
+                        ),
+                        Icon(
+                          Icons.info_outline,
+                          size: SizeConfig.iconSize2,
+                          color: UiConstants.teal3,
+                        ),
+                      ],
                     ),
                   ],
                 )

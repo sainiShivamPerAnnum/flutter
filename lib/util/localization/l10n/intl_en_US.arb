@@ -948,5 +948,102 @@
   "tutorial3": "You can see the tickets and play the weekly game in this section and earn rewards!",
   "tutorial4": "You can see all your earned rewards in this Rewards section",
   "tutorial5": "If you want to know more about Fello, check out these stories!",
-  "tutorial6": "Now lets start your rewarding savings journey by selecting your asset over here"
+  "tutorial6": "Now lets start your rewarding savings journey by selecting your asset over here",
+  "scratchCardsSip":"Scratch Card",
+  "sipTickets": "Tickets {count}",
+  "@sipTickets": {
+    "placeholders": {
+      "count": {
+        "type": "num"
+      }
+    }
+  },
+  "sipamount":"SIP amount",
+  "siptitle":"SIP with Fello",
+  "selectSipAmount":"Select SIP amount",
+  "minSipAmount": "Minimum amount - ₹{amount}",
+  "@minSipAmount": {
+    "placeholders": {
+      "amount": {
+        "type": "double"
+      }
+    }
+  },
+  "maxSipAmount": "Maximum amount - ₹{amount}",
+  "@maxSipAmount": {
+    "placeholders": {
+      "amount": {
+        "type": "double"
+      }
+    }
+  },
+  "expectedReturns5y": "Expected Returns in 5Y",
+  "returnSubText": "with Fello SIP",
+  "percentageReturns": "with {percentage}% returns",
+  "@percentageReturns": {
+    "placeholders": {
+      "percentage": {
+        "type": "num"
+      }
+    }
+  },
+  "existingMandate": "Your SIP amount will be deducted fro your existing mandate . No new mandate will be created for this SIP",
+  "newMandate": "You will receive a mandate for ₹5000 on the selected UPI App. But don’t worry, We will not deduct anymore than ₹1100/week.",
+  "updateSip": "UPDATE SIP",
+  "oneClickAway": "1 CLICKS AWAY",
+  "twoClickAway": "2 CLICKS AWAY",
+  "sipIntroTitle": "Save Weekly / Monthly  automatically & ",
+  "sipIntroSubTitle": "Grow money on autopilot",
+  "startSip": "START SIP",
+  "sipCustomers": "8000+ users have started SIP",
+  "existingSip": "Your Existing SIP",
+  "bothassetSip": "Digital Gold & P2P SIP",
+  "floSip": "Fello P2P SIP",
+  "goldSip": "Digital Gold SIP",
+  "pauseSip": "Paused SIP",
+  "editSip": "Edit SIP",
+  "clickToresumeSip": "Click on card to Resume SIP",
+  "SipCalculator":"SIP Calculator",
+  "returnsCalculator": "Calculate your SIP returns",
+  "sipAmount": "SIP Amount -",
+  "timePeriod": "Time Period",
+  "rpSip": "Return Percentage",
+  "yourMoneySip": "Your Money in {timePeriod} Years-",
+  "@yourMoneySip": {
+    "placeholders": {
+      "timePeriod": {
+        "type": "int"
+      }
+    }
+  },
+  "sipForIphone": "With a daily SIP you can save for an Iphone in a year",
+  "sipForCar": "With a monthly SIP You can save enough for a Car in a year",
+  "sipForTrip": "With a weekly SIP You can save enough for a Goa trip in a year",
+  "SipIphoneTitle": "SIP for an Iphone",
+  "SipCarTitle": "SIP For a Car",
+  "SipTripTitle": "SIP for a trip",
+  "selectAsset": "Select Asset",
+  "threeClicksAway": "3 CLICKS AWAY",
+  "comingSoon": "COMING SOON",
+  "editSipOptions": "Edit SIP Options",
+  "editSipbtn": "Edit SIP",
+  "resumeSipbtn": "Resume SIP",
+  "pauseSipbtn": "Pause SIP",
+  "sipReturn": "You can earn upto ₹{returns} in 5 years from this SIP",
+  "@sipReturn": {
+    "placeholders": {
+      "returns": {
+        "type": "String"
+      }
+    }
+  },
+  "setupSip": "Setup SIP",
+  "setupCardTitle": "Start your SIP & Grow money on autopilot",
+  "setupCardSubTitle": "Invest in Fello Flo or Digital Gold to meet your financial Goals",
+  "sipYear":"Year",
+  "pauseSuccess":"SIP paused successfully",
+  "pauseSuccessSub": "For more details check SIP section",
+  "pauseFail": "Failed to pause SIP",
+  "tryAgain": "Please try again",
+  "errorLoadingSip": "Error Loading SIP data. Try Again Later!"
 }

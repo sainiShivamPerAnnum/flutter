@@ -17,9 +17,10 @@ import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/feature/fello_badges/ui/fello_badges_home.dart';
 import 'package:felloapp/feature/flo_withdrawals/ui/balloon_lottie_screen.dart';
 import 'package:felloapp/feature/referrals/ui/referral_home.dart';
-import 'package:felloapp/feature/sip/ui/sip_process_view.dart';
-import 'package:felloapp/feature/sip/ui/sip_setup/sip_intro.dart';
+import 'package:felloapp/feature/sip/mandate_page/view/mandate_view.dart';
 import 'package:felloapp/feature/sip/ui/sip_setup/sip_amount_view.dart';
+import 'package:felloapp/feature/sip/ui/sip_setup/sip_intro.dart';
+import 'package:felloapp/feature/sip/ui/sip_setup/sip_select_assset.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/transition_delegate.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -30,10 +31,6 @@ import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_buy/gold_pro
 import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_details/gold_pro_details_view.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_sell/gold_pro_sell_view.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_transactions/gold_pro_txns_view.dart';
-import 'package:felloapp/ui/pages/finance/autosave/autosave_details/autosave_details_view.dart';
-import 'package:felloapp/ui/pages/finance/autosave/autosave_onboarding/autosave_onboarding_view.dart';
-import 'package:felloapp/ui/pages/finance/autosave/autosave_setup/autosave_process_view.dart';
-import 'package:felloapp/ui/pages/finance/autosave/autosave_update/autosave_update_view.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/detail_page/flo_premium_details_view.dart';
 import 'package:felloapp/ui/pages/finance/transactions_history/transactions_history_view.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/journey_view.dart';
@@ -386,10 +383,27 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           _addPageData(const FelloBadgeHome(), FelloBadgeHomeViewPageConfig);
           break;
 
-        case Pages.Sip:
-          _addPageData(const SipProcessView(), SipPageConfig);
+        case Pages.SipEntryView:
+          _addPageData(const SipIntroView(), SipIntroPageConfig);
           break;
-
+        case Pages.SipAssetSelectView:
+          _addPageData(
+              SipAssetSelectView(
+                isMandateAvailable: queryParams?['mandateAvailable'] ?? false,
+              ),
+              SipAssetSelectPageConfig);
+          break;
+        case Pages.SipFormView:
+          _addPageData(
+              SipFormAmountView(
+                mandateAvailable: queryParams?['mandateAvailable'] ?? false,
+                sipAssetType: queryParams?['sipAssetType'],
+              ),
+              SipFormPageConfig);
+          break;
+        case Pages.SipMandateView:
+          _addPageData(const SipMandateView(), SipMandatePageConfig);
+          break;
         default:
           break;
       }

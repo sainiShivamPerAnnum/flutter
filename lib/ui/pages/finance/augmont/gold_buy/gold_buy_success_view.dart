@@ -657,7 +657,7 @@ class AutopaySetupWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Selector<SubService, AllSubscriptionModel?>(
+    return Selector<SubService, Subscriptions?>(
         selector: (_, subService) => subService.subscriptionData,
         builder: (context, subState, child) {
           if (subState != null) return Container();

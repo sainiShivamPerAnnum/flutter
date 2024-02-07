@@ -8,11 +8,14 @@ part of 'sip_amount_data.dart';
 
 SipAmountSelection _$SipAmountSelectionFromJson(Map<String, dynamic> json) =>
     SipAmountSelection(
-      title: json['title'] as String?,
-      options:
-          (json['options'] as List<dynamic>?)?.map((e) => e as String).toList(),
+      title: json['title'] as String? ?? '',
+      options: (json['options'] as List<dynamic>?)
+              ?.map((e) => e as String)
+              .toList() ??
+          const [],
       data: (json['data'] as Map<String, dynamic>?)?.map(
-        (k, e) =>
-            MapEntry(k, SipAmountDetails.fromJson(e as Map<String, dynamic>)),
-      ),
+            (k, e) => MapEntry(
+                k, SipAmountDetails.fromJson(e as Map<String, dynamic>)),
+          ) ??
+          const {},
     );

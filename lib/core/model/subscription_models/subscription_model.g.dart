@@ -20,6 +20,12 @@ SubscriptionModel _$SubscriptionModelFromJson(Map<String, dynamic> json) =>
                   $enumDecodeNullable(_$AutosaveStateEnumMap, v,
                       unknownValue: AutosaveState.IDLE) ??
                   AutosaveState.IDLE),
+          assetType: $checkedConvert(
+              'assetType',
+              (v) =>
+                  $enumDecodeNullable(_$SIPAssetTypesEnumMap, v,
+                      unknownValue: SIPAssetTypes.UNKNOWN) ??
+                  SIPAssetTypes.UNKNOWN),
           amount: $checkedConvert('amount', (v) => v as num? ?? 0),
           frequency: $checkedConvert('frequency', (v) => v as String? ?? ''),
           aUGGOLD99: $checkedConvert('AUGGOLD99', (v) => v as num? ?? 0),
@@ -40,4 +46,13 @@ const _$AutosaveStateEnumMap = {
   AutosaveState.PAUSE_FROM_APP_FOREVER: 'PAUSE_FROM_APP_FOREVER',
   AutosaveState.PAUSE_FROM_PSP: 'PAUSE_FROM_PSP',
   AutosaveState.CANCELLED: 'CANCELLED',
+};
+
+const _$SIPAssetTypesEnumMap = {
+  SIPAssetTypes.UNI_FLEXI: 'UNI_FLEXI',
+  SIPAssetTypes.UNI_FIXED_3: 'UNI_FIXED_3',
+  SIPAssetTypes.UNI_FIXED_6: 'UNI_FIXED_6',
+  SIPAssetTypes.AUGGOLD99: 'AUGGOLD99',
+  SIPAssetTypes.BOTH: 'BOTH',
+  SIPAssetTypes.UNKNOWN: 'UNKNOWN',
 };
