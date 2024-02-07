@@ -294,7 +294,6 @@ class SubService extends ChangeNotifier {
     final res = await _subscriptionRepo.updateSubscription(
         freq: freq, id: id, amount: amount);
     if (res.isSuccess()) {
-      await getSubscription();
       return true;
     } else {
       BaseUtil.showNegativeAlert(res.errorMessage, "Please try again");
@@ -310,10 +309,7 @@ class SubService extends ChangeNotifier {
         await _subscriptionRepo.pauseSubscription(option: option, id: id);
     isPauseOrResuming = false;
     if (res.isSuccess()) {
-      await getSubscription();
       BaseUtil.showPositiveAlert(locale.pauseSuccess, locale.pauseSuccessSub);
-      await AppState.backButtonDispatcher!.didPopRoute();
-
       return true;
     } else {
       BaseUtil.showNegativeAlert(res.errorMessage, locale.tryAgain);
@@ -327,7 +323,8 @@ class SubService extends ChangeNotifier {
     final res = await _subscriptionRepo.resumeSubscription(id);
     isPauseOrResuming = false;
     if (res.isSuccess()) {
-      await getSubscription();
+      BaseUtil.showPositiveAlert(
+          "SIP resumed successfully", "For more details check SIP section");
       return true;
     } else {
       BaseUtil.showNegativeAlert(res.errorMessage, "Please try again");

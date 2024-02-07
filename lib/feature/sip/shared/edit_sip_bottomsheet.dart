@@ -127,6 +127,7 @@ class _EditSipBottomSheetState extends State<EditSipBottomSheet> {
                         : await widget.model.pause(widget.index);
                     setState(() {
                       _isLoading = false;
+                      // widget.model.getData();
                     });
                   },
                   child: Column(children: [

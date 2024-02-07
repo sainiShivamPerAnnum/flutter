@@ -13,6 +13,7 @@ import 'package:felloapp/feature/sip/ui/sip_setup/sip_amount_view.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/modalsheets/pause_autosave_modalsheet.dart';
+import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -23,6 +24,7 @@ part 'autosave_state.dart';
 
 class SipCubit extends Cubit<SipState> {
   SipCubit() : super(const LoadingSipData());
+  final CustomLogger logger = locator<CustomLogger>();
   final _subService = locator<SubService>();
   final AnalyticsService _analyticsService = locator<AnalyticsService>();
   final locale = locator<S>();
@@ -97,19 +99,14 @@ class SipCubit extends Cubit<SipState> {
             "amount": subscription.amount,
           });
           bool response = await _subService.resumeSubscription(subscription.id);
-          if (!response) {
-            BaseUtil.showNegativeAlert(
-                "Failed to resume SIP", "Please try again");
-          } else {
-            BaseUtil.showPositiveAlert("SIP resumed successfully",
-                "For more details check SIP section");
+          if (response) {
             await getData();
             await AppState.backButtonDispatcher!.didPopRoute();
           }
         }
       }
     } catch (e) {
-      print('Error in pauseResume: $e');
+      logger.e('Error in Resume: $e');
     } finally {
       updatePauseResumeStatus(false);
     }
@@ -130,6 +127,7 @@ class SipCubit extends Cubit<SipState> {
             "amount": subscription.amount,
           });
 
+          await AppState.backButtonDispatcher!.didPopRoute();
           await BaseUtil.openModalBottomSheet(
             addToScreenStack: true,
             hapticVibrate: true,
@@ -143,15 +141,13 @@ class SipCubit extends Cubit<SipState> {
             content: PauseAutosaveModal(
               model: _subService,
               id: subscription.id,
+              getData: getData,
             ),
-          ).then((value) async {
-            await getData();
-            await AppState.backButtonDispatcher!.didPopRoute();
-          });
+          );
         }
       }
     } catch (e) {
-      print('Error in pauseResume: $e');
+      logger.e('Error in pause: $e');
     } finally {
       updatePauseResumeStatus(false);
     }

@@ -12,12 +12,10 @@ import 'package:flutter/material.dart';
 class PauseAutosaveModal extends StatefulWidget {
   final SubService? model;
   final String id;
+  final Function() getData;
 
-  const PauseAutosaveModal({
-    required this.id,
-    super.key,
-    this.model,
-  });
+  const PauseAutosaveModal(
+      {required this.id, super.key, this.model, required this.getData});
 
   @override
   State<PauseAutosaveModal> createState() => _PauseAutosaveModalState();
@@ -90,6 +88,7 @@ class _PauseAutosaveModalState extends State<PauseAutosaveModal> {
       splashColor: Colors.transparent,
       highlightColor: Colors.transparent,
       onTap: () async {
+        await AppState.backButtonDispatcher!.didPopRoute();
         await BaseUtil.openDialog(
           addToScreenStack: true,
           isBarrierDismissible: false,
@@ -104,6 +103,8 @@ class _PauseAutosaveModalState extends State<PauseAutosaveModal> {
             buttonText: locale.btnYes,
             confirmAction: () async {
               await widget.model!.pauseSubscription(option, widget.id);
+              await widget.getData();
+              await AppState.backButtonDispatcher!.didPopRoute();
             },
           ),
         );

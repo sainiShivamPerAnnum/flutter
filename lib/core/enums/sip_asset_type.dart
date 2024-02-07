@@ -11,4 +11,5 @@ enum SIPAssetTypes {
       this == SIPAssetTypes.UNI_FIXED_3 ||
       this == SIPAssetTypes.UNI_FIXED_6;
   bool get isAugGold => this == SIPAssetTypes.AUGGOLD99;
+  bool get isCombined => this == SIPAssetTypes.BOTH;
 }
