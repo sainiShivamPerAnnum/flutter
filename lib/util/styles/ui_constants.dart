@@ -268,3 +268,9 @@ extension ColorExtension on String {
     return null;
   }
 }
+
+extension StringEnhancements on String {
+  String get capitalizeFirst {
+    return this[0].toUpperCase() + this.substring(1).toLowerCase();
+  }
+}
