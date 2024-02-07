@@ -140,9 +140,7 @@ class PaymentRepository extends BaseRepo {
   }
 
   Future<ApiResponse<GoldProInvestmentResponseModel>> investInGoldPro(
-    double leaseQty,
-    String schemeId,
-  ) async {
+      double leaseQty, String schemeId, bool isAutoLeaseChecked) async {
     try {
       final response = await APIService.instance.postData(
         ApiPath.Fd,
@@ -151,6 +149,7 @@ class PaymentRepository extends BaseRepo {
           "quantity": leaseQty,
           "schemeId": schemeId,
           "uid": userService.baseUser!.uid,
+          "autoRenewFlag": isAutoLeaseChecked
         },
         apiName: '$_payments/fd',
       );

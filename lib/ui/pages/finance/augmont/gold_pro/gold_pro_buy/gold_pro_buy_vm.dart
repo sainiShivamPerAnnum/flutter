@@ -71,6 +71,7 @@ class GoldProBuyViewModel extends BaseViewModel
   double _totalGoldAmount = 0;
   bool _isGoldRateFetching = true;
   bool _isChecked = false;
+  bool _isAutoLeaseChecked = true;
   AugmontRates? goldRates;
 
   List<GoldProChoiceChipsModel> chipsList = [
@@ -196,9 +197,15 @@ class GoldProBuyViewModel extends BaseViewModel
   }
 
   bool get isChecked => _isChecked;
+  bool get isAutoLeaseChecked => _isAutoLeaseChecked;
 
   set isChecked(bool value) {
     _isChecked = value;
+    notifyListeners();
+  }
+
+  set isAutoLeaseChecked(bool value) {
+    _isAutoLeaseChecked = value;
     notifyListeners();
   }
 
@@ -265,17 +272,15 @@ class GoldProBuyViewModel extends BaseViewModel
       return;
     }
     AppState.isGoldProBuyInProgress = false;
-    locator<AnalyticsService>().track(
-      eventName: AnalyticsEvents.goldProFinalSaveTapped,
-      properties: {
-        "grams to add": additionalGoldBalance,
-        "amount to add": totalGoldAmount,
-        "total lease value": totalGoldBalance,
-        "current gold balance": currentGoldBalance,
-        "expected returns": expectedGoldReturns,
-        "returns percentage": 15.5
-      },
-    );
+    locator<AnalyticsService>()
+        .track(eventName: AnalyticsEvents.goldProFinalSaveTapped, properties: {
+      "grams to add": additionalGoldBalance,
+      "amount to add": totalGoldAmount,
+      "total lease value": totalGoldBalance,
+      "current gold balance": currentGoldBalance,
+      "expected returns": expectedGoldReturns,
+      "returns percentage": 15.5
+    });
     if (additionalGoldBalance == 0) {
       await _initiateLease();
     } else {
@@ -285,18 +290,18 @@ class GoldProBuyViewModel extends BaseViewModel
 
   Future<void> _initiateBuyAndLease() async {
     await _txnService.initiateAugmontTransaction(
-      details: GoldPurchaseDetails(
-        goldBuyAmount: totalGoldAmount,
-        goldRates: goldRates,
-        couponCode: '',
-        skipMl: false,
-        goldInGrams: additionalGoldBalance,
-        leaseQty: totalGoldBalance,
-        isPro: true,
-        upiChoice: selectedUpiApplication,
-        isIntentFlow: assetOptionsModel!.data.intent,
-      ),
-    );
+        details: GoldPurchaseDetails(
+          goldBuyAmount: totalGoldAmount,
+          goldRates: goldRates,
+          couponCode: '',
+          skipMl: false,
+          goldInGrams: additionalGoldBalance,
+          leaseQty: totalGoldBalance,
+          isPro: true,
+          upiChoice: selectedUpiApplication,
+          isIntentFlow: assetOptionsModel!.data.intent,
+        ),
+        isAutoLeaseChecked: isAutoLeaseChecked);
   }
 
   GoldProInvestmentResponseModel? _leaseModel;
@@ -316,7 +321,7 @@ class GoldProBuyViewModel extends BaseViewModel
     );
     _txnService.currentTxnAmount = 0;
     final res = await _paymentRepo.investInGoldPro(
-        totalGoldBalance, _txnService.goldProScheme!.id);
+        totalGoldBalance, _txnService.goldProScheme!.id, isAutoLeaseChecked);
     if (res.isSuccess()) {
       _leaseModel = res.model;
       _txnService.currentTransactionState = TransactionState.success;

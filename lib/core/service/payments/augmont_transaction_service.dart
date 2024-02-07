@@ -83,18 +83,18 @@ class AugmontTransactionService extends BaseTransactionService
     notifyListeners();
   }
 
-  Future<void> initiateAugmontTransaction({
-    required GoldPurchaseDetails details,
-  }) async {
+  Future<void> initiateAugmontTransaction(
+      {required GoldPurchaseDetails details, bool? isAutoLeaseChecked}) async {
     currentGoldPurchaseDetails = details;
     currentTxnAmount = details.goldBuyAmount;
 
     if ((currentTxnAmount ?? 0) >= Constants.mandatoryNetBankingThreshold) {
-      return await processNBTransaction();
+      return await processNBTransaction(isAutoLeaseChecked: isAutoLeaseChecked);
     }
 
     if (details.isIntentFlow && details.upiChoice != null) {
-      return await processUpiTransaction();
+      return await processUpiTransaction(
+          isAutoLeaseChecked: isAutoLeaseChecked);
     }
 
     if (!details.isIntentFlow) {
@@ -104,7 +104,7 @@ class AugmontTransactionService extends BaseTransactionService
 
   //6 -- UPI
   @override
-  Future<void> processUpiTransaction() async {
+  Future<void> processUpiTransaction({bool? isAutoLeaseChecked}) async {
     isGoldBuyInProgress = true;
     AppState.blockNavigation();
 
@@ -140,6 +140,7 @@ class AugmontTransactionService extends BaseTransactionService
       InvestmentType.AUGGOLD99,
       currentGoldPurchaseDetails.upiChoice!.upiApplication.appName
           .formatUpiAppName(),
+      isAutoLeaseChecked,
       augProMap,
     );
     if (txnResponse.isSuccess()) {
@@ -203,7 +204,7 @@ class AugmontTransactionService extends BaseTransactionService
   }
 
   @override
-  Future<void> processNBTransaction() async {
+  Future<void> processNBTransaction({bool? isAutoLeaseChecked}) async {
     isGoldBuyInProgress = true;
     AppState.blockNavigation();
 
@@ -240,6 +241,8 @@ class AugmontTransactionService extends BaseTransactionService
       '',
       InvestmentType.AUGGOLD99,
       null, //app use
+
+      isAutoLeaseChecked,
       augProMap,
       'NET_BANKING', // pay-mode
     );
