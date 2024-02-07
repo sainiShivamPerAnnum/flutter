@@ -25,6 +25,8 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../gold_pro_buy_components/gold_pro_info_row.dart';
+
 class GoldProBuyOverView extends StatelessWidget {
   const GoldProBuyOverView({
     required this.model,
@@ -48,7 +50,7 @@ class GoldProBuyOverView extends StatelessWidget {
       content: GoldProBreakdownView(
         model: model,
         showBreakDown: showBreakDown,
-        showPaymentOption: showPsp,
+        showPaymentOption: true, //! change this back to var value
         isBreakDown: isBreakDown,
         onSave: () => _onPressed(amt),
       ),
@@ -269,6 +271,28 @@ class GoldProBuyOverView extends StatelessWidget {
               ),
               PriceAdaptiveGoldProOverViewCard(model: model),
               const GoldProLeaseCompanyDetailsStrip(),
+              SizedBox(height: SizeConfig.padding14),
+              InfoRow(
+                text: "Auto Lease ",
+                child: Checkbox(
+                  checkColor: UiConstants.teal3,
+                  // side: MaterialStateBorderSide.resolveWith(
+                  //   (states) => BorderSide(
+                  //       width: 1.0,
+                  //       color: model.isAutoLeaseChecked
+                  //           ? UiConstants.kTextColor
+                  //           : Colors.transparent),
+                  // ),
+                  // activeColor: UiConstants.kProfileBorderColor,
+                  fillColor: MaterialStateProperty.all(
+                      UiConstants.kProfileBorderColor),
+                  value: model.isAutoLeaseChecked,
+                  onChanged: (newValue) {
+                    print("newValue:- $newValue");
+                    model.isAutoLeaseChecked = newValue!;
+                  },
+                ),
+              ),
             ],
           ),
         ),
