@@ -118,6 +118,7 @@ const String SipEntryPageViewPath = "/sipintro";
 const String SipAssetsSelectViewPath = "/sipassets";
 const String SipFormPageViewPath = "/sipform";
 const String SipStatusPage = '/sip/status';
+const String SipMandateViewPath = '/sip/mandateView';
 
 enum Pages {
   Splash,
@@ -230,6 +231,7 @@ enum Pages {
   SipAssetSelectView,
   SipFormView,
   SipStatusView,
+  SipMandateView
 }
 
 class PageConfiguration {
@@ -933,4 +935,10 @@ PageConfiguration SipPollingPageConfig = PageConfiguration(
   path: SipStatusPage,
   uiPage: Pages.SipStatusView,
   name: 'Sip polling page config',
+);
+PageConfiguration SipMandatePageConfig = PageConfiguration(
+  key: 'SipMandateViewPath',
+  path: SipMandateViewPath,
+  uiPage: Pages.SipMandateView,
+  name: 'Sip madate page config',
 );

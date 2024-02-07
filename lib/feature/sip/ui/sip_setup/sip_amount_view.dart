@@ -1,12 +1,15 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
+import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/sip_asset_type.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/feature/sip/cubit/sip_data_holder.dart';
 import 'package:felloapp/feature/sip/cubit/sip_form_cubit.dart';
+import 'package:felloapp/feature/sip/mandate_page/view/mandate_view.dart';
 import 'package:felloapp/feature/sip/shared/interestCalculator.dart';
 import 'package:felloapp/feature/sip/shared/tab_slider.dart';
 import 'package:felloapp/navigator/app_state.dart';
+import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -376,16 +379,12 @@ class _FooterState extends State<_Footer> {
                                   freq: widget.frequency,
                                   assetType: widget.sipAssetType);
                             } else {
-                              ///TODO @Hirdesh2101
-                              // AppState.delegate!.appState
-                              //                       .currentAction = PageAction(
-                              //                     page: SipAssetSelectPageConfig,
-                              //                     widget: SipAssetSelectView(
-                              //                       isMandateAvailable: state
-                              //                           .activeSubscription.isActive,
-                              //                     ),
-                              //                     state: PageState.addWidget,
-                              //                   );
+                              AppState.delegate!.appState.currentAction =
+                                  PageAction(
+                                page: SipMandatePageConfig,
+                                widget: const SipMandateView(),
+                                state: PageState.addWidget,
+                              );
                             }
                           }
                         }

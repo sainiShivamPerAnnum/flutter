@@ -17,6 +17,7 @@ import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/feature/fello_badges/ui/fello_badges_home.dart';
 import 'package:felloapp/feature/flo_withdrawals/ui/balloon_lottie_screen.dart';
 import 'package:felloapp/feature/referrals/ui/referral_home.dart';
+import 'package:felloapp/feature/sip/mandate_page/view/mandate_view.dart';
 import 'package:felloapp/feature/sip/ui/sip_setup/sip_amount_view.dart';
 import 'package:felloapp/feature/sip/ui/sip_setup/sip_intro.dart';
 import 'package:felloapp/feature/sip/ui/sip_setup/sip_select_assset.dart';
@@ -400,7 +401,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
               ),
               SipFormPageConfig);
           break;
-
+        case Pages.SipMandateView:
+          _addPageData(const SipMandateView(), SipMandatePageConfig);
+          break;
         default:
           break;
       }
