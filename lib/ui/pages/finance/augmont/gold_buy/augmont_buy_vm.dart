@@ -644,7 +644,7 @@ class GoldBuyViewModel extends BaseViewModel
 
     if (couponsRes.code == 200 &&
         couponsRes.model != null &&
-        (couponsRes.model?.length ?? 0) > 1) {
+        (couponsRes.model?.length ?? 0) >= 1) {
       couponList = couponsRes.model;
       if (couponList![0].priority == 1) focusCoupon = couponList![0];
       showCoupons = true;
