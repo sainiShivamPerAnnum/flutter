@@ -5012,10 +5012,10 @@ class S {
     );
   }
 
-  /// `Pause Autosave`
+  /// `Pause SIP for`
   String get pauseAutoSave {
     return Intl.message(
-      'Pause Autosave',
+      'Pause SIP for',
       name: 'pauseAutoSave',
       desc: '',
       args: [],
@@ -8871,6 +8871,556 @@ class S {
     return Intl.message(
       'Now lets start your rewarding savings journey by selecting your asset over here',
       name: 'tutorial6',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Scratch Card`
+  String get scratchCardsSip {
+    return Intl.message(
+      'Scratch Card',
+      name: 'scratchCardsSip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tickets {count}`
+  String sipTickets(num count) {
+    return Intl.message(
+      'Tickets $count',
+      name: 'sipTickets',
+      desc: '',
+      args: [count],
+    );
+  }
+
+  /// `SIP amount`
+  String get sipamount {
+    return Intl.message(
+      'SIP amount',
+      name: 'sipamount',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `SIP with Fello`
+  String get siptitle {
+    return Intl.message(
+      'SIP with Fello',
+      name: 'siptitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Select SIP amount`
+  String get selectSipAmount {
+    return Intl.message(
+      'Select SIP amount',
+      name: 'selectSipAmount',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Minimum amount - ₹{amount}`
+  String minSipAmount(double amount) {
+    return Intl.message(
+      'Minimum amount - ₹$amount',
+      name: 'minSipAmount',
+      desc: '',
+      args: [amount],
+    );
+  }
+
+  /// `Maximum amount - ₹{amount}`
+  String maxSipAmount(double amount) {
+    return Intl.message(
+      'Maximum amount - ₹$amount',
+      name: 'maxSipAmount',
+      desc: '',
+      args: [amount],
+    );
+  }
+
+  /// `Expected Returns in 5Y`
+  String get expectedReturns5y {
+    return Intl.message(
+      'Expected Returns in 5Y',
+      name: 'expectedReturns5y',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `with Fello SIP`
+  String get returnSubText {
+    return Intl.message(
+      'with Fello SIP',
+      name: 'returnSubText',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `with {percentage}% returns`
+  String percentageReturns(num percentage) {
+    return Intl.message(
+      'with $percentage% returns',
+      name: 'percentageReturns',
+      desc: '',
+      args: [percentage],
+    );
+  }
+
+  /// `Your SIP amount will be deducted fro your existing mandate . No new mandate will be created for this SIP`
+  String get existingMandate {
+    return Intl.message(
+      'Your SIP amount will be deducted fro your existing mandate . No new mandate will be created for this SIP',
+      name: 'existingMandate',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You will receive a mandate for ₹5000 on the selected UPI App. But don’t worry, We will not deduct anymore than ₹1100/week.`
+  String get newMandate {
+    return Intl.message(
+      'You will receive a mandate for ₹5000 on the selected UPI App. But don’t worry, We will not deduct anymore than ₹1100/week.',
+      name: 'newMandate',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `UPDATE SIP`
+  String get updateSip {
+    return Intl.message(
+      'UPDATE SIP',
+      name: 'updateSip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `1 CLICKS AWAY`
+  String get oneClickAway {
+    return Intl.message(
+      '1 CLICKS AWAY',
+      name: 'oneClickAway',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `2 CLICKS AWAY`
+  String get twoClickAway {
+    return Intl.message(
+      '2 CLICKS AWAY',
+      name: 'twoClickAway',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Save Weekly / Monthly  automatically & `
+  String get sipIntroTitle {
+    return Intl.message(
+      'Save Weekly / Monthly  automatically & ',
+      name: 'sipIntroTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Grow money on autopilot`
+  String get sipIntroSubTitle {
+    return Intl.message(
+      'Grow money on autopilot',
+      name: 'sipIntroSubTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `START SIP`
+  String get startSip {
+    return Intl.message(
+      'START SIP',
+      name: 'startSip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `8000+ users have started SIP`
+  String get sipCustomers {
+    return Intl.message(
+      '8000+ users have started SIP',
+      name: 'sipCustomers',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your Existing SIP`
+  String get existingSip {
+    return Intl.message(
+      'Your Existing SIP',
+      name: 'existingSip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Digital Gold & P2P SIP`
+  String get bothassetSip {
+    return Intl.message(
+      'Digital Gold & P2P SIP',
+      name: 'bothassetSip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Fello P2P SIP`
+  String get floSip {
+    return Intl.message(
+      'Fello P2P SIP',
+      name: 'floSip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Digital Gold SIP`
+  String get goldSip {
+    return Intl.message(
+      'Digital Gold SIP',
+      name: 'goldSip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Paused SIP`
+  String get pauseSip {
+    return Intl.message(
+      'Paused SIP',
+      name: 'pauseSip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Edit SIP`
+  String get editSip {
+    return Intl.message(
+      'Edit SIP',
+      name: 'editSip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Click on card to Resume SIP`
+  String get clickToresumeSip {
+    return Intl.message(
+      'Click on card to Resume SIP',
+      name: 'clickToresumeSip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `SIP Calculator`
+  String get SipCalculator {
+    return Intl.message(
+      'SIP Calculator',
+      name: 'SipCalculator',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Calculate your SIP returns`
+  String get returnsCalculator {
+    return Intl.message(
+      'Calculate your SIP returns',
+      name: 'returnsCalculator',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `SIP Amount -`
+  String get sipAmount {
+    return Intl.message(
+      'SIP Amount -',
+      name: 'sipAmount',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Time Period`
+  String get timePeriod {
+    return Intl.message(
+      'Time Period',
+      name: 'timePeriod',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Return Percentage`
+  String get rpSip {
+    return Intl.message(
+      'Return Percentage',
+      name: 'rpSip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your Money in {timePeriod} Years-`
+  String yourMoneySip(int timePeriod) {
+    return Intl.message(
+      'Your Money in $timePeriod Years-',
+      name: 'yourMoneySip',
+      desc: '',
+      args: [timePeriod],
+    );
+  }
+
+  /// `With a daily SIP you can save for an Iphone in a year`
+  String get sipForIphone {
+    return Intl.message(
+      'With a daily SIP you can save for an Iphone in a year',
+      name: 'sipForIphone',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `With a monthly SIP You can save enough for a Car in a year`
+  String get sipForCar {
+    return Intl.message(
+      'With a monthly SIP You can save enough for a Car in a year',
+      name: 'sipForCar',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `With a weekly SIP You can save enough for a Goa trip in a year`
+  String get sipForTrip {
+    return Intl.message(
+      'With a weekly SIP You can save enough for a Goa trip in a year',
+      name: 'sipForTrip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `SIP for an Iphone`
+  String get SipIphoneTitle {
+    return Intl.message(
+      'SIP for an Iphone',
+      name: 'SipIphoneTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `SIP For a Car`
+  String get SipCarTitle {
+    return Intl.message(
+      'SIP For a Car',
+      name: 'SipCarTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `SIP for a trip`
+  String get SipTripTitle {
+    return Intl.message(
+      'SIP for a trip',
+      name: 'SipTripTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Select Asset`
+  String get selectAsset {
+    return Intl.message(
+      'Select Asset',
+      name: 'selectAsset',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `3 CLICKS AWAY`
+  String get threeClicksAway {
+    return Intl.message(
+      '3 CLICKS AWAY',
+      name: 'threeClicksAway',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `COMING SOON`
+  String get comingSoon {
+    return Intl.message(
+      'COMING SOON',
+      name: 'comingSoon',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Edit SIP Options`
+  String get editSipOptions {
+    return Intl.message(
+      'Edit SIP Options',
+      name: 'editSipOptions',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Edit SIP`
+  String get editSipbtn {
+    return Intl.message(
+      'Edit SIP',
+      name: 'editSipbtn',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Resume SIP`
+  String get resumeSipbtn {
+    return Intl.message(
+      'Resume SIP',
+      name: 'resumeSipbtn',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Pause SIP`
+  String get pauseSipbtn {
+    return Intl.message(
+      'Pause SIP',
+      name: 'pauseSipbtn',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `You can earn upto ₹{returns} in 5 years from this SIP`
+  String sipReturn(String returns) {
+    return Intl.message(
+      'You can earn upto ₹$returns in 5 years from this SIP',
+      name: 'sipReturn',
+      desc: '',
+      args: [returns],
+    );
+  }
+
+  /// `Setup SIP`
+  String get setupSip {
+    return Intl.message(
+      'Setup SIP',
+      name: 'setupSip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Start your SIP & Grow money on autopilot`
+  String get setupCardTitle {
+    return Intl.message(
+      'Start your SIP & Grow money on autopilot',
+      name: 'setupCardTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Invest in Fello Flo or Digital Gold to meet your financial Goals`
+  String get setupCardSubTitle {
+    return Intl.message(
+      'Invest in Fello Flo or Digital Gold to meet your financial Goals',
+      name: 'setupCardSubTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Year`
+  String get sipYear {
+    return Intl.message(
+      'Year',
+      name: 'sipYear',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `SIP paused successfully`
+  String get pauseSuccess {
+    return Intl.message(
+      'SIP paused successfully',
+      name: 'pauseSuccess',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `For more details check SIP section`
+  String get pauseSuccessSub {
+    return Intl.message(
+      'For more details check SIP section',
+      name: 'pauseSuccessSub',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Failed to pause SIP`
+  String get pauseFail {
+    return Intl.message(
+      'Failed to pause SIP',
+      name: 'pauseFail',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Please try again`
+  String get tryAgain {
+    return Intl.message(
+      'Please try again',
+      name: 'tryAgain',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Error Loading SIP data. Try Again Later!`
+  String get errorLoadingSip {
+    return Intl.message(
+      'Error Loading SIP data. Try Again Later!',
+      name: 'errorLoadingSip',
       desc: '',
       args: [],
     );

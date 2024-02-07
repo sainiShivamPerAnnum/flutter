@@ -114,7 +114,11 @@ const String GoldProTxnsDetailsViewPath = "goldProTxnsDetailsView";
 const String TicketsIntroViewPath = "/ticketsIntroViewPath";
 const String TicketsTutorialViewPath = "/ticketsTutorialViewPath";
 
-const String SipPageViewPath = "/sip";
+const String SipEntryPageViewPath = "/sipintro";
+const String SipAssetsSelectViewPath = "/sipassets";
+const String SipFormPageViewPath = "/sipform";
+const String SipStatusPage = '/sip/status';
+const String SipMandateViewPath = '/sip/mandateView';
 
 enum Pages {
   Splash,
@@ -224,6 +228,10 @@ enum Pages {
 
   // SIP
   SipEntryView,
+  SipAssetSelectView,
+  SipFormView,
+  SipStatusView,
+  SipMandateView
 }
 
 class PageConfiguration {
@@ -896,11 +904,23 @@ PageConfiguration FelloBadgeHomeViewPageConfig = PageConfiguration(
   name: "Fello Badge Home View Screen",
 );
 
-PageConfiguration SipPageConfig = PageConfiguration(
-  key: 'SipEntryViewPath',
-  path: SipPageViewPath,
+PageConfiguration SipIntroPageConfig = PageConfiguration(
+  key: 'SipEntryPageViewPath',
+  path: SipEntryPageViewPath,
   uiPage: Pages.SipEntryView,
   name: 'Sip Entry View',
+);
+PageConfiguration SipAssetSelectPageConfig = PageConfiguration(
+  key: 'SipAssetsSelectViewPath',
+  path: SipAssetsSelectViewPath,
+  uiPage: Pages.SipAssetSelectView,
+  name: 'Sip Asset Select View',
+);
+PageConfiguration SipFormPageConfig = PageConfiguration(
+  key: 'SipFormPageViewPath',
+  path: SipFormPageViewPath,
+  uiPage: Pages.SipFormView,
+  name: 'Sip Amount Form View',
 );
 
 PageConfiguration StoriesPageConfig = PageConfiguration(
@@ -908,4 +928,17 @@ PageConfiguration StoriesPageConfig = PageConfiguration(
   path: StoriesPath,
   uiPage: Pages.Stories,
   name: "New user stories",
+);
+
+PageConfiguration SipPollingPageConfig = PageConfiguration(
+  key: 'SipStatusViewPath',
+  path: SipStatusPage,
+  uiPage: Pages.SipStatusView,
+  name: 'Sip polling page config',
+);
+PageConfiguration SipMandatePageConfig = PageConfiguration(
+  key: 'SipMandateViewPath',
+  path: SipMandateViewPath,
+  uiPage: Pages.SipMandateView,
+  name: 'Sip madate page config',
 );

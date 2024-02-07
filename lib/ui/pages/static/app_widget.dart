@@ -961,12 +961,14 @@ class SecondaryButton extends StatelessWidget {
     required this.onPressed,
     required this.label,
     this.disabled = false,
+    this.child,
     super.key,
   });
 
   final VoidCallback onPressed;
   final String label;
   final bool disabled;
+  final Widget? child;
 
   void _onTap() {
     onPressed();
@@ -983,12 +985,13 @@ class SecondaryButton extends StatelessWidget {
       minWidth: SizeConfig.screenWidth! - SizeConfig.pageHorizontalMargins * 2,
       color: disabled ? Colors.white54 : Colors.white,
       onPressed: _onTap,
-      child: Text(
-        label,
-        style: TextStyles.rajdhaniB.body1.colour(
-          Colors.black,
-        ),
-      ),
+      child: child ??
+          Text(
+            label,
+            style: TextStyles.rajdhaniB.body1.colour(
+              Colors.black,
+            ),
+          ),
     );
   }
 }

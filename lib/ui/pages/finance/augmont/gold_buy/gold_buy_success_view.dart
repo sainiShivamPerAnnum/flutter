@@ -4,7 +4,7 @@ import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
-import 'package:felloapp/core/model/subscription_models/subscription_model.dart';
+import 'package:felloapp/core/model/subscription_models/all_subscription_model.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/payments/augmont_transaction_service.dart';
@@ -657,7 +657,7 @@ class AutopaySetupWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Selector<SubService, SubscriptionModel?>(
+    return Selector<SubService, Subscriptions?>(
         selector: (_, subService) => subService.subscriptionData,
         builder: (context, subState, child) {
           if (subState != null) return Container();
@@ -680,7 +680,7 @@ class AutopaySetupWidget extends StatelessWidget {
                 const Spacer(),
                 TextButton(
                   onPressed: () {
-                    locator<SubService>().handleTap();
+                    // locator<SubService>().handleTap();
                   },
                   child: Text(
                     "Setup Autopay".toUpperCase(),

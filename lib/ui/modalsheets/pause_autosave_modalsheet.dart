@@ -2,8 +2,8 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
-import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -11,8 +11,11 @@ import 'package:flutter/material.dart';
 
 class PauseAutosaveModal extends StatefulWidget {
   final SubService? model;
+  final String id;
+  final Function() getData;
 
-  const PauseAutosaveModal({Key? key, this.model}) : super(key: key);
+  const PauseAutosaveModal(
+      {required this.id, super.key, this.model, required this.getData});
 
   @override
   State<PauseAutosaveModal> createState() => _PauseAutosaveModalState();
@@ -21,45 +24,35 @@ class PauseAutosaveModal extends StatefulWidget {
 class _PauseAutosaveModalState extends State<PauseAutosaveModal> {
   AutosavePauseOption? pauseValue;
   int pauseInt = 0;
-  setPauseValue(AutosavePauseOption value, int val) {
-    setState(() {
-      pauseValue = value;
-      pauseInt = val;
-    });
-  }
 
   bool isPausing = false;
 
   @override
   Widget build(BuildContext context) {
-    S locale = S.of(context);
+    S locale = locator<S>();
     return Container(
       padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
       child: Wrap(
-        //shrinkWrap: true,
-        // mainAxisSize: MainAxisSize.min,
-        // crossAxisAlignment: CrossAxisAlignment.start,
         children: [
-          Row(
-            children: [
-              Text(locale.pauseAutoSave, style: TextStyles.rajdhaniB.title3),
-              const Spacer(),
-              CircleAvatar(
-                backgroundColor: Colors.transparent,
-                child: IconButton(
-                  onPressed: () {
-                    AppState.backButtonDispatcher!.didPopRoute();
-                  },
-                  icon: Icon(
-                    Icons.close,
-                    size: SizeConfig.iconSize1,
-                    color: Colors.white,
-                  ),
-                ),
-              ),
-            ],
+          SizedBox(
+            height: SizeConfig.padding14,
           ),
-          SizedBox(height: SizeConfig.padding16),
+          Center(
+            child: Container(
+              decoration: BoxDecoration(
+                  borderRadius: BorderRadius.circular(10),
+                  color: UiConstants.kProfileBorderColor.withOpacity(0.4)),
+              height: 5,
+              width: 94,
+            ),
+          ),
+          SizedBox(
+            height: SizeConfig.padding22,
+          ),
+          Text(locale.pauseAutoSave, style: TextStyles.sourceSansSB.body1),
+          SizedBox(
+            height: SizeConfig.padding32,
+          ),
           pauseOptionTile(
             text: "1 Week",
             radioValue: 1,
@@ -80,94 +73,60 @@ class _PauseAutosaveModalState extends State<PauseAutosaveModal> {
             radioValue: 4,
             option: AutosavePauseOption.FOREVER,
           ),
-          Container(height: SizeConfig.padding16),
-          ReactivePositiveAppButton(
-            btnText: locale.btnPause.toUpperCase(),
-            // child:
-            // isPausing
-            //     ? SpinKitThreeBounce(
-            //         color: Colors.white,
-            //         size: SizeConfig.padding16,
-            //       )
-            //     : Text(
-            //         locale.btnPause.toUpperCase(),
-            //         style: TextStyles.rajdhaniB.body1.bold.colour(Colors.white),
-            //       ),
-            onPressed: () async {
-              if (pauseValue == null) {
-                return BaseUtil.showNegativeAlert("No duration selected",
-                    "Please select a duration to pause");
-              }
-              if (pauseValue == 3) {
-                BaseUtil.openDialog(
-                  addToScreenStack: true,
-                  isBarrierDismissible: false,
-                  hapticVibrate: true,
-                  content: ConfirmationDialog(
-                    title: locale.areYouSure,
-                    description: locale.loseAutoSave,
-                    cancelBtnText: locale.btnNo,
-                    cancelAction: () {
-                      AppState.backButtonDispatcher!.didPopRoute();
-                    },
-                    buttonText: locale.btnYes,
-                    confirmAction: () async {
-                      await widget.model!.pauseSubscription(pauseValue!);
-                      AppState.backButtonDispatcher!.didPopRoute();
-                    },
-                  ),
-                );
-              } else {
-                await widget.model!.pauseSubscription(pauseValue!);
-              }
-            },
-          ),
           SizedBox(height: SizeConfig.pageHorizontalMargins / 2),
         ],
       ),
     );
   }
 
-  pauseOptionTile(
+  Widget pauseOptionTile(
       {required String text,
       required int radioValue,
       required AutosavePauseOption option}) {
+    final locale = locator<S>();
     return InkWell(
       splashColor: Colors.transparent,
       highlightColor: Colors.transparent,
-      onTap: () {
-        setPauseValue(option, radioValue);
+      onTap: () async {
+        await AppState.backButtonDispatcher!.didPopRoute();
+        await BaseUtil.openDialog(
+          addToScreenStack: true,
+          isBarrierDismissible: false,
+          hapticVibrate: true,
+          content: ConfirmationDialog(
+            title: locale.areYouSure,
+            description: locale.loseAutoSave,
+            cancelBtnText: locale.btnNo,
+            cancelAction: () {
+              AppState.backButtonDispatcher!.didPopRoute();
+            },
+            buttonText: locale.btnYes,
+            confirmAction: () async {
+              await widget.model!.pauseSubscription(option, widget.id);
+              await widget.getData();
+              await AppState.backButtonDispatcher!.didPopRoute();
+            },
+          ),
+        );
       },
-      child: Container(
-        margin: EdgeInsets.symmetric(vertical: SizeConfig.padding8),
-        decoration: BoxDecoration(
-            border: Border.all(
-              width: pauseValue == radioValue ? 0.5 : 0,
-              color: pauseValue == radioValue
-                  ? UiConstants.primaryColor
-                  : UiConstants.kTextColor2,
-            ),
-            borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-            color: pauseValue == radioValue
-                ? UiConstants.kTealTextColor.withOpacity(0.1)
-                : Colors.transparent),
-        padding: EdgeInsets.symmetric(
-          vertical: SizeConfig.padding4,
-        ),
-        child: ListTile(
-          title: Text(
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          Divider(
+            thickness: 1,
+            color: UiConstants.kProfileBorderColor.withOpacity(0.2),
+          ),
+          SizedBox(
+            height: SizeConfig.padding10,
+          ),
+          Text(
             text,
             style: TextStyles.sourceSans.body2,
           ),
-          trailing: Radio(
-            value: radioValue,
-            groupValue: pauseInt,
-            onChanged: (dynamic value) {
-              setPauseValue(option, radioValue);
-            },
-            activeColor: UiConstants.primaryColor,
+          SizedBox(
+            height: SizeConfig.padding10,
           ),
-        ),
+        ],
       ),
     );
   }

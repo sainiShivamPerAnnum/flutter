@@ -1,18 +1,16 @@
 class ApiResponse<T> {
-  T? model;
-  String? errorMessage;
-  int? code;
+  final T? model;
+  final String? errorMessage;
+  final int? code;
 
-  ApiResponse({
+  const ApiResponse({
     this.model,
     this.errorMessage,
     this.code,
   });
 
-  ApiResponse.withError(String error, int code)
-      : model = null,
-        errorMessage = error,
-        code = code;
+  const ApiResponse.withError(String this.errorMessage, int this.code)
+      : model = null;
 
   bool isSuccess() {
     return code == 200;

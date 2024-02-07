@@ -1,7 +1,11 @@
 import 'package:felloapp/core/constants/apis_path_constants.dart';
+import 'package:felloapp/core/model/subscription_models/all_subscription_model.dart';
+import 'package:felloapp/core/model/subscription_models/create_subs_response.dart';
 import 'package:felloapp/core/model/subscription_models/subscription_model.dart';
+import 'package:felloapp/core/model/subscription_models/subscription_status_response.dart';
 import 'package:felloapp/core/model/subscription_models/subscription_transaction_model.dart';
 import 'package:felloapp/core/service/api_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/custom_logger.dart';
@@ -43,69 +47,97 @@ class SubscriptionRepo extends BaseRepo {
             SubscriptionTransactionModel.helper.fromMapArray(responseData);
         return ApiResponse(model: result, code: 200);
       }
-      return ApiResponse(model: [], code: 200);
+      return const ApiResponse(model: [], code: 200);
     } catch (e) {
       logger.e(e.toString());
       return ApiResponse.withError(e.toString(), 400);
     }
   }
 
-  Future<ApiResponse<String>> createSubscription({
+  Future<ApiResponse<CreateSubscriptionResponse>> createSubscription({
     required String freq,
-    required int amount,
-    required int lbAmt,
-    required int augAmt,
-    required String package,
+    required num amount,
+    required num lbAmt,
+    required num augAmt,
+    required String assetType, //TODO(@DK070202) enum if possible.
+    String? package,
   }) async {
     try {
-      Map<String, dynamic> _body = {
+      Map<String, dynamic> body = {
         "amount": amount,
         "lbAmt": lbAmt,
         "augAmt": augAmt,
         "frequency": freq,
-        "pspPackage": package,
+        "assetType": assetType, //TODO(@DK070202): remove this.
+        "pspPackage": 'com.phonepe.app.preprod', //TODO(@DK070202): remove this.
       };
 
-      if (package.toLowerCase().contains('phonepe')) {
+      if (package != null && package.toLowerCase().contains('phonepe')) {
         final res = await getPhonepeVersionCode();
-        if (res.isSuccess()) _body["version"] = res.model;
+        if (res.isSuccess()) body["version"] = res.model;
       }
 
       final response = await APIService.instance.postData(
-        ApiPath.subscription(userService.baseUser!.uid!),
-        body: _body,
+        ApiPath.createSubscription(userService.baseUser!.uid!),
+        body: body,
         cBaseUrl: baseUrl,
         apiName: '$_subscription/createSubscription',
       );
 
-      if (response['data'] != null) {
-        final responseData = response['data'];
-        if (responseData["intent"] != null) {
-          final responseIntent = responseData["intent"];
-          if ((responseIntent["redirectUrl"] ?? '').isNotEmpty) {
-            final responseRedirectUrl = responseIntent["redirectUrl"];
-            return ApiResponse(model: responseRedirectUrl, code: 200);
-          }
-        }
-      }
-      return ApiResponse.withError('No redirect url found', 400);
+      final res = CreateSubscriptionResponse.fromJson(
+        response,
+      );
+
+      return ApiResponse(
+        model: res,
+        code: 200,
+      );
     } catch (e) {
       _logger.e(e.toString());
       return ApiResponse.withError(e.toString(), 400);
     }
   }
 
-  /// TODO: Rremove this api as there will be array of object in new api.
-  ///
-  Future<ApiResponse<SubscriptionModel>> getSubscription() async {
+  Future<ApiResponse<SubscriptionStatusResponse>> getTransactionStatus(
+    String id,
+  ) async {
+    final uid = locator<UserService>().baseUser!.uid!;
+
     try {
       final response = await APIService.instance.getData(
-        ApiPath.subscription(userService.baseUser!.uid!),
+        ApiPath.getTransactionStatus(uid, id),
+        cBaseUrl: baseUrl,
+        apiName: '$_subscription/getTransactionStatus',
+      );
+
+      final res = SubscriptionStatusResponse.fromJson(
+        response,
+      );
+
+      return ApiResponse<SubscriptionStatusResponse>(
+        model: res,
+        code: 200,
+      );
+    } catch (e) {
+      _logger.e(e.toString());
+      return ApiResponse.withError(
+        e.toString(),
+        400, // client error.
+      );
+    }
+  }
+
+  /// TODO: Rremove this api as there will be array of object in new api.
+  ///
+  Future<ApiResponse<Subscriptions>> getSubscription() async {
+    try {
+      final response = await APIService.instance.getData(
+        ApiPath.subscription,
         cBaseUrl: baseUrl,
         apiName: _subscription,
       );
-      SubscriptionModel subscriptionModel =
-          SubscriptionModel.fromMap(response['data']['subscription']);
+      Subscriptions subscriptionModel =
+          Subscriptions.fromJson(response['data']);
       return ApiResponse(model: subscriptionModel, code: 200);
     } catch (e) {
       _logger.e(e.toString());
@@ -115,27 +147,25 @@ class SubscriptionRepo extends BaseRepo {
 
   Future<ApiResponse<SubscriptionModel>> updateSubscription({
     required String freq,
-    required int lbAmt,
-    required int augAmt,
+    required String id,
     required int amount,
   }) async {
     try {
-      Map<String, dynamic> _body = {
+      Map<String, dynamic> body = {
         "amount": amount,
-        "lbAmt": lbAmt,
-        "augAmt": augAmt,
+        "id": id,
         "frequency": freq,
       };
 
       final response = await APIService.instance.patchData(
-        ApiPath.subscription(userService.baseUser!.uid!),
-        body: _body,
+        ApiPath.updateSubscription(userService.baseUser!.uid!),
+        body: body,
         cBaseUrl: baseUrl,
         apiName: '$_subscription/updateSubscription',
       );
 
       SubscriptionModel subscriptionModel =
-          SubscriptionModel.fromMap(response['data']['subscription']);
+          SubscriptionModel.fromJson(response['data']['subscription']);
       return ApiResponse(model: subscriptionModel, code: 200);
     } catch (e) {
       _logger.e(e.toString());
@@ -153,28 +183,30 @@ class SubscriptionRepo extends BaseRepo {
     } catch (e) {
       debugPrint(e.toString());
       version = 0;
-      return ApiResponse.withError("Unable to get PhonePe version code", 400);
+      return const ApiResponse.withError(
+          "Unable to get PhonePe version code", 400);
     }
   }
 
   Future<ApiResponse<SubscriptionModel>> pauseSubscription({
     required AutosavePauseOption option,
+    required String id,
   }) async {
     try {
-      Map<String, dynamic> _body = {
-        "uid": userService.baseUser!.uid!,
+      Map<String, dynamic> body = {
+        "id": id,
         "frequency": option.name,
       };
 
       final response = await APIService.instance.postData(
         ApiPath.pauseSubscription,
-        body: _body,
+        body: body,
         cBaseUrl: baseUrl,
         apiName: '$_subscription/pauseSubscription',
       );
 
       SubscriptionModel subscriptionModel =
-          SubscriptionModel.fromMap(response['data']);
+          SubscriptionModel.fromJson(response['data']);
       return ApiResponse(model: subscriptionModel, code: 200);
     } catch (e) {
       _logger.e(e.toString());
@@ -182,21 +214,21 @@ class SubscriptionRepo extends BaseRepo {
     }
   }
 
-  Future<ApiResponse<SubscriptionModel>> resumeSubscription() async {
+  Future<ApiResponse<SubscriptionModel>> resumeSubscription(String id) async {
     try {
-      Map<String, dynamic> _body = {
-        "uid": userService.baseUser!.uid!,
+      Map<String, dynamic> body = {
+        "id": id,
       };
 
       final response = await APIService.instance.postData(
         ApiPath.resumeSubscription,
-        body: _body,
+        body: body,
         cBaseUrl: baseUrl,
         apiName: '$_subscription/resumeSubscription',
       );
 
       SubscriptionModel subscriptionModel =
-          SubscriptionModel.fromMap(response['data']);
+          SubscriptionModel.fromJson(response['data']);
       return ApiResponse(model: subscriptionModel, code: 200);
     } catch (e) {
       _logger.e(e.toString());

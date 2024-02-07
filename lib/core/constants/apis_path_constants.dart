@@ -194,9 +194,15 @@ class ApiPath {
   static String kDailyAppBonusEvent(String uid) => "/user/$uid/daily-bonus";
 
   //phonepe subscriptions
-  static String subscription(String uid) => "/$uid/sub";
+  static String subscription = "/subs";
+  static String subscriptionV3 = "/sub";
+  static String createSubscription(String uid) => '/$uid/sub';
   static const pauseSubscription = "/sub/pause";
   static const resumeSubscription = "/sub/resume";
+  static String updateSubscription(String uid) => "/$uid/sub";
+
+  static String getTransactionStatus(String uid, String id) =>
+      '/$uid/sub?id=$id';
 
   static String txnsSubscription(String uid) => "/$uid/sub/txns";
 

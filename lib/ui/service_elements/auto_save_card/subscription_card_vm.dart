@@ -153,12 +153,14 @@ class SubscriptionCardViewModel extends BaseViewModel {
   // }
 
   String getResumeDate() {
-    if (_subService.subscriptionData!.resumeDate != null) {
-      return DateFormat("dd MMM yyyy")
-          .format(_subService.subscriptionData!.resumeDate!.toDate());
-    } else {
-      return "Forever";
-    }
+    ///TODO(@Hirdesh2101)
+    // if (_subService.subscriptionData!.resumeDate != null) {
+    //   return DateFormat("dd MMM yyyy")
+    //       .format(_subService.subscriptionData!.resumeDate!.toDate());
+    // } else {
+    //   return "Forever";
+    // }
+    return "Forever";
   }
 
   getFreq(String? freq) {
@@ -220,20 +222,21 @@ class SubscriptionCardViewModel extends BaseViewModel {
     }
   }
 
+  ///TODO(@Hirdesh2101)
   navigateToAutoSave() {
-    if (_subService.subscriptionData != null &&
-        _subService.subscriptionData!.status != Constants.SUBSCRIPTION_INIT &&
-        _subService.subscriptionData!.status !=
-            Constants.SUBSCRIPTION_CANCELLED) {
-      AppState.delegate!.appState.currentAction = PageAction(
-        state: PageState.addPage,
-        page: AutosaveDetailsViewPageConfig,
-      );
-    } else {
-      AppState.delegate!.appState.currentAction = PageAction(
-        state: PageState.addPage,
-        page: AutosaveDetailsViewPageConfig,
-      );
-    }
+    // if (_subService.subscriptionData != null &&
+    //     _subService.subscriptionData!.status != Constants.SUBSCRIPTION_INIT &&
+    //     _subService.subscriptionData!.status !=
+    //         Constants.SUBSCRIPTION_CANCELLED) {
+    //   AppState.delegate!.appState.currentAction = PageAction(
+    //     state: PageState.addPage,
+    //     page: AutosaveDetailsViewPageConfig,
+    //   );
+    // } else {
+    //   AppState.delegate!.appState.currentAction = PageAction(
+    //     state: PageState.addPage,
+    //     page: AutosaveDetailsViewPageConfig,
+    //   );
+    // }
   }
 }

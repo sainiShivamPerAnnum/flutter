@@ -1,45 +1,50 @@
 part of 'autosave_cubit.dart';
 
-@immutable
-abstract class AutoSaveSetupState {}
+sealed class SipState extends Equatable {
+  const SipState();
+}
 
-final class AutosaveStatee extends Equatable {
-  int currentPage;
-  SubscriptionModel? activeSubscription;
-  bool isFetchingTransactions;
-  AutosaveStatee({
-    this.currentPage = 0,
-    this.activeSubscription,
-    this.isFetchingTransactions = false,
+class LoadingSipData extends SipState {
+  const LoadingSipData();
+
+  @override
+  List<Object?> get props => const [];
+}
+
+class ErrorSipState extends SipState {
+  const ErrorSipState();
+
+  @override
+  List<Object?> get props => const [];
+}
+
+class LoadedSipData extends SipState {
+  const LoadedSipData({
+    required this.activeSubscription,
+    required this.sipScreenData,
+    this.isPauseOrResuming = false,
+    this.showAllSip = false,
   });
+  final Subscriptions activeSubscription;
+  final SipData sipScreenData;
+  final bool isPauseOrResuming;
+  final bool showAllSip;
 
-  AutosaveStatee copyWith({required bool visible}) {
-    return AutosaveStatee();
+  LoadedSipData copyWith({
+    SipData? sipScreenData,
+    Subscriptions? activeSubscription,
+    bool? isPauseOrResuming,
+    bool? showAllSip,
+  }) {
+    return LoadedSipData(
+      activeSubscription: activeSubscription ?? this.activeSubscription,
+      isPauseOrResuming: isPauseOrResuming ?? this.isPauseOrResuming,
+      sipScreenData: sipScreenData ?? this.sipScreenData,
+      showAllSip: showAllSip ?? this.showAllSip,
+    );
   }
 
   @override
-  List<Object> get props => [currentPage, isFetchingTransactions];
+  List<Object?> get props =>
+      [activeSubscription, sipScreenData, isPauseOrResuming, showAllSip];
 }
-
-// class ContactsLoaded extends AutoSaveSetupState {
-//   final List<Contact> contacts;
-
-//   ContactsLoaded(this.contacts);
-
-//   ContactsLoaded copyWith({
-//     List<Contact>? contacts,
-//   }) {
-//     return ContactsLoaded(
-//       contacts ?? this.contacts,
-//     );
-//   }
-
-//   @override
-//   bool operator ==(Object other) {
-//     if (identical(this, other)) return true;
-//     return other is ContactsLoaded && listEquals(other.contacts, contacts);
-//   }
-
-//   @override
-//   int get hashCode => contacts.hashCode;
-// }

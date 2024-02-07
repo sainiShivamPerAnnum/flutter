@@ -926,6 +926,15 @@ class BaseUtil extends ChangeNotifier {
     return formatter.format(value);
   }
 
+  static String formatRupees(double value) {
+    final formatter = NumberFormat.currency(
+      locale: 'en_IN',
+      symbol: '',
+      decimalDigits: 0,
+    );
+    return formatter.format(value);
+  }
+
   static Future<bool> isFirstTimeThisWeek() async {
     /// Get the current week number
     final currentWeekNumber =

@@ -18,18 +18,18 @@ extension StringExtension on String {
   }
 }
 
-extension FRename on FREQUENCY {
-  String rename() {
-    switch (this) {
-      case FREQUENCY.daily:
-        return "day";
-      case FREQUENCY.weekly:
-        return "week";
-      case FREQUENCY.monthly:
-        return "month";
-    }
-  }
-}
+// extension FRename on FREQUENCY {
+//   String rename() {
+//     switch (this) {
+//       case FREQUENCY.daily:
+//         return "day";
+//       case FREQUENCY.weekly:
+//         return "week";
+//       case FREQUENCY.monthly:
+//         return "month";
+//     }
+//   }
+// }
 
 extension IndianNumberSystem on String {
   String formatToIndianNumberSystem() {

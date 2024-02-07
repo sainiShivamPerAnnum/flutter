@@ -17,6 +17,10 @@ import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/feature/fello_badges/ui/fello_badges_home.dart';
 import 'package:felloapp/feature/flo_withdrawals/ui/balloon_lottie_screen.dart';
 import 'package:felloapp/feature/referrals/ui/referral_home.dart';
+import 'package:felloapp/feature/sip/mandate_page/view/mandate_view.dart';
+import 'package:felloapp/feature/sip/ui/sip_setup/sip_amount_view.dart';
+import 'package:felloapp/feature/sip/ui/sip_setup/sip_intro.dart';
+import 'package:felloapp/feature/sip/ui/sip_setup/sip_select_assset.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/transition_delegate.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -27,10 +31,6 @@ import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_buy/gold_pro
 import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_details/gold_pro_details_view.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_sell/gold_pro_sell_view.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_transactions/gold_pro_txns_view.dart';
-import 'package:felloapp/ui/pages/finance/autosave/autosave_details/autosave_details_view.dart';
-import 'package:felloapp/ui/pages/finance/autosave/autosave_onboarding/autosave_onboarding_view.dart';
-import 'package:felloapp/ui/pages/finance/autosave/autosave_setup/autosave_process_view.dart';
-import 'package:felloapp/ui/pages/finance/autosave/autosave_update/autosave_update_view.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/detail_page/flo_premium_details_view.dart';
 import 'package:felloapp/ui/pages/finance/transactions_history/transactions_history_view.dart';
 import 'package:felloapp/ui/pages/hometabs/journey/journey_view.dart';
@@ -52,7 +52,6 @@ import 'package:felloapp/ui/pages/power_play/welcome_page/power_play_welcome_pag
 import 'package:felloapp/ui/pages/rewards/scratch_card/scratch_card_view.dart';
 import 'package:felloapp/ui/pages/root/root_controller.dart';
 import 'package:felloapp/ui/pages/root/root_view.dart';
-import 'package:felloapp/ui/pages/sip/sip.dart';
 import 'package:felloapp/ui/pages/splash/splash_view.dart';
 import 'package:felloapp/ui/pages/static/earn_more_returns_view.dart';
 import 'package:felloapp/ui/pages/static/web_view.dart';
@@ -300,22 +299,22 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           _addPageData(ScratchCardsView(model: locator<ScratchCardService>()),
               ScratchCardsViewPageConfig);
           break;
-        case Pages.AutosaveOnboardingView:
-          _addPageData(
-              const AutosaveOnboardingView(), AutosaveOnboardingViewPageConfig);
-          break;
-        case Pages.AutosaveProcessView:
-          _addPageData(
-              const AutosaveProcessView(), AutosaveProcessViewPageConfig);
-          break;
-        case Pages.AutosaveDetailsView:
-          _addPageData(
-              const AutosaveDetailsView(), AutosaveDetailsViewPageConfig);
-          break;
-        case Pages.AutosaveUpdateView:
-          _addPageData(
-              const AutosaveUpdateView(), AutosaveUpdateViewPageConfig);
-          break;
+        // case Pages.AutosaveOnboardingView:
+        //   _addPageData(
+        //       const AutosaveOnboardingView(), AutosaveOnboardingViewPageConfig);
+        //   break;
+        // case Pages.AutosaveProcessView:
+        //   _addPageData(
+        //       const AutosaveProcessView(), AutosaveProcessViewPageConfig);
+        //   break;
+        // case Pages.AutosaveDetailsView:
+        //   _addPageData(
+        //       const AutosaveDetailsView(), AutosaveDetailsViewPageConfig);
+        //   break;
+        // case Pages.AutosaveUpdateView:
+        //   _addPageData(
+        //       const AutosaveUpdateView(), AutosaveUpdateViewPageConfig);
+        //   break;
         case Pages.JourneyView:
           _addPageData(const JourneyView(), JourneyViewPageConfig);
           break;
@@ -385,9 +384,26 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           break;
 
         case Pages.SipEntryView:
-          _addPageData(const SipScreen(), SipPageConfig);
+          _addPageData(const SipIntroView(), SipIntroPageConfig);
           break;
-
+        case Pages.SipAssetSelectView:
+          _addPageData(
+              SipAssetSelectView(
+                isMandateAvailable: queryParams?['mandateAvailable'] ?? false,
+              ),
+              SipAssetSelectPageConfig);
+          break;
+        case Pages.SipFormView:
+          _addPageData(
+              SipFormAmountView(
+                mandateAvailable: queryParams?['mandateAvailable'] ?? false,
+                sipAssetType: queryParams?['sipAssetType'],
+              ),
+              SipFormPageConfig);
+          break;
+        case Pages.SipMandateView:
+          _addPageData(const SipMandateView(), SipMandatePageConfig);
+          break;
         default:
           break;
       }
