@@ -68,7 +68,7 @@ class SubscriptionRepo extends BaseRepo {
         "lbAmt": lbAmt,
         "augAmt": augAmt,
         "frequency": freq,
-        "assetType": "UNI_FLEXI", //TODO(@DK070202): remove this.
+        "assetType": assetType, //TODO(@DK070202): remove this.
         "pspPackage": 'com.phonepe.app.preprod', //TODO(@DK070202): remove this.
       };
 
