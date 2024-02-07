@@ -1,9 +1,12 @@
 import 'package:bloc/bloc.dart';
+import 'package:equatable/equatable.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/sip_asset_type.dart';
+import 'package:felloapp/core/model/sip_model/sip_options.dart';
 import 'package:felloapp/core/repository/subscription_repo.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
+import 'package:felloapp/feature/sip/cubit/sip_data_holder.dart';
 import 'package:felloapp/feature/sip/sip_polling_page/view/sip_polling_view.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -12,13 +15,60 @@ import 'package:flutter/material.dart';
 
 part 'sip_form_state.dart';
 
-class SipFormCubit extends Cubit<SipFormCubitState> {
-  SipFormCubit() : super(SipFormCubitState());
+class SipFormCubit extends Cubit<SipFormState> {
+  SipFormCubit() : super(const LoadingSipFormData());
   final SubService _subService = locator<SubService>();
   final _subscriptionRepo = locator<SubscriptionRepo>();
 
   void setAmount(int amount) {
-    emit(state.copyWith(formAmount: amount));
+    final currentState = state;
+    if (currentState is SipFormCubitState) {
+      emit(currentState.copyWith(formAmount: amount));
+    }
+  }
+
+  void onTabChange(int index) {
+    final currentState = state;
+    if (currentState is SipFormCubitState) {
+      List<String> tabOptions =
+          SipDataHolder.instance.data.amountSelectionScreen.options;
+      List<SipOptions>? options = SipDataHolder
+          .instance.data.amountSelectionScreen.data[tabOptions[index]]?.options;
+      SipOptions? maxValueOption = options?.reduce((currentMax, next) =>
+          next.value > currentMax.value ? next : currentMax);
+      int _upperLimit = maxValueOption!.value;
+      int _division = options!.length;
+      int currentAmount = options.firstWhere((option) => option.best).value;
+      emit(currentState.copyWith(
+          currentTab: index,
+          bestOption: options.firstWhere((option) => option.best),
+          division: options.length,
+          upperLimit: maxValueOption.value,
+          formAmount: currentAmount,
+          lowerLimit: _upperLimit / _division));
+    }
+  }
+
+  void init(int? prefillAmount, String? prefillFrequency) {
+    List<String> tabOptions =
+        SipDataHolder.instance.data.amountSelectionScreen.options;
+    int editSipTab = SipDataHolder.instance.data.amountSelectionScreen.options
+        .indexOf(prefillFrequency ?? 'DAILY');
+    List<SipOptions>? options = SipDataHolder.instance.data
+        .amountSelectionScreen.data[tabOptions[editSipTab]]?.options;
+    SipOptions? maxValueOption = options?.reduce((currentMax, next) =>
+        next.value > currentMax.value ? next : currentMax);
+    SipOptions bestOption = options!.firstWhere((option) => option.best);
+    int currentAmount = prefillAmount ?? bestOption.value;
+    int _upperLimit = maxValueOption!.value;
+    int _division = options.length;
+    emit(SipFormCubitState(
+        formAmount: currentAmount,
+        currentTab: editSipTab,
+        bestOption: bestOption,
+        division: options.length,
+        upperLimit: maxValueOption.value,
+        lowerLimit: _upperLimit / _division));
   }
 
   Future<void> getData() async {
@@ -27,20 +77,25 @@ class SipFormCubit extends Cubit<SipFormCubitState> {
 
   Future<bool> editSipTrigger(
       num principalAmount, String frequency, String id) async {
-    emit(state.copyWith(isLoading: true));
-    bool response = await _subService.updateSubscription(
-        freq: frequency, amount: principalAmount.toInt(), id: id);
-    if (!response) {
-      BaseUtil.showNegativeAlert("Failed to update SIP", "Please try again");
-      emit(state.copyWith(isLoading: false));
-      return false;
+    final currentState = state;
+    if (currentState is SipFormCubitState) {
+      emit(currentState.copyWith(isLoading: true));
+      bool response = await _subService.updateSubscription(
+          freq: frequency, amount: principalAmount.toInt(), id: id);
+      if (!response) {
+        BaseUtil.showNegativeAlert("Failed to update SIP", "Please try again");
+        emit(currentState.copyWith(isLoading: false));
+        return false;
+      } else {
+        await getData();
+        emit(currentState.copyWith(isLoading: false));
+        BaseUtil.showPositiveAlert("Subscription updated successfully",
+            "Effective changes will take place from tomorrow");
+        await AppState.backButtonDispatcher!.didPopRoute();
+        return true;
+      }
     } else {
-      await getData();
-      emit(state.copyWith(isLoading: false));
-      BaseUtil.showPositiveAlert("Subscription updated successfully",
-          "Effective changes will take place from tomorrow");
-      await AppState.backButtonDispatcher!.didPopRoute();
-      return true;
+      return false;
     }
   }
 
@@ -49,33 +104,36 @@ class SipFormCubit extends Cubit<SipFormCubitState> {
     required String freq,
     required SIPAssetTypes assetType,
   }) async {
-    emit(state.copyWith(isLoading: true));
+    final currentState = state;
+    if (currentState is SipFormCubitState) {
+      emit(currentState.copyWith(isLoading: true));
 
-    final response = await _subscriptionRepo.createSubscription(
-      freq: freq,
-      amount: amount,
-      assetType: assetType.name,
-      lbAmt: assetType != SIPAssetTypes.AUGGOLD99 ? amount : 0,
-      augAmt: assetType == SIPAssetTypes.AUGGOLD99 ? amount : 0,
-    );
-
-    final data = response.model?.data;
-    final subscription = data?.subscription;
-
-    if (response.isSuccess() && subscription != null) {
-      AppState.delegate!.appState.currentAction = PageAction(
-        state: PageState.addWidget,
-        page: SipPollingPageConfig,
-        widget: SipPollingPage(
-          data: subscription,
-        ),
+      final response = await _subscriptionRepo.createSubscription(
+        freq: freq,
+        amount: amount,
+        assetType: assetType.name,
+        lbAmt: assetType != SIPAssetTypes.AUGGOLD99 ? amount : 0,
+        augAmt: assetType == SIPAssetTypes.AUGGOLD99 ? amount : 0,
       );
-    } else {
-      emit(state.copyWith(isLoading: false));
-      BaseUtil.showNegativeAlert(
-        'Failed to create subscription',
-        response.errorMessage,
-      );
+
+      final data = response.model?.data;
+      final subscription = data?.subscription;
+
+      if (response.isSuccess() && subscription != null) {
+        AppState.delegate!.appState.currentAction = PageAction(
+          state: PageState.addWidget,
+          page: SipPollingPageConfig,
+          widget: SipPollingPage(
+            data: subscription,
+          ),
+        );
+      } else {
+        emit(currentState.copyWith(isLoading: false));
+        BaseUtil.showNegativeAlert(
+          'Failed to create subscription',
+          response.errorMessage,
+        );
+      }
     }
   }
 }

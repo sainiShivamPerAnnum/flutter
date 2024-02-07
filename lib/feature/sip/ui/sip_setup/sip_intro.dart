@@ -80,225 +80,219 @@ class _SipIntroState extends State<SipIntro> {
         builder: (context, state) {
           final model = context.read<SipCubit>();
           return SingleChildScrollView(
-            child: (state is LoadingSipData)
-                ? const Stack(
-                    children: [
-                      NewSquareBackground(),
-                      Positioned.fill(
-                        child: Center(
-                          child: FullScreenLoader(),
-                        ),
+            child: switch (state) {
+              LoadingSipData() => const Stack(
+                  children: [
+                    NewSquareBackground(),
+                    Positioned.fill(
+                      child: Center(
+                        child: FullScreenLoader(),
                       ),
-                    ],
-                  )
-                : (state is LoadedSipData)
-                    ? Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Stack(
-                            alignment: AlignmentDirectional.bottomCenter,
-                            children: [
-                              Column(
+                    ),
+                  ],
+                ),
+              LoadedSipData() => Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Stack(
+                      alignment: AlignmentDirectional.bottomCenter,
+                      children: [
+                        Column(
+                          children: [
+                            Container(
+                              height: SizeConfig.padding436,
+                              decoration: const BoxDecoration(
+                                gradient: LinearGradient(
+                                  begin: Alignment.bottomCenter,
+                                  end: Alignment.topCenter,
+                                  colors: [
+                                    UiConstants.teal5,
+                                    UiConstants.kTextColor4
+                                  ],
+                                ),
+                              ),
+                            ),
+                            Container(
+                              height: SizeConfig.padding68,
+                              decoration: const BoxDecoration(
+                                  color: UiConstants.kSipBackgroundColor),
+                            ),
+                          ],
+                        ),
+                        Column(
+                          children: [
+                            SizedBox(
+                              width: SizeConfig.screenWidth,
+                              child: Stack(
                                 children: [
-                                  Container(
-                                    height: SizeConfig.padding436,
-                                    decoration: const BoxDecoration(
-                                      gradient: LinearGradient(
-                                        begin: Alignment.bottomCenter,
-                                        end: Alignment.topCenter,
-                                        colors: [
-                                          UiConstants.teal5,
-                                          UiConstants.kTextColor4
+                                  Positioned(
+                                    top: 53,
+                                    left: 40,
+                                    child: SizedBox(
+                                      width: SizeConfig.padding200,
+                                      child: Column(
+                                        crossAxisAlignment:
+                                            CrossAxisAlignment.start,
+                                        children: [
+                                          Text(
+                                            locale.sipIntroTitle,
+                                            style: TextStyles.sourceSansSB.body1
+                                                .colour(UiConstants.kTextColor),
+                                          ),
+                                          SizedBox(
+                                            height: SizeConfig.padding6,
+                                          ),
+                                          Text(
+                                            locale.sipIntroSubTitle,
+                                            style: TextStyles.sourceSans.body3
+                                                .colour(UiConstants
+                                                    .kWinnerPlayerPrimaryColor),
+                                          )
                                         ],
                                       ),
                                     ),
                                   ),
-                                  Container(
-                                    height: SizeConfig.padding68,
-                                    decoration: const BoxDecoration(
-                                        color: UiConstants.kSipBackgroundColor),
-                                  ),
-                                ],
-                              ),
-                              Column(
-                                children: [
-                                  SizedBox(
-                                    width: SizeConfig.screenWidth,
-                                    child: Stack(
-                                      children: [
-                                        Positioned(
-                                          top: 53,
-                                          left: 40,
-                                          child: SizedBox(
-                                            width: SizeConfig.padding200,
-                                            child: Column(
-                                              crossAxisAlignment:
-                                                  CrossAxisAlignment.start,
-                                              children: [
-                                                Text(
-                                                  locale.sipIntroTitle,
-                                                  style: TextStyles
-                                                      .sourceSansSB.body1
-                                                      .colour(UiConstants
-                                                          .kTextColor),
-                                                ),
-                                                SizedBox(
-                                                  height: SizeConfig.padding6,
-                                                ),
-                                                Text(
-                                                  locale.sipIntroSubTitle,
-                                                  style: TextStyles
-                                                      .sourceSans.body3
-                                                      .colour(UiConstants
-                                                          .kWinnerPlayerPrimaryColor),
-                                                )
-                                              ],
-                                            ),
-                                          ),
-                                        ),
-                                        Align(
-                                          alignment:
-                                              AlignmentDirectional.bottomEnd,
-                                          child: AppImage(
-                                            Assets.sipIntroImage,
-                                            height: SizeConfig.padding300,
-                                          ),
-                                        ),
-                                      ],
-                                    ),
-                                  ),
-                                  SizedBox(
-                                    height: SizeConfig.padding20,
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(
-                                        horizontal: SizeConfig.padding40),
-                                    child: AppPositiveBtn(
-                                        btnText: locale.startSip,
-                                        onPressed: () {
-                                          AppState.delegate!.appState
-                                              .currentAction = PageAction(
-                                            page: SipAssetSelectPageConfig,
-                                            widget: SipAssetSelectView(
-                                              isMandateAvailable: state
-                                                  .activeSubscription.isActive,
-                                            ),
-                                            state: PageState.addWidget,
-                                          );
-                                        }),
-                                  ),
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(
-                                      vertical: SizeConfig.padding6,
-                                    ),
-                                    child: Text(
-                                      locale.sipCustomers,
-                                      style: TextStyles.sourceSans.body3
-                                          .colour(UiConstants.kTabBorderColor),
+                                  Align(
+                                    alignment: AlignmentDirectional.bottomEnd,
+                                    child: AppImage(
+                                      Assets.sipIntroImage,
+                                      height: SizeConfig.padding300,
                                     ),
                                   ),
                                 ],
                               ),
-                            ],
-                          ),
-                          if (activeSubsLength != 0)
+                            ),
+                            SizedBox(
+                              height: SizeConfig.padding20,
+                            ),
                             Padding(
                               padding: EdgeInsets.symmetric(
-                                  horizontal: SizeConfig.padding20),
-                              child: Column(
-                                crossAxisAlignment: CrossAxisAlignment.start,
-                                children: [
-                                  Padding(
-                                    padding: EdgeInsets.symmetric(
-                                        vertical: SizeConfig.padding24),
-                                    child: Text(
-                                      locale.existingSip,
-                                      style: TextStyles.rajdhaniSB.title5
-                                          .colour(UiConstants.kTextColor),
-                                    ),
-                                  ),
-                                  ...List.generate(
-                                      state.seeAll
-                                          ? activeSubsLength
-                                          : activeSubsLength > 3
-                                              ? 3
-                                              : activeSubsLength, (i) {
-                                    return Column(children: [
-                                      AssetSipContainer(
-                                        model: model,
-                                        index: i,
-                                        assetType: subs[i].assetType,
-                                        state: subs[i].status,
-                                        allowEdit: subs[i].assetType !=
-                                            SIPAssetTypes.BOTH,
-                                        assetUrl: (subs[i].lENDBOXP2P != 0.0 &&
-                                                subs[i].aUGGOLD99 != 0.0)
-                                            ? Assets.goldAndflo
-                                            : subs[i].lENDBOXP2P != 0
-                                                ? Assets.floWithoutShadow
-                                                : Assets.goldWithoutShadow,
-                                        nextDueDate: subs[i].nextDue,
-                                        sipAmount: subs[i].amount.toInt(),
-                                        sipName: subs[i].lENDBOXP2P != 0 &&
-                                                subs[i].aUGGOLD99 != 0
-                                            ? locale.bothassetSip
-                                            : subs[i].lENDBOXP2P != 0
-                                                ? locale.floSip
-                                                : locale.goldSip,
-                                        startDate: subs[i].createdOn,
-                                        sipInterval: subs[i].frequency,
-                                        pausedSip: subs[i].status.isPaused,
+                                  horizontal: SizeConfig.padding40),
+                              child: AppPositiveBtn(
+                                  btnText: locale.startSip,
+                                  onPressed: () {
+                                    AppState.delegate!.appState.currentAction =
+                                        PageAction(
+                                      page: SipAssetSelectPageConfig,
+                                      widget: SipAssetSelectView(
+                                        isMandateAvailable:
+                                            state.activeSubscription.isActive,
                                       ),
-                                      SizedBox(
-                                        height: SizeConfig.padding16,
-                                      ),
-                                    ]);
+                                      state: PageState.addWidget,
+                                    );
                                   }),
-                                  activeSubsLength > 3 && !state.seeAll
-                                      ? TextButton(
-                                          onPressed: () {
-                                            model.updateSeeAll(true);
-                                          },
-                                          child: Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              Text(
-                                                locale.btnSeeAll,
-                                                style: TextStyles
-                                                    .sourceSansSB.body2
-                                                    .colour(Colors.white),
-                                              ),
-                                              SizedBox(
-                                                width: SizeConfig.padding8,
-                                              ),
-                                              Transform.rotate(
-                                                  angle: math.pi / 2,
-                                                  child: const AppImage(
-                                                    Assets.chevRonRightArrow,
-                                                    color: UiConstants
-                                                        .primaryColor,
-                                                  ))
-                                            ],
-                                          ),
-                                        )
-                                      : const SizedBox()
-                                ],
+                            ),
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                vertical: SizeConfig.padding6,
+                              ),
+                              child: Text(
+                                locale.sipCustomers,
+                                style: TextStyles.sourceSans.body3
+                                    .colour(UiConstants.kTabBorderColor),
                               ),
                             ),
-                          SizedBox(
-                            height: SizeConfig.padding24,
-                          ),
-                          Padding(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: SizeConfig.padding20),
-                            child: SipCalculator(
-                              state: state,
+                          ],
+                        ),
+                      ],
+                    ),
+                    if (activeSubsLength != 0)
+                      Padding(
+                        padding: EdgeInsets.symmetric(
+                            horizontal: SizeConfig.padding20),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Padding(
+                              padding: EdgeInsets.symmetric(
+                                  vertical: SizeConfig.padding24),
+                              child: Text(
+                                locale.existingSip,
+                                style: TextStyles.rajdhaniSB.title5
+                                    .colour(UiConstants.kTextColor),
+                              ),
                             ),
-                          ),
-                        ],
-                      )
-                    : const SizedBox.shrink(),
+                            ...List.generate(
+                                state.seeAll
+                                    ? activeSubsLength
+                                    : activeSubsLength > 3
+                                        ? 3
+                                        : activeSubsLength, (i) {
+                              return Column(children: [
+                                AssetSipContainer(
+                                  model: model,
+                                  index: i,
+                                  assetType: subs[i].assetType,
+                                  state: subs[i].status,
+                                  allowEdit:
+                                      subs[i].assetType != SIPAssetTypes.BOTH,
+                                  assetUrl: (subs[i].lENDBOXP2P != 0.0 &&
+                                          subs[i].aUGGOLD99 != 0.0)
+                                      ? Assets.goldAndflo
+                                      : subs[i].lENDBOXP2P != 0
+                                          ? Assets.floWithoutShadow
+                                          : Assets.goldWithoutShadow,
+                                  nextDueDate: subs[i].nextDue,
+                                  sipAmount: subs[i].amount.toInt(),
+                                  sipName: subs[i].lENDBOXP2P != 0 &&
+                                          subs[i].aUGGOLD99 != 0
+                                      ? locale.bothassetSip
+                                      : subs[i].lENDBOXP2P != 0
+                                          ? locale.floSip
+                                          : locale.goldSip,
+                                  startDate: subs[i].createdOn,
+                                  sipInterval: subs[i].frequency,
+                                  pausedSip: subs[i].status.isPaused,
+                                ),
+                                SizedBox(
+                                  height: SizeConfig.padding16,
+                                ),
+                              ]);
+                            }),
+                            activeSubsLength > 3 && !state.seeAll
+                                ? TextButton(
+                                    onPressed: () {
+                                      model.updateSeeAll(true);
+                                    },
+                                    child: Row(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Text(
+                                          locale.btnSeeAll,
+                                          style: TextStyles.sourceSansSB.body2
+                                              .colour(Colors.white),
+                                        ),
+                                        SizedBox(
+                                          width: SizeConfig.padding8,
+                                        ),
+                                        Transform.rotate(
+                                            angle: math.pi / 2,
+                                            child: const AppImage(
+                                              Assets.chevRonRightArrow,
+                                              color: UiConstants.primaryColor,
+                                            ))
+                                      ],
+                                    ),
+                                  )
+                                : const SizedBox()
+                          ],
+                        ),
+                      ),
+                    SizedBox(
+                      height: SizeConfig.padding24,
+                    ),
+                    Padding(
+                      padding: EdgeInsets.symmetric(
+                          horizontal: SizeConfig.padding20),
+                      child: SipCalculator(
+                        state: state,
+                      ),
+                    ),
+                  ],
+                ),
+              _ => const SizedBox.shrink(),
+            },
           );
         },
       ),

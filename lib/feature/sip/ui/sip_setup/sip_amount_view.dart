@@ -1,9 +1,7 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
-import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/sip_asset_type.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
-import 'package:felloapp/core/model/sip_model/sip_options.dart';
 import 'package:felloapp/feature/sip/cubit/sip_data_holder.dart';
 import 'package:felloapp/feature/sip/cubit/sip_form_cubit.dart';
 import 'package:felloapp/feature/sip/shared/interestCalculator.dart';
@@ -40,14 +38,12 @@ class SipFormAmountView extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return BlocProvider(
-      create: (_) => SipFormCubit(),
+      create: (_) => SipFormCubit()..init(prefillAmount, prefillFrequency),
       child: SipFormAmount(
         mandateAvailable: mandateAvailable,
-        prefillAmount: prefillAmount,
-        prefillFrequency: prefillFrequency,
-        isEdit: isEdit,
         editId: editId,
         sipAssetType: sipAssetType,
+        isEdit: isEdit,
       ),
     );
   }
@@ -58,13 +54,9 @@ class SipFormAmount extends StatefulWidget {
       {required this.mandateAvailable,
       required this.sipAssetType,
       super.key,
-      this.prefillAmount,
       this.isEdit,
-      this.editId,
-      this.prefillFrequency});
+      this.editId});
   final bool mandateAvailable;
-  final int? prefillAmount;
-  final String? prefillFrequency;
   final bool? isEdit;
   final String? editId;
   final SIPAssetTypes sipAssetType;
@@ -74,56 +66,18 @@ class SipFormAmount extends StatefulWidget {
 }
 
 class _SipFormAmountState extends State<SipFormAmount> {
-  late num _upperLimit;
-  late num _lowerLimit;
-  late num _division;
-  int _currentTab = 0;
-  late SipOptions bestOption;
   num ticketMultiplier = AppConfig.getValue(AppConfigKey.tambola_cost);
   List<String> tabOptions =
       SipDataHolder.instance.data.amountSelectionScreen.options;
   final locale = locator<S>();
 
-  void onTabChange() {
-    final formmodel = context.read<SipFormCubit>();
-    List<SipOptions>? options = SipDataHolder.instance.data
-        .amountSelectionScreen.data[tabOptions[_currentTab]]?.options;
-    SipOptions? maxValueOption = options?.reduce((currentMax, next) =>
-        next.value > currentMax.value ? next : currentMax);
-    bestOption = options!.firstWhere((option) => option.best);
-    int currentAmount = bestOption.value;
-    formmodel.setAmount(currentAmount);
-    _division = options.length;
-    _upperLimit = maxValueOption!.value;
-    _lowerLimit = _upperLimit / _division;
-  }
-
-  @override
-  void initState() {
-    super.initState();
-    final formmodel = context.read<SipFormCubit>();
-    int editSipTab = SipDataHolder.instance.data.amountSelectionScreen.options
-        .indexOf(widget.prefillFrequency ?? 'DAILY');
-    _currentTab = editSipTab;
-    List<SipOptions>? options = SipDataHolder.instance.data
-        .amountSelectionScreen.data[tabOptions[_currentTab]]?.options;
-    SipOptions? maxValueOption = options?.reduce((currentMax, next) =>
-        next.value > currentMax.value ? next : currentMax);
-    bestOption = options!.firstWhere((option) => option.best);
-    int currentAmount = widget.prefillAmount ?? bestOption.value;
-    formmodel.setAmount(currentAmount);
-    _division = options.length;
-    _upperLimit = maxValueOption!.value;
-    _lowerLimit = _upperLimit / _division;
-  }
-
   @override
   Widget build(BuildContext context) {
+    print(widget.isEdit);
     num percentage = SipDataHolder.instance.data.selectAssetScreen.options
         .where((element) => element.type == widget.sipAssetType)
         .first
         .interest;
-    final formmodel = context.read<SipFormCubit>();
     return Scaffold(
         backgroundColor: UiConstants.kBackgroundColor,
         appBar: AppBar(
@@ -142,179 +96,189 @@ class _SipFormAmountState extends State<SipFormAmount> {
           elevation: 0,
         ),
         resizeToAvoidBottomInset: false,
-        body: DefaultTabController(
-          length: tabOptions.length,
-          initialIndex: _currentTab,
-          child: BaseScaffold(
-              showBackgroundGrid: false,
-              backgroundColor: UiConstants.bg,
-              body: Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.padding24,
-                ),
-                child: Column(
-                  children: [
-                    SizedBox(
-                      height: SizeConfig.padding34,
-                    ),
-                    Padding(
+        body: BlocConsumer<SipFormCubit, SipFormState>(
+          listener: (context, state) {
+            // TODO: implement listener
+          },
+          builder: (context, state) {
+            final formmodel = context.read<SipFormCubit>();
+            return switch (state) {
+              SipFormCubitState() => DefaultTabController(
+                  length: tabOptions.length,
+                  initialIndex: state.currentTab,
+                  child: BaseScaffold(
+                    showBackgroundGrid: false,
+                    backgroundColor: UiConstants.bg,
+                    body: Padding(
                       padding: EdgeInsets.symmetric(
-                          horizontal: SizeConfig.padding28),
-                      child: TabSlider<String>(
-                        tabs: tabOptions,
-                        labelBuilder: (label) => label,
-                        onTap: (_, i) {
-                          setState(() {
-                            _currentTab = i;
-                            onTabChange();
-                          });
-                        },
-                      ),
-                    ),
-                    SizedBox(
-                      height: SizeConfig.padding28,
-                    ),
-                    Text(
-                      locale.selectSipAmount,
-                      style: TextStyles.rajdhaniSB.body1.copyWith(height: 1.2),
-                    ),
-                    SizedBox(
-                      height: SizeConfig.padding16,
-                    ),
-                    BlocConsumer<SipFormCubit, SipFormCubitState>(
-                      listener: (context, state) {},
-                      builder: (context, state) => Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          AmountInputWidget(
-                            lowerLimit: _lowerLimit.toDouble(),
-                            upperLimit: _upperLimit.toDouble(),
-                            division: _division.toInt(),
-                            amount: state.formAmount,
-                            ticketMultiplier: ticketMultiplier,
-                            onChange: formmodel.setAmount,
-                          ),
-                          if (state.formAmount < _lowerLimit.toDouble())
-                            Padding(
-                              padding: EdgeInsets.only(
-                                left: SizeConfig.padding16,
-                                right: SizeConfig.padding16,
-                              ),
-                              child: Text(
-                                locale.minSipAmount(_lowerLimit.toDouble()),
-                                style: TextStyles.sourceSans.body4
-                                    .colour(UiConstants.errorText),
-                              ),
-                            ),
-                          if (state.formAmount > _upperLimit.toDouble())
-                            Padding(
-                              padding: EdgeInsets.only(
-                                left: SizeConfig.padding16,
-                                right: SizeConfig.padding16,
-                              ),
-                              child: Text(
-                                locale.maxSipAmount(_upperLimit.toDouble()),
-                                style: TextStyles.sourceSans.body4
-                                    .colour(UiConstants.errorText),
-                              ),
-                            ),
-                          SizedBox(
-                            height: SizeConfig.padding32,
-                          ),
-                          AmountSlider(
-                            lowerLimit: _lowerLimit.toDouble(),
-                            upperLimit: _upperLimit.toDouble(),
-                            division: _division.toInt(),
-                            amount: state.formAmount.toDouble(),
-                            onChanged: formmodel.setAmount,
-                            bestOption: bestOption.order,
-                          ),
-                        ],
-                      ),
-                    ),
-                    const Spacer(),
-                    Container(
-                      padding: EdgeInsets.all(SizeConfig.padding16),
-                      decoration: BoxDecoration(
-                        color: UiConstants.grey5,
-                        borderRadius:
-                            BorderRadius.circular(SizeConfig.roundness12),
+                        horizontal: SizeConfig.padding24,
                       ),
                       child: Column(
                         children: [
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                            children: [
-                              Text(
-                                locale.expectedReturns5y,
-                                style: TextStyles.sourceSans.body2,
-                              ),
-                              BlocConsumer<SipFormCubit, SipFormCubitState>(
-                                  builder: (context, state) => Text.rich(
-                                        TextSpan(children: [
-                                          TextSpan(
-                                            text:
-                                                '${BaseUtil.formatIndianRupees(SipCalculation.getPrincipal(formAmount: state.formAmount, currentTab: _currentTab).toDouble())}+',
-                                          ),
-                                          TextSpan(
-                                            text: SipCalculation.getReturn(
-                                                formAmount: state.formAmount,
-                                                currentasset:
-                                                    widget.sipAssetType,
-                                                currentTab: _currentTab,
-                                                interestOnly: true),
-                                            style: TextStyles.sourceSansSB.body1
-                                                .colour(UiConstants
-                                                    .kTabBorderColor),
-                                          ),
-                                        ]),
-                                        style: TextStyles.sourceSans.body3
-                                            .colour(UiConstants.kTextColor),
-                                      ),
-                                  listener: (context, state) {})
-                            ],
+                          SizedBox(
+                            height: SizeConfig.padding34,
+                          ),
+                          Padding(
+                            padding: EdgeInsets.symmetric(
+                                horizontal: SizeConfig.padding28),
+                            child: TabSlider<String>(
+                              tabs: tabOptions,
+                              labelBuilder: (label) => label,
+                              onTap: (_, i) {
+                                return formmodel.onTabChange(i);
+                              },
+                            ),
                           ),
                           SizedBox(
-                            height: SizeConfig.padding3,
+                            height: SizeConfig.padding28,
                           ),
-                          Row(
-                            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                          Text(
+                            locale.selectSipAmount,
+                            style: TextStyles.rajdhaniSB.body1
+                                .copyWith(height: 1.2),
+                          ),
+                          SizedBox(
+                            height: SizeConfig.padding16,
+                          ),
+                          Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
-                              Text(
-                                locale.returnSubText,
-                                style: TextStyles.sourceSans.body4
-                                    .copyWith(color: UiConstants.grey1),
+                              AmountInputWidget(
+                                lowerLimit: state.lowerLimit.toDouble(),
+                                upperLimit: state.upperLimit.toDouble(),
+                                division: state.division.toInt(),
+                                amount: state.formAmount,
+                                ticketMultiplier: ticketMultiplier,
+                                onChange: formmodel.setAmount,
                               ),
-                              Text(
-                                locale.percentageReturns(percentage),
-                                style: TextStyles.sourceSans.body4
-                                    .copyWith(color: UiConstants.grey1),
+                              if (state.formAmount <
+                                  state.lowerLimit.toDouble())
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                    left: SizeConfig.padding16,
+                                    right: SizeConfig.padding16,
+                                  ),
+                                  child: Text(
+                                    locale.minSipAmount(
+                                        state.lowerLimit.toDouble()),
+                                    style: TextStyles.sourceSans.body4
+                                        .colour(UiConstants.errorText),
+                                  ),
+                                ),
+                              if (state.formAmount >
+                                  state.upperLimit.toDouble())
+                                Padding(
+                                  padding: EdgeInsets.only(
+                                    left: SizeConfig.padding16,
+                                    right: SizeConfig.padding16,
+                                  ),
+                                  child: Text(
+                                    locale.maxSipAmount(
+                                        state.upperLimit.toDouble()),
+                                    style: TextStyles.sourceSans.body4
+                                        .colour(UiConstants.errorText),
+                                  ),
+                                ),
+                              SizedBox(
+                                height: SizeConfig.padding32,
+                              ),
+                              AmountSlider(
+                                lowerLimit: state.lowerLimit.toDouble(),
+                                upperLimit: state.upperLimit.toDouble(),
+                                division: state.division.toInt(),
+                                amount: state.formAmount.toDouble(),
+                                onChanged: formmodel.setAmount,
+                                bestOption: state.bestOption.order,
                               ),
                             ],
+                          ),
+                          const Spacer(),
+                          Container(
+                            padding: EdgeInsets.all(SizeConfig.padding16),
+                            decoration: BoxDecoration(
+                              color: UiConstants.grey5,
+                              borderRadius:
+                                  BorderRadius.circular(SizeConfig.roundness12),
+                            ),
+                            child: Column(
+                              children: [
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      locale.expectedReturns5y,
+                                      style: TextStyles.sourceSans.body2,
+                                    ),
+                                    Text.rich(
+                                      TextSpan(children: [
+                                        TextSpan(
+                                          text:
+                                              '${BaseUtil.formatIndianRupees(SipCalculation.getPrincipal(
+                                            formAmount: state.formAmount,
+                                            currentTab: state.currentTab,
+                                          ).toDouble())}+',
+                                        ),
+                                        TextSpan(
+                                          text: SipCalculation.getReturn(
+                                              formAmount: state.formAmount,
+                                              currentasset: widget.sipAssetType,
+                                              currentTab: state.currentTab,
+                                              interestOnly: true),
+                                          style: TextStyles.sourceSansSB.body1
+                                              .colour(
+                                                  UiConstants.kTabBorderColor),
+                                        ),
+                                      ]),
+                                      style: TextStyles.sourceSans.body3
+                                          .colour(UiConstants.kTextColor),
+                                    ),
+                                  ],
+                                ),
+                                SizedBox(
+                                  height: SizeConfig.padding3,
+                                ),
+                                Row(
+                                  mainAxisAlignment:
+                                      MainAxisAlignment.spaceBetween,
+                                  children: [
+                                    Text(
+                                      locale.returnSubText,
+                                      style: TextStyles.sourceSans.body4
+                                          .copyWith(color: UiConstants.grey1),
+                                    ),
+                                    Text(
+                                      locale.percentageReturns(percentage),
+                                      style: TextStyles.sourceSans.body4
+                                          .copyWith(color: UiConstants.grey1),
+                                    ),
+                                  ],
+                                ),
+                              ],
+                            ),
+                          ),
+                          SizedBox(
+                            height: SizeConfig.padding16,
                           ),
                         ],
                       ),
                     ),
-                    SizedBox(
-                      height: SizeConfig.padding16,
+                    bottomNavigationBar: _Footer(
+                      isValidAmount: state.lowerLimit <= state.formAmount &&
+                          state.formAmount <= state.upperLimit,
+                      isEdit: widget.isEdit ?? false,
+                      mandateAvailable: widget.mandateAvailable,
+                      amount: state.formAmount,
+                      sipAssetType: widget.sipAssetType,
+                      frequency: SipDataHolder.instance.data
+                          .amountSelectionScreen.options[state.currentTab],
+                      id: (widget.isEdit ?? false) ? widget.editId : null,
                     ),
-                  ],
+                  ),
                 ),
-              ),
-              bottomNavigationBar:
-                  BlocConsumer<SipFormCubit, SipFormCubitState>(
-                      builder: (context, state) => _Footer(
-                            isValidAmount: _lowerLimit <= state.formAmount &&
-                                state.formAmount <= _upperLimit,
-                            isEdit: widget.isEdit ?? false,
-                            mandateAvailable: widget.mandateAvailable,
-                            amount: state.formAmount,
-                            sipAssetType: widget.sipAssetType,
-                            frequency: SipDataHolder.instance.data
-                                .amountSelectionScreen.options[_currentTab],
-                            id: (widget.isEdit ?? false) ? widget.editId : null,
-                          ),
-                      listener: (context, state) {})),
+              _ => const SizedBox.shrink(),
+            };
+          },
         ));
   }
 }
@@ -386,44 +350,54 @@ class _FooterState extends State<_Footer> {
           SizedBox(
             height: SizeConfig.padding22,
           ),
-          Opacity(
-            opacity: widget.isValidAmount ? 1 : 0.5,
-            child: SecondaryButton(
-              label: widget.isEdit
-                  ? locale.updateSip
-                  : widget.mandateAvailable
-                      ? locale.oneClickAway
-                      : locale.twoClickAway,
-              onPressed: () async {
-                if (widget.isValidAmount) {
-                  if (widget.isEdit) {
-                    await formmodel.editSipTrigger(
-                        widget.amount, widget.frequency, widget.id!);
-                  } else {
-                    if (widget.mandateAvailable) {
-                      await formmodel.createSubscription(
-                          amount: widget.amount,
-                          freq: widget.frequency,
-                          assetType: widget.sipAssetType);
-                    } else {
-                      ///TODO @Hirdesh2101
-                      // AppState.delegate!.appState
-                      //                       .currentAction = PageAction(
-                      //                     page: SipAssetSelectPageConfig,
-                      //                     widget: SipAssetSelectView(
-                      //                       isMandateAvailable: state
-                      //                           .activeSubscription.isActive,
-                      //                     ),
-                      //                     state: PageState.addWidget,
-                      //                   );
-                    }
-                  }
-                }
-              },
-              child: formmodel.state.isLoading
-                  ? const CupertinoActivityIndicator()
-                  : null,
-            ),
+          BlocConsumer<SipFormCubit, SipFormState>(
+            listener: (context, state) {
+              // TODO: implement listener
+            },
+            builder: (context, state) {
+              return switch (state) {
+                SipFormCubitState() => Opacity(
+                    opacity: widget.isValidAmount ? 1 : 0.5,
+                    child: SecondaryButton(
+                      label: widget.isEdit
+                          ? locale.updateSip
+                          : widget.mandateAvailable
+                              ? locale.oneClickAway
+                              : locale.twoClickAway,
+                      onPressed: () async {
+                        if (widget.isValidAmount) {
+                          if (widget.isEdit) {
+                            await formmodel.editSipTrigger(
+                                widget.amount, widget.frequency, widget.id!);
+                          } else {
+                            if (widget.mandateAvailable) {
+                              await formmodel.createSubscription(
+                                  amount: widget.amount,
+                                  freq: widget.frequency,
+                                  assetType: widget.sipAssetType);
+                            } else {
+                              ///TODO @Hirdesh2101
+                              // AppState.delegate!.appState
+                              //                       .currentAction = PageAction(
+                              //                     page: SipAssetSelectPageConfig,
+                              //                     widget: SipAssetSelectView(
+                              //                       isMandateAvailable: state
+                              //                           .activeSubscription.isActive,
+                              //                     ),
+                              //                     state: PageState.addWidget,
+                              //                   );
+                            }
+                          }
+                        }
+                      },
+                      child: state.isLoading
+                          ? const CupertinoActivityIndicator()
+                          : null,
+                    ),
+                  ),
+                _ => SizedBox.shrink(),
+              };
+            },
           ),
           SizedBox(
             height: SizeConfig.padding16,
