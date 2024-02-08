@@ -98,7 +98,7 @@ class SipSummaSuccessView extends StatelessWidget {
               height: SizeConfig.padding6,
             ),
             Text(
-              'Your ${data.frequency.duration} SIP in Fello P2P',
+              'Your ${data.frequency.duration} SIP in ${data.AUGGOLD99 > 0 ? "Digital Gold" : "Fello P2P"}',
               style: TextStyles.sourceSans.body2.setOpacity(.7),
             ),
             SizedBox(

@@ -27,7 +27,7 @@ class MandateBloc extends Bloc<MandateEvent, MandateState> {
     this._logger,
   ) : super(const MandateInitialState()) {
     on<LoadPSPApps>(_onLoadPSPApps);
-    on<CrateSubscription>(_onRequestCreateSubscription);
+    on<CreateSubscription>(_onRequestCreateSubscription);
   }
 
   // Loads the available psp apps.
@@ -42,7 +42,7 @@ class MandateBloc extends Bloc<MandateEvent, MandateState> {
 
   // creates the subscription and launches the psp app if required.
   FutureOr<void> _onRequestCreateSubscription(
-    CrateSubscription event,
+    CreateSubscription event,
     Emitter<MandateState> emitter,
   ) async {
     final currentState = state;

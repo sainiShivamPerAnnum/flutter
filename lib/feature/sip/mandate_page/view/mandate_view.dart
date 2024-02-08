@@ -98,76 +98,102 @@ class _SipMandatePage extends StatelessWidget {
             MandateInitialState() ||
             ListingPSPApps() =>
               const FullScreenLoader(),
-            ListedPSPApps(:final pspApps) => Padding(
-                padding: EdgeInsets.symmetric(
-                  horizontal: SizeConfig.pageHorizontalMargins,
-                ),
-                child: Column(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    SizedBox(
-                      height: SizeConfig.padding22,
-                    ),
-                    Text(
-                      'Set up UPI Mandate:',
-                      style: TextStyles.rajdhaniSB.title5,
-                    ),
-                    SizedBox(
-                      height: SizeConfig.padding3,
-                    ),
-                    Text(
-                      'Just a click away',
-                      style: TextStyles.rajdhaniSB.body2.colour(
-                        UiConstants.grey1,
-                      ),
-                    ),
-                    SizedBox(
-                      height: SizeConfig.padding32,
-                    ),
-                    SelectUPIApplicationSection(
-                      upiApps: pspApps,
-                      onSelectApplication: (meta) {
-                        final event = CrateSubscription.fromAssetType(
-                          assetType,
-                          freq: frequency,
-                          meta: meta,
-                          assetType: assetType.name,
-                          value: amount.toInt(),
-                        );
-
-                        context.read<MandateBloc>().add(event);
-                      },
-                    ),
-                    SizedBox(
-                      height: SizeConfig.padding32,
-                    ),
-                    const AllowUPIMandateSection(),
-                    SizedBox(
-                      height: SizeConfig.padding32,
-                    ),
-                    Align(
-                      alignment: Alignment.center,
-                      child: Text(
-                        '3. Enter UPI pin and you are done',
-                        style: TextStyles.rajdhaniSB.body1,
-                      ),
-                    ),
-                    const Spacer(),
-                    switch (state.transactionStatus) {
-                      Creating() => const LinearProgressIndicator(
-                          color: UiConstants.primaryColor,
-                          backgroundColor: UiConstants.kDarkBackgroundColor,
-                        ),
-                      _ => const SizedBox.shrink(),
-                    },
-                    SizedBox(
-                      height: SizeConfig.padding40,
-                    ),
-                  ],
-                ),
-              ),
+            ListedPSPApps(:final pspApps) => MandateStepView(
+                amount: amount,
+                frequency: frequency,
+                assetType: assetType,
+                pspApps: pspApps,
+                state: state)
           };
         },
+      ),
+    );
+  }
+}
+
+class MandateStepView extends StatelessWidget {
+  const MandateStepView({
+    super.key,
+    required this.pspApps,
+    required this.amount,
+    required this.frequency,
+    required this.assetType,
+    required this.state,
+  });
+  final List<ApplicationMeta> pspApps;
+  final num amount;
+  final String frequency;
+  final SIPAssetTypes assetType;
+  final ListedPSPApps state;
+
+  @override
+  Widget build(BuildContext context) {
+    return Padding(
+      padding: EdgeInsets.symmetric(
+        horizontal: SizeConfig.pageHorizontalMargins,
+      ),
+      child: Column(
+        crossAxisAlignment: CrossAxisAlignment.start,
+        children: [
+          SizedBox(
+            height: SizeConfig.padding22,
+          ),
+          Text(
+            'Set up UPI Mandate:',
+            style: TextStyles.rajdhaniSB.title5,
+          ),
+          SizedBox(
+            height: SizeConfig.padding3,
+          ),
+          Text(
+            'Just a click away',
+            style: TextStyles.rajdhaniSB.body2.colour(
+              UiConstants.grey1,
+            ),
+          ),
+          SizedBox(
+            height: SizeConfig.padding32,
+          ),
+          SelectUPIApplicationSection(
+            upiApps: pspApps,
+            onSelectApplication: (meta) {
+              final event = CreateSubscription.fromAssetType(
+                assetType,
+                freq: frequency,
+                meta: meta,
+                assetType: assetType.name,
+                value: amount.toInt(),
+              );
+
+              context.read<MandateBloc>().add(event);
+            },
+          ),
+          SizedBox(
+            height: SizeConfig.padding32,
+          ),
+          const AllowUPIMandateSection(),
+          SizedBox(
+            height: SizeConfig.padding32,
+          ),
+          Align(
+            alignment: Alignment.center,
+            child: Text(
+              '3. Enter UPI pin and you are done',
+              style: TextStyles.rajdhaniSB.body1,
+            ),
+          ),
+          const Spacer(),
+          switch (state.transactionStatus) {
+            Creating() => const LinearProgressIndicator(
+                color: UiConstants.primaryColor,
+                backgroundColor: UiConstants.kDarkBackgroundColor,
+              ),
+            _ => const SizedBox.shrink(),
+          },
+          SizedBox(
+            height: SizeConfig.padding40,
+          ),
+        ],
       ),
     );
   }

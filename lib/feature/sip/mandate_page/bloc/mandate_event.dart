@@ -8,7 +8,7 @@ class LoadPSPApps extends MandateEvent {
   const LoadPSPApps();
 }
 
-class CrateSubscription extends MandateEvent {
+class CreateSubscription extends MandateEvent {
   final ApplicationMeta meta;
   final num amount;
   final num lbAmt;
@@ -16,7 +16,7 @@ class CrateSubscription extends MandateEvent {
   final String freq;
   final String assetType;
 
-  factory CrateSubscription.fromAssetType(
+  factory CreateSubscription.fromAssetType(
     SIPAssetTypes type, {
     required ApplicationMeta meta,
     required String freq,
@@ -24,13 +24,13 @@ class CrateSubscription extends MandateEvent {
     required int value,
   }) {
     return type.isAugGold
-        ? CrateSubscription.aug(
+        ? CreateSubscription.aug(
             meta: meta,
             freq: freq,
             assetType: assetType,
             value: value,
           )
-        : CrateSubscription.lb(
+        : CreateSubscription.lb(
             meta: meta,
             freq: freq,
             assetType: assetType,
@@ -38,7 +38,7 @@ class CrateSubscription extends MandateEvent {
           );
   }
 
-  const CrateSubscription.lb({
+  const CreateSubscription.lb({
     required this.meta,
     required this.freq,
     required this.assetType,
@@ -47,7 +47,7 @@ class CrateSubscription extends MandateEvent {
         lbAmt = value,
         augAmt = 0;
 
-  const CrateSubscription.aug(
+  const CreateSubscription.aug(
       {required this.meta,
       required this.freq,
       required this.assetType,
