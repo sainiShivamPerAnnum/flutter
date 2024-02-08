@@ -344,4 +344,7 @@ class AnalyticsEvents {
   static const rewardsSectionTab = 'Reward Section';
   static const howToEarnRewards = 'How to earn rewards cards clicked';
   static const earnRewardsClicked = 'Earn rewards clicked';
+
+  //Gold Pro Auto Lease
+  static const goldProAutoLeaseToggle = 'Gold pro auto lease toggle';
 }

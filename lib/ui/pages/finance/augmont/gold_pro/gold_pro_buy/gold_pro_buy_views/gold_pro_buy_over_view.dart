@@ -278,6 +278,7 @@ class GoldProBuyOverView extends StatelessWidget {
                     value: model.isAutoLeaseChecked,
                     onChanged: (val) {
                       model.isAutoLeaseChecked = val;
+                      model.isAutoLeaseCheckedSwitchTapped();
                     },
                   )
 

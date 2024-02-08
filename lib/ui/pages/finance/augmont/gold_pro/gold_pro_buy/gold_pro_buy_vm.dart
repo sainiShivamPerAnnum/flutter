@@ -209,6 +209,13 @@ class GoldProBuyViewModel extends BaseViewModel
     notifyListeners();
   }
 
+  void isAutoLeaseCheckedSwitchTapped() {
+    locator<AnalyticsService>().track(
+      eventName: AnalyticsEvents.goldProAutoLeaseToggle,
+      properties: {"State": isAutoLeaseChecked},
+    );
+  }
+
   bool _isGoldProUser = false;
   bool get isGoldProUser => _isGoldProUser;
 
@@ -279,7 +286,8 @@ class GoldProBuyViewModel extends BaseViewModel
       "total lease value": totalGoldBalance,
       "current gold balance": currentGoldBalance,
       "expected returns": expectedGoldReturns,
-      "returns percentage": 15.5
+      "returns percentage": 15.5,
+      "Auto lease status": isAutoLeaseChecked
     });
     if (additionalGoldBalance == 0) {
       await _initiateLease();
