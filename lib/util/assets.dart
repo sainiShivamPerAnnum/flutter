@@ -474,4 +474,6 @@ class Assets {
   static const String iphone = 'assets/svg/iphone.svg';
   static const String car = 'assets/svg/car.svg';
   static const String trip = 'assets/svg/trip.svg';
+  static const String mandate_intro =
+      "https://ik.imagekit.io/9xfwtu0xm/sip/mandate_intro.png?updatedAt=1707312146215";
 }

@@ -1,5 +1,7 @@
 import 'package:felloapp/core/enums/page_state_enum.dart';
+import 'package:felloapp/core/enums/sip_asset_type.dart';
 import 'package:felloapp/feature/sip/mandate_page/bloc/mandate_bloc.dart';
+import 'package:felloapp/feature/sip/sip_polling_page/constants/asset_type.dart';
 import 'package:felloapp/feature/sip/sip_polling_page/view/sip_polling_view.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -14,15 +16,15 @@ import 'package:upi_pay/upi_pay.dart';
 
 class SipMandateView extends StatelessWidget {
   const SipMandateView({
+    required this.assetType,
     this.amount = 1000,
     this.frequency = 'DAILY',
-    this.assetType = '',
     super.key,
   });
 
   final num amount;
   final String frequency;
-  final String assetType;
+  final SIPAssetTypes assetType;
 
   @override
   Widget build(BuildContext context) {
@@ -45,7 +47,7 @@ class SipMandateView extends StatelessWidget {
 class _SipMandatePage extends StatelessWidget {
   final num amount;
   final String frequency;
-  final String assetType;
+  final SIPAssetTypes assetType;
 
   const _SipMandatePage({
     required this.amount,
@@ -66,6 +68,7 @@ class _SipMandatePage extends StatelessWidget {
             widget: SipPollingPage(
               subscriptionKey: key,
               data: data.subscriptionData,
+              assetType: assetType.isAugGold ? AssetType.aug : AssetType.flo,
             ),
           );
         }
@@ -102,12 +105,12 @@ class _SipMandatePage extends StatelessWidget {
                   SelectUPIApplicationSection(
                     upiApps: pspApps,
                     onSelectApplication: (meta) {
-                      final event = CrateSubscription(
-                        meta: meta,
-                        assetType: assetType,
+                      final event = CrateSubscription.fromAssetType(
+                        assetType,
                         freq: frequency,
-                        amount: 1000,
-                        lbAmt: 1000,
+                        meta: meta,
+                        assetType: assetType.name,
+                        value: amount.toInt(),
                       );
 
                       context.read<MandateBloc>().add(event);
@@ -284,8 +287,9 @@ class AllowUPIMandateSection extends StatelessWidget {
           child: Row(
             crossAxisAlignment: CrossAxisAlignment.start,
             children: [
-              const AppImage(
-                Assets.bulb,
+              AppImage(
+                Assets.mandate_intro,
+                height: SizeConfig.padding192,
               ),
               SizedBox(
                 width: SizeConfig.padding16,

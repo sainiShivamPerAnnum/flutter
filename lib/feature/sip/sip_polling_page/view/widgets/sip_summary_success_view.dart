@@ -1,6 +1,7 @@
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/subscription_models/subscription_status.dart';
 import 'package:felloapp/core/model/subscription_models/subscription_status_response.dart';
+import 'package:felloapp/feature/sip/cubit/autosave_cubit.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
@@ -8,6 +9,7 @@ import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:lottie/lottie.dart';
 
 import '../../constants/asset_type.dart';
@@ -105,10 +107,11 @@ class SipSummaSuccessView extends StatelessWidget {
             const Spacer(),
             SecondaryButton(
               label: 'CHECK YOUR REWARDS',
-              onPressed: () {
+              onPressed: () async {
+                await context.read<SipCubit>().getData();
                 AppState.delegate!.appState.currentAction = PageAction(
                   state: PageState.replaceAll,
-                  page: RootPageConfig,
+                  page: SipIntroPageConfig,
                 );
               },
             ),
@@ -164,6 +167,7 @@ class _SipSummary extends StatelessWidget {
                 height: SizeConfig.padding12,
               ),
               Text(
+                ///TODO @Hirdesh2101
                 'Started on 3rd September 2023',
                 style: TextStyles.sourceSans.body3.colour(
                   UiConstants.grey1,

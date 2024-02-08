@@ -402,7 +402,8 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
               SipFormPageConfig);
           break;
         case Pages.SipMandateView:
-          _addPageData(const SipMandateView(), SipMandatePageConfig);
+          _addPageData(SipMandateView(assetType: queryParams?['sipAssetType']),
+              SipMandatePageConfig);
           break;
         default:
           break;

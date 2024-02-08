@@ -16,12 +16,43 @@ class CrateSubscription extends MandateEvent {
   final String freq;
   final String assetType;
 
-  const CrateSubscription({
+  factory CrateSubscription.fromAssetType(
+    SIPAssetTypes type, {
+    required ApplicationMeta meta,
+    required String freq,
+    required String assetType,
+    required int value,
+  }) {
+    return type.isAugGold
+        ? CrateSubscription.aug(
+            meta: meta,
+            freq: freq,
+            assetType: assetType,
+            value: value,
+          )
+        : CrateSubscription.lb(
+            meta: meta,
+            freq: freq,
+            assetType: assetType,
+            value: value,
+          );
+  }
+
+  const CrateSubscription.lb({
     required this.meta,
     required this.freq,
     required this.assetType,
-    this.amount = 0,
-    this.lbAmt = 0,
-    this.augAmt = 0,
-  });
+    required int value,
+  })  : amount = value,
+        lbAmt = value,
+        augAmt = 0;
+
+  const CrateSubscription.aug(
+      {required this.meta,
+      required this.freq,
+      required this.assetType,
+      required int value})
+      : amount = value,
+        lbAmt = 0,
+        augAmt = value;
 }
