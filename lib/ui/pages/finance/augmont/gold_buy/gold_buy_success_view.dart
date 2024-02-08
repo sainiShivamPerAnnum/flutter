@@ -680,7 +680,7 @@ class AutopaySetupWidget extends StatelessWidget {
                 const Spacer(),
                 TextButton(
                   onPressed: () {
-                    // locator<SubService>().handleTap();
+                    locator<SubService>().handleTap();
                   },
                   child: Text(
                     "Setup Autopay".toUpperCase(),

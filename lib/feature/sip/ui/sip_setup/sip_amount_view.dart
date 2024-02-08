@@ -711,9 +711,17 @@ class _AmountInputWidgetState extends State<AmountInputWidget> {
 
   void _onIncrement() {
     if (widget.amount < widget.upperLimit) {
-      final value =
-          (widget.amount + (widget.upperLimit / widget.division)).toInt();
-      widget.onChange(value);
+      if (widget.amount < widget.lowerLimit) {
+        widget.onChange(widget.lowerLimit.toInt());
+      } else {
+        final value =
+            (widget.amount + (widget.upperLimit / widget.division)).toInt();
+        if (value > widget.upperLimit) {
+          widget.onChange(widget.upperLimit.toInt());
+        } else {
+          widget.onChange(value);
+        }
+      }
     }
   }
 
@@ -768,6 +776,8 @@ class _AmountInputWidgetState extends State<AmountInputWidget> {
                           widget.onChange(int.parse(value));
                         },
                         inputFormatters: [
+                          MaxValueInputFormatter(
+                              maxValue: widget.upperLimit.toInt()),
                           TextInputFormatter.withFunction((oldValue, newValue) {
                             var decimalSeparator =
                                 NumberFormat().symbols.DECIMAL_SEP;
@@ -872,5 +882,22 @@ class _ActionButton extends StatelessWidget {
         ),
       ),
     );
+  }
+}
+
+class MaxValueInputFormatter extends TextInputFormatter {
+  final int maxValue;
+
+  MaxValueInputFormatter({required this.maxValue});
+
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    if (newValue.text.isEmpty) {
+      return newValue;
+    }
+
+    final int? value = int.tryParse(newValue.text);
+    return value != null && value <= maxValue ? newValue : oldValue;
   }
 }

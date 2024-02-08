@@ -69,7 +69,7 @@ class _PauseAutosaveModalState extends State<PauseAutosaveModal> {
             option: AutosavePauseOption.ONE_MONTH,
           ),
           pauseOptionTile(
-            text: "Forever",
+            text: "Indefinitely",
             radioValue: 4,
             option: AutosavePauseOption.FOREVER,
           ),

@@ -22,6 +22,7 @@ import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
 
@@ -59,7 +60,6 @@ class _SipIntroViewState extends State<SipIntroView> {
         centerTitle: true,
         elevation: 0,
       ),
-      resizeToAvoidBottomInset: false,
       body: BlocConsumer<SipCubit, SipState>(
         listener: (context, state) {},
         builder: (context, state) {
@@ -625,6 +625,9 @@ class _SipCalculatorState extends State<SipCalculator>
                 maxValue: maxSipValue.toDouble(),
                 minValue: minSipValue.toDouble(),
                 value: sipAmount.toDouble(),
+                inputFormatters: [
+                  MaxValueInputFormatter(maxValue: maxSipValue),
+                ],
               ),
               SizedBox(
                 height: SizeConfig.padding20,
@@ -635,6 +638,9 @@ class _SipCalculatorState extends State<SipCalculator>
                 requiresSlider: true,
                 label: locale.timePeriod,
                 suffixText: locale.sipYear,
+                inputFormatters: [
+                  FilteringTextInputFormatter.digitsOnly,
+                ],
                 maxValue: maxTimePeriod.toDouble(),
                 minValue: minTimePeriod.toDouble(),
                 value: timePeriod.toDouble(),
@@ -681,5 +687,22 @@ class _SipCalculatorState extends State<SipCalculator>
         ),
       ],
     );
+  }
+}
+
+class MaxValueInputFormatter extends TextInputFormatter {
+  final int maxValue;
+
+  MaxValueInputFormatter({required this.maxValue});
+
+  @override
+  TextEditingValue formatEditUpdate(
+      TextEditingValue oldValue, TextEditingValue newValue) {
+    if (newValue.text.isEmpty) {
+      return newValue;
+    }
+
+    final int? value = int.tryParse(newValue.text);
+    return value != null && value <= maxValue ? newValue : oldValue;
   }
 }

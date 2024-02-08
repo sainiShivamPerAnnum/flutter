@@ -37,7 +37,7 @@ class SipCalculation {
             .where((element) => element.type == currentasset)
             .first
             .interest;
-    double interestRate = (interest * .001) / numberOfPeriodsPerYear;
+    double interestRate = (interest * .01) / numberOfPeriodsPerYear;
     int numberOfYear = numberOfYears ?? 5;
 
     int numberOfInvestments = numberOfYear * numberOfPeriodsPerYear;

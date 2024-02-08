@@ -8986,10 +8986,10 @@ class S {
     );
   }
 
-  /// `You will receive a mandate for ₹5000 on the selected UPI App. But don’t worry, We will not deduct anymore than ₹1100/week.`
+  /// `You will receive a mandate for ₹5000 on the selected UPI App. But don’t worry, We will not deduct anymore than your SIP amount.`
   String get newMandate {
     return Intl.message(
-      'You will receive a mandate for ₹5000 on the selected UPI App. But don’t worry, We will not deduct anymore than ₹1100/week.',
+      'You will receive a mandate for ₹5000 on the selected UPI App. But don’t worry, We will not deduct anymore than your SIP amount.',
       name: 'newMandate',
       desc: '',
       args: [],

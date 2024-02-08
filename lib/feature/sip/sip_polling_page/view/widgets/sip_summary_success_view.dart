@@ -110,10 +110,14 @@ class SipSummaSuccessView extends StatelessWidget {
               label: 'CHECK YOUR REWARDS',
               onPressed: () async {
                 await context.read<SipCubit>().getData();
-                while (AppState.delegate!.pages.last.name !=
-                    SipIntroPageConfig.path) {
+                while (
+                    AppState.delegate!.pages.last.name != RootPageConfig.path) {
                   await AppState.backButtonDispatcher!.didPopRoute();
                 }
+                AppState.delegate!.appState.currentAction = PageAction(
+                  state: PageState.addPage,
+                  page: MyWinningsPageConfig,
+                );
               },
             ),
             SizedBox(
