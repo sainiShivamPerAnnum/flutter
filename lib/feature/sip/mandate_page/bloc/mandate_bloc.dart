@@ -66,7 +66,7 @@ class MandateBloc extends Bloc<MandateEvent, MandateState> {
       final subscriptionData = data?.subscription;
       final intentData = data?.intent;
 
-      if (res.isSuccess() && intentData != null) {
+      if (res.isSuccess() && intentData != null && subscriptionData != null) {
         if (intentData.redirectUrl.isNotEmpty && !intentData.alreadyExist) {
           await _openPSPApp(intentData.redirectUrl, event.meta.packageName);
         }
@@ -74,7 +74,7 @@ class MandateBloc extends Bloc<MandateEvent, MandateState> {
         emitter(
           (state as ListedPSPApps).copyWith(
             status: SubsTransactionStatus.created(
-              subsPrimaryKey: intentData.subId,
+              subsPrimaryKey: subscriptionData.id,
               redirectUrl: intentData.redirectUrl,
               mandateAlreadyExits: intentData.alreadyExist,
               subscriptionData: subscriptionData,

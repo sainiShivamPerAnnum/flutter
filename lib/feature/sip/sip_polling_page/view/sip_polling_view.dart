@@ -26,7 +26,7 @@ class SipPollingPage extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final event = data != null
+    final event = data != null && data!.status.isActive
         ? CreatedSubscription(data!)
         : StartPolling(subscriptionKey!);
 

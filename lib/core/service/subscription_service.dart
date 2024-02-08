@@ -244,9 +244,10 @@ class SubService extends ChangeNotifier {
       // propagate error response to further.
       // - Or request completes with success and the status of subscription is
       // active.
-      final predicate =
-          lastResult.isSuccess() && data != null && data.status.isActive ||
-              !lastResult.isSuccess();
+      final predicate = lastResult.isSuccess() &&
+              data != null &&
+              data.subscription.status.isActive ||
+          !lastResult.isSuccess();
 
       if (predicate) {
         return lastResult;

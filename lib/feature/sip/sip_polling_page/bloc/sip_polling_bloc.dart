@@ -40,7 +40,7 @@ class SipPollingBloc extends Bloc<SipPollingEvent, SipPollingState> {
 
     if (response.isSuccess() && data != null) {
       emitter(
-        CompletedPollingWithSuccessOrPending(data),
+        CompletedPollingWithSuccessOrPending(data.subscription),
       ); // either pending or success.
     } else {
       emitter(

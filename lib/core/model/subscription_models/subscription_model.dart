@@ -7,7 +7,6 @@ part 'subscription_model.g.dart';
 
 @JsonSerializable(
   createToJson: false,
-  checked: true,
 )
 class SubscriptionModel {
   final String id; // phone pe id on backend.
