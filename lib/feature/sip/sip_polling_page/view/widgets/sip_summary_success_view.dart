@@ -10,6 +10,7 @@ import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 
 import '../../constants/asset_type.dart';
@@ -108,10 +109,10 @@ class SipSummaSuccessView extends StatelessWidget {
             SecondaryButton(
               label: 'CHECK YOUR REWARDS',
               onPressed: () async {
-                await context.read<SipCubit>().getData();
+                // await context.read<SipCubit>().getData();
                 AppState.delegate!.appState.currentAction = PageAction(
                   state: PageState.replaceAll,
-                  page: SipIntroPageConfig,
+                  page: RootPageConfig,
                 );
               },
             ),
@@ -131,6 +132,8 @@ class _SipSummary extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String formattedDate =
+        DateFormat('dd MMM yyyy').format(DateTime.parse(data.createdOn));
     return Column(
       children: [
         Container(
@@ -167,8 +170,7 @@ class _SipSummary extends StatelessWidget {
                 height: SizeConfig.padding12,
               ),
               Text(
-                ///TODO @Hirdesh2101
-                'Started on 3rd September 2023',
+                'Started on $formattedDate',
                 style: TextStyles.sourceSans.body3.colour(
                   UiConstants.grey1,
                 ),
