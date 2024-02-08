@@ -25,7 +25,6 @@ SubscriptionStatusData _$SubscriptionStatusDataFromJson(
         Map<String, dynamic> json) =>
     SubscriptionStatusData(
       id: json['id'] as String? ?? '',
-      subId: json['subId'] as String? ?? '',
       amount: json['amount'] as num? ?? 0,
       frequency: $enumDecodeNullable(_$FrequencyEnumMap, json['frequency'],
               unknownValue: Frequency.DAILY) ??
