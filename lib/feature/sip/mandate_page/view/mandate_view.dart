@@ -331,7 +331,8 @@ class AllowUPIMandateSection extends StatelessWidget {
                       children: [
                         AppImage(
                           Assets.mandate_intro,
-                          height: SizeConfig.padding192,
+                          height: SizeConfig.padding172,
+                          width: SizeConfig.padding192,
                         ),
                       ],
                     )
