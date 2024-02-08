@@ -147,6 +147,7 @@ class _SipFormAmountState extends State<SipFormAmount> {
                             crossAxisAlignment: CrossAxisAlignment.start,
                             children: [
                               AmountInputWidget(
+                                mandateAvailable: widget.mandateAvailable,
                                 lowerLimit: state.lowerLimit.toDouble(),
                                 upperLimit: state.upperLimit.toDouble(),
                                 division: state.division.toInt(),
@@ -384,7 +385,10 @@ class _FooterState extends State<_Footer> {
                               AppState.delegate!.appState.currentAction =
                                   PageAction(
                                 page: SipMandatePageConfig,
-                                widget: const SipMandateView(),
+                                widget: SipMandateView(
+                                    amount: widget.amount,
+                                    frequency: widget.frequency,
+                                    assetType: widget.sipAssetType),
                                 state: PageState.addWidget,
                               );
                             }
@@ -661,6 +665,7 @@ class AmountInputWidget extends StatefulWidget {
     required this.amount,
     required this.onChange,
     required this.ticketMultiplier,
+    required this.mandateAvailable,
     super.key,
     this.upperLimit = 15000,
     this.lowerLimit = 500,
@@ -672,6 +677,7 @@ class AmountInputWidget extends StatefulWidget {
   final double lowerLimit;
   final num ticketMultiplier;
   final int division;
+  final bool mandateAvailable;
   final void Function(int value) onChange;
 
   @override
@@ -788,34 +794,35 @@ class _AmountInputWidgetState extends State<AmountInputWidget> {
                     ),
                   ],
                 ),
-                Row(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  children: [
-                    Text(
-                      '+$tambolaTickets Tambola Ticket',
-                      style: TextStyles.sourceSans.body3.copyWith(
-                        color: UiConstants.teal3,
-                        height: 1.5,
-                      ),
-                    ),
-                    SizedBox(
-                      width: SizeConfig.padding4,
-                    ),
-                    Column(
-                      mainAxisAlignment: MainAxisAlignment.center,
-                      children: [
-                        SizedBox(
-                          height: SizeConfig.padding4,
-                        ),
-                        Icon(
-                          Icons.info_outline,
-                          size: SizeConfig.iconSize2,
+                if (!widget.mandateAvailable)
+                  Row(
+                    mainAxisAlignment: MainAxisAlignment.center,
+                    children: [
+                      Text(
+                        '+$tambolaTickets Tambola Ticket',
+                        style: TextStyles.sourceSans.body3.copyWith(
                           color: UiConstants.teal3,
+                          height: 1.5,
                         ),
-                      ],
-                    ),
-                  ],
-                )
+                      ),
+                      SizedBox(
+                        width: SizeConfig.padding4,
+                      ),
+                      Column(
+                        mainAxisAlignment: MainAxisAlignment.center,
+                        children: [
+                          SizedBox(
+                            height: SizeConfig.padding4,
+                          ),
+                          Icon(
+                            Icons.info_outline,
+                            size: SizeConfig.iconSize2,
+                            color: UiConstants.teal3,
+                          ),
+                        ],
+                      ),
+                    ],
+                  )
               ],
             ),
           ),

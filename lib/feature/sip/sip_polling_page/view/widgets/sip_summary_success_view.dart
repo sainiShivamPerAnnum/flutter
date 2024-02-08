@@ -1,6 +1,7 @@
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/subscription_models/subscription_status.dart';
 import 'package:felloapp/core/model/subscription_models/subscription_status_response.dart';
+import 'package:felloapp/feature/sip/cubit/autosave_cubit.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
@@ -8,6 +9,8 @@ import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
 
 import '../../constants/asset_type.dart';
@@ -95,7 +98,7 @@ class SipSummaSuccessView extends StatelessWidget {
               height: SizeConfig.padding6,
             ),
             Text(
-              'Your ${data.frequency.duration} SIP in Fello P2P',
+              'Your ${data.frequency.duration} SIP in ${data.AUGGOLD99 > 0 ? "Digital Gold" : "Fello P2P"}',
               style: TextStyles.sourceSans.body2.setOpacity(.7),
             ),
             SizedBox(
@@ -105,11 +108,12 @@ class SipSummaSuccessView extends StatelessWidget {
             const Spacer(),
             SecondaryButton(
               label: 'CHECK YOUR REWARDS',
-              onPressed: () {
-                AppState.delegate!.appState.currentAction = PageAction(
-                  state: PageState.replaceAll,
-                  page: RootPageConfig,
-                );
+              onPressed: () async {
+                await context.read<SipCubit>().getData();
+                while (AppState.delegate!.pages.last.name !=
+                    SipIntroPageConfig.path) {
+                  await AppState.backButtonDispatcher!.didPopRoute();
+                }
               },
             ),
             SizedBox(
@@ -128,6 +132,8 @@ class _SipSummary extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
+    String formattedDate =
+        DateFormat('dd MMM yyyy').format(DateTime.parse(data.createdOn));
     return Column(
       children: [
         Container(
@@ -164,7 +170,7 @@ class _SipSummary extends StatelessWidget {
                 height: SizeConfig.padding12,
               ),
               Text(
-                'Started on 3rd September 2023',
+                'Started on $formattedDate',
                 style: TextStyles.sourceSans.body3.colour(
                   UiConstants.grey1,
                 ),

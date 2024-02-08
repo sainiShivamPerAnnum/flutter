@@ -7,35 +7,21 @@ part of 'subscription_model.dart';
 // **************************************************************************
 
 SubscriptionModel _$SubscriptionModelFromJson(Map<String, dynamic> json) =>
-    $checkedCreate(
-      'SubscriptionModel',
-      json,
-      ($checkedConvert) {
-        final val = SubscriptionModel(
-          id: $checkedConvert('id', (v) => v as String? ?? ''),
-          subId: $checkedConvert('subId', (v) => v as String? ?? ''),
-          status: $checkedConvert(
-              'status',
-              (v) =>
-                  $enumDecodeNullable(_$AutosaveStateEnumMap, v,
-                      unknownValue: AutosaveState.IDLE) ??
-                  AutosaveState.IDLE),
-          assetType: $checkedConvert(
-              'assetType',
-              (v) =>
-                  $enumDecodeNullable(_$SIPAssetTypesEnumMap, v,
-                      unknownValue: SIPAssetTypes.UNKNOWN) ??
-                  SIPAssetTypes.UNKNOWN),
-          amount: $checkedConvert('amount', (v) => v as num? ?? 0),
-          frequency: $checkedConvert('frequency', (v) => v as String? ?? ''),
-          aUGGOLD99: $checkedConvert('AUGGOLD99', (v) => v as num? ?? 0),
-          lENDBOXP2P: $checkedConvert('LENDBOXP2P', (v) => v as num? ?? 0),
-          createdOn: $checkedConvert('createdOn', (v) => v as String? ?? ''),
-          nextDue: $checkedConvert('nextDue', (v) => v as String? ?? ''),
-        );
-        return val;
-      },
-      fieldKeyMap: const {'aUGGOLD99': 'AUGGOLD99', 'lENDBOXP2P': 'LENDBOXP2P'},
+    SubscriptionModel(
+      id: json['id'] as String? ?? '',
+      subId: json['subId'] as String? ?? '',
+      status: $enumDecodeNullable(_$AutosaveStateEnumMap, json['status'],
+              unknownValue: AutosaveState.IDLE) ??
+          AutosaveState.IDLE,
+      assetType: $enumDecodeNullable(_$SIPAssetTypesEnumMap, json['assetType'],
+              unknownValue: SIPAssetTypes.UNKNOWN) ??
+          SIPAssetTypes.UNKNOWN,
+      amount: json['amount'] as num? ?? 0,
+      frequency: json['frequency'] as String? ?? '',
+      aUGGOLD99: json['AUGGOLD99'] as num? ?? 0,
+      lENDBOXP2P: json['LENDBOXP2P'] as num? ?? 0,
+      createdOn: json['createdOn'] as String? ?? '',
+      nextDue: json['nextDue'] as String? ?? '',
     );
 
 const _$AutosaveStateEnumMap = {

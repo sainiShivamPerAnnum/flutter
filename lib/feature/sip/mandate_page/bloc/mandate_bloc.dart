@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/enums/sip_asset_type.dart';
 import 'package:felloapp/core/model/subscription_models/subscription_status_response.dart';
 import 'package:felloapp/core/repository/subscription_repo.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
@@ -26,7 +27,7 @@ class MandateBloc extends Bloc<MandateEvent, MandateState> {
     this._logger,
   ) : super(const MandateInitialState()) {
     on<LoadPSPApps>(_onLoadPSPApps);
-    on<CrateSubscription>(_onRequestCreateSubscription);
+    on<CreateSubscription>(_onRequestCreateSubscription);
   }
 
   // Loads the available psp apps.
@@ -41,7 +42,7 @@ class MandateBloc extends Bloc<MandateEvent, MandateState> {
 
   // creates the subscription and launches the psp app if required.
   FutureOr<void> _onRequestCreateSubscription(
-    CrateSubscription event,
+    CreateSubscription event,
     Emitter<MandateState> emitter,
   ) async {
     final currentState = state;
@@ -65,7 +66,7 @@ class MandateBloc extends Bloc<MandateEvent, MandateState> {
       final subscriptionData = data?.subscription;
       final intentData = data?.intent;
 
-      if (res.isSuccess() && intentData != null) {
+      if (res.isSuccess() && intentData != null && subscriptionData != null) {
         if (intentData.redirectUrl.isNotEmpty && !intentData.alreadyExist) {
           await _openPSPApp(intentData.redirectUrl, event.meta.packageName);
         }
@@ -73,7 +74,7 @@ class MandateBloc extends Bloc<MandateEvent, MandateState> {
         emitter(
           (state as ListedPSPApps).copyWith(
             status: SubsTransactionStatus.created(
-              subsPrimaryKey: intentData.subId,
+              subsPrimaryKey: subscriptionData.id,
               redirectUrl: intentData.redirectUrl,
               mandateAlreadyExits: intentData.alreadyExist,
               subscriptionData: subscriptionData,
