@@ -1190,6 +1190,10 @@ class _CustomSwitchState extends State<CustomSwitch>
     );
   }
 
+  SwitchButtonStates get switchState =>
+      (_circleAnimation!.value == Alignment.centerLeft)
+          ? SwitchButtonStates.switchOn
+          : SwitchButtonStates.switchOff;
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
@@ -1212,9 +1216,8 @@ class _CustomSwitchState extends State<CustomSwitch>
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(24.0),
                 border: Border.all(
-                    color: _circleAnimation!.value == Alignment.centerLeft
-                        ? UiConstants.grey1
-                        : UiConstants.grey2),
+                    color:
+                        Theme.of(context).switchButtonBorderColor(switchState)),
                 color:
                     // _circleAnimation!.value == Alignment.centerLeft?
                     Colors.black
@@ -1227,14 +1230,10 @@ class _CustomSwitchState extends State<CustomSwitch>
                   right: SizeConfig.padding2,
                   left: SizeConfig.padding2),
               child: returnWidgetLayout(
-                child1: Text(
-                    _circleAnimation!.value == Alignment.centerLeft
-                        ? 'ON'
-                        : 'OFF',
+                child1: Text(switchState.isSwitchOn ? 'ON' : 'OFF',
                     style: TextStyle(
-                        color: _circleAnimation!.value == Alignment.centerLeft
-                            ? Colors.white
-                            : UiConstants.textGray60)),
+                        color: Theme.of(context)
+                            .switchButtonTextColor(switchState))),
                 child2: Container(
                   alignment: widget.value
                       ? ((Directionality.of(context) == TextDirection.rtl)
@@ -1248,16 +1247,14 @@ class _CustomSwitchState extends State<CustomSwitch>
                       height: 20.0,
                       decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color:
-                              (_circleAnimation!.value == Alignment.centerLeft)
-                                  ? UiConstants.teal3
-                                  : UiConstants.grey2),
+                          color: Theme.of(context)
+                              .switchButtonThumbColor(switchState)),
                       child: Center(
-                        child: _circleAnimation!.value == Alignment.centerLeft
+                        child: switchState.isSwitchOn
                             ? Container(
                                 width: 5.0,
                                 height: 5.0,
-                                decoration: BoxDecoration(
+                                decoration: const BoxDecoration(
                                     shape: BoxShape.circle,
                                     color: Colors.black))
                             : Container(

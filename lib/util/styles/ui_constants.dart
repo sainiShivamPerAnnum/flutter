@@ -274,3 +274,19 @@ extension StringEnhancements on String {
     return this[0].toUpperCase() + this.substring(1).toLowerCase();
   }
 }
+
+enum SwitchButtonStates { switchOn, switchOff }
+
+extension SwitchButtonStatesX on SwitchButtonStates {
+  bool get isSwitchOn => this == SwitchButtonStates.switchOn;
+  bool get isSwitchOff => this == SwitchButtonStates.switchOff;
+}
+
+extension ThemeDataX on ThemeData {
+  Color switchButtonBorderColor(SwitchButtonStates buttonType) =>
+      buttonType.isSwitchOn ? UiConstants.grey1 : UiConstants.grey2;
+  Color switchButtonTextColor(SwitchButtonStates buttonType) =>
+      buttonType.isSwitchOn ? Colors.white : UiConstants.textGray60;
+  Color switchButtonThumbColor(SwitchButtonStates buttonType) =>
+      buttonType.isSwitchOn ? UiConstants.teal3 : UiConstants.grey2;
+}
