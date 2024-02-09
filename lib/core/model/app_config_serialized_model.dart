@@ -1,4 +1,5 @@
 import 'package:json_annotation/json_annotation.dart';
+
 part 'app_config_serialized_model.g.dart';
 
 const _deserializable = JsonSerializable(
@@ -391,7 +392,7 @@ class HowReferralWorks {
   });
 
   factory HowReferralWorks.fromJson(Map<String, dynamic> json) =>
-      _$HowFromJson(json);
+      _$HowReferralWorksFromJson(json);
 }
 
 @_deserializable

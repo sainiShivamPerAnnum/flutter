@@ -180,7 +180,7 @@ RevampedReferralsConfig _$RevampedReferralsConfigFromJson(
           ? null
           : SaveScreen.fromJson(json['hero'] as Map<String, dynamic>),
       how: (json['how'] as List<dynamic>?)
-              ?.map((e) => How.fromJson(e as Map<String, dynamic>))
+              ?.map((e) => HowReferralWorks.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
       rewardValues: json['rewardValues'] == null
@@ -191,7 +191,8 @@ RevampedReferralsConfig _$RevampedReferralsConfigFromJson(
           : Stats.fromJson(json['stats'] as Map<String, dynamic>),
     );
 
-How _$HowFromJson(Map<String, dynamic> json) => How(
+HowReferralWorks _$HowReferralWorksFromJson(Map<String, dynamic> json) =>
+    HowReferralWorks(
       image: json['image'] as String? ?? '',
       text: json['text'] as String? ?? '',
     );
