@@ -93,14 +93,14 @@
   "obPreferNotToSay": "Rather Not Say",
   "obLoginAsText": "Login as +91-{mobileNumber}",
   "@obLoginAsText": {
-      "placeholders": {
-        "mobileNumber": {
-          "type": "String"
-        }
+    "placeholders": {
+      "mobileNumber": {
+        "type": "String"
       }
-    },
+    }
+  },
   "obAssetPrefBottomSheet2ButtonText1": "SKIP TO HOME",
-  "learnMore" : "LEARN MORE",
+  "learnMore": "LEARN MORE",
   "obAssetWelcomeText": "Welcome To Fello",
   "obAssetPrefGreeting": "Hi {name}",
   "@obAssetPrefGreeting": {
@@ -110,8 +110,8 @@
       }
     }
   },
-  "obProceedWithP2P" : "PROCEED WITH FELLO P2P",
-  "obProceedWithGold" : "PROCEED WITH DIGITAL GOLD",
+  "obProceedWithP2P": "PROCEED WITH FELLO P2P",
+  "obProceedWithGold": "PROCEED WITH DIGITAL GOLD",
   "-----------------------------------": "----------------------------",
   "navBarJourney": "Journey",
   "navBarPlay": "Play",
@@ -347,11 +347,11 @@
   "refsubtitle": "Earn ₹ 25 and 200 Fello tokens for every referral and referrer of the month will get a brand new iphone 13",
   "refWhatsapp": "WhatsApp",
   "refShareLink": "Share Link",
-  "referralNudgeMessage" : "Claim {amount} referral bonus by saving",
+  "referralNudgeMessage": "Claim {amount} referral bonus by saving",
   "@referralNudgeMessage": {
-    "placeholders" : {
-      "amount" : {
-        "type":"num"
+    "placeholders": {
+      "amount": {
+        "type": "num"
       }
     }
   },
@@ -920,7 +920,7 @@
   "howtoearn": "How to Earn Rewards",
   "noScratchCards": "You don’t have any Scratch Cards",
   "noScratchCardsSub": "Earn Scratch Cards to win assured rewards with Fello",
-  "sctab1":"Your Rewards",
+  "sctab1": "Your Rewards",
   "sctab2": "Earn Rewards",
   "loadingScratchCards": "Loading more tickets",
   "lastWeekFello": "Last Week on Fello",
@@ -934,14 +934,14 @@
   "rewardsWithFello": "Rewards with Fello",
   "earned": "Earned ",
   "ticketsMatched": "Tickets matched",
-  "rewardsWon":"Reward won",
+  "rewardsWon": "Reward won",
   "leaderBoardswillUpdate": "Leaderboard will be updated soon",
   "reupload": "UPLOAD AGAIN",
   "powerPlaySlog": "Predict | Save | Win",
-  "skip" : "SKIP",
-  "selectAssetMessage" : "Choose any of the above asset to proceed",
+  "skip": "SKIP",
+  "selectAssetMessage": "Choose any of the above asset to proceed",
   "tryAgainMessage": "Please try again",
-  "signUp" : "SIGN-UP",
+  "signUp": "SIGN-UP",
   "tutorialstart": "Welcome to Fello!\n\nQuick tips are here to guide you. \nClick anywhere for the next tip. \n'Skip' to close. \nRestart anytime from the 'Profile' section.🚀",
   "tutorial1": "Start your Rewarding Savings journey by selecting your assets over here",
   "tutorial2": "For every Rs.500 saved, you get 1 weekly ticket which earns you rewards from Rs.1 to Rs. 1 Cr.",
@@ -949,7 +949,7 @@
   "tutorial4": "You can see all your earned rewards in this Rewards section",
   "tutorial5": "If you want to know more about Fello, check out these stories!",
   "tutorial6": "Now lets start your rewarding savings journey by selecting your asset over here",
-  "scratchCardsSip":"Scratch Card",
+  "scratchCardsSip": "Scratch Card",
   "sipTickets": "Tickets {count}",
   "@sipTickets": {
     "placeholders": {
@@ -958,9 +958,9 @@
       }
     }
   },
-  "sipamount":"SIP amount",
-  "siptitle":"SIP with Fello",
-  "selectSipAmount":"Select SIP amount",
+  "sipamount": "SIP amount",
+  "siptitle": "SIP with Fello",
+  "selectSipAmount": "Select SIP amount",
   "minSipAmount": "Minimum amount - ₹{amount}",
   "@minSipAmount": {
     "placeholders": {
@@ -977,8 +977,15 @@
       }
     }
   },
-  "expectedReturns5y": "Expected Returns in 5Y",
-  "returnSubText": "with Fello SIP",
+  "expectedReturns5y": "Your Investment in 5Y",
+  "returnSubText": "with Fello {type}",
+  "@returnSubText": {
+    "placeholders": {
+      "type": {
+        "type": "String"
+      }
+    }
+  },
   "percentageReturns": "with {percentage}% returns",
   "@percentageReturns": {
     "placeholders": {
@@ -988,7 +995,7 @@
     }
   },
   "existingMandate": "Your SIP amount will be deducted fro your existing mandate . No new mandate will be created for this SIP",
-  "newMandate": "You will receive a mandate for ₹5000 on the selected UPI App. But don’t worry, We will not deduct anymore than ₹1100/week.",
+  "newMandate": "You will receive a mandate for ₹5000 on the selected UPI App. But don’t worry, We will not deduct anymore than your SIP amount.",
   "updateSip": "UPDATE SIP",
   "oneClickAway": "1 CLICKS AWAY",
   "twoClickAway": "2 CLICKS AWAY",
@@ -1040,10 +1047,17 @@
   "setupSip": "Setup SIP",
   "setupCardTitle": "Start your SIP & Grow money on autopilot",
   "setupCardSubTitle": "Invest in Fello Flo or Digital Gold to meet your financial Goals",
-  "sipYear":"Year",
-  "pauseSuccess":"SIP paused successfully",
+  "sipYear": "Year",
+  "pauseSuccess": "SIP paused successfully",
   "pauseSuccessSub": "For more details check SIP section",
   "pauseFail": "Failed to pause SIP",
   "tryAgain": "Please try again",
-  "errorLoadingSip": "Error Loading SIP data. Try Again Later!"
+  "errorLoadingSip": "Error Loading SIP data. Try Again Later!",
+  "sipText": "SIP",
+  "oneWeek": "1 Week",
+  "twoWeek": "2 Weeks",
+  "oneMonth": "1 Month",
+  "indefinitely": "Indefinitely",
+  "manageSip": "Manage SIP",
+  "viewSIPTransac" :"View SIP Transactions"
 }

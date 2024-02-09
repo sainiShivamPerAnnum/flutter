@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:felloapp/core/enums/screen_item_enum.dart';
 import 'package:felloapp/core/service/notifier_services/scratch_card_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -42,8 +40,7 @@ class ScratchCardsView extends StatelessWidget {
         return InkWell(
           onTap: () {
             AppState.screenStack.add(ScreenItem.dialog);
-            Navigator.of(AppState.delegate!.navigatorKey.currentContext!)
-                .push(
+            Navigator.of(AppState.delegate!.navigatorKey.currentContext!).push(
               HeroDialogRoute(
                 builder: (context) {
                   return GTDetailedView(

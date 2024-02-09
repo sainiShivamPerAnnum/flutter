@@ -1,5 +1,6 @@
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter/services.dart';
 
 class CalculatorField extends StatelessWidget {
   const CalculatorField(
@@ -12,6 +13,7 @@ class CalculatorField extends StatelessWidget {
       this.prefixText,
       this.suffixText,
       this.changeFunction,
+      this.inputFormatters,
       this.maxValue,
       this.textAlign,
       this.minValue,
@@ -23,6 +25,7 @@ class CalculatorField extends StatelessWidget {
   final bool? isPercentage;
   final String label;
   final String? prefixText;
+  final List<TextInputFormatter>? inputFormatters;
   final String? suffixText;
   final double? maxValue;
   final double? minValue;
@@ -65,6 +68,7 @@ class CalculatorField extends StatelessWidget {
                 onSubmitted: (value) {
                   changeFunction!(int.parse(value));
                 },
+                inputFormatters: inputFormatters,
                 textAlign: textAlign ?? TextAlign.start,
                 decoration: InputDecoration(
                     border: InputBorder.none,
