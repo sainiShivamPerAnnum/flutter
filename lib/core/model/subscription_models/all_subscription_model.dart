@@ -19,3 +19,8 @@ class Subscriptions {
   factory Subscriptions.fromJson(Map<String, dynamic> json) =>
       _$SubscriptionsFromJson(json);
 }
+
+extension SubscriptionsX on Subscriptions {
+  num get totalSipInvestedAmount => subs.fold(
+      0.0, (previousValue, element) => previousValue + element.amount);
+}

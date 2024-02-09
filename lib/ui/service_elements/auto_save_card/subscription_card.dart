@@ -34,6 +34,7 @@ class AutosaveCard extends StatelessWidget {
                   return;
                 }
                 service.handleTap(type: investmentType);
+                service.onSipCardTapEventCapture();
               },
               child: AutoSaveCard(service: service))
           : const SizedBox(),

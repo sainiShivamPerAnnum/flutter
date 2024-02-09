@@ -62,6 +62,7 @@ class _SipAsssetSelectState extends State<SipAsssetSelect> {
   @override
   Widget build(BuildContext context) {
     var assets = SipDataHolder.instance.data.selectAssetScreen.options;
+
     var assetsLength = assets.length;
     final selectedAssetModel = context.watch<SelectAssetCubit>();
     final isBtnActive = selectedAssetModel.state.selectedAsset != null;
@@ -239,8 +240,13 @@ class _AssetBlockState extends State<AssetBlock> with TickerProviderStateMixin {
   Widget build(BuildContext context) {
     return InkWell(
       onTap: () {
+        context.read<SelectAssetCubit>().onSipAssetSelected(
+              selectedSipName: widget.option.title.replaceAll('SIP in', ''),
+              // widget.state.options[tabController.previousIndex],
+            );
         if (widget.asset != SIPAssetTypes.UNKNOWN) {
           final model = context.read<SelectAssetCubit>();
+
           model.setSelectedAsset(widget.asset);
         }
       },

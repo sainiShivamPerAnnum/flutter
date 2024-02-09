@@ -153,4 +153,43 @@ class SipCubit extends Cubit<SipState> {
       updatePauseResumeStatus(false);
     }
   }
+
+  void onSetUpSipEventCapture(
+      {required int noOfSips, required num totalSipAmount}) {
+    locator<AnalyticsService>().track(
+      eventName: AnalyticsEvents.setupSipButtonTap,
+      properties: {"No. of SIPS": noOfSips, "Amount of SIPS": totalSipAmount},
+    );
+  }
+
+  void onExistingSipCardTapEventCapture(
+      {required String assertName,
+      required num sipAmount,
+      required String sipStartingDate,
+      required String sipNextDueDate,
+      required String actionType}) {
+    locator<AnalyticsService>().track(
+      eventName: AnalyticsEvents.sipExistingCardTap,
+      properties: {
+        "Amount": sipAmount,
+        "Asset Name": assertName,
+        "Date Started": sipStartingDate,
+        "Next Due": sipNextDueDate,
+        "Action": actionType
+      },
+    );
+  }
+
+  void onCalculatorFrequencyChanged({
+    required String previousFrequency,
+    required String newFrequency,
+  }) {
+    locator<AnalyticsService>().track(
+      eventName: AnalyticsEvents.sipCalculatorFrequencyCHanged,
+      properties: {
+        "Current Frequency": newFrequency,
+        "Updated Frequency": newFrequency
+      },
+    );
+  }
 }
