@@ -9485,6 +9485,16 @@ class S {
       args: [],
     );
   }
+
+  /// `View SIP Transactions`
+  String get viewSIPTransac {
+    return Intl.message(
+      'View SIP Transactions',
+      name: 'viewSIPTransac',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

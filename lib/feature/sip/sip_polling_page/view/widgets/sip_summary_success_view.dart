@@ -215,6 +215,11 @@ class _SipSummary extends StatelessWidget {
                         RootPageConfig.path) {
                       await AppState.backButtonDispatcher!.didPopRoute();
                     }
+
+                    AppState.delegate!.appState.currentAction = PageAction(
+                      state: PageState.addPage,
+                      page: MyWinningsPageConfig,
+                    );
                   },
                   child: Expanded(
                     child: _WinningsChip(

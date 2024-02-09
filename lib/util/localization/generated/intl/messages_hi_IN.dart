@@ -1503,6 +1503,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("सत्यापित करने में असमर्थ"),
         "view": MessageLookupByLibrary.simpleMessage("देखना"),
         "viewPrizes": MessageLookupByLibrary.simpleMessage("पुरस्कार देखें"),
+        "viewSIPTransac":
+            MessageLookupByLibrary.simpleMessage("SIP लेनदेन देखें"),
         "waitForNewOTP": MessageLookupByLibrary.simpleMessage(
             "कृपया नए ओटीपी की प्रतीक्षा करें"),
         "wantToSell": MessageLookupByLibrary.simpleMessage(

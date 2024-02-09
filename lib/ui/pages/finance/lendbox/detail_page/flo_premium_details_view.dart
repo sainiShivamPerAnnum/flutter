@@ -1141,7 +1141,7 @@ class FloPremiumTransactionsList extends StatefulWidget {
 class _FloPremiumTransactionsListState
     extends State<FloPremiumTransactionsList> {
   late LendboxMaturityService _lendboxMaturityService;
-  bool showChange =
+  bool showChangeCTA =
       AppConfig.getValue(AppConfigKey.canChangePostMaturityPreference);
 
   void trackTransactionCardTap(
@@ -1367,7 +1367,7 @@ class _FloPremiumTransactionsListState
                                     ),
                                   ),
                                   SizedBox(width: SizeConfig.padding10),
-                                  if (showChange)
+                                  if (showChangeCTA)
                                     MaterialButton(
                                       elevation:
                                           (showNeedHelp || showConfirm) ? 0 : 2,

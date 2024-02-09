@@ -1058,5 +1058,6 @@
   "twoWeek": "2 Weeks",
   "oneMonth": "1 Month",
   "indefinitely": "Indefinitely",
-  "manageSip": "Manage SIP"
+  "manageSip": "Manage SIP",
+  "viewSIPTransac" :"View SIP Transactions"
 }

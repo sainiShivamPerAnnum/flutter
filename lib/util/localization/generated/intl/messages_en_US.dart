@@ -1519,6 +1519,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Unable to verify"),
         "view": MessageLookupByLibrary.simpleMessage("View"),
         "viewPrizes": MessageLookupByLibrary.simpleMessage("View Prizes"),
+        "viewSIPTransac":
+            MessageLookupByLibrary.simpleMessage("View SIP Transactions"),
         "waitForNewOTP":
             MessageLookupByLibrary.simpleMessage("Please wait for the new otp"),
         "wantToSell": MessageLookupByLibrary.simpleMessage(
