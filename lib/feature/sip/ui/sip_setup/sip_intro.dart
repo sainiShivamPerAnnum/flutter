@@ -316,7 +316,6 @@ class _SipIntroViewState extends State<SipIntroView> {
                     ],
                   );
                 }(),
-              _ => const SizedBox.shrink(),
             },
           );
         },
@@ -364,36 +363,34 @@ class AssetSipContainer extends StatelessWidget {
         );
 
     await BaseUtil.openModalBottomSheet(
-        addToScreenStack: true,
-        isBarrierDismissible: true,
-        enableDrag: true,
-        content: EditSipBottomSheet(
-          assetType: assetType,
-          state: state,
-          index: index,
-          allowEdit: allowEdit,
-          amount: sipAmount,
-          model: model,
+      addToScreenStack: true,
+      isBarrierDismissible: true,
+      enableDrag: true,
+      content: EditSipBottomSheet(
+        assetType: assetType,
+        state: state,
+        index: index,
+        allowEdit: allowEdit,
+        amount: sipAmount,
+        model: model,
+        frequency: sipInterval,
+        sipReturns: SipCalculation.getReturn(
+          formAmount: sipAmount,
+          currentasset: assetType,
+          interestOnly: true,
           frequency: sipInterval,
-          sipReturns: SipCalculation.getReturn(
-              formAmount: sipAmount,
-              currentasset: assetType,
-              interestOnly: true,
-              frequency: sipInterval),
-        ));
+        ),
+      ),
+    );
   }
 
   bool get isSipPaused => pausedSip != null && (pausedSip ?? false);
-  String get sipTextIfPause => isSipPaused ? locale.pauseSip : locale.editSip;
 
-  Color get sipTextColorIfPause => isSipPaused
+  String get ctaLabel => isSipPaused ? locale.pauseSip : locale.editSip;
+
+  Color get ctaColor => isSipPaused
       ? UiConstants.kWinnerPlayerPrimaryColor.withOpacity(.8)
       : UiConstants.kTabBorderColor;
-  String get clickToResumeTextValue =>
-      isSipPaused ? locale.clickToresumeSip : nextDueDate;
-  Color get clickToResumeTextColor => isSipPaused
-      ? UiConstants.kTabBorderColor
-      : UiConstants.kTextColor.withOpacity(0.8);
 
   @override
   Widget build(BuildContext context) {
@@ -442,31 +439,32 @@ class AssetSipContainer extends StatelessWidget {
                   ],
                 ),
                 InkWell(
-                    onTap: () async {
-                      await BaseUtil.openModalBottomSheet(
-                          addToScreenStack: true,
-                          isBarrierDismissible: true,
-                          enableDrag: true,
-                          content: EditSipBottomSheet(
-                            assetType: assetType,
-                            state: state,
-                            index: index,
-                            allowEdit: allowEdit,
-                            amount: sipAmount,
-                            model: model,
+                  onTap: () async {
+                    await BaseUtil.openModalBottomSheet(
+                        addToScreenStack: true,
+                        isBarrierDismissible: true,
+                        enableDrag: true,
+                        content: EditSipBottomSheet(
+                          assetType: assetType,
+                          state: state,
+                          index: index,
+                          allowEdit: allowEdit,
+                          amount: sipAmount,
+                          model: model,
+                          frequency: sipInterval,
+                          sipReturns: SipCalculation.getReturn(
+                            formAmount: sipAmount,
+                            currentasset: assetType,
+                            interestOnly: true,
                             frequency: sipInterval,
-                            sipReturns: SipCalculation.getReturn(
-                                formAmount: sipAmount,
-                                currentasset: assetType,
-                                interestOnly: true,
-                                frequency: sipInterval),
-                          ));
-                    },
-                    child: Text(
-                      sipTextIfPause,
-                      style: TextStyles.sourceSans.body3
-                          .colour(sipTextColorIfPause),
-                    ))
+                          ),
+                        ));
+                  },
+                  child: Text(
+                    ctaLabel,
+                    style: TextStyles.sourceSans.body3.colour(ctaColor),
+                  ),
+                )
               ],
             ),
             SizedBox(
@@ -476,9 +474,10 @@ class AssetSipContainer extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Text(
-                  clickToResumeTextValue,
-                  style: TextStyles.sourceSans.body4
-                      .colour(clickToResumeTextColor),
+                  isSipPaused ? locale.clickToResumeSip : nextDueDate,
+                  style: TextStyles.sourceSans.body4.colour(isSipPaused
+                      ? UiConstants.kTabBorderColor
+                      : UiConstants.kTextColor.withOpacity(0.8)),
                 ),
                 Text(
                     BaseUtil.formatIndianRupees(
