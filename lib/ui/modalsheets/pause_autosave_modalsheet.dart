@@ -54,22 +54,22 @@ class _PauseAutosaveModalState extends State<PauseAutosaveModal> {
             height: SizeConfig.padding32,
           ),
           pauseOptionTile(
-            text: "1 Week",
+            text: locale.oneWeek,
             radioValue: 1,
             option: AutosavePauseOption.ONE_WEEK,
           ),
           pauseOptionTile(
-            text: "2 Weeks",
+            text: locale.twoWeek,
             radioValue: 2,
             option: AutosavePauseOption.TWO_WEEK,
           ),
           pauseOptionTile(
-            text: "1 Month",
+            text: locale.oneMonth,
             radioValue: 3,
             option: AutosavePauseOption.ONE_MONTH,
           ),
           pauseOptionTile(
-            text: "Forever",
+            text: locale.indefinitely,
             radioValue: 4,
             option: AutosavePauseOption.FOREVER,
           ),

@@ -99,18 +99,20 @@ class _SipAsssetSelectState extends State<SipAsssetSelect> {
                 SizedBox(
                   height: SizeConfig.padding30,
                 ),
-                Column(
-                  children: [
-                    for (int i = 0; i < assetsLength; i++) ...[
-                      AssetBlock(
-                        option: assets[i],
-                        asset: assets[i].type,
-                      ),
-                      SizedBox(
-                        height: SizeConfig.padding16,
-                      ),
-                    ]
-                  ],
+                SingleChildScrollView(
+                  child: Column(
+                    children: [
+                      for (int i = 0; i < assetsLength; i++) ...[
+                        AssetBlock(
+                          option: assets[i],
+                          asset: assets[i].type,
+                        ),
+                        SizedBox(
+                          height: SizeConfig.padding16,
+                        ),
+                      ]
+                    ],
+                  ),
                 ),
                 //
               ],
@@ -191,7 +193,7 @@ class _SipAsssetSelectState extends State<SipAsssetSelect> {
                                 );
                               }
                             : () => null,
-                        label: locale.threeClicksAway),
+                        label: locale.proceed),
                   ),
                 ),
               ],
@@ -223,8 +225,12 @@ class _AssetBlockState extends State<AssetBlock> with TickerProviderStateMixin {
       vsync: this,
     );
     final model = context.read<SelectAssetCubit>();
-    if (model.state.selectedAsset == widget.asset) {
+    if (model.state.selectedAsset == widget.asset ||
+        widget.option.defaultSelected) {
       _controller.forward(from: 0.0);
+    }
+    if (model.state.selectedAsset == null && widget.option.defaultSelected) {
+      model.setSelectedAsset(widget.asset);
     }
     super.initState();
   }

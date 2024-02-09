@@ -8946,23 +8946,23 @@ class S {
     );
   }
 
-  /// `Expected Returns in 5Y`
+  /// `Your Investment in 5Y`
   String get expectedReturns5y {
     return Intl.message(
-      'Expected Returns in 5Y',
+      'Your Investment in 5Y',
       name: 'expectedReturns5y',
       desc: '',
       args: [],
     );
   }
 
-  /// `with Fello SIP`
-  String get returnSubText {
+  /// `with Fello {type}`
+  String returnSubText(String type) {
     return Intl.message(
-      'with Fello SIP',
+      'with Fello $type',
       name: 'returnSubText',
       desc: '',
-      args: [],
+      args: [type],
     );
   }
 
@@ -8986,10 +8986,10 @@ class S {
     );
   }
 
-  /// `You will receive a mandate for ₹5000 on the selected UPI App. But don’t worry, We will not deduct anymore than ₹1100/week.`
+  /// `You will receive a mandate for ₹5000 on the selected UPI App. But don’t worry, We will not deduct anymore than your SIP amount.`
   String get newMandate {
     return Intl.message(
-      'You will receive a mandate for ₹5000 on the selected UPI App. But don’t worry, We will not deduct anymore than ₹1100/week.',
+      'You will receive a mandate for ₹5000 on the selected UPI App. But don’t worry, We will not deduct anymore than your SIP amount.',
       name: 'newMandate',
       desc: '',
       args: [],
@@ -9421,6 +9421,76 @@ class S {
     return Intl.message(
       'Error Loading SIP data. Try Again Later!',
       name: 'errorLoadingSip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `SIP`
+  String get sipText {
+    return Intl.message(
+      'SIP',
+      name: 'sipText',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `1 Week`
+  String get oneWeek {
+    return Intl.message(
+      '1 Week',
+      name: 'oneWeek',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `2 Weeks`
+  String get twoWeek {
+    return Intl.message(
+      '2 Weeks',
+      name: 'twoWeek',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `1 Month`
+  String get oneMonth {
+    return Intl.message(
+      '1 Month',
+      name: 'oneMonth',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Indefinitely`
+  String get indefinitely {
+    return Intl.message(
+      'Indefinitely',
+      name: 'indefinitely',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Manage SIP`
+  String get manageSip {
+    return Intl.message(
+      'Manage SIP',
+      name: 'manageSip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `View SIP Transactions`
+  String get viewSIPTransac {
+    return Intl.message(
+      'View SIP Transactions',
+      name: 'viewSIPTransac',
       desc: '',
       args: [],
     );
