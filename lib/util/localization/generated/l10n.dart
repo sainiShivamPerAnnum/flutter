@@ -9127,10 +9127,10 @@ class S {
   }
 
   /// `Click on card to Resume SIP`
-  String get clickToresumeSip {
+  String get clickToResumeSip {
     return Intl.message(
       'Click on card to Resume SIP',
-      name: 'clickToresumeSip',
+      name: 'clickToResumeSip',
       desc: '',
       args: [],
     );

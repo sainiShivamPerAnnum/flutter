@@ -5,6 +5,8 @@ import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/sip_asset_type.dart';
 import 'package:felloapp/core/model/sip_model/calculator_data.dart';
 import 'package:felloapp/core/model/sip_model/calculator_details.dart';
+import 'package:felloapp/core/model/subscription_models/all_subscription_model.dart';
+import 'package:felloapp/core/model/subscription_models/subscription_model.dart';
 import 'package:felloapp/core/model/subscription_models/subscription_status.dart';
 import 'package:felloapp/feature/sip/cubit/autosave_cubit.dart';
 import 'package:felloapp/feature/sip/shared/edit_sip_bottomsheet.dart';
@@ -24,7 +26,6 @@ import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 
 class SipIntroView extends StatefulWidget {
   const SipIntroView({super.key});
@@ -96,6 +97,7 @@ class _SipIntroViewState extends State<SipIntroView> {
                       : state.activeSubscription.length > 3
                           ? 3
                           : state.activeSubscription.length;
+
                   return Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
@@ -187,6 +189,14 @@ class _SipIntroViewState extends State<SipIntroView> {
                                         ),
                                         state: PageState.addWidget,
                                       );
+                                      context
+                                          .read<SipCubit>()
+                                          .onSetUpSipEventCapture(
+                                            noOfSips: length,
+                                            totalSipAmount: state
+                                                .activeSubscription
+                                                .totalSipInvestedAmount,
+                                          );
                                     }),
                               ),
                               Padding(
@@ -249,8 +259,8 @@ class _SipIntroViewState extends State<SipIntroView> {
                                                 .assetType.isLendBox
                                             ? locale.floSip
                                             : locale.goldSip,
-                                    startDate: state
-                                        .activeSubscription.subs[i].createdOn,
+                                    startDate: state.activeSubscription.subs[i]
+                                        .formattedStartDate,
                                     sipInterval: state
                                         .activeSubscription.subs[i].frequency,
                                     pausedSip: state.activeSubscription.subs[i]
@@ -306,7 +316,6 @@ class _SipIntroViewState extends State<SipIntroView> {
                     ],
                   );
                 }(),
-              _ => const SizedBox.shrink(),
             },
           );
         },
@@ -344,31 +353,51 @@ class AssetSipContainer extends StatelessWidget {
   final SipCubit model;
   final locale = locator<S>();
 
+  Future<void> openBottomSheetOnSipPaused(BuildContext context) async {
+    context.read<SipCubit>().onExistingSipCardTapEventCapture(
+          assertName: sipName,
+          sipAmount: sipAmount,
+          sipStartingDate: startDate,
+          sipNextDueDate: nextDueDate,
+          actionType: isSipPaused ? 'Paused' : 'Edit',
+        );
+
+    await BaseUtil.openModalBottomSheet(
+      addToScreenStack: true,
+      isBarrierDismissible: true,
+      enableDrag: true,
+      content: EditSipBottomSheet(
+        assetType: assetType,
+        state: state,
+        index: index,
+        allowEdit: allowEdit,
+        amount: sipAmount,
+        model: model,
+        frequency: sipInterval,
+        sipReturns: SipCalculation.getReturn(
+          formAmount: sipAmount,
+          currentasset: assetType,
+          interestOnly: true,
+          frequency: sipInterval,
+        ),
+      ),
+    );
+  }
+
+  bool get isSipPaused => pausedSip != null && (pausedSip ?? false);
+
+  String get ctaLabel => isSipPaused ? locale.pauseSip : locale.editSip;
+
+  Color get ctaColor => isSipPaused
+      ? UiConstants.kWinnerPlayerPrimaryColor.withOpacity(.8)
+      : UiConstants.kTabBorderColor;
+
   @override
   Widget build(BuildContext context) {
-    String formattedDate =
-        DateFormat('dd MMM yyyy').format(DateTime.parse(startDate));
     return GestureDetector(
-      onTap: pausedSip != null && (pausedSip ?? false)
-          ? () async {
-              await BaseUtil.openModalBottomSheet(
-                  addToScreenStack: true,
-                  isBarrierDismissible: true,
-                  enableDrag: true,
-                  content: EditSipBottomSheet(
-                    assetType: assetType,
-                    state: state,
-                    index: index,
-                    allowEdit: allowEdit,
-                    amount: sipAmount,
-                    model: model,
-                    frequency: sipInterval,
-                    sipReturns: SipCalculation.getReturn(
-                        formAmount: sipAmount,
-                        currentasset: assetType,
-                        interestOnly: true,
-                        frequency: sipInterval),
-                  ));
+      onTap: isSipPaused
+          ? () {
+              openBottomSheetOnSipPaused(context);
             }
           : null,
       child: Container(
@@ -401,7 +430,7 @@ class AssetSipContainer extends StatelessWidget {
                               .colour(UiConstants.kTextColor),
                         ),
                         Text(
-                          "$sipInterval SIP started on $formattedDate",
+                          "$sipInterval SIP started on $startDate",
                           style: TextStyles.sourceSans.body4
                               .colour(UiConstants.kTextColor.withOpacity(0.8)),
                         )
@@ -410,38 +439,32 @@ class AssetSipContainer extends StatelessWidget {
                   ],
                 ),
                 InkWell(
-                    onTap: () async {
-                      await BaseUtil.openModalBottomSheet(
-                          addToScreenStack: true,
-                          isBarrierDismissible: true,
-                          enableDrag: true,
-                          content: EditSipBottomSheet(
-                            assetType: assetType,
-                            state: state,
-                            index: index,
-                            allowEdit: allowEdit,
-                            amount: sipAmount,
-                            model: model,
+                  onTap: () async {
+                    await BaseUtil.openModalBottomSheet(
+                        addToScreenStack: true,
+                        isBarrierDismissible: true,
+                        enableDrag: true,
+                        content: EditSipBottomSheet(
+                          assetType: assetType,
+                          state: state,
+                          index: index,
+                          allowEdit: allowEdit,
+                          amount: sipAmount,
+                          model: model,
+                          frequency: sipInterval,
+                          sipReturns: SipCalculation.getReturn(
+                            formAmount: sipAmount,
+                            currentasset: assetType,
+                            interestOnly: true,
                             frequency: sipInterval,
-                            sipReturns: SipCalculation.getReturn(
-                                formAmount: sipAmount,
-                                currentasset: assetType,
-                                interestOnly: true,
-                                frequency: sipInterval),
-                          ));
-                    },
-                    child: pausedSip != null && pausedSip!
-                        ? Text(
-                            locale.pauseSip,
-                            style: TextStyles.sourceSans.body3.colour(
-                                UiConstants.kWinnerPlayerPrimaryColor
-                                    .withOpacity(.8)),
-                          )
-                        : Text(
-                            locale.editSip,
-                            style: TextStyles.sourceSans.body3
-                                .colour(UiConstants.kTabBorderColor),
-                          ))
+                          ),
+                        ));
+                  },
+                  child: Text(
+                    ctaLabel,
+                    style: TextStyles.sourceSans.body3.colour(ctaColor),
+                  ),
+                )
               ],
             ),
             SizedBox(
@@ -450,17 +473,12 @@ class AssetSipContainer extends StatelessWidget {
             Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
-                pausedSip != null && pausedSip!
-                    ? Text(
-                        locale.clickToresumeSip,
-                        style: TextStyles.sourceSans.body4
-                            .colour(UiConstants.kTabBorderColor),
-                      )
-                    : Text(
-                        nextDueDate,
-                        style: TextStyles.sourceSans.body4
-                            .colour(UiConstants.kTextColor.withOpacity(0.8)),
-                      ),
+                Text(
+                  isSipPaused ? locale.clickToResumeSip : nextDueDate,
+                  style: TextStyles.sourceSans.body4.colour(isSipPaused
+                      ? UiConstants.kTabBorderColor
+                      : UiConstants.kTextColor.withOpacity(0.8)),
+                ),
                 Text(
                     BaseUtil.formatIndianRupees(
                         double.parse(sipAmount.toString())),
@@ -604,7 +622,13 @@ class _SipCalculatorState extends State<SipCalculator>
                   controller: tabController,
                   tabs: widget.state.options,
                   labelBuilder: (label) => label,
-                  onTap: (_, i) {
+                  onTap: (currentTab, i) {
+                    context.read<SipCubit>().onCalculatorFrequencyChanged(
+                          previousFrequency:
+                              widget.state.options[tabController.previousIndex],
+                          newFrequency: currentTab,
+                        );
+
                     setState(() {
                       getDefaultValue(
                         i,

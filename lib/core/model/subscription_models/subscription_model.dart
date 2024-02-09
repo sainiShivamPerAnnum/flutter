@@ -1,4 +1,5 @@
 import 'package:felloapp/core/enums/sip_asset_type.dart';
+import 'package:intl/intl.dart';
 import 'package:json_annotation/json_annotation.dart';
 
 import 'subscription_status.dart';
@@ -39,4 +40,9 @@ class SubscriptionModel {
 
   factory SubscriptionModel.fromJson(Map<String, dynamic> json) =>
       _$SubscriptionModelFromJson(json);
+}
+
+extension SubscriptionModelX on SubscriptionModel {
+  String get formattedStartDate =>
+      DateFormat('dd MMM yyyy').format(DateTime.parse(createdOn));
 }

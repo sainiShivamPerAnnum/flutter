@@ -983,7 +983,7 @@
   "goldSip": "डिजिटल गोल्ड SIP",
   "pauseSip": "रोकी गई SIP",
   "editSip": "SIP संपादित करें",
-  "clickToresumeSip": "SIP फिर से शुरू करने के लिए कार्ड पर क्लिक करें",
+  "clickToResumeSip": "SIP फिर से शुरू करने के लिए कार्ड पर क्लिक करें",
   "SipCalculator": "SIP कैलकुलेटर",
   "returnsCalculator": "अपने SIP रिटर्न्स की गणना करें",
   "sipAmount": "SIP राशि -",

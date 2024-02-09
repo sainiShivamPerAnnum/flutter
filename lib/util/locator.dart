@@ -115,7 +115,7 @@ import 'package:felloapp/ui/pages/userProfile/my_winnings/my_winnings_vm.dart';
 import 'package:felloapp/ui/pages/userProfile/referrals/referral_details/referral_details_vm.dart';
 import 'package:felloapp/ui/pages/userProfile/settings/settings_vm.dart';
 import 'package:felloapp/ui/pages/userProfile/userProfile/userProfile_viewModel.dart';
-import 'package:felloapp/ui/service_elements/auto_save_card/subscription_card_vm.dart';
+
 import 'package:felloapp/ui/service_elements/last_week/last_week_vm.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -277,7 +277,7 @@ Future<void> setupLocator() async {
   locator.registerFactory(FelloCoinBarViewModel.new);
   locator.registerFactory(FAQCardViewModel.new);
   locator.registerFactory(SourceAdaptiveAssetViewModel.new);
-  locator.registerFactory(SubscriptionCardViewModel.new);
+
   locator.registerFactory(FloPremiumDetailsViewModel.new);
   locator.registerFactory(AssetPreferenceViewModel.new);
 
