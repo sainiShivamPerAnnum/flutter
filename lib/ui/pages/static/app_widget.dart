@@ -1192,7 +1192,7 @@ class _CustomSwitchState extends State<CustomSwitch>
         widget.onChanged(!selected);
       },
       child: Container(
-        width: SizeConfig.padding48,
+        width: SizeConfig.padding50,
         height: SizeConfig.padding26,
         decoration: BoxDecoration(
             borderRadius: BorderRadius.circular(
@@ -1202,7 +1202,7 @@ class _CustomSwitchState extends State<CustomSwitch>
             color: Colors.black),
         child: Padding(
           padding: EdgeInsets.only(
-              right: SizeConfig.padding2, left: SizeConfig.padding2),
+              right: SizeConfig.padding4, left: SizeConfig.padding4),
           child: returnWidgetLayout(
             child1: Text(switchState.isSwitchOn ? 'ON' : 'OFF',
                 style: TextStyle(color: switchButtonTextColor)),
