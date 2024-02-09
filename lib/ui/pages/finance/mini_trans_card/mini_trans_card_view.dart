@@ -144,7 +144,7 @@ class MiniTransactionCard extends StatelessWidget {
                             );
                           },
                           child: Text(
-                            "View Autosave Transactions",
+                            "View SIP Transactions",
                             style: TextStyles.sourceSansM.body3
                                 .colour(UiConstants.primaryColor),
                           ),

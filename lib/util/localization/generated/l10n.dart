@@ -8946,23 +8946,23 @@ class S {
     );
   }
 
-  /// `Expected Returns in 5Y`
+  /// `Your Investment in 5Y`
   String get expectedReturns5y {
     return Intl.message(
-      'Expected Returns in 5Y',
+      'Your Investment in 5Y',
       name: 'expectedReturns5y',
       desc: '',
       args: [],
     );
   }
 
-  /// `with Fello SIP`
-  String get returnSubText {
+  /// `with Fello {type}`
+  String returnSubText(String type) {
     return Intl.message(
-      'with Fello SIP',
+      'with Fello $type',
       name: 'returnSubText',
       desc: '',
-      args: [],
+      args: [type],
     );
   }
 

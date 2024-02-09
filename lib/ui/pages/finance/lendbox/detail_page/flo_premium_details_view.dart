@@ -1141,6 +1141,8 @@ class FloPremiumTransactionsList extends StatefulWidget {
 class _FloPremiumTransactionsListState
     extends State<FloPremiumTransactionsList> {
   late LendboxMaturityService _lendboxMaturityService;
+  bool showChange =
+      AppConfig.getValue(AppConfigKey.canChangePostMaturityPreference);
 
   void trackTransactionCardTap(
       double currentAmount, double investedAmount, String maturityDate) {
@@ -1190,6 +1192,7 @@ class _FloPremiumTransactionsListState
 
   @override
   Widget build(BuildContext context) {
+    log(showChange.toString(), name: 'mylog');
     return Selector<LendboxMaturityService, List<Deposit>?>(
       selector: (context, data) => data.filteredDeposits,
       builder: (context, filteredDeposits, child) {
@@ -1365,85 +1368,87 @@ class _FloPremiumTransactionsListState
                                     ),
                                   ),
                                   SizedBox(width: SizeConfig.padding10),
-                                  MaterialButton(
-                                    elevation:
-                                        (showNeedHelp || showConfirm) ? 0 : 2,
-                                    onPressed: () {
-                                      Haptic.vibrate();
+                                  if (showChange)
+                                    MaterialButton(
+                                      elevation:
+                                          (showNeedHelp || showConfirm) ? 0 : 2,
+                                      onPressed: () {
+                                        Haptic.vibrate();
 
-                                      log('showNeedHelp: $showNeedHelp');
+                                        log('showNeedHelp: $showNeedHelp');
 
-                                      if (showNeedHelp) {
-                                        AppState.delegate!.appState
-                                            .currentAction = PageAction(
-                                          state: PageState.addPage,
-                                          page: FreshDeskHelpPageConfig,
+                                        if (showNeedHelp) {
+                                          AppState.delegate!.appState
+                                              .currentAction = PageAction(
+                                            state: PageState.addPage,
+                                            page: FreshDeskHelpPageConfig,
+                                          );
+                                        } else if (showConfirm &&
+                                            depositData != null &&
+                                            depositData != Deposit()) {
+                                          BaseUtil.openModalBottomSheet(
+                                            addToScreenStack: true,
+                                            enableDrag: false,
+                                            hapticVibrate: true,
+                                            isBarrierDismissible: false,
+                                            backgroundColor: Colors.transparent,
+                                            isScrollControlled: true,
+                                            content: ReInvestmentSheet(
+                                              decision: _lendboxMaturityService
+                                                  .setDecision(depositData
+                                                          .decisionMade ??
+                                                      "3"),
+                                              depositData: depositData,
+                                            ),
+                                          );
+                                        } else {
+                                          BaseUtil.openModalBottomSheet(
+                                            isBarrierDismissible: false,
+                                            addToScreenStack: true,
+                                            hapticVibrate: true,
+                                            isScrollControlled: true,
+                                            content: MaturityPrefModalSheet(
+                                              amount: "${currentValue - gain}",
+                                              txnId: widget.model
+                                                  .transactionsList[i].docKey!,
+                                              assetType: widget.model.is12
+                                                  ? Constants
+                                                      .ASSET_TYPE_FLO_FIXED_6
+                                                  : Constants
+                                                      .ASSET_TYPE_FLO_FIXED_3,
+                                            ),
+                                          ).then((value) =>
+                                              widget.model.getTransactions());
+                                        }
+
+                                        trackDecideButtonTap(
+                                          currentValue,
+                                          currentValue - gain,
+                                          formattedMaturityDate,
                                         );
-                                      } else if (showConfirm &&
-                                          depositData != null &&
-                                          depositData != Deposit()) {
-                                        BaseUtil.openModalBottomSheet(
-                                          addToScreenStack: true,
-                                          enableDrag: false,
-                                          hapticVibrate: true,
-                                          isBarrierDismissible: false,
-                                          backgroundColor: Colors.transparent,
-                                          isScrollControlled: true,
-                                          content: ReInvestmentSheet(
-                                            decision: _lendboxMaturityService
-                                                .setDecision(
-                                                    depositData.decisionMade ??
-                                                        "3"),
-                                            depositData: depositData,
-                                          ),
-                                        );
-                                      } else {
-                                        BaseUtil.openModalBottomSheet(
-                                          isBarrierDismissible: false,
-                                          addToScreenStack: true,
-                                          hapticVibrate: true,
-                                          isScrollControlled: true,
-                                          content: MaturityPrefModalSheet(
-                                            amount: "${currentValue - gain}",
-                                            txnId: widget.model
-                                                .transactionsList[i].docKey!,
-                                            assetType: widget.model.is12
-                                                ? Constants
-                                                    .ASSET_TYPE_FLO_FIXED_6
-                                                : Constants
-                                                    .ASSET_TYPE_FLO_FIXED_3,
-                                          ),
-                                        ).then((value) =>
-                                            widget.model.getTransactions());
-                                      }
-
-                                      trackDecideButtonTap(
-                                        currentValue,
-                                        currentValue - gain,
-                                        formattedMaturityDate,
-                                      );
-                                    },
-                                    color: (showNeedHelp || showConfirm)
-                                        ? Colors.black.withOpacity(0.25)
-                                        : Colors.white,
-                                    shape: RoundedRectangleBorder(
-                                      borderRadius: BorderRadius.circular(
-                                          SizeConfig.roundness5),
-                                    ),
-                                    child: Text(
-                                      showNeedHelp
-                                          ? "NEED HELP ?"
-                                          : showConfirm
-                                              ? "CONFIRM"
-                                              : hasUserDecided
-                                                  ? "CHANGE"
-                                                  : "CHOOSE",
-                                      style: TextStyles.rajdhaniB.body2.colour(
-                                          (showNeedHelp || showConfirm)
-                                              ? Colors.white
-                                              : Colors.black),
-                                    ),
-                                  )
+                                      },
+                                      color: (showNeedHelp || showConfirm)
+                                          ? Colors.black.withOpacity(0.25)
+                                          : Colors.white,
+                                      shape: RoundedRectangleBorder(
+                                        borderRadius: BorderRadius.circular(
+                                            SizeConfig.roundness5),
+                                      ),
+                                      child: Text(
+                                        showNeedHelp
+                                            ? "NEED HELP ?"
+                                            : showConfirm
+                                                ? "CONFIRM"
+                                                : hasUserDecided
+                                                    ? "CHANGE"
+                                                    : "CHOOSE",
+                                        style: TextStyles.rajdhaniB.body2
+                                            .colour(
+                                                (showNeedHelp || showConfirm)
+                                                    ? Colors.white
+                                                    : Colors.black),
+                                      ),
+                                    )
                                 ],
                               ),
                             )

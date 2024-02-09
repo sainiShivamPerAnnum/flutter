@@ -193,7 +193,7 @@ class _SipAsssetSelectState extends State<SipAsssetSelect> {
                                 );
                               }
                             : () => null,
-                        label: locale.threeClicksAway),
+                        label: locale.proceed),
                   ),
                 ),
               ],

@@ -507,9 +507,9 @@ class BaseUtil extends ChangeNotifier {
       case '1':
         return "Auto-investing in ${isFrom10 ? 10 : 12}% Flo on maturity";
       case '2':
-        return "Move to ${isFrom10 ? 8 : 10} Flo after maturity";
+        return "Move to ${isFrom10 ? 8 : 10}% Flo after maturity";
       default:
-        return "What will happen to your investment after maturity?";
+        return "Move to 8% Flo after maturity";
     }
   }
 
@@ -931,6 +931,15 @@ class BaseUtil extends ChangeNotifier {
       locale: 'en_IN',
       symbol: '',
       decimalDigits: 0,
+    );
+    return formatter.format(value);
+  }
+
+  static String formatCompactRupees(double value) {
+    final formatter = NumberFormat.compactCurrency(
+      decimalDigits: 0,
+      locale: 'en_IN',
+      symbol: '',
     );
     return formatter.format(value);
   }

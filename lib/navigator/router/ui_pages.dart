@@ -114,7 +114,7 @@ const String GoldProTxnsDetailsViewPath = "goldProTxnsDetailsView";
 const String TicketsIntroViewPath = "/ticketsIntroViewPath";
 const String TicketsTutorialViewPath = "/ticketsTutorialViewPath";
 
-const String SipEntryPageViewPath = "/sipintro";
+const String SipEntryPageViewPath = "/autosave";
 const String SipAssetsSelectViewPath = "/sipassets";
 const String SipFormPageViewPath = "/sipform";
 const String SipStatusPage = '/sip/status';

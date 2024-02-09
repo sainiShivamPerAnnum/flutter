@@ -46,7 +46,7 @@ class SipCalculation {
         calculateMaturityValue(formAmount, interestRate, numberOfInvestments);
     final totalValue =
         interestOnly ? maturityValue - totalPrincipal : maturityValue;
-    return BaseUtil.formatRupees(double.parse(totalValue.toString()));
+    return BaseUtil.formatCompactRupees(double.parse(totalValue.toString()));
   }
 
   static int getPrincipal({

@@ -1,4 +1,3 @@
-import 'package:carousel_slider/carousel_slider.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/connectivity_status_enum.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
@@ -13,8 +12,6 @@ import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
-import 'package:flutter_svg/svg.dart';
 import 'package:provider/provider.dart';
 
 class AutosaveCard extends StatelessWidget {
@@ -35,192 +32,18 @@ class AutosaveCard extends StatelessWidget {
                 }
                 service.handleTap(type: investmentType);
               },
-              child: AutoSaveCard(service: service))
+              child: AutoSaveCardNew(service: service))
           : const SizedBox(),
     );
   }
 }
 
-class InitAutosaveCard extends HookWidget {
-  final SubService service;
-
-  InitAutosaveCard({required this.service, Key? key}) : super(key: key);
-
-  final List<String> images = [
-    'assets/svg/iphone.svg',
-    'assets/svg/car.svg',
-    'assets/svg/trip.svg',
-  ];
-
-  final List<String> titles = [
-    'Buy an Iphone',
-    'Buy a Car',
-    'Plan a Trip',
-  ];
-
-  @override
-  Widget build(BuildContext context) {
-    final currentIndex = useState(0);
-
-    return Container(
-      width: SizeConfig.screenWidth,
-      margin: EdgeInsets.symmetric(
-        vertical: SizeConfig.padding14,
-      ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        mainAxisAlignment: MainAxisAlignment.center,
-        children: [
-          const TitleSubtitleContainer(title: 'SIP with Fello'),
-          SizedBox(height: SizeConfig.padding10),
-          Container(
-            decoration: BoxDecoration(
-              // color: UiConstants.kTambolaMidTextColor,
-              borderRadius: BorderRadius.circular(SizeConfig.roundness16),
-              gradient: LinearGradient(
-                begin: const Alignment(-0.00, -1.00),
-                end: const Alignment(0, 1),
-                colors: [
-                  const Color(0xFF617E8E),
-                  const Color(0x00617E8E).withOpacity(0.7)
-                ],
-                // stops: [0.7, 1.0],
-              ),
-            ),
-            margin: EdgeInsets.symmetric(
-                horizontal: SizeConfig.pageHorizontalMargins),
-            padding: EdgeInsets.symmetric(
-                horizontal: SizeConfig.padding16,
-                vertical: SizeConfig.padding16),
-            child: Row(
-              // mainAxisAlignment: MainAxisAlignment.start,
-              crossAxisAlignment: CrossAxisAlignment.start,
-              children: [
-                Expanded(
-                  flex: 1,
-                  child: Column(
-                    children: [
-                      SizedBox(
-                        height: SizeConfig.padding88,
-                        width: SizeConfig.padding90 + SizeConfig.padding6,
-                        child: CarouselSlider.builder(
-                          itemCount: 3,
-                          itemBuilder: (context, index, realIndex) {
-                            return SvgPicture.asset(
-                              images[index],
-                              // width: 75,
-                              height: SizeConfig.padding88,
-                            );
-                          },
-                          options: CarouselOptions(
-                            autoPlay: true,
-                            viewportFraction: 1,
-                            scrollPhysics:
-                                const AlwaysScrollableScrollPhysics(),
-                            onPageChanged: (index, reason) {
-                              currentIndex.value = index;
-                            },
-                          ),
-                        ),
-                      ),
-                      Transform.translate(
-                        offset: Offset(0, -SizeConfig.padding16),
-                        child: Container(
-                            padding: EdgeInsets.symmetric(
-                                horizontal: SizeConfig.padding12,
-                                vertical: SizeConfig.padding4),
-                            decoration: ShapeDecoration(
-                              color: const Color(0xFF465963),
-                              shape: RoundedRectangleBorder(
-                                  borderRadius: BorderRadius.circular(8)),
-                            ),
-                            child: Text(
-                              titles[currentIndex.value],
-                              style: TextStyles.sourceSans.body4
-                                  .colour(Colors.white),
-                            )),
-                      ),
-                      // add indicator
-                      Row(
-                        mainAxisAlignment: MainAxisAlignment.center,
-                        children: List.generate(
-                          images.length,
-                          (index) => Container(
-                            width: SizeConfig.padding6,
-                            height: SizeConfig.padding6,
-                            margin: EdgeInsets.symmetric(
-                                horizontal: SizeConfig.padding4),
-                            decoration: BoxDecoration(
-                              shape: BoxShape.circle,
-                              color: index == currentIndex.value
-                                  ? Colors.white
-                                  : Colors.white.withOpacity(0.4),
-                            ),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-                SizedBox(
-                  width: SizeConfig.padding16,
-                ),
-                Expanded(
-                  flex: 2,
-                  child: SizedBox(
-                    width: SizeConfig.padding168,
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text('Set Your Financial Goals with Autosave',
-                            style: TextStyles.rajdhaniSB.body1
-                                .colour(Colors.white)),
-                        SizedBox(
-                          height: SizeConfig.padding8,
-                        ),
-                        Text(
-                          'Invest on Fello to meet your financial Goals',
-                          style: TextStyles.sourceSans.body4
-                              .colour(const Color(0xFFA9C5D5)),
-                        ),
-                        SizedBox(
-                          height: SizeConfig.padding20,
-                        ),
-                        Row(
-                          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                          children: [
-                            Text(
-                              'Setup Autosave',
-                              style: TextStyles.sourceSansSB.body2
-                                  .colour(Colors.white),
-                            ),
-                            SvgPicture.asset(
-                              Assets.chevRonRightArrow,
-                              color: Colors.white,
-                              height: SizeConfig.padding24,
-                              width: SizeConfig.padding24,
-                            )
-                          ],
-                        )
-                      ],
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
-}
-
-class AutoSaveCard extends StatelessWidget {
+class AutoSaveCardNew extends StatelessWidget {
   final SubService service;
   final InvestmentType? asset;
   final bool assetSpecificCard;
 
-  AutoSaveCard(
+  AutoSaveCardNew(
       {required this.service,
       Key? key,
       this.asset,

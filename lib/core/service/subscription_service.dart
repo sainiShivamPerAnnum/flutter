@@ -478,15 +478,17 @@ class SubService extends ChangeNotifier {
             appMetaList.add(element);
           }
 
+          ///TODO @Hirdesh2101 BEFORE PROD ADD IT
+          if (element.upiApplication.appName == "PhonePe Simulator" &&
+              AppConfig.getValue<String>(AppConfigKey.enabled_psp_apps)
+                  .contains('E')) {
+            appMetaList.add(element);
+          }
           // debug assertion to avoid this in production.
-          assert(() {
-            if (element.upiApplication.appName == "PhonePe Simulator" &&
-                AppConfig.getValue<String>(AppConfigKey.enabled_psp_apps)
-                    .contains('E')) {
-              appMetaList.add(element);
-            }
-            return true;
-          }());
+          // assert(() {
+
+          //   return true;
+          // }());
 
           if (element.upiApplication.appName == "PhonePe Preprod" &&
               AppConfig.getValue<String>(AppConfigKey.enabled_psp_apps)

@@ -3,6 +3,7 @@ import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/sip_asset_type.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
+import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/feature/sip/cubit/autosave_cubit.dart';
 import 'package:felloapp/feature/sip/cubit/sip_data_holder.dart';
 import 'package:felloapp/feature/sip/cubit/sip_form_cubit.dart';
@@ -21,6 +22,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
 import 'package:intl/intl.dart';
+import 'package:provider/provider.dart';
 
 class SipFormAmountView extends StatelessWidget {
   const SipFormAmountView({
@@ -218,17 +220,21 @@ class _SipFormAmountState extends State<SipFormAmount> {
                                       TextSpan(children: [
                                         TextSpan(
                                           text:
-                                              '${BaseUtil.formatIndianRupees(SipCalculation.getPrincipal(
+                                              '₹${BaseUtil.formatCompactRupees(SipCalculation.getPrincipal(
                                             formAmount: state.formAmount,
                                             currentTab: state.currentTab,
                                           ).toDouble())}+',
                                         ),
                                         TextSpan(
                                           text: SipCalculation.getReturn(
-                                              formAmount: state.formAmount,
-                                              currentasset: widget.sipAssetType,
-                                              currentTab: state.currentTab,
-                                              interestOnly: true),
+                                                  formAmount: state.formAmount,
+                                                  currentasset:
+                                                      widget.sipAssetType,
+                                                  currentTab: state.currentTab,
+                                                  interestOnly: true) +
+                                              (widget.sipAssetType.isAugGold
+                                                  ? '*'
+                                                  : ''),
                                           style: TextStyles.sourceSansSB.body1
                                               .colour(
                                                   UiConstants.kTabBorderColor),
@@ -247,12 +253,18 @@ class _SipFormAmountState extends State<SipFormAmount> {
                                       MainAxisAlignment.spaceBetween,
                                   children: [
                                     Text(
-                                      locale.returnSubText,
+                                      locale.returnSubText(
+                                          widget.sipAssetType.isLendBox
+                                              ? "P2P"
+                                              : "Gold"),
                                       style: TextStyles.sourceSans.body4
                                           .copyWith(color: UiConstants.grey1),
                                     ),
                                     Text(
-                                      locale.percentageReturns(percentage),
+                                      locale.percentageReturns(percentage) +
+                                          (widget.sipAssetType.isAugGold
+                                              ? '*'
+                                              : ''),
                                       style: TextStyles.sourceSans.body4
                                           .copyWith(color: UiConstants.grey1),
                                     ),
@@ -360,45 +372,54 @@ class _FooterState extends State<_Footer> {
               return switch (state) {
                 SipFormCubitState() => Opacity(
                     opacity: widget.isValidAmount ? 1 : 0.5,
-                    child: SecondaryButton(
-                      label: widget.isEdit
-                          ? locale.updateSip
-                          : widget.mandateAvailable
-                              ? locale.oneClickAway
-                              : locale.twoClickAway,
-                      onPressed: () async {
-                        if (widget.isValidAmount) {
-                          if (widget.isEdit) {
-                            await formmodel
-                                .editSipTrigger(
-                                    widget.amount, widget.frequency, widget.id!)
-                                .then((value) {
-                              context.read<SipCubit>().getData();
-                            });
-                          } else {
-                            if (widget.mandateAvailable) {
-                              await formmodel.createSubscription(
-                                  amount: widget.amount,
-                                  freq: widget.frequency,
-                                  assetType: widget.sipAssetType);
-                            } else {
-                              AppState.delegate!.appState.currentAction =
-                                  PageAction(
-                                page: SipMandatePageConfig,
-                                widget: SipMandateView(
-                                    amount: widget.amount,
-                                    frequency: widget.frequency,
-                                    assetType: widget.sipAssetType),
-                                state: PageState.addWidget,
-                              );
-                            }
-                          }
-                        }
-                      },
-                      child: state.isLoading
-                          ? const CupertinoActivityIndicator()
-                          : null,
-                    ),
+                    child: Selector<BankAndPanService, bool>(
+                        selector: (p0, p1) => p1.isKYCVerified,
+                        builder: (ctx, isKYCVerified, child) {
+                          return SecondaryButton(
+                            label: widget.isEdit
+                                ? locale.updateSip
+                                : isKYCVerified
+                                    ? locale.oneClickAway
+                                    : locale.twoClickAway,
+                            onPressed: () async {
+                              if (!isKYCVerified) {
+                                AppState.delegate!.appState.currentAction =
+                                    PageAction(
+                                        page: KycDetailsPageConfig,
+                                        state: PageState.addPage);
+                              } else if (widget.isValidAmount) {
+                                if (widget.isEdit) {
+                                  await formmodel
+                                      .editSipTrigger(widget.amount,
+                                          widget.frequency, widget.id!)
+                                      .then((value) {
+                                    context.read<SipCubit>().getData();
+                                  });
+                                } else {
+                                  if (widget.mandateAvailable) {
+                                    await formmodel.createSubscription(
+                                        amount: widget.amount,
+                                        freq: widget.frequency,
+                                        assetType: widget.sipAssetType);
+                                  } else {
+                                    AppState.delegate!.appState.currentAction =
+                                        PageAction(
+                                      page: SipMandatePageConfig,
+                                      widget: SipMandateView(
+                                          amount: widget.amount,
+                                          frequency: widget.frequency,
+                                          assetType: widget.sipAssetType),
+                                      state: PageState.addWidget,
+                                    );
+                                  }
+                                }
+                              }
+                            },
+                            child: state.isLoading
+                                ? const CupertinoActivityIndicator()
+                                : null,
+                          );
+                        }),
                   ),
                 _ => SizedBox.shrink(),
               };
