@@ -1,6 +1,5 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
-import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/sip_asset_type.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
@@ -11,7 +10,6 @@ import 'package:felloapp/feature/sip/mandate_page/view/mandate_view.dart';
 import 'package:felloapp/feature/sip/shared/interest_calculator.dart';
 import 'package:felloapp/feature/sip/shared/tab_slider.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -289,6 +287,11 @@ class _SipFormAmountState extends State<SipFormAmount> {
                       frequency: SipDataHolder.instance.data
                           .amountSelectionScreen.options[state.currentTab],
                       id: (widget.isEdit ?? false) ? widget.editId : null,
+                      defaultChip: state.bestOption.value.toString(),
+                      defaultTickets:
+                          (state.bestOption.value ~/ ticketMultiplier)
+                              .toString(),
+                      minAmount: state.lowerLimit.toString(),
                     ),
                   ),
                 ),
@@ -308,6 +311,9 @@ class _Footer extends StatefulWidget {
     required this.id,
     required this.isValidAmount,
     required this.sipAssetType,
+    required this.defaultChip,
+    required this.defaultTickets,
+    required this.minAmount,
   });
   final bool mandateAvailable;
   final num amount;
@@ -316,6 +322,9 @@ class _Footer extends StatefulWidget {
   final bool isEdit;
   final bool isValidAmount;
   final SIPAssetTypes sipAssetType;
+  final String defaultChip;
+  final String defaultTickets;
+  final String minAmount;
 
   @override
   State<_Footer> createState() => _FooterState();
@@ -382,38 +391,21 @@ class _FooterState extends State<_Footer> {
                                     ? locale.oneClickAway
                                     : locale.twoClickAway,
                             onPressed: () async {
-                              if (!isKYCVerified) {
-                                AppState.delegate!.appState.currentAction =
-                                    PageAction(
-                                        page: KycDetailsPageConfig,
-                                        state: PageState.addPage);
-                              } else if (widget.isValidAmount) {
-                                if (widget.isEdit) {
-                                  await formmodel
-                                      .editSipTrigger(widget.amount,
-                                          widget.frequency, widget.id!)
-                                      .then((value) {
-                                    context.read<SipCubit>().getData();
-                                  });
-                                } else {
-                                  if (widget.mandateAvailable) {
-                                    await formmodel.createSubscription(
-                                        amount: widget.amount,
-                                        freq: widget.frequency,
-                                        assetType: widget.sipAssetType);
-                                  } else {
-                                    AppState.delegate!.appState.currentAction =
-                                        PageAction(
-                                      page: SipMandatePageConfig,
-                                      widget: SipMandateView(
-                                          amount: widget.amount,
-                                          frequency: widget.frequency,
-                                          assetType: widget.sipAssetType),
-                                      state: PageState.addWidget,
-                                    );
-                                  }
-                                }
-                              }
+                              return await formmodel
+                                  .onFormSubmit(
+                                      widget.mandateAvailable,
+                                      isKYCVerified,
+                                      widget.isValidAmount,
+                                      widget.isEdit,
+                                      widget.amount,
+                                      widget.frequency,
+                                      widget.id,
+                                      widget.sipAssetType,
+                                      widget.defaultChip,
+                                      widget.defaultTickets,
+                                      widget.minAmount)
+                                  .then((value) =>
+                                      context.read<SipCubit>().getData());
                             },
                             child: state.isLoading
                                 ? const CupertinoActivityIndicator()

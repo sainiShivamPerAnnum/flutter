@@ -1,11 +1,14 @@
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/subscription_models/subscription_status.dart';
 import 'package:felloapp/core/model/subscription_models/subscription_status_response.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
@@ -58,7 +61,7 @@ class SipSummaryView extends StatelessWidget {
 }
 
 class SipSummaSuccessView extends StatelessWidget {
-  const SipSummaSuccessView({
+  SipSummaSuccessView({
     required this.data,
     required this.assetType,
     super.key,
@@ -66,6 +69,7 @@ class SipSummaSuccessView extends StatelessWidget {
 
   final SubscriptionStatusData data;
   final AssetType assetType;
+  final AnalyticsService _analyticsService = locator<AnalyticsService>();
 
   @override
   Widget build(BuildContext context) {
@@ -107,6 +111,13 @@ class SipSummaSuccessView extends StatelessWidget {
             SecondaryButton(
               label: 'CHECK YOUR REWARDS',
               onPressed: () async {
+                _analyticsService.track(
+                    eventName: AnalyticsEvents.sipSummaryButtonClicked,
+                    properties: {
+                      "Invested Amount": data.amount,
+                      "Frequency": data.frequency.duration,
+                      "Started On": data.createdOn,
+                    });
                 while (
                     AppState.delegate!.pages.last.name != RootPageConfig.path) {
                   await AppState.backButtonDispatcher!.didPopRoute();
@@ -128,8 +139,9 @@ class SipSummaSuccessView extends StatelessWidget {
 }
 
 class _SipSummary extends StatelessWidget {
-  const _SipSummary(this.data);
+  _SipSummary(this.data);
   final SubscriptionStatusData data;
+  final AnalyticsService _analyticsService = locator<AnalyticsService>();
 
   @override
   Widget build(BuildContext context) {
@@ -188,6 +200,13 @@ class _SipSummary extends StatelessWidget {
               if (data.gts.isNotEmpty)
                 GestureDetector(
                   onTap: () async {
+                    _analyticsService.track(
+                        eventName: AnalyticsEvents.sipSummaryGtClicked,
+                        properties: {
+                          "Invested Amount": data.amount,
+                          "Frequency": data.frequency.duration,
+                          "Started On": data.createdOn,
+                        });
                     while (AppState.delegate!.pages.last.name !=
                         RootPageConfig.path) {
                       await AppState.backButtonDispatcher!.didPopRoute();
@@ -211,6 +230,14 @@ class _SipSummary extends StatelessWidget {
                 ),
                 GestureDetector(
                   onTap: () async {
+                    _analyticsService.track(
+                        eventName: AnalyticsEvents.sipSummaryTicketClicked,
+                        properties: {
+                          "Invested Amount": data.amount,
+                          "Frequency": data.frequency.duration,
+                          "Started On": data.createdOn,
+                          "Tickets": data.tt
+                        });
                     while (AppState.delegate!.pages.last.name !=
                         RootPageConfig.path) {
                       await AppState.backButtonDispatcher!.didPopRoute();

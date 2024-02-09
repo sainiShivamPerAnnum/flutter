@@ -1,4 +1,6 @@
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/dialogs/confirm_action_dialog.dart';
@@ -84,10 +86,15 @@ class _PauseAutosaveModalState extends State<PauseAutosaveModal> {
       required int radioValue,
       required AutosavePauseOption option}) {
     final locale = locator<S>();
+    final AnalyticsService _analyticsService = locator<AnalyticsService>();
     return InkWell(
       splashColor: Colors.transparent,
       highlightColor: Colors.transparent,
       onTap: () async {
+        _analyticsService
+            .track(eventName: AnalyticsEvents.pauseSipOption, properties: {
+          "Duration": option,
+        });
         await AppState.backButtonDispatcher!.didPopRoute();
         await BaseUtil.openDialog(
           addToScreenStack: true,

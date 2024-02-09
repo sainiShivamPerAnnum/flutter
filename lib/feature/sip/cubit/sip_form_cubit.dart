@@ -1,12 +1,15 @@
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/sip_asset_type.dart';
 import 'package:felloapp/core/model/sip_model/sip_options.dart';
 import 'package:felloapp/core/repository/subscription_repo.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/feature/sip/cubit/sip_data_holder.dart';
+import 'package:felloapp/feature/sip/mandate_page/view/mandate_view.dart';
 import 'package:felloapp/feature/sip/sip_polling_page/view/sip_polling_view.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -18,6 +21,7 @@ class SipFormCubit extends Cubit<SipFormState> {
   SipFormCubit() : super(const LoadingSipFormData());
   final SubService _subService = locator<SubService>();
   final _subscriptionRepo = locator<SubscriptionRepo>();
+  final AnalyticsService _analyticsService = locator<AnalyticsService>();
 
   void setAmount(int amount) {
     final currentState = state;
@@ -127,6 +131,50 @@ class SipFormCubit extends Cubit<SipFormState> {
           'Failed to create subscription',
           response.errorMessage,
         );
+      }
+    }
+  }
+
+  Future<void> onFormSubmit(
+    bool mandateAvailable,
+    bool isKYCVerified,
+    bool isValidAmount,
+    bool isEdit,
+    num amount,
+    String frequency,
+    String? id,
+    SIPAssetTypes sipAssetType,
+    String defultChip,
+    String defaultTickets,
+    String minAmount,
+  ) async {
+    _analyticsService
+        .track(eventName: AnalyticsEvents.sipPaymentAppChoose, properties: {
+      "Frequency": frequency,
+      "Amount": amount,
+      "Default chip amount": defultChip,
+      "tambola tickets": defaultTickets,
+      "KYC Status": isKYCVerified ? "Yes" : "No",
+      "Minimum Amount": minAmount,
+    });
+    if (!isKYCVerified) {
+      AppState.delegate!.appState.currentAction =
+          PageAction(page: KycDetailsPageConfig, state: PageState.addPage);
+    } else if (isValidAmount) {
+      if (isEdit) {
+        await editSipTrigger(amount, frequency, id!);
+      } else {
+        if (mandateAvailable) {
+          await createSubscription(
+              amount: amount, freq: frequency, assetType: sipAssetType);
+        } else {
+          AppState.delegate!.appState.currentAction = PageAction(
+            page: SipMandatePageConfig,
+            widget: SipMandateView(
+                amount: amount, frequency: frequency, assetType: sipAssetType),
+            state: PageState.addWidget,
+          );
+        }
       }
     }
   }
