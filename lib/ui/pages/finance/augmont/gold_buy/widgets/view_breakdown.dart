@@ -795,9 +795,7 @@ class _FloBreakdownViewState extends State<FloBreakdownView> {
     final isLendBoxOldUser =
         locator<UserService>().userSegments.contains(Constants.US_FLO_OLD);
 
-    Lendboxp2P? assetInformation;
-
-    assetInformation = lendBoxDetails.firstWhereOrNull(
+    Lendboxp2P? assetInformation = lendBoxDetails.firstWhereOrNull(
       (element) {
         return modelFlowType == Constants.ASSET_TYPE_FLO_FELXI
             ? element.isForOldLb == isLendBoxOldUser &&

@@ -162,19 +162,6 @@ class AppCachedVideo extends StatefulWidget {
   final Map<String, dynamic>? requestHeaders;
   final String url;
 
-  // static AppCachedVideo url(String url,
-  //     {required bool showShimmer,
-  //     double? aspectRatio,
-  //     Map<String, dynamic>? requestHeaders,
-  //     Key? key}) {
-  //   return AppCachedVideo(
-  //     VideoLoader(url, requestHeaders: requestHeaders),
-  //     key: key,
-  //     showShimmer: showShimmer,
-  //     aspectRatio: aspectRatio,
-  //   );
-  // }
-
   @override
   State<AppCachedVideo> createState() => _AppCachedVideoState();
 }

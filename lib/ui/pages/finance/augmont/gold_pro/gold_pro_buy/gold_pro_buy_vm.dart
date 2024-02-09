@@ -298,7 +298,7 @@ class GoldProBuyViewModel extends BaseViewModel
 
   Future<void> _initiateBuyAndLease() async {
     await _txnService.initiateAugmontTransaction(
-        details: GoldPurchaseDetails(
+      details: GoldPurchaseDetails(
           goldBuyAmount: totalGoldAmount,
           goldRates: goldRates,
           couponCode: '',
@@ -308,8 +308,8 @@ class GoldProBuyViewModel extends BaseViewModel
           isPro: true,
           upiChoice: selectedUpiApplication,
           isIntentFlow: assetOptionsModel!.data.intent,
-        ),
-        isAutoLeaseChecked: isAutoLeaseChecked);
+          isAutoLeaseChecked: isAutoLeaseChecked),
+    );
   }
 
   GoldProInvestmentResponseModel? _leaseModel;

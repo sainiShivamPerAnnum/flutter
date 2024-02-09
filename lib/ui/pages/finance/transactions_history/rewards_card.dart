@@ -2,6 +2,7 @@ import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
+import 'package:felloapp/util/styles/styles.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:flutter/cupertino.dart';
 import 'package:flutter_svg/svg.dart';
@@ -42,7 +43,7 @@ class RewardsCard extends StatelessWidget {
       child: Container(
         alignment: Alignment.center,
         decoration: BoxDecoration(
-            color: const Color(0xff212B31),
+            color: UiConstants.rewardsCardColor,
             borderRadius: BorderRadius.circular(8)),
         padding: EdgeInsets.symmetric(
             horizontal: SizeConfig.padding16, vertical: SizeConfig.padding8),

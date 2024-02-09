@@ -254,6 +254,7 @@ class UiConstants {
   static const peach3 = Color(0xFFF79780);
 
   static const greyDivider = Color(0xFF7F86A3);
+  static const rewardsCardColor = Color(0xff212B31);
 }
 
 extension ColorExtension on String {
@@ -280,13 +281,4 @@ enum SwitchButtonStates { switchOn, switchOff }
 extension SwitchButtonStatesX on SwitchButtonStates {
   bool get isSwitchOn => this == SwitchButtonStates.switchOn;
   bool get isSwitchOff => this == SwitchButtonStates.switchOff;
-}
-
-extension ThemeDataX on ThemeData {
-  Color switchButtonBorderColor(SwitchButtonStates buttonType) =>
-      buttonType.isSwitchOn ? UiConstants.grey1 : UiConstants.grey2;
-  Color switchButtonTextColor(SwitchButtonStates buttonType) =>
-      buttonType.isSwitchOn ? Colors.white : UiConstants.textGray60;
-  Color switchButtonThumbColor(SwitchButtonStates buttonType) =>
-      buttonType.isSwitchOn ? UiConstants.teal3 : UiConstants.grey2;
 }

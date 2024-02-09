@@ -83,18 +83,20 @@ class AugmontTransactionService extends BaseTransactionService
     notifyListeners();
   }
 
-  Future<void> initiateAugmontTransaction(
-      {required GoldPurchaseDetails details, bool? isAutoLeaseChecked}) async {
+  Future<void> initiateAugmontTransaction({
+    required GoldPurchaseDetails details,
+  }) async {
     currentGoldPurchaseDetails = details;
     currentTxnAmount = details.goldBuyAmount;
 
     if ((currentTxnAmount ?? 0) >= Constants.mandatoryNetBankingThreshold) {
-      return await processNBTransaction(isAutoLeaseChecked: isAutoLeaseChecked);
+      return await processNBTransaction(
+          isAutoLeaseChecked: details.isAutoLeaseChecked);
     }
 
     if (details.isIntentFlow && details.upiChoice != null) {
       return await processUpiTransaction(
-          isAutoLeaseChecked: isAutoLeaseChecked);
+          isAutoLeaseChecked: details.isAutoLeaseChecked);
     }
 
     if (!details.isIntentFlow) {
@@ -501,16 +503,24 @@ class GoldPurchaseDetails {
   double? leaseQty;
   bool isPro;
   bool isIntentFlow;
+  bool isAutoLeaseChecked;
 
-  GoldPurchaseDetails({
-    required this.goldBuyAmount,
-    required this.goldRates,
-    required this.couponCode,
-    required this.skipMl,
-    required this.goldInGrams,
-    this.upiChoice,
-    this.leaseQty,
-    this.isPro = false,
-    this.isIntentFlow = false,
-  });
+  GoldPurchaseDetails(
+      {required this.goldBuyAmount,
+      required this.goldRates,
+      required this.couponCode,
+      required this.skipMl,
+      required this.goldInGrams,
+      this.upiChoice,
+      this.leaseQty,
+      this.isPro = false,
+      this.isIntentFlow = false,
+      this.isAutoLeaseChecked = true});
+
+  //  bool get isAutoLeaseChecked => _isAutoLeaseChecked;
+
+  //  set isAutoLeaseChecked(bool value) {
+  //   _isAutoLeaseChecked = value;
+  //   notifyListeners();
+  // }
 }

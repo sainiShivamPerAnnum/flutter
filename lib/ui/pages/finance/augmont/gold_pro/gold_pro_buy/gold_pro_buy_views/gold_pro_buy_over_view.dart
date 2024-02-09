@@ -50,7 +50,7 @@ class GoldProBuyOverView extends StatelessWidget {
       content: GoldProBreakdownView(
         model: model,
         showBreakDown: showBreakDown,
-        showPaymentOption: true, //! change this back to var value
+        showPaymentOption: showPsp,
         isBreakDown: isBreakDown,
         onSave: () => _onPressed(amt),
       ),
@@ -280,27 +280,7 @@ class GoldProBuyOverView extends StatelessWidget {
                       model.isAutoLeaseChecked = val;
                       model.isAutoLeaseCheckedSwitchTapped();
                     },
-                  )
-
-                  // Checkbox(
-                  //   checkColor: UiConstants.teal3,
-                  //   // side: MaterialStateBorderSide.resolveWith(
-                  //   //   (states) => BorderSide(
-                  //   //       width: 1.0,
-                  //   //       color: model.isAutoLeaseChecked
-                  //   //           ? UiConstants.kTextColor
-                  //   //           : Colors.transparent),
-                  //   // ),
-                  //   // activeColor: UiConstants.kProfileBorderColor,
-                  //   fillColor: MaterialStateProperty.all(
-                  //       UiConstants.kProfileBorderColor),
-                  //   value: model.isAutoLeaseChecked,
-                  //   onChanged: (newValue) {
-                  //     print("newValue:- $newValue");
-                  //     model.isAutoLeaseChecked = newValue!;
-                  //   },
-                  // ),
-                  ),
+                  )),
             ],
           ),
         ),
@@ -486,33 +466,3 @@ class GoldProBuyOverView extends StatelessWidget {
         .track(eventName: AnalyticsEvents.termsAndConditions);
   }
 }
-
-// class SwitchButton extends StatefulWidget {
-//   const SwitchButton({super.key, required this.model});
-//   final GoldProBuyViewModel model;
-
-//   @override
-//   State<SwitchButton> createState() => _SwitchButtonState();
-// }
-
-// class _SwitchButtonState extends State<SwitchButton> {
-//   bool light = true;
-
-//   @override
-//   Widget build(BuildContext context) {
-//     return Switch(
-//       // This bool value toggles the switch.
-//       value: widget.model.isAutoLeaseChecked,
-//       activeColor: Colors.blue,
-// //       focusColor: Colors.pink,
-//       activeTrackColor: Colors.black,
-//       // inactiveThumbImage: const AssetImage('assets/images/subtract_switch.png'),
-//       onChanged: (bool value) {
-//         // This is called when the user toggles the switch.
-//         setState(() {
-//           widget.model.isAutoLeaseChecked = value;
-//         });
-//       },
-//     );
-//   }
-// }

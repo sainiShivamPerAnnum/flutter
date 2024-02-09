@@ -154,7 +154,7 @@ class Lendboxp2P {
 
   final bool isForOldLb;
 
-  Lendboxp2P({
+  const Lendboxp2P({
     this.fundType = '',
     this.maturityPeriodText = '',
     this.minAmountText = '',
@@ -173,7 +173,7 @@ class OverrideUrls {
 
   final String rewards;
 
-  OverrideUrls({
+  const OverrideUrls({
     this.userOps = '',
     this.rewards = '',
   });
@@ -190,7 +190,7 @@ class PowerPlayConfig {
 
   final PredictScreen? predictScreen;
 
-  PowerPlayConfig({
+  const PowerPlayConfig({
     this.saveScreen,
     this.howScreen,
     this.predictScreen,
@@ -210,7 +210,7 @@ class HowScreen {
 
   final SeasonReward? seasonReward;
 
-  HowScreen({
+  const HowScreen({
     this.tileUrls = const [],
     this.predictionCondition,
     this.predictionReward = const [],
@@ -232,7 +232,7 @@ class PredictionCondition {
 
   final String explainerUrl;
 
-  PredictionCondition({
+  const PredictionCondition({
     this.callOutText = '',
     this.callOutIconUrl = '',
     this.subText = '',
@@ -249,7 +249,7 @@ class PredictionReward {
 
   final String rewardDesc;
 
-  PredictionReward({
+  const PredictionReward({
     this.winnerDesc = '',
     this.rewardDesc = '',
   });
@@ -264,7 +264,7 @@ class SeasonReward {
 
   final String rewardDesc;
 
-  SeasonReward({
+  const SeasonReward({
     this.asideIcon = '',
     this.rewardDesc = '',
   });
@@ -278,7 +278,7 @@ class PredictScreen {
   @JsonKey(name: "cardCarousel")
   final List<CardCarousel> cardCarousel;
 
-  PredictScreen({
+  const PredictScreen({
     this.cardCarousel = const [],
   });
 
@@ -292,7 +292,7 @@ class CardCarousel {
 
   final String onTapLink;
 
-  CardCarousel({
+  const CardCarousel({
     this.imgUrl = '',
     this.onTapLink = '',
   });
@@ -307,7 +307,7 @@ class SaveScreen {
 
   final String subtitle;
 
-  SaveScreen({
+  const SaveScreen({
     this.title = '',
     this.subtitle = '',
   });
@@ -326,7 +326,7 @@ class QuickAction {
 
   final String color;
 
-  QuickAction({
+  const QuickAction({
     this.name = '',
     this.img = '',
     this.deepLink = '',
@@ -347,7 +347,7 @@ class QuizConfig {
 
   final String baseUrl;
 
-  QuizConfig({
+  const QuizConfig({
     this.title = '',
     this.image = '',
     this.deepLink = '',
@@ -362,13 +362,13 @@ class QuizConfig {
 class RevampedReferralsConfig {
   final SaveScreen? hero;
 
-  final List<How> how;
+  final List<HowReferralWorks> how;
 
   final RewardValues? rewardValues;
 
   final Stats? stats;
 
-  RevampedReferralsConfig({
+  const RevampedReferralsConfig({
     this.hero,
     this.how = const [],
     this.rewardValues,
@@ -380,17 +380,18 @@ class RevampedReferralsConfig {
 }
 
 @_deserializable
-class How {
+class HowReferralWorks {
   final String image;
 
   final String text;
 
-  How({
+  const HowReferralWorks({
     this.image = '',
     this.text = '',
   });
 
-  factory How.fromJson(Map<String, dynamic> json) => _$HowFromJson(json);
+  factory HowReferralWorks.fromJson(Map<String, dynamic> json) =>
+      _$HowFromJson(json);
 }
 
 @_deserializable
@@ -399,7 +400,7 @@ class RewardValues {
   @JsonKey(name: "invest10kflo12")
   final num invest10KFlo12;
 
-  RewardValues({
+  const RewardValues({
     this.invest1K = 0,
     this.invest10KFlo12 = 0,
   });
@@ -416,7 +417,7 @@ class Stats {
 
   final String rewardsFromReferrals;
 
-  Stats({
+  const Stats({
     this.referrersCount = '',
     this.usersFromReferrals = '',
     this.rewardsFromReferrals = '',
@@ -438,7 +439,7 @@ class TicketsCategories {
   @JsonKey(name: "category_5")
   final String category5;
 
-  TicketsCategories({
+  const TicketsCategories({
     this.category1 = '',
     this.category2 = '',
     this.category3 = '',

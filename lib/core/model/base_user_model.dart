@@ -34,7 +34,7 @@ class BaseUser {
   List segments;
   SuperFelloLevel superFelloLevel = SuperFelloLevel.NEW_FELLO;
   num minRedemptionAmt = 200;
-  bool? doesHaveSubscriptionTransaction;
+  bool doesHaveSubscriptionTransaction;
   static const String fldId = "mID";
   static const String fldMobile = "mMobile";
   static const String fldEmail = "mEmail";
@@ -109,7 +109,7 @@ class BaseUser {
       this.minRedemptionAmt = 200,
       this.subsStatus,
       this.favAsset,
-      this.doesHaveSubscriptionTransaction});
+      this.doesHaveSubscriptionTransaction = false});
 
   BaseUser.newUser(String id, String mobile)
       : this(

@@ -1194,6 +1194,12 @@ class _CustomSwitchState extends State<CustomSwitch>
       (_circleAnimation!.value == Alignment.centerLeft)
           ? SwitchButtonStates.switchOn
           : SwitchButtonStates.switchOff;
+  Color get switchButtonBorderColor =>
+      switchState.isSwitchOn ? UiConstants.grey1 : UiConstants.grey2;
+  Color get switchButtonTextColor =>
+      switchState.isSwitchOn ? Colors.white : UiConstants.textGray60;
+  Color get switchButtonThumbColor =>
+      switchState.isSwitchOn ? UiConstants.teal3 : UiConstants.grey2;
   @override
   Widget build(BuildContext context) {
     return AnimatedBuilder(
@@ -1215,9 +1221,7 @@ class _CustomSwitchState extends State<CustomSwitch>
             height: SizeConfig.padding26,
             decoration: BoxDecoration(
                 borderRadius: BorderRadius.circular(24.0),
-                border: Border.all(
-                    color:
-                        Theme.of(context).switchButtonBorderColor(switchState)),
+                border: Border.all(color: switchButtonBorderColor),
                 color:
                     // _circleAnimation!.value == Alignment.centerLeft?
                     Colors.black
@@ -1231,9 +1235,7 @@ class _CustomSwitchState extends State<CustomSwitch>
                   left: SizeConfig.padding2),
               child: returnWidgetLayout(
                 child1: Text(switchState.isSwitchOn ? 'ON' : 'OFF',
-                    style: TextStyle(
-                        color: Theme.of(context)
-                            .switchButtonTextColor(switchState))),
+                    style: TextStyle(color: switchButtonTextColor)),
                 child2: Container(
                   alignment: widget.value
                       ? ((Directionality.of(context) == TextDirection.rtl)
@@ -1247,8 +1249,7 @@ class _CustomSwitchState extends State<CustomSwitch>
                       height: 20.0,
                       decoration: BoxDecoration(
                           shape: BoxShape.circle,
-                          color: Theme.of(context)
-                              .switchButtonThumbColor(switchState)),
+                          color: switchButtonThumbColor),
                       child: Center(
                         child: switchState.isSwitchOn
                             ? Container(
