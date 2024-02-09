@@ -2,6 +2,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/connectivity_status_enum.dart';
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/service/notifier_services/connectivity_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/ui/elements/title_subtitle_container.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
@@ -40,19 +41,18 @@ class AutosaveCard extends StatelessWidget {
 
 class AutoSaveCardNew extends StatelessWidget {
   final SubService service;
-  final InvestmentType? asset;
-  final bool assetSpecificCard;
 
-  AutoSaveCardNew(
-      {required this.service,
-      Key? key,
-      this.asset,
-      this.assetSpecificCard = true})
-      : super(key: key);
+  AutoSaveCardNew({
+    required this.service,
+    Key? key,
+  }) : super(key: key);
   final locale = locator<S>();
+
+  final UserService _userService = locator<UserService>();
 
   @override
   Widget build(BuildContext context) {
+    final String? isSActiveSub = _userService.baseUser!.subsStatus;
     return Container(
       margin: EdgeInsets.symmetric(vertical: SizeConfig.padding14),
       child: Column(
@@ -115,7 +115,9 @@ class AutoSaveCardNew extends StatelessWidget {
                           children: [
                             Expanded(
                               child: Text(
-                                locale.setupSip,
+                                isSActiveSub == "ACTIVE"
+                                    ? locale.manageSip
+                                    : locale.setupSip,
                                 style: TextStyles.sourceSansSB.body2
                                     .colour(UiConstants.kTabBorderColor),
                                 textAlign: TextAlign.left,

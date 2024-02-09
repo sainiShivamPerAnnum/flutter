@@ -1052,5 +1052,11 @@
   "pauseSuccessSub": "For more details check SIP section",
   "pauseFail": "Failed to pause SIP",
   "tryAgain": "Please try again",
-  "errorLoadingSip": "Error Loading SIP data. Try Again Later!"
+  "errorLoadingSip": "Error Loading SIP data. Try Again Later!",
+  "sipText": "SIP",
+  "oneWeek": "1 Week",
+  "twoWeek": "2 Weeks",
+  "oneMonth": "1 Month",
+  "indefinitely": "Indefinitely",
+  "manageSip": "Manage SIP"
 }

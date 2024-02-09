@@ -569,6 +569,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "inProgress": MessageLookupByLibrary.simpleMessage("in Progress"),
         "inSufficientBal":
             MessageLookupByLibrary.simpleMessage("Insufficient balance"),
+        "indefinitely": MessageLookupByLibrary.simpleMessage("Indefinitely"),
         "ineligible": MessageLookupByLibrary.simpleMessage("Ineligible"),
         "interestOnGold":
             MessageLookupByLibrary.simpleMessage("Interest\non Gold"),
@@ -667,6 +668,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "madeWith": MessageLookupByLibrary.simpleMessage("Made with "),
         "makeSomeChanges": MessageLookupByLibrary.simpleMessage(
             "Please make some changes to update details"),
+        "manageSip": MessageLookupByLibrary.simpleMessage("Manage SIP"),
         "max8gms": MessageLookupByLibrary.simpleMessage(
             "A maximum of 8 gms can be sold in one go"),
         "maxAmountIs": MessageLookupByLibrary.simpleMessage("Max amount is "),
@@ -900,8 +902,10 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Win Rs.1 Crore!"),
         "onboradButton": MessageLookupByLibrary.simpleMessage("GET STARTED"),
         "oneClickAway": MessageLookupByLibrary.simpleMessage("1 CLICKS AWAY"),
+        "oneMonth": MessageLookupByLibrary.simpleMessage("1 Month"),
         "oneScratchCard":
             MessageLookupByLibrary.simpleMessage("1 Scratch\nCard"),
+        "oneWeek": MessageLookupByLibrary.simpleMessage("1 Week"),
         "operationCannotBeCompleted": MessageLookupByLibrary.simpleMessage(
             "Operation cannot be completed at the moment"),
         "orderSummary": MessageLookupByLibrary.simpleMessage("Order Summary"),
@@ -1181,6 +1185,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "sipIntroTitle": MessageLookupByLibrary.simpleMessage(
             "Save Weekly / Monthly  automatically & "),
         "sipReturn": m27,
+        "sipText": MessageLookupByLibrary.simpleMessage("SIP"),
         "sipTickets": m28,
         "sipWithAutoSave": MessageLookupByLibrary.simpleMessage(
             "Start an SIP with Fello Autosave"),
@@ -1376,6 +1381,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "tutorialstart": MessageLookupByLibrary.simpleMessage(
             "Welcome to Fello!\n\nQuick tips are here to guide you. \nClick anywhere for the next tip. \n\'Skip\' to close. \nRestart anytime from the \'Profile\' section.🚀"),
         "twoClickAway": MessageLookupByLibrary.simpleMessage("2 CLICKS AWAY"),
+        "twoWeek": MessageLookupByLibrary.simpleMessage("2 Weeks"),
         "txnActiveCoupon":
             MessageLookupByLibrary.simpleMessage("Active Coupons"),
         "txnAmountTitle":

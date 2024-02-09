@@ -561,6 +561,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "inProgress": MessageLookupByLibrary.simpleMessage("चालू"),
         "inSufficientBal":
             MessageLookupByLibrary.simpleMessage("अपर्याप्त बैलेंस"),
+        "indefinitely":
+            MessageLookupByLibrary.simpleMessage("अनिश्चितकाल के लिए"),
         "ineligible": MessageLookupByLibrary.simpleMessage("अपात्र"),
         "interestOnGold": MessageLookupByLibrary.simpleMessage("सोने पर ब्याज"),
         "invalidBankAcc":
@@ -659,6 +661,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "madeWith": MessageLookupByLibrary.simpleMessage("मेड विद "),
         "makeSomeChanges": MessageLookupByLibrary.simpleMessage(
             "कृपया विवरण अपडेट करने के लिए कुछ बदलाव करें"),
+        "manageSip": MessageLookupByLibrary.simpleMessage("SIP प्रबंधित करें"),
         "max8gms": MessageLookupByLibrary.simpleMessage(
             "एक बार में अधिकतम 8 ग्राम बेचा जा सकता है"),
         "maxAmountIs": MessageLookupByLibrary.simpleMessage("अधिकतम राशि है"),
@@ -894,8 +897,10 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("रु.1 करोड़ जीतें!"),
         "onboradButton": MessageLookupByLibrary.simpleMessage("शुरू हो जाओ"),
         "oneClickAway": MessageLookupByLibrary.simpleMessage("1 क्लिक दूर"),
+        "oneMonth": MessageLookupByLibrary.simpleMessage("1 महीना"),
         "oneScratchCard":
             MessageLookupByLibrary.simpleMessage("1 गोल्डन\nटिकट"),
+        "oneWeek": MessageLookupByLibrary.simpleMessage("1 सप्ताह"),
         "operationCannotBeCompleted": MessageLookupByLibrary.simpleMessage(
             "कार्रवाई इस समय पूरी नहीं की जा सकती"),
         "orderSummary": MessageLookupByLibrary.simpleMessage("आदेश सारांश"),
@@ -1172,6 +1177,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "sipIntroTitle": MessageLookupByLibrary.simpleMessage(
             "साप्ताहिक / मासिक रूप से स्वचालित रूप से बचत करें और"),
         "sipReturn": m27,
+        "sipText": MessageLookupByLibrary.simpleMessage("SIP"),
         "sipTickets": m28,
         "sipWithAutoSave": MessageLookupByLibrary.simpleMessage(
             "फेलो ऑटोसेव के साथ एक एसआईपी शुरू करें"),
@@ -1364,6 +1370,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "tutorial6": MessageLookupByLibrary.simpleMessage(
             "अब अपनी इनामी बचत यात्रा शुरू करने के लिए यहां अपनी संपत्ति का चयन करें"),
         "twoClickAway": MessageLookupByLibrary.simpleMessage("2 क्लिक दूर"),
+        "twoWeek": MessageLookupByLibrary.simpleMessage("2 सप्ताह"),
         "txnActiveCoupon": MessageLookupByLibrary.simpleMessage("सक्रिय कूपन"),
         "txnAmountTitle": MessageLookupByLibrary.simpleMessage("लेनदेन राशि"),
         "txnApply": MessageLookupByLibrary.simpleMessage("आवेदन करें"),

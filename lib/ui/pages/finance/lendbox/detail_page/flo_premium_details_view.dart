@@ -1192,7 +1192,6 @@ class _FloPremiumTransactionsListState
 
   @override
   Widget build(BuildContext context) {
-    log(showChange.toString(), name: 'mylog');
     return Selector<LendboxMaturityService, List<Deposit>?>(
       selector: (context, data) => data.filteredDeposits,
       builder: (context, filteredDeposits, child) {

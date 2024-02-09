@@ -9425,6 +9425,66 @@ class S {
       args: [],
     );
   }
+
+  /// `SIP`
+  String get sipText {
+    return Intl.message(
+      'SIP',
+      name: 'sipText',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `1 Week`
+  String get oneWeek {
+    return Intl.message(
+      '1 Week',
+      name: 'oneWeek',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `2 Weeks`
+  String get twoWeek {
+    return Intl.message(
+      '2 Weeks',
+      name: 'twoWeek',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `1 Month`
+  String get oneMonth {
+    return Intl.message(
+      '1 Month',
+      name: 'oneMonth',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Indefinitely`
+  String get indefinitely {
+    return Intl.message(
+      'Indefinitely',
+      name: 'indefinitely',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Manage SIP`
+  String get manageSip {
+    return Intl.message(
+      'Manage SIP',
+      name: 'manageSip',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {
