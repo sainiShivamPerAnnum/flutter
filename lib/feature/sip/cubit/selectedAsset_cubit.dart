@@ -12,13 +12,11 @@ class SelectAssetCubit extends Cubit<SelectAssetCubitState> {
 
   void setSelectedAsset(SIPAssetTypes asset) {
     emit(state.copyWith(selectedAsset: asset));
-  }
 
-  void onSipAssetSelected({required String selectedSipName}) {
     locator<AnalyticsService>().track(
       eventName: AnalyticsEvents.sipAssetSelected,
       properties: {
-        "asset selected": selectedSipName,
+        "asset selected": asset.name,
       },
     );
   }

@@ -25,7 +25,6 @@ import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
-import 'package:intl/intl.dart';
 
 class SipIntroView extends StatefulWidget {
   const SipIntroView({super.key});
@@ -355,13 +354,15 @@ class AssetSipContainer extends StatelessWidget {
   final SipCubit model;
   final locale = locator<S>();
 
-  void openBottomSheetOnSipPaused(BuildContext context) async {
+  Future<void> openBottomSheetOnSipPaused(BuildContext context) async {
     context.read<SipCubit>().onExistingSipCardTapEventCapture(
-        assertName: sipName,
-        sipAmount: sipAmount,
-        sipStartingDate: startDate,
-        sipNextDueDate: nextDueDate,
-        actionType: actionType);
+          assertName: sipName,
+          sipAmount: sipAmount,
+          sipStartingDate: startDate,
+          sipNextDueDate: nextDueDate,
+          actionType: isSipPaused ? 'Paused' : 'Edit',
+        );
+
     await BaseUtil.openModalBottomSheet(
         addToScreenStack: true,
         isBarrierDismissible: true,
@@ -384,14 +385,6 @@ class AssetSipContainer extends StatelessWidget {
 
   bool get isSipPaused => pausedSip != null && (pausedSip ?? false);
   String get sipTextIfPause => isSipPaused ? locale.pauseSip : locale.editSip;
-  String get actionType {
-    List<String> sipActionTypeList = sipTextIfPause.split(' ');
-    if (sipActionTypeList.length > 0) {
-      return sipActionTypeList[0];
-    }
-
-    return '';
-  }
 
   Color get sipTextColorIfPause => isSipPaused
       ? UiConstants.kWinnerPlayerPrimaryColor.withOpacity(.8)
@@ -632,8 +625,8 @@ class _SipCalculatorState extends State<SipCalculator>
                   labelBuilder: (label) => label,
                   onTap: (currentTab, i) {
                     context.read<SipCubit>().onCalculatorFrequencyChanged(
-                          previousFrequency: "",
-                          // widget.state.options[tabController.previousIndex],
+                          previousFrequency:
+                              widget.state.options[tabController.previousIndex],
                           newFrequency: currentTab,
                         );
 

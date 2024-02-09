@@ -523,9 +523,7 @@ class SubService extends ChangeNotifier {
       widget: const SipIntroView(),
       state: PageState.addWidget,
     );
-  }
 
-  void onSipCardTapEventCapture() {
     locator<AnalyticsService>().track(
       eventName: AnalyticsEvents.sipCardTapped,
     );

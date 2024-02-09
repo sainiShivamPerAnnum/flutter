@@ -81,7 +81,7 @@ class AnalyticsEvents {
   static const sipCardTapped = "SIP Card clicked";
   static const setupSipButtonTap = "SIP Setup SIP click";
   static const sipExistingCardTap = "SIP card tapped";
-  static const sipCalculatorFrequencyCHanged =
+  static const sipCalculatorFrequencyChanged =
       "SIP Calculator frequency changed";
   static const sipAssetSelected = "SIP asset selected";
   static const sipAssetProceed = "SIP asset proceed";

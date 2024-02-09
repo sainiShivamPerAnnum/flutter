@@ -162,12 +162,13 @@ class SipCubit extends Cubit<SipState> {
     );
   }
 
-  void onExistingSipCardTapEventCapture(
-      {required String assertName,
-      required num sipAmount,
-      required String sipStartingDate,
-      required String sipNextDueDate,
-      required String actionType}) {
+  void onExistingSipCardTapEventCapture({
+    required String assertName,
+    required num sipAmount,
+    required String sipStartingDate,
+    required String sipNextDueDate,
+    required String actionType,
+  }) {
     locator<AnalyticsService>().track(
       eventName: AnalyticsEvents.sipExistingCardTap,
       properties: {
@@ -185,7 +186,7 @@ class SipCubit extends Cubit<SipState> {
     required String newFrequency,
   }) {
     locator<AnalyticsService>().track(
-      eventName: AnalyticsEvents.sipCalculatorFrequencyCHanged,
+      eventName: AnalyticsEvents.sipCalculatorFrequencyChanged,
       properties: {
         "Current Frequency": newFrequency,
         "Updated Frequency": newFrequency
