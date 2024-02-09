@@ -1,6 +1,7 @@
 import 'dart:math' as math;
 
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/sip_asset_type.dart';
 import 'package:felloapp/core/model/sip_model/calculator_data.dart';
@@ -8,9 +9,10 @@ import 'package:felloapp/core/model/sip_model/calculator_details.dart';
 import 'package:felloapp/core/model/subscription_models/all_subscription_model.dart';
 import 'package:felloapp/core/model/subscription_models/subscription_model.dart';
 import 'package:felloapp/core/model/subscription_models/subscription_status.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/feature/sip/cubit/autosave_cubit.dart';
 import 'package:felloapp/feature/sip/shared/edit_sip_bottomsheet.dart';
-import 'package:felloapp/feature/sip/shared/interestCalculator.dart';
+import 'package:felloapp/feature/sip/shared/interest_calculator.dart';
 import 'package:felloapp/feature/sip/shared/sip.dart';
 import 'package:felloapp/feature/sip/shared/tab_slider.dart';
 import 'package:felloapp/feature/sip/ui/sip_setup/sip_select_assset.dart';
@@ -376,7 +378,7 @@ class AssetSipContainer extends StatelessWidget {
         frequency: sipInterval,
         sipReturns: SipCalculation.getReturn(
           formAmount: sipAmount,
-          currentasset: assetType,
+          currentAsset: assetType,
           interestOnly: true,
           frequency: sipInterval,
         ),
@@ -454,7 +456,7 @@ class AssetSipContainer extends StatelessWidget {
                           frequency: sipInterval,
                           sipReturns: SipCalculation.getReturn(
                             formAmount: sipAmount,
-                            currentasset: assetType,
+                            currentAsset: assetType,
                             interestOnly: true,
                             frequency: sipInterval,
                           ),
@@ -578,6 +580,20 @@ class _SipCalculatorState extends State<SipCalculator>
     });
   }
 
+  void _sendEvent() {
+    final properties = {
+      'SIP Amount': sipAmount,
+      'Time Period': timePeriod,
+      'Return Percentage': returnPercentage,
+      'Frequency': widget.state.options[tabController.index],
+    };
+
+    locator<AnalyticsService>().track(
+      eventName: AnalyticsEvents.sipAssetSelected,
+      properties: properties,
+    );
+  }
+
   @override
   Widget build(BuildContext context) {
     return Column(
@@ -634,6 +650,8 @@ class _SipCalculatorState extends State<SipCalculator>
                         i,
                       );
                     });
+
+                    _sendEvent();
                   },
                 ),
               ),
@@ -641,6 +659,7 @@ class _SipCalculatorState extends State<SipCalculator>
                 height: SizeConfig.padding20,
               ),
               CalculatorField(
+                onChangeEnd: (x) => _sendEvent(),
                 requiresQuickButtons: false,
                 changeFunction: changeSIPAmount,
                 requiresSlider: true,
@@ -657,6 +676,7 @@ class _SipCalculatorState extends State<SipCalculator>
                 height: SizeConfig.padding20,
               ),
               CalculatorField(
+                onChangeEnd: (x) => _sendEvent(),
                 requiresQuickButtons: false,
                 changeFunction: changeTimePeriod,
                 requiresSlider: true,
@@ -673,6 +693,7 @@ class _SipCalculatorState extends State<SipCalculator>
                 height: SizeConfig.padding20,
               ),
               CalculatorField(
+                  onChangeEnd: (x) => _sendEvent(),
                   requiresQuickButtons: false,
                   requiresSlider: true,
                   textAlign: TextAlign.center,

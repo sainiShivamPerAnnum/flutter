@@ -3,23 +3,27 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class CalculatorField extends StatelessWidget {
-  const CalculatorField(
-      {required this.requiresSlider,
-      required this.label,
-      required this.value,
-      required this.requiresQuickButtons,
-      this.isPercentage,
-      super.key,
-      this.prefixText,
-      this.suffixText,
-      this.changeFunction,
-      this.inputFormatters,
-      this.maxValue,
-      this.textAlign,
-      this.minValue,
-      this.increment,
-      this.decrement});
+  const CalculatorField({
+    required this.requiresSlider,
+    required this.label,
+    required this.value,
+    required this.requiresQuickButtons,
+    this.isPercentage,
+    this.onChangeEnd,
+    super.key,
+    this.prefixText,
+    this.suffixText,
+    this.changeFunction,
+    this.inputFormatters,
+    this.maxValue,
+    this.textAlign,
+    this.minValue,
+    this.increment,
+    this.decrement,
+  });
+
   final Function(int)? changeFunction;
+  final ValueChanged<int>? onChangeEnd;
   final bool requiresSlider;
   final bool requiresQuickButtons;
   final bool? isPercentage;
@@ -121,6 +125,7 @@ class CalculatorField extends StatelessWidget {
               onChanged: (value) {
                 changeFunction!(value.toInt());
               },
+              onChangeEnd: (v) => onChangeEnd?.call(v.toInt()),
               thumbColor: Colors.white,
               activeColor: UiConstants.teal3,
               inactiveColor: Colors.white,

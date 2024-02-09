@@ -84,6 +84,7 @@ class AnalyticsEvents {
   static const sipCalculatorFrequencyChanged =
       "SIP Calculator frequency changed";
   static const sipAssetSelected = "SIP asset selected";
+  static const calculatorValueChanged = 'SIP Calculator Value updated';
   static const sipAssetProceed = "SIP asset proceed";
   static const asBenefitsTapped = "Autosave Benefits Next Tapped";
   static const asChooseAssetNextTapped = "Autosave Choose asset next Tapped";
