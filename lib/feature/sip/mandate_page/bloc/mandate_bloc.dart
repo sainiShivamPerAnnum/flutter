@@ -4,11 +4,14 @@ import 'dart:io';
 import 'package:bloc/bloc.dart';
 import 'package:equatable/equatable.dart';
 import 'package:felloapp/base_util.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/sip_asset_type.dart';
 import 'package:felloapp/core/model/subscription_models/subscription_status_response.dart';
 import 'package:felloapp/core/repository/subscription_repo.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/util/custom_logger.dart';
+import 'package:felloapp/util/locator.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter/widgets.dart';
 import 'package:upi_pay/upi_pay.dart';
@@ -20,6 +23,7 @@ class MandateBloc extends Bloc<MandateEvent, MandateState> {
   final SubService _subService;
   final SubscriptionRepo _repo;
   final CustomLogger _logger;
+  final AnalyticsService _analyticsService = locator<AnalyticsService>();
 
   MandateBloc(
     this._subService,
@@ -52,6 +56,11 @@ class MandateBloc extends Bloc<MandateEvent, MandateState> {
           status: const SubsTransactionStatus.creating(),
         ),
       );
+
+      _analyticsService
+          .track(eventName: AnalyticsEvents.sipPaymentAppChoose, properties: {
+        "Payment option choosen": event.meta.upiApplication.appName,
+      });
 
       final res = await _repo.createSubscription(
         freq: event.freq,

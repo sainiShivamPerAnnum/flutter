@@ -1,5 +1,7 @@
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/sip_asset_type.dart';
 import 'package:felloapp/core/model/subscription_models/subscription_status.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/feature/sip/cubit/autosave_cubit.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
@@ -36,6 +38,7 @@ class EditSipBottomSheet extends StatefulWidget {
 class _EditSipBottomSheetState extends State<EditSipBottomSheet> {
   bool _isLoading = false;
   final locale = locator<S>();
+  final AnalyticsService _analyticsService = locator<AnalyticsService>();
   @override
   Widget build(BuildContext context) {
     return Padding(
@@ -85,6 +88,11 @@ class _EditSipBottomSheetState extends State<EditSipBottomSheet> {
                 if (widget.allowEdit)
                   InkWell(
                     onTap: () async {
+                      _analyticsService.track(
+                          eventName: AnalyticsEvents.editSipOption,
+                          properties: {
+                            "Option Selected": "Edit SIP",
+                          });
                       return widget.model.editSip(widget.amount,
                           widget.frequency, widget.index, widget.assetType);
                     },
@@ -122,6 +130,13 @@ class _EditSipBottomSheetState extends State<EditSipBottomSheet> {
                     setState(() {
                       _isLoading = true;
                     });
+                    _analyticsService.track(
+                        eventName: AnalyticsEvents.editSipOption,
+                        properties: {
+                          "Option Selected": widget.state.isPaused
+                              ? "Resume SIP"
+                              : "Pause SIP",
+                        });
                     widget.state.isPaused
                         ? await widget.model.resume(widget.index)
                         : await widget.model.pause(widget.index);

@@ -1,7 +1,9 @@
 import 'package:carousel_slider/carousel_slider.dart';
+import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/sip_asset_type.dart';
 import 'package:felloapp/core/model/sip_model/select_asset_options.dart';
+import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/feature/sip/cubit/selectedAsset_cubit.dart';
 import 'package:felloapp/feature/sip/cubit/sip_data_holder.dart';
 import 'package:felloapp/feature/sip/ui/sip_setup/sip_amount_view.dart';
@@ -51,6 +53,7 @@ class _SipAsssetSelectState extends State<SipAsssetSelect> {
   ];
   List<String> titles = [];
   List<String> subTitle = [];
+  final AnalyticsService _analyticsService = locator<AnalyticsService>();
 
   @override
   void initState() {
@@ -181,6 +184,13 @@ class _SipAsssetSelectState extends State<SipAsssetSelect> {
                     child: SecondaryButton(
                         onPressed: isBtnActive
                             ? () {
+                                _analyticsService.track(
+                                    eventName:
+                                        AnalyticsEvents.asChooseAssetNextTapped,
+                                    properties: {
+                                      "asset selected": selectedAssetModel
+                                          .state.selectedAsset,
+                                    });
                                 AppState.delegate!.appState.currentAction =
                                     PageAction(
                                   page: SipFormPageConfig,

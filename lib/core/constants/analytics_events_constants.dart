@@ -88,8 +88,8 @@ class AnalyticsEvents {
   static const asCustomComboTapped = "Autosave Custom combo tapped";
   static const asCustomComboSubmit = "Autosave Custom combo Submit";
   static const asChipsTapped = "Autosave Chips tapped";
-  static const asCancelContinueTapped = "Autosave Cancel - Continue Tapped";
-  static const asCancelOTPTapped = "Autosave Cancel - One time payment Tapped";
+  static const asCancelContinueTapped = "SIP Cancel - Continue Tapped";
+  static const asCancelOTPTapped = "SIP Cance _One time payment Tapped";
   static const asUpiAppTapped = "Autosave UPI App Tapped";
   static const asUpiSubmitTapped = "Autosave UPI Submit Tapped";
   static const asHardBackTapped = "Autosave Hard Back Tapped";
@@ -98,7 +98,7 @@ class AnalyticsEvents {
   static const asDoneTapped = "Autosave success done tapped";
   static const asPrevTapped = "Autosave Previous Tapped";
   static const asUpdateTapped = "Update Autosave Tapped";
-  static const asPauseTapped = "Pause Autosave Tapped";
+  static const asPauseTapped = "Pause SIP Confirm";
   static const asResumeTapped = "Resume Autosave Tapped";
 
   static const asPauseOneWeek = "Autosave paused for one week";
@@ -209,8 +209,8 @@ class AnalyticsEvents {
   static const maturityWithdrawPopupTapped = "Maturity Withdraw Popup Tapped";
   static const quickCheckoutTapped = "Quick Checkout Tapped";
   static const quickCheckoutTileTapped = "Quick Checkout Tile Tapped";
-  static const saveOnce = "Save Once Tapped in Asset Detail Page";
-  static const saveDaily = "Save Daily Tapped in Asset Detail Page";
+  static const saveOnce = "Save Once tapped in Asset Detail Page";
+  static const saveDaily = "SIP tapped in Asset Detail Page";
   static const tambolaCarousel = "Tickets top banner tapped";
   static const quizCrossTapped = "Cross on Quiz Tapped";
   static const quizBannerTapped = "Quiz Banner Tapped";
@@ -344,4 +344,12 @@ class AnalyticsEvents {
   static const rewardsSectionTab = 'Reward Section';
   static const howToEarnRewards = 'How to earn rewards cards clicked';
   static const earnRewardsClicked = 'Earn rewards clicked';
+
+  static const sipSummaryTicketClicked = "Tickets Click";
+  static const sipSummaryGtClicked = "Scratch Card Click";
+  static const sipSummaryButtonClicked = "Check Rewards click";
+  static const sipPaymentAppChoose = "Setup SIP Confirmation";
+
+  static const editSipOption = "Edit SIP Options";
+  static const pauseSipOption = "Pause SIP Confirm";
 }
