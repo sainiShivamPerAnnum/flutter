@@ -77,8 +77,15 @@ class AnalyticsEvents {
   static const prizeAWS = "Prize claim choice AWS gift card";
 
   static const flcTokensExhasuted = 'Fello Tokens Exhausted';
-
-  static const asCardTapped = "Autosave Card Tapped";
+//SIP
+  static const sipCardTapped = "SIP Card clicked";
+  static const setupSipButtonTap = "SIP Setup SIP click";
+  static const sipExistingCardTap = "SIP card tapped";
+  static const sipCalculatorFrequencyChanged =
+      "SIP Calculator frequency changed";
+  static const sipAssetSelected = "SIP asset selected";
+  static const calculatorValueChanged = 'SIP Calculator Value updated';
+  static const sipAssetProceed = "SIP asset proceed";
   static const asBenefitsTapped = "Autosave Benefits Next Tapped";
   static const asChooseAssetNextTapped = "Autosave Choose asset next Tapped";
   static const asAssetTapped = "Autosave Asset tapped";

@@ -304,7 +304,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("अपनी संपत्ति चुनें"),
         "claimMessage": MessageLookupByLibrary.simpleMessage(
             "आज के लिए दावा किया गया इनाम, और अधिक के लिए कल वापस आएं।"),
-        "clickToresumeSip": MessageLookupByLibrary.simpleMessage(
+        "clickToResumeSip": MessageLookupByLibrary.simpleMessage(
             "SIP फिर से शुरू करने के लिए कार्ड पर क्लिक करें"),
         "comingSoon": MessageLookupByLibrary.simpleMessage("जल्द आ रहा है"),
         "completeKYCText":

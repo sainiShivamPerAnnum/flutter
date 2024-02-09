@@ -6,7 +6,8 @@ import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/feature/sip/cubit/autosave_cubit.dart';
 import 'package:felloapp/feature/sip/cubit/sip_data_holder.dart';
 import 'package:felloapp/feature/sip/cubit/sip_form_cubit.dart';
-import 'package:felloapp/feature/sip/shared/interestCalculator.dart';
+import 'package:felloapp/feature/sip/mandate_page/view/mandate_view.dart';
+import 'package:felloapp/feature/sip/shared/interest_calculator.dart';
 import 'package:felloapp/feature/sip/shared/tab_slider.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
@@ -225,7 +226,7 @@ class _SipFormAmountState extends State<SipFormAmount> {
                                         TextSpan(
                                           text: SipCalculation.getReturn(
                                                   formAmount: state.formAmount,
-                                                  currentasset:
+                                                  currentAsset:
                                                       widget.sipAssetType,
                                                   currentTab: state.currentTab,
                                                   interestOnly: true) +

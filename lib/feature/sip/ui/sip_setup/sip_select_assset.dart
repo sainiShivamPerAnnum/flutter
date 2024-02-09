@@ -65,6 +65,7 @@ class _SipAsssetSelectState extends State<SipAsssetSelect> {
   @override
   Widget build(BuildContext context) {
     var assets = SipDataHolder.instance.data.selectAssetScreen.options;
+
     var assetsLength = assets.length;
     final selectedAssetModel = context.watch<SelectAssetCubit>();
     final isBtnActive = selectedAssetModel.state.selectedAsset != null;

@@ -17,7 +17,7 @@ class SipCalculation {
   static String getReturn({
     required int formAmount,
     required bool interestOnly,
-    SIPAssetTypes? currentasset,
+    SIPAssetTypes? currentAsset,
     int? currentTab,
     int? numberOfYears,
     String? frequency,
@@ -34,7 +34,7 @@ class SipCalculation {
 
     num interest = interestSelection ??
         SipDataHolder.instance.data.selectAssetScreen.options
-            .where((element) => element.type == currentasset)
+            .where((element) => element.type == currentAsset)
             .first
             .interest;
     double interestRate = (interest * .01) / numberOfPeriodsPerYear;

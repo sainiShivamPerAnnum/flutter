@@ -309,7 +309,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Choose your asset"),
         "claimMessage": MessageLookupByLibrary.simpleMessage(
             "Reward claimed for today, come back tomorrow for more."),
-        "clickToresumeSip":
+        "clickToResumeSip":
             MessageLookupByLibrary.simpleMessage("Click on card to Resume SIP"),
         "comingSoon": MessageLookupByLibrary.simpleMessage("COMING SOON"),
         "completeKYCText": MessageLookupByLibrary.simpleMessage("Complete KYC"),
