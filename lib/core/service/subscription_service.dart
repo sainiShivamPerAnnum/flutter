@@ -156,14 +156,7 @@ class SubService extends ChangeNotifier {
   Future<void> init() async {
     autosaveVisible = AppConfig.getValue(AppConfigKey.showNewAutosave) as bool;
     debugPrint("-----------autoSave visible $autosaveVisible");
-    final userServiceSubscriptionStatus =
-        locator<UserService>().baseUser?.subsStatus;
-
-    if (autosaveVisible &&
-        (userServiceSubscriptionStatus?.toUpperCase() == 'ACTIVE' ||
-            userServiceSubscriptionStatus?.toUpperCase() == 'PAUSED')) {
-      await getSubscription();
-    }
+    if (autosaveVisible) await getSubscription();
   }
 
   void dump() {

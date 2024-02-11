@@ -157,13 +157,14 @@ class UiConstants {
   );
 
   static LinearGradient kButtonGradient = const LinearGradient(
-      colors: [
-        Color(0xFF08D2AD),
-        Color(0xFF43544F),
-      ],
-      begin: Alignment.topCenter,
-      end: Alignment.bottomCenter,
-      tileMode: TileMode.clamp);
+    colors: [
+      Color(0xFF08D2AD),
+      Color(0xFF43544F),
+    ],
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+    tileMode: TileMode.clamp,
+  );
 
   static LinearGradient kCampaignBannerBackgrondGradient = LinearGradient(
     colors: [
@@ -272,13 +273,6 @@ extension ColorExtension on String {
 
 extension StringEnhancements on String {
   String get capitalizeFirst {
-    return this[0].toUpperCase() + this.substring(1).toLowerCase();
+    return this[0].toUpperCase() + substring(1).toLowerCase();
   }
-}
-
-enum SwitchButtonStates { switchOn, switchOff }
-
-extension SwitchButtonStatesX on SwitchButtonStates {
-  bool get isSwitchOn => this == SwitchButtonStates.switchOn;
-  bool get isSwitchOff => this == SwitchButtonStates.switchOff;
 }

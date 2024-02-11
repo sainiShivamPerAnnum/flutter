@@ -1,4 +1,5 @@
 import 'dart:async';
+import 'dart:math';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/connectivity_status_enum.dart';
@@ -168,86 +169,87 @@ class AppTextField extends StatelessWidget {
         autovalidateMode: autovalidateMode ?? AutovalidateMode.disabled,
         decoration: inputDecoration ??
             InputDecoration(
-                counterStyle: const TextStyle(color: UiConstants.kTextColor),
-                suffixIcon: suffixIcon != null
-                    ? Padding(
-                        padding: const EdgeInsets.only(right: 10),
-                        child: suffixIcon,
-                      )
-                    : null,
-                prefixText: prefixText,
-                prefixStyle: prefixTextStyle,
-                suffixText: suffixText,
-                suffixStyle: suffixTextStyle,
-                suffix: suffix,
-                prefixIcon: prefixIcon,
-                suffixIconConstraints: suffixIconConstraints ??
-                    const BoxConstraints(
-                      minWidth: 35,
-                      minHeight: 35,
-                      maxHeight: 35,
-                      maxWidth: 35,
-                    ),
-                fillColor: fillColor ??
-                    (isEnabled
-                        ? UiConstants.kTextFieldColor
-                        : UiConstants.kTextFieldColor.withOpacity(0.7)),
-                filled: true,
-                border: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(SizeConfig.roundness5),
-                  borderSide: BorderSide(
-                    color: UiConstants.kTextColor.withOpacity(0.1),
-                    width: SizeConfig.border1,
+              counterStyle: const TextStyle(color: UiConstants.kTextColor),
+              suffixIcon: suffixIcon != null
+                  ? Padding(
+                      padding: const EdgeInsets.only(right: 10),
+                      child: suffixIcon,
+                    )
+                  : null,
+              prefixText: prefixText,
+              prefixStyle: prefixTextStyle,
+              suffixText: suffixText,
+              suffixStyle: suffixTextStyle,
+              suffix: suffix,
+              prefixIcon: prefixIcon,
+              suffixIconConstraints: suffixIconConstraints ??
+                  const BoxConstraints(
+                    minWidth: 35,
+                    minHeight: 35,
+                    maxHeight: 35,
+                    maxWidth: 35,
                   ),
+              fillColor: fillColor ??
+                  (isEnabled
+                      ? UiConstants.kTextFieldColor
+                      : UiConstants.kTextFieldColor.withOpacity(0.7)),
+              filled: true,
+              border: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(SizeConfig.roundness5),
+                borderSide: BorderSide(
+                  color: UiConstants.kTextColor.withOpacity(0.1),
+                  width: SizeConfig.border1,
                 ),
-                enabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(SizeConfig.roundness5),
-                  borderSide: BorderSide(
-                    color: UiConstants.kTextColor.withOpacity(0.1),
-                    width: SizeConfig.border1,
+              ),
+              enabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(SizeConfig.roundness5),
+                borderSide: BorderSide(
+                  color: UiConstants.kTextColor.withOpacity(0.1),
+                  width: SizeConfig.border1,
+                ),
+              ),
+              disabledBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(SizeConfig.roundness5),
+                borderSide: BorderSide(
+                  color: UiConstants.kTextColor.withOpacity(0.1),
+                  width: SizeConfig.border1,
+                ),
+              ),
+              errorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(SizeConfig.roundness5),
+                borderSide: BorderSide(
+                  color: Colors.red,
+                  width: SizeConfig.border1,
+                ),
+              ),
+              focusedErrorBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(SizeConfig.roundness5),
+                borderSide: BorderSide(
+                  color: Colors.red,
+                  width: SizeConfig.border1,
+                ),
+              ),
+              errorStyle: const TextStyle(
+                height: 0.75,
+                fontSize: 12,
+              ),
+              focusedBorder: OutlineInputBorder(
+                borderRadius: BorderRadius.circular(SizeConfig.roundness5),
+                borderSide: BorderSide(
+                  color: focusedBorderColor ?? UiConstants.kTabBorderColor,
+                  width: SizeConfig.border1,
+                ),
+              ),
+              hintText: hintText,
+              hintStyle:
+                  hintStyle ?? TextStyles.body3.colour(UiConstants.kTextColor2),
+              contentPadding: contentPadding ??
+                  EdgeInsets.symmetric(
+                    horizontal: SizeConfig.padding16,
+                    vertical: SizeConfig.padding2,
                   ),
-                ),
-                disabledBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(SizeConfig.roundness5),
-                  borderSide: BorderSide(
-                    color: UiConstants.kTextColor.withOpacity(0.1),
-                    width: SizeConfig.border1,
-                  ),
-                ),
-                errorBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(SizeConfig.roundness5),
-                  borderSide: BorderSide(
-                    color: Colors.red,
-                    width: SizeConfig.border1,
-                  ),
-                ),
-                focusedErrorBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(SizeConfig.roundness5),
-                  borderSide: BorderSide(
-                    color: Colors.red,
-                    width: SizeConfig.border1,
-                  ),
-                ),
-                errorStyle: const TextStyle(
-                  height: 0.75,
-                  fontSize: 12,
-                ),
-                focusedBorder: OutlineInputBorder(
-                  borderRadius: BorderRadius.circular(SizeConfig.roundness5),
-                  borderSide: BorderSide(
-                    color: focusedBorderColor ?? UiConstants.kTabBorderColor,
-                    width: SizeConfig.border1,
-                  ),
-                ),
-                hintText: hintText,
-                hintStyle: hintStyle ??
-                    TextStyles.body3.colour(UiConstants.kTextColor2),
-                contentPadding: contentPadding ??
-                    EdgeInsets.symmetric(
-                      horizontal: SizeConfig.padding16,
-                      vertical: SizeConfig.padding2,
-                    ),
-                counterText: ""),
+              counterText: "",
+            ),
       ),
     );
   }
@@ -354,15 +356,15 @@ class AppDatePickerField extends StatelessWidget {
 }
 
 class AppPositiveBtn extends StatelessWidget {
-  const AppPositiveBtn(
-      {required this.onPressed,
-      this.btnText,
-      Key? key,
-      this.style,
-      this.width,
-      this.height,
-      this.child})
-      : super(key: key);
+  const AppPositiveBtn({
+    required this.onPressed,
+    super.key,
+    this.btnText,
+    this.style,
+    this.width,
+    this.height,
+    this.child,
+  });
   final String? btnText;
   final VoidCallback onPressed;
   final double? width, height;
@@ -489,54 +491,51 @@ class ReactivePositiveAppButton extends HookWidget {
         );
 
     return Consumer<ConnectivityService>(
-        builder: (ctx, model, child) => Container(
-              height: SizeConfig.screenWidth! * 0.1556,
-              width: width ??
-                  SizeConfig.screenWidth! -
-                      SizeConfig.pageHorizontalMargins * 2,
-              decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(
-                  SizeConfig.buttonBorderRadius,
-                ),
-                gradient: LinearGradient(
-                  colors: model.connectivityStatus == ConnectivityStatus.Offline
-                      ? [
-                          UiConstants.kTextColor,
-                          Colors.grey,
-                          Colors.black,
-                        ]
-                      : [
-                          const Color.fromARGB(255, 168, 230, 219)
-                              .withOpacity(isDisabled ? 0.8 : 1),
-                          const Color(0xff12BC9D)
-                              .withOpacity(isDisabled ? 0.8 : 1),
-                          const Color(0xff249680)
-                              .withOpacity(isDisabled ? 0.8 : 1),
-                        ],
-                  stops: const [0.01, 0.3, 1],
-                  begin: Alignment.topCenter,
-                  end: Alignment.bottomCenter,
-                ),
-              ),
-              child: MaterialButton(
-                // padding: EdgeInsets.zero,
-                onPressed:
-                    model.connectivityStatus == ConnectivityStatus.Offline
-                        ? BaseUtil.showNoInternetAlert
-                        : () async {
-                            if (isLoading.value) return;
-                            isLoading.value = true;
-                            await onPressed();
-                            isLoading.value = false;
-                          },
-                child: isLoading.value
-                    ? SpinKitThreeBounce(
-                        size: SizeConfig.title5,
-                        color: Colors.white,
-                      )
-                    : content,
-              ),
-            ));
+      builder: (ctx, model, child) => Container(
+        height: SizeConfig.screenWidth! * 0.1556,
+        width: width ??
+            SizeConfig.screenWidth! - SizeConfig.pageHorizontalMargins * 2,
+        decoration: BoxDecoration(
+          borderRadius: BorderRadius.circular(
+            SizeConfig.buttonBorderRadius,
+          ),
+          gradient: LinearGradient(
+            colors: model.connectivityStatus == ConnectivityStatus.Offline
+                ? [
+                    UiConstants.kTextColor,
+                    Colors.grey,
+                    Colors.black,
+                  ]
+                : [
+                    const Color.fromARGB(255, 168, 230, 219)
+                        .withOpacity(isDisabled ? 0.8 : 1),
+                    const Color(0xff12BC9D).withOpacity(isDisabled ? 0.8 : 1),
+                    const Color(0xff249680).withOpacity(isDisabled ? 0.8 : 1),
+                  ],
+            stops: const [0.01, 0.3, 1],
+            begin: Alignment.topCenter,
+            end: Alignment.bottomCenter,
+          ),
+        ),
+        child: MaterialButton(
+          // padding: EdgeInsets.zero,
+          onPressed: model.connectivityStatus == ConnectivityStatus.Offline
+              ? BaseUtil.showNoInternetAlert
+              : () async {
+                  if (isLoading.value) return;
+                  isLoading.value = true;
+                  await onPressed();
+                  isLoading.value = false;
+                },
+          child: isLoading.value
+              ? SpinKitThreeBounce(
+                  size: SizeConfig.title5,
+                  color: Colors.white,
+                )
+              : content,
+        ),
+      ),
+    );
   }
 }
 
@@ -583,14 +582,14 @@ class AppDateField extends StatelessWidget {
   final double? fieldWidth;
   final FormFieldValidator<String> validate;
 
-  const AppDateField(
-      {required this.validate,
-      Key? key,
-      this.controller,
-      this.labelText,
-      this.maxlength,
-      this.fieldWidth})
-      : super(key: key);
+  const AppDateField({
+    required this.validate,
+    super.key,
+    this.controller,
+    this.labelText,
+    this.maxlength,
+    this.fieldWidth,
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -1151,89 +1150,202 @@ class GradientBoxBorder extends BoxBorder {
 }
 
 class CustomSwitch extends StatefulWidget {
-  final bool value;
+  final bool initialValue;
   final ValueChanged<bool> onChanged;
 
-  const CustomSwitch({Key? key, required this.value, required this.onChanged})
-      : super(key: key);
+  const CustomSwitch({
+    required this.initialValue,
+    required this.onChanged,
+    super.key,
+  });
 
   @override
-  _CustomSwitchState createState() => _CustomSwitchState();
+  State<CustomSwitch> createState() => _CustomSwitchState();
 }
 
 class _CustomSwitchState extends State<CustomSwitch>
     with SingleTickerProviderStateMixin {
-  Widget returnWidgetLayout({required Widget child1, required Widget child2}) {
-    return Padding(
-      padding: EdgeInsets.symmetric(vertical: SizeConfig.padding4),
-      child: Row(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          mainAxisSize: MainAxisSize.min,
-          children: selected ? [child1, child2] : [child2, child1]),
+  static const _curve = Curves.easeIn;
+  static const _duration = Duration(milliseconds: 300);
+
+  late final AnimationController _animationController;
+  late final Animation<Color?> _colorAnimation;
+  late final Animation<Size?> _sizeAnimation;
+
+  bool _selected = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _selected = widget.initialValue;
+
+    _animationController = AnimationController(
+      vsync: this,
+      duration: _duration,
     );
+
+    final curvedAnimation = CurvedAnimation(
+      parent: _animationController,
+      curve: _curve,
+    );
+
+    _colorAnimation = ColorTween(
+      begin: UiConstants.grey2,
+      end: UiConstants.teal3,
+    ).animate(curvedAnimation);
+
+    _sizeAnimation = SizeTween(
+      begin: const Size(7, 2),
+      end: const Size.square(6),
+    ).animate(curvedAnimation);
+
+    if (_selected) {
+      _animationController.value = 1.0;
+    }
   }
 
-  SwitchButtonStates get switchState =>
-      selected ? SwitchButtonStates.switchOn : SwitchButtonStates.switchOff;
-  Color get switchButtonBorderColor =>
-      switchState.isSwitchOn ? UiConstants.grey1 : UiConstants.grey2;
-  Color get switchButtonTextColor =>
-      switchState.isSwitchOn ? Colors.white : UiConstants.textGray60;
-  Color get switchButtonThumbColor =>
-      switchState.isSwitchOn ? UiConstants.teal3 : UiConstants.grey2;
-  bool selected = true;
+  @override
+  void didUpdateWidget(covariant CustomSwitch oldWidget) {
+    super.didUpdateWidget(oldWidget);
+
+    if (oldWidget.initialValue != widget.initialValue) {
+      _selected = widget.initialValue;
+      _onValueChanged();
+    }
+  }
+
+  @override
+  void dispose() {
+    _animationController.dispose();
+    super.dispose();
+  }
+
+  void _onToggle() {
+    setState(() => _selected = !_selected);
+    widget.onChanged(_selected);
+    _onValueChanged();
+  }
+
+  void _onValueChanged() {
+    if (_selected) {
+      _animationController.forward();
+    } else {
+      _animationController.reverse();
+    }
+  }
+
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: () {
-        setState(() {
-          selected = !selected;
-        });
-        widget.onChanged(!selected);
-      },
+      onTap: _onToggle,
       child: Container(
-        width: SizeConfig.padding50,
-        height: SizeConfig.padding26,
+        height: SizeConfig.padding25,
+        width: SizeConfig.padding46,
         decoration: BoxDecoration(
-            borderRadius: BorderRadius.circular(
-              SizeConfig.padding24,
+          borderRadius: BorderRadius.circular(SizeConfig.roundness56),
+          border: Border.all(color: UiConstants.grey2),
+          color: Colors.black,
+        ),
+        padding: EdgeInsets.all(SizeConfig.padding4),
+        child: Stack(
+          alignment: Alignment.center,
+          children: [
+            Align(
+              alignment: Alignment.centerLeft,
+              child: AnimatedOpacity(
+                opacity: _selected ? 1 : 0,
+                duration: _duration,
+                curve: _curve,
+                child: Padding(
+                  padding: EdgeInsets.only(left: SizeConfig.padding4),
+                  child: Text(
+                    'ON',
+                    style: TextStyles.sourceSans.body5.copyWith(
+                      height: 1.2,
+                    ),
+                  ),
+                ),
+              ),
             ),
-            border: Border.all(color: switchButtonBorderColor),
-            color: Colors.black),
-        child: Padding(
-          padding: EdgeInsets.only(
-              right: SizeConfig.padding4, left: SizeConfig.padding4),
-          child: returnWidgetLayout(
-            child1: Text(switchState.isSwitchOn ? 'ON' : 'OFF',
-                style: TextStyle(color: switchButtonTextColor)),
-            child2: AnimatedAlign(
+            Align(
+              alignment: Alignment.centerRight,
+              child: AnimatedOpacity(
+                opacity: _selected ? 0 : 1,
+                duration: _duration,
+                child: Padding(
+                  padding: EdgeInsets.only(right: SizeConfig.padding4),
+                  child: Text(
+                    'OFF',
+                    style: TextStyles.sourceSans.body5.copyWith(
+                      height: 1.2,
+                      color: UiConstants.textGray60,
+                    ),
+                  ),
+                ),
+              ),
+            ),
+            AnimatedAlign(
               alignment:
-                  selected ? Alignment.centerRight : Alignment.centerLeft,
-              duration: const Duration(milliseconds: 300),
-              child: Container(
-                  width: 20.0,
-                  height: 20.0,
-                  decoration: BoxDecoration(
-                      shape: BoxShape.circle, color: switchButtonThumbColor),
-                  child: Center(
-                    child: switchState.isSwitchOn
-                        ? Container(
-                            width: 5.0,
-                            height: 5.0,
-                            decoration: const BoxDecoration(
-                                shape: BoxShape.circle, color: Colors.black))
-                        : Container(
-                            height: 2,
-                            width: 8,
-                            decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(2),
-                                color: Colors.black),
-                          ),
-                  )),
+                  _selected ? Alignment.centerRight : Alignment.centerLeft,
+              duration: _duration,
+              curve: _curve,
+              child: AnimatedBuilder(
+                animation: _animationController,
+                builder: (context, child) {
+                  return SizedBox.square(
+                    dimension: SizeConfig.padding16,
+                    child: CustomPaint(
+                      painter: _ThumbPainter(
+                        _colorAnimation.value!,
+                        _sizeAnimation.value!,
+                      ),
+                    ),
+                  );
+                },
+              ),
             ),
-          ),
+          ],
         ),
       ),
     );
   }
+}
+
+class _ThumbPainter extends CustomPainter {
+  final Color thumbColor;
+  final Size circleSize;
+
+  _ThumbPainter(this.thumbColor, this.circleSize);
+
+  @override
+  void paint(Canvas canvas, Size size) {
+    final backgroundCirclePainter = Paint()..color = thumbColor;
+    final foreGroundCirclePainter = Paint()..blendMode = BlendMode.dstOut;
+
+    final radius = max(size.height / 2, size.width / 2);
+    final rectCenter = (Offset.zero & size).center;
+
+    canvas.drawCircle(
+      rectCenter,
+      radius,
+      backgroundCirclePainter,
+    );
+
+    final centerRect =
+        (rectCenter - Offset(circleSize.width / 2, circleSize.height / 2)) &
+            circleSize;
+
+    canvas.drawRRect(
+      RRect.fromRectAndRadius(
+        centerRect,
+        const Radius.circular(5),
+      ),
+      foreGroundCirclePainter,
+    );
+  }
+
+  @override
+  bool shouldRepaint(covariant _ThumbPainter oldDelegate) =>
+      oldDelegate.thumbColor != thumbColor ||
+      oldDelegate.circleSize != circleSize;
 }

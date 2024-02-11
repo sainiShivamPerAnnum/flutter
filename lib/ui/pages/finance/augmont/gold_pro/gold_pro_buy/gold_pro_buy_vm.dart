@@ -45,9 +45,10 @@ class GoldProBuyViewModel extends BaseViewModel
   final TxnHistoryService _txnHistoryService = locator<TxnHistoryService>();
   S locale = locator<S>();
   TextEditingController goldFieldController = TextEditingController(
-      text: AppConfig.getValue(AppConfigKey.goldProInvestmentChips)[1]
-          .toDouble()
-          .toString());
+    text: AppConfig.getValue(AppConfigKey.goldProInvestmentChips)[1]
+        .toDouble()
+        .toString(),
+  );
 
   bool get isGoldBuyInProgress => _txnService.isGoldBuyInProgress;
 
@@ -132,9 +133,13 @@ class GoldProBuyViewModel extends BaseViewModel
     _totalGoldBalance = value;
 
     _additionalGoldBalance = BaseUtil.digitPrecision(
-        max(totalGoldBalance - currentGoldBalance, 0), 4, false);
+      max(totalGoldBalance - currentGoldBalance, 0),
+      4,
+      false,
+    );
     print(
-        "Total: $totalGoldBalance && Current: $currentGoldBalance && additional: $additionalGoldBalance");
+      "Total: $totalGoldBalance && Current: $currentGoldBalance && additional: $additionalGoldBalance",
+    );
     updateSliderValueFromGoldBalance();
     postUpdateChips();
     updateAmount();
@@ -199,13 +204,12 @@ class GoldProBuyViewModel extends BaseViewModel
   bool get isChecked => _isChecked;
   bool get isAutoLeaseChecked => _isAutoLeaseChecked;
 
-  set isChecked(bool value) {
-    _isChecked = value;
-    notifyListeners();
-  }
-
   set isAutoLeaseChecked(bool value) {
     _isAutoLeaseChecked = value;
+  }
+
+  set isChecked(bool value) {
+    _isChecked = value;
     notifyListeners();
   }
 
@@ -228,7 +232,10 @@ class GoldProBuyViewModel extends BaseViewModel
       _txnService.currentTransactionState = TransactionState.idle;
     });
     currentGoldBalance = BaseUtil.digitPrecision(
-        userService.userFundWallet!.augGoldQuantity, 4, false);
+      userService.userFundWallet!.augGoldQuantity,
+      4,
+      false,
+    );
     totalGoldBalance = chipsList[1].value;
     _isChecked = userService.userPortfolio.augmont.fd.isGoldProUser;
     await initAndSetPreferredPaymentOption();
@@ -267,28 +274,34 @@ class GoldProBuyViewModel extends BaseViewModel
       unavailabilityText = res.errorMessage ??
           "${Constants.ASSET_GOLD_STAKE} not available at the moment, please try again after sometime";
       BaseUtil.showNegativeAlert(
-          "Failed to fetch Gold Scheme", res.errorMessage);
+        "Failed to fetch Gold Scheme",
+        res.errorMessage,
+      );
       return false;
     }
   }
 
   Future<void> initiateGoldProTransaction() async {
     if (!isChecked) {
-      BaseUtil.showNegativeAlert("Please accept the terms and conditions",
-          "to continue saving in ${Constants.ASSET_GOLD_STAKE}");
+      BaseUtil.showNegativeAlert(
+        "Please accept the terms and conditions",
+        "to continue saving in ${Constants.ASSET_GOLD_STAKE}",
+      );
       return;
     }
     AppState.isGoldProBuyInProgress = false;
-    locator<AnalyticsService>()
-        .track(eventName: AnalyticsEvents.goldProFinalSaveTapped, properties: {
-      "grams to add": additionalGoldBalance,
-      "amount to add": totalGoldAmount,
-      "total lease value": totalGoldBalance,
-      "current gold balance": currentGoldBalance,
-      "expected returns": expectedGoldReturns,
-      "returns percentage": 15.5,
-      "Auto lease status": isAutoLeaseChecked
-    });
+    locator<AnalyticsService>().track(
+      eventName: AnalyticsEvents.goldProFinalSaveTapped,
+      properties: {
+        "grams to add": additionalGoldBalance,
+        "amount to add": totalGoldAmount,
+        "total lease value": totalGoldBalance,
+        "current gold balance": currentGoldBalance,
+        "expected returns": expectedGoldReturns,
+        "returns percentage": 15.5,
+        "Auto lease status": isAutoLeaseChecked
+      },
+    );
     if (additionalGoldBalance == 0) {
       await _initiateLease();
     } else {
@@ -299,16 +312,17 @@ class GoldProBuyViewModel extends BaseViewModel
   Future<void> _initiateBuyAndLease() async {
     await _txnService.initiateAugmontTransaction(
       details: GoldPurchaseDetails(
-          goldBuyAmount: totalGoldAmount,
-          goldRates: goldRates,
-          couponCode: '',
-          skipMl: false,
-          goldInGrams: additionalGoldBalance,
-          leaseQty: totalGoldBalance,
-          isPro: true,
-          upiChoice: selectedUpiApplication,
-          isIntentFlow: assetOptionsModel!.data.intent,
-          isAutoLeaseChecked: isAutoLeaseChecked),
+        goldBuyAmount: totalGoldAmount,
+        goldRates: goldRates,
+        couponCode: '',
+        skipMl: false,
+        goldInGrams: additionalGoldBalance,
+        leaseQty: totalGoldBalance,
+        isPro: true,
+        upiChoice: selectedUpiApplication,
+        isIntentFlow: assetOptionsModel!.data.intent,
+        isAutoLeaseChecked: isAutoLeaseChecked,
+      ),
     );
   }
 
@@ -329,7 +343,10 @@ class GoldProBuyViewModel extends BaseViewModel
     );
     _txnService.currentTxnAmount = 0;
     final res = await _paymentRepo.investInGoldPro(
-        totalGoldBalance, _txnService.goldProScheme!.id, isAutoLeaseChecked);
+      totalGoldBalance,
+      _txnService.goldProScheme!.id,
+      isAutoLeaseChecked,
+    );
     if (res.isSuccess()) {
       _leaseModel = res.model;
       _txnService.currentTransactionState = TransactionState.success;
@@ -392,14 +409,18 @@ class GoldProBuyViewModel extends BaseViewModel
 
   void updateSliderValueFromGoldBalance() {
     double val = BaseUtil.digitPrecision(
-        (totalGoldBalance - consecutiveDifference) / edgeDifference, 4);
+      (totalGoldBalance - consecutiveDifference) / edgeDifference,
+      4,
+    );
     if (val >= 0 && val <= 1) sliderValue = val;
   }
 
   void updateSliderValue(double val) {
     sliderValue = val;
     totalGoldBalance = BaseUtil.digitPrecision(
-        edgeDifference * val + consecutiveDifference, 1);
+      edgeDifference * val + consecutiveDifference,
+      1,
+    );
     goldFieldController.text = totalGoldBalance.toString();
     postUpdateChips();
   }
@@ -481,16 +502,20 @@ class GoldProBuyViewModel extends BaseViewModel
       },
     );
     if (totalGoldBalance > maximumGrams) {
-      BaseUtil.showNegativeAlert("Gold grams out of bound",
-          "You can lease at most $maximumGrams grams");
+      BaseUtil.showNegativeAlert(
+        "Gold grams out of bound",
+        "You can lease at most $maximumGrams grams",
+      );
       totalGoldBalance = maximumGrams;
       goldFieldController.text = "$maximumGrams";
       updateAmount();
       return;
     }
     if (totalGoldBalance < minimumGrams) {
-      BaseUtil.showNegativeAlert("Gold grams too low to lease",
-          "You have to lease at least $minimumGrams grams");
+      BaseUtil.showNegativeAlert(
+        "Gold grams too low to lease",
+        "You have to lease at least $minimumGrams grams",
+      );
       totalGoldBalance = minimumGrams;
       goldFieldController.text = "$minimumGrams";
       updateAmount();
@@ -524,7 +549,9 @@ class GoldProBuyViewModel extends BaseViewModel
     isGoldRateFetching = false;
     if (goldRates == null) {
       BaseUtil.showNegativeAlert(
-          locale.portalUnavailable, locale.currentRatesNotLoadedText1);
+        locale.portalUnavailable,
+        locale.currentRatesNotLoadedText1,
+      );
     }
   }
 
@@ -538,9 +565,10 @@ class GoldProBuyViewModel extends BaseViewModel
       const variableAmount = 3;
 
       final amountWithPrecision = BaseUtil.digitPrecision(
-          (goldBuyPrice! * additionalGoldBalance) +
-              (netTax * goldBuyPrice! * additionalGoldBalance) / 100,
-          2);
+        (goldBuyPrice! * additionalGoldBalance) +
+            (netTax * goldBuyPrice! * additionalGoldBalance) / 100,
+        2,
+      );
 
       // Add variable amount if
       totalGoldAmount = amountWithPrecision == 0
@@ -548,7 +576,10 @@ class GoldProBuyViewModel extends BaseViewModel
           : amountWithPrecision + variableAmount;
 
       double expectedGoldReturnsAmount = BaseUtil.digitPrecision(
-          totalGoldBalance * goldBuyPrice! + netTax, 2, false);
+        totalGoldBalance * goldBuyPrice! + netTax,
+        2,
+        false,
+      );
       expectedGoldReturns =
           expectedGoldReturnsAmount + 0.155 * expectedGoldReturnsAmount * 5;
     } else {

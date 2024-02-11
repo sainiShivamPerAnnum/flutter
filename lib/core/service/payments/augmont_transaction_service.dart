@@ -90,13 +90,11 @@ class AugmontTransactionService extends BaseTransactionService
     currentTxnAmount = details.goldBuyAmount;
 
     if ((currentTxnAmount ?? 0) >= Constants.mandatoryNetBankingThreshold) {
-      return await processNBTransaction(
-          isAutoLeaseChecked: details.isAutoLeaseChecked);
+      return await processNBTransaction();
     }
 
     if (details.isIntentFlow && details.upiChoice != null) {
-      return await processUpiTransaction(
-          isAutoLeaseChecked: details.isAutoLeaseChecked);
+      return await processUpiTransaction();
     }
 
     if (!details.isIntentFlow) {
@@ -106,7 +104,7 @@ class AugmontTransactionService extends BaseTransactionService
 
   //6 -- UPI
   @override
-  Future<void> processUpiTransaction({bool? isAutoLeaseChecked}) async {
+  Future<void> processUpiTransaction() async {
     isGoldBuyInProgress = true;
     AppState.blockNavigation();
 
@@ -142,7 +140,7 @@ class AugmontTransactionService extends BaseTransactionService
       InvestmentType.AUGGOLD99,
       currentGoldPurchaseDetails.upiChoice!.upiApplication.appName
           .formatUpiAppName(),
-      isAutoLeaseChecked,
+      currentGoldPurchaseDetails.isAutoLeaseChecked,
       augProMap,
     );
     if (txnResponse.isSuccess()) {
@@ -206,7 +204,7 @@ class AugmontTransactionService extends BaseTransactionService
   }
 
   @override
-  Future<void> processNBTransaction({bool? isAutoLeaseChecked}) async {
+  Future<void> processNBTransaction() async {
     isGoldBuyInProgress = true;
     AppState.blockNavigation();
 
@@ -244,7 +242,7 @@ class AugmontTransactionService extends BaseTransactionService
       InvestmentType.AUGGOLD99,
       null, //app use
 
-      isAutoLeaseChecked,
+      currentGoldPurchaseDetails.isAutoLeaseChecked,
       augProMap,
       'NET_BANKING', // pay-mode
     );
@@ -505,22 +503,16 @@ class GoldPurchaseDetails {
   bool isIntentFlow;
   bool isAutoLeaseChecked;
 
-  GoldPurchaseDetails(
-      {required this.goldBuyAmount,
-      required this.goldRates,
-      required this.couponCode,
-      required this.skipMl,
-      required this.goldInGrams,
-      this.upiChoice,
-      this.leaseQty,
-      this.isPro = false,
-      this.isIntentFlow = false,
-      this.isAutoLeaseChecked = true});
-
-  //  bool get isAutoLeaseChecked => _isAutoLeaseChecked;
-
-  //  set isAutoLeaseChecked(bool value) {
-  //   _isAutoLeaseChecked = value;
-  //   notifyListeners();
-  // }
+  GoldPurchaseDetails({
+    required this.goldBuyAmount,
+    required this.goldRates,
+    required this.couponCode,
+    required this.skipMl,
+    required this.goldInGrams,
+    this.upiChoice,
+    this.leaseQty,
+    this.isPro = false,
+    this.isIntentFlow = false,
+    this.isAutoLeaseChecked = true,
+  });
 }
