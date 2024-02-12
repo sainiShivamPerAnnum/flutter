@@ -247,7 +247,6 @@ class SubService extends ChangeNotifier {
         await _subscriptionRepo.pauseSubscription(option: option, id: id);
     isPauseOrResuming = false;
     if (res.isSuccess()) {
-      BaseUtil.showPositiveAlert(locale.pauseSuccess, locale.pauseSuccessSub);
       return true;
     } else {
       BaseUtil.showNegativeAlert(res.errorMessage, locale.tryAgain);

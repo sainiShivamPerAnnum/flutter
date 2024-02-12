@@ -28,6 +28,7 @@ import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:flutter_bloc/flutter_bloc.dart';
+import 'package:intl/intl.dart';
 
 class SipIntroView extends StatefulWidget {
   const SipIntroView({super.key});
@@ -382,12 +383,6 @@ class AssetSipContainer extends StatelessWidget {
         amount: sipAmount,
         model: model,
         frequency: sipInterval,
-        sipReturns: SipCalculation.getReturn(
-          formAmount: sipAmount,
-          currentAsset: assetType,
-          interestOnly: true,
-          frequency: sipInterval,
-        ),
       ),
     );
   }
@@ -460,12 +455,6 @@ class AssetSipContainer extends StatelessWidget {
                           amount: sipAmount,
                           model: model,
                           frequency: sipInterval,
-                          sipReturns: SipCalculation.getReturn(
-                            formAmount: sipAmount,
-                            currentAsset: assetType,
-                            interestOnly: true,
-                            frequency: sipInterval,
-                          ),
                         ));
                   },
                   child: Text(
@@ -535,6 +524,7 @@ class _SipCalculatorState extends State<SipCalculator>
 
   late final TabController tabController;
   late final List<String> sipOptions;
+  final _formKey = GlobalKey<FormState>();
 
   @override
   void initState() {
@@ -550,22 +540,34 @@ class _SipCalculatorState extends State<SipCalculator>
     super.dispose();
   }
 
-  void changeTimePeriod(int value) {
-    setState(() {
-      timePeriod = value > maxTimePeriod ? maxTimePeriod : value;
-    });
+  void changeTimePeriod(String value) {
+    _formKey.currentState!.validate();
+    int? time = int.tryParse(value);
+    if (time != null) {
+      setState(() {
+        timePeriod = time > maxTimePeriod ? maxTimePeriod : time;
+      });
+    }
   }
 
-  void changeSIPAmount(int value) {
-    setState(() {
-      sipAmount = value > maxSipValue ? maxSipValue : value;
-    });
+  void changeSIPAmount(String value) {
+    _formKey.currentState!.validate();
+    int? amount = int.tryParse(value);
+    if (amount != null) {
+      setState(() {
+        sipAmount = amount > maxSipValue ? maxSipValue : amount;
+      });
+    }
   }
 
-  void changeRateOfInterest(int value) {
-    setState(() {
-      returnPercentage = value > 30 ? 30 : value;
-    });
+  void changeRateOfInterest(String value) {
+    _formKey.currentState!.validate();
+    int? roi = int.tryParse(value);
+    if (roi != null) {
+      setState(() {
+        returnPercentage = roi > 30 ? 30 : roi;
+      });
+    }
   }
 
   void _sendEvent() {
@@ -620,97 +622,106 @@ class _SipCalculatorState extends State<SipCalculator>
               top: SizeConfig.padding16,
               left: SizeConfig.padding16,
               right: SizeConfig.padding16),
-          child: Column(
-            children: [
-              Padding(
-                padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding28),
-                child: TabSlider<String>(
-                  controller: tabController,
-                  tabs: widget.state.options,
-                  labelBuilder: (label) => label,
-                  onTap: (currentTab, i) {
-                    setState(() {
-                      getDefaultValue(
-                        i,
-                      );
-                    });
+          child: Form(
+            key: _formKey,
+            child: Column(
+              children: [
+                Padding(
+                  padding:
+                      EdgeInsets.symmetric(horizontal: SizeConfig.padding28),
+                  child: TabSlider<String>(
+                    controller: tabController,
+                    tabs: widget.state.options,
+                    labelBuilder: (label) => label,
+                    onTap: (currentTab, i) {
+                      setState(() {
+                        getDefaultValue(
+                          i,
+                        );
+                      });
 
-                    _sendEvent();
-                  },
+                      _sendEvent();
+                    },
+                  ),
                 ),
-              ),
-              SizedBox(
-                height: SizeConfig.padding20,
-              ),
-              CalculatorField(
-                onChangeEnd: (x) => _sendEvent(),
-                requiresQuickButtons: false,
-                changeFunction: changeSIPAmount,
-                label: locale.sipamount,
-                prefixText: "₹",
-                maxValue: maxSipValue.toDouble(),
-                minValue: minSipValue.toDouble(),
-                value: sipAmount.toDouble(),
-                inputFormatters: [
-                  MaxValueInputFormatter(maxValue: maxSipValue),
-                ],
-              ),
-              SizedBox(
-                height: SizeConfig.padding20,
-              ),
-              CalculatorField(
-                onChangeEnd: (x) => _sendEvent(),
-                requiresQuickButtons: false,
-                changeFunction: changeTimePeriod,
-                label: locale.timePeriod,
-                suffixText: locale.sipYear,
-                inputFormatters: [
-                  FilteringTextInputFormatter.digitsOnly,
-                  MaxValueInputFormatter(maxValue: maxTimePeriod),
-                ],
-                maxValue: maxTimePeriod.toDouble(),
-                minValue: minTimePeriod.toDouble(),
-                value: timePeriod.toDouble(),
-              ),
-              SizedBox(
-                height: SizeConfig.padding20,
-              ),
-              CalculatorField(
+                SizedBox(
+                  height: SizeConfig.padding20,
+                ),
+                CalculatorField(
                   onChangeEnd: (x) => _sendEvent(),
                   requiresQuickButtons: false,
-                  textAlign: TextAlign.center,
-                  label: locale.rpSip,
-                  minValue: 1,
-                  maxValue: 30,
-                  suffixText: '%',
+                  changeFunction: changeSIPAmount,
+                  label: locale.sipamount,
+                  prefixText: "₹",
+                  maxValue: maxSipValue.toDouble(),
+                  minValue: minSipValue.toDouble(),
+                  value: sipAmount.toDouble(),
                   inputFormatters: [
-                    MaxValueInputFormatter(maxValue: 30),
+                    MaxValueInputFormatter(maxValue: maxSipValue.toInt()),
+                    TextInputFormatter.withFunction((oldValue, newValue) {
+                      var decimalSeparator = NumberFormat().symbols.DECIMAL_SEP;
+                      var r = RegExp(r'^\d*(\' + decimalSeparator + r'\d*)?$');
+                      return r.hasMatch(newValue.text) ? newValue : oldValue;
+                    })
                   ],
-                  isPercentage: true,
-                  changeFunction: changeRateOfInterest,
-                  value: returnPercentage.toDouble()),
-              SizedBox(
-                height: SizeConfig.padding20,
-              ),
-              Row(
-                mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                children: [
-                  Text(
-                    locale.yourMoneySip(timePeriod),
-                    style: TextStyles.sourceSansSB.body2
-                        .colour(UiConstants.kTextColor),
-                  ),
-                  Text(
-                    '₹${SipCalculation.getReturn(formAmount: sipAmount, interestSelection: returnPercentage, numberOfYears: timePeriod, currentTab: tabController.index, interestOnly: false)}',
-                    style: TextStyles.sourceSansSB.title5
-                        .colour(UiConstants.kTabBorderColor),
-                  ),
-                ],
-              ),
-              SizedBox(
-                height: SizeConfig.padding18,
-              ),
-            ],
+                ),
+                SizedBox(
+                  height: SizeConfig.padding20,
+                ),
+                CalculatorField(
+                  onChangeEnd: (x) => _sendEvent(),
+                  requiresQuickButtons: false,
+                  changeFunction: changeTimePeriod,
+                  label: locale.timePeriod,
+                  suffixText: locale.sipYear,
+                  inputFormatters: [
+                    FilteringTextInputFormatter.digitsOnly,
+                    MaxValueInputFormatter(maxValue: maxTimePeriod),
+                  ],
+                  maxValue: maxTimePeriod.toDouble(),
+                  minValue: minTimePeriod.toDouble(),
+                  value: timePeriod.toDouble(),
+                ),
+                SizedBox(
+                  height: SizeConfig.padding20,
+                ),
+                CalculatorField(
+                    onChangeEnd: (x) => _sendEvent(),
+                    requiresQuickButtons: false,
+                    textAlign: TextAlign.center,
+                    label: locale.rpSip,
+                    minValue: 1,
+                    maxValue: 30,
+                    suffixText: '%',
+                    inputFormatters: [
+                      MaxValueInputFormatter(maxValue: 30),
+                    ],
+                    isPercentage: true,
+                    changeFunction: changeRateOfInterest,
+                    value: returnPercentage.toDouble()),
+                SizedBox(
+                  height: SizeConfig.padding20,
+                ),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.spaceBetween,
+                  children: [
+                    Text(
+                      locale.yourMoneySip(timePeriod),
+                      style: TextStyles.sourceSansSB.body2
+                          .colour(UiConstants.kTextColor),
+                    ),
+                    Text(
+                      '₹${SipCalculation.getReturn(formAmount: sipAmount, interestSelection: returnPercentage, numberOfYears: timePeriod, currentTab: tabController.index, interestOnly: false)}',
+                      style: TextStyles.sourceSansSB.title5
+                          .colour(UiConstants.kTabBorderColor),
+                    ),
+                  ],
+                ),
+                SizedBox(
+                  height: SizeConfig.padding18,
+                ),
+              ],
+            ),
           ),
         ),
         SizedBox(

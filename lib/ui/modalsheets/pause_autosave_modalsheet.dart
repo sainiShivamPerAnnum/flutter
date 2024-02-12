@@ -93,7 +93,7 @@ class _PauseAutosaveModalState extends State<PauseAutosaveModal> {
       onTap: () async {
         _analyticsService
             .track(eventName: AnalyticsEvents.pauseSipOption, properties: {
-          "Duration": option,
+          "Duration": option.name,
         });
         await AppState.backButtonDispatcher!.didPopRoute();
         await BaseUtil.openDialog(
@@ -112,6 +112,8 @@ class _PauseAutosaveModalState extends State<PauseAutosaveModal> {
               await widget.model!.pauseSubscription(option, widget.id);
               await widget.getData();
               await AppState.backButtonDispatcher!.didPopRoute();
+              BaseUtil.showPositiveAlert(
+                  locale.pauseSuccess, locale.pauseSuccessSub);
             },
           ),
         );

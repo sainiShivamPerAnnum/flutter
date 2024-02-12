@@ -28,7 +28,7 @@ class SelectAssetCubit extends Cubit<SelectAssetCubitState> {
   void submitAsset(SIPAssetTypes asset, bool isMandateAvailable) {
     locator<AnalyticsService>()
         .track(eventName: AnalyticsEvents.asChooseAssetNextTapped, properties: {
-      "asset selected": asset,
+      "asset selected": asset.name,
     });
     AppState.delegate!.appState.currentAction = PageAction(
       page: SipFormPageConfig,
