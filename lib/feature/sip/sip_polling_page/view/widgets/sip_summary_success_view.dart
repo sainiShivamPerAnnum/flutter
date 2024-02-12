@@ -3,6 +3,7 @@ import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/subscription_models/subscription_status.dart';
 import 'package:felloapp/core/model/subscription_models/subscription_status_response.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
+import 'package:felloapp/feature/sip/cubit/autosave_cubit.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
@@ -13,6 +14,7 @@ import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:lottie/lottie.dart';
+import 'package:provider/provider.dart';
 
 import '../../constants/asset_type.dart';
 
@@ -109,7 +111,9 @@ class SipSummaSuccessView extends StatelessWidget {
             _SipSummary(data),
             const Spacer(),
             SecondaryButton(
-              label: 'CHECK YOUR REWARDS',
+              label: (data.gts.isNotEmpty || data.tt > 0)
+                  ? 'CHECK YOUR REWARDS'
+                  : 'VIEW SIP',
               onPressed: () async {
                 _analyticsService.track(
                     eventName: AnalyticsEvents.sipSummaryButtonClicked,
@@ -118,14 +122,22 @@ class SipSummaSuccessView extends StatelessWidget {
                       "Frequency": data.frequency.duration,
                       "Started On": data.createdOn,
                     });
-                while (
-                    AppState.delegate!.pages.last.name != RootPageConfig.path) {
-                  await AppState.backButtonDispatcher!.didPopRoute();
+                if (data.gts.isNotEmpty || data.tt > 0) {
+                  while (AppState.delegate!.pages.last.name !=
+                      RootPageConfig.path) {
+                    await AppState.backButtonDispatcher!.didPopRoute();
+                  }
+                  AppState.delegate!.appState.currentAction = PageAction(
+                    state: PageState.addPage,
+                    page: MyWinningsPageConfig,
+                  );
+                } else {
+                  context.read<SipCubit>().getData();
+                  while (AppState.delegate!.pages.last.name !=
+                      SipIntroPageConfig.path) {
+                    await AppState.backButtonDispatcher!.didPopRoute();
+                  }
                 }
-                AppState.delegate!.appState.currentAction = PageAction(
-                  state: PageState.addPage,
-                  page: MyWinningsPageConfig,
-                );
               },
             ),
             SizedBox(

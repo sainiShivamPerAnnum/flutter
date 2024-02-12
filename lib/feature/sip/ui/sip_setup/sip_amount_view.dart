@@ -6,7 +6,6 @@ import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/feature/sip/cubit/autosave_cubit.dart';
 import 'package:felloapp/feature/sip/cubit/sip_data_holder.dart';
 import 'package:felloapp/feature/sip/cubit/sip_form_cubit.dart';
-import 'package:felloapp/feature/sip/mandate_page/view/mandate_view.dart';
 import 'package:felloapp/feature/sip/shared/interest_calculator.dart';
 import 'package:felloapp/feature/sip/shared/tab_slider.dart';
 import 'package:felloapp/navigator/app_state.dart';
@@ -384,17 +383,19 @@ class _FooterState extends State<_Footer> {
                     child: Selector<BankAndPanService, bool>(
                         selector: (p0, p1) => p1.isKYCVerified,
                         builder: (ctx, isKYCVerified, child) {
+                          bool startKYC =
+                              widget.sipAssetType.isLendBox && !isKYCVerified;
                           return SecondaryButton(
                             label: widget.isEdit
                                 ? locale.updateSip
-                                : isKYCVerified
+                                : !startKYC
                                     ? locale.oneClickAway
                                     : locale.twoClickAway,
                             onPressed: () async {
                               return await formmodel
                                   .onFormSubmit(
                                       widget.mandateAvailable,
-                                      isKYCVerified,
+                                      !startKYC,
                                       widget.isValidAmount,
                                       widget.isEdit,
                                       widget.amount,
@@ -911,6 +912,15 @@ class MaxValueInputFormatter extends TextInputFormatter {
     }
 
     final int? value = int.tryParse(newValue.text);
-    return value != null && value <= maxValue ? newValue : oldValue;
+    if (value == null) {
+      return oldValue;
+    } else if (value > maxValue) {
+      return TextEditingValue(
+        text: maxValue.toString(),
+        selection: TextSelection.collapsed(offset: maxValue.toString().length),
+      );
+    } else {
+      return newValue;
+    }
   }
 }

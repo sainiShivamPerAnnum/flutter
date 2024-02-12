@@ -101,7 +101,7 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m34(prize) => "Winnings can be redeemed on reaching ₹${prize}";
 
-  static String m35(timePeriod) => "Your Money in ${timePeriod} Years-";
+  static String m35(timePeriod) => "Your Money in ${timePeriod} Years";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -1171,7 +1171,6 @@ class MessageLookup extends MessageLookupByLibrary {
         "simulatorsNotAllowed":
             MessageLookupByLibrary.simpleMessage("Simulators not allowed"),
         "single": MessageLookupByLibrary.simpleMessage("Single"),
-        "sipAmount": MessageLookupByLibrary.simpleMessage("SIP Amount -"),
         "sipCustomers": MessageLookupByLibrary.simpleMessage(
             "8000+ users have started SIP"),
         "sipForCar": MessageLookupByLibrary.simpleMessage(
@@ -1189,7 +1188,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "sipTickets": m28,
         "sipWithAutoSave": MessageLookupByLibrary.simpleMessage(
             "Start an SIP with Fello Autosave"),
-        "sipYear": MessageLookupByLibrary.simpleMessage("Year"),
+        "sipYear": MessageLookupByLibrary.simpleMessage("Years"),
         "sipamount": MessageLookupByLibrary.simpleMessage("SIP amount"),
         "siptitle": MessageLookupByLibrary.simpleMessage("SIP with Fello"),
         "skip": MessageLookupByLibrary.simpleMessage("SKIP"),

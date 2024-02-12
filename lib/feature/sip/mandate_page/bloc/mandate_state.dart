@@ -64,23 +64,34 @@ class ListingPSPApps extends MandateState {
 class ListedPSPApps extends MandateState {
   final List<ApplicationMeta> pspApps;
   final SubsTransactionStatus transactionStatus;
+  final bool isTransactionInProgress;
   final String? subsTransactionKey; // the primary key for subscription.
 
   const ListedPSPApps(
     this.pspApps, {
     this.transactionStatus = const Ideal(),
     this.subsTransactionKey,
+    this.isTransactionInProgress = false,
   });
 
   ListedPSPApps copyWith({
     SubsTransactionStatus? status,
+    bool? isTransactionInProgress,
   }) {
     return ListedPSPApps(
       pspApps,
       transactionStatus: status ?? transactionStatus,
+      isTransactionInProgress:
+          isTransactionInProgress ?? this.isTransactionInProgress,
+      subsTransactionKey: subsTransactionKey,
     );
   }
 
   @override
-  List<Object?> get props => [pspApps, transactionStatus];
+  List<Object?> get props => [
+        pspApps,
+        transactionStatus,
+        subsTransactionKey,
+        isTransactionInProgress,
+      ];
 }

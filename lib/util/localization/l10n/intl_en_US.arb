@@ -1012,10 +1012,9 @@
   "clickToResumeSip": "Click on card to Resume SIP",
   "SipCalculator":"SIP Calculator",
   "returnsCalculator": "Calculate your SIP returns",
-  "sipAmount": "SIP Amount -",
   "timePeriod": "Time Period",
   "rpSip": "Return Percentage",
-  "yourMoneySip": "Your Money in {timePeriod} Years-",
+  "yourMoneySip": "Your Money in {timePeriod} Years",
   "@yourMoneySip": {
     "placeholders": {
       "timePeriod": {
@@ -1047,7 +1046,7 @@
   "setupSip": "Setup SIP",
   "setupCardTitle": "Start your SIP & Grow money on autopilot",
   "setupCardSubTitle": "Invest in Fello Flo or Digital Gold to meet your financial Goals",
-  "sipYear": "Year",
+  "sipYear": "Years",
   "pauseSuccess": "SIP paused successfully",
   "pauseSuccessSub": "For more details check SIP section",
   "pauseFail": "Failed to pause SIP",

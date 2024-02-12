@@ -53,6 +53,7 @@ class MandateBloc extends Bloc<MandateEvent, MandateState> {
     if (currentState is ListedPSPApps) {
       emitter(
         (state as ListedPSPApps).copyWith(
+          isTransactionInProgress: true,
           status: const SubsTransactionStatus.creating(),
         ),
       );
@@ -82,6 +83,7 @@ class MandateBloc extends Bloc<MandateEvent, MandateState> {
 
         emitter(
           (state as ListedPSPApps).copyWith(
+            isTransactionInProgress: false,
             status: SubsTransactionStatus.created(
               subsPrimaryKey: subscriptionData.id,
               redirectUrl: intentData.redirectUrl,

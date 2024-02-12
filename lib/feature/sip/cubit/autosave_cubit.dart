@@ -78,9 +78,6 @@ class SipCubit extends Cubit<SipState> {
       ),
       state: PageState.addWidget,
     );
-
-    ///TODO@Hirdesh2101
-    ///WHEN COMPLETE CALL INIT
   }
 
   Future<void> resume(int index) async {
@@ -103,6 +100,8 @@ class SipCubit extends Cubit<SipState> {
           if (response) {
             await getData();
             await AppState.backButtonDispatcher!.didPopRoute();
+            BaseUtil.showPositiveAlert("SIP resumed successfully",
+                "For more details check SIP section");
           }
         }
       }

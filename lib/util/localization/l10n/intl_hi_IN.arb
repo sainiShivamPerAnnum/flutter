@@ -986,10 +986,9 @@
   "clickToResumeSip": "SIP फिर से शुरू करने के लिए कार्ड पर क्लिक करें",
   "SipCalculator": "SIP कैलकुलेटर",
   "returnsCalculator": "अपने SIP रिटर्न्स की गणना करें",
-  "sipAmount": "SIP राशि -",
   "timePeriod": "समय अवधि",
   "rpSip": "रिटर्न प्रतिशत",
-  "yourMoneySip": "{timePeriod} वर्षों में आपका पैसा-",
+  "yourMoneySip": "{timePeriod} वर्षों में आपका पैसा",
   "@yourMoneySip": {
     "placeholders": {
       "timePeriod": {

@@ -81,7 +81,8 @@ class SipFormCubit extends Cubit<SipFormState> {
       emit(currentState.copyWith(isLoading: true));
       bool response = await _subService.updateSubscription(
           freq: frequency, amount: principalAmount.toInt(), id: id);
-      if (!response) {
+      bool resumeResponse = await _subService.resumeSubscription(id);
+      if (!response && !resumeResponse) {
         BaseUtil.showNegativeAlert("Failed to update SIP", "Please try again");
         emit(currentState.copyWith(isLoading: false));
         return false;

@@ -9156,16 +9156,6 @@ class S {
     );
   }
 
-  /// `SIP Amount -`
-  String get sipAmount {
-    return Intl.message(
-      'SIP Amount -',
-      name: 'sipAmount',
-      desc: '',
-      args: [],
-    );
-  }
-
   /// `Time Period`
   String get timePeriod {
     return Intl.message(
@@ -9186,10 +9176,10 @@ class S {
     );
   }
 
-  /// `Your Money in {timePeriod} Years-`
+  /// `Your Money in {timePeriod} Years`
   String yourMoneySip(int timePeriod) {
     return Intl.message(
-      'Your Money in $timePeriod Years-',
+      'Your Money in $timePeriod Years',
       name: 'yourMoneySip',
       desc: '',
       args: [timePeriod],
@@ -9366,10 +9356,10 @@ class S {
     );
   }
 
-  /// `Year`
+  /// `Years`
   String get sipYear {
     return Intl.message(
-      'Year',
+      'Years',
       name: 'sipYear',
       desc: '',
       args: [],

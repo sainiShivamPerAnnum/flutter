@@ -94,7 +94,7 @@ class MessageLookup extends MessageLookupByLibrary {
   static String m34(prize) =>
       "जीत को ₹${prize} तक पहुंचने पर रिडीम किया जा सकता है";
 
-  static String m35(timePeriod) => "${timePeriod} वर्षों में आपका पैसा-";
+  static String m35(timePeriod) => "${timePeriod} वर्षों में आपका पैसा";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -1163,7 +1163,6 @@ class MessageLookup extends MessageLookupByLibrary {
         "simulatorsNotAllowed":
             MessageLookupByLibrary.simpleMessage("अनुकरणों की अनुमति नहीं है"),
         "single": MessageLookupByLibrary.simpleMessage("अकेला"),
-        "sipAmount": MessageLookupByLibrary.simpleMessage("SIP राशि -"),
         "sipCustomers": MessageLookupByLibrary.simpleMessage(
             "8000+ उपयोगकर्ताओं ने SIP शुरू की है"),
         "sipForCar": MessageLookupByLibrary.simpleMessage(

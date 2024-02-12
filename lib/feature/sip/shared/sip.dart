@@ -3,7 +3,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 
 class CalculatorField extends StatelessWidget {
-  const CalculatorField({
+  CalculatorField({
     required this.requiresSlider,
     required this.label,
     required this.value,
@@ -61,16 +61,22 @@ class CalculatorField extends StatelessWidget {
                   border: Border.all(color: UiConstants.kDividerColor),
                   borderRadius: BorderRadius.circular(SizeConfig.roundness12)),
               child: TextField(
-                controller: TextEditingController(
-                    text: isPercentage != null && isPercentage!
-                        ? '${formatValue(value.toDouble())}%'
-                        : formatValue(value.toDouble())),
+                onEditingComplete: () {
+                  FocusScope.of(context).nextFocus();
+                },
+                controller:
+                    TextEditingController(text: formatValue(value.toDouble())),
                 textDirection: prefixText != null ? TextDirection.rtl : null,
                 keyboardType: TextInputType.number,
                 style: TextStyles.sourceSansSB.body2
                     .colour(UiConstants.kTextColor),
-                onSubmitted: (value) {
+                onChanged: (value) {
                   changeFunction!(int.parse(value));
+                },
+                onSubmitted: (value) {
+                  if (value == '') {
+                    changeFunction!(int.parse(minValue.toString()));
+                  }
                 },
                 inputFormatters: inputFormatters,
                 textAlign: textAlign ?? TextAlign.start,
@@ -119,7 +125,7 @@ class CalculatorField extends StatelessWidget {
                 ),
                 overlayShape: SliderComponentShape.noOverlay),
             child: Slider(
-              value: value,
+              value: value < minValue! ? minValue! : value,
               max: maxValue ?? 30,
               min: minValue ?? 0,
               onChanged: (value) {

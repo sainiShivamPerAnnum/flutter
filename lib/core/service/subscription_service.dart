@@ -326,8 +326,6 @@ class SubService extends ChangeNotifier {
     final res = await _subscriptionRepo.resumeSubscription(id);
     isPauseOrResuming = false;
     if (res.isSuccess()) {
-      BaseUtil.showPositiveAlert(
-          "SIP resumed successfully", "For more details check SIP section");
       return true;
     } else {
       BaseUtil.showNegativeAlert(res.errorMessage, "Please try again");
