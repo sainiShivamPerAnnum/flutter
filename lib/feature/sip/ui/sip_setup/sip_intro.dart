@@ -65,8 +65,7 @@ class _SipIntroViewState extends State<SipIntroView> {
           centerTitle: true,
           elevation: 0,
         ),
-        body: BlocConsumer<SipCubit, SipState>(
-          listener: (context, state) {},
+        body: BlocBuilder<SipCubit, SipState>(
           builder: (context, state) {
             final model = context.read<SipCubit>();
             return SingleChildScrollView(
@@ -630,12 +629,6 @@ class _SipCalculatorState extends State<SipCalculator>
                   tabs: widget.state.options,
                   labelBuilder: (label) => label,
                   onTap: (currentTab, i) {
-                    context.read<SipCubit>().onCalculatorFrequencyChanged(
-                          previousFrequency:
-                              widget.state.options[tabController.previousIndex],
-                          newFrequency: currentTab,
-                        );
-
                     setState(() {
                       getDefaultValue(
                         i,
@@ -653,7 +646,6 @@ class _SipCalculatorState extends State<SipCalculator>
                 onChangeEnd: (x) => _sendEvent(),
                 requiresQuickButtons: false,
                 changeFunction: changeSIPAmount,
-                requiresSlider: true,
                 label: locale.sipamount,
                 prefixText: "₹",
                 maxValue: maxSipValue.toDouble(),
@@ -670,7 +662,6 @@ class _SipCalculatorState extends State<SipCalculator>
                 onChangeEnd: (x) => _sendEvent(),
                 requiresQuickButtons: false,
                 changeFunction: changeTimePeriod,
-                requiresSlider: true,
                 label: locale.timePeriod,
                 suffixText: locale.sipYear,
                 inputFormatters: [
@@ -687,7 +678,6 @@ class _SipCalculatorState extends State<SipCalculator>
               CalculatorField(
                   onChangeEnd: (x) => _sendEvent(),
                   requiresQuickButtons: false,
-                  requiresSlider: true,
                   textAlign: TextAlign.center,
                   label: locale.rpSip,
                   minValue: 1,

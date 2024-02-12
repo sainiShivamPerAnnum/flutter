@@ -49,16 +49,15 @@ class SipCubit extends Cubit<SipState> {
   }
 
   void updatePauseResumeStatus(bool isPauseOrResuming) {
-    final currentState = state;
-    if (currentState is LoadedSipData) {
-      emit(currentState.copyWith(isPauseOrResuming: isPauseOrResuming));
+    if (state is LoadedSipData) {
+      emit((state as LoadedSipData)
+          .copyWith(isPauseOrResuming: isPauseOrResuming));
     }
   }
 
   void updateSeeAll(bool value) {
-    final currentState = state;
-    if (currentState is LoadedSipData) {
-      emit(currentState.copyWith(showAllSip: value));
+    if (state is LoadedSipData) {
+      emit((state as LoadedSipData).copyWith(showAllSip: value));
     }
   }
 
@@ -176,19 +175,6 @@ class SipCubit extends Cubit<SipState> {
         "Date Started": sipStartingDate,
         "Next Due": sipNextDueDate,
         "Action": actionType
-      },
-    );
-  }
-
-  void onCalculatorFrequencyChanged({
-    required String previousFrequency,
-    required String newFrequency,
-  }) {
-    locator<AnalyticsService>().track(
-      eventName: AnalyticsEvents.sipCalculatorFrequencyChanged,
-      properties: {
-        "Current Frequency": newFrequency,
-        "Updated Frequency": newFrequency
       },
     );
   }

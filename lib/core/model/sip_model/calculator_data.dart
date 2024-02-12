@@ -10,7 +10,7 @@ class CalculatorData {
   final List<String> options;
   final Map<String, CalculatorDetails> data;
 
-  CalculatorData({this.options = const [], this.data = const {}});
+  const CalculatorData({this.options = const [], this.data = const {}});
   factory CalculatorData.fromJson(Map<String, dynamic> json) =>
       _$CalculatorDataFromJson(json);
 }

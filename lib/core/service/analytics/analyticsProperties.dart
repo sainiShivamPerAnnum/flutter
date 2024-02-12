@@ -119,6 +119,7 @@ class AnalyticsProperties {
   }
 
   static bool isAutoSIPActive() {
+    ///needs to be discussed with backend!
     if (_subService.subscriptionData == null) {
       return false;
     } else {

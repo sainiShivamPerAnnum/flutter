@@ -1032,5 +1032,24 @@
   "oneMonth": "1 महीना",
   "indefinitely": "अनिश्चितकाल के लिए",
   "manageSip": "SIP प्रबंधित करें",
-  "viewSIPTransac" :"SIP लेनदेन देखें"
+  "viewSIPTransac": "SIP लेनदेन देखें",
+  "setUpMandate": "UPI मैंडेट सेटअप करें:",
+  "jstAClickAway": "बस एक क्लिक दूर",
+  "enterUPIpin": "3. अपना UPI पिन दर्ज करें और आप हो गए तैयार",
+  "mandateStep1": "1. पसंदीदा UPI एप्लिकेशन चुनें",
+  "noUpiAppFound": "कोई UPI एप्लिकेशन नहीं मिला",
+  "step2Mandate": "2. UPI मैंडेट की अनुमति दें।",
+  "sipSummary": "आपका SIP सारांश",
+  "checkYourRewards": "अपने इनामों की जाँच करें",
+  "viewSip": "SIP देखें",
+  "sipGt": "स्क्रैच कार्ड",
+  "sipTicket": "टिकट",
+  "startedSip": "{date} को शुरू किया गया",
+  "@startedSip": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  }
 }

@@ -74,18 +74,9 @@ class _SipStatusView extends StatelessWidget {
               data: response,
               assetType: assetType,
             ),
-          CompletedPollingWithFailure() => const SipStatusCheckFailurePage(),
+          CompletedPollingWithFailure() => const SizedBox.shrink(),
         };
       },
     );
-  }
-}
-
-class SipStatusCheckFailurePage extends StatelessWidget {
-  const SipStatusCheckFailurePage({super.key});
-
-  @override
-  Widget build(BuildContext context) {
-    return const Placeholder();
   }
 }

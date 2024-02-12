@@ -11,7 +11,7 @@ class CalculatorScreen {
   final String imageUrl;
   final CalculatorData calculatorData;
 
-  CalculatorScreen(
+  const CalculatorScreen(
       {this.title = '', this.imageUrl = '', required this.calculatorData});
   factory CalculatorScreen.fromJson(Map<String, dynamic> json) =>
       _$CalculatorScreenFromJson(json);

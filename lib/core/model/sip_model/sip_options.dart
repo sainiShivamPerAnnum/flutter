@@ -10,7 +10,7 @@ class SipOptions {
   final int value;
   final bool best;
 
-  SipOptions({this.order = 0, this.value = 0, this.best = false});
+  const SipOptions({this.order = 0, this.value = 0, this.best = false});
   factory SipOptions.fromJson(Map<String, dynamic> json) =>
       _$SipOptionsFromJson(json);
 }

@@ -9485,6 +9485,126 @@ class S {
       args: [],
     );
   }
+
+  /// `Set up UPI Mandate:`
+  String get setUpMandate {
+    return Intl.message(
+      'Set up UPI Mandate:',
+      name: 'setUpMandate',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Just a click away`
+  String get jstAClickAway {
+    return Intl.message(
+      'Just a click away',
+      name: 'jstAClickAway',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `3. Enter UPI pin and you are done`
+  String get enterUPIpin {
+    return Intl.message(
+      '3. Enter UPI pin and you are done',
+      name: 'enterUPIpin',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `1. Select preferred UPI application`
+  String get mandateStep1 {
+    return Intl.message(
+      '1. Select preferred UPI application',
+      name: 'mandateStep1',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `No upi apps found`
+  String get noUpiAppFound {
+    return Intl.message(
+      'No upi apps found',
+      name: 'noUpiAppFound',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `2. Allow UPI Mandate.`
+  String get step2Mandate {
+    return Intl.message(
+      '2. Allow UPI Mandate.',
+      name: 'step2Mandate',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Your SIP Summary`
+  String get sipSummary {
+    return Intl.message(
+      'Your SIP Summary',
+      name: 'sipSummary',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `CHECK YOUR REWARDS`
+  String get checkYourRewards {
+    return Intl.message(
+      'CHECK YOUR REWARDS',
+      name: 'checkYourRewards',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `VIEW SIP`
+  String get viewSip {
+    return Intl.message(
+      'VIEW SIP',
+      name: 'viewSip',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Scratch Card`
+  String get sipGt {
+    return Intl.message(
+      'Scratch Card',
+      name: 'sipGt',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Tickets`
+  String get sipTicket {
+    return Intl.message(
+      'Tickets',
+      name: 'sipTicket',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Started on {date}`
+  String startedSip(String date) {
+    return Intl.message(
+      'Started on $date',
+      name: 'startedSip',
+      desc: '',
+      args: [date],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

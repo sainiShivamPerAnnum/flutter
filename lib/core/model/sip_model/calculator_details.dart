@@ -12,7 +12,7 @@ class CalculatorDetails {
   final Map<String, dynamic> interest;
   final int numberOfPeriodsPerYear;
 
-  CalculatorDetails(
+  const CalculatorDetails(
       {required this.sipAmount,
       required this.timePeriod,
       this.interest = const {},

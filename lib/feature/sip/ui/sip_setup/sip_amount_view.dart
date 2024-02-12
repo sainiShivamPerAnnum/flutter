@@ -98,10 +98,7 @@ class _SipFormAmountState extends State<SipFormAmount> {
           elevation: 0,
         ),
         resizeToAvoidBottomInset: false,
-        body: BlocConsumer<SipFormCubit, SipFormState>(
-          listener: (context, state) {
-            // TODO: implement listener
-          },
+        body: BlocBuilder<SipFormCubit, SipFormState>(
           builder: (context, state) {
             final formmodel = context.read<SipFormCubit>();
             return switch (state) {
@@ -374,8 +371,7 @@ class _FooterState extends State<_Footer> {
           SizedBox(
             height: SizeConfig.padding22,
           ),
-          BlocConsumer<SipFormCubit, SipFormState>(
-            listener: (context, state) {},
+          BlocBuilder<SipFormCubit, SipFormState>(
             builder: (context, state) {
               return switch (state) {
                 SipFormCubitState() => Opacity(

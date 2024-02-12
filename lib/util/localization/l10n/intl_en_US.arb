@@ -1010,7 +1010,7 @@
   "pauseSip": "Paused SIP",
   "editSip": "Edit SIP",
   "clickToResumeSip": "Click on card to Resume SIP",
-  "SipCalculator":"SIP Calculator",
+  "SipCalculator": "SIP Calculator",
   "returnsCalculator": "Calculate your SIP returns",
   "timePeriod": "Time Period",
   "rpSip": "Return Percentage",
@@ -1058,5 +1058,24 @@
   "oneMonth": "1 Month",
   "indefinitely": "Indefinitely",
   "manageSip": "Manage SIP",
-  "viewSIPTransac" :"View SIP Transactions"
+  "viewSIPTransac": "View SIP Transactions",
+  "setUpMandate": "Set up UPI Mandate:",
+  "jstAClickAway": "Just a click away",
+  "enterUPIpin": "3. Enter UPI pin and you are done",
+  "mandateStep1": "1. Select preferred UPI application",
+  "noUpiAppFound": "No upi apps found",
+  "step2Mandate": "2. Allow UPI Mandate.",
+  "sipSummary": "Your SIP Summary",
+  "checkYourRewards": "CHECK YOUR REWARDS",
+  "viewSip": "VIEW SIP",
+  "sipGt": "Scratch Card",
+  "sipTicket": "Tickets",
+  "startedSip": "Started on {date}",
+  "@startedSip": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  }
 }

@@ -112,7 +112,7 @@ class _SipMandatePage extends StatelessWidget {
 }
 
 class MandateStepView extends StatelessWidget {
-  const MandateStepView({
+  MandateStepView({
     super.key,
     required this.pspApps,
     required this.amount,
@@ -124,6 +124,7 @@ class MandateStepView extends StatelessWidget {
   final num amount;
   final String frequency;
   final SIPAssetTypes assetType;
+  final locale = locator<S>();
   final ListedPSPApps state;
 
   @override
@@ -140,14 +141,14 @@ class MandateStepView extends StatelessWidget {
               height: SizeConfig.padding22,
             ),
             Text(
-              'Set up UPI Mandate:',
+              locale.setUpMandate,
               style: TextStyles.rajdhaniSB.title5,
             ),
             SizedBox(
               height: SizeConfig.padding3,
             ),
             Text(
-              'Just a click away',
+              locale.jstAClickAway,
               style: TextStyles.rajdhaniSB.body2.colour(
                 UiConstants.grey1,
               ),
@@ -174,14 +175,14 @@ class MandateStepView extends StatelessWidget {
             SizedBox(
               height: SizeConfig.padding32,
             ),
-            const AllowUPIMandateSection(),
+            AllowUPIMandateSection(),
             SizedBox(
               height: SizeConfig.padding32,
             ),
             Align(
               alignment: Alignment.center,
               child: Text(
-                '3. Enter UPI pin and you are done',
+                locale.enterUPIpin,
                 style: TextStyles.rajdhaniSB.body1,
               ),
             ),
@@ -204,13 +205,14 @@ class MandateStepView extends StatelessWidget {
 }
 
 class SelectUPIApplicationSection extends StatelessWidget {
-  const SelectUPIApplicationSection({
+  SelectUPIApplicationSection({
     required this.onSelectApplication,
     super.key,
     this.upiApps = const [],
   });
 
   final List<ApplicationMeta> upiApps;
+  final locale = locator<S>();
   final ValueChanged<ApplicationMeta> onSelectApplication;
 
   @override
@@ -219,7 +221,7 @@ class SelectUPIApplicationSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Text(
-          '1. Select preferred UPI application',
+          locale.mandateStep1,
           style: TextStyles.rajdhaniSB.body1,
         ),
         SizedBox(
@@ -229,7 +231,7 @@ class SelectUPIApplicationSection extends StatelessWidget {
           Align(
             alignment: Alignment.center,
             child: Text(
-              'No upi apps found',
+              locale.noUpiAppFound,
               style: TextStyles.rajdhaniSB.body1,
             ),
           )
@@ -310,7 +312,8 @@ class _PspAppContainer extends StatelessWidget {
 }
 
 class AllowUPIMandateSection extends StatelessWidget {
-  const AllowUPIMandateSection({super.key});
+  AllowUPIMandateSection({super.key});
+  final locale = locator<S>();
 
   @override
   Widget build(BuildContext context) {
@@ -318,7 +321,7 @@ class AllowUPIMandateSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Text(
-          '2. Allow UPI Mandate.',
+          locale.step2Mandate,
           style: TextStyles.rajdhaniSB.body1,
         ),
         SizedBox(
@@ -350,7 +353,7 @@ class AllowUPIMandateSection extends StatelessWidget {
                 child: Column(
                   children: [
                     Text(
-                      'You will receive a mandate for ₹5000 on the selected UPI App. But don’t worry, We will not deduct anymore than your SIP amount.',
+                      locale.newMandate,
                       style: TextStyles.sourceSans.body4
                           .colour(UiConstants.kTextColor2),
                     ),

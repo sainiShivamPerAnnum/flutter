@@ -14,6 +14,7 @@ import 'package:felloapp/core/model/subscription_models/all_subscription_model.d
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
+import 'package:felloapp/feature/sip/ui/sip_setup/sip_intro.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
@@ -21,7 +22,6 @@ import 'package:felloapp/ui/elements/helpers/tnc_text.dart';
 import 'package:felloapp/ui/elements/title_subtitle_container.dart';
 import 'package:felloapp/ui/elements/video_player/app_video_player.dart';
 import 'package:felloapp/ui/pages/asset_selection.dart';
-import 'package:felloapp/ui/pages/finance/autosave/autosave_setup/autosave_process_view.dart';
 import 'package:felloapp/ui/pages/finance/mini_trans_card/mini_trans_card_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/flo_components/flo_basic_card.dart';
 import 'package:felloapp/ui/pages/hometabs/save/flo_components/flo_premium_section.dart';
@@ -703,14 +703,12 @@ class AssetBottomButtons extends StatelessWidget {
                               BaseUtil()
                                   .openRechargeModalSheet(investmentType: type);
                             } else {
-                              // AppState.delegate!.appState.currentAction =
-                              //     PageAction(
-                              //   state: PageState.addWidget,
-                              //   page: AutosaveProcessViewPageConfig,
-                              //   widget: AutosaveProcessView(
-                              //     investmentType: type,
-                              //   ),
-                              // );
+                              AppState.delegate!.appState.currentAction =
+                                  PageAction(
+                                state: PageState.addWidget,
+                                page: SipIntroPageConfig,
+                                widget: const SipIntroView(),
+                              );
                             }
 
                             locator<AnalyticsService>().track(

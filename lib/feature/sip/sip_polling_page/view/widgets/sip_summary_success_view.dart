@@ -9,6 +9,7 @@ import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
 import 'package:felloapp/util/assets.dart';
+import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
@@ -72,6 +73,7 @@ class SipSummaSuccessView extends StatelessWidget {
   final SubscriptionStatusData data;
   final AssetType assetType;
   final AnalyticsService _analyticsService = locator<AnalyticsService>();
+  final locale = locator<S>();
 
   @override
   Widget build(BuildContext context) {
@@ -95,7 +97,7 @@ class SipSummaSuccessView extends StatelessWidget {
               height: SizeConfig.padding44,
             ),
             Text(
-              'Your SIP Summary',
+              locale.sipSummary,
               style: TextStyles.rajdhaniB.title2,
             ),
             SizedBox(
@@ -112,8 +114,8 @@ class SipSummaSuccessView extends StatelessWidget {
             const Spacer(),
             SecondaryButton(
               label: (data.gts.isNotEmpty || data.tt > 0)
-                  ? 'CHECK YOUR REWARDS'
-                  : 'VIEW SIP',
+                  ? locale.checkYourRewards
+                  : locale.viewSip,
               onPressed: () async {
                 _analyticsService.track(
                     eventName: AnalyticsEvents.sipSummaryButtonClicked,
@@ -154,6 +156,7 @@ class _SipSummary extends StatelessWidget {
   _SipSummary(this.data);
   final SubscriptionStatusData data;
   final AnalyticsService _analyticsService = locator<AnalyticsService>();
+  final locale = locator<S>();
 
   @override
   Widget build(BuildContext context) {
@@ -179,7 +182,7 @@ class _SipSummary extends StatelessWidget {
                 width: double.infinity,
               ),
               Text(
-                'SIP amount',
+                locale.sipamount,
                 style: TextStyles.sourceSans.body2.colour(
                   UiConstants.textGray60,
                 ),
@@ -195,7 +198,7 @@ class _SipSummary extends StatelessWidget {
                 height: SizeConfig.padding12,
               ),
               Text(
-                'Started on $formattedDate',
+                locale.startedSip(formattedDate),
                 style: TextStyles.sourceSans.body3.colour(
                   UiConstants.grey1,
                 ),
@@ -231,7 +234,7 @@ class _SipSummary extends StatelessWidget {
                   child: Expanded(
                     child: _WinningsChip(
                       type: _RewardType.sc,
-                      title: 'Scratch Card',
+                      title: locale.sipGt,
                       quantity: data.gts.length,
                     ),
                   ),
@@ -263,7 +266,7 @@ class _SipSummary extends StatelessWidget {
                   child: Expanded(
                     child: _WinningsChip(
                       type: _RewardType.tt,
-                      title: 'Tickets',
+                      title: locale.sipTicket,
                       quantity: data.tt,
                     ),
                   ),

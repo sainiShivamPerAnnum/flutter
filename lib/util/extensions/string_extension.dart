@@ -1,5 +1,3 @@
-import 'package:felloapp/ui/pages/finance/autosave/autosave_setup/autosave_process_vm.dart';
-
 extension StringExtension on String {
   String capitalize() {
     return "${this[0].toUpperCase()}${substring(1).toLowerCase()}";
@@ -17,19 +15,6 @@ extension StringExtension on String {
     return "";
   }
 }
-
-// extension FRename on FREQUENCY {
-//   String rename() {
-//     switch (this) {
-//       case FREQUENCY.daily:
-//         return "day";
-//       case FREQUENCY.weekly:
-//         return "week";
-//       case FREQUENCY.monthly:
-//         return "month";
-//     }
-//   }
-// }
 
 extension IndianNumberSystem on String {
   String formatToIndianNumberSystem() {

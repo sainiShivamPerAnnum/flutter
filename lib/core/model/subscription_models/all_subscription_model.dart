@@ -11,7 +11,7 @@ class Subscriptions {
   final bool isActive;
   final List<SubscriptionModel> subs;
 
-  Subscriptions({
+  const Subscriptions({
     this.length = 0,
     this.isActive = false,
     this.subs = const [],

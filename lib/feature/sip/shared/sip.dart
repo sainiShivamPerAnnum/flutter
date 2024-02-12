@@ -4,7 +4,6 @@ import 'package:flutter/services.dart';
 
 class CalculatorField extends StatelessWidget {
   CalculatorField({
-    required this.requiresSlider,
     required this.label,
     required this.value,
     required this.requiresQuickButtons,
@@ -24,7 +23,6 @@ class CalculatorField extends StatelessWidget {
 
   final Function(int)? changeFunction;
   final ValueChanged<int>? onChangeEnd;
-  final bool requiresSlider;
   final bool requiresQuickButtons;
   final bool? isPercentage;
   final String label;
@@ -112,31 +110,29 @@ class CalculatorField extends StatelessWidget {
             )
           ],
         ),
-        if (requiresSlider)
-          SizedBox(
-            height: SizeConfig.padding12,
+        SizedBox(
+          height: SizeConfig.padding12,
+        ),
+        SliderTheme(
+          data: SliderThemeData(
+              trackHeight: 1,
+              thumbShape: RoundSliderThumbShape(
+                enabledThumbRadius: SizeConfig.roundness8,
+              ),
+              overlayShape: SliderComponentShape.noOverlay),
+          child: Slider(
+            value: value < minValue! ? minValue! : value,
+            max: maxValue ?? 30,
+            min: minValue ?? 0,
+            onChanged: (value) {
+              changeFunction!(value.toInt());
+            },
+            onChangeEnd: (v) => onChangeEnd?.call(v.toInt()),
+            thumbColor: Colors.white,
+            activeColor: UiConstants.teal3,
+            inactiveColor: Colors.white,
           ),
-        if (requiresSlider)
-          SliderTheme(
-            data: SliderThemeData(
-                trackHeight: 1,
-                thumbShape: RoundSliderThumbShape(
-                  enabledThumbRadius: SizeConfig.roundness8,
-                ),
-                overlayShape: SliderComponentShape.noOverlay),
-            child: Slider(
-              value: value < minValue! ? minValue! : value,
-              max: maxValue ?? 30,
-              min: minValue ?? 0,
-              onChanged: (value) {
-                changeFunction!(value.toInt());
-              },
-              onChangeEnd: (v) => onChangeEnd?.call(v.toInt()),
-              thumbColor: Colors.white,
-              activeColor: UiConstants.teal3,
-              inactiveColor: Colors.white,
-            ),
-          )
+        )
       ],
     );
   }

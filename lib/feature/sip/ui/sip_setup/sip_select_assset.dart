@@ -1,14 +1,10 @@
 import 'package:carousel_slider/carousel_slider.dart';
-import 'package:felloapp/core/constants/analytics_events_constants.dart';
-import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/sip_asset_type.dart';
 import 'package:felloapp/core/model/sip_model/select_asset_options.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/feature/sip/cubit/selectedAsset_cubit.dart';
 import 'package:felloapp/feature/sip/cubit/sip_data_holder.dart';
-import 'package:felloapp/feature/sip/ui/sip_setup/sip_amount_view.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -184,25 +180,9 @@ class _SipAsssetSelectState extends State<SipAsssetSelect> {
                     opacity: isBtnActive ? 1 : 0.5,
                     child: SecondaryButton(
                         onPressed: isBtnActive
-                            ? () {
-                                _analyticsService.track(
-                                    eventName:
-                                        AnalyticsEvents.asChooseAssetNextTapped,
-                                    properties: {
-                                      "asset selected": selectedAssetModel
-                                          .state.selectedAsset,
-                                    });
-                                AppState.delegate!.appState.currentAction =
-                                    PageAction(
-                                  page: SipFormPageConfig,
-                                  widget: SipFormAmountView(
-                                    mandateAvailable: widget.isMandateAvailable,
-                                    sipAssetType:
-                                        selectedAssetModel.state.selectedAsset!,
-                                  ),
-                                  state: PageState.addWidget,
-                                );
-                              }
+                            ? () => selectedAssetModel.submitAsset(
+                                selectedAssetModel.state.selectedAsset!,
+                                widget.isMandateAvailable)
                             : () => null,
                         label: locale.proceed),
                   ),

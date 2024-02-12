@@ -1,11 +1,12 @@
 part of 'selectedAsset_cubit.dart';
 
-@immutable
-abstract class AutoSaveSetupState {}
+sealed class AutoSaveSetupState extends Equatable {
+  const AutoSaveSetupState();
+}
 
 final class SelectAssetCubitState extends AutoSaveSetupState {
   final SIPAssetTypes? selectedAsset;
-  SelectAssetCubitState({
+  const SelectAssetCubitState({
     this.selectedAsset,
   });
 
@@ -16,4 +17,7 @@ final class SelectAssetCubitState extends AutoSaveSetupState {
       selectedAsset: selectedAsset ?? this.selectedAsset,
     );
   }
+
+  @override
+  List<Object?> get props => [selectedAsset];
 }
