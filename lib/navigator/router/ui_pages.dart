@@ -101,6 +101,7 @@ const String MaturityWithdrawalSuccessViewPath =
     "/maturityWithdrawalSuccessViewPath";
 const String FelloBadgeHomePath = "/felloBadgeHomePath";
 const String StoriesPath = "/storiesPath";
+const String sipAmount = '/sipAmount';
 
 //GoldPro
 const String GoldProDetailsPath = "/goldProDetailsPath";
@@ -112,6 +113,12 @@ const String GoldProTxnsDetailsViewPath = "goldProTxnsDetailsView";
 //Tickets
 const String TicketsIntroViewPath = "/ticketsIntroViewPath";
 const String TicketsTutorialViewPath = "/ticketsTutorialViewPath";
+
+const String SipEntryPageViewPath = "/autosave";
+const String SipAssetsSelectViewPath = "/sipassets";
+const String SipFormPageViewPath = "/sipform";
+const String SipStatusPage = '/sip/status';
+const String SipMandateViewPath = '/sip/mandateView';
 
 enum Pages {
   Splash,
@@ -218,6 +225,13 @@ enum Pages {
   TicketsIntroViewPath,
   TicketsTutorialViewPath,
   Stories,
+
+  // SIP
+  SipEntryView,
+  SipAssetSelectView,
+  SipFormView,
+  SipStatusView,
+  SipMandateView
 }
 
 class PageConfiguration {
@@ -884,14 +898,47 @@ PageConfiguration MaturityWithdrawalSuccessViewPageConfig = PageConfiguration(
     name: "Maturity Withdrawal Success View Screen");
 
 PageConfiguration FelloBadgeHomeViewPageConfig = PageConfiguration(
-    key: 'FelloBadgeHomeViewPath',
-    path: FelloBadgeHomePath,
-    uiPage: Pages.FelloBadgeHome,
-    name: "Fello Badge Home View Screen");
+  key: 'FelloBadgeHomeViewPath',
+  path: FelloBadgeHomePath,
+  uiPage: Pages.FelloBadgeHome,
+  name: "Fello Badge Home View Screen",
+);
+
+PageConfiguration SipIntroPageConfig = PageConfiguration(
+  key: 'SipEntryPageViewPath',
+  path: SipEntryPageViewPath,
+  uiPage: Pages.SipEntryView,
+  name: 'Sip Entry View',
+);
+PageConfiguration SipAssetSelectPageConfig = PageConfiguration(
+  key: 'SipAssetsSelectViewPath',
+  path: SipAssetsSelectViewPath,
+  uiPage: Pages.SipAssetSelectView,
+  name: 'Sip Asset Select View',
+);
+PageConfiguration SipFormPageConfig = PageConfiguration(
+  key: 'SipFormPageViewPath',
+  path: SipFormPageViewPath,
+  uiPage: Pages.SipFormView,
+  name: 'Sip Amount Form View',
+);
 
 PageConfiguration StoriesPageConfig = PageConfiguration(
   key: 'StoriesViewPath',
   path: StoriesPath,
   uiPage: Pages.Stories,
   name: "New user stories",
+);
+
+PageConfiguration SipPollingPageConfig = PageConfiguration(
+  key: 'SipStatusViewPath',
+  path: SipStatusPage,
+  uiPage: Pages.SipStatusView,
+  name: 'Sip polling page config',
+);
+PageConfiguration SipMandatePageConfig = PageConfiguration(
+  key: 'SipMandateViewPath',
+  path: SipMandateViewPath,
+  uiPage: Pages.SipMandateView,
+  name: 'Sip madate page config',
 );

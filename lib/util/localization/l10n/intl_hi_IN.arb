@@ -99,9 +99,8 @@
       }
     }
   },
-  
   "obAssetPrefBottomSheet2ButtonText1": "होम स्क्रीन पर जाएँ",
-  "learnMore" : "और अधिक जानें",
+  "learnMore": "और अधिक जानें",
   "obAssetPrefBottomSheet1ButtonText": "आगे बढ़ना",
   "obAssetWelcomeText": "फेलो में आपका स्वागत है",
   "obAssetPrefGreeting": "नमस्ते {name}",
@@ -112,8 +111,8 @@
       }
     }
   },
-  "obProceedWithP2P" : "फेलो पी2पी के साथ आगे बढ़ें",
-  "obProceedWithGold" : "डिजिटल गोल्ड के साथ आगे बढ़ें",
+  "obProceedWithP2P": "फेलो पी2पी के साथ आगे बढ़ें",
+  "obProceedWithGold": "डिजिटल गोल्ड के साथ आगे बढ़ें",
   "-----------------------------------": "----------------------------",
   "navBarJourney": "यात्रा",
   "navBarPlay": "खेलें",
@@ -333,11 +332,11 @@
   "refsubtitle": "हर रेफरल के लिए ₹ 25 और 200 फेलो टोकन कमाएं और महीने के रेफर करने वाले को एक नया आईफोन 13 मिलेगा",
   "refWhatsapp": "WhatsApp",
   "refShareLink": "लिंक शेयर करें",
-  "referralNudgeMessage" : "बचत करके {amount} रेफरल बोनस प्राप्त करें",
+  "referralNudgeMessage": "बचत करके {amount} रेफरल बोनस प्राप्त करें",
   "@referralNudgeMessage": {
-    "placeholders" : {
-      "amount" : {
-        "type":"num"
+    "placeholders": {
+      "amount": {
+        "type": "num"
       }
     }
   },
@@ -914,14 +913,143 @@
   "rewardsWon": "इनाम जीता गया",
   "leaderBoardswillUpdate": "लीडरबोर्ड जल्द ही अपडेट होगा",
   "reupload": "पुनः अपलोड करें",
-  "skip" : "छोड़ दें",
-  "selectAssetMessage" : "आगे बढ़ने के लिए उपरोक्त परिसंपत्तियों में से कोई भी चुनें",
+  "skip": "छोड़ दें",
+  "selectAssetMessage": "आगे बढ़ने के लिए उपरोक्त परिसंपत्तियों में से कोई भी चुनें",
   "tryAgainMessage": "कृपया पुन: प्रयास करें",
-  "signUp" : "साइन अप करें",
+  "signUp": "साइन अप करें",
   "tutorial1": "नमस्ते उपयोगकर्ता! यहां अपनी संपत्तियों का चयन करके अपनी इनामी बचत यात्रा शुरू करें",
   "tutorial2": "प्रत्येक 500 रुपये की बचत के लिए, आपको 1 साप्ताहिक टिकट मिलता है जिससे आप 1 रुपये से लेकर 1 करोड़ रुपये तक के इनाम जीत सकते हैं।",
   "tutorial3": "आप इस खंड में टिकट देख सकते हैं और साप्ताहिक खेल खेलकर इनाम अर्जित कर सकते हैं!",
   "tutorial4": "आप इस इनाम अनुभाग में अपने सभी अर्जित इनाम देख सकते हैं",
   "tutorial5": "यदि आप फेलो के बारे में और जानना चाहते हैं, तो इन कहानियों को देखें!",
-  "tutorial6": "अब अपनी इनामी बचत यात्रा शुरू करने के लिए यहां अपनी संपत्ति का चयन करें"
+  "tutorial6": "अब अपनी इनामी बचत यात्रा शुरू करने के लिए यहां अपनी संपत्ति का चयन करें",
+  "scratchCardsSip": "स्क्रैच कार्ड",
+  "sipTickets": "टिकट {count}",
+  "@sipTickets": {
+    "placeholders": {
+      "count": {
+        "type": "num"
+      }
+    }
+  },
+  "sipamount": "SIP राशि",
+  "siptitle": "फेलो के साथ SIP",
+  "selectSipAmount": "SIP राशि चुनें",
+  "minSipAmount": "न्यूनतम राशि - ₹{amount}",
+  "@minSipAmount": {
+    "placeholders": {
+      "amount": {
+        "type": "double"
+      }
+    }
+  },
+  "maxSipAmount": "अधिकतम राशि - ₹{amount}",
+  "@maxSipAmount": {
+    "placeholders": {
+      "amount": {
+        "type": "double"
+      }
+    }
+  },
+  "expectedReturns5y": "आपका निवेश 5वर्ष में",
+  "returnSubText": "फेलो {type} के साथ",
+  "@returnSubText": {
+    "placeholders": {
+      "type": {
+        "type": "String"
+      }
+    }
+  },
+  "percentageReturns": "{percentage}% रिटर्न्स के साथ",
+  "@percentageReturns": {
+    "placeholders": {
+      "percentage": {
+        "type": "num"
+      }
+    }
+  },
+  "existingMandate": "आपकी SIP राशि आपके मौजूदा मैंडेट से कटौती की जाएगी। इस SIP के लिए कोई नया मैंडेट नहीं बनाया जाएगा",
+  "newMandate": "आपको चयनित यूपीआई ऐप पर ₹15000 का मैंडेट प्राप्त होगा। लेकिन चिंता न करें, हम आपकी एसआईपी राशि से अधिक कटौती नहीं करेंगे।",
+  "updateSip": "SIP अपडेट करें",
+  "oneClickAway": "1 क्लिक दूर",
+  "twoClickAway": "2 क्लिक दूर",
+  "sipIntroTitle": "साप्ताहिक / मासिक रूप से स्वचालित रूप से बचत करें और",
+  "sipIntroSubTitle": "ऑटोपायलट पर पैसे बढ़ाएं",
+  "startSip": "SIP शुरू करें",
+  "sipCustomers": "8000+ उपयोगकर्ताओं ने SIP शुरू की है",
+  "existingSip": "आपकी मौजूदा SIP",
+  "bothassetSip": "डिजिटल गोल्ड और P2P SIP",
+  "floSip": "फेलो P2P SIP",
+  "goldSip": "डिजिटल गोल्ड SIP",
+  "pauseSip": "रोकी गई SIP",
+  "editSip": "SIP संपादित करें",
+  "clickToResumeSip": "SIP फिर से शुरू करने के लिए कार्ड पर क्लिक करें",
+  "SipCalculator": "SIP कैलकुलेटर",
+  "returnsCalculator": "अपने SIP रिटर्न्स की गणना करें",
+  "timePeriod": "समय अवधि",
+  "rpSip": "रिटर्न प्रतिशत",
+  "yourMoneySip": "{timePeriod} वर्षों में आपका पैसा",
+  "@yourMoneySip": {
+    "placeholders": {
+      "timePeriod": {
+        "type": "int"
+      }
+    }
+  },
+  "sipForIphone": "दैनिक SIP के साथ आप एक वर्ष में एक Iphone के लिए बचत कर सकते हैं",
+  "sipForCar": "मासिक SIP के साथ आप एक वर्ष में एक कार के लिए पर्याप्त बचत कर सकते हैं",
+  "sipForTrip": "साप्ताहिक SIP के साथ आप एक वर्ष में गोवा यात्रा के लिए पर्याप्त बचत कर सकते हैं",
+  "SipIphoneTitle": "एक Iphone के लिए SIP",
+  "SipCarTitle": "एक कार के लिए SIP",
+  "SipTripTitle": "एक यात्रा के लिए SIP",
+  "selectAsset": "एसेट चुनें",
+  "threeClicksAway": "3 क्लिक दूर",
+  "comingSoon": "जल्द आ रहा है",
+  "editSipOptions": "SIP विकल्प संपादित करें",
+  "editSipbtn": "SIP संपादित करें",
+  "resumeSipbtn": "SIP फिर से शुरू करें",
+  "pauseSipbtn": "SIP रोकें",
+  "sipReturn": "इस SIP से आप 5 वर्षों में ₹{returns} तक कमा सकते हैं",
+  "@sipReturn": {
+    "placeholders": {
+      "returns": {
+        "type": "String"
+      }
+    }
+  },
+  "setupSip": "SIP सेटअप करें",
+  "setupCardTitle": "अपना SIP शुरू करें और ऑटोपायलट पर पैसे बढ़ाएं",
+  "setupCardSubTitle": "अपने वित्तीय लक्ष्यों को पूरा करने के लिए फेलो फ्लो या डिजिटल गोल्ड में निवेश करें",
+  "sipYear": "वर्ष",
+  "pauseSuccess": "SIP सफलतापूर्वक रोक दिया गया",
+  "pauseSuccessSub": "अधिक जानकारी के लिए SIP अनुभाग देखें",
+  "pauseFail": "SIP रोकने में विफल",
+  "tryAgain": "कृपया पुनः प्रयास करें",
+  "errorLoadingSip": "SIP डेटा लोड करने में त्रुटि। बाद में पुनः प्रयास करें!",
+  "sipText": "SIP",
+  "oneWeek": "1 सप्ताह",
+  "twoWeek": "2 सप्ताह",
+  "oneMonth": "1 महीना",
+  "indefinitely": "अनिश्चितकाल के लिए",
+  "manageSip": "SIP प्रबंधित करें",
+  "viewSIPTransac": "SIP लेनदेन देखें",
+  "setUpMandate": "UPI मैंडेट सेटअप करें:",
+  "jstAClickAway": "बस एक क्लिक दूर",
+  "enterUPIpin": "3. अपना UPI पिन दर्ज करें और आप हो गए तैयार",
+  "mandateStep1": "1. पसंदीदा UPI एप्लिकेशन चुनें",
+  "noUpiAppFound": "कोई UPI एप्लिकेशन नहीं मिला",
+  "step2Mandate": "2. UPI मैंडेट की अनुमति दें।",
+  "sipSummary": "आपका SIP सारांश",
+  "checkYourRewards": "अपने इनामों की जाँच करें",
+  "viewSip": "SIP देखें",
+  "sipGt": "स्क्रैच कार्ड",
+  "sipTicket": "टिकट",
+  "startedSip": "{date} को शुरू किया गया",
+  "@startedSip": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  }
 }

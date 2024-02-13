@@ -1,60 +1,48 @@
-import 'package:felloapp/core/model/timestamp_model.dart';
+import 'package:felloapp/core/enums/sip_asset_type.dart';
+import 'package:intl/intl.dart';
+import 'package:json_annotation/json_annotation.dart';
 
+import 'subscription_status.dart';
+
+part 'subscription_model.g.dart';
+
+@JsonSerializable(
+  createToJson: false,
+)
 class SubscriptionModel {
-  String? id;
-  String? uid;
-  String? merchantSubId;
-  String? amount;
-  String? augAmt;
-  String? lbAmt;
-  String? authTxnId;
-  String? frequency;
-  String? recurringCount;
-  String? status;
-  String? note;
-  String? cloudTask;
-  String? resumeFrequency;
-  TimestampModel? resumeDate;
-  TimestampModel? startDate;
-  TimestampModel? createdOn;
-  TimestampModel? updatedOn;
+  final String id; // phone pe id on backend.
+  final String subId;
+  @JsonKey(unknownEnumValue: AutosaveState.IDLE)
+  final AutosaveState status;
+  final num amount;
+  final String frequency;
+  @JsonKey(unknownEnumValue: SIPAssetTypes.UNKNOWN)
+  final SIPAssetTypes assetType;
+  @JsonKey(name: 'AUGGOLD99')
+  final num aUGGOLD99;
+  @JsonKey(name: 'LENDBOXP2P')
+  final num lENDBOXP2P;
+  final String createdOn;
+  final String nextDue;
 
-  SubscriptionModel(
-      {this.id,
-      this.uid,
-      this.merchantSubId,
-      this.amount,
-      this.augAmt,
-      this.lbAmt,
-      this.authTxnId,
-      this.frequency,
-      this.recurringCount,
-      this.status,
-      this.note,
-      this.cloudTask,
-      this.resumeFrequency,
-      this.resumeDate,
-      this.startDate,
-      this.createdOn,
-      this.updatedOn});
+  const SubscriptionModel({
+    this.id = '',
+    this.subId = '',
+    this.status = AutosaveState.IDLE,
+    this.assetType = SIPAssetTypes.UNKNOWN,
+    this.amount = 0,
+    this.frequency = '',
+    this.aUGGOLD99 = 0,
+    this.lENDBOXP2P = 0,
+    this.createdOn = '',
+    this.nextDue = '',
+  });
 
-  SubscriptionModel.fromMap(Map<String, dynamic> map) {
-    id = map['id'];
-    uid = map['uid'];
-    merchantSubId = map['merchantSubId'];
-    amount = map['amount'];
-    augAmt = map['AUGGOLD99'];
-    lbAmt = map['LENDBOXP2P'];
-    authTxnId = map['authTxnId'];
-    frequency = map['frequency'];
-    recurringCount = map['recurringCount'];
-    status = map['status'];
-    note = map['note'];
-    cloudTask = map['cloudTask'];
-    resumeFrequency = map['resumeFrequency'];
-    resumeDate = TimestampModel.fromMap(map['resumeDate']);
-    startDate = TimestampModel.fromMap(map['startDate']);
-    createdOn = TimestampModel.fromMap(map['createdOn']);
-    updatedOn = TimestampModel.fromMap(map['updatedOn']);
-  }
+  factory SubscriptionModel.fromJson(Map<String, dynamic> json) =>
+      _$SubscriptionModelFromJson(json);
+}
+
+extension SubscriptionModelX on SubscriptionModel {
+  String get formattedStartDate =>
+      DateFormat('dd MMM yyyy').format(DateTime.parse(createdOn));
 }

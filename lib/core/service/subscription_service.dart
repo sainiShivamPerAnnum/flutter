@@ -1,5 +1,4 @@
 import 'dart:async';
-import 'dart:developer';
 import 'dart:io';
 
 import 'package:felloapp/base_util.dart';
@@ -9,30 +8,29 @@ import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/model/amount_chips_model.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
+import 'package:felloapp/core/model/sip_model/sip_data_model.dart';
 import 'package:felloapp/core/model/sub_combos_model.dart';
-import 'package:felloapp/core/model/subscription_models/subscription_model.dart';
+import 'package:felloapp/core/model/subscription_models/all_subscription_model.dart';
 import 'package:felloapp/core/model/subscription_models/subscription_transaction_model.dart';
 import 'package:felloapp/core/repository/getters_repo.dart';
+import 'package:felloapp/core/repository/sip_repo.dart';
 import 'package:felloapp/core/repository/subscription_repo.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
-import 'package:felloapp/core/service/notifier_services/user_service.dart';
+import 'package:felloapp/feature/sip/ui/sip_setup/sip_intro.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
-import 'package:felloapp/ui/pages/finance/autosave/autosave_setup/autosave_process_view.dart';
-import 'package:felloapp/ui/pages/finance/autosave/autosave_setup/autosave_process_vm.dart';
 import 'package:felloapp/util/api_response.dart';
 import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/custom_logger.dart';
-import 'package:felloapp/util/flavor_config.dart';
-import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/preference_helper.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:upi_pay/upi_pay.dart';
 
-enum AutosaveState { IDLE, INIT, ACTIVE, PAUSED, INACTIVE, CANCELLED }
+import '../model/subscription_models/subscription_status_response.dart';
+
+enum FREQUENCY { daily, weekly, monthly }
 
 enum AutosavePauseOption {
   FOREVER,
@@ -46,6 +44,7 @@ List defaultChipsAndComboList = [
   defaultAmountChipList,
   defaultSipComboList
 ];
+
 List<AmountChipsModel> defaultAmountChipList = [
   AmountChipsModel(order: 0, value: 100, best: false, isSelected: false),
   AmountChipsModel(order: 0, value: 250, best: true, isSelected: false),
@@ -84,19 +83,15 @@ List<SubComboModel> defaultSipComboList = [
 
 class SubService extends ChangeNotifier {
   //DEPENDENCY - START
-
   final SubscriptionRepo _subscriptionRepo = locator<SubscriptionRepo>();
+  final SipRepository _sipRepo = locator<SipRepository>();
   final GetterRepository _getterRepo = locator<GetterRepository>();
   final CustomLogger _logger = locator<CustomLogger>();
-  final AnalyticsService _analyticsService = locator<AnalyticsService>();
-  final UserService _userService = locator<UserService>();
-
-  //DEPENDENCY - END
 
   //LOCAL VARIABLES - START
   List suggestions = [];
   Timer? timer;
-  int pollCount = 0;
+
   List<SubscriptionTransactionModel> allSubTxnList = [];
   List<SubscriptionTransactionModel> lbSubTxnList = [];
   List<SubscriptionTransactionModel> augSubTxnList = [];
@@ -104,7 +99,6 @@ class SubService extends ChangeNotifier {
   bool hasNoMoreSubsTxns = false;
   bool hasNoMoreLbSubsTxns = false;
   bool hasNoMoreAugSubsTxns = false;
-  UpiApplication? upiApplication;
   String? selectedUpiApplicationName;
   PageController? pageController;
 
@@ -121,28 +115,25 @@ class SubService extends ChangeNotifier {
     notifyListeners();
   }
 
-  AutosaveState _autosaveState = AutosaveState.IDLE;
+  Subscriptions? _subscriptionData;
 
-  AutosaveState get autosaveState => _autosaveState;
+  SipData? _sipData;
 
-  set autosaveState(AutosaveState value) {
-    _autosaveState = value;
-    notifyListeners();
+  Subscriptions? get subscriptionData => _subscriptionData;
+
+  SipData? get sipData => _sipData;
+
+  set subscriptionData(Subscriptions? value) {
+    _subscriptionData = value;
   }
 
-  SubscriptionModel? _subscriptionData;
-
-  SubscriptionModel? get subscriptionData => _subscriptionData;
-
-  set subscriptionData(value) {
-    // if (value == null) return;
-    _subscriptionData = value;
-    setSubscriptionState();
+  set sipData(SipData? value) {
+    _sipData = value;
   }
 
   bool _isPauseOrResuming = false;
 
-  get isPauseOrResuming => _isPauseOrResuming;
+  bool get isPauseOrResuming => _isPauseOrResuming;
 
   set isPauseOrResuming(value) {
     _isPauseOrResuming = value;
@@ -156,121 +147,91 @@ class SubService extends ChangeNotifier {
   Future<void> init() async {
     autosaveVisible = AppConfig.getValue(AppConfigKey.showNewAutosave) as bool;
     debugPrint("-----------autoSave visible $autosaveVisible");
-    if (autosaveVisible) await getSubscription();
   }
 
   void dump() {
-    pollCount = 0;
     _subscriptionData = null;
     hasNoMoreSubsTxns = false;
     timer?.cancel();
     allSubTxnList = [];
-    autosaveState = AutosaveState.IDLE;
     allSubTxnList = [];
     lbSubTxnList = [];
     augSubTxnList = [];
     suggestions.clear();
     hasNoMoreLbSubsTxns = false;
     hasNoMoreAugSubsTxns = false;
-    upiApplication = null;
     selectedUpiApplicationName = null;
   }
 
-  // SUBSCRIPTION SERVICE CORE METHODS - END
+  Future<ApiResponse<SubscriptionStatusResponse>> pollForSubscriptionStatus(
+    String subscriptionKey,
+  ) async {
+    int pollCount = 1;
+    const pollLimit = 6;
+    const relayDuration = Duration(seconds: 5);
 
-  // SUBSCRIPTION CORE METHODS - START
+    ApiResponse<SubscriptionStatusResponse> lastResult =
+        await getSubscriptionByStatus(subscriptionKey);
 
-  Future<bool> createSubscription({
-    required String freq,
-    required int lbAmt,
-    required int augAmt,
-    required int amount,
-    required String package,
-  }) async {
-    pollCount = 0;
-    autosaveState = AutosaveState.IDLE;
-    final res = await _subscriptionRepo.createSubscription(
-        amount: amount,
-        freq: freq,
-        lbAmt: lbAmt,
-        package: package,
-        augAmt: augAmt);
-    if (res.isSuccess()) {
-      try {
-        await getSubscription();
-        const platform = MethodChannel("methodChannel/upiIntent");
-        // autosaveState = AutosaveState.INIT;
-        if (Platform.isIOS) {
-          BaseUtil.launchUrl(res.model!);
-        } else {
-          final result = await platform.invokeMethod('initiatePsp', {
-            'redirectUrl': res.model,
-            'packageName': FlavorConfig.isDevelopment()
-                ? "com.phonepe.app.preprod"
-                : package
-          });
-          log("Result from initiatePsp: $result");
-        }
-        if (subscriptionData != null) {
-          startPollingForCreateSubscriptionResponse();
-        }
+    while (pollCount < pollLimit) {
+      final data = lastResult.model?.data;
 
-        return true;
-      } catch (e) {
-        _logger.e("Create subscription failed: Platform Exception");
-        return false;
+      // Termination condition for polling:
+      // - Either the request fails completely then break further polling and
+      // propagate error response to further.
+      // - Or request completes with success and the status of subscription is
+      // active.
+      final predicate = lastResult.isSuccess() &&
+              data != null &&
+              data.subscription.status.isActive ||
+          !lastResult.isSuccess();
+
+      if (predicate) {
+        return lastResult;
       }
-    } else {
-      autosaveState = AutosaveState.IDLE;
-      BaseUtil.showNegativeAlert(res.errorMessage, "Please try after sometime");
-      return false;
-    }
-  }
 
-  void startPollingForCreateSubscriptionResponse() {
-    timer = Timer.periodic(
-      const Duration(seconds: 10),
-      (t) {
-        pollCount++;
-        if (pollCount > 100) {
-          t.cancel();
-          autosaveState = AutosaveState.IDLE;
-        }
-        getSubscription().then((_) {
-          if (subscriptionData!.status != AutosaveState.INIT.name &&
-              subscriptionData!.status != AutosaveState.CANCELLED.name) {
-            _logger.i("Autosave Polling cancelled.");
-            t.cancel();
-          }
-        });
-      },
-    );
+      // delay between two requests.
+      if (pollCount > 1) {
+        await Future.delayed(
+          relayDuration,
+        );
+      }
+
+      lastResult = await getSubscriptionByStatus(subscriptionKey);
+
+      pollCount++;
+    }
+
+    return lastResult;
   }
 
   Future<void> getSubscription() async {
     final res = await _subscriptionRepo.getSubscription();
-    if (res.isSuccess()) {
-      subscriptionData = res.model;
-    } else {
-      subscriptionData = null;
-    }
+    subscriptionData = res.isSuccess() ? res.model : null;
+  }
+
+  Future<void> getSipScreenData() async {
+    final res = await _sipRepo.getSipScreenData();
+    sipData = res.isSuccess() ? res.model : null;
+  }
+
+  Future<ApiResponse<SubscriptionStatusResponse>> getSubscriptionByStatus(
+    String subscriptionKey,
+  ) async {
+    final response = await _subscriptionRepo.getTransactionStatus(
+      subscriptionKey,
+    );
+    return response;
   }
 
   Future<bool> updateSubscription({
     required String freq,
-    required int lbAmt,
-    required int augAmt,
+    required String id,
     required int amount,
   }) async {
     final res = await _subscriptionRepo.updateSubscription(
-        freq: freq, lbAmt: lbAmt, augAmt: augAmt, amount: amount);
+        freq: freq, id: id, amount: amount);
     if (res.isSuccess()) {
-      subscriptionData = res.model;
-      AppState.backButtonDispatcher!.didPopRoute();
-      Future.delayed(const Duration(seconds: 1), () {
-        BaseUtil.showPositiveAlert("Subscription updated successfully",
-            "Effective changes will take place from tomorrow");
-      });
       return true;
     } else {
       BaseUtil.showNegativeAlert(res.errorMessage, "Please try again");
@@ -278,36 +239,27 @@ class SubService extends ChangeNotifier {
     }
   }
 
-  Future<bool> pauseSubscription(AutosavePauseOption option) async {
+  Future<bool> pauseSubscription(AutosavePauseOption option, String id) async {
+    final locale = locator<S>();
     if (isPauseOrResuming) return false;
     isPauseOrResuming = true;
-    final res = await _subscriptionRepo.pauseSubscription(option: option);
+    final res =
+        await _subscriptionRepo.pauseSubscription(option: option, id: id);
     isPauseOrResuming = false;
     if (res.isSuccess()) {
-      subscriptionData = res.model;
-      AppState.backButtonDispatcher!.didPopRoute();
-      Future.delayed(const Duration(seconds: 1), () {
-        BaseUtil.showPositiveAlert("Subscription paused successfully",
-            "Effective changes will take place from tomorrow");
-      });
       return true;
     } else {
-      BaseUtil.showNegativeAlert(res.errorMessage, "Please try again");
+      BaseUtil.showNegativeAlert(res.errorMessage, locale.tryAgain);
       return false;
     }
   }
 
-  Future<bool> resumeSubscription() async {
+  Future<bool> resumeSubscription(String id) async {
     if (isPauseOrResuming) return false;
     isPauseOrResuming = true;
-    final res = await _subscriptionRepo.resumeSubscription();
+    final res = await _subscriptionRepo.resumeSubscription(id);
     isPauseOrResuming = false;
     if (res.isSuccess()) {
-      subscriptionData = res.model;
-      Future.delayed(const Duration(seconds: 1), () {
-        BaseUtil.showPositiveAlert("Subscription resumed successfully",
-            "Effective changes will take place from tomorrow");
-      });
       return true;
     } else {
       BaseUtil.showNegativeAlert(res.errorMessage, "Please try again");
@@ -398,35 +350,17 @@ class SubService extends ChangeNotifier {
 
   Future<List> getAmountChipsAndCombos({required String freq}) async {
     ApiResponse<List> data = await _getterRepo.getSubCombosAndChips(freq: freq);
-    if (data.isSuccess()) {
-      return data.model!;
-    } else {
-      return defaultChipsAndComboList;
-    }
+    return data.isSuccess() ? data.model! : defaultChipsAndComboList;
   }
-
-  // Future<List<SubComboModel>> getSipCombos({required String freq}) async {
-  //   ApiResponse<List<SubComboModel>> data =
-  //       await _getterRepo.getSubCombos(freq: freq);
-  //   if (data.isSuccess())
-  //     return data.model!;
-  //   else
-  //     return defaultSipComboList;
-  // }
 
   Future<int> getPhonePeVersionCode() async {
     final res = await _subscriptionRepo.getPhonepeVersionCode();
-    if (res.isSuccess()) {
-      return res.model!;
-    } else {
-      return 0;
-    }
+    return res.isSuccess() ? res.model! : 0;
   }
 
   Future<List<ApplicationMeta>> getUPIApps() async {
     S locale = locator<S>();
     List<ApplicationMeta> appMetaList = [];
-    print("Apps: getting upi apps");
 
     if (Platform.isIOS) {
       const platform = MethodChannel("methodChannel/deviceData");
@@ -457,7 +391,7 @@ class SubService extends ChangeNotifier {
         }
         return appMetaList;
       } on PlatformException catch (e) {
-        print("Failed to fetch installed applications on ios $e");
+        _logger.d('Failed to fetch installed applications on ios $e');
         return appMetaList;
       }
     } else {
@@ -466,7 +400,7 @@ class SubService extends ChangeNotifier {
             await UpiPay.getInstalledUpiApplications(
                 statusType: UpiApplicationDiscoveryAppStatusType.all);
 
-        allUpiApps.forEach((element) {
+        for (final element in allUpiApps) {
           if (element.upiApplication.appName == "Paytm" &&
               AppConfig.getValue<String>(AppConfigKey.enabled_psp_apps)
                   .contains('P')) {
@@ -477,126 +411,53 @@ class SubService extends ChangeNotifier {
                   .contains('E')) {
             appMetaList.add(element);
           }
+
+          // debug assertion to avoid this in production.
+          assert(() {
+            if (element.upiApplication.appName == "PhonePe Simulator" &&
+                AppConfig.getValue<String>(AppConfigKey.enabled_psp_apps)
+                    .contains('E')) {
+              appMetaList.add(element);
+            }
+            return true;
+          }());
+
           if (element.upiApplication.appName == "PhonePe Preprod" &&
               AppConfig.getValue<String>(AppConfigKey.enabled_psp_apps)
                   .contains('E')) {
             appMetaList.add(element);
           }
+
           if (element.upiApplication.appName == "Google Pay" &&
               AppConfig.getValue<String>(AppConfigKey.enabled_psp_apps)
                   .contains('G')) {
             appMetaList.add(element);
           }
-        });
+        }
 
         return appMetaList;
       } catch (e) {
-        print("Apps: No Apps found");
+        _logger.d('Failed to list all psp app due to error: $e');
 
-        BaseUtil.showNegativeAlert(locale.unableToGetUpi, locale.tryLater);
+        BaseUtil.showNegativeAlert(
+          locale.unableToGetUpi,
+          locale.tryLater,
+        );
+
         return [];
       }
     }
   }
 
-  setSubscriptionState() {
-    switch (subscriptionData?.status) {
-      case "INIT":
-        autosaveState = AutosaveState.INIT;
-        break;
-      case "ACTIVE":
-        timer?.cancel();
-        autosaveState = AutosaveState.ACTIVE;
-        break;
-      case "PAUSE_FROM_APP":
-        autosaveState = AutosaveState.PAUSED;
-        break;
-      case "PAUSE_FROM_APP_FOREVER":
-        autosaveState = AutosaveState.PAUSED;
-        break;
-      case "PAUSE_FROM_PSP":
-        autosaveState = AutosaveState.PAUSED;
-        break;
-      case "CANCELLED":
-        autosaveState = AutosaveState.CANCELLED;
-        break;
-      default:
-        autosaveState = AutosaveState.IDLE;
-        break;
-    }
+  void handleTap({InvestmentType? type}) {
+    AppState.delegate!.appState.currentAction = PageAction(
+      page: SipIntroPageConfig,
+      widget: const SipIntroView(),
+      state: PageState.addWidget,
+    );
+
+    locator<AnalyticsService>().track(
+      eventName: AnalyticsEvents.sipCardTapped,
+    );
   }
-
-  handleTap({InvestmentType? type}) {
-    Haptic.vibrate();
-    _analyticsService.track(
-        eventName: AnalyticsEvents.asCardTapped,
-        properties: {"status": autosaveState.name, "location": "Save section"});
-    switch (autosaveState) {
-      case AutosaveState.INIT:
-        return BaseUtil.showNegativeAlert(
-            "Subscription in processing", "please check back after sometime");
-      case AutosaveState.IDLE:
-        if (type != null && type == InvestmentType.AUGGOLD99) {
-          locator<AnalyticsService>().track(
-            eventName: AnalyticsEvents.autosaveCardInGoldSectionTapped,
-            properties: {
-              'progress_bar_completed':
-                  (_userService.userFundWallet?.augGoldQuantity ?? 0) > 0.5
-                      ? "YES"
-                      : (_userService.userFundWallet?.augGoldQuantity ?? 0) /
-                          0.5,
-              "existing lease amount":
-                  _userService.userPortfolio.augmont.fd.balance,
-              "existing lease grams":
-                  _userService.userFundWallet?.wAugFdQty ?? 0
-            },
-          );
-          return AppState.delegate!.appState.currentAction = PageAction(
-            page: AutosaveProcessViewPageConfig,
-            widget: AutosaveProcessView(
-              investmentType: type,
-            ),
-            state: PageState.addWidget,
-          );
-        } else {
-          return AppState.delegate!.appState.currentAction = PageAction(
-            page: (PreferenceHelper.getBool(
-                    PreferenceHelper.CACHE_IS_AUTOSAVE_FIRST_TIME,
-                    def: true))
-                ? AutosaveOnboardingViewPageConfig
-                : AutosaveProcessViewPageConfig,
-            state: PageState.addPage,
-          );
-        }
-
-      case AutosaveState.PAUSED:
-      case AutosaveState.INACTIVE:
-      case AutosaveState.ACTIVE:
-        return AppState.delegate!.appState.currentAction = PageAction(
-          page: AutosaveDetailsViewPageConfig,
-          state: PageState.addPage,
-        );
-      default:
-        return;
-    }
-  }
-
-// onAmountValueChanged(String val) {
-//   if (val == "00000") amountController.text = '0';
-//   if (val != null && val.isNotEmpty) {
-//     if (int.tryParse(val)! < minValue)
-//       showMinAlert = true;
-//     else
-//       showMinAlert = false;
-//     if (int.tryParse(val)! > maxValue) {
-//       amountController.text = maxValue.toString();
-//       val = maxValue.toString();
-//       FocusManager.instance.primaryFocus!.unfocus();
-//     }
-//   } else {
-//     val = '0';
-//   }
-//   // saveAmount = calculateSaveAmount(int.tryParse(val ?? '0')!);
-//   notifyListeners();
-// }
 }
