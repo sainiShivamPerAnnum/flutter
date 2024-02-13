@@ -186,7 +186,9 @@ class MandateStepView extends StatelessWidget {
                 style: TextStyles.rajdhaniSB.body1,
               ),
             ),
-            // const Spacer(),
+            SizedBox(
+              height: SizeConfig.padding32,
+            ),
             switch (state.transactionStatus) {
               Creating() => const LinearProgressIndicator(
                   color: UiConstants.primaryColor,
