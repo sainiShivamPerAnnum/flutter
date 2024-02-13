@@ -52,7 +52,7 @@ class AutoSaveCardNew extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final String? isSActiveSub = _userService.baseUser!.subsStatus;
+    final isSActiveSub = _userService.baseUser!.doesHaveSubscriptionTransaction;
     return Container(
       margin: EdgeInsets.symmetric(vertical: SizeConfig.padding14),
       child: Column(
@@ -115,7 +115,7 @@ class AutoSaveCardNew extends StatelessWidget {
                           children: [
                             Expanded(
                               child: Text(
-                                isSActiveSub == "ACTIVE"
+                                isSActiveSub
                                     ? locale.manageSip
                                     : locale.setupSip,
                                 style: TextStyles.sourceSansSB.body2

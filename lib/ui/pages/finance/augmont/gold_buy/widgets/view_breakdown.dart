@@ -1,7 +1,9 @@
+import 'package:collection/collection.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
+import 'package:felloapp/core/model/app_config_serialized_model.dart';
 import 'package:felloapp/core/model/bank_account_details_model.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
@@ -25,6 +27,7 @@ import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:upi_pay/upi_pay.dart';
 
+import '../../../../../../core/service/notifier_services/user_service.dart';
 import '../../../../../../util/locator.dart';
 
 class GoldBreakdownView extends StatefulWidget {
@@ -776,11 +779,38 @@ class FloBreakdownView extends StatefulWidget {
 class _FloBreakdownViewState extends State<FloBreakdownView> {
   bool _isNetbankingMandatory = false;
 
+  num _multiplicationFactor = 1;
+
   @override
   void initState() {
     super.initState();
     final amount = num.tryParse(widget.model.amountController?.text ?? '') ?? 0;
     _isNetbankingMandatory = amount >= Constants.mandatoryNetBankingThreshold;
+    _caluculateFactor();
+  }
+
+  void _caluculateFactor() {
+    String modelFlowType = widget.model.floAssetType;
+    List<Lendboxp2P> lendBoxDetails = AppConfigV2.instance.lendBoxP2P;
+    final isLendBoxOldUser =
+        locator<UserService>().userSegments.contains(Constants.US_FLO_OLD);
+
+    Lendboxp2P? assetInformation = lendBoxDetails.firstWhereOrNull(
+      (element) {
+        return modelFlowType == Constants.ASSET_TYPE_FLO_FELXI
+            ? element.isForOldLb == isLendBoxOldUser &&
+                element.fundType == modelFlowType
+            : element.fundType == modelFlowType;
+      },
+    );
+
+    if (assetInformation != null) {
+      _multiplicationFactor = assetInformation.tamBolaMultiplier;
+    }
+  }
+
+  num get totalTicketsEarned {
+    return (widget.model.totalTickets ?? 0) * _multiplicationFactor;
   }
 
   @override
@@ -788,6 +818,7 @@ class _FloBreakdownViewState extends State<FloBreakdownView> {
     final showMaturity =
         !(widget.model.floAssetType == Constants.ASSET_TYPE_FLO_FELXI);
     final currentDateTime = DateTime.now();
+
     return WillPopScope(
       onWillPop: () async {
         AppState.removeOverlay();
@@ -899,7 +930,7 @@ class _FloBreakdownViewState extends State<FloBreakdownView> {
                           ),
                           const Spacer(),
                           Text(
-                            "${widget.model.totalTickets}",
+                            "$totalTicketsEarned",
                             style: TextStyles.sourceSansSB.body1,
                           ),
                         ],

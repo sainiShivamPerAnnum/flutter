@@ -54,17 +54,17 @@ class PaytmRepository extends BaseRepo {
       : "https://wd7bvvu7le.execute-api.ap-south-1.amazonaws.com/dev";
 
   Future<ApiResponse<CreatePaytmTransactionModel>> createTransaction(
-    double? amount,
-    Map<String, dynamic>? augMap,
-    Map<String, dynamic>? lbMap,
-    String? couponCode,
-    bool? skipMl,
-    String mid,
-    InvestmentType investmentType,
-    AppUse? appUse, [
-    Map<String, dynamic>? goldProMap,
-    String? paymode,
-  ]) async {
+      double? amount,
+      Map<String, dynamic>? augMap,
+      Map<String, dynamic>? lbMap,
+      String? couponCode,
+      bool? skipMl,
+      String mid,
+      InvestmentType investmentType,
+      AppUse? appUse,
+      bool? isAutoLeaseChecked,
+      [Map<String, dynamic>? goldProMap,
+      String? paymode]) async {
     try {
       final String? _uid = userService.baseUser!.uid;
       final Map<String, dynamic> _body = {
@@ -74,6 +74,7 @@ class PaytmRepository extends BaseRepo {
         "couponcode": couponCode ?? '',
         "skipMl": skipMl ?? false,
         if (paymode != null) 'paymode': paymode,
+        if (isAutoLeaseChecked != null) 'autoRenewFlag': isAutoLeaseChecked
       };
 
       if (investmentType == InvestmentType.AUGGOLD99) _body["augMap"] = augMap;

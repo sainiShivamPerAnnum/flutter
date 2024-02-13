@@ -10,6 +10,7 @@ import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_buy/gold_pro_buy_components/gold_balance_rows.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_buy/gold_pro_buy_components/gold_pro_choice_chips.dart';
+import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_buy/gold_pro_buy_components/gold_pro_info_row.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_buy/gold_pro_buy_vm.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/pages/static/loader_widget.dart';
@@ -427,129 +428,109 @@ class GoldProLeaseCompanyDetailsStrip extends StatelessWidget {
     return Selector<AugmontTransactionService, GoldProSchemeModel?>(
       selector: (p0, p1) => p1.goldProScheme,
       builder: (ctx, scheme, child) => GestureDetector(
-        onTap: () {
-          if (scheme != null) {
-            BaseUtil.openModalBottomSheet(
-                isBarrierDismissible: true,
-                addToScreenStack: true,
-                backgroundColor: UiConstants.kBackgroundColor2,
-                borderRadius: BorderRadius.only(
-                  topLeft: Radius.circular(SizeConfig.roundness16),
-                  topRight: Radius.circular(SizeConfig.roundness16),
-                ),
-                hapticVibrate: true,
-                content: WillPopScope(
-                  onWillPop: () async {
-                    AppState.removeOverlay();
-                    return Future.value(true);
-                  },
-                  child: Container(
-                    margin: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
-                    child: scheme != null
-                        ? Column(
-                            mainAxisSize: MainAxisSize.min,
-                            children: [
-                              ListTile(
-                                leading: Container(
-                                  decoration: BoxDecoration(
-                                    border: Border.all(
-                                        width: 1, color: Colors.white),
-                                    borderRadius: BorderRadius.circular(
-                                        SizeConfig.roundness12),
-                                    image: DecorationImage(
-                                      image: NetworkImage(scheme.logo),
-                                      fit: BoxFit.cover,
-                                    ),
-                                  ),
-                                  height: SizeConfig.padding54,
-                                  width: SizeConfig.padding54,
-                                ),
-                                title: Text(
-                                  scheme.jewellerUserAccountName,
-                                  style: TextStyles.sourceSansB.body1
-                                      .colour(Colors.white),
-                                ),
-                                subtitle: Text(
-                                  "Estd. ${scheme.yearOfOperation}",
-                                  style: TextStyles.body3
-                                      .colour(UiConstants.kFAQsAnswerColor),
-                                ),
-                              ),
-                              ListTile(
-                                title: Text(
-                                  "Business Type:",
-                                  style:
-                                      TextStyles.body3.colour(Colors.white60),
-                                ),
-                                trailing: Text(
-                                  "Wholesaler, Manufacturer",
-                                  style: TextStyles.body3
-                                      .colour(UiConstants.kFAQsAnswerColor),
-                                ),
-                              ),
-                              if (scheme.description.isNotEmpty)
-                                Padding(
-                                  padding: EdgeInsets.symmetric(
-                                      horizontal: SizeConfig.padding12),
-                                  child: Row(
-                                    children: [
-                                      Text(
-                                        "Description:",
-                                        style: TextStyles.body3
-                                            .colour(Colors.white60),
-                                      ),
-                                      SizedBox(width: SizeConfig.padding20),
-                                      Expanded(
-                                        child: Text(
-                                          scheme.description
-                                              .checkOverFlow(maxLength: 100),
-                                          style: TextStyles.body3.colour(
-                                              UiConstants.kFAQsAnswerColor),
-                                          maxLines: 5,
-                                          textAlign: TextAlign.end,
-                                        ),
-                                      )
-                                    ],
-                                  ),
-                                )
-                            ],
-                          )
-                        : const Center(
-                            child: CircularProgressIndicator.adaptive()),
+          onTap: () {
+            if (scheme != null) {
+              BaseUtil.openModalBottomSheet(
+                  isBarrierDismissible: true,
+                  addToScreenStack: true,
+                  backgroundColor: UiConstants.kBackgroundColor2,
+                  borderRadius: BorderRadius.only(
+                    topLeft: Radius.circular(SizeConfig.roundness16),
+                    topRight: Radius.circular(SizeConfig.roundness16),
                   ),
-                ));
-          }
-        },
-        child: Container(
-          margin: EdgeInsets.symmetric(vertical: SizeConfig.padding8),
-          child: Row(
-            children: [
-              Text(
-                "Leasing to ",
-                style: TextStyles.sourceSans.body3.copyWith(
-                  color: UiConstants.grey1,
+                  hapticVibrate: true,
+                  content: WillPopScope(
+                    onWillPop: () async {
+                      AppState.removeOverlay();
+                      return Future.value(true);
+                    },
+                    child: Container(
+                      margin: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
+                      child: scheme != null
+                          ? Column(
+                              mainAxisSize: MainAxisSize.min,
+                              children: [
+                                ListTile(
+                                  leading: Container(
+                                    decoration: BoxDecoration(
+                                      border: Border.all(
+                                          width: 1, color: Colors.white),
+                                      borderRadius: BorderRadius.circular(
+                                          SizeConfig.roundness12),
+                                      image: DecorationImage(
+                                        image: NetworkImage(scheme.logo),
+                                        fit: BoxFit.cover,
+                                      ),
+                                    ),
+                                    height: SizeConfig.padding54,
+                                    width: SizeConfig.padding54,
+                                  ),
+                                  title: Text(
+                                    scheme.jewellerUserAccountName,
+                                    style: TextStyles.sourceSansB.body1
+                                        .colour(Colors.white),
+                                  ),
+                                  subtitle: Text(
+                                    "Estd. ${scheme.yearOfOperation}",
+                                    style: TextStyles.body3
+                                        .colour(UiConstants.kFAQsAnswerColor),
+                                  ),
+                                ),
+                                ListTile(
+                                  title: Text(
+                                    "Business Type:",
+                                    style:
+                                        TextStyles.body3.colour(Colors.white60),
+                                  ),
+                                  trailing: Text(
+                                    "Wholesaler, Manufacturer",
+                                    style: TextStyles.body3
+                                        .colour(UiConstants.kFAQsAnswerColor),
+                                  ),
+                                ),
+                                if (scheme.description.isNotEmpty)
+                                  Padding(
+                                    padding: EdgeInsets.symmetric(
+                                        horizontal: SizeConfig.padding12),
+                                    child: Row(
+                                      children: [
+                                        Text(
+                                          "Description:",
+                                          style: TextStyles.body3
+                                              .colour(Colors.white60),
+                                        ),
+                                        SizedBox(width: SizeConfig.padding20),
+                                        Expanded(
+                                          child: Text(
+                                            scheme.description
+                                                .checkOverFlow(maxLength: 100),
+                                            style: TextStyles.body3.colour(
+                                                UiConstants.kFAQsAnswerColor),
+                                            maxLines: 5,
+                                            textAlign: TextAlign.end,
+                                          ),
+                                        )
+                                      ],
+                                    ),
+                                  )
+                              ],
+                            )
+                          : const Center(
+                              child: CircularProgressIndicator.adaptive()),
+                    ),
+                  ));
+            }
+          },
+          child: InfoRow(
+              text: "Leasing to ",
+              child: Text(
+                (scheme?.jewellerUserAccountName ?? "-").toUpperCase(),
+                textAlign: TextAlign.end,
+                style: TextStyles.sourceSans.body2.copyWith(
+                  color: UiConstants.textGray70,
                   height: 1,
                 ),
-              ),
-              const Icon(
-                Icons.info_outline,
-                color: UiConstants.kFAQsAnswerColor,
-                size: 14,
-              ),
-              Expanded(
-                child: Text(
-                  (scheme?.jewellerUserAccountName ?? "-").toUpperCase(),
-                  textAlign: TextAlign.end,
-                  style: TextStyles.sourceSans.body2.copyWith(
-                    color: UiConstants.textGray70,
-                    height: 1,
-                  ),
-                ),
-              )
-            ],
-          ),
-        ),
-      ),
+              ))),
     );
   }
 }

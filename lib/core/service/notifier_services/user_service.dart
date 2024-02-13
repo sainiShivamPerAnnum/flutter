@@ -431,7 +431,10 @@ class UserService extends PropertyChangeNotifier<UserServiceProperties> {
         'mobile': _baseUser?.mobile ?? '',
         'time': dateTime.hour,
         'segments': _baseUser?.segments ?? [],
-        'subsStatus': _baseUser?.subsStatus ?? '',
+        // To featureflag service that sip has been setup in past or not.
+        'subsStatus': (_baseUser?.doesHaveSubscriptionTransaction ?? false)
+            ? "ACTIVE"
+            : "IDLE",
         'spinCompleted': spinComplete,
         'firstLaunch': firstLaunch,
       });

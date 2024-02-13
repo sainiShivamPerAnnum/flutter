@@ -186,6 +186,7 @@ class LendboxTransactionService extends BaseTransactionService
       InvestmentType.LENDBOXP2P,
       null,
       null,
+      null,
       'NET_BANKING', // pay-mode
     );
 
@@ -239,19 +240,19 @@ class LendboxTransactionService extends BaseTransactionService
 
     final ApiResponse<CreatePaytmTransactionModel> txnResponse =
         await _paytmRepo.createTransaction(
-      currentTxnAmount,
-      {},
-      {
-        "fundType": currentFloPurchaseDetails!.floAssetType,
-        "maturityPref": currentFloPurchaseDetails!.maturityPref,
-      },
-      currentFloPurchaseDetails!.couponCode,
-      currentFloPurchaseDetails!.skipMl,
-      '',
-      InvestmentType.LENDBOXP2P,
-      currentFloPurchaseDetails!.upiChoice!.upiApplication.appName
-          .formatUpiAppName(),
-    );
+            currentTxnAmount,
+            {},
+            {
+              "fundType": currentFloPurchaseDetails!.floAssetType,
+              "maturityPref": currentFloPurchaseDetails!.maturityPref,
+            },
+            currentFloPurchaseDetails!.couponCode,
+            currentFloPurchaseDetails!.skipMl,
+            '',
+            InvestmentType.LENDBOXP2P,
+            currentFloPurchaseDetails!.upiChoice!.upiApplication.appName
+                .formatUpiAppName(),
+            null);
 
     if (txnResponse.isSuccess()) {
       currentTxnOrderId = txnResponse.model!.data!.txnId;

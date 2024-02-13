@@ -4,6 +4,7 @@ import 'dart:convert';
 import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/timestamp_model.dart';
+import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/logger.dart';
 import 'package:flutter/foundation.dart';
 
@@ -291,6 +292,16 @@ class UserTransaction {
   set timestamp(Timestamp? value) {
     _timestamp = value;
   }
+
+  String get showRewardsTextValue => type == UserTransaction.TRAN_TYPE_WITHDRAW
+      ? "Rewards Deducted:"
+      : (subType != Constants.ASSET_TYPE_LENDBOX &&
+              augmnt != null &&
+              augmnt!["aBlockId"] == null)
+          ? "You redeemed ₹${amount} from your total winnings."
+          : "Rewards Credited:";
+  String get rewardQuantity =>
+      "${(misMap!.containsKey("gtId") ? 1 : 0) + (couponMap!.containsKey("gtId") ? 1 : 0) + (misMap!.containsKey("gtIds") ? misMap!["gtIds"].length : 0) + (misMap!.containsKey("happyHourGtId") ? 1 : 0)}";
 }
 
 class TransactionStatusMapItemModel {

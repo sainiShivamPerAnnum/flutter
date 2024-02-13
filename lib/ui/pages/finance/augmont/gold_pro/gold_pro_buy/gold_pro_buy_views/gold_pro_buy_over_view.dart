@@ -25,6 +25,8 @@ import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 
+import '../gold_pro_buy_components/gold_pro_info_row.dart';
+
 class GoldProBuyOverView extends StatelessWidget {
   const GoldProBuyOverView({
     required this.model,
@@ -35,10 +37,11 @@ class GoldProBuyOverView extends StatelessWidget {
   final GoldProBuyViewModel model;
   final AugmontTransactionService txnService;
 
-  void _openPaymentSheet(
-      {bool showBreakDown = true,
-      bool showPsp = true,
-      bool isBreakDown = false}) {
+  void _openPaymentSheet({
+    bool showBreakDown = true,
+    bool showPsp = true,
+    bool isBreakDown = false,
+  }) {
     final amt = model.totalGoldAmount;
     BaseUtil.openModalBottomSheet(
       isBarrierDismissible: true,
@@ -122,8 +125,10 @@ class GoldProBuyOverView extends StatelessWidget {
     );
   }
 
-  Widget _buildButtonLabel(
-      {required bool hasEnoughBalance, required num amount}) {
+  Widget _buildButtonLabel({
+    required bool hasEnoughBalance,
+    required num amount,
+  }) {
     final style = TextStyles.rajdhaniB.body1.colour(
       Colors.white,
     );
@@ -201,7 +206,8 @@ class GoldProBuyOverView extends StatelessWidget {
         ),
         Container(
           margin: EdgeInsets.symmetric(
-              horizontal: SizeConfig.pageHorizontalMargins),
+            horizontal: SizeConfig.pageHorizontalMargins,
+          ),
           child: Column(
             children: [
               SizedBox(height: SizeConfig.screenHeight! * 0.03),
@@ -269,6 +275,17 @@ class GoldProBuyOverView extends StatelessWidget {
               ),
               PriceAdaptiveGoldProOverViewCard(model: model),
               const GoldProLeaseCompanyDetailsStrip(),
+              SizedBox(height: SizeConfig.padding14),
+              InfoRow(
+                text: "Auto Lease ",
+                child: CustomSwitch(
+                  initialValue: model.isAutoLeaseChecked,
+                  onChanged: (val) {
+                    model.isAutoLeaseChecked = val;
+                    model.isAutoLeaseCheckedSwitchTapped();
+                  },
+                ),
+              ),
             ],
           ),
         ),
@@ -289,8 +306,12 @@ class GoldProBuyOverView extends StatelessWidget {
                       .fd
                       .isGoldProUser)
                     Padding(
-                      padding: EdgeInsets.fromLTRB(SizeConfig.padding10,
-                          SizeConfig.padding10, SizeConfig.padding10, 0),
+                      padding: EdgeInsets.fromLTRB(
+                        SizeConfig.padding10,
+                        SizeConfig.padding10,
+                        SizeConfig.padding10,
+                        0,
+                      ),
                       child: Row(
                         mainAxisAlignment: MainAxisAlignment.center,
                         children: [

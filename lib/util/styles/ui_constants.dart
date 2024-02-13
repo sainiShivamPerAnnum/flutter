@@ -160,13 +160,14 @@ class UiConstants {
   );
 
   static LinearGradient kButtonGradient = const LinearGradient(
-      colors: [
-        Color(0xFF08D2AD),
-        Color(0xFF43544F),
-      ],
-      begin: Alignment.topCenter,
-      end: Alignment.bottomCenter,
-      tileMode: TileMode.clamp);
+    colors: [
+      Color(0xFF08D2AD),
+      Color(0xFF43544F),
+    ],
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+    tileMode: TileMode.clamp,
+  );
 
   static LinearGradient kCampaignBannerBackgrondGradient = LinearGradient(
     colors: [
@@ -257,6 +258,7 @@ class UiConstants {
   static const peach3 = Color(0xFFF79780);
 
   static const greyDivider = Color(0xFF7F86A3);
+  static const rewardsCardColor = Color(0xff212B31);
 }
 
 extension ColorExtension on String {
@@ -269,5 +271,11 @@ extension ColorExtension on String {
       return Color(int.parse("0x$hexColor"));
     }
     return null;
+  }
+}
+
+extension StringEnhancements on String {
+  String get capitalizeFirst {
+    return this[0].toUpperCase() + substring(1).toLowerCase();
   }
 }

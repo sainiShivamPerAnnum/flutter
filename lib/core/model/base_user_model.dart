@@ -34,6 +34,7 @@ class BaseUser {
   List segments;
   SuperFelloLevel superFelloLevel = SuperFelloLevel.NEW_FELLO;
   num minRedemptionAmt = 200;
+  bool doesHaveSubscriptionTransaction;
   static const String fldId = "mID";
   static const String fldMobile = "mMobile";
   static const String fldEmail = "mEmail";
@@ -69,6 +70,7 @@ class BaseUser {
   static const String fieldMinRedemptionAmt = 'minRedemptionAmt';
   static const String fieldSubscriptionStatus = 'subsStatus';
   static const String fieldFavAsset = 'favAsset';
+  static const String doesHaveSubscriptionTxn = 'doesHaveSubsTrxn';
 
   static const _$UserBadgeLevelEnumMap = {
     'GOOD': SuperFelloLevel.GOOD,
@@ -78,36 +80,36 @@ class BaseUser {
   };
 
   BaseUser(
-    this.uid,
-    this.mobile,
-    this.email,
-    this.name,
-    this.dob,
-    this.gender,
-    this.client_token,
-    this.isInvested,
-    this.isIciciOnboarded,
-    this.isAugmontOnboarded,
-    this.isSimpleKycVerified,
-    this.isKycVerified,
-    this.kycName,
-    this.pendingTxnId,
-    this.isIciciEnabled,
-    this.isAugmontEnabled,
-    this.username,
-    this.isEmailVerified,
-    this.isBlocked,
-    this.userPreferences,
-    this.createdOn,
-    this.appFlyerId,
-    this.avatarId,
-    this.isOldUser,
-    this.segments, {
-    this.superFelloLevel = SuperFelloLevel.NEW_FELLO,
-    this.minRedemptionAmt = 200,
-    this.subsStatus,
-    this.favAsset,
-  });
+      this.uid,
+      this.mobile,
+      this.email,
+      this.name,
+      this.dob,
+      this.gender,
+      this.client_token,
+      this.isInvested,
+      this.isIciciOnboarded,
+      this.isAugmontOnboarded,
+      this.isSimpleKycVerified,
+      this.isKycVerified,
+      this.kycName,
+      this.pendingTxnId,
+      this.isIciciEnabled,
+      this.isAugmontEnabled,
+      this.username,
+      this.isEmailVerified,
+      this.isBlocked,
+      this.userPreferences,
+      this.createdOn,
+      this.appFlyerId,
+      this.avatarId,
+      this.isOldUser,
+      this.segments,
+      {this.superFelloLevel = SuperFelloLevel.NEW_FELLO,
+      this.minRedemptionAmt = 200,
+      this.subsStatus,
+      this.favAsset,
+      this.doesHaveSubscriptionTransaction = false});
 
   BaseUser.newUser(String id, String mobile)
       : this(
@@ -140,38 +142,39 @@ class BaseUser {
 
   BaseUser.fromMap(Map<String, dynamic> data, String id, [String? client_token])
       : this(
-          id,
-          data[fldMobile]?.toString() ?? '',
-          data[fldEmail]?.toString() ?? '',
-          data[fldName]?.toString() ?? '',
-          data[fldDob]?.toString() ?? '',
-          data[fldGender]?.toString().toUpperCase() ?? '',
-          client_token?.toString() ?? '',
-          data[fldIsInvested] ?? false,
-          data[fldIsIciciOnboarded],
-          data[fldIsAugmontOnboarded] ?? false,
-          data[fldIsSimpleKycVerified] ?? false,
-          data[fldIsKycVerified] ?? 0,
-          data[fldKycName] ?? '',
-          data[fldPendingTxnId] ?? '',
-          data[fldIsIciciEnabled] ?? false,
-          data[fldIsAugmontEnabled] ?? false,
-          data[fldUsername]?.toString() ?? '',
-          data[fldIsEmailVerified] ?? false,
-          data[fldIsBlocked] ?? false,
-          UserPreferences(data[fldUserPrefs]),
-          TimestampModel.fromMap(data[fldCreatedOn]),
-          data[fldAppFlyerId] ?? '',
-          data[fldAvatarId] ?? '',
-          data[fldIsOldUser] ?? false,
-          data['mSegments'] ?? [],
-          minRedemptionAmt: data[fieldMinRedemptionAmt] ?? 200,
-          superFelloLevel: data[fieldSuperFelloLevel] != null
-              ? _$UserBadgeLevelEnumMap[data[fieldSuperFelloLevel]]!
-              : SuperFelloLevel.NEW_FELLO,
-          subsStatus: data[fieldSubscriptionStatus],
-          favAsset: data[fieldFavAsset],
-        );
+            id,
+            data[fldMobile]?.toString() ?? '',
+            data[fldEmail]?.toString() ?? '',
+            data[fldName]?.toString() ?? '',
+            data[fldDob]?.toString() ?? '',
+            data[fldGender]?.toString().toUpperCase() ?? '',
+            client_token?.toString() ?? '',
+            data[fldIsInvested] ?? false,
+            data[fldIsIciciOnboarded],
+            data[fldIsAugmontOnboarded] ?? false,
+            data[fldIsSimpleKycVerified] ?? false,
+            data[fldIsKycVerified] ?? 0,
+            data[fldKycName] ?? '',
+            data[fldPendingTxnId] ?? '',
+            data[fldIsIciciEnabled] ?? false,
+            data[fldIsAugmontEnabled] ?? false,
+            data[fldUsername]?.toString() ?? '',
+            data[fldIsEmailVerified] ?? false,
+            data[fldIsBlocked] ?? false,
+            UserPreferences(data[fldUserPrefs]),
+            TimestampModel.fromMap(data[fldCreatedOn]),
+            data[fldAppFlyerId] ?? '',
+            data[fldAvatarId] ?? '',
+            data[fldIsOldUser] ?? false,
+            data['mSegments'] ?? [],
+            minRedemptionAmt: data[fieldMinRedemptionAmt] ?? 200,
+            superFelloLevel: data[fieldSuperFelloLevel] != null
+                ? _$UserBadgeLevelEnumMap[data[fieldSuperFelloLevel]]!
+                : SuperFelloLevel.NEW_FELLO,
+            subsStatus: data[fieldSubscriptionStatus],
+            favAsset: data[fieldFavAsset],
+            doesHaveSubscriptionTransaction:
+                data[doesHaveSubscriptionTxn] ?? false);
 
   bool hasIncompleteDetails() {
     return (mobile?.isEmpty ?? true) || (name?.isEmpty ?? true);

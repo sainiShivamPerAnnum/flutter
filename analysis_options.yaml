@@ -130,6 +130,7 @@ linter:
     - use_to_and_as_if_applicable
     - valid_regexps
     - void_checks
+    - require_trailing_commas
 
 dart_code_metrics:
   metrics:

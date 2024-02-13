@@ -352,6 +352,10 @@ class AnalyticsEvents {
   static const howToEarnRewards = 'How to earn rewards cards clicked';
   static const earnRewardsClicked = 'Earn rewards clicked';
 
+
+  //Gold Pro Auto Lease
+  static const goldProAutoLeaseToggle = 'Gold pro auto lease toggle';
+  
   static const sipSummaryTicketClicked = "Tickets Click";
   static const sipSummaryGtClicked = "Scratch Card Click";
   static const sipSummaryButtonClicked = "Check Rewards click";
@@ -359,4 +363,5 @@ class AnalyticsEvents {
 
   static const editSipOption = "Edit SIP Options";
   static const pauseSipOption = "Pause SIP Confirm";
+
 }

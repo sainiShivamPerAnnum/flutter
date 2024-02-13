@@ -138,19 +138,20 @@ class TransactionsHistoryViewModel extends BaseViewModel {
     } else {
       filteredList = [];
     }
+    final bool? doesHaveSubscriptionTransaction =
+        locator<UserService>().baseUser?.doesHaveSubscriptionTransaction;
 
-    if (_subscriptionService.subscriptionData != null) {
-//  if (investmentType == InvestmentType.AUGGOLD99)
-      _sipScrollController!.addListener(() async {
-        if (_sipScrollController!.offset >=
-                _sipScrollController!.position.maxScrollExtent &&
-            !_sipScrollController!.position.outOfRange) {
-          if (!_subscriptionService.hasNoMoreAugSubsTxns &&
-              state == ViewState.Idle) {
-            getMoreSipTransactions(investmentType!);
-          }
+    _sipScrollController!.addListener(() async {
+      if (_sipScrollController!.offset >=
+              _sipScrollController!.position.maxScrollExtent &&
+          !_sipScrollController!.position.outOfRange) {
+        if (state == ViewState.Idle &&
+            (doesHaveSubscriptionTransaction ?? false)) {
+          getMoreSipTransactions(investmentType!);
         }
-      });
+      }
+    });
+    if ((doesHaveSubscriptionTransaction ?? false)) {
       getLatestSIPTransactions(investmentType!);
     }
 
@@ -257,40 +258,37 @@ class TransactionsHistoryViewModel extends BaseViewModel {
     if (update && filteredList!.length < 30) getMoreTransactions();
   }
 
-  getLatestSIPTransactions(InvestmentType asset) async {
+  Future<void> getLatestSIPTransactions(InvestmentType asset) async {
     setState(ViewState.Busy);
+
     activeSubscription = _subscriptionService.subscriptionData;
+
     if (activeSubscription == null) {
       setState(ViewState.Idle);
       return;
     }
+
     await _subscriptionService.getSubscriptionTransactionHistory(
         asset: asset.name);
-    if (asset == InvestmentType.AUGGOLD99) {
-      filteredSIPList = _subscriptionService.augSubTxnList;
-    } else {
-      filteredSIPList = _subscriptionService.lbSubTxnList;
-    }
+
+    filteredSIPList = (asset == InvestmentType.AUGGOLD99)
+        ? _subscriptionService.augSubTxnList
+        : _subscriptionService.lbSubTxnList;
 
     setState(ViewState.Idle);
   }
 
-  getMoreSipTransactions(InvestmentType asset) async {
-    if (asset == InvestmentType.AUGGOLD99) {
-      if (!_subscriptionService.hasNoMoreAugSubsTxns) {
-        isMoreTxnsBeingFetched = true;
-        await _subscriptionService.getSubscriptionTransactionHistory(
-            paginate: true, asset: asset.name);
-        isMoreTxnsBeingFetched = false;
-        _filteredSIPList = _subscriptionService.augSubTxnList;
-      }
+  Future<void> getMoreSipTransactions(InvestmentType asset) async {
+    isMoreTxnsBeingFetched = true;
+    await _subscriptionService.getSubscriptionTransactionHistory(
+        paginate: true, asset: asset.name);
+    isMoreTxnsBeingFetched = false;
+
+    if (asset == InvestmentType.AUGGOLD99 &&
+        !_subscriptionService.hasNoMoreAugSubsTxns) {
+      _filteredSIPList = _subscriptionService.augSubTxnList;
     } else {
       if (!_subscriptionService.hasNoMoreLbSubsTxns) {
-        isMoreTxnsBeingFetched = true;
-        await _subscriptionService.getSubscriptionTransactionHistory(
-            paginate: true, asset: asset.name);
-        isMoreTxnsBeingFetched = false;
-
         _filteredSIPList = _subscriptionService.lbSubTxnList;
       }
     }
