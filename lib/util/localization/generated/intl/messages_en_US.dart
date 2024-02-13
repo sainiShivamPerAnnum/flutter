@@ -436,7 +436,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "exceededOTPs": MessageLookupByLibrary.simpleMessage(
             "You have exceeded the number of allowed OTP attempts. Please try again in sometime"),
         "existingMandate": MessageLookupByLibrary.simpleMessage(
-            "Your SIP amount will be deducted fro your existing mandate . No new mandate will be created for this SIP"),
+            "Your SIP amount will be deducted from your existing mandate. No new mandate will be created for this SIP"),
         "existingSip":
             MessageLookupByLibrary.simpleMessage("Your Existing SIP"),
         "expectedReturns5y":
@@ -913,7 +913,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "onboardingTitle3":
             MessageLookupByLibrary.simpleMessage("Win Rs.1 Crore!"),
         "onboradButton": MessageLookupByLibrary.simpleMessage("GET STARTED"),
-        "oneClickAway": MessageLookupByLibrary.simpleMessage("1 CLICKS AWAY"),
+        "oneClickAway": MessageLookupByLibrary.simpleMessage("1 CLICK AWAY"),
         "oneMonth": MessageLookupByLibrary.simpleMessage("1 Month"),
         "oneScratchCard":
             MessageLookupByLibrary.simpleMessage("1 Scratch\nCard"),

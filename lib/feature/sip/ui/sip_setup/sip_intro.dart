@@ -541,30 +541,31 @@ class _SipCalculatorState extends State<SipCalculator>
   }
 
   void changeTimePeriod(String value) {
-    _formKey.currentState!.validate();
+    // _formKey.currentState!.validate();
     int? time = int.tryParse(value);
     if (time != null) {
       timePeriod = time > maxTimePeriod ? maxTimePeriod : time;
     }
     setState(() {});
+    // _formKey.currentState!.validate();
   }
 
   void changeSIPAmount(String value) {
-    _formKey.currentState!.validate();
     int? amount = int.tryParse(value);
     if (amount != null) {
       sipAmount = amount > maxSipValue ? maxSipValue : amount;
     }
     setState(() {});
+    // _formKey.currentState!.validate();
   }
 
   void changeRateOfInterest(String value) {
-    _formKey.currentState!.validate();
     int? roi = int.tryParse(value);
     if (roi != null) {
       returnPercentage = roi > 30 ? 30 : roi;
     }
     setState(() {});
+    _formKey.currentState!.validate();
   }
 
   void _sendEvent() {
@@ -706,17 +707,15 @@ class _SipCalculatorState extends State<SipCalculator>
                           .colour(UiConstants.kTextColor),
                     ),
                     Text(
-                      // _formKey.currentState!.validate()
-                      // ?
-                      '₹${SipCalculation.getReturn(
-                        formAmount: sipAmount,
-                        interestSelection: returnPercentage,
-                        numberOfYears: timePeriod,
-                        currentTab: tabController.index,
-                        interestOnly: false,
-                      )}'
-                      // : "-"
-                      ,
+                      _formKey.currentState?.validate() ?? false
+                          ? '₹${SipCalculation.getReturn(
+                              formAmount: sipAmount,
+                              interestSelection: returnPercentage,
+                              numberOfYears: timePeriod,
+                              currentTab: tabController.index,
+                              interestOnly: false,
+                            )}'
+                          : "-",
                       style: TextStyles.sourceSansSB.title5
                           .colour(UiConstants.kTabBorderColor),
                     ),

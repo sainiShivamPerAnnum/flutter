@@ -166,7 +166,7 @@ class AssetSelectionPage extends StatelessWidget {
                       top: SizeConfig.padding14,
                     ),
                     child: GoldPlanWidget(
-                      fetchGoldRate: !showFlo,
+                      fetchGoldRate: showGold,
                       isSkipMl: isSkipMl,
                       amount: amount,
                     ),

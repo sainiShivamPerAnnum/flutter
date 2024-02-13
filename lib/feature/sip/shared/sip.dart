@@ -126,8 +126,8 @@ class _CalculatorFieldState extends State<CalculatorField> {
                           BorderRadius.circular(SizeConfig.roundness12),
                     ),
                     errorBorder: OutlineInputBorder(
-                      borderSide:
-                          const BorderSide(color: UiConstants.errorText),
+                      borderSide: const BorderSide(
+                          color: UiConstants.kErrorBorderColor),
                       borderRadius:
                           BorderRadius.circular(SizeConfig.roundness12),
                     ),

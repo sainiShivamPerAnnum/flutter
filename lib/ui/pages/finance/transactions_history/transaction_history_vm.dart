@@ -47,13 +47,13 @@ class TransactionsHistoryViewModel extends BaseViewModel {
   int _tabIndex = 0;
   int get filter => _filter;
   String? get filterValue => _filterValue;
-  Subscriptions? _activeSubscription;
+  // Subscriptions? _activeSubscription;
   List<SubscriptionTransactionModel>? _filteredSIPList = [];
   bool _hasMoreSIPTxns = false;
 
   // Map<String, int> get tranTypeFilterItems => _tranTypeFilterItems;
 
-  Subscriptions? get activeSubscription => _activeSubscription;
+  // Subscriptions? get activeSubscription => _activeSubscription;
   List<String?> get tranTypeFilterItems => _tranTypeFilterItems;
   List<UserTransaction>? get filteredList => _filteredList;
   List<SubscriptionTransactionModel>? get filteredSIPList => _filteredSIPList;
@@ -104,10 +104,10 @@ class TransactionsHistoryViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  set activeSubscription(value) {
-    _activeSubscription = value;
-    notifyListeners();
-  }
+  // set activeSubscription(value) {
+  //   _activeSubscription = value;
+  //   notifyListeners();
+  // }
 
   set setHasMoreTxns(bool hasMoreTxns) {
     _hasMoreSIPTxns = hasMoreTxns;
@@ -261,12 +261,12 @@ class TransactionsHistoryViewModel extends BaseViewModel {
   Future<void> getLatestSIPTransactions(InvestmentType asset) async {
     setState(ViewState.Busy);
 
-    activeSubscription = _subscriptionService.subscriptionData;
+    // activeSubscription = _subscriptionService.subscriptionData;
 
-    if (activeSubscription == null) {
-      setState(ViewState.Idle);
-      return;
-    }
+    // if (activeSubscription == null) {
+    //   setState(ViewState.Idle);
+    //   return;
+    // }
 
     await _subscriptionService.getSubscriptionTransactionHistory(
         asset: asset.name);
