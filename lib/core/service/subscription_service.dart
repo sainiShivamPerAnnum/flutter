@@ -154,9 +154,6 @@ class SubService extends ChangeNotifier {
     hasNoMoreSubsTxns = false;
     timer?.cancel();
     allSubTxnList = [];
-
-    ///TODO(@Hirdesh2101)
-    // autosaveState = AutosaveState.IDLE;
     allSubTxnList = [];
     lbSubTxnList = [];
     augSubTxnList = [];
@@ -165,68 +162,6 @@ class SubService extends ChangeNotifier {
     hasNoMoreAugSubsTxns = false;
     selectedUpiApplicationName = null;
   }
-
-  // SUBSCRIPTION SERVICE CORE METHODS - END
-
-  // SUBSCRIPTION CORE METHODS - START
-
-  // Future<void> createSubscription({
-  //   required String freq,
-  //   required num lbAmt,
-  //   required num augAmt,
-  //   required num amount,
-  //   required String package,
-  // }) async {
-  //   final res = await _subscriptionRepo.createSubscription(
-  //     amount: amount,
-  //     freq: freq,
-  //     lbAmt: lbAmt,
-  //     package: package,
-  //     augAmt: augAmt,
-  //   );
-
-  //   if (res.isSuccess()) {
-  //     final intent = res.model!.data.intent;
-  //     final intentUrl = intent.redirectUrl;
-  //     final id = intent.subId;
-  //     if (intentUrl.isNotEmpty) {
-  //       try {
-  //         if (Platform.isIOS) {
-  //           await BaseUtil.launchUrl(intentUrl);
-  //           return;
-  //         } else {
-  //           const platform = MethodChannel("methodChannel/upiIntent");
-  //           final result = await platform.invokeMethod('initiatePsp', {
-  //             'redirectUrl': res.model,
-  //             'packageName': FlavorConfig.isDevelopment()
-  //                 ? "com.phonepe.app.preprod"
-  //                 : package
-  //           });
-  //           log("Result from initiatePsp: $result");
-  //         }
-  //       } catch (e) {
-  //         _logger.e("Create subscription failed: Platform Exception");
-  //       }
-
-  //       if (subscriptionData != null) {
-  //         final result = await pollForSubscriptionStatus(id);
-  //         final data = result.model?.data;
-  //         if (result.isSuccess() && data != null) {
-  //           if (data.status.isActive) {}
-
-  //           if (data.status.isCancelled) {}
-  //         } else {
-  //           _logger.d('Something went wrong while creating subscription');
-  //         }
-  //       }
-  //     }
-  //   } else {
-  //     BaseUtil.showNegativeAlert(
-  //       res.errorMessage,
-  //       "Please try after sometime",
-  //     );
-  //   }
-  // }
 
   Future<ApiResponse<SubscriptionStatusResponse>> pollForSubscriptionStatus(
     String subscriptionKey,
@@ -312,7 +247,6 @@ class SubService extends ChangeNotifier {
         await _subscriptionRepo.pauseSubscription(option: option, id: id);
     isPauseOrResuming = false;
     if (res.isSuccess()) {
-      BaseUtil.showPositiveAlert(locale.pauseSuccess, locale.pauseSuccessSub);
       return true;
     } else {
       BaseUtil.showNegativeAlert(res.errorMessage, locale.tryAgain);
@@ -326,8 +260,6 @@ class SubService extends ChangeNotifier {
     final res = await _subscriptionRepo.resumeSubscription(id);
     isPauseOrResuming = false;
     if (res.isSuccess()) {
-      BaseUtil.showPositiveAlert(
-          "SIP resumed successfully", "For more details check SIP section");
       return true;
     } else {
       BaseUtil.showNegativeAlert(res.errorMessage, "Please try again");

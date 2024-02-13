@@ -112,7 +112,7 @@ class _SipMandatePage extends StatelessWidget {
 }
 
 class MandateStepView extends StatelessWidget {
-  const MandateStepView({
+  MandateStepView({
     super.key,
     required this.pspApps,
     required this.amount,
@@ -124,6 +124,7 @@ class MandateStepView extends StatelessWidget {
   final num amount;
   final String frequency;
   final SIPAssetTypes assetType;
+  final locale = locator<S>();
   final ListedPSPApps state;
 
   @override
@@ -132,81 +133,88 @@ class MandateStepView extends StatelessWidget {
       padding: EdgeInsets.symmetric(
         horizontal: SizeConfig.pageHorizontalMargins,
       ),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          SizedBox(
-            height: SizeConfig.padding22,
-          ),
-          Text(
-            'Set up UPI Mandate:',
-            style: TextStyles.rajdhaniSB.title5,
-          ),
-          SizedBox(
-            height: SizeConfig.padding3,
-          ),
-          Text(
-            'Just a click away',
-            style: TextStyles.rajdhaniSB.body2.colour(
-              UiConstants.grey1,
+      child: SingleChildScrollView(
+        child: Column(
+          crossAxisAlignment: CrossAxisAlignment.start,
+          children: [
+            SizedBox(
+              height: SizeConfig.padding22,
             ),
-          ),
-          SizedBox(
-            height: SizeConfig.padding32,
-          ),
-          SelectUPIApplicationSection(
-            upiApps: pspApps,
-            onSelectApplication: (meta) {
-              final event = CreateSubscription.fromAssetType(
-                assetType,
-                freq: frequency,
-                meta: meta,
-                assetType: assetType.name,
-                value: amount.toInt(),
-              );
-
-              context.read<MandateBloc>().add(event);
-            },
-          ),
-          SizedBox(
-            height: SizeConfig.padding32,
-          ),
-          const AllowUPIMandateSection(),
-          SizedBox(
-            height: SizeConfig.padding32,
-          ),
-          Align(
-            alignment: Alignment.center,
-            child: Text(
-              '3. Enter UPI pin and you are done',
-              style: TextStyles.rajdhaniSB.body1,
+            Text(
+              locale.setUpMandate,
+              style: TextStyles.rajdhaniSB.title5,
             ),
-          ),
-          const Spacer(),
-          switch (state.transactionStatus) {
-            Creating() => const LinearProgressIndicator(
-                color: UiConstants.primaryColor,
-                backgroundColor: UiConstants.kDarkBackgroundColor,
+            SizedBox(
+              height: SizeConfig.padding3,
+            ),
+            Text(
+              locale.jstAClickAway,
+              style: TextStyles.rajdhaniSB.body2.colour(
+                UiConstants.grey1,
               ),
-            _ => const SizedBox.shrink(),
-          },
-          SizedBox(
-            height: SizeConfig.padding40,
-          ),
-        ],
+            ),
+            SizedBox(
+              height: SizeConfig.padding32,
+            ),
+            SelectUPIApplicationSection(
+              upiApps: pspApps,
+              onSelectApplication: (meta) {
+                if (state case ListedPSPApps(:final isTransactionInProgress)
+                    when !isTransactionInProgress) {
+                  final event = CreateSubscription.fromAssetType(
+                    assetType,
+                    freq: frequency,
+                    meta: meta,
+                    assetType: assetType.name,
+                    value: amount.toInt(),
+                  );
+                  context.read<MandateBloc>().add(event);
+                }
+              },
+            ),
+            SizedBox(
+              height: SizeConfig.padding32,
+            ),
+            AllowUPIMandateSection(),
+            SizedBox(
+              height: SizeConfig.padding32,
+            ),
+            Align(
+              alignment: Alignment.center,
+              child: Text(
+                locale.enterUPIpin,
+                style: TextStyles.rajdhaniSB.body1,
+              ),
+            ),
+            SizedBox(
+              height: SizeConfig.padding32,
+            ),
+            switch (state.transactionStatus) {
+              Creating() => const LinearProgressIndicator(
+                  color: UiConstants.primaryColor,
+                  backgroundColor: UiConstants.kDarkBackgroundColor,
+                ),
+              _ => const SizedBox.shrink(),
+            },
+            SizedBox(
+              height: SizeConfig.padding40,
+            ),
+          ],
+        ),
       ),
     );
   }
 }
 
 class SelectUPIApplicationSection extends StatelessWidget {
-  const SelectUPIApplicationSection({
+  SelectUPIApplicationSection({
     required this.onSelectApplication,
     super.key,
     this.upiApps = const [],
   });
 
   final List<ApplicationMeta> upiApps;
+  final locale = locator<S>();
   final ValueChanged<ApplicationMeta> onSelectApplication;
 
   @override
@@ -215,7 +223,7 @@ class SelectUPIApplicationSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Text(
-          '1. Select preferred UPI application',
+          locale.mandateStep1,
           style: TextStyles.rajdhaniSB.body1,
         ),
         SizedBox(
@@ -225,7 +233,7 @@ class SelectUPIApplicationSection extends StatelessWidget {
           Align(
             alignment: Alignment.center,
             child: Text(
-              'No upi apps found',
+              locale.noUpiAppFound,
               style: TextStyles.rajdhaniSB.body1,
             ),
           )
@@ -306,7 +314,8 @@ class _PspAppContainer extends StatelessWidget {
 }
 
 class AllowUPIMandateSection extends StatelessWidget {
-  const AllowUPIMandateSection({super.key});
+  AllowUPIMandateSection({super.key});
+  final locale = locator<S>();
 
   @override
   Widget build(BuildContext context) {
@@ -314,7 +323,7 @@ class AllowUPIMandateSection extends StatelessWidget {
       crossAxisAlignment: CrossAxisAlignment.center,
       children: [
         Text(
-          '2. Allow UPI Mandate.',
+          locale.step2Mandate,
           style: TextStyles.rajdhaniSB.body1,
         ),
         SizedBox(
@@ -346,7 +355,7 @@ class AllowUPIMandateSection extends StatelessWidget {
                 child: Column(
                   children: [
                     Text(
-                      'You will receive a mandate for ₹5000 on the selected UPI App. But don’t worry, We will not deduct anymore than ₹1100/week.',
+                      locale.newMandate,
                       style: TextStyles.sourceSans.body4
                           .colour(UiConstants.kTextColor2),
                     ),

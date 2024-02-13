@@ -509,7 +509,7 @@ class BaseUtil extends ChangeNotifier {
       case '2':
         return "Move to ${isFrom10 ? 8 : 10}% Flo after maturity";
       default:
-        return "Move to 8% Flo after maturity";
+        return "Move to ${isFrom10 ? 8 : 10}% Flo after maturity";
     }
   }
 

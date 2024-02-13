@@ -12,7 +12,7 @@ class SipAmount {
   @JsonKey(name: "default")
   final int defaultValue;
 
-  SipAmount(
+  const SipAmount(
       {this.min = 0,
       this.max = 1000,
       this.multiples = 1,

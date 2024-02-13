@@ -299,22 +299,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
           _addPageData(ScratchCardsView(model: locator<ScratchCardService>()),
               ScratchCardsViewPageConfig);
           break;
-        // case Pages.AutosaveOnboardingView:
-        //   _addPageData(
-        //       const AutosaveOnboardingView(), AutosaveOnboardingViewPageConfig);
-        //   break;
-        // case Pages.AutosaveProcessView:
-        //   _addPageData(
-        //       const AutosaveProcessView(), AutosaveProcessViewPageConfig);
-        //   break;
-        // case Pages.AutosaveDetailsView:
-        //   _addPageData(
-        //       const AutosaveDetailsView(), AutosaveDetailsViewPageConfig);
-        //   break;
-        // case Pages.AutosaveUpdateView:
-        //   _addPageData(
-        //       const AutosaveUpdateView(), AutosaveUpdateViewPageConfig);
-        //   break;
         case Pages.JourneyView:
           _addPageData(const JourneyView(), JourneyViewPageConfig);
           break;
@@ -661,9 +645,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.CampaignView:
         CampaignViewPageConfig.currentPageAction = action;
         break;
-      // case Pages.SaveAssetView:
-      //   SaveAssetsViewConfig.currentPageAction = action;
-      //   break;
       case Pages.SellConfirmationView:
         SellConfirmationViewConfig.currentPageAction = action;
         break;

@@ -11,7 +11,7 @@ class SipAmountDetails {
   final int numberOfPeriodsPerYear;
   final List<SipOptions> options;
 
-  SipAmountDetails(
+  const SipAmountDetails(
       {this.minamount = 0,
       this.numberOfPeriodsPerYear = 1,
       this.options = const []});

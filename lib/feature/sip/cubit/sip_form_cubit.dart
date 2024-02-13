@@ -24,15 +24,13 @@ class SipFormCubit extends Cubit<SipFormState> {
   final AnalyticsService _analyticsService = locator<AnalyticsService>();
 
   void setAmount(int amount) {
-    final currentState = state;
-    if (currentState is SipFormCubitState) {
-      emit(currentState.copyWith(formAmount: amount));
+    if (state is SipFormCubitState) {
+      emit((state as SipFormCubitState).copyWith(formAmount: amount));
     }
   }
 
   void onTabChange(int index) {
-    final currentState = state;
-    if (currentState is SipFormCubitState) {
+    if (state is SipFormCubitState) {
       List<String> tabOptions =
           SipDataHolder.instance.data.amountSelectionScreen.options;
       List<SipOptions> options = SipDataHolder
@@ -42,7 +40,7 @@ class SipFormCubit extends Cubit<SipFormState> {
       int _upperLimit = maxValueOption.value;
       int _division = options.length;
       int currentAmount = options.firstWhere((option) => option.best).value;
-      emit(currentState.copyWith(
+      emit((state as SipFormCubitState).copyWith(
           currentTab: index,
           bestOption: options.firstWhere((option) => option.best),
           division: options.length,
@@ -76,17 +74,17 @@ class SipFormCubit extends Cubit<SipFormState> {
 
   Future<bool> editSipTrigger(
       num principalAmount, String frequency, String id) async {
-    final currentState = state;
-    if (currentState is SipFormCubitState) {
-      emit(currentState.copyWith(isLoading: true));
+    if (state is SipFormCubitState) {
+      emit((state as SipFormCubitState).copyWith(isLoading: true));
       bool response = await _subService.updateSubscription(
           freq: frequency, amount: principalAmount.toInt(), id: id);
-      if (!response) {
+      bool resumeResponse = await _subService.resumeSubscription(id);
+      if (!response && !resumeResponse) {
         BaseUtil.showNegativeAlert("Failed to update SIP", "Please try again");
-        emit(currentState.copyWith(isLoading: false));
+        emit((state as SipFormCubitState).copyWith(isLoading: false));
         return false;
       } else {
-        emit(currentState.copyWith(isLoading: false));
+        emit((state as SipFormCubitState).copyWith(isLoading: false));
         BaseUtil.showPositiveAlert("Subscription updated successfully",
             "Effective changes will take place from tomorrow");
         await AppState.backButtonDispatcher!.didPopRoute();
@@ -102,9 +100,8 @@ class SipFormCubit extends Cubit<SipFormState> {
     required String freq,
     required SIPAssetTypes assetType,
   }) async {
-    final currentState = state;
-    if (currentState is SipFormCubitState) {
-      emit(currentState.copyWith(isLoading: true));
+    if (state is SipFormCubitState) {
+      emit((state as SipFormCubitState).copyWith(isLoading: true));
 
       final response = await _subscriptionRepo.createSubscription(
         freq: freq,
@@ -126,7 +123,7 @@ class SipFormCubit extends Cubit<SipFormState> {
           ),
         );
       } else {
-        emit(currentState.copyWith(isLoading: false));
+        emit((state as SipFormCubitState).copyWith(isLoading: false));
         BaseUtil.showNegativeAlert(
           'Failed to create subscription',
           response.errorMessage,

@@ -13,7 +13,7 @@ class SipData {
   final CalculatorScreen calculatorScreen;
   final SipAmountSelection amountSelectionScreen;
 
-  SipData(
+  const SipData(
       {required this.selectAssetScreen,
       required this.calculatorScreen,
       required this.amountSelectionScreen});

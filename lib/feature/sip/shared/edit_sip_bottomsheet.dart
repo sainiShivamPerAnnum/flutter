@@ -3,6 +3,7 @@ import 'package:felloapp/core/enums/sip_asset_type.dart';
 import 'package:felloapp/core/model/subscription_models/subscription_status.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/feature/sip/cubit/autosave_cubit.dart';
+import 'package:felloapp/feature/sip/shared/interest_calculator.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -19,7 +20,6 @@ class EditSipBottomSheet extends StatefulWidget {
     required this.frequency,
     required this.amount,
     required this.assetType,
-    required this.sipReturns,
     required this.model,
     super.key,
   });
@@ -29,7 +29,6 @@ class EditSipBottomSheet extends StatefulWidget {
   final num amount;
   final String frequency;
   final SIPAssetTypes assetType;
-  final String sipReturns;
   final SipCubit model;
   @override
   State<EditSipBottomSheet> createState() => _EditSipBottomSheetState();
@@ -142,7 +141,6 @@ class _EditSipBottomSheetState extends State<EditSipBottomSheet> {
                         : await widget.model.pause(widget.index);
                     setState(() {
                       _isLoading = false;
-                      // widget.model.getData();
                     });
                   },
                   child: Column(children: [
@@ -173,27 +171,38 @@ class _EditSipBottomSheetState extends State<EditSipBottomSheet> {
                   thickness: 1,
                   color: UiConstants.kProfileBorderColor.withOpacity(0.2),
                 ),
-                Padding(
-                  padding: EdgeInsets.only(
+                if (widget.allowEdit)
+                  Padding(
+                    padding: EdgeInsets.only(
                       left: SizeConfig.padding6,
                       top: SizeConfig.padding22,
-                      bottom: SizeConfig.padding28),
-                  child: Row(
-                    children: [
-                      Container(
-                        height: SizeConfig.padding4,
-                        width: SizeConfig.padding4,
-                        decoration: const BoxDecoration(
-                            shape: BoxShape.circle, color: UiConstants.teal3),
-                      ),
-                      SizedBox(
-                        width: SizeConfig.padding6,
-                      ),
-                      Text(locale.sipReturn(widget.sipReturns),
-                          style: TextStyles.sourceSansSB.body3.colour(
-                              UiConstants.kModalSheetMutedTextBackgroundColor))
-                    ],
+                    ),
+                    child: Row(
+                      children: [
+                        Container(
+                          height: SizeConfig.padding4,
+                          width: SizeConfig.padding4,
+                          decoration: const BoxDecoration(
+                              shape: BoxShape.circle, color: UiConstants.teal3),
+                        ),
+                        SizedBox(
+                          width: SizeConfig.padding6,
+                        ),
+                        Text(
+                            locale.sipReturn(SipCalculation.getReturn(
+                              formAmount: widget.amount.toInt(),
+                              currentAsset: widget.assetType,
+                              interestOnly: true,
+                              frequency: widget.frequency,
+                            )),
+                            style: TextStyles.sourceSansSB.body3.colour(
+                                UiConstants
+                                    .kModalSheetMutedTextBackgroundColor))
+                      ],
+                    ),
                   ),
+                SizedBox(
+                  height: SizeConfig.padding28,
                 )
               ],
             ),

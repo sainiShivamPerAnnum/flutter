@@ -15,7 +15,7 @@ class AssetOptions {
   final SIPAssetTypes type;
   final num interest;
 
-  AssetOptions(
+  const AssetOptions(
       {this.title = '',
       this.imageUrl = '',
       this.subText = '',

@@ -59,7 +59,7 @@ class SubscriptionRepo extends BaseRepo {
     required num amount,
     required num lbAmt,
     required num augAmt,
-    required String assetType, //TODO(@DK070202) enum if possible.
+    required String assetType,
     String? package,
   }) async {
     try {
@@ -68,8 +68,8 @@ class SubscriptionRepo extends BaseRepo {
         "lbAmt": lbAmt,
         "augAmt": augAmt,
         "frequency": freq,
-        "assetType": assetType, //TODO(@DK070202): remove this.
-        "pspPackage": 'com.phonepe.app.preprod', //TODO(@DK070202): remove this.
+        "assetType": assetType,
+        if (package != null) "pspPackage": package,
       };
 
       if (package != null && package.toLowerCase().contains('phonepe')) {
@@ -127,8 +127,6 @@ class SubscriptionRepo extends BaseRepo {
     }
   }
 
-  /// TODO: Rremove this api as there will be array of object in new api.
-  ///
   Future<ApiResponse<Subscriptions>> getSubscription() async {
     try {
       final response = await APIService.instance.getData(

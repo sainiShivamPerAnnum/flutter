@@ -76,8 +76,6 @@ import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_buy/gold_pro
 import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_details/gold_pro_details_vm.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_sell/gold_pro_sell_vm.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_sell/gold_sell_vm.dart';
-import 'package:felloapp/ui/pages/finance/autosave/autosave_details/autosave_details_vm.dart';
-import 'package:felloapp/ui/pages/finance/autosave/autosave_setup/autosave_process_vm.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/deposit/lendbox_buy_vm.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/detail_page/flo_premium_details_vm.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/withdrawal/lendbox_withdrawal_vm.dart';
@@ -254,8 +252,6 @@ Future<void> setupLocator() async {
   locator.registerFactory(GTInstantViewModel.new);
   locator.registerFactory(MultipleScratchCardsViewModel.new);
   locator.registerFactory(TopSaverViewModel.new);
-  // locator.registerFactory(AutosaveProcessViewModel.new);
-  // locator.registerFactory(AutosaveDetailsViewModel.new);
   locator.registerFactory(CampaignRepo.new);
   locator.registerFactory(OnboardingViewModel.new);
   locator.registerFactory(JourneyBannersViewModel.new);
@@ -281,6 +277,5 @@ Future<void> setupLocator() async {
   locator.registerFactory(FloPremiumDetailsViewModel.new);
   locator.registerFactory(AssetPreferenceViewModel.new);
 
-  // locator.registerFactory<UsernameInputViewModel>(() => UsernameInputViewModel());
   await locator.allReady();
 }

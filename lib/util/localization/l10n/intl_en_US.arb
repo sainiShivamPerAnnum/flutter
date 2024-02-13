@@ -995,7 +995,7 @@
     }
   },
   "existingMandate": "Your SIP amount will be deducted fro your existing mandate . No new mandate will be created for this SIP",
-  "newMandate": "You will receive a mandate for ₹5000 on the selected UPI App. But don’t worry, We will not deduct anymore than your SIP amount.",
+  "newMandate": "You will receive a mandate for ₹15000 on the selected UPI App. But don’t worry, We will not deduct anymore than your SIP amount.",
   "updateSip": "UPDATE SIP",
   "oneClickAway": "1 CLICKS AWAY",
   "twoClickAway": "2 CLICKS AWAY",
@@ -1010,12 +1010,11 @@
   "pauseSip": "Paused SIP",
   "editSip": "Edit SIP",
   "clickToResumeSip": "Click on card to Resume SIP",
-  "SipCalculator":"SIP Calculator",
+  "SipCalculator": "SIP Calculator",
   "returnsCalculator": "Calculate your SIP returns",
-  "sipAmount": "SIP Amount -",
   "timePeriod": "Time Period",
   "rpSip": "Return Percentage",
-  "yourMoneySip": "Your Money in {timePeriod} Years-",
+  "yourMoneySip": "Your Money in {timePeriod} Years",
   "@yourMoneySip": {
     "placeholders": {
       "timePeriod": {
@@ -1047,7 +1046,7 @@
   "setupSip": "Setup SIP",
   "setupCardTitle": "Start your SIP & Grow money on autopilot",
   "setupCardSubTitle": "Invest in Fello Flo or Digital Gold to meet your financial Goals",
-  "sipYear": "Year",
+  "sipYear": "Years",
   "pauseSuccess": "SIP paused successfully",
   "pauseSuccessSub": "For more details check SIP section",
   "pauseFail": "Failed to pause SIP",
@@ -1059,5 +1058,24 @@
   "oneMonth": "1 Month",
   "indefinitely": "Indefinitely",
   "manageSip": "Manage SIP",
-  "viewSIPTransac" :"View SIP Transactions"
+  "viewSIPTransac": "View SIP Transactions",
+  "setUpMandate": "Set up UPI Mandate:",
+  "jstAClickAway": "Just a click away",
+  "enterUPIpin": "3. Enter UPI pin and you are done",
+  "mandateStep1": "1. Select preferred UPI application",
+  "noUpiAppFound": "No upi apps found",
+  "step2Mandate": "2. Allow UPI Mandate.",
+  "sipSummary": "Your SIP Summary",
+  "checkYourRewards": "CHECK YOUR REWARDS",
+  "viewSip": "VIEW SIP",
+  "sipGt": "Scratch Card",
+  "sipTicket": "Tickets",
+  "startedSip": "Started on {date}",
+  "@startedSip": {
+    "placeholders": {
+      "date": {
+        "type": "String"
+      }
+    }
+  }
 }

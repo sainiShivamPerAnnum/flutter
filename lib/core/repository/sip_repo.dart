@@ -6,15 +6,15 @@ import 'package:felloapp/util/flavor_config.dart';
 
 class SipRepository extends BaseRepo {
   String baseUrl = FlavorConfig.isProduction()
-      ? "https://2z48o79cm5.execute-api.ap-south-1.amazonaws.com/prod"
-      : "https://2je5zoqtuc.execute-api.ap-south-1.amazonaws.com/dev";
+      ? "https://d11q4cti75qmcp.cloudfront.net/sip.json"
+      : "https://d18gbwu7fwwwtf.cloudfront.net/sip.json";
 
   static const _subscription = 'subscription';
 
   Future<ApiResponse<SipData>> getSipScreenData() async {
     try {
       final response = await APIService.instance.getData(
-        'https://mocki.io/v1/3d355d03-da34-4a9c-a53f-04529d114410',
+        baseUrl,
         cBaseUrl: '',
         apiName: _subscription,
       );
