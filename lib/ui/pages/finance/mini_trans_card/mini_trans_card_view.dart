@@ -3,7 +3,7 @@ import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
-import 'package:felloapp/core/service/subscription_service.dart';
+import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
@@ -54,37 +54,43 @@ class MiniTransactionCard extends StatelessWidget {
                 children: [
                   model.state == ViewState.Busy || m.txnList == null
                       ? SizedBox(
-                          child: Row(children: [
-                            TitleSubtitleContainer(
-                                title: locale.txns, leadingPadding: false),
-                            const Spacer(),
-                            SizedBox(
-                              width: SizeConfig.avatarRadius,
-                              height: SizeConfig.avatarRadius,
-                              child: const CircularProgressIndicator(
-                                strokeWidth: 0.5,
-                                color: UiConstants.primaryColor,
+                          child: Row(
+                            children: [
+                              TitleSubtitleContainer(
+                                title: locale.txns,
+                                leadingPadding: false,
                               ),
-                            ),
-                            SizedBox(
-                              width: SizeConfig.pageHorizontalMargins * 1.5,
-                            )
-                          ]),
+                              const Spacer(),
+                              SizedBox(
+                                width: SizeConfig.avatarRadius,
+                                height: SizeConfig.avatarRadius,
+                                child: const CircularProgressIndicator(
+                                  strokeWidth: 0.5,
+                                  color: UiConstants.primaryColor,
+                                ),
+                              ),
+                              SizedBox(
+                                width: SizeConfig.pageHorizontalMargins * 1.5,
+                              )
+                            ],
+                          ),
                         )
-                      : (m.txnList!.length == 0
+                      : (m.txnList!.isEmpty
                           ? SizedBox(height: SizeConfig.padding12)
                           : Padding(
                               padding: EdgeInsets.symmetric(
-                                  horizontal: SizeConfig.padding10,
-                                  vertical: SizeConfig.padding10),
+                                horizontal: SizeConfig.padding10,
+                                vertical: SizeConfig.padding10,
+                              ),
                               child: Column(
                                 crossAxisAlignment: CrossAxisAlignment.start,
                                 children: [
                                   Row(
                                     children: [
                                       TitleSubtitleContainer(
-                                          title: locale.txns,
-                                          leadingPadding: false),
+                                        title: locale.txns,
+                                        leadingPadding: false,
+                                      ),
                                       const Spacer(),
                                       model.state == ViewState.Idle &&
                                               m.txnList != null &&
@@ -99,13 +105,15 @@ class MiniTransactionCard extends StatelessWidget {
                                                   locale.btnSeeAll,
                                                   style: TextStyles
                                                       .rajdhaniSB.body2
-                                                      .colour(UiConstants
-                                                          .primaryColor),
+                                                      .colour(
+                                                    UiConstants.primaryColor,
+                                                  ),
                                                 ),
                                               ),
                                               onTap: () =>
                                                   model.viewAllTransaction(
-                                                      investmentType),
+                                                investmentType,
+                                              ),
                                             )
                                           : const SizedBox(),
                                       SizedBox(
@@ -126,7 +134,9 @@ class MiniTransactionCard extends StatelessWidget {
                               ),
                             )),
                   SizedBox(height: SizeConfig.padding12),
-                  if (locator<SubService>().subscriptionData != null)
+                  if (locator<UserService>()
+                      .baseUser!
+                      .doesHaveSubscriptionTransaction)
                     Container(
                       padding: EdgeInsets.only(bottom: SizeConfig.padding16),
                       child: Center(
