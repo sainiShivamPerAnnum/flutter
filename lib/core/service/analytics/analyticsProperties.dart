@@ -1,22 +1,17 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/referral_details_model.dart';
-import 'package:felloapp/core/model/subscription_models/subscription_status.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
-import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/feature/tambola/tambola.dart';
-import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
 
 class AnalyticsProperties {
   //Required depedencies
   static final UserService _userService = locator<UserService>();
   static final UserCoinService _userCoinService = locator<UserCoinService>();
-  // static final PaytmService? _paytmService = locator<PaytmService>();
-  static final SubService _subService = locator<SubService>();
   static final JourneyService _journeyService = locator<JourneyService>();
   static final TxnHistoryService _txnHistoryService =
       locator<TxnHistoryService>();
@@ -118,31 +113,6 @@ class AnalyticsProperties {
     return currentWinning;
   }
 
-  static bool isAutoSIPActive() {
-    ///needs to be discussed with backend!
-    if (_subService.subscriptionData == null) {
-      return false;
-    } else {
-      if (_userService.baseUser!.subsStatus == AutosaveState.ACTIVE.name) {
-        return true;
-      }
-      return false;
-    }
-  }
-
-  static double getAutoSIPAmount() {
-    if (_subService.subscriptionData == null) {
-      return 0.0;
-    } else {
-      num totalAmount = 0;
-      num length = _subService.subscriptionData?.subs.length ?? 0;
-      for (var i = 0; i < length; i++) {
-        totalAmount += _subService.subscriptionData?.subs[i].amount ?? 0;
-      }
-      return totalAmount.toDouble();
-    }
-  }
-
   static String getJouneryCapsuleText() {
     return _journeyService
             .currentMilestoneList[_userService.userJourneyStats!.mlIndex! - 1]
@@ -190,8 +160,6 @@ class AnalyticsProperties {
       "Amount Invested in Gold": getGoldInvestedAmount(),
       "Grams of Gold owned": getGoldQuantityInGrams(),
       "Amount Invested in Flo": getFelloFloAmount(),
-      "Auto SIP done": isAutoSIPActive(),
-      "Auto SIP amount": getAutoSIPAmount(),
       "KYC Verified": isKYCVerified(),
       "Level": getCurrentLevel(),
       "MileStones Completed": getMileStonesCompleted(),
