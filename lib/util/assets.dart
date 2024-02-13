@@ -9,6 +9,8 @@ class Assets {
       'https://ik.imagekit.io/9xfwtu0xm/fello_stories_logo.png';
   static const String logoShortform = 'assets/svg/fello-short-logo.svg';
 
+  static const String bulb = 'assets/vectors/icons/bulb.svg';
+
   static const String referGraphic = 'images/transfer.png';
   static const String augmontGraphic = 'images/augmont.png';
   static const String winnersGraphic = 'images/winners-small.png';
@@ -129,6 +131,7 @@ class Assets {
   static const String floAsset = "assets/svg/fello_flo.svg";
   static const String floWithoutShadow = "assets/svg/flo_without_shadow.svg";
   static const String goldWithoutShadow = "assets/svg/gold_without_shadow.svg";
+  static const String goldAndflo = "assets/svg/gold_and_flo.svg";
 
   static const String goldAsset = "assets/svg/digital_gold.svg";
   static const String icici = "assets/svg/icici.svg";
@@ -443,6 +446,12 @@ class Assets {
   static const String kycSecurity = "assets/images/kyc_security.png";
   static const String stepCircle = "assets/svg/steps_circle.svg";
 
+  static const String editIcon = "assets/vectors/edit_icon.svg";
+  static const String pauseIcon = "assets/vectors/pause_icon.svg";
+  static const String normalChevronLeftArrow =
+      "assets/vectors/normal_chevron_left.svg";
+  static const String normalChevronRightArrow =
+      "assets/vectors/normal_chevron_right.svg";
   //asset-prefs
   static const String assetPrefBottomSheet1 =
       "assets/svg/asset_pref_bottomsheet1.svg";
@@ -459,4 +468,12 @@ class Assets {
   static const String rewardsIntro2 =
       "https://ik.imagekit.io/9xfwtu0xm/rewards/rewards_2.png";
   static const String garbageBin = "assets/vectors/garbage-bin.svg";
+  static const String sipIntroImage =
+      "https://ik.imagekit.io/9xfwtu0xm/sip/sip_intro.png?updatedAt=1706526977156";
+  static const String sipBox = "assets/svg/sip_box.svg";
+  static const String iphone = 'assets/svg/iphone.svg';
+  static const String car = 'assets/svg/car.svg';
+  static const String trip = 'assets/svg/trip.svg';
+  static const String mandate_intro =
+      "https://ik.imagekit.io/9xfwtu0xm/sip/mandate_intro.png?updatedAt=1707312146215";
 }

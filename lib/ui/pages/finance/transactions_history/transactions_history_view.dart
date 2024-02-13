@@ -527,7 +527,7 @@ class TransactionChoiceSelectionTab extends StatelessWidget {
                     height: SizeConfig.padding24,
                     // width: SizeConfig.padding32,
                     color: Colors.transparent,
-                    child: Text(locale.autoSave,
+                    child: Text(locale.sipText,
                         style: TextStyles.sourceSansSB.body2),
                   ),
                 ),

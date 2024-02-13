@@ -5,11 +5,13 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/enums/connectivity_status_enum.dart';
 import 'package:felloapp/core/model/sdui/sections/home_page_sections.dart';
 import 'package:felloapp/core/service/notifier_services/connectivity_service.dart';
+import 'package:felloapp/ui/pages/static/new_square_background.dart';
 import 'package:felloapp/util/action_resolver.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
+import 'package:flutter/gestures.dart';
 import 'package:flutter/material.dart' hide BoxDecoration, BoxShadow;
 import 'package:flutter/services.dart';
 import 'package:flutter_hooks/flutter_hooks.dart';
@@ -958,12 +960,14 @@ class SecondaryButton extends StatelessWidget {
     required this.onPressed,
     required this.label,
     this.disabled = false,
+    this.child,
     super.key,
   });
 
   final VoidCallback onPressed;
   final String label;
   final bool disabled;
+  final Widget? child;
 
   void _onTap() {
     onPressed();
@@ -980,12 +984,13 @@ class SecondaryButton extends StatelessWidget {
       minWidth: SizeConfig.screenWidth! - SizeConfig.pageHorizontalMargins * 2,
       color: disabled ? Colors.white54 : Colors.white,
       onPressed: _onTap,
-      child: Text(
-        label,
-        style: TextStyles.rajdhaniB.body1.colour(
-          Colors.black,
-        ),
-      ),
+      child: child ??
+          Text(
+            label,
+            style: TextStyles.rajdhaniB.body1.colour(
+              Colors.black,
+            ),
+          ),
     );
   }
 }
@@ -1148,6 +1153,7 @@ class GradientBoxBorder extends BoxBorder {
       ..style = PaintingStyle.stroke;
   }
 }
+
 
 class CustomSwitch extends StatefulWidget {
   final bool initialValue;
@@ -1348,4 +1354,104 @@ class _ThumbPainter extends CustomPainter {
   bool shouldRepaint(covariant _ThumbPainter oldDelegate) =>
       oldDelegate.thumbColor != thumbColor ||
       oldDelegate.circleSize != circleSize;
+
+}
+
+
+class BaseScaffold extends StatelessWidget {
+  const BaseScaffold({
+    super.key,
+    this.appBar,
+    this.body,
+    this.floatingActionButton,
+    this.floatingActionButtonLocation,
+    this.floatingActionButtonAnimator,
+    this.persistentFooterButtons,
+    this.drawer,
+    this.onDrawerChanged,
+    this.endDrawer,
+    this.onEndDrawerChanged,
+    this.bottomNavigationBar,
+    this.bottomSheet,
+    this.backgroundColor,
+    this.resizeToAvoidBottomInset,
+    this.primary = true,
+    this.drawerDragStartBehavior = DragStartBehavior.start,
+    this.extendBody = false,
+    this.extendBodyBehindAppBar = false,
+    this.drawerScrimColor,
+    this.drawerEdgeDragWidth,
+    this.drawerEnableOpenDragGesture = true,
+    this.endDrawerEnableOpenDragGesture = true,
+    this.showBackgroundGrid = true,
+    this.restorationId,
+  });
+
+  final bool extendBody;
+  final bool extendBodyBehindAppBar;
+  final PreferredSizeWidget? appBar;
+  final Widget? body;
+  final Widget? floatingActionButton;
+  final FloatingActionButtonLocation? floatingActionButtonLocation;
+  final FloatingActionButtonAnimator? floatingActionButtonAnimator;
+  final List<Widget>? persistentFooterButtons;
+  final Widget? drawer;
+  final DrawerCallback? onDrawerChanged;
+  final Widget? endDrawer;
+  final DrawerCallback? onEndDrawerChanged;
+  final Color? drawerScrimColor;
+  final Color? backgroundColor;
+  final Widget? bottomNavigationBar;
+  final Widget? bottomSheet;
+  final bool? resizeToAvoidBottomInset;
+  final bool primary;
+  final DragStartBehavior drawerDragStartBehavior;
+  final double? drawerEdgeDragWidth;
+  final bool drawerEnableOpenDragGesture;
+  final bool endDrawerEnableOpenDragGesture;
+  final String? restorationId;
+  final bool showBackgroundGrid;
+
+  @override
+  Widget build(BuildContext context) {
+    return AnnotatedRegion(
+      value: const SystemUiOverlayStyle(
+        statusBarBrightness: Brightness.dark,
+        statusBarIconBrightness: Brightness.light,
+        statusBarColor: Colors.transparent,
+      ),
+      child: Stack(
+        children: [
+          // Background of scaffold with grid pattern.
+          if (showBackgroundGrid) const NewSquareBackground(),
+
+          // For scaffold configuration.
+          Scaffold(
+            extendBody: extendBody,
+            extendBodyBehindAppBar: extendBodyBehindAppBar,
+            appBar: appBar,
+            body: body,
+            floatingActionButton: floatingActionButton,
+            floatingActionButtonLocation: floatingActionButtonLocation,
+            floatingActionButtonAnimator: floatingActionButtonAnimator,
+            persistentFooterButtons: persistentFooterButtons,
+            drawer: drawer,
+            onDrawerChanged: onDrawerChanged,
+            endDrawer: endDrawer,
+            onEndDrawerChanged: onEndDrawerChanged,
+            drawerScrimColor: drawerScrimColor,
+            backgroundColor: backgroundColor ?? Colors.transparent,
+            bottomNavigationBar: bottomNavigationBar,
+            bottomSheet: bottomSheet,
+            resizeToAvoidBottomInset: resizeToAvoidBottomInset,
+            primary: primary,
+            drawerDragStartBehavior: drawerDragStartBehavior,
+            drawerEdgeDragWidth: drawerEdgeDragWidth,
+            drawerEnableOpenDragGesture: drawerEnableOpenDragGesture,
+            restorationId: restorationId,
+          ),
+        ],
+      ),
+    );
+  }
 }

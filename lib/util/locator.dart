@@ -23,6 +23,7 @@ import 'package:felloapp/core/repository/referral_repo.dart';
 import 'package:felloapp/core/repository/report_repo.dart';
 import 'package:felloapp/core/repository/save_repo.dart';
 import 'package:felloapp/core/repository/scratch_card_repo.dart';
+import 'package:felloapp/core/repository/sip_repo.dart';
 import 'package:felloapp/core/repository/subscription_repo.dart';
 import 'package:felloapp/core/repository/transactions_history_repo.dart';
 import 'package:felloapp/core/repository/user_repo.dart';
@@ -75,8 +76,6 @@ import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_buy/gold_pro
 import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_details/gold_pro_details_vm.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_pro/gold_pro_sell/gold_pro_sell_vm.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_sell/gold_sell_vm.dart';
-import 'package:felloapp/ui/pages/finance/autosave/autosave_details/autosave_details_vm.dart';
-import 'package:felloapp/ui/pages/finance/autosave/autosave_setup/autosave_process_vm.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/deposit/lendbox_buy_vm.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/detail_page/flo_premium_details_vm.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/withdrawal/lendbox_withdrawal_vm.dart';
@@ -114,7 +113,7 @@ import 'package:felloapp/ui/pages/userProfile/my_winnings/my_winnings_vm.dart';
 import 'package:felloapp/ui/pages/userProfile/referrals/referral_details/referral_details_vm.dart';
 import 'package:felloapp/ui/pages/userProfile/settings/settings_vm.dart';
 import 'package:felloapp/ui/pages/userProfile/userProfile/userProfile_viewModel.dart';
-import 'package:felloapp/ui/service_elements/auto_save_card/subscription_card_vm.dart';
+
 import 'package:felloapp/ui/service_elements/last_week/last_week_vm.dart';
 import 'package:felloapp/util/custom_logger.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
@@ -202,6 +201,7 @@ Future<void> setupLocator() async {
   locator.registerLazySingleton(InternalOpsRepository.new);
   locator.registerLazySingleton(PaymentRepository.new);
   locator.registerLazySingleton(SubscriptionRepo.new);
+  locator.registerLazySingleton(SipRepository.new);
   locator.registerLazySingleton(SaveRepo.new);
   locator.registerLazySingleton(LendboxRepo.new);
   locator.registerLazySingleton(PrizingRepo.new);
@@ -252,8 +252,6 @@ Future<void> setupLocator() async {
   locator.registerFactory(GTInstantViewModel.new);
   locator.registerFactory(MultipleScratchCardsViewModel.new);
   locator.registerFactory(TopSaverViewModel.new);
-  locator.registerFactory(AutosaveProcessViewModel.new);
-  locator.registerFactory(AutosaveDetailsViewModel.new);
   locator.registerFactory(CampaignRepo.new);
   locator.registerFactory(OnboardingViewModel.new);
   locator.registerFactory(JourneyBannersViewModel.new);
@@ -275,10 +273,9 @@ Future<void> setupLocator() async {
   locator.registerFactory(FelloCoinBarViewModel.new);
   locator.registerFactory(FAQCardViewModel.new);
   locator.registerFactory(SourceAdaptiveAssetViewModel.new);
-  locator.registerFactory(SubscriptionCardViewModel.new);
+
   locator.registerFactory(FloPremiumDetailsViewModel.new);
   locator.registerFactory(AssetPreferenceViewModel.new);
 
-  // locator.registerFactory<UsernameInputViewModel>(() => UsernameInputViewModel());
   await locator.allReady();
 }

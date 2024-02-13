@@ -507,9 +507,9 @@ class BaseUtil extends ChangeNotifier {
       case '1':
         return "Auto-investing in ${isFrom10 ? 10 : 12}% Flo on maturity";
       case '2':
-        return "Move to ${isFrom10 ? 8 : 10} Flo after maturity";
+        return "Move to ${isFrom10 ? 8 : 10}% Flo after maturity";
       default:
-        return "What will happen to your investment after maturity?";
+        return "Move to ${isFrom10 ? 8 : 10}% Flo after maturity";
     }
   }
 
@@ -751,19 +751,6 @@ class BaseUtil extends ChangeNotifier {
     return parsedInt ?? 0;
   }
 
-  Future<bool> authenticateUser(AuthCredential credential) {
-    logger.d("Verification credetials: $credential");
-    // FirebaseAuth.instance.signInWithCustomToken(token)
-    return FirebaseAuth.instance.signInWithCredential(credential).then((res) {
-      firebaseUser = res.user;
-      logger.i("New Firebase User: ${res.additionalUserInfo!.isNewUser}");
-      return true;
-    }).catchError((e) {
-      logger.e("User Authentication failed with credential: Error: $e");
-      return false;
-    });
-  }
-
   Future<bool> signOut() async {
     try {
       // await _lModel!.deleteLocalAppData();
@@ -935,6 +922,24 @@ class BaseUtil extends ChangeNotifier {
       locale: 'en_IN',
       symbol: '₹',
       decimalDigits: 0,
+    );
+    return formatter.format(value);
+  }
+
+  static String formatRupees(double value) {
+    final formatter = NumberFormat.currency(
+      locale: 'en_IN',
+      symbol: '',
+      decimalDigits: 0,
+    );
+    return formatter.format(value);
+  }
+
+  static String formatCompactRupees(double value) {
+    final formatter = NumberFormat.compactCurrency(
+      decimalDigits: 0,
+      locale: 'en_IN',
+      symbol: '',
     );
     return formatter.format(value);
   }

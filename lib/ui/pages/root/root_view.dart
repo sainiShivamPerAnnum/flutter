@@ -147,10 +147,11 @@ class _RootState extends State<Root> {
                     color: Colors.black.withOpacity(0.85),
                     child: Center(
                       child: Padding(
-                        padding:const  EdgeInsets.symmetric(horizontal: 20),
+                        padding: const EdgeInsets.symmetric(horizontal: 20),
                         child: DefaultTextStyle(
                           style: TextStyles.sourceSans.body1
-                              .colour(UiConstants.kTextColor).copyWith(height: 1.5),
+                              .colour(UiConstants.kTextColor)
+                              .copyWith(height: 1.5),
                           child: Text(
                             locale.tutorialstart,
                           ),
@@ -226,7 +227,7 @@ class RootAppBar extends StatelessWidget {
                           child: FAppBar(
                             showAvatar: true,
                             leadingPadding: false,
-                           titleWidget: Expanded(
+                            titleWidget: Expanded(
                               child: Salutation(
                                 leftMargin: SizeConfig.padding8,
                                 textStyle: TextStyles.rajdhaniSB.body0

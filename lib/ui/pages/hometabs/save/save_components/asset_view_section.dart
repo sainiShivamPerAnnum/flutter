@@ -10,10 +10,11 @@ import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/user_service_enum.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/portfolio_model.dart';
-import 'package:felloapp/core/model/subscription_models/subscription_model.dart';
+import 'package:felloapp/core/model/subscription_models/all_subscription_model.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
+import 'package:felloapp/feature/sip/ui/sip_setup/sip_intro.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
@@ -21,7 +22,6 @@ import 'package:felloapp/ui/elements/helpers/tnc_text.dart';
 import 'package:felloapp/ui/elements/title_subtitle_container.dart';
 import 'package:felloapp/ui/elements/video_player/app_video_player.dart';
 import 'package:felloapp/ui/pages/asset_selection.dart';
-import 'package:felloapp/ui/pages/finance/autosave/autosave_setup/autosave_process_view.dart';
 import 'package:felloapp/ui/pages/finance/mini_trans_card/mini_trans_card_view.dart';
 import 'package:felloapp/ui/pages/hometabs/save/flo_components/flo_basic_card.dart';
 import 'package:felloapp/ui/pages/hometabs/save/flo_components/flo_premium_section.dart';
@@ -660,7 +660,7 @@ class AssetBottomButtons extends StatelessWidget {
               ],
             ),
           )
-        : Selector<SubService, SubscriptionModel?>(
+        : Selector<SubService, Subscriptions?>(
             selector: (_, subService) => subService.subscriptionData,
             builder: (context, state, child) {
               // state = SubscriptionModel();
@@ -706,10 +706,8 @@ class AssetBottomButtons extends StatelessWidget {
                               AppState.delegate!.appState.currentAction =
                                   PageAction(
                                 state: PageState.addWidget,
-                                page: AutosaveProcessViewPageConfig,
-                                widget: AutosaveProcessView(
-                                  investmentType: type,
-                                ),
+                                page: SipIntroPageConfig,
+                                widget: const SipIntroView(),
                               );
                             }
 

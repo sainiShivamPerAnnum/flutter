@@ -77,8 +77,15 @@ class AnalyticsEvents {
   static const prizeAWS = "Prize claim choice AWS gift card";
 
   static const flcTokensExhasuted = 'Fello Tokens Exhausted';
-
-  static const asCardTapped = "Autosave Card Tapped";
+//SIP
+  static const sipCardTapped = "SIP Card clicked";
+  static const setupSipButtonTap = "SIP Setup SIP click";
+  static const sipExistingCardTap = "SIP card tapped";
+  static const sipCalculatorFrequencyChanged =
+      "SIP Calculator frequency changed";
+  static const sipAssetSelected = "SIP asset selected";
+  static const calculatorValueChanged = 'SIP Calculator Value updated';
+  static const sipAssetProceed = "SIP asset proceed";
   static const asBenefitsTapped = "Autosave Benefits Next Tapped";
   static const asChooseAssetNextTapped = "Autosave Choose asset next Tapped";
   static const asAssetTapped = "Autosave Asset tapped";
@@ -88,8 +95,8 @@ class AnalyticsEvents {
   static const asCustomComboTapped = "Autosave Custom combo tapped";
   static const asCustomComboSubmit = "Autosave Custom combo Submit";
   static const asChipsTapped = "Autosave Chips tapped";
-  static const asCancelContinueTapped = "Autosave Cancel - Continue Tapped";
-  static const asCancelOTPTapped = "Autosave Cancel - One time payment Tapped";
+  static const asCancelContinueTapped = "SIP Cancel - Continue Tapped";
+  static const asCancelOTPTapped = "SIP Cance _One time payment Tapped";
   static const asUpiAppTapped = "Autosave UPI App Tapped";
   static const asUpiSubmitTapped = "Autosave UPI Submit Tapped";
   static const asHardBackTapped = "Autosave Hard Back Tapped";
@@ -98,7 +105,7 @@ class AnalyticsEvents {
   static const asDoneTapped = "Autosave success done tapped";
   static const asPrevTapped = "Autosave Previous Tapped";
   static const asUpdateTapped = "Update Autosave Tapped";
-  static const asPauseTapped = "Pause Autosave Tapped";
+  static const asPauseTapped = "Pause SIP Confirm";
   static const asResumeTapped = "Resume Autosave Tapped";
 
   static const asPauseOneWeek = "Autosave paused for one week";
@@ -209,8 +216,8 @@ class AnalyticsEvents {
   static const maturityWithdrawPopupTapped = "Maturity Withdraw Popup Tapped";
   static const quickCheckoutTapped = "Quick Checkout Tapped";
   static const quickCheckoutTileTapped = "Quick Checkout Tile Tapped";
-  static const saveOnce = "Save Once Tapped in Asset Detail Page";
-  static const saveDaily = "Save Daily Tapped in Asset Detail Page";
+  static const saveOnce = "Save Once tapped in Asset Detail Page";
+  static const saveDaily = "SIP tapped in Asset Detail Page";
   static const tambolaCarousel = "Tickets top banner tapped";
   static const quizCrossTapped = "Cross on Quiz Tapped";
   static const quizBannerTapped = "Quiz Banner Tapped";
@@ -345,6 +352,16 @@ class AnalyticsEvents {
   static const howToEarnRewards = 'How to earn rewards cards clicked';
   static const earnRewardsClicked = 'Earn rewards clicked';
 
+
   //Gold Pro Auto Lease
   static const goldProAutoLeaseToggle = 'Gold pro auto lease toggle';
+  
+  static const sipSummaryTicketClicked = "Tickets Click";
+  static const sipSummaryGtClicked = "Scratch Card Click";
+  static const sipSummaryButtonClicked = "Check Rewards click";
+  static const sipPaymentAppChoose = "Setup SIP Confirmation";
+
+  static const editSipOption = "Edit SIP Options";
+  static const pauseSipOption = "Pause SIP Confirm";
+
 }
