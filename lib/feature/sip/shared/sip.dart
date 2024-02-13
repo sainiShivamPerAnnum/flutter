@@ -32,7 +32,7 @@ class CalculatorField extends StatefulWidget {
   final double? maxValue;
   final double? minValue;
   final TextAlign? textAlign;
-  final double value;
+  final int value;
   final VoidCallback? increment;
   final VoidCallback? decrement;
 
@@ -196,7 +196,7 @@ class _CalculatorFieldState extends State<CalculatorField> {
           child: Slider(
             value: widget.value < widget.minValue!
                 ? widget.minValue!
-                : widget.value,
+                : widget.value.toDouble(),
             max: widget.maxValue!,
             min: widget.minValue!,
             onChanged: (value) {

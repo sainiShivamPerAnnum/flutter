@@ -936,11 +936,12 @@ class BaseUtil extends ChangeNotifier {
   }
 
   static String formatCompactRupees(double value) {
-    final formatter = NumberFormat.compactCurrency(
-      decimalDigits: 0,
-      locale: 'en_IN',
-      symbol: '',
-    );
+    late NumberFormat formatter;
+    formatter = value > 99999
+        ? NumberFormat.compactCurrency(
+            decimalDigits: 0, locale: 'en_IN', symbol: '')
+        : NumberFormat.compactCurrency(decimalDigits: 0, symbol: '');
+
     return formatter.format(value);
   }
 
