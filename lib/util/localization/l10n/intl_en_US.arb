@@ -995,7 +995,7 @@
     }
   },
   "existingMandate": "Your SIP amount will be deducted fro your existing mandate . No new mandate will be created for this SIP",
-  "newMandate": "You will receive a mandate for ₹5000 on the selected UPI App. But don’t worry, We will not deduct anymore than your SIP amount.",
+  "newMandate": "You will receive a mandate for ₹15000 on the selected UPI App. But don’t worry, We will not deduct anymore than your SIP amount.",
   "updateSip": "UPDATE SIP",
   "oneClickAway": "1 CLICKS AWAY",
   "twoClickAway": "2 CLICKS AWAY",

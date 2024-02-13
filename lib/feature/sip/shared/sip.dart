@@ -66,6 +66,12 @@ class _CalculatorFieldState extends State<CalculatorField> {
   }
 
   @override
+  void dispose() {
+    _amountController.dispose();
+    super.dispose();
+  }
+
+  @override
   Widget build(BuildContext context) {
     return Column(
       children: [

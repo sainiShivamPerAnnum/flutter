@@ -724,7 +724,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "navWMT": MessageLookupByLibrary.simpleMessage("Earn more tokens"),
         "needHelp": MessageLookupByLibrary.simpleMessage("Need more help?"),
         "newMandate": MessageLookupByLibrary.simpleMessage(
-            "You will receive a mandate for ₹5000 on the selected UPI App. But don’t worry, We will not deduct anymore than your SIP amount."),
+            "You will receive a mandate for ₹15000 on the selected UPI App. But don’t worry, We will not deduct anymore than your SIP amount."),
         "newMileStoneAlert1": MessageLookupByLibrary.simpleMessage(
             "Congratulations, you have completed a new milestone! 🎉"),
         "newMileStoneAlert2": MessageLookupByLibrary.simpleMessage(
