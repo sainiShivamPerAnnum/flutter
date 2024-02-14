@@ -4,6 +4,7 @@ import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/sip_asset_type.dart';
+import 'package:felloapp/core/model/sip_model/calculator_details.dart';
 import 'package:felloapp/core/model/sip_model/sip_data_model.dart';
 import 'package:felloapp/core/model/subscription_models/all_subscription_model.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
@@ -45,6 +46,66 @@ class SipCubit extends Cubit<SipState> {
         sipScreenData: SipDataHolder.instance.data,
         activeSubscription: _subService.subscriptionData!,
       ));
+      getDefaultValue();
+    }
+  }
+
+  void setAmount(int amount) {
+    if (state is LoadedSipData) {
+      emit((state as LoadedSipData).copyWith(calculatorAmount: amount));
+    }
+  }
+
+  void setTP(int tp) {
+    if (state is LoadedSipData) {
+      emit((state as LoadedSipData).copyWith(calculatorTP: tp));
+    }
+  }
+
+  void setROI(int roi) {
+    if (state is LoadedSipData) {
+      emit((state as LoadedSipData).copyWith(calculatorRoi: roi));
+    }
+  }
+
+  void setTab(int tab) {
+    if (state is LoadedSipData) {
+      emit((state as LoadedSipData).copyWith(currentTab: tab));
+    }
+  }
+
+  void getDefaultValue() {
+    final currentState = state;
+    if (currentState is LoadedSipData) {
+      Map<String, CalculatorDetails> data =
+          currentState.sipScreenData.calculatorScreen.calculatorData.data;
+      List<String> sipOptions =
+          currentState.sipScreenData.calculatorScreen.calculatorData.options;
+      emit((state as LoadedSipData).copyWith(
+          calculatorAmount:
+              data[sipOptions[currentState.currentTab]]!.sipAmount.defaultValue,
+          calculatorTP: data[sipOptions[currentState.currentTab]]!
+              .timePeriod
+              .defaultValue,
+          calculatorRoi: int.parse(data[sipOptions[currentState.currentTab]]!
+              .interest['default']
+              .toString())));
+    }
+  }
+
+  void sendEvent(List options) {
+    if (state is LoadedSipData) {
+      final properties = {
+        'SIP Amount': (state as LoadedSipData).calculatorAmount,
+        'Time Period': (state as LoadedSipData).calculatorTP,
+        'Return Percentage': (state as LoadedSipData).calculatorRoi,
+        'Frequency': options[(state as LoadedSipData).currentTab],
+      };
+
+      locator<AnalyticsService>().track(
+        eventName: AnalyticsEvents.sipAssetSelected,
+        properties: properties,
+      );
     }
   }
 

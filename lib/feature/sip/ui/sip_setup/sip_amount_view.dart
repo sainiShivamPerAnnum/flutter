@@ -705,6 +705,12 @@ class _AmountInputWidgetState extends State<AmountInputWidget> {
   }
 
   @override
+  void dispose() {
+    _amountController.dispose();
+    super.dispose();
+  }
+
+  @override
   void didUpdateWidget(covariant AmountInputWidget oldWidget) {
     super.didUpdateWidget(oldWidget);
     if (oldWidget.amount != widget.amount) {
@@ -788,6 +794,9 @@ class _AmountInputWidgetState extends State<AmountInputWidget> {
                         inputFormatters: [
                           MaxValueInputFormatter(
                               maxValue: widget.upperLimit.toInt()),
+                          FilteringTextInputFormatter.deny(
+                            RegExp(r'^0+'),
+                          ),
                           TextInputFormatter.withFunction((oldValue, newValue) {
                             var decimalSeparator =
                                 NumberFormat().symbols.DECIMAL_SEP;

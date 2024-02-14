@@ -8976,10 +8976,10 @@ class S {
     );
   }
 
-  /// `Your SIP amount will be deducted fro your existing mandate . No new mandate will be created for this SIP`
+  /// `Your SIP amount will be deducted from your existing mandate. No new mandate will be created for this SIP`
   String get existingMandate {
     return Intl.message(
-      'Your SIP amount will be deducted fro your existing mandate . No new mandate will be created for this SIP',
+      'Your SIP amount will be deducted from your existing mandate. No new mandate will be created for this SIP',
       name: 'existingMandate',
       desc: '',
       args: [],
@@ -9006,10 +9006,10 @@ class S {
     );
   }
 
-  /// `1 CLICKS AWAY`
+  /// `1 CLICK AWAY`
   String get oneClickAway {
     return Intl.message(
-      '1 CLICKS AWAY',
+      '1 CLICK AWAY',
       name: 'oneClickAway',
       desc: '',
       args: [],

@@ -476,4 +476,6 @@ class Assets {
   static const String trip = 'assets/svg/trip.svg';
   static const String mandate_intro =
       "https://ik.imagekit.io/9xfwtu0xm/sip/mandate_intro.png?updatedAt=1707312146215";
+
+  static const String sipError = 'assets/images/sip_error.png';
 }
