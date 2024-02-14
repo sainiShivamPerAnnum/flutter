@@ -3,12 +3,14 @@
 import 'dart:async';
 import 'dart:developer';
 
+import 'package:collection/collection.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
+import 'package:felloapp/core/model/app_config_serialized_model.dart';
 import 'package:felloapp/core/model/asset_options_model.dart';
 import 'package:felloapp/core/model/coupon_card_model.dart';
 import 'package:felloapp/core/model/eligible_coupon_model.dart';
@@ -211,6 +213,26 @@ class LendboxBuyViewModel extends BaseViewModel
     notifyListeners();
   }
 
+  void _caluculateFactor() {
+    String modelFlowType = floAssetType;
+    List<Lendboxp2P> lendBoxDetails = AppConfigV2.instance.lendBoxP2P;
+    final isLendBoxOldUser =
+        locator<UserService>().userSegments.contains(Constants.US_FLO_OLD);
+
+    Lendboxp2P? assetInformation = lendBoxDetails.firstWhereOrNull(
+      (element) {
+        return modelFlowType == Constants.ASSET_TYPE_FLO_FELXI
+            ? element.isForOldLb == isLendBoxOldUser &&
+                element.fundType == modelFlowType
+            : element.fundType == modelFlowType;
+      },
+    );
+
+    if (assetInformation != null) {
+      tambolaMultiplier = assetInformation.tamBolaMultiplier.toInt();
+    }
+  }
+
   Future<void> init(
     int? amount,
     bool isSkipMilestone,
@@ -248,6 +270,7 @@ class LendboxBuyViewModel extends BaseViewModel
             .indexWhere((element) => element.best) ??
         1;
 
+    _caluculateFactor();
     setState(ViewState.Idle);
 
     await getAvailableCoupons();

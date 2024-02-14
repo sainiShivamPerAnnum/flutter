@@ -51,11 +51,6 @@ const String AllParticipantsViewPath = '/allParticipantsView';
 const String PoolViewPath = "/poolView";
 const String WebHomeViewPath = "/webHomeView";
 const String WebGameViewPath = "/webGameView";
-const String AutosaveOnboardingViewPath = '/autosaveOnboardingView';
-const String AutosaveProcessViewPath = '/autosaveProcessView';
-const String AutosaveUpdateViewPath = '/autosaveUpdateView';
-const String AutosaveDetailsViewPath = '/autosaveDetailsView';
-const String AutosaveTransactionsViewPath = '/autosaveTransactionsViewPath';
 const String NewGameHomeViewPath = '/newGameHome';
 const String NewWebHomeViewPath = '/newWebHomeView';
 const String TopPlayerLeaderboard = '/topPlayerLeaderboard';
@@ -173,11 +168,6 @@ enum Pages {
   PoolView,
   WebHomeView,
   WebGameView,
-  AutosaveOnboardingView,
-  AutosaveProcessView,
-  AutosaveDetailsView,
-  AutosaveTransactionsView,
-  AutosaveUpdateView,
   NewWebHomeView,
   TopPlayerLeaderboard,
   JourneyView,
@@ -616,37 +606,6 @@ PageConfiguration PoolViewPageConfig = PageConfiguration(
   uiPage: Pages.PoolView,
   name: 'Pool View Screen',
 );
-
-PageConfiguration AutosaveOnboardingViewPageConfig = PageConfiguration(
-  key: 'AutosaveOnboardingView',
-  path: AutosaveOnboardingViewPath,
-  uiPage: Pages.AutosaveOnboardingView,
-  name: 'Autosave Onboarding Screen',
-);
-
-PageConfiguration AutosaveProcessViewPageConfig = PageConfiguration(
-  key: 'AutosaveProcessView',
-  path: AutosaveProcessViewPath,
-  uiPage: Pages.AutosaveProcessView,
-);
-
-PageConfiguration AutosaveUpdateViewPageConfig = PageConfiguration(
-  key: 'AutosaveUpdateView',
-  path: AutosaveProcessViewPath,
-  uiPage: Pages.AutosaveUpdateView,
-);
-
-PageConfiguration AutosaveDetailsViewPageConfig = PageConfiguration(
-  key: 'AutosaveDetailsView',
-  path: AutosaveDetailsViewPath,
-  uiPage: Pages.AutosaveDetailsView,
-);
-
-PageConfiguration AutosaveTransactionsViewPageConfig = PageConfiguration(
-    key: 'AutosaveTransactionsView',
-    path: AutosaveTransactionsViewPath,
-    uiPage: Pages.AutosaveTransactionsView,
-    name: "Autosave transaction Screen");
 
 PageConfiguration NewWebHomeViewPageConfig = PageConfiguration(
   key: 'NewWebHomeView',
