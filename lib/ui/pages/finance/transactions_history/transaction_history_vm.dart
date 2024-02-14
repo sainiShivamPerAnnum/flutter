@@ -151,9 +151,6 @@ class TransactionsHistoryViewModel extends BaseViewModel {
         }
       }
     });
-    if ((doesHaveSubscriptionTransaction ?? false)) {
-      getLatestSIPTransactions(investmentType!);
-    }
 
     _scrollController!.addListener(() async {
       if (_scrollController!.offset >=
@@ -171,6 +168,11 @@ class TransactionsHistoryViewModel extends BaseViewModel {
 
     await _txnHistoryService.updateTransactions(_investmentType);
     _filteredList = _txnHistoryService.txnList;
+    final bool? doesHaveSubscriptionTransaction =
+        locator<UserService>().baseUser?.doesHaveSubscriptionTransaction;
+    if (doesHaveSubscriptionTransaction ?? false) {
+      await getLatestSIPTransactions(investmentType);
+    }
     setState(ViewState.Idle);
   }
 
@@ -259,8 +261,6 @@ class TransactionsHistoryViewModel extends BaseViewModel {
   }
 
   Future<void> getLatestSIPTransactions(InvestmentType asset) async {
-    setState(ViewState.Busy);
-
     // activeSubscription = _subscriptionService.subscriptionData;
 
     // if (activeSubscription == null) {
@@ -274,8 +274,6 @@ class TransactionsHistoryViewModel extends BaseViewModel {
     filteredSIPList = (asset == InvestmentType.AUGGOLD99)
         ? _subscriptionService.augSubTxnList
         : _subscriptionService.lbSubTxnList;
-
-    setState(ViewState.Idle);
   }
 
   Future<void> getMoreSipTransactions(InvestmentType asset) async {
