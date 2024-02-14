@@ -1,4 +1,5 @@
 import 'package:felloapp/core/model/quote_model.dart';
+import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/finance/quotes.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/styles/styles.dart';
@@ -7,7 +8,7 @@ import 'package:lottie/lottie.dart';
 
 import '../../constants/asset_type.dart';
 
-class SipPolling extends StatelessWidget {
+class SipPolling extends StatefulWidget {
   const SipPolling({
     required this.assetType,
     super.key,
@@ -16,8 +17,25 @@ class SipPolling extends StatelessWidget {
   final AssetType assetType;
 
   @override
+  State<SipPolling> createState() => _SipPollingState();
+}
+
+class _SipPollingState extends State<SipPolling> {
+  @override
+  void initState() {
+    super.initState();
+    AppState.blockNavigation();
+  }
+
+  @override
+  void dispose() {
+    super.dispose();
+    AppState.unblockNavigation();
+  }
+
+  @override
   Widget build(BuildContext context) {
-    final label = switch (assetType) {
+    final label = switch (widget.assetType) {
       AssetType.aug => 'Digital Gold',
       AssetType.flo => 'Fello P2P'
     };
@@ -28,12 +46,13 @@ class SipPolling extends StatelessWidget {
         backgroundColor:
             UiConstants.kRechargeModalSheetAmountSectionBackgroundColor,
         centerTitle: true,
+        automaticallyImplyLeading: false,
         title: Row(
           mainAxisSize: MainAxisSize.min,
           children: [
             SizedBox.square(
               dimension: SizeConfig.padding44,
-              child: AppImage(assetType.icon),
+              child: AppImage(widget.assetType.icon),
             ),
             Text(
               label,
@@ -51,12 +70,12 @@ class SipPolling extends StatelessWidget {
           ),
           Expanded(
             child: Lottie.network(
-              assetType.loadingLottie,
+              widget.assetType.loadingLottie,
               height: SizeConfig.screenHeight! * 0.7,
             ),
           ),
           QuotesComponent(
-            quotesType: switch (assetType) {
+            quotesType: switch (widget.assetType) {
               AssetType.flo => QuotesType.flo,
               AssetType.aug => QuotesType.aug,
             },
