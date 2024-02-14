@@ -1,7 +1,6 @@
 import 'dart:math' as math;
 
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/page_state_enum.dart';
 import 'package:felloapp/core/enums/sip_asset_type.dart';
 import 'package:felloapp/core/model/sip_model/calculator_data.dart';
@@ -9,12 +8,12 @@ import 'package:felloapp/core/model/sip_model/calculator_details.dart';
 import 'package:felloapp/core/model/subscription_models/all_subscription_model.dart';
 import 'package:felloapp/core/model/subscription_models/subscription_model.dart';
 import 'package:felloapp/core/model/subscription_models/subscription_status.dart';
-import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/feature/sip/cubit/autosave_cubit.dart';
 import 'package:felloapp/feature/sip/shared/edit_sip_bottomsheet.dart';
 import 'package:felloapp/feature/sip/shared/interest_calculator.dart';
 import 'package:felloapp/feature/sip/shared/sip.dart';
 import 'package:felloapp/feature/sip/shared/tab_slider.dart';
+import 'package:felloapp/feature/sip/ui/sip_setup/sip_error_page.dart';
 import 'package:felloapp/feature/sip/ui/sip_setup/sip_select_assset.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
@@ -71,20 +70,7 @@ class _SipIntroViewState extends State<SipIntroView> {
             final model = context.read<SipCubit>();
             return SingleChildScrollView(
               child: switch (state) {
-                ErrorSipState() => Stack(
-                    children: [
-                      const NewSquareBackground(),
-                      Positioned.fill(
-                        child: Center(
-                          child: Text(
-                            locale.errorLoadingSip,
-                            style: TextStyles.rajdhaniSB.body0
-                                .colour(UiConstants.kTextColor),
-                          ),
-                        ),
-                      ),
-                    ],
-                  ),
+                ErrorSipState() => SipErrorWidget(),
                 LoadingSipData() => const Stack(
                     children: [
                       NewSquareBackground(),
