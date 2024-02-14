@@ -68,27 +68,27 @@ class _SipIntroViewState extends State<SipIntroView> {
         body: BlocBuilder<SipCubit, SipState>(
           builder: (context, state) {
             final model = context.read<SipCubit>();
-            return SingleChildScrollView(
-              child: switch (state) {
-                ErrorSipState() => SipErrorWidget(),
-                LoadingSipData() => const Stack(
-                    children: [
-                      NewSquareBackground(),
-                      Positioned.fill(
-                        child: Center(
-                          child: FullScreenLoader(),
-                        ),
+            return switch (state) {
+              ErrorSipState() => SipErrorWidget(),
+              LoadingSipData() => const Stack(
+                  children: [
+                    NewSquareBackground(),
+                    Positioned.fill(
+                      child: Center(
+                        child: FullScreenLoader(),
                       ),
-                    ],
-                  ),
-                LoadedSipData(:final showAllSip) => () {
-                    int length = showAllSip
-                        ? state.activeSubscription.length
-                        : state.activeSubscription.length > 3
-                            ? 3
-                            : state.activeSubscription.length;
+                    ),
+                  ],
+                ),
+              LoadedSipData(:final showAllSip) => () {
+                  int length = showAllSip
+                      ? state.activeSubscription.length
+                      : state.activeSubscription.length > 3
+                          ? 3
+                          : state.activeSubscription.length;
 
-                    return Column(
+                  return SingleChildScrollView(
+                    child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
                         Stack(
@@ -308,10 +308,10 @@ class _SipIntroViewState extends State<SipIntroView> {
                           ),
                         ),
                       ],
-                    );
-                  }(),
-              },
-            );
+                    ),
+                  );
+                }(),
+            };
           },
         ),
       ),

@@ -786,27 +786,6 @@ class _FloBreakdownViewState extends State<FloBreakdownView> {
     super.initState();
     final amount = num.tryParse(widget.model.amountController?.text ?? '') ?? 0;
     _isNetbankingMandatory = amount >= Constants.mandatoryNetBankingThreshold;
-    _caluculateFactor();
-  }
-
-  void _caluculateFactor() {
-    String modelFlowType = widget.model.floAssetType;
-    List<Lendboxp2P> lendBoxDetails = AppConfigV2.instance.lendBoxP2P;
-    final isLendBoxOldUser =
-        locator<UserService>().userSegments.contains(Constants.US_FLO_OLD);
-
-    Lendboxp2P? assetInformation = lendBoxDetails.firstWhereOrNull(
-      (element) {
-        return modelFlowType == Constants.ASSET_TYPE_FLO_FELXI
-            ? element.isForOldLb == isLendBoxOldUser &&
-                element.fundType == modelFlowType
-            : element.fundType == modelFlowType;
-      },
-    );
-
-    if (assetInformation != null) {
-      _multiplicationFactor = assetInformation.tamBolaMultiplier;
-    }
   }
 
   num get totalTicketsEarned {

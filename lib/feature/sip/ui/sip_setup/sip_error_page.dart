@@ -14,47 +14,43 @@ class SipErrorWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return SizedBox(
-      height:
-          SizeConfig.safeScreenHeight! - SizeConfig.sliverAppBarPaddingLarge,
-      child: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.spaceBetween,
-          children: [
-            Column(
-              children: [
-                SizedBox(
-                  height: SizeConfig.padding56,
-                ),
-                Text(
-                  'Oops, this one is on us',
-                  style: TextStyles.rajdhaniSB.title4
-                      .colour(UiConstants.kTextColor),
-                ),
-                SizedBox(
-                  height: SizeConfig.padding16,
-                ),
-                Text(
-                  'Our team is trying to resolve it earliest possible',
-                  style: TextStyles.sourceSans.body3
-                      .colour(UiConstants.kTextFieldTextColor),
-                ),
-                SizedBox(
-                  height: SizeConfig.padding42,
-                ),
-                AppImage(
-                  Assets.sipError,
-                  height: SizeConfig.padding252,
-                ),
-              ],
-            ),
-            SecondaryButton(
-              onPressed: () async =>
-                  await AppState.backButtonDispatcher!.didPopRoute(),
-              label: locale.proceed,
-            )
-          ],
-        ),
+    return Center(
+      child: Column(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          Column(
+            children: [
+              SizedBox(
+                height: SizeConfig.padding56,
+              ),
+              Text(
+                'Oops, this one is on us',
+                style:
+                    TextStyles.rajdhaniSB.title4.colour(UiConstants.kTextColor),
+              ),
+              SizedBox(
+                height: SizeConfig.padding16,
+              ),
+              Text(
+                'Our team is trying to resolve it earliest possible',
+                style: TextStyles.sourceSans.body3
+                    .colour(UiConstants.kTextFieldTextColor),
+              ),
+              SizedBox(
+                height: SizeConfig.padding42,
+              ),
+              AppImage(
+                Assets.sipError,
+                height: SizeConfig.padding252,
+              ),
+            ],
+          ),
+          SecondaryButton(
+            onPressed: () async =>
+                await AppState.backButtonDispatcher!.didPopRoute(),
+            label: locale.proceed,
+          ),
+        ],
       ),
     );
   }
