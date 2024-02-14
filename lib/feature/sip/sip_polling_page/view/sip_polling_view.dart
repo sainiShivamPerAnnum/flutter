@@ -49,12 +49,16 @@ class _SipStatusView extends StatelessWidget {
     return BlocConsumer<SipPollingBloc, SipPollingState>(
       listener: (context, state) {
         if (state case CompletedPollingWithSuccessOrPending(:final response)) {
-          if (response.status.isPaused || response.status.isCancelled) {
-            BaseUtil.showNegativeAlert(
-              'Unable to check subscription status',
-              'Please try again later',
+          if (response.status.isPaused ||
+              response.status.isCancelled ||
+              response.status.isInitialized) {
+            Future.delayed(const Duration(milliseconds: 400)).then(
+              (value) => BaseUtil.showNegativeAlert(
+                'Unable to check subscription status',
+                'Please try again later',
+              ),
             );
-
+            AppState.unblockNavigation();
             AppState.backButtonDispatcher!.didPopRoute();
           }
         }
