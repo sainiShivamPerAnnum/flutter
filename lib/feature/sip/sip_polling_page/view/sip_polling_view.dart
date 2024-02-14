@@ -52,7 +52,7 @@ class _SipStatusView extends StatelessWidget {
           if (response.status.isPaused ||
               response.status.isCancelled ||
               response.status.isInitialized) {
-            Future.delayed(const Duration(seconds: 1)).then(
+            Future.delayed(const Duration(milliseconds: 400)).then(
               (value) => BaseUtil.showNegativeAlert(
                 'Unable to check subscription status',
                 'Please try again later',
