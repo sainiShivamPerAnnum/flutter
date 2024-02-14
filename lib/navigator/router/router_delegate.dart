@@ -612,21 +612,6 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case Pages.WebGameView:
         WebGameViewPageConfig.currentPageAction = action;
         break;
-      case Pages.AutosaveOnboardingView:
-        AutosaveOnboardingViewPageConfig.currentPageAction = action;
-        break;
-      case Pages.AutosaveProcessView:
-        AutosaveProcessViewPageConfig.currentPageAction = action;
-        break;
-      case Pages.AutosaveDetailsView:
-        AutosaveDetailsViewPageConfig.currentPageAction = action;
-        break;
-      case Pages.AutosaveUpdateView:
-        AutosaveUpdateViewPageConfig.currentPageAction = action;
-        break;
-      case Pages.AutosaveTransactionsView:
-        AutosaveTransactionsViewPageConfig.currentPageAction = action;
-        break;
       case Pages.NewWebHomeView:
         NewWebHomeViewPageConfig.currentPageAction = action;
         break;
@@ -722,6 +707,18 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
         break;
       case Pages.TicketsTutorialViewPath:
         TicketsTutorialViewPageConfig.currentPageAction = action;
+        break;
+      case Pages.SipEntryView:
+        SipIntroPageConfig.currentPageAction = action;
+        break;
+      case Pages.SipAssetSelectView:
+        SipAssetSelectPageConfig.currentPageAction = action;
+        break;
+      case Pages.SipFormView:
+        SipFormPageConfig.currentPageAction = action;
+        break;
+      case Pages.SipMandateView:
+        SipMandatePageConfig.currentPageAction = action;
         break;
       default:
         break;
@@ -1035,14 +1032,9 @@ class FelloRouterDelegate extends RouterDelegate<PageConfiguration>
       case 'pop':
         AppState.backButtonDispatcher!.didPopRoute();
         break;
-
-      case 'autosaveDetails':
-        if (!(AppConfig.getValue(AppConfigKey.showNewAutosave) as bool)) break;
-        pageConfiguration = AutosaveDetailsViewPageConfig;
-        break;
       case "autosave":
         if (!(AppConfig.getValue(AppConfigKey.showNewAutosave) as bool)) break;
-        pageConfiguration = AutosaveOnboardingViewPageConfig;
+        pageConfiguration = SipIntroPageConfig;
         break;
       case 'autosaveTxns':
         openTransactions(InvestmentType.AUGGOLD99);
