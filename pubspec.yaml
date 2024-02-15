@@ -3,7 +3,7 @@ description: Game-based Investments
 
 publish_to: "none"
 
-version: 4.8.0+254
+version: 4.9.0+252
 
 environment:
   sdk: ">=3.0.0 <4.0.0"
