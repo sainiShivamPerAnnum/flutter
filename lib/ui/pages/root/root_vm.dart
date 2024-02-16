@@ -99,7 +99,6 @@ class RootViewModel extends BaseViewModel {
       _userCoinService.getUserCoinBalance(),
       _userService.getUserFundWalletData(),
       _gtService.updateUnscratchedGTCount(),
-      _subscriptionService.getSubscription(),
     ]);
 
     _txnHistoryService.signOut();

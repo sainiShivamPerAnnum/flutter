@@ -5,7 +5,7 @@ import 'package:felloapp/core/model/timestamp_model.dart';
 class SubscriptionTransactionModel {
   final String id;
   final String type;
-  final String amount;
+  final num amount;
   final String status;
   final String? note;
   final TimestampModel createdOn;
@@ -36,7 +36,7 @@ class SubscriptionTransactionModel {
     return SubscriptionTransactionModel(
       id: map['id'] as String,
       type: map['type'] as String,
-      amount: map['amount'] as String,
+      amount: map['amount'] as num,
       status: map['status'] as String,
       note: map['note'] as String,
       createdOn: TimestampModel.fromMap(map['createdOn']),
@@ -56,7 +56,7 @@ class SubscriptionTransactionModel {
 
 class LbMap {
   final String? status;
-  final String? amount;
+  final num? amount;
   final String? note;
   LbMap({
     required this.status,
@@ -78,12 +78,12 @@ class LbMap {
 
 class AugMap {
   String? status;
-  String? amount;
+  num? amount;
   String? note;
   String? blockId;
-  String? lockPrice;
-  String? gold;
-  String? closingBalance;
+  num? lockPrice;
+  num? gold;
+  num? closingBalance;
   AugMap({
     required this.status,
     required this.amount,
@@ -113,7 +113,7 @@ class AugMap {
 }
 
 class MiscMap {
-  final String? tt;
+  final num? tt;
   final List<String>? gts;
   MiscMap({
     required this.tt,

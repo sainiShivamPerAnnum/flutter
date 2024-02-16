@@ -471,8 +471,8 @@ class TransactionSIPTile extends StatelessWidget {
           Text(
             _txnHistoryService.getFormattedTxnAmount(double.tryParse(
                     model!.investmentType == InvestmentType.AUGGOLD99
-                        ? txn!.augMap?.amount ?? '0'
-                        : txn!.lbMap?.amount ?? '0') ??
+                        ? txn!.augMap?.amount.toString() ?? '0'
+                        : txn!.lbMap?.amount.toString() ?? '0') ??
                 0),
             style: TextStyles.sourceSansM.body3,
           ),
@@ -527,7 +527,7 @@ class TransactionChoiceSelectionTab extends StatelessWidget {
                     height: SizeConfig.padding24,
                     // width: SizeConfig.padding32,
                     color: Colors.transparent,
-                    child: Text(locale.autoSave,
+                    child: Text(locale.sipText,
                         style: TextStyles.sourceSansSB.body2),
                   ),
                 ),

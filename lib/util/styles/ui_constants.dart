@@ -36,6 +36,7 @@ class UiConstants {
   static const Color bottomNavBarColor = Colors.white;
   static const Color titleTextColor = Colors.white;
   static const Color textColor = Colors.black87;
+  static const Color errorText = Color(0xffC34B29);
 
   static const MaterialColor kPrimaryColor = MaterialColor(
     0xff2EB19F,
@@ -113,6 +114,8 @@ class UiConstants {
   static const Color kTicketPeachColor = Color(0xFFFFCCBF);
   static const Color kSelectedDotColor = Color(0xFFCEF8F5);
   static const Color kInfoBackgroundColor = Color(0xFF121212);
+  static const Color kSipBackgroundColor = Color(0xFF1C272B);
+  static const Color kErrorBorderColor = Colors.red;
 
   static const Color kFAQsAnswerColor = Color(0xFFA9C6D6);
 
@@ -157,13 +160,14 @@ class UiConstants {
   );
 
   static LinearGradient kButtonGradient = const LinearGradient(
-      colors: [
-        Color(0xFF08D2AD),
-        Color(0xFF43544F),
-      ],
-      begin: Alignment.topCenter,
-      end: Alignment.bottomCenter,
-      tileMode: TileMode.clamp);
+    colors: [
+      Color(0xFF08D2AD),
+      Color(0xFF43544F),
+    ],
+    begin: Alignment.topCenter,
+    end: Alignment.bottomCenter,
+    tileMode: TileMode.clamp,
+  );
 
   static LinearGradient kCampaignBannerBackgrondGradient = LinearGradient(
     colors: [
@@ -219,7 +223,7 @@ class UiConstants {
   static Color kReferralHeaderColor = const Color(0xff6052A9);
 
   //GOLD X
-  static Color kGoldProPrimary = const Color(0xffFFD979);
+  static const Color kGoldProPrimary = Color(0xffFFD979);
   static Color KGoldProSecondary = const Color(0xffFFE9B1);
   static Color KGoldProPrimaryDark = const Color(0xffEFAF4E);
   static Color kGoldProBorder = const Color(0xffFFD979).withOpacity(0.2);
@@ -254,6 +258,7 @@ class UiConstants {
   static const peach3 = Color(0xFFF79780);
 
   static const greyDivider = Color(0xFF7F86A3);
+  static const rewardsCardColor = Color(0xff212B31);
 }
 
 extension ColorExtension on String {
@@ -266,5 +271,11 @@ extension ColorExtension on String {
       return Color(int.parse("0x$hexColor"));
     }
     return null;
+  }
+}
+
+extension StringEnhancements on String {
+  String get capitalizeFirst {
+    return this[0].toUpperCase() + substring(1).toLowerCase();
   }
 }

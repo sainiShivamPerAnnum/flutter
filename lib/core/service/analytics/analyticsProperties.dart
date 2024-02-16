@@ -5,17 +5,13 @@ import 'package:felloapp/core/service/journey_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_coin_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
-import 'package:felloapp/core/service/subscription_service.dart';
 import 'package:felloapp/feature/tambola/tambola.dart';
-import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
 
 class AnalyticsProperties {
   //Required depedencies
   static final UserService _userService = locator<UserService>();
   static final UserCoinService _userCoinService = locator<UserCoinService>();
-  // static final PaytmService? _paytmService = locator<PaytmService>();
-  static final SubService _subService = locator<SubService>();
   static final JourneyService _journeyService = locator<JourneyService>();
   static final TxnHistoryService _txnHistoryService =
       locator<TxnHistoryService>();
@@ -117,26 +113,6 @@ class AnalyticsProperties {
     return currentWinning;
   }
 
-  static bool isAutoSIPActive() {
-    if (_subService.subscriptionData == null) {
-      return false;
-    } else {
-      return _subService.subscriptionData!.status ==
-              Constants.SUBSCRIPTION_ACTIVE
-          ? true
-          : false;
-    }
-  }
-
-  static double getAutoSIPAmount() {
-    if (_subService.subscriptionData == null) {
-      return 0.0;
-    } else {
-      return (double.tryParse(_subService.subscriptionData!.amount ?? '0') ??
-          0.0);
-    }
-  }
-
   static String getJouneryCapsuleText() {
     return _journeyService
             .currentMilestoneList[_userService.userJourneyStats!.mlIndex! - 1]
@@ -184,8 +160,6 @@ class AnalyticsProperties {
       "Amount Invested in Gold": getGoldInvestedAmount(),
       "Grams of Gold owned": getGoldQuantityInGrams(),
       "Amount Invested in Flo": getFelloFloAmount(),
-      "Auto SIP done": isAutoSIPActive(),
-      "Auto SIP amount": getAutoSIPAmount(),
       "KYC Verified": isKYCVerified(),
       "Level": getCurrentLevel(),
       "MileStones Completed": getMileStonesCompleted(),

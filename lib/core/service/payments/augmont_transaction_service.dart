@@ -140,6 +140,7 @@ class AugmontTransactionService extends BaseTransactionService
       InvestmentType.AUGGOLD99,
       currentGoldPurchaseDetails.upiChoice!.upiApplication.appName
           .formatUpiAppName(),
+      currentGoldPurchaseDetails.isAutoLeaseChecked,
       augProMap,
     );
     if (txnResponse.isSuccess()) {
@@ -240,6 +241,8 @@ class AugmontTransactionService extends BaseTransactionService
       '',
       InvestmentType.AUGGOLD99,
       null, //app use
+
+      currentGoldPurchaseDetails.isAutoLeaseChecked,
       augProMap,
       'NET_BANKING', // pay-mode
     );
@@ -498,6 +501,7 @@ class GoldPurchaseDetails {
   double? leaseQty;
   bool isPro;
   bool isIntentFlow;
+  bool isAutoLeaseChecked;
 
   GoldPurchaseDetails({
     required this.goldBuyAmount,
@@ -509,5 +513,6 @@ class GoldPurchaseDetails {
     this.leaseQty,
     this.isPro = false,
     this.isIntentFlow = false,
+    this.isAutoLeaseChecked = true,
   });
 }

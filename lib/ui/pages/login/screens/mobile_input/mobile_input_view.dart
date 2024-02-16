@@ -51,7 +51,7 @@ class LoginMobileViewState extends State<LoginMobileView> {
                     !widget.loginModel.loginUsingTrueCaller,
                 focusNode: model.mobileFocusNode,
                 key: model.phoneFieldKey,
-                keyboardType: TextInputType.phone,
+                keyboardType: TextInputType.number,
                 inputFormatters: [FilteringTextInputFormatter.digitsOnly],
                 maxLength: 10,
                 prefixText: "+91 ",

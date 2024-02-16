@@ -14,6 +14,7 @@ import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/navigator/router/ui_pages.dart';
 import 'package:felloapp/ui/elements/appbar/appbar.dart';
 import 'package:felloapp/ui/modalsheets/transaction_details_model_sheet.dart';
+import 'package:felloapp/ui/pages/finance/transactions_history/rewards_card.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
@@ -29,6 +30,7 @@ import 'package:intl/intl.dart';
 import 'package:open_filex/open_filex.dart';
 
 import '../../../../base_util.dart';
+import 'package:felloapp/util/styles/styles.dart';
 
 class TransactionDetailsPage extends StatefulWidget {
   const TransactionDetailsPage({required this.txn, Key? key}) : super(key: key);
@@ -116,6 +118,16 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage>
       });
     }
   }
+
+  bool get ticketsPresent =>
+      (widget.txn.misMap?.containsKey("tickets") ?? false) &&
+      widget.txn.misMap!["tickets"] != 0;
+  bool get goldPresent =>
+      (widget.txn.misMap?.containsKey("gtId") ?? false) ||
+      ((widget.txn.misMap?.containsKey("gtIds") ?? false) &&
+          widget.txn.misMap?["gtIds"].length > 0) ||
+      (widget.txn.couponMap?.containsKey("gtIds") ?? false) ||
+      (widget.txn.misMap?.containsKey("happyHourGtId") ?? false);
 
   @override
   Widget build(BuildContext context) {
@@ -247,11 +259,8 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage>
                                     width: SizeConfig.padding2,
                                   ),
                                   Text(
-                                    widget.txn.tranStatus!.substring(0, 1) +
-                                        widget.txn.tranStatus!
-                                            .substring(1,
-                                                widget.txn.tranStatus!.length)
-                                            .toLowerCase(),
+                                    widget.txn.tranStatus?.capitalizeFirst ??
+                                        '',
                                     style: TextStyles.sourceSans.colour(
                                         _txnHistoryService.getTileColor(
                                             widget.txn.tranStatus)),
@@ -409,33 +418,23 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage>
                             ]
                           ],
                           if (widget.txn.tranStatus == "COMPLETE") ...[
-                            Align(
-                              alignment: Alignment.centerLeft,
-                              child: Text(
-                                widget.txn.type ==
-                                        UserTransaction.TRAN_TYPE_WITHDRAW
-                                    ? "Rewards Deducted:"
-                                    : (widget.txn.subType !=
-                                                Constants.ASSET_TYPE_LENDBOX &&
-                                            widget.txn.augmnt != null &&
-                                            widget.txn.augmnt!["aBlockId"] ==
-                                                null)
-                                        ? "You redeemed ₹${widget.txn.amount} from your total winnings."
-                                        : "Rewards Credited:",
-                                style: TextStyles.sourceSans.body3
-                                    .colour(const Color(0XFF9AB5C4)),
+                            if (goldPresent || ticketsPresent)
+                              Align(
+                                alignment: Alignment.centerLeft,
+                                child: Text(
+                                  widget.txn.showRewardsTextValue,
+                                  style: TextStyles.sourceSans.body3
+                                      .colour(const Color(0XFF9AB5C4)),
+                                ),
                               ),
-                            ),
                             if (widget.txn.type ==
                                 UserTransaction.TRAN_TYPE_WITHDRAW)
                               Align(
                                 alignment: Alignment.topLeft,
-                                child: SizedBox(
-                                  child: Text(
-                                    "Tickets are deducted for withdrawals",
-                                    style: TextStyles.sourceSans.body4
-                                        .colour(const Color(0xffA0A0A0)),
-                                  ),
+                                child: Text(
+                                  "Tickets are deducted for withdrawals",
+                                  style: TextStyles.sourceSans.body4
+                                      .colour(const Color(0xffA0A0A0)),
                                 ),
                               ),
                             SizedBox(
@@ -443,113 +442,19 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage>
                             ),
                             Row(
                               children: [
-                                if ((widget.txn.misMap
-                                            ?.containsKey("tickets") ??
-                                        false) &&
-                                    widget.txn.misMap!["tickets"] != 0)
-                                  Expanded(
-                                    child: Container(
-                                      alignment: Alignment.center,
-                                      decoration: BoxDecoration(
-                                          color: const Color(0xff212B31),
-                                          borderRadius:
-                                              BorderRadius.circular(8)),
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 16, vertical: 8),
-                                      margin: const EdgeInsets.only(right: 8),
-                                      child: Column(
-                                        children: [
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              if (widget.txn.type ==
-                                                  UserTransaction
-                                                      .TRAN_TYPE_WITHDRAW)
-                                                Text(
-                                                  "-  ",
-                                                  style: TextStyles
-                                                      .rajdhaniSB.body1,
-                                                ),
-                                              SvgPicture.asset(
-                                                Assets.tambolaTicket,
-                                                height: SizeConfig.padding16,
-                                              ),
-                                              SizedBox(
-                                                width: SizeConfig.padding4,
-                                              ),
-                                              Text(
-                                                widget.txn.misMap!["tickets"]
-                                                    .toString(),
-                                                style:
-                                                    TextStyles.rajdhaniSB.body2,
-                                              ),
-                                            ],
-                                          ),
-                                          SizedBox(
-                                            width: SizeConfig.padding4,
-                                          ),
-                                          Text(
-                                            "Ticket(s)",
-                                            textAlign: TextAlign.center,
-                                            style: TextStyles.rajdhaniSB.body4,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  ),
-                                if ((widget.txn.misMap?.containsKey("gtId") ??
-                                        false) ||
-                                    ((widget.txn.misMap?.containsKey("gtIds") ??
-                                            false) &&
-                                        widget
-                                                .txn.misMap?["gtIds"].length >
-                                            0) ||
-                                    (widget.txn.couponMap
-                                            ?.containsKey("gtIds") ??
-                                        false) ||
-                                    (widget.txn.misMap
-                                            ?.containsKey("happyHourGtId") ??
-                                        false))
-                                  Expanded(
-                                    child: Container(
-                                      decoration: BoxDecoration(
-                                          color: const Color(0xff212B31),
-                                          borderRadius:
-                                              BorderRadius.circular(8)),
-                                      padding: const EdgeInsets.symmetric(
-                                          horizontal: 16, vertical: 8),
-                                      child: Column(
-                                        children: [
-                                          Row(
-                                            mainAxisAlignment:
-                                                MainAxisAlignment.center,
-                                            children: [
-                                              SvgPicture.asset(
-                                                Assets.scratchCard,
-                                                height: SizeConfig.padding16,
-                                              ),
-                                              SizedBox(
-                                                width: SizeConfig.padding4,
-                                              ),
-                                              Text(
-                                                "${(widget.txn.misMap!.containsKey("gtId") ? 1 : 0) + (widget.txn.couponMap!.containsKey("gtId") ? 1 : 0) + (widget.txn.misMap!.containsKey("gtIds") ? widget.txn.misMap!["gtIds"].length : 0) + (widget.txn.misMap!.containsKey("happyHourGtId") ? 1 : 0)}",
-                                                style:
-                                                    TextStyles.rajdhaniSB.body2,
-                                              ),
-                                            ],
-                                          ),
-                                          SizedBox(
-                                            width: SizeConfig.padding4,
-                                          ),
-                                          Text(
-                                            "Scratch Card",
-                                            style: TextStyles.rajdhaniSB.body4,
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  )
+                                if (ticketsPresent)
+                                  RewardsCard(
+                                      rewardType: RewardType.tt,
+                                      rewardQuantity: widget
+                                          .txn.misMap!["tickets"]
+                                          .toString(),
+                                      txnType: widget.txn.type ?? '',
+                                      isRewardTypeTicket: true),
+                                if (goldPresent)
+                                  RewardsCard(
+                                      rewardType: RewardType.sc,
+                                      rewardQuantity: widget.txn.rewardQuantity,
+                                      txnType: widget.txn.type ?? '')
                               ],
                             ),
                           ]
