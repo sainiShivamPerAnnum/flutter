@@ -73,13 +73,10 @@ class MainActivity : FlutterFragmentActivity() {
 
             when (call.method) {
                 "createNotificationChannel" -> {
-
                     val argData = call.arguments as HashMap<String, String>
                     val completed = createNotificationChannel(argData)
-
                     returnResult(completed as Object)
                 }
-
                 getUpiApps -> getupiApps()
                 intiateTransaction -> startTransation(
                     call.argument<String>("app").toString(),
@@ -171,7 +168,7 @@ class MainActivity : FlutterFragmentActivity() {
 
     override fun onActivityResult(requestCode: Int, resultCode: Int, data: Intent?) {
         super.onActivityResult(requestCode, resultCode, data)
-        if (requestCode == successRequestCode) {
+        if (requestCode == successRequestCode && ::paymentResult.isInitialized) {
             data?.let { intentData ->
                 try {
                     val response = intentData.getStringExtra("response")
@@ -290,8 +287,6 @@ class MainActivity : FlutterFragmentActivity() {
     private fun startTransation(app: String, deepLink: String) {
 
         try {
-
-
             val uri = Uri.parse(deepLink)
             val deepLinkIntent = Intent(Intent.ACTION_VIEW, uri)
             deepLinkIntent.setPackage(app)
