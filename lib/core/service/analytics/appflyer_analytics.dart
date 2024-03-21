@@ -62,12 +62,12 @@ class AppFlyerAnalytics extends BaseAnalyticsService {
       );
 
       _appsflyerSdk = AppsflyerSdk(appsFlyerOptions);
-      _appsflyerSdk.setAppInviteOneLinkID('uxu0', (res) {
-        _logger.d("appsflyer setAppInviteOneLinkID callback:" + res.toString());
+      await _appsflyerSdk.setAppInviteOneLinkID('uxu0', (res) {
+        _logger.d("appsflyer setAppInviteOneLinkID callback:$res");
       });
       // _appsflyerSdk.setOneLinkCustomDomain([_brandedDomain]);
 
-      _appsflyerSdk.onDeepLinking((DeepLinkResult result) {
+      _appsflyerSdk.onDeepLinking((result) {
         _logger.d('appflyer deeplink $result');
       });
 
@@ -83,7 +83,7 @@ class AppFlyerAnalytics extends BaseAnalyticsService {
         registerConversionDataCallback: true,
       );
 
-      id = await (_appsflyerSdk.getAppsFlyerUID());
+      id = await _appsflyerSdk.getAppsFlyerUID();
       _logger.d('appflyer initialized');
     } catch (e) {
       _logger.e('appflyer $e');
