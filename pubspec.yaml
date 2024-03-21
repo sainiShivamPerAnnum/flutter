@@ -14,7 +14,7 @@ dependencies:
   another_flushbar: 1.12.29
   app_set_id: ^1.0.0
   app_install_date: ^0.1.1
-  appsflyer_sdk: ^6.5.2
+  appsflyer_sdk: ^6.12.2
   cached_network_image: ^3.2.3
   carousel_slider: ^4.2.1
   cloud_firestore: ^4.2.0
