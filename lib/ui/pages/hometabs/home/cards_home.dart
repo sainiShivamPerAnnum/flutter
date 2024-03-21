@@ -346,6 +346,7 @@ class _CardsState extends State<Cards> with SingleTickerProviderStateMixin {
                                         }
                                       },
                                       child: Card(
+                                        key: const ValueKey('portfolioCard'),
                                         color: Colors.transparent,
                                         shape: RoundedRectangleBorder(
                                           borderRadius: BorderRadius.circular(
@@ -483,6 +484,7 @@ class _CardsState extends State<Cards> with SingleTickerProviderStateMixin {
                                                       0.04 *
                                                       3),
                                           child: CardContent(
+                                            key: const ValueKey('goldPortfolioSave'),
                                             isHorizontalView:
                                                 cardActions.isHorizontalView,
                                             isVerticalView:
@@ -581,6 +583,7 @@ class _CardsState extends State<Cards> with SingleTickerProviderStateMixin {
                                                       0.04 *
                                                       2),
                                           child: CardContent(
+                                            key: const ValueKey('floPortfolioSave'),
                                             isHorizontalView:
                                                 cardActions.isHorizontalView,
                                             isVerticalView:
@@ -940,6 +943,7 @@ class _CardsState extends State<Cards> with SingleTickerProviderStateMixin {
                     margin: EdgeInsets.only(
                         bottom: SizeConfig.pageHorizontalMargins * 1.4),
                     child: MaterialButton(
+                      key: const ValueKey('saveNowButton'),
                       height: SizeConfig.padding44,
                       shape: RoundedRectangleBorder(
                           borderRadius:
@@ -1177,6 +1181,7 @@ class CardContent extends StatelessWidget {
                     child: FittedBox(
                       fit: BoxFit.scaleDown,
                       child: Text(
+                        //key: const ValueKey(),
                         title == "Fello Rewards" ? "REDEEM" : "SAVE",
                         style: TextStyles.rajdhaniB.body2.colour(
                           title == "Fello Rewards"

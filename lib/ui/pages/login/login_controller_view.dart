@@ -94,7 +94,8 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                   child: GestureDetector(
                     onTap: () => model.processScreenInput(model.currentPage),
                     child: Container(
-                      key: K.loginNextCTAKey,
+                      key: const ValueKey("LoginCTA"),
+                      //key: K.loginNextCTAKey,
                       width: SizeConfig.screenWidth,
                       height: SizeConfig.padding54,
                       color: UiConstants.kArrowButtonBackgroundColor,
@@ -147,6 +148,7 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                 Positioned(
                   bottom: 0,
                   child: SizedBox(
+                    key: const ValueKey("TermsAndConditions"),
                     width: SizeConfig.screenWidth,
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.center,

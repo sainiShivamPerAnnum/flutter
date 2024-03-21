@@ -27,27 +27,27 @@ class LoginMobileViewModel extends BaseViewModel {
       GlobalKey<FormFieldState<String>>();
   String code = "+91";
 
-  get formKey => _formKey;
+  GlobalKey<FormState> get formKey => _formKey;
 
-  get showTickCheck => _showTickCheck;
+  bool get showTickCheck => _showTickCheck;
 
-  get validate => _validate;
+  bool get validate => _validate;
 
-  get phoneFieldKey => _phoneFieldKey;
+  GlobalKey<FormFieldState<String>> get phoneFieldKey => _phoneFieldKey;
 
   TextEditingController get mobileController => _mobileController;
 
-  get truecallerMobileController => _mobileController;
+  TextEditingController get truecallerMobileController => _mobileController;
 
-  get referralCodeController => _referralCodeController;
+  TextEditingController get referralCodeController => _referralCodeController;
   S locale = locator<S>();
 
-  void showAvailablePhoneNumbers() async {
+  Future<void> showAvailablePhoneNumbers() async {
     if (Platform.isAndroid && showAvailableMobileNos) {
       showAvailableMobileNos = false;
       mobileFocusNode.unfocus();
-      final SmsAutoFill _autoFill = SmsAutoFill();
-      String? completePhoneNumber = await _autoFill.hint;
+      final SmsAutoFill autoFill = SmsAutoFill();
+      String? completePhoneNumber = await autoFill.hint;
       if (completePhoneNumber != null) {
         _mobileController.text =
             completePhoneNumber.substring(completePhoneNumber.length - 10);
@@ -56,7 +56,9 @@ class LoginMobileViewModel extends BaseViewModel {
         mobileFocusNode.requestFocus();
       }
       Future.delayed(
-          const Duration(milliseconds: 500), mobileFocusNode.requestFocus);
+        const Duration(milliseconds: 500),
+        mobileFocusNode.requestFocus,
+      );
     }
   }
 

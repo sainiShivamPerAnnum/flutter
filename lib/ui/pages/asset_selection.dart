@@ -273,6 +273,7 @@ class FloPlanWidget extends StatelessWidget {
           ),
           SizedBox(height: SizeConfig.padding26),
           FelloFloPrograms(
+            key: const ValueKey('12%'),
             percentage: '12%',
             isRecommended: true,
             chipString1: lendboxDetails[0]["maturityPeriodText"],
@@ -287,6 +288,7 @@ class FloPlanWidget extends StatelessWidget {
           ),
           // SizedBox(height: SizeConfig.padding12),
           FelloFloPrograms(
+            key: const ValueKey('10%'),
             percentage: '10%',
             isRecommended: false,
             chipString1: isLendboxOldUser
@@ -311,6 +313,8 @@ class FloPlanWidget extends StatelessWidget {
           // SizedBox(height: SizeConfig.padding12),
           if (!isLendboxOldUser)
             FelloFloPrograms(
+                key: const ValueKey('8%'),
+                //key: const ValueKey(Constants.ASSET_TYPE_FLO_FELXI),
                 percentage: '8%',
                 isRecommended: false,
                 chipString1:
@@ -413,6 +417,7 @@ class GoldPlanWidget extends StatelessWidget {
                 isPro: true,
               ),
               DigitalGoldPrograms(
+                key: const ValueKey('goldSavePlan'),
                 title: "Save in Gold",
                 model: model,
                 showRates: true,

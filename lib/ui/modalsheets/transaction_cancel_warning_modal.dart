@@ -168,6 +168,7 @@ class TransactionCancelBottomSheet extends StatelessWidget {
                     (value) => AppState.backButtonDispatcher!.didPopRoute()));
               },
               child: Text(
+                key: const ValueKey('goBackAnywayButton'),
                 "GO BACK ANYWAY",
                 style: TextStyles.rajdhaniB.body2.colour(Colors.white),
               ),

@@ -80,6 +80,7 @@ class EnterAmountView extends StatelessWidget {
                               curve: Curves.easeIn,
                               width: model.fieldWidth,
                               child: TextFormField(
+                                key: const ValueKey('enterGoldBuyAmount'),
                                 autofocus: true,
                                 readOnly: model.readOnly,
                                 showCursor: true,

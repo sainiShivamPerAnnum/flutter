@@ -12,6 +12,7 @@ class TermsAndConditions extends StatelessWidget {
       padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
       child: Center(
         child: GestureDetector(
+          key: const ValueKey('goldTermsAndConditions'),
           onTap: () async {
             AppState.delegate!
                 .parseRoute(Uri.parse(url), title: "Terms and Conditions");

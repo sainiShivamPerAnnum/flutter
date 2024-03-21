@@ -532,7 +532,8 @@ class UserProfileForm extends StatelessWidget {
             SizedBox(height: SizeConfig.padding6),
             Center(
               child: TextButton(
-                key: K.singOutButtonKey,
+                key: const Key('signOutButton'),
+                // key: K.singOutButtonKey,
                 onPressed: model.signout,
                 child: Text(
                   locale.btnSignout,

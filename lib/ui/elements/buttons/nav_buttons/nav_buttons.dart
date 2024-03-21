@@ -57,7 +57,8 @@ class AppBarButton extends StatelessWidget {
 class FelloAppBarBackButton extends StatelessWidget {
   final Function? onBackPress;
   final Color color;
-  const FelloAppBarBackButton({this.onBackPress, this.color = Colors.white});
+  const FelloAppBarBackButton(
+      {super.key, this.onBackPress, this.color = Colors.white});
 
   @override
   Widget build(BuildContext context) {

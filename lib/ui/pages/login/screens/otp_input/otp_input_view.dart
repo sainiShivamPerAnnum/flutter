@@ -115,7 +115,8 @@ class LoginOtpViewState extends State<LoginOtpView> {
                 horizontal: SizeConfig.pageHorizontalMargins * 2,
               ),
               child: PinInputTextField(
-                key: K.otpTextFieldKey,
+                key: ValueKey("otpTextField"),
+                //key: K.otpTextFieldKey,
                 enabled: model.otpFieldEnabled,
                 controller: model.pinEditingController,
                 autoFocus: true,
@@ -182,6 +183,7 @@ class LoginOtpViewState extends State<LoginOtpView> {
                     },
                     child: Text(
                       locale.obResend,
+                      key: const ValueKey("OtpResend"),
                       style: TextStyles.sourceSans.body2.colour(
                         UiConstants.primaryColor,
                       ),

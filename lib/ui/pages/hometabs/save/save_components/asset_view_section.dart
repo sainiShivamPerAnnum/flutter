@@ -590,6 +590,7 @@ class AssetBottomButtons extends StatelessWidget {
                 Expanded(
                   flex: 5,
                   child: MaterialButton(
+                    key: const ValueKey('saveinGoldButton'),
                     height: SizeConfig.padding44,
                     shape: RoundedRectangleBorder(
                       side: const BorderSide(width: 1.5, color: Colors.white),
@@ -619,6 +620,7 @@ class AssetBottomButtons extends StatelessWidget {
                   child: Stack(
                     children: [
                       MaterialButton(
+                        key: const ValueKey('saveinGoldProButton'),
                         minWidth: SizeConfig.padding156,
                         color: Colors.white,
                         height: SizeConfig.padding44,
@@ -725,6 +727,7 @@ class AssetBottomButtons extends StatelessWidget {
                     Expanded(
                       flex: 1,
                       child: MaterialButton(
+                        key: const ValueKey('saveinFloButton'),
                         minWidth: SizeConfig.padding156,
                         color: Colors.white,
                         height: SizeConfig.padding44,
