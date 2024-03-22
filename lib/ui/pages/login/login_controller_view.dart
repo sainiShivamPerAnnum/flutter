@@ -4,7 +4,6 @@ import 'package:felloapp/core/enums/faqTypes.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
 import 'package:felloapp/ui/animations/welcome_rings/welcome_rings.dart';
 import 'package:felloapp/ui/architecture/base_view.dart';
-import 'package:felloapp/ui/keys/keys.dart';
 import 'package:felloapp/ui/pages/login/login_components/login_support.dart';
 import 'package:felloapp/ui/pages/login/login_controller_vm.dart';
 import 'package:felloapp/ui/pages/login/screens/name_input/name_input_view.dart';
@@ -49,8 +48,9 @@ class _LoginControllerViewState extends State<LoginControllerView> {
           body: Stack(
             children: <Widget>[
               const NewSquareBackground(
-                  backgroundColor: UiConstants
-                      .kRechargeModalSheetAmountSectionBackgroundColor),
+                backgroundColor:
+                    UiConstants.kRechargeModalSheetAmountSectionBackgroundColor,
+              ),
               SingleChildScrollView(
                 reverse: true,
                 child: Column(
@@ -65,9 +65,9 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                               physics: const NeverScrollableScrollPhysics(),
                               scrollDirection: Axis.horizontal,
                               controller: model.controller,
-                              itemCount: model.pages!.length,
+                              itemCount: model.pages.length,
                               itemBuilder: (context, index) =>
-                                  model.pages![index],
+                                  model.pages[index],
                               onPageChanged: (index) =>
                                   model.currentPage = index,
                             ),
@@ -82,10 +82,12 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                 alignment: Alignment.topRight,
                 child: SafeArea(
                   child: Container(
-                      margin: EdgeInsets.only(
-                          top: SizeConfig.pageHorizontalMargins / 2,
-                          right: SizeConfig.pageHorizontalMargins),
-                      child: const FaqPill(type: FaqsType.onboarding)),
+                    margin: EdgeInsets.only(
+                      top: SizeConfig.pageHorizontalMargins / 2,
+                      right: SizeConfig.pageHorizontalMargins,
+                    ),
+                    child: const FaqPill(type: FaqsType.onboarding),
+                  ),
                 ),
               ),
               if (keyboardIsOpen)
@@ -109,7 +111,8 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                               child: SpinKitThreeBounce(
                                 color: UiConstants.primaryColor,
                                 size: SizeConfig.padding20,
-                              ))
+                              ),
+                            )
                           : Text(
                               model.currentPage == LoginNameInputView.index
                                   ? locale.obFinish
@@ -129,7 +132,8 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                           mainAxisSize: MainAxisSize.min,
                           children: [
                             FullScreenLoader(
-                                size: SizeConfig.screenWidth! * 0.3),
+                              size: SizeConfig.screenWidth! * 0.3,
+                            ),
                             SizedBox(height: SizeConfig.padding12),
                             Text(
                               locale.obLoading,
@@ -155,12 +159,14 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                       children: [
                         Container(
                           padding: EdgeInsets.symmetric(
-                              vertical: SizeConfig.padding16,
-                              horizontal: SizeConfig.padding20),
+                            vertical: SizeConfig.padding16,
+                            horizontal: SizeConfig.padding20,
+                          ),
                           decoration: BoxDecoration(
                             color: UiConstants.kBackgroundColor3,
                             borderRadius: BorderRadius.all(
-                                Radius.circular(SizeConfig.roundness12)),
+                              Radius.circular(SizeConfig.roundness12),
+                            ),
                           ),
                           child: Row(
                             mainAxisSize: MainAxisSize.min,
@@ -180,8 +186,12 @@ class _LoginControllerViewState extends State<LoginControllerView> {
                           ),
                         ),
                         Padding(
-                          padding: EdgeInsets.fromLTRB(SizeConfig.padding10,
-                              SizeConfig.padding16, SizeConfig.padding10, 0),
+                          padding: EdgeInsets.fromLTRB(
+                            SizeConfig.padding10,
+                            SizeConfig.padding16,
+                            SizeConfig.padding10,
+                            0,
+                          ),
                           child: RichText(
                             text: TextSpan(
                               children: [
@@ -215,37 +225,38 @@ class _LoginControllerViewState extends State<LoginControllerView> {
               Align(
                 alignment: Alignment.bottomCenter,
                 child: Container(
-                    width: SizeConfig.screenWidth,
-                    height: SizeConfig.screenWidth! * 0.2,
-                    margin: EdgeInsets.only(
-                      bottom: SizeConfig.viewInsets.bottom +
-                          SizeConfig.pageHorizontalMargins,
-                    ),
-                    alignment: Alignment.center,
-                    child: model.loginUsingTrueCaller
-                        ? Row(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: [
-                              Text(
-                                locale.obLoggingInWith,
-                                style: TextStyles.body3.bold
-                                    .colour(UiConstants.primaryColor),
-                              ),
-                              Image.asset(
-                                Assets.truecaller,
-                                color: UiConstants.primaryColor,
-                                height: SizeConfig.body1,
-                              ),
-                              SizedBox(
-                                width: SizeConfig.padding4,
-                              ),
-                              SpinKitThreeBounce(
-                                color: UiConstants.primaryColor,
-                                size: SizeConfig.body1,
-                              )
-                            ],
-                          )
-                        : const SizedBox()),
+                  width: SizeConfig.screenWidth,
+                  height: SizeConfig.screenWidth! * 0.2,
+                  margin: EdgeInsets.only(
+                    bottom: SizeConfig.viewInsets.bottom +
+                        SizeConfig.pageHorizontalMargins,
+                  ),
+                  alignment: Alignment.center,
+                  child: model.loginUsingTrueCaller
+                      ? Row(
+                          mainAxisAlignment: MainAxisAlignment.center,
+                          children: [
+                            Text(
+                              locale.obLoggingInWith,
+                              style: TextStyles.body3.bold
+                                  .colour(UiConstants.primaryColor),
+                            ),
+                            Image.asset(
+                              Assets.truecaller,
+                              color: UiConstants.primaryColor,
+                              height: SizeConfig.body1,
+                            ),
+                            SizedBox(
+                              width: SizeConfig.padding4,
+                            ),
+                            SpinKitThreeBounce(
+                              color: UiConstants.primaryColor,
+                              size: SizeConfig.body1,
+                            )
+                          ],
+                        )
+                      : const SizedBox(),
+                ),
               ),
               if (FlavorConfig.isDevelopment())
                 SizedBox(
