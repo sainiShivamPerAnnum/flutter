@@ -162,8 +162,6 @@ class LoginControllerViewModel extends BaseViewModel {
             );
             _verificationId = '+91${userMobile!}';
             await _verifyPhone();
-            // FocusScope.of(_mobileScreenKey.currentContext).unfocus();
-            setState(ViewState.Busy);
           }
           break;
         }
@@ -675,15 +673,12 @@ class LoginControllerViewModel extends BaseViewModel {
       if (baseProvider!.isOtpResendCount == 0) {
         ///this is the first time that the otp was requested
 
-        await _controller!
-            .animateToPage(
+        await _controller!.animateToPage(
           LoginOtpView.index,
           duration: const Duration(milliseconds: 500),
           curve: Curves.easeInToLinear,
-        )
-            .then((_) {
-          setState(ViewState.Idle);
-        });
+        );
+        setState(ViewState.Idle);
         Future.delayed(const Duration(seconds: 1), () {
           _otpScreenKey.currentState!.model!.otpFocusNode.requestFocus();
         });
@@ -865,7 +860,9 @@ class LoginControllerViewModel extends BaseViewModel {
       }).catchError((e) {
         logger.e(e);
         BaseUtil.showNegativeAlert(
-            locale.authFailed, locale.authenticateNumber);
+          locale.authFailed,
+          locale.authenticateNumber,
+        );
         loginUsingTrueCaller = false;
       }),
     );
