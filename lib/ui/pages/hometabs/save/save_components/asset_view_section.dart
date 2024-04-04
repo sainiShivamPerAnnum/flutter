@@ -30,7 +30,6 @@ import 'package:felloapp/ui/pages/hometabs/save/gold_components/gold_rate_widget
 import 'package:felloapp/ui/pages/hometabs/save/save_viewModel.dart';
 import 'package:felloapp/ui/pages/login/login_components/login_support.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
-import 'package:felloapp/ui/pages/static/web_view.dart';
 import 'package:felloapp/ui/service_elements/auto_save_card/subscription_card.dart';
 import 'package:felloapp/ui/service_elements/gold_sell_card/sell_card_view.dart';
 import 'package:felloapp/util/assets.dart';
@@ -143,9 +142,9 @@ class _AssetSectionViewState extends State<AssetSectionView> {
               return RefreshIndicator(
                 color: UiConstants.primaryColor,
                 backgroundColor: Colors.black,
-                onRefresh: () async {
-                  await state.refreshTransactions(widget.type);
-                },
+                onRefresh: () async => await state.refreshTransactions(
+                  widget.type,
+                ),
                 child: Scaffold(
                   backgroundColor: UiConstants.kBackgroundColor,
                   body: Stack(
@@ -218,13 +217,12 @@ class _AssetSectionViewState extends State<AssetSectionView> {
                                 height: SizeConfig.padding26,
                               ),
                               if (widget.type == InvestmentType.AUGGOLD99) ...[
-                                balance == 0
-                                    ? _buildInfoSection()
-                                    : const GoldInfoWidget(),
+                                if (balance == 0)
+                                  _buildInfoSection()
+                                else
+                                  const GoldInfoWidget(),
                                 const GoldRateWidget(),
-                                if (widget.type == InvestmentType.AUGGOLD99 &&
-                                    !hasSavedInAug)
-                                  const LineGradientChart(),
+                                if (!hasSavedInAug) const LineGradientChart(),
                               ],
                               if (balance == 0)
                                 SizedBox(
@@ -249,13 +247,12 @@ class _AssetSectionViewState extends State<AssetSectionView> {
                                   userService: model,
                                 ),
                               SizedBox(
-                                height: SizeConfig.padding4,
+                                height: SizeConfig.padding14,
                               ),
-                              SizedBox(
-                                height: SizeConfig.padding10,
-                              ),
-                              if (!_isGold) FloPremiumSection(model: model),
-                              if (!_isGold) FloBasicCard(model: model),
+                              if (!_isGold) ...[
+                                FloPremiumSection(model: model),
+                                FloBasicCard(model: model),
+                              ],
                               if (!isNewUser) ...[
                                 MiniTransactionCard(
                                   investmentType: widget.type,
@@ -280,9 +277,6 @@ class _AssetSectionViewState extends State<AssetSectionView> {
                                   ),
                                 ],
                               ],
-                              GoldenDayUiEntryPoint(
-                                isGold: _isGold,
-                              ),
                               if (widget.type == InvestmentType.AUGGOLD99)
                                 const GoldProCard(),
                               if (!isNewUser)
@@ -344,7 +338,8 @@ class _AssetSectionViewState extends State<AssetSectionView> {
                                 isGold: _isGold,
                               ),
                               const TermsAndConditions(
-                                  url: Constants.savingstnc),
+                                url: Constants.savingstnc,
+                              ),
                               SizedBox(
                                 height: SizeConfig.screenHeight! * 0.15,
                               ),
@@ -514,59 +509,6 @@ class _AssetSectionViewState extends State<AssetSectionView> {
 
   Color get _subTitleColor =>
       _isGold ? UiConstants.kBlogTitleColor : UiConstants.kTabBorderColor;
-}
-
-class GoldenDayUiEntryPoint extends StatelessWidget {
-  final bool isGold;
-  final DateTime _startTime;
-  final DateTime _endTime;
-
-  GoldenDayUiEntryPoint({
-    required this.isGold,
-    super.key,
-  })  : _startTime = DateTime(2023, 11, 7),
-        _endTime = DateTime(2023, 11, 21);
-
-  Future<void> _onTap() async {
-    const url = 'https://fello.in/diwali-23';
-    AppState.delegate!.appState.currentAction = PageAction(
-      page: WebViewPageConfig,
-      state: PageState.addWidget,
-      widget: WebViewScreen(
-        url: url,
-        onUrlChanged: (value) {
-          if (value != url) {
-            AppState.backButtonDispatcher!.didPopRoute();
-          }
-        },
-      ),
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    if (!isGold) return const SizedBox.shrink();
-
-    final now = DateTime.now();
-    final isValidDate = now.isAfter(_startTime) && now.isBefore(_endTime);
-
-    if (!isValidDate) return const SizedBox.shrink();
-
-    return InkWell(
-      onTap: _onTap,
-      child: Padding(
-        padding: EdgeInsets.symmetric(
-          horizontal: SizeConfig.padding20,
-          vertical: SizeConfig.padding8,
-        ),
-        child: AspectRatio(
-          aspectRatio: 4.34,
-          child: Image.network(
-              'https://ik.imagekit.io/9xfwtu0xm/Offer%20Banners/Gold%20Details%20screen%20banner.png'),
-        ),
-      ),
-    );
-  }
 }
 
 class AssetBottomButtons extends StatelessWidget {

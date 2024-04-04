@@ -34,24 +34,24 @@ class FloPremiumTierCard extends StatelessWidget {
   final UserService userService;
   final String? promoText;
 
-  void trackTierCardTap(
-    String assetName,
-  ) {
-    locator<AnalyticsService>()
-        .track(eventName: AnalyticsEvents.floSlabBannerTapped, properties: {
+  void trackTierCardTap(String assetName) {
+    final props = {
       "asset name": assetName,
       "new user":
           locator<UserService>().userSegments.contains(Constants.NEW_USER),
       "invested amount": getTrail(),
       "current amount": getLead(),
       "lockin period": lockIn,
-    });
+    };
+
+    locator<AnalyticsService>().track(
+      eventName: AnalyticsEvents.floSlabBannerTapped,
+      properties: props,
+    );
   }
 
   @override
   Widget build(BuildContext context) {
-    // List lendboxDetails = AppConfig.getValue(AppConfigKey.lendbox);
-
     return Column(
       children: [
         InkWell(
@@ -61,10 +61,10 @@ class FloPremiumTierCard extends StatelessWidget {
             trackTierCardTap(title!);
           },
           child: Container(
-            // margin: EdgeInsets.symmetric(vertical: SizeConfig.padding10),
             decoration: BoxDecoration(
-                borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-                color: Colors.white10),
+              borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+              color: Colors.white10,
+            ),
             padding: EdgeInsets.all(SizeConfig.padding16),
             child: Column(
               children: [
@@ -88,17 +88,15 @@ class FloPremiumTierCard extends StatelessWidget {
                         Row(
                           children: [
                             FloPremiumTierChip(value: lockIn),
-                            if (!isUserInvestedInThisTier())
+                            if (!isUserInvestedInThisTier()) ...[
                               SizedBox(width: SizeConfig.padding16),
-                            if (!isUserInvestedInThisTier())
                               FloPremiumTierChip(value: minInvestment),
-                            if (!isUserInvestedInThisTier())
                               SizedBox(width: SizeConfig.padding16),
+                            ]
                           ],
                         )
                       ],
                     ),
-
                     const Spacer(),
                     Transform.translate(
                       offset: Offset(SizeConfig.padding4, SizeConfig.padding2),
@@ -108,42 +106,23 @@ class FloPremiumTierCard extends StatelessWidget {
                         size: SizeConfig.iconSize1,
                       ),
                     )
-                    // SizedBox(
-                    //   width: SizeConfig.padding80,
-                    //   child: MaterialButton(
-                    //     color: Colors.white,
-                    //     shape: RoundedRectangleBorder(
-                    //         borderRadius:
-                    //             BorderRadius.circular(SizeConfig.roundness5)),
-                    //     // height: SizeConfig.padding44,
-                    //     padding: EdgeInsets.all(SizeConfig.padding6),
-                    //     onPressed: cta,
-                    //     child: FittedBox(
-                    //       fit: BoxFit.scaleDown,
-                    //       child: Text(
-                    //         "SAVE",
-                    //         style:
-                    //             TextStyles.sourceSansB.body2.colour(Colors.black),
-                    //       ),
-                    //     ),
-                    //   ),
-                    // )
                   ],
                 ),
                 SizedBox(height: SizeConfig.padding16),
-                isUserInvestedInThisTier()
-                    ? FloBalanceBriefRow(
-                        tier: tier,
-                        mini: true,
-                      )
-                    : SizedBox(
-                        child: Text(
-                          summary ?? "",
-                          style: TextStyles.body3.colour(
-                            Colors.white.withOpacity(0.6),
-                          ),
-                        ),
+                if (isUserInvestedInThisTier())
+                  FloBalanceBriefRow(
+                    tier: tier,
+                    mini: true,
+                  )
+                else
+                  SizedBox(
+                    child: Text(
+                      summary ?? "",
+                      style: TextStyles.body3.colour(
+                        Colors.white.withOpacity(0.6),
                       ),
+                    ),
+                  ),
               ],
             ),
           ),
@@ -151,8 +130,9 @@ class FloPremiumTierCard extends StatelessWidget {
         if (promoText != null && promoText!.isNotEmpty)
           Padding(
             padding: EdgeInsets.symmetric(
-                vertical: SizeConfig.padding4,
-                horizontal: SizeConfig.padding16),
+              vertical: SizeConfig.padding4,
+              horizontal: SizeConfig.padding16,
+            ),
             child: Row(
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
@@ -168,10 +148,8 @@ class FloPremiumTierCard extends StatelessWidget {
                 MaterialButton(
                   color: Colors.white,
                   shape: RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.circular(SizeConfig.roundness5)),
-                  // height: SizeConfig.padding44,
-                  // padding: EdgeInsets.all(SizeConfig.padding6),
+                    borderRadius: BorderRadius.circular(SizeConfig.roundness5),
+                  ),
                   onPressed: cta,
                   child: FittedBox(
                     fit: BoxFit.scaleDown,
@@ -216,16 +194,10 @@ class FloPremiumTierCard extends StatelessWidget {
   }
 
   bool isUserInvestedInThisTier() {
-    switch (tier) {
-      case Constants.ASSET_TYPE_FLO_FIXED_6:
-        return (userService.userPortfolio.flo.fixed2.balance) > 0;
-      case Constants.ASSET_TYPE_FLO_FIXED_3:
-        return (userService.userPortfolio.flo.fixed1.balance) > 0;
-      case Constants.ASSET_TYPE_FLO_FELXI:
-        return (userService.userPortfolio.flo.flexi.balance) > 0;
-      default:
-        return false;
-    }
+    final userPortfolio = userService.userPortfolio.flo;
+    return userPortfolio.fixed1.balance > 0 ||
+        userPortfolio.fixed2.balance > 0 ||
+        userPortfolio.flexi.balance > 0;
   }
 }
 
@@ -242,7 +214,9 @@ class FloPremiumTierChip extends StatelessWidget {
     return Container(
       margin: EdgeInsets.symmetric(vertical: SizeConfig.padding6),
       padding: EdgeInsets.symmetric(
-          vertical: SizeConfig.padding2, horizontal: SizeConfig.padding10),
+        vertical: SizeConfig.padding2,
+        horizontal: SizeConfig.padding10,
+      ),
       decoration: BoxDecoration(
         color: Colors.white24,
         borderRadius: BorderRadius.circular(

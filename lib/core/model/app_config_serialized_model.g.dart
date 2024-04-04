@@ -31,7 +31,7 @@ AppConfigV2Data _$AppConfigV2DataFromJson(Map<String, dynamic> json) =>
       canChangePostMaturityPreference:
           json['canChangePostMaturityPreference'] as bool? ?? false,
       lendBoxP2P: (json['LENDBOXP2P'] as List<dynamic>?)
-              ?.map((e) => Lendboxp2P.fromJson(e as Map<String, dynamic>))
+              ?.map((e) => LendboxP2P.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
       youtubeVideos: (json['youtubeVideos'] as List<dynamic>?)
@@ -76,14 +76,20 @@ AppConfigV2Data _$AppConfigV2DataFromJson(Map<String, dynamic> json) =>
       features: json['features'] as Map<String, dynamic>? ?? const {},
     );
 
-Lendboxp2P _$Lendboxp2PFromJson(Map<String, dynamic> json) => Lendboxp2P(
-      fundType: json['fundType'] as String? ?? '',
-      maturityPeriodText: json['maturityPeriodText'] as String? ?? '',
-      minAmountText: json['minAmountText'] as String? ?? '',
-      descText: json['descText'] as String? ?? '',
-      tamBolaMultiplier: json['tambolaMultiplier'] as num? ?? 0,
+LendboxP2P _$LendboxP2PFromJson(Map<String, dynamic> json) => LendboxP2P(
+      fundType: $enumDecode(_$FundTypeEnumMap, json['fundType']),
+      maturityPeriodText: json['maturityPeriodText'] as String,
+      minAmountText: json['minAmountText'] as String,
+      descText: json['descText'] as String,
+      tambolaMultiplier: json['tambolaMultiplier'] as num,
       isForOldLb: json['isForOldLb'] as bool? ?? false,
     );
+
+const _$FundTypeEnumMap = {
+  FundType.UNI_FLEXI: 'UNI_FLEXI',
+  FundType.UNI_FIXED_6: 'UNI_FIXED_6',
+  FundType.UNI_FIXED_3: 'UNI_FIXED_3',
+};
 
 OverrideUrls _$OverrideUrlsFromJson(Map<String, dynamic> json) => OverrideUrls(
       userOps: json['userOps'] as String? ?? '',

@@ -215,11 +215,11 @@ class LendboxBuyViewModel extends BaseViewModel
 
   void _caluculateFactor() {
     String modelFlowType = floAssetType;
-    List<Lendboxp2P> lendBoxDetails = AppConfigV2.instance.lendBoxP2P;
+    List<LendboxP2P> lendBoxDetails = AppConfigV2.instance.lendBoxP2P;
     final isLendBoxOldUser =
         locator<UserService>().userSegments.contains(Constants.US_FLO_OLD);
 
-    Lendboxp2P? assetInformation = lendBoxDetails.firstWhereOrNull(
+    LendboxP2P? assetInformation = lendBoxDetails.firstWhereOrNull(
       (element) {
         return modelFlowType == Constants.ASSET_TYPE_FLO_FELXI
             ? element.isForOldLb == isLendBoxOldUser &&
@@ -229,7 +229,7 @@ class LendboxBuyViewModel extends BaseViewModel
     );
 
     if (assetInformation != null) {
-      tambolaMultiplier = assetInformation.tamBolaMultiplier.toInt();
+      tambolaMultiplier = assetInformation.tambolaMultiplier.toInt();
     }
   }
 
@@ -247,7 +247,9 @@ class LendboxBuyViewModel extends BaseViewModel
     _txnService.floAssetType = floAssetType;
     showHappyHour = locator<MarketingEventHandlerService>().showHappyHourBanner;
     animationController = AnimationController(
-        vsync: vsync, duration: const Duration(milliseconds: 500));
+      vsync: vsync,
+      duration: const Duration(milliseconds: 500),
+    );
     animationController?.addListener(listener);
     isLendboxOldUser =
         locator<UserService>().userSegments.contains(Constants.US_FLO_OLD);
@@ -257,8 +259,10 @@ class LendboxBuyViewModel extends BaseViewModel
     log("isLendboxOldUser $isLendboxOldUser");
     skipMl = isSkipMilestone;
     int? data = assetOptionsModel?.data.userOptions
-        .firstWhere((element) => element.best,
-            orElse: () => assetOptionsModel!.data.userOptions[1])
+        .firstWhere(
+          (element) => element.best,
+          orElse: () => assetOptionsModel!.data.userOptions[1],
+        )
         .value;
 
     amountController = TextEditingController(
@@ -330,7 +334,9 @@ class LendboxBuyViewModel extends BaseViewModel
       _isBuyInProgress = false;
       forcedBuy = false;
       BaseUtil.showNegativeAlert(
-          "Invalid Amount", "Please Enter Amount Greater than $minAmount");
+        "Invalid Amount",
+        "Please Enter Amount Greater than $minAmount",
+      );
       notifyListeners();
       return;
     }
@@ -356,18 +362,20 @@ class LendboxBuyViewModel extends BaseViewModel
     notifyListeners();
 
     if (selectedUpiApplication != null) {
-      analyticsService
-          .track(eventName: AnalyticsEvents.intentUpiAppSelected, properties: {
-        "floAssetType": floAssetType,
-        "maturityPref": selectedOption.lbMapping,
-        "couponCode": appliedCoupon?.code ?? '',
-        "txnAmount": amount.toDouble(),
-        "skipMl": skipMl,
-        "upiChoice": selectedUpiApplication!.packageName,
-        "abTesting": AppConfig.getValue(AppConfigKey.payment_brief_view)
-            ? "with payment summary"
-            : "without payment summary"
-      });
+      analyticsService.track(
+        eventName: AnalyticsEvents.intentUpiAppSelected,
+        properties: {
+          "floAssetType": floAssetType,
+          "maturityPref": selectedOption.lbMapping,
+          "couponCode": appliedCoupon?.code ?? '',
+          "txnAmount": amount.toDouble(),
+          "skipMl": skipMl,
+          "upiChoice": selectedUpiApplication!.packageName,
+          "abTesting": AppConfig.getValue(AppConfigKey.payment_brief_view)
+              ? "with payment summary"
+              : "without payment summary"
+        },
+      );
     }
   }
 
@@ -424,23 +432,24 @@ class LendboxBuyViewModel extends BaseViewModel
     }
 
     analyticsService.track(
-        eventName: AnalyticsEvents.saveCheckout,
-        properties:
-            AnalyticsProperties.getDefaultPropertiesMap(extraValuesMap: {
+      eventName: AnalyticsEvents.saveCheckout,
+      properties: AnalyticsProperties.getDefaultPropertiesMap(
+        extraValuesMap: {
           "iplPrediction": PowerPlayService.powerPlayDepositFlow,
           "Asset": floAssetType,
           "Amount Entered": amountController?.text,
           "Best flag": assetOptionsModel?.data.userOptions
               .firstWhere(
-                  (element) =>
-                      element.value.toString() == amountController!.text,
-                  orElse: () =>
-                      const UserOption(order: 0, value: 0, best: false))
+                (element) => element.value.toString() == amountController!.text,
+                orElse: () => const UserOption(order: 0, value: 0, best: false),
+              )
               .value,
           "Lock-in": getLockin(),
           "Maturity Decision": getMaturityTitle(),
           "coupon name": appliedCoupon?.code
-        }));
+        },
+      ),
+    );
     return buyAmount!;
   }
 
@@ -478,15 +487,17 @@ class LendboxBuyViewModel extends BaseViewModel
   }
 
   void navigateToKycScreen() {
-    analyticsService
-        .track(eventName: AnalyticsEvents.completeKYCTapped, properties: {
-      "location": "Fello Felo Invest",
-      "Total invested amount": AnalyticsProperties.getGoldInvestedAmount() +
-          AnalyticsProperties.getFelloFloAmount(),
-      "Amount invested in gold": AnalyticsProperties.getGoldInvestedAmount(),
-      "Grams of gold owned": AnalyticsProperties.getGoldQuantityInGrams(),
-      "Amount invested in Flo": AnalyticsProperties.getFelloFloAmount(),
-    });
+    analyticsService.track(
+      eventName: AnalyticsEvents.completeKYCTapped,
+      properties: {
+        "location": "Fello Felo Invest",
+        "Total invested amount": AnalyticsProperties.getGoldInvestedAmount() +
+            AnalyticsProperties.getFelloFloAmount(),
+        "Amount invested in gold": AnalyticsProperties.getGoldInvestedAmount(),
+        "Grams of gold owned": AnalyticsProperties.getGoldQuantityInGrams(),
+        "Amount invested in Flo": AnalyticsProperties.getFelloFloAmount(),
+      },
+    );
     AppState.delegate!.appState.currentAction = PageAction(
       state: PageState.addPage,
       page: KycDetailsPageConfig,
@@ -502,14 +513,6 @@ class LendboxBuyViewModel extends BaseViewModel
       couponList = couponsRes.model;
       if (couponList?[0].priority == 1) focusCoupon = couponList?[0];
       showCoupons = true;
-    }
-  }
-
-  int getAmount(int amount) {
-    if (amount > amount.toInt()) {
-      return amount;
-    } else {
-      return amount.toInt();
     }
   }
 
@@ -567,16 +570,20 @@ class LendboxBuyViewModel extends BaseViewModel
 
     appliedCoupon = null;
 
-    analyticsService
-        .track(eventName: AnalyticsEvents.suggestedAmountTapped, properties: {
-      'order': index,
-      'Asset': floAssetType,
-      'Amount': assetOptionsModel?.data.userOptions[index].value,
-      'Best flag': assetOptionsModel?.data.userOptions
-          .firstWhere((element) => element.best,
-              orElse: () => const UserOption(order: 0, value: 0, best: false))
-          .value
-    });
+    analyticsService.track(
+      eventName: AnalyticsEvents.suggestedAmountTapped,
+      properties: {
+        'order': index,
+        'Asset': floAssetType,
+        'Amount': assetOptionsModel?.data.userOptions[index].value,
+        'Best flag': assetOptionsModel?.data.userOptions
+            .firstWhere(
+              (element) => element.best,
+              orElse: () => const UserOption(order: 0, value: 0, best: false),
+            )
+            .value
+      },
+    );
 
     updateFieldWidth();
     notifyListeners();
@@ -779,46 +786,60 @@ class LendboxBuyViewModel extends BaseViewModel
         appliedCoupon = response.model;
 
         BaseUtil.showPositiveAlert(
-            locale.couponAppliedSucc, response.model?.message);
+          locale.couponAppliedSucc,
+          response.model?.message,
+        );
       } else {
         BaseUtil.showNegativeAlert(
-            locale.couponCannotBeApplied, response.model?.message);
+          locale.couponCannotBeApplied,
+          response.model?.message,
+        );
       }
     } else if (response.code == 400) {
-      BaseUtil.showNegativeAlert(locale.couponNotApplied,
-          response.errorMessage ?? locale.anotherCoupon);
+      BaseUtil.showNegativeAlert(
+        locale.couponNotApplied,
+        response.errorMessage ?? locale.anotherCoupon,
+      );
     } else {
       BaseUtil.showNegativeAlert(locale.couponNotApplied, locale.anotherCoupon);
     }
-    analyticsService
-        .track(eventName: AnalyticsEvents.saveBuyCoupon, properties: {
-      "Asset": floAssetType,
-      "Manual Code entry": isManuallyTyped,
-      "Order of coupon in list": order == -1 ? "Not in list" : order.toString(),
-      "Coupon Name": couponCode,
-      "description": description,
-      "Error message": response.code == 400 ? response.model?.message : "",
-      "Min transaction": minTransaction == -1 ? "Not fetched" : minTransaction,
-    });
+    analyticsService.track(
+      eventName: AnalyticsEvents.saveBuyCoupon,
+      properties: {
+        "Asset": floAssetType,
+        "Manual Code entry": isManuallyTyped,
+        "Order of coupon in list":
+            order == -1 ? "Not in list" : order.toString(),
+        "Coupon Name": couponCode,
+        "description": description,
+        "Error message": response.code == 400 ? response.model?.message : "",
+        "Min transaction":
+            minTransaction == -1 ? "Not fetched" : minTransaction,
+      },
+    );
   }
 
   void checkForSpecialCoupon(EligibleCouponResponseModel model) {
-    if (couponList!.firstWhere((coupon) => coupon.code == model.code,
-            orElse: CouponModel.none) ==
+    if (couponList!.firstWhere(
+          (coupon) => coupon.code == model.code,
+          orElse: CouponModel.none,
+        ) ==
         CouponModel.none()) {
       showCoupons = false;
       couponList!.insert(
-          0,
-          CouponModel(
-              code: model.code,
-              createdOn: TimestampModel.currentTimeStamp(),
-              description: model.desc,
-              expiresOn: TimestampModel.currentTimeStamp(),
-              highlight: '',
-              maxUse: 0,
-              minPurchase: model.minAmountRequired?.toInt(),
-              priority: 0,
-              id: ''));
+        0,
+        CouponModel(
+          code: model.code,
+          createdOn: TimestampModel.currentTimeStamp(),
+          description: model.desc,
+          expiresOn: TimestampModel.currentTimeStamp(),
+          highlight: '',
+          maxUse: 0,
+          minPurchase: model.minAmountRequired?.toInt(),
+          priority: 0,
+          id: '',
+        ),
+      );
       addSpecialCoupon = true;
       showCoupons = true;
     }
@@ -829,6 +850,7 @@ class LendboxBuyViewModel extends BaseViewModel
     if (n == 0) n++;
     _fieldWidth = SizeConfig.padding40 * n.toDouble();
     amountController!.selection = TextSelection.fromPosition(
-        TextPosition(offset: amountController!.text.length));
+      TextPosition(offset: amountController!.text.length),
+    );
   }
 }

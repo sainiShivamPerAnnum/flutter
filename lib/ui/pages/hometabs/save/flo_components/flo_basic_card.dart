@@ -1,5 +1,3 @@
-import 'dart:developer';
-
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
@@ -30,27 +28,31 @@ class FloBasicCard extends StatelessWidget {
   });
 
   void trackBasicCardWithdrawTap(bool isLendboxOldUser, String lockIn) {
-    locator<AnalyticsService>()
-        .track(eventName: AnalyticsEvents.withdrawFloTapped, properties: {
-      "asset name": isLendboxOldUser ? "10% Flo" : "8% Flo",
-      "new user":
-          locator<UserService>().userSegments.contains(Constants.NEW_USER),
-      "invested amount": getPrinciple(isLendboxOldUser),
-      "current amount": getBalance(isLendboxOldUser),
-      "lockin period": lockIn,
-    });
+    locator<AnalyticsService>().track(
+      eventName: AnalyticsEvents.withdrawFloTapped,
+      properties: {
+        "asset name": isLendboxOldUser ? "10% Flo" : "8% Flo",
+        "new user":
+            locator<UserService>().userSegments.contains(Constants.NEW_USER),
+        "invested amount": getPrinciple(isLendboxOldUser),
+        "current amount": getBalance(isLendboxOldUser),
+        "lockin period": lockIn,
+      },
+    );
   }
 
   void trackBasicCardInvestTap(bool isLendboxOldUser, String lockIn) {
-    locator<AnalyticsService>()
-        .track(eventName: AnalyticsEvents.investFloBannerTapped, properties: {
-      "asset name": isLendboxOldUser ? "10% Flo" : "8% Flo",
-      "new user":
-          locator<UserService>().userSegments.contains(Constants.NEW_USER),
-      "invested amount": getPrinciple(isLendboxOldUser),
-      "current amount": getBalance(isLendboxOldUser),
-      "lockin period": lockIn,
-    });
+    locator<AnalyticsService>().track(
+      eventName: AnalyticsEvents.investFloBannerTapped,
+      properties: {
+        "asset name": isLendboxOldUser ? "10% Flo" : "8% Flo",
+        "new user":
+            locator<UserService>().userSegments.contains(Constants.NEW_USER),
+        "invested amount": getPrinciple(isLendboxOldUser),
+        "current amount": getBalance(isLendboxOldUser),
+        "lockin period": lockIn,
+      },
+    );
   }
 
   @override
@@ -63,15 +65,17 @@ class FloBasicCard extends StatelessWidget {
       onTap: () {
         BaseUtil.openFloBuySheet(floAssetType: Constants.ASSET_TYPE_FLO_FELXI);
         trackBasicCardWithdrawTap(
-            isLendboxOldUser,
-            isLendboxOldUser
-                ? lendboxDetails[2]["maturityPeriodText"]
-                : lendboxDetails[3]["maturityPeriodText"] ?? "1 Week Lockin");
+          isLendboxOldUser,
+          isLendboxOldUser
+              ? lendboxDetails[2]["maturityPeriodText"]
+              : lendboxDetails[3]["maturityPeriodText"] ?? "1 Week Lockin",
+        );
       },
       child: Container(
         margin: EdgeInsets.symmetric(
-            vertical: SizeConfig.pageHorizontalMargins / 2,
-            horizontal: SizeConfig.pageHorizontalMargins),
+          vertical: SizeConfig.pageHorizontalMargins / 2,
+          horizontal: SizeConfig.pageHorizontalMargins,
+        ),
         decoration: BoxDecoration(
           shape: BoxShape.rectangle,
           border: Border.all(
@@ -90,81 +94,65 @@ class FloBasicCard extends StatelessWidget {
           children: [
             Container(
               padding: EdgeInsets.symmetric(
-                  vertical: SizeConfig.padding12,
-                  horizontal: SizeConfig.padding16),
+                vertical: SizeConfig.padding12,
+                horizontal: SizeConfig.padding16,
+              ),
               decoration: BoxDecoration(
-                  borderRadius: BorderRadius.circular(SizeConfig.roundness12),
-                  color: Colors.white10),
+                borderRadius: BorderRadius.circular(SizeConfig.roundness12),
+                color: Colors.white10,
+              ),
               child: Column(
                 crossAxisAlignment: CrossAxisAlignment.start,
                 children: [
-                  basicPrinciple < 0
-                      ? Column(
+                  if (basicPrinciple < 0)
+                    Column(
+                      children: [
+                        Text(
+                          isLendboxOldUser ? "10% Flo" : '8% Flo',
+                          style: TextStyles.sourceSansB.title5,
+                        ),
+                        SizedBox(height: SizeConfig.padding8),
+                        FloPremiumTierChip(
+                          value: isLendboxOldUser
+                              ? lendboxDetails[2]["maturityPeriodText"]
+                              : lendboxDetails[3]["maturityPeriodText"] ??
+                                  "1 Week Lockin",
+                        ),
+                      ],
+                    )
+                  else
+                    Row(
+                      children: [
+                        Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
                           children: [
-                            Text(isLendboxOldUser ? "10% Flo" : '8% Flo',
-                                style: TextStyles.sourceSansB.title5),
-                            SizedBox(height: SizeConfig.padding8),
-                            FloPremiumTierChip(
-                                value: isLendboxOldUser
-                                    ? lendboxDetails[2]["maturityPeriodText"]
-                                    : lendboxDetails[3]["maturityPeriodText"] ??
-                                        "1 Week Lockin"),
-                          ],
-                        )
-                      : Row(
-                          children: [
-                            Column(
-                              crossAxisAlignment: CrossAxisAlignment.start,
+                            Text(
+                              isLendboxOldUser ? "10% Flo" : '8% Flo',
+                              style: TextStyles.sourceSansB.title5,
+                            ),
+                            SizedBox(height: SizeConfig.padding4),
+                            Row(
                               children: [
-                                Text(isLendboxOldUser ? "10% Flo" : '8% Flo',
-                                    style: TextStyles.sourceSansB.title5),
-                                SizedBox(height: SizeConfig.padding4),
-                                Row(
-                                  children: [
-                                    FloPremiumTierChip(
-                                      value: isLendboxOldUser
-                                          ? lendboxDetails[2]["minAmountText"]
-                                          : lendboxDetails[3]["minAmountText"],
-                                    ),
-                                    SizedBox(width: SizeConfig.padding16),
-                                    FloPremiumTierChip(
-                                      value: isLendboxOldUser
-                                          ? lendboxDetails[2]
-                                              ["maturityPeriodText"]
-                                          : lendboxDetails[3]
-                                                  ["maturityPeriodText"] ??
-                                              "1 Week Lockin",
-                                    ),
-                                  ],
+                                FloPremiumTierChip(
+                                  value: isLendboxOldUser
+                                      ? lendboxDetails[2]["minAmountText"]
+                                      : lendboxDetails[3]["minAmountText"],
+                                ),
+                                SizedBox(width: SizeConfig.padding16),
+                                FloPremiumTierChip(
+                                  value: isLendboxOldUser
+                                      ? lendboxDetails[2]["maturityPeriodText"]
+                                      : lendboxDetails[3]
+                                              ["maturityPeriodText"] ??
+                                          "1 Week Lockin",
                                 ),
                               ],
                             ),
-                            const Spacer(),
-                            // SizedBox(
-                            //   width: SizeConfig.padding80,
-                            //   child: MaterialButton(
-                            //     color: Colors.white,
-                            //     shape: RoundedRectangleBorder(
-                            //         borderRadius: BorderRadius.circular(
-                            //             SizeConfig.roundness5)),
-                            //     // height: SizeConfig.padding44,
-                            //     padding: EdgeInsets.all(SizeConfig.padding6),
-                            //     onPressed: () => BaseUtil.openFloBuySheet(
-                            //         floAssetType: Constants.ASSET_TYPE_FLO_FELXI),
-                            //
-                            //     child: FittedBox(
-                            //       fit: BoxFit.scaleDown,
-                            //       child: Text(
-                            //         "SAVE",
-                            //         style: TextStyles.sourceSansB.body2
-                            //             .colour(Colors.black),
-                            //       ),
-                            //     ),
-                            //   ),
-                            // )
                           ],
                         ),
-
+                        const Spacer(),
+                      ],
+                    ),
                   SizedBox(height: SizeConfig.padding12),
                   basicPrinciple > 0
                       ? const FloBalanceBriefRow(
@@ -182,23 +170,20 @@ class FloBasicCard extends StatelessWidget {
                             ),
                           ),
                         ),
-                  // SizedBox(height: SizeConfig.padding10),
                 ],
               ),
             ),
             if (basicPrinciple > 0)
               Padding(
                 padding: EdgeInsets.symmetric(
-                    vertical: SizeConfig.padding8,
-                    horizontal: SizeConfig.padding16),
+                  vertical: SizeConfig.padding8,
+                  horizontal: SizeConfig.padding16,
+                ),
                 child: Row(
                   children: [
                     Expanded(
                       child: OutlinedButton(
                         onPressed: () {
-                          log(locator<BankAndPanService>()
-                              .isBankDetailsAdded
-                              .toString());
                           if (locator<BankAndPanService>().isBankDetailsAdded) {
                             BaseUtil.openModalBottomSheet(
                               backgroundColor:
@@ -212,7 +197,8 @@ class FloBasicCard extends StatelessWidget {
                                     Radius.circular(SizeConfig.roundness32),
                               ),
                               content: const SellingReasonBottomSheet(
-                                  investmentType: InvestmentType.LENDBOXP2P),
+                                investmentType: InvestmentType.LENDBOXP2P,
+                              ),
                             );
                           } else {
                             BaseUtil.openDialog(
@@ -246,10 +232,14 @@ class FloBasicCard extends StatelessWidget {
                           }
                         },
                         style: ButtonStyle(
-                            side: MaterialStateProperty.all(const BorderSide(
-                                color: Colors.white,
-                                width: 1.0,
-                                style: BorderStyle.solid))),
+                          side: MaterialStateProperty.all(
+                            const BorderSide(
+                              color: Colors.white,
+                              width: 1.0,
+                              style: BorderStyle.solid,
+                            ),
+                          ),
+                        ),
                         child: Text(
                           key: const ValueKey('floWithdraw'),
                           "WITHDRAW",
@@ -268,13 +258,15 @@ class FloBasicCard extends StatelessWidget {
                         color: Colors.white,
                         onPressed: () {
                           BaseUtil.openFloBuySheet(
-                              floAssetType: Constants.ASSET_TYPE_FLO_FELXI);
+                            floAssetType: Constants.ASSET_TYPE_FLO_FELXI,
+                          );
                           trackBasicCardInvestTap(
-                              isLendboxOldUser,
-                              isLendboxOldUser
-                                  ? lendboxDetails[2]["maturityPeriodText"]
-                                  : lendboxDetails[3]["maturityPeriodText"] ??
-                                      "1 Week Lockin");
+                            isLendboxOldUser,
+                            isLendboxOldUser
+                                ? lendboxDetails[2]["maturityPeriodText"]
+                                : lendboxDetails[3]["maturityPeriodText"] ??
+                                    "1 Week Lockin",
+                          );
                         },
                         child: Text(
                           "SAVE",
@@ -289,8 +281,9 @@ class FloBasicCard extends StatelessWidget {
             else
               Padding(
                 padding: EdgeInsets.symmetric(
-                    vertical: SizeConfig.padding4,
-                    horizontal: SizeConfig.padding16),
+                  vertical: SizeConfig.padding4,
+                  horizontal: SizeConfig.padding16,
+                ),
                 child: Row(
                   mainAxisAlignment: MainAxisAlignment.spaceBetween,
                   children: [
@@ -308,12 +301,12 @@ class FloBasicCard extends StatelessWidget {
                     MaterialButton(
                       color: Colors.white,
                       shape: RoundedRectangleBorder(
-                          borderRadius:
-                              BorderRadius.circular(SizeConfig.roundness5)),
-                      // height: SizeConfig.padding44,
-                      // padding: EdgeInsets.all(SizeConfig.padding6),
+                        borderRadius:
+                            BorderRadius.circular(SizeConfig.roundness5),
+                      ),
                       onPressed: () => BaseUtil.openFloBuySheet(
-                          floAssetType: Constants.ASSET_TYPE_FLO_FELXI),
+                        floAssetType: Constants.ASSET_TYPE_FLO_FELXI,
+                      ),
                       child: FittedBox(
                         fit: BoxFit.scaleDown,
                         child: Text(
@@ -333,26 +326,14 @@ class FloBasicCard extends StatelessWidget {
   }
 
   double getPrinciple(bool isLendboxOldUser) {
-    if (isLendboxOldUser) {
-      return model.userFundWallet?.wLbPrinciple ?? 0;
-    } else {
-      return model.userFundWallet?.wLbPrinciple ?? 0;
-    }
+    return model.userFundWallet?.wLbPrinciple ?? 0;
   }
 
   double getBalance(bool isLendboxOldUser) {
-    if (isLendboxOldUser) {
-      return model.userFundWallet?.wLbBalance ?? 0;
-    } else {
-      return model.userFundWallet?.wLbBalance ?? 0;
-    }
+    return model.userFundWallet?.wLbBalance ?? 0;
   }
 
-  double getPercent(isLendboxOldUser) {
-    if (isLendboxOldUser) {
-      return 0.05;
-    } else {
-      return 0.01;
-    }
+  double getPercent(bool isLendboxOldUser) {
+    return isLendboxOldUser ? 0.05 : 0.01;
   }
 }
