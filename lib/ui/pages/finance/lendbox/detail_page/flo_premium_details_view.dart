@@ -51,11 +51,6 @@ class FloPremiumDetailsView extends StatefulWidget {
 
 class _FloPremiumDetailsViewState extends State<FloPremiumDetailsView>
     with SingleTickerProviderStateMixin {
-  ScrollController? controller;
-
-  AnimationController? _animController;
-  Animation<double>? offsetAnim;
-
   bool _seeAll = false;
 
   void seeAllClicked() {
@@ -65,27 +60,7 @@ class _FloPremiumDetailsViewState extends State<FloPremiumDetailsView>
   }
 
   @override
-  void initState() {
-    super.initState();
-    _animController = AnimationController(
-      vsync: this,
-      duration: const Duration(milliseconds: 250),
-    )..addListener(() {
-        setState(() {});
-      });
-
-    offsetAnim = CurvedAnimation(
-      curve: Curves.easeInCubic,
-      parent: _animController!,
-      reverseCurve: Curves.decelerate,
-    );
-    controller = ScrollController();
-  }
-
-  @override
   void dispose() {
-    controller?.dispose();
-    _animController!.dispose();
     super.dispose();
     _seeAll = false;
   }
@@ -108,7 +83,6 @@ class _FloPremiumDetailsViewState extends State<FloPremiumDetailsView>
   Widget build(BuildContext context) {
     return BaseView<FloPremiumDetailsViewModel>(
       onModelReady: (model) => model.init(widget.is12),
-      onModelDispose: (model) => model.dump(),
       builder: (context, model, _) {
         final value = context.watch<LendboxMaturityService>().callTxnApi;
 
@@ -152,57 +126,208 @@ class _FloPremiumDetailsViewState extends State<FloPremiumDetailsView>
                         const SizedBox(height: kToolbarHeight * 0.8),
                         Expanded(
                           child: SingleChildScrollView(
-                            controller: controller,
                             child: Column(
                               children: [
-                                Transform.translate(
-                                  offset:
-                                      Offset(0, -1 * offsetAnim!.value * 50),
-                                  child: AnimatedSwitcher(
-                                    duration: const Duration(seconds: 2),
-                                    child: model.is12
-                                        ? Column(
-                                            children: [
-                                              FloPremiumHeader(
-                                                key: const ValueKey(
-                                                  "12floHeader",
+                                AnimatedSwitcher(
+                                  duration: const Duration(seconds: 2),
+                                  child: model.is12
+                                      ? Column(
+                                          children: [
+                                            FloPremiumHeader(
+                                              key: const ValueKey(
+                                                "12floHeader",
+                                              ),
+                                              model: model,
+                                            ),
+                                            SizedBox(
+                                              height: SizeConfig.padding32,
+                                            ),
+                                            if (model.isInvested)
+                                              Container(
+                                                margin: EdgeInsets.symmetric(
+                                                  horizontal:
+                                                      SizeConfig.padding16,
                                                 ),
-                                                model: model,
-                                              ),
-                                              SizedBox(
-                                                height: SizeConfig.padding32,
-                                              ),
-                                              if (model.isInvested)
-                                                Container(
-                                                  margin: EdgeInsets.symmetric(
-                                                    horizontal:
-                                                        SizeConfig.padding16,
-                                                  ),
-                                                  padding: EdgeInsets.only(
-                                                    top: SizeConfig.padding16,
-                                                    // horizontal:
-                                                    //     SizeConfig.padding16,
-                                                  ),
-                                                  decoration: ShapeDecoration(
-                                                    color:
-                                                        const Color(0xFF013B3F),
-                                                    shape:
-                                                        RoundedRectangleBorder(
-                                                      side: const BorderSide(
-                                                        width: 1,
-                                                        strokeAlign: BorderSide
-                                                            .strokeAlignOutside,
-                                                        color:
-                                                            Color(0xFF326164),
-                                                      ),
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                        16,
-                                                      ),
+                                                padding: EdgeInsets.only(
+                                                  top: SizeConfig.padding16,
+                                                  // horizontal:
+                                                  //     SizeConfig.padding16,
+                                                ),
+                                                decoration: ShapeDecoration(
+                                                  color:
+                                                      const Color(0xFF013B3F),
+                                                  shape: RoundedRectangleBorder(
+                                                    side: const BorderSide(
+                                                      width: 1,
+                                                      strokeAlign: BorderSide
+                                                          .strokeAlignOutside,
+                                                      color: Color(0xFF326164),
+                                                    ),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                      16,
                                                     ),
                                                   ),
-                                                  child: Column(
-                                                    children: [
+                                                ),
+                                                child: Column(
+                                                  children: [
+                                                    Container(
+                                                      margin:
+                                                          EdgeInsets.symmetric(
+                                                        horizontal: SizeConfig
+                                                            .padding24,
+                                                      ),
+                                                      child:
+                                                          const FloBalanceBriefRow(
+                                                        key: ValueKey(
+                                                          "10floBalance",
+                                                        ),
+                                                        tier: Constants
+                                                            .ASSET_TYPE_FLO_FIXED_6,
+                                                        mini: true,
+                                                        endAlign: true,
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      height:
+                                                          SizeConfig.padding16,
+                                                    ),
+                                                    Container(
+                                                      margin:
+                                                          EdgeInsets.symmetric(
+                                                        horizontal: SizeConfig
+                                                            .padding16,
+                                                      ),
+                                                      child:
+                                                          FloPremiumTransactionsList(
+                                                        key: const ValueKey(
+                                                          "12floTxns",
+                                                        ),
+                                                        model: model,
+                                                        seeAll: _seeAll,
+                                                      ),
+                                                    ),
+                                                    SizedBox(
+                                                      height:
+                                                          SizeConfig.padding8,
+                                                    ),
+                                                    if (model.transactionsList
+                                                            .length >
+                                                        2)
+                                                      GestureDetector(
+                                                        onTap: () {
+                                                          setState(() {
+                                                            _seeAll = !_seeAll;
+                                                          });
+                                                        },
+                                                        child: Container(
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: Colors.white
+                                                                .withOpacity(
+                                                              0.10,
+                                                            ),
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .only(
+                                                              bottomLeft: Radius
+                                                                  .circular(
+                                                                SizeConfig
+                                                                    .roundness16,
+                                                              ),
+                                                              bottomRight:
+                                                                  Radius
+                                                                      .circular(
+                                                                SizeConfig
+                                                                    .roundness16,
+                                                              ),
+                                                            ),
+                                                          ),
+                                                          child: Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .center,
+                                                            children: [
+                                                              Text(
+                                                                _seeAll
+                                                                    ? 'View less Investments'
+                                                                    : 'View more Investments',
+                                                                style: TextStyles
+                                                                    .sourceSansSB
+                                                                    .body2
+                                                                    .colour(
+                                                                  Colors.white,
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                width: SizeConfig
+                                                                    .padding4,
+                                                              ),
+                                                              Icon(
+                                                                _seeAll
+                                                                    ? Icons
+                                                                        .keyboard_arrow_up
+                                                                    : Icons
+                                                                        .keyboard_arrow_down_outlined,
+                                                                color: Colors
+                                                                    .white,
+                                                                size: SizeConfig
+                                                                    .padding28,
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      )
+                                                  ],
+                                                ),
+                                              ),
+                                            if (model.isInvested)
+                                              SizedBox(
+                                                height: SizeConfig.padding16,
+                                              )
+                                          ],
+                                        )
+                                      : Column(
+                                          children: [
+                                            FloPremiumHeader(
+                                              key: const ValueKey(
+                                                "10floHeader",
+                                              ),
+                                              model: model,
+                                            ),
+                                            SizedBox(
+                                              height: SizeConfig.padding32,
+                                            ),
+                                            if (model.isInvested)
+                                              Container(
+                                                margin: EdgeInsets.symmetric(
+                                                  horizontal:
+                                                      SizeConfig.padding16,
+                                                ),
+                                                padding: EdgeInsets.only(
+                                                  top: SizeConfig.padding16,
+                                                  // horizontal:
+                                                  //     SizeConfig.padding16,
+                                                ),
+                                                decoration: ShapeDecoration(
+                                                  color:
+                                                      const Color(0xFF013B3F),
+                                                  shape: RoundedRectangleBorder(
+                                                    side: const BorderSide(
+                                                      width: 1,
+                                                      strokeAlign: BorderSide
+                                                          .strokeAlignOutside,
+                                                      color: Color(0xFF326164),
+                                                    ),
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                      16,
+                                                    ),
+                                                  ),
+                                                ),
+                                                child: Column(
+                                                  children: [
+                                                    if (model.isInvested)
                                                       Container(
                                                         margin: EdgeInsets
                                                             .symmetric(
@@ -215,285 +340,118 @@ class _FloPremiumDetailsViewState extends State<FloPremiumDetailsView>
                                                             "10floBalance",
                                                           ),
                                                           tier: Constants
-                                                              .ASSET_TYPE_FLO_FIXED_6,
+                                                              .ASSET_TYPE_FLO_FIXED_3,
                                                           mini: true,
                                                           endAlign: true,
                                                         ),
                                                       ),
+                                                    if (model.isInvested)
                                                       SizedBox(
                                                         height: SizeConfig
                                                             .padding16,
                                                       ),
-                                                      Container(
-                                                        margin: EdgeInsets
-                                                            .symmetric(
-                                                          horizontal: SizeConfig
-                                                              .padding16,
+                                                    Container(
+                                                      margin:
+                                                          EdgeInsets.symmetric(
+                                                        horizontal: SizeConfig
+                                                            .padding16,
+                                                      ),
+                                                      child:
+                                                          FloPremiumTransactionsList(
+                                                        key: const ValueKey(
+                                                          "10floTxns",
                                                         ),
-                                                        child:
-                                                            FloPremiumTransactionsList(
-                                                          key: const ValueKey(
-                                                            "12floTxns",
-                                                          ),
-                                                          model: model,
-                                                          seeAll: _seeAll,
-                                                        ),
-                                                      ),
-                                                      SizedBox(
-                                                        height:
-                                                            SizeConfig.padding8,
-                                                      ),
-                                                      if (model.transactionsList
-                                                              .length >
-                                                          2)
-                                                        GestureDetector(
-                                                          onTap: () {
-                                                            setState(() {
-                                                              _seeAll =
-                                                                  !_seeAll;
-                                                            });
-                                                          },
-                                                          child: Container(
-                                                            decoration:
-                                                                BoxDecoration(
-                                                              color: Colors
-                                                                  .white
-                                                                  .withOpacity(
-                                                                0.10,
-                                                              ),
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .only(
-                                                                bottomLeft: Radius
-                                                                    .circular(
-                                                                  SizeConfig
-                                                                      .roundness16,
-                                                                ),
-                                                                bottomRight:
-                                                                    Radius
-                                                                        .circular(
-                                                                  SizeConfig
-                                                                      .roundness16,
-                                                                ),
-                                                              ),
-                                                            ),
-                                                            child: Row(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .center,
-                                                              children: [
-                                                                Text(
-                                                                  _seeAll
-                                                                      ? 'View less Investments'
-                                                                      : 'View more Investments',
-                                                                  style: TextStyles
-                                                                      .sourceSansSB
-                                                                      .body2
-                                                                      .colour(
-                                                                    Colors
-                                                                        .white,
-                                                                  ),
-                                                                ),
-                                                                SizedBox(
-                                                                  width: SizeConfig
-                                                                      .padding4,
-                                                                ),
-                                                                Icon(
-                                                                  _seeAll
-                                                                      ? Icons
-                                                                          .keyboard_arrow_up
-                                                                      : Icons
-                                                                          .keyboard_arrow_down_outlined,
-                                                                  color: Colors
-                                                                      .white,
-                                                                  size: SizeConfig
-                                                                      .padding28,
-                                                                ),
-                                                              ],
-                                                            ),
-                                                          ),
-                                                        )
-                                                    ],
-                                                  ),
-                                                ),
-                                              if (model.isInvested)
-                                                SizedBox(
-                                                  height: SizeConfig.padding16,
-                                                )
-                                            ],
-                                          )
-                                        : Column(
-                                            children: [
-                                              FloPremiumHeader(
-                                                key: const ValueKey(
-                                                  "10floHeader",
-                                                ),
-                                                model: model,
-                                              ),
-                                              SizedBox(
-                                                height: SizeConfig.padding32,
-                                              ),
-                                              if (model.isInvested)
-                                                Container(
-                                                  margin: EdgeInsets.symmetric(
-                                                    horizontal:
-                                                        SizeConfig.padding16,
-                                                  ),
-                                                  padding: EdgeInsets.only(
-                                                    top: SizeConfig.padding16,
-                                                    // horizontal:
-                                                    //     SizeConfig.padding16,
-                                                  ),
-                                                  decoration: ShapeDecoration(
-                                                    color:
-                                                        const Color(0xFF013B3F),
-                                                    shape:
-                                                        RoundedRectangleBorder(
-                                                      side: const BorderSide(
-                                                        width: 1,
-                                                        strokeAlign: BorderSide
-                                                            .strokeAlignOutside,
-                                                        color:
-                                                            Color(0xFF326164),
-                                                      ),
-                                                      borderRadius:
-                                                          BorderRadius.circular(
-                                                        16,
+                                                        model: model,
+                                                        seeAll: _seeAll,
                                                       ),
                                                     ),
-                                                  ),
-                                                  child: Column(
-                                                    children: [
-                                                      if (model.isInvested)
-                                                        Container(
-                                                          margin: EdgeInsets
-                                                              .symmetric(
-                                                            horizontal:
+                                                    SizedBox(
+                                                      height:
+                                                          SizeConfig.padding8,
+                                                    ),
+                                                    if (model.isInvested &&
+                                                        (model.transactionsList
+                                                                .length >
+                                                            2))
+                                                      GestureDetector(
+                                                        onTap: () {
+                                                          setState(() {
+                                                            _seeAll = !_seeAll;
+                                                          });
+                                                        },
+                                                        child: Container(
+                                                          decoration:
+                                                              BoxDecoration(
+                                                            color: Colors.white
+                                                                .withOpacity(
+                                                              0.10,
+                                                            ),
+                                                            borderRadius:
+                                                                BorderRadius
+                                                                    .only(
+                                                              bottomLeft: Radius
+                                                                  .circular(
                                                                 SizeConfig
-                                                                    .padding24,
-                                                          ),
-                                                          child:
-                                                              const FloBalanceBriefRow(
-                                                            key: ValueKey(
-                                                              "10floBalance",
-                                                            ),
-                                                            tier: Constants
-                                                                .ASSET_TYPE_FLO_FIXED_3,
-                                                            mini: true,
-                                                            endAlign: true,
-                                                          ),
-                                                        ),
-                                                      if (model.isInvested)
-                                                        SizedBox(
-                                                          height: SizeConfig
-                                                              .padding16,
-                                                        ),
-                                                      Container(
-                                                        margin: EdgeInsets
-                                                            .symmetric(
-                                                          horizontal: SizeConfig
-                                                              .padding16,
-                                                        ),
-                                                        child:
-                                                            FloPremiumTransactionsList(
-                                                          key: const ValueKey(
-                                                            "10floTxns",
-                                                          ),
-                                                          model: model,
-                                                          seeAll: _seeAll,
-                                                        ),
-                                                      ),
-                                                      SizedBox(
-                                                        height:
-                                                            SizeConfig.padding8,
-                                                      ),
-                                                      if (model.isInvested &&
-                                                          (model.transactionsList
-                                                                  .length >
-                                                              2))
-                                                        GestureDetector(
-                                                          onTap: () {
-                                                            setState(() {
-                                                              _seeAll =
-                                                                  !_seeAll;
-                                                            });
-                                                          },
-                                                          child: Container(
-                                                            decoration:
-                                                                BoxDecoration(
-                                                              color: Colors
-                                                                  .white
-                                                                  .withOpacity(
-                                                                0.10,
+                                                                    .roundness16,
                                                               ),
-                                                              borderRadius:
-                                                                  BorderRadius
-                                                                      .only(
-                                                                bottomLeft: Radius
-                                                                    .circular(
-                                                                  SizeConfig
-                                                                      .roundness16,
-                                                                ),
-                                                                bottomRight:
-                                                                    Radius
-                                                                        .circular(
-                                                                  SizeConfig
-                                                                      .roundness16,
-                                                                ),
+                                                              bottomRight:
+                                                                  Radius
+                                                                      .circular(
+                                                                SizeConfig
+                                                                    .roundness16,
                                                               ),
                                                             ),
-                                                            child: Row(
-                                                              mainAxisAlignment:
-                                                                  MainAxisAlignment
-                                                                      .center,
-                                                              children: [
-                                                                Text(
-                                                                  _seeAll
-                                                                      ? 'View less Investments'
-                                                                      : 'View more Investments',
-                                                                  style: TextStyles
-                                                                      .sourceSansSB
-                                                                      .body2
-                                                                      .colour(
-                                                                    Colors
-                                                                        .white,
-                                                                  ),
-                                                                ),
-                                                                SizedBox(
-                                                                  width: SizeConfig
-                                                                      .padding4,
-                                                                ),
-                                                                Icon(
-                                                                  _seeAll
-                                                                      ? Icons
-                                                                          .keyboard_arrow_up
-                                                                      : Icons
-                                                                          .keyboard_arrow_down_outlined,
-                                                                  color: Colors
-                                                                      .white,
-                                                                  size: SizeConfig
-                                                                      .padding28,
-                                                                ),
-                                                              ],
-                                                            ),
                                                           ),
-                                                        )
-                                                    ],
-                                                  ),
+                                                          child: Row(
+                                                            mainAxisAlignment:
+                                                                MainAxisAlignment
+                                                                    .center,
+                                                            children: [
+                                                              Text(
+                                                                _seeAll
+                                                                    ? 'View less Investments'
+                                                                    : 'View more Investments',
+                                                                style: TextStyles
+                                                                    .sourceSansSB
+                                                                    .body2
+                                                                    .colour(
+                                                                  Colors.white,
+                                                                ),
+                                                              ),
+                                                              SizedBox(
+                                                                width: SizeConfig
+                                                                    .padding4,
+                                                              ),
+                                                              Icon(
+                                                                _seeAll
+                                                                    ? Icons
+                                                                        .keyboard_arrow_up
+                                                                    : Icons
+                                                                        .keyboard_arrow_down_outlined,
+                                                                color: Colors
+                                                                    .white,
+                                                                size: SizeConfig
+                                                                    .padding28,
+                                                              ),
+                                                            ],
+                                                          ),
+                                                        ),
+                                                      )
+                                                  ],
                                                 ),
-                                              if (model.isInvested)
-                                                SizedBox(
-                                                  height: SizeConfig.padding16,
-                                                )
-                                            ],
-                                          ),
-                                    transitionBuilder: (child, animation) {
-                                      return FadeTransition(
-                                        opacity: animation,
-                                        child: child,
-                                      );
-                                    },
-                                  ),
+                                              ),
+                                            if (model.isInvested)
+                                              SizedBox(
+                                                height: SizeConfig.padding16,
+                                              )
+                                          ],
+                                        ),
+                                  transitionBuilder: (child, animation) {
+                                    return FadeTransition(
+                                      opacity: animation,
+                                      child: child,
+                                    );
+                                  },
                                 ),
 
                                 SizedBox(
@@ -514,7 +472,7 @@ class _FloPremiumDetailsViewState extends State<FloPremiumDetailsView>
                                   textAlign: TextAlign.center,
                                 ),
                                 SizedBox(height: SizeConfig.padding24),
-                                const Testomonials(),
+                                const Testimonials(),
 
                                 SizedBox(height: SizeConfig.padding20),
 
@@ -522,178 +480,12 @@ class _FloPremiumDetailsViewState extends State<FloPremiumDetailsView>
                                 SizedBox(
                                   height: SizeConfig.pageHorizontalMargins,
                                 ),
-                                Padding(
-                                  padding: EdgeInsets.symmetric(
-                                    vertical: SizeConfig.padding16,
-                                  ),
-                                  child: Text(
-                                    "Frequently Asked Questions",
-                                    style: TextStyles.rajdhaniSB.title4
-                                        .colour(Colors.white),
-                                  ),
+                                _Faqs(
+                                  faqs: model.faqHeaders,
                                 ),
-                                SizedBox(
-                                  width: SizeConfig.screenWidth,
-                                  child: Column(
-                                    children: [
-                                      Theme(
-                                        data: ThemeData(
-                                          brightness: Brightness.dark,
-                                        ),
-                                        child: ExpansionPanelList(
-                                          animationDuration:
-                                              const Duration(milliseconds: 600),
-                                          expandedHeaderPadding:
-                                              const EdgeInsets.all(0),
-                                          dividerColor: UiConstants
-                                              .kDividerColor
-                                              .withOpacity(0.3),
-                                          elevation: 0,
-                                          children: List.generate(
-                                            model.faqHeaders.length,
-                                            (index) => ExpansionPanel(
-                                              backgroundColor:
-                                                  Colors.transparent,
-                                              canTapOnHeader: true,
-                                              headerBuilder: (ctx, isOpen) =>
-                                                  Padding(
-                                                padding: EdgeInsets.only(
-                                                  top: SizeConfig.padding20,
-                                                  left: SizeConfig
-                                                      .pageHorizontalMargins,
-                                                  bottom: SizeConfig.padding20,
-                                                ),
-                                                child: Text(
-                                                  model.faqHeaders[index] ?? "",
-                                                  style: TextStyles
-                                                      .sourceSans.body2
-                                                      .colour(Colors.white),
-                                                ),
-                                              ),
-                                              isExpanded:
-                                                  model.detStatus[index],
-                                              body: Container(
-                                                margin: EdgeInsets.symmetric(
-                                                  horizontal: SizeConfig
-                                                      .pageHorizontalMargins,
-                                                ),
-                                                alignment: Alignment.centerLeft,
-                                                child: Text(
-                                                  model.faqResponses[index]!,
-                                                  textAlign: TextAlign.start,
-                                                  style:
-                                                      TextStyles.body3.colour(
-                                                    UiConstants
-                                                        .kFAQsAnswerColor,
-                                                  ),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                          expansionCallback: (i, isOpen) {
-                                            model.updateDetStatus(i, !isOpen);
-                                          },
-                                        ),
-                                      ),
-                                    ],
-                                  ),
-                                ),
-                                Container(
-                                  decoration: BoxDecoration(
-                                    color: UiConstants.kSaveStableFelloCardBg,
-                                    borderRadius: BorderRadius.circular(
-                                      SizeConfig.roundness16,
-                                    ),
-                                    border: Border.all(
-                                      color: Colors.white,
-                                      width: 2,
-                                    ),
-                                  ),
-                                  margin: EdgeInsets.all(
-                                    SizeConfig.pageHorizontalMargins,
-                                  ),
-                                  padding: EdgeInsets.all(SizeConfig.padding16),
-                                  child: Row(
-                                    mainAxisAlignment:
-                                        MainAxisAlignment.spaceBetween,
-                                    children: [
-                                      SizedBox(
-                                        width: SizeConfig.padding200 +
-                                            SizeConfig.padding4,
-                                        child: Column(
-                                          crossAxisAlignment:
-                                              CrossAxisAlignment.start,
-                                          children: [
-                                            Text(
-                                              "We’ll be happy to assist",
-                                              style:
-                                                  TextStyles.rajdhaniSB.body1,
-                                            ),
-                                            SizedBox(
-                                              height: SizeConfig.padding12,
-                                            ),
-                                            Text(
-                                              "Get in touch with the experts at Fello to assist you in your savings",
-                                              style: TextStyles.body3
-                                                  .colour(Colors.white),
-                                            )
-                                          ],
-                                        ),
-                                      ),
-                                      Stack(
-                                        children: [
-                                          SvgPicture.asset(
-                                            'assets/svg/customer_help.svg',
-                                            height: SizeConfig.padding104,
-                                          ),
-                                          Transform.translate(
-                                            offset:
-                                                Offset(0, SizeConfig.padding54),
-                                            child: Align(
-                                              alignment: Alignment.bottomCenter,
-                                              child: OutlinedButton(
-                                                onPressed: () {
-                                                  Haptic.vibrate();
-                                                  AppState.delegate!.appState
-                                                          .currentAction =
-                                                      PageAction(
-                                                    state: PageState.addPage,
-                                                    page:
-                                                        FreshDeskHelpPageConfig,
-                                                  );
-                                                  trackHelpBannerTapped(
-                                                    model.is12,
-                                                  );
-                                                },
-                                                style: ButtonStyle(
-                                                  backgroundColor:
-                                                      MaterialStateProperty.all(
-                                                    const Color(
-                                                      0xFF01656B,
-                                                    ),
-                                                  ),
-                                                  side:
-                                                      MaterialStateProperty.all(
-                                                    const BorderSide(
-                                                      color: Colors.white,
-                                                      width: 1.0,
-                                                      style: BorderStyle.solid,
-                                                    ),
-                                                  ),
-                                                ),
-                                                child: Text(
-                                                  "ASK FELLO",
-                                                  style: TextStyles
-                                                      .rajdhaniB.body2
-                                                      .colour(Colors.white),
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      )
-                                    ],
-                                  ),
+
+                                _CustomerSupportWidget(
+                                  is12: widget.is12,
                                 ),
                                 SizedBox(
                                   height: SizeConfig.navBarHeight * 2,
@@ -778,27 +570,11 @@ class _FloPremiumDetailsViewState extends State<FloPremiumDetailsView>
                                               style: TextStyles.rajdhaniSB.body2
                                                   .colour(Colors.white),
                                             ),
-                                            onPressed: () async {
+                                            onPressed: () {
                                               Haptic.vibrate();
-                                              await controller
-                                                  ?.animateTo(
-                                                0,
-                                                duration: const Duration(
-                                                  milliseconds: 200,
-                                                ),
-                                                curve: Curves.decelerate,
-                                              )
-                                                  .then((_) {
-                                                _animController!
-                                                    .forward()
-                                                    .then((value) {
-                                                  model.cleanTransactionsList();
-                                                  _animController!.reverse();
-                                                  model.is12 = true;
-
-                                                  model.getTransactions();
-                                                });
-                                              });
+                                              model.cleanTransactionsList();
+                                              model.is12 = true;
+                                              model.getTransactions();
                                             },
                                           ),
                                         ),
@@ -884,6 +660,119 @@ class _FloPremiumDetailsViewState extends State<FloPremiumDetailsView>
       },
     );
   }
+}
+
+class _Faqs extends StatefulWidget {
+  const _Faqs({
+    required this.faqs,
+  });
+
+  final List<(String, String)> faqs;
+
+  @override
+  State<_Faqs> createState() => _FaqsState();
+}
+
+class _FaqsState extends State<_Faqs> {
+  late final List<bool> _expansionStatus;
+
+  @override
+  void initState() {
+    super.initState();
+    _expansionStatus = List<bool>.filled(
+      widget.faqs.length,
+      false,
+      growable: false,
+    );
+  }
+
+  @override
+  void dispose() {
+    _expansionStatus.clear();
+    super.dispose();
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    return Column(
+      children: [
+        Padding(
+          padding: EdgeInsets.symmetric(
+            vertical: SizeConfig.padding16,
+          ),
+          child: Text(
+            "Frequently Asked Questions",
+            style: TextStyles.rajdhaniSB.title4.colour(Colors.white),
+          ),
+        ),
+        SizedBox(
+          width: SizeConfig.screenWidth,
+          child: Column(
+            children: [
+              Theme(
+                data: ThemeData(
+                  brightness: Brightness.dark,
+                ),
+                child: ExpansionPanelList(
+                  animationDuration: const Duration(
+                    milliseconds: 600,
+                  ),
+                  expandedHeaderPadding: const EdgeInsets.all(0),
+                  dividerColor: UiConstants.kDividerColor.withOpacity(0.3),
+                  elevation: 0,
+                  children: List.generate(
+                    widget.faqs.length,
+                    (index) => ExpansionPanel(
+                      backgroundColor: Colors.transparent,
+                      canTapOnHeader: true,
+                      headerBuilder: (ctx, isOpen) => Padding(
+                        padding: EdgeInsets.only(
+                          top: SizeConfig.padding20,
+                          left: SizeConfig.pageHorizontalMargins,
+                          bottom: SizeConfig.padding20,
+                        ),
+                        child: Text(
+                          widget.faqs[index].$1,
+                          style:
+                              TextStyles.sourceSans.body2.colour(Colors.white),
+                        ),
+                      ),
+                      isExpanded: _expansionStatus[index],
+                      body: Container(
+                        margin: EdgeInsets.symmetric(
+                          horizontal: SizeConfig.pageHorizontalMargins,
+                        ),
+                        alignment: Alignment.centerLeft,
+                        child: Text(
+                          widget.faqs[index].$2,
+                          textAlign: TextAlign.start,
+                          style: TextStyles.body3.colour(
+                            UiConstants.kFAQsAnswerColor,
+                          ),
+                        ),
+                      ),
+                    ),
+                  ),
+                  expansionCallback: (i, isOpen) {
+                    setState(() {
+                      _expansionStatus[i] = !isOpen;
+                    });
+                  },
+                ),
+              ),
+            ],
+          ),
+        ),
+      ],
+    );
+  }
+}
+
+class _CustomerSupportWidget extends StatelessWidget {
+  const _CustomerSupportWidget({
+    required this.is12,
+  });
+  final bool is12;
 
   void trackHelpBannerTapped(bool is12) {
     locator<AnalyticsService>().track(
@@ -901,10 +790,98 @@ class _FloPremiumDetailsViewState extends State<FloPremiumDetailsView>
       },
     );
   }
+
+  @override
+  Widget build(BuildContext context) {
+    return Container(
+      decoration: BoxDecoration(
+        color: UiConstants.kSaveStableFelloCardBg,
+        borderRadius: BorderRadius.circular(
+          SizeConfig.roundness16,
+        ),
+        border: Border.all(
+          color: Colors.white,
+          width: 2,
+        ),
+      ),
+      margin: EdgeInsets.all(
+        SizeConfig.pageHorizontalMargins,
+      ),
+      padding: EdgeInsets.all(SizeConfig.padding16),
+      child: Row(
+        mainAxisAlignment: MainAxisAlignment.spaceBetween,
+        children: [
+          SizedBox(
+            width: SizeConfig.padding200 + SizeConfig.padding4,
+            child: Column(
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  "We’ll be happy to assist",
+                  style: TextStyles.rajdhaniSB.body1,
+                ),
+                SizedBox(
+                  height: SizeConfig.padding12,
+                ),
+                Text(
+                  "Get in touch with the experts at Fello to assist you in your savings",
+                  style: TextStyles.body3.colour(Colors.white),
+                )
+              ],
+            ),
+          ),
+          Stack(
+            children: [
+              SvgPicture.asset(
+                'assets/svg/customer_help.svg',
+                height: SizeConfig.padding104,
+              ),
+              Transform.translate(
+                offset: Offset(0, SizeConfig.padding54),
+                child: Align(
+                  alignment: Alignment.bottomCenter,
+                  child: OutlinedButton(
+                    onPressed: () {
+                      Haptic.vibrate();
+                      AppState.delegate!.appState.currentAction = PageAction(
+                        state: PageState.addPage,
+                        page: FreshDeskHelpPageConfig,
+                      );
+                      trackHelpBannerTapped(
+                        is12,
+                      );
+                    },
+                    style: ButtonStyle(
+                      backgroundColor: MaterialStateProperty.all(
+                        const Color(
+                          0xFF01656B,
+                        ),
+                      ),
+                      side: MaterialStateProperty.all(
+                        const BorderSide(
+                          color: Colors.white,
+                          width: 1.0,
+                          style: BorderStyle.solid,
+                        ),
+                      ),
+                    ),
+                    child: Text(
+                      "ASK FELLO",
+                      style: TextStyles.rajdhaniB.body2.colour(Colors.white),
+                    ),
+                  ),
+                ),
+              ),
+            ],
+          )
+        ],
+      ),
+    );
+  }
 }
 
-class Testomonials extends StatelessWidget {
-  const Testomonials({
+class Testimonials extends StatelessWidget {
+  const Testimonials({
     super.key,
     this.type = InvestmentType.LENDBOXP2P,
   });
