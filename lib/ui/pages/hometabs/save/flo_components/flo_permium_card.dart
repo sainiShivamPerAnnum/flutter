@@ -1,6 +1,6 @@
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/model/portfolio_model.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
-import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/hometabs/save/save_components/asset_view_section.dart';
 import 'package:felloapp/util/constants.dart';
@@ -12,33 +12,34 @@ import 'package:flutter/material.dart';
 
 class FloPremiumTierCard extends StatelessWidget {
   const FloPremiumTierCard({
-    required this.userService,
     required this.tier,
     required this.actionUri,
-    required this.cta,
+    required this.onTapSave,
+    required this.newUser,
+    required this.portfolio,
+    required this.title,
+    required this.lockIn,
+    required this.minInvestment,
+    required this.summary,
+    required this.promoText,
     super.key,
-    this.title,
-    this.lockIn,
-    this.minInvestment,
-    this.summary,
-    this.promoText,
   });
 
   final String tier;
-  final String? title;
-  final String? lockIn;
-  final String? summary;
-  final String? minInvestment;
+  final String title;
+  final String lockIn;
+  final String summary;
+  final String minInvestment;
   final String actionUri;
-  final VoidCallback cta;
-  final UserService userService;
-  final String? promoText;
+  final VoidCallback onTapSave;
+  final String promoText;
+  final bool newUser;
+  final Portfolio portfolio;
 
   void trackTierCardTap(String assetName) {
     final props = {
       "asset name": assetName,
-      "new user":
-          locator<UserService>().userSegments.contains(Constants.NEW_USER),
+      "new user": newUser,
       "invested amount": getTrail(),
       "current amount": getLead(),
       "lockin period": lockIn,
@@ -58,7 +59,7 @@ class FloPremiumTierCard extends StatelessWidget {
           onTap: () {
             Haptic.vibrate();
             AppState.delegate!.parseRoute(Uri.parse(actionUri));
-            trackTierCardTap(title!);
+            trackTierCardTap(title);
           },
           child: Container(
             decoration: BoxDecoration(
@@ -79,7 +80,7 @@ class FloPremiumTierCard extends StatelessWidget {
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
                             Text(
-                              title ?? 'Fello Flo',
+                              title,
                               style: TextStyles.sourceSansB.title5,
                             ),
                           ],
@@ -117,7 +118,7 @@ class FloPremiumTierCard extends StatelessWidget {
                 else
                   SizedBox(
                     child: Text(
-                      summary ?? "",
+                      summary,
                       style: TextStyles.body3.colour(
                         Colors.white.withOpacity(0.6),
                       ),
@@ -127,7 +128,7 @@ class FloPremiumTierCard extends StatelessWidget {
             ),
           ),
         ),
-        if (promoText != null && promoText!.isNotEmpty)
+        if (promoText.isNotEmpty)
           Padding(
             padding: EdgeInsets.symmetric(
               vertical: SizeConfig.padding4,
@@ -137,7 +138,7 @@ class FloPremiumTierCard extends StatelessWidget {
               mainAxisAlignment: MainAxisAlignment.spaceBetween,
               children: [
                 Expanded(
-                  child: promoText!.beautify(
+                  child: promoText.beautify(
                     boldStyle:
                         TextStyles.sourceSansB.body4.colour(Colors.white),
                     style: TextStyles.sourceSans.body4.colour(Colors.white),
@@ -150,7 +151,7 @@ class FloPremiumTierCard extends StatelessWidget {
                   shape: RoundedRectangleBorder(
                     borderRadius: BorderRadius.circular(SizeConfig.roundness5),
                   ),
-                  onPressed: cta,
+                  onPressed: onTapSave,
                   child: FittedBox(
                     fit: BoxFit.scaleDown,
                     child: Text(
@@ -169,11 +170,11 @@ class FloPremiumTierCard extends StatelessWidget {
   double getLead() {
     switch (tier) {
       case Constants.ASSET_TYPE_FLO_FIXED_6:
-        return userService.userPortfolio.flo.fixed2.balance;
+        return portfolio.flo.fixed2.balance;
       case Constants.ASSET_TYPE_FLO_FIXED_3:
-        return userService.userPortfolio.flo.fixed1.balance;
+        return portfolio.flo.fixed1.balance;
       case Constants.ASSET_TYPE_FLO_FELXI:
-        return userService.userPortfolio.flo.flexi.balance;
+        return portfolio.flo.flexi.balance;
 
       default:
         return 0;
@@ -183,18 +184,18 @@ class FloPremiumTierCard extends StatelessWidget {
   double getTrail() {
     switch (tier) {
       case Constants.ASSET_TYPE_FLO_FIXED_6:
-        return userService.userPortfolio.flo.fixed2.principle;
+        return portfolio.flo.fixed2.principle;
       case Constants.ASSET_TYPE_FLO_FIXED_3:
-        return userService.userPortfolio.flo.fixed1.principle;
+        return portfolio.flo.fixed1.principle;
       case Constants.ASSET_TYPE_FLO_FELXI:
-        return userService.userPortfolio.flo.flexi.principle;
+        return portfolio.flo.flexi.principle;
       default:
         return 0;
     }
   }
 
   bool isUserInvestedInThisTier() {
-    final userPortfolio = userService.userPortfolio.flo;
+    final userPortfolio = portfolio.flo;
     return userPortfolio.fixed1.balance > 0 ||
         userPortfolio.fixed2.balance > 0 ||
         userPortfolio.flexi.balance > 0;

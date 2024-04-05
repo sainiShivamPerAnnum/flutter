@@ -1,5 +1,6 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/model/app_config_serialized_model.dart';
+import 'package:felloapp/core/model/portfolio_model.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/ui/pages/hometabs/save/flo_components/flo_permium_card.dart';
 import 'package:felloapp/util/constants.dart';
@@ -17,15 +18,20 @@ class FloPremiumSection extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     final oldLBUser = model.userSegments.contains(Constants.US_FLO_OLD);
+    final newUser = model.userSegments.contains(Constants.NEW_USER);
+    final portfolio = model.userPortfolio;
 
-    final assetConfiguration = AppConfigV2.instance.lendBoxP2P
-        .where((element) => element.fundType != FundType.UNI_FLEXI);
+    final assetConfiguration = AppConfigV2.instance.lendBoxP2P.where(
+      (element) => element.fundType != FundType.UNI_FLEXI,
+    );
 
     return Column(
       children: [
         for (final configuration in assetConfiguration)
           if (!(configuration.fundType != FundType.UNI_FIXED_3 && oldLBUser))
             _FloAssetCard(
+              portfolio: portfolio,
+              newUser: newUser,
               oldLBUser: oldLBUser,
               model: model,
               assetConfig: configuration,
@@ -44,14 +50,18 @@ class _FloAssetCard extends StatelessWidget {
     required this.assetConfig,
     required this.oldLBUser,
     required this.onTapSave,
+    required this.newUser,
+    required this.portfolio,
   });
 
   final UserService model;
   final LendboxP2P assetConfig;
   final bool oldLBUser;
   final VoidCallback onTapSave;
+  final bool newUser;
+  final Portfolio portfolio;
 
-  ({int percentage, String redirection}) details(FundType fundType) {
+  ({int percentage, String redirection}) _getAssetDetails(FundType fundType) {
     return switch (fundType) {
       FundType.UNI_FIXED_6 => (percentage: 12, redirection: 'flo12Details'),
       FundType.UNI_FIXED_3 => (percentage: 10, redirection: 'flo10Details'),
@@ -65,7 +75,7 @@ class _FloAssetCard extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final (:percentage, :redirection) = details(assetConfig.fundType);
+    final (:percentage, :redirection) = _getAssetDetails(assetConfig.fundType);
     final decoration = BoxDecoration(
       border: Border.all(
         width: 1,
@@ -82,7 +92,8 @@ class _FloAssetCard extends StatelessWidget {
       ),
       decoration: decoration,
       child: FloPremiumTierCard(
-        userService: model,
+        portfolio: portfolio,
+        newUser: newUser,
         title: "$percentage% Flo",
         summary: assetConfig.descText,
         lockIn: assetConfig.maturityPeriodText,
@@ -91,7 +102,7 @@ class _FloAssetCard extends StatelessWidget {
         actionUri: redirection,
         promoText:
             "Get *${assetConfig.tambolaMultiplier}X tickets* on saving in $percentage% Flo till maturity",
-        cta: onTapSave,
+        onTapSave: onTapSave,
       ),
     );
   }
