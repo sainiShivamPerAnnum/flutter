@@ -41,7 +41,7 @@ class FloPremiumDetailsViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  List<(String, String)> faqHeaders = [
+  List<(String, String)> faqs = [
     (
       "How safe is the invested money? Who is the money lent to?",
       "Your funds are safe and secure with our lending partner Lendbox. To safeguard the investments, a lender's money is distributed across borrowers who are assessed on 200+ parameters to check the creditworthiness of the borrowers to ensure the credibility of borrowers.",
