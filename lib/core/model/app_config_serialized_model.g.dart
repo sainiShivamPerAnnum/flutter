@@ -31,7 +31,8 @@ AppConfigV2Data _$AppConfigV2DataFromJson(Map<String, dynamic> json) =>
       canChangePostMaturityPreference:
           json['canChangePostMaturityPreference'] as bool? ?? false,
       lendBoxP2P: (json['LENDBOXP2P'] as List<dynamic>?)
-              ?.map((e) => LendboxP2P.fromJson(e as Map<String, dynamic>))
+              ?.map((e) =>
+                  LendboxAssetConfiguration.fromJson(e as Map<String, dynamic>))
               .toList() ??
           const [],
       youtubeVideos: (json['youtubeVideos'] as List<dynamic>?)
@@ -76,13 +77,19 @@ AppConfigV2Data _$AppConfigV2DataFromJson(Map<String, dynamic> json) =>
       features: json['features'] as Map<String, dynamic>? ?? const {},
     );
 
-LendboxP2P _$LendboxP2PFromJson(Map<String, dynamic> json) => LendboxP2P(
+LendboxAssetConfiguration _$LendboxAssetConfigurationFromJson(
+        Map<String, dynamic> json) =>
+    LendboxAssetConfiguration(
       fundType: $enumDecode(_$FundTypeEnumMap, json['fundType']),
       maturityPeriodText: json['maturityPeriodText'] as String,
       minAmountText: json['minAmountText'] as String,
       descText: json['descText'] as String,
       tambolaMultiplier: json['tambolaMultiplier'] as num,
       isForOldLb: json['isForOldLb'] as bool? ?? false,
+      highlights: json['highlights'] as String? ?? '',
+      description: json['description'] as String? ?? '',
+      interest: json['interest'] as num? ?? 10,
+      assetName: json['assetName'] as String? ?? '',
     );
 
 const _$FundTypeEnumMap = {

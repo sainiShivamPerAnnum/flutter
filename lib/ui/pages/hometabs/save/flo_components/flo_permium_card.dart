@@ -168,37 +168,31 @@ class FloPremiumTierCard extends StatelessWidget {
   }
 
   double getLead() {
-    switch (tier) {
-      case Constants.ASSET_TYPE_FLO_FIXED_6:
-        return portfolio.flo.fixed2.balance;
-      case Constants.ASSET_TYPE_FLO_FIXED_3:
-        return portfolio.flo.fixed1.balance;
-      case Constants.ASSET_TYPE_FLO_FELXI:
-        return portfolio.flo.flexi.balance;
-
-      default:
-        return 0;
-    }
+    return switch (tier) {
+      Constants.ASSET_TYPE_FLO_FIXED_6 => portfolio.flo.fixed2.balance,
+      Constants.ASSET_TYPE_FLO_FIXED_3 => portfolio.flo.fixed1.balance,
+      Constants.ASSET_TYPE_FLO_FELXI => portfolio.flo.flexi.balance,
+      _ => 0,
+    };
   }
 
   double getTrail() {
-    switch (tier) {
-      case Constants.ASSET_TYPE_FLO_FIXED_6:
-        return portfolio.flo.fixed2.principle;
-      case Constants.ASSET_TYPE_FLO_FIXED_3:
-        return portfolio.flo.fixed1.principle;
-      case Constants.ASSET_TYPE_FLO_FELXI:
-        return portfolio.flo.flexi.principle;
-      default:
-        return 0;
-    }
+    return switch (tier) {
+      Constants.ASSET_TYPE_FLO_FIXED_6 => portfolio.flo.fixed2.principle,
+      Constants.ASSET_TYPE_FLO_FIXED_3 => portfolio.flo.fixed1.principle,
+      Constants.ASSET_TYPE_FLO_FELXI => portfolio.flo.flexi.principle,
+      _ => 0
+    };
   }
 
   bool isUserInvestedInThisTier() {
     final userPortfolio = portfolio.flo;
-    return userPortfolio.fixed1.balance > 0 ||
-        userPortfolio.fixed2.balance > 0 ||
-        userPortfolio.flexi.balance > 0;
+    return switch (tier) {
+      Constants.ASSET_TYPE_FLO_FIXED_6 => userPortfolio.fixed2.balance > 0,
+      Constants.ASSET_TYPE_FLO_FIXED_3 => userPortfolio.fixed1.balance > 0,
+      Constants.ASSET_TYPE_FLO_FELXI => userPortfolio.flexi.balance > 0,
+      _ => false
+    };
   }
 }
 

@@ -9605,6 +9605,16 @@ class S {
       args: [date],
     );
   }
+
+  /// `Get *${multiplier}X tickets* on saving in {percent}% Flo till maturity`
+  String floTicketEarningOnAsset(num multiplier, num percent) {
+    return Intl.message(
+      'Get *\$${multiplier}X tickets* on saving in $percent% Flo till maturity',
+      name: 'floTicketEarningOnAsset',
+      desc: '',
+      args: [multiplier, percent],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {
