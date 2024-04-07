@@ -29,74 +29,74 @@ class MessageLookup extends MessageLookupByLibrary {
 
   static String m3(currentDay) => "दावा करने का दिन ${currentDay} इनाम";
 
-  static String m4(prizeAmount) => "रु.${prizeAmount} तक जीतें";
+  static String m5(prizeAmount) => "रु.${prizeAmount} तक जीतें";
 
-  static String m5(Value) => "हर ₹${Value} की बचत पर एक टिकट पाएं";
+  static String m6(Value) => "हर ₹${Value} की बचत पर एक टिकट पाएं";
 
-  static String m6(index) => "माइलस्टोन ${index}";
+  static String m7(index) => "माइलस्टोन ${index}";
 
-  static String m8(amount) => "अधिकतम राशि - ₹${amount}";
+  static String m9(amount) => "अधिकतम राशि - ₹${amount}";
 
-  static String m11(amount) => "न्यूनतम राशि - ₹${amount}";
+  static String m12(amount) => "न्यूनतम राशि - ₹${amount}";
 
-  static String m12(name) => "नमस्ते ${name}";
+  static String m13(name) => "नमस्ते ${name}";
 
-  static String m13(mobileNumber) => "लॉगिन करें +91-${mobileNumber}";
+  static String m14(mobileNumber) => "लॉगिन करें +91-${mobileNumber}";
 
-  static String m14(percentage) => "${percentage}% रिटर्न्स के साथ";
+  static String m15(percentage) => "${percentage}% रिटर्न्स के साथ";
 
-  static String m15(prizeAmount) =>
+  static String m16(prizeAmount) =>
       "मैंने फेलो पर डिजिटल गोल्ड के रूप में ₹\$${prizeAmount} जीती है!";
 
-  static String m16(i) => "पुरस्कार \$${i}";
-
-  static String m17(Value) =>
-      "क्या आप सुनिश्चित हैं कि आप  अमेज़न उपहार वाउचर के रूप में ₹${Value} रिडीम करना चाहते हैं?";
+  static String m17(i) => "पुरस्कार \$${i}";
 
   static String m18(Value) =>
+      "क्या आप सुनिश्चित हैं कि आप  अमेज़न उपहार वाउचर के रूप में ₹${Value} रिडीम करना चाहते हैं?";
+
+  static String m19(Value) =>
       "क्या आप सुनिश्चित हैं कि आप ₹${Value} को डिजिटल गोल्ड के रूप में रिडीम करना चाहते हैं?";
 
-  static String m19(refUnlock) =>
+  static String m20(refUnlock) =>
       "आपकी जीत को रिडीम करने के लिए ₹ ${refUnlock} की बचत आवश्यक है।";
 
-  static String m20(amount) => "बचत करके ${amount} रेफरल बोनस प्राप्त करें";
+  static String m21(amount) => "बचत करके ${amount} रेफरल बोनस प्राप्त करें";
 
-  static String m21(servingSize) => "*${servingSize} fl पर आधारित। ओज सेवारत.";
-
-  static String m22(quantity, formattedNumber) =>
-      "${Intl.plural(quantity, one: 'One serving.', other: '${formattedNumber} servings in your system at one time.')}";
+  static String m22(servingSize) => "*${servingSize} fl पर आधारित। ओज सेवारत.";
 
   static String m23(quantity, formattedNumber) =>
+      "${Intl.plural(quantity, one: 'One serving.', other: '${formattedNumber} servings in your system at one time.')}";
+
+  static String m24(quantity, formattedNumber) =>
       "${Intl.plural(quantity, one: 'One serving per day.', other: '${formattedNumber} servings per day.')}";
 
-  static String m24(type) => "फेलो ${type} के साथ";
+  static String m25(type) => "फेलो ${type} के साथ";
 
-  static String m25(goldAmount) => "${goldAmount} ग्राम";
+  static String m26(goldAmount) => "${goldAmount} ग्राम";
 
-  static String m26(winningsAmout) => "₹ ${winningsAmout}";
+  static String m27(winningsAmout) => "₹ ${winningsAmout}";
 
-  static String m27(returns) =>
+  static String m28(returns) =>
       "इस SIP से आप 5 वर्षों में ₹${returns} तक कमा सकते हैं";
 
-  static String m28(count) => "टिकट ${count}";
+  static String m29(count) => "टिकट ${count}";
 
-  static String m29(cost) => "${cost} टोकन के साथ छोड़ें";
+  static String m30(cost) => "${cost} टोकन के साथ छोड़ें";
 
-  static String m30(date) => "${date} को शुरू किया गया";
+  static String m31(date) => "${date} को शुरू किया गया";
 
-  static String m31(prize) => "पूरा ${prize} पाने के लिए";
+  static String m32(prize) => "पूरा ${prize} पाने के लिए";
 
-  static String m32(ticketGenerateCount) => "आपके ${ticketGenerateCount} टिकट";
+  static String m33(ticketGenerateCount) => "आपके ${ticketGenerateCount} टिकट";
 
-  static String m33(username) =>
+  static String m34(username) =>
       "आपका उपयोगकर्ता नाम ${username} सफलतापूर्वक पंजीकृत हो गया है!";
 
-  static String m34(ticketType, rewardAmount) => "एक ${ticketType} टिकट जीतें";
+  static String m35(ticketType, rewardAmount) => "एक ${ticketType} टिकट जीतें";
 
-  static String m35(prize) =>
+  static String m36(prize) =>
       "जीत को ₹${prize} तक पहुंचने पर रिडीम किया जा सकता है";
 
-  static String m36(timePeriod) => "${timePeriod} वर्षों में आपका पैसा";
+  static String m37(timePeriod) => "${timePeriod} वर्षों में आपका पैसा";
 
   final messages = _notInlinedMessages(_notInlinedMessages);
   static Map<String, Function> _notInlinedMessages(_) => <String, Function>{
@@ -490,7 +490,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "सुरक्षा कारणों से गेम लॉक किया गया है"),
         "gameOfWeek": MessageLookupByLibrary.simpleMessage("सप्ताह का खेल"),
         "gameOver": MessageLookupByLibrary.simpleMessage("गेम ओवर"),
-        "gameRewardsAmount": m4,
+        "gameRewardsAmount": m5,
         "gameWinUptoTitle": MessageLookupByLibrary.simpleMessage("तक जीतें "),
         "gameWinners": MessageLookupByLibrary.simpleMessage("खेल विजेता"),
         "gamesSafetySubTitle": MessageLookupByLibrary.simpleMessage(
@@ -499,7 +499,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "खेल फेलो टोकन के साथ खेले जाते हैं"),
         "generatingLinkFailed":
             MessageLookupByLibrary.simpleMessage("लिंक बनाना विफल"),
-        "get1Ticket": m5,
+        "get1Ticket": m6,
         "get1Token": MessageLookupByLibrary.simpleMessage(
             "बचाए गए प्रत्येक रुपये के लिए 1 टोकन प्राप्त करें"),
         "getHappyHourNotified": MessageLookupByLibrary.simpleMessage(
@@ -598,7 +598,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "jLevel": MessageLookupByLibrary.simpleMessage("लेवल "),
         "jLoadinglevels": MessageLookupByLibrary.simpleMessage(
             "आपके लिए और लेवल लोड हो रहे हैं, कृपया प्रतीक्षा करें"),
-        "jMileStone": m6,
+        "jMileStone": m7,
         "jMileStoneSKipSuccessTitle1": MessageLookupByLibrary.simpleMessage(
             "माइलस्टोन सफलतापूर्वक छोड़ा गया"),
         "jMileStoneSKipSuccessTitle2":
@@ -675,7 +675,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "max8gms": MessageLookupByLibrary.simpleMessage(
             "एक बार में अधिकतम 8 ग्राम बेचा जा सकता है"),
         "maxAmountIs": MessageLookupByLibrary.simpleMessage("अधिकतम राशि है"),
-        "maxSipAmount": m8,
+        "maxSipAmount": m9,
         "maxSize": MessageLookupByLibrary.simpleMessage("अधिकतम आकार: 5 MB"),
         "maxSizeText":
             MessageLookupByLibrary.simpleMessage("अधिकतम आकार: 5 एमबी"),
@@ -690,7 +690,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "minAmountIs": MessageLookupByLibrary.simpleMessage("न्यूनतम राशि है"),
         "minAmountShouldBe":
             MessageLookupByLibrary.simpleMessage("न्यूनतम राशि ₹ होनी चाहिए"),
-        "minSipAmount": m11,
+        "minSipAmount": m12,
         "minimumAmount":
             MessageLookupByLibrary.simpleMessage("न्यूनतम विक्रय राशि ₹ 10 है"),
         "minutes": MessageLookupByLibrary.simpleMessage("मिनट"),
@@ -750,7 +750,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "obAppUpdate": MessageLookupByLibrary.simpleMessage("ऐप अपडेट आवश्यक"),
         "obAssetPrefBottomSheet2ButtonText1":
             MessageLookupByLibrary.simpleMessage("होम स्क्रीन पर जाएँ"),
-        "obAssetPrefGreeting": m12,
+        "obAssetPrefGreeting": m13,
         "obAssetWelcomeText":
             MessageLookupByLibrary.simpleMessage("फेलो में आपका स्वागत है"),
         "obBankDetails":
@@ -823,7 +823,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "obLoading": MessageLookupByLibrary.simpleMessage("लोड हो रहा है..."),
         "obLoggingInWith":
             MessageLookupByLibrary.simpleMessage("के साथ लॉग इन करें"),
-        "obLoginAsText": m13,
+        "obLoginAsText": m14,
         "obLoginHeading": MessageLookupByLibrary.simpleMessage("लॉगइन/साइन अप"),
         "obMale": MessageLookupByLibrary.simpleMessage("नर"),
         "obMinutes": MessageLookupByLibrary.simpleMessage(" मिनट"),
@@ -945,7 +945,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "paymentMethod":
             MessageLookupByLibrary.simpleMessage("भुगतान का तरीका"),
         "perGame": MessageLookupByLibrary.simpleMessage("प्रति गेम"),
-        "percentageReturns": m14,
+        "percentageReturns": m15,
         "permissionUnavailable":
             MessageLookupByLibrary.simpleMessage("अनुमति अनुपलब्ध"),
         "pkPanLabel": MessageLookupByLibrary.simpleMessage("पैन नंबर"),
@@ -965,12 +965,12 @@ class MessageLookup extends MessageLookupByLibrary {
             "आपकी लाभप्रद बचत यात्रा शुरू होने से एक कदम दूर"),
         "priceClaimTitle1": MessageLookupByLibrary.simpleMessage(
             "आपने अमेज़न उपहार वाउचर\n मूल्य जीता है"),
-        "priceClaimTitle2": m15,
+        "priceClaimTitle2": m16,
         "priceClaimTitle3": MessageLookupByLibrary.simpleMessage(
             "आपने फेलो रिवार्ड \n और मूल्य जीते हैं"),
         "primaryUPI": MessageLookupByLibrary.simpleMessage("प्राथमिक यूपीआई"),
         "privacyPolicy": MessageLookupByLibrary.simpleMessage("गोपनीयता नीति"),
-        "prize": m16,
+        "prize": m17,
         "prizeFetchFailed": MessageLookupByLibrary.simpleMessage(
             "इस सप्ताह के पुरस्कार प्राप्त नहीं किए जा सके"),
         "prizeText": MessageLookupByLibrary.simpleMessage("इनाम"),
@@ -999,8 +999,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "received": MessageLookupByLibrary.simpleMessage("प्राप्त"),
         "receivedOn": MessageLookupByLibrary.simpleMessage("प्राप्त हुआ"),
         "redeem": MessageLookupByLibrary.simpleMessage("भुनाना"),
-        "redeemAmznGiftVchr": m17,
-        "redeemDigitalGold": m18,
+        "redeemAmznGiftVchr": m18,
+        "redeemDigitalGold": m19,
         "redeemed": MessageLookupByLibrary.simpleMessage("रिडीम किया"),
         "redeemedOn": MessageLookupByLibrary.simpleMessage("पर भुनाया गया"),
         "reedomAmznPay":
@@ -1029,12 +1029,12 @@ class MessageLookup extends MessageLookupByLibrary {
         "refStep3": MessageLookupByLibrary.simpleMessage(
             "आप और आपके मित्र दोनों को आपके खाते में ₹25 और 200 फेलो टोकन प्राप्त होते हैं।"),
         "refUnAvailable": MessageLookupByLibrary.simpleMessage("अनुपलब्ध"),
-        "refUnlockText": m19,
+        "refUnlockText": m20,
         "refWhatsapp": MessageLookupByLibrary.simpleMessage("WhatsApp"),
         "refer": MessageLookupByLibrary.simpleMessage("संदर्भ देना"),
         "referFriends":
             MessageLookupByLibrary.simpleMessage("अपने दोस्तों को देखें"),
-        "referralNudgeMessage": m20,
+        "referralNudgeMessage": m21,
         "referrals": MessageLookupByLibrary.simpleMessage("रेफरल"),
         "referralsTitle": MessageLookupByLibrary.simpleMessage("रेफरल"),
         "refreshKYC":
@@ -1048,9 +1048,9 @@ class MessageLookup extends MessageLookupByLibrary {
         "restart": MessageLookupByLibrary.simpleMessage("पुनर्प्रारंभ करें"),
         "restartAndTry": MessageLookupByLibrary.simpleMessage(
             "कृपया पुनः प्रारंभ करें और पुनः प्रयास करें"),
-        "resultsPageFirstDisclaimer": m21,
-        "resultsPageLethalDosageMessage": m22,
-        "resultsPageSafeDosageMessage": m23,
+        "resultsPageFirstDisclaimer": m22,
+        "resultsPageLethalDosageMessage": m23,
+        "resultsPageSafeDosageMessage": m24,
         "resultsPageSafeDosageTitle":
             MessageLookupByLibrary.simpleMessage("दैनिक सुरक्षित अधिकतम"),
         "resultsPageSecondDisclaimer": MessageLookupByLibrary.simpleMessage(
@@ -1060,7 +1060,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("ऑटोसेव फिर से शुरू करें"),
         "resumeSipbtn":
             MessageLookupByLibrary.simpleMessage("SIP फिर से शुरू करें"),
-        "returnSubText": m24,
+        "returnSubText": m25,
         "returnsCalculator": MessageLookupByLibrary.simpleMessage(
             "अपने SIP रिटर्न्स की गणना करें"),
         "reupload": MessageLookupByLibrary.simpleMessage("पुनः अपलोड करें"),
@@ -1086,7 +1086,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "saveBaseline": MessageLookupByLibrary.simpleMessage(
             "बचाए गए प्रत्येक रुपये के लिए आपको 1 टोकन मिलता है"),
         "saveGold24k": MessageLookupByLibrary.simpleMessage("24कैरेट"),
-        "saveGoldBalanceValue": m25,
+        "saveGoldBalanceValue": m26,
         "saveGoldBalancelabel":
             MessageLookupByLibrary.simpleMessage("गोल्ड बैलेंस:"),
         "saveGoldPure": MessageLookupByLibrary.simpleMessage("99.99% शुद्ध"),
@@ -1097,7 +1097,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "saveViewAll": MessageLookupByLibrary.simpleMessage("सभी को देखें"),
         "saveWinningsLabel":
             MessageLookupByLibrary.simpleMessage("मेरी सक्रिय जीत"),
-        "saveWinningsValue": m26,
+        "saveWinningsValue": m27,
         "savingsMade": MessageLookupByLibrary.simpleMessage("बचत की गई"),
         "savingsOnAuto": MessageLookupByLibrary.simpleMessage(
             "अपनी बचत को ऑटोपायलट पर रखें"),
@@ -1190,11 +1190,11 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("ऑटोपायलट पर पैसे बढ़ाएं"),
         "sipIntroTitle": MessageLookupByLibrary.simpleMessage(
             "साप्ताहिक / मासिक रूप से स्वचालित रूप से बचत करें और"),
-        "sipReturn": m27,
+        "sipReturn": m28,
         "sipSummary": MessageLookupByLibrary.simpleMessage("आपका SIP सारांश"),
         "sipText": MessageLookupByLibrary.simpleMessage("SIP"),
         "sipTicket": MessageLookupByLibrary.simpleMessage("टिकट"),
-        "sipTickets": m28,
+        "sipTickets": m29,
         "sipWithAutoSave": MessageLookupByLibrary.simpleMessage(
             "फेलो ऑटोसेव के साथ एक एसआईपी शुरू करें"),
         "sipYear": MessageLookupByLibrary.simpleMessage("वर्ष"),
@@ -1202,7 +1202,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "siptitle": MessageLookupByLibrary.simpleMessage("फेलो के साथ SIP"),
         "skip": MessageLookupByLibrary.simpleMessage("छोड़ दें"),
         "skipKYC": MessageLookupByLibrary.simpleMessage("अब नहीं छोड़ें"),
-        "skipWithtokenCost": m29,
+        "skipWithtokenCost": m30,
         "sold": MessageLookupByLibrary.simpleMessage("बिका हुआ"),
         "someThingWentWrongError": MessageLookupByLibrary.simpleMessage(
             "कुछ गलत हो गया, कृपया फिर से प्रयास करें"),
@@ -1225,7 +1225,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "startSavingNow":
             MessageLookupByLibrary.simpleMessage("अभी बचत करना शुरू करें"),
         "startSip": MessageLookupByLibrary.simpleMessage("SIP शुरू करें"),
-        "startedSip": m30,
+        "startedSip": m31,
         "step2Mandate": MessageLookupByLibrary.simpleMessage(
             "2. UPI मैंडेट की अनुमति दें।"),
         "subTitle": MessageLookupByLibrary.simpleMessage("उपशीर्षक"),
@@ -1240,7 +1240,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "tBottomRow": MessageLookupByLibrary.simpleMessage("निचली पंक्ति"),
         "tCheckIfWon": MessageLookupByLibrary.simpleMessage(
             "पता करें कि क्या आपके टिकट जीत गए"),
-        "tCompleteToGet": m31,
+        "tCompleteToGet": m32,
         "tCorners": MessageLookupByLibrary.simpleMessage("कोनों"),
         "tDailyPicks": MessageLookupByLibrary.simpleMessage("दैनिक पसंद"),
         "tDrawTime":
@@ -1311,7 +1311,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "termsOfService":
             MessageLookupByLibrary.simpleMessage("सेवा की शर्तें"),
         "tgenerated": MessageLookupByLibrary.simpleMessage("जनरेट किया गया"),
-        "tgeneratedCount": m32,
+        "tgeneratedCount": m33,
         "tgetFirstTkt":
             MessageLookupByLibrary.simpleMessage("अपना पहला टिकट प्राप्त करें"),
         "threeClicksAway": MessageLookupByLibrary.simpleMessage("3 क्लिक दूर"),
@@ -1504,7 +1504,7 @@ class MessageLookup extends MessageLookupByLibrary {
             "उपयोगकर्ता नाम खाली नहीं हो सकता"),
         "userNameSuccess": MessageLookupByLibrary.simpleMessage(
             "सफलतापूर्वक उपयोक्ता नाम बनाया गया"),
-        "userNameSuccessSubtitle": m33,
+        "userNameSuccessSubtitle": m34,
         "userNameVal1": MessageLookupByLibrary.simpleMessage(
             "कृपया 3 वर्णों से अधिक का उपयोगकर्ता नाम दर्ज करें।"),
         "userNameVal2": MessageLookupByLibrary.simpleMessage(
@@ -1538,7 +1538,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("निवेश क्यों करें?"),
         "win": MessageLookupByLibrary.simpleMessage("जीतना"),
         "win1Crore": MessageLookupByLibrary.simpleMessage("₹1 करोड़ जीतें!"),
-        "winATicket": m34,
+        "winATicket": m35,
         "winChipsTitle1": MessageLookupByLibrary.simpleMessage(
             "गेम खेलने के लिए टोकन का प्रयोग करें!"),
         "winChipsTitle2": MessageLookupByLibrary.simpleMessage(
@@ -1564,7 +1564,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("मेरे पुरस्कार"),
         "winipadText": MessageLookupByLibrary.simpleMessage(
             " हर गोल्डन टिकट से। उच्चतम रेफ़रलकर्ता हर महीने एक iPad जीतता है।"),
-        "winningsRedeem": m35,
+        "winningsRedeem": m36,
         "withDrawalFailed": MessageLookupByLibrary.simpleMessage("निकासी विफल"),
         "withDrawalProcessing":
             MessageLookupByLibrary.simpleMessage("आहरण प्रक्रिया"),
@@ -1583,7 +1583,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "your": MessageLookupByLibrary.simpleMessage("आपका"),
         "yourAutoSave":
             MessageLookupByLibrary.simpleMessage("आपका स्वतः सहेजना खाता है"),
-        "yourMoneySip": m36,
+        "yourMoneySip": m37,
         "yourSavings": MessageLookupByLibrary.simpleMessage("आपकी बचत"),
         "zeroperDay": MessageLookupByLibrary.simpleMessage("0.0/दिन")
       };

@@ -7,19 +7,26 @@ import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
 
 extension ReturnInvestments on int {
-  String getReturns(InvestmentType investmentType, double amount, int? interest,
-      [decimalPoint = 2]) {
+  String getReturns(
+    InvestmentType investmentType,
+    double amount,
+    num? interest, [
+    decimalPoint = 2,
+  ]) {
     final month = this;
-    final int returnPercentage =
+    final num returnPercentage =
         investmentType == InvestmentType.AUGGOLD99 ? 8 : (interest ?? 10);
 
     return (amount +
-            ((calculatePercentageInterest(month, returnPercentage) * amount)))
+            (calculatePercentageInterest(month, returnPercentage) * amount))
         .toStringAsFixed(decimalPoint);
   }
 
   String calculateCompoundInterest(
-      InvestmentType investmentType, double principalAmount, int? interest) {
+    InvestmentType investmentType,
+    double principalAmount,
+    num? interest,
+  ) {
     final period = this;
     final interestRate =
         investmentType == InvestmentType.AUGGOLD99 ? 8 : (interest ?? 10);
@@ -28,7 +35,7 @@ extension ReturnInvestments on int {
         .toStringAsFixed(0);
   }
 
-  double calculatePercentageInterest(int month, int percentage) =>
+  double calculatePercentageInterest(int month, num percentage) =>
       ((percentage * month) / 12) / 100;
 
   String calculateAmountAfterMaturity(String amount, int year) {
@@ -38,11 +45,12 @@ extension ReturnInvestments on int {
         locator<UserService>().userSegments.contains(Constants.US_FLO_OLD);
     int interest = 1;
 
-    if (floAssetType == Constants.ASSET_TYPE_FLO_FELXI && !isLendboxOldUser) {
-      interest = 10;
-    } else {
-      interest = floAssetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? 12 : 10;
-    }
+    interest =
+        floAssetType == Constants.ASSET_TYPE_FLO_FELXI && !isLendboxOldUser
+            ? 10
+            : floAssetType == Constants.ASSET_TYPE_FLO_FIXED_6
+                ? 12
+                : 10;
 
     double principal = double.tryParse(amount) ?? 0.0;
     double rateOfInterest = interest / 100.0;

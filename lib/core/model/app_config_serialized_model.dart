@@ -65,7 +65,7 @@ class AppConfigV2Data {
 
   final bool canChangePostMaturityPreference;
   @JsonKey(name: "LENDBOXP2P")
-  final List<LendboxP2P> lendBoxP2P;
+  final List<LendboxAssetConfiguration> lendBoxP2P;
 
   final List<String> youtubeVideos;
 
@@ -142,32 +142,41 @@ class AppConfigV2Data {
 }
 
 @_deserializable
-class LendboxP2P {
+class LendboxAssetConfiguration {
   final FundType fundType;
   final String maturityPeriodText;
   final String minAmountText;
   final String descText;
-  @JsonKey(name: "tambolaMultiplier")
   final num tambolaMultiplier;
   final bool isForOldLb;
+  final String highlights;
+  final String description;
+  final num interest;
+  final String assetName;
 
-  const LendboxP2P({
+  const LendboxAssetConfiguration({
     required this.fundType,
     required this.maturityPeriodText,
     required this.minAmountText,
     required this.descText,
     required this.tambolaMultiplier,
     this.isForOldLb = false,
+    this.highlights = '',
+    this.description = '',
+    this.interest = 10,
+    this.assetName = '',
   });
 
-  factory LendboxP2P.fromJson(Map<String, dynamic> json) =>
-      _$LendboxP2PFromJson(json);
+  factory LendboxAssetConfiguration.fromJson(Map<String, dynamic> json) =>
+      _$LendboxAssetConfigurationFromJson(json);
 }
 
 enum FundType {
   UNI_FLEXI,
   UNI_FIXED_6,
   UNI_FIXED_3;
+
+  bool get isFixed6 => this == FundType.UNI_FIXED_6;
 }
 
 @_deserializable

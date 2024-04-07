@@ -1077,5 +1077,18 @@
         "type": "String"
       }
     }
+  },
+
+  "@_flo_premium_details" : {},
+  "floTicketEarningOnAsset" : "Get *${multiplier}X tickets* on saving in {percent}% Flo till maturity",
+  "@floTicketEarningOnAsset": {
+    "placeholders" : {
+      "multiplier" : { 
+        "type" : "num"
+      },
+      "percent" : {
+        "type": "num"
+      }
+    }
   }
 }

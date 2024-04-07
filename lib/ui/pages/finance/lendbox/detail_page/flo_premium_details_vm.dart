@@ -1,10 +1,7 @@
-import 'package:felloapp/core/enums/app_config_keys.dart';
-import 'package:felloapp/core/model/app_config_model.dart';
+import 'package:felloapp/core/model/app_config_serialized_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
 import 'package:felloapp/core/repository/transactions_history_repo.dart';
-import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/ui/architecture/base_vm.dart';
-import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/locator.dart';
 
 import '../../../../../base_util.dart';
@@ -12,25 +9,15 @@ import '../../../../../base_util.dart';
 class FloPremiumDetailsViewModel extends BaseViewModel {
   final TransactionHistoryRepository _txnHistoryRepo =
       locator<TransactionHistoryRepository>();
-  List lendboxDetails = AppConfig.getValue(AppConfigKey.lendbox);
-  bool _is12 = true;
 
-  bool get is12 => _is12;
+  LendboxAssetConfiguration _config = AppConfigV2.instance.lendBoxP2P.first;
 
-  set is12(bool value) {
-    _is12 = value;
+  LendboxAssetConfiguration get config => _config;
+
+  set config(LendboxAssetConfiguration config) {
+    _config = config;
     notifyListeners();
   }
-
-  final UserService userService = locator<UserService>();
-  final String flo10Highlights = "P2P Asset  • 10% Returns • 3 months maturity";
-
-  final String flo12Highlights = "P2P Asset  • 12% Returns • 6 months maturity";
-
-  String flo10Description =
-      "Fello Flo Premium 10% is a P2P Asset. The asset works in the way of a Fixed deposit but has a lock-in of just 3 months!";
-  String flo12Description =
-      "Fello Flo Premium 12% is a P2P Asset. The asset works in the way of a Fixed deposit but has a lock-in of just 6 months!";
 
   bool _isInvested = false;
 
@@ -39,6 +26,20 @@ class FloPremiumDetailsViewModel extends BaseViewModel {
   set isInvested(bool value) {
     _isInvested = value;
     notifyListeners();
+  }
+
+  void updateConfig(FundType fundType) {
+    config = AppConfigV2.instance.lendBoxP2P.firstWhere(
+      (element) => element.fundType == fundType,
+    );
+  }
+
+  void init(FundType fundType) {
+    config = AppConfigV2.instance.lendBoxP2P.firstWhere(
+      (element) => element.fundType == fundType,
+    );
+
+    getTransactions();
   }
 
   List<(String, String)> faqs = [
@@ -70,13 +71,6 @@ class FloPremiumDetailsViewModel extends BaseViewModel {
 
   List<UserTransaction> transactionsList = [];
 
-  void init(bool is12View) {
-    flo12Description = lendboxDetails[0]["descText"];
-    flo10Description = lendboxDetails[1]["descText"];
-    _is12 = is12View;
-    getTransactions();
-  }
-
   void cleanTransactionsList() {
     transactionsList = [];
     notifyListeners();
@@ -87,10 +81,9 @@ class FloPremiumDetailsViewModel extends BaseViewModel {
     final response = await _txnHistoryRepo.getUserTransactions(
       type: "DEPOSIT",
       subtype: "LENDBOXP2P",
-      lbFundType: is12
-          ? Constants.ASSET_TYPE_FLO_FIXED_6
-          : Constants.ASSET_TYPE_FLO_FIXED_3,
+      lbFundType: config.fundType.name,
     );
+
     if (response.isSuccess()) {
       transactionsList = response.model!.transactions!;
       if (transactionsList.isNotEmpty) {
