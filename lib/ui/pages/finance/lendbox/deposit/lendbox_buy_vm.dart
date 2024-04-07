@@ -215,16 +215,18 @@ class LendboxBuyViewModel extends BaseViewModel
 
   void _caluculateFactor() {
     String modelFlowType = floAssetType;
-    List<LendboxP2P> lendBoxDetails = AppConfigV2.instance.lendBoxP2P;
+    List<LendboxAssetConfiguration> lendBoxDetails =
+        AppConfigV2.instance.lendBoxP2P;
     final isLendBoxOldUser =
         locator<UserService>().userSegments.contains(Constants.US_FLO_OLD);
 
-    LendboxP2P? assetInformation = lendBoxDetails.firstWhereOrNull(
+    LendboxAssetConfiguration? assetInformation =
+        lendBoxDetails.firstWhereOrNull(
       (element) {
         return modelFlowType == Constants.ASSET_TYPE_FLO_FELXI
-            ? element.isForOldLb == isLendBoxOldUser &&
-                element.fundType == modelFlowType
-            : element.fundType == modelFlowType;
+            ? (element.isForOldLb == isLendBoxOldUser &&
+                element.fundType.name == modelFlowType)
+            : element.fundType.name == modelFlowType;
       },
     );
 

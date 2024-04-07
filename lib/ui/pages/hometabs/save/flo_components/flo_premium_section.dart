@@ -55,7 +55,7 @@ class _FloAssetCard extends StatelessWidget {
   });
 
   final UserService model;
-  final LendboxP2P assetConfig;
+  final LendboxAssetConfiguration assetConfig;
   final bool oldLBUser;
   final VoidCallback onTapSave;
   final bool newUser;
