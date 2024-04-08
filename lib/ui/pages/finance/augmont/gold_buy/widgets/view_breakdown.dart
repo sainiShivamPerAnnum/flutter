@@ -1,9 +1,7 @@
-import 'package:collection/collection.dart';
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/enums/app_config_keys.dart';
 import 'package:felloapp/core/model/app_config_model.dart';
-import 'package:felloapp/core/model/app_config_serialized_model.dart';
 import 'package:felloapp/core/model/bank_account_details_model.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
 import 'package:felloapp/core/service/payments/bank_and_pan_service.dart';
@@ -27,7 +25,6 @@ import 'package:provider/provider.dart';
 import 'package:shimmer/shimmer.dart';
 import 'package:upi_pay/upi_pay.dart';
 
-import '../../../../../../core/service/notifier_services/user_service.dart';
 import '../../../../../../util/locator.dart';
 
 class GoldBreakdownView extends StatefulWidget {
@@ -234,7 +231,8 @@ class _GoldBreakdownViewState extends State<GoldBreakdownView> {
                             UpiApplication.PhonePeSimulator,
                             Uint8List(10),
                             1,
-                            1)
+                            1,
+                          )
                         : widget.model.appMetaList[i];
 
                     widget.model.initiateBuy();
@@ -711,7 +709,8 @@ class UpiAppsGridView extends StatelessWidget {
                             ),
                           )
                         ],
-                      ))
+                      ),
+                    )
                   : Padding(
                       padding: EdgeInsets.all(SizeConfig.pageHorizontalMargins),
                       child: Text(
@@ -749,7 +748,8 @@ class UpiAppsGridView extends StatelessWidget {
                         ),
                       ),
                     );
-                  }),
+                  },
+                ),
         ],
       ),
     );
@@ -779,7 +779,7 @@ class FloBreakdownView extends StatefulWidget {
 class _FloBreakdownViewState extends State<FloBreakdownView> {
   bool _isNetbankingMandatory = false;
 
-  num _multiplicationFactor = 1;
+  final num _multiplicationFactor = 1;
 
   @override
   void initState() {
@@ -802,17 +802,18 @@ class _FloBreakdownViewState extends State<FloBreakdownView> {
       onWillPop: () async {
         AppState.removeOverlay();
         locator<AnalyticsService>().track(
-            eventName: AnalyticsEvents.intentTransactionBackPressed,
-            properties: {
-              "floAssetType": widget.model.floAssetType,
-              "maturityPref": widget.model.selectedOption.lbMapping,
-              "couponCode": widget.model.appliedCoupon?.code ?? '',
-              "txnAmount": widget.model.buyAmount,
-              "skipMl": widget.model.skipMl,
-              "abTesting": AppConfig.getValue(AppConfigKey.payment_brief_view)
-                  ? "with payment summary"
-                  : "without payment summary"
-            });
+          eventName: AnalyticsEvents.intentTransactionBackPressed,
+          properties: {
+            "floAssetType": widget.model.floAssetType,
+            "maturityPref": widget.model.selectedOption.lbMapping,
+            "couponCode": widget.model.appliedCoupon?.code ?? '',
+            "txnAmount": widget.model.buyAmount,
+            "skipMl": widget.model.skipMl,
+            "abTesting": AppConfig.getValue(AppConfigKey.payment_brief_view)
+                ? "with payment summary"
+                : "without payment summary"
+          },
+        );
         return true;
       },
       child: Padding(
@@ -841,10 +842,9 @@ class _FloBreakdownViewState extends State<FloBreakdownView> {
                 children: [
                   LendboxPaymentSummaryHeader(
                     amount: widget.model.amountController?.text ?? '0',
-                    assetType: widget.model.floAssetType,
                     maturityTerm: widget.model.selectedOption.maturityTerm,
                     showMaturity: showMaturity,
-                    model: widget.model,
+                    configuration: widget.model.config,
                   ),
                   Row(
                     children: [
@@ -867,10 +867,7 @@ class _FloBreakdownViewState extends State<FloBreakdownView> {
                   Row(
                     children: [
                       Text(
-                        widget.model.floAssetType ==
-                                Constants.ASSET_TYPE_FLO_FELXI
-                            ? "Lockin Until"
-                            : "Maturity date",
+                        "Maturity date",
                         style: TextStyles.sourceSans.body2,
                       ),
                       const Spacer(),
@@ -887,8 +884,8 @@ class _FloBreakdownViewState extends State<FloBreakdownView> {
                   if ((widget.model.totalTickets ?? 0) > 0 &&
                       !widget.showPaymentOption) ...[
                     Divider(
-                        color:
-                            UiConstants.kLastUpdatedTextColor.withOpacity(0.5)),
+                      color: UiConstants.kLastUpdatedTextColor.withOpacity(0.5),
+                    ),
                     Expandable(
                       header: Row(
                         children: [
@@ -954,8 +951,8 @@ class _FloBreakdownViewState extends State<FloBreakdownView> {
                   ],
                   if (widget.model.appliedCoupon != null) ...[
                     Divider(
-                        color:
-                            UiConstants.kLastUpdatedTextColor.withOpacity(0.5)),
+                      color: UiConstants.kLastUpdatedTextColor.withOpacity(0.5),
+                    ),
                     SizedBox(
                       height: SizeConfig.padding12,
                     ),
@@ -982,8 +979,8 @@ class _FloBreakdownViewState extends State<FloBreakdownView> {
                   ],
                   if (widget.showBreakDown)
                     Divider(
-                        color:
-                            UiConstants.kLastUpdatedTextColor.withOpacity(0.5)),
+                      color: UiConstants.kLastUpdatedTextColor.withOpacity(0.5),
+                    ),
                 ],
               ),
             if (widget.showPaymentOption) ...[
@@ -993,8 +990,10 @@ class _FloBreakdownViewState extends State<FloBreakdownView> {
                   onTap: (i) {
                     if ((widget.model.buyAmount ?? 0) <
                         widget.model.minAmount) {
-                      BaseUtil.showNegativeAlert("Invalid Amount",
-                          "Please Enter Amount Greater than ${widget.model.minAmount}");
+                      BaseUtil.showNegativeAlert(
+                        "Invalid Amount",
+                        "Please Enter Amount Greater than ${widget.model.minAmount}",
+                      );
                       return;
                     }
 
@@ -1006,7 +1005,8 @@ class _FloBreakdownViewState extends State<FloBreakdownView> {
                               UpiApplication.PhonePeSimulator,
                               Uint8List(10),
                               1,
-                              1)
+                              1,
+                            )
                           : widget.model.appMetaList[i];
                       widget.model.initiateBuy();
                     }
@@ -1020,8 +1020,10 @@ class _FloBreakdownViewState extends State<FloBreakdownView> {
                   onPressed: () {
                     if ((widget.model.buyAmount ?? 0) <
                         widget.model.minAmount) {
-                      BaseUtil.showNegativeAlert("Invalid Amount",
-                          "Please Enter Amount Greater than ${widget.model.minAmount}");
+                      BaseUtil.showNegativeAlert(
+                        "Invalid Amount",
+                        "Please Enter Amount Greater than ${widget.model.minAmount}",
+                      );
                       return;
                     }
 
@@ -1104,14 +1106,15 @@ class _GoldProBreakdownViewState extends State<GoldProBreakdownView> {
       onWillPop: () async {
         AppState.removeOverlay();
         locator<AnalyticsService>().track(
-            eventName: AnalyticsEvents.intentTransactionBackPressed,
-            properties: {
-              "goldBuyAmount": widget.model.totalGoldAmount,
-              "goldInGrams": widget.model.totalGoldBalance,
-              "abTesting": AppConfig.getValue(AppConfigKey.payment_brief_view)
-                  ? "with payment summary"
-                  : "without payment summary"
-            });
+          eventName: AnalyticsEvents.intentTransactionBackPressed,
+          properties: {
+            "goldBuyAmount": widget.model.totalGoldAmount,
+            "goldInGrams": widget.model.totalGoldBalance,
+            "abTesting": AppConfig.getValue(AppConfigKey.payment_brief_view)
+                ? "with payment summary"
+                : "without payment summary"
+          },
+        );
         return Future.value(true);
       },
       child: Padding(
@@ -1177,7 +1180,8 @@ class _GoldProBreakdownViewState extends State<GoldProBreakdownView> {
                             UpiApplication.PhonePeSimulator,
                             Uint8List(10),
                             1,
-                            1)
+                            1,
+                          )
                         : widget.model.appMetaList[i];
                     AppState.backButtonDispatcher?.didPopRoute();
                     widget.model.initiateGoldProTransaction();

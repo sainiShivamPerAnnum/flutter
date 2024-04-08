@@ -226,7 +226,9 @@ class FloPremiumDetailsView extends StatelessWidget {
                                             onPressed: () {
                                               Haptic.vibrate();
                                               model.cleanTransactionsList();
-                                              model.config = true;
+                                              model.updateConfig(
+                                                FundType.UNI_FIXED_6,
+                                              );
                                               model.getTransactions();
                                             },
                                           ),

@@ -22,26 +22,26 @@ class LendboxAmountInputView extends StatefulWidget {
   final String maxAmountMsg;
   final String minAmountMsg;
   final FocusNode focusNode;
-  final Function(int val) onAmountChange;
+  final Function(int val)? onAmountChange;
   final bool readOnly;
   final void Function() onTap;
 
-  const LendboxAmountInputView(
-      {required this.chipAmounts,
-      required this.onAmountChange,
-      required this.amountController,
-      required this.isEnabled,
-      required this.maxAmount,
-      required this.minAmount,
-      required this.maxAmountMsg,
-      required this.minAmountMsg,
-      required this.focusNode,
-      required this.readOnly,
-      required this.onTap,
-      Key? key,
-      this.bestChipIndex = 1,
-      this.notice})
-      : super(key: key);
+  const LendboxAmountInputView({
+    required this.chipAmounts,
+    required this.amountController,
+    required this.isEnabled,
+    required this.maxAmount,
+    required this.minAmount,
+    required this.maxAmountMsg,
+    required this.minAmountMsg,
+    required this.focusNode,
+    required this.readOnly,
+    required this.onTap,
+    this.onAmountChange,
+    super.key,
+    this.bestChipIndex = 1,
+    this.notice,
+  });
 
   @override
   State<LendboxAmountInputView> createState() => _LendboxAmountInputViewState();
@@ -67,16 +67,17 @@ class _LendboxAmountInputViewState extends State<LendboxAmountInputView> {
   void updateFieldWidth() {
     int n = widget.amountController!.text.length;
     if (n == 0) n++;
-    _fieldWidth = (SizeConfig.padding40 * n.toDouble());
+    _fieldWidth = SizeConfig.padding40 * n.toDouble();
     widget.amountController!.selection = TextSelection.fromPosition(
-        TextPosition(offset: widget.amountController!.text.length));
+      TextPosition(offset: widget.amountController!.text.length),
+    );
   }
 
   @override
   Widget build(BuildContext context) {
     final currentAmt = double.tryParse(widget.amountController!.text) ?? 0;
     if (currentAmt == null) widget.amountController!.text = "0.0";
-    final AnalyticsService _analyticsService = locator<AnalyticsService>();
+    final AnalyticsService analyticsService = locator<AnalyticsService>();
     return Column(
       children: [
         Container(
@@ -140,10 +141,8 @@ class _LendboxAmountInputViewState extends State<LendboxAmountInputView> {
                       inputFormatters: [
                         FilteringTextInputFormatter.digitsOnly,
                       ],
-                      onChanged: (String val) {
-                        setState(() {
-                          updateFieldWidth();
-                        });
+                      onChanged: (val) {
+                        setState(updateFieldWidth);
                       },
                       decoration: const InputDecoration(
                         focusedBorder: InputBorder.none,
@@ -189,26 +188,30 @@ class _LendboxAmountInputViewState extends State<LendboxAmountInputView> {
           crossAxisAlignment: CrossAxisAlignment.center,
           mainAxisAlignment: MainAxisAlignment.center,
           children: widget.chipAmounts
-              .mapIndexed((item, i) => AmountChip(
+              .mapIndexed(
+                (item, i) => AmountChip(
                   isActive: _selectedIndex == i,
                   index: i,
                   amt: item.value,
                   isBest: item.best,
                   onClick: (amt) {
-                    _analyticsService.track(
-                        eventName: AnalyticsEvents.suggestedAmountTapped,
-                        properties: {
-                          'order': i,
-                          'Amount': amt,
-                          'Best flag': item.best
-                        });
+                    analyticsService.track(
+                      eventName: AnalyticsEvents.suggestedAmountTapped,
+                      properties: {
+                        'order': i,
+                        'Amount': amt,
+                        'Best flag': item.best
+                      },
+                    );
                     setState(() {
                       _selectedIndex = i;
                       widget.amountController!.text =
                           widget.chipAmounts[i].value.toString();
                       updateFieldWidth();
                     });
-                  }))
+                  },
+                ),
+              )
               .toList(),
         ),
       ],

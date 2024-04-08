@@ -90,6 +90,7 @@ class LendboxBuyViewModel extends BaseViewModel
   int? _buyAmount = 0;
   bool isLendboxOldUser = false;
   late String floAssetType;
+  LendboxAssetConfiguration config = AppConfigV2.instance.lendBoxP2P.first;
   double _fieldWidth = 0.0;
   bool _forcedBuy = false;
   bool _showMaxCapText = false;
@@ -246,6 +247,9 @@ class LendboxBuyViewModel extends BaseViewModel
   }) async {
     setState(ViewState.Busy);
     floAssetType = assetTypeFlow;
+    config = AppConfigV2.instance.lendBoxP2P.firstWhere(
+      (element) => element.fundType.name == floAssetType,
+    );
     _txnService.floAssetType = floAssetType;
     showHappyHour = locator<MarketingEventHandlerService>().showHappyHourBanner;
     animationController = AnimationController(
@@ -343,10 +347,9 @@ class LendboxBuyViewModel extends BaseViewModel
       return;
     }
 
-    log(amount.toString());
     _isBuyInProgress = true;
     notifyListeners();
-    trackCheckOut(amount.toDouble());
+    _trackCheckOut(amount.toDouble());
     await _txnService.initiateTransaction(
       FloPurchaseDetails(
         floAssetType: floAssetType,
@@ -390,7 +393,7 @@ class LendboxBuyViewModel extends BaseViewModel
     }
   }
 
-  trackCheckOut(double? amount) {
+  void _trackCheckOut(double? amount) {
     _txnService.currentTransactionAnalyticsDetails = {
       "Asset": "Flo",
       "Amount Entered": amount ?? 0,
@@ -666,30 +669,6 @@ class LendboxBuyViewModel extends BaseViewModel
     };
   }
 
-  /// Calculates the compound interest based on the [amount], [interestRate] and
-  /// [maturityDuration] for [terms].
-  num calculateInterest({
-    required num amount,
-    required num interestRate,
-    required int maturityDuration,
-    int terms = 1,
-  }) {
-    if (terms == 0) return 0;
-
-    double effectiveInterestRate = (maturityDuration / 12) * interestRate;
-    double normalized = effectiveInterestRate / 100.0;
-    final gainedInterest = amount * normalized;
-
-    final i2 = calculateInterest(
-      amount: amount + gainedInterest,
-      interestRate: interestRate,
-      maturityDuration: maturityDuration,
-      terms: terms - 1,
-    );
-
-    return gainedInterest + i2;
-  }
-
   Widget showReinvestSubTitle() {
     final amount = int.tryParse(amountController!.text) ?? 0;
     final maturityDuration =
@@ -697,7 +676,7 @@ class LendboxBuyViewModel extends BaseViewModel
     final terms = selectedOption.maturityTerm;
     final rate = floAssetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? 12 : 10;
 
-    final i = calculateInterest(
+    final i = BaseUtil.calculateCompoundInterest(
       amount: amount,
       interestRate: rate,
       maturityDuration: maturityDuration,
