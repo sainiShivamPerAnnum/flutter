@@ -162,11 +162,11 @@ class LendboxAssetConfiguration {
     required this.descText,
     required this.tambolaMultiplier,
     this.isForOldLb = false,
-    this.highlights = '',
-    this.description = '',
     this.interest = 10,
     this.maturityDuration = 3,
     this.assetName = '',
+    this.highlights = '',
+    this.description = '',
   });
 
   factory LendboxAssetConfiguration.fromJson(Map<String, dynamic> json) =>
@@ -176,7 +176,8 @@ class LendboxAssetConfiguration {
 enum FundType {
   UNI_FLEXI,
   UNI_FIXED_6,
-  UNI_FIXED_3;
+  UNI_FIXED_3,
+  UNI_FIXED_1;
 
   bool get isFixed6 => this == FundType.UNI_FIXED_6;
 }

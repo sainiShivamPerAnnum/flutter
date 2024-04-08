@@ -312,11 +312,13 @@ class FloPremiumDetailsView extends StatelessWidget {
         "total invested amount": switch (config.fundType) {
           FundType.UNI_FIXED_6 => portfolio.flo.fixed1.principle,
           FundType.UNI_FIXED_3 => portfolio.flo.fixed2.principle,
+          FundType.UNI_FIXED_1 => portfolio.flo.fixed2.principle,
           FundType.UNI_FLEXI => portfolio.flo.flexi.principle,
         },
         "total current amount": switch (config.fundType) {
           FundType.UNI_FIXED_6 => portfolio.flo.fixed1.balance,
           FundType.UNI_FIXED_3 => portfolio.flo.fixed2.balance,
+          FundType.UNI_FIXED_1 => portfolio.flo.fixed2.balance,
           FundType.UNI_FLEXI => portfolio.flo.flexi.balance,
         },
       },

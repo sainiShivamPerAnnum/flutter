@@ -86,17 +86,18 @@ LendboxAssetConfiguration _$LendboxAssetConfigurationFromJson(
       descText: json['descText'] as String,
       tambolaMultiplier: json['tambolaMultiplier'] as num,
       isForOldLb: json['isForOldLb'] as bool? ?? false,
-      highlights: json['highlights'] as String? ?? '',
-      description: json['description'] as String? ?? '',
       interest: json['interest'] as num? ?? 10,
       maturityDuration: json['maturityDuration'] as int? ?? 3,
       assetName: json['assetName'] as String? ?? '',
+      highlights: json['highlights'] as String? ?? '',
+      description: json['description'] as String? ?? '',
     );
 
 const _$FundTypeEnumMap = {
   FundType.UNI_FLEXI: 'UNI_FLEXI',
   FundType.UNI_FIXED_6: 'UNI_FIXED_6',
   FundType.UNI_FIXED_3: 'UNI_FIXED_3',
+  FundType.UNI_FIXED_1: 'UNI_FIXED_1',
 };
 
 OverrideUrls _$OverrideUrlsFromJson(Map<String, dynamic> json) => OverrideUrls(
