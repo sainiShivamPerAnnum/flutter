@@ -152,6 +152,7 @@ class LendboxAssetConfiguration {
   final String highlights;
   final String description;
   final num interest;
+  final int maturityDuration;
   final String assetName;
 
   const LendboxAssetConfiguration({
@@ -164,6 +165,7 @@ class LendboxAssetConfiguration {
     this.highlights = '',
     this.description = '',
     this.interest = 10,
+    this.maturityDuration = 3,
     this.assetName = '',
   });
 

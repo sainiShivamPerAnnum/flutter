@@ -1,14 +1,11 @@
 import 'package:felloapp/core/enums/view_state_enum.dart';
-import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/lendbox_app_bar.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/withdrawal/lendbox_withdrawal_vm.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/withdrawal/widget/lendbox_amount_view.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/ui/service_elements/gold_sell_card/sell_card_components.dart';
-import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
-import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
 import 'package:felloapp/util/styles/ui_constants.dart';
@@ -19,12 +16,12 @@ class LendboxWithdrawalInputView extends StatelessWidget {
 
   const LendboxWithdrawalInputView({
     required this.model,
-    Key? key,
-  }) : super(key: key);
+    super.key,
+  });
 
   @override
   Widget build(BuildContext context) {
-    S locale = S.of(context);
+    final locale = S.of(context);
     return Stack(
       children: [
         Column(
@@ -35,12 +32,8 @@ class LendboxWithdrawalInputView extends StatelessWidget {
             SizedBox(height: SizeConfig.padding16),
             LendBoxAppBar(
               isEnabled: !model.inProgress,
-              trackClosingEvent: () =>
-                  AppState.backButtonDispatcher!.didPopRoute(),
-              assetType: Constants.ASSET_TYPE_FLO_FELXI,
-              isOldUser: locator<UserService>()
-                  .userSegments
-                  .contains(Constants.US_FLO_OLD),
+              trackClosingEvent: AppState.backButtonDispatcher!.didPopRoute,
+              assetName: 'Fello Flo',
             ),
             SizedBox(height: SizeConfig.padding32),
             if (model.state == ViewState.Idle &&
@@ -65,15 +58,14 @@ class LendboxWithdrawalInputView extends StatelessWidget {
               minAmountMsg: locale.txnWithDrawMin,
               notice: model.buyNotice,
               bestChipIndex: 1,
-              onAmountChange: (int amount) {},
-              // isbuyView: false,
             ),
             const Spacer(),
             model.withdrawableResponseMessage.isNotEmpty
                 ? Container(
                     margin: EdgeInsets.symmetric(
-                        horizontal: SizeConfig.pageHorizontalMargins,
-                        vertical: SizeConfig.padding10),
+                      horizontal: SizeConfig.pageHorizontalMargins,
+                      vertical: SizeConfig.padding10,
+                    ),
                     decoration: BoxDecoration(
                       borderRadius:
                           BorderRadius.circular(SizeConfig.roundness24),
@@ -93,7 +85,8 @@ class LendboxWithdrawalInputView extends StatelessWidget {
                     children: [
                       Padding(
                         padding: EdgeInsets.symmetric(
-                            horizontal: SizeConfig.padding38),
+                          horizontal: SizeConfig.padding38,
+                        ),
                         child: Row(
                           mainAxisAlignment: MainAxisAlignment.spaceBetween,
                           children: [
@@ -130,7 +123,7 @@ class LendboxWithdrawalInputView extends StatelessWidget {
                               onPressed: () async {
                                 if (!model.inProgress) {
                                   FocusScope.of(context).unfocus();
-                                  model.initiateWithdraw();
+                                  await model.initiateWithdraw();
                                 }
                               },
                               width: SizeConfig.screenWidth! * 0.813,

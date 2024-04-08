@@ -89,6 +89,7 @@ LendboxAssetConfiguration _$LendboxAssetConfigurationFromJson(
       highlights: json['highlights'] as String? ?? '',
       description: json['description'] as String? ?? '',
       interest: json['interest'] as num? ?? 10,
+      maturityDuration: json['maturityDuration'] as int? ?? 3,
       assetName: json['assetName'] as String? ?? '',
     );
 

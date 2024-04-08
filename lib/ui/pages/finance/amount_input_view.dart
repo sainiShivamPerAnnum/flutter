@@ -1,16 +1,11 @@
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
-import 'package:felloapp/core/enums/app_config_keys.dart';
-import 'package:felloapp/core/model/app_config_model.dart';
 import 'package:felloapp/core/model/asset_options_model.dart';
 import 'package:felloapp/core/service/analytics/analytics_service.dart';
-import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/ui/pages/finance/amount_chip.dart';
 import 'package:felloapp/ui/pages/finance/augmont/gold_buy/widgets/view_breakdown.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/deposit/lendbox_buy_vm.dart';
-import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/list_utils.dart';
-import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
 import 'package:felloapp/util/styles/textStyles.dart';
@@ -21,7 +16,6 @@ import 'package:flutter/services.dart';
 class AmountInputView extends StatefulWidget {
   final TextEditingController? amountController;
   final List<UserOption> chipAmounts;
-
   final int bestChipIndex;
   final String? notice;
   final bool isEnabled;
@@ -30,15 +24,13 @@ class AmountInputView extends StatefulWidget {
   final String maxAmountMsg;
   final String minAmountMsg;
   final FocusNode focusNode;
-  final Function(int val) onAmountChange;
   final bool readOnly;
-  final void Function() onTap;
+  final VoidCallback onTap;
   final LendboxBuyViewModel model;
   final bool isBuyView;
 
   const AmountInputView({
     required this.chipAmounts,
-    required this.onAmountChange,
     required this.amountController,
     required this.isEnabled,
     required this.maxAmount,
@@ -66,32 +58,11 @@ class _AmountInputViewState extends State<AmountInputView> {
     widget.model.updateFieldWidth();
   }
 
-  List lendboxDetails = AppConfig.getValue(AppConfigKey.lendbox);
-
-  String getSubString() {
-    switch (widget.model.floAssetType) {
-      case Constants.ASSET_TYPE_FLO_FIXED_6:
-        return lendboxDetails[0]['maturityPeriodText'];
-
-      case Constants.ASSET_TYPE_FLO_FIXED_3:
-        return lendboxDetails[1]['maturityPeriodText'];
-
-      case Constants.ASSET_TYPE_FLO_FELXI:
-        return locator<UserService>()
-                .userSegments
-                .contains(Constants.US_FLO_OLD)
-            ? lendboxDetails[2]['maturityPeriodText']
-            : lendboxDetails[3]['maturityPeriodText'];
-      default:
-        return "";
-    }
-  }
-
   @override
   Widget build(BuildContext context) {
     final currentAmt = double.tryParse(widget.amountController!.text) ?? 0;
     final AnalyticsService analyticsService = locator<AnalyticsService>();
-    final s = locator<S>();
+
     return Column(
       children: [
         Container(
@@ -142,15 +113,10 @@ class _AmountInputViewState extends State<AmountInputView> {
                       autofocus: true,
                       showCursor: true,
                       readOnly: widget.readOnly,
-                      onTap: () {
-                        widget.onTap();
-                      },
+                      onTap: widget.onTap,
                       controller: widget.amountController,
                       focusNode: widget.focusNode,
                       enabled: widget.isEnabled,
-                      validator: (val) {
-                        return null;
-                      },
                       maxLength: widget.maxAmount.toString().length,
                       keyboardType: const TextInputType.numberWithOptions(
                         decimal: true,
@@ -158,16 +124,11 @@ class _AmountInputViewState extends State<AmountInputView> {
                       inputFormatters: [
                         FilteringTextInputFormatter.digitsOnly,
                       ],
-                      onChanged: (val) {
-                        widget.model.onValueChanged(val);
-
-                        // setState(updateFieldWidth);
-                      },
+                      onChanged: widget.model.onValueChanged,
                       decoration: const InputDecoration(
                         focusedBorder: InputBorder.none,
                         border: InputBorder.none,
                         enabledBorder: InputBorder.none,
-                        // isCollapse: true,
                         disabledBorder: InputBorder.none,
                         isDense: true,
                         counter: Offstage(),
@@ -200,13 +161,13 @@ class _AmountInputViewState extends State<AmountInputView> {
                     GestureDetector(
                       onTap: () {
                         analyticsService.track(
-                            eventName: AnalyticsEvents.tambolaTicketInfoTapped,
-                            properties: {
-                              'Ticket count':
-                                  widget.model.numberOfTambolaTickets,
-                              'happy hour ticket count':
-                                  widget.model.happyHourTickets,
-                            });
+                          eventName: AnalyticsEvents.tambolaTicketInfoTapped,
+                          properties: {
+                            'Ticket count': widget.model.numberOfTambolaTickets,
+                            'happy hour ticket count':
+                                widget.model.happyHourTickets,
+                          },
+                        );
 
                         BaseUtil.openModalBottomSheet(
                           isBarrierDismissible: true,

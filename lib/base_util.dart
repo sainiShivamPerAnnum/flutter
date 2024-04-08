@@ -282,7 +282,9 @@ class BaseUtil extends ChangeNotifier {
 
     if (isAugDepositBanned != null && isAugDepositBanned) {
       BaseUtil.showNegativeAlert(
-          augDepositBanNotice ?? locale.assetNotAvailable, locale.tryLater);
+        augDepositBanNotice ?? locale.assetNotAvailable,
+        locale.tryLater,
+      );
       return;
     }
     Haptic.vibrate();
@@ -344,7 +346,9 @@ class BaseUtil extends ChangeNotifier {
         isAugDepositBanned != null &&
         isAugDepositBanned) {
       BaseUtil.showNegativeAlert(
-          augDepositBanNotice ?? locale.assetNotAvailable, locale.tryLater);
+        augDepositBanNotice ?? locale.assetNotAvailable,
+        locale.tryLater,
+      );
       return;
     }
 
@@ -479,7 +483,6 @@ class BaseUtil extends ChangeNotifier {
         amount: parsedAmount ?? amt,
         initialCouponCode: coupon,
         skipMl: isSkipMl ?? false,
-        onChanged: (p0) => p0,
         floAssetType: floAssetType,
         entryPoint: entryPoint,
         quickCheckout: quickCheckout,
@@ -513,12 +516,37 @@ class BaseUtil extends ChangeNotifier {
     }
   }
 
+  /// Calculates the compound interest based on the [amount], [interestRate] and
+  /// [maturityDuration] for [terms].
+  static num calculateCompoundInterest({
+    required num amount,
+    required num interestRate,
+    required int maturityDuration,
+    int terms = 1,
+  }) {
+    if (terms == 0) return 0;
+
+    double effectiveInterestRate = (maturityDuration / 12) * interestRate;
+    double normalized = effectiveInterestRate / 100.0;
+    final gainedInterest = amount * normalized;
+
+    final i2 = calculateCompoundInterest(
+      amount: amount + gainedInterest,
+      interestRate: interestRate,
+      maturityDuration: maturityDuration,
+      terms: terms - 1,
+    );
+
+    return gainedInterest + i2;
+  }
+
   Future<void> showConfirmExit() async {
     await openModalBottomSheet(
-        isBarrierDismissible: false,
-        addToScreenStack: true,
-        isScrollControlled: true,
-        content: const ConfirmExitModal());
+      isBarrierDismissible: false,
+      addToScreenStack: true,
+      isScrollControlled: true,
+      content: const ConfirmExitModal(),
+    );
   }
 
   void openSellModalSheet({required InvestmentType investmentType}) {
@@ -535,20 +563,25 @@ class BaseUtil extends ChangeNotifier {
           isAugSellLocked != null &&
           isAugSellLocked) {
         BaseUtil.showNegativeAlert(
-            augSellBanNotice ?? locale.assetNotAvailable, locale.tryLater);
+          augSellBanNotice ?? locale.assetNotAvailable,
+          locale.tryLater,
+        );
         return;
       }
       if (investmentType == InvestmentType.LENDBOXP2P &&
           islBoxSellBanned != null &&
           islBoxSellBanned) {
         BaseUtil.showNegativeAlert(
-            lBoxSellBanNotice ?? locale.assetNotAvailable, locale.tryLater);
+          lBoxSellBanNotice ?? locale.assetNotAvailable,
+          locale.tryLater,
+        );
         return;
       }
       _analyticsService.track(
-          eventName: investmentType == InvestmentType.AUGGOLD99
-              ? AnalyticsEvents.goldSellModalSheet
-              : AnalyticsEvents.lBoxSellModalSheet);
+        eventName: investmentType == InvestmentType.AUGGOLD99
+            ? AnalyticsEvents.goldSellModalSheet
+            : AnalyticsEvents.lBoxSellModalSheet,
+      );
 
       BaseUtil.openModalBottomSheet(
         addToScreenStack: true,
@@ -564,8 +597,11 @@ class BaseUtil extends ChangeNotifier {
     });
   }
 
-  static void openDepositOptionsModalSheet(
-      {int? amount, bool isSkipMl = false, int timer = 500}) {
+  static void openDepositOptionsModalSheet({
+    int? amount,
+    bool isSkipMl = false,
+    int timer = 500,
+  }) {
     locator<AnalyticsService>()
         .track(eventName: AnalyticsEvents.assetOptionsModalTapped);
     Haptic.vibrate();
@@ -584,16 +620,28 @@ class BaseUtil extends ChangeNotifier {
     );
   }
 
-  static void showPositiveAlert(String? title, String? message,
-      {int seconds = 2}) {
+  static void showPositiveAlert(
+    String? title,
+    String? message, {
+    int seconds = 2,
+  }) {
     AppToasts.showPositiveToast(
-        title: title, subtitle: message, seconds: seconds);
+      title: title,
+      subtitle: message,
+      seconds: seconds,
+    );
   }
 
-  static void showNegativeAlert(String? title, String? message,
-      {int? seconds}) {
+  static void showNegativeAlert(
+    String? title,
+    String? message, {
+    int? seconds,
+  }) {
     AppToasts.showNegativeToast(
-        title: title, subtitle: message, seconds: seconds);
+      title: title,
+      subtitle: message,
+      seconds: seconds,
+    );
   }
 
   static dynamic showNoInternetAlert() {
@@ -658,8 +706,7 @@ class BaseUtil extends ChangeNotifier {
   static void showFelloRatingSheet() {
     d.log("qwertyuio", name: "showFelloRatingSheet");
 
-    if (PreferenceHelper.getBool(PreferenceHelper.APP_RATING_SUBMITTED) ==
-        false) {
+    if (!PreferenceHelper.getBool(PreferenceHelper.APP_RATING_SUBMITTED)) {
       Future.delayed(const Duration(milliseconds: 300), () {
         Haptic.vibrate();
 
@@ -709,8 +756,11 @@ class BaseUtil extends ChangeNotifier {
     }
   }
 
-  static Widget getWidgetBasedOnUrl(String fileUrl,
-      {double? height, double? width}) {
+  static Widget getWidgetBasedOnUrl(
+    String fileUrl, {
+    double? height,
+    double? width,
+  }) {
     FileType fileType = getFileType(fileUrl);
 
     switch (fileType) {
@@ -723,8 +773,12 @@ class BaseUtil extends ChangeNotifier {
         );
 
       case FileType.lottie:
-        return Lottie.network(fileUrl,
-            fit: BoxFit.contain, height: height, width: width);
+        return Lottie.network(
+          fileUrl,
+          fit: BoxFit.contain,
+          height: height,
+          width: width,
+        );
       case FileType.png:
         return CachedNetworkImage(
           fit: BoxFit.contain,
@@ -813,8 +867,10 @@ class BaseUtil extends ChangeNotifier {
 
   static Future<bool> launchUrl(String url) async {
     if (!await launchUrlString(url, mode: LaunchMode.externalApplication)) {
-      BaseUtil.showNegativeAlert("Operation cannot be completed at the moment",
-          "Please try after some time");
+      BaseUtil.showNegativeAlert(
+        "Operation cannot be completed at the moment",
+        "Please try after some time",
+      );
       return false;
     }
     return true;
@@ -939,7 +995,10 @@ class BaseUtil extends ChangeNotifier {
     late NumberFormat formatter;
     formatter = value > 99999
         ? NumberFormat.compactCurrency(
-            decimalDigits: 0, locale: 'en_IN', symbol: '')
+            decimalDigits: 0,
+            locale: 'en_IN',
+            symbol: '',
+          )
         : NumberFormat.compactCurrency(decimalDigits: 0, symbol: '');
 
     return formatter.format(value);
@@ -956,7 +1015,8 @@ class BaseUtil extends ChangeNotifier {
     /// if user signup date is same as current week number then return false
     if (userCreatedOn != null) {
       final userCreatedOnDate = DateTime.fromMillisecondsSinceEpoch(
-          userCreatedOn.millisecondsSinceEpoch);
+        userCreatedOn.millisecondsSinceEpoch,
+      );
       final userCreatedOnWeekNumber =
           (userCreatedOnDate.difference(DateTime.utc(0, 1, 1)).inDays ~/ 7) + 1;
       if (userCreatedOnWeekNumber == currentWeekNumber) {
@@ -970,7 +1030,9 @@ class BaseUtil extends ChangeNotifier {
 
     /// Update the last week number in preferences
     await PreferenceHelper.setInt(
-        PreferenceHelper.LAST_WEEK_NUMBER, currentWeekNumber);
+      PreferenceHelper.LAST_WEEK_NUMBER,
+      currentWeekNumber,
+    );
 
     /// Check if the current week is the same as the last week when the app was opened
     return currentWeekNumber != lastWeekNumber;
@@ -1031,7 +1093,10 @@ class BaseUtil extends ChangeNotifier {
   }
 
   void updateAugmontDetails(
-      String holderName, String accountNumber, String ifscode) {
+    String holderName,
+    String accountNumber,
+    String ifscode,
+  ) {
     _augmontDetail!.bankHolderName = holderName;
     _augmontDetail!.bankAccNo = accountNumber;
     _augmontDetail!.ifsc = ifscode;
@@ -1166,8 +1231,10 @@ class BaseUtil extends ChangeNotifier {
     notifyListeners();
   }
 
-  Future showHappyHourDialog(HappyHourCampign model,
-      {bool isComingFromSave = false}) async {
+  Future showHappyHourDialog(
+    HappyHourCampign model, {
+    bool isComingFromSave = false,
+  }) async {
     return openModalBottomSheet(
       backgroundColor: Colors.transparent,
       addToScreenStack: true,

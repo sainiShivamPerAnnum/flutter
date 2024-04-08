@@ -2,9 +2,9 @@ import 'dart:async';
 
 import 'package:felloapp/base_util.dart';
 import 'package:felloapp/core/constants/analytics_events_constants.dart';
+import 'package:felloapp/core/model/app_config_serialized_model.dart';
 import 'package:felloapp/core/repository/lendbox_repo.dart';
 import 'package:felloapp/core/service/lendbox_maturity_service.dart';
-import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/deposit/lendbox_buy_vm.dart';
 import 'package:felloapp/util/assets.dart';
@@ -53,8 +53,11 @@ class ReInvestPrompt extends HookWidget {
   final String assetType;
   final LendboxBuyViewModel model;
 
-  void _onTap(UserDecision decision, LendboxBuyViewModel m,
-      ValueNotifier<UserDecision> selectedOption) {
+  void _onTap(
+    UserDecision decision,
+    LendboxBuyViewModel m,
+    ValueNotifier<UserDecision> selectedOption,
+  ) {
     m.selectedOption = selectedOption.value = decision;
   }
 
@@ -114,10 +117,9 @@ class ReInvestPrompt extends HookWidget {
         children: [
           LendboxPaymentSummaryHeader(
             amount: amount,
-            assetType: assetType,
             maturityTerm: selectedOption.value.maturityTerm,
             showMaturity: true,
-            model: model,
+            configuration: model.config,
           ),
           Padding(
             padding: const EdgeInsets.symmetric(horizontal: 10),
@@ -135,7 +137,8 @@ class ReInvestPrompt extends HookWidget {
                     ),
                     Tooltip(
                       margin: EdgeInsets.symmetric(
-                          horizontal: SizeConfig.pageHorizontalMargins),
+                        horizontal: SizeConfig.pageHorizontalMargins,
+                      ),
                       triggerMode: TooltipTriggerMode.tap,
                       preferBelow: false,
                       decoration: BoxDecoration(
@@ -144,8 +147,9 @@ class ReInvestPrompt extends HookWidget {
                             BorderRadius.circular(SizeConfig.roundness8),
                       ),
                       padding: EdgeInsets.symmetric(
-                          horizontal: SizeConfig.pageHorizontalMargins,
-                          vertical: SizeConfig.pageHorizontalMargins),
+                        horizontal: SizeConfig.pageHorizontalMargins,
+                        vertical: SizeConfig.pageHorizontalMargins,
+                      ),
                       showDuration: const Duration(seconds: 10),
                       message:
                           "Fello Flo Premium plans allow you to decide what happens to your money after maturity. You can choose what you want to do with your money while you invest. If you do not select a preference, we will contact you and confirm what you want to do with the corpus post maturity.",
@@ -194,7 +198,8 @@ class ReInvestPrompt extends HookWidget {
                   child: MaterialButton(
                     height: SizeConfig.padding40,
                     shape: RoundedRectangleBorder(
-                        borderRadius: BorderRadius.circular(5)),
+                      borderRadius: BorderRadius.circular(5),
+                    ),
                     padding: const EdgeInsets.symmetric(vertical: 10),
                     color: Colors.white,
                     onPressed: _onProceed,
@@ -272,24 +277,25 @@ class OptionContainer<T> extends StatelessWidget {
             child: Row(
               children: [
                 Container(
-                    width: SizeConfig.padding24,
-                    height: SizeConfig.padding24,
+                  width: SizeConfig.padding24,
+                  height: SizeConfig.padding24,
+                  decoration: BoxDecoration(
+                    shape: BoxShape.circle,
+                    border: Border.all(
+                      color: selected
+                          ? UiConstants.kTabBorderColor
+                          : const Color(0xFFD3D3D3).withOpacity(0.2),
+                      width: SizeConfig.border1,
+                    ),
+                  ),
+                  child: Container(
+                    margin: EdgeInsets.all(SizeConfig.padding4),
                     decoration: BoxDecoration(
                       shape: BoxShape.circle,
-                      border: Border.all(
-                        color: selected
-                            ? UiConstants.kTabBorderColor
-                            : const Color(0xFFD3D3D3).withOpacity(0.2),
-                        width: SizeConfig.border1,
-                      ),
+                      color: selected ? UiConstants.kTabBorderColor : null,
                     ),
-                    child: Container(
-                      margin: EdgeInsets.all(SizeConfig.padding4),
-                      decoration: BoxDecoration(
-                        shape: BoxShape.circle,
-                        color: selected ? UiConstants.kTabBorderColor : null,
-                      ),
-                    )),
+                  ),
+                ),
                 SizedBox(
                   width: SizeConfig.padding16,
                 ),
@@ -428,67 +434,36 @@ class InvestmentForeseenWidget extends StatelessWidget {
 class LendboxPaymentSummaryHeader extends StatelessWidget {
   const LendboxPaymentSummaryHeader({
     required this.amount,
-    required this.assetType,
-    required this.model,
+    required this.configuration,
     this.showMaturity = false,
     this.maturityTerm = 1,
     super.key,
-  }) : _maturityDuration =
-            assetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? 6 : 3;
+  });
 
   final String amount;
-  final String assetType;
   final bool showMaturity;
   final int maturityTerm;
-  final LendboxBuyViewModel model;
-  final int _maturityDuration;
+  final LendboxAssetConfiguration configuration;
 
-  static final _isOldUser = locator<UserService>().userSegments.contains(
-        Constants.US_FLO_OLD,
-      );
-
-  static final _interestMapping = {
-    Constants.ASSET_TYPE_FLO_FIXED_6: 12,
-    Constants.ASSET_TYPE_FLO_FIXED_3: 10,
-    Constants.ASSET_TYPE_FLO_FELXI: _isOldUser ? 10 : 8,
-  };
-
-  String _getTitle() {
-    final isNewUser = !locator<UserService>().userSegments.contains(
-          Constants.US_FLO_OLD,
-        );
-
-    if (assetType == Constants.ASSET_TYPE_FLO_FIXED_6) {
-      return "12% Flo";
-    }
-
-    if (assetType == Constants.ASSET_TYPE_FLO_FIXED_3) {
-      return "10% Flo";
-    }
-
-    return assetType == Constants.ASSET_TYPE_FLO_FELXI && isNewUser
-        ? "8% Flo"
-        : "10% Flo";
+  String _getTitle(num interest) {
+    return "$interest% Flo";
   }
 
-  String _getSubTitle({int terms = 1}) {
-    return "Maturity in ${terms * _maturityDuration} Months";
+  String _getSubTitle({required int maturityDuration, int terms = 1}) {
+    return "Maturity in ${terms * maturityDuration} Months";
   }
 
   @override
   Widget build(BuildContext context) {
     final formatter = NumberFormat("#,##0", "en_US");
     final amt = num.parse(amount);
-    final isFlexi = assetType == Constants.ASSET_TYPE_FLO_FELXI;
 
-    final interest = model
-        .calculateInterest(
-          amount: amt,
-          interestRate: _interestMapping[assetType]!,
-          maturityDuration: isFlexi ? 12 : _maturityDuration,
-          terms: isFlexi ? 1 : maturityTerm,
-        )
-        .toInt();
+    final interest = BaseUtil.calculateCompoundInterest(
+      amount: amt,
+      interestRate: configuration.interest,
+      maturityDuration: configuration.maturityDuration,
+      terms: maturityTerm,
+    ).toInt();
 
     return Container(
       decoration: BoxDecoration(
@@ -511,7 +486,7 @@ class LendboxPaymentSummaryHeader extends StatelessWidget {
                 width: SizeConfig.padding12,
               ),
               Text(
-                _getTitle(),
+                _getTitle(configuration.interest),
                 style: TextStyles.rajdhaniSB.title5.copyWith(
                   color: Colors.white,
                 ),
@@ -529,9 +504,9 @@ class LendboxPaymentSummaryHeader extends StatelessWidget {
               ),
               const Spacer(),
               _AmountSectionView(
-                header: isFlexi ? 'Savings (after 1 Year)' : 'Maturity Amount',
+                header: 'Maturity Amount',
                 sub: '₹${formatter.format(amt)}+',
-                subTail: "₹${formatter.format(interest)}",
+                subTail: '₹${formatter.format(interest)}',
               ),
             ],
           ),
@@ -540,7 +515,10 @@ class LendboxPaymentSummaryHeader extends StatelessWidget {
               height: SizeConfig.padding16,
             ),
             Text(
-              _getSubTitle(terms: maturityTerm),
+              _getSubTitle(
+                maturityDuration: configuration.maturityDuration,
+                terms: maturityTerm,
+              ),
               style: TextStyles.rajdhaniSB.body3.copyWith(
                 color: UiConstants.grey1,
               ),
@@ -775,13 +753,16 @@ class _MaturityPrefModalSheetState extends State<MaturityPrefModalSheet> {
                 height: SizeConfig.padding40,
                 minWidth: SizeConfig.screenWidth!,
                 shape: RoundedRectangleBorder(
-                    borderRadius: BorderRadius.circular(5)),
+                  borderRadius: BorderRadius.circular(5),
+                ),
                 padding: const EdgeInsets.symmetric(vertical: 10),
                 color: Colors.white.withOpacity(isEnable ? 1 : 0.5),
                 onPressed: () async {
                   if (selectedOption == -1) {
-                    BaseUtil.showNegativeAlert("Please select an option",
-                        "proceed by choosing an option");
+                    BaseUtil.showNegativeAlert(
+                      "Please select an option",
+                      "proceed by choosing an option",
+                    );
                     return;
                   }
 
@@ -796,17 +777,22 @@ class _MaturityPrefModalSheetState extends State<MaturityPrefModalSheet> {
 
                     final res = await locator<LendboxRepo>()
                         .updateUserInvestmentPreference(
-                            widget.txnId, maturityPref,
-                            hasConfirmed: hasConfirmed ?? false);
+                      widget.txnId,
+                      maturityPref,
+                      hasConfirmed: hasConfirmed ?? false,
+                    );
                     if (res.isSuccess()) {
                       unawaited(AppState.backButtonDispatcher!.didPopRoute());
                       await locator<LendboxMaturityService>().init();
                       BaseUtil.showPositiveAlert(
-                          "You preference recorded successfully",
-                          "We'll contact you if required");
+                        "You preference recorded successfully",
+                        "We'll contact you if required",
+                      );
                     } else {
                       BaseUtil.showNegativeAlert(
-                          res.errorMessage, "Please try again");
+                        res.errorMessage,
+                        "Please try again",
+                      );
                     }
                   }
                 },
