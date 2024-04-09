@@ -9615,6 +9615,26 @@ class S {
       args: [multiplier, percent],
     );
   }
+
+  /// `Auto Invest on Maturity`
+  String get floAutoInvest {
+    return Intl.message(
+      'Auto Invest on Maturity',
+      name: 'floAutoInvest',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Moving to *P2P Flexi* on maturity\nCan withdraw anytime after maturity`
+  String get floReInvestMessage {
+    return Intl.message(
+      'Moving to *P2P Flexi* on maturity\nCan withdraw anytime after maturity',
+      name: 'floReInvestMessage',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {
