@@ -1,18 +1,14 @@
 import 'dart:async';
 
 import 'package:felloapp/base_util.dart';
-import 'package:felloapp/core/constants/analytics_events_constants.dart';
 import 'package:felloapp/core/model/app_config_serialized_model.dart';
 import 'package:felloapp/core/repository/lendbox_repo.dart';
 import 'package:felloapp/core/service/lendbox_maturity_service.dart';
 import 'package:felloapp/navigator/app_state.dart';
-import 'package:felloapp/ui/pages/finance/lendbox/deposit/lendbox_buy_vm.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
-import 'package:flutter/services.dart';
-import 'package:flutter_hooks/flutter_hooks.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/flutter_svg.dart';
 import 'package:intl/intl.dart';
@@ -39,183 +35,6 @@ enum UserDecision {
     required this.lbMapping,
     required this.maturityTerm,
   });
-}
-
-class ReInvestPrompt extends HookWidget {
-  const ReInvestPrompt({
-    required this.amount,
-    required this.assetType,
-    required this.model,
-    super.key,
-  });
-
-  final String amount;
-  final String assetType;
-  final LendboxBuyViewModel model;
-
-  void _onTap(
-    UserDecision decision,
-    LendboxBuyViewModel m,
-    ValueNotifier<UserDecision> selectedOption,
-  ) {
-    m.selectedOption = selectedOption.value = decision;
-  }
-
-  bool _isSelected(UserDecision optionIndex, UserDecision selectedIndex) {
-    return optionIndex == selectedIndex;
-  }
-
-  int _getMaturityDuration({int cycle = 1}) {
-    int duration = assetType == Constants.ASSET_TYPE_FLO_FIXED_6 ? 6 : 3;
-    return duration * cycle;
-  }
-
-  String _getTitle({int cycle = 1}) {
-    return '${_getMaturityDuration(cycle: cycle)} Months';
-  }
-
-  String _getSubTitle(UserDecision decision) {
-    final maturity = model.assetOptionsModel!.data.maturityAt;
-    if (maturity == null) return '';
-
-    final date = switch (decision) {
-      UserDecision.notDecided => maturity.notDecided,
-      UserDecision.reInvest => maturity.reInvest,
-      _ => maturity.notDecided,
-    };
-
-    return 'Maturity on $date';
-  }
-
-  void _onProceed() {
-    AppState.backButtonDispatcher?.didPopRoute();
-
-    SystemChannels.textInput.invokeMethod('TextInput.hide');
-
-    model.analyticsService.track(
-      eventName: AnalyticsEvents.maturitySelectionContinueTapped,
-      properties: {
-        'Choice Tapped': _getSubTitle(
-          model.selectedOption,
-        ),
-        "asset": model.floAssetType,
-        "amount": model.buyAmount,
-      },
-    );
-  }
-
-  @override
-  Widget build(BuildContext context) {
-    final selectedOption = useState<UserDecision>(model.selectedOption);
-
-    return SingleChildScrollView(
-      padding: const EdgeInsets.symmetric(
-        horizontal: 20,
-        vertical: 25,
-      ),
-      child: Column(
-        children: [
-          LendboxPaymentSummaryHeader(
-            amount: amount,
-            maturityTerm: selectedOption.value.maturityTerm,
-            showMaturity: true,
-            configuration: model.config,
-          ),
-          Padding(
-            padding: const EdgeInsets.symmetric(horizontal: 10),
-            child: Column(
-              children: [
-                Row(
-                  crossAxisAlignment: CrossAxisAlignment.start,
-                  children: [
-                    Expanded(
-                      child: Text(
-                        "Choose your Maturity Period",
-                        style:
-                            TextStyles.sourceSans.body2.copyWith(height: 1.2),
-                      ),
-                    ),
-                    Tooltip(
-                      margin: EdgeInsets.symmetric(
-                        horizontal: SizeConfig.pageHorizontalMargins,
-                      ),
-                      triggerMode: TooltipTriggerMode.tap,
-                      preferBelow: false,
-                      decoration: BoxDecoration(
-                        color: Colors.black.withOpacity(0.9),
-                        borderRadius:
-                            BorderRadius.circular(SizeConfig.roundness8),
-                      ),
-                      padding: EdgeInsets.symmetric(
-                        horizontal: SizeConfig.pageHorizontalMargins,
-                        vertical: SizeConfig.pageHorizontalMargins,
-                      ),
-                      showDuration: const Duration(seconds: 10),
-                      message:
-                          "Fello Flo Premium plans allow you to decide what happens to your money after maturity. You can choose what you want to do with your money while you invest. If you do not select a preference, we will contact you and confirm what you want to do with the corpus post maturity.",
-                      child: const Icon(
-                        Icons.info_outline,
-                        color: Colors.white,
-                        size: 15,
-                      ),
-                    ),
-                  ],
-                ),
-                SizedBox(height: SizeConfig.padding4),
-                Text(
-                  'After Maturity your investment is withdraw-able from 8% P2P Asset',
-                  style: TextStyles.sourceSans.body3.colour(
-                    UiConstants.grey1,
-                  ),
-                ),
-                SizedBox(height: SizeConfig.padding20),
-                OptionContainer<UserDecision>(
-                  isRecommended: true,
-                  value: UserDecision.reInvest,
-                  title: _getTitle(cycle: UserDecision.reInvest.maturityTerm),
-                  description: _getSubTitle(UserDecision.reInvest),
-                  isSelected: (i) => _isSelected(i, selectedOption.value),
-                  onTap: (i) => _onTap(i, model, selectedOption),
-                ),
-                SizedBox(height: SizeConfig.padding16),
-                OptionContainer<UserDecision>(
-                  value: UserDecision.notDecided,
-                  title: _getTitle(cycle: UserDecision.notDecided.maturityTerm),
-                  description: _getSubTitle(UserDecision.notDecided),
-                  isSelected: (i) => _isSelected(i, selectedOption.value),
-                  onTap: (i) => _onTap(i, model, selectedOption),
-                ),
-              ],
-            ),
-          ),
-          SizedBox(height: SizeConfig.padding24),
-          Padding(
-            padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding6),
-            child: Row(
-              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-              children: [
-                Expanded(
-                  child: MaterialButton(
-                    height: SizeConfig.padding40,
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(5),
-                    ),
-                    padding: const EdgeInsets.symmetric(vertical: 10),
-                    color: Colors.white,
-                    onPressed: _onProceed,
-                    child: Text(
-                      'PROCEED',
-                      style: TextStyles.rajdhaniB.body1.colour(Colors.black),
-                    ),
-                  ),
-                ),
-              ],
-            ),
-          ),
-        ],
-      ),
-    );
-  }
 }
 
 class OptionContainer<T> extends StatelessWidget {

@@ -1090,5 +1090,7 @@
         "type": "num"
       }
     }
-  }
+  },
+  "floAutoInvest":"Auto Invest on Maturity",
+  "floReInvestMessage":"Moving to *P2P Flexi* on maturity\nCan withdraw anytime after maturity"
 }
