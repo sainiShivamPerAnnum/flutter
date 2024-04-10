@@ -1226,17 +1226,17 @@ class _CustomSwitchState extends State<CustomSwitch>
     super.dispose();
   }
 
-  void _onToggle() {
+  Future<void> _onToggle() async {
     setState(() => _selected = !_selected);
+    await _onValueChanged();
     widget.onChanged(_selected);
-    _onValueChanged();
   }
 
-  void _onValueChanged() {
+  Future<void> _onValueChanged() async {
     if (_selected) {
-      _animationController.forward();
+      await _animationController.forward();
     } else {
-      _animationController.reverse();
+      await _animationController.reverse();
     }
   }
 

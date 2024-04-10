@@ -623,25 +623,6 @@ class LendboxBuyViewModel extends BaseViewModel
     appliedCoupon = null;
   }
 
-  void openReinvestBottomSheet() {
-    BaseUtil.openModalBottomSheet(
-      isBarrierDismissible: true,
-      addToScreenStack: true,
-      backgroundColor: const Color(0xff1B262C),
-      content: ReInvestPrompt(
-        amount: amountController?.text ?? '0',
-        assetType: floAssetType,
-        model: this,
-      ),
-      borderRadius: BorderRadius.only(
-        topLeft: Radius.circular(SizeConfig.roundness24),
-        topRight: Radius.circular(SizeConfig.roundness24),
-      ),
-      hapticVibrate: true,
-      isScrollControlled: true,
-    );
-  }
-
   void showOfferModal(LendboxBuyViewModel? model) {
     BaseUtil.openModalBottomSheet(
       content: FloCouponModalSheet(model: model),

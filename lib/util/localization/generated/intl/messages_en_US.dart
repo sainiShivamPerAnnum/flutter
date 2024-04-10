@@ -485,8 +485,12 @@ class MessageLookup extends MessageLookupByLibrary {
         "flexiIvested": MessageLookupByLibrary.simpleMessage("Invested Amount"),
         "flo10PercentReturns":
             MessageLookupByLibrary.simpleMessage("10% returns on investment"),
+        "floAutoInvest":
+            MessageLookupByLibrary.simpleMessage("Auto Invest on Maturity"),
         "floEarn10Percent":
             MessageLookupByLibrary.simpleMessage("Earn 10% returns"),
+        "floReInvestMessage": MessageLookupByLibrary.simpleMessage(
+            "Moving to *P2P Flexi* on maturity\nCan withdraw anytime after maturity"),
         "floSip": MessageLookupByLibrary.simpleMessage("Fello P2P SIP"),
         "floTicketEarningOnAsset": m4,
         "forTheRequest":

@@ -19,11 +19,13 @@ import 'package:felloapp/ui/pages/finance/augmont/gold_buy/widgets/view_breakdow
 import 'package:felloapp/ui/pages/finance/banner_widget.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/deposit/lendbox_buy_vm.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/deposit/widget/flo_coupon.dart';
+import 'package:felloapp/ui/pages/finance/lendbox/deposit/widget/prompt.dart';
 import 'package:felloapp/ui/pages/finance/lendbox/lendbox_app_bar.dart';
 import 'package:felloapp/ui/pages/finance/preferred_payment_option.dart';
 import 'package:felloapp/ui/pages/static/app_widget.dart';
 import 'package:felloapp/util/assets.dart';
 import 'package:felloapp/util/constants.dart';
+import 'package:felloapp/util/extensions/rich_text_extension.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
 import 'package:felloapp/util/styles/size_config.dart';
@@ -226,6 +228,20 @@ class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
                     ),
                     SizedBox(height: SizeConfig.padding24),
                   ],
+                  Divider(
+                    color: UiConstants.kModalSheetSecondaryBackgroundColor
+                        .withOpacity(0.2),
+                    indent: SizeConfig.pageHorizontalMargins,
+                    endIndent: SizeConfig.pageHorizontalMargins,
+                  ),
+                  _ReInvestNudge(
+                    initialValue: true,
+                    onChange: (value) {
+                      widget.model.selectedOption = value
+                          ? UserDecision.reInvest
+                          : UserDecision.moveToFlexi;
+                    },
+                  ),
                 ],
               ),
             ),
@@ -309,6 +325,71 @@ class _LendboxBuyInputViewState extends State<LendboxBuyInputView> {
           SizedBox(
             height: SizeConfig.padding16,
           ),
+        ],
+      ),
+    );
+  }
+}
+
+class _ReInvestNudge extends StatefulWidget {
+  const _ReInvestNudge({
+    required this.initialValue,
+    required this.onChange,
+  });
+
+  final bool initialValue;
+  final ValueChanged<bool> onChange;
+
+  @override
+  State<_ReInvestNudge> createState() => _ReInvestNudgeState();
+}
+
+class _ReInvestNudgeState extends State<_ReInvestNudge> {
+  bool _value = true;
+
+  @override
+  void initState() {
+    super.initState();
+    _value = widget.initialValue;
+  }
+
+  void _onChanged(bool value) {
+    setState(() {
+      _value = value;
+      widget.onChange(_value);
+    });
+  }
+
+  @override
+  Widget build(BuildContext context) {
+    final locale = locator<S>();
+    return Padding(
+      padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding24),
+      child: Column(
+        children: [
+          Row(
+            mainAxisAlignment: MainAxisAlignment.spaceBetween,
+            children: [
+              Text(
+                locale.floAutoInvest,
+                style: TextStyles.sourceSans.body3.copyWith(
+                  color: UiConstants.grey1,
+                ),
+              ),
+              CustomSwitch(
+                initialValue: true,
+                onChanged: _onChanged,
+              )
+            ],
+          ),
+          SizedBox(
+            height: SizeConfig.padding12,
+          ),
+          if (!_value)
+            locale.floReInvestMessage.beautify(
+              style: TextStyles.sourceSans.body4,
+              alignment: TextAlign.center,
+            ),
         ],
       ),
     );
@@ -590,134 +671,6 @@ class FloBuyNavBar extends StatelessWidget {
               ),
             ],
           )
-        ],
-      ),
-    );
-  }
-}
-
-class MaturityDetailsWidget extends StatelessWidget {
-  const MaturityDetailsWidget({
-    required this.model,
-    super.key,
-  });
-
-  final LendboxBuyViewModel model;
-
-  @override
-  Widget build(BuildContext context) {
-    return Selector<BankAndPanService, bool>(
-      selector: (p0, p1) => p1.isKYCVerified,
-      builder: (ctx, isKYCVerified, child) {
-        return (!isKYCVerified)
-            ? const SizedBox()
-            : (model.floAssetType == Constants.ASSET_TYPE_FLO_FIXED_6 ||
-                    model.floAssetType == Constants.ASSET_TYPE_FLO_FIXED_3)
-                ? GestureDetector(
-                    onTap: () {
-                      if (!model.isBuyInProgress) {
-                        model.openReinvestBottomSheet();
-                      }
-
-                      model.analyticsService.track(
-                        eventName: AnalyticsEvents.maturityChoiceTapped,
-                        properties: {
-                          'amount': model.buyAmount,
-                          "asset": model.floAssetType,
-                        },
-                      );
-                    },
-                    child: Container(
-                      width: SizeConfig.screenWidth,
-                      padding: EdgeInsets.symmetric(
-                        horizontal: SizeConfig.pageHorizontalMargins,
-                      ),
-                      child: Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Divider(
-                            height: 1,
-                            color: UiConstants
-                                .kModalSheetSecondaryBackgroundColor
-                                .withOpacity(0.2),
-                          ),
-                          SizedBox(
-                            height: SizeConfig.padding16,
-                          ),
-                          Text(
-                            'Choose your maturity period',
-                            style: TextStyles.sourceSansSB.body2,
-                            textAlign: TextAlign.left,
-                          ),
-                          SizedBox(
-                            height: SizeConfig.padding16,
-                          ),
-                          Container(
-                            padding: const EdgeInsets.symmetric(
-                              vertical: 7,
-                              horizontal: 12,
-                            ),
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(10),
-                              color: UiConstants.grey2.withOpacity(.2),
-                            ),
-                            child: Row(
-                              mainAxisAlignment: MainAxisAlignment.spaceBetween,
-                              children: [
-                                model.showReinvestSubTitle(),
-                                Text(
-                                  "Change",
-                                  style: TextStyles.sourceSans.body3
-                                      .colour(UiConstants.kTabBorderColor),
-                                ),
-                              ],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ),
-                  )
-                : const SizedBox();
-      },
-    );
-  }
-}
-
-class MaturityTextWidget extends StatelessWidget {
-  const MaturityTextWidget({
-    super.key,
-  });
-
-  @override
-  Widget build(BuildContext context) {
-    return Container(
-      width: SizeConfig.screenWidth,
-      padding:
-          EdgeInsets.symmetric(horizontal: SizeConfig.pageHorizontalMargins),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.start,
-        children: [
-          Divider(
-            height: 1,
-            color: UiConstants.kModalSheetSecondaryBackgroundColor
-                .withOpacity(0.2),
-          ),
-          SizedBox(
-            height: SizeConfig.padding16,
-          ),
-          RichText(
-            text: TextSpan(
-              text: "Note: ",
-              style: TextStyles.sourceSansSB.body3,
-              children: [
-                TextSpan(
-                  text:
-                      "Post maturity, the amount will be moved to 8% Flo which can be withdrawn anytime.",
-                  style: TextStyles.sourceSans.body3.colour(UiConstants.grey1),
-                ),
-              ],
-            ),
-          ),
         ],
       ),
     );
