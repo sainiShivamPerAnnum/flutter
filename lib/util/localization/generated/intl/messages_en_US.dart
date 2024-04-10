@@ -152,6 +152,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "amountWillbeCreditedShortly": MessageLookupByLibrary.simpleMessage(
             "The amount will be credited to your UPI registered bank account shortly"),
         "and": MessageLookupByLibrary.simpleMessage("and"),
+        "annualInterest":
+            MessageLookupByLibrary.simpleMessage("Annual Interest"),
         "anotherCoupon":
             MessageLookupByLibrary.simpleMessage("Please try another coupon"),
         "anotherEmail": MessageLookupByLibrary.simpleMessage(
@@ -175,6 +177,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Authentication Failed"),
         "authenticateNumber": MessageLookupByLibrary.simpleMessage(
             "Please enter your mobile number to authenticate."),
+        "autoInvest":
+            MessageLookupByLibrary.simpleMessage("Auto-invest on Maturity"),
         "autoPayApproveReq":
             MessageLookupByLibrary.simpleMessage("Approve Request"),
         "autoPayBanksSupported": MessageLookupByLibrary.simpleMessage(
@@ -478,6 +482,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("50 Fello\nTokens"),
         "fillAllFeilds":
             MessageLookupByLibrary.simpleMessage("please fill all fields"),
+        "flexiIvested": MessageLookupByLibrary.simpleMessage("Invested Amount"),
         "flo10PercentReturns":
             MessageLookupByLibrary.simpleMessage("10% returns on investment"),
         "floEarn10Percent":
@@ -653,6 +658,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "kycUseCamera": MessageLookupByLibrary.simpleMessage("Use Camera"),
         "kycVerifyText": MessageLookupByLibrary.simpleMessage(
             "This is required to securely verify your identity."),
+        "lastLockIn": MessageLookupByLibrary.simpleMessage("Last Lock-in Date"),
         "lastWeekFello":
             MessageLookupByLibrary.simpleMessage("Last Week on Fello"),
         "lastWeekWinners":
@@ -683,6 +689,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "manageSip": MessageLookupByLibrary.simpleMessage("Manage SIP"),
         "mandateStep1": MessageLookupByLibrary.simpleMessage(
             "1. Select preferred UPI application"),
+        "maturityOn": MessageLookupByLibrary.simpleMessage(
+            "Compounding returns on your investment"),
         "max8gms": MessageLookupByLibrary.simpleMessage(
             "A maximum of 8 gms can be sold in one go"),
         "maxAmountIs": MessageLookupByLibrary.simpleMessage("Max amount is "),
@@ -717,6 +725,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Explore More Games"),
         "moretxns": MessageLookupByLibrary.simpleMessage(
             "Looking for more transactions, please wait ..."),
+        "movetoflexi": MessageLookupByLibrary.simpleMessage(
+            "\'Moving to 8% P2P Flexi on maturity"),
         "myReward": MessageLookupByLibrary.simpleMessage("My Reward"),
         "myreferrals": MessageLookupByLibrary.simpleMessage("My Referrals"),
         "na": MessageLookupByLibrary.simpleMessage("N/A"),
@@ -1069,6 +1079,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "resumeAutoSave":
             MessageLookupByLibrary.simpleMessage("Resume Autosave"),
         "resumeSipbtn": MessageLookupByLibrary.simpleMessage("Resume SIP"),
+        "retiiredFlexi": MessageLookupByLibrary.simpleMessage("8% P2P Flexi"),
         "returnSubText": m25,
         "returnsCalculator":
             MessageLookupByLibrary.simpleMessage("Calculate your SIP returns"),
@@ -1375,6 +1386,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "totalWinnings": MessageLookupByLibrary.simpleMessage("Total Winnings"),
         "toverifyEmail":
             MessageLookupByLibrary.simpleMessage("to verify email"),
+        "transaction": MessageLookupByLibrary.simpleMessage("Transaction"),
         "transactionProgress": MessageLookupByLibrary.simpleMessage(
             "Your transaction is in progress"),
         "trustedBy": MessageLookupByLibrary.simpleMessage("Trusted by"),
@@ -1587,6 +1599,10 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("Withdrawal Failed"),
         "withDrawalProcessing":
             MessageLookupByLibrary.simpleMessage("Withdrawal processing"),
+        "withdrable": MessageLookupByLibrary.simpleMessage("Withdrable Amount"),
+        "withdraw": MessageLookupByLibrary.simpleMessage("Withdraw"),
+        "withdrawAfterMaturity": MessageLookupByLibrary.simpleMessage(
+            "Can withdraw anytime after maturity"),
         "withdrawGoldBalance":
             MessageLookupByLibrary.simpleMessage("Withdrawable Gold Balance"),
         "withdrawal": MessageLookupByLibrary.simpleMessage("Withdrawal"),

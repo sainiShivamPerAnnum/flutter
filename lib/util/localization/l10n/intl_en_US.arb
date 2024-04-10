@@ -1090,5 +1090,16 @@
         "type": "num"
       }
     }
-  }
+  },
+  "retiiredFlexi": "8% P2P Flexi",
+  "flexiIvested": "Invested Amount",
+  "lastLockIn": "Last Lock-in Date",
+  "withdrable": "Withdrable Amount",
+  "annualInterest": "Annual Interest",
+  "transaction": "Transaction",
+  "withdraw": "Withdraw",
+  "autoInvest": "Auto-invest on Maturity",
+  "maturityOn": "Compounding returns on your investment",
+  "movetoflexi":"'Moving to 8% P2P Flexi on maturity",
+  "withdrawAfterMaturity": "Can withdraw anytime after maturity"
 }

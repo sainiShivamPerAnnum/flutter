@@ -56,6 +56,8 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage>
 
   bool _isInvoiceLoading = false;
 
+  bool _isMaturityOn = false;
+
   @override
   void initState() {
     _animationController = AnimationController(vsync: this);
@@ -457,6 +459,55 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage>
                                       txnType: widget.txn.type ?? '')
                               ],
                             ),
+                            if (!isGold) ...[
+                              Padding(
+                                padding: EdgeInsets.symmetric(
+                                    vertical: SizeConfig.padding14),
+                                child: const Divider(
+                                  color: Color(0xff3E3E3E),
+                                ),
+                              ),
+                              Row(
+                                mainAxisAlignment:
+                                    MainAxisAlignment.spaceBetween,
+                                children: [
+                                  Text(
+                                    locale.autoInvest,
+                                    style: TextStyles.sourceSans.body3
+                                        .colour(UiConstants.kTextColor),
+                                  ),
+                                  CustomSwitch(
+                                    initialValue: false,
+                                    onChanged: (val) {
+                                      setState(() {
+                                        _isMaturityOn = val;
+                                      });
+                                    },
+                                  ),
+                                ],
+                              ),
+                              SizedBox(
+                                height: SizeConfig.padding8,
+                              ),
+                              if (_isMaturityOn)
+                                Text(
+                                  locale.maturityOn,
+                                  style: TextStyles.sourceSans.body4
+                                      .colour(UiConstants.kTabBorderColor),
+                                )
+                              else ...[
+                                Text(
+                                  locale.movetoflexi,
+                                  style: TextStyles.sourceSans.body3
+                                      .colour(UiConstants.kTextColor),
+                                ),
+                                Text(
+                                  locale.withdrawAfterMaturity,
+                                  style: TextStyles.sourceSans.body4
+                                      .colour(UiConstants.kFAQsAnswerColor),
+                                )
+                              ]
+                            ]
                           ]
                         ],
                       ),

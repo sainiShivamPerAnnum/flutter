@@ -9615,6 +9615,116 @@ class S {
       args: [multiplier, percent],
     );
   }
+
+  /// `8% P2P Flexi`
+  String get retiiredFlexi {
+    return Intl.message(
+      '8% P2P Flexi',
+      name: 'retiiredFlexi',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Invested Amount`
+  String get flexiIvested {
+    return Intl.message(
+      'Invested Amount',
+      name: 'flexiIvested',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Last Lock-in Date`
+  String get lastLockIn {
+    return Intl.message(
+      'Last Lock-in Date',
+      name: 'lastLockIn',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Withdrable Amount`
+  String get withdrable {
+    return Intl.message(
+      'Withdrable Amount',
+      name: 'withdrable',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Annual Interest`
+  String get annualInterest {
+    return Intl.message(
+      'Annual Interest',
+      name: 'annualInterest',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Transaction`
+  String get transaction {
+    return Intl.message(
+      'Transaction',
+      name: 'transaction',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Withdraw`
+  String get withdraw {
+    return Intl.message(
+      'Withdraw',
+      name: 'withdraw',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Auto-invest on Maturity`
+  String get autoInvest {
+    return Intl.message(
+      'Auto-invest on Maturity',
+      name: 'autoInvest',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Compounding returns on your investment`
+  String get maturityOn {
+    return Intl.message(
+      'Compounding returns on your investment',
+      name: 'maturityOn',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `'Moving to 8% P2P Flexi on maturity`
+  String get movetoflexi {
+    return Intl.message(
+      '\'Moving to 8% P2P Flexi on maturity',
+      name: 'movetoflexi',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Can withdraw anytime after maturity`
+  String get withdrawAfterMaturity {
+    return Intl.message(
+      'Can withdraw anytime after maturity',
+      name: 'withdrawAfterMaturity',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {
