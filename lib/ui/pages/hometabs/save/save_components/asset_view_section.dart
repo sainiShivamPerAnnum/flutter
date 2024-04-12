@@ -703,14 +703,8 @@ class AssetBottomButtons extends StatelessWidget {
                         ),
                         onPressed: () {
                           Haptic.vibrate();
-                          AppState.delegate!.appState.currentAction =
-                              PageAction(
-                            state: PageState.addWidget,
-                            widget: const FlexiBalanceView(),
-                            page: AssetSelectionViewConfig,
-                          );
-                          // BaseUtil()
-                          //     .openRechargeModalSheet(investmentType: type);
+                          BaseUtil()
+                              .openRechargeModalSheet(investmentType: type);
                           locator<AnalyticsService>().track(
                             eventName: AnalyticsEvents.saveOnce,
                             properties: {
