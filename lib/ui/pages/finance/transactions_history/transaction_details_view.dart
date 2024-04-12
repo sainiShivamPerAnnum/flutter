@@ -21,8 +21,7 @@ import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/styles/size_config.dart';
-import 'package:felloapp/util/styles/textStyles.dart';
+import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
@@ -30,7 +29,6 @@ import 'package:intl/intl.dart';
 import 'package:open_filex/open_filex.dart';
 
 import '../../../../base_util.dart';
-import 'package:felloapp/util/styles/styles.dart';
 
 class TransactionDetailsPage extends StatefulWidget {
   const TransactionDetailsPage({required this.txn, Key? key}) : super(key: key);
@@ -459,55 +457,6 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage>
                                       txnType: widget.txn.type ?? '')
                               ],
                             ),
-                            if (!isGold) ...[
-                              Padding(
-                                padding: EdgeInsets.symmetric(
-                                    vertical: SizeConfig.padding14),
-                                child: const Divider(
-                                  color: Color(0xff3E3E3E),
-                                ),
-                              ),
-                              Row(
-                                mainAxisAlignment:
-                                    MainAxisAlignment.spaceBetween,
-                                children: [
-                                  Text(
-                                    locale.autoInvest,
-                                    style: TextStyles.sourceSans.body3
-                                        .colour(UiConstants.kTextColor),
-                                  ),
-                                  CustomSwitch(
-                                    initialValue: false,
-                                    onChanged: (val) {
-                                      setState(() {
-                                        _isMaturityOn = val;
-                                      });
-                                    },
-                                  ),
-                                ],
-                              ),
-                              SizedBox(
-                                height: SizeConfig.padding8,
-                              ),
-                              if (_isMaturityOn)
-                                Text(
-                                  locale.maturityOn,
-                                  style: TextStyles.sourceSans.body4
-                                      .colour(UiConstants.kTabBorderColor),
-                                )
-                              else ...[
-                                Text(
-                                  locale.movetoflexi,
-                                  style: TextStyles.sourceSans.body3
-                                      .colour(UiConstants.kTextColor),
-                                ),
-                                Text(
-                                  locale.withdrawAfterMaturity,
-                                  style: TextStyles.sourceSans.body4
-                                      .colour(UiConstants.kFAQsAnswerColor),
-                                )
-                              ]
-                            ]
                           ]
                         ],
                       ),

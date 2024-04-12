@@ -21,14 +21,14 @@ import '../../transactions_history/transactions_history_view.dart';
 import 'lendbox_withdrawal_view.dart';
 import 'lendbox_withdrawal_vm.dart';
 
-class LendboxRetiredFlexi extends StatefulWidget {
-  const LendboxRetiredFlexi({super.key});
+class FlexiBalanceView extends StatefulWidget {
+  const FlexiBalanceView({super.key});
 
   @override
-  State<LendboxRetiredFlexi> createState() => _LendboxRetiredFlexiState();
+  State<FlexiBalanceView> createState() => _FlexiBalanceViewState();
 }
 
-class _LendboxRetiredFlexiState extends State<LendboxRetiredFlexi> {
+class _FlexiBalanceViewState extends State<FlexiBalanceView> {
   final UserService _usrService = locator<UserService>();
   final TxnHistoryService _txnHistoryService = locator<TxnHistoryService>();
 
@@ -93,7 +93,6 @@ class _LendboxRetiredFlexiState extends State<LendboxRetiredFlexi> {
           return Padding(
             padding: EdgeInsets.symmetric(horizontal: SizeConfig.padding20),
             child: Column(
-              // crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 SizedBox(
                   height: SizeConfig.padding16,
@@ -194,7 +193,7 @@ class _LendboxRetiredFlexiState extends State<LendboxRetiredFlexi> {
                 Padding(
                   padding: EdgeInsets.symmetric(vertical: SizeConfig.padding16),
                   child: const Divider(
-                    color: Color(0xff3E3E3E),
+                    color: UiConstants.kDividerColorLight,
                   ),
                 ),
                 Row(
@@ -233,14 +232,7 @@ class _LendboxRetiredFlexiState extends State<LendboxRetiredFlexi> {
                 const Spacer(),
                 Padding(
                   padding: EdgeInsets.only(bottom: SizeConfig.padding24),
-                  child: MaterialButton(
-                    minWidth: SizeConfig.padding300,
-                    color: Colors.white,
-                    height: SizeConfig.padding44,
-                    shape: RoundedRectangleBorder(
-                      borderRadius:
-                          BorderRadius.circular(SizeConfig.roundness5),
-                    ),
+                  child: SecondaryButton(
                     onPressed: () {
                       Haptic.vibrate();
                       BaseUtil.openModalBottomSheet(
@@ -253,10 +245,7 @@ class _LendboxRetiredFlexiState extends State<LendboxRetiredFlexi> {
                         content: LendboxWithdrawalView(),
                       );
                     },
-                    child: Text(
-                      locale.withdraw,
-                      style: TextStyles.rajdhaniB.body1.colour(Colors.black),
-                    ),
+                    label: locale.withdraw,
                   ),
                 ),
               ],

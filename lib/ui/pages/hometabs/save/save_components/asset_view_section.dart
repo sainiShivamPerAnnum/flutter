@@ -49,6 +49,7 @@ import 'package:property_change_notifier/property_change_notifier.dart';
 import 'package:provider/provider.dart';
 import 'package:syncfusion_flutter_gauges/gauges.dart';
 
+import '../../../finance/lendbox/withdrawal/lendbox_flexi.dart';
 import '../gold_components/gold_pro_card.dart';
 import '../gold_components/gold_rate_graph.dart';
 
@@ -702,8 +703,14 @@ class AssetBottomButtons extends StatelessWidget {
                         ),
                         onPressed: () {
                           Haptic.vibrate();
-                          BaseUtil()
-                              .openRechargeModalSheet(investmentType: type);
+                          AppState.delegate!.appState.currentAction =
+                              PageAction(
+                            state: PageState.addWidget,
+                            widget: const FlexiBalanceView(),
+                            page: AssetSelectionViewConfig,
+                          );
+                          // BaseUtil()
+                          //     .openRechargeModalSheet(investmentType: type);
                           locator<AnalyticsService>().track(
                             eventName: AnalyticsEvents.saveOnce,
                             properties: {
