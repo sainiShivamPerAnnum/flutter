@@ -1051,5 +1051,16 @@
         "type": "String"
       }
     }
-  }
+  },
+  "retiiredFlexi": "8% P2P फ्लेक्सी",
+"flexiIvested": "निवेशित राशि",
+"lastLockIn": "अंतिम लॉक-इन तारीख",
+"withdrable": "निकासी योग्य राशि",
+"annualInterest": "वार्षिक ब्याज",
+"transaction": "लेन-देन",
+"withdraw": "निकासी",
+"autoInvest": "परिपक्वता पर स्वतः निवेश",
+"maturityOn": "आपके निवेश पर चक्रवृद्धि रिटर्न",
+"movetoflexi": "परिपक्वता पर 8% P2P फ्लेक्सी में स्थानांतरण",
+"withdrawAfterMaturity": "परिपक्वता के बाद कभी भी निकासी संभव"
 }

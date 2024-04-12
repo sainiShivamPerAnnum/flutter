@@ -21,8 +21,7 @@ import 'package:felloapp/util/constants.dart';
 import 'package:felloapp/util/haptic.dart';
 import 'package:felloapp/util/localization/generated/l10n.dart';
 import 'package:felloapp/util/locator.dart';
-import 'package:felloapp/util/styles/size_config.dart';
-import 'package:felloapp/util/styles/textStyles.dart';
+import 'package:felloapp/util/styles/styles.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_spinkit/flutter_spinkit.dart';
 import 'package:flutter_svg/svg.dart';
@@ -30,7 +29,6 @@ import 'package:intl/intl.dart';
 import 'package:open_filex/open_filex.dart';
 
 import '../../../../base_util.dart';
-import 'package:felloapp/util/styles/styles.dart';
 
 class TransactionDetailsPage extends StatefulWidget {
   const TransactionDetailsPage({required this.txn, Key? key}) : super(key: key);
@@ -55,6 +53,8 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage>
   final BaseUtil? baseProvider = locator<BaseUtil>();
 
   bool _isInvoiceLoading = false;
+
+  bool _isMaturityOn = false;
 
   @override
   void initState() {
