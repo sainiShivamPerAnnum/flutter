@@ -144,6 +144,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "amountWillbeCreditedShortly": MessageLookupByLibrary.simpleMessage(
             "राशि शीघ्र ही आपके यूपीआई पंजीकृत बैंक खाते में जमा कर दी जाएगी"),
         "and": MessageLookupByLibrary.simpleMessage(" और "),
+        "annualInterest": MessageLookupByLibrary.simpleMessage("वार्षिक ब्याज"),
         "anotherCoupon":
             MessageLookupByLibrary.simpleMessage("कृपया दूसरा कूपन आजमाएं"),
         "anotherEmail": MessageLookupByLibrary.simpleMessage(
@@ -167,6 +168,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "authFailed": MessageLookupByLibrary.simpleMessage("प्रमाणीकरण विफल"),
         "authenticateNumber": MessageLookupByLibrary.simpleMessage(
             "प्रमाणीकरण के लिए कृपया अपना मोबाइल नंबर दर्ज करें।"),
+        "autoInvest":
+            MessageLookupByLibrary.simpleMessage("परिपक्वता पर स्वतः निवेश"),
         "autoPayApproveReq":
             MessageLookupByLibrary.simpleMessage("अनुरोध स्वीकृत करें"),
         "autoPayBanksSupported": MessageLookupByLibrary.simpleMessage(
@@ -469,6 +472,7 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("50 फेलो\nटोकन"),
         "fillAllFeilds":
             MessageLookupByLibrary.simpleMessage("कृपया सभी खानें भरें"),
+        "flexiIvested": MessageLookupByLibrary.simpleMessage("निवेशित राशि"),
         "flo10PercentReturns":
             MessageLookupByLibrary.simpleMessage("निवेश पर 10% रिटर्न"),
         "floEarn10Percent":
@@ -642,6 +646,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("कैमरे का प्रयोग करें"),
         "kycVerifyText": MessageLookupByLibrary.simpleMessage(
             "आपकी पहचान को सुरक्षित रूप से सत्यापित करने के लिए यह आवश्यक है।"),
+        "lastLockIn":
+            MessageLookupByLibrary.simpleMessage("अंतिम लॉक-इन तारीख"),
         "lastWeekFello":
             MessageLookupByLibrary.simpleMessage("फेलो पर पिछले सप्ताह"),
         "lastWeekWinners":
@@ -672,6 +678,8 @@ class MessageLookup extends MessageLookupByLibrary {
         "manageSip": MessageLookupByLibrary.simpleMessage("SIP प्रबंधित करें"),
         "mandateStep1": MessageLookupByLibrary.simpleMessage(
             "1. पसंदीदा UPI एप्लिकेशन चुनें"),
+        "maturityOn": MessageLookupByLibrary.simpleMessage(
+            "आपके निवेश पर चक्रवृद्धि रिटर्न"),
         "max8gms": MessageLookupByLibrary.simpleMessage(
             "एक बार में अधिकतम 8 ग्राम बेचा जा सकता है"),
         "maxAmountIs": MessageLookupByLibrary.simpleMessage("अधिकतम राशि है"),
@@ -704,6 +712,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("और गेम्स एक्सप्लोर करें"),
         "moretxns": MessageLookupByLibrary.simpleMessage(
             "अधिक लेन-देन की तलाश में हैं, कृपया प्रतीक्षा करें ..."),
+        "movetoflexi": MessageLookupByLibrary.simpleMessage(
+            "परिपक्वता पर 8% P2P फ्लेक्सी में स्थानांतरण"),
         "myReward": MessageLookupByLibrary.simpleMessage("मेरा इनाम"),
         "myreferrals": MessageLookupByLibrary.simpleMessage("मेरा सिफ़ारिशें"),
         "na": MessageLookupByLibrary.simpleMessage("एन / ए"),
@@ -1060,6 +1070,8 @@ class MessageLookup extends MessageLookupByLibrary {
             MessageLookupByLibrary.simpleMessage("ऑटोसेव फिर से शुरू करें"),
         "resumeSipbtn":
             MessageLookupByLibrary.simpleMessage("SIP फिर से शुरू करें"),
+        "retiiredFlexi":
+            MessageLookupByLibrary.simpleMessage("8% P2P फ्लेक्सी"),
         "returnSubText": m25,
         "returnsCalculator": MessageLookupByLibrary.simpleMessage(
             "अपने SIP रिटर्न्स की गणना करें"),
@@ -1360,6 +1372,7 @@ class MessageLookup extends MessageLookupByLibrary {
         "totalWinnings": MessageLookupByLibrary.simpleMessage("सम्पूर्ण जीता"),
         "toverifyEmail":
             MessageLookupByLibrary.simpleMessage("ईमेल सत्यापित करने के लिए"),
+        "transaction": MessageLookupByLibrary.simpleMessage("लेन-देन"),
         "transactionProgress":
             MessageLookupByLibrary.simpleMessage("आपका लेन-देन हो रहा है"),
         "trustedBy":
@@ -1568,6 +1581,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "withDrawalFailed": MessageLookupByLibrary.simpleMessage("निकासी विफल"),
         "withDrawalProcessing":
             MessageLookupByLibrary.simpleMessage("आहरण प्रक्रिया"),
+        "withdrable": MessageLookupByLibrary.simpleMessage("निकासी योग्य राशि"),
+        "withdraw": MessageLookupByLibrary.simpleMessage("निकासी"),
+        "withdrawAfterMaturity": MessageLookupByLibrary.simpleMessage(
+            "परिपक्वता के बाद कभी भी निकासी संभव"),
         "withdrawGoldBalance": MessageLookupByLibrary.simpleMessage(
             "निकासी योग्य सोने की शेष राशि"),
         "withdrawal": MessageLookupByLibrary.simpleMessage("निकासी"),

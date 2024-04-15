@@ -30,6 +30,7 @@ import 'package:open_filex/open_filex.dart';
 import '../../../../base_util.dart';
 import 'transaction_details_vm.dart';
 
+
 class TransactionDetailsPage extends StatefulWidget {
   const TransactionDetailsPage({
     required this.txn,
@@ -57,6 +58,8 @@ class _TransactionDetailsPageState extends State<TransactionDetailsPage>
   final BaseUtil? baseProvider = locator<BaseUtil>();
 
   bool _isInvoiceLoading = false;
+
+  bool _isMaturityOn = false;
 
   @override
   void initState() {
