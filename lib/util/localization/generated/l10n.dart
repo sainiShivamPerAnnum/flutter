@@ -9635,6 +9635,36 @@ class S {
       args: [],
     );
   }
+
+  /// `Compounding returns on your investment`
+  String get reinvestMessage {
+    return Intl.message(
+      'Compounding returns on your investment',
+      name: 'reinvestMessage',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Moving to P2P Flexi on maturity`
+  String get disabledReinvestTitle {
+    return Intl.message(
+      'Moving to P2P Flexi on maturity',
+      name: 'disabledReinvestTitle',
+      desc: '',
+      args: [],
+    );
+  }
+
+  /// `Can withdraw anytime after maturity`
+  String get disabledReinvestSubtitle {
+    return Intl.message(
+      'Can withdraw anytime after maturity',
+      name: 'disabledReinvestSubtitle',
+      desc: '',
+      args: [],
+    );
+  }
 }
 
 class AppLocalizationDelegate extends LocalizationsDelegate<S> {

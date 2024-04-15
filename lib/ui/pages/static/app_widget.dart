@@ -1157,13 +1157,20 @@ class GradientBoxBorder extends BoxBorder {
 
 class CustomSwitch extends StatefulWidget {
   final bool initialValue;
-  final ValueChanged<bool> onChanged;
+  final ValueChanged<bool>? onChanged;
+  final VoidCallback? onTap;
+  final bool isLoading;
 
   const CustomSwitch({
     required this.initialValue,
-    required this.onChanged,
+    this.isLoading = false,
+    this.onChanged,
+    this.onTap,
     super.key,
-  });
+  }) : assert(
+          (onTap != null) ^ (onChanged != null),
+          'Either client is allowed to use onTap or onChanged',
+        );
 
   @override
   State<CustomSwitch> createState() => _CustomSwitchState();
@@ -1226,10 +1233,16 @@ class _CustomSwitchState extends State<CustomSwitch>
     super.dispose();
   }
 
-  Future<void> _onToggle() async {
-    setState(() => _selected = !_selected);
-    await _onValueChanged();
-    widget.onChanged(_selected);
+  Future<void> _onTap() async {
+    if (widget.onChanged != null) {
+      setState(() => _selected = !_selected);
+      await _onValueChanged();
+      widget.onChanged?.call(_selected);
+    }
+
+    if (widget.onTap != null) {
+      widget.onTap?.call();
+    }
   }
 
   Future<void> _onValueChanged() async {
@@ -1243,7 +1256,7 @@ class _CustomSwitchState extends State<CustomSwitch>
   @override
   Widget build(BuildContext context) {
     return GestureDetector(
-      onTap: _onToggle,
+      onTap: _onTap,
       child: Container(
         height: SizeConfig.padding25,
         width: SizeConfig.padding46,
@@ -1298,6 +1311,13 @@ class _CustomSwitchState extends State<CustomSwitch>
               child: AnimatedBuilder(
                 animation: _animationController,
                 builder: (context, child) {
+                  if (widget.isLoading) {
+                    return SizedBox.square(
+                      dimension: SizeConfig.padding16,
+                      child: const CircularProgressIndicator(),
+                    );
+                  }
+
                   return SizedBox.square(
                     dimension: SizeConfig.padding16,
                     child: CustomPaint(

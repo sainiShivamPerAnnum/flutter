@@ -376,6 +376,10 @@ class MessageLookup extends MessageLookupByLibrary {
         "digitalGoldSubTitle": MessageLookupByLibrary.simpleMessage(
             "99.9% pure | 24K Gold | 100% secure"),
         "digitalGoldText": MessageLookupByLibrary.simpleMessage("Digital Gold"),
+        "disabledReinvestSubtitle": MessageLookupByLibrary.simpleMessage(
+            "Can withdraw anytime after maturity"),
+        "disabledReinvestTitle": MessageLookupByLibrary.simpleMessage(
+            "Moving to P2P Flexi on maturity"),
         "donePAN": MessageLookupByLibrary.simpleMessage("DONE"),
         "dummyNoAlert": MessageLookupByLibrary.simpleMessage(
             "Only dummy numbers are allowed in QA mode"),
@@ -1057,6 +1061,8 @@ class MessageLookup extends MessageLookupByLibrary {
             "Your friend installs Fello and signs up using your referral link or referral code."),
         "refsubtitle": MessageLookupByLibrary.simpleMessage(
             "Earn ₹ 25 and 200 Fello tokens for every referral and referrer of the month will get a brand new iphone 13"),
+        "reinvestMessage": MessageLookupByLibrary.simpleMessage(
+            "Compounding returns on your investment"),
         "reqPermission":
             MessageLookupByLibrary.simpleMessage("Request Permission"),
         "restart": MessageLookupByLibrary.simpleMessage("Restart"),
