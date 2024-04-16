@@ -88,7 +88,7 @@ class _FelloButtonState extends State<FelloButton> {
                 }
                 BaseUtil.showNoInternetAlert();
               },
-              style: ElevatedButton.styleFrom(primary: Colors.grey),
+              style: ElevatedButton.styleFrom(foregroundColor: Colors.grey),
               child: Opacity(
                 opacity: 0.7,
                 child: Text(widget.defaultButtonText ?? locale.btn),
@@ -136,7 +136,8 @@ class _FelloButtonState extends State<FelloButton> {
                   if (widget.onPressed != null) widget.onPressed!();
                   isAlreadyClicked = false;
                 },
-                child: widget.activeButtonUI)
+                child: widget.activeButtonUI,
+              )
             : TextButton(
                 onPressed: () async {
                   if (Platform.isAndroid) {
