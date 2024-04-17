@@ -1103,5 +1103,10 @@
   "movetoflexi":"'Moving to 8% P2P Flexi on maturity",
   "withdrawAfterMaturity": "Can withdraw anytime after maturity",
   "floAutoInvest":"Auto Invest on Maturity",
-  "floReInvestMessage":"Moving to *P2P Flexi* on maturity\nCan withdraw anytime after maturity"
+  "floReInvestMessage":"Moving to *P2P Flexi* on maturity\nCan withdraw anytime after maturity",
+
+  "@_flo_transaction_details": {},
+  "reinvestMessage": "Compounding returns on your investment",
+  "disabledReinvestTitle": "Moving to P2P Flexi on maturity",
+  "disabledReinvestSubtitle":"Can withdraw anytime after maturity"
 }

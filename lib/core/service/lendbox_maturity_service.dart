@@ -131,6 +131,20 @@ class LendboxMaturityService extends ChangeNotifier {
     }
   }
 
+  Future<bool> updateInvestmentPrefForTransaction(
+    String txnId,
+    String pref, {
+    bool hasConfirmed = false,
+  }) async {
+    final res = await _lendboxRepo.updateUserInvestmentPreference(
+      txnId,
+      pref,
+      hasConfirmed: true,
+    );
+
+    return res.isSuccess();
+  }
+
   UserDecision setDecision(String val) {
     int? i = int.tryParse(val);
 

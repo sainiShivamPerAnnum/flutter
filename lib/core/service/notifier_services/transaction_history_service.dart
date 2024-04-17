@@ -21,7 +21,7 @@ class TxnHistoryService extends ChangeNotifier {
   final TransactionHistoryRepository _transactionHistoryRepo =
       locator<TransactionHistoryRepository>();
   final _paymentRepo = locator<PaymentRepository>();
-  List<UserTransaction>? _txnList = [];
+  List<UserTransaction> _txnList = [];
   List<GoldProInvestmentResponseModel> _goldProTxns = [];
 
   List<GoldProInvestmentResponseModel> get goldProTxns => _goldProTxns;
@@ -41,9 +41,9 @@ class TxnHistoryService extends ChangeNotifier {
   bool hasMoreWithdrawalTxns = true;
   bool hasMoreRefundedTxns = true;
 
-  List<UserTransaction>? get txnList => _txnList;
+  List<UserTransaction> get txnList => _txnList;
 
-  set txnList(List<UserTransaction>? list) {
+  set txnList(List<UserTransaction> list) {
     _txnList = list;
     notifyListeners();
   }
@@ -79,8 +79,8 @@ class TxnHistoryService extends ChangeNotifier {
       );
     }
     // if transaction list is empty
-    if (_txnList == null || _txnList!.isEmpty) {
-      txnList = response.model!.transactions;
+    if (_txnList.isEmpty) {
+      txnList = response.model!.transactions ?? [];
     } else {
       // if transaction list already have some items
       appendTxns(response.model!.transactions!);
@@ -92,41 +92,6 @@ class TxnHistoryService extends ChangeNotifier {
       setHasMoreTxnsValue(type: type, status: status);
     }
   }
-
-  // String? getLastTxnDocType({String? status, String? type}) {
-  //   if (status == null && type == null) return lastTxnDocId;
-  //   if (status != null) return lastRefundedTxnDocId;
-  //   if (type != null) {
-  //     if (type == UserTransaction.TRAN_TYPE_DEPOSIT) return lastDepositTxnDocId;
-  //     if (type == UserTransaction.TRAN_TYPE_PRIZE) return lastPrizeTxnDocId;
-  //     if (type == UserTransaction.TRAN_TYPE_WITHDRAW) {
-  //       return lastWithdrawalTxnDocId;
-  //     }
-  //   }
-  //   return lastTxnDocId;
-  // }
-
-  // setLastTxnDocType({String? status, String? type, String? lastDocId}) {
-  //   if (status == null && type == null) {
-  //     lastTxnDocId = lastDocId;
-  //     lastRefundedTxnDocId = lastDocId;
-  //     lastDepositTxnDocId = lastDocId;
-  //     lastWithdrawalTxnDocId = lastDocId;
-  //     lastPrizeTxnDocId = lastDocId;
-  //   } else if (status != null) {
-  //     lastRefundedTxnDocId = lastDocId;
-  //   } else if (type != null) {
-  //     if (type == UserTransaction.TRAN_TYPE_DEPOSIT) {
-  //       lastDepositTxnDocId = lastDocId;
-  //     }
-  //     if (type == UserTransaction.TRAN_TYPE_PRIZE) {
-  //       lastPrizeTxnDocId = lastDocId;
-  //     }
-  //     if (type == UserTransaction.TRAN_TYPE_WITHDRAW) {
-  //       lastWithdrawalTxnDocId = lastDocId;
-  //     }
-  //   }
-  // }
 
   setHasMoreTxnsValue({String? status, String? type}) {
     if (status == null && type == null) {

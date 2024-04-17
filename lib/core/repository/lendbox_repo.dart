@@ -63,8 +63,10 @@ class LendboxRepo extends BaseRepo {
   }
 
   Future<ApiResponse<bool>> updateUserInvestmentPreference(
-      String txnId, String pref,
-      {bool hasConfirmed = false}) async {
+    String txnId,
+    String pref, {
+    bool hasConfirmed = false,
+  }) async {
     try {
       final uid = userService.baseUser!.uid;
 
@@ -81,7 +83,7 @@ class LendboxRepo extends BaseRepo {
         apiName: '$_lendBox/updateUserInvestmentPref',
       );
 
-      return ApiResponse(model: true, code: 200);
+      return const ApiResponse(model: true, code: 200);
     } catch (e) {
       logger.e(e);
       return ApiResponse.withError(e.toString(), 400);

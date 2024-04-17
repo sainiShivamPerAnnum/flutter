@@ -1,8 +1,8 @@
 import 'package:felloapp/core/enums/investment_type.dart';
 import 'package:felloapp/core/enums/view_state_enum.dart';
-import 'package:felloapp/core/model/subscription_models/all_subscription_model.dart';
 import 'package:felloapp/core/model/subscription_models/subscription_transaction_model.dart';
 import 'package:felloapp/core/model/user_transaction_model.dart';
+import 'package:felloapp/core/service/lendbox_maturity_service.dart';
 import 'package:felloapp/core/service/notifier_services/transaction_history_service.dart';
 import 'package:felloapp/core/service/notifier_services/user_service.dart';
 import 'package:felloapp/core/service/subscription_service.dart';
@@ -16,13 +16,10 @@ enum TranFilterType { Type, Subtype }
 
 class TransactionsHistoryViewModel extends BaseViewModel {
   final CustomLogger _logger = locator<CustomLogger>();
-  final UserService _userService = locator<UserService>();
-  // final PaytmService? _paytmService = locator<PaytmService>();
   final SubService _subscriptionService = locator<SubService>();
-
   final TxnHistoryService _txnHistoryService = locator<TxnHistoryService>();
+  final _lendboxMaturityService = locator<LendboxMaturityService>();
 
-  //local variables
   int _filter = 1;
   bool _isMoreTxnsBeingFetched = false;
   List<UserTransaction> apiTxns = [];
@@ -33,11 +30,11 @@ class TransactionsHistoryViewModel extends BaseViewModel {
     "Deposits",
     "Withdrawals",
   ];
-  List<UserTransaction>? _filteredList;
+  List<UserTransaction> _filteredList = [];
   ScrollController? _scrollController;
   ScrollController? _sipScrollController;
 
-  get sipScrollController => _sipScrollController;
+  ScrollController? get sipScrollController => _sipScrollController;
 
   set sipScrollController(value) {
     _sipScrollController = value;
@@ -47,34 +44,27 @@ class TransactionsHistoryViewModel extends BaseViewModel {
   int _tabIndex = 0;
   int get filter => _filter;
   String? get filterValue => _filterValue;
-  // Subscriptions? _activeSubscription;
   List<SubscriptionTransactionModel>? _filteredSIPList = [];
-  bool _hasMoreSIPTxns = false;
-
-  // Map<String, int> get tranTypeFilterItems => _tranTypeFilterItems;
-
-  // Subscriptions? get activeSubscription => _activeSubscription;
   List<String?> get tranTypeFilterItems => _tranTypeFilterItems;
-  List<UserTransaction>? get filteredList => _filteredList;
+  List<UserTransaction> get filteredList => _filteredList;
   List<SubscriptionTransactionModel>? get filteredSIPList => _filteredSIPList;
 
   ScrollController? get tranListController => _scrollController;
   PageController? get pageController => _pageController;
   int get tabIndex => _tabIndex;
-  bool get getHasMoreTxns => _hasMoreSIPTxns;
   bool get isMoreTxnsBeingFetched => _isMoreTxnsBeingFetched;
   InvestmentType _investmentType = InvestmentType.AUGGOLD99;
 
   InvestmentType get investmentType => _investmentType;
 
   set investmentType(InvestmentType value) => _investmentType = value;
-  //setters
+
   set filter(int val) {
     _filter = val;
     notifyListeners();
   }
 
-  set filteredList(List<UserTransaction>? val) {
+  set filteredList(List<UserTransaction> val) {
     _filteredList = val;
     notifyListeners();
   }
@@ -99,45 +89,25 @@ class TransactionsHistoryViewModel extends BaseViewModel {
     notifyListeners();
   }
 
-  appendToSipList(List<SubscriptionTransactionModel> value) {
-    _filteredSIPList!.addAll(value);
-    notifyListeners();
-  }
-
-  // set activeSubscription(value) {
-  //   _activeSubscription = value;
-  //   notifyListeners();
-  // }
-
-  set setHasMoreTxns(bool hasMoreTxns) {
-    _hasMoreSIPTxns = hasMoreTxns;
-    notifyListeners();
-  }
-
-  init(InvestmentType? investmentType, bool showAutosave) {
+  void init(InvestmentType? investmentType, bool showAutosave) {
     _investmentType = investmentType ?? InvestmentType.AUGGOLD99;
     _scrollController = ScrollController();
-    // if (investmentType == InvestmentType.AUGGOLD99)
     _sipScrollController = ScrollController();
     _pageController = PageController(initialPage: 0);
     if (showAutosave) {
       tabIndex = 1;
       WidgetsBinding.instance.addPostFrameCallback((timeStamp) {
-        pageController!.animateToPage(1,
-            duration: const Duration(milliseconds: 200), curve: Curves.linear);
+        pageController!.animateToPage(
+          1,
+          duration: const Duration(milliseconds: 200),
+          curve: Curves.linear,
+        );
       });
     }
 
-    // if (_txnHistoryService!.txnList == null ||
-    //     _txnHistoryService!.txnList!.length <= 5) {
     getTransactions();
-    // }
 
-    if (_txnHistoryService.txnList != null) {
-      filteredList = _txnHistoryService.txnList;
-    } else {
-      filteredList = [];
-    }
+    filteredList = _txnHistoryService.txnList;
     final bool? doesHaveSubscriptionTransaction =
         locator<UserService>().baseUser?.doesHaveSubscriptionTransaction;
 
@@ -147,7 +117,7 @@ class TransactionsHistoryViewModel extends BaseViewModel {
           !_sipScrollController!.position.outOfRange) {
         if (state == ViewState.Idle &&
             (doesHaveSubscriptionTransaction ?? false)) {
-          getMoreSipTransactions(investmentType!);
+          await getMoreSipTransactions(investmentType!);
         }
       }
     });
@@ -157,7 +127,7 @@ class TransactionsHistoryViewModel extends BaseViewModel {
               _scrollController!.position.maxScrollExtent &&
           !_scrollController!.position.outOfRange) {
         if (_txnHistoryService.hasMoreTxns && state == ViewState.Idle) {
-          getMoreTransactions();
+          await getMoreTransactions();
         }
       }
     });
@@ -173,10 +143,11 @@ class TransactionsHistoryViewModel extends BaseViewModel {
     if (doesHaveSubscriptionTransaction ?? false) {
       await getLatestSIPTransactions(investmentType);
     }
+
     setState(ViewState.Idle);
   }
 
-  getMoreTransactions() async {
+  Future<void> getMoreTransactions() async {
     _logger.d("fetching more transactions...");
     isMoreTxnsBeingFetched = true;
     switch (filter) {
@@ -190,86 +161,84 @@ class TransactionsHistoryViewModel extends BaseViewModel {
       case 2:
         if (_txnHistoryService.hasMoreDepositTxns) {
           await _txnHistoryService.fetchTransactions(
-              subtype: _investmentType,
-              type: UserTransaction.TRAN_TYPE_DEPOSIT);
+            subtype: _investmentType,
+            type: UserTransaction.TRAN_TYPE_DEPOSIT,
+          );
         }
         break;
       case 3:
         if (_txnHistoryService.hasMoreWithdrawalTxns) {
           await _txnHistoryService.fetchTransactions(
-              subtype: _investmentType,
-              type: UserTransaction.TRAN_TYPE_WITHDRAW);
+            subtype: _investmentType,
+            type: UserTransaction.TRAN_TYPE_WITHDRAW,
+          );
         }
         break;
       case 4:
         if (_txnHistoryService.hasMorePrizeTxns) {
           await _txnHistoryService.fetchTransactions(
-              subtype: _investmentType, type: UserTransaction.TRAN_TYPE_PRIZE);
+            subtype: _investmentType,
+            type: UserTransaction.TRAN_TYPE_PRIZE,
+          );
         }
 
         break;
       case 5:
         if (_txnHistoryService.hasMoreRefundedTxns) {
           await _txnHistoryService.fetchTransactions(
-              subtype: _investmentType,
-              status: UserTransaction.TRAN_STATUS_REFUNDED);
+            subtype: _investmentType,
+            status: UserTransaction.TRAN_STATUS_REFUNDED,
+          );
         }
         break;
       default:
-        // if (_txnHistoryService.hasMoreTxns)
-        //   await _txnHistoryService.fetchTransactions(subtype: _investmentType,limit: 30);
         break;
     }
     filterTransactions(update: false);
     isMoreTxnsBeingFetched = false;
   }
 
-  filterTransactions({required bool update}) {
+  void filterTransactions({required bool update}) {
     switch (filter) {
       case 1:
         filteredList = _txnHistoryService.txnList;
         break;
       case 2:
         filteredList = [
-          ..._txnHistoryService.txnList!
+          ..._txnHistoryService.txnList
               .where((txn) => txn.type == UserTransaction.TRAN_TYPE_DEPOSIT)
         ];
         break;
       case 3:
         filteredList = [
-          ..._txnHistoryService.txnList!
+          ..._txnHistoryService.txnList
               .where((txn) => txn.type == UserTransaction.TRAN_TYPE_WITHDRAW)
         ];
         break;
       case 4:
         filteredList = [
-          ..._txnHistoryService.txnList!
+          ..._txnHistoryService.txnList
               .where((txn) => txn.type == UserTransaction.TRAN_TYPE_PRIZE)
         ];
         break;
       case 5:
         filteredList = [
-          ..._txnHistoryService.txnList!.where(
-              (txn) => txn.tranStatus == UserTransaction.TRAN_STATUS_REFUNDED)
+          ..._txnHistoryService.txnList.where(
+            (txn) => txn.tranStatus == UserTransaction.TRAN_STATUS_REFUNDED,
+          )
         ];
         break;
       default:
         filteredList = _txnHistoryService.txnList;
         break;
     }
-    if (update && filteredList!.length < 30) getMoreTransactions();
+    if (update && filteredList.length < 30) getMoreTransactions();
   }
 
   Future<void> getLatestSIPTransactions(InvestmentType asset) async {
-    // activeSubscription = _subscriptionService.subscriptionData;
-
-    // if (activeSubscription == null) {
-    //   setState(ViewState.Idle);
-    //   return;
-    // }
-
     await _subscriptionService.getSubscriptionTransactionHistory(
-        asset: asset.name);
+      asset: asset.name,
+    );
 
     filteredSIPList = (asset == InvestmentType.AUGGOLD99)
         ? _subscriptionService.augSubTxnList
@@ -278,8 +247,12 @@ class TransactionsHistoryViewModel extends BaseViewModel {
 
   Future<void> getMoreSipTransactions(InvestmentType asset) async {
     isMoreTxnsBeingFetched = true;
+
     await _subscriptionService.getSubscriptionTransactionHistory(
-        paginate: true, asset: asset.name);
+      paginate: true,
+      asset: asset.name,
+    );
+
     isMoreTxnsBeingFetched = false;
 
     if (asset == InvestmentType.AUGGOLD99 &&
@@ -290,5 +263,15 @@ class TransactionsHistoryViewModel extends BaseViewModel {
         _filteredSIPList = _subscriptionService.lbSubTxnList;
       }
     }
+  }
+
+  Future<void> updateMaturityPreference({
+    required String pref,
+    required String txnId,
+  }) async {
+    await _lendboxMaturityService.updateInvestmentPrefForTransaction(
+      txnId,
+      pref,
+    );
   }
 }
