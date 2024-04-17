@@ -10,12 +10,13 @@ class LendBoxAppBar extends StatelessWidget {
   final bool isOldUser;
   final String assetType;
 
-  const LendBoxAppBar(
-      {required this.isEnabled,
-      required this.isOldUser,
-      required this.assetType,
-      super.key,
-      this.trackClosingEvent});
+  const LendBoxAppBar({
+    required this.isEnabled,
+    required this.isOldUser,
+    required this.assetType,
+    super.key,
+    this.trackClosingEvent,
+  });
 
   String getTitle() {
     if (assetType == Constants.ASSET_TYPE_FLO_FELXI && isOldUser) {
@@ -45,10 +46,12 @@ class LendBoxAppBar extends StatelessWidget {
           : Container(
               margin: EdgeInsets.only(left: SizeConfig.padding16),
               child: IconButton(
-                icon: Icon(Icons.arrow_back_ios,
-                    color: Colors.white.withOpacity(0.4)),
+                icon: Icon(
+                  Icons.arrow_back_ios,
+                  color: Colors.white.withOpacity(0.4),
+                ),
                 onPressed: () {
-                  if (trackClosingEvent != null) trackClosingEvent!();
+                  trackClosingEvent?.call();
                 },
               ),
             ),
